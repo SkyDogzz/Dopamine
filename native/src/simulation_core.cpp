@@ -95,22 +95,22 @@ EntityId SimulationCore::spawn(std::string type, float x, float y, float hp, flo
 }
 
 EntityId SimulationCore::spawn_projectile(std::string type, float x, float y, float damage, float radius,
-		double lifetime_seconds, float velocity_x, float velocity_y, float burn_damage_per_tick,
-		double burn_interval_seconds, double burn_duration_seconds) {
+		double lifetime_seconds, float velocity_x, float velocity_y, float status_damage_per_tick,
+		double status_interval_seconds, double status_duration_seconds) {
 	if (!std::isfinite(damage) || damage <= 0.0F || !std::isfinite(radius) || radius < 0.0F ||
 			!std::isfinite(lifetime_seconds) || lifetime_seconds <= 0.0 || type.empty()) {
 		throw std::invalid_argument("invalid projectile");
 	}
-	const bool applies_burn = type == "inferno_sprayer";
-	if (applies_burn && (!std::isfinite(burn_damage_per_tick) || burn_damage_per_tick <= 0.0F ||
-			!std::isfinite(burn_interval_seconds) || burn_interval_seconds <= 0.0 ||
-			!std::isfinite(burn_duration_seconds) || burn_duration_seconds <= 0.0)) {
-		throw std::invalid_argument("burn values must be positive and finite");
+	const bool applies_damage_over_time = type == "inferno_sprayer" || type == "bloodstorm_dagger";
+	if (applies_damage_over_time && (!std::isfinite(status_damage_per_tick) || status_damage_per_tick <= 0.0F ||
+			!std::isfinite(status_interval_seconds) || status_interval_seconds <= 0.0 ||
+			!std::isfinite(status_duration_seconds) || status_duration_seconds <= 0.0)) {
+		throw std::invalid_argument("projectile status values must be positive and finite");
 	}
 	const EntityId id = spawn(type, x, y, 1.0F, velocity_x, velocity_y);
 	projectile_flags_[id.index] = true;
-	projectiles_[id.index] = {damage, radius, lifetime_seconds, applies_burn,
-			burn_damage_per_tick, burn_interval_seconds, burn_duration_seconds};
+	projectiles_[id.index] = {damage, radius, lifetime_seconds, applies_damage_over_time,
+			status_damage_per_tick, status_interval_seconds, status_duration_seconds};
 	return id;
 }
 
@@ -289,9 +289,9 @@ std::vector<CombatEvent> SimulationCore::advance(double delta_seconds) {
 				const EntityId projectile_id{projectile_index, slots_[projectile_index].generation};
 				const EntityId target_id{target_index, slots_[target_index].generation};
 				apply_damage(projectile_id, target_id, projectile.damage, events, to_despawn);
-				if (projectile.applies_burn && health_[target_index].current > 0.0F) {
-					apply_damage_over_time(target_id, projectile.burn_damage_per_tick,
-							projectile.burn_interval_seconds, projectile.burn_duration_seconds);
+				if (projectile.applies_damage_over_time && health_[target_index].current > 0.0F) {
+					apply_damage_over_time(target_id, projectile.status_damage_per_tick,
+							projectile.status_interval_seconds, projectile.status_duration_seconds);
 				}
 				hit = true;
 				break;

@@ -41,8 +41,9 @@
 - [x] Prototype vagues : 24 vagues, horloge arrêtée pendant les placeholders boss, spawns selon courbes proposées et HUD vague.
 - [x] HUD boss : barre HP courants/max et état de victoire distinct de la défaite.
 - [x] Chests Survival : mort→drop→pickup→modal à trois choix→mise à jour du loadout et reprise; sélection du catalogue **[PROPOSÉE]**.
-- [x] Projectiles prototypes Inferno/Crimson et modificateurs de reliques testés; brûlure, explosion et entailles restent à implémenter. Blood Chalice accorde un lifesteal direct de 5 %/niveau **[PROPOSÉ]** avec soft cap.
+- [x] Projectiles prototypes Inferno/Crimson, brûlure, saignement Bloodstorm et modificateurs de reliques testés; explosions Inferno et effets Infinite Circuit restent à implémenter. Blood Chalice accorde un lifesteal direct de 5 %/niveau **[PROPOSÉ]** avec soft cap.
 - [x] Écran de choix d’arme initiale parmi deux prototypes **[PROPOSÉS]**, entrée Survival depuis le Sandbox, victoire/défaite avec résumé et redémarrage.
-- [ ] Évolutions et effets élémentaires complets; confirmer le pool de départ du vertical slice.
+- [x] Déclencheur Bloodstorm au niveau 5 avec Blood Chalice; saignement et lifesteal sur ticks testés, réglages encore **[PROPOSÉS]**.
+- [ ] Infinite Circuit, Wildfire et autres effets d’évolution; confirmer le pool de départ du vertical slice.
 - [ ] Vagues, chests, 3 armes/reliques, mid-boss et boss final.
 - [ ] HUD, fin de run, sauvegarde minimale et vérification QA complète.

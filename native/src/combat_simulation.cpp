@@ -18,6 +18,8 @@ void CombatSimulation::_bind_methods() {
 			&CombatSimulation::spawn_enemy);
 	ClassDB::bind_method(D_METHOD("spawn_projectile", "projectile_type", "position", "velocity", "damage", "radius", "lifetime_seconds", "burn_damage_per_tick", "burn_interval_seconds", "burn_duration_seconds"),
 			&CombatSimulation::spawn_projectile, DEFVAL(2.0), DEFVAL(0.5), DEFVAL(2.0));
+	ClassDB::bind_method(D_METHOD("spawn_status_projectile", "projectile_type", "position", "velocity", "damage", "radius", "lifetime_seconds", "status_damage_per_tick", "status_interval_seconds", "status_duration_seconds"),
+			&CombatSimulation::spawn_status_projectile, DEFVAL(2.0), DEFVAL(0.5), DEFVAL(2.0));
 	ClassDB::bind_method(D_METHOD("spawn_xp_orb", "position", "xp_value"), &CombatSimulation::spawn_xp_orb);
 	ClassDB::bind_method(D_METHOD("collect_xp_orb", "index", "generation"), &CombatSimulation::collect_xp_orb);
 	ClassDB::bind_method(D_METHOD("apply_damage_over_time", "index", "generation", "damage_per_tick", "interval_seconds", "duration_seconds"),
@@ -92,14 +94,23 @@ int64_t CombatSimulation::spawn_enemy(String enemy_type, int64_t count, Vector2 
 int64_t CombatSimulation::spawn_projectile(String projectile_type, Vector2 position, Vector2 velocity,
 		float damage, float radius, double lifetime_seconds, float burn_damage_per_tick,
 		double burn_interval_seconds, double burn_duration_seconds) {
+	return spawn_status_projectile(projectile_type, position, velocity, damage, radius, lifetime_seconds,
+			burn_damage_per_tick, burn_interval_seconds, burn_duration_seconds);
+}
+
+int64_t CombatSimulation::spawn_status_projectile(String projectile_type, Vector2 position, Vector2 velocity,
+		float damage, float radius, double lifetime_seconds, float status_damage_per_tick,
+		double status_interval_seconds, double status_duration_seconds) {
+	const std::string type = projectile_type.utf8().get_data();
+	const bool applies_damage_over_time = type == "inferno_sprayer" || type == "bloodstorm_dagger";
 	if (projectile_type.is_empty() || !std::isfinite(position.x) || !std::isfinite(position.y) ||
 			!std::isfinite(velocity.x) || !std::isfinite(velocity.y) || !std::isfinite(damage) || damage <= 0.0F ||
 			!std::isfinite(radius) || radius < 0.0F || !std::isfinite(lifetime_seconds) || lifetime_seconds <= 0.0) {
 		return 0;
 	}
-	if (projectile_type == "inferno_sprayer" && (!std::isfinite(burn_damage_per_tick) || burn_damage_per_tick <= 0.0F ||
-			!std::isfinite(burn_interval_seconds) || burn_interval_seconds <= 0.0 ||
-			!std::isfinite(burn_duration_seconds) || burn_duration_seconds <= 0.0)) {
+	if (applies_damage_over_time && (!std::isfinite(status_damage_per_tick) || status_damage_per_tick <= 0.0F ||
+			!std::isfinite(status_interval_seconds) || status_interval_seconds <= 0.0 ||
+			!std::isfinite(status_duration_seconds) || status_duration_seconds <= 0.0)) {
 		return 0;
 	}
 	SimulationCommand command;
@@ -112,9 +123,9 @@ int64_t CombatSimulation::spawn_projectile(String projectile_type, Vector2 posit
 	command.projectile_damage = damage;
 	command.projectile_radius = radius;
 	command.projectile_lifetime = lifetime_seconds;
-	command.projectile_burn_damage = burn_damage_per_tick;
-	command.projectile_burn_interval = burn_interval_seconds;
-	command.projectile_burn_duration = burn_duration_seconds;
+	command.projectile_status_damage = status_damage_per_tick;
+	command.projectile_status_interval = status_interval_seconds;
+	command.projectile_status_duration = status_duration_seconds;
 	return submit(std::move(command));
 }
 

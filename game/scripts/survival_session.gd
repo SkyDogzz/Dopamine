@@ -57,6 +57,10 @@ const WAVE_HP_CAP := 12.0
 @export var daggers_projectile_speed: float = 900.0
 @export var daggers_projectile_radius: float = 2.5
 @export var daggers_projectile_lifetime: float = 0.8
+@export_group("Prototype Bloodstorm — proposed tuning")
+@export var bloodstorm_bleed_damage_per_tick: float = 2.0
+@export var bloodstorm_bleed_interval_seconds: float = 0.5
+@export var bloodstorm_bleed_duration_seconds: float = 2.0
 @export_group("Prototype relic bonuses — proposed tuning")
 @export_range(0.0, 1.0) var storm_core_damage_per_level: float = 0.05
 @export_range(0.0, 1.0) var infernal_heart_damage_per_level: float = 0.05
@@ -521,7 +525,7 @@ func _fire_inferno_sprayer(active_time: float, paused: bool) -> void:
 	var level: int = loadout.weapon_level("inferno_sprayer")
 	var damage := inferno_damage * (1.0 + 0.15 * float(level - 1))
 	damage *= 1.0 + float(loadout.relic_level("infernal_heart")) * infernal_heart_damage_per_level
-	var projectile_sequence: int = simulation.spawn_projectile("inferno_sprayer", player.global_position + direction * 14.0,
+	var projectile_sequence: int = simulation.spawn_status_projectile("inferno_sprayer", player.global_position + direction * 14.0,
 			direction * inferno_projectile_speed, damage, inferno_projectile_radius,
 			inferno_projectile_lifetime, inferno_burn_damage_per_tick,
 			inferno_burn_interval_seconds, inferno_burn_duration_seconds)
@@ -539,12 +543,21 @@ func _fire_crimson_daggers(active_time: float, paused: bool) -> void:
 		direction = Vector2.RIGHT
 	var level: int = loadout.weapon_level("crimson_daggers")
 	var damage := daggers_damage * (1.0 + 0.15 * float(level - 1))
+	var projectile_type := "crimson_dagger"
+	var status_damage := 2.0
+	var status_interval := 0.5
+	var status_duration := 2.0
+	if level >= 5 and loadout.relic_level("blood_chalice") > 0:
+		projectile_type = "bloodstorm_dagger"
+		status_damage = bloodstorm_bleed_damage_per_tick
+		status_interval = bloodstorm_bleed_interval_seconds
+		status_duration = bloodstorm_bleed_duration_seconds
 	var fired := 0
 	for spread in [-0.06, 0.06]:
 		var shot_direction: Vector2 = direction.rotated(spread)
-		if simulation.spawn_projectile("crimson_dagger", player.global_position + shot_direction * 14.0,
+		if simulation.spawn_status_projectile(projectile_type, player.global_position + shot_direction * 14.0,
 				shot_direction * daggers_projectile_speed, damage, daggers_projectile_radius,
-				daggers_projectile_lifetime) > 0:
+				daggers_projectile_lifetime, status_damage, status_interval, status_duration) > 0:
 			fired += 1
 	if fired > 0:
 		_next_daggers_time = active_time + daggers_cooldown
