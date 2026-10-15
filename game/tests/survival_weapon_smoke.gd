@@ -10,6 +10,7 @@ func _run() -> void:
 		return
 	session.spawn_initial_enemy = false
 	session.xp_collection_radius = 200.0
+	session.contact_damage_per_hit = 0.0
 	session.ordinary_chest_drop_chance = 0.0
 	session.skip_starting_weapon_choice = true
 	root.add_child(session)

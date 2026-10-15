@@ -18,6 +18,7 @@ func _run() -> void:
 	session.weapon_enabled = false
 	root.add_child(session)
 	await process_frame
+	session.spawn_initial_enemy = true
 	session.wave_director.wave = 24
 	session.wave_director.state = session.WAVE_DIRECTOR_SCRIPT.State.FINAL_BOSS
 	session._spawn_boss_placeholder("final_boss")

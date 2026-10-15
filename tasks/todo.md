@@ -31,7 +31,8 @@
 - [x] Scène Survival minimale : position monde du joueur transmise au steering ECS ; vitesses des profils conservées.
 - [x] Relier HP decay à l’horloge active Survival et appliquer les soins des événements de mort au HP Godot.
 - [x] Prototype de tir automatique Lightning Conductor ; chaînes distinctes ciblées et valeurs de combat configurables, toutes proposées.
-- [ ] Ajouter lifesteal, statuts, contact joueur-ennemi et contrôles de ces règles dans le Sandbox.
+- [ ] Ajouter lifesteal, statuts et contrôles de ces règles dans le Sandbox.
+- [x] Dégâts de contact joueur-ennemi et invulnérabilité provisoires en Survival; contrôles suspendus pendant les pauses et fins de run.
 
 ## Phase 4 — Premier playable Survival
 

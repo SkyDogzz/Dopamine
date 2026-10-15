@@ -24,6 +24,11 @@ const WAVE_HP_CAP := 12.0
 @export var elite_chest_drop_chance: float = 0.15
 @export var chest_guarantee_interval_seconds: float = 60.0
 @export var chest_collection_radius: float = 36.0
+@export_group("Prototype contact damage — proposed tuning")
+@export var contact_damage_per_hit: float = 10.0
+@export var contact_invulnerability_seconds: float = 0.35
+@export var player_contact_radius: float = 10.0
+@export var enemy_contact_radius: float = 12.0
 @export var enemy_separation_radius: float = 18.0
 @export_range(0.0, 1.0) var enemy_separation_weight: float = 0.5
 @export_group("Prototype Lightning Conductor — proposed tuning")
@@ -87,6 +92,7 @@ var _chest_director: RefCounted
 var _world_chests: Array[Dictionary] = []
 var _chest_open := false
 var _starting_weapon_choice_open := false
+var _contact_invulnerable_until := 0.0
 
 @onready var _hp_value: Label = $HUD/RunPanel/RunInfo/HPValue
 @onready var _hp_bar: ProgressBar = $HUD/RunPanel/RunInfo/HPBar
@@ -107,6 +113,7 @@ func _ready() -> void:
 	player = PLAYER_SCENE.instantiate()
 	player.name = "Player"
 	add_child(player)
+	player.controls_enabled = false
 	loadout = LOADOUT_SCRIPT.new()
 	_chest_director = CHEST_DIRECTOR_SCRIPT.new()
 	_chest_director.ordinary_drop_chance = ordinary_chest_drop_chance
@@ -183,6 +190,7 @@ func _process(_delta: float) -> void:
 		simulation.acknowledge_events(latest_event_sequence)
 	_entities = state["entities"]
 	_advance_wave_director(elapsed_active_time, state["paused"])
+	_apply_contact_damage(state, current_simulation_time)
 	_collect_nearby_xp_orbs(state)
 	_collect_nearby_chests(state)
 	_complete_pending_victory()
@@ -191,8 +199,25 @@ func _process(_delta: float) -> void:
 	_fire_crimson_daggers(current_simulation_time, state["paused"])
 	if player_hp <= 0.0 and not run_over:
 		_finish_run(false)
+	player.controls_enabled = not state["paused"] and not run_over and not _chest_open and not _starting_weapon_choice_open
 	_refresh_hud(state)
 	queue_redraw()
+
+func _apply_contact_damage(state: Dictionary, current_simulation_time: float) -> void:
+	if state["paused"] or run_over or current_simulation_time < _contact_invulnerable_until:
+		return
+	var contact_distance := player_contact_radius + enemy_contact_radius
+	for entity in _entities:
+		var components: Dictionary = entity["components"]
+		if not components.has("EnemyType"):
+			continue
+		var transform: Dictionary = components["Transform2D"]
+		var enemy_position := Vector2(float(transform["x"]), float(transform["y"]))
+		if player.global_position.distance_squared_to(enemy_position) > contact_distance * contact_distance:
+			continue
+		player_hp = maxf(0.0, player_hp - contact_damage_per_hit)
+		_contact_invulnerable_until = current_simulation_time + contact_invulnerability_seconds
+		return
 
 func _refresh_hud(state: Dictionary) -> void:
 	_hp_value.text = "HP  %.1f / %.0f" % [player_hp, player_max_hp]

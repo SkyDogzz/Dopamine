@@ -70,6 +70,7 @@ func _blood_chalice_boosts_kill_heal() -> bool:
 	session.skip_starting_weapon_choice = true
 	session.ordinary_chest_drop_chance = 0.0
 	session.xp_collection_radius = 0.0
+	session.contact_damage_per_hit = 0.0
 	root.add_child(session)
 	await process_frame
 	session.player_hp = 50.0
