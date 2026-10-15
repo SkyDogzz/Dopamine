@@ -72,6 +72,13 @@ if(BUILD_TESTING)
                 --scenario=res://scenarios/enemy_profiles_smoke.json
                 "--output=${CMAKE_CURRENT_BINARY_DIR}/sandbox_enemy_profiles_result.json")
         set_tests_properties(sandbox_enemy_profiles_scenario PROPERTIES FIXTURES_REQUIRED godot_project_ready)
+
+        add_test(NAME sandbox_damage_over_time_scenario
+            COMMAND "${DOPAMINE_GODOT_EXECUTABLE}" --headless --path "${PROJECT_SOURCE_DIR}/game"
+                --script res://scripts/scenario_runner.gd --
+                --scenario=res://scenarios/damage_over_time_smoke.json
+                "--output=${CMAKE_CURRENT_BINARY_DIR}/sandbox_damage_over_time_result.json")
+        set_tests_properties(sandbox_damage_over_time_scenario PROPERTIES FIXTURES_REQUIRED godot_project_ready)
     endif()
 endif()
 

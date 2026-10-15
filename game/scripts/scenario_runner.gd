@@ -130,6 +130,15 @@ func _validate_scenario(scenario: Variant) -> String:
 			"despawn":
 				if not _valid_id(command.get("index")) or not _valid_id(command.get("generation")) or int(command["generation"]) == 0:
 					return "Command %d requires a valid entity index and generation" % index
+			"apply_damage_over_time":
+				if not _valid_id(command.get("index")) or not _valid_id(command.get("generation")) or int(command["generation"]) == 0:
+					return "Command %d requires a valid entity index and generation" % index
+				if not _valid_number(command.get("damage_per_tick")) or float(command["damage_per_tick"]) <= 0.0:
+					return "Command %d damage_per_tick must be positive and finite" % index
+				if not _valid_number(command.get("interval_seconds")) or float(command["interval_seconds"]) <= 0.0:
+					return "Command %d interval_seconds must be positive and finite" % index
+				if not _valid_number(command.get("duration_seconds")) or float(command["duration_seconds"]) <= 0.0:
+					return "Command %d duration_seconds must be positive and finite" % index
 			"step":
 				if not _valid_number(command.get("delta_seconds")) or float(command["delta_seconds"]) <= 0.0:
 					return "Command %d step duration must be positive and finite" % index
@@ -173,7 +182,7 @@ func _check_expected(expected: Dictionary, state: Dictionary, simulation: Object
 			var transform: Dictionary = state["entities"][index]["components"]["Transform2D"]
 			if not is_equal_approx(float(position[0]), float(transform["x"])) or not is_equal_approx(float(position[1]), float(transform["y"])):
 				return "Scenario entity position %d did not match expected value" % index
-	for expected_key in ["entity_health", "entity_speeds", "enemy_move_speeds"]:
+	for expected_key in ["entity_health", "entity_health_current", "entity_speeds", "enemy_move_speeds"]:
 		if expected.has(expected_key):
 			var values: Variant = expected[expected_key]
 			if typeof(values) != TYPE_ARRAY or values.size() != state["entities"].size():
@@ -185,6 +194,8 @@ func _check_expected(expected: Dictionary, state: Dictionary, simulation: Object
 				var actual: float
 				if expected_key == "entity_health":
 					actual = float(entity["components"]["Health"]["maximum"])
+				elif expected_key == "entity_health_current":
+					actual = float(entity["components"]["Health"]["current"])
 				elif expected_key == "enemy_move_speeds":
 					actual = float(entity["components"]["MoveSpeed"])
 				else:
@@ -198,14 +209,16 @@ func _check_expected(expected: Dictionary, state: Dictionary, simulation: Object
 	if expected.has("projectile_count"):
 		if not _valid_integer(expected["projectile_count"]) or int(expected["projectile_count"]) != state["metrics"]["projectile_count"]:
 			return "Scenario projectile_count did not match expected value"
-	for event_type in ["damage", "death"]:
+	for event_type in ["damage", "death", "damage_over_time"]:
 		var expected_key := "%s_events" % event_type
 		if expected.has(expected_key):
 			if not _valid_integer(expected[expected_key]) or int(expected[expected_key]) < 0:
 				return "Scenario %s must be a non-negative integer" % expected_key
 			var count := 0
 			for event in state["events"]:
-				if event["type"] == event_type:
+				if event_type == "damage_over_time" and event["type"] == "damage" and event.get("is_damage_over_time", false):
+					count += 1
+				elif event_type != "damage_over_time" and event["type"] == event_type:
 					count += 1
 			if count != int(expected[expected_key]):
 				return "Scenario %s did not match expected value" % expected_key
@@ -265,6 +278,10 @@ func _submit(simulation: Object, command: Dictionary) -> int:
 			)
 		"despawn":
 			return simulation.despawn(int(command["index"]), int(command["generation"]))
+		"apply_damage_over_time":
+			return simulation.apply_damage_over_time(int(command["index"]), int(command["generation"]),
+				float(command["damage_per_tick"]), float(command["interval_seconds"]),
+				float(command["duration_seconds"]))
 		"kill_all":
 			return simulation.kill_all()
 		"pause":

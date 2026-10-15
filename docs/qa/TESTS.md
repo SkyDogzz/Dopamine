@@ -40,6 +40,7 @@
 - [ ] Spatial hash trouve les collisions attendues aux frontières des cellules.
 - [x] Swept collision détecte les projectiles rapides contre une cible en mouvement.
 - [x] DoT partagé : ticks en temps simulé, durée, grand pas, remplacement, cible obsolète et événements identifiés.
+- [x] Scénario Sandbox JSON applique un DoT, vérifie la santé restante et compte les événements de tick tagués.
 - [ ] Deltas 1/120, 1/60, 1/30 et pics 100 ms ne causent pas de NaN ni de téléportation non maîtrisée.
 - [ ] Timers de statuts exprimés en secondes, indépendants du nombre de frames.
 - [ ] Les chaînes d'effets respectent le budget sans perdre silencieusement les événements critiques.

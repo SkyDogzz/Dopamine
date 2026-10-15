@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "scenario_id": "damage_over_time_smoke",
+  "expected": {
+    "simulation_time": 1.0,
+    "entity_count": 1,
+    "paused": true,
+    "entity_health_current": [12],
+    "damage_over_time_events": 2
+  },
+  "commands": [
+    {
+      "type": "spawn",
+      "entity_type": "training_target",
+      "position": [100, 100],
+      "hp": 20,
+      "velocity": [0, 0]
+    },
+    {
+      "type": "apply_damage_over_time",
+      "index": 0,
+      "generation": 1,
+      "damage_per_tick": 4,
+      "interval_seconds": 0.5,
+      "duration_seconds": 1.5
+    },
+    {
+      "type": "step",
+      "delta_seconds": 1.0
+    }
+  ]
+}
