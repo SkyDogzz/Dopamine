@@ -135,6 +135,11 @@ int main() {
 	require(after_reset->simulation_time == 0.0, "reset should clear simulation time");
 	require(after_reset->paused, "reset should leave simulation paused");
 	require(after_reset->speed_multiplier == 1.0, "reset should restore normal speed");
+	require(after_reset->steering_config.max_speed == 75.0F &&
+			after_reset->steering_config.separation_radius == 18.0F &&
+			after_reset->steering_config.separation_weight == 0.5F &&
+			after_reset->steering_config.spatial_hash.cell_size == 64.0F,
+			"reset should restore every live steering override to its default");
 
 	spawn.x = 100.0F;
 	spawn.y = 0.0F;

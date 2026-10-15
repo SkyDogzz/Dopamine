@@ -286,6 +286,7 @@ void SimulationWorker::apply(const SimulationCommand &command) {
 			paused_ = true;
 			speed_multiplier_ = 1.0;
 			has_steering_target_ = false;
+			steering_config_ = SteeringConfig{};
 			collision_count_ = 0;
 			deferred_elapsed_ = 0.0;
 			log("simulation reset");

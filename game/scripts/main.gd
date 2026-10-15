@@ -16,6 +16,7 @@ var _selected_generation := -1
 var _last_combat_event_sequence := 0
 var _damage_total := 0.0
 var _pending_tuning_sequence := 0
+var _pending_reset_sequence := 0
 
 @onready var _view = $Shell/Content/MainColumn/SimulationView
 @onready var _state_label: Label = $Shell/Header/StateLabel
@@ -113,6 +114,16 @@ func _flat(background: Color, border: Color, border_width: int) -> StyleBoxFlat:
 
 func _refresh() -> void:
 	var state: Dictionary = simulation.snapshot()
+	if _pending_reset_sequence > 0 and int(state["last_sequence"]) >= _pending_reset_sequence:
+		var tuning: Dictionary = state["sandbox_overrides"]
+		var tuning_grid := $Shell/Content/SidePanel/Sections/TuningPanel/TuningForm/TuningGrid
+		tuning_grid.get_node("MaxSpeedSpin").value = tuning["max_speed"]
+		tuning_grid.get_node("SeparationRadiusSpin").value = tuning["separation_radius"]
+		tuning_grid.get_node("SeparationWeightSpin").value = tuning["separation_weight"]
+		tuning_grid.get_node("CellSizeSpin").value = tuning["cell_size"]
+		$Shell/Content/SidePanel/Sections/TuningPanel/TuningForm/TuningStatus.text = "TUNING RESET"
+		$Shell/Content/SidePanel/Sections/TuningPanel/TuningForm/TuningStatus.add_theme_color_override("font_color", COLOR_MUTED)
+		_pending_reset_sequence = 0
 	if _pending_tuning_sequence > 0 and int(state["last_sequence"]) >= _pending_tuning_sequence:
 		$Shell/Content/SidePanel/Sections/TuningPanel/TuningForm/TuningStatus.text = "LIVE TUNING APPLIED"
 		$Shell/Content/SidePanel/Sections/TuningPanel/TuningForm/TuningStatus.add_theme_color_override("font_color", COLOR_CYAN)
@@ -208,7 +219,15 @@ func _on_reset_pressed() -> void:
 	_damage_total = 0.0
 	_selected_index = -1
 	_selected_generation = -1
-	simulation.reset()
+	_pending_tuning_sequence = 0
+	_pending_reset_sequence = simulation.reset()
+	var tuning_status: Label = $Shell/Content/SidePanel/Sections/TuningPanel/TuningForm/TuningStatus
+	if _pending_reset_sequence == 0:
+		tuning_status.text = "RESET REJECTED"
+		tuning_status.add_theme_color_override("font_color", COLOR_PINK)
+	else:
+		tuning_status.text = "RESET QUEUED"
+		tuning_status.add_theme_color_override("font_color", COLOR_AMBER)
 
 func _on_spawn_pressed() -> void:
 	var row := _entity_type.selected

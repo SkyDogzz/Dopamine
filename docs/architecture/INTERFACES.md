@@ -9,6 +9,7 @@ Les exemples ci-dessous sont des **interfaces de conception proposées**, pas un
 - `submit(command)` ajoute une commande ordonnée et renvoie son numéro de séquence ; `0` signifie qu'elle a été refusée.
 - La file accepte jusqu'à 2 048 commandes en attente. Le snapshot publie le dernier numéro appliqué.
 - Le worker démarre en pause. `Step` exige une durée positive et finie, et seulement une simulation en pause ; la vitesse configurée (×0,25 à ×4) multiplie sa durée.
+- `reset()` efface les entités, le temps et les métriques de combat, met la simulation en pause et restaure vitesse ainsi que paramètres de steering par défaut.
 - Le contrôle `Step` du Sandbox accepte une durée de 0,001 à 10 s par incréments de 0,001 s.
 - Spawn est limité à 500 entités par commande et 2 500 entités actives, afin de couvrir la cible de charge de 500 ennemis et 2 000 projectiles. Les valeurs d'entité non valides sont rejetées et consignées.
 - Les snapshots sont publiés atomiquement sous forme de `shared_ptr<const SimulationSnapshot>` ; les anciennes versions restent immuables.

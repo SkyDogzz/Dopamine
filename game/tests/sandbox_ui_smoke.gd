@@ -127,6 +127,13 @@ func _run() -> void:
 		state = sandbox.simulation.snapshot()
 	assert(state["simulation_time"] == 0.0, "Sandbox reset should restart simulated time")
 	sandbox._refresh()
+	var reset_tuning: Control = sandbox.get_node("Shell/Content/SidePanel/Sections/TuningPanel/TuningForm/TuningGrid")
+	assert(is_equal_approx(reset_tuning.get_node("MaxSpeedSpin").value, 75.0))
+	assert(is_equal_approx(reset_tuning.get_node("SeparationRadiusSpin").value, 18.0))
+	assert(is_equal_approx(reset_tuning.get_node("SeparationWeightSpin").value, 0.5))
+	assert(is_equal_approx(reset_tuning.get_node("CellSizeSpin").value, 64.0))
+	assert(sandbox.get_node("Shell/Content/SidePanel/Sections/TuningPanel/TuningForm/TuningStatus").text == "TUNING RESET",
+		"Sandbox reset should acknowledge defaults and refresh the live tuning controls")
 	assert(dps_label.text == "AVG DPS  0.0", "Sandbox reset should clear accumulated damage")
 	print("Sandbox UI spawn, inspect, despawn and kill-all checks passed")
 	quit()

@@ -95,6 +95,8 @@ func _run() -> void:
 	assert(state["simulation_time"] == 0.0)
 	assert(state["speed_multiplier"] == 1.0)
 	assert(state["paused"])
+	assert(state["sandbox_overrides"]["max_speed"] == 75.0,
+		"Reset should restore the default Sandbox steering configuration")
 	print("Sandbox simulation bridge checks passed")
 	quit()
 
