@@ -1,0 +1,190 @@
+[gd_resource type="Theme" load_steps=10 format=3]
+
+[sub_resource type="StyleBoxFlat" id="PanelSurface"]
+bg_color = Color(0.039216, 0.066667, 0.094118, 1)
+border_color = Color(0.14902, 0.211765, 0.27451, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+content_margin_left = 18.0
+content_margin_top = 16.0
+content_margin_right = 18.0
+content_margin_bottom = 16.0
+
+[sub_resource type="StyleBoxFlat" id="ButtonNormal"]
+bg_color = Color(0.039216, 0.066667, 0.094118, 1)
+border_color = Color(0.14902, 0.211765, 0.27451, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+corner_radius_top_left = 2
+corner_radius_top_right = 2
+corner_radius_bottom_right = 2
+corner_radius_bottom_left = 2
+content_margin_left = 14.0
+content_margin_top = 10.0
+content_margin_right = 14.0
+content_margin_bottom = 10.0
+
+[sub_resource type="StyleBoxFlat" id="ButtonHover"]
+bg_color = Color(0.078431, 0.137255, 0.184314, 1)
+border_color = Color(0.270588, 0.898039, 0.929412, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+corner_radius_top_left = 2
+corner_radius_top_right = 2
+corner_radius_bottom_right = 2
+corner_radius_bottom_left = 2
+content_margin_left = 14.0
+content_margin_top = 10.0
+content_margin_right = 14.0
+content_margin_bottom = 10.0
+
+[sub_resource type="StyleBoxFlat" id="ButtonPressed"]
+bg_color = Color(0.270588, 0.898039, 0.929412, 1)
+border_color = Color(0.270588, 0.898039, 0.929412, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+corner_radius_top_left = 2
+corner_radius_top_right = 2
+corner_radius_bottom_right = 2
+corner_radius_bottom_left = 2
+content_margin_left = 14.0
+content_margin_top = 10.0
+content_margin_right = 14.0
+content_margin_bottom = 10.0
+
+[sub_resource type="StyleBoxFlat" id="ButtonFocus"]
+bg_color = Color(0.039216, 0.066667, 0.094118, 1)
+border_color = Color(1, 0.819608, 0.4, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+corner_radius_top_left = 2
+corner_radius_top_right = 2
+corner_radius_bottom_right = 2
+corner_radius_bottom_left = 2
+content_margin_left = 12.0
+content_margin_top = 8.0
+content_margin_right = 12.0
+content_margin_bottom = 8.0
+
+[sub_resource type="StyleBoxFlat" id="ButtonDisabled"]
+bg_color = Color(0.047059, 0.066667, 0.082353, 1)
+border_color = Color(0.14902, 0.211765, 0.27451, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+corner_radius_top_left = 2
+corner_radius_top_right = 2
+corner_radius_bottom_right = 2
+corner_radius_bottom_left = 2
+content_margin_left = 14.0
+content_margin_top = 10.0
+content_margin_right = 14.0
+content_margin_bottom = 10.0
+
+[sub_resource type="StyleBoxFlat" id="FieldNormal"]
+bg_color = Color(0.027451, 0.043137, 0.062745, 1)
+border_color = Color(0.14902, 0.211765, 0.27451, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+corner_radius_top_left = 2
+corner_radius_top_right = 2
+corner_radius_bottom_right = 2
+corner_radius_bottom_left = 2
+content_margin_left = 10.0
+content_margin_top = 8.0
+content_margin_right = 10.0
+content_margin_bottom = 8.0
+
+[sub_resource type="StyleBoxFlat" id="FieldFocus"]
+bg_color = Color(0.027451, 0.043137, 0.062745, 1)
+border_color = Color(0.270588, 0.898039, 0.929412, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+corner_radius_top_left = 2
+corner_radius_top_right = 2
+corner_radius_bottom_right = 2
+corner_radius_bottom_left = 2
+content_margin_left = 9.0
+content_margin_top = 7.0
+content_margin_right = 9.0
+content_margin_bottom = 7.0
+
+[sub_resource type="StyleBoxFlat" id="FieldDisabled"]
+bg_color = Color(0.047059, 0.066667, 0.082353, 1)
+border_color = Color(0.121569, 0.172549, 0.207843, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+corner_radius_top_left = 2
+corner_radius_top_right = 2
+corner_radius_bottom_right = 2
+corner_radius_bottom_left = 2
+content_margin_left = 10.0
+content_margin_top = 8.0
+content_margin_right = 10.0
+content_margin_bottom = 8.0
+
+[resource]
+default_font_size = 16
+Button/colors/font_color = Color(0.898039, 0.94902, 0.960784, 1)
+Button/colors/font_hover_color = Color(0.898039, 0.94902, 0.960784, 1)
+Button/colors/font_pressed_color = Color(0.027451, 0.043137, 0.062745, 1)
+Button/colors/font_disabled_color = Color(0.556863, 0.639216, 0.678431, 1)
+Button/styles/normal = SubResource("ButtonNormal")
+Button/styles/hover = SubResource("ButtonHover")
+Button/styles/pressed = SubResource("ButtonPressed")
+Button/styles/focus = SubResource("ButtonFocus")
+Button/styles/disabled = SubResource("ButtonDisabled")
+Label/colors/font_color = Color(0.898039, 0.94902, 0.960784, 1)
+LineEdit/colors/font_color = Color(0.898039, 0.94902, 0.960784, 1)
+LineEdit/colors/font_placeholder_color = Color(0.556863, 0.639216, 0.678431, 1)
+LineEdit/styles/normal = SubResource("FieldNormal")
+LineEdit/styles/focus = SubResource("FieldFocus")
+LineEdit/styles/disabled = SubResource("FieldDisabled")
+OptionButton/colors/font_color = Color(0.898039, 0.94902, 0.960784, 1)
+OptionButton/colors/font_hover_color = Color(0.898039, 0.94902, 0.960784, 1)
+OptionButton/colors/font_pressed_color = Color(0.027451, 0.043137, 0.062745, 1)
+OptionButton/colors/font_disabled_color = Color(0.556863, 0.639216, 0.678431, 1)
+OptionButton/styles/normal = SubResource("ButtonNormal")
+OptionButton/styles/hover = SubResource("ButtonHover")
+OptionButton/styles/pressed = SubResource("ButtonPressed")
+OptionButton/styles/focus = SubResource("ButtonFocus")
+OptionButton/styles/disabled = SubResource("ButtonDisabled")
+Panel/styles/panel = SubResource("PanelSurface")
+PanelContainer/styles/panel = SubResource("PanelSurface")
+SpinBox/styles/normal = SubResource("FieldNormal")
+SpinBox/styles/focus = SubResource("FieldFocus")
+SpinBox/styles/disabled = SubResource("FieldDisabled")
+VBoxContainer/constants/separation = 12
+HBoxContainer/constants/separation = 12
+GridContainer/constants/h_separation = 10
+GridContainer/constants/v_separation = 10
+Dopamine/colors/background = Color(0.027451, 0.043137, 0.062745, 1)
+Dopamine/colors/surface = Color(0.039216, 0.066667, 0.094118, 1)
+Dopamine/colors/surface_hover = Color(0.078431, 0.137255, 0.184314, 1)
+Dopamine/colors/text = Color(0.898039, 0.94902, 0.960784, 1)
+Dopamine/colors/text_muted = Color(0.556863, 0.639216, 0.678431, 1)
+Dopamine/colors/accent = Color(0.270588, 0.898039, 0.929412, 1)
+Dopamine/colors/focus = Color(1, 0.819608, 0.4, 1)
+Dopamine/colors/alert = Color(1, 0.360784, 0.658824, 1)
+Dopamine/colors/border = Color(0.14902, 0.211765, 0.27451, 1)

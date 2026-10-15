@@ -2,6 +2,10 @@
 
 Les exemples ci-dessous sont des **interfaces de conception proposées**, pas une API compilable définitive. Elles doivent être affinées en P0/P1.
 
+## Actions UI Godot
+
+Les contrôles `Control` utilisent les actions natives `ui_accept`, `ui_cancel`, `ui_up`, `ui_down`, `ui_left` et `ui_right`. Le projet mappe la validation à Entrée, Entrée du pavé numérique, Espace et bouton A; l’annulation à Échap et bouton B. Cette configuration conserve le pilotage clavier/manette via `InputMap`, conformément à l’ADR-011 **[ACCEPTÉ]**. Les contrôles interactifs doivent exposer un focus visible; la vérification d’un mapping ne remplace pas un essai avec une manette physique.
+
 ## Contrat natif P1 implémenté
 
 `SimulationCore` reste indépendant de Godot et appartient exclusivement à `SimulationWorker`. Le worker possède le thread de simulation ; aucun Node ni élément du `SceneTree` n'est accédé depuis ce thread.

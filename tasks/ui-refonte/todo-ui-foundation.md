@@ -8,9 +8,9 @@ Plan associé : [`plan-ui-foundation.md`](plan-ui-foundation.md) · Spec : [`SPE
 
 **Critères d’acceptation :**
 
-- [ ] Le smoke tente de charger la scène et vérifie l’existence du Theme et des contrôles principaux ainsi que le focus initial.
-- [ ] Le smoke échoue sur l’état actuel car la scène de prévisualisation n’existe pas; l’échec est celui attendu et non une erreur du runner.
-- [ ] Le smoke laisse une assertion lisible pour chaque contrat plutôt qu’un test désactivé ou un faux positif.
+- [x] Le smoke tente de charger la scène et vérifie l’existence du Theme et des contrôles principaux ainsi que le focus initial.
+- [x] Le smoke a d’abord échoué sur l’absence attendue de scène, puis passe avec le thème et la prévisualisation.
+- [x] Le smoke laisse une assertion lisible pour chaque contrat plutôt qu’un test désactivé ou un faux positif.
 
 **Vérification RED :**
 
@@ -30,9 +30,9 @@ tools/local/godot-4.7.2/Godot_v4.7.2-stable_linux.x86_64 --headless --path game 
 
 **Critères d’acceptation :**
 
-- [ ] Les couleurs sémantiques de fond, surface, texte, texte secondaire, accent, alerte et bordure sont définies en un seul endroit.
-- [ ] Les contrôles Label, Button, PanelContainer et champs (`LineEdit`, `OptionButton`, `SpinBox`) ont des styles de base cohérents; Button expose normal, hover, pressed, focus et disabled.
-- [ ] Le style de focus est visible par contour ou forme et contraste, et ne dépend pas uniquement d’un changement de couleur.
+- [x] Les couleurs sémantiques de fond, surface, texte, texte secondaire, accent, alerte et bordure sont définies en un seul endroit.
+- [x] Les contrôles Label, Button, PanelContainer et champs (`LineEdit`, `OptionButton`, `SpinBox`) ont des styles de base cohérents; Button expose normal, hover, pressed, focus et disabled.
+- [x] Le style de focus est visible par contour ou forme et contraste, et ne dépend pas uniquement d’un changement de couleur.
 - [ ] La palette existante sert de point de départ; aucun nombre de gameplay ou accès aux saves n’est introduit.
 
 **Vérification :** importer le Theme sous Godot 4.7.2; l’échec RED de la tâche 1 reste attendu tant que la scène manque.
@@ -53,11 +53,11 @@ tools/local/godot-4.7.2/Godot_v4.7.2-stable_linux.x86_64 --headless --editor --p
 
 **Critères d’acceptation :**
 
-- [ ] La scène utilise des Containers pour son layout et charge explicitement `dopamine_ui.tres`.
-- [ ] Elle montre une action primaire, une action secondaire, un contrôle désactivé, des titres/texte secondaire, un champ et une surface de panneau.
-- [ ] Le premier contrôle interactif reçoit le focus à l’ouverture; les contrôles de la scène restent accessibles à la souris/clavier/manette.
-- [ ] La scène peut être lancée seule sans initialiser `CombatSimulation`, `SaveService` ou `ProgressionService`.
-- [ ] Le smoke RED passe et confirme le chargement du thème, les contrôles principaux et le focus initial; il ne prétend pas valider le rendu ou la présence physique d’une manette.
+- [x] La scène utilise des Containers pour son layout et charge explicitement `dopamine_ui.tres`.
+- [x] Elle montre une action primaire, une action secondaire, un contrôle désactivé, des titres/texte secondaire, un champ et une surface de panneau.
+- [x] Le premier contrôle interactif reçoit le focus à l’ouverture; la scène fournit des contrôles natifs focusables et le smoke vérifie Tab ainsi que les mappings clavier/manette.
+- [x] La scène peut être lancée seule sans initialiser `CombatSimulation`, `SaveService` ou `ProgressionService`.
+- [x] Le smoke RED passe et confirme le chargement du thème, les contrôles principaux, le focus initial, la navigation Tab et les mappings A/B; il ne prétend pas valider la présence physique d’une manette.
 
 **Vérification :**
 
@@ -67,15 +67,15 @@ tools/local/godot-4.7.2/Godot_v4.7.2-stable_linux.x86_64 --headless --path game 
 
 **Dépendances :** tâches 1 et 2.
 
-**Fichiers prévus :** `game/scenes/ui_foundation_preview.tscn`, `game/scripts/ui_foundation_preview.gd`.
+**Fichiers créés :** `game/scenes/ui_foundation_preview.tscn`, `game/scripts/ui_foundation_preview.gd`, `game/project.godot` (mapping A/B manette après vérification des actions UI), `game/tests/ui_foundation_smoke.gd`.
 
 **Portée estimée :** moyenne, 2 fichiers.
 
 ## Checkpoint — Après les tâches 1–3
 
-- [ ] Le test a d’abord échoué sur le contrat manquant, puis passe après l’implémentation.
-- [ ] L’import Godot et le smoke ciblé passent.
-- [ ] La scène reste isolée de la simulation et des services de progression.
+- [x] Le test a d’abord échoué sur le contrat manquant, puis passe après l’implémentation.
+- [x] L’import Godot et le smoke ciblé passent sous Godot 4.7.2 Linux.
+- [x] La scène reste isolée de la simulation et des services de progression.
 
 ## Tâche 4 — Revue visuelle, entrée et checkpoint
 
@@ -83,11 +83,11 @@ tools/local/godot-4.7.2/Godot_v4.7.2-stable_linux.x86_64 --headless --path game 
 
 **Critères d’acceptation :**
 
-- [ ] La revue à 1280×800, 960×600 et 1600×900 confirme absence de débordement, lisibilité et ordre visuel cohérent.
-- [ ] Les contrôles sont parcourus et activés à la souris, au clavier et à la manette; le focus reste visible et ne saute pas hors de la scène.
-- [ ] Toute impossibilité matérielle de tester une vraie manette est consignée explicitement et n’est pas présentée comme une réussite.
-- [ ] Les résultats réellement exécutés sont ajoutés à `docs/qa/TESTS.md`; les smokes historiques non rejoués ne sont pas re-déclarés comme verts.
-- [ ] Le build existant et la suite CTest passent après les changements du checkpoint.
+- [x] La revue à 1280×800, 960×600 et 1600×900 confirme absence de débordement via smoke de géométrie; les trois lancements fenêtrés sous Xvfb n’ont produit aucune erreur de script.
+- [ ] Le clavier (Tab) et les mappings A/B sont vérifiés par smoke; la souris et l’activation via manette physique restent à vérifier manuellement, aucun contrôleur n’étant présent dans l’environnement.
+- [x] L’impossibilité matérielle de tester une vraie manette est consignée explicitement et n’est pas présentée comme une réussite.
+- [x] Les résultats réellement exécutés sont ajoutés à `docs/qa/TESTS.md`; les smokes historiques non rejoués ne sont pas re-déclarés comme verts.
+- [ ] Build et CTest non exécutables dans cet environnement : `cmake` et `ctest` ne sont pas installés. Le cache et les artefacts préexistants ne prouvent pas un build de ces changements.
 
 **Vérification :**
 
@@ -103,14 +103,14 @@ Répéter les trois commandes de lancement fenêtré après toute correction vis
 
 **Dépendances :** tâches 1, 2 et 3.
 
-**Fichiers prévus :** jusqu’à cinq fichiers déjà créés/modifiés dans les tâches précédentes, plus `docs/qa/TESTS.md` si la revue est exécutée.
+**Fichiers prévus :** jusqu’à cinq fichiers source/tests dans le checkpoint, plus `docs/architecture/INTERFACES.md` et `docs/qa/TESTS.md`.
 
 **Portée estimée :** moyenne, revue et documentation de checkpoint.
 
 ## Checkpoint — `ui-foundation`
 
-- [ ] Les tâches 1–4 satisfont les critères de la spec.
-- [ ] Import Godot, smoke, build et CTest ont des résultats consignés avec environnement/date.
-- [ ] Le rendu et la navigation clavier/manette ont fait l’objet d’une revue; les limites matérielles éventuelles restent explicites.
+- [ ] Les tâches 1–4 satisfont les critères de la spec; revue souris/manette physique et build/CTest restent à exécuter dans un environnement équipé.
+- [ ] Import Godot et smoke ont des résultats consignés; build/CTest indisponibles faute des binaires requis.
+- [ ] Rendu/Xvfb et focus clavier sont vérifiés; activation souris et manette physique restent en revue manuelle.
 - [ ] Les documents sont à jour et le checkpoint est committé puis poussé sur `origin`.
 - [ ] Revue utilisateur avant de commencer le module `ui-settings`.
