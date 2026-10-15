@@ -408,9 +408,7 @@ func _spawn_wave_enemy() -> void:
 	if wave_director.wave >= 10 and randf() < 0.15:
 		enemy_type = "shooter"
 	var hp_multiplier := minf(pow(WAVE_HP_GROWTH, float(wave_director.wave - 1)), WAVE_HP_CAP)
-	var profile_hp := {"chaser": 20.0, "sprinter": 12.0, "tank": 80.0, "shooter": 25.0}
-	var hp: float = profile_hp[enemy_type] * hp_multiplier
-	simulation.spawn(enemy_type, 1, spawn_position, hp, Vector2.ZERO, 1.0)
+	simulation.spawn_enemy(enemy_type, 1, spawn_position, Vector2.ZERO, hp_multiplier)
 
 func _spawn_boss_placeholder(boss_type: String) -> void:
 	if not spawn_initial_enemy or _boss_spawn_pending:

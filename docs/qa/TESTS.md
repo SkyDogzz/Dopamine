@@ -45,6 +45,7 @@
 
 - [x] ID index+génération rejette les handles obsolètes après réutilisation d’un index.
 - [x] Spawn/despawn via worker et cœur natif ne casse aucun itérateur.
+- [x] Les profils ennemis gardent leurs vitesses typées avec HP de vague multiplicatifs ; les multiplicateurs HP nuls ou non finis sont refusés.
 - [x] Spatial hash trouve les cibles aux coordonnées négatives, au bord du rayon et aux frontières testées.
 - [x] Swept collision détecte les projectiles rapides contre une cible en mouvement.
 - [x] DoT partagé : ticks en temps simulé, durée, grand pas, remplacement, cible obsolète et événements identifiés.

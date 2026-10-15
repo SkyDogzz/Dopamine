@@ -24,6 +24,28 @@ func _run() -> void:
 	if float(velocity["x"]) >= 0.0:
 		_fail("Enemy should steer toward the player from the right")
 		return
+	session.set_physics_process(false)
+	var slow_target_sequence: int = session.simulation.set_steering_target(Vector2.ZERO, 10.0, 0.0, 0.0)
+	state = await _wait_until(session, func(snapshot: Dictionary) -> bool:
+		return int(snapshot["last_sequence"]) >= slow_target_sequence
+	)
+	if state.is_empty():
+		_fail("Survival should accept a slower generic steering target for the profile speed check")
+		return
+	session._spawn_wave_enemy()
+	state = await _wait_until(session, func(snapshot: Dictionary) -> bool:
+		return snapshot["entities"].size() == 2
+	)
+	if state.is_empty():
+		_fail("Survival should spawn a wave enemy through the shared enemy-profile API")
+		return
+	var wave_enemy: Dictionary = state["entities"][1]["components"]
+	var wave_velocity: Dictionary = wave_enemy["Velocity2D"]
+	if not is_equal_approx(float(wave_enemy["MoveSpeed"]), 75.0) or \
+			not is_equal_approx(Vector2(float(wave_velocity["x"]), float(wave_velocity["y"])).length(), 75.0):
+		_fail("Wave-spawned Chasers should preserve their profile speed instead of generic steering speed")
+		return
+	session.set_physics_process(true)
 	session.player.global_position = Vector2(400.0, 0.0)
 	state = await _wait_until(session, func(snapshot: Dictionary) -> bool:
 		var last_sequence: int = int(snapshot["last_sequence"])

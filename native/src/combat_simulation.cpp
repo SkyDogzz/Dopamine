@@ -14,8 +14,8 @@ using dopamine::sim::SimulationCommand;
 void CombatSimulation::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("spawn", "entity_type", "count", "position", "hp", "velocity", "threat_level"),
 			&CombatSimulation::spawn, DEFVAL(1.0));
-	ClassDB::bind_method(D_METHOD("spawn_enemy", "enemy_type", "count", "position", "velocity"),
-			&CombatSimulation::spawn_enemy);
+	ClassDB::bind_method(D_METHOD("spawn_enemy", "enemy_type", "count", "position", "velocity", "hp_multiplier"),
+			&CombatSimulation::spawn_enemy, DEFVAL(1.0));
 	ClassDB::bind_method(D_METHOD("spawn_projectile", "projectile_type", "position", "velocity", "damage", "radius", "lifetime_seconds", "burn_damage_per_tick", "burn_interval_seconds", "burn_duration_seconds", "explosion_radius", "explosion_damage_multiplier"),
 			&CombatSimulation::spawn_projectile, DEFVAL(2.0), DEFVAL(0.5), DEFVAL(2.0), DEFVAL(0.0), DEFVAL(0.0));
 	ClassDB::bind_method(D_METHOD("spawn_status_projectile", "projectile_type", "position", "velocity", "damage", "radius", "lifetime_seconds", "status_damage_per_tick", "status_interval_seconds", "status_duration_seconds", "explosion_radius", "explosion_damage_multiplier"),
@@ -66,14 +66,16 @@ int64_t CombatSimulation::spawn(String entity_type, int64_t count, Vector2 posit
 	return submit(std::move(command));
 }
 
-int64_t CombatSimulation::spawn_enemy(String enemy_type, int64_t count, Vector2 position, Vector2 velocity) {
+int64_t CombatSimulation::spawn_enemy(String enemy_type, int64_t count, Vector2 position, Vector2 velocity,
+		float hp_multiplier) {
 	const std::string type = enemy_type.utf8().get_data();
 	const auto profile = dopamine::sim::enemy_profile(type);
 	if (!profile.has_value()) {
 		return 0;
 	}
 	if (count <= 0 || count > 500 || !std::isfinite(position.x) || !std::isfinite(position.y) ||
-			!std::isfinite(velocity.x) || !std::isfinite(velocity.y)) {
+			!std::isfinite(velocity.x) || !std::isfinite(velocity.y) || !std::isfinite(hp_multiplier) ||
+			hp_multiplier <= 0.0F || !std::isfinite(profile->health * hp_multiplier)) {
 		return 0;
 	}
 	SimulationCommand command;
@@ -82,7 +84,7 @@ int64_t CombatSimulation::spawn_enemy(String enemy_type, int64_t count, Vector2 
 	command.count = static_cast<uint32_t>(count);
 	command.x = static_cast<float>(position.x);
 	command.y = static_cast<float>(position.y);
-	command.hp = profile->health;
+	command.hp = profile->health * hp_multiplier;
 	command.threat_level = profile->threat_level;
 	command.enemy_move_speed = profile->speed;
 	const Vector2 initial_velocity = velocity.length() > 0.0

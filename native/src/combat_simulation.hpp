@@ -20,7 +20,8 @@ public:
 
 	int64_t spawn(String entity_type, int64_t count, Vector2 position, float hp, Vector2 velocity,
 			float threat_level = 1.0F);
-	int64_t spawn_enemy(String enemy_type, int64_t count, Vector2 position, Vector2 velocity);
+	int64_t spawn_enemy(String enemy_type, int64_t count, Vector2 position, Vector2 velocity,
+			float hp_multiplier = 1.0F);
 	int64_t spawn_projectile(String projectile_type, Vector2 position, Vector2 velocity, float damage,
 			float radius, double lifetime_seconds, float burn_damage_per_tick = 2.0F,
 			double burn_interval_seconds = 0.5, double burn_duration_seconds = 2.0,

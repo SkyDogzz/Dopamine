@@ -25,6 +25,17 @@ func _run() -> void:
 	assert(is_equal_approx(profile_state["entities"][0]["components"]["MoveSpeed"], 75.0))
 	var clear_profiles: int = simulation.kill_all()
 	await _wait_for_sequence(simulation, clear_profiles)
+	var scaled_profile_sequence: int = simulation.spawn_enemy("sprinter", 1, Vector2.ZERO, Vector2.ZERO, 2.0)
+	var scaled_profile_state: Dictionary = await _wait_for_sequence(simulation, scaled_profile_sequence)
+	assert(simulation.spawn_enemy("sprinter", 1, Vector2.ZERO, Vector2.ZERO, 0.0) == 0,
+		"GDExtension should reject a non-positive typed enemy health multiplier")
+	assert(simulation.spawn_enemy("sprinter", 1, Vector2.ZERO, Vector2.ZERO, INF) == 0,
+		"GDExtension should reject a non-finite typed enemy health multiplier")
+	assert(is_equal_approx(scaled_profile_state["entities"][0]["components"]["Health"]["maximum"], 24.0),
+		"GDExtension should scale typed enemy health without losing its profile")
+	assert(is_equal_approx(scaled_profile_state["entities"][0]["components"]["MoveSpeed"], 125.0),
+		"GDExtension should retain typed enemy movement speed with scaled health")
+	await _wait_for_sequence(simulation, simulation.kill_all())
 	assert(simulation.spawn("", 1, Vector2.ZERO, 10.0, Vector2.ZERO) == 0)
 	assert(simulation.set_speed(10.0) == 0)
 	var override_sequence: int = simulation.apply_sandbox_overrides({
