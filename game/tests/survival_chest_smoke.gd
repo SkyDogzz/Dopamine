@@ -37,7 +37,10 @@ func _run() -> void:
 		return not snapshot["paused"] and not session._chest_open and not chosen_ids[0].is_empty()
 	)
 	if resumed.is_empty():
-		_fail("Taking a chest offer should apply a loadout choice and resume combat")
+		var final_state: Dictionary = session.simulation.snapshot()
+		_fail("Chest choice timed out: paused=%s chest_open=%s choice=%s run_over=%s logs=%s" % [
+			final_state["paused"], session._chest_open, chosen_ids[0], session.run_over, final_state["logs"]
+		])
 		return
 	var choice: PackedStringArray = chosen_ids[0].split(":", false, 1)
 	if choice.size() != 2 or session.loadout.weapon_level(choice[1]) == 0:
