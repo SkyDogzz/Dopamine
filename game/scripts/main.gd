@@ -17,6 +17,7 @@ var _last_combat_event_sequence := 0
 
 @onready var _view = $Shell/Content/MainColumn/SimulationView
 @onready var _state_label: Label = $Shell/Header/StateLabel
+@onready var _survival_button: Button = $Shell/Header/SurvivalButton
 @onready var _pause_button: Button = $Shell/Content/MainColumn/Toolbar/Row/PauseButton
 @onready var _step_button: Button = $Shell/Content/MainColumn/Toolbar/Row/StepButton
 @onready var _step_duration: SpinBox = $Shell/Content/MainColumn/Toolbar/Row/StepDuration
@@ -28,6 +29,7 @@ var _last_combat_event_sequence := 0
 
 func _ready() -> void:
 	_apply_theme()
+	_survival_button.pressed.connect(_on_survival_pressed)
 	simulation = ClassDB.instantiate("CombatSimulation")
 	if simulation == null:
 		_state_label.text = "SIMULATION EXTENSION UNAVAILABLE"
@@ -60,6 +62,11 @@ func _ready() -> void:
 	_count.value = 1
 	_step_duration.value = 1.0 / 60.0
 	_refresh()
+
+func _on_survival_pressed() -> void:
+	var error := get_tree().change_scene_to_file("res://scenes/survival_session.tscn")
+	if error != OK:
+		push_error("Could not open Survival prototype scene: %s" % error_string(error))
 
 func _process(delta: float) -> void:
 	_refresh_elapsed += delta

@@ -10,6 +10,7 @@ func _run() -> void:
 		return
 	session.spawn_initial_enemy = false
 	session.wave_spawning_enabled = false
+	session.skip_starting_weapon_choice = true
 	session.weapon_enabled = false
 	session.ordinary_chest_drop_chance = 1.0
 	session.chest_collection_radius = 100.0

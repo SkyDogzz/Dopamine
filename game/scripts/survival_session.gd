@@ -11,6 +11,7 @@ const WAVE_HP_CAP := 12.0
 
 @export var spawn_initial_enemy: bool = true
 @export var wave_spawning_enabled: bool = true
+@export var skip_starting_weapon_choice: bool = false
 @export_group("Prototype wave director — proposed tuning")
 @export var wave_duration_seconds: float = 30.0
 @export_range(1, 400) var wave_population_cap: int = 80
@@ -72,6 +73,7 @@ var player_level := 1
 var player_xp := 0.0
 var player_xp_to_next := 10.0
 var run_over := false
+var kill_count := 0
 var _last_target := Vector2(INF, INF)
 var _last_simulation_time := 0.0
 var _last_combat_event_sequence := 0
@@ -83,6 +85,7 @@ var _pending_xp_orbs: Dictionary = {}
 var _chest_director: RefCounted
 var _world_chests: Array[Dictionary] = []
 var _chest_open := false
+var _starting_weapon_choice_open := false
 
 @onready var _hp_value: Label = $HUD/RunPanel/RunInfo/HPValue
 @onready var _hp_bar: ProgressBar = $HUD/RunPanel/RunInfo/HPBar
@@ -96,6 +99,8 @@ var _chest_open := false
 @onready var _boss_value: Label = $HUD/BossPanel/BossInfo/BossValue
 @onready var _boss_hp_bar: ProgressBar = $HUD/BossPanel/BossInfo/BossHPBar
 @onready var _chest_choice: PanelContainer = $HUD/ChestOverlay/ChestChoice
+@onready var _run_result_overlay: CenterContainer = $HUD/RunResultOverlay
+@onready var _run_result: PanelContainer = $HUD/RunResultOverlay/RunResultPanel
 
 func _ready() -> void:
 	player = PLAYER_SCENE.instantiate()
@@ -112,6 +117,7 @@ func _ready() -> void:
 		set_physics_process(false)
 		return
 	_chest_choice.option_selected.connect(_on_chest_option_selected)
+	_run_result.restart_requested.connect(_restart_run)
 	player_max_hp = simulation.initial_player_hp()
 	player_hp = player_max_hp
 	player_xp_to_next = xp_base_to_next_level
@@ -120,7 +126,12 @@ func _ready() -> void:
 	_publish_player_target()
 	if spawn_initial_enemy and not wave_spawning_enabled:
 		simulation.spawn_enemy("chaser", 1, player.global_position + Vector2(140.0, 0.0), Vector2.ZERO)
-	simulation.resume()
+	if skip_starting_weapon_choice:
+		loadout.choose_starting_weapon("lightning_conductor")
+		simulation.resume()
+	else:
+		_starting_weapon_choice_open = true
+		_chest_choice.present(loadout.starting_weapon_options(), 2, "CHOOSE YOUR STARTING WEAPON")
 
 func _physics_process(_delta: float) -> void:
 	_publish_player_target()
@@ -143,6 +154,7 @@ func _process(_delta: float) -> void:
 		latest_event_sequence = sequence
 		match event["type"]:
 			"death":
+				kill_count += 1
 				var dead_enemy_type: String = str(event.get("target_type", ""))
 				if dead_enemy_type == "mid_boss":
 					_boss_spawn_pending = false
@@ -150,8 +162,7 @@ func _process(_delta: float) -> void:
 				elif dead_enemy_type == "final_boss":
 					_boss_spawn_pending = false
 					wave_director.boss_defeated()
-					run_over = true
-					simulation.pause()
+					_finish_run(true)
 				_roll_enemy_chests(dead_enemy_type, Vector2(
 					float(event["position"]["x"]), float(event["position"]["y"])
 				))
@@ -177,8 +188,7 @@ func _process(_delta: float) -> void:
 	_fire_inferno_sprayer(current_simulation_time, state["paused"])
 	_fire_crimson_daggers(current_simulation_time, state["paused"])
 	if player_hp <= 0.0 and not run_over:
-		run_over = true
-		simulation.pause()
+		_finish_run(false)
 	_refresh_hud(state)
 	queue_redraw()
 
@@ -263,10 +273,26 @@ func open_chest_family(family: String) -> bool:
 	return open_chest(loadout.offers(family))
 
 func _on_chest_option_selected(option_id: String) -> void:
+	if _starting_weapon_choice_open:
+		_starting_weapon_choice_open = false
+		if loadout.choose_starting_weapon(option_id.trim_prefix("start:")):
+			simulation.resume()
+		return
 	_chest_open = false
 	loadout.apply_offer(option_id)
 	chest_option_chosen.emit(option_id)
 	simulation.resume()
+
+func _finish_run(victory: bool) -> void:
+	if run_over:
+		return
+	run_over = true
+	simulation.pause()
+	_run_result_overlay.visible = true
+	_run_result.show_result(victory, wave_director.wave, player_active_time, kill_count)
+
+func _restart_run() -> void:
+	get_tree().reload_current_scene()
 
 func _roll_enemy_chests(enemy_type: String, position: Vector2) -> void:
 	var eligible_families: Array[String] = []
@@ -361,8 +387,7 @@ func _kill_boss_placeholder(boss_type: String) -> void:
 			_boss_spawn_pending = false
 			wave_director.boss_defeated()
 			if wave_director.state == WAVE_DIRECTOR_SCRIPT.State.VICTORY:
-				run_over = true
-				simulation.pause()
+				_finish_run(true)
 			return
 
 func _wave_population(wave_number: int) -> int:

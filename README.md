@@ -32,6 +32,7 @@ godot --path game
 ```
 
 Le premier lancement de l’éditeur importe le projet et vérifie la GDExtension. Le dernier lancement ouvre le Sandbox développeur, sans sauvegarde.
+Le bouton `PLAY SURVIVAL` du Sandbox ouvre la session Survival prototype et son choix d’arme initial.
 
 Vérifications ciblées :
 

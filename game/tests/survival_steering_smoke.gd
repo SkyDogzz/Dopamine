@@ -8,6 +8,7 @@ func _run() -> void:
 	session.weapon_enabled = false
 	session.spawn_initial_enemy = true
 	session.wave_spawning_enabled = false
+	session.skip_starting_weapon_choice = true
 	root.add_child(session)
 	await process_frame
 	if session.simulation == null:

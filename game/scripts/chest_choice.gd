@@ -7,8 +7,8 @@ signal option_selected(option_id: String)
 func _ready() -> void:
 	visible = false
 
-func present(options: Array) -> bool:
-	if options.size() != 3:
+func present(options: Array, required_count: int = 3, heading: String = "CHEST — CHOOSE ONE") -> bool:
+	if required_count < 2 or required_count > 3 or options.size() != required_count:
 		return false
 	var seen_ids: Dictionary = {}
 	for option in options:
@@ -19,6 +19,7 @@ func present(options: Array) -> bool:
 			return false
 		seen_ids[option_id] = true
 	_clear_options()
+	$Content/Title.text = heading
 	for index in range(options.size()):
 		var option: Dictionary = options[index]
 		var button := Button.new()

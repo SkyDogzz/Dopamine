@@ -26,6 +26,7 @@ func _weapon_kills_target(weapon_id: String, relic_id: String, target_hp: float)
 	session.spawn_initial_enemy = false
 	session.wave_spawning_enabled = false
 	session.weapon_enabled = false
+	session.skip_starting_weapon_choice = true
 	root.add_child(session)
 	await process_frame
 	if not session.loadout.apply_offer("weapon:" + weapon_id):
@@ -66,6 +67,7 @@ func _blood_chalice_boosts_kill_heal() -> bool:
 	session.spawn_initial_enemy = false
 	session.wave_spawning_enabled = false
 	session.weapon_enabled = false
+	session.skip_starting_weapon_choice = true
 	session.ordinary_chest_drop_chance = 0.0
 	session.xp_collection_radius = 0.0
 	root.add_child(session)

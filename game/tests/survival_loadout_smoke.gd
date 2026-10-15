@@ -6,8 +6,14 @@ func _initialize() -> void:
 		_fail("Survival loadout script should exist")
 		return
 	var loadout = loadout_script.new(17)
+	if loadout.owned_weapons().size() != 0 or loadout.starting_weapon_options().size() != 2:
+		_fail("A new run should offer two proposed starting weapons")
+		return
+	if not loadout.choose_starting_weapon("lightning_conductor"):
+		_fail("The player should be able to choose an available starting weapon")
+		return
 	if loadout.weapon_level("lightning_conductor") != 1 or loadout.owned_weapons().size() != 1:
-		_fail("A new run should start with the Lightning Conductor prototype")
+		_fail("The chosen starting weapon should enter the loadout at level 1")
 		return
 	var weapon_offers: Array = loadout.offers("weapon")
 	if not _has_three_unique(weapon_offers) or not _contains(weapon_offers, "weapon:lightning_conductor"):

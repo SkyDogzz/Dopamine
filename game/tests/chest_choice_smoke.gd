@@ -20,6 +20,9 @@ func _run() -> void:
 	if not choice.present(options) or not choice.visible:
 		_fail("Chest choice should show exactly three valid offers")
 		return
+	if not choice.present(options.slice(0, 2), 2, "STARTING WEAPON"):
+		_fail("The shared choice modal should also show two starting weapon offers")
+		return
 	var selected_ids := [""]
 	choice.option_selected.connect(func(option_id: String) -> void: selected_ids[0] = option_id)
 	choice.get_node("Content/Options/Choice0").emit_signal("pressed")

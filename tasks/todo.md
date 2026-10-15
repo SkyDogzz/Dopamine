@@ -41,6 +41,7 @@
 - [x] HUD boss : barre HP courants/max et état de victoire distinct de la défaite.
 - [x] Chests Survival : mort→drop→pickup→modal à trois choix→mise à jour du loadout et reprise; sélection du catalogue **[PROPOSÉE]**.
 - [x] Projectiles prototypes Inferno/Crimson et modificateurs de reliques testés; brûlure, explosion, entailles et lifesteal restent à implémenter.
-- [ ] Choix d’arme initiale, évolutions et effets élémentaires complets; confirmer le pool de départ du vertical slice.
+- [x] Écran de choix d’arme initiale parmi deux prototypes **[PROPOSÉS]**, entrée Survival depuis le Sandbox, victoire/défaite avec résumé et redémarrage.
+- [ ] Évolutions et effets élémentaires complets; confirmer le pool de départ du vertical slice.
 - [ ] Vagues, chests, 3 armes/reliques, mid-boss et boss final.
 - [ ] HUD, fin de run, sauvegarde minimale et vérification QA complète.

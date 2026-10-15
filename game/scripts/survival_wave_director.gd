@@ -16,9 +16,11 @@ func advance(delta_seconds: float) -> bool:
 		return false
 	elapsed_in_wave = 0.0
 	if wave == 11:
+		wave = 12
 		state = State.MID_BOSS
 		return true
 	if wave == 23:
+		wave = 24
 		state = State.FINAL_BOSS
 		return true
 	wave += 1

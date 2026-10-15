@@ -11,10 +11,11 @@ const RELICS := {
 	"infernal_heart": "Infernal Heart",
 	"blood_chalice": "Blood Chalice",
 }
+const STARTING_WEAPONS := ["lightning_conductor", "inferno_sprayer"]
 const MAX_SLOTS := 5
 const MAX_LEVEL := 5
 
-var _weapon_levels := {"lightning_conductor": 1}
+var _weapon_levels := {}
 var _relic_levels := {}
 var _rng := RandomNumberGenerator.new()
 
@@ -59,6 +60,22 @@ func offers(family: String) -> Array[Dictionary]:
 		candidates[index] = candidates[other]
 		candidates[other] = temporary
 	return candidates.slice(0, 3)
+
+func starting_weapon_options() -> Array[Dictionary]:
+	var options: Array[Dictionary] = []
+	for weapon_id in STARTING_WEAPONS:
+		options.append({
+			"id": "start:%s" % weapon_id,
+			"title": WEAPONS[weapon_id],
+			"description": "Arme de départ du prototype.",
+		})
+	return options
+
+func choose_starting_weapon(weapon_id: String) -> bool:
+	if not _weapon_levels.is_empty() or not STARTING_WEAPONS.has(weapon_id):
+		return false
+	_weapon_levels[weapon_id] = 1
+	return true
 
 func apply_offer(offer_id: String) -> bool:
 	var parts := offer_id.split(":", false, 1)

@@ -44,6 +44,11 @@ layout_mode = 2
 text = "DOPAMINE  /  SANDBOX DEV"
 theme_override_font_sizes/font_size = 22
 
+[node name="SurvivalButton" type="Button" parent="Shell/Header"]
+custom_minimum_size = Vector2(190, 38)
+layout_mode = 2
+text = "PLAY SURVIVAL"
+
 [node name="HeaderSpacer" type="Control" parent="Shell/Header"]
 layout_mode = 2
 size_flags_horizontal = 3

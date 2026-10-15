@@ -22,7 +22,7 @@ func _run() -> void:
 		return
 	for wave in range(2, 12):
 		director.advance(30.0)
-	if director.state != director_script.State.MID_BOSS or director.wave != 11:
+	if director.state != director_script.State.MID_BOSS or director.wave != 12:
 		_fail("The mid-boss should follow wave 11")
 		return
 	if director.advance(30.0) or not director.boss_defeated() or director.wave != 13:
@@ -30,7 +30,7 @@ func _run() -> void:
 		return
 	for wave in range(13, 24):
 		director.advance(30.0)
-	if director.state != director_script.State.FINAL_BOSS or director.wave != 23:
+	if director.state != director_script.State.FINAL_BOSS or director.wave != 24:
 		_fail("The final boss should follow wave 23")
 		return
 	if not director.boss_defeated() or director.state != director_script.State.VICTORY:
@@ -40,6 +40,7 @@ func _run() -> void:
 	session.wave_spawning_enabled = false
 	session.weapon_enabled = false
 	session.player_hp = 1000.0
+	session.skip_starting_weapon_choice = true
 	root.add_child(session)
 	await process_frame
 	while session.wave_director.state != director_script.State.VICTORY:
@@ -61,6 +62,13 @@ func _run() -> void:
 		return
 	if session.get_node("HUD/RunPanel/RunInfo/RunState").text != "VICTORY":
 		_fail("The final boss should show a distinct victory state")
+		return
+	var result_panel = session.get_node("HUD/RunResultOverlay/RunResultPanel")
+	if not session.get_node("HUD/RunResultOverlay").visible or result_panel.get_node("Content/Title").text != "VICTORY":
+		_fail("Winning should display the victory result screen")
+		return
+	if not result_panel.get_node("Content/Summary").text.begins_with("WAVE 24"):
+		_fail("A completed Survival run should record the final boss as wave 24")
 		return
 	print("Survival wave director smoke passed")
 	quit()

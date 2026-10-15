@@ -55,10 +55,12 @@ Livrer d’abord un Sandbox développeur autonome, puis le premier playable Surv
 - [x] Poser le contrat testable du directeur de drop proposé et du modal à trois choix, sans accès aux saves Sandbox.
 - [x] Relier les drops aux morts/pickup et appliquer les choix à un loadout de run avec capacités et niveaux plafonnés.
 - [x] Ajouter les projectiles Inferno/Crimson et relier les trois reliques à des modificateurs provisoires vérifiés.
-- [ ] Compléter les comportements des 3 armes/reliques, l’écran de choix d’arme initiale et confirmer le pool de contenu du vertical slice.
+- [x] Ajouter l’écran de choix de départ et l’entrée vers Survival depuis le Sandbox; la paire de départ reste **[PROPOSÉE]**.
+- [ ] Confirmer le pool de contenu du vertical slice et compléter les effets/évolutions des 3 armes/reliques.
 - [x] Ajouter un HUD Survival minimal pour le HP, temps actif, arme prototype, XP/niveau et état de run.
 - [x] Afficher les HP courants/max des placeholders boss et distinguer l’état logique de victoire de la mort.
-- [ ] Implémenter les patterns/récompenses de boss et un écran de fin de run complet avec sauvegarde minimale isolée du Sandbox.
+- [x] Ajouter un écran de fin avec résumé de run et redémarrage local sans sauvegarde.
+- [ ] Implémenter les patterns/récompenses de boss et la sauvegarde minimale isolée du Sandbox.
 - [ ] Vérifier une run Survival complète de 24 vagues et les critères QA associés.
 - [ ] Checkpoint final : build Linux, démarrage sans save existante, run complète et régression Sandbox.
 

@@ -7,6 +7,7 @@ func _run() -> void:
 	var sandbox: Control = load("res://scenes/main.tscn").instantiate()
 	root.add_child(sandbox)
 	await process_frame
+	assert(sandbox.get_node("Shell/Header/SurvivalButton").text == "PLAY SURVIVAL", "Sandbox should expose the Survival prototype entry")
 	assert(sandbox.simulation != null, "Sandbox UI should create its simulation without a save")
 
 	var count_spin: SpinBox = sandbox.get_node("Shell/Content/SidePanel/Sections/SpawnPanel/SpawnForm/TypeRow/CountSpin")
