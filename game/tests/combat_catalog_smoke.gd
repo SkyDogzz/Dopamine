@@ -21,6 +21,11 @@ func _initialize() -> void:
 	if loadout._weapons.size() != 3 or loadout._relics.size() != 3:
 		_fail("Survival loadout should keep unimplemented catalog entries out of chest offers")
 		return
+	var starting_options: Array = loadout.starting_weapon_options()
+	if starting_options.size() != 2 or starting_options[0]["title"] != "Lightning Conductor" or \
+			starting_options[1]["title"] != "Inferno Sprayer":
+		_fail("Starting weapon choices should resolve names from the loaded catalog")
+		return
 	print("Combat catalog smoke passed")
 	quit()
 

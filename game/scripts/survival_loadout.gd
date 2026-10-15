@@ -75,7 +75,7 @@ func starting_weapon_options() -> Array[Dictionary]:
 	for weapon_id in STARTING_WEAPONS:
 		options.append({
 			"id": "start:%s" % weapon_id,
-			"title": WEAPONS[weapon_id],
+			"title": _weapons[weapon_id],
 			"description": "Arme de départ du prototype.",
 			"icon": ICONS[weapon_id],
 		})
