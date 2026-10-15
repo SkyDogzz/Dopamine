@@ -8,6 +8,22 @@
 
 namespace dopamine::sim {
 
+double health_decay_amount(double active_time_seconds, double delta_seconds, HealthDecayConfig config) {
+	if (!std::isfinite(active_time_seconds) || active_time_seconds < 0.0 ||
+			!std::isfinite(delta_seconds) || delta_seconds < 0.0 ||
+			!std::isfinite(config.base_rate) || config.base_rate < 0.0 ||
+			!std::isfinite(config.increase_per_active_second) || config.increase_per_active_second < 0.0) {
+		throw std::invalid_argument("invalid health decay interval or configuration");
+	}
+	const double amount = delta_seconds *
+			(config.base_rate + config.increase_per_active_second *
+					(active_time_seconds + delta_seconds * 0.5));
+	if (!std::isfinite(amount)) {
+		throw std::overflow_error("health decay amount overflowed");
+	}
+	return amount;
+}
+
 EntityId SimulationCore::spawn(std::string type, float x, float y, float hp, float velocity_x, float velocity_y) {
 	if (type.empty() || !std::isfinite(x) || !std::isfinite(y) || !std::isfinite(hp) || hp <= 0.0F ||
 			!std::isfinite(velocity_x) || !std::isfinite(velocity_y)) {

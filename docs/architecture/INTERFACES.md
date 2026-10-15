@@ -37,6 +37,8 @@ Chaque impact produit un événement `damage` ; un impact létal produit ensuite
 
 `set_steering_target(position, max_speed, separation_radius, separation_weight)` transmet une cible monde fournie par le mode. Une commande `Step` ou une frame active recalcule le steering des entités simulées avant l’intégration. Les valeurs de vitesse/rayon/poids sont configurables et restent provisoires ; l’appelant conserve l’autorité sur la position du joueur, conformément au point encore **OUVERT** concernant joueur/boss.
 
+`health_decay_amount(active_time_seconds, delta_seconds)` calcule une perte sans muter d’état HP. Avec la config par défaut issue de la formule **[PROPOSÉE]** du GDD, le calcul exact est `delta × (base_rate + slope × (active_time + delta/2))`, avec base 1,5 HP/s et pente 0,004 HP/s². `HealthDecayConfig` permet de tester/ajuster les coefficients. Le GDD fixe **[VALIDÉ]** le HP initial à 100 ; le cœur expose cette constante, mais l’instance de HP et l’horloge active restent à intégrer au contrat du mode quand l’autorité joueur sera définie.
+
 ## Scénarios headless Sandbox P1
 
 `game/scripts/scenario_runner.gd` lit un scénario JSON versionné (limite 1 Mio et 1 000 commandes), soumet les mêmes commandes au pont `CombatSimulation`, vérifie les attentes déclarées et exporte un JSON horodaté avec la version Godot, le temps simulé, les métriques, les entités, les événements de combat et les logs. Les scénarios acceptent `spawn`, `spawn_projectile`, `despawn`, `kill_all`, `pause`, `resume`, `step`, `set_speed`, `set_steering_target` et `reset`. Le runner ne charge ni n’écrit de sauvegarde normale.

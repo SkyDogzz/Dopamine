@@ -19,6 +19,27 @@ void require(bool condition, const char *message) {
 } // namespace
 
 int main() {
+	using dopamine::sim::health_decay_amount;
+	require(dopamine::sim::gdd_validated_player_initial_hp == 100.0F,
+			"validated initial player HP should remain 100");
+	require(std::abs(health_decay_amount(0.0, 60.0) - 97.2) < 0.000001,
+			"proposed health decay should match the GDD first-minute example");
+	require(std::abs(health_decay_amount(0.0, 720.0) - 2116.8) < 0.000001,
+			"proposed health decay should match the GDD twelve-minute example");
+	require(std::abs(health_decay_amount(60.0, 60.0) - 111.6) < 0.000001,
+			"health decay should use the active-time interval start");
+	require(health_decay_amount(15.0, 0.0) == 0.0,
+			"zero active duration should cause no health decay");
+	require(health_decay_amount(10.0, 10.0, {.base_rate = 2.0, .increase_per_active_second = 0.0}) == 20.0,
+			"health decay coefficients should remain configurable");
+	bool rejected_decay_interval = false;
+	try {
+		health_decay_amount(-1.0, 1.0);
+	} catch (const std::invalid_argument &) {
+		rejected_decay_interval = true;
+	}
+	require(rejected_decay_interval, "negative active time must be rejected by the decay rule");
+
 	SimulationCore simulation;
 	const auto first = simulation.spawn("chaser", 1.0F, 2.0F, 10.0F, 5.0F, 0.0F);
 	require(simulation.entity_count() == 1, "spawn should add one entity");

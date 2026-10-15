@@ -61,6 +61,8 @@ Pour le steering, l’index spatial est construit une fois par passe et réutili
 
 P2 implémente les projectiles ECS comme entités distinctes, leur durée de vie et un test balayé relatif au mouvement des cibles. Les impacts passent par `apply_damage`, émettent des événements séquencés et appliquent le despawn en fin de passe. Les rayons d’ennemi (12 unités) et le rayon projectile par défaut (3 unités) sont des paramètres provisoires faute de hitboxes validées.
 
+La règle de HP decay est une fonction pure du temps actif fourni par le mode et d’une durée. Elle reprend la formule exacte marquée **[PROPOSÉ]** dans le GDD ; la propriété du HP joueur et de son horloge n’est pas encore fixée par le code.
+
 ## Delta variable : risques et invariants
 
 **ACCEPTÉ :** delta variable, non déterministe. **PROPOSÉ :** bornage par sous-étapes lorsque `dt` devient excessif. Ne jamais jeter silencieusement le temps excédentaire : conserver un accumulateur ou documenter le ralentissement. Les statuts exprimés en secondes doivent produire des résultats raisonnablement stables quel que soit le nombre de frames ; les collisions rapides utilisent des swept tests. `Step` dans le Sandbox signifie avancer une durée explicite, par exemple 1/60 s, sans imposer un tick fixe global.

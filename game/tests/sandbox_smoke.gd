@@ -6,6 +6,10 @@ func _initialize() -> void:
 func _run() -> void:
 	var simulation = ClassDB.instantiate("CombatSimulation")
 	assert(simulation != null, "CombatSimulation GDExtension class is unavailable")
+	assert(is_equal_approx(simulation.health_decay_amount(0.0, 60.0), 97.2),
+			"GDExtension decay rule should match the proposed first-minute GDD example")
+	assert(is_equal_approx(simulation.health_decay_amount(0.0, 720.0), 2116.8),
+			"GDExtension decay rule should match the proposed twelve-minute GDD example")
 	assert(simulation.spawn("", 1, Vector2.ZERO, 10.0, Vector2.ZERO) == 0)
 	assert(simulation.set_speed(10.0) == 0)
 

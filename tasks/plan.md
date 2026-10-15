@@ -37,8 +37,9 @@ Livrer d’abord un Sandbox développeur autonome, puis le premier playable Surv
 - [x] Ajouter le spatial hash uniforme minimal et des tests ciblés de requête de rayon.
 - [x] Ajouter la poursuite d’une cible de mode et la séparation locale via un index construit une fois par passe.
 - [x] Ajouter les projectiles ECS, leur expiration, le swept circle et les événements dégâts/mort acquittables.
+- [x] Ajouter le calcul pur et testable du HP decay, sans attribuer au cœur l’autorité sur le HP joueur.
 - [ ] Ajouter le déplacement joueur et les profils des ennemis initiaux ; le contrat d’autorité joueur/boss reste à arbitrer avant liaison au mode.
-- [ ] Compléter les modificateurs de dégâts, statuts, effets de soin et HP decay.
+- [ ] Intégrer le HP decay à l’horloge active et à la propriété du HP du mode ; compléter les modificateurs, statuts et soins.
 - [ ] Tester les règles indépendamment dans le Sandbox et respecter les budgets de simulation.
 
 ### Phase 4 — Premier playable Survival

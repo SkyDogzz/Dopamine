@@ -24,7 +24,8 @@
 - [x] Spatial hash uniforme minimal avec requête de rayon native ; paramètres de cellule à profiler.
 - [x] Steering de poursuite et séparation locale avec cible fournie par le mode ; paramètres initiaux provisoires.
 - [x] Projectiles ECS, collisions balayées, dégâts centraux, mort et file d’événements non perdus tant que l’acquittement est différé.
-- [ ] HP decay, soins et règles de combat testables dans le Sandbox.
+- [x] Fonction pure de HP decay, paramètres par défaut encore proposés, exemples GDD validés par test.
+- [ ] Relier le HP decay à l’horloge du mode ; ajouter soins et autres règles de combat dans le Sandbox.
 
 ## Phase 4 — Premier playable Survival
 

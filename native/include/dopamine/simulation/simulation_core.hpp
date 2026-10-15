@@ -10,6 +10,8 @@
 
 namespace dopamine::sim {
 
+inline constexpr float gdd_validated_player_initial_hp = 100.0F;
+
 struct EntityId {
 	uint32_t index = 0;
 	uint32_t generation = 0;
@@ -42,6 +44,14 @@ struct Health {
 	float current = 1.0F;
 	float maximum = 1.0F;
 };
+
+struct HealthDecayConfig {
+	double base_rate = 1.5;
+	double increase_per_active_second = 0.004;
+};
+
+double health_decay_amount(double active_time_seconds, double delta_seconds,
+		HealthDecayConfig config = {});
 
 struct EnemyType {
 	std::string id;

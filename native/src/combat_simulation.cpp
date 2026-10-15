@@ -25,6 +25,8 @@ void CombatSimulation::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("set_steering_target", "position", "max_speed", "separation_radius", "separation_weight"),
 			&CombatSimulation::set_steering_target);
 	ClassDB::bind_method(D_METHOD("acknowledge_events", "event_sequence"), &CombatSimulation::acknowledge_events);
+	ClassDB::bind_method(D_METHOD("health_decay_amount", "active_time_seconds", "delta_seconds"),
+			&CombatSimulation::health_decay_amount);
 	ClassDB::bind_method(D_METHOD("reset"), &CombatSimulation::reset);
 	ClassDB::bind_method(D_METHOD("snapshot"), &CombatSimulation::snapshot);
 }
@@ -145,6 +147,10 @@ int64_t CombatSimulation::acknowledge_events(int64_t event_sequence) {
 	command.type = CommandType::AcknowledgeEvents;
 	command.event_sequence = static_cast<uint64_t>(event_sequence);
 	return submit(std::move(command));
+}
+
+double CombatSimulation::health_decay_amount(double active_time_seconds, double delta_seconds) const {
+	return dopamine::sim::health_decay_amount(active_time_seconds, delta_seconds);
 }
 
 int64_t CombatSimulation::reset() {
