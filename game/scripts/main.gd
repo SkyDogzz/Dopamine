@@ -1,15 +1,196 @@
 extends Control
 
+const COLOR_TEXT := Color("#e5f2f5")
+const COLOR_MUTED := Color("#8ea3ad")
+const COLOR_PANEL := Color("#101923")
+const COLOR_FIELD := Color("#0a111a")
+const COLOR_BORDER := Color("#263746")
+const COLOR_CYAN := Color("#45e5ed")
+const COLOR_PINK := Color("#ff5ca8")
+const COLOR_AMBER := Color("#ffd166")
+
+var simulation: Object
+var _refresh_elapsed := 0.0
+var _selected_index := -1
+var _selected_generation := -1
+
+@onready var _view = $Shell/Content/MainColumn/SimulationView
+@onready var _state_label: Label = $Shell/Header/StateLabel
+@onready var _pause_button: Button = $Shell/Content/MainColumn/Toolbar/Row/PauseButton
+@onready var _step_button: Button = $Shell/Content/MainColumn/Toolbar/Row/StepButton
+@onready var _step_duration: SpinBox = $Shell/Content/MainColumn/Toolbar/Row/StepDuration
+@onready var _speed_select: OptionButton = $Shell/Content/MainColumn/Toolbar/Row/SpeedSelect
+@onready var _entity_type: OptionButton = $Shell/Content/SidePanel/Sections/SpawnPanel/SpawnForm/TypeRow/EntityType
+@onready var _count: SpinBox = $Shell/Content/SidePanel/Sections/SpawnPanel/SpawnForm/TypeRow/CountSpin
+@onready var _entity_info: RichTextLabel = $Shell/Content/SidePanel/Sections/InspectorPanel/InspectorForm/EntityInfo
+@onready var _log_text: RichTextLabel = $Shell/Content/SidePanel/Sections/LogPanel/LogForm/LogText
+
 func _ready() -> void:
-	var simulation = ClassDB.instantiate("CombatSimulation")
-	assert(simulation != null, "CombatSimulation GDExtension class is unavailable")
-	assert(simulation.step(0.0) == 0, "Simulation bridge should reject an empty step")
-	assert(simulation.set_speed(10.0) == 0, "Simulation bridge should reject an unsafe speed")
-	assert(simulation.spawn("", 1, Vector2.ZERO, 10.0, Vector2.ZERO) == 0, "Simulation bridge should reject an empty type")
-	var sequence: int = simulation.spawn("chaser", 1, Vector2(1.0, 2.0), 10.0, Vector2(2.0, 0.0))
-	assert(sequence > 0, "Simulation worker rejected spawn")
-	await get_tree().create_timer(0.05).timeout
+	_apply_theme()
+	simulation = ClassDB.instantiate("CombatSimulation")
+	if simulation == null:
+		_state_label.text = "SIMULATION EXTENSION UNAVAILABLE"
+		push_error("CombatSimulation GDExtension class is unavailable")
+		return
+
+	for entity_type in ["chaser", "sprinter", "tank", "shooter"]:
+		_entity_type.add_item(entity_type.to_upper())
+		_entity_type.set_item_metadata(_entity_type.item_count - 1, entity_type)
+	for speed in [0.25, 0.5, 1.0, 2.0, 4.0]:
+		_speed_select.add_item("×%s" % speed)
+		_speed_select.set_item_metadata(_speed_select.item_count - 1, speed)
+
+	$Shell/Content/MainColumn/Toolbar/Row/PauseButton.pressed.connect(_on_pause_pressed)
+	$Shell/Content/MainColumn/Toolbar/Row/StepButton.pressed.connect(_on_step_pressed)
+	$Shell/Content/MainColumn/Toolbar/Row/SpeedSelect.item_selected.connect(_on_speed_selected)
+	$Shell/Content/MainColumn/Toolbar/Row/ResetButton.pressed.connect(_on_reset_pressed)
+	$Shell/Content/SidePanel/Sections/SpawnPanel/SpawnForm/SpawnActions/SpawnButton.pressed.connect(_on_spawn_pressed)
+	$Shell/Content/SidePanel/Sections/SpawnPanel/SpawnForm/SpawnActions/DespawnButton.pressed.connect(_on_despawn_pressed)
+	$Shell/Content/SidePanel/Sections/SpawnPanel/SpawnForm/SpawnActions/KillButton.pressed.connect(_on_kill_all_pressed)
+	_view.entity_selected.connect(_on_entity_selected)
+
+	$Shell/Header/Title.add_theme_color_override("font_color", COLOR_CYAN)
+	$Shell/Content/SidePanel/Sections/SpawnPanel/SpawnForm/SpawnTitle.add_theme_color_override("font_color", COLOR_CYAN)
+	$Shell/Content/SidePanel/Sections/InspectorPanel/InspectorForm/InspectorTitle.add_theme_color_override("font_color", COLOR_CYAN)
+	$Shell/Content/SidePanel/Sections/LogPanel/LogForm/LogTitle.add_theme_color_override("font_color", COLOR_CYAN)
+	$Shell/Content/SidePanel/Sections/SpawnPanel/SpawnForm/SpawnActions/DespawnButton.add_theme_color_override("font_color", COLOR_AMBER)
+	$Shell/Content/SidePanel/Sections/SpawnPanel/SpawnForm/SpawnActions/KillButton.add_theme_color_override("font_color", COLOR_PINK)
+	_step_duration.min_value = 0.001
+	_count.value = 1
+	_step_duration.value = 1.0 / 60.0
+	_refresh()
+
+func _process(delta: float) -> void:
+	_refresh_elapsed += delta
+	if _refresh_elapsed >= 0.1:
+		_refresh_elapsed = 0.0
+		_refresh()
+
+func _apply_theme() -> void:
+	var ui_theme := Theme.new()
+	ui_theme.default_font_size = 14
+	ui_theme.set_color("font_color", "Label", COLOR_TEXT)
+	ui_theme.set_color("font_color", "Button", COLOR_TEXT)
+	ui_theme.set_color("font_hover_color", "Button", COLOR_TEXT)
+	ui_theme.set_color("font_pressed_color", "Button", Color("#071015"))
+	ui_theme.set_color("font_disabled_color", "Button", COLOR_MUTED)
+	ui_theme.set_color("font_color", "LineEdit", COLOR_TEXT)
+	ui_theme.set_color("font_placeholder_color", "LineEdit", COLOR_MUTED)
+	ui_theme.set_color("font_color", "RichTextLabel", COLOR_TEXT)
+	ui_theme.set_stylebox("panel", "PanelContainer", _flat(COLOR_PANEL, COLOR_BORDER, 1))
+	ui_theme.set_stylebox("normal", "Button", _flat(COLOR_FIELD, COLOR_BORDER, 1))
+	ui_theme.set_stylebox("hover", "Button", _flat(Color("#142330"), COLOR_CYAN, 1))
+	ui_theme.set_stylebox("pressed", "Button", _flat(COLOR_CYAN, COLOR_CYAN, 1))
+	ui_theme.set_stylebox("focus", "Button", _flat(COLOR_FIELD, COLOR_CYAN, 2))
+	ui_theme.set_stylebox("normal", "LineEdit", _flat(COLOR_FIELD, COLOR_BORDER, 1))
+	ui_theme.set_stylebox("focus", "LineEdit", _flat(COLOR_FIELD, COLOR_CYAN, 1))
+	theme = ui_theme
+
+func _flat(background: Color, border: Color, border_width: int) -> StyleBoxFlat:
+	var style := StyleBoxFlat.new()
+	style.bg_color = background
+	style.border_color = border
+	style.set_border_width_all(border_width)
+	style.set_corner_radius_all(3)
+	style.content_margin_left = 10.0
+	style.content_margin_top = 6.0
+	style.content_margin_right = 10.0
+	style.content_margin_bottom = 6.0
+	return style
+
+func _refresh() -> void:
 	var state: Dictionary = simulation.snapshot()
-	assert(state["last_sequence"] >= sequence, "Worker did not acknowledge spawn")
-	assert(state["entities"].size() == 1, "Worker snapshot should contain spawned entity")
-	print("Dopamine C++ simulation bridge loaded and responsive")
+	var paused: bool = state["paused"]
+	_state_label.text = "PAUSED  /  NO SAVE" if paused else "RUNNING  /  NO SAVE"
+	_state_label.add_theme_color_override("font_color", COLOR_AMBER if paused else COLOR_CYAN)
+	_pause_button.text = "RESUME" if paused else "PAUSE"
+	_step_button.disabled = not paused
+	_select_speed(float(state["speed_multiplier"]))
+	_view.set_entities(state["entities"])
+	_view.set_selected_entity(_selected_index, _selected_generation)
+
+	var metrics: Dictionary = state["metrics"]
+	$Shell/Content/MainColumn/Metrics/MetricRow/MetricFPS.text = "FPS  %d" % Engine.get_frames_per_second()
+	$Shell/Content/MainColumn/Metrics/MetricRow/MetricFrame.text = "FRAME  %.2f ms" % metrics["frame_time_ms"]
+	$Shell/Content/MainColumn/Metrics/MetricRow/MetricTime.text = "SIM  %.2f s" % state["simulation_time"]
+	$Shell/Content/MainColumn/Metrics/MetricRow/MetricEntities.text = "ENTITIES  %d" % metrics["entity_count"]
+	$Shell/Content/MainColumn/Metrics/MetricRow/MetricProjectiles.text = "PROJECTILES  %d" % metrics["projectile_count"]
+	$Shell/Content/MainColumn/Metrics/MetricRow/MetricCollisions.text = "COLLISIONS  %d" % metrics["collision_count"]
+	_log_text.text = "\n".join(state["logs"])
+	_refresh_inspector(state["entities"])
+
+func _select_speed(speed: float) -> void:
+	for index in range(_speed_select.item_count):
+		if is_equal_approx(float(_speed_select.get_item_metadata(index)), speed):
+			if _speed_select.selected != index:
+				_speed_select.select(index)
+			return
+
+func _refresh_inspector(entities: Array) -> void:
+	for entity in entities:
+		var id: Dictionary = entity["id"]
+		if id["index"] == _selected_index and id["generation"] == _selected_generation:
+			var components: Dictionary = entity["components"]
+			var transform: Dictionary = components["Transform2D"]
+			var velocity: Dictionary = components["Velocity2D"]
+			var health: Dictionary = components["Health"]
+			var speed := Vector2(velocity["x"], velocity["y"]).length()
+			_entity_info.text = "[b]ENTITY %04d / G%03d[/b]\n[b]TYPE[/b]  %s\n[b]POSITION[/b]  (%.1f, %.1f)\n[b]VELOCITY[/b]  (%.1f, %.1f)  /  SPEED %.1f\n[b]HEALTH[/b]  %.1f / %.1f" % [
+				_selected_index, _selected_generation, components["EnemyType"],
+				transform["x"], transform["y"], velocity["x"], velocity["y"], speed, health["current"], health["maximum"]
+			]
+			return
+	_selected_index = -1
+	_selected_generation = -1
+	_entity_info.text = "Select an entity in the simulation view."
+
+func _on_pause_pressed() -> void:
+	var state: Dictionary = simulation.snapshot()
+	if state["paused"]:
+		simulation.resume()
+	else:
+		simulation.pause()
+
+func _on_step_pressed() -> void:
+	if simulation.step(_step_duration.value) == 0:
+		_state_label.text = "STEP REJECTED"
+
+func _on_speed_selected(index: int) -> void:
+	simulation.set_speed(float(_speed_select.get_item_metadata(index)))
+
+func _on_reset_pressed() -> void:
+	_selected_index = -1
+	_selected_generation = -1
+	simulation.reset()
+
+func _on_spawn_pressed() -> void:
+	var row := _entity_type.selected
+	var entity_type: String = _entity_type.get_item_metadata(row)
+	var position := Vector2(
+		$Shell/Content/SidePanel/Sections/SpawnPanel/SpawnForm/PositionRow/XSpin.value,
+		$Shell/Content/SidePanel/Sections/SpawnPanel/SpawnForm/PositionRow/YSpin.value
+	)
+	var velocity := Vector2(
+		$Shell/Content/SidePanel/Sections/SpawnPanel/SpawnForm/HealthRow/VelocityXSpin.value,
+		$Shell/Content/SidePanel/Sections/SpawnPanel/SpawnForm/HealthRow/VelocityYSpin.value
+	)
+	var hp: float = $Shell/Content/SidePanel/Sections/SpawnPanel/SpawnForm/HealthRow/HealthSpin.value
+	if simulation.spawn(entity_type, int(_count.value), position, hp, velocity) == 0:
+		_state_label.text = "SPAWN REJECTED"
+
+func _on_kill_all_pressed() -> void:
+	simulation.kill_all()
+	_selected_index = -1
+	_selected_generation = -1
+
+func _on_despawn_pressed() -> void:
+	if _selected_index < 0 or _selected_generation <= 0:
+		return
+	simulation.despawn(_selected_index, _selected_generation)
+	_selected_index = -1
+	_selected_generation = -1
+
+func _on_entity_selected(index: int, generation: int) -> void:
+	_selected_index = index
+	_selected_generation = generation
+	_refresh()

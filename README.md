@@ -19,3 +19,24 @@
 - **OUVERT** : arbitrage à faire ou benchmark nécessaire.
 
 **Attention :** le chapitre architecture du GDD v1.5 précède les 60 décisions techniques récentes. En cas de conflit, les ADR acceptés et `ARCHITECTURE.md` prévalent. Le mode Endless standard contient toujours des choix provisoires. Les chiffres d'équilibrage indiqués comme proposés ne sont pas définitifs.
+
+## Développement Linux
+
+Prérequis : Godot 4.7.2, CMake 3.21 ou supérieur, Git et un compilateur C++23. CMake récupère le commit verrouillé de `godot-cpp` lors de la configuration.
+
+```bash
+cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug
+cmake --build build --parallel 4
+godot --headless --editor --path game --quit
+godot --path game
+```
+
+Le premier lancement de l’éditeur importe le projet et vérifie la GDExtension. Le dernier lancement ouvre le Sandbox développeur, sans sauvegarde.
+
+Vérifications ciblées :
+
+```bash
+ctest --test-dir build --output-on-failure
+godot --headless --path game --script res://tests/sandbox_smoke.gd
+godot --headless --path game --script res://tests/sandbox_ui_smoke.gd
+```

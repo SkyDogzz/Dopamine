@@ -14,8 +14,8 @@
 
 ## Phase 2 — Sandbox développeur MVP
 
-- [ ] Contrôles de simulation et spawn/despawn.
-- [ ] Inspecteur, métriques et logs.
+- [x] Contrôles de simulation et spawn/despawn.
+- [x] Inspecteur, métriques et logs.
 - [ ] Runner headless, export et isolation des saves.
 
 ## Phase 3 — Combat core
