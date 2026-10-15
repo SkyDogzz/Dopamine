@@ -1,0 +1,130 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Theme" path="res://themes/dopamine_ui.tres" id="1_theme"]
+[ext_resource type="Script" path="res://scripts/launch_menu.gd" id="2_script"]
+
+[node name="LaunchMenu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_theme")
+script = ExtResource("2_script")
+
+[node name="Background" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.027451, 0.039216, 0.058824, 1)
+
+[node name="Content" type="CenterContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_left = 0.025
+anchor_top = 0.035
+anchor_right = 0.975
+anchor_bottom = 0.965
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Card" type="PanelContainer" parent="Content"]
+custom_minimum_size = Vector2(900, 480)
+layout_mode = 2
+
+[node name="Columns" type="HBoxContainer" parent="Content/Card"]
+layout_mode = 2
+theme_override_constants/separation = 32
+
+[node name="Identity" type="VBoxContainer" parent="Content/Card/Columns"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+alignment = 1
+theme_override_constants/separation = 12
+
+[node name="Edition" type="Label" parent="Content/Card/Columns/Identity"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.360784, 0.658824, 1)
+theme_override_font_sizes/font_size = 14
+text = "SURVIVAL  /  NEON ARCADE"
+
+[node name="Title" type="Label" parent="Content/Card/Columns/Identity"]
+custom_minimum_size = Vector2(0, 96)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.270588, 0.898039, 0.929412, 1)
+theme_override_font_sizes/font_size = 52
+text = "DOPAMINE"
+vertical_alignment = 1
+
+[node name="Tagline" type="Label" parent="Content/Card/Columns/Identity"]
+custom_minimum_size = Vector2(0, 60)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.556863, 0.639216, 0.678431, 1)
+theme_override_font_sizes/font_size = 18
+text = "SURVIVE THE SIGNAL."
+vertical_alignment = 1
+
+[node name="Accent" type="ColorRect" parent="Content/Card/Columns/Identity"]
+custom_minimum_size = Vector2(56, 3)
+layout_mode = 2
+color = Color(1, 0.360784, 0.658824, 1)
+
+[node name="Spacer" type="Control" parent="Content/Card/Columns/Identity"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="BuildLabel" type="Label" parent="Content/Card/Columns/Identity"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.356863, 0.443137, 0.490196, 1)
+theme_override_font_sizes/font_size = 12
+text = "A NEON SURVIVAL GAME"
+
+[node name="Menu" type="VBoxContainer" parent="Content/Card/Columns"]
+custom_minimum_size = Vector2(280, 0)
+layout_mode = 2
+size_flags_vertical = 3
+alignment = 1
+theme_override_constants/separation = 10
+
+[node name="MenuLabel" type="Label" parent="Content/Card/Columns/Menu"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.556863, 0.639216, 0.678431, 1)
+text = "MENU PRINCIPAL"
+
+[node name="PlayButton" type="Button" parent="Content/Card/Columns/Menu"]
+custom_minimum_size = Vector2(0, 56)
+layout_mode = 2
+focus_mode = 2
+theme_override_colors/font_color = Color(0.270588, 0.898039, 0.929412, 1)
+theme_override_font_sizes/font_size = 20
+text = "JOUER"
+
+[node name="OptionsButton" type="Button" parent="Content/Card/Columns/Menu"]
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 2
+focus_mode = 2
+text = "OPTIONS"
+
+[node name="QuitButton" type="Button" parent="Content/Card/Columns/Menu"]
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 2
+focus_mode = 2
+text = "QUITTER"
+
+[node name="MenuSpacer" type="Control" parent="Content/Card/Columns/Menu"]
+custom_minimum_size = Vector2(0, 18)
+layout_mode = 2
+
+[node name="SandboxButton" type="Button" parent="Content/Card/Columns/Menu"]
+custom_minimum_size = Vector2(0, 38)
+layout_mode = 2
+focus_mode = 2
+theme_override_colors/font_color = Color(0.556863, 0.639216, 0.678431, 1)
+theme_override_font_sizes/font_size = 13
+text = "SANDBOX DEV"

@@ -1,17 +1,17 @@
 # Tâches : `launch-navigation`
 
-**Statut : proposé pour validation.** N’exécuter aucune tâche avant validation de cette liste et du [`plan`](plan-ui-launch-navigation.md).
+**Statut : validé par l’utilisateur.**
 
 ## Tâche 1 — Accueil et contrat du hub
 
 **Description :** Créer une scène d’accueil thémée avec Jouer, Options, Quitter et l’accès secondaire Sandbox, en définissant `play_requested` sans fabriquer la scène du hub.
 
 **Critères d’acceptation :**
-- [ ] L’accueil contient les quatre destinations, avec accès Sandbox visuellement secondaire.
-- [ ] Les contrôles sont focusables, ordonnés et gardent le focus visible.
-- [ ] Jouer émet un signal vérifiable sans démarrer directement une run ni pointer sur une fausse scène.
+- [x] L’accueil contient les quatre destinations, avec accès Sandbox visuellement secondaire.
+- [x] Les contrôles sont focusables, ordonnés et gardent le focus visible.
+- [x] Jouer émet un signal vérifiable sans démarrer directement une run ni pointer sur une fausse scène.
 
-**Vérification :** Smoke ciblé de la scène, du focus, de l’ordre des boutons et du signal Jouer; inspection fenêtrée.
+**Vérification :** Smoke ciblé `launch_navigation_smoke.gd` de la scène, du focus initial et du signal Jouer passé sous Godot 4.7.2 headless; inspection fenêtrée complète au checkpoint.
 
 **Dépendances :** ui-foundation, ui-settings.
 
