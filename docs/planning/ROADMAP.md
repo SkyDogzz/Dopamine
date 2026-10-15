@@ -357,19 +357,20 @@ Travail requis :
 
 ### P5.4 — Ennemis, élites et boss
 
-**Avancement :** le profil Shooter tire maintenant des projectiles lents après un télégraphe visible ; le projectile est esquivable et sa collision joueur respecte la pause et l’invulnérabilité. Dégâts, vitesse et cadence restent **[PROPOSÉS]**. Les familles support/explosive, élites et patterns de boss restent à faire.
+**Avancement :** le profil Shooter tire des projectiles lents après un télégraphe visible ; la pause et l’invulnérabilité s’appliquent. Le profil Buffer (35 HP, vitesse 55, menace 2) renforce de 20 % la vitesse des alliés dans son aura de 150 unités, visible en Survival et dans le Sandbox ; l’effet cesse à sa mort. Ses stats, rayon, multiplicateur et taux d’apparition restent **[PROPOSÉS]**. Les familles explosives, élites et patterns de boss restent à faire.
 
 - [ ] **P5.4.1 — Familles ennemies**
   - [ ] Ajouter une famille de mêlée avec spawn, steering et mort.
   - [ ] Ajouter une famille rapide avec un contre-jeu lisible.
   - [ ] Ajouter une famille tank et vérifier sa menace/HP proposés.
-  - [ ] Ajouter une famille distance avec projectile télégraphié.
-  - [ ] Ajouter soutien et explosif comme deux comportements séparés.
+  - [x] Ajouter une famille distance avec projectile télégraphié.
+  - [x] Ajouter un profil de soutien Buffer avec aura de vitesse visible et bornée.
+  - [ ] Ajouter une famille explosive avec contre-jeu lisible.
   - [ ] Compléter le catalogue jusqu’à 8–12 familles et vérifier les compositions.
 - [ ] **P5.4.2 — Interactions ennemies**
-  - [ ] Ajouter un buff de soutien visible et borné.
+  - [x] Ajouter un buff de soutien visible et borné.
   - [ ] Ajouter protection ou invocation avec nombre maximum documenté.
-  - [ ] Tester destruction du soutien et fin de son effet.
+  - [x] Tester destruction du soutien et fin de son effet.
 - [ ] **P5.4.3 — Élites**
   - [ ] Définir les affixes éligibles à chaque famille.
   - [ ] Générer un élite avec budget/cooldown de menace.

@@ -20,6 +20,8 @@ std::optional<EnemyProfile> enemy_profile(std::string_view id) {
 	if (id == "sprinter") return EnemyProfile{"sprinter", 12.0F, 125.0F, 1.0F};
 	if (id == "tank") return EnemyProfile{"tank", 80.0F, 45.0F, 1.0F};
 	if (id == "shooter") return EnemyProfile{"shooter", 25.0F, 65.0F, 1.0F};
+	// Buffer stats and aura are proposed tuning, kept isolated from accepted GDD behavior.
+	if (id == "buffer") return EnemyProfile{"buffer", 35.0F, 55.0F, 2.0F, 150.0F, 1.2F};
 	return std::nullopt;
 }
 
@@ -91,7 +93,11 @@ EntityId SimulationCore::spawn(std::string type, float x, float y, float hp, flo
 	transforms_[index] = {x, y};
 	velocities_[index] = {velocity_x, velocity_y};
 	health_[index] = {hp, hp};
-	enemy_types_[index] = {std::move(type), threat_level, move_speed};
+	const auto profile = enemy_profile(type);
+	enemy_types_[index] = {std::move(type), threat_level, move_speed,
+			profile ? profile->support_radius : 0.0F,
+			profile ? profile->support_speed_multiplier : 1.0F,
+			false};
 	projectile_flags_[index] = false;
 	projectiles_[index] = {};
 	xp_orb_flags_[index] = false;
@@ -344,7 +350,11 @@ void SimulationCore::restore_state(const SimulationCoreState &state) {
 				entity.health.current <= entity.health.maximum;
 		const bool valid_type = !entity.type.id.empty() && std::isfinite(entity.type.threat_level) &&
 				entity.type.threat_level > 0.0F && std::isfinite(entity.type.move_speed) && entity.type.move_speed >= 0.0F;
-		if (!valid_transform || !valid_health || !valid_type || (entity.is_projectile && entity.is_xp_orb)) {
+		const bool valid_support = std::isfinite(entity.type.support_radius) && entity.type.support_radius >= 0.0F &&
+				std::isfinite(entity.type.support_speed_multiplier) && entity.type.support_speed_multiplier >= 1.0F &&
+				(!entity.type.supported || entity.type.support_radius == 0.0F);
+		if (!valid_transform || !valid_health || !valid_type || !valid_support ||
+				(entity.is_projectile && entity.is_xp_orb)) {
 			throw std::invalid_argument("invalid active simulation core entity");
 		}
 		if (entity.is_projectile) {
@@ -750,13 +760,20 @@ void SimulationCore::steer_enemies_towards(float target_x, float target_y, Steer
 	}
 
 	std::vector<Velocity2D> next_velocities = velocities_;
-	const SpatialIndex spatial_index = config.separation_radius > 0.0F && config.separation_weight > 0.0F
-			? build_spatial_index(config.spatial_hash)
-			: SpatialIndex{};
+	float maximum_support_radius = 0.0F;
+	for (uint32_t index = 0; index < slots_.size(); ++index) {
+		if (slots_[index].active && !projectile_flags_[index] && !xp_orb_flags_[index]) {
+			maximum_support_radius = std::max(maximum_support_radius, enemy_types_[index].support_radius);
+		}
+	}
+	const bool needs_spatial_index = (config.separation_radius > 0.0F && config.separation_weight > 0.0F) ||
+			maximum_support_radius > 0.0F;
+	const SpatialIndex spatial_index = needs_spatial_index ? build_spatial_index(config.spatial_hash) : SpatialIndex{};
 	for (uint32_t index = 0; index < slots_.size(); ++index) {
 		if (!slots_[index].active || projectile_flags_[index] || xp_orb_flags_[index]) {
 			continue;
 		}
+		enemy_types_[index].supported = false;
 		const Transform2D &position = transforms_[index];
 		const double target_dx = static_cast<double>(target_x) - position.x;
 		const double target_dy = static_cast<double>(target_y) - position.y;
@@ -798,6 +815,25 @@ void SimulationCore::steer_enemies_towards(float target_x, float target_y, Steer
 			float max_speed = enemy_types_[index].move_speed > 0.0F
 					? enemy_types_[index].move_speed
 					: config.max_speed;
+			if (enemy_types_[index].support_radius <= 0.0F && maximum_support_radius > 0.0F) {
+				const auto support_neighbors = query_spatial_index(spatial_index, position.x, position.y,
+						maximum_support_radius, config.spatial_hash);
+				for (uint32_t support_index : support_neighbors) {
+					const EnemyType &support = enemy_types_[support_index];
+					if (support.support_radius <= 0.0F || health_[support_index].current <= 0.0F) {
+						continue;
+					}
+					const double dx = static_cast<double>(position.x) - transforms_[support_index].x;
+					const double dy = static_cast<double>(position.y) - transforms_[support_index].y;
+					if (dx * dx + dy * dy > static_cast<double>(support.support_radius) * support.support_radius) {
+						continue;
+					}
+					enemy_types_[index].supported = true;
+					max_speed = std::max(max_speed, enemy_types_[index].move_speed > 0.0F
+							? enemy_types_[index].move_speed * support.support_speed_multiplier
+							: config.max_speed * support.support_speed_multiplier);
+				}
+			}
 			if (chill_effects_[index].has_value()) {
 				max_speed *= chill_effects_[index]->speed_multiplier;
 			}

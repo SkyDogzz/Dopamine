@@ -26,6 +26,7 @@ int main() {
 	const auto sprinter_profile = enemy_profile("sprinter");
 	const auto tank_profile = enemy_profile("tank");
 	const auto shooter_profile = enemy_profile("shooter");
+	const auto buffer_profile = enemy_profile("buffer");
 	require(chaser_profile && chaser_profile->health == 20.0F && chaser_profile->speed == 75.0F,
 			"proposed chaser profile should match GDD starting values");
 	require(sprinter_profile && sprinter_profile->health == 12.0F && sprinter_profile->speed == 125.0F,
@@ -34,6 +35,9 @@ int main() {
 			"proposed tank profile should match GDD starting values");
 	require(shooter_profile && shooter_profile->health == 25.0F && shooter_profile->speed == 65.0F,
 			"proposed shooter profile should match GDD starting values");
+	require(buffer_profile && buffer_profile->support_radius == 150.0F &&
+			buffer_profile->support_speed_multiplier == 1.2F,
+			"proposed support profile should expose a bounded speed aura");
 	require(!enemy_profile("unknown"), "unknown enemy profiles should be rejected");
 	SimulationCore profile_steering;
 	const auto profile_entity = profile_steering.spawn("tank", -100.0F, 0.0F, 80.0F,
@@ -41,6 +45,38 @@ int main() {
 	profile_steering.steer_enemies_towards(0.0F, 0.0F, {.max_speed = 10.0F});
 	require(std::abs(profile_steering.entity(profile_entity)->velocity.x - tank_profile->speed) < 0.001F,
 			"enemy steering should preserve the profile-specific proposed movement speed");
+	SimulationCore supported_group;
+	const auto supported_ally = supported_group.spawn("chaser", 80.0F, 0.0F, 20.0F, 0.0F, 0.0F, 1.0F, 75.0F);
+	const auto distant_ally = supported_group.spawn("chaser", 180.0F, 0.0F, 20.0F, 0.0F, 0.0F, 1.0F, 75.0F);
+	const auto support_entity = supported_group.spawn("buffer", 0.0F, 0.0F, 35.0F, 0.0F, 0.0F, 2.0F, 55.0F);
+	supported_group.steer_enemies_towards(500.0F, 0.0F, {.max_speed = 75.0F, .separation_radius = 0.0F});
+	const auto supported_velocity = supported_group.entity(supported_ally)->velocity;
+	const auto distant_velocity = supported_group.entity(distant_ally)->velocity;
+	require(supported_velocity.x > 75.0F && supported_group.entity(supported_ally)->type.supported &&
+			std::abs(distant_velocity.x - 75.0F) < 0.001F &&
+			!supported_group.entity(distant_ally)->type.supported,
+			"support aura should speed nearby allies without affecting enemies outside its radius");
+	SimulationCore restored_support;
+	restored_support.restore_state(supported_group.capture_state());
+	require(restored_support.entity(supported_ally)->type.supported &&
+			restored_support.entity(support_entity)->type.support_radius == 150.0F,
+			"support aura and ally state should survive simulation capture and restore");
+	auto invalid_support_state = supported_group.capture_state();
+	invalid_support_state.entities[support_entity.index].type.support_radius = -1.0F;
+	bool rejected_invalid_support_state = false;
+	try {
+		SimulationCore invalid_support;
+		invalid_support.restore_state(invalid_support_state);
+	} catch (const std::invalid_argument &) {
+		rejected_invalid_support_state = true;
+	}
+	require(rejected_invalid_support_state, "restoring a negative support radius should be rejected");
+	std::vector<dopamine::sim::CombatEvent> support_death_events;
+	supported_group.apply_direct_damage(supported_ally, support_entity, 35.0F, support_death_events);
+	supported_group.steer_enemies_towards(500.0F, 0.0F, {.max_speed = 75.0F, .separation_radius = 0.0F});
+	require(!supported_group.entity(supported_ally)->type.supported &&
+			std::abs(supported_group.entity(supported_ally)->velocity.x - 75.0F) < 0.001F,
+			"destroying a support enemy should immediately remove its aura effect");
 	SimulationCore xp_simulation;
 	const auto xp_orb = xp_simulation.spawn_xp_orb(12.0F, -4.0F, 7.0F);
 	const auto spawned_orb = xp_simulation.entity(xp_orb);

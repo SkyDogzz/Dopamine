@@ -5,6 +5,7 @@ const SPRITE_FILES := {
 	"enemy_sprinter": "enemy_sprinter",
 	"enemy_tank": "enemy_tank",
 	"enemy_shooter": "enemy_shooter",
+	"enemy_buffer": "enemy_buffer.svg",
 	"boss_mid_placeholder": "boss_mid_placeholder",
 	"boss_final_placeholder": "boss_final_placeholder",
 	"xp_orb": "xp_orb",
@@ -84,6 +85,20 @@ func draw_batches(canvas: CanvasItem) -> void:
 		if multimesh.instance_count > 0:
 			canvas.draw_multimesh(multimesh, batch["texture"])
 
+func draw_support_feedback(canvas: CanvasItem, entities: Array, origin: Vector2 = Vector2.ZERO) -> void:
+	for entity in entities:
+		var components: Dictionary = entity["components"]
+		if components.get("IsProjectile", false):
+			continue
+		var transform: Dictionary = components["Transform2D"]
+		var center := origin + Vector2(float(transform["x"]), float(transform["y"]))
+		if str(components.get("EnemyType", "")) == "buffer":
+			var radius := float(components.get("SupportRadius", 0.0))
+			canvas.draw_circle(center, radius, Color(0.18, 0.96, 0.73, 0.055))
+			canvas.draw_arc(center, radius, 0.0, TAU, 64, Color(0.25, 1.0, 0.78, 0.45), 2.0, true)
+		elif components.get("Supported", false):
+			canvas.draw_arc(center, 14.0, 0.0, TAU, 24, Color(0.3, 1.0, 0.72, 0.8), 2.0, true)
+
 func multimesh_for(sprite_id: String) -> MultiMesh:
 	if not _batches.has(sprite_id):
 		return null
@@ -131,6 +146,8 @@ func _sprite_for_entity(components: Dictionary) -> String:
 			return "enemy_tank"
 		"shooter":
 			return "enemy_shooter"
+		"buffer":
+			return "enemy_buffer"
 		"mid_boss":
 			return "boss_mid_placeholder"
 		"final_boss":

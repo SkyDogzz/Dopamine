@@ -67,6 +67,9 @@ struct EnemyType {
 	std::string id;
 	float threat_level = 1.0F;
 	float move_speed = 0.0F;
+	float support_radius = 0.0F;
+	float support_speed_multiplier = 1.0F;
+	bool supported = false;
 };
 
 struct EnemyProfile {
@@ -74,6 +77,8 @@ struct EnemyProfile {
 	float health = 1.0F;
 	float speed = 0.0F;
 	float threat_level = 1.0F;
+	float support_radius = 0.0F;
+	float support_speed_multiplier = 1.0F;
 };
 
 std::optional<EnemyProfile> enemy_profile(std::string_view id);

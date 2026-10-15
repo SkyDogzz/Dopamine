@@ -916,6 +916,8 @@ func _spawn_wave_enemy() -> void:
 		enemy_type = "tank"
 	if wave_director.wave >= 10 and randf() < 0.15:
 		enemy_type = "shooter"
+	if wave_director.wave >= 6 and randf() < 0.10:
+		enemy_type = "buffer"
 	var hp_multiplier := minf(pow(WAVE_HP_GROWTH, float(wave_director.wave - 1)), WAVE_HP_CAP)
 	simulation.spawn_enemy(enemy_type, 1, spawn_position, Vector2.ZERO, hp_multiplier)
 
@@ -1624,6 +1626,7 @@ func _draw() -> void:
 	draw_texture_rect(GROUND_TEXTURE, Rect2(-8192.0, -8192.0, 16384.0, 16384.0), true)
 	draw_texture_rect(RUINS_TEXTURE, Rect2(-768.0, -768.0, 1536.0, 1536.0), false, Color(1.0, 1.0, 1.0, 0.88))
 	_sprite_renderer.draw_batches(self)
+	_sprite_renderer.draw_support_feedback(self, _entities)
 	for attack in _shooter_attacks.values():
 		if str(attack["phase"]) != "telegraph":
 			continue
