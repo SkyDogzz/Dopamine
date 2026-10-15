@@ -9,6 +9,7 @@ const ICONS := {
 	"toxic_cloud": "res://assets/sprites/projectile_toxic_cloud.svg",
 	"sawblades": "res://assets/sprites/projectile_sawblades.svg",
 	"meteor_staff": "res://assets/sprites/projectile_meteor.svg",
+	"prism_laser": "res://assets/sprites/projectile_prism_laser.svg",
 	"storm_core": "res://assets/sprites/relic_storm_core.png",
 	"infernal_heart": "res://assets/sprites/relic_infernal_heart.png",
 	"blood_chalice": "res://assets/sprites/relic_blood_chalice.png",
@@ -16,6 +17,7 @@ const ICONS := {
 	"plague_mask": "res://assets/sprites/relic_plague_mask.svg",
 	"magnetic_coil": "res://assets/sprites/relic_magnetic_coil.svg",
 	"celestial_eye": "res://assets/sprites/relic_celestial_eye.svg",
+	"prism_crystal": "res://assets/sprites/relic_prism_crystal.svg",
 	"magnet_heart": "res://assets/sprites/relic_magnet_heart.svg",
 }
 const STARTING_WEAPONS := ["lightning_conductor", "inferno_sprayer"]

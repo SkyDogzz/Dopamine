@@ -7,7 +7,7 @@ Roadmap détaillée et audit GDD/code : [`docs/planning/ROADMAP.md`](../docs/pla
 - [x] **P0** Linux/Godot 4.7.2/C++23/GDExtension : build et import headless documentés.
 - [x] **P1** Cœur natif, worker, snapshots et Sandbox développeur MVP ; isolation de sauvegarde couverte historiquement.
 - [x] **P2 fondation** ECS, spatial hash, steering, projectiles balayés, dégâts, événements et DoT.
-- [x] **P3 prototype initial** Trois paires de base et compteur DPS Sandbox prototypés ; sept paires ont maintenant un prototype, selon l’avancement P5.
+- [x] **P3 prototype initial** Trois paires de base et compteur DPS Sandbox prototypés ; huit paires ont maintenant un prototype, selon l’avancement P5.
 - [x] **P4 prototype** Parcours Survival 24 vagues, XP, chests, HUD, résultats et boss placeholders.
 - [x] Audit statique GDD/code et roadmap détaillée P0–P9 mis à jour.
 
@@ -16,7 +16,7 @@ Roadmap détaillée et audit GDD/code : [`docs/planning/ROADMAP.md`](../docs/pla
 ## P5 — Contenu v1.6 (jalon actif)
 
 - [ ] **P5.1 — Compléter les armes, reliques et évolutions**
-  - [x] **P5.1.1 — Contrat catalogue :** définitions des dix armes, dix reliques associées et Magnet Heart ; relations contrôlées au chargement ; sept paires prototypées et Magnet Heart sont disponibles en Survival. JSON Schema reste à intégrer.
+  - [x] **P5.1.1 — Contrat catalogue :** définitions des dix armes, dix reliques associées et Magnet Heart ; relations contrôlées au chargement ; huit paires prototypées et Magnet Heart sont disponibles en Survival. JSON Schema reste à intégrer.
   - Pour chaque nouvelle paire, faire les petites tranches suivantes dans l’ordre :
     - [ ] Ajouter les définitions stables arme/relique/évolution et valider les références.
     - [ ] Ajouter uniquement l’attaque de base de l’arme et vérifier son ciblage Sandbox.
@@ -30,7 +30,7 @@ Roadmap détaillée et audit GDD/code : [`docs/planning/ROADMAP.md`](../docs/pla
   - [x] Ajouter un prototype Toxic Cloud/Plague Mask/Pandemic ; DoT partagé en zone et propagation bornée à la mort ; le nuage visuel persistant et les statuts multiples restent à faire, valeurs **[PROPOSÉES]**.
   - [x] Ajouter un prototype Sawblades/Magnetic Coil/Razorstorm ; ricochets natifs vers des cibles non touchées et vitesse de projectile bonus, chiffres **[PROPOSÉS]**.
   - [x] Ajouter un prototype Meteor Staff/Celestial Eye/Starfall ; ciblage de groupe, explosion et fragments, réglages **[PROPOSÉS]**.
-  - [ ] Ajouter Prism Laser/Prism Crystal/Spectrum Collapse.
+  - [x] Prototyper Prism Laser/Prism Crystal/Spectrum Collapse (réglages **[PROPOSÉS]**).
   - [x] Ajouter Magnet Heart comme relique sans évolution ; appliquer le rayon XP **[PROPOSÉ]** et préserver l'exclusion des chests.
   - [ ] Étendre Magnet Heart aux autres collectibles et à l'impulsion **[PROPOSÉE]** de niveau 5.
   - [ ] Vérifier les niveaux 1–5, feedback visuel et règles d’évolution sur une paire à la fois.

@@ -37,8 +37,46 @@ func _run() -> void:
 	if not await _meteor_staff_targets_groups_and_starfall_fragments():
 		_fail("Meteor Staff should hit a group and Starfall should fragment toward nearby enemies")
 		return
+	if not await _prism_laser_tracks_and_splits():
+		_fail("Prism Laser should hit its priority target and Spectrum Collapse should fire secondary beams")
+		return
 	print("Survival weapon catalog smoke passed")
 	quit()
+
+func _prism_laser_tracks_and_splits() -> bool:
+	var session: Node2D = load("res://scenes/survival_session.tscn").instantiate()
+	session.spawn_initial_enemy = false
+	session.wave_spawning_enabled = false
+	session.weapon_enabled = false
+	session.skip_starting_weapon_choice = true
+	session.contact_damage_per_hit = 0.0
+	session.xp_collection_radius = 0.0
+	session.prism_laser_cooldown = 1000.0
+	root.add_child(session)
+	await process_frame
+	for _level in range(5):
+		if not session.loadout.apply_offer("weapon:prism_laser") or not session.loadout.apply_offer("relic:prism_crystal"):
+			session.queue_free()
+			return false
+	session.simulation.set_speed(4.0)
+	session.simulation.spawn("test_target", 1, Vector2(180.0, 0.0), 100.0, Vector2.ZERO)
+	session.simulation.spawn("test_target", 1, Vector2(180.0, 100.0), 100.0, Vector2.ZERO)
+	if (await _wait_for_targets(session, 2)).size() != 2:
+		session.queue_free()
+		return false
+	var before := int(session.simulation.snapshot()["metrics"]["collision_count"])
+	var active_time := float(session.simulation.snapshot()["simulation_time"])
+	session.weapon_enabled = true
+	session._entities = session.simulation.snapshot()["entities"]
+	session._fire_prism_laser(active_time, false)
+	var deadline := Time.get_ticks_msec() + 2500
+	while Time.get_ticks_msec() < deadline:
+		await process_frame
+		if int(session.simulation.snapshot()["metrics"]["collision_count"]) >= before + 2:
+			session.queue_free()
+			return true
+	session.queue_free()
+	return false
 
 func _sawblades_ricochet_between_targets() -> bool:
 	var session: Node2D = load("res://scenes/survival_session.tscn").instantiate()

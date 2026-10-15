@@ -13,6 +13,7 @@ const WEAPON_ICONS := {
 	"toxic_cloud": preload("res://assets/sprites/projectile_toxic_cloud.svg"),
 	"sawblades": preload("res://assets/sprites/projectile_sawblades.svg"),
 	"meteor_staff": preload("res://assets/sprites/projectile_meteor.svg"),
+	"prism_laser": preload("res://assets/sprites/projectile_prism_laser.svg"),
 }
 const WAVE_DIRECTOR_SCRIPT := preload("res://scripts/survival_wave_director.gd")
 const LOADOUT_SCRIPT := preload("res://scripts/survival_loadout.gd")
@@ -121,6 +122,14 @@ const WAVE_HP_CAP := 12.0
 @export var starfall_fragment_radius: float = 150.0
 @export var starfall_fragment_damage_multiplier: float = 0.4
 @export_range(0, 8) var starfall_fragment_count: int = 2
+@export_group("Prototype Prism Laser — proposed tuning")
+@export var prism_laser_cooldown: float = 0.12
+@export var prism_laser_damage: float = 3.0
+@export var prism_laser_range: float = 620.0
+@export var prism_laser_projectile_speed: float = 1800.0
+@export var prism_laser_projectile_radius: float = 1.5
+@export var prism_crystal_critical_damage_per_level: float = 0.03
+@export_range(0, 4) var spectrum_collapse_secondary_beams: int = 2
 @export_group("Prototype Bloodstorm — proposed tuning")
 @export var bloodstorm_bleed_damage_per_tick: float = 2.0
 @export var bloodstorm_bleed_interval_seconds: float = 0.5
@@ -169,6 +178,8 @@ var _next_minigun_time := 0.0
 var _next_toxic_time := 0.0
 var _next_sawblades_time := 0.0
 var _next_meteor_time := 0.0
+var _next_prism_time := 0.0
+var _prism_beams: Array[Dictionary] = []
 var _redline_fire_time := 0.0
 var _redline_target_id := Vector2i(-1, -1)
 var _pandemic_poisoned_targets: Dictionary = {}
@@ -372,6 +383,7 @@ func _process(_delta: float) -> void:
 	_fire_toxic_cloud(current_simulation_time, state["paused"])
 	_fire_sawblades(current_simulation_time, state["paused"])
 	_fire_meteor_staff(current_simulation_time, state["paused"])
+	_fire_prism_laser(current_simulation_time, state["paused"])
 	if player_hp <= 0.0 and not run_over:
 		_finish_run(false)
 	player.controls_enabled = not state["paused"] and not run_over and not _chest_open and not _starting_weapon_choice_open
@@ -1078,6 +1090,74 @@ func _fire_meteor_staff(active_time: float, paused: bool) -> void:
 		var cooldown_multiplier := 0.85 if level >= 4 else 1.0
 		_next_meteor_time = active_time + _effective_weapon_cooldown(meteor_staff_cooldown * cooldown_multiplier)
 
+func _fire_prism_laser(active_time: float, paused: bool) -> void:
+	_prism_beams.clear()
+	if not weapon_enabled or loadout.weapon_level("prism_laser") == 0 or paused or _chest_open or run_over or prism_laser_cooldown <= 0.0:
+		return
+	var level: int = loadout.weapon_level("prism_laser")
+	var range_multiplier := (1.2 if level >= 3 else 1.0) * (1.15 if level >= 4 else 1.0)
+	var laser_range := _equipment_area(prism_laser_range * range_multiplier)
+	var target := _nearest_enemy(laser_range)
+	if target.is_empty():
+		return
+	var evolved: bool = level >= 5 and loadout.relic_level("prism_crystal") > 0
+	var damage_multiplier := (1.2 if level >= 2 else 1.0) * (1.25 if level >= 5 else 1.0)
+	var prism_level: int = loadout.relic_level("prism_crystal")
+	var targets: Array[Dictionary] = [target]
+	if evolved:
+		var excluded: Array[Vector2i] = [target["id"]]
+		for _beam in range(spectrum_collapse_secondary_beams):
+			var secondary := _nearest_enemy_excluding(laser_range, excluded)
+			if secondary.is_empty():
+				break
+			targets.append(secondary)
+			excluded.append(secondary["id"])
+	for index in range(targets.size()):
+		_prism_beams.append({"from": player.global_position, "to": targets[index]["position"], "secondary": index > 0})
+	if active_time < _next_prism_time:
+		return
+	var critical: float = _roll_equipment_critical_multiplier()
+	var fired := false
+	for index in range(targets.size()):
+		var beam_target: Dictionary = targets[index]
+		var direction: Vector2 = (beam_target["position"] - player.global_position).normalized()
+		var secondary_beam: bool = index > 0
+		var projectile_type := "spectrum_collapse" if evolved and secondary_beam else "prism_laser"
+		if simulation.spawn_projectile(projectile_type, player.global_position + direction * 14.0,
+				direction * prism_laser_projectile_speed,
+				prism_laser_damage * damage_multiplier * _persistent_damage_multiplier() * critical * (0.65 if secondary_beam else 1.0),
+				prism_laser_projectile_radius, laser_range / prism_laser_projectile_speed) > 0:
+			fired = true
+	if critical > 1.0 and prism_level >= 5 and not evolved:
+		var secondary := _nearest_enemy_excluding(laser_range, [target["id"]])
+		if not secondary.is_empty():
+			var direction: Vector2 = (secondary["position"] - player.global_position).normalized()
+			if simulation.spawn_projectile("prism_secondary", player.global_position + direction * 14.0,
+					direction * prism_laser_projectile_speed, prism_laser_damage * damage_multiplier * critical * 0.5,
+					prism_laser_projectile_radius, laser_range / prism_laser_projectile_speed) > 0:
+				fired = true
+	if fired:
+		_next_prism_time = active_time + _effective_weapon_cooldown(prism_laser_cooldown)
+
+func _nearest_enemy_excluding(max_range: float, excluded: Array[Vector2i]) -> Dictionary:
+	var nearest: Dictionary = {}
+	var best_distance_squared := max_range * max_range
+	for entity in _entities:
+		var components: Dictionary = entity["components"]
+		if components.get("IsProjectile", false) or components.get("IsXpOrb", false) or float(components.get("Health", {}).get("current", 0.0)) <= 0.0:
+			continue
+		var id: Dictionary = entity["id"]
+		var key := Vector2i(int(id["index"]), int(id["generation"]))
+		if excluded.has(key):
+			continue
+		var transform: Dictionary = components["Transform2D"]
+		var point := Vector2(float(transform["x"]), float(transform["y"]))
+		var distance_squared := player.global_position.distance_squared_to(point)
+		if distance_squared < best_distance_squared:
+			best_distance_squared = distance_squared
+			nearest = {"position": point, "id": key}
+	return nearest
+
 func _meteor_cluster_target() -> Dictionary:
 	var anchor := _nearest_enemy(meteor_staff_range)
 	if anchor.is_empty():
@@ -1183,7 +1263,7 @@ func _effective_weapon_cooldown(base_cooldown: float) -> float:
 func _roll_equipment_critical_multiplier() -> float:
 	var chance := clampf(_equipment_bonus("critical_chance_pct"), 0.0, 100.0)
 	if randf() * 100.0 < chance:
-		return 1.5 + _equipment_bonus("critical_damage_pct") / 100.0
+		return 1.5 + _equipment_bonus("critical_damage_pct") / 100.0 + float(loadout.relic_level("prism_crystal")) * prism_crystal_critical_damage_per_level
 	return 1.0
 
 func _equipment_projectile_speed(base_speed: float) -> float:
@@ -1252,6 +1332,10 @@ func _publish_player_target() -> void:
 
 func _draw() -> void:
 	_sprite_renderer.draw_batches(self)
+	for beam in _prism_beams:
+		var beam_color := Color(0.55, 0.95, 1.0, 0.78) if bool(beam["secondary"]) else Color(1.0, 0.92, 0.55, 0.9)
+		draw_line(beam["from"], beam["to"], beam_color, 5.0 if not beam["secondary"] else 3.0, true)
+		draw_line(beam["from"], beam["to"], Color(1.0, 1.0, 1.0, 0.9), 1.5, true)
 	for burst in _pandemic_bursts:
 		var fade := clampf(float(burst["remaining"]) / maxf(pandemic_feedback_seconds, 0.01), 0.0, 1.0)
 		draw_circle(burst["position"], pandemic_spread_radius * (1.0 - fade * 0.35), Color(0.35, 1.0, 0.4, 0.18 * fade))

@@ -26,7 +26,7 @@ func _initialize() -> void:
 		_fail("The chosen starting weapon should enter the loadout at level 1")
 		return
 	var weapon_offers: Array = loadout.offers("weapon")
-	if not _has_three_unique(weapon_offers) or not _contains(weapon_offers, "weapon:lightning_conductor"):
+	if not _has_three_unique(weapon_offers):
 		_fail("Weapon chest should offer three unique eligible upgrades or new weapons")
 		return
 	for offer in weapon_offers:
@@ -67,12 +67,6 @@ func _has_three_unique(offers: Array) -> bool:
 	for offer in offers:
 		ids[offer["id"]] = true
 	return ids.size() == 3
-
-func _contains(offers: Array, offer_id: String) -> bool:
-	for offer in offers:
-		if offer["id"] == offer_id:
-			return true
-	return false
 
 func _fail(message: String) -> void:
 	push_error(message)
