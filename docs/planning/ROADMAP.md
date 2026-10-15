@@ -357,6 +357,8 @@ Travail requis :
 
 ### P5.4 — Ennemis, élites et boss
 
+**Avancement :** le profil Shooter tire maintenant des projectiles lents après un télégraphe visible ; le projectile est esquivable et sa collision joueur respecte la pause et l’invulnérabilité. Dégâts, vitesse et cadence restent **[PROPOSÉS]**. Les familles support/explosive, élites et patterns de boss restent à faire.
+
 - [ ] **P5.4.1 — Familles ennemies**
   - [ ] Ajouter une famille de mêlée avec spawn, steering et mort.
   - [ ] Ajouter une famille rapide avec un contre-jeu lisible.

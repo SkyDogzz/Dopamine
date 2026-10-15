@@ -608,6 +608,10 @@ std::vector<CombatEvent> SimulationCore::advance(double delta_seconds) {
 			const auto candidates = query_spatial_index(spatial_index, midpoint_x, midpoint_y,
 					broadphase_radius, {});
 			bool hit = false;
+			// Survival's player is a Godot CharacterBody2D outside the ECS. Enemy shots
+			// travel through the same projectile/lifetime path, while Godot resolves
+			// their player collision; they must not damage other ECS enemies.
+			if (enemy_types_[projectile_index].id != "enemy_projectile") {
 			for (uint32_t target_index : candidates) {
 				const EntityId potential_target{target_index, slots_[target_index].generation};
 				if (target_index == projectile_index || projectile_flags_[target_index] || xp_orb_flags_[target_index] ||
@@ -712,6 +716,7 @@ std::vector<CombatEvent> SimulationCore::advance(double delta_seconds) {
 				}
 				hit = !ricocheted;
 				break;
+			}
 			}
 			projectile.remaining_seconds -= delta_seconds;
 			if (hit || projectile.remaining_seconds <= 0.0) {

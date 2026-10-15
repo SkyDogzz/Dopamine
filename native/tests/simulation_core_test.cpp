@@ -94,6 +94,17 @@ int main() {
 	require(std::abs(moved->transform.x - 3.5F) < 0.001F, "step should integrate velocity");
 	require(std::abs(simulation.simulation_time() - 0.5) < 0.001, "step should advance time");
 
+	SimulationCore enemy_shot;
+	const auto untouched_enemy = enemy_shot.spawn("chaser", 10.0F, 0.0F, 100.0F, 0.0F, 0.0F);
+	const auto enemy_projectile = enemy_shot.spawn_projectile("enemy_projectile", 0.0F, 0.0F,
+			8.0F, 6.0F, 4.0, 100.0F, 0.0F);
+	enemy_shot.advance(0.1);
+	const auto enemy_after_shot = enemy_shot.entity(untouched_enemy);
+	const auto shot_after_advance = enemy_shot.entity(enemy_projectile);
+	require(enemy_after_shot && enemy_after_shot->health.current == 100.0F && shot_after_advance &&
+			shot_after_advance->transform.x > 0.0F,
+			"enemy projectiles should move without damaging ECS enemy targets");
+
 	SimulationCore void_orb;
 	const auto pulled_target = void_orb.spawn("chaser", -20.0F, 0.0F, 100.0F, 0.0F, 0.0F);
 	const auto gravity_orb = void_orb.spawn_projectile("void_orb", 80.0F, 0.0F, 2.0F, 3.0F, 3.0,

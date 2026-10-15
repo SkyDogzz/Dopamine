@@ -63,6 +63,13 @@ const WAVE_HP_CAP := 12.0
 @export var enemy_contact_radius: float = 8.0
 @export var enemy_separation_radius: float = 18.0
 @export_range(0.0, 1.0) var enemy_separation_weight: float = 0.5
+@export_group("Prototype shooter attacks — proposed tuning")
+@export var shooter_telegraph_seconds: float = 0.7
+@export var shooter_fire_interval_seconds: float = 2.8
+@export var shooter_projectile_speed: float = 180.0
+@export var shooter_projectile_damage: float = 8.0
+@export var shooter_projectile_radius: float = 6.0
+@export var shooter_projectile_lifetime: float = 4.0
 @export_group("Prototype Lightning Conductor — proposed tuning")
 @export var weapon_enabled: bool = true
 @export var lightning_cooldown: float = 0.5
@@ -253,6 +260,7 @@ var _base_player_move_speed := 240.0
 var _next_unique_lightning_time := 0.0
 var _evolution_shockwave_triggered := false
 var _elite_haste_expires_at := 0.0
+var _shooter_attacks: Dictionary = {}
 
 @onready var _hp_value: Label = $HUD/RunPanel/RunInfo/HPValue
 @onready var _hp_bar: ProgressBar = $HUD/RunPanel/RunInfo/HPBar
@@ -461,6 +469,7 @@ func _process(_delta: float) -> void:
 	_sprite_renderer.set_entities(_entities)
 	_advance_wave_director(elapsed_active_time, state["paused"])
 	_apply_contact_damage(state, current_simulation_time)
+	_update_shooter_attacks(current_simulation_time, bool(state["paused"]))
 	_collect_nearby_xp_orbs(state)
 	_collect_nearby_chests(state)
 	_complete_pending_victory()
@@ -483,18 +492,73 @@ func _process(_delta: float) -> void:
 func _apply_contact_damage(state: Dictionary, current_simulation_time: float) -> void:
 	if state["paused"] or run_over or current_simulation_time < _contact_invulnerable_until:
 		return
-	var contact_distance := player_contact_radius + enemy_contact_radius
 	for entity in _entities:
 		var components: Dictionary = entity["components"]
-		if not components.has("EnemyType") or components.get("IsProjectile", false) or components.get("IsXpOrb", false):
+		if components.get("IsProjectile", false):
+			if str(components.get("EnemyType", "")) != "enemy_projectile":
+				continue
+			var projectile_transform: Dictionary = components["Transform2D"]
+			var projectile_position := Vector2(float(projectile_transform["x"]), float(projectile_transform["y"]))
+			var projectile: Dictionary = components.get("Projectile", {})
+			var projectile_distance := player_contact_radius + float(projectile.get("radius", 0.0))
+			if player.global_position.distance_squared_to(projectile_position) > projectile_distance * projectile_distance:
+				continue
+			_take_player_damage(float(projectile.get("damage", shooter_projectile_damage)))
+			_contact_invulnerable_until = current_simulation_time + contact_invulnerability_seconds
+			var projectile_id: Dictionary = entity["id"]
+			simulation.despawn(int(projectile_id["index"]), int(projectile_id["generation"]))
+			return
+		if not components.has("EnemyType") or components.get("IsXpOrb", false):
 			continue
 		var transform: Dictionary = components["Transform2D"]
 		var enemy_position := Vector2(float(transform["x"]), float(transform["y"]))
+		var contact_distance := player_contact_radius + enemy_contact_radius
 		if player.global_position.distance_squared_to(enemy_position) > contact_distance * contact_distance:
 			continue
 		_take_player_damage(contact_damage_per_hit)
 		_contact_invulnerable_until = current_simulation_time + contact_invulnerability_seconds
 		return
+
+func _update_shooter_attacks(current_simulation_time: float, paused: bool) -> void:
+	if paused or run_over:
+		return
+	var active_shooters: Dictionary = {}
+	for entity in _entities:
+		var components: Dictionary = entity["components"]
+		if components.get("IsProjectile", false) or components.get("EnemyType", "") != "shooter":
+			continue
+		var id: Dictionary = entity["id"]
+		var key := _entity_key(int(id["index"]), int(id["generation"]))
+		active_shooters[key] = true
+		var transform: Dictionary = components["Transform2D"]
+		var origin := Vector2(float(transform["x"]), float(transform["y"]))
+		if not _shooter_attacks.has(key):
+			_shooter_attacks[key] = {
+				"phase": "telegraph",
+				"aim": player.global_position,
+				"fire_at": current_simulation_time + shooter_telegraph_seconds,
+				"origin": origin,
+			}
+		var attack: Dictionary = _shooter_attacks[key]
+		attack["origin"] = origin
+		if str(attack["phase"]) == "telegraph":
+			if current_simulation_time < float(attack["fire_at"]):
+				continue
+			var aim: Vector2 = attack["aim"]
+			var direction := (aim - origin).normalized()
+			if direction == Vector2.ZERO:
+				direction = Vector2.RIGHT
+			simulation.spawn_projectile("enemy_projectile", origin, direction * shooter_projectile_speed,
+					shooter_projectile_damage, shooter_projectile_radius, shooter_projectile_lifetime)
+			attack["phase"] = "waiting"
+			attack["fire_at"] = current_simulation_time + shooter_fire_interval_seconds
+		elif current_simulation_time >= float(attack["fire_at"]):
+			attack["phase"] = "telegraph"
+			attack["aim"] = player.global_position
+			attack["fire_at"] = current_simulation_time + shooter_telegraph_seconds
+	for shooter_key in _shooter_attacks.keys():
+		if not active_shooters.has(shooter_key):
+			_shooter_attacks.erase(shooter_key)
 
 func _apply_pending_lifesteal(elapsed_active_time: float) -> void:
 	if elapsed_active_time <= 0.0 or _pending_lifesteal <= 0.0 or run_over:
@@ -1560,6 +1624,14 @@ func _draw() -> void:
 	draw_texture_rect(GROUND_TEXTURE, Rect2(-8192.0, -8192.0, 16384.0, 16384.0), true)
 	draw_texture_rect(RUINS_TEXTURE, Rect2(-768.0, -768.0, 1536.0, 1536.0), false, Color(1.0, 1.0, 1.0, 0.88))
 	_sprite_renderer.draw_batches(self)
+	for attack in _shooter_attacks.values():
+		if str(attack["phase"]) != "telegraph":
+			continue
+		var time_left := clampf(float(attack["fire_at"]) - _last_simulation_time, 0.0, shooter_telegraph_seconds)
+		var alpha := 1.0 - time_left / maxf(shooter_telegraph_seconds, 0.01)
+		draw_line(attack["origin"], attack["aim"], Color(1.0, 0.2, 0.28, 0.18 + alpha * 0.5), 2.0, true)
+		draw_arc(attack["aim"], 14.0 + alpha * 5.0, 0.0, TAU, 32,
+				Color(1.0, 0.2, 0.28, 0.45 + alpha * 0.5), 2.0, true)
 	for entity in _entities:
 		var components: Dictionary = entity["components"]
 		if not components.get("IsProjectile", false) or not ["void_orb", "event_horizon"].has(str(components.get("EnemyType", ""))):
