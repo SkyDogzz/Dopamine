@@ -48,7 +48,7 @@ Roadmap détaillée et audit GDD/code : [`docs/planning/ROADMAP.md`](../docs/pla
   - [ ] Vérifier pause/reprise et évolution après chaque acquisition/amélioration.
   - [ ] Garder probabilités/poids/rerolls proposés configurables tant qu’ils ne sont pas arbitrés.
   - [x] Ajouter le smoke `pickup_radius` élevé : XP collectée à distance, chest inchangé.
-  - [ ] Exécuter ce smoke sous Godot avant de clore P5.3.
+  - [x] Exécuter ce smoke sous Godot 4.7.2 Linux ; XP collectée, coffre toujours hors de portée.
   - **Vérifier :** smoke chest ciblé puis test de run.
 
 - [ ] **P5.4 — Ennemis et boss**

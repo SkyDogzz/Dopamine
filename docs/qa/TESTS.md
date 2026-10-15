@@ -47,9 +47,9 @@
 
 ## ECS / simulation
 
-- [ ] Catalogue de combat : dix armes, dix reliques associées et Magnet Heart sans paire ; validation des relations et disponibilité des seules paires jouables.
+- [x] Catalogue de combat sous Godot 4.7.2 : dix armes, dix reliques associées et Magnet Heart sans paire ; validation des relations et disponibilité des seules paires jouables.
 
-Pour le catalogue, la validation JSON et des références a été vérifiée par script Python statique. Le smoke GDScript est enregistré dans CTest ; il reste à exécuter sous Godot, absent de l’environnement utilisé pour cette tranche.
+Pour le catalogue, la validation JSON et des références a aussi été vérifiée par script Python statique. Le smoke GDScript est enregistré dans CTest et a passé sous Godot 4.7.2 Linux.
 
 - [x] ID index+génération rejette les handles obsolètes après réutilisation d’un index.
 - [x] Spawn/despawn via worker et cœur natif ne casse aucun itérateur.
@@ -98,8 +98,8 @@ Pour le catalogue, la validation JSON et des références a été vérifiée par
 - [x] Skill tree prototype : nodes Vitality (+5 % HP, 50 Essence) et Focused Training (+3 % dégâts, prérequis Vitality, 80 Essence), valeurs **[PROPOSÉES]** ; respec gratuit vérifié.
 - [x] Achievement prototype : kills cumulés et quatre paliers Exterminator **[PROPOSÉS]** crédités une seule fois par run ; bonus dégâts cumulés de l'exemple vérifiés.
 - [ ] Rareté ajustée par difficulté/vague et mort précoce, calibrage des rolls, arbitrage vente/démantèlement et validation des bonus. Le rayon de ramassage ne doit jamais affecter la collecte de coffres selon GDD v1.6.
-- [x] Revue de code v1.6 : collecte de coffres utilise uniquement `chest_collection_radius`; `pickup_radius_pct` ne l’élargit pas. Runtime smoke non relancé faute de Godot dans l’environnement.
-- [ ] Smoke de régression : avec `pickup_radius_pct` élevé, XP à distance collectée, coffre hors de `chest_collection_radius` toujours au sol.
+- [x] Revue de code v1.6 : collecte de coffres utilise uniquement `chest_collection_radius`; `pickup_radius_pct` ne l’élargit pas.
+- [x] Smoke de régression sous Godot 4.7.2 Linux : avec `pickup_radius_pct` à 900 %, l’XP distante est collectée et le coffre hors de `chest_collection_radius` reste au sol.
 - [x] Achievement tiers débloqués une seule fois et bonus cumulés vérifiés pour la famille prototype Exterminator ; le catalogue et les seuils complets restent à définir.
 - [ ] Armorless : 3 équipements proposés après chaque vague, 1 choisi ; Flux temporaire.
 - [x] `SaveService` : slot JSON versionné, checksum SHA-256, remplacement via temporaire, backup relu après altération/corruption et migration de la fixture v0 dictionnaire brut ; vérifié par `save_service_smoke`. Cette fixture ne définit pas un ancien schéma de production. Le service n’est pas chargé par le Sandbox.
@@ -117,6 +117,7 @@ Le runner est fourni par `game/scripts/scenario_runner.gd` et consomme un fichie
 ## Audit du 2026-10-15
 
 - `git diff --check` exécuté ; résultat attendu consigné dans la revue du changement.
-- Godot n’est pas installé/détectable par `command -v godot` ou `command -v godot4` dans cet environnement ; tests GDScript non relancés.
+- Le binaire officiel Godot 4.7.2 a été lancé depuis `/tmp` (il reste absent du PATH). Import headless réussi ; smokes `combat_catalog`, `survival_loadout`, `survival_starting_weapon`, `survival_weapon_catalog`, `survival_inventory` et `survival_chest` réussis.
+- Cet import a révélé trois erreurs d’inférence GDScript qui empêchaient Survival/Skill Tree de se charger ; les types de `evolved`, `vitality_cost` et `focus_cost` ont été explicités avant la réussite des smokes.
 - Cibles natives non reconstruites dans cet audit ; les résultats historiques ci-dessus restent datés de leurs exécutions précédentes.
 - P5 v1.6 (dix armes, onze reliques, familles d’ennemis) n’est pas livré ; la progression permanente existante est un prototype anticipé P6.

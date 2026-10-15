@@ -33,7 +33,7 @@ func _run() -> void:
 		_fail("A large pickup bonus must not extend chest collection range")
 		return
 	session._world_chests.clear()
-	var xp_before := session.player_xp
+	var xp_before: float = session.player_xp
 	if session.simulation.spawn_xp_orb(session.player.global_position + Vector2(50.0, 0.0), 5.0) <= 0:
 		_fail("Survival should spawn the long-range XP pickup fixture")
 		return

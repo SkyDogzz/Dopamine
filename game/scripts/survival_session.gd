@@ -910,7 +910,7 @@ func _try_unique_lightning_burst(base_damage: float) -> void:
 func _try_evolution_shockwave(base_damage: float) -> void:
 	if _evolution_shockwave_triggered or not _has_unique_effect("evolution_shockwave"):
 		return
-	var evolved := (loadout.weapon_level("lightning_conductor") >= 5 and loadout.relic_level("storm_core") > 0) or \
+	var evolved: bool = (loadout.weapon_level("lightning_conductor") >= 5 and loadout.relic_level("storm_core") > 0) or \
 			(loadout.weapon_level("inferno_sprayer") >= 5 and loadout.relic_level("infernal_heart") > 0) or \
 			(loadout.weapon_level("crimson_daggers") >= 5 and loadout.relic_level("blood_chalice") > 0)
 	if not evolved:

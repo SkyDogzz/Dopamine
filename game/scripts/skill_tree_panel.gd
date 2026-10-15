@@ -24,8 +24,8 @@ func present(profile: Dictionary) -> void:
 	var resources: Dictionary = profile.get("resources", {})
 	var unlocked: Array = profile.get("unlocked_skill_nodes", [])
 	var essence := int(resources.get("essence", 0))
-	var vitality_cost := progression_service.skill_node_cost(NODE_ID) if progression_service != null else 50
-	var focus_cost := progression_service.skill_node_cost("focused_training") if progression_service != null else 80
+	var vitality_cost: int = progression_service.skill_node_cost(NODE_ID) if progression_service != null else 50
+	var focus_cost: int = progression_service.skill_node_cost("focused_training") if progression_service != null else 80
 	var has_node := NODE_ID in unlocked
 	var has_focus := "focused_training" in unlocked
 	_essence.text = "ESSENCE %d" % essence
