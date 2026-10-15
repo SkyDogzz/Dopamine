@@ -236,6 +236,7 @@ var _chest_director: RefCounted
 var _world_chests: Array[Dictionary] = []
 var _chest_open := false
 var _starting_weapon_choice_open := false
+var _manually_paused := false
 var _contact_invulnerable_until := 0.0
 var _pending_lifesteal := 0.0
 var _inventory_was_running := false
@@ -324,6 +325,22 @@ func _ready() -> void:
 
 func _physics_process(_delta: float) -> void:
 	_publish_player_target()
+
+func _unhandled_key_input(event: InputEvent) -> void:
+	if not event is InputEventKey or not event.pressed or event.echo or event.keycode != KEY_ESCAPE:
+		return
+	if simulation == null or run_over or _chest_open or _starting_weapon_choice_open or \
+			_equipment_panel.visible or _skill_tree_panel.visible:
+		return
+	if _manually_paused:
+		_manually_paused = false
+		simulation.resume()
+	elif not bool(simulation.snapshot()["paused"]):
+		_manually_paused = true
+		simulation.pause()
+	else:
+		return
+	get_viewport().set_input_as_handled()
 
 func _process(_delta: float) -> void:
 	if simulation == null:
@@ -526,7 +543,7 @@ func _refresh_hud(state: Dictionary) -> void:
 		_run_state.text = "RUN OVER"
 		_run_state.add_theme_color_override("font_color", Color("#ff5c70"))
 	elif state["paused"]:
-		_run_state.text = "PAUSED"
+		_run_state.text = "PAUSED · ESC" if _manually_paused else "PAUSED"
 		_run_state.add_theme_color_override("font_color", Color("#ffd166"))
 	else:
 		_run_state.text = "IN RUN"
