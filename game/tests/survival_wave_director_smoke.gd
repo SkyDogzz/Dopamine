@@ -32,6 +32,23 @@ func _run() -> void:
 			not is_zero_approx(boss_boundary_director.elapsed_in_wave):
 		_fail("A long delta should stop at a boss boundary and leave its wave clock paused")
 		return
+	var invalid_duration_director = director_script.new()
+	invalid_duration_director.wave_duration_seconds = 0.0
+	if invalid_duration_director.advance(1.0) or invalid_duration_director.wave != 1 or \
+			not is_zero_approx(invalid_duration_director.elapsed_in_wave):
+		_fail("A non-positive wave duration should be ignored without changing state")
+		return
+	var non_finite_duration_director = director_script.new()
+	non_finite_duration_director.wave_duration_seconds = INF
+	if non_finite_duration_director.advance(1.0) or non_finite_duration_director.wave != 1 or \
+			not is_zero_approx(non_finite_duration_director.elapsed_in_wave):
+		_fail("A non-finite wave duration should be ignored without changing state")
+		return
+	var non_finite_delta_director = director_script.new()
+	if non_finite_delta_director.advance(INF) or non_finite_delta_director.wave != 1 or \
+			not is_zero_approx(non_finite_delta_director.elapsed_in_wave):
+		_fail("A non-finite delta should be ignored without corrupting the wave clock")
+		return
 	for wave in range(2, 12):
 		director.advance(30.0)
 	if director.state != director_script.State.MID_BOSS or director.wave != 12:

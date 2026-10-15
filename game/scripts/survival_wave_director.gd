@@ -9,7 +9,8 @@ var elapsed_in_wave := 0.0
 var state := State.WAVE
 
 func advance(delta_seconds: float) -> bool:
-	if state != State.WAVE or delta_seconds < 0.0:
+	if state != State.WAVE or not is_finite(delta_seconds) or delta_seconds < 0.0 or \
+			not is_finite(wave_duration_seconds) or wave_duration_seconds <= 0.0:
 		return false
 	elapsed_in_wave += delta_seconds
 	var advanced := false
