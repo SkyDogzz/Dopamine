@@ -1,6 +1,6 @@
 # Plan d’implémentation — `ui-foundation`
 
-**Statut : proposition à valider.** Ce plan suit la spec approuvée [`SPEC-ui-foundation.md`](SPEC-ui-foundation.md). Il ne couvre pas les autres modules UI.
+**Statut : approuvé par l’utilisateur.** Ce plan suit la spec approuvée [`SPEC-ui-foundation.md`](SPEC-ui-foundation.md). Il ne couvre pas les autres modules UI.
 
 ## Vue d’ensemble
 
@@ -26,9 +26,9 @@ La palette présente dans `main.gd` sert de référence interne de départ. Ses 
 
 ## Séquence de travail proposée
 
-1. Créer `game/themes/dopamine_ui.tres` avec couleurs sémantiques, styles de texte et surfaces de base, boutons couvrant leurs états et styles de champs/panneaux.
-2. Créer une scène de prévisualisation simple, bâtie avec des conteneurs et contrôles natifs, attachant explicitement le thème partagé.
-3. Ajouter un smoke Godot ciblé vérifiant que la ressource se charge, que les contrôles attendus sont présents et que le focus initial peut être acquis. Garder navigation réelle et rendu pour la revue fenêtrée.
+1. Écrire d’abord un smoke qui formalise le contrat de la prévisualisation et constater son échec attendu faute de scène/thème.
+2. Créer `game/themes/dopamine_ui.tres` avec couleurs sémantiques, styles de texte et surfaces de base, boutons couvrant leurs états et styles de champs/panneaux.
+3. Créer une scène de prévisualisation simple, bâtie avec des conteneurs et contrôles natifs, attachant explicitement le thème partagé; faire passer le smoke.
 4. Importer le projet, exécuter le smoke, puis examiner la scène à 1280×800, une taille plus petite et une plus grande; parcourir les contrôles au clavier et à la manette.
 5. Ajuster contraste/espacement, mettre à jour la spec ou la QA si une décision d’interface change, puis créer le checkpoint.
 
@@ -42,7 +42,7 @@ La palette présente dans `main.gd` sert de référence interne de départ. Ses 
 - Prévisualisation et smoke : scène isolée, états illustrés et test headless.
 - Revue visuelle et contrôles : tailles d’écran, focus clavier/manette, correction puis checkpoint.
 
-Le détail des fichiers, critères par tâche et commandes exactes sera inscrit dans `tasks/ui-refonte/todo-ui-foundation.md` après validation de ce plan.
+Le détail des fichiers, critères par tâche et commandes exactes est inscrit dans [`todo-ui-foundation.md`](todo-ui-foundation.md).
 
 ## Vérification
 
@@ -80,4 +80,4 @@ tools/local/godot-4.7.2/Godot_v4.7.2-stable_linux.x86_64 --path game --scene res
 
 ## Point de validation
 
-Après approbation, détailler les tâches d’implémentation dans `todo-ui-foundation.md`, puis implémenter chaque tranche avec ses vérifications et commits. Les specs et plans des autres modules attendent la fin du cycle de `ui-foundation`, selon l’ordre validé de la carte.
+Les tâches détaillées sont dans [`todo-ui-foundation.md`](todo-ui-foundation.md). Après approbation de cette liste, implémenter chaque tranche avec ses vérifications et commits. Les specs et plans des autres modules attendent la fin du cycle de `ui-foundation`, selon l’ordre validé de la carte.
