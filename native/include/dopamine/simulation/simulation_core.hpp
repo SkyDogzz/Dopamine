@@ -70,6 +70,10 @@ struct EnemyType {
 	float support_radius = 0.0F;
 	float support_speed_multiplier = 1.0F;
 	bool supported = false;
+	float shield_radius = 0.0F;
+	float shield_damage_multiplier = 1.0F;
+	bool shielded = false;
+	EntityId shield_source;
 };
 
 struct EnemyProfile {
@@ -79,6 +83,8 @@ struct EnemyProfile {
 	float threat_level = 1.0F;
 	float support_radius = 0.0F;
 	float support_speed_multiplier = 1.0F;
+	float shield_radius = 0.0F;
+	float shield_damage_multiplier = 1.0F;
 };
 
 std::optional<EnemyProfile> enemy_profile(std::string_view id);

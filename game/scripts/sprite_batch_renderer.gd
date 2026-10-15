@@ -7,6 +7,7 @@ const SPRITE_FILES := {
 	"enemy_shooter": "enemy_shooter",
 	"enemy_buffer": "enemy_buffer.svg",
 	"enemy_exploder": "enemy_exploder.svg",
+	"enemy_shielder": "enemy_shielder.svg",
 	"boss_mid_placeholder": "boss_mid_placeholder",
 	"boss_final_placeholder": "boss_final_placeholder",
 	"xp_orb": "xp_orb",
@@ -99,6 +100,12 @@ func draw_enemy_feedback(canvas: CanvasItem, entities: Array, origin: Vector2 = 
 			canvas.draw_arc(center, radius, 0.0, TAU, 64, Color(0.25, 1.0, 0.78, 0.45), 2.0, true)
 		elif components.get("Supported", false):
 			canvas.draw_arc(center, 14.0, 0.0, TAU, 24, Color(0.3, 1.0, 0.72, 0.8), 2.0, true)
+		if str(components.get("EnemyType", "")) == "shielder":
+			var shield_radius := float(components.get("ShieldRadius", 0.0))
+			canvas.draw_circle(center, shield_radius, Color(0.55, 0.48, 1.0, 0.045))
+			canvas.draw_arc(center, shield_radius, 0.0, TAU, 64, Color(0.68, 0.61, 1.0, 0.5), 2.0, true)
+		elif components.get("Shielded", false):
+			canvas.draw_arc(center, 15.0, 0.0, TAU, 24, Color(0.55, 0.85, 1.0, 0.9), 2.0, true)
 		if components.get("Affix", "") == "Hasted":
 			canvas.draw_arc(center, 18.0, 0.0, TAU, 32, Color(1.0, 0.36, 0.25, 0.95), 2.5, true)
 
@@ -153,6 +160,8 @@ func _sprite_for_entity(components: Dictionary) -> String:
 			return "enemy_buffer"
 		"exploder":
 			return "enemy_exploder"
+		"shielder":
+			return "enemy_shielder"
 		"elite":
 			return "enemy_sprinter"
 		"mid_boss":

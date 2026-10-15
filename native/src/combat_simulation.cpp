@@ -381,9 +381,14 @@ Dictionary CombatSimulation::snapshot() const {
 			components["Affix"] = "Hasted";
 		}
 		components["Supported"] = entity.type.supported;
+		components["Shielded"] = entity.type.shielded;
 		if (entity.type.support_radius > 0.0F) {
 			components["SupportRadius"] = entity.type.support_radius;
 			components["SupportSpeedMultiplier"] = entity.type.support_speed_multiplier;
+		}
+		if (entity.type.shield_radius > 0.0F) {
+			components["ShieldRadius"] = entity.type.shield_radius;
+			components["ShieldDamageMultiplier"] = entity.type.shield_damage_multiplier;
 		}
 		components["IsProjectile"] = entity.is_projectile;
 		components["IsXpOrb"] = entity.is_xp_orb;

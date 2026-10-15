@@ -29,6 +29,7 @@ int main() {
 	const auto buffer_profile = enemy_profile("buffer");
 	const auto elite_profile = enemy_profile("elite");
 	const auto exploder_profile = enemy_profile("exploder");
+	const auto shielder_profile = enemy_profile("shielder");
 	require(chaser_profile && chaser_profile->health == 20.0F && chaser_profile->speed == 75.0F,
 			"proposed chaser profile should match GDD starting values");
 	require(sprinter_profile && sprinter_profile->health == 12.0F && sprinter_profile->speed == 125.0F,
@@ -46,6 +47,9 @@ int main() {
 	require(exploder_profile && exploder_profile->health == 30.0F && exploder_profile->speed == 60.0F &&
 			exploder_profile->threat_level == 2.0F,
 			"proposed Exploder profile should be available to Survival");
+	require(shielder_profile && shielder_profile->shield_radius == 150.0F &&
+			shielder_profile->shield_damage_multiplier == 0.65F,
+			"proposed Shielder profile should expose bounded ally protection");
 	require(!enemy_profile("unknown"), "unknown enemy profiles should be rejected");
 	SimulationCore profile_steering;
 	const auto profile_entity = profile_steering.spawn("tank", -100.0F, 0.0F, 80.0F,
@@ -85,6 +89,33 @@ int main() {
 	require(!supported_group.entity(supported_ally)->type.supported &&
 			std::abs(supported_group.entity(supported_ally)->velocity.x - 75.0F) < 0.001F,
 			"destroying a support enemy should immediately remove its aura effect");
+	SimulationCore shielded_group;
+	const auto protected_ally = shielded_group.spawn("chaser", 80.0F, 0.0F, 20.0F, 0.0F, 0.0F, 1.0F, 75.0F);
+	const auto unprotected_ally = shielded_group.spawn("chaser", 180.0F, 0.0F, 20.0F, 0.0F, 0.0F, 1.0F, 75.0F);
+	const auto shielder = shielded_group.spawn("shielder", 0.0F, 0.0F, 40.0F, 0.0F, 0.0F, 2.0F, 45.0F);
+	shielded_group.steer_enemies_towards(80.0F, 0.0F, {.max_speed = 75.0F, .separation_radius = 0.0F});
+	std::vector<dopamine::sim::CombatEvent> shield_events;
+	shielded_group.apply_direct_damage(protected_ally, protected_ally, 10.0F, shield_events);
+	require(shield_events.size() == 1 && std::abs(shield_events[0].amount - 6.5F) < 0.001F &&
+			shielded_group.entity(protected_ally)->type.shielded &&
+			!shielded_group.entity(unprotected_ally)->type.shielded,
+			"Shielder should reduce damage only for allies inside its aura");
+	SimulationCore restored_shielded_group;
+	restored_shielded_group.restore_state(shielded_group.capture_state());
+	require(restored_shielded_group.entity(protected_ally)->type.shielded &&
+			restored_shielded_group.entity(protected_ally)->type.shield_source == shielder,
+			"Shielder protection source should survive simulation capture and restore");
+	std::vector<dopamine::sim::CombatEvent> distant_events;
+	shielded_group.apply_direct_damage(unprotected_ally, unprotected_ally, 10.0F, distant_events);
+	require(distant_events.size() == 1 && std::abs(distant_events[0].amount - 10.0F) < 0.001F,
+			"allies outside the Shielder aura should receive unmodified damage");
+	std::vector<dopamine::sim::CombatEvent> shielder_death_events;
+	shielded_group.apply_direct_damage(protected_ally, shielder, 40.0F, shielder_death_events);
+	std::vector<dopamine::sim::CombatEvent> unshielded_events;
+	shielded_group.apply_direct_damage(protected_ally, protected_ally, 10.0F, unshielded_events);
+	require(!shielded_group.entity(protected_ally)->type.shielded && unshielded_events.size() == 1 &&
+			std::abs(unshielded_events[0].amount - 10.0F) < 0.001F,
+			"destroying the Shielder should immediately restore full incoming damage");
 	SimulationCore xp_simulation;
 	const auto xp_orb = xp_simulation.spawn_xp_orb(12.0F, -4.0F, 7.0F);
 	const auto spawned_orb = xp_simulation.entity(xp_orb);

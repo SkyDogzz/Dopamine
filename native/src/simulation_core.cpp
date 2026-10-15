@@ -21,6 +21,7 @@ std::optional<EnemyProfile> enemy_profile(std::string_view id) {
 	if (id == "tank") return EnemyProfile{"tank", 80.0F, 45.0F, 1.0F};
 	if (id == "shooter") return EnemyProfile{"shooter", 25.0F, 65.0F, 1.0F};
 	if (id == "exploder") return EnemyProfile{"exploder", 30.0F, 60.0F, 2.0F};
+	if (id == "shielder") return EnemyProfile{"shielder", 40.0F, 45.0F, 2.0F, 0.0F, 1.0F, 150.0F, 0.65F};
 	// Buffer stats and aura are proposed tuning, kept isolated from accepted GDD behavior.
 	if (id == "buffer") return EnemyProfile{"buffer", 35.0F, 55.0F, 2.0F, 150.0F, 1.2F};
 	// The Hasted elite profile is a proposed first affix prototype.
@@ -100,7 +101,11 @@ EntityId SimulationCore::spawn(std::string type, float x, float y, float hp, flo
 	enemy_types_[index] = {std::move(type), threat_level, move_speed,
 			profile ? profile->support_radius : 0.0F,
 			profile ? profile->support_speed_multiplier : 1.0F,
-			false};
+			false,
+			profile ? profile->shield_radius : 0.0F,
+			profile ? profile->shield_damage_multiplier : 1.0F,
+			false,
+			{}};
 	projectile_flags_[index] = false;
 	projectiles_[index] = {};
 	xp_orb_flags_[index] = false;
@@ -356,7 +361,14 @@ void SimulationCore::restore_state(const SimulationCoreState &state) {
 		const bool valid_support = std::isfinite(entity.type.support_radius) && entity.type.support_radius >= 0.0F &&
 				std::isfinite(entity.type.support_speed_multiplier) && entity.type.support_speed_multiplier >= 1.0F &&
 				(!entity.type.supported || entity.type.support_radius == 0.0F);
-		if (!valid_transform || !valid_health || !valid_type || !valid_support ||
+		const bool valid_shield = std::isfinite(entity.type.shield_radius) && entity.type.shield_radius >= 0.0F &&
+				std::isfinite(entity.type.shield_damage_multiplier) && entity.type.shield_damage_multiplier > 0.0F &&
+				entity.type.shield_damage_multiplier <= 1.0F &&
+				(entity.type.shielded
+					? entity.type.shield_radius == 0.0F && entity.type.shield_source.generation != 0 &&
+						entity.type.shield_source.index < slot_count
+					: entity.type.shield_source.generation == 0);
+		if (!valid_transform || !valid_health || !valid_type || !valid_support || !valid_shield ||
 				(entity.is_projectile && entity.is_xp_orb)) {
 			throw std::invalid_argument("invalid active simulation core entity");
 		}
@@ -764,19 +776,23 @@ void SimulationCore::steer_enemies_towards(float target_x, float target_y, Steer
 
 	std::vector<Velocity2D> next_velocities = velocities_;
 	float maximum_support_radius = 0.0F;
+	float maximum_shield_radius = 0.0F;
 	for (uint32_t index = 0; index < slots_.size(); ++index) {
 		if (slots_[index].active && !projectile_flags_[index] && !xp_orb_flags_[index]) {
 			maximum_support_radius = std::max(maximum_support_radius, enemy_types_[index].support_radius);
+			maximum_shield_radius = std::max(maximum_shield_radius, enemy_types_[index].shield_radius);
 		}
 	}
 	const bool needs_spatial_index = (config.separation_radius > 0.0F && config.separation_weight > 0.0F) ||
-			maximum_support_radius > 0.0F;
+			maximum_support_radius > 0.0F || maximum_shield_radius > 0.0F;
 	const SpatialIndex spatial_index = needs_spatial_index ? build_spatial_index(config.spatial_hash) : SpatialIndex{};
 	for (uint32_t index = 0; index < slots_.size(); ++index) {
 		if (!slots_[index].active || projectile_flags_[index] || xp_orb_flags_[index]) {
 			continue;
 		}
 		enemy_types_[index].supported = false;
+		enemy_types_[index].shielded = false;
+		enemy_types_[index].shield_source = {};
 		const Transform2D &position = transforms_[index];
 		const double target_dx = static_cast<double>(target_x) - position.x;
 		const double target_dy = static_cast<double>(target_y) - position.y;
@@ -846,6 +862,24 @@ void SimulationCore::steer_enemies_towards(float target_x, float target_y, Steer
 			};
 		} else {
 			next_velocities[index] = {};
+		}
+		if (enemy_types_[index].shield_radius <= 0.0F && maximum_shield_radius > 0.0F) {
+			const auto shield_neighbors = query_spatial_index(spatial_index, position.x, position.y,
+					maximum_shield_radius, config.spatial_hash);
+			for (uint32_t shield_index : shield_neighbors) {
+				const EnemyType &shield = enemy_types_[shield_index];
+				if (shield.shield_radius <= 0.0F || health_[shield_index].current <= 0.0F) {
+					continue;
+				}
+				const double dx = static_cast<double>(position.x) - transforms_[shield_index].x;
+				const double dy = static_cast<double>(position.y) - transforms_[shield_index].y;
+				if (dx * dx + dy * dy > static_cast<double>(shield.shield_radius) * shield.shield_radius) {
+					continue;
+				}
+				enemy_types_[index].shielded = true;
+				enemy_types_[index].shield_source = {shield_index, slots_[shield_index].generation};
+				break;
+			}
 		}
 	}
 	velocities_.swap(next_velocities);
@@ -941,6 +975,27 @@ void SimulationCore::apply_damage(EntityId source, EntityId target, float amount
 	}
 	Health &target_health = health_[target.index];
 	const bool target_was_chilled = chill_effects_[target.index].has_value();
+	EnemyType &target_type = enemy_types_[target.index];
+	if (target_type.shielded) {
+		const EntityId source_id = target_type.shield_source;
+		const bool source_active = source_id.index < slots_.size() && slots_[source_id.index].active &&
+				slots_[source_id.index].generation == source_id.generation &&
+				health_[source_id.index].current > 0.0F && enemy_types_[source_id.index].shield_radius > 0.0F;
+		if (source_active) {
+			const double dx = static_cast<double>(transforms_[target.index].x) - transforms_[source_id.index].x;
+			const double dy = static_cast<double>(transforms_[target.index].y) - transforms_[source_id.index].y;
+			const float radius = enemy_types_[source_id.index].shield_radius;
+			if (dx * dx + dy * dy <= static_cast<double>(radius) * radius) {
+				amount *= enemy_types_[source_id.index].shield_damage_multiplier;
+			} else {
+				target_type.shielded = false;
+				target_type.shield_source = {};
+			}
+		} else {
+			target_type.shielded = false;
+			target_type.shield_source = {};
+		}
+	}
 	if (target_was_chilled) {
 		amount *= chill_effects_[target.index]->damage_taken_multiplier;
 	}
