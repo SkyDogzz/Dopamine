@@ -232,6 +232,10 @@ func debug_advance_wave() -> void:
 	if wave_director.state == WAVE_DIRECTOR_SCRIPT.State.WAVE:
 		wave_director.elapsed_in_wave = wave_duration_seconds
 		wave_director.advance(0.0)
+		if wave_director.state == WAVE_DIRECTOR_SCRIPT.State.MID_BOSS:
+			_spawn_boss_placeholder("mid_boss")
+		elif wave_director.state == WAVE_DIRECTOR_SCRIPT.State.FINAL_BOSS:
+			_spawn_boss_placeholder("final_boss")
 	elif wave_director.state == WAVE_DIRECTOR_SCRIPT.State.MID_BOSS:
 		_kill_boss_placeholder("mid_boss")
 	elif wave_director.state == WAVE_DIRECTOR_SCRIPT.State.FINAL_BOSS:
@@ -243,6 +247,7 @@ func _kill_boss_placeholder(boss_type: String) -> void:
 		if components.get("EnemyType", "") == boss_type:
 			var id: Dictionary = entity["id"]
 			simulation.despawn(int(id["index"]), int(id["generation"]))
+			_boss_spawn_pending = false
 			wave_director.boss_defeated()
 			if wave_director.state == WAVE_DIRECTOR_SCRIPT.State.VICTORY:
 				run_over = true

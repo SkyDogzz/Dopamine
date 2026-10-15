@@ -36,8 +36,36 @@ func _run() -> void:
 	if not director.boss_defeated() or director.state != director_script.State.VICTORY:
 		_fail("Defeating the final boss should complete the run")
 		return
+	var session: Node2D = load("res://scenes/survival_session.tscn").instantiate()
+	session.wave_spawning_enabled = false
+	session.weapon_enabled = false
+	session.player_hp = 1000.0
+	root.add_child(session)
+	await process_frame
+	while session.wave_director.state != director_script.State.VICTORY:
+		session.debug_advance_wave()
+		if session.wave_director.state == director_script.State.MID_BOSS:
+			if not await _wait_for_entity_type(session, "mid_boss"):
+				return
+		elif session.wave_director.state == director_script.State.FINAL_BOSS:
+			if not await _wait_for_entity_type(session, "final_boss"):
+				return
+		await process_frame
+	if not session.run_over or not session.simulation.snapshot()["paused"]:
+		_fail("Defeating the final boss placeholder should complete and pause the Survival run")
+		return
 	print("Survival wave director smoke passed")
 	quit()
+
+func _wait_for_entity_type(session: Node2D, expected_type: String) -> bool:
+	var deadline := Time.get_ticks_msec() + 1000
+	while Time.get_ticks_msec() < deadline:
+		await process_frame
+		for entity in session.simulation.snapshot()["entities"]:
+			if entity["components"].get("EnemyType", "") == expected_type:
+				return true
+	_fail("Timed out waiting for %s placeholder" % expected_type)
+	return false
 
 func _fail(message: String) -> void:
 	push_error(message)
