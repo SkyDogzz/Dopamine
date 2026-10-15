@@ -1,0 +1,19 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/chest_choice.gd" id="1_script"]
+
+[node name="ChestChoice" type="PanelContainer"]
+custom_minimum_size = Vector2(520, 330)
+script = ExtResource("1_script")
+
+[node name="Content" type="VBoxContainer" parent="."]
+theme_override_constants/separation = 12
+
+[node name="Title" type="Label" parent="Content"]
+layout_mode = 2
+text = "CHEST — CHOOSE ONE"
+horizontal_alignment = 1
+
+[node name="Options" type="VBoxContainer" parent="Content"]
+layout_mode = 2
+theme_override_constants/separation = 8

@@ -39,5 +39,6 @@
 - [x] Prototype XP : une orbe partagée apparaît à la mort d’un ennemi, se collecte une fois et fait progresser le niveau.
 - [x] Prototype vagues : 24 vagues, horloge arrêtée pendant les placeholders boss, spawns selon courbes proposées et HUD vague.
 - [x] HUD boss : barre HP courants/max et état de victoire distinct de la défaite.
+- [x] Fondations chest : directeur de drop configurable et modal de trois choix avec pause/reprise; catalogue et effets non intégrés.
 - [ ] Vagues, chests, 3 armes/reliques, mid-boss et boss final.
 - [ ] HUD, fin de run, sauvegarde minimale et vérification QA complète.

@@ -15,6 +15,27 @@ func _run() -> void:
 	if session.get_node("HUD/RunPanel/RunInfo/HPBar").value != 100.0:
 		_fail("Survival HUD should start at the validated player HP")
 		return
+	var selected_chest_options := [""]
+	session.chest_option_chosen.connect(func(option_id: String) -> void: selected_chest_options[0] = option_id)
+	var chest_options := [
+		{"id": "weapon_upgrade", "title": "Weapon upgrade", "description": "Improve an equipped weapon."},
+		{"id": "new_weapon", "title": "New weapon", "description": "Add a weapon to this run."},
+		{"id": "relic", "title": "Relic", "description": "Add a matching relic."},
+	]
+	if not session.open_chest(chest_options):
+		_fail("Survival should open a chest with three valid offers")
+		return
+	var paused: Dictionary = await _wait_until(session, func(snapshot: Dictionary) -> bool: return snapshot["paused"])
+	if paused.is_empty() or not session.get_node("HUD/ChestOverlay/ChestChoice").visible:
+		_fail("Opening a chest should pause the simulation and show its modal")
+		return
+	session.get_node("HUD/ChestOverlay/ChestChoice/Content/Options/Choice0").emit_signal("pressed")
+	var resumed: Dictionary = await _wait_until(session, func(snapshot: Dictionary) -> bool:
+		return not snapshot["paused"] and selected_chest_options[0] == "weapon_upgrade"
+	)
+	if resumed.is_empty() or session.get_node("HUD/ChestOverlay/ChestChoice").visible:
+		_fail("Choosing an offer should emit its ID and resume the run")
+		return
 	session.simulation.set_speed(4.0)
 	session.player_hp = 80.0
 	for position in [Vector2(140.0, -30.0), Vector2(140.0, 30.0)]:

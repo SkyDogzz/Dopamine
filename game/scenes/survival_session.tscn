@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene load_steps=3 format=3]
 
 [ext_resource type="Script" path="res://scripts/survival_session.gd" id="1_session"]
+[ext_resource type="PackedScene" path="res://scenes/chest_choice.tscn" id="2_chest_choice"]
 
 [node name="SurvivalSession" type="Node2D"]
 script = ExtResource("1_session")
@@ -81,3 +82,13 @@ text = "BOSS  1000 / 1000"
 custom_minimum_size = Vector2(260, 0)
 layout_mode = 2
 show_percentage = false
+
+[node name="ChestOverlay" type="CenterContainer" parent="HUD"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="ChestChoice" parent="HUD/ChestOverlay" instance=ExtResource("2_chest_choice")]

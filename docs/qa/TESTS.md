@@ -19,6 +19,7 @@
 - [x] P3 vagues ciblé : progression de 24 vagues et transitions aux boss 12/24; timer bloqué pendant les placeholders et type d’ennemi préservé dans les événements de mort.
 - [x] P3 intégration : traversal accéléré de la session Survival à travers 24 vagues, spawn/défaite des placeholders boss, écran victoire logique et pause finale.
 - [x] P3 UI boss : la barre affiche les HP courants/max pour le mid-boss et le boss final; la victoire se distingue de RUN OVER.
+- [x] P3 loot primitives : directeur teste les probabilités configurables, les garanties et le filet 60 s; modal rejette les choix invalides et la session pause/reprend après sélection.
 - [ ] Godot 4.7.2 charge la GDExtension sur Windows et Linux.
 - [ ] Le projet C++23 compile avec versions verrouillées.
 - [ ] Aucune API Godot non thread-safe n'est appelée depuis le worker.

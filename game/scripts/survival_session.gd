@@ -1,5 +1,7 @@
 extends Node2D
 
+signal chest_option_chosen(option_id: String)
+
 const PLAYER_SCENE := preload("res://scenes/player.tscn")
 const WAVE_DIRECTOR_SCRIPT := preload("res://scripts/survival_wave_director.gd")
 const WAVE_HP_GROWTH := 1.12
@@ -50,6 +52,7 @@ var _last_combat_event_sequence := 0
 var _next_weapon_time := 0.0
 var _entities: Array = []
 var _pending_xp_orbs: Dictionary = {}
+var _chest_open := false
 
 @onready var _hp_value: Label = $HUD/RunPanel/RunInfo/HPValue
 @onready var _hp_bar: ProgressBar = $HUD/RunPanel/RunInfo/HPBar
@@ -62,6 +65,7 @@ var _pending_xp_orbs: Dictionary = {}
 @onready var _boss_panel: PanelContainer = $HUD/BossPanel
 @onready var _boss_value: Label = $HUD/BossPanel/BossInfo/BossValue
 @onready var _boss_hp_bar: ProgressBar = $HUD/BossPanel/BossInfo/BossHPBar
+@onready var _chest_choice: PanelContainer = $HUD/ChestOverlay/ChestChoice
 
 func _ready() -> void:
 	player = PLAYER_SCENE.instantiate()
@@ -72,6 +76,7 @@ func _ready() -> void:
 		push_error("CombatSimulation GDExtension class is unavailable")
 		set_physics_process(false)
 		return
+	_chest_choice.option_selected.connect(_on_chest_option_selected)
 	player_max_hp = simulation.initial_player_hp()
 	player_hp = player_max_hp
 	player_xp_to_next = xp_base_to_next_level
@@ -200,6 +205,18 @@ func _add_xp(amount: float) -> void:
 		player_xp -= player_xp_to_next
 		player_level += 1
 		player_xp_to_next = xp_base_to_next_level + xp_growth_per_level * float(player_level - 1)
+
+func open_chest(options: Array) -> bool:
+	if simulation == null or run_over or _chest_open or not _chest_choice.present(options):
+		return false
+	_chest_open = true
+	simulation.pause()
+	return true
+
+func _on_chest_option_selected(option_id: String) -> void:
+	_chest_open = false
+	chest_option_chosen.emit(option_id)
+	simulation.resume()
 
 func _advance_wave_director(delta_seconds: float, paused: bool) -> void:
 	if paused or run_over or wave_director == null or not wave_spawning_enabled:
