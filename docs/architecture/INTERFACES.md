@@ -13,7 +13,23 @@ Les exemples ci-dessous sont des **interfaces de conception proposées**, pas un
 - Les snapshots sont publiés atomiquement sous forme de `shared_ptr<const SimulationSnapshot>` ; les anciennes versions restent immuables.
 - `stop()` réveille puis joint le worker ; l'état est publié après sa terminaison.
 
-Le pont GDExtension et les noms de méthodes consommés par GDScript restent à implémenter ; ils ne sont pas encore un contrat public.
+## Pont GDExtension P1 implémenté
+
+`CombatSimulation` démarre son worker en pause. Les méthodes de commandes renvoient un numéro de séquence positif quand la commande entre dans la file, ou `0` si l'entrée est refusée. Elles ne bloquent pas le thread Godot.
+
+```gdscript
+var sequence = simulation.spawn("chaser", 5, Vector2(100, 80), 20.0, Vector2(0, 1))
+simulation.despawn(entity_index, entity_generation)
+simulation.kill_all()
+simulation.pause()
+simulation.resume()
+simulation.step(1.0 / 60.0)
+simulation.set_speed(2.0)
+simulation.reset()
+var state: Dictionary = simulation.snapshot()
+```
+
+Le snapshot contient l'état `paused`, `speed_multiplier`, `simulation_time`, `last_sequence`, `rejected_commands`, une liste `entities` (ID index/génération et composants `Transform2D`, `Velocity2D`, `Health`, `EnemyType`), les `metrics` et les `logs`. Godot reçoit des valeurs copiées ; aucune référence mutable du worker n'est exposée. `CombatSimulation` n'a pas accès au service de sauvegarde.
 
 ## Simulation native
 

@@ -36,10 +36,10 @@ endif()
 
 add_library(dopamine SHARED
     native/src/register_types.cpp
-    native/src/simulation_probe.cpp
+    native/src/combat_simulation.cpp
 )
 target_compile_features(dopamine PRIVATE cxx_std_23)
-target_link_libraries(dopamine PRIVATE godot-cpp)
+target_link_libraries(dopamine PRIVATE dopamine_simulation godot-cpp)
 
 get_target_property(GODOTCPP_SUFFIX godot::cpp GODOTCPP_SUFFIX)
 get_target_property(GODOTCPP_PLATFORM godot::cpp GODOTCPP_PLATFORM)

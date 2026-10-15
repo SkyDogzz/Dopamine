@@ -23,7 +23,7 @@ Livrer d’abord un Sandbox développeur autonome, puis le premier playable Surv
 
 - [x] Définir et tester les `EntityId` index/génération, le stockage SoA minimal et spawn/despawn/reset.
 - [x] Ajouter le thread de simulation, commandes ordonnées, pause/reprise/step explicite, arrêt propre et snapshots cohérents.
-- [ ] Exposer le contrat natif minimal à Godot et documenter les règles de propriété/thread.
+- [x] Exposer le contrat natif minimal à Godot et documenter les règles de propriété/thread.
 
 ### Phase 2 — Sandbox développeur MVP
 

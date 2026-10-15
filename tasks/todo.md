@@ -10,7 +10,7 @@
 
 - [x] Modèle ECS minimal (Transform2D, Velocity2D, Health, EnemyType) et test ciblé.
 - [x] Worker, file de commandes, pause/reprise/step et snapshots immuables.
-- [ ] Contrat natif documenté.
+- [x] Contrat natif documenté et pont GDExtension smoke-testé.
 
 ## Phase 2 — Sandbox développeur MVP
 

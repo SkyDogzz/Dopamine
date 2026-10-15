@@ -1,4 +1,4 @@
-#include "simulation_probe.hpp"
+#include "combat_simulation.hpp"
 
 #include <godot_cpp/godot.hpp>
 
@@ -6,7 +6,7 @@ using namespace godot;
 
 void initialize_dopamine(ModuleInitializationLevel level) {
 	if (level == MODULE_INITIALIZATION_LEVEL_SCENE) {
-		GDREGISTER_CLASS(SimulationProbe);
+		GDREGISTER_CLASS(CombatSimulation);
 	}
 }
 
