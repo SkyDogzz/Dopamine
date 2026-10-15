@@ -169,6 +169,33 @@ int main() {
 			"large steps should preserve each due damage-over-time tick");
 	require(damage_over_time.entity(dot_target)->health.current == 14.0F,
 			"damage-over-time should apply cumulative tick damage");
+	SimulationCore expiring_status;
+	const auto expiring_target = expiring_status.spawn("chaser", 0.0F, 0.0F, 10.0F, 0.0F, 0.0F);
+	expiring_status.apply_damage_over_time(expiring_target, 1.0F, 0.5, 1.0);
+	const auto expiry_events = expiring_status.advance(2.0);
+	require(expiry_events.size() == 2 && expiring_status.entity(expiring_target)->health.current == 8.0F,
+			"a large step must not emit damage-over-time ticks after the effect expires");
+	SimulationCore excessive_status;
+	std::vector<dopamine::sim::EntityId> excessive_targets;
+	for (int index = 0; index < 10; ++index) {
+		const auto target = excessive_status.spawn("chaser", static_cast<float>(index * 100), 0.0F,
+				100000.0F, 0.0F, 0.0F);
+		excessive_targets.push_back(target);
+		excessive_status.apply_damage_over_time(target, 1.0F, 0.001, 1.0);
+	}
+	bool rejected_excessive_step = false;
+	try {
+		excessive_status.advance(1.0);
+	} catch (const std::length_error &) {
+		rejected_excessive_step = true;
+	}
+	require(rejected_excessive_step && excessive_status.simulation_time() == 0.0,
+			"an event-heavy step must be rejected before advancing simulation time");
+	for (const auto target : excessive_targets) {
+		const auto state = excessive_status.entity(target);
+		require(state && state->health.current == 100000.0F && state->damage_over_time.has_value(),
+				"an event-heavy rejected step must not partially mutate entities or statuses");
+	}
 	const auto dot_replacement = damage_over_time.spawn("tank", 0.0F, 0.0F, 10.0F, 0.0F, 0.0F);
 	require(damage_over_time.apply_damage_over_time(dot_replacement, 2.0F, 0.5, 0.5),
 			"damage-over-time should apply to a second entity");

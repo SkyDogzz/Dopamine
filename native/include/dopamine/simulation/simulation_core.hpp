@@ -146,6 +146,7 @@ public:
 	bool collect_xp_orb(EntityId id, std::vector<CombatEvent> &events);
 	bool despawn(EntityId id);
 	void reset();
+	std::size_t estimate_event_count_upper_bound(double delta_seconds) const;
 	std::vector<CombatEvent> advance(double delta_seconds);
 	void steer_enemies_towards(float target_x, float target_y, SteeringConfig config = {});
 	std::vector<EntityId> query_radius(float x, float y, float radius,

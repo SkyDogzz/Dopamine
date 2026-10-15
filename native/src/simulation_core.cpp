@@ -216,10 +216,61 @@ void SimulationCore::reset() {
 	simulation_time_ = 0.0;
 }
 
-std::vector<CombatEvent> SimulationCore::advance(double delta_seconds) {
-	constexpr std::size_t max_explosion_targets_per_advance = 500; // Proposed safety budget for secondary blast hits.
+std::size_t SimulationCore::estimate_event_count_upper_bound(double delta_seconds) const {
 	if (!std::isfinite(delta_seconds) || delta_seconds < 0.0) {
 		throw std::invalid_argument("simulation delta must be finite and non-negative");
+	}
+	if (delta_seconds == 0.0) {
+		return 0;
+	}
+	std::size_t estimate = 0;
+	const auto add_saturated = [&estimate](long double amount) {
+		const long double remaining = static_cast<long double>(std::numeric_limits<std::size_t>::max() - estimate);
+		estimate += static_cast<std::size_t>(std::min(amount, remaining));
+	};
+	std::size_t projectile_count = 0;
+	bool has_explosive_projectile = false;
+	for (std::size_t index = 0; index < slots_.size(); ++index) {
+		if (!slots_[index].active) {
+			continue;
+		}
+		if (projectile_flags_[index]) {
+			++projectile_count;
+			has_explosive_projectile = has_explosive_projectile ||
+					(projectiles_[index].explosion_radius > 0.0F &&
+					 projectiles_[index].explosion_damage_multiplier > 0.0F);
+			continue;
+		}
+		if (!damage_over_time_[index].has_value() || health_[index].current <= 0.0F) {
+			continue;
+		}
+		const DamageOverTime &status = *damage_over_time_[index];
+		const double active_seconds = std::min(delta_seconds, status.remaining_seconds);
+		const double first_tick = std::max(0.0, status.time_to_tick);
+		if (active_seconds + 1e-12 < first_tick) {
+			continue;
+		}
+		const long double ticks = std::floor((static_cast<long double>(active_seconds) - first_tick + 1e-12L) /
+				status.interval_seconds) + 1.0L;
+		// Each tick emits damage, and at most one of those ticks can also emit death.
+		add_saturated(ticks + 1.0L);
+	}
+	add_saturated(static_cast<long double>(projectile_count) * 2.0L);
+	if (has_explosive_projectile) {
+		// The whole advance shares a 500-target splash cap; each hit can emit damage and death.
+		add_saturated(1000.0L);
+	}
+	return estimate;
+}
+
+std::vector<CombatEvent> SimulationCore::advance(double delta_seconds) {
+	constexpr std::size_t max_explosion_targets_per_advance = 500; // Proposed safety budget for secondary blast hits.
+	constexpr std::size_t max_events_per_advance = 8192;
+	if (!std::isfinite(delta_seconds) || delta_seconds < 0.0) {
+		throw std::invalid_argument("simulation delta must be finite and non-negative");
+	}
+	if (estimate_event_count_upper_bound(delta_seconds) > max_events_per_advance) {
+		throw std::length_error("simulation step exceeds the combat event budget");
 	}
 	bool has_active_projectile = false;
 	for (std::size_t index = 0; index < slots_.size(); ++index) {
@@ -245,7 +296,7 @@ std::vector<CombatEvent> SimulationCore::advance(double delta_seconds) {
 		DamageOverTime &status = *damage_over_time_[index];
 		const double active_seconds = std::min(delta_seconds, status.remaining_seconds);
 		status.remaining_seconds -= active_seconds;
-		status.time_to_tick -= delta_seconds;
+		status.time_to_tick -= active_seconds;
 		const EntityId target{index, slots_[index].generation};
 		while (status.time_to_tick <= 1e-12 && status.remaining_seconds >= -1e-12) {
 			const std::size_t event_start = events.size();

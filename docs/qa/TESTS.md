@@ -50,7 +50,7 @@
 - [x] Scénario Sandbox JSON applique un DoT, vérifie la santé restante et compte les événements de tick tagués.
 - [x] Pas de simulation 1/120, 1/60, 1/30 et 100 ms : position, vitesse et HP restent finis; déplacement égal à la vitesse intégrée, sans saut; DoT indépendant du pas.
 - [x] Timers de statuts exprimés en secondes, indépendants du nombre de frames pour les pas testés.
-- [ ] Les chaînes d'effets respectent le budget sans perdre silencieusement les événements critiques.
+- [x] Les chaînes d'effets respectent le budget : le cœur refuse atomiquement un pas DoT trop riche, le worker explique le refus, un pas plus petit conserve tous les événements dus et les ticks s'arrêtent à l'expiration.
 
 ## Communication / rendu
 

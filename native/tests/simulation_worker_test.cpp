@@ -167,6 +167,43 @@ int main() {
 	acknowledge.event_sequence = with_events->events.back().sequence;
 	submit_and_wait(worker, acknowledge);
 	require(worker.snapshot()->events.empty(), "acknowledged combat events should leave the pending queue");
+	SimulationCommand dot_targets;
+	dot_targets.type = CommandType::Spawn;
+	dot_targets.entity_type = "chaser";
+	dot_targets.count = 10;
+	dot_targets.hp = 100000.0F;
+	submit_and_wait(worker, dot_targets);
+	for (const auto &entity : worker.snapshot()->entities) {
+		SimulationCommand apply_status;
+		apply_status.type = CommandType::ApplyDamageOverTime;
+		apply_status.entity = entity.id;
+		apply_status.status_damage_per_tick = 1.0F;
+		apply_status.status_interval_seconds = 0.001;
+		apply_status.status_duration_seconds = 1.0;
+		submit_and_wait(worker, apply_status);
+	}
+	step.delta_seconds = 1.0;
+	const uint64_t rejected_dot_step = submit_and_wait(worker, step);
+	const auto after_rejected_dot_step = worker.snapshot();
+	require(after_rejected_dot_step->last_sequence == rejected_dot_step &&
+			after_rejected_dot_step->simulation_time == 0.2,
+			"worker should acknowledge but not execute a step that exceeds the event budget");
+	for (const auto &entity : after_rejected_dot_step->entities) {
+		require(entity.health.current == 100000.0F && entity.damage_over_time.has_value(),
+				"rejected worker step should preserve health and active statuses");
+	}
+	require(after_rejected_dot_step->events.empty() && !after_rejected_dot_step->logs.empty() &&
+			after_rejected_dot_step->logs.back().find("event budget exceeded") != std::string::npos,
+			"worker should explain that an oversized explicit step was rejected");
+	step.delta_seconds = 0.1;
+	submit_and_wait(worker, step);
+	const auto after_bounded_dot_step = worker.snapshot();
+	require(std::abs(after_bounded_dot_step->simulation_time - 0.3) < 1e-9 &&
+			after_bounded_dot_step->events.size() == 1000,
+			"a smaller step should preserve every due damage-over-time event");
+	acknowledge.event_sequence = after_bounded_dot_step->events.back().sequence;
+	submit_and_wait(worker, acknowledge);
+	submit_and_wait(worker, reset);
 
 	SimulationCommand capacity_enemies;
 	capacity_enemies.type = CommandType::Spawn;

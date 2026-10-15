@@ -104,8 +104,29 @@ void SimulationWorker::run(std::stop_token stop_token) {
 					simulation_.steer_enemies_towards(steering_target_x_, steering_target_y_, steering_config_);
 				}
 				const double delta = deferred_elapsed_ + elapsed * speed_multiplier_;
-				deferred_elapsed_ = 0.0;
-				append_events(simulation_.advance(delta));
+				double step = delta;
+				if (simulation_.estimate_event_count_upper_bound(step) > max_events_per_advance_) {
+					double lower = 0.0;
+					double upper = step;
+					for (int iteration = 0; iteration < 48; ++iteration) {
+						const double candidate = lower + (upper - lower) * 0.5;
+						if (candidate == lower || candidate == upper) {
+							break;
+						}
+						if (simulation_.estimate_event_count_upper_bound(candidate) <= max_events_per_advance_) {
+							lower = candidate;
+						} else {
+							upper = candidate;
+						}
+					}
+					step = lower;
+				}
+				if (step > 0.0) {
+					deferred_elapsed_ = delta - step;
+					append_events(simulation_.advance(step));
+				} else {
+					deferred_elapsed_ = delta;
+				}
 			} else {
 				deferred_elapsed_ += elapsed * speed_multiplier_;
 			}
@@ -166,10 +187,15 @@ void SimulationWorker::apply(const SimulationCommand &command) {
 					log("step rejected: acknowledge pending combat events first");
 					break;
 				}
+				const double scaled_delta = command.delta_seconds * speed_multiplier_;
+				if (simulation_.estimate_event_count_upper_bound(scaled_delta) > max_events_per_advance_) {
+					log("step rejected: combat event budget exceeded; use a smaller duration");
+					break;
+				}
 				if (has_steering_target_) {
 					simulation_.steer_enemies_towards(steering_target_x_, steering_target_y_, steering_config_);
 				}
-				append_events(simulation_.advance(command.delta_seconds * speed_multiplier_));
+				append_events(simulation_.advance(scaled_delta));
 				log("stepped " + std::to_string(command.delta_seconds) + " seconds");
 			} catch (const std::exception &error) {
 				log(std::string("step rejected: ") + error.what());
