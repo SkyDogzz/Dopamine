@@ -63,7 +63,7 @@ Pour le steering, l’index spatial est construit une fois par passe et réutili
 
 P2 implémente les projectiles ECS comme entités distinctes, leur durée de vie et un test balayé relatif au mouvement des cibles. Les impacts passent par `apply_damage`, émettent des événements séquencés et appliquent le despawn en fin de passe. Les rayons d’ennemi (12 unités) et le rayon projectile par défaut (3 unités) sont des paramètres provisoires faute de hitboxes validées.
 
-Les tirs des ennemis ordinaires utilisent aussi des entités projectile ECS pour le déplacement et la durée de vie. Comme le joueur reste un `CharacterBody2D` Godot hors de l’ECS, Survival résout leur collision avec le joueur et applique les dégâts côté Godot ; ces projectiles sont exclus des impacts contre les ennemis ECS.
+Les tirs des ennemis ordinaires utilisent aussi des entités projectile ECS pour le déplacement et la durée de vie. Comme le joueur reste un `CharacterBody2D` Godot hors de l'ECS, Survival résout leur collision avec le joueur et applique les dégâts côté Godot ; ces projectiles sont exclus des impacts contre les ennemis ECS. Le fuse et l'explosion de proximité des Exploders sont résolus par Survival à partir des snapshots ECS ; leur délai suit `simulation_time` et se fige en pause.
 
 La règle de HP decay est une fonction pure du temps actif fourni par le mode et d’une durée. Elle reprend la formule exacte marquée **[PROPOSÉ]** dans le GDD ; la propriété du HP joueur et de son horloge n’est pas encore fixée par le code.
 
@@ -81,7 +81,7 @@ La règle de HP decay est une fonction pure du temps actif fourni par le mode et
 
 ## Rendu
 
-- Les scènes Sandbox et Survival utilisent des sprites pixel art RGBA pour le joueur, les profils ennemis, les placeholders de boss, les projectiles des trois armes jouables, les orbes XP et les chests. Le Buffer possède un sprite dédié ; son aura, les alliés buffés et le Hasted des élites sont signalés dans les deux vues. Les icônes des armes/reliques apparaissent aussi dans les choix.
+- Les scènes Sandbox et Survival utilisent des sprites pixel art RGBA pour le joueur, les profils ennemis, les placeholders de boss, les projectiles des trois armes jouables, les orbes XP et les chests. Le Buffer et l’Exploder possèdent des sprites dédiés ; leurs effets, les alliés buffés et le Hasted des élites sont signalés dans les deux vues. Les icônes des armes/reliques apparaissent aussi dans les choix.
 - `SpriteBatchRenderer` regroupe les entités en MultiMesh par sprite afin de garder un lot par type visuel ; la planche source est découpée en tuiles 64×64 avec `game/tools/slice_sprite_atlas.gd`.
 - Animation par shader et index de frame d'atlas ; shaders 2D, glow mesuré, particules GPU.
 - Résolution logique pixel art fixe, upscale entier lorsque l'affichage le permet.

@@ -74,6 +74,11 @@ const WAVE_HP_CAP := 12.0
 @export var shooter_projectile_damage: float = 8.0
 @export var shooter_projectile_radius: float = 6.0
 @export var shooter_projectile_lifetime: float = 4.0
+@export_group("Prototype Exploder attacks — proposed tuning")
+@export var exploder_trigger_radius: float = 110.0
+@export var exploder_blast_radius: float = 82.0
+@export var exploder_fuse_seconds: float = 0.8
+@export var exploder_damage: float = 18.0
 @export_group("Prototype Lightning Conductor — proposed tuning")
 @export var weapon_enabled: bool = true
 @export var lightning_cooldown: float = 0.5
@@ -266,6 +271,7 @@ var _next_unique_lightning_time := 0.0
 var _evolution_shockwave_triggered := false
 var _elite_haste_expires_at := 0.0
 var _shooter_attacks: Dictionary = {}
+var _exploder_attacks: Dictionary = {}
 
 @onready var _hp_value: Label = $HUD/RunPanel/RunInfo/HPValue
 @onready var _hp_bar: ProgressBar = $HUD/RunPanel/RunInfo/HPBar
@@ -476,6 +482,7 @@ func _process(_delta: float) -> void:
 	_advance_wave_director(elapsed_active_time, state["paused"])
 	_apply_contact_damage(state, current_simulation_time)
 	_update_shooter_attacks(current_simulation_time, bool(state["paused"]))
+	_update_exploder_attacks(current_simulation_time, bool(state["paused"]))
 	_collect_nearby_xp_orbs(state)
 	_collect_nearby_chests(state)
 	_complete_pending_victory()
@@ -565,6 +572,48 @@ func _update_shooter_attacks(current_simulation_time: float, paused: bool) -> vo
 	for shooter_key in _shooter_attacks.keys():
 		if not active_shooters.has(shooter_key):
 			_shooter_attacks.erase(shooter_key)
+
+func _update_exploder_attacks(current_simulation_time: float, paused: bool) -> void:
+	if paused or run_over:
+		return
+	var active_exploders: Dictionary = {}
+	for entity in _entities:
+		var components: Dictionary = entity["components"]
+		if components.get("IsProjectile", false) or components.get("EnemyType", "") != "exploder":
+			continue
+		var id: Dictionary = entity["id"]
+		var key := _entity_key(int(id["index"]), int(id["generation"]))
+		active_exploders[key] = true
+		if _exploder_attacks.has(key) and str(_exploder_attacks[key].get("phase", "")) == "detonated":
+			continue
+		var transform: Dictionary = components["Transform2D"]
+		var origin := Vector2(float(transform["x"]), float(transform["y"]))
+		if not _exploder_attacks.has(key):
+			if player.global_position.distance_squared_to(origin) > exploder_trigger_radius * exploder_trigger_radius:
+				continue
+			_exploder_attacks[key] = {"origin": origin, "detonate_at": current_simulation_time + maxf(0.05, exploder_fuse_seconds)}
+		var attack: Dictionary = _exploder_attacks[key]
+		attack["origin"] = origin
+		if current_simulation_time < float(attack["detonate_at"]):
+			continue
+		var blast_origin: Vector2 = attack["origin"]
+		if player.global_position.distance_squared_to(blast_origin) <= exploder_blast_radius * exploder_blast_radius and \
+				current_simulation_time >= _contact_invulnerable_until:
+			_take_player_damage(exploder_damage)
+			_contact_invulnerable_until = current_simulation_time + contact_invulnerability_seconds
+		simulation.despawn(int(id["index"]), int(id["generation"]))
+		attack["phase"] = "detonated"
+		kill_count += 1
+		_roll_enemy_chests("exploder", blast_origin)
+		if not run_over:
+			var healing: float = float(simulation.kill_heal_amount(float(components.get("ThreatLevel", 2.0))))
+			healing *= 1.0 + float(loadout.relic_level("blood_chalice")) * blood_chalice_heal_per_level
+			healing *= 1.0 + _equipment_bonus("kill_healing_pct") / 100.0
+			player_hp = minf(player_max_hp, player_hp + healing)
+			simulation.spawn_xp_orb(blast_origin, xp_per_enemy * (1.0 + _equipment_bonus("xp_pct") / 100.0))
+	for exploder_key in _exploder_attacks.keys():
+		if not active_exploders.has(exploder_key):
+			_exploder_attacks.erase(exploder_key)
 
 func _apply_pending_lifesteal(elapsed_active_time: float) -> void:
 	if elapsed_active_time <= 0.0 or _pending_lifesteal <= 0.0 or run_over:
@@ -925,6 +974,8 @@ func _spawn_wave_enemy() -> void:
 		enemy_type = "shooter"
 	if wave_director.wave >= 6 and randf() < 0.10:
 		enemy_type = "buffer"
+	if wave_director.wave >= 8 and randf() < 0.12:
+		enemy_type = "exploder"
 	var hp_multiplier := minf(pow(WAVE_HP_GROWTH, float(wave_director.wave - 1)), WAVE_HP_CAP)
 	simulation.spawn_enemy(enemy_type, 1, spawn_position, Vector2.ZERO, hp_multiplier)
 
@@ -1669,6 +1720,17 @@ func _draw() -> void:
 		draw_line(attack["origin"], attack["aim"], Color(1.0, 0.2, 0.28, 0.18 + alpha * 0.5), 2.0, true)
 		draw_arc(attack["aim"], 14.0 + alpha * 5.0, 0.0, TAU, 32,
 				Color(1.0, 0.2, 0.28, 0.45 + alpha * 0.5), 2.0, true)
+	for attack in _exploder_attacks.values():
+		if str(attack.get("phase", "")) == "detonated":
+			continue
+		var time_left := clampf(float(attack["detonate_at"]) - _last_simulation_time, 0.0, exploder_fuse_seconds)
+		var alpha := 1.0 - time_left / maxf(exploder_fuse_seconds, 0.01)
+		var origin: Vector2 = attack["origin"]
+		draw_circle(origin, exploder_blast_radius, Color(1.0, 0.17, 0.08, 0.06 + alpha * 0.14))
+		draw_arc(origin, exploder_blast_radius, 0.0, TAU, 48,
+				Color(1.0, 0.24, 0.08, 0.4 + alpha * 0.5), 2.0 + alpha * 2.0, true)
+		draw_arc(origin, 16.0 + alpha * 8.0, 0.0, TAU, 32,
+				Color(1.0, 0.72, 0.25, 0.5 + alpha * 0.45), 2.0, true)
 	for entity in _entities:
 		var components: Dictionary = entity["components"]
 		if not components.get("IsProjectile", false) or not ["void_orb", "event_horizon"].has(str(components.get("EnemyType", ""))):

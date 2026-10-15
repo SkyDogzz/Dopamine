@@ -2,10 +2,10 @@
   "schema_version": 1,
   "scenario_id": "enemy_profiles_smoke",
   "expected": {
-    "entity_count": 6,
-    "entity_health": [20.0, 24.0, 80.0, 25.0, 35.0, 50.0],
-    "entity_speeds": [75.0, 125.0, 45.0, 65.0, 55.0, 100.0],
-    "enemy_move_speeds": [75.0, 125.0, 45.0, 65.0, 55.0, 100.0]
+    "entity_count": 7,
+    "entity_health": [20.0, 24.0, 80.0, 25.0, 35.0, 50.0, 30.0],
+    "entity_speeds": [75.0, 125.0, 45.0, 65.0, 55.0, 100.0, 60.0],
+    "enemy_move_speeds": [75.0, 125.0, 45.0, 65.0, 55.0, 100.0, 60.0]
   },
   "commands": [
     {"type": "spawn_enemy", "enemy_type": "chaser"},
@@ -13,6 +13,7 @@
     {"type": "spawn_enemy", "enemy_type": "tank"},
     {"type": "spawn_enemy", "enemy_type": "shooter"},
     {"type": "spawn_enemy", "enemy_type": "buffer"},
-    {"type": "spawn_enemy", "enemy_type": "elite"}
+    {"type": "spawn_enemy", "enemy_type": "elite"},
+    {"type": "spawn_enemy", "enemy_type": "exploder"}
   ]
 }

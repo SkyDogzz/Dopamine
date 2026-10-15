@@ -357,7 +357,7 @@ Travail requis :
 
 ### P5.4 — Ennemis, élites et boss
 
-**Avancement :** le profil Shooter tire des projectiles lents après un télégraphe visible ; la pause et l’invulnérabilité s’appliquent. Le profil Buffer (35 HP, vitesse 55, menace 2) renforce de 20 % la vitesse des alliés dans son aura de 150 unités, visible en Survival et dans le Sandbox ; l’effet cesse à sa mort. Un premier prototype d’élite **Hasted** (50 HP, vitesse 100, menace 3), marqué visuellement, apparaît selon un cooldown, un plafond actif et un budget égal à la population de la vague ; son coût de menace est 3. Il utilise le chemin de récompense élite existant. Tous ces réglages et ce budget restent **[PROPOSÉS]**. Les familles explosives et les patterns de boss restent à faire.
+**Avancement :** le profil Shooter tire des projectiles lents après un télégraphe visible ; la pause et l’invulnérabilité s’appliquent. Le profil Buffer (35 HP, vitesse 55, menace 2) renforce de 20 % la vitesse des alliés dans son aura de 150 unités, visible en Survival et dans le Sandbox ; l’effet cesse à sa mort. Un premier prototype d’élite **Hasted** (50 HP, vitesse 100, menace 3), marqué visuellement, apparaît selon un cooldown, un plafond actif et un budget égal à la population de la vague ; son coût de menace est 3. Il utilise le chemin de récompense élite existant. Le profil **Exploder** (30 HP, vitesse 60, menace 2) s’approche, déclenche un fuse de 0,8 s dans un rayon de 110 et inflige 18 dégâts dans un rayon de 82 ; le cercle de souffle est visible, la pause fige le fuse, et sortir du rayon esquive le souffle. Ses statistiques, rayons, dégâts, durée et apparition à partir de la vague 8 sont **[PROPOSÉS]**. Tous les réglages Hasted et le budget restent **[PROPOSÉS]**. Les autres familles explosives et patterns de boss restent à faire.
 
 - [ ] **P5.4.1 — Familles ennemies**
   - [ ] Ajouter une famille de mêlée avec spawn, steering et mort.
@@ -365,7 +365,7 @@ Travail requis :
   - [ ] Ajouter une famille tank et vérifier sa menace/HP proposés.
   - [x] Ajouter une famille distance avec projectile télégraphié.
   - [x] Ajouter un profil de soutien Buffer avec aura de vitesse visible et bornée.
-  - [ ] Ajouter une famille explosive avec contre-jeu lisible.
+  - [x] Ajouter le prototype Exploder avec fuse et souffle esquivables **[PROPOSÉS]**.
   - [ ] Compléter le catalogue jusqu’à 8–12 familles et vérifier les compositions.
 - [ ] **P5.4.2 — Interactions ennemies**
   - [x] Ajouter un buff de soutien visible et borné.

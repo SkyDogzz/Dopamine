@@ -110,7 +110,7 @@ func _validate_scenario(scenario: Variant) -> String:
 				if not _valid_number(command.get("threat_level", 1)) or float(command.get("threat_level", 1)) <= 0.0:
 					return "Command %d threat_level must be positive and finite" % index
 			"spawn_enemy":
-				if typeof(command.get("enemy_type")) != TYPE_STRING or not ["chaser", "sprinter", "tank", "shooter", "buffer", "elite"].has(command["enemy_type"]):
+				if typeof(command.get("enemy_type")) != TYPE_STRING or not ["chaser", "sprinter", "tank", "shooter", "buffer", "elite", "exploder"].has(command["enemy_type"]):
 					return "Command %d enemy_type must name a supported profile" % index
 				if not _valid_integer(command.get("count", 1)) or int(command.get("count", 1)) < 1 or int(command.get("count", 1)) > 500:
 					return "Command %d count must be between 1 and 500" % index

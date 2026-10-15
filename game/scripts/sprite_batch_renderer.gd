@@ -6,6 +6,7 @@ const SPRITE_FILES := {
 	"enemy_tank": "enemy_tank",
 	"enemy_shooter": "enemy_shooter",
 	"enemy_buffer": "enemy_buffer.svg",
+	"enemy_exploder": "enemy_exploder.svg",
 	"boss_mid_placeholder": "boss_mid_placeholder",
 	"boss_final_placeholder": "boss_final_placeholder",
 	"xp_orb": "xp_orb",
@@ -150,6 +151,8 @@ func _sprite_for_entity(components: Dictionary) -> String:
 			return "enemy_shooter"
 		"buffer":
 			return "enemy_buffer"
+		"exploder":
+			return "enemy_exploder"
 		"elite":
 			return "enemy_sprinter"
 		"mid_boss":
