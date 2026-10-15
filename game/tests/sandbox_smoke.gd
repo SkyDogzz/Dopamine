@@ -20,6 +20,7 @@ func _run() -> void:
 	var profile_state: Dictionary = await _wait_for_sequence(simulation, profile_sequence)
 	assert(is_equal_approx(profile_state["entities"][0]["components"]["Health"]["maximum"], 20.0))
 	assert(is_equal_approx(profile_state["entities"][0]["components"]["Velocity2D"]["y"], 75.0))
+	assert(is_equal_approx(profile_state["entities"][0]["components"]["MoveSpeed"], 75.0))
 	var clear_profiles: int = simulation.kill_all()
 	await _wait_for_sequence(simulation, clear_profiles)
 	assert(simulation.spawn("", 1, Vector2.ZERO, 10.0, Vector2.ZERO) == 0)

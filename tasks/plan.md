@@ -41,7 +41,8 @@ Livrer d’abord un Sandbox développeur autonome, puis le premier playable Surv
 - [x] Ajouter les menaces aux événements de mort et calculer le soin par kill proposé sans muter le HP joueur.
 - [x] Ajouter au cœur les profils provisoires Chaser, Sprinter, Tank et Shooter ; les rendre appelables depuis le Sandbox.
 - [x] Ajouter une scène joueur Godot avec mouvement configurable WASD/manette ; garder l’autorité du transform dans Godot.
-- [ ] Ajouter les comportements d’ennemis ; établir et tester la synchronisation du transform joueur vers le steering.
+- [x] Relier le transform Godot du joueur au steering de l’ECS dans une scène Survival, en préservant les vitesses de profil proposées.
+- [ ] Ajouter les comportements d’ennemis autres que la poursuite ; arbitrer la synchronisation du joueur/boss.
 - [ ] Intégrer HP decay et soins à l’horloge active et au HP du mode ; compléter les modificateurs et statuts.
 - [ ] Tester les règles indépendamment dans le Sandbox et respecter les budgets de simulation.
 

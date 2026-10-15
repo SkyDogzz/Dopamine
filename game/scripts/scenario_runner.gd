@@ -173,7 +173,7 @@ func _check_expected(expected: Dictionary, state: Dictionary, simulation: Object
 			var transform: Dictionary = state["entities"][index]["components"]["Transform2D"]
 			if not is_equal_approx(float(position[0]), float(transform["x"])) or not is_equal_approx(float(position[1]), float(transform["y"])):
 				return "Scenario entity position %d did not match expected value" % index
-	for expected_key in ["entity_health", "entity_speeds"]:
+	for expected_key in ["entity_health", "entity_speeds", "enemy_move_speeds"]:
 		if expected.has(expected_key):
 			var values: Variant = expected[expected_key]
 			if typeof(values) != TYPE_ARRAY or values.size() != state["entities"].size():
@@ -185,6 +185,8 @@ func _check_expected(expected: Dictionary, state: Dictionary, simulation: Object
 				var actual: float
 				if expected_key == "entity_health":
 					actual = float(entity["components"]["Health"]["maximum"])
+				elif expected_key == "enemy_move_speeds":
+					actual = float(entity["components"]["MoveSpeed"])
 				else:
 					var velocity: Dictionary = entity["components"]["Velocity2D"]
 					actual = Vector2(float(velocity["x"]), float(velocity["y"])).length()

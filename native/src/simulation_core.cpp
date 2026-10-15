@@ -50,10 +50,10 @@ double kill_heal_amount(double threat_level, KillHealConfig config) {
 }
 
 EntityId SimulationCore::spawn(std::string type, float x, float y, float hp, float velocity_x,
-		float velocity_y, float threat_level) {
+		float velocity_y, float threat_level, float move_speed) {
 	if (type.empty() || !std::isfinite(x) || !std::isfinite(y) || !std::isfinite(hp) || hp <= 0.0F ||
 			!std::isfinite(velocity_x) || !std::isfinite(velocity_y) || !std::isfinite(threat_level) ||
-			threat_level <= 0.0F) {
+			threat_level <= 0.0F || !std::isfinite(move_speed) || move_speed < 0.0F) {
 		throw std::invalid_argument("invalid simulation entity");
 	}
 
@@ -81,7 +81,7 @@ EntityId SimulationCore::spawn(std::string type, float x, float y, float hp, flo
 	transforms_[index] = {x, y};
 	velocities_[index] = {velocity_x, velocity_y};
 	health_[index] = {hp, hp};
-	enemy_types_[index] = {std::move(type), threat_level};
+	enemy_types_[index] = {std::move(type), threat_level, move_speed};
 	projectile_flags_[index] = false;
 	projectiles_[index] = {};
 	++entity_count_;
@@ -278,9 +278,12 @@ void SimulationCore::steer_enemies_towards(float target_x, float target_y, Steer
 
 		const double steering_length = std::hypot(steering_x, steering_y);
 		if (steering_length > 0.0) {
+			const float max_speed = enemy_types_[index].move_speed > 0.0F
+					? enemy_types_[index].move_speed
+					: config.max_speed;
 			next_velocities[index] = {
-				static_cast<float>(steering_x / steering_length * config.max_speed),
-				static_cast<float>(steering_y / steering_length * config.max_speed),
+				static_cast<float>(steering_x / steering_length * max_speed),
+				static_cast<float>(steering_y / steering_length * max_speed),
 			};
 		} else {
 			next_velocities[index] = {};

@@ -66,6 +66,7 @@ double kill_heal_amount(double threat_level, KillHealConfig config = {});
 struct EnemyType {
 	std::string id;
 	float threat_level = 1.0F;
+	float move_speed = 0.0F;
 };
 
 struct EnemyProfile {
@@ -111,7 +112,7 @@ struct Entity {
 class SimulationCore {
 public:
 	EntityId spawn(std::string type, float x, float y, float hp, float velocity_x, float velocity_y,
-			float threat_level = 1.0F);
+			float threat_level = 1.0F, float move_speed = 0.0F);
 	EntityId spawn_projectile(std::string type, float x, float y, float damage, float radius,
 			double lifetime_seconds, float velocity_x, float velocity_y);
 	bool despawn(EntityId id);

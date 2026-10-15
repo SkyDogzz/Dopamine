@@ -34,6 +34,12 @@ int main() {
 	require(shooter_profile && shooter_profile->health == 25.0F && shooter_profile->speed == 65.0F,
 			"proposed shooter profile should match GDD starting values");
 	require(!enemy_profile("unknown"), "unknown enemy profiles should be rejected");
+	SimulationCore profile_steering;
+	const auto profile_entity = profile_steering.spawn("tank", -100.0F, 0.0F, 80.0F,
+			0.0F, 0.0F, 1.0F, tank_profile->speed);
+	profile_steering.steer_enemies_towards(0.0F, 0.0F, {.max_speed = 10.0F});
+	require(std::abs(profile_steering.entity(profile_entity)->velocity.x - tank_profile->speed) < 0.001F,
+			"enemy steering should preserve the profile-specific proposed movement speed");
 	require(dopamine::sim::gdd_validated_player_initial_hp == 100.0F,
 			"validated initial player HP should remain 100");
 	require(std::abs(health_decay_amount(0.0, 60.0) - 97.2) < 0.000001,

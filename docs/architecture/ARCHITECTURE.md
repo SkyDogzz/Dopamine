@@ -36,7 +36,7 @@ Config Resolver ← JSON balance + Resources + Sandbox Overrides
 
 **Invariant :** aucun état mutable ne doit avoir deux autorités. Le contrat de synchronisation joueur/boss avec la simulation est à détailler et tester dès P2.
 
-Le joueur est contrôlé par une scène Godot `CharacterBody2D` ; ses actions InputMap couvrent WASD et les axes gauche du gamepad. `move_speed` est exporté et sa valeur de départ de 240 px/s est **[PROPOSÉE]** faute de valeur dans le GDD. Le laboratoire Sandbox existant garde ses commandes propres. Quand Survival sera assemblé, seul le transform joueur Godot alimentera `set_steering_target` pour l’ECS ennemie.
+Le joueur est contrôlé par une scène Godot `CharacterBody2D` ; ses actions InputMap couvrent WASD et les axes gauche du gamepad. `move_speed` est exporté et sa valeur de départ de 240 px/s est **[PROPOSÉE]** faute de valeur dans le GDD. La scène `survival_session.tscn` transmet la position globale joueur à `set_steering_target` lors de ses changements. Le worker reçoit une copie de cette cible et ne possède jamais le transform joueur. Le laboratoire Sandbox existant garde ses commandes propres.
 
 ## ECS
 

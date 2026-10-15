@@ -64,9 +64,24 @@ int64_t CombatSimulation::spawn_enemy(String enemy_type, int64_t count, Vector2 
 	if (!profile.has_value()) {
 		return 0;
 	}
-	return spawn(enemy_type, count, position, profile->health,
-			velocity.length() > 0.0 ? velocity.normalized() * profile->speed : Vector2(profile->speed, 0.0),
-			profile->threat_level);
+	if (count <= 0 || count > 500 || !std::isfinite(position.x) || !std::isfinite(position.y) ||
+			!std::isfinite(velocity.x) || !std::isfinite(velocity.y)) {
+		return 0;
+	}
+	SimulationCommand command;
+	command.type = CommandType::Spawn;
+	command.entity_type = std::string(profile->id);
+	command.count = static_cast<uint32_t>(count);
+	command.x = static_cast<float>(position.x);
+	command.y = static_cast<float>(position.y);
+	command.hp = profile->health;
+	command.threat_level = profile->threat_level;
+	command.enemy_move_speed = profile->speed;
+	const Vector2 initial_velocity = velocity.length() > 0.0
+			? velocity.normalized() * profile->speed : Vector2(profile->speed, 0.0);
+	command.velocity_x = static_cast<float>(initial_velocity.x);
+	command.velocity_y = static_cast<float>(initial_velocity.y);
+	return submit(std::move(command));
 }
 
 int64_t CombatSimulation::spawn_projectile(String projectile_type, Vector2 position, Vector2 velocity,
@@ -217,6 +232,7 @@ Dictionary CombatSimulation::snapshot() const {
 		components["Health"] = health;
 		components["EnemyType"] = String(entity.type.id.c_str());
 		components["ThreatLevel"] = entity.type.threat_level;
+		components["MoveSpeed"] = entity.type.move_speed;
 		components["IsProjectile"] = entity.is_projectile;
 		if (entity.is_projectile) {
 			Dictionary projectile;
