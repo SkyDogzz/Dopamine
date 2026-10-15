@@ -23,7 +23,7 @@ L’audit courant est statique. Godot/Godot 4 n’est pas détecté dans le PATH
 | P2 Simulation/combat | **Fondation présente, couverture partielle** | Diversité des IA, règles complètes d’ennemis/boss, instrumentation et performance iGPU. |
 | P3 Prototype de combat | **Trois paires et trois évolutions de prototype présentes** | Contrats génériques, retours visuels par niveau, ciblage fidèle, mesures DPS détaillées. |
 | P4 Vertical slice Survival | **Boucle de run prototype présente** | Boss réels, difficulté sélectionnable, run équilibrée et vérifiée sans harness. |
-| P5 Contenu v1.6 | **Non livré** | 7 armes et 8 reliques sont définies dans le catalogue mais restent indisponibles en Survival ; Magnet Heart et le gameplay complet, 8–12 familles ennemies et boss multi-phases restent à implémenter. |
+| P5 Contenu v1.6 | **Non livré** | 7 armes et leurs 7 reliques associées sont définies mais indisponibles en Survival ; Magnet Heart n'agit que sur l'XP ; le contenu complet, 8–12 familles ennemies et boss multi-phases restent à implémenter. |
 | P6 Progression permanente | **Prototype anticipé seulement** | Catalogue complet, règles et contenus validés, récompenses calibrées et effets uniques actifs. |
 | P7 Modes Endless | **À faire** | Armorless complet ; arbitrages nécessaires pour Endless standard. |
 | P8 Sandbox Lab joueur | **À faire au-delà des outils développeur P1** | Builds libres, presets/import/export, copie de save, snapshots complets et règles de sécurité. |
@@ -35,7 +35,7 @@ L’audit courant est statique. Godot/Godot 4 n’est pas détecté dans le PATH
 
 **Intégré en prototype, à ne pas confondre avec une feature finie :** boss (apparition/HP/transition, mais pas leurs patterns), XP auto-bonus, loot/probabilités, trois évolutions, équipement et enhancement, deux nodes de skill tree, famille Exterminator, effets uniques, récompenses de run. Les paramètres restent souvent **[PROPOSÉS]**.
 
-**Survolé ou absent par rapport au GDD :** 7 armes et 8 reliques restantes dont Magnet Heart ; animation/identité spécifique à chaque niveau ; dagues réellement orbitantes dans Bloodstorm (le code actuel tire des projectiles en éventail) ; 8–12 familles ennemies et leurs rôles ; élites à affixes ; boss à phases ; difficultés ; réactions élémentaires nommées ; tree ~120 nodes ; achievements ~120 familles ; modes Endless ; Sandbox Lab joueur ; performance iGPU et build Windows.
+**Survolé ou absent par rapport au GDD :** 7 armes et 7 reliques associées restantes ; Magnet Heart n'agit que sur XP (autres pickups et impulsion de niveau 5 absents) ; animation/identité spécifique à chaque niveau ; dagues réellement orbitantes dans Bloodstorm (le code actuel tire des projectiles en éventail) ; 8–12 familles ennemies et leurs rôles ; élites à affixes ; boss à phases ; difficultés ; réactions élémentaires nommées ; tree ~120 nodes ; achievements ~120 familles ; modes Endless ; Sandbox Lab joueur ; performance iGPU et build Windows.
 
 ## Dépendances principales
 
@@ -275,7 +275,7 @@ Catalogue d’évolution défini dans le GDD :
 | Sawblades | Magnetic Coil | Razorstorm | Définition catalogue présente ; gameplay absent. |
 | Toxic Cloud | Plague Mask | Pandemic | Définition catalogue présente ; gameplay absent. |
 | Prism Laser | Prism Crystal | Spectrum Collapse | Définition catalogue présente ; gameplay absent. |
-| — | Magnet Heart (relique utilitaire) | Aucune | Définition catalogue présente ; gameplay absent. |
+| — | Magnet Heart (relique utilitaire) | Aucune | Disponible ; rayon XP augmenté avec valeur **[PROPOSÉE]** configurable ; autres pickups et impulsion absents. |
 
 Travail requis :
 
@@ -296,9 +296,11 @@ Travail requis :
   - [ ] Vérifier conservation du niveau 5, non-consommation de relique et unicité.
   - [ ] Couvrir les choix chest impossibles après niveau max.
 - [ ] **P5.1.5 — Magnet Heart et pickups**
-  - [ ] Ajouter Magnet Heart comme relique utilitaire sans évolution.
-  - [ ] Définir les collectibles éligibles à l’attraction selon le GDD.
-  - [ ] Vérifier séparément orbe XP et chest : le rayon augmenté ne modifie jamais le chest.
+  - [x] Ajouter Magnet Heart comme relique utilitaire sans évolution et l'inclure dans les offres Survival.
+  - [x] Appliquer le bonus de rayon **[PROPOSÉ]** configurable de 25 % par niveau aux orbes XP.
+  - [x] Vérifier orbe XP et chest séparément : le bonus n'élargit jamais le rayon du chest.
+  - [ ] Étendre l'attraction aux soins, ressources, monnaies et bonus temporaires lorsqu'ils existent.
+  - [ ] Implémenter l'impulsion de niveau 5 **[PROPOSÉE]** (20 s, rayon 300 %) sans téléporter les objets.
 - [ ] **P5.1.6 — Slots et effets de capacité**
   - [ ] Vérifier cinq slots de reliques en run normale.
   - [ ] Tester une extension Legendary/Mythic seulement avec effet unique actif.

@@ -43,6 +43,51 @@ func _run() -> void:
 	if collected_xp.is_empty():
 		_fail("A large pickup bonus should extend XP collection range")
 		return
+	session._cached_equipment_bonuses.clear()
+	session.xp_collection_radius = 40.0
+	session.chest_collection_radius = 10.0
+	if not session.loadout.apply_offer("relic:magnet_heart"):
+		_fail("Magnet Heart should be available as a relic choice")
+		return
+	session._world_chests.append({"family": "weapon", "position": session.player.global_position + Vector2(45.0, 0.0)})
+	session._collect_nearby_chests(session.simulation.snapshot())
+	if session._chest_open or session._world_chests.size() != 1:
+		_fail("Magnet Heart must never extend chest collection range")
+		return
+	session._world_chests.clear()
+	xp_before = session.player_xp
+	if session.simulation.spawn_xp_orb(session.player.global_position + Vector2(45.0, 0.0), 1.0) <= 0:
+		_fail("Survival should spawn the Magnet Heart XP fixture")
+		return
+	collected_xp = await _wait_until(session, func(_snapshot: Dictionary) -> bool:
+		return session.player_xp > xp_before
+	)
+	if collected_xp.is_empty():
+		_fail("Magnet Heart should extend XP collection range")
+		return
+	for _level in range(4):
+		if not session.loadout.apply_offer("relic:magnet_heart"):
+			_fail("Magnet Heart should upgrade through level 5")
+			return
+	if session.loadout.relic_level("magnet_heart") != 5 or session.loadout.apply_offer("relic:magnet_heart"):
+		_fail("Magnet Heart should stop at the proposed level cap of 5")
+		return
+	session._world_chests.append({"family": "weapon", "position": session.player.global_position + Vector2(85.0, 0.0)})
+	session._collect_nearby_chests(session.simulation.snapshot())
+	if session._chest_open or session._world_chests.size() != 1:
+		_fail("Magnet Heart level 5 must not attract distant chests")
+		return
+	session._world_chests.clear()
+	xp_before = session.player_xp
+	if session.simulation.spawn_xp_orb(session.player.global_position + Vector2(85.0, 0.0), 1.0) <= 0:
+		_fail("Survival should spawn the level-5 Magnet Heart XP fixture")
+		return
+	collected_xp = await _wait_until(session, func(_snapshot: Dictionary) -> bool:
+		return session.player_xp > xp_before
+	)
+	if collected_xp.is_empty():
+		_fail("Magnet Heart level 5 should apply its configured pickup radius")
+		return
 	session.chest_collection_radius = 100.0
 	if session.simulation.spawn_enemy("chaser", 1, Vector2(20.0, 0.0), Vector2.ZERO) <= 0:
 		_fail("Survival should spawn the chest-drop test enemy")

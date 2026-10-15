@@ -23,6 +23,6 @@
     {"id": "magnetic_coil", "name": "Magnetic Coil", "weapon_id": "sawblades", "available_in_survival": false},
     {"id": "plague_mask", "name": "Plague Mask", "weapon_id": "toxic_cloud", "available_in_survival": false},
     {"id": "prism_crystal", "name": "Prism Crystal", "weapon_id": "prism_laser", "available_in_survival": false},
-    {"id": "magnet_heart", "name": "Magnet Heart", "behavior": "Utilitaire : augmente la distance de ramassage sans attirer les coffres", "available_in_survival": false}
+    {"id": "magnet_heart", "name": "Magnet Heart", "behavior": "Utilitaire : augmente la distance de ramassage sans attirer les coffres", "available_in_survival": true}
   ]
 }

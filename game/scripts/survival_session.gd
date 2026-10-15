@@ -76,6 +76,8 @@ const WAVE_HP_CAP := 12.0
 @export_range(0.0, 1.0) var infernal_heart_damage_per_level: float = 0.05
 @export_range(0.0, 1.0) var blood_chalice_heal_per_level: float = 0.10
 @export_range(0.0, 1.0) var blood_chalice_lifesteal_per_level: float = 0.05
+@export_group("Prototype Magnet Heart — proposed tuning")
+@export_range(0.0, 1.25, 0.01) var magnet_heart_pickup_radius_per_level: float = 0.25
 @export_group("Prototype XP — proposed tuning")
 @export var xp_per_enemy: float = 5.0
 @export var xp_collection_radius: float = 36.0
@@ -372,7 +374,9 @@ func _collect_nearby_xp_orbs(state: Dictionary) -> void:
 			_pending_xp_orbs.erase(key)
 		var transform: Dictionary = components["Transform2D"]
 		var orb_position := Vector2(float(transform["x"]), float(transform["y"]))
-		var pickup_radius := xp_collection_radius * (1.0 + _equipment_bonus("pickup_radius_pct") / 100.0)
+		var pickup_radius_bonus_pct := _equipment_bonus("pickup_radius_pct") + \
+				float(loadout.relic_level("magnet_heart")) * magnet_heart_pickup_radius_per_level * 100.0
+		var pickup_radius := xp_collection_radius * (1.0 + pickup_radius_bonus_pct / 100.0)
 		if player.global_position.distance_squared_to(orb_position) > pickup_radius * pickup_radius:
 			continue
 		var sequence: int = simulation.collect_xp_orb(int(id["index"]), int(id["generation"]))

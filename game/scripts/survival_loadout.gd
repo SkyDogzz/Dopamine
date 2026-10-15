@@ -8,6 +8,7 @@ const ICONS := {
 	"storm_core": "res://assets/sprites/relic_storm_core.png",
 	"infernal_heart": "res://assets/sprites/relic_infernal_heart.png",
 	"blood_chalice": "res://assets/sprites/relic_blood_chalice.png",
+	"magnet_heart": "res://assets/sprites/relic_magnet_heart.svg",
 }
 const STARTING_WEAPONS := ["lightning_conductor", "inferno_sprayer"]
 const MAX_SLOTS := 5
@@ -45,20 +46,23 @@ func offers(family: String) -> Array[Dictionary]:
 		return []
 	var candidates: Array[Dictionary] = []
 	for item_id in catalog:
+		var description := "Améliore l’objet équipé." if owned.has(item_id) else "Ajoute cet objet à la run au niveau 1."
+		if family == "relic" and item_id == "magnet_heart":
+			description = "Augmente le ramassage d’XP ; n’attire jamais les coffres."
 		if owned.has(item_id):
 			if int(owned[item_id]) >= MAX_LEVEL:
 				continue
 			candidates.append({
 				"id": "%s:%s" % [family, item_id],
 				"title": "%s — niveau %d" % [catalog[item_id], int(owned[item_id]) + 1],
-				"description": "Améliore l’objet équipé.",
+				"description": description,
 				"icon": ICONS.get(item_id, ""),
 			})
 		elif owned.size() < MAX_SLOTS:
 			candidates.append({
 				"id": "%s:%s" % [family, item_id],
 				"title": catalog[item_id],
-				"description": "Ajoute cet objet à la run au niveau 1.",
+				"description": description,
 				"icon": ICONS.get(item_id, ""),
 			})
 	if candidates.size() < 3:

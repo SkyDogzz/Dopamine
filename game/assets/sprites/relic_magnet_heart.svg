@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64" shape-rendering="crispEdges">
+	<!-- Two magnetic poles frame a clearly readable pixel heart. -->
+	<g fill="#121827">
+		<rect x="0" y="20" width="12" height="24"/>
+		<rect x="4" y="16" width="8" height="4"/>
+		<rect x="4" y="44" width="8" height="4"/>
+		<rect x="52" y="20" width="12" height="24"/>
+		<rect x="52" y="16" width="8" height="4"/>
+		<rect x="52" y="44" width="8" height="4"/>
+		<rect x="20" y="8" width="8" height="4"/><rect x="36" y="8" width="8" height="4"/>
+		<rect x="16" y="12" width="32" height="4"/>
+		<rect x="12" y="16" width="40" height="8"/>
+		<rect x="12" y="24" width="40" height="4"/>
+		<rect x="16" y="28" width="32" height="4"/>
+		<rect x="20" y="32" width="24" height="4"/>
+		<rect x="24" y="36" width="16" height="4"/>
+		<rect x="28" y="40" width="8" height="4"/>
+	</g>
+	<g fill="#41e8ed">
+		<rect x="4" y="20" width="8" height="4"/>
+		<rect x="4" y="24" width="4" height="12"/>
+		<rect x="56" y="36" width="4" height="8"/>
+	</g>
+	<g fill="#ff9c40">
+		<rect x="4" y="40" width="8" height="4"/>
+		<rect x="52" y="20" width="8" height="4"/>
+		<rect x="56" y="24" width="4" height="8"/>
+	</g>
+	<g fill="#f32f89">
+		<rect x="20" y="12" width="8" height="4"/><rect x="36" y="12" width="8" height="4"/>
+		<rect x="16" y="16" width="32" height="8"/>
+		<rect x="16" y="24" width="32" height="4"/>
+		<rect x="20" y="28" width="24" height="4"/>
+		<rect x="24" y="32" width="16" height="4"/>
+		<rect x="28" y="36" width="8" height="4"/>
+	</g>
+	<g fill="#ff79b7">
+		<rect x="20" y="16" width="8" height="4"/>
+		<rect x="16" y="20" width="8" height="4"/>
+		<rect x="28" y="28" width="4" height="4"/>
+	</g>
+	<rect fill="#f8f4ff" x="20" y="16" width="4" height="4"/>
+</svg>
