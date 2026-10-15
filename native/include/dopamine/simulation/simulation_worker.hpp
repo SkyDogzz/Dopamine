@@ -23,6 +23,7 @@ enum class CommandType {
 	Resume,
 	Step,
 	SetSpeed,
+	SetSteeringTarget,
 	Reset,
 };
 
@@ -39,6 +40,7 @@ struct SimulationCommand {
 	float velocity_y = 0.0F;
 	double delta_seconds = 0.0;
 	double speed_multiplier = 1.0;
+	SteeringConfig steering;
 };
 
 struct SimulationSnapshot {
@@ -95,6 +97,10 @@ private:
 	SimulationCore simulation_;
 	bool paused_ = true;
 	double speed_multiplier_ = 1.0;
+	bool has_steering_target_ = false;
+	float steering_target_x_ = 0.0F;
+	float steering_target_y_ = 0.0F;
+	SteeringConfig steering_config_;
 	std::vector<std::string> logs_;
 };
 

@@ -22,6 +22,7 @@
 
 - [ ] Mouvement, ennemis, spatial hash, projectiles et dégâts.
 - [x] Spatial hash uniforme minimal avec requête de rayon native ; paramètres de cellule à profiler.
+- [x] Steering de poursuite et séparation locale avec cible fournie par le mode ; paramètres initiaux provisoires.
 - [ ] HP decay, soins et règles de combat testables dans le Sandbox.
 
 ## Phase 4 — Premier playable Survival

@@ -31,9 +31,11 @@ var state: Dictionary = simulation.snapshot()
 
 Le snapshot contient l'état `paused`, `speed_multiplier`, `simulation_time`, `last_sequence`, `rejected_commands`, une liste `entities` (ID index/génération et composants `Transform2D`, `Velocity2D`, `Health`, `EnemyType`), les `metrics` et les `logs`. Godot reçoit des valeurs copiées ; aucune référence mutable du worker n'est exposée. `CombatSimulation` n'a pas accès au service de sauvegarde.
 
+`set_steering_target(position, max_speed, separation_radius, separation_weight)` transmet une cible monde fournie par le mode. Une commande `Step` ou une frame active recalcule le steering des entités simulées avant l’intégration. Les valeurs de vitesse/rayon/poids sont configurables et restent provisoires ; l’appelant conserve l’autorité sur la position du joueur, conformément au point encore **OUVERT** concernant joueur/boss.
+
 ## Scénarios headless Sandbox P1
 
-`game/scripts/scenario_runner.gd` lit un scénario JSON versionné (limite 1 Mio et 1 000 commandes), soumet les mêmes commandes au pont `CombatSimulation`, vérifie les attentes déclarées et exporte un JSON horodaté avec la version Godot, le temps simulé, les métriques, les entités et les logs. Les scénarios acceptent `spawn`, `despawn`, `kill_all`, `pause`, `resume`, `step`, `set_speed` et `reset`. Le runner ne charge ni n’écrit de sauvegarde normale.
+`game/scripts/scenario_runner.gd` lit un scénario JSON versionné (limite 1 Mio et 1 000 commandes), soumet les mêmes commandes au pont `CombatSimulation`, vérifie les attentes déclarées et exporte un JSON horodaté avec la version Godot, le temps simulé, les métriques, les entités et les logs. Les scénarios acceptent `spawn`, `despawn`, `kill_all`, `pause`, `resume`, `step`, `set_speed`, `set_steering_target` et `reset`. Le runner ne charge ni n’écrit de sauvegarde normale.
 
 ```bash
 godot --headless --path game --script res://scripts/scenario_runner.gd -- \\
@@ -44,7 +46,7 @@ Quand Godot est disponible à la configuration, CTest inclut les smoke tests GDS
 
 ## Simulation native
 
-Le cœur expose aussi `query_radius(x, y, radius, SpatialHashConfig)` pour les recherches locales nécessaires au steering et aux collisions. Il valide les valeurs finies, utilise `floor` pour les coordonnées négatives et retourne uniquement les entités actives dans le rayon (bord inclus), dans l’ordre stable des IDs. L’index est reconstruit à l’appel pour garder cette première tranche minimale ; sa durée de vie pourra évoluer si le profiling P2 le justifie. La taille de cellule par défaut est une valeur provisoire, modifiable à l’appel.
+Le cœur expose aussi `query_radius(x, y, radius, SpatialHashConfig)` pour les recherches locales nécessaires au steering et aux collisions. Il valide les valeurs finies, utilise `floor` pour les coordonnées négatives et retourne uniquement les entités actives dans le rayon (bord inclus), dans l’ordre stable des IDs. La requête autonome reconstruit son index à l’appel ; le steering partage un seul index entre toutes les entités d’une passe. La taille de cellule par défaut est une valeur provisoire, modifiable à l’appel.
 
 ```cpp
 struct EntityId { uint32_t index; uint32_t generation; };

@@ -51,6 +51,13 @@ if(BUILD_TESTING)
                 --scenario=res://scenarios/dev_sandbox.json
                 "--output=${CMAKE_CURRENT_BINARY_DIR}/sandbox_scenario_result.json")
         set_tests_properties(sandbox_scenario PROPERTIES FIXTURES_REQUIRED godot_project_ready)
+
+        add_test(NAME sandbox_steering_scenario
+            COMMAND "${DOPAMINE_GODOT_EXECUTABLE}" --headless --path "${PROJECT_SOURCE_DIR}/game"
+                --script res://scripts/scenario_runner.gd --
+                --scenario=res://scenarios/steering_smoke.json
+                "--output=${CMAKE_CURRENT_BINARY_DIR}/sandbox_steering_result.json")
+        set_tests_properties(sandbox_steering_scenario PROPERTIES FIXTURES_REQUIRED godot_project_ready)
     endif()
 endif()
 

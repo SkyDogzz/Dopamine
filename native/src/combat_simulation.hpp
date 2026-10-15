@@ -25,6 +25,7 @@ public:
 	int64_t resume();
 	int64_t step(double delta_seconds);
 	int64_t set_speed(double multiplier);
+	int64_t set_steering_target(Vector2 position, float max_speed, float separation_radius, float separation_weight);
 	int64_t reset();
 	Dictionary snapshot() const;
 

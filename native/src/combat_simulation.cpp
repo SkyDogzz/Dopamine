@@ -20,6 +20,8 @@ void CombatSimulation::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("resume"), &CombatSimulation::resume);
 	ClassDB::bind_method(D_METHOD("step", "delta_seconds"), &CombatSimulation::step);
 	ClassDB::bind_method(D_METHOD("set_speed", "multiplier"), &CombatSimulation::set_speed);
+	ClassDB::bind_method(D_METHOD("set_steering_target", "position", "max_speed", "separation_radius", "separation_weight"),
+			&CombatSimulation::set_steering_target);
 	ClassDB::bind_method(D_METHOD("reset"), &CombatSimulation::reset);
 	ClassDB::bind_method(D_METHOD("snapshot"), &CombatSimulation::snapshot);
 }
@@ -92,6 +94,23 @@ int64_t CombatSimulation::set_speed(double multiplier) {
 	SimulationCommand command;
 	command.type = CommandType::SetSpeed;
 	command.speed_multiplier = multiplier;
+	return submit(std::move(command));
+}
+
+int64_t CombatSimulation::set_steering_target(Vector2 position, float max_speed, float separation_radius,
+		float separation_weight) {
+	if (!std::isfinite(position.x) || !std::isfinite(position.y) || !std::isfinite(max_speed) || max_speed < 0.0F ||
+			!std::isfinite(separation_radius) || separation_radius < 0.0F || !std::isfinite(separation_weight) ||
+			separation_weight < 0.0F || separation_weight > 1.0F) {
+		return 0;
+	}
+	SimulationCommand command;
+	command.type = CommandType::SetSteeringTarget;
+	command.x = static_cast<float>(position.x);
+	command.y = static_cast<float>(position.y);
+	command.steering.max_speed = max_speed;
+	command.steering.separation_radius = separation_radius;
+	command.steering.separation_weight = separation_weight;
 	return submit(std::move(command));
 }
 

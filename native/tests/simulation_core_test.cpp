@@ -59,6 +59,37 @@ int main() {
 	}
 	require(rejected_query, "negative spatial query radius must be rejected");
 
+	SimulationCore steering;
+	const auto chaser = steering.spawn("chaser", -20.0F, 0.0F, 20.0F, 0.0F, 0.0F);
+	const auto neighbor = steering.spawn("chaser", -15.0F, 0.0F, 20.0F, 0.0F, 0.0F);
+	steering.steer_enemies_towards(0.0F, 0.0F,
+			{.max_speed = 75.0F, .separation_radius = 18.0F, .separation_weight = 0.75F,
+					.spatial_hash = {.cell_size = 8.0F}});
+	const auto steered = steering.entity(chaser);
+	const auto separated = steering.entity(neighbor);
+	require(steered.has_value() && separated.has_value(), "steering must keep entities active");
+	require(std::abs(std::hypot(steered->velocity.x, steered->velocity.y) - 75.0F) < 0.001F,
+			"steering must respect the configured maximum speed");
+	require(steered->velocity.x < -1.0F && separated->velocity.x > 1.0F,
+			"nearby entities should steer apart while pursuing the target");
+	steering.advance(0.1);
+	require(steering.entity(chaser)->transform.x < -20.0F, "steered entity should move after integration");
+	bool rejected_steering = false;
+	try {
+		steering.steer_enemies_towards(0.0F, 0.0F, {.max_speed = -1.0F});
+	} catch (const std::invalid_argument &) {
+		rejected_steering = true;
+	}
+	require(rejected_steering, "invalid steering configuration must be rejected");
+	SimulationCore coincident;
+	const auto coincident_first = coincident.spawn("chaser", 0.0F, 0.0F, 1.0F, 0.0F, 0.0F);
+	const auto coincident_second = coincident.spawn("chaser", 0.0F, 0.0F, 1.0F, 0.0F, 0.0F);
+	coincident.steer_enemies_towards(10.0F, 0.0F,
+			{.max_speed = 10.0F, .separation_radius = 5.0F, .separation_weight = 0.75F});
+	require(coincident.entity(coincident_first)->velocity.x < 0.0F &&
+			coincident.entity(coincident_second)->velocity.x > 0.0F,
+			"coincident entities should separate deterministically without random state");
+
 	bool rejected_negative_delta = false;
 	try {
 		simulation.advance(-1.0);

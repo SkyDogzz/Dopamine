@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "scenario_id": "steering_separation_smoke",
+  "expected": {
+    "simulation_time": 0.1,
+    "entity_count": 2,
+    "entity_positions": [
+      [-27.5, 0.0],
+      [-7.5, 0.0]
+    ]
+  },
+  "commands": [
+    {
+      "type": "spawn",
+      "entity_type": "chaser",
+      "position": [-20.0, 0.0],
+      "hp": 20.0
+    },
+    {
+      "type": "spawn",
+      "entity_type": "chaser",
+      "position": [-15.0, 0.0],
+      "hp": 20.0
+    },
+    {
+      "type": "set_steering_target",
+      "position": [0.0, 0.0],
+      "max_speed": 75.0,
+      "separation_radius": 18.0,
+      "separation_weight": 0.75
+    },
+    {
+      "type": "step",
+      "delta_seconds": 0.1
+    }
+  ]
+}

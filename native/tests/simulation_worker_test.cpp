@@ -72,9 +72,25 @@ int main() {
 	submit_and_wait(worker, pause);
 	require(worker.snapshot()->paused, "pause should stop continuous simulation");
 
+	SimulationCommand steering_target;
+	steering_target.type = CommandType::SetSteeringTarget;
+	steering_target.x = 20.0F;
+	steering_target.y = 2.0F;
+	steering_target.steering.max_speed = 10.0F;
+	steering_target.steering.separation_radius = 18.0F;
+	steering_target.steering.separation_weight = 0.5F;
+	submit_and_wait(worker, steering_target);
+	step.delta_seconds = 0.1;
+	submit_and_wait(worker, step);
+	const auto after_steering = worker.snapshot();
+	require(after_steering->entities[0].velocity.x > 0.0F,
+			"worker step should apply target steering through the shared core");
+	require(after_steering->entities[0].transform.x > after_step->entities[0].transform.x,
+			"steered worker step should move toward its target");
+
 	SimulationCommand despawn;
 	despawn.type = CommandType::Despawn;
-	despawn.entity = after_step->entities[0].id;
+	despawn.entity = after_steering->entities[0].id;
 	submit_and_wait(worker, despawn);
 	require(worker.snapshot()->entities.empty(), "despawn command should remove the requested entity");
 

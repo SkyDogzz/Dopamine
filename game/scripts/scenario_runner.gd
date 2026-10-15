@@ -115,6 +115,15 @@ func _validate_scenario(scenario: Variant) -> String:
 			"set_speed":
 				if not _valid_number(command.get("multiplier")) or float(command["multiplier"]) < 0.25 or float(command["multiplier"]) > 4.0:
 					return "Command %d speed must be between 0.25 and 4.0" % index
+			"set_steering_target":
+				if not _valid_vector(command.get("position")):
+					return "Command %d steering target position must be a finite 2-number array" % index
+				if not _valid_number(command.get("max_speed", 75)) or float(command.get("max_speed", 75)) < 0.0:
+					return "Command %d max_speed must be a non-negative finite number" % index
+				if not _valid_number(command.get("separation_radius", 18)) or float(command.get("separation_radius", 18)) < 0.0:
+					return "Command %d separation_radius must be a non-negative finite number" % index
+				if not _valid_number(command.get("separation_weight", 0.5)) or float(command.get("separation_weight", 0.5)) < 0.0 or float(command.get("separation_weight", 0.5)) > 1.0:
+					return "Command %d separation_weight must be between 0 and 1" % index
 			"kill_all", "pause", "resume", "reset":
 				pass
 			_:
@@ -133,6 +142,16 @@ func _check_expected(expected: Dictionary, state: Dictionary) -> String:
 			return "Scenario entity_count did not match expected value"
 	if expected.has("paused") and (typeof(expected["paused"]) != TYPE_BOOL or expected["paused"] != state["paused"]):
 		return "Scenario paused state did not match expected value"
+	if expected.has("entity_positions"):
+		if typeof(expected["entity_positions"]) != TYPE_ARRAY or expected["entity_positions"].size() != state["entities"].size():
+			return "Scenario entity_positions must match the snapshot entity count"
+		for index in range(expected["entity_positions"].size()):
+			var position: Variant = expected["entity_positions"][index]
+			if not _valid_vector(position):
+				return "Scenario entity_positions[%d] must be a finite 2-number array" % index
+			var transform: Dictionary = state["entities"][index]["components"]["Transform2D"]
+			if not is_equal_approx(float(position[0]), float(transform["x"])) or not is_equal_approx(float(position[1]), float(transform["y"])):
+				return "Scenario entity position %d did not match expected value" % index
 	return ""
 
 func _valid_number(value: Variant) -> bool:
@@ -169,6 +188,14 @@ func _submit(simulation: Object, command: Dictionary) -> int:
 			return simulation.step(float(command["delta_seconds"]))
 		"set_speed":
 			return simulation.set_speed(float(command["multiplier"]))
+		"set_steering_target":
+			var position: Array = command["position"]
+			return simulation.set_steering_target(
+				Vector2(float(position[0]), float(position[1])),
+				float(command.get("max_speed", 75)),
+				float(command.get("separation_radius", 18)),
+				float(command.get("separation_weight", 0.5))
+			)
 		"reset":
 			return simulation.reset()
 	return 0

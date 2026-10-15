@@ -98,6 +98,9 @@ void SimulationWorker::run(std::stop_token stop_token) {
 		last_update = now;
 		double frame_time_ms = elapsed * 1000.0;
 		if (!paused_ && elapsed > 0.0) {
+			if (has_steering_target_) {
+				simulation_.steer_enemies_towards(steering_target_x_, steering_target_y_, steering_config_);
+			}
 			simulation_.advance(elapsed * speed_multiplier_);
 		} else if (paused_) {
 			frame_time_ms = 0.0;
@@ -152,6 +155,9 @@ void SimulationWorker::apply(const SimulationCommand &command) {
 				break;
 			}
 			try {
+				if (has_steering_target_) {
+					simulation_.steer_enemies_towards(steering_target_x_, steering_target_y_, steering_config_);
+				}
 				simulation_.advance(command.delta_seconds * speed_multiplier_);
 				log("stepped " + std::to_string(command.delta_seconds) + " seconds");
 			} catch (const std::exception &error) {
@@ -167,10 +173,28 @@ void SimulationWorker::apply(const SimulationCommand &command) {
 			speed_multiplier_ = command.speed_multiplier;
 			log("speed set to " + std::to_string(speed_multiplier_));
 			break;
+		case CommandType::SetSteeringTarget:
+			if (!std::isfinite(command.x) || !std::isfinite(command.y) ||
+					!std::isfinite(command.steering.max_speed) || command.steering.max_speed < 0.0F ||
+					!std::isfinite(command.steering.separation_radius) || command.steering.separation_radius < 0.0F ||
+					!std::isfinite(command.steering.separation_weight) || command.steering.separation_weight < 0.0F ||
+					command.steering.separation_weight > 1.0F ||
+					!std::isfinite(command.steering.spatial_hash.cell_size) ||
+					command.steering.spatial_hash.cell_size <= 0.0F) {
+				log("steering target rejected: invalid target or configuration");
+				break;
+			}
+			has_steering_target_ = true;
+			steering_target_x_ = command.x;
+			steering_target_y_ = command.y;
+			steering_config_ = command.steering;
+			log("steering target updated");
+			break;
 		case CommandType::Reset:
 			simulation_.reset();
 			paused_ = true;
 			speed_multiplier_ = 1.0;
+			has_steering_target_ = false;
 			log("simulation reset");
 			break;
 	}

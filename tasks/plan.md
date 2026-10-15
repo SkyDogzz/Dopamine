@@ -35,7 +35,8 @@ Livrer d’abord un Sandbox développeur autonome, puis le premier playable Surv
 ### Phase 3 — Combat core jouable
 
 - [x] Ajouter le spatial hash uniforme minimal et des tests ciblés de requête de rayon.
-- [ ] Ajouter déplacement du joueur, ennemis initiaux, steering et spatial hash.
+- [x] Ajouter la poursuite d’une cible de mode et la séparation locale via un index construit une fois par passe.
+- [ ] Ajouter le déplacement joueur et les profils des ennemis initiaux ; le contrat d’autorité joueur/boss reste à arbitrer avant liaison au mode.
 - [ ] Ajouter projectiles, collisions, dégâts centralisés, statuts nécessaires et effets de soin/HP decay.
 - [ ] Tester les règles indépendamment dans le Sandbox et respecter les budgets de simulation.
 

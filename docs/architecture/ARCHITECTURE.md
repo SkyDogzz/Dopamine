@@ -57,6 +57,8 @@ Config Resolver ← JSON balance + Resources + Sandbox Overrides
 8. Appliquer spawn/despawn en fin de phase.
 9. Publier snapshot visuel et batch d'événements ; relever métriques.
 
+Pour le steering, l’index spatial est construit une fois par passe et réutilisé pour toutes les entités. La cible monde vient du mode appelant ; son point d’autorité joueur reste **OUVERT**.
+
 ## Delta variable : risques et invariants
 
 **ACCEPTÉ :** delta variable, non déterministe. **PROPOSÉ :** bornage par sous-étapes lorsque `dt` devient excessif. Ne jamais jeter silencieusement le temps excédentaire : conserver un accumulateur ou documenter le ralentissement. Les statuts exprimés en secondes doivent produire des résultats raisonnablement stables quel que soit le nombre de frames ; les collisions rapides utilisent des swept tests. `Step` dans le Sandbox signifie avancer une durée explicite, par exemple 1/60 s, sans imposer un tick fixe global.

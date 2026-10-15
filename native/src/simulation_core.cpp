@@ -2,8 +2,8 @@
 
 #include <cmath>
 #include <limits>
+#include <algorithm>
 #include <stdexcept>
-#include <unordered_map>
 #include <utility>
 
 namespace dopamine::sim {
@@ -84,6 +84,72 @@ void SimulationCore::advance(double delta_seconds) {
 	simulation_time_ += delta_seconds;
 }
 
+void SimulationCore::steer_enemies_towards(float target_x, float target_y, SteeringConfig config) {
+	if (!std::isfinite(target_x) || !std::isfinite(target_y) || !std::isfinite(config.max_speed) ||
+			config.max_speed < 0.0F || !std::isfinite(config.separation_radius) ||
+			config.separation_radius < 0.0F || !std::isfinite(config.separation_weight) ||
+			config.separation_weight < 0.0F || config.separation_weight > 1.0F ||
+			!std::isfinite(config.spatial_hash.cell_size) || config.spatial_hash.cell_size <= 0.0F) {
+		throw std::invalid_argument("invalid steering configuration");
+	}
+
+	std::vector<Velocity2D> next_velocities = velocities_;
+	const SpatialIndex spatial_index = config.separation_radius > 0.0F && config.separation_weight > 0.0F
+			? build_spatial_index(config.spatial_hash)
+			: SpatialIndex{};
+	for (uint32_t index = 0; index < slots_.size(); ++index) {
+		if (!slots_[index].active) {
+			continue;
+		}
+		const Transform2D &position = transforms_[index];
+		const double target_dx = static_cast<double>(target_x) - position.x;
+		const double target_dy = static_cast<double>(target_y) - position.y;
+		const double target_length = std::hypot(target_dx, target_dy);
+		double steering_x = target_length > 0.0 ? target_dx / target_length : 0.0;
+		double steering_y = target_length > 0.0 ? target_dy / target_length : 0.0;
+
+		if (config.separation_radius > 0.0F && config.separation_weight > 0.0F) {
+			const auto neighbors = query_spatial_index(spatial_index, position.x, position.y,
+					config.separation_radius, config.spatial_hash);
+			double separation_x = 0.0;
+			double separation_y = 0.0;
+			for (uint32_t neighbor_index : neighbors) {
+				if (neighbor_index == index) {
+					continue;
+				}
+				const double dx = static_cast<double>(position.x) - transforms_[neighbor_index].x;
+				const double dy = static_cast<double>(position.y) - transforms_[neighbor_index].y;
+				const double distance = std::hypot(dx, dy);
+				if (distance > 0.0) {
+					const double strength = (config.separation_radius - distance) / config.separation_radius;
+					separation_x += dx / distance * strength;
+					separation_y += dy / distance * strength;
+				} else {
+					separation_x += neighbor_index < index ? 1.0 : -1.0;
+				}
+			}
+			const double separation_length = std::hypot(separation_x, separation_y);
+			if (separation_length > 0.0) {
+				steering_x = steering_x * (1.0 - config.separation_weight) +
+						separation_x / separation_length * config.separation_weight;
+				steering_y = steering_y * (1.0 - config.separation_weight) +
+						separation_y / separation_length * config.separation_weight;
+			}
+		}
+
+		const double steering_length = std::hypot(steering_x, steering_y);
+		if (steering_length > 0.0) {
+			next_velocities[index] = {
+				static_cast<float>(steering_x / steering_length * config.max_speed),
+				static_cast<float>(steering_y / steering_length * config.max_speed),
+			};
+		} else {
+			next_velocities[index] = {};
+		}
+	}
+	velocities_.swap(next_velocities);
+}
+
 std::vector<EntityId> SimulationCore::query_radius(float x, float y, float radius, SpatialHashConfig config) const {
 	if (!std::isfinite(x) || !std::isfinite(y) || !std::isfinite(radius) || radius < 0.0F ||
 			!std::isfinite(config.cell_size) || config.cell_size <= 0.0F) {
@@ -93,46 +159,60 @@ std::vector<EntityId> SimulationCore::query_radius(float x, float y, float radiu
 		return {};
 	}
 
-	using Cell = std::pair<int64_t, int64_t>;
-	struct CellHash {
-		size_t operator()(const Cell &cell) const noexcept {
-			const size_t first = std::hash<int64_t>{}(cell.first);
-			const size_t second = std::hash<int64_t>{}(cell.second);
-			return first ^ (second + 0x9e3779b9U + (first << 6U) + (first >> 2U));
-		}
-	};
-	std::unordered_map<Cell, std::vector<uint32_t>, CellHash> cells;
-	cells.reserve(entity_count_);
-	for (uint32_t index = 0; index < slots_.size(); ++index) {
-		if (!slots_[index].active) {
+	const SpatialIndex index = build_spatial_index(config);
+	const std::vector<uint32_t> candidates = query_spatial_index(index, x, y, radius, config);
+	std::vector<EntityId> result;
+	result.reserve(candidates.size());
+	for (uint32_t entity_index : candidates) {
+		result.push_back({entity_index, slots_[entity_index].generation});
+	}
+	return result;
+}
+
+size_t SimulationCore::SpatialCellHash::operator()(const SpatialCell &cell) const noexcept {
+	const size_t first = std::hash<int64_t>{}(cell.first);
+	const size_t second = std::hash<int64_t>{}(cell.second);
+	return first ^ (second + 0x9e3779b9U + (first << 6U) + (first >> 2U));
+}
+
+SimulationCore::SpatialIndex SimulationCore::build_spatial_index(SpatialHashConfig config) const {
+	SpatialIndex index;
+	index.reserve(entity_count_);
+	for (uint32_t slot_index = 0; slot_index < slots_.size(); ++slot_index) {
+		if (!slots_[slot_index].active) {
 			continue;
 		}
-		const Transform2D &position = transforms_[index];
-		cells[{cell_coordinate(position.x, config.cell_size), cell_coordinate(position.y, config.cell_size)}]
-				.push_back(index);
+		const Transform2D &position = transforms_[slot_index];
+		index[{cell_coordinate(position.x, config.cell_size), cell_coordinate(position.y, config.cell_size)}]
+				.push_back(slot_index);
 	}
+	return index;
+}
 
+std::vector<uint32_t> SimulationCore::query_spatial_index(const SpatialIndex &index, float x, float y,
+		float radius, SpatialHashConfig config) const {
 	const int64_t min_x = cell_coordinate(x - radius, config.cell_size);
 	const int64_t max_x = cell_coordinate(x + radius, config.cell_size);
 	const int64_t min_y = cell_coordinate(y - radius, config.cell_size);
 	const int64_t max_y = cell_coordinate(y + radius, config.cell_size);
 	const double radius_squared = static_cast<double>(radius) * radius;
-	std::vector<EntityId> result;
+	std::vector<uint32_t> result;
 	for (int64_t cell_x = min_x; cell_x <= max_x; ++cell_x) {
 		for (int64_t cell_y = min_y; cell_y <= max_y; ++cell_y) {
-			const auto found = cells.find({cell_x, cell_y});
-			if (found == cells.end()) {
+			const auto found = index.find({cell_x, cell_y});
+			if (found == index.end()) {
 				continue;
 			}
-			for (uint32_t index : found->second) {
-				const double dx = static_cast<double>(transforms_[index].x) - x;
-				const double dy = static_cast<double>(transforms_[index].y) - y;
+			for (uint32_t slot_index : found->second) {
+				const double dx = static_cast<double>(transforms_[slot_index].x) - x;
+				const double dy = static_cast<double>(transforms_[slot_index].y) - y;
 				if (dx * dx + dy * dy <= radius_squared) {
-					result.push_back({index, slots_[index].generation});
+					result.push_back(slot_index);
 				}
 			}
 		}
 	}
+	std::sort(result.begin(), result.end());
 	return result;
 }
 
