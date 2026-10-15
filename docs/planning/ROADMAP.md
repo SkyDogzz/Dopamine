@@ -351,9 +351,9 @@ Travail requis :
   - [ ] Garder taux, poids, pity et rerolls accessibles en configuration.
   - [ ] Faire arbitrer les valeurs nécessaires avant leur verrouillage.
 - [ ] **P5.3.5 — Collecte**
-  - [ ] Préserver le rayon séparé `chest_collection_radius`.
-  - [ ] Ajouter un test de régression où pickup est très élevé et chest éloigné.
-  - [ ] Vérifier collecte à proximité et interaction si cette dernière est implémentée.
+  - [x] Préserver le rayon séparé `chest_collection_radius`.
+  - [x] Vérifier par régression qu'un pickup très élevé n'attire pas un chest éloigné.
+  - [x] Vérifier la collecte à proximité et l'ouverture du choix ; l'interaction manuelle reste facultative selon le GDD.
 
 ### P5.4 — Ennemis, élites et boss
 
