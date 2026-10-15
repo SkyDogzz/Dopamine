@@ -81,3 +81,39 @@ Livrer d’abord un Sandbox développeur autonome, puis le premier playable Surv
 - Smoke test Godot headless après changement du pont ou des scènes.
 - Batterie plus complète aux checkpoints Sandbox puis Survival ; benchmark de charge aux étapes P2/P4.
 - Commit par tranche cohérente ; pousser chaque commit lorsque `origin` est configurée.
+
+## Suite de la roadmap — P5 à P8
+
+Cette suite suit `docs/planning/ROADMAP.md` et ne transforme pas les points **[PROPOSÉ]** ou **[OUVERT]** du GDD en décisions. Les jalons historiques ci-dessus restent inchangés.
+
+### P5 — Progression persistante
+
+- [ ] Étendre le profil versionné aux quatre poudres et migrer les profils existants sans perdre ressources/inventaire.
+- [ ] Ajouter l'amélioration +0..+10 par ligne, conversion 10:1, démantèlement et choix d'effet unique ; les chances et coûts proposés doivent rester configurables et signalés comme provisoires.
+- [ ] Ajouter un arbre de compétences réduit et données de définition uniquement si les coûts/prérequis peuvent être documentés sans figer le graphe **[OUVERT]** de 120 nodes.
+- [ ] Ajouter le suivi cumulatif idempotent d'achievements avec un petit catalogue prototype, sans attribuer les bonus chiffrés proposés comme décisions finales.
+- [ ] Vérifier migration, sauvegarde/reprise et absence de double attribution.
+
+### P6 — Modes sans arbitrage implicite
+
+- [ ] Implémenter Armorless selon les règles marquées **[VALIDÉ]** : départ sans équipement permanent, draft de trois objets après chaque vague, choix d'un seul, objets et Flux temporaires.
+- [ ] Garder les taux de rareté, économie Flux, récompenses, scaling et difficulté proposés configurables et clairement identifiés.
+- [ ] Ne pas ajouter l'entrée ni la poursuite Endless standard tant que ses règles **[OUVERTES]** n'ont pas été arbitrées.
+- [ ] Ajouter les tests de draft, pauses, mort/victoire et non-persistance temporaire.
+
+### P7 — Sandbox Lab
+
+- [ ] Ajouter validation bornée, versionnée et isolée des presets JSON et codes de partage.
+- [ ] Étendre la capture/restauration native au build et à l'état Godot pour produire un snapshot complet, puis vérifier reprise et isolation bit-à-bit des saves normales.
+- [ ] Garder imports et exports Sandbox hors de `user://saves` et sans effets de progression officielle.
+
+### P8 — Finition et plateformes
+
+- [ ] Vérifier build et chargement GDExtension Windows avec outil disponible ou CI Windows.
+- [ ] Mesurer CPU/GPU/P95/P99 et cible 60 FPS sur une machine de référence documentée ; le rendu logiciel ne suffit pas.
+- [ ] Parcourir les lacunes de contenu, accessibilité/manette, équilibrage, longues runs et préparation Steam sans déclarer les seuils atteints sans mesures.
+
+### Checkpoints
+
+- [ ] Après chaque tranche P5/P6/P7 : tests ciblés, régression aux avancées majeures, commit explicite et push `origin`.
+- [ ] À P8 : build Linux et Windows, suite complète, mesures de performance et revue de livraison.

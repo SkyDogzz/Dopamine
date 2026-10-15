@@ -17,10 +17,35 @@ func _run() -> void:
 		_fail("A Normal wave 24 victory should grant the GDD proposed 88 Essence and 122 Basic Powder")
 		return
 	var profile: Dictionary = save_service.load_slot("0")["payload"]
+	if profile.get("profile_version") != 4 or profile["resources"].get("powder_refined") != 0 or \
+			profile["resources"].get("powder_pure") != 0 or profile["resources"].get("powder_prismatic") != 0:
+		_fail("New progression profiles should initialize all four powder tiers")
+		return
 	var inventory: Array = profile["equipment_inventory"]
 	if inventory.size() != 1 or inventory[0].get("source_mode") != "survival" or \
 			inventory[0].get("instance_id") != "survival_run-win_equipment":
 		_fail("Every completed Survival run should add one permanent equipment instance")
+		return
+	profile["resources"]["powder_basic"] = 100
+	inventory[0]["stat_lines"][0]["fail_streak"] = 9
+	profile["equipment_inventory"] = inventory
+	if not save_service.save_slot("0", profile):
+		_fail("The guaranteed enhancement fixture should save")
+		return
+	var enhanced: Dictionary = service.enhance_equipment(
+		inventory[0]["instance_id"], inventory[0]["stat_lines"][0]["stat_id"], "basic"
+	)
+	var enhanced_profile: Dictionary = save_service.load_slot("0")["payload"]
+	if not enhanced.get("ok", false) or not enhanced.get("success", false) or \
+			enhanced["profile"]["equipment_inventory"][0]["stat_lines"][0]["enhancement_level"] != 1 or \
+			enhanced_profile["resources"]["powder_basic"] != 100 - enhanced["cost"]:
+		_fail("A tenth consecutive enhancement attempt should succeed and consume its target-level powder cost")
+		return
+	inventory = enhanced_profile["equipment_inventory"]
+	var conversion: Dictionary = service.convert_powder("basic", 10)
+	if not conversion.get("ok", false) or conversion["profile"]["resources"]["powder_basic"] != 90 - enhanced["cost"] or \
+			conversion["profile"]["resources"]["powder_refined"] != 1:
+		_fail("Ten lower-tier powder should convert into one powder of the next tier")
 		return
 	if not _valid_equipment_instance(inventory[0]):
 		_fail("The equipment instance should use a valid slot, rarity and unique stat lines")
@@ -37,7 +62,7 @@ func _run() -> void:
 		_fail("A defeated run should grant the proposed resources for its last reached wave")
 		return
 	profile = save_service.load_slot("0")["payload"]
-	if profile["resources"].get("essence") != 127 or profile["resources"].get("powder_basic") != 178:
+	if profile["resources"].get("essence") != 127 or profile["resources"].get("powder_basic") != 146 - enhanced["cost"]:
 		_fail("Distinct completed runs should accumulate their resources")
 		return
 	if profile["equipment_inventory"].size() != 2 or \
@@ -77,7 +102,7 @@ func _run() -> void:
 	var migrated_duplicate: Dictionary = legacy_service.award_survival_run("already-awarded", 24, true)
 	var migrated_profile: Dictionary = save_service.load_slot("legacy")["payload"]
 	if not migrated_duplicate.get("ok", false) or not migrated_duplicate.get("duplicate", false) or \
-			migrated_profile.get("profile_version") != 3 or migrated_profile["resources"].get("essence") != 7 or \
+			migrated_profile.get("profile_version") != 4 or migrated_profile["resources"].get("essence") != 7 or \
 			migrated_profile["equipment_inventory"].size() != 0:
 		_fail("A previous progression profile should migrate without losing resources or replaying a reward")
 		return
@@ -91,7 +116,7 @@ func _run() -> void:
 	var version_two_service = load("res://scripts/progression_service.gd").new(save_service, "version-two")
 	var migrated_profile_result: Dictionary = version_two_service.load_profile()
 	var migrated_inventory: Array = migrated_profile_result.get("profile", {}).get("equipment_inventory", [])
-	if not migrated_profile_result.get("ok", false) or migrated_profile_result["profile"].get("profile_version") != 3 or \
+	if not migrated_profile_result.get("ok", false) or migrated_profile_result["profile"].get("profile_version") != 4 or \
 			migrated_inventory.size() != 2 or migrated_inventory[0].get("equipped", true) or migrated_inventory[1].get("equipped", true):
 		_fail("Version 2 equipment should migrate as unequipped without losing items")
 		return
@@ -109,7 +134,7 @@ func _valid_equipment_instance(equipment: Dictionary) -> bool:
 		var stat_id: String = line["stat_id"]
 		var percentile := float(line["roll_percentile"])
 		if stats.has(stat_id) or percentile < 0.0 or percentile >= 1.0 or \
-				line["enhancement_level"] != 0 or line["fail_streak"] != 0:
+				line["enhancement_level"] < 0 or line["enhancement_level"] > 10 or line["fail_streak"] < 0:
 			return false
 		stats[stat_id] = true
 	var rarity: String = equipment["rarity"]

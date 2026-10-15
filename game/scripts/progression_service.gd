@@ -1,17 +1,24 @@
 extends RefCounted
 
-const PROFILE_VERSION := 3
+const PROFILE_VERSION := 4
+const POWDER_TIERS := ["basic", "refined", "pure", "prismatic"]
+const ENHANCEMENT_BASE_COSTS := [10, 15, 22, 32, 46, 65, 90, 125, 175, 250]
+const RARITY_COST_MULTIPLIERS := {"normal": 1.0, "magic": 1.5, "mystic": 2.0, "legendary": 3.0, "mythic": 4.0}
+const PROPOSED_SUCCESS_CHANCE := {"basic": 50.0, "refined": 70.0, "pure": 85.0, "prismatic": 95.0}
+const PROPOSED_CRITICAL_FAILURE_CHANCE := {"basic": 10.0, "refined": 5.0, "pure": 2.0, "prismatic": 0.5}
 const RUN_ID_PATTERN := "^[A-Za-z0-9_-]{1,128}$"
 const EQUIPMENT_GENERATOR_SCRIPT := preload("res://scripts/equipment_generator.gd")
 
 var _save_service: RefCounted
 var _slot_id: String
 var _equipment_generator: RefCounted
+var _rng := RandomNumberGenerator.new()
 
 func _init(save_service: RefCounted, slot_id: String = "0") -> void:
 	_save_service = save_service
 	_slot_id = slot_id
 	_equipment_generator = EQUIPMENT_GENERATOR_SCRIPT.new()
+	_rng.randomize()
 
 func award_survival_run(run_id: String, wave_reached: int, victory: bool) -> Dictionary:
 	if _save_service == null or not _valid_run_id(run_id):
@@ -54,14 +61,22 @@ func load_profile() -> Dictionary:
 		return {"ok": false, "error": str(loaded.get("error", "load_failed"))}
 	var profile: Dictionary = loaded["payload"]
 	var migrated := bool(loaded.get("migrated", false))
-	if profile.get("profile_version") == 1:
-		profile["profile_version"] = PROFILE_VERSION
+	var version := int(profile.get("profile_version", 0))
+	if version == 1:
 		profile["equipment_inventory"] = profile.get("equipment_inventory", [])
-		migrated = true
-	elif profile.get("profile_version") == 2:
-		profile["profile_version"] = PROFILE_VERSION
+	if version in [1, 2]:
 		for equipment in profile.get("equipment_inventory", []):
 			equipment["equipped"] = false
+	if version in [1, 2, 3]:
+		var old_resources: Dictionary = profile.get("resources", {})
+		profile["resources"] = {
+			"essence": old_resources.get("essence", 0),
+			"powder_basic": old_resources.get("powder_basic", 0),
+			"powder_refined": old_resources.get("powder_refined", 0),
+			"powder_pure": old_resources.get("powder_pure", 0),
+			"powder_prismatic": old_resources.get("powder_prismatic", 0),
+		}
+		profile["profile_version"] = PROFILE_VERSION
 		migrated = true
 	if not _valid_profile(profile):
 		return {"ok": false, "error": "invalid_profile"}
@@ -90,10 +105,76 @@ func set_equipped(instance_id: String, equipped: bool) -> Dictionary:
 		return {"ok": false, "error": "save_failed"}
 	return {"ok": true, "profile": profile.duplicate(true)}
 
+func enhance_equipment(instance_id: String, stat_id: String, powder_tier: String) -> Dictionary:
+	if powder_tier not in POWDER_TIERS:
+		return {"ok": false, "error": "invalid_powder_tier"}
+	var profile_result := load_profile()
+	if not profile_result.get("ok", false):
+		return {"ok": false, "error": str(profile_result.get("error", "load_failed"))}
+	var profile: Dictionary = profile_result["profile"]
+	for equipment in profile["equipment_inventory"]:
+		if equipment["instance_id"] != instance_id:
+			continue
+		var line_index := -1
+		for index in range(equipment["stat_lines"].size()):
+			if equipment["stat_lines"][index]["stat_id"] == stat_id:
+				line_index = index
+				break
+		if line_index < 0:
+			return {"ok": false, "error": "stat_line_not_found"}
+		var line: Dictionary = equipment["stat_lines"][line_index]
+		var level := int(line["enhancement_level"])
+		if level >= 10:
+			return {"ok": false, "error": "enhancement_max_level"}
+		var cost := ceili(float(ENHANCEMENT_BASE_COSTS[level]) * RARITY_COST_MULTIPLIERS[equipment["rarity"]])
+		var resource_key := "powder_%s" % powder_tier
+		if int(profile["resources"].get(resource_key, 0)) < cost:
+			return {"ok": false, "error": "insufficient_powder", "cost": cost}
+		profile["resources"][resource_key] -= cost
+		var chance := maxf(0.0, PROPOSED_SUCCESS_CHANCE[powder_tier] - 3.0 * level)
+		var success := int(line["fail_streak"]) >= 9 or _rng.randf() * 100.0 < chance
+		var critical_failure := false
+		if success:
+			line["enhancement_level"] = level + 1
+			line["fail_streak"] = 0
+		else:
+			critical_failure = _rng.randf() * 100.0 < PROPOSED_CRITICAL_FAILURE_CHANCE[powder_tier]
+			if critical_failure:
+				line["enhancement_level"] = maxi(0, level - 1)
+			line["fail_streak"] = int(line["fail_streak"]) + 1
+		if not _save_service.save_slot(_slot_id, profile):
+			return {"ok": false, "error": "save_failed"}
+		return {
+			"ok": true, "success": success, "critical_failure": critical_failure,
+			"cost": cost, "profile": profile.duplicate(true),
+		}
+	return {"ok": false, "error": "equipment_not_found"}
+
+func convert_powder(source_tier: String, amount: int) -> Dictionary:
+	var source_index := POWDER_TIERS.find(source_tier)
+	if source_index < 0 or source_index >= POWDER_TIERS.size() - 1 or amount < 10 or amount % 10 != 0:
+		return {"ok": false, "error": "invalid_conversion"}
+	var profile_result := load_profile()
+	if not profile_result.get("ok", false):
+		return {"ok": false, "error": str(profile_result.get("error", "load_failed"))}
+	var profile: Dictionary = profile_result["profile"]
+	var source_key := "powder_%s" % source_tier
+	if int(profile["resources"].get(source_key, 0)) < amount:
+		return {"ok": false, "error": "insufficient_powder"}
+	profile["resources"][source_key] -= amount
+	var next_key := "powder_%s" % POWDER_TIERS[source_index + 1]
+	profile["resources"][next_key] += amount / 10
+	if not _save_service.save_slot(_slot_id, profile):
+		return {"ok": false, "error": "save_failed"}
+	return {"ok": true, "profile": profile.duplicate(true)}
+
 func _empty_profile() -> Dictionary:
 	return {
 		"profile_version": PROFILE_VERSION,
-		"resources": {"essence": 0, "powder_basic": 0},
+		"resources": {
+			"essence": 0, "powder_basic": 0, "powder_refined": 0,
+			"powder_pure": 0, "powder_prismatic": 0,
+		},
 		"equipment_inventory": [],
 		"rewarded_survival_runs": [],
 	}
@@ -103,7 +184,7 @@ func _valid_profile(profile: Dictionary) -> bool:
 			not profile.get("equipment_inventory") is Array or not profile.get("rewarded_survival_runs") is Array:
 		return false
 	var resources: Dictionary = profile["resources"]
-	for resource in ["essence", "powder_basic"]:
+	for resource in ["essence", "powder_basic", "powder_refined", "powder_pure", "powder_prismatic"]:
 		var value = resources.get(resource)
 		if typeof(value) not in [TYPE_INT, TYPE_FLOAT] or not is_finite(float(value)) or value < 0.0:
 			return false
@@ -143,6 +224,12 @@ func _valid_equipment(equipment: Variant) -> bool:
 		var percentile = stat_line.get("roll_percentile")
 		if typeof(percentile) not in [TYPE_INT, TYPE_FLOAT] or not is_finite(float(percentile)) or \
 				percentile < 0.0 or percentile >= 1.0:
+			return false
+		var enhancement_level = stat_line.get("enhancement_level")
+		var fail_streak = stat_line.get("fail_streak")
+		if typeof(enhancement_level) not in [TYPE_INT, TYPE_FLOAT] or \
+				int(enhancement_level) != enhancement_level or enhancement_level < 0 or enhancement_level > 10 or \
+				typeof(fail_streak) not in [TYPE_INT, TYPE_FLOAT] or int(fail_streak) != fail_streak or fail_streak < 0:
 			return false
 		used_stats[stat_line["stat_id"]] = true
 	return true

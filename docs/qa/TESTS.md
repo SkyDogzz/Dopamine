@@ -86,6 +86,7 @@
 - [x] Une instance d'équipement permanente par run Survival, y compris défaite ; slot parmi les six validés, lignes sans statistique répétée, rarité selon la table Normal **[PROPOSÉE]**. Smoke victoire/défaite et unicité par `run_id`.
 - [x] Inventaire Survival consultable : affiche rareté, slot, percentiles et état non calibré ; l’ouverture suspend la simulation et la fermeture la reprend seulement si elle tournait déjà. Test headless et revue du rendu fenêtré.
 - [x] Équipement persistant : équiper, déséquiper et remplacer une pièce du même slot ; migration du profil v2 vers v3. Aucun bonus de statistique n’est appliqué tant que les rolls restent non calibrés.
+- [x] Progression v4 : migration des profils précédents vers quatre tiers de Powder, conversion 10:1, amélioration de ligne +0..+10, coût de rareté/niveau et pity au dixième essai ; probabilités et coûts restent les valeurs **[PROPOSÉES]** du GDD.
 - [ ] Rareté ajustée par difficulté/vague et mort précoce, plages de rolls calibrées et application des bonus, vente/démantèlement et choix d'effet unique Legendary/Mythic ; les percentiles d'instance sont normalisés et non appliqués.
 - [ ] Achievement tiers débloqué une seule fois ; bonus cumulés.
 - [ ] Armorless : 3 équipements proposés après chaque vague, 1 choisi ; Flux temporaire.

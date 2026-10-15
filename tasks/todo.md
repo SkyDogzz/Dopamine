@@ -47,3 +47,17 @@
 - [ ] Effets d’évolution restants; confirmer le pool de départ du vertical slice. Les réglages d’explosion Wildfire et de branchement Infinite Circuit restent **[PROPOSÉS]**.
 - [ ] Vagues, chests, 3 armes/reliques, mid-boss et boss final.
 - [ ] HUD, fin de run, sauvegarde minimale et vérification QA complète.
+
+## Jalons restants — P5 à P8
+
+- [ ] **P5.1** Migration profil v3→v4 et prise en charge Basic/Refined/Pure/Prismatic Powder.
+- [ ] **P5.2** Amélioration d'une ligne +0..+10, échecs, pity, conversion Powder et UI ; taux proposés configurables.
+- [ ] **P5.3** Démantèlement équipement et choix d'effet unique Legendary/Mythic ; calibrer les bonus sans inventer les plages **[OUVERTES]**.
+- [ ] **P5.4** Arbre de compétences et achievements : commencer par contrats/données bornées, sans figer le graphe ou les catalogues **[OUVERTS]**.
+- [ ] **P6.1** Mode Armorless conforme aux règles **[VALIDÉES]** avec draft à trois, choix unique et Flux temporaire.
+- [ ] **P6.2** Reprise des vagues Endless et records Armorless selon contrats validés ; garder la progression permanente proposée désactivée/non attribuée tant que non arbitrée.
+- [ ] **P7.1** Presets Sandbox JSON versionnés, bornés, UI et code de partage sans charge utile exécutable.
+- [ ] **P7.2** Snapshot complet incluant état Godot/build et restauration, séparé des saves normales.
+- [ ] **P8.1** Build Windows via toolchain locale ou CI et documentation de son résultat.
+- [ ] **P8.2** Profiling 60 FPS sur machine de référence, métriques CPU/GPU P95/P99.
+- [ ] **P8.3** Audit contenu, accessibilité/manette, équilibrage, soak test et préparation Steam.
