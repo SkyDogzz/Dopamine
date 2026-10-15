@@ -6,7 +6,7 @@ Cette carte organise l’intention approuvée par interview avant la rédaction 
 |---|---|---|
 | [`ui-foundation`](tasks/ui-refonte/SPEC-ui-foundation.md) | Thème partagé, composants réutilisables, navigation au focus, adaptation aux résolutions et langage visuel pixel art néon lisible. | — |
 | `ui-settings` | Options accessibles depuis le menu et la pause : plein écran et volume général. Les réglages doivent préserver l’état de pause de la run. | `ui-foundation` |
-| `launch-navigation` | Écran de lancement, navigation vers le hub ou l’entrée Sandbox discrète, retour à l’accueil et fermeture du jeu. | `ui-foundation`, `ui-settings` |
+| [`launch-navigation`](tasks/ui-refonte/SPEC-launch-navigation.md) | Écran de lancement, navigation vers le hub ou l’entrée Sandbox discrète, retour à l’accueil et fermeture du jeu. | `ui-foundation`, `ui-settings` |
 | `survival-hub` | Sélection Survival/difficulté, accès aux équipements et à l’arbre de compétences avant la run, boutons Succès/Bestiaire inactifs, lancement explicite de run. | `launch-navigation`, `ui-foundation` |
 | `survival-hud` | Refonte de l’interface en run : HUD, choix de coffre et écran de résultat, avec hiérarchie lisible et états de run clairs. | `ui-foundation`, `survival-hub` |
 | `survival-pause` | Pause/reprise, options, inventaire de run en lecture seule et abandon avec confirmation; la simulation et les horloges restent figées dans les écrans de pause. | `ui-settings`, `survival-hud` |
