@@ -10,13 +10,22 @@ const PROPOSED_UNIQUE_EFFECTS := [
 	"lightning_burst", "overflow_shield", "evolution_shockwave",
 	"elite_haste", "free_first_chest_reroll", "revive_knockback",
 ]
-const PROTOTYPE_DISMANTLE_REWARD := {
-	"normal": "powder_basic", "magic": "powder_refined", "mystic": "powder_pure",
-	"legendary": "powder_prismatic", "mythic": "powder_prismatic",
+const PROPOSED_DISMANTLE_REWARDS := {
+	"normal": {"powder_basic": 1}, "magic": {"powder_basic": 3},
+	"mystic": {"powder_refined": 1}, "legendary": {"powder_refined": 3},
+	"mythic": {"powder_pure": 1},
 }
 const PROTOTYPE_SKILL_NODES := {
-	"vitality_starter": {"essence_cost": 50, "max_hp_pct": 0.05, "prerequisites": [], "status": "PROPOSED"},
-	"focused_training": {"essence_cost": 80, "damage_pct": 0.03, "prerequisites": ["vitality_starter"], "status": "PROPOSED"},
+	"vitality_starter": {"essence_cost": 50, "max_hp_pct": 0.05, "prerequisites": [], "status": "PROPOSED", "depth": 3},
+	"focused_training": {"essence_cost": 80, "damage_pct": 0.03, "prerequisites": ["vitality_starter"], "status": "PROPOSED", "depth": 6},
+}
+const SKILL_CATEGORIES := {
+	"core_stats": 30, "weapon_unlocks": 8, "relic_unlocks": 8,
+	"weapon_mastery": 20, "relic_mastery": 20, "utilities": 14, "bridges": 20,
+}
+const ACHIEVEMENT_CATEGORIES := {
+	"combat": 25, "survival": 15, "weapons": 20, "relics_evolutions": 15,
+	"equipment": 15, "difficulty_bosses": 15, "progression": 10, "secrets": 5,
 }
 const PROPOSED_EXTERMINATOR_THRESHOLDS := [100, 1000, 10000, 100000]
 const PROPOSED_EXTERMINATOR_DAMAGE_BONUSES := [0.0005, 0.001, 0.0015, 0.002]
@@ -231,12 +240,13 @@ func dismantle_equipment(instance_id: String) -> Dictionary:
 		var equipment: Dictionary = profile["equipment_inventory"][index]
 		if equipment["instance_id"] != instance_id:
 			continue
-		var resource_key: String = PROTOTYPE_DISMANTLE_REWARD[equipment["rarity"]]
+		var reward: Dictionary = PROPOSED_DISMANTLE_REWARDS[equipment["rarity"]]
 		profile["equipment_inventory"].remove_at(index)
-		profile["resources"][resource_key] += 1
+		for resource_key in reward:
+			profile["resources"][resource_key] += int(reward[resource_key])
 		if not _save_service.save_slot(_slot_id, profile):
 			return {"ok": false, "error": "save_failed"}
-		return {"ok": true, "powder": resource_key, "profile": profile.duplicate(true)}
+		return {"ok": true, "powder_rewards": reward.duplicate(true), "profile": profile.duplicate(true)}
 	return {"ok": false, "error": "equipment_not_found"}
 
 func unlock_skill_node(node_id: String) -> Dictionary:
@@ -282,6 +292,47 @@ func skill_bonus(stat_id: String) -> float:
 		if PROTOTYPE_SKILL_NODES.has(node_id):
 			bonus += float(PROTOTYPE_SKILL_NODES[node_id].get(stat_id, 0.0))
 	return bonus
+
+func equipment_bonus(stat_id: String) -> float:
+	if not EQUIPMENT_GENERATOR_SCRIPT.PROPOSED_STAT_RANGES.has(stat_id):
+		return 0.0
+	var result := load_profile()
+	if not result.get("ok", false):
+		return 0.0
+	var bonus := 0.0
+	for equipment in result["profile"]["equipment_inventory"]:
+		if not equipment.get("equipped", false):
+			continue
+		for line in equipment["stat_lines"]:
+			if line["stat_id"] == stat_id:
+				bonus += EQUIPMENT_GENERATOR_SCRIPT.stat_value(
+					stat_id, float(line["roll_percentile"]), int(line["enhancement_level"])
+				)
+	return bonus
+
+func proposed_skill_catalog() -> Array[Dictionary]:
+	var nodes: Array[Dictionary] = []
+	for category in SKILL_CATEGORIES:
+		for index in range(SKILL_CATEGORIES[category]):
+			var node_id := "%s_%02d" % [category, index + 1]
+			var depth := 1 + index % 10
+			nodes.append({
+				"id": node_id, "category": category, "depth": depth,
+				"essence_cost": 20 + 10 * depth + (80 if category in ["weapon_unlocks", "relic_unlocks"] else 0),
+				"prerequisites": [], "status": "PROPOSED_CONTENT_PLACEHOLDER",
+			})
+	return nodes
+
+func proposed_achievement_catalog() -> Array[Dictionary]:
+	var achievements: Array[Dictionary] = []
+	for category in ACHIEVEMENT_CATEGORIES:
+		for index in range(ACHIEVEMENT_CATEGORIES[category]):
+			achievements.append({
+				"id": "%s_%02d" % [category, index + 1], "category": category,
+				"tiers": PROPOSED_EXTERMINATOR_THRESHOLDS.duplicate(),
+				"status": "PROPOSED_CONTENT_PLACEHOLDER",
+			})
+	return achievements
 
 func achievement_bonus(stat_id: String) -> float:
 	if stat_id != "damage_pct":

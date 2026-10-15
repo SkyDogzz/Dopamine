@@ -31,13 +31,14 @@ const RARITY_ICONS := {
 	"mythic": "res://assets/icons/rarity_mythic.png",
 }
 const POWDER_TIERS := ["basic", "refined", "pure", "prismatic"]
+const EQUIPMENT_GENERATOR_SCRIPT := preload("res://scripts/equipment_generator.gd")
 const UNIQUE_EFFECTS := [
 	"lightning_burst", "overflow_shield", "evolution_shockwave",
 	"elite_haste", "free_first_chest_reroll", "revive_knockback",
 ]
 const DISMANTLE_POWDER := {
-	"normal": "BASIC", "magic": "REFINED", "mystic": "PURE",
-	"legendary": "PRISMATIC", "mythic": "PRISMATIC",
+	"normal": "1 BASIC", "magic": "3 BASIC", "mystic": "1 REFINED",
+	"legendary": "3 REFINED", "mythic": "1 PURE",
 }
 
 func _ready() -> void:
@@ -106,9 +107,11 @@ func _create_item_row(equipment: Dictionary, resources: Dictionary) -> Control:
 		content.add_child(enhancement_row)
 		var details := Label.new()
 		details.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		details.text = "%s — roll %d%%  +%d/10" % [
+		details.text = "%s — %s  +%d/10" % [
 			str(line.get("stat_id", "")).replace("_", " ").to_upper(),
-			roundi(float(line.get("roll_percentile", 0.0)) * 100.0),
+			EQUIPMENT_GENERATOR_SCRIPT.stat_label(str(line.get("stat_id", "")),
+				EQUIPMENT_GENERATOR_SCRIPT.stat_value(str(line.get("stat_id", "")),
+					float(line.get("roll_percentile", 0.0)), int(line.get("enhancement_level", 0)))),
 			int(line.get("enhancement_level", 0)),
 		]
 		enhancement_row.add_child(details)
@@ -137,9 +140,9 @@ func _create_item_row(equipment: Dictionary, resources: Dictionary) -> Control:
 		enhancement_row.add_child(enhance_button)
 	var status := Label.new()
 	status.add_theme_color_override("font_color", Color("#ffd166"))
-	status.text = "ROLLS UNCALIBRATED — no gameplay bonus yet"
+	status.text = "PROPOSED ROLLS — damage and HP currently affect Survival"
 	if equipment.get("equipped", false):
-		status.text = "EQUIPPED — rolls uncalibrated; no gameplay bonus yet"
+		status.text = "EQUIPPED — damage and HP rolls active; other stats are display-only"
 	if equipment.get("unique_effect_id") == "pending_choice":
 		status.text += "\nUnique effect choice pending"
 	elif str(equipment.get("unique_effect_id", "")) != "":
@@ -170,8 +173,8 @@ func _create_item_row(equipment: Dictionary, resources: Dictionary) -> Control:
 	)
 	content.add_child(equip_button)
 	var dismantle_button := Button.new()
-	dismantle_button.text = "DISMANTLE  •  +1 %s POWDER" % DISMANTLE_POWDER[rarity]
-	dismantle_button.tooltip_text = "Prototype yield; final dismantle economy is still open."
+	dismantle_button.text = "DISMANTLE  •  %s POWDER" % DISMANTLE_POWDER[rarity]
+	dismantle_button.tooltip_text = "Proposed prototype dismantle yield; economy remains open for calibration."
 	dismantle_button.pressed.connect(func() -> void:
 		dismantle_requested.emit(str(equipment.get("instance_id", "")))
 	)

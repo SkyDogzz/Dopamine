@@ -174,6 +174,7 @@ func _ready() -> void:
 	player_max_hp = simulation.initial_player_hp()
 	if progression_service != null:
 		player_max_hp *= 1.0 + progression_service.skill_bonus("max_hp_pct")
+		player_max_hp += progression_service.equipment_bonus("max_hp")
 		_refresh_persistent_bonuses()
 	player_hp = player_max_hp
 	player_xp_to_next = xp_base_to_next_level
@@ -435,7 +436,7 @@ func _unlock_skill_node(node_id: String) -> void:
 	var result: Dictionary = progression_service.unlock_skill_node(node_id)
 	if result.get("ok", false):
 		var health_ratio := player_hp / player_max_hp if player_max_hp > 0.0 else 1.0
-		player_max_hp = simulation.initial_player_hp() * (1.0 + progression_service.skill_bonus("max_hp_pct"))
+		player_max_hp = simulation.initial_player_hp() * (1.0 + progression_service.skill_bonus("max_hp_pct")) + progression_service.equipment_bonus("max_hp")
 		player_hp = player_max_hp * health_ratio
 		_refresh_persistent_bonuses()
 		_skill_tree_panel.present(result["profile"])
@@ -446,7 +447,7 @@ func _respec_skill_tree() -> void:
 	var result: Dictionary = progression_service.respec_skill_tree()
 	if result.get("ok", false):
 		var health_ratio := player_hp / player_max_hp if player_max_hp > 0.0 else 1.0
-		player_max_hp = simulation.initial_player_hp() * (1.0 + progression_service.skill_bonus("max_hp_pct"))
+		player_max_hp = simulation.initial_player_hp() * (1.0 + progression_service.skill_bonus("max_hp_pct")) + progression_service.equipment_bonus("max_hp")
 		player_hp = player_max_hp * health_ratio
 		_refresh_persistent_bonuses()
 		_skill_tree_panel.present(result["profile"])
@@ -458,6 +459,10 @@ func _set_equipment_state(instance_id: String, equipped: bool) -> void:
 		return
 	var result: Dictionary = progression_service.set_equipped(instance_id, equipped)
 	if result.get("ok", false):
+		_refresh_persistent_bonuses()
+		var health_ratio := player_hp / player_max_hp if player_max_hp > 0.0 else 1.0
+		player_max_hp = simulation.initial_player_hp() * (1.0 + progression_service.skill_bonus("max_hp_pct")) + progression_service.equipment_bonus("max_hp")
+		player_hp = minf(player_max_hp, player_max_hp * health_ratio)
 		_equipment_panel.present(result["profile"])
 	else:
 		_equipment_panel.present_error()
@@ -467,6 +472,10 @@ func _enhance_equipment(instance_id: String, stat_id: String, powder_tier: Strin
 		return
 	var result: Dictionary = progression_service.enhance_equipment(instance_id, stat_id, powder_tier)
 	if result.get("ok", false):
+		_refresh_persistent_bonuses()
+		var health_ratio := player_hp / player_max_hp if player_max_hp > 0.0 else 1.0
+		player_max_hp = simulation.initial_player_hp() * (1.0 + progression_service.skill_bonus("max_hp_pct")) + progression_service.equipment_bonus("max_hp")
+		player_hp = minf(player_max_hp, player_max_hp * health_ratio)
 		_equipment_panel.present(result["profile"])
 		_equipment_panel.show_feedback(
 			"ENHANCEMENT SUCCESS" if result["success"] else \
@@ -490,8 +499,18 @@ func _dismantle_equipment(instance_id: String) -> void:
 		return
 	var result: Dictionary = progression_service.dismantle_equipment(instance_id)
 	if result.get("ok", false):
+		_refresh_persistent_bonuses()
+		var health_ratio := player_hp / player_max_hp if player_max_hp > 0.0 else 1.0
+		player_max_hp = simulation.initial_player_hp() * (1.0 + progression_service.skill_bonus("max_hp_pct")) + progression_service.equipment_bonus("max_hp")
+		player_hp = minf(player_max_hp, player_max_hp * health_ratio)
 		_equipment_panel.present(result["profile"])
-		_equipment_panel.show_feedback("ITEM DISMANTLED — +1 %s" % str(result["powder"]).trim_prefix("powder_").to_upper())
+		var reward_parts: PackedStringArray = []
+		for resource in result["powder_rewards"]:
+			reward_parts.append("+%d %s" % [
+				int(result["powder_rewards"][resource]), resource.trim_prefix("powder_").to_upper(),
+			])
+		var reward_text := ", ".join(reward_parts)
+		_equipment_panel.show_feedback("ITEM DISMANTLED — %s" % reward_text)
 	else:
 		_equipment_panel.show_feedback("DISMANTLE FAILED: %s" % str(result.get("error", "unknown")))
 
@@ -798,6 +817,7 @@ func _refresh_persistent_bonuses() -> void:
 	if progression_service != null:
 		_cached_persistent_damage_multiplier += progression_service.skill_bonus("damage_pct")
 		_cached_persistent_damage_multiplier += progression_service.achievement_bonus("damage_pct")
+		_cached_persistent_damage_multiplier += progression_service.equipment_bonus("damage_pct") / 100.0
 
 func _nearest_enemy(max_range: float) -> Dictionary:
 	var nearest: Dictionary = {}

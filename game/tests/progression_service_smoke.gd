@@ -26,7 +26,18 @@ func _run() -> void:
 			inventory[0].get("instance_id") != "survival_run-win_equipment":
 		_fail("Every completed Survival run should add one permanent equipment instance")
 		return
-	var unique_stat_ids := ["damage_pct", "attack_speed_pct", "critical_chance_pct"]
+	var equipment_generator = load("res://scripts/equipment_generator.gd")
+	if not equipment_generator.PROPOSED_STAT_RANGES.has("damage_pct") or \
+				not is_equal_approx(equipment_generator.stat_value("damage_pct", 0.5, 2), 3.24) or \
+			equipment_generator.stat_value("damage_pct", 1.0, 0) != 5.0:
+		_fail("Proposed equipment stat percentiles and enhancements should produce calibrated values")
+		return
+	var skill_catalog: Array = service.proposed_skill_catalog()
+	var achievement_catalog: Array = service.proposed_achievement_catalog()
+	if skill_catalog.size() != 120 or achievement_catalog.size() != 120:
+		_fail("Proposed content catalogs should preserve the 120 node and achievement targets")
+		return
+	var unique_stat_ids := ["damage_pct", "max_hp", "attack_speed_pct"]
 	inventory[0]["rarity"] = "legendary"
 	inventory[0]["stat_lines"] = []
 	for stat_id in unique_stat_ids:
@@ -96,8 +107,10 @@ func _run() -> void:
 		return
 	var first_equipped: Dictionary = service.set_equipped("survival_run-win_equipment", true)
 	if not first_equipped.get("ok", false) or \
-			not first_equipped["profile"]["equipment_inventory"][0].get("equipped", false):
-		_fail("Equipping a permanent item should persist its equipped state")
+			not first_equipped["profile"]["equipment_inventory"][0].get("equipped", false) or \
+				not is_equal_approx(service.equipment_bonus("damage_pct"), 3.24) or \
+				not is_equal_approx(service.equipment_bonus("max_hp"), 5.0):
+		_fail("Equipping a permanent item should persist its state and activate proposed damage/HP lines")
 		return
 	var replacement: Dictionary = service.set_equipped("survival_run-loss_equipment", true)
 	var replaced_inventory: Array = replacement.get("profile", {}).get("equipment_inventory", [])
@@ -162,9 +175,9 @@ func _run() -> void:
 		return
 	var dismantled: Dictionary = service.dismantle_equipment("survival_run-win_equipment")
 	if not dismantled.get("ok", false) or dismantled["profile"]["equipment_inventory"].size() != 1 or \
-			dismantled["profile"]["resources"]["powder_prismatic"] != 1 or \
+			dismantled["profile"]["resources"]["powder_refined"] != 3 or \
 			service.dismantle_equipment("survival_run-win_equipment").get("ok", false):
-		_fail("Dismantling should remove the item once and persist its prototype rarity-tier powder reward")
+		_fail("Dismantling should remove the item once and persist its proposed rarity powder reward")
 		return
 	var achievement_service = load("res://scripts/progression_service.gd").new(save_service, "achievement")
 	var achievement_run: Dictionary = achievement_service.award_survival_run("kill-run", 24, true, 100)
