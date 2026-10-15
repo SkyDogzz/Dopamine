@@ -1,0 +1,203 @@
+#include "dopamine/simulation/simulation_worker.hpp"
+
+#include <cmath>
+#include <utility>
+
+namespace dopamine::sim {
+
+SimulationWorker::SimulationWorker() {
+	published_.store(std::make_shared<SimulationSnapshot>());
+}
+
+SimulationWorker::~SimulationWorker() {
+	stop();
+}
+
+void SimulationWorker::start() {
+	std::lock_guard lock(lifecycle_mutex_);
+	if (thread_.joinable()) {
+		return;
+	}
+	running_.store(true);
+	thread_ = std::jthread([this](std::stop_token stop_token) { run(stop_token); });
+}
+
+void SimulationWorker::stop() {
+	std::lock_guard lock(lifecycle_mutex_);
+	if (!thread_.joinable()) {
+		running_.store(false);
+		return;
+	}
+	thread_.request_stop();
+	queue_cv_.notify_all();
+	thread_.join();
+	{
+		std::lock_guard queue_lock(queue_mutex_);
+		queue_.clear();
+	}
+	running_.store(false);
+	apply(SimulationCommand{.type = CommandType::Pause});
+	publish(0.0);
+}
+
+uint64_t SimulationWorker::submit(SimulationCommand command) {
+	if (!running_.load()) {
+		return 0;
+	}
+	{
+		std::lock_guard lock(queue_mutex_);
+		if (!running_.load() || queue_.size() >= max_queued_commands_) {
+			rejected_commands_.fetch_add(1);
+			return 0;
+		}
+		const uint64_t sequence = next_sequence_++;
+		command.sequence = sequence;
+		queue_.push_back(std::move(command));
+		queue_cv_.notify_one();
+		return sequence;
+	}
+}
+
+std::shared_ptr<const SimulationSnapshot> SimulationWorker::snapshot() const {
+	return published_.load();
+}
+
+bool SimulationWorker::wait_until_applied(uint64_t sequence, std::chrono::milliseconds timeout) const {
+	std::unique_lock lock(applied_mutex_);
+	return applied_cv_.wait_for(lock, timeout, [this, sequence] {
+		return snapshot()->last_sequence >= sequence || !running_.load();
+	}) && snapshot()->last_sequence >= sequence;
+}
+
+void SimulationWorker::run(std::stop_token stop_token) {
+	auto last_update = std::chrono::steady_clock::now();
+	while (!stop_token.stop_requested()) {
+		std::deque<SimulationCommand> commands;
+		{
+			std::unique_lock lock(queue_mutex_);
+			auto has_command_or_stopping = [this, &stop_token] {
+				return stop_token.stop_requested() || !queue_.empty();
+			};
+			if (paused_) {
+				queue_cv_.wait(lock, has_command_or_stopping);
+			} else {
+				queue_cv_.wait_for(lock, std::chrono::milliseconds(16), has_command_or_stopping);
+			}
+			if (stop_token.stop_requested()) {
+				break;
+			}
+			commands.swap(queue_);
+		}
+
+		for (const SimulationCommand &command : commands) {
+			apply(command);
+		}
+
+		const auto now = std::chrono::steady_clock::now();
+		const double elapsed = std::chrono::duration<double>(now - last_update).count();
+		last_update = now;
+		double frame_time_ms = elapsed * 1000.0;
+		if (!paused_ && elapsed > 0.0) {
+			simulation_.advance(elapsed * speed_multiplier_);
+		} else if (paused_) {
+			frame_time_ms = 0.0;
+		}
+		publish(frame_time_ms);
+	}
+	running_.store(false);
+	queue_cv_.notify_all();
+	applied_cv_.notify_all();
+}
+
+void SimulationWorker::apply(const SimulationCommand &command) {
+	switch (command.type) {
+		case CommandType::Spawn: {
+			if (command.count == 0 || command.count > 500 || simulation_.entity_count() + command.count > max_entities_) {
+				log("spawn rejected: entity count outside limits");
+				break;
+			}
+			try {
+				for (uint32_t i = 0; i < command.count; ++i) {
+					simulation_.spawn(command.entity_type, command.x, command.y, command.hp,
+							command.velocity_x, command.velocity_y);
+				}
+				log("spawned " + std::to_string(command.count) + " " + command.entity_type);
+			} catch (const std::exception &error) {
+				log(std::string("spawn rejected: ") + error.what());
+			}
+			break;
+		}
+		case CommandType::Despawn:
+			log(simulation_.despawn(command.entity) ? "entity despawned" : "despawn ignored: stale entity ID");
+			break;
+		case CommandType::KillAll: {
+			const auto entities = simulation_.snapshot();
+			for (const Entity &entity : entities) {
+				simulation_.despawn(entity.id);
+			}
+			log("removed " + std::to_string(entities.size()) + " entities");
+			break;
+		}
+		case CommandType::Pause:
+			paused_ = true;
+			log("simulation paused");
+			break;
+		case CommandType::Resume:
+			paused_ = false;
+			log("simulation resumed");
+			break;
+		case CommandType::Step:
+			if (!paused_ || !std::isfinite(command.delta_seconds) || command.delta_seconds <= 0.0) {
+				log("step rejected: pause first and use a positive finite duration");
+				break;
+			}
+			try {
+				simulation_.advance(command.delta_seconds * speed_multiplier_);
+				log("stepped " + std::to_string(command.delta_seconds) + " seconds");
+			} catch (const std::exception &error) {
+				log(std::string("step rejected: ") + error.what());
+			}
+			break;
+		case CommandType::SetSpeed:
+			if (!std::isfinite(command.speed_multiplier) || command.speed_multiplier < 0.25 ||
+					command.speed_multiplier > 4.0) {
+				log("speed rejected: expected a value from 0.25 to 4.0");
+				break;
+			}
+			speed_multiplier_ = command.speed_multiplier;
+			log("speed set to " + std::to_string(speed_multiplier_));
+			break;
+		case CommandType::Reset:
+			simulation_.reset();
+			paused_ = true;
+			speed_multiplier_ = 1.0;
+			log("simulation reset");
+			break;
+	}
+	if (command.sequence != 0) {
+		pending_sequence_ = command.sequence;
+	}
+}
+
+void SimulationWorker::publish(double frame_time_ms) {
+	auto next = std::make_shared<SimulationSnapshot>();
+	next->paused = paused_;
+	next->speed_multiplier = speed_multiplier_;
+	next->simulation_time = simulation_.simulation_time();
+	next->frame_time_ms = frame_time_ms;
+	next->last_sequence = pending_sequence_;
+	next->rejected_commands = rejected_commands_.load();
+	next->entities = simulation_.snapshot();
+	next->logs = logs_;
+	published_.store(std::move(next));
+	applied_cv_.notify_all();
+}
+
+void SimulationWorker::log(std::string message) {
+	if (logs_.size() == 100) {
+		logs_.erase(logs_.begin());
+	}
+	logs_.push_back("t=" + std::to_string(simulation_.simulation_time()) + "s " + std::move(message));
+}
+
+} // namespace dopamine::sim

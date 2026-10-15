@@ -16,7 +16,10 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(godot-cpp)
 
-add_library(dopamine_simulation STATIC native/src/simulation_core.cpp)
+add_library(dopamine_simulation STATIC
+    native/src/simulation_core.cpp
+    native/src/simulation_worker.cpp
+)
 target_include_directories(dopamine_simulation PUBLIC native/include)
 target_compile_features(dopamine_simulation PUBLIC cxx_std_23)
 set_target_properties(dopamine_simulation PROPERTIES POSITION_INDEPENDENT_CODE ON)
@@ -25,6 +28,10 @@ if(BUILD_TESTING)
     add_executable(simulation_core_tests native/tests/simulation_core_test.cpp)
     target_link_libraries(simulation_core_tests PRIVATE dopamine_simulation)
     add_test(NAME simulation_core COMMAND simulation_core_tests)
+
+    add_executable(simulation_worker_tests native/tests/simulation_worker_test.cpp)
+    target_link_libraries(simulation_worker_tests PRIVATE dopamine_simulation)
+    add_test(NAME simulation_worker COMMAND simulation_worker_tests)
 endif()
 
 add_library(dopamine SHARED
