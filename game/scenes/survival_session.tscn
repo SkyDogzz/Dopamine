@@ -13,69 +13,94 @@ script = ExtResource("1_session")
 layer = 5
 
 [node name="RunPanel" type="PanelContainer" parent="HUD"]
-offset_left = 20.0
-offset_top = 20.0
-offset_right = 1190.0
-offset_bottom = 80.0
+offset_left = 18.0
+offset_top = 14.0
+offset_right = -18.0
+offset_bottom = 100.0
 mouse_filter = 2
+theme_override_constants/margin_left = 14
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 14
+theme_override_constants/margin_bottom = 8
 
-[node name="RunInfo" type="HBoxContainer" parent="HUD/RunPanel"]
-theme_override_constants/separation = 14
+[node name="RunInfo" type="GridContainer" parent="HUD/RunPanel"]
+columns = 5
+theme_override_constants/h_separation = 12
+theme_override_constants/v_separation = 3
 mouse_filter = 2
 
 [node name="HPValue" type="Label" parent="HUD/RunPanel/RunInfo"]
-custom_minimum_size = Vector2(125, 0)
+custom_minimum_size = Vector2(170, 0)
 layout_mode = 2
+theme_override_colors/font_color = Color(0.9, 0.95, 0.97, 1)
+theme_override_font_sizes/font_size = 15
 text = "HP  100 / 100"
+vertical_alignment = 1
 
 [node name="HPBar" type="ProgressBar" parent="HUD/RunPanel/RunInfo"]
-custom_minimum_size = Vector2(170, 0)
+custom_minimum_size = Vector2(240, 10)
 layout_mode = 2
 show_percentage = false
 value = 100.0
 
 [node name="TimeValue" type="Label" parent="HUD/RunPanel/RunInfo"]
-custom_minimum_size = Vector2(56, 0)
+custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
+theme_override_colors/font_color = Color(0.27, 0.9, 0.93, 1)
+theme_override_font_sizes/font_size = 21
 text = "00:00"
+vertical_alignment = 1
 
 [node name="WeaponIcon" type="TextureRect" parent="HUD/RunPanel/RunInfo"]
-custom_minimum_size = Vector2(30, 30)
+custom_minimum_size = Vector2(34, 34)
 layout_mode = 2
 texture_filter = 1
 stretch_mode = 5
 
 [node name="WeaponValue" type="Label" parent="HUD/RunPanel/RunInfo"]
-custom_minimum_size = Vector2(190, 0)
+custom_minimum_size = Vector2(360, 0)
 layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.9, 0.95, 0.97, 1)
+theme_override_font_sizes/font_size = 13
 text = "LIGHTNING CONDUCTOR  •  2 CHAINS"
+vertical_alignment = 1
 
 [node name="XPValue" type="Label" parent="HUD/RunPanel/RunInfo"]
-custom_minimum_size = Vector2(110, 0)
+custom_minimum_size = Vector2(170, 0)
 layout_mode = 2
-text = "LV 1  XP 0 / 10"
+theme_override_colors/font_color = Color(0.64, 0.79, 0.84, 1)
+theme_override_font_sizes/font_size = 13
+text = "LV 1  •  XP 0 / 10"
+vertical_alignment = 1
 
 [node name="XPBar" type="ProgressBar" parent="HUD/RunPanel/RunInfo"]
-custom_minimum_size = Vector2(110, 0)
+custom_minimum_size = Vector2(240, 10)
 layout_mode = 2
 show_percentage = false
 
 [node name="WaveValue" type="Label" parent="HUD/RunPanel/RunInfo"]
-custom_minimum_size = Vector2(150, 0)
+custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.82, 0.4, 1)
+theme_override_font_sizes/font_size = 14
 text = "WAVE 01  •  30 s"
+vertical_alignment = 1
 
 [node name="RunState" type="Label" parent="HUD/RunPanel/RunInfo"]
-custom_minimum_size = Vector2(86, 0)
+custom_minimum_size = Vector2(110, 0)
 layout_mode = 2
+theme_override_colors/font_color = Color(0.27, 0.9, 0.93, 1)
+theme_override_font_sizes/font_size = 12
 text = "IN RUN"
+vertical_alignment = 1
 
 [node name="BossPanel" type="PanelContainer" parent="HUD"]
 visible = false
 offset_left = 420.0
-offset_top = 90.0
+offset_top = 110.0
 offset_right = 860.0
-offset_bottom = 132.0
+offset_bottom = 152.0
 mouse_filter = 2
 
 [node name="BossInfo" type="HBoxContainer" parent="HUD/BossPanel"]
@@ -104,17 +129,17 @@ mouse_filter = 2
 
 [node name="EquipmentButton" type="Button" parent="HUD"]
 offset_left = 20.0
-offset_top = 92.0
+offset_top = 110.0
 offset_right = 180.0
-offset_bottom = 132.0
+offset_bottom = 150.0
 text = "EQUIPMENT"
 tooltip_text = "Open the permanent equipment inventory. Simulation pauses while it is open."
 
 [node name="SkillsButton" type="Button" parent="HUD"]
 offset_left = 190.0
-offset_top = 92.0
+offset_top = 110.0
 offset_right = 350.0
-offset_bottom = 132.0
+offset_bottom = 150.0
 text = "SKILL TREE"
 tooltip_text = "Spend Essence on permanent skill nodes."
 

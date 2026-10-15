@@ -190,6 +190,7 @@ const WAVE_HP_CAP := 12.0
 var simulation: Object
 var progression_service: RefCounted
 var _sprite_renderer: RefCounted
+var _hp_fill_style: StyleBoxFlat
 var _run_id := ""
 var player: CharacterBody2D
 var loadout: RefCounted
@@ -268,6 +269,7 @@ var _elite_haste_expires_at := 0.0
 
 func _ready() -> void:
 	texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	_style_run_hud()
 	_sprite_renderer = SPRITE_RENDERER_SCRIPT.new()
 	_run_id = Crypto.new().generate_random_bytes(16).hex_encode()
 	player = PLAYER_SCENE.instantiate()
@@ -487,6 +489,9 @@ func _refresh_hud(state: Dictionary) -> void:
 	]
 	_hp_bar.max_value = player_max_hp
 	_hp_bar.value = player_hp
+	var hp_ratio := player_hp / player_max_hp if player_max_hp > 0.0 else 0.0
+	_hp_fill_style.bg_color = Color("#54e0c1") if hp_ratio > 0.6 else Color("#ffd166") if hp_ratio > 0.3 else Color("#ff5c70")
+	_hp_value.add_theme_color_override("font_color", _hp_fill_style.bg_color)
 	_xp_value.text = "LV %d  XP %.0f / %.0f" % [player_level, player_xp, player_xp_to_next]
 	_xp_bar.max_value = player_xp_to_next
 	_xp_bar.value = player_xp
@@ -516,12 +521,39 @@ func _refresh_hud(state: Dictionary) -> void:
 	_weapon_value.text = "  •  ".join(equipped_names)
 	if wave_director != null and wave_director.state == WAVE_DIRECTOR_SCRIPT.State.VICTORY:
 		_run_state.text = "VICTORY"
+		_run_state.add_theme_color_override("font_color", Color("#54e0c1"))
 	elif run_over:
 		_run_state.text = "RUN OVER"
+		_run_state.add_theme_color_override("font_color", Color("#ff5c70"))
 	elif state["paused"]:
 		_run_state.text = "PAUSED"
+		_run_state.add_theme_color_override("font_color", Color("#ffd166"))
 	else:
 		_run_state.text = "IN RUN"
+		_run_state.add_theme_color_override("font_color", Color("#54e0c1"))
+
+func _style_run_hud() -> void:
+	var panel_style := StyleBoxFlat.new()
+	panel_style.bg_color = Color("#0b1521")
+	panel_style.border_color = Color("#34495b")
+	panel_style.set_border_width_all(1)
+	panel_style.border_width_left = 3
+	panel_style.border_color = Color("#45e5ed")
+	panel_style.set_corner_radius_all(4)
+	$HUD/RunPanel.add_theme_stylebox_override("panel", panel_style)
+	var bar_background := StyleBoxFlat.new()
+	bar_background.bg_color = Color("#172633")
+	bar_background.set_corner_radius_all(3)
+	_hp_bar.add_theme_stylebox_override("background", bar_background)
+	$HUD/RunPanel/RunInfo/XPBar.add_theme_stylebox_override("background", bar_background)
+	_hp_fill_style = StyleBoxFlat.new()
+	_hp_fill_style.bg_color = Color("#54e0c1")
+	_hp_fill_style.set_corner_radius_all(3)
+	_hp_bar.add_theme_stylebox_override("fill", _hp_fill_style)
+	var xp_fill := StyleBoxFlat.new()
+	xp_fill.bg_color = Color("#45e5ed")
+	xp_fill.set_corner_radius_all(3)
+	$HUD/RunPanel/RunInfo/XPBar.add_theme_stylebox_override("fill", xp_fill)
 
 func _refresh_boss_hud() -> void:
 	_boss_panel.visible = false
