@@ -1,0 +1,57 @@
+extends SceneTree
+
+func _initialize() -> void:
+	call_deferred("_run")
+
+func _run() -> void:
+	var session: Node2D = load("res://scenes/survival_session.tscn").instantiate()
+	session.spawn_initial_enemy = false
+	session.wave_spawning_enabled = false
+	session.weapon_enabled = false
+	session.skip_starting_weapon_choice = true
+	session.contact_damage_per_hit = 0.0
+	session.ordinary_chest_drop_chance = 0.0
+	session.xp_collection_radius = 0.0
+	root.add_child(session)
+	await process_frame
+	if not session.loadout.apply_offer("relic:blood_chalice"):
+		_fail("Blood Chalice should be equipable")
+		return
+	session.player_hp = 50.0
+	session.simulation.set_speed(0.25)
+	session.simulation.spawn("test_target", 1, Vector2(60.0, 0.0), 100.0, Vector2.ZERO, 1.0)
+	session.simulation.spawn_projectile("test_weapon", Vector2.ZERO, Vector2(1000.0, 0.0), 40.0, 3.0, 1.0)
+	if not await _wait_until(func() -> bool:
+		return int(session.simulation.snapshot()["metrics"]["collision_count"]) > 0 and session.player_hp > 50.2
+	):
+		_fail("Blood Chalice should heal from weapon damage events")
+		return
+	if session.kill_count != 0:
+		_fail("Lifesteal should work on damage without requiring an enemy kill")
+		return
+	session.player_hp = 50.0
+	session._pending_lifesteal = 40.0
+	session._apply_pending_lifesteal(2.0)
+	if not is_equal_approx(session.player_hp, 75.0):
+		_fail("Lifesteal should apply the proposed 10 HP/s cap and 25% overflow efficiency")
+		return
+	session.player_hp = 99.5
+	session._pending_lifesteal = 40.0
+	session._apply_pending_lifesteal(2.0)
+	if not is_equal_approx(session.player_hp, session.player_max_hp):
+		_fail("Lifesteal should not heal above maximum HP")
+		return
+	print("Survival lifesteal smoke passed")
+	quit()
+
+func _wait_until(predicate: Callable) -> bool:
+	var deadline := Time.get_ticks_msec() + 2000
+	while Time.get_ticks_msec() < deadline:
+		await process_frame
+		if predicate.call():
+			return true
+	return false
+
+func _fail(message: String) -> void:
+	push_error(message)
+	quit(1)

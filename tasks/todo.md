@@ -31,7 +31,7 @@
 - [x] Scène Survival minimale : position monde du joueur transmise au steering ECS ; vitesses des profils conservées.
 - [x] Relier HP decay à l’horloge active Survival et appliquer les soins des événements de mort au HP Godot.
 - [x] Prototype de tir automatique Lightning Conductor ; chaînes distinctes ciblées et valeurs de combat configurables, toutes proposées.
-- [ ] Ajouter lifesteal, statuts et contrôles de ces règles dans le Sandbox.
+- [ ] Ajouter les contrôles Sandbox pour lifesteal et statuts; intégrer le lifesteal des dégâts sur la durée et clarifier le taux de base **[OUVERT]**.
 - [x] Dégâts de contact joueur-ennemi et invulnérabilité provisoires en Survival; contrôles suspendus pendant les pauses et fins de run.
 
 ## Phase 4 — Premier playable Survival
@@ -41,7 +41,7 @@
 - [x] Prototype vagues : 24 vagues, horloge arrêtée pendant les placeholders boss, spawns selon courbes proposées et HUD vague.
 - [x] HUD boss : barre HP courants/max et état de victoire distinct de la défaite.
 - [x] Chests Survival : mort→drop→pickup→modal à trois choix→mise à jour du loadout et reprise; sélection du catalogue **[PROPOSÉE]**.
-- [x] Projectiles prototypes Inferno/Crimson et modificateurs de reliques testés; brûlure, explosion, entailles et lifesteal restent à implémenter.
+- [x] Projectiles prototypes Inferno/Crimson et modificateurs de reliques testés; brûlure, explosion et entailles restent à implémenter. Blood Chalice accorde un lifesteal direct de 5 %/niveau **[PROPOSÉ]** avec soft cap.
 - [x] Écran de choix d’arme initiale parmi deux prototypes **[PROPOSÉS]**, entrée Survival depuis le Sandbox, victoire/défaite avec résumé et redémarrage.
 - [ ] Évolutions et effets élémentaires complets; confirmer le pool de départ du vertical slice.
 - [ ] Vagues, chests, 3 armes/reliques, mid-boss et boss final.

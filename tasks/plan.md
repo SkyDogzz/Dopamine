@@ -46,7 +46,7 @@ Livrer d’abord un Sandbox développeur autonome, puis le premier playable Surv
 - [x] Intégrer HP decay et soins aux événements de combat et à l’horloge active de `SurvivalSession`, avec HP possédé côté Godot.
 - [x] Ajouter un prototype automatique Lightning Conductor configurable ; la cadence, les dégâts et l’interprétation des deux chaînes restent **[PROPOSÉS]**.
 - [x] Ajouter les dégâts de contact joueur-ennemi et l’invulnérabilité provisoires; suspendre les contrôles joueur en pause et après la fin.
-- [ ] Compléter les modificateurs de dégâts, lifesteal, statuts et collisions joueur.
+- [ ] Ajouter les contrôles Sandbox pour les modificateurs de dégâts/lifesteal/statuts; compléter le lifesteal des dégâts sur la durée et les statuts.
 - [ ] Tester les règles indépendamment dans le Sandbox et respecter les budgets de simulation.
 
 ### Phase 4 — Premier playable Survival

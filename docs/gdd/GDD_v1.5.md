@@ -97,6 +97,9 @@ Paires de contenu :
 9. Toxic Cloud + Plague Mask → Pandemic : poison contagieux.
 10. Prism Laser + Prism Crystal → Spectrum Collapse : faisceaux divisés.
 
+[PROPOSÉ] Blood Chalice accorde 5 % de lifesteal par niveau sur les dégâts directs. Le prototype applique le soft cap décrit en section 03; la valeur n'est pas validée et les dégâts sur la durée restent à intégrer.
+[OUVERT] Le taux de lifesteal général indépendant de Blood Chalice n'est pas défini.
+
 [PROPOSÉ] Lightning Conductor niveaux 1–5 : 2 chaînes → 3 chaînes → +25 % dégâts → 5 chaînes → 2 cibles initiales. Les 9 autres tables de niveaux, cooldowns, dégâts, portée, ciblage et bonus précis des reliques restent [À RÉDIGER].
 
 [VALIDÉ] Les armes/reliques débloquées deviennent disponibles pour les tirages et ne sont pas automatiquement équipées dans chaque run.

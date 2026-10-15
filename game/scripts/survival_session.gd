@@ -58,6 +58,7 @@ const WAVE_HP_CAP := 12.0
 @export_range(0.0, 1.0) var storm_core_damage_per_level: float = 0.05
 @export_range(0.0, 1.0) var infernal_heart_damage_per_level: float = 0.05
 @export_range(0.0, 1.0) var blood_chalice_heal_per_level: float = 0.10
+@export_range(0.0, 1.0) var blood_chalice_lifesteal_per_level: float = 0.05
 @export_group("Prototype XP — proposed tuning")
 @export var xp_per_enemy: float = 5.0
 @export var xp_collection_radius: float = 36.0
@@ -93,6 +94,7 @@ var _world_chests: Array[Dictionary] = []
 var _chest_open := false
 var _starting_weapon_choice_open := false
 var _contact_invulnerable_until := 0.0
+var _pending_lifesteal := 0.0
 
 @onready var _hp_value: Label = $HUD/RunPanel/RunInfo/HPValue
 @onready var _hp_bar: ProgressBar = $HUD/RunPanel/RunInfo/HPBar
@@ -161,6 +163,8 @@ func _process(_delta: float) -> void:
 			continue
 		latest_event_sequence = sequence
 		match event["type"]:
+			"damage":
+				_pending_lifesteal += float(event["amount"]) * float(loadout.relic_level("blood_chalice")) * blood_chalice_lifesteal_per_level
 			"death":
 				kill_count += 1
 				var dead_enemy_type: String = str(event.get("target_type", ""))
@@ -185,6 +189,7 @@ func _process(_delta: float) -> void:
 				var id: Dictionary = event["target"]
 				_pending_xp_orbs.erase(_entity_key(int(id["index"]), int(id["generation"])))
 				_add_xp(float(event["amount"]))
+	_apply_pending_lifesteal(elapsed_active_time)
 	if latest_event_sequence > _last_combat_event_sequence:
 		_last_combat_event_sequence = latest_event_sequence
 		simulation.acknowledge_events(latest_event_sequence)
@@ -218,6 +223,15 @@ func _apply_contact_damage(state: Dictionary, current_simulation_time: float) ->
 		player_hp = maxf(0.0, player_hp - contact_damage_per_hit)
 		_contact_invulnerable_until = current_simulation_time + contact_invulnerability_seconds
 		return
+
+func _apply_pending_lifesteal(elapsed_active_time: float) -> void:
+	if elapsed_active_time <= 0.0 or _pending_lifesteal <= 0.0 or run_over:
+		return
+	var normal_healing_limit := 10.0 * elapsed_active_time
+	var healing := minf(_pending_lifesteal, normal_healing_limit)
+	healing += maxf(0.0, _pending_lifesteal - normal_healing_limit) * 0.25
+	_pending_lifesteal = 0.0
+	player_hp = minf(player_max_hp, player_hp + healing)
 
 func _refresh_hud(state: Dictionary) -> void:
 	_hp_value.text = "HP  %.1f / %.0f" % [player_hp, player_max_hp]
