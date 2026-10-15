@@ -107,6 +107,7 @@ var _chest_open := false
 var _starting_weapon_choice_open := false
 var _contact_invulnerable_until := 0.0
 var _pending_lifesteal := 0.0
+var _inventory_was_running := false
 
 @onready var _hp_value: Label = $HUD/RunPanel/RunInfo/HPValue
 @onready var _hp_bar: ProgressBar = $HUD/RunPanel/RunInfo/HPBar
@@ -120,6 +121,8 @@ var _pending_lifesteal := 0.0
 @onready var _boss_value: Label = $HUD/BossPanel/BossInfo/BossValue
 @onready var _boss_hp_bar: ProgressBar = $HUD/BossPanel/BossInfo/BossHPBar
 @onready var _chest_choice: PanelContainer = $HUD/ChestOverlay/ChestChoice
+@onready var _equipment_button: Button = $HUD/EquipmentButton
+@onready var _equipment_panel: CenterContainer = $HUD/EquipmentInventoryOverlay
 @onready var _run_result_overlay: CenterContainer = $HUD/RunResultOverlay
 @onready var _run_result: PanelContainer = $HUD/RunResultOverlay/RunResultPanel
 
@@ -141,6 +144,9 @@ func _ready() -> void:
 		return
 	_chest_choice.option_selected.connect(_on_chest_option_selected)
 	_run_result.restart_requested.connect(_restart_run)
+	_equipment_button.pressed.connect(_open_equipment_inventory)
+	_equipment_panel.close_requested.connect(_close_equipment_inventory)
+	_equipment_button.visible = progression_service != null
 	player_max_hp = simulation.initial_player_hp()
 	player_hp = player_max_hp
 	player_xp_to_next = xp_base_to_next_level
@@ -356,6 +362,24 @@ func _finish_run(victory: bool) -> void:
 	if progression_service != null:
 		reward = progression_service.award_survival_run(_run_id, wave_director.wave, victory)
 	_run_result.show_result(victory, wave_director.wave, player_active_time, kill_count, reward)
+
+func _open_equipment_inventory() -> void:
+	if progression_service == null or run_over or _chest_open or _starting_weapon_choice_open or _equipment_panel.visible:
+		return
+	_inventory_was_running = not bool(simulation.snapshot()["paused"])
+	if _inventory_was_running:
+		simulation.pause()
+	var result: Dictionary = progression_service.load_profile()
+	if result.get("ok", false):
+		_equipment_panel.present(result["profile"])
+	else:
+		_equipment_panel.present_error()
+
+func _close_equipment_inventory() -> void:
+	if _inventory_was_running and not run_over:
+		simulation.resume()
+	_inventory_was_running = false
+	_equipment_button.grab_focus()
 
 func _restart_run() -> void:
 	get_tree().reload_current_scene()

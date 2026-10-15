@@ -1,8 +1,9 @@
-[gd_scene load_steps=4 format=3]
+[gd_scene load_steps=5 format=3]
 
 [ext_resource type="Script" path="res://scripts/survival_session.gd" id="1_session"]
 [ext_resource type="PackedScene" path="res://scenes/chest_choice.tscn" id="2_chest_choice"]
 [ext_resource type="PackedScene" path="res://scenes/run_result_panel.tscn" id="3_run_result"]
+[ext_resource type="PackedScene" path="res://scenes/equipment_inventory_panel.tscn" id="4_inventory"]
 
 [node name="SurvivalSession" type="Node2D"]
 script = ExtResource("1_session")
@@ -93,6 +94,16 @@ grow_vertical = 2
 mouse_filter = 2
 
 [node name="ChestChoice" parent="HUD/ChestOverlay" instance=ExtResource("2_chest_choice")]
+
+[node name="EquipmentButton" type="Button" parent="HUD"]
+offset_left = 20.0
+offset_top = 92.0
+offset_right = 180.0
+offset_bottom = 132.0
+text = "EQUIPMENT"
+tooltip_text = "Open the permanent equipment inventory. Simulation pauses while it is open."
+
+[node name="EquipmentInventoryOverlay" parent="HUD" instance=ExtResource("4_inventory")]
 
 [node name="RunResultOverlay" type="CenterContainer" parent="HUD"]
 visible = false

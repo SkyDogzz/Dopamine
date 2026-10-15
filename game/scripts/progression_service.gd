@@ -16,26 +16,12 @@ func _init(save_service: RefCounted, slot_id: String = "0") -> void:
 func award_survival_run(run_id: String, wave_reached: int, victory: bool) -> Dictionary:
 	if _save_service == null or not _valid_run_id(run_id):
 		return _award_error("invalid_run")
-	var loaded: Dictionary = _save_service.load_slot(_slot_id)
-	var profile: Dictionary
-	var profile_migrated := false
-	if loaded.get("ok", false):
-		profile = loaded["payload"]
-		if profile.get("profile_version") == 1:
-			profile_migrated = true
-			profile["profile_version"] = PROFILE_VERSION
-			profile["equipment_inventory"] = profile.get("equipment_inventory", [])
-		if not _valid_profile(profile):
-			return _award_error("invalid_profile")
-	elif loaded.get("error") == "not_found":
-		profile = _empty_profile()
-	else:
-		return _award_error(str(loaded.get("error", "load_failed")))
+	var profile_result := load_profile()
+	if not profile_result.get("ok", false):
+		return _award_error(str(profile_result.get("error", "load_failed")))
+	var profile: Dictionary = profile_result["profile"]
 	var rewarded_runs: Array = profile["rewarded_survival_runs"]
 	if rewarded_runs.has(run_id):
-		if profile_migrated or loaded.get("migrated", false):
-			if not _save_service.save_slot(_slot_id, profile):
-				return _award_error("save_failed")
 		return {"ok": true, "duplicate": true, "essence": 0, "powder_basic": 0}
 	var wave := clampi(wave_reached, 1, 24)
 	var final_boss_vanquished := victory and wave >= 24
@@ -57,6 +43,26 @@ func award_survival_run(run_id: String, wave_reached: int, victory: bool) -> Dic
 		"powder_basic": powder_reward,
 		"equipment": equipment,
 	}
+
+func load_profile() -> Dictionary:
+	if _save_service == null:
+		return {"ok": false, "error": "save_service_unavailable"}
+	var loaded: Dictionary = _save_service.load_slot(_slot_id)
+	if not loaded.get("ok", false):
+		if loaded.get("error") == "not_found":
+			return {"ok": true, "profile": _empty_profile()}
+		return {"ok": false, "error": str(loaded.get("error", "load_failed"))}
+	var profile: Dictionary = loaded["payload"]
+	var migrated := bool(loaded.get("migrated", false))
+	if profile.get("profile_version") == 1:
+		profile["profile_version"] = PROFILE_VERSION
+		profile["equipment_inventory"] = profile.get("equipment_inventory", [])
+		migrated = true
+	if not _valid_profile(profile):
+		return {"ok": false, "error": "invalid_profile"}
+	if migrated and not _save_service.save_slot(_slot_id, profile):
+		return {"ok": false, "error": "save_failed"}
+	return {"ok": true, "profile": profile.duplicate(true)}
 
 func _empty_profile() -> Dictionary:
 	return {
