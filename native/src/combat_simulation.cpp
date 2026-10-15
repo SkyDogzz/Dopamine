@@ -20,6 +20,8 @@ void CombatSimulation::_bind_methods() {
 			&CombatSimulation::spawn_projectile);
 	ClassDB::bind_method(D_METHOD("spawn_xp_orb", "position", "xp_value"), &CombatSimulation::spawn_xp_orb);
 	ClassDB::bind_method(D_METHOD("collect_xp_orb", "index", "generation"), &CombatSimulation::collect_xp_orb);
+	ClassDB::bind_method(D_METHOD("apply_damage_over_time", "index", "generation", "damage_per_tick", "interval_seconds", "duration_seconds"),
+			&CombatSimulation::apply_damage_over_time);
 	ClassDB::bind_method(D_METHOD("despawn", "index", "generation"), &CombatSimulation::despawn);
 	ClassDB::bind_method(D_METHOD("kill_all"), &CombatSimulation::kill_all);
 	ClassDB::bind_method(D_METHOD("pause"), &CombatSimulation::pause);
@@ -127,6 +129,23 @@ int64_t CombatSimulation::collect_xp_orb(int64_t index, int64_t generation) {
 	SimulationCommand command;
 	command.type = CommandType::CollectXpOrb;
 	command.entity = {static_cast<uint32_t>(index), static_cast<uint32_t>(generation)};
+	return submit(std::move(command));
+}
+
+int64_t CombatSimulation::apply_damage_over_time(int64_t index, int64_t generation, float damage_per_tick,
+		double interval_seconds, double duration_seconds) {
+	constexpr int64_t max_id = std::numeric_limits<uint32_t>::max();
+	if (index < 0 || index > max_id || generation <= 0 || generation > max_id ||
+			!std::isfinite(damage_per_tick) || damage_per_tick <= 0.0F || !std::isfinite(interval_seconds) ||
+			interval_seconds <= 0.0 || !std::isfinite(duration_seconds) || duration_seconds <= 0.0) {
+		return 0;
+	}
+	SimulationCommand command;
+	command.type = CommandType::ApplyDamageOverTime;
+	command.entity = {static_cast<uint32_t>(index), static_cast<uint32_t>(generation)};
+	command.status_damage_per_tick = damage_per_tick;
+	command.status_interval_seconds = interval_seconds;
+	command.status_duration_seconds = duration_seconds;
 	return submit(std::move(command));
 }
 
@@ -267,6 +286,14 @@ Dictionary CombatSimulation::snapshot() const {
 		components["IsProjectile"] = entity.is_projectile;
 		components["IsXpOrb"] = entity.is_xp_orb;
 		components["XpValue"] = entity.xp_value;
+		if (entity.damage_over_time.has_value()) {
+			Dictionary status;
+			status["damage_per_tick"] = entity.damage_over_time->damage_per_tick;
+			status["interval_seconds"] = entity.damage_over_time->interval_seconds;
+			status["remaining_seconds"] = entity.damage_over_time->remaining_seconds;
+			status["time_to_tick"] = entity.damage_over_time->time_to_tick;
+			components["DamageOverTime"] = status;
+		}
 		if (entity.is_projectile) {
 			Dictionary projectile;
 			projectile["damage"] = entity.projectile.damage;
@@ -299,6 +326,7 @@ Dictionary CombatSimulation::snapshot() const {
 		entry["source"] = source;
 		entry["target"] = target;
 		entry["amount"] = event.amount;
+		entry["is_damage_over_time"] = event.is_damage_over_time;
 		entry["remaining_health"] = event.remaining_health;
 		entry["threat_level"] = event.threat_level;
 		entry["target_type"] = event.target_type.c_str();

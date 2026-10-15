@@ -72,6 +72,7 @@ EntityId SimulationCore::spawn(std::string type, float x, float y, float hp, flo
 		projectiles_.emplace_back();
 		xp_orb_flags_.push_back(false);
 		xp_values_.push_back(0.0F);
+		damage_over_time_.emplace_back();
 	} else {
 		index = free_indices_.back();
 		free_indices_.pop_back();
@@ -88,6 +89,7 @@ EntityId SimulationCore::spawn(std::string type, float x, float y, float hp, flo
 	projectiles_[index] = {};
 	xp_orb_flags_[index] = false;
 	xp_values_[index] = 0.0F;
+	damage_over_time_[index].reset();
 	++entity_count_;
 	return id;
 }
@@ -112,6 +114,21 @@ EntityId SimulationCore::spawn_xp_orb(float x, float y, float xp_value) {
 	xp_orb_flags_[id.index] = true;
 	xp_values_[id.index] = xp_value;
 	return id;
+}
+
+bool SimulationCore::apply_damage_over_time(EntityId target, float damage_per_tick, double interval_seconds,
+		double duration_seconds) {
+	if (!std::isfinite(damage_per_tick) || damage_per_tick <= 0.0F || !std::isfinite(interval_seconds) ||
+			interval_seconds <= 0.0 || !std::isfinite(duration_seconds) || duration_seconds <= 0.0) {
+		throw std::invalid_argument("damage-over-time values must be positive and finite");
+	}
+	if (target.index >= slots_.size() || !slots_[target.index].active ||
+			slots_[target.index].generation != target.generation || projectile_flags_[target.index] ||
+			xp_orb_flags_[target.index]) {
+		return false;
+	}
+	damage_over_time_[target.index] = DamageOverTime{damage_per_tick, interval_seconds, duration_seconds, interval_seconds};
+	return true;
 }
 
 bool SimulationCore::collect_xp_orb(EntityId id, std::vector<CombatEvent> &events) {
@@ -163,7 +180,7 @@ void SimulationCore::reset() {
 	simulation_time_ = 0.0;
 }
 
-	std::vector<CombatEvent> SimulationCore::advance(double delta_seconds) {
+std::vector<CombatEvent> SimulationCore::advance(double delta_seconds) {
 	if (!std::isfinite(delta_seconds) || delta_seconds < 0.0) {
 		throw std::invalid_argument("simulation delta must be finite and non-negative");
 	}
@@ -183,6 +200,30 @@ void SimulationCore::reset() {
 
 	std::vector<CombatEvent> events;
 	std::vector<EntityId> to_despawn;
+	for (uint32_t index = 0; index < slots_.size(); ++index) {
+		if (!slots_[index].active || !damage_over_time_[index].has_value()) {
+			continue;
+		}
+		DamageOverTime &status = *damage_over_time_[index];
+		const double active_seconds = std::min(delta_seconds, status.remaining_seconds);
+		status.remaining_seconds -= active_seconds;
+		status.time_to_tick -= delta_seconds;
+		const EntityId target{index, slots_[index].generation};
+		while (status.time_to_tick <= 1e-12 && status.remaining_seconds >= -1e-12) {
+			const std::size_t event_start = events.size();
+			apply_damage(target, target, status.damage_per_tick, events, to_despawn);
+			if (event_start < events.size()) {
+				events[event_start].is_damage_over_time = true;
+			}
+			status.time_to_tick += status.interval_seconds;
+			if (health_[index].current <= 0.0F) {
+				break;
+			}
+		}
+		if (status.remaining_seconds <= 1e-12 || health_[index].current <= 0.0F) {
+			damage_over_time_[index].reset();
+		}
+	}
 	if (has_active_projectile) {
 		float max_target_displacement = 0.0F;
 		for (uint32_t index = 0; index < slots_.size(); ++index) {
@@ -436,7 +477,8 @@ std::optional<Entity> SimulationCore::entity(EntityId id) const {
 	}
 	const size_t index = static_cast<size_t>(id.index);
 	return Entity{id, transforms_[index], velocities_[index], health_[index], enemy_types_[index],
-			projectile_flags_[index], projectiles_[index], xp_orb_flags_[index], xp_values_[index]};
+			projectile_flags_[index], projectiles_[index], xp_orb_flags_[index], xp_values_[index],
+			damage_over_time_[index]};
 }
 
 std::vector<Entity> SimulationCore::snapshot() const {
@@ -446,7 +488,8 @@ std::vector<Entity> SimulationCore::snapshot() const {
 		if (slots_[index].active) {
 			const EntityId id{index, slots_[index].generation};
 			result.push_back({id, transforms_[index], velocities_[index], health_[index], enemy_types_[index],
-					projectile_flags_[index], projectiles_[index], xp_orb_flags_[index], xp_values_[index]});
+					projectile_flags_[index], projectiles_[index], xp_orb_flags_[index], xp_values_[index],
+					damage_over_time_[index]});
 		}
 	}
 	return result;

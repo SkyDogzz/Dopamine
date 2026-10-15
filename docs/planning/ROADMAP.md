@@ -8,11 +8,14 @@
 | P1 | **Developer Sandbox MVP** : spawn, despawn, pause, step, vitesse, métriques, logs, reset | Simuler des entités sans Survival et exporter métriques |
 | P2 | Combat Core : ECS, AI, spatial hash, collisions, dégâts, HP | 500 ennemis + 2 000 projectiles dans benchmark reproductible ; vérifier 60 FPS |
 | P3 | Sandbox Combat : éditeur de stats, armes, god mode, DPS meter, inspecteur | Tester une arme et son DPS sans jouer une run |
+
 | P4 | Survival : 24 vagues, boss, XP, chests, 3 armes/reliques | Une run complète jouable |
 | P5 | Progression : gear, Powder, Essence, skill tree, achievements, saves | Persistance sûre sur plusieurs runs |
 | P6 | Endless et Armorless : Flux, draft temporaire, scaling | Modes utilisant le même combat core |
 | P7 | Sandbox Lab joueur complet : presets, share codes, snapshots, isolation, UI | Accessible sans save ; aucune progression normale altérée |
 | P8 | Contenu complet, balance, accessibilité, Steam, optimisation | Régressions vertes et cible perf atteinte |
+
+P3 groundwork: the shared simulation core and developer Sandbox can apply one configurable damage-over-time status per selected entity. Reapplication replaces the current effect; integration with Survival lifesteal and a general status catalogue remain future work.
 
 ## Sandbox MVP — spécification minimum
 

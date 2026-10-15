@@ -298,6 +298,50 @@ fit_content = true
 scroll_active = false
 text = "Select an entity in the simulation view."
 
+[node name="StatusTitle" type="Label" parent="Shell/Content/SidePanel/Sections/InspectorPanel/InspectorForm"]
+layout_mode = 2
+text = "DAMAGE OVER TIME"
+tooltip_text = "Apply a timed damage status to the selected entity. Reapplying replaces its current status."
+theme_override_font_sizes/font_size = 13
+
+[node name="StatusDamageSpin" type="SpinBox" parent="Shell/Content/SidePanel/Sections/InspectorPanel/InspectorForm"]
+custom_minimum_size = Vector2(0, 34)
+layout_mode = 2
+min_value = 0.1
+max_value = 100000.0
+step = 0.5
+value = 2.0
+prefix = "DAMAGE / TICK "
+tooltip_text = "Health removed at each status tick."
+
+[node name="StatusIntervalSpin" type="SpinBox" parent="Shell/Content/SidePanel/Sections/InspectorPanel/InspectorForm"]
+custom_minimum_size = Vector2(0, 34)
+layout_mode = 2
+min_value = 0.01
+max_value = 60.0
+step = 0.1
+value = 1.0
+prefix = "INTERVAL "
+suffix = " s"
+tooltip_text = "Simulation seconds between damage ticks."
+
+[node name="StatusDurationSpin" type="SpinBox" parent="Shell/Content/SidePanel/Sections/InspectorPanel/InspectorForm"]
+custom_minimum_size = Vector2(0, 34)
+layout_mode = 2
+min_value = 0.01
+max_value = 600.0
+step = 0.5
+value = 5.0
+prefix = "DURATION "
+suffix = " s"
+tooltip_text = "Total simulation time before the status expires."
+
+[node name="ApplyStatusButton" type="Button" parent="Shell/Content/SidePanel/Sections/InspectorPanel/InspectorForm"]
+custom_minimum_size = Vector2(0, 36)
+layout_mode = 2
+text = "APPLY TO SELECTED"
+tooltip_text = "Apply this damage-over-time configuration to the selected entity."
+
 [node name="LogPanel" type="PanelContainer" parent="Shell/Content/SidePanel/Sections"]
 layout_mode = 2
 

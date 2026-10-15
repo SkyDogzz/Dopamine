@@ -27,6 +27,7 @@ enum class CommandType {
 	SpawnProjectile,
 	SpawnXpOrb,
 	CollectXpOrb,
+	ApplyDamageOverTime,
 	AcknowledgeEvents,
 	Reset,
 };
@@ -50,6 +51,9 @@ struct SimulationCommand {
 	float projectile_radius = 3.0F;
 	double projectile_lifetime = 5.0;
 	float xp_value = 1.0F;
+	float status_damage_per_tick = 0.0F;
+	double status_interval_seconds = 0.0;
+	double status_duration_seconds = 0.0;
 	uint64_t event_sequence = 0;
 	SteeringConfig steering;
 };

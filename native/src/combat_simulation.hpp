@@ -25,6 +25,8 @@ public:
 			float radius, double lifetime_seconds);
 	int64_t spawn_xp_orb(Vector2 position, float xp_value);
 	int64_t collect_xp_orb(int64_t index, int64_t generation);
+	int64_t apply_damage_over_time(int64_t index, int64_t generation, float damage_per_tick,
+			double interval_seconds, double duration_seconds);
 	int64_t despawn(int64_t index, int64_t generation);
 	int64_t kill_all();
 	int64_t pause();

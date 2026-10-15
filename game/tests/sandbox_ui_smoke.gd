@@ -10,6 +10,16 @@ func _run() -> void:
 	assert(sandbox.get_node("Shell/Header/SurvivalButton").text == "PLAY SURVIVAL", "Sandbox should expose the Survival prototype entry")
 	assert(sandbox.simulation != null, "Sandbox UI should create its simulation without a save")
 	for node_path in [
+		"Shell/Content/SidePanel/Sections/InspectorPanel/InspectorForm/StatusTitle",
+		"Shell/Content/SidePanel/Sections/InspectorPanel/InspectorForm/StatusDamageSpin",
+		"Shell/Content/SidePanel/Sections/InspectorPanel/InspectorForm/StatusIntervalSpin",
+		"Shell/Content/SidePanel/Sections/InspectorPanel/InspectorForm/StatusDurationSpin",
+		"Shell/Content/SidePanel/Sections/InspectorPanel/InspectorForm/ApplyStatusButton",
+	]:
+		if sandbox.get_node(node_path).tooltip_text.is_empty():
+			_fail("%s should explain itself on hover" % node_path)
+			return
+	for node_path in [
 		"Shell/Content/SidePanel/Sections/SpawnPanel/SpawnForm/SpawnTitle",
 		"Shell/Content/SidePanel/Sections/SpawnPanel/SpawnForm/TypeRow/EntityType",
 		"Shell/Content/SidePanel/Sections/SpawnPanel/SpawnForm/TypeRow/CountSpin",
@@ -33,6 +43,20 @@ func _run() -> void:
 	var id: Dictionary = state["entities"][0]["id"]
 
 	sandbox.get_node("Shell/Content/MainColumn/SimulationView").entity_selected.emit(id["index"], id["generation"])
+	var status_damage: SpinBox = sandbox.get_node("Shell/Content/SidePanel/Sections/InspectorPanel/InspectorForm/StatusDamageSpin")
+	status_damage.value = 2.0
+	var status_interval: SpinBox = sandbox.get_node("Shell/Content/SidePanel/Sections/InspectorPanel/InspectorForm/StatusIntervalSpin")
+	status_interval.value = 0.1
+	var status_duration: SpinBox = sandbox.get_node("Shell/Content/SidePanel/Sections/InspectorPanel/InspectorForm/StatusDurationSpin")
+	status_duration.value = 0.2
+	sandbox.get_node("Shell/Content/SidePanel/Sections/InspectorPanel/InspectorForm/ApplyStatusButton").pressed.emit()
+	state = await _wait_for_status(sandbox.simulation, id["index"])
+	assert(state["entities"][0]["components"].has("DamageOverTime"), "Sandbox should apply a status to the selected entity")
+	assert(sandbox.get_node("Shell/Content/SidePanel/Sections/InspectorPanel/InspectorForm/EntityInfo").text.contains("DAMAGE OVER TIME"), "Inspector should display active status")
+	sandbox.simulation.step(0.2)
+	state = await _wait_for_damage(sandbox.simulation)
+	assert(state["events"][0]["is_damage_over_time"], "Status damage events should be identified")
+	sandbox.simulation.acknowledge_events(state["events"][0]["sequence"])
 	sandbox.get_node("Shell/Content/SidePanel/Sections/SpawnPanel/SpawnForm/SpawnActions/DespawnButton").pressed.emit()
 	await _wait_for_entity_count(sandbox.simulation, 1)
 
@@ -49,6 +73,29 @@ func _wait_for_entity_count(simulation: Object, expected_count: int) -> Dictiona
 		await process_frame
 		state = simulation.snapshot()
 	assert(state["entities"].size() == expected_count, "Sandbox UI command timed out")
+	return state
+
+func _wait_for_status(simulation: Object, entity_index: int) -> Dictionary:
+	var deadline := Time.get_ticks_msec() + 1000
+	var state: Dictionary = simulation.snapshot()
+	while Time.get_ticks_msec() < deadline:
+		for entity in state["entities"]:
+			if entity["id"]["index"] == entity_index and entity["components"].has("DamageOverTime"):
+				return state
+		await process_frame
+		state = simulation.snapshot()
+	_fail("Sandbox status command timed out")
+	return state
+
+func _wait_for_damage(simulation: Object) -> Dictionary:
+	var deadline := Time.get_ticks_msec() + 1000
+	var state: Dictionary = simulation.snapshot()
+	while Time.get_ticks_msec() < deadline:
+		if not state["events"].is_empty():
+			return state
+		await process_frame
+		state = simulation.snapshot()
+	_fail("Sandbox status tick timed out")
 	return state
 
 func _fail(message: String) -> void:

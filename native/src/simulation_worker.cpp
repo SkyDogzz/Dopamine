@@ -241,6 +241,18 @@ void SimulationWorker::apply(const SimulationCommand &command) {
 				}
 			}
 			break;
+		case CommandType::ApplyDamageOverTime:
+			try {
+				if (simulation_.apply_damage_over_time(command.entity, command.status_damage_per_tick,
+						command.status_interval_seconds, command.status_duration_seconds)) {
+					log("damage-over-time applied to entity " + std::to_string(command.entity.index));
+				} else {
+					log("damage-over-time ignored: stale or unsupported entity ID");
+				}
+			} catch (const std::exception &error) {
+				log(std::string("damage-over-time rejected: ") + error.what());
+			}
+			break;
 		case CommandType::AcknowledgeEvents:
 			if (command.event_sequence <= last_event_sequence_) {
 				const auto first_pending = std::find_if(pending_events_.begin(), pending_events_.end(),

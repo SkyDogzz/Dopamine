@@ -84,6 +84,13 @@ struct ProjectileData {
 	double remaining_seconds = 5.0;
 };
 
+struct DamageOverTime {
+	float damage_per_tick = 0.0F;
+	double interval_seconds = 0.0;
+	double remaining_seconds = 0.0;
+	double time_to_tick = 0.0;
+};
+
 enum class CombatEventType {
 	Damage,
 	Death,
@@ -101,6 +108,7 @@ struct CombatEvent {
 	float position_x = 0.0F;
 	float position_y = 0.0F;
 	std::string target_type;
+	bool is_damage_over_time = false;
 };
 
 struct Entity {
@@ -113,6 +121,7 @@ struct Entity {
 	ProjectileData projectile;
 	bool is_xp_orb = false;
 	float xp_value = 0.0F;
+	std::optional<DamageOverTime> damage_over_time;
 };
 
 class SimulationCore {
@@ -122,6 +131,8 @@ public:
 	EntityId spawn_projectile(std::string type, float x, float y, float damage, float radius,
 			double lifetime_seconds, float velocity_x, float velocity_y);
 	EntityId spawn_xp_orb(float x, float y, float xp_value);
+	bool apply_damage_over_time(EntityId target, float damage_per_tick, double interval_seconds,
+			double duration_seconds);
 	bool collect_xp_orb(EntityId id, std::vector<CombatEvent> &events);
 	bool despawn(EntityId id);
 	void reset();
@@ -163,6 +174,7 @@ private:
 	std::vector<ProjectileData> projectiles_;
 	std::vector<bool> xp_orb_flags_;
 	std::vector<float> xp_values_;
+	std::vector<std::optional<DamageOverTime>> damage_over_time_;
 	std::vector<uint32_t> free_indices_;
 	std::size_t entity_count_ = 0;
 	double simulation_time_ = 0.0;

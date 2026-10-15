@@ -155,6 +155,37 @@ int main() {
 			coincident.entity(coincident_second)->velocity.x > 0.0F,
 			"coincident entities should separate deterministically without random state");
 
+	SimulationCore damage_over_time;
+	const auto dot_target = damage_over_time.spawn("chaser", 0.0F, 0.0F, 20.0F, 0.0F, 0.0F);
+	require(damage_over_time.apply_damage_over_time(dot_target, 3.0F, 1.0, 2.5),
+			"valid damage-over-time should apply to a live target");
+	auto dot_events = damage_over_time.advance(0.5);
+	require(dot_events.empty(), "damage-over-time should wait for its first interval");
+	dot_events = damage_over_time.advance(2.0);
+	require(dot_events.size() == 2 && dot_events[0].type == dopamine::sim::CombatEventType::Damage &&
+			dot_events[0].amount == 3.0F && dot_events[0].is_damage_over_time &&
+			dot_events[1].amount == 3.0F && dot_events[1].is_damage_over_time,
+			"large steps should preserve each due damage-over-time tick");
+	require(damage_over_time.entity(dot_target)->health.current == 14.0F,
+			"damage-over-time should apply cumulative tick damage");
+	const auto dot_replacement = damage_over_time.spawn("tank", 0.0F, 0.0F, 10.0F, 0.0F, 0.0F);
+	require(damage_over_time.apply_damage_over_time(dot_replacement, 2.0F, 0.5, 0.5),
+			"damage-over-time should apply to a second entity");
+	require(damage_over_time.apply_damage_over_time(dot_replacement, 4.0F, 1.0, 1.0),
+			"reapplying damage-over-time should replace the active effect");
+	dot_events = damage_over_time.advance(1.0);
+	require(dot_events.size() == 1 && dot_events[0].amount == 4.0F,
+			"reapplication should replace rather than stack or retain old timing");
+	require(!damage_over_time.apply_damage_over_time({9999, 1}, 1.0F, 1.0, 1.0),
+			"damage-over-time should reject stale targets");
+	bool rejected_dot = false;
+	try {
+		damage_over_time.apply_damage_over_time(dot_replacement, 0.0F, 1.0, 1.0);
+	} catch (const std::invalid_argument &) {
+		rejected_dot = true;
+	}
+	require(rejected_dot, "damage-over-time should reject non-positive values");
+
 	SimulationCore combat;
 	const auto target = combat.spawn("chaser", 50.0F, -100.0F, 10.0F, 0.0F, 1000.0F, 4.0F);
 	const auto projectile = combat.spawn_projectile("test_projectile", 0.0F, 0.0F, 12.0F, 2.0F, 1.0, 500.0F, 0.0F);

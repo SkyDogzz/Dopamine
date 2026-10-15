@@ -5,7 +5,8 @@
 - [x] Linux P0 : Godot 4.7.2 charge la GDExtension C++23 après import headless du projet.
 - [x] P1 ciblé : handles index/génération, snapshots immuables, spawn/despawn, kill all, step, pause/reprise, reset et arrêt du worker.
 - [x] P1 intégration : GDScript charge `CombatSimulation`, soumet un spawn et reçoit le snapshot acquitté sous Godot headless.
-- [x] P1 UI : scène Sandbox sans save, inspection par sélection, despawn ciblé et kill all vérifiés sous Godot headless ; infobulles de tous les champs et actions de `SPAWN ENTITIES` vérifiées ; rendu revu à 1280×800.
+- [x] P1 UI : scène Sandbox sans save, inspection par sélection, despawn ciblé et kill all vérifiés sous Godot headless ; infobulles de tous les champs et actions de `SPAWN ENTITIES` et du formulaire de statut vérifiées ; rendu revu à 1280×800.
+- [x] P2 UI : le Sandbox applique un DoT configurable à l’entité sélectionnée, montre l’état dans l’inspecteur et reçoit un événement de tick identifié.
 - [x] P1 scénario : runner JSON vérifie les attentes et exporte métriques, entités, événements et logs ; scénario inclus dans CTest quand Godot est détecté.
 - [x] P2 ciblé : requêtes de rayon du spatial hash aux coordonnées négatives, bord de rayon et cellules ; les entités détruites sont exclues.
 - [x] P2 ciblé : poursuite d’une cible explicite et séparation locale, y compris deux entités superposées ; scénario Godot headless vérifie les positions obtenues.
@@ -36,6 +37,7 @@
 - [ ] Spawn/despawn via command buffer ne casse aucun itérateur.
 - [ ] Spatial hash trouve les collisions attendues aux frontières des cellules.
 - [x] Swept collision détecte les projectiles rapides contre une cible en mouvement.
+- [x] DoT partagé : ticks en temps simulé, durée, grand pas, remplacement, cible obsolète et événements identifiés.
 - [ ] Deltas 1/120, 1/60, 1/30 et pics 100 ms ne causent pas de NaN ni de téléportation non maîtrisée.
 - [ ] Timers de statuts exprimés en secondes, indépendants du nombre de frames.
 - [ ] Les chaînes d'effets respectent le budget sans perdre silencieusement les événements critiques.
@@ -52,6 +54,7 @@
 
 - [ ] Sandbox démarre sans sauvegarde créée ou chargée.
 - [ ] Spawn, kill all, pause, resume, step, speed, reset et logs fonctionnent.
+- [x] Sandbox applique un DoT configurable à l’entité sélectionnée et expose ses valeurs à l’inspecteur.
 - [ ] Changement live valide est atomique ; changement invalide rollback.
 - [ ] DPS meter et inspecteur affichent des métriques cohérentes.
 - [ ] Import d'une save produit une copie isolée ; original inchangé.

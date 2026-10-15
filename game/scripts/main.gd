@@ -50,6 +50,7 @@ func _ready() -> void:
 	$Shell/Content/SidePanel/Sections/SpawnPanel/SpawnForm/SpawnActions/SpawnButton.pressed.connect(_on_spawn_pressed)
 	$Shell/Content/SidePanel/Sections/SpawnPanel/SpawnForm/SpawnActions/DespawnButton.pressed.connect(_on_despawn_pressed)
 	$Shell/Content/SidePanel/Sections/SpawnPanel/SpawnForm/SpawnActions/KillButton.pressed.connect(_on_kill_all_pressed)
+	$Shell/Content/SidePanel/Sections/InspectorPanel/InspectorForm/ApplyStatusButton.pressed.connect(_on_apply_status_pressed)
 	_view.entity_selected.connect(_on_entity_selected)
 
 	$Shell/Header/Title.add_theme_color_override("font_color", COLOR_CYAN)
@@ -58,6 +59,7 @@ func _ready() -> void:
 	$Shell/Content/SidePanel/Sections/LogPanel/LogForm/LogTitle.add_theme_color_override("font_color", COLOR_CYAN)
 	$Shell/Content/SidePanel/Sections/SpawnPanel/SpawnForm/SpawnActions/DespawnButton.add_theme_color_override("font_color", COLOR_AMBER)
 	$Shell/Content/SidePanel/Sections/SpawnPanel/SpawnForm/SpawnActions/KillButton.add_theme_color_override("font_color", COLOR_PINK)
+	$Shell/Content/SidePanel/Sections/InspectorPanel/InspectorForm/StatusTitle.add_theme_color_override("font_color", COLOR_CYAN)
 	_step_duration.min_value = 0.001
 	_count.value = 1
 	_step_duration.value = 1.0 / 60.0
@@ -160,9 +162,13 @@ func _refresh_inspector(entities: Array) -> void:
 			var velocity: Dictionary = components["Velocity2D"]
 			var health: Dictionary = components["Health"]
 			var speed := Vector2(velocity["x"], velocity["y"]).length()
-			_entity_info.text = "[b]ENTITY %04d / G%03d[/b]\n[b]TYPE[/b]  %s\n[b]POSITION[/b]  (%.1f, %.1f)\n[b]VELOCITY[/b]  (%.1f, %.1f)  /  SPEED %.1f\n[b]HEALTH[/b]  %.1f / %.1f" % [
+			var status_text := "NONE"
+			if components.has("DamageOverTime"):
+				var status: Dictionary = components["DamageOverTime"]
+				status_text = "%.1f / %.1fs  (%.1fs left)" % [status["damage_per_tick"], status["interval_seconds"], status["remaining_seconds"]]
+			_entity_info.text = "[b]ENTITY %04d / G%03d[/b]\n[b]TYPE[/b]  %s\n[b]POSITION[/b]  (%.1f, %.1f)\n[b]VELOCITY[/b]  (%.1f, %.1f)  /  SPEED %.1f\n[b]HEALTH[/b]  %.1f / %.1f\n[b]DAMAGE OVER TIME[/b]  %s" % [
 				_selected_index, _selected_generation, components["EnemyType"],
-				transform["x"], transform["y"], velocity["x"], velocity["y"], speed, health["current"], health["maximum"]
+				transform["x"], transform["y"], velocity["x"], velocity["y"], speed, health["current"], health["maximum"], status_text
 			]
 			return
 	_selected_index = -1
@@ -218,4 +224,13 @@ func _on_despawn_pressed() -> void:
 func _on_entity_selected(index: int, generation: int) -> void:
 	_selected_index = index
 	_selected_generation = generation
+
+func _on_apply_status_pressed() -> void:
+	if _selected_index < 0 or _selected_generation <= 0:
+		return
+	var form := $Shell/Content/SidePanel/Sections/InspectorPanel/InspectorForm
+	if simulation.apply_damage_over_time(_selected_index, _selected_generation,
+			form.get_node("StatusDamageSpin").value, form.get_node("StatusIntervalSpin").value,
+			form.get_node("StatusDurationSpin").value) == 0:
+		_state_label.text = "STATUS REJECTED"
 	_refresh()
