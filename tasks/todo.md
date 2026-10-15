@@ -16,6 +16,7 @@ Roadmap détaillée et audit GDD/code : [`docs/planning/ROADMAP.md`](../docs/pla
 ## P5 — Contenu v1.6 (jalon actif)
 
 - [ ] **P5.1 — Compléter les armes, reliques et évolutions**
+  - [x] **P5.1.1 — Contrat catalogue :** définitions des dix armes, dix reliques associées et Magnet Heart ; relations contrôlées au chargement ; seules les trois paires prototypées sont disponibles en Survival. JSON Schema reste à intégrer.
   - Pour chaque nouvelle paire, faire les petites tranches suivantes dans l’ordre :
     - [ ] Ajouter les définitions stables arme/relique/évolution et valider les références.
     - [ ] Ajouter uniquement l’attaque de base de l’arme et vérifier son ciblage Sandbox.

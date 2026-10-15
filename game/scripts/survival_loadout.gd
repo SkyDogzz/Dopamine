@@ -1,16 +1,6 @@
 extends RefCounted
 
-# Prototype selection from the first three GDD pairs is [PROPOSED] until the starter pool is confirmed.
-const WEAPONS := {
-	"lightning_conductor": "Lightning Conductor",
-	"inferno_sprayer": "Inferno Sprayer",
-	"crimson_daggers": "Crimson Daggers",
-}
-const RELICS := {
-	"storm_core": "Storm Core",
-	"infernal_heart": "Infernal Heart",
-	"blood_chalice": "Blood Chalice",
-}
+const COMBAT_CATALOG_SCRIPT := preload("res://scripts/combat_catalog.gd")
 const ICONS := {
 	"lightning_conductor": "res://assets/sprites/projectile_lightning.png",
 	"inferno_sprayer": "res://assets/sprites/projectile_inferno.png",
@@ -25,9 +15,18 @@ const MAX_LEVEL := 5
 
 var _weapon_levels := {}
 var _relic_levels := {}
+var _weapons := {}
+var _relics := {}
 var _rng := RandomNumberGenerator.new()
 
 func _init(seed_value: int = 0) -> void:
+	var catalog = COMBAT_CATALOG_SCRIPT.new()
+	if not catalog.error.is_empty():
+		push_error(catalog.error)
+	for item_id in catalog.available_ids("weapon"):
+		_weapons[item_id] = catalog.weapons[item_id]["name"]
+	for item_id in catalog.available_ids("relic"):
+		_relics[item_id] = catalog.relics[item_id]["name"]
 	if seed_value == 0:
 		_rng.randomize()
 	else:
@@ -37,10 +36,10 @@ func offers(family: String) -> Array[Dictionary]:
 	var catalog: Dictionary
 	var owned: Dictionary
 	if family == "weapon":
-		catalog = WEAPONS
+		catalog = _weapons
 		owned = _weapon_levels
 	elif family == "relic":
-		catalog = RELICS
+		catalog = _relics
 		owned = _relic_levels
 	else:
 		return []
@@ -96,10 +95,10 @@ func apply_offer(offer_id: String) -> bool:
 	var catalog: Dictionary
 	if parts[0] == "weapon":
 		owned = _weapon_levels
-		catalog = WEAPONS
+		catalog = _weapons
 	elif parts[0] == "relic":
 		owned = _relic_levels
-		catalog = RELICS
+		catalog = _relics
 	else:
 		return false
 	var item_id: String = parts[1]

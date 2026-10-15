@@ -23,7 +23,7 @@ L’audit courant est statique. Godot/Godot 4 n’est pas détecté dans le PATH
 | P2 Simulation/combat | **Fondation présente, couverture partielle** | Diversité des IA, règles complètes d’ennemis/boss, instrumentation et performance iGPU. |
 | P3 Prototype de combat | **Trois paires et trois évolutions de prototype présentes** | Contrats génériques, retours visuels par niveau, ciblage fidèle, mesures DPS détaillées. |
 | P4 Vertical slice Survival | **Boucle de run prototype présente** | Boss réels, difficulté sélectionnable, run équilibrée et vérifiée sans harness. |
-| P5 Contenu v1.6 | **Non livré** | 7 armes, 8 reliques, Magnet Heart, contenu complet de progression/évolutions, 8–12 familles ennemies et boss multi-phases. |
+| P5 Contenu v1.6 | **Non livré** | 7 armes et 8 reliques sont définies dans le catalogue mais restent indisponibles en Survival ; Magnet Heart et le gameplay complet, 8–12 familles ennemies et boss multi-phases restent à implémenter. |
 | P6 Progression permanente | **Prototype anticipé seulement** | Catalogue complet, règles et contenus validés, récompenses calibrées et effets uniques actifs. |
 | P7 Modes Endless | **À faire** | Armorless complet ; arbitrages nécessaires pour Endless standard. |
 | P8 Sandbox Lab joueur | **À faire au-delà des outils développeur P1** | Builds libres, presets/import/export, copie de save, snapshots complets et règles de sécurité. |
@@ -268,23 +268,19 @@ Catalogue d’évolution défini dans le GDD :
 | Lightning Conductor | Storm Core | Infinite Circuit | Prototype présent ; QA historique ciblée. |
 | Inferno Sprayer | Infernal Heart | Wildfire | Prototype présent ; QA historique ciblée. |
 | Crimson Daggers | Blood Chalice | Bloodstorm | Prototype présent ; dagues en éventail, alors que le GDD exige une tempête orbitale. |
-| Void Orb | Singularity | Event Horizon | Absent. |
-| Frost Nova | Frozen Crown | Absolute Zero | Absent. |
-| Minigun | Overdrive Engine | Redline | Absent. |
-| Meteor Staff | Celestial Eye | Starfall | Absent. |
-| Sawblades | Magnetic Coil | Razorstorm | Absent. |
-| Toxic Cloud | Plague Mask | Pandemic | Absent. |
-| Prism Laser | Prism Crystal | Spectrum Collapse | Absent. |
-| — | Magnet Heart (relique utilitaire) | Aucune | Absent. |
+| Void Orb | Singularity | Event Horizon | Définition catalogue présente ; gameplay absent. |
+| Frost Nova | Frozen Crown | Absolute Zero | Définition catalogue présente ; gameplay absent. |
+| Minigun | Overdrive Engine | Redline | Définition catalogue présente ; gameplay absent. |
+| Meteor Staff | Celestial Eye | Starfall | Définition catalogue présente ; gameplay absent. |
+| Sawblades | Magnetic Coil | Razorstorm | Définition catalogue présente ; gameplay absent. |
+| Toxic Cloud | Plague Mask | Pandemic | Définition catalogue présente ; gameplay absent. |
+| Prism Laser | Prism Crystal | Spectrum Collapse | Définition catalogue présente ; gameplay absent. |
+| — | Magnet Heart (relique utilitaire) | Aucune | Définition catalogue présente ; gameplay absent. |
 
 Travail requis :
 
-- [ ] **P5.1.1 — Catalogue**
-  - [ ] Ajouter une définition de données pour Void Orb/Singularity.
-  - [ ] Ajouter Frost Nova/Frozen Crown, puis Minigun/Overdrive Engine.
-  - [ ] Ajouter Meteor Staff/Celestial Eye, puis Sawblades/Magnetic Coil.
-  - [ ] Ajouter Toxic Cloud/Plague Mask, puis Prism Laser/Prism Crystal.
-  - [ ] Vérifier que le catalogue de run contient exactement les dix armes et dix reliques associées.
+- [x] **P5.1.1 — Définitions catalogue** — les dix armes et leurs dix reliques associées, plus Magnet Heart sans paire, sont définies et les relations sont vérifiées au chargement.
+- [ ] **P5.1.1 — Schéma et activation** — brancher JSON Schema, puis activer chaque entrée en Survival uniquement après son implémentation gameplay.
 - [ ] **P5.1.2 — Ciblage des armes**
   - [ ] Décrire la règle de ciblage de chaque arme avant son comportement visuel.
   - [ ] Implémenter un prototype par politique réutilisable et exposer ses cibles dans Sandbox.

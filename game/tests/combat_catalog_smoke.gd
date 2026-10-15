@@ -1,0 +1,29 @@
+extends SceneTree
+
+func _initialize() -> void:
+	var catalog = load("res://scripts/combat_catalog.gd").new()
+	if not catalog.error.is_empty():
+		_fail(catalog.error)
+		return
+	if catalog.weapons.size() != 10 or catalog.relics.size() != 11:
+		_fail("Combat catalog should contain ten weapons and eleven relics")
+		return
+	if catalog.available_ids("weapon").size() != 3 or catalog.available_ids("relic").size() != 3:
+		_fail("Only the three implemented prototype pairs should be offered in Survival")
+		return
+	if catalog.weapons["crimson_daggers"]["behavior"] != "Dagues en orbite autour du joueur, non lancées":
+		_fail("Catalog should preserve the validated orbiting dagger behavior")
+		return
+	if catalog.relics["magnet_heart"].has("weapon_id") or catalog.relics["magnet_heart"].has("evolution_id"):
+		_fail("Magnet Heart must remain an unpaired utility relic")
+		return
+	var loadout = load("res://scripts/survival_loadout.gd").new(19)
+	if loadout._weapons.size() != 3 or loadout._relics.size() != 3:
+		_fail("Survival loadout should keep unimplemented catalog entries out of chest offers")
+		return
+	print("Combat catalog smoke passed")
+	quit()
+
+func _fail(message: String) -> void:
+	push_error(message)
+	quit(1)

@@ -47,6 +47,10 @@
 
 ## ECS / simulation
 
+- [ ] Catalogue de combat : dix armes, dix reliques associées et Magnet Heart sans paire ; validation des relations et disponibilité des seules paires jouables.
+
+Pour le catalogue, la validation JSON et des références a été vérifiée par script Python statique. Le smoke GDScript est enregistré dans CTest ; il reste à exécuter sous Godot, absent de l’environnement utilisé pour cette tranche.
+
 - [x] ID index+génération rejette les handles obsolètes après réutilisation d’un index.
 - [x] Spawn/despawn via worker et cœur natif ne casse aucun itérateur.
 - [x] Les profils ennemis gardent leurs vitesses typées avec HP de vague multiplicatifs ; les multiplicateurs HP nuls ou non finis sont refusés.

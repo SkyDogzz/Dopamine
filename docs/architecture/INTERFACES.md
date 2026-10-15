@@ -141,6 +141,8 @@ Dans Survival, le joueur accepte WASD et les quatre flèches via les mêmes acti
 
 `base JSON → validation JSON Schema → cache typé → override Sandbox validé → config effective immuable pour l'étape courante`. Les changements structurels peuvent exiger une pause/reconstruction ; certains paramètres peuvent exiger un redémarrage.
 
+Le catalogue de contenu de combat est dans `game/data/combat_catalog.json`. Il définit les dix IDs d'armes du GDD, leurs comportements validés, la relique et l'évolution associées, ainsi que les onze reliques, dont Magnet Heart sans paire. Le chargeur vérifie la version, les champs essentiels, les IDs uniques, les comptes et la cohérence des associations. `available_in_survival` maintient les offres limitées aux trois prototypes implémentés ; les autres entrées ne sont pas encore des objets sélectionnables. Les valeurs de balancing n'appartiennent pas à ce catalogue tant qu'elles ne sont pas définies et marquées séparément.
+
 ## Sauvegardes et snapshots
 
 ```text
