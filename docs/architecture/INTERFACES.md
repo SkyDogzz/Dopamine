@@ -26,11 +26,19 @@ simulation.pause()
 simulation.resume()
 simulation.step(1.0 / 60.0)
 simulation.set_speed(2.0)
+simulation.apply_sandbox_overrides({
+    "max_speed": 75.0,
+    "separation_radius": 18.0,
+    "separation_weight": 0.5,
+    "cell_size": 64.0,
+})
 simulation.reset()
 var state: Dictionary = simulation.snapshot()
 ```
 
 Le snapshot contient l'état `paused`, `speed_multiplier`, `simulation_time`, `last_sequence`, `rejected_commands`, une liste `entities` (ID index/génération et composants `Transform2D`, `Velocity2D`, `Health`, `EnemyType`), les `metrics` et les `logs`. Godot reçoit des valeurs copiées ; aucune référence mutable du worker n'est exposée. `CombatSimulation` n'a pas accès au service de sauvegarde.
+
+`apply_sandbox_overrides` accepte une transaction complète de steering avec les quatre nombres `max_speed`, `separation_radius`, `separation_weight` (entre 0 et 1) et `cell_size` (strictement positif). Les types et toutes les valeurs sont validés avant l'envoi d'une commande unique; une entrée absente, supplémentaire, non numérique ou hors limites renvoie `0` et ne modifie pas la configuration effective. Le worker revalide la transaction avant de remplacer sa configuration en une seule étape et publie les valeurs appliquées sous `sandbox_overrides` dans le snapshot. Cela fournit le contrat atomique de base; l'éditeur UI et les transactions des autres variables runtime restent à implémenter.
 
 `spawn(type, count, position, hp, velocity, threat_level=1)` garde une menace sur les entités ennemies ; cette valeur accompagne leurs événements de dégâts et de mort. `spawn_enemy(type, count, position, direction)` applique les profils **[PROPOSÉS]** du GDD : Chaser 20 HP/75 px·s⁻¹, Sprinter 12/125, Tank 80/45, Shooter 25/65. Une direction non nulle est normalisée puis multipliée par la vitesse du profil ; une direction nulle utilise l’axe +X. La menace initiale des profils reste configurable dans le catalogue natif ; elle n’est pas présentée comme équilibre validé. `spawn_projectile(type, position, velocity, damage, radius, lifetime_seconds, burn_damage_per_tick, burn_interval_seconds, burn_duration_seconds, explosion_radius=0, explosion_damage_multiplier=0)` conserve ses arguments existants; `spawn_status_projectile` expose le même contrat de dégâts sur durée et d’explosion. Les paramètres d’explosion optionnels restent inactifs à zéro. À l’impact, `wildfire_sprayer` applique ses dégâts et sa brûlure à la cible, puis inflige une fraction configurable des dégâts directs et applique le même DoT aux ennemis dans son rayon. Le cœur limite les impacts secondaires d’explosion à 500 par pas **[PROPOSÉ]**, pour borner les chaînes d’événements; l’ordre stable des IDs choisit les cibles tant que le budget est disponible. Le rayon de 60 unités et le multiplicateur de dégâts de 0,5 utilisés par Survival sont aussi **[PROPOSÉS]**. L’Inferno standard et Bloodstorm gardent leur comportement sans explosion. `apply_damage_over_time(index, generation, damage_per_tick, interval_seconds, duration_seconds)` remplace l’éventuel DoT d’une entité vivante (projectiles et orbes exclus) ; le premier tick arrive après un intervalle complet, les durées utilisent le temps simulé et un grand pas conserve tous les ticks dus avant expiration. Les événements de dégâts portent `is_damage_over_time` pour distinguer ces impacts. Le Sandbox expose ces paramètres sur l’entité sélectionnée; Survival configure la brûlure de l’Inferno et le saignement Bloodstorm avec des valeurs **[PROPOSÉES]** et réduit à 25 % le lifesteal théorique de ces ticks, conformément au GDD. `Step`/l’intégration continue déplacent le projectile et les ennemis, testent la distance minimale entre leurs segments relatifs (swept circle), appliquent les dégâts par la fonction centrale `apply_damage`, puis détruisent projectile consommé, cible morte ou projectile expiré. Le rayon d’ennemi est provisoirement 12 unités ; rayon de projectile et durée de vie viennent de la commande (défauts Sandbox : 3 unités et 5 s). Les modificateurs d’arme et résistances restent à implémenter. En Survival, le contact géométrique joueur-ennemi applique 10 HP **[PROPOSÉS]** avec 0,35 s d’invulnérabilité **[PROPOSÉE]**; les rayons de contact de 10 unités pour le joueur et 8 pour l’ennemi correspondent aux cercles affichés et restent provisoires. Les contrôles joueur s’arrêtent pendant les pauses, choix de chest et fin de run.
 
@@ -102,6 +110,8 @@ var events = simulation.drain_combat_events()
 ```
 
 Les méthodes GDExtension n'exposent pas de pointeurs ECS ni de références mutables à un autre thread.
+
+Dans Survival, le joueur accepte WASD et les quatre flèches via les mêmes actions de déplacement. Le modal des armes de départ et des coffres place le focus sur le premier bouton; les directions parcourent les choix et Espace ou Entrée confirme le bouton focalisé.
 
 ## Messages
 

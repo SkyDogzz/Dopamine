@@ -62,6 +62,25 @@ int main() {
 	require(first_snapshot->simulation_time == 0.0, "published snapshots should remain immutable");
 	require(first_snapshot->entities[0].transform.x == 1.0F, "old snapshot should retain old entity state");
 
+	SimulationCommand overrides;
+	overrides.type = CommandType::ApplySandboxOverrides;
+	overrides.steering.max_speed = 42.0F;
+	overrides.steering.separation_radius = 24.0F;
+	overrides.steering.separation_weight = 0.75F;
+	overrides.steering.spatial_hash.cell_size = 48.0F;
+	submit_and_wait(worker, overrides);
+	require(worker.snapshot()->steering_config.max_speed == 42.0F &&
+			worker.snapshot()->steering_config.separation_radius == 24.0F &&
+			worker.snapshot()->steering_config.separation_weight == 0.75F &&
+			worker.snapshot()->steering_config.spatial_hash.cell_size == 48.0F,
+			"valid sandbox override transaction should commit all values atomically");
+	overrides.steering.max_speed = 99.0F;
+	overrides.steering.separation_weight = 2.0F;
+	submit_and_wait(worker, overrides);
+	require(worker.snapshot()->steering_config.max_speed == 42.0F &&
+			worker.snapshot()->steering_config.separation_weight == 0.75F,
+			"invalid sandbox override transaction should roll back every value");
+
 	SimulationCommand resume;
 	resume.type = CommandType::Resume;
 	submit_and_wait(worker, resume);

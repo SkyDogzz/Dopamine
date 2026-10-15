@@ -184,6 +184,19 @@ void SimulationWorker::apply(const SimulationCommand &command) {
 			speed_multiplier_ = command.speed_multiplier;
 			log("speed set to " + std::to_string(speed_multiplier_));
 			break;
+		case CommandType::ApplySandboxOverrides:
+			if (!std::isfinite(command.steering.max_speed) || command.steering.max_speed < 0.0F ||
+					!std::isfinite(command.steering.separation_radius) || command.steering.separation_radius < 0.0F ||
+					!std::isfinite(command.steering.separation_weight) || command.steering.separation_weight < 0.0F ||
+					command.steering.separation_weight > 1.0F ||
+					!std::isfinite(command.steering.spatial_hash.cell_size) ||
+					command.steering.spatial_hash.cell_size <= 0.0F) {
+				log("sandbox overrides rejected: invalid configuration; previous values kept");
+				break;
+			}
+			steering_config_ = command.steering;
+			log("sandbox overrides committed atomically");
+			break;
 		case CommandType::SetSteeringTarget:
 			if (!std::isfinite(command.x) || !std::isfinite(command.y) ||
 					!std::isfinite(command.steering.max_speed) || command.steering.max_speed < 0.0F ||
@@ -288,6 +301,7 @@ void SimulationWorker::publish(double frame_time_ms) {
 	next->frame_time_ms = frame_time_ms;
 	next->last_sequence = pending_sequence_;
 	next->rejected_commands = rejected_commands_.load();
+	next->steering_config = steering_config_;
 	next->entities = simulation_.snapshot();
 	next->events = pending_events_;
 	next->collision_count = collision_count_;

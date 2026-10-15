@@ -21,6 +21,42 @@ func _run() -> void:
 	if player.position.x <= 0.0:
 		_fail("Player should move from the right input action")
 		return
+	for action_and_key in [["move_left", KEY_LEFT], ["move_right", KEY_RIGHT], ["move_up", KEY_UP], ["move_down", KEY_DOWN]]:
+		if not _has_physical_key(action_and_key[0], action_and_key[1]):
+			_fail("Each movement action should include its matching arrow key")
+			return
+	var before_right := player.position.x
+	Input.action_press("move_right")
+	await physics_frame
+	await physics_frame
+	Input.action_release("move_right")
+	if player.position.x <= before_right:
+		_fail("The right arrow should move the player through the right input action")
+		return
+	var before_left := player.position.x
+	Input.action_press("move_left")
+	await physics_frame
+	await physics_frame
+	Input.action_release("move_left")
+	if player.position.x >= before_left:
+		_fail("The left arrow should move the player through the left input action")
+		return
+	var before_up := player.position.y
+	Input.action_press("move_up")
+	await physics_frame
+	await physics_frame
+	Input.action_release("move_up")
+	if player.position.y >= before_up:
+		_fail("The up arrow should move the player through the up input action")
+		return
+	var before_down := player.position.y
+	Input.action_press("move_down")
+	await physics_frame
+	await physics_frame
+	Input.action_release("move_down")
+	if player.position.y <= before_down:
+		_fail("The down arrow should move the player through the down input action")
+		return
 	Input.parse_input_event(_key_event(KEY_D, true))
 	Input.parse_input_event(_key_event(KEY_S, true))
 	await physics_frame
@@ -33,6 +69,12 @@ func _run() -> void:
 		return
 	print("Player scene and movement input smoke passed")
 	quit()
+
+func _has_physical_key(action: String, keycode: Key) -> bool:
+	for event in InputMap.action_get_events(action):
+		if event is InputEventKey and event.physical_keycode == keycode:
+			return true
+	return false
 
 func _key_event(keycode: Key, pressed: bool) -> InputEventKey:
 	var event := InputEventKey.new()

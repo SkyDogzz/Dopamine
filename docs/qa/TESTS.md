@@ -29,6 +29,8 @@
 - [x] P3 boss final : une mort réelle génère les chests boss éligibles et la victoire attend la collecte et le choix de chaque chest.
 - [x] P3 contact : collision joueur-ennemi, invulnérabilité temporaire, pause/reprise des contrôles et verrouillage après la fin vérifiés sous Godot 4.7.2 headless.
 - [x] P3 contact : projectiles et orbes exclus; le rayon de contact enemy correspond au disque affiché (8 unités).
+- [x] Survival clavier : WASD et flèches déplacent le joueur; les choix de départ et de chest se parcourent au clavier et se confirment avec Espace/Entrée.
+- [x] P1 contrat natif : transaction complète de steering validée puis publiée atomiquement; transaction invalide ou mal typée conserve les valeurs précédentes.
 - [x] P3 lifesteal : Blood Chalice soigne sur un événement de dégâts non létal; soft cap, efficacité au-dessus du cap et HP maximum vérifiés sous Godot 4.7.2 headless.
 - [x] P3 Inferno : impact applique la brûlure configurée et ses ticks contribuent au lifesteal à 25 % du taux théorique.
 - [x] Charge worker : 500 ennemis + 2 000 projectiles sont acceptés, le plafond de 2 500 entités est appliqué, puis 2 000 impacts se résolvent sans dépasser le budget réservé d’événements.
@@ -65,6 +67,7 @@
 
 - [x] Sandbox démarre sans save : le smoke UI utilise un répertoire utilisateur Linux isolé et confirme l’absence de `user://saves` avant et après le lancement.
 - [x] UI Sandbox : spawn, despawn, kill all, pause, reprise, step à durée explicite, vitesse ×2, reset et logs vérifiés sous Godot headless.
+- [x] Contrat GDExtension `apply_sandbox_overrides` : quatre paramètres de steering validés avant soumission et exposés dans le snapshot; le worker rejette une configuration invalide sans commit partiel.
 - [x] Sandbox applique un DoT configurable à l’entité sélectionnée et expose ses valeurs à l’inspecteur.
 - [ ] Changement live valide est atomique ; changement invalide rollback.
 - [x] DPS moyen du Sandbox additionne les événements `damage` (dont DoT) et les divise par le temps simulé ; vérifié sur un Step explicite et remis à zéro avec la simulation.

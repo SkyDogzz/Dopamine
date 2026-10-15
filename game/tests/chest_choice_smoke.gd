@@ -25,9 +25,17 @@ func _run() -> void:
 		return
 	var selected_ids := [""]
 	choice.option_selected.connect(func(option_id: String) -> void: selected_ids[0] = option_id)
-	choice.get_node("Content/Options/Choice0").emit_signal("pressed")
+	choice._input(_key_event(KEY_SPACE))
 	if selected_ids[0] != "weapon_upgrade" or choice.visible:
-		_fail("Selecting an offer should emit its ID and close the modal")
+		_fail("Space should confirm the focused starting weapon and close the modal")
+		return
+	if not choice.present(options.slice(0, 2), 2, "STARTING WEAPON"):
+		_fail("Starting weapon choices should reopen")
+		return
+	(choice.get_node("Content/Options/Choice1") as Button).grab_focus()
+	choice._input(_key_event(KEY_ENTER))
+	if selected_ids[0] != "new_weapon" or choice.visible:
+		_fail("Enter should confirm the focused weapon choice and close the modal")
 		return
 	if choice.present([options[0], options[0], options[2]]):
 		_fail("Chest choice should reject duplicate offer IDs")
@@ -38,3 +46,9 @@ func _run() -> void:
 func _fail(message: String) -> void:
 	push_error(message)
 	quit(1)
+
+func _key_event(keycode: Key) -> InputEventKey:
+	var event := InputEventKey.new()
+	event.keycode = keycode
+	event.pressed = true
+	return event

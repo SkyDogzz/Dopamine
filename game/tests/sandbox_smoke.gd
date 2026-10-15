@@ -27,6 +27,33 @@ func _run() -> void:
 	await _wait_for_sequence(simulation, clear_profiles)
 	assert(simulation.spawn("", 1, Vector2.ZERO, 10.0, Vector2.ZERO) == 0)
 	assert(simulation.set_speed(10.0) == 0)
+	var override_sequence: int = simulation.apply_sandbox_overrides({
+		"max_speed": 42.0,
+		"separation_radius": 24.0,
+		"separation_weight": 0.75,
+		"cell_size": 48.0,
+	})
+	var override_state: Dictionary = await _wait_for_sequence(simulation, override_sequence)
+	assert(override_state["sandbox_overrides"] == {
+		"max_speed": 42.0,
+		"separation_radius": 24.0,
+		"separation_weight": 0.75,
+		"cell_size": 48.0,
+	}, "GDExtension should publish committed Sandbox overrides")
+	assert(simulation.apply_sandbox_overrides({
+		"max_speed": 80.0,
+		"separation_radius": 30.0,
+		"separation_weight": 1.5,
+		"cell_size": 32.0,
+	}) == 0, "GDExtension should reject an invalid override transaction")
+	assert(simulation.snapshot()["sandbox_overrides"] == override_state["sandbox_overrides"],
+		"Rejected GDExtension overrides should leave the effective config unchanged")
+	assert(simulation.apply_sandbox_overrides({
+		"max_speed": "fast",
+		"separation_radius": 18.0,
+		"separation_weight": 0.5,
+		"cell_size": 64.0,
+	}) == 0, "GDExtension should reject non-numeric override values")
 
 	var spawn_sequence: int = simulation.spawn("chaser", 1, Vector2(1.0, 2.0), 10.0, Vector2(2.0, 0.0))
 	var state: Dictionary = await _wait_for_sequence(simulation, spawn_sequence)

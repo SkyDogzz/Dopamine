@@ -23,6 +23,7 @@ enum class CommandType {
 	Resume,
 	Step,
 	SetSpeed,
+	ApplySandboxOverrides,
 	SetSteeringTarget,
 	SpawnProjectile,
 	SpawnXpOrb,
@@ -73,6 +74,7 @@ struct SimulationSnapshot {
 	uint64_t collision_count = 0;
 	uint64_t projectile_count = 0;
 	uint64_t xp_orb_count = 0;
+	SteeringConfig steering_config;
 	std::vector<Entity> entities;
 	std::vector<CombatEvent> events;
 	std::vector<std::string> logs;

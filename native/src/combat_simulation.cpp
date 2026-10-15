@@ -30,6 +30,7 @@ void CombatSimulation::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("resume"), &CombatSimulation::resume);
 	ClassDB::bind_method(D_METHOD("step", "delta_seconds"), &CombatSimulation::step);
 	ClassDB::bind_method(D_METHOD("set_speed", "multiplier"), &CombatSimulation::set_speed);
+	ClassDB::bind_method(D_METHOD("apply_sandbox_overrides", "overrides"), &CombatSimulation::apply_sandbox_overrides);
 	ClassDB::bind_method(D_METHOD("set_steering_target", "position", "max_speed", "separation_radius", "separation_weight"),
 			&CombatSimulation::set_steering_target);
 	ClassDB::bind_method(D_METHOD("acknowledge_events", "event_sequence"), &CombatSimulation::acknowledge_events);
@@ -226,6 +227,37 @@ int64_t CombatSimulation::set_speed(double multiplier) {
 	return submit(std::move(command));
 }
 
+int64_t CombatSimulation::apply_sandbox_overrides(Dictionary overrides) {
+	if (overrides.size() != 4 || !overrides.has("max_speed") || !overrides.has("separation_radius") ||
+			!overrides.has("separation_weight") || !overrides.has("cell_size")) {
+		return 0;
+	}
+	const Variant max_speed = overrides["max_speed"];
+	const Variant separation_radius = overrides["separation_radius"];
+	const Variant separation_weight = overrides["separation_weight"];
+	const Variant cell_size = overrides["cell_size"];
+	const auto is_number = [](const Variant &value) {
+		return value.get_type() == Variant::INT || value.get_type() == Variant::FLOAT;
+	};
+	if (!is_number(max_speed) || !is_number(separation_radius) || !is_number(separation_weight) || !is_number(cell_size)) {
+		return 0;
+	}
+	SimulationCommand command;
+	command.type = CommandType::ApplySandboxOverrides;
+	command.steering.max_speed = static_cast<float>(static_cast<double>(max_speed));
+	command.steering.separation_radius = static_cast<float>(static_cast<double>(separation_radius));
+	command.steering.separation_weight = static_cast<float>(static_cast<double>(separation_weight));
+	command.steering.spatial_hash.cell_size = static_cast<float>(static_cast<double>(cell_size));
+	if (!std::isfinite(command.steering.max_speed) || command.steering.max_speed < 0.0F ||
+			!std::isfinite(command.steering.separation_radius) || command.steering.separation_radius < 0.0F ||
+			!std::isfinite(command.steering.separation_weight) || command.steering.separation_weight < 0.0F ||
+			command.steering.separation_weight > 1.0F || !std::isfinite(command.steering.spatial_hash.cell_size) ||
+			command.steering.spatial_hash.cell_size <= 0.0F) {
+		return 0;
+	}
+	return submit(std::move(command));
+}
+
 int64_t CombatSimulation::set_steering_target(Vector2 position, float max_speed, float separation_radius,
 		float separation_weight) {
 	if (!std::isfinite(position.x) || !std::isfinite(position.y) || !std::isfinite(max_speed) || max_speed < 0.0F ||
@@ -276,6 +308,12 @@ Dictionary CombatSimulation::snapshot() const {
 	Dictionary result;
 	result["paused"] = state->paused;
 	result["speed_multiplier"] = state->speed_multiplier;
+	Dictionary overrides;
+	overrides["max_speed"] = state->steering_config.max_speed;
+	overrides["separation_radius"] = state->steering_config.separation_radius;
+	overrides["separation_weight"] = state->steering_config.separation_weight;
+	overrides["cell_size"] = state->steering_config.spatial_hash.cell_size;
+	result["sandbox_overrides"] = overrides;
 	result["simulation_time"] = state->simulation_time;
 	result["last_sequence"] = static_cast<int64_t>(state->last_sequence);
 	result["rejected_commands"] = static_cast<int64_t>(state->rejected_commands);

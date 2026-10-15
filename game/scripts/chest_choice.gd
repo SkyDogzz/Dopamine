@@ -7,6 +7,19 @@ signal option_selected(option_id: String)
 func _ready() -> void:
 	visible = false
 
+func _input(event: InputEvent) -> void:
+	var keyboard_accept := event.is_action_pressed("ui_accept")
+	if event is InputEventKey:
+		keyboard_accept = keyboard_accept or event.keycode in [KEY_SPACE, KEY_ENTER, KEY_KP_ENTER]
+	if not visible or not keyboard_accept:
+		return
+	var focused := get_viewport().gui_get_focus_owner() as Button
+	if focused == null or not _options.is_ancestor_of(focused):
+		focused = _options.get_child(0) as Button if _options.get_child_count() > 0 else null
+	if focused != null:
+		focused.emit_signal("pressed")
+		get_viewport().set_input_as_handled()
+
 func present(options: Array, required_count: int = 3, heading: String = "CHEST â€” CHOOSE ONE") -> bool:
 	if required_count < 2 or required_count > 3 or options.size() != required_count:
 		return false
@@ -27,9 +40,11 @@ func present(options: Array, required_count: int = 3, heading: String = "CHEST â
 		button.text = "%s\n%s" % [str(option["title"]), str(option["description"])]
 		button.custom_minimum_size.y = 72.0
 		button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		button.focus_mode = Control.FOCUS_ALL
 		button.pressed.connect(_choose.bind(str(option["id"])))
 		_options.add_child(button)
 	visible = true
+	(_options.get_child(0) as Button).grab_focus()
 	return true
 
 func _choose(option_id: String) -> void:
