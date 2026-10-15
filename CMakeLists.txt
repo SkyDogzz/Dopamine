@@ -65,6 +65,13 @@ if(BUILD_TESTING)
                 --scenario=res://scenarios/projectile_swept_smoke.json
                 "--output=${CMAKE_CURRENT_BINARY_DIR}/sandbox_projectile_result.json")
         set_tests_properties(sandbox_projectile_scenario PROPERTIES FIXTURES_REQUIRED godot_project_ready)
+
+        add_test(NAME sandbox_enemy_profiles_scenario
+            COMMAND "${DOPAMINE_GODOT_EXECUTABLE}" --headless --path "${PROJECT_SOURCE_DIR}/game"
+                --script res://scripts/scenario_runner.gd --
+                --scenario=res://scenarios/enemy_profiles_smoke.json
+                "--output=${CMAKE_CURRENT_BINARY_DIR}/sandbox_enemy_profiles_result.json")
+        set_tests_properties(sandbox_enemy_profiles_scenario PROPERTIES FIXTURES_REQUIRED godot_project_ready)
     endif()
 endif()
 

@@ -8,6 +8,15 @@
 
 namespace dopamine::sim {
 
+std::optional<EnemyProfile> enemy_profile(std::string_view id) {
+	// Starting values from the GDD are proposed and remain tunable.
+	if (id == "chaser") return EnemyProfile{"chaser", 20.0F, 75.0F, 1.0F};
+	if (id == "sprinter") return EnemyProfile{"sprinter", 12.0F, 125.0F, 1.0F};
+	if (id == "tank") return EnemyProfile{"tank", 80.0F, 45.0F, 1.0F};
+	if (id == "shooter") return EnemyProfile{"shooter", 25.0F, 65.0F, 1.0F};
+	return std::nullopt;
+}
+
 double health_decay_amount(double active_time_seconds, double delta_seconds, HealthDecayConfig config) {
 	if (!std::isfinite(active_time_seconds) || active_time_seconds < 0.0 ||
 			!std::isfinite(delta_seconds) || delta_seconds < 0.0 ||

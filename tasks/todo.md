@@ -26,6 +26,7 @@
 - [x] Projectiles ECS, collisions balayées, dégâts centraux, mort et file d’événements non perdus tant que l’acquittement est différé.
 - [x] Fonction pure de HP decay, paramètres par défaut encore proposés, exemples GDD validés par test.
 - [x] Menace portée par les ennemis et événements de mort ; formule de soin proposée calculée comme preview, sans changer le HP joueur.
+- [x] Profils d’ennemis proposés disponibles dans le cœur et dans les scénarios Sandbox.
 - [ ] Relier HP decay et soins à l’horloge et au HP du mode ; ajouter les autres règles de combat au Sandbox.
 
 ## Phase 4 — Premier playable Survival

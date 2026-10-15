@@ -20,6 +20,20 @@ void require(bool condition, const char *message) {
 
 int main() {
 	using dopamine::sim::health_decay_amount;
+	using dopamine::sim::enemy_profile;
+	const auto chaser_profile = enemy_profile("chaser");
+	const auto sprinter_profile = enemy_profile("sprinter");
+	const auto tank_profile = enemy_profile("tank");
+	const auto shooter_profile = enemy_profile("shooter");
+	require(chaser_profile && chaser_profile->health == 20.0F && chaser_profile->speed == 75.0F,
+			"proposed chaser profile should match GDD starting values");
+	require(sprinter_profile && sprinter_profile->health == 12.0F && sprinter_profile->speed == 125.0F,
+			"proposed sprinter profile should match GDD starting values");
+	require(tank_profile && tank_profile->health == 80.0F && tank_profile->speed == 45.0F,
+			"proposed tank profile should match GDD starting values");
+	require(shooter_profile && shooter_profile->health == 25.0F && shooter_profile->speed == 65.0F,
+			"proposed shooter profile should match GDD starting values");
+	require(!enemy_profile("unknown"), "unknown enemy profiles should be rejected");
 	require(dopamine::sim::gdd_validated_player_initial_hp == 100.0F,
 			"validated initial player HP should remain 100");
 	require(std::abs(health_decay_amount(0.0, 60.0) - 97.2) < 0.000001,

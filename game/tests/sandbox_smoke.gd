@@ -14,6 +14,14 @@ func _run() -> void:
 			"GDExtension kill heal rule should match the proposed ordinary enemy value")
 	assert(is_equal_approx(simulation.kill_heal_amount(100.0), 17.0),
 			"GDExtension kill heal rule should clamp to the proposed maximum threat")
+	assert(simulation.spawn_enemy("not_an_enemy", 1, Vector2.ZERO, Vector2.ZERO) == 0,
+			"GDExtension should reject unknown enemy profiles")
+	var profile_sequence: int = simulation.spawn_enemy("chaser", 1, Vector2.ZERO, Vector2(0.0, 1.0))
+	var profile_state: Dictionary = await _wait_for_sequence(simulation, profile_sequence)
+	assert(is_equal_approx(profile_state["entities"][0]["components"]["Health"]["maximum"], 20.0))
+	assert(is_equal_approx(profile_state["entities"][0]["components"]["Velocity2D"]["y"], 75.0))
+	var clear_profiles: int = simulation.kill_all()
+	await _wait_for_sequence(simulation, clear_profiles)
 	assert(simulation.spawn("", 1, Vector2.ZERO, 10.0, Vector2.ZERO) == 0)
 	assert(simulation.set_speed(10.0) == 0)
 

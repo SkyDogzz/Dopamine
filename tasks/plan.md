@@ -39,7 +39,8 @@ Livrer d’abord un Sandbox développeur autonome, puis le premier playable Surv
 - [x] Ajouter les projectiles ECS, leur expiration, le swept circle et les événements dégâts/mort acquittables.
 - [x] Ajouter le calcul pur et testable du HP decay, sans attribuer au cœur l’autorité sur le HP joueur.
 - [x] Ajouter les menaces aux événements de mort et calculer le soin par kill proposé sans muter le HP joueur.
-- [ ] Ajouter le déplacement joueur et les profils des ennemis initiaux ; le contrat d’autorité joueur/boss reste à arbitrer avant liaison au mode.
+- [x] Ajouter au cœur les profils provisoires Chaser, Sprinter, Tank et Shooter ; les rendre appelables depuis le Sandbox.
+- [ ] Ajouter le déplacement joueur et les comportements d’ennemis ; le contrat d’autorité joueur/boss reste à arbitrer avant liaison au mode.
 - [ ] Intégrer HP decay et soins à l’horloge active et au HP du mode ; compléter les modificateurs et statuts.
 - [ ] Tester les règles indépendamment dans le Sandbox et respecter les budgets de simulation.
 

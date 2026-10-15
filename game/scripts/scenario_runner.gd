@@ -109,6 +109,13 @@ func _validate_scenario(scenario: Variant) -> String:
 					return "Command %d hp must be a positive finite number" % index
 				if not _valid_number(command.get("threat_level", 1)) or float(command.get("threat_level", 1)) <= 0.0:
 					return "Command %d threat_level must be positive and finite" % index
+			"spawn_enemy":
+				if typeof(command.get("enemy_type")) != TYPE_STRING or not ["chaser", "sprinter", "tank", "shooter"].has(command["enemy_type"]):
+					return "Command %d enemy_type must name a supported profile" % index
+				if not _valid_integer(command.get("count", 1)) or int(command.get("count", 1)) < 1 or int(command.get("count", 1)) > 500:
+					return "Command %d count must be between 1 and 500" % index
+				if not _valid_vector(command.get("position", [0, 0])) or not _valid_vector(command.get("velocity", [0, 0])):
+					return "Command %d position and velocity must be finite 2-number arrays" % index
 			"spawn_projectile":
 				if typeof(command.get("projectile_type")) != TYPE_STRING or String(command["projectile_type"]).is_empty():
 					return "Command %d requires projectile_type" % index
@@ -166,6 +173,23 @@ func _check_expected(expected: Dictionary, state: Dictionary, simulation: Object
 			var transform: Dictionary = state["entities"][index]["components"]["Transform2D"]
 			if not is_equal_approx(float(position[0]), float(transform["x"])) or not is_equal_approx(float(position[1]), float(transform["y"])):
 				return "Scenario entity position %d did not match expected value" % index
+	for expected_key in ["entity_health", "entity_speeds"]:
+		if expected.has(expected_key):
+			var values: Variant = expected[expected_key]
+			if typeof(values) != TYPE_ARRAY or values.size() != state["entities"].size():
+				return "Scenario %s must match the snapshot entity count" % expected_key
+			for index in range(values.size()):
+				if not _valid_number(values[index]):
+					return "Scenario %s[%d] must be finite" % [expected_key, index]
+				var entity: Dictionary = state["entities"][index]
+				var actual: float
+				if expected_key == "entity_health":
+					actual = float(entity["components"]["Health"]["maximum"])
+				else:
+					var velocity: Dictionary = entity["components"]["Velocity2D"]
+					actual = Vector2(float(velocity["x"]), float(velocity["y"])).length()
+				if not is_equal_approx(float(values[index]), actual):
+					return "Scenario %s[%d] did not match expected value" % [expected_key, index]
 	if expected.has("collision_count"):
 		if not _valid_integer(expected["collision_count"]) or int(expected["collision_count"]) != state["metrics"]["collision_count"]:
 			return "Scenario collision_count did not match expected value"
@@ -213,6 +237,11 @@ func _valid_id(value: Variant) -> bool:
 
 func _submit(simulation: Object, command: Dictionary) -> int:
 	match command["type"]:
+		"spawn_enemy":
+			var position: Array = command.get("position", [0, 0])
+			var velocity: Array = command.get("velocity", [0, 0])
+			return simulation.spawn_enemy(command["enemy_type"], int(command.get("count", 1)),
+					Vector2(float(position[0]), float(position[1])), Vector2(float(velocity[0]), float(velocity[1])))
 		"spawn":
 			var position: Array = command.get("position", [0, 0])
 			var velocity: Array = command.get("velocity", [0, 0])

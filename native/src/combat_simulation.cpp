@@ -14,6 +14,8 @@ using dopamine::sim::SimulationCommand;
 void CombatSimulation::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("spawn", "entity_type", "count", "position", "hp", "velocity", "threat_level"),
 			&CombatSimulation::spawn, DEFVAL(1.0));
+	ClassDB::bind_method(D_METHOD("spawn_enemy", "enemy_type", "count", "position", "velocity"),
+			&CombatSimulation::spawn_enemy);
 	ClassDB::bind_method(D_METHOD("spawn_projectile", "projectile_type", "position", "velocity", "damage", "radius", "lifetime_seconds"),
 			&CombatSimulation::spawn_projectile);
 	ClassDB::bind_method(D_METHOD("despawn", "index", "generation"), &CombatSimulation::despawn);
@@ -54,6 +56,17 @@ int64_t CombatSimulation::spawn(String entity_type, int64_t count, Vector2 posit
 	command.velocity_y = static_cast<float>(velocity.y);
 	command.threat_level = threat_level;
 	return submit(std::move(command));
+}
+
+int64_t CombatSimulation::spawn_enemy(String enemy_type, int64_t count, Vector2 position, Vector2 velocity) {
+	const std::string type = enemy_type.utf8().get_data();
+	const auto profile = dopamine::sim::enemy_profile(type);
+	if (!profile.has_value()) {
+		return 0;
+	}
+	return spawn(enemy_type, count, position, profile->health,
+			velocity.length() > 0.0 ? velocity.normalized() * profile->speed : Vector2(profile->speed, 0.0),
+			profile->threat_level);
 }
 
 int64_t CombatSimulation::spawn_projectile(String projectile_type, Vector2 position, Vector2 velocity,

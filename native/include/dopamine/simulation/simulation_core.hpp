@@ -4,6 +4,7 @@
 #include <cstdint>
 #include <optional>
 #include <string>
+#include <string_view>
 #include <unordered_map>
 #include <utility>
 #include <vector>
@@ -66,6 +67,15 @@ struct EnemyType {
 	std::string id;
 	float threat_level = 1.0F;
 };
+
+struct EnemyProfile {
+	std::string_view id;
+	float health = 1.0F;
+	float speed = 0.0F;
+	float threat_level = 1.0F;
+};
+
+std::optional<EnemyProfile> enemy_profile(std::string_view id);
 
 struct ProjectileData {
 	float damage = 1.0F;
