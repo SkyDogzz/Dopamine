@@ -5,6 +5,7 @@ func _initialize() -> void:
 
 func _run() -> void:
 	var session: Node2D = load("res://scenes/survival_session.tscn").instantiate()
+	session.weapon_enabled = false
 	root.add_child(session)
 	await process_frame
 	if session.simulation == null:

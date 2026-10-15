@@ -44,6 +44,7 @@ Livrer d’abord un Sandbox développeur autonome, puis le premier playable Surv
 - [x] Relier le transform Godot du joueur au steering de l’ECS dans une scène Survival, en préservant les vitesses de profil proposées.
 - [ ] Ajouter les comportements d’ennemis autres que la poursuite ; arbitrer la synchronisation du joueur/boss.
 - [x] Intégrer HP decay et soins aux événements de combat et à l’horloge active de `SurvivalSession`, avec HP possédé côté Godot.
+- [x] Ajouter un prototype automatique Lightning Conductor configurable ; la cadence, les dégâts et l’interprétation des deux chaînes restent **[PROPOSÉS]**.
 - [ ] Compléter les modificateurs de dégâts, lifesteal, statuts et collisions joueur.
 - [ ] Tester les règles indépendamment dans le Sandbox et respecter les budgets de simulation.
 

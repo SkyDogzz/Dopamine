@@ -30,6 +30,7 @@
 - [x] Scène de déplacement joueur configurable sous Godot, avec actions clavier et manette.
 - [x] Scène Survival minimale : position monde du joueur transmise au steering ECS ; vitesses des profils conservées.
 - [x] Relier HP decay à l’horloge active Survival et appliquer les soins des événements de mort au HP Godot.
+- [x] Prototype de tir automatique Lightning Conductor ; chaînes distinctes ciblées et valeurs de combat configurables, toutes proposées.
 - [ ] Ajouter lifesteal, statuts, contact joueur-ennemi et contrôles de ces règles dans le Sandbox.
 
 ## Phase 4 — Premier playable Survival

@@ -6,6 +6,15 @@ const ENEMY_SPAWN_OFFSET := Vector2(140.0, 0.0)
 @export var spawn_initial_enemy: bool = true
 @export var enemy_separation_radius: float = 18.0
 @export_range(0.0, 1.0) var enemy_separation_weight: float = 0.5
+@export_group("Prototype Lightning Conductor — proposed tuning")
+@export var weapon_enabled: bool = true
+@export var lightning_cooldown: float = 0.5
+@export var lightning_damage: float = 12.0
+@export var lightning_range: float = 600.0
+@export var lightning_projectile_speed: float = 800.0
+@export var lightning_projectile_radius: float = 4.0
+@export var lightning_projectile_lifetime: float = 2.0
+@export_range(1, 5) var lightning_chain_count: int = 2
 
 var simulation: Object
 var player: CharacterBody2D
@@ -16,6 +25,7 @@ var run_over := false
 var _last_target := Vector2(INF, INF)
 var _last_simulation_time := 0.0
 var _last_combat_event_sequence := 0
+var _next_weapon_time := 0.0
 var _entities: Array = []
 
 func _ready() -> void:
@@ -59,10 +69,51 @@ func _process(_delta: float) -> void:
 		_last_combat_event_sequence = latest_event_sequence
 		simulation.acknowledge_events(latest_event_sequence)
 	_entities = state["entities"]
+	_fire_lightning_conductor(current_simulation_time, state["paused"])
 	if player_hp <= 0.0 and not run_over:
 		run_over = true
 		simulation.pause()
 	queue_redraw()
+
+func _fire_lightning_conductor(active_time: float, paused: bool) -> void:
+	if not weapon_enabled or paused or run_over or lightning_cooldown <= 0.0 or active_time < _next_weapon_time:
+		return
+	var selected_ids: Array[Vector2i] = []
+	var max_distance_squared := lightning_range * lightning_range
+	for _chain in range(lightning_chain_count):
+		var best: Dictionary = {}
+		var best_distance_squared := max_distance_squared
+		for entity in _entities:
+			var components: Dictionary = entity["components"]
+			if components.get("IsProjectile", false):
+				continue
+			var id: Dictionary = entity["id"]
+			var entity_id := Vector2i(int(id["index"]), int(id["generation"]))
+			if selected_ids.has(entity_id):
+				continue
+			var transform: Dictionary = components["Transform2D"]
+			var target := Vector2(float(transform["x"]), float(transform["y"]))
+			var distance_squared := player.global_position.distance_squared_to(target)
+			if distance_squared < best_distance_squared:
+				best_distance_squared = distance_squared
+				best = entity
+		if best.is_empty():
+			break
+		var target_transform: Dictionary = best["components"]["Transform2D"]
+		var target_position := Vector2(float(target_transform["x"]), float(target_transform["y"]))
+		var direction := (target_position - player.global_position).normalized()
+		if direction == Vector2.ZERO:
+			direction = Vector2.RIGHT
+		var sequence: int = simulation.spawn_projectile(
+			"lightning_conductor", player.global_position + direction * 14.0,
+			direction * lightning_projectile_speed, lightning_damage,
+			lightning_projectile_radius, lightning_projectile_lifetime
+		)
+		if sequence > 0:
+			var id: Dictionary = best["id"]
+			selected_ids.append(Vector2i(int(id["index"]), int(id["generation"])))
+	if not selected_ids.is_empty():
+		_next_weapon_time = active_time + lightning_cooldown
 
 func _publish_player_target() -> void:
 	var target := player.global_position
@@ -77,6 +128,8 @@ func _draw() -> void:
 	for entity in _entities:
 		var components: Dictionary = entity["components"]
 		if components.get("IsProjectile", false):
+			var projectile_transform: Dictionary = components["Transform2D"]
+			draw_circle(Vector2(float(projectile_transform["x"]), float(projectile_transform["y"])), 3.0, Color("#ffd166"))
 			continue
 		var transform: Dictionary = components["Transform2D"]
 		var position := Vector2(float(transform["x"]), float(transform["y"]))
