@@ -5,11 +5,16 @@ func _initialize() -> void:
 
 func _run() -> void:
 	var save_directory := ProjectSettings.globalize_path("user://saves")
-	assert(not DirAccess.dir_exists_absolute(save_directory), "Sandbox smoke must start without a save directory")
+	assert(DirAccess.make_dir_recursive_absolute(save_directory) == OK, "Sandbox smoke should create its isolated save fixture")
+	const slot_path := "user://saves/slot_0.json"
+	const sentinel := "{\"schema_version\":1,\"fixture\":\"sandbox-must-preserve-this-slot\"}"
+	var slot_file := FileAccess.open(slot_path, FileAccess.WRITE)
+	assert(slot_file != null, "Sandbox isolation fixture should be writable")
+	slot_file.store_string(sentinel)
+	slot_file.close()
 	var sandbox: Control = load("res://scenes/main.tscn").instantiate()
 	root.add_child(sandbox)
 	await process_frame
-	assert(not DirAccess.dir_exists_absolute(save_directory), "Starting the Sandbox must not create a save directory")
 	assert(sandbox.get_node("Shell/Header/SurvivalButton").text == "PLAY SURVIVAL", "Sandbox should expose the Survival prototype entry")
 	assert(sandbox.simulation != null, "Sandbox UI should create its simulation without a save")
 	for node_path in [
@@ -135,6 +140,11 @@ func _run() -> void:
 	assert(sandbox.get_node("Shell/Content/SidePanel/Sections/TuningPanel/TuningForm/TuningStatus").text == "TUNING RESET",
 		"Sandbox reset should acknowledge defaults and refresh the live tuning controls")
 	assert(dps_label.text == "AVG DPS  0.0", "Sandbox reset should clear accumulated damage")
+	assert(FileAccess.get_file_as_string(slot_path) == sentinel,
+		"Sandbox interactions should leave normal progress save bytes unchanged")
+	var saved_files := DirAccess.get_files_at(save_directory)
+	assert(saved_files.size() == 1 and saved_files[0] == "slot_0.json",
+		"Sandbox interactions should not add files to normal progression slots")
 	print("Sandbox UI spawn, inspect, despawn and kill-all checks passed")
 	quit()
 
