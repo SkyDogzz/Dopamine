@@ -47,7 +47,7 @@ const WAVE_HP_CAP := 12.0
 @export var wave_duration_seconds: float = 30.0
 @export_range(1, 400) var wave_population_cap: int = 80
 @export var wave_population_scale: float = 1.0
-@export var enemy_spawn_interval: float = 1.0
+@export var enemy_spawn_interval: float = 0.5
 @export var enemy_spawn_radius: float = 520.0
 @export var boss_placeholder_hp: float = 1000.0
 @export_group("Prototype loot — proposed rates")
@@ -66,7 +66,7 @@ const WAVE_HP_CAP := 12.0
 @export var weapon_enabled: bool = true
 @export var lightning_cooldown: float = 0.5
 @export var lightning_damage: float = 12.0
-@export var lightning_range: float = 600.0
+@export var lightning_range: float = 300.0
 @export var lightning_projectile_speed: float = 800.0
 @export var lightning_projectile_radius: float = 4.0
 @export var lightning_projectile_lifetime: float = 2.0
