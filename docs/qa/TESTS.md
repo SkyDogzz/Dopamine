@@ -2,6 +2,7 @@
 
 ## Build et intégration
 
+- [x] Linux P0 : Godot 4.7.2 charge la GDExtension C++23 après import headless du projet.
 - [ ] Godot 4.7.2 charge la GDExtension sur Windows et Linux.
 - [ ] Le projet C++23 compile avec versions verrouillées.
 - [ ] Aucune API Godot non thread-safe n'est appelée depuis le worker.

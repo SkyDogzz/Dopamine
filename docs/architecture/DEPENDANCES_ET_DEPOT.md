@@ -6,8 +6,8 @@
 |---|---|---|
 | Godot | 4.7.2 stable verrouillée | ACCEPTÉ |
 | Langages | GDScript + C++23 | ACCEPTÉ |
-| GDExtension | godot-cpp à commit compatible 4.7.2 | Version exacte OUVERTE |
-| Build C++ | CMake | PROPOSÉ |
+| GDExtension | godot-cpp `b8530af7546a3fcae80cef2477526569fd42ffc2`, API 4.7 | ACCEPTÉ — build et chargement Linux vérifiés avec Godot 4.7.2 |
+| Build C++ | CMake | ACCEPTÉ — spike Linux P0 compilé |
 | Compilateurs | MSVC Windows, Clang/GCC Linux compatibles C++23 | PROPOSÉ |
 | Tests C++ | doctest ou Catch2 | OUVERT |
 | JSON | JSON Schema + validation runtime | ACCEPTÉ |

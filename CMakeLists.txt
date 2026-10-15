@@ -1,0 +1,30 @@
+cmake_minimum_required(VERSION 3.21)
+project(dopamine_survivor LANGUAGES CXX)
+
+include(FetchContent)
+
+set(GODOTCPP_API_VERSION "4.7" CACHE STRING "Godot API version" FORCE)
+set(GODOTCPP_TARGET "template_debug" CACHE STRING "godot-cpp target" FORCE)
+
+FetchContent_Declare(
+    godot-cpp
+    GIT_REPOSITORY https://github.com/godotengine/godot-cpp.git
+    GIT_TAG b8530af7546a3fcae80cef2477526569fd42ffc2
+    GIT_SHALLOW TRUE
+)
+FetchContent_MakeAvailable(godot-cpp)
+
+add_library(dopamine SHARED
+    native/src/register_types.cpp
+    native/src/simulation_probe.cpp
+)
+target_compile_features(dopamine PRIVATE cxx_std_23)
+target_link_libraries(dopamine PRIVATE godot-cpp)
+
+get_target_property(GODOTCPP_SUFFIX godot::cpp GODOTCPP_SUFFIX)
+get_target_property(GODOTCPP_PLATFORM godot::cpp GODOTCPP_PLATFORM)
+set_target_properties(dopamine PROPERTIES
+    PREFIX "lib"
+    OUTPUT_NAME "dopamine${GODOTCPP_SUFFIX}"
+    LIBRARY_OUTPUT_DIRECTORY "${PROJECT_SOURCE_DIR}/game/bin/${GODOTCPP_PLATFORM}"
+)
