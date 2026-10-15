@@ -13,7 +13,7 @@ Cette frontière est aussi imposée par le build : `dopamine_simulation` contien
 - Le worker démarre en pause. `Step` exige une durée positive et finie, et seulement une simulation en pause ; la vitesse configurée (×0,25 à ×4) multiplie sa durée.
 - `reset()` efface les entités, le temps et les métriques de combat, met la simulation en pause et restaure vitesse ainsi que paramètres de steering par défaut.
 - Le contrôle `Step` du Sandbox accepte une durée de 0,001 à 10 s par incréments de 0,001 s.
-- Spawn est limité à 500 entités par commande et 2 500 entités actives, afin de couvrir la cible de charge de 500 ennemis et 2 000 projectiles. Les valeurs d'entité non valides sont rejetées et consignées.
+- Spawn est limité à 500 entités par commande et 2 500 entités actives, afin de couvrir la cible de charge de 500 ennemis et 2 000 projectiles. Un batch dépassant la capacité restante est rejeté intégralement avant toute création. Les valeurs d'entité non valides sont rejetées et consignées. Le worker borne aussi la file à 2 048 commandes, les événements en attente à 8 192 et chaque avance à un budget de 6 000 événements ; un `Step` trop coûteux est rejeté sans muter l’état, tandis que l’intégration continue diffère son reliquat.
 - Les snapshots sont publiés atomiquement sous forme de `shared_ptr<const SimulationSnapshot>` ; les anciennes versions restent immuables.
 - `stop()` réveille puis joint le worker ; l'état est publié après sa terminaison.
 

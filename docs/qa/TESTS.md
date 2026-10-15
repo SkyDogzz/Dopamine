@@ -72,11 +72,11 @@
 - [x] Sandbox applique un DoT configurable à l’entité sélectionnée et expose ses valeurs à l’inspecteur.
 - [x] Transaction live de steering : changements UI valides appliqués ensemble et visibles dans le snapshot; entrée native invalide ou mal typée conserve toute la configuration précédente.
 - [x] DPS moyen du Sandbox additionne les événements `damage` (dont DoT) et les divise par le temps simulé ; vérifié sur un Step explicite et remis à zéro avec la simulation.
+- [x] Limites de ressources : files bornées à 2 048 commandes et 8 192 événements, 2 500 entités, budget de 6 000 événements par avance ; un batch de spawn qui dépasse le plafond ne crée aucune entité partielle et un Step trop coûteux préserve l’état. Vérifié dans le test du worker avec la charge 500 ennemis + 2 000 projectiles.
 - [ ] Import d'une save produit une copie isolée ; original inchangé.
 - [ ] Preset JSON et share code sont validés, versionnés, avec limites de taille.
 - [ ] Snapshot complet reprend composants, queues, clocks, RNG et build.
 - [ ] Sandbox ne génère ni équipement permanent, ni achievement officiel, ni classement.
-- [ ] Caps CPU/mémoire limitent une configuration extrême sans corruption.
 
 ## Progression et modes
 

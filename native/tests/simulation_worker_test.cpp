@@ -212,7 +212,7 @@ int main() {
 	capacity_enemies.hp = 20.0F;
 	const uint64_t enemies_sequence = submit_and_wait(worker, capacity_enemies);
 	uint64_t projectiles_sequence = 0;
-	for (int index = 0; index < 2000; ++index) {
+	for (int index = 0; index < 1999; ++index) {
 		SimulationCommand capacity_projectile;
 		capacity_projectile.type = CommandType::SpawnProjectile;
 		capacity_projectile.entity_type = "benchmark_projectile";
@@ -223,15 +223,33 @@ int main() {
 		require(projectiles_sequence != 0, "worker command queue should accept the benchmark projectile workload");
 	}
 	require(projectiles_sequence > enemies_sequence && worker.wait_until_applied(projectiles_sequence, 5s),
-			"worker should apply 500 enemies and 2,000 projectiles");
+			"worker should apply the initial benchmark entities");
+	SimulationCommand over_capacity_spawn;
+	over_capacity_spawn.type = CommandType::Spawn;
+	over_capacity_spawn.entity_type = "chaser";
+	over_capacity_spawn.count = 2;
+	over_capacity_spawn.hp = 20.0F;
+	submit_and_wait(worker, over_capacity_spawn);
+	const auto after_rejected_spawn = worker.snapshot();
+	require(after_rejected_spawn->entities.size() == 2499 &&
+			after_rejected_spawn->logs.back().find("spawn rejected: entity count outside limits") != std::string::npos,
+			"an over-capacity batch spawn should be rejected without partially adding entities");
+	SimulationCommand final_projectile;
+	final_projectile.type = CommandType::SpawnProjectile;
+	final_projectile.entity_type = "benchmark_projectile";
+	final_projectile.x = 0.0F;
+	final_projectile.y = 0.0F;
+	final_projectile.projectile_lifetime = 60.0;
+	const uint64_t final_projectile_sequence = submit_and_wait(worker, final_projectile);
 	const auto benchmark_snapshot = worker.snapshot();
-	require(benchmark_snapshot->entities.size() == 2500 && benchmark_snapshot->projectile_count == 2000,
-			"worker capacity should match the documented 500-enemy plus 2,000-projectile target");
+	require(final_projectile_sequence > projectiles_sequence && benchmark_snapshot->entities.size() == 2500 &&
+			benchmark_snapshot->projectile_count == 2000,
+			"worker capacity should match the documented 500-enemy plus 2,000-projectile target after rejection");
 	SimulationCommand over_capacity_projectile;
 	over_capacity_projectile.type = CommandType::SpawnProjectile;
 	over_capacity_projectile.entity_type = "benchmark_projectile";
 	const uint64_t over_capacity_sequence = submit_and_wait(worker, over_capacity_projectile);
-	require(over_capacity_sequence > projectiles_sequence && worker.snapshot()->entities.size() == 2500,
+	require(over_capacity_sequence > final_projectile_sequence && worker.snapshot()->entities.size() == 2500,
 			"worker should keep its hard entity cap after reaching the benchmark capacity");
 	step.delta_seconds = 1.0 / 60.0;
 	submit_and_wait(worker, step);
