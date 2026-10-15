@@ -172,6 +172,7 @@ theme_override_constants/separation = 8
 [node name="SpawnTitle" type="Label" parent="Shell/Content/SidePanel/Sections/SpawnPanel/SpawnForm"]
 layout_mode = 2
 text = "SPAWN ENTITIES"
+tooltip_text = "Choose the type and starting stats for spawned entities."
 theme_override_font_sizes/font_size = 16
 
 [node name="TypeRow" type="HBoxContainer" parent="Shell/Content/SidePanel/Sections/SpawnPanel/SpawnForm"]
@@ -182,6 +183,7 @@ theme_override_constants/separation = 8
 custom_minimum_size = Vector2(0, 38)
 layout_mode = 2
 size_flags_horizontal = 3
+tooltip_text = "Select the entity profile to create."
 
 [node name="CountSpin" type="SpinBox" parent="Shell/Content/SidePanel/Sections/SpawnPanel/SpawnForm/TypeRow"]
 custom_minimum_size = Vector2(92, 38)
@@ -190,6 +192,7 @@ min_value = 1.0
 max_value = 500.0
 value = 1.0
 suffix = " x"
+tooltip_text = "Number of entities to create."
 
 [node name="PositionRow" type="HBoxContainer" parent="Shell/Content/SidePanel/Sections/SpawnPanel/SpawnForm"]
 layout_mode = 2
@@ -203,6 +206,7 @@ min_value = -2000.0
 max_value = 2000.0
 step = 16.0
 prefix = "X "
+tooltip_text = "Starting horizontal position in simulation units."
 
 [node name="YSpin" type="SpinBox" parent="Shell/Content/SidePanel/Sections/SpawnPanel/SpawnForm/PositionRow"]
 custom_minimum_size = Vector2(0, 38)
@@ -212,6 +216,7 @@ min_value = -2000.0
 max_value = 2000.0
 step = 16.0
 prefix = "Y "
+tooltip_text = "Starting vertical position in simulation units."
 
 [node name="HealthRow" type="HBoxContainer" parent="Shell/Content/SidePanel/Sections/SpawnPanel/SpawnForm"]
 layout_mode = 2
@@ -226,6 +231,7 @@ max_value = 100000.0
 value = 20.0
 step = 1.0
 prefix = "HP "
+tooltip_text = "Starting health for each entity."
 
 [node name="VelocityXSpin" type="SpinBox" parent="Shell/Content/SidePanel/Sections/SpawnPanel/SpawnForm/HealthRow"]
 custom_minimum_size = Vector2(0, 38)
@@ -235,6 +241,7 @@ min_value = -1000.0
 max_value = 1000.0
 step = 5.0
 prefix = "VX "
+tooltip_text = "Initial horizontal velocity in units per second."
 
 [node name="VelocityYSpin" type="SpinBox" parent="Shell/Content/SidePanel/Sections/SpawnPanel/SpawnForm/HealthRow"]
 custom_minimum_size = Vector2(0, 38)
@@ -244,6 +251,7 @@ min_value = -1000.0
 max_value = 1000.0
 step = 5.0
 prefix = "VY "
+tooltip_text = "Initial vertical velocity in units per second."
 
 [node name="SpawnActions" type="HBoxContainer" parent="Shell/Content/SidePanel/Sections/SpawnPanel/SpawnForm"]
 layout_mode = 2
@@ -254,18 +262,21 @@ custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
 size_flags_horizontal = 3
 text = "SPAWN"
+tooltip_text = "Create the configured entities."
 
 [node name="DespawnButton" type="Button" parent="Shell/Content/SidePanel/Sections/SpawnPanel/SpawnForm/SpawnActions"]
 custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
 size_flags_horizontal = 3
 text = "DESPAWN"
+tooltip_text = "Remove the selected entity."
 
 [node name="KillButton" type="Button" parent="Shell/Content/SidePanel/Sections/SpawnPanel/SpawnForm/SpawnActions"]
 custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
 size_flags_horizontal = 3
 text = "KILL ALL"
+tooltip_text = "Remove every entity from the simulation."
 
 [node name="InspectorPanel" type="PanelContainer" parent="Shell/Content/SidePanel/Sections"]
 layout_mode = 2

@@ -9,6 +9,22 @@ func _run() -> void:
 	await process_frame
 	assert(sandbox.get_node("Shell/Header/SurvivalButton").text == "PLAY SURVIVAL", "Sandbox should expose the Survival prototype entry")
 	assert(sandbox.simulation != null, "Sandbox UI should create its simulation without a save")
+	for node_path in [
+		"Shell/Content/SidePanel/Sections/SpawnPanel/SpawnForm/SpawnTitle",
+		"Shell/Content/SidePanel/Sections/SpawnPanel/SpawnForm/TypeRow/EntityType",
+		"Shell/Content/SidePanel/Sections/SpawnPanel/SpawnForm/TypeRow/CountSpin",
+		"Shell/Content/SidePanel/Sections/SpawnPanel/SpawnForm/PositionRow/XSpin",
+		"Shell/Content/SidePanel/Sections/SpawnPanel/SpawnForm/PositionRow/YSpin",
+		"Shell/Content/SidePanel/Sections/SpawnPanel/SpawnForm/HealthRow/HealthSpin",
+		"Shell/Content/SidePanel/Sections/SpawnPanel/SpawnForm/HealthRow/VelocityXSpin",
+		"Shell/Content/SidePanel/Sections/SpawnPanel/SpawnForm/HealthRow/VelocityYSpin",
+		"Shell/Content/SidePanel/Sections/SpawnPanel/SpawnForm/SpawnActions/SpawnButton",
+		"Shell/Content/SidePanel/Sections/SpawnPanel/SpawnForm/SpawnActions/DespawnButton",
+		"Shell/Content/SidePanel/Sections/SpawnPanel/SpawnForm/SpawnActions/KillButton",
+	]:
+		if sandbox.get_node(node_path).tooltip_text.is_empty():
+			_fail("%s should explain itself on hover" % node_path)
+			return
 
 	var count_spin: SpinBox = sandbox.get_node("Shell/Content/SidePanel/Sections/SpawnPanel/SpawnForm/TypeRow/CountSpin")
 	count_spin.value = 2
@@ -34,3 +50,7 @@ func _wait_for_entity_count(simulation: Object, expected_count: int) -> Dictiona
 		state = simulation.snapshot()
 	assert(state["entities"].size() == expected_count, "Sandbox UI command timed out")
 	return state
+
+func _fail(message: String) -> void:
+	push_error(message)
+	quit(1)
