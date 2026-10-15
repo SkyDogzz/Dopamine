@@ -70,8 +70,59 @@ func _run() -> void:
 	if not result_panel.get_node("Content/Summary").text.begins_with("WAVE 24"):
 		_fail("A completed Survival run should record the final boss as wave 24")
 		return
+	session.queue_free()
+	await process_frame
+	if not await _verify_live_wave_clock():
+		return
 	print("Survival wave director smoke passed")
 	quit()
+
+func _verify_live_wave_clock() -> bool:
+	var session: Node2D = load("res://scenes/survival_session.tscn").instantiate()
+	session.skip_starting_weapon_choice = true
+	session.wave_duration_seconds = 0.05
+	session.enemy_spawn_interval = 100.0
+	session.weapon_enabled = false
+	session.contact_damage_per_hit = 0.0
+	session.player_hp = 1000.0
+	root.add_child(session)
+	if not await _wait_for_wave(session, 2):
+		_fail("The live simulation clock should advance the first wave")
+		return false
+	session.simulation.pause()
+	var pause_deadline := Time.get_ticks_msec() + 1000
+	var state: Dictionary = session.simulation.snapshot()
+	while not state["paused"] and Time.get_ticks_msec() < pause_deadline:
+		await process_frame
+		state = session.simulation.snapshot()
+	if not state["paused"]:
+		_fail("Survival pause command should pause the live simulation")
+		return false
+	await process_frame
+	var paused_simulation_time := float(session.simulation.snapshot()["simulation_time"])
+	var paused_wave_elapsed := float(session.wave_director.elapsed_in_wave)
+	await create_timer(0.1).timeout
+	if not is_equal_approx(float(session.simulation.snapshot()["simulation_time"]), paused_simulation_time):
+		_fail("The live simulation clock should stop while paused")
+		return false
+	if not is_equal_approx(float(session.wave_director.elapsed_in_wave), paused_wave_elapsed):
+		_fail("The active wave timer should stop while paused")
+		return false
+	session.simulation.resume()
+	if not await _wait_for_wave(session, 3):
+		_fail("The active wave timer should resume from the live simulation clock")
+		return false
+	session.queue_free()
+	await process_frame
+	return true
+
+func _wait_for_wave(session: Node2D, expected_wave: int) -> bool:
+	var deadline := Time.get_ticks_msec() + 2000
+	while Time.get_ticks_msec() < deadline:
+		await process_frame
+		if session.wave_director.wave >= expected_wave:
+			return true
+	return false
 
 func _wait_for_entity_type(session: Node2D, expected_type: String) -> bool:
 	var deadline := Time.get_ticks_msec() + 1000
