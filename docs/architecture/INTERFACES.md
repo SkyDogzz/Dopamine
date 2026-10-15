@@ -71,7 +71,7 @@ Le lancement standard démarre dans le Sandbox; son bouton `PLAY SURVIVAL` ouvre
 
 ## Scénarios headless Sandbox P1
 
-`game/scripts/scenario_runner.gd` lit un scénario JSON versionné (limite 1 Mio et 1 000 commandes), soumet les mêmes commandes au pont `CombatSimulation`, vérifie les attentes déclarées et exporte un JSON horodaté avec la version Godot, le temps simulé, les métriques, les entités, les événements de combat et les logs. Les scénarios acceptent `spawn`, `spawn_enemy`, `spawn_projectile`, `apply_damage_over_time`, `despawn`, `kill_all`, `pause`, `resume`, `step`, `set_speed`, `set_steering_target` et `reset`. Les attentes peuvent vérifier les HP actuels et le nombre d’événements de ticks DoT. Le runner ne charge ni n’écrit de sauvegarde normale.
+`game/scripts/scenario_runner.gd` lit un scénario JSON versionné (limite 1 Mio et 1 000 commandes), soumet les mêmes commandes au pont `CombatSimulation`, vérifie les attentes déclarées et exporte un JSON horodaté avec la version Godot, le temps simulé, les métriques, les entités, les événements de combat et les logs. Les scénarios acceptent `spawn`, `spawn_enemy`, `spawn_projectile`, `apply_damage_over_time`, `despawn`, `kill_all`, `pause`, `resume`, `step`, `set_speed`, `set_steering_target`, `apply_sandbox_overrides` et `reset`. La transaction JSON `apply_sandbox_overrides` exige les quatre nombres de steering et rejette les valeurs manquantes, supplémentaires ou hors limites; les attentes peuvent comparer `sandbox_overrides` dans le snapshot, les HP actuels et le nombre d’événements de ticks DoT. Le runner ne charge ni n’écrit de sauvegarde normale.
 
 ```bash
 godot --headless --path game --script res://scripts/scenario_runner.gd -- \\

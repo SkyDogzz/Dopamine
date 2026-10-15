@@ -154,6 +154,17 @@ func _validate_scenario(scenario: Variant) -> String:
 					return "Command %d separation_radius must be a non-negative finite number" % index
 				if not _valid_number(command.get("separation_weight", 0.5)) or float(command.get("separation_weight", 0.5)) < 0.0 or float(command.get("separation_weight", 0.5)) > 1.0:
 					return "Command %d separation_weight must be between 0 and 1" % index
+			"apply_sandbox_overrides":
+				if command.size() != 5 or not command.has_all(["max_speed", "separation_radius", "separation_weight", "cell_size"]):
+					return "Command %d apply_sandbox_overrides requires exactly four tuning values" % index
+				if not _valid_number(command["max_speed"]) or float(command["max_speed"]) < 0.0:
+					return "Command %d max_speed must be a non-negative finite number" % index
+				if not _valid_number(command["separation_radius"]) or float(command["separation_radius"]) < 0.0:
+					return "Command %d separation_radius must be a non-negative finite number" % index
+				if not _valid_number(command["separation_weight"]) or float(command["separation_weight"]) < 0.0 or float(command["separation_weight"]) > 1.0:
+					return "Command %d separation_weight must be between 0 and 1" % index
+				if not _valid_number(command["cell_size"]) or float(command["cell_size"]) <= 0.0:
+					return "Command %d cell_size must be positive and finite" % index
 			"kill_all", "pause", "resume", "reset":
 				pass
 			_:
@@ -167,6 +178,14 @@ func _check_expected(expected: Dictionary, state: Dictionary, simulation: Object
 	if expected.has("speed_multiplier"):
 		if not _valid_number(expected["speed_multiplier"]) or not is_equal_approx(float(expected["speed_multiplier"]), float(state["speed_multiplier"])):
 			return "Scenario speed_multiplier did not match expected value"
+	if expected.has("sandbox_overrides"):
+		var expected_overrides: Variant = expected["sandbox_overrides"]
+		if typeof(expected_overrides) != TYPE_DICTIONARY or expected_overrides.size() != 4:
+			return "Scenario sandbox_overrides must contain exactly four tuning values"
+		var actual_overrides: Dictionary = state["sandbox_overrides"]
+		for key in ["max_speed", "separation_radius", "separation_weight", "cell_size"]:
+			if not _valid_number(expected_overrides.get(key)) or not is_equal_approx(float(expected_overrides[key]), float(actual_overrides[key])):
+				return "Scenario sandbox_overrides.%s did not match expected value" % key
 	if expected.has("entity_count"):
 		if not _valid_integer(expected["entity_count"]) or int(expected["entity_count"]) != state["metrics"]["entity_count"]:
 			return "Scenario entity_count did not match expected value"
@@ -300,6 +319,13 @@ func _submit(simulation: Object, command: Dictionary) -> int:
 				float(command.get("separation_radius", 18)),
 				float(command.get("separation_weight", 0.5))
 			)
+		"apply_sandbox_overrides":
+			return simulation.apply_sandbox_overrides({
+				"max_speed": command["max_speed"],
+				"separation_radius": command["separation_radius"],
+				"separation_weight": command["separation_weight"],
+				"cell_size": command["cell_size"],
+			})
 		"reset":
 			return simulation.reset()
 	return 0
