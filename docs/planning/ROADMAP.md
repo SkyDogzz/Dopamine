@@ -104,7 +104,7 @@ Cette roadmap traduit le GDD consolidé [v1.6](../gdd/GDD_v1.6.md) en jalons vé
 - [ ] Exclure l'arme niveau 5 non évoluée du pool de ses améliorations ordinaires ; aucun doublon en run normale, doublons autorisés dans Sandbox.
 - [ ] Respecter limites de capacité d'équipement v1.5 et exceptions Legendary/Mythic seulement si leur effet est actif et applicable.
 - [ ] Ajouter Magnet Heart au pool normal de reliques, sans arme associée, et respecter ses bonus globaux de ramassage.
-- [ ] Invariant obligatoire : aucun effet de rayon de ramassage (relique, équipement, skill tree, bonus temporaire) n'attire ni ne collecte les coffres. Les coffres restent ramassés par déplacement. Vérifier les orbes XP et autres collectibles éligibles indépendamment.
+- [ ] Invariant obligatoire : aucun effet de rayon de ramassage (relique, équipement, skill tree, bonus temporaire) n'attire ni ne collecte les coffres. Les coffres ne sont jamais attirés ; ils sont collectés à proximité ou par interaction du joueur. Vérifier les orbes XP et autres collectibles éligibles indépendamment.
 - [ ] Tables de progression des armes dans le GDD annexe restent **[PROPOSÉES]** ; ne pas les verrouiller comme équilibre accepté.
 
 ### Statuts, synergies, coffre

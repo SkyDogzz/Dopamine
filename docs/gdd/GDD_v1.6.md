@@ -33,7 +33,7 @@
 DOPAMINE SURVIVOR — GAME DESIGN DOCUMENT v1.6
 Statut : spécification consolidée de conception, 15 octobre 2026.
 
-La version 1.6 intègre les décisions et propositions du delta v1.6. Les règles inchangées de v1.5 sont conservées. Les statuts [VALIDÉ], [PROPOSÉ] et [OUVERT] restent distincts. En cas de contradiction, les règles validées du delta prévalent, sous réserve des ADR acceptés et de l’architecture technique.
+La version 1.6 intègre les décisions et propositions du delta v1.6. Les règles inchangées de v1.5 sont conservées. Les statuts [VALIDÉ], [PROPOSÉ] et [OUVERT] restent distincts. En cas de contradiction, les règles validées du delta prévalent, sous réserve des ADR acceptés et de l’architecture technique. Les sources historiques et leur fiabilité sont indexées dans [`archive/VERSIONS.md`](archive/VERSIONS.md).
 
 Dopamine Survivor est un roguelite top-down à combat automatique inspiré du genre bullet heaven. Son identité repose sur une pression de survie permanente : les points de vie diminuent continuellement et les éliminations permettent de les restaurer. Le joueur optimise armes, reliques, évolutions, équipement, arbre de compétences et achievements afin de vaincre des vagues toujours plus dangereuses.
 
@@ -67,7 +67,7 @@ Boucle Survival : choisir difficulté et arme initiale → survivre à une vague
 
 [PROPOSÉ] Soin par kill H(T)=2+3√T, menace T bornée dans [0,5 ; 25] ; ennemi ordinaire T=1 → +5 HP. Menace calculée depuis archétype et multiplicateurs HP/dégâts/vitesse. Lifesteal : rendement normal jusqu'à 10 HP/s puis efficacité de 25 % au-delà ; dégâts sur la durée donnent 25 % de leur lifesteal théorique. Invulnérabilité après impact : 0,35 s.
 
-[[À TESTER]] Taux de kills nécessaire pour compenser le decay, situations sans ennemis, builds à faible DPS, boucles de guérison infinie, survie à 1 HP et comportement pendant les transitions.
+[À TESTER] Taux de kills nécessaire pour compenser le decay, situations sans ennemis, builds à faible DPS, boucles de guérison infinie, survie à 1 HP et comportement pendant les transitions.
 
 <a id="4"></a>
 
@@ -87,21 +87,23 @@ Boucle Survival : choisir difficulté et arme initiale → survivre à une vague
 
 ## 05 — Armes, reliques et évolutions
 
-[VALIDÉ] Les interactions entre armes émergent des dégâts et statuts ; les réactions élémentaires sont prévues. Aucune limite artificielle aux synergies n’est ajoutée pour le seul équilibrage, sous réserve des protections techniques.
+[VALIDÉ] Les interactions entre armes peuvent émerger des dégâts et statuts. Aucune limite artificielle aux synergies n’est ajoutée pour le seul équilibrage, sous réserve des protections techniques.
 
-[VALIDÉ] Dix armes distinctes, chacune à ciblage automatique intelligent propre, dont l’efficacité dépend fortement du positionnement et du déplacement. Le choix de départ se fait parmi deux armes débloquées. Aucun doublon d’arme en run normale (doublons autorisés dans le Sandbox). Chaque arme et relique a cinq niveaux ; les niveaux d’arme ont des améliorations fixes, principalement statistiques, et une évolution majeure conserve le niveau 5. L’arme évolue automatiquement dès qu’elle est niveau 5 et que sa relique associée est possédée, quel que soit le niveau de relique. Une seule évolution par arme ; une arme niveau 5 non évoluée ne peut plus apparaître comme amélioration ordinaire de chest. Chaque niveau d’arme reçoit un retour visuel, même pour une hausse uniquement statistique. Les bonus de relique progressent linéairement.
+[PROPOSÉ] Réactions élémentaires entre statuts ; les combinaisons et effets listés en annexe restent à valider.
+
+[VALIDÉ] Dix armes distinctes, chacune à ciblage automatique intelligent propre, dont l’efficacité dépend fortement du positionnement et du déplacement. Le choix de départ se fait parmi deux armes débloquées. Aucun doublon d’arme en run normale (doublons autorisés dans le Sandbox). Chaque arme et relique a cinq niveaux ; les niveaux d’arme ont des améliorations fixes, principalement statistiques, et une évolution majeure conserve le niveau 5. L’arme évolue automatiquement dès qu’elle est niveau 5 et que sa relique associée est possédée, quel que soit le niveau de relique ; l’évolution ne consomme pas la relique. Une seule évolution par arme ; une arme niveau 5 non évoluée ne peut plus apparaître comme amélioration ordinaire de chest. Chaque niveau d’arme reçoit un retour visuel, même pour une hausse uniquement statistique. Les bonus de relique progressent linéairement.
 
 Paires de contenu validées :
-1. Lightning Conductor + Storm Core → Infinite Circuit : éclairs ramifiés.
+1. Lightning Conductor + Storm Core → Infinite Circuit : éclairs ramifiés et Shock.
 2. Inferno Sprayer + Infernal Heart → Wildfire : brûlures qui explosent et se propagent.
-3. Crimson Daggers + Blood Chalice → Bloodstorm : entailles et lifesteal.
+3. Crimson Daggers + Blood Chalice → Bloodstorm : tempête orbitale de dagues, Bleed et lifesteal.
 4. Void Orb + Singularity → Event Horizon : trous noirs et attraction.
 5. Frost Nova + Frozen Crown → Absolute Zero : gel et fragmentation.
 6. Minigun + Overdrive Engine → Redline : cadence accélérante.
 7. Meteor Staff + Celestial Eye → Starfall : météores fragmentés.
 8. Sawblades + Magnetic Coil → Razorstorm : ricochets.
 9. Toxic Cloud + Plague Mask → Pandemic : poison contagieux.
-10. Prism Laser + Prism Crystal → Spectrum Collapse : faisceaux divisés.
+10. Prism Laser + Prism Crystal → Spectrum Collapse : faisceaux secondaires.
 
 [PROPOSÉ] Blood Chalice accorde 5 % de lifesteal par niveau sur les dégâts directs. Le prototype applique le soft cap décrit en section 03; la valeur n'est pas validée et les dégâts sur la durée restent à intégrer.
 [OUVERT] Le taux de lifesteal général indépendant de Blood Chalice n'est pas défini.
@@ -120,7 +122,7 @@ Paires de contenu validées :
 
 [PROPOSÉ] Probabilité de drop par ennemi ordinaire : 0,5 % pour chaque famille ; élite : 15 % par famille ; boss : un chest de chaque famille garanti. Filet de sécurité : au moins un chest éligible de chaque famille toutes les 60 secondes. Poids de proposition : ×1,5 upgrade équipé ; ×2 relique correspondant à une arme ; ×1,5 arme correspondant à une relique ; ×1,25 évolution proche ; multiplicateur combiné plafonné à ×3.
 
-[[À TESTER]] Éviter les tirages impossibles lorsque les slots sont pleins ; définir les alternatives quand tout est niveau 5 ; ne pas compter plusieurs fois les drops garantis ; prévenir les biais extrêmes ; empêcher l'ouverture en double après chargement.
+[À TESTER] Éviter les tirages impossibles lorsque les slots sont pleins ; définir les alternatives quand tout est niveau 5 ; ne pas compter plusieurs fois les drops garantis ; prévenir les biais extrêmes ; empêcher l'ouverture en double après chargement.
 
 <a id="7"></a>
 
@@ -176,7 +178,7 @@ Effets uniques proposés : Lightning supplémentaire occasionnel ; bouclier temp
 
 Données : AchievementDefinition {id, category, secret, metric, aggregation, tiers[threshold,rewards]}; métriques de vie cumulées (sum), records (max), et état des tiers. Les récompenses sont reconstruites à partir des tiers acquis au chargement ; jamais dupliquées dans le save. Events idempotents ; secrets suivis avant révélation.
 
-[[À TESTER]] Les bonus spécialisés et utilitaires ne s'additionnent pas naïvement au budget de puissance ; mesurer des builds de référence complets.
+[À TESTER] Les bonus spécialisés et utilitaires ne s'additionnent pas naïvement au budget de puissance ; mesurer des builds de référence complets.
 
 <a id="11"></a>
 
@@ -212,7 +214,7 @@ Données : AchievementDefinition {id, category, secret, metric, aggregation, tie
 
 [PROPOSÉ] Récompenses persistantes possibles : Essence, Powder, achievements et records, mais pas d'équipement permanent garanti. Ce dernier point reste une proposition à confirmer ; la règle d'un équipement garanti s'applique explicitement aux runs classiques.
 
-[[À TESTER]] Draft à trois slots identiques, objets multiples d'un slot, gestion de l'inventaire temporaire, remplacement d'un équipement qui fournit un slot d'arme, destruction de Flux à la mort, sauvegarde/reprise et anti-double-attribution.
+[À TESTER] Draft à trois slots identiques, objets multiples d'un slot, gestion de l'inventaire temporaire, remplacement d'un équipement qui fournit un slot d'arme, destruction de Flux à la mort, sauvegarde/reprise et anti-double-attribution.
 
 <a id="14"></a>
 
@@ -348,18 +350,18 @@ Les tableaux ci-dessous précisent les comportements et hypothèses numériques 
 
 ### Comportements des armes
 
-| Arme                | Comportement validé                         | Évolution existante |
-| ------------------- | ------------------------------------------- | ------------------- |
-| Lightning Conductor | Chaînes électriques entre ennemis           | Infinite Circuit    |
-| Inferno Sprayer     | Jet de feu directionnel automatique         | Wildfire            |
-| Crimson Daggers     | Dagues orbitant autour du joueur            | Bloodstorm          |
+| Arme                | Comportement validé                            | Évolution existante |
+| ------------------- | ---------------------------------------------- | ------------------- |
+| Lightning Conductor | Chaînes électriques entre ennemis              | Infinite Circuit    |
+| Inferno Sprayer     | Jet de feu directionnel automatique            | Wildfire            |
+| Crimson Daggers     | Dagues en orbite autour du joueur, non lancées | Bloodstorm          |
 | Void Orb            | Orbe lente traversante attirant les ennemis | Event Horizon       |
 | Frost Nova          | Onde de gel autour du joueur                | Absolute Zero       |
 | Minigun             | Tir automatique très rapide sur une cible   | Redline             |
 | Meteor Staff        | Météores ciblant des groupes d'ennemis      | Starfall            |
 | Sawblades           | Lames rebondissant entre ennemis            | Razorstorm          |
 | Toxic Cloud         | Nuages persistants empoisonnant les ennemis | Pandemic            |
-| Prism Laser         | Rayon continu ciblant les ennemis           | Spectrum Collapse   |
+| Prism Laser         | Rayon continu suivant la cible prioritaire     | Spectrum Collapse   |
 
 ### Progression numérique proposée (non validée)
 
@@ -390,17 +392,17 @@ Ces valeurs sont des hypothèses de balancing, pas des valeurs définitives.
 
 ### Effets proposés pour les 10 reliques existantes
 
-| Relique          | Bonus niv. 5 proposé    | Mécanique spéciale proposée               |
-| ---------------- | ----------------------- | ----------------------------------------- |
-| Storm Core       | +20% application Shock  | Propagation électrique                    |
-| Infernal Heart   | +25% puissance Burn     | Explosion des cibles fortement brûlées    |
-| Blood Chalice    | +5% lifesteal           | Soins excédentaires convertis en bouclier |
-| Singularity      | +25% contrôle           | Dégâts bonus sur ennemis regroupés        |
-| Frozen Crown     | +25% Chill              | Vulnérabilité des cibles gelées           |
-| Overdrive Engine | +20% cadence            | Accélération après attaques consécutives  |
-| Celestial Eye    | +15% zone               | Chance de double impact                   |
-| Magnetic Coil    | +20% vitesse projectile | Correction de trajectoire                 |
-| Plague Mask      | +25% DOT                | Transmission de statut à la mort          |
+| Relique          | Bonus niv. 5 proposé    | Mécanique spéciale proposée                |
+| ---------------- | ----------------------- | ------------------------------------------ |
+| Storm Core       | +20% chance Shock       | Décharge à proximité                       |
+| Infernal Heart   | +25% Burn               | Explosion des cibles brûlées               |
+| Blood Chalice    | +5% lifesteal           | Soins excédentaires convertis en bouclier  |
+| Singularity      | +25% contrôle           | Dégâts bonus sur ennemis regroupés         |
+| Frozen Crown     | +25% Chill              | Vulnérabilité des cibles gelées            |
+| Overdrive Engine | +20% cadence            | Accélération après attaques consécutives   |
+| Celestial Eye    | +15% zone               | Chance de double impact                    |
+| Magnetic Coil    | +20% vitesse projectile | Homing léger                               |
+| Plague Mask      | +25% DOT                | Transmission de statut à la mort           |
 | Prism Crystal    | +15% dégâts critiques   | Projectile secondaire sur critique        |
 
 Ces effets et chiffres restent à valider.
@@ -416,7 +418,7 @@ Ces effets et chiffres restent à valider.
 - Augmente la distance de ramassage des objets.
 - Attire XP, soins, ressources, monnaies et bonus temporaires ramassables.
 - **N'attire jamais les coffres.**
-- Les coffres restent au sol et nécessitent un déplacement du joueur.
+- Les coffres restent au sol et exigent proximité ou interaction du joueur.
 - Cette exclusion s'applique aussi aux effets de ramassage provenant des équipements, du skill tree et des autres reliques.
 
 Progression proposée :
@@ -429,12 +431,12 @@ Progression proposée :
 | 4      | +100%          |
 | 5      | +125%          |
 
-**Effet niv. 5 proposé — Magnetic Pulse :** toutes les 20 secondes, attire les objets éligibles dans un rayon de 300% du rayon de base, sans attirer les coffres.
+**Effet niv. 5 proposé — Magnetic Pulse :** toutes les 20 secondes, attire les objets éligibles dans un rayon de 300% du rayon de base, sans attirer les coffres. Les objets accélèrent vers le joueur au lieu d’être téléportés.
 
 Synergies proposées :
 
-- Magnet Heart + Magnetic Coil : attraction plus rapide.
-- Magnet Heart + Singularity : les effets gravitationnels attirent également les objets éligibles.
+- Magnet Heart + Magnetic Coil : vitesse d’attraction accrue.
+- Magnet Heart + Singularity : attraction de l’XP par gravité.
 - Magnet Heart + Celestial Eye : rayon des impulsions augmenté.
 
 **Nouveau total : 10 armes, 11 reliques, toujours 5 slots de reliques.**
@@ -445,21 +447,24 @@ Synergies proposées :
 
 - Évolutions automatiques, une par arme.
 - Interactions émergentes entre armes via dégâts et statuts.
-- Réactions élémentaires entre statuts.
 - Pas de limitation artificielle des synergies pour des raisons d'équilibrage ; seules les protections techniques nécessaires sont autorisées.
+
+### Réactions élémentaires proposées
+
+Les combinaisons et résultats sont proposés et non validés : voir le tableau ci-dessous. Overcharge impliquant un statut conducteur supplémentaire reste ouvert.
 
 ### Évolutions proposées
 
-- Infinite Circuit : ramifications électriques supplémentaires.
-- Wildfire : propagation de Burn et explosions à la mort.
-- Bloodstorm : tempête de dagues, Bleed et soins.
+- Infinite Circuit : ramifications électriques supplémentaires et Shock.
+- Wildfire : Burn contagieux et explosion à la mort.
+- Bloodstorm : tempête orbitale de dagues, Bleed et lifesteal.
 - Event Horizon : trou noir persistant et effondrement.
 - Absolute Zero : bris des ennemis gelés et dégâts de zone.
 - Redline : cadence croissante en tir continu.
-- Starfall : fragmentation des météores.
-- Razorstorm : ricochets et pénétration supplémentaires.
-- Pandemic : propagation de Poison et création de nuages.
-- Spectrum Collapse : rayons laser secondaires.
+- Starfall : fragments de météores.
+- Razorstorm : ricochets et pénétration.
+- Pandemic : Poison contagieux et nouveaux nuages.
+- Spectrum Collapse : faisceaux secondaires.
 
 ### Réactions élémentaires proposées
 
@@ -590,7 +595,7 @@ Introduire `pickup_radius` comme statistique globale, utilisable par :
 - Certains nœuds du skill tree.
 - Éventuels effets temporaires.
 
-La statistique doit respecter une règle globale d'exclusion des coffres : aucun effet de ramassage ne les attire ou ne les collecte ; ils restent au sol jusqu'au déplacement du joueur.
+La statistique doit respecter une règle globale d'exclusion des coffres : aucun effet de ramassage ne les attire ou ne les collecte ; ils restent au sol jusqu’à ce que le joueur s’en approche ou interagisse avec eux.
 
 Conserver les autres règles d'équipement, enhancement, achievements et raretés de la base v1.5 intégrée à ce document.
 
