@@ -22,12 +22,19 @@ func _run() -> void:
 	await process_frame
 	session._finish_run(false)
 	var reward_label: Label = session.get_node("HUD/RunResultOverlay/RunResultPanel/Content/Rewards")
+	var equipment_label: Label = session.get_node("HUD/RunResultOverlay/RunResultPanel/Content/Equipment")
 	var profile: Dictionary = save_service.load_slot("0")["payload"]
 	if not session.run_over or reward_label.text != "+17 ESSENCE  •  +23 BASIC POWDER":
 		_fail("A normal Survival defeat should persist and show its proposed Normal rewards")
 		return
+	if not equipment_label.text.begins_with("EQUIPMENT: "):
+		_fail("The Survival result should show its permanent equipment reward")
+		return
 	if profile["resources"].get("essence") != 17 or profile["resources"].get("powder_basic") != 23:
 		_fail("The Survival result should save its reward to the progression profile")
+		return
+	if profile["equipment_inventory"].size() != 1 or profile["equipment_inventory"][0].get("source_mode") != "survival":
+		_fail("The Survival result should persist exactly one item in the permanent inventory")
 		return
 	session._finish_run(false)
 	profile = save_service.load_slot("0")["payload"]
