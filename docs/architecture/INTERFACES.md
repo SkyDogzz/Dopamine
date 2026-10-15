@@ -31,6 +31,17 @@ var state: Dictionary = simulation.snapshot()
 
 Le snapshot contient l'état `paused`, `speed_multiplier`, `simulation_time`, `last_sequence`, `rejected_commands`, une liste `entities` (ID index/génération et composants `Transform2D`, `Velocity2D`, `Health`, `EnemyType`), les `metrics` et les `logs`. Godot reçoit des valeurs copiées ; aucune référence mutable du worker n'est exposée. `CombatSimulation` n'a pas accès au service de sauvegarde.
 
+## Scénarios headless Sandbox P1
+
+`game/scripts/scenario_runner.gd` lit un scénario JSON versionné (limite 1 Mio et 1 000 commandes), soumet les mêmes commandes au pont `CombatSimulation`, vérifie les attentes déclarées et exporte un JSON horodaté avec la version Godot, le temps simulé, les métriques, les entités et les logs. Les scénarios acceptent `spawn`, `despawn`, `kill_all`, `pause`, `resume`, `step`, `set_speed` et `reset`. Le runner ne charge ni n’écrit de sauvegarde normale.
+
+```bash
+godot --headless --path game --script res://scripts/scenario_runner.gd -- \\
+  --scenario=res://scenarios/dev_sandbox.json --output=/tmp/result.json
+```
+
+Quand Godot est disponible à la configuration, CTest inclut les smoke tests GDScript et le scénario après un import headless initial du projet.
+
 ## Simulation native
 
 ```cpp

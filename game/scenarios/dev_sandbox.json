@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "scenario_id": "dev_sandbox_smoke",
+  "expected": {
+    "simulation_time": 1.0,
+    "speed_multiplier": 2.0,
+    "entity_count": 0,
+    "paused": true
+  },
+  "commands": [
+    {
+      "type": "spawn",
+      "entity_type": "chaser",
+      "count": 3,
+      "position": [10, 20],
+      "hp": 20,
+      "velocity": [1, 0]
+    },
+    {
+      "type": "set_speed",
+      "multiplier": 2
+    },
+    {
+      "type": "step",
+      "delta_seconds": 0.5
+    },
+    {
+      "type": "despawn",
+      "index": 0,
+      "generation": 1
+    },
+    {
+      "type": "kill_all"
+    }
+  ]
+}

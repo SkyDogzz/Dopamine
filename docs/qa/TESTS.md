@@ -6,6 +6,7 @@
 - [x] P1 ciblé : handles index/génération, snapshots immuables, spawn/despawn, kill all, step, pause/reprise, reset et arrêt du worker.
 - [x] P1 intégration : GDScript charge `CombatSimulation`, soumet un spawn et reçoit le snapshot acquitté sous Godot headless.
 - [x] P1 UI : scène Sandbox sans save, inspection par sélection, despawn ciblé et kill all vérifiés sous Godot headless ; rendu revu à 1280×800.
+- [x] P1 scénario : runner JSON vérifie les attentes et exporte métriques, entités et logs ; scénario inclus dans CTest quand Godot est détecté.
 - [ ] Godot 4.7.2 charge la GDExtension sur Windows et Linux.
 - [ ] Le projet C++23 compile avec versions verrouillées.
 - [ ] Aucune API Godot non thread-safe n'est appelée depuis le worker.
@@ -50,10 +51,10 @@
 - [ ] Save JSON atomique, backup et migrations sur fixtures anciennes.
 - [ ] Le mode Endless standard reste à finaliser avant ses tests de validation.
 
-## Runner headless (CLI proposée)
+## Runner headless (CLI P1 implémentée)
 
 ```bash
 dopamine-sim --scenario benchmark_500_enemies --duration 60 --output results.json
 ```
 
-Le CLI est une **spécification**, pas un exécutable déjà fourni.
+Le runner est fourni par `game/scripts/scenario_runner.gd` et consomme un fichier JSON de commandes. Le nom `dopamine-sim` et les options de durée illustrés ci-dessus restent une proposition distincte.

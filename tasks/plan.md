@@ -29,8 +29,8 @@ Livrer d’abord un Sandbox développeur autonome, puis le premier playable Surv
 
 - [x] Construire une scène de laboratoire utilisable sans sauvegarde avec spawn, despawn, pause, step, vitesse et reset.
 - [x] Ajouter l’inspecteur d’entité, les métriques et les logs.
-- [ ] Ajouter des scénarios headless et un export de métriques ; vérifier l’absence d’accès aux sauvegardes normales.
-- [ ] Checkpoint : exécuter et inspecter une simulation sans Survival ni état persistant.
+- [x] Ajouter des scénarios headless et un export de métriques ; vérifier l’absence d’accès aux sauvegardes normales.
+- [x] Checkpoint : exécuter et inspecter une simulation sans Survival ni état persistant.
 
 ### Phase 3 — Combat core jouable
 

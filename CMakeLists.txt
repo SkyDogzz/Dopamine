@@ -32,6 +32,26 @@ if(BUILD_TESTING)
     add_executable(simulation_worker_tests native/tests/simulation_worker_test.cpp)
     target_link_libraries(simulation_worker_tests PRIVATE dopamine_simulation)
     add_test(NAME simulation_worker COMMAND simulation_worker_tests)
+
+    find_program(DOPAMINE_GODOT_EXECUTABLE NAMES godot godot4 Godot)
+    if(DOPAMINE_GODOT_EXECUTABLE)
+        add_test(NAME godot_project_import
+            COMMAND "${DOPAMINE_GODOT_EXECUTABLE}" --headless --editor --path "${PROJECT_SOURCE_DIR}/game" --quit)
+        set_tests_properties(godot_project_import PROPERTIES FIXTURES_SETUP godot_project_ready)
+
+        foreach(script_name IN ITEMS sandbox_smoke sandbox_ui_smoke)
+            add_test(NAME ${script_name}
+                COMMAND "${DOPAMINE_GODOT_EXECUTABLE}" --headless --path "${PROJECT_SOURCE_DIR}/game" --script "res://tests/${script_name}.gd")
+            set_tests_properties(${script_name} PROPERTIES FIXTURES_REQUIRED godot_project_ready)
+        endforeach()
+
+        add_test(NAME sandbox_scenario
+            COMMAND "${DOPAMINE_GODOT_EXECUTABLE}" --headless --path "${PROJECT_SOURCE_DIR}/game"
+                --script res://scripts/scenario_runner.gd --
+                --scenario=res://scenarios/dev_sandbox.json
+                "--output=${CMAKE_CURRENT_BINARY_DIR}/sandbox_scenario_result.json")
+        set_tests_properties(sandbox_scenario PROPERTIES FIXTURES_REQUIRED godot_project_ready)
+    endif()
 endif()
 
 add_library(dopamine SHARED

@@ -40,3 +40,12 @@ ctest --test-dir build --output-on-failure
 godot --headless --path game --script res://tests/sandbox_smoke.gd
 godot --headless --path game --script res://tests/sandbox_ui_smoke.gd
 ```
+
+Scénario headless avec export JSON des métriques (l’option `--output` peut aussi viser `user://sandbox/logs/...`) :
+
+```bash
+godot --headless --path game --script res://scripts/scenario_runner.gd -- \
+  --scenario=res://scenarios/dev_sandbox.json --output=/tmp/dopamine-scenario.json
+```
+
+Si Godot est trouvé lors de la configuration CMake, `ctest` lance aussi l’import du projet, les deux smoke tests et ce scénario. Le runner et l’extension n’ont aucun accès au service de sauvegarde.

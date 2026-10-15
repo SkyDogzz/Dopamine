@@ -16,7 +16,7 @@
 
 - [x] Contrôles de simulation et spawn/despawn.
 - [x] Inspecteur, métriques et logs.
-- [ ] Runner headless, export et isolation des saves.
+- [x] Runner headless, export JSON des métriques et absence d’accès aux saves normales.
 
 ## Phase 3 — Combat core
 
