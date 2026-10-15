@@ -82,6 +82,10 @@ struct ProjectileData {
 	float damage = 1.0F;
 	float radius = 3.0F;
 	double remaining_seconds = 5.0;
+	bool applies_burn = false;
+	float burn_damage_per_tick = 0.0F;
+	double burn_interval_seconds = 0.0;
+	double burn_duration_seconds = 0.0;
 };
 
 struct DamageOverTime {
@@ -129,7 +133,8 @@ public:
 	EntityId spawn(std::string type, float x, float y, float hp, float velocity_x, float velocity_y,
 			float threat_level = 1.0F, float move_speed = 0.0F);
 	EntityId spawn_projectile(std::string type, float x, float y, float damage, float radius,
-			double lifetime_seconds, float velocity_x, float velocity_y);
+			double lifetime_seconds, float velocity_x, float velocity_y, float burn_damage_per_tick = 2.0F,
+			double burn_interval_seconds = 0.5, double burn_duration_seconds = 2.0);
 	EntityId spawn_xp_orb(float x, float y, float xp_value);
 	bool apply_damage_over_time(EntityId target, float damage_per_tick, double interval_seconds,
 			double duration_seconds);

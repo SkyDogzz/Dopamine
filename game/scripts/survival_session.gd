@@ -47,6 +47,9 @@ const WAVE_HP_CAP := 12.0
 @export var inferno_projectile_speed: float = 650.0
 @export var inferno_projectile_radius: float = 5.0
 @export var inferno_projectile_lifetime: float = 1.2
+@export var inferno_burn_damage_per_tick: float = 2.0
+@export var inferno_burn_interval_seconds: float = 0.5
+@export var inferno_burn_duration_seconds: float = 2.0
 @export_group("Prototype Crimson Daggers — proposed tuning")
 @export var daggers_cooldown: float = 0.8
 @export var daggers_damage: float = 7.0
@@ -164,7 +167,10 @@ func _process(_delta: float) -> void:
 		latest_event_sequence = sequence
 		match event["type"]:
 			"damage":
-				_pending_lifesteal += float(event["amount"]) * float(loadout.relic_level("blood_chalice")) * blood_chalice_lifesteal_per_level
+				var damage_lifesteal := float(event["amount"]) * float(loadout.relic_level("blood_chalice")) * blood_chalice_lifesteal_per_level
+				if bool(event.get("is_damage_over_time", false)):
+					damage_lifesteal *= 0.25
+				_pending_lifesteal += damage_lifesteal
 			"death":
 				kill_count += 1
 				var dead_enemy_type: String = str(event.get("target_type", ""))
@@ -515,9 +521,11 @@ func _fire_inferno_sprayer(active_time: float, paused: bool) -> void:
 	var level: int = loadout.weapon_level("inferno_sprayer")
 	var damage := inferno_damage * (1.0 + 0.15 * float(level - 1))
 	damage *= 1.0 + float(loadout.relic_level("infernal_heart")) * infernal_heart_damage_per_level
-	if simulation.spawn_projectile("inferno_sprayer", player.global_position + direction * 14.0,
+	var projectile_sequence: int = simulation.spawn_projectile("inferno_sprayer", player.global_position + direction * 14.0,
 			direction * inferno_projectile_speed, damage, inferno_projectile_radius,
-			inferno_projectile_lifetime) > 0:
+			inferno_projectile_lifetime, inferno_burn_damage_per_tick,
+			inferno_burn_interval_seconds, inferno_burn_duration_seconds)
+	if projectile_sequence > 0:
 		_next_inferno_time = active_time + inferno_cooldown
 
 func _fire_crimson_daggers(active_time: float, paused: bool) -> void:

@@ -208,7 +208,9 @@ void SimulationWorker::apply(const SimulationCommand &command) {
 			}
 			try {
 				simulation_.spawn_projectile(command.entity_type, command.x, command.y, command.projectile_damage,
-						command.projectile_radius, command.projectile_lifetime, command.velocity_x, command.velocity_y);
+						command.projectile_radius, command.projectile_lifetime, command.velocity_x, command.velocity_y,
+						command.projectile_burn_damage, command.projectile_burn_interval,
+						command.projectile_burn_duration);
 				log("spawned projectile " + command.entity_type);
 			} catch (const std::exception &error) {
 				log(std::string("projectile rejected: ") + error.what());

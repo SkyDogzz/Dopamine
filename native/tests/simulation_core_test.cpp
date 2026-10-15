@@ -185,6 +185,17 @@ int main() {
 		rejected_dot = true;
 	}
 	require(rejected_dot, "damage-over-time should reject non-positive values");
+	SimulationCore inferno_burn;
+	const auto burn_target = inferno_burn.spawn("chaser", 60.0F, 0.0F, 20.0F, 0.0F, 0.0F);
+	inferno_burn.spawn_projectile("inferno_sprayer", 0.0F, 0.0F, 1.0F, 3.0F, 2.0,
+			100.0F, 0.0F, 2.5F, 0.25, 1.0);
+	const auto burn_impact = inferno_burn.advance(0.6);
+	require(!burn_impact.empty() && inferno_burn.entity(burn_target)->health.current == 19.0F &&
+			inferno_burn.entity(burn_target)->damage_over_time.has_value(),
+			"Inferno Sprayer projectile hit should apply its configured burn to a surviving target");
+	const auto burn_ticks = inferno_burn.advance(0.25);
+	require(burn_ticks.size() == 1 && burn_ticks[0].is_damage_over_time && burn_ticks[0].amount == 2.5F,
+			"Inferno burn should emit a tagged tick using its configured damage");
 
 	SimulationCore combat;
 	const auto target = combat.spawn("chaser", 50.0F, -100.0F, 10.0F, 0.0F, 1000.0F, 4.0F);

@@ -41,8 +41,43 @@ func _run() -> void:
 	if not is_equal_approx(session.player_hp, session.player_max_hp):
 		_fail("Lifesteal should not heal above maximum HP")
 		return
+	session.simulation.kill_all()
+	session.player_hp = 50.0
+	session.inferno_burn_damage_per_tick = 4.0
+	session.inferno_burn_interval_seconds = 0.1
+	session.inferno_burn_duration_seconds = 0.4
+	session.simulation.set_speed(0.25)
+	session.simulation.spawn("burn_target", 1, Vector2(80.0, 0.0), 100.0, Vector2.ZERO, 1.0)
+	session.simulation.spawn_projectile("inferno_sprayer", Vector2.ZERO, Vector2(1000.0, 0.0),
+		1.0, 3.0, 2.0, session.inferno_burn_damage_per_tick,
+		session.inferno_burn_interval_seconds, session.inferno_burn_duration_seconds)
+	var burned_state: Dictionary = await _wait_for_state(session, func(state: Dictionary) -> bool:
+		for entity in state["entities"]:
+			if entity["components"].has("DamageOverTime"):
+				return true
+		return false
+	)
+	if burned_state.is_empty():
+		_fail("Inferno Sprayer impact should apply its configured burn")
+		return
+	var before_burn_heal: float = session.player_hp
+	if not await _wait_until(func() -> bool: return session.player_hp > before_burn_heal):
+		_fail("Burn ticks should contribute lifesteal in Survival")
+		return
+	if session.player_hp - before_burn_heal >= 0.5:
+		_fail("Burn lifesteal should be reduced to the proposed 25% rate")
+		return
 	print("Survival lifesteal smoke passed")
 	quit()
+
+func _wait_for_state(session: Node2D, predicate: Callable) -> Dictionary:
+	var deadline := Time.get_ticks_msec() + 2000
+	while Time.get_ticks_msec() < deadline:
+		await process_frame
+		var state: Dictionary = session.simulation.snapshot()
+		if predicate.call(state):
+			return state
+	return {}
 
 func _wait_until(predicate: Callable) -> bool:
 	var deadline := Time.get_ticks_msec() + 2000
