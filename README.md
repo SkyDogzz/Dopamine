@@ -42,6 +42,12 @@ godot --headless --path game --script res://tests/sandbox_smoke.gd
 godot --headless --path game --script res://tests/sandbox_ui_smoke.gd
 ```
 
+Pour lancer un combat Sandbox automatisé dans une fenêtre et garder le résultat (impact, mort et logs) à l’écran jusqu’à Échap :
+
+```bash
+godot --path game --script res://tests/sandbox_combat_smoke.gd -- --stay-open
+```
+
 Pour parcourir une run Survival de validation avec ses 24 vagues de 30 secondes, à vitesse ×4, dans une fenêtre :
 
 ```bash

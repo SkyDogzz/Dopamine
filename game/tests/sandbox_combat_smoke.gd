@@ -33,7 +33,12 @@ func _run() -> void:
 	assert(log_label.text.contains("DAMAGE"), "Sandbox UI should display damage events")
 	assert(log_label.text.contains("DEATH"), "Sandbox UI should display death events")
 	print("Sandbox combat projectile, event display and acknowledgement checks passed")
-	quit()
+	if "--stay-open" in OS.get_cmdline_user_args():
+		print("Combat result is on screen; press Escape to close the window")
+		while not Input.is_key_pressed(KEY_ESCAPE):
+			await process_frame
+	else:
+		quit()
 
 func _wait_for_sequence(simulation: Object, sequence: int) -> Dictionary:
 	var deadline := Time.get_ticks_msec() + 1000
