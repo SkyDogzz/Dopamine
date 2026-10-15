@@ -12,8 +12,8 @@ using dopamine::sim::CommandType;
 using dopamine::sim::SimulationCommand;
 
 void CombatSimulation::_bind_methods() {
-	ClassDB::bind_method(D_METHOD("spawn", "entity_type", "count", "position", "hp", "velocity"),
-			&CombatSimulation::spawn);
+	ClassDB::bind_method(D_METHOD("spawn", "entity_type", "count", "position", "hp", "velocity", "threat_level"),
+			&CombatSimulation::spawn, DEFVAL(1.0));
 	ClassDB::bind_method(D_METHOD("spawn_projectile", "projectile_type", "position", "velocity", "damage", "radius", "lifetime_seconds"),
 			&CombatSimulation::spawn_projectile);
 	ClassDB::bind_method(D_METHOD("despawn", "index", "generation"), &CombatSimulation::despawn);
@@ -27,6 +27,7 @@ void CombatSimulation::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("acknowledge_events", "event_sequence"), &CombatSimulation::acknowledge_events);
 	ClassDB::bind_method(D_METHOD("health_decay_amount", "active_time_seconds", "delta_seconds"),
 			&CombatSimulation::health_decay_amount);
+	ClassDB::bind_method(D_METHOD("kill_heal_amount", "threat_level"), &CombatSimulation::kill_heal_amount);
 	ClassDB::bind_method(D_METHOD("reset"), &CombatSimulation::reset);
 	ClassDB::bind_method(D_METHOD("snapshot"), &CombatSimulation::snapshot);
 }
@@ -35,10 +36,11 @@ CombatSimulation::CombatSimulation() {
 	worker_.start();
 }
 
-int64_t CombatSimulation::spawn(String entity_type, int64_t count, Vector2 position, float hp, Vector2 velocity) {
+int64_t CombatSimulation::spawn(String entity_type, int64_t count, Vector2 position, float hp, Vector2 velocity,
+		float threat_level) {
 	if (entity_type.is_empty() || count <= 0 || count > 500 || !std::isfinite(position.x) ||
 			!std::isfinite(position.y) || !std::isfinite(hp) || hp <= 0.0F || !std::isfinite(velocity.x) ||
-			!std::isfinite(velocity.y)) {
+			!std::isfinite(velocity.y) || !std::isfinite(threat_level) || threat_level <= 0.0F) {
 		return 0;
 	}
 	SimulationCommand command;
@@ -50,6 +52,7 @@ int64_t CombatSimulation::spawn(String entity_type, int64_t count, Vector2 posit
 	command.hp = hp;
 	command.velocity_x = static_cast<float>(velocity.x);
 	command.velocity_y = static_cast<float>(velocity.y);
+	command.threat_level = threat_level;
 	return submit(std::move(command));
 }
 
@@ -153,6 +156,10 @@ double CombatSimulation::health_decay_amount(double active_time_seconds, double 
 	return dopamine::sim::health_decay_amount(active_time_seconds, delta_seconds);
 }
 
+double CombatSimulation::kill_heal_amount(double threat_level) const {
+	return dopamine::sim::kill_heal_amount(threat_level);
+}
+
 int64_t CombatSimulation::reset() {
 	SimulationCommand command;
 	command.type = CommandType::Reset;
@@ -196,6 +203,7 @@ Dictionary CombatSimulation::snapshot() const {
 		components["Velocity2D"] = velocity;
 		components["Health"] = health;
 		components["EnemyType"] = String(entity.type.id.c_str());
+		components["ThreatLevel"] = entity.type.threat_level;
 		components["IsProjectile"] = entity.is_projectile;
 		if (entity.is_projectile) {
 			Dictionary projectile;
@@ -226,6 +234,7 @@ Dictionary CombatSimulation::snapshot() const {
 		entry["target"] = target;
 		entry["amount"] = event.amount;
 		entry["remaining_health"] = event.remaining_health;
+		entry["threat_level"] = event.threat_level;
 		events.push_back(entry);
 	}
 	result["events"] = events;

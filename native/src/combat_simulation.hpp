@@ -18,7 +18,8 @@ protected:
 public:
 	CombatSimulation();
 
-	int64_t spawn(String entity_type, int64_t count, Vector2 position, float hp, Vector2 velocity);
+	int64_t spawn(String entity_type, int64_t count, Vector2 position, float hp, Vector2 velocity,
+			float threat_level = 1.0F);
 	int64_t spawn_projectile(String projectile_type, Vector2 position, Vector2 velocity, float damage,
 			float radius, double lifetime_seconds);
 	int64_t despawn(int64_t index, int64_t generation);
@@ -30,6 +31,7 @@ public:
 	int64_t set_steering_target(Vector2 position, float max_speed, float separation_radius, float separation_weight);
 	int64_t acknowledge_events(int64_t event_sequence);
 	double health_decay_amount(double active_time_seconds, double delta_seconds) const;
+	double kill_heal_amount(double threat_level) const;
 	int64_t reset();
 	Dictionary snapshot() const;
 

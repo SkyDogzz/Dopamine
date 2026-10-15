@@ -42,7 +42,7 @@ if(BUILD_TESTING)
         foreach(script_name IN ITEMS sandbox_smoke sandbox_ui_smoke sandbox_combat_smoke)
             add_test(NAME ${script_name}
                 COMMAND "${DOPAMINE_GODOT_EXECUTABLE}" --headless --path "${PROJECT_SOURCE_DIR}/game" --script "res://tests/${script_name}.gd")
-            set_tests_properties(${script_name} PROPERTIES FIXTURES_REQUIRED godot_project_ready)
+            set_tests_properties(${script_name} PROPERTIES FIXTURES_REQUIRED godot_project_ready TIMEOUT 15)
         endforeach()
 
         add_test(NAME sandbox_scenario

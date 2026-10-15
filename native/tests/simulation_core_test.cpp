@@ -39,6 +39,16 @@ int main() {
 		rejected_decay_interval = true;
 	}
 	require(rejected_decay_interval, "negative active time must be rejected by the decay rule");
+	using dopamine::sim::kill_heal_amount;
+	require(std::abs(kill_heal_amount(1.0) - 5.0) < 0.000001,
+			"proposed ordinary enemy threat should produce five HP of kill healing");
+	require(std::abs(kill_heal_amount(0.1) - (2.0 + 3.0 * std::sqrt(0.5))) < 0.000001,
+			"kill healing should clamp threat to its proposed lower bound");
+	require(std::abs(kill_heal_amount(100.0) - 17.0) < 0.000001,
+			"kill healing should clamp threat to its proposed upper bound");
+	require(kill_heal_amount(1.0, {.base_amount = 1.0, .amount_per_sqrt_threat = 2.0,
+			.minimum_threat = 1.0, .maximum_threat = 9.0}) == 3.0,
+			"kill healing formula coefficients should remain configurable");
 
 	SimulationCore simulation;
 	const auto first = simulation.spawn("chaser", 1.0F, 2.0F, 10.0F, 5.0F, 0.0F);
@@ -114,7 +124,7 @@ int main() {
 			"coincident entities should separate deterministically without random state");
 
 	SimulationCore combat;
-	const auto target = combat.spawn("chaser", 50.0F, -100.0F, 10.0F, 0.0F, 1000.0F);
+	const auto target = combat.spawn("chaser", 50.0F, -100.0F, 10.0F, 0.0F, 1000.0F, 4.0F);
 	const auto projectile = combat.spawn_projectile("test_projectile", 0.0F, 0.0F, 12.0F, 2.0F, 1.0, 500.0F, 0.0F);
 	const auto combat_events = combat.advance(0.2);
 	require(combat_events.size() == 2, "swept projectile hit should emit damage and death events");
@@ -122,8 +132,11 @@ int main() {
 			combat_events[0].target == target && combat_events[0].source == projectile,
 			"damage event should identify projectile and target");
 	require(combat_events[1].type == dopamine::sim::CombatEventType::Death &&
-			combat_events[1].sequence > combat_events[0].sequence,
-			"lethal damage should emit a following death event");
+			combat_events[1].sequence > combat_events[0].sequence &&
+			combat_events[1].threat_level == 4.0F,
+			"death event should preserve the target threat for reward calculation");
+	require(kill_heal_amount(combat_events[1].threat_level) == 8.0,
+			"death threat should feed the proposed kill heal rule");
 	require(!combat.entity(target).has_value() && !combat.entity(projectile).has_value(),
 			"lethal hit should remove the enemy and consumed projectile");
 	require(std::abs(combat.simulation_time() - 0.2) < 0.001,

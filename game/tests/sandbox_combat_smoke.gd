@@ -22,6 +22,10 @@ func _run() -> void:
 	state = await _wait_for_events(simulation, step_sequence)
 	assert(state["events"].size() == 2, "lethal swept hit should expose damage and death events")
 	assert(state["metrics"]["collision_count"] == 1)
+	var death_event: Dictionary = state["events"][1]
+	assert(death_event["type"] == "death" and is_equal_approx(death_event["threat_level"], 1.0))
+	assert(is_equal_approx(simulation.kill_heal_amount(death_event["threat_level"]), 5.0),
+			"death threat should be available to the proposed kill heal rule")
 
 	var log_label: RichTextLabel = sandbox.get_node("Shell/Content/SidePanel/Sections/LogPanel/LogForm/LogText")
 	state = await _wait_for_event_ack(simulation)

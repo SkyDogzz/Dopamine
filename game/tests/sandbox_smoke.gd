@@ -10,6 +10,10 @@ func _run() -> void:
 			"GDExtension decay rule should match the proposed first-minute GDD example")
 	assert(is_equal_approx(simulation.health_decay_amount(0.0, 720.0), 2116.8),
 			"GDExtension decay rule should match the proposed twelve-minute GDD example")
+	assert(is_equal_approx(simulation.kill_heal_amount(1.0), 5.0),
+			"GDExtension kill heal rule should match the proposed ordinary enemy value")
+	assert(is_equal_approx(simulation.kill_heal_amount(100.0), 17.0),
+			"GDExtension kill heal rule should clamp to the proposed maximum threat")
 	assert(simulation.spawn("", 1, Vector2.ZERO, 10.0, Vector2.ZERO) == 0)
 	assert(simulation.set_speed(10.0) == 0)
 

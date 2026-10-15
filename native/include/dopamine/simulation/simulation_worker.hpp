@@ -38,6 +38,7 @@ struct SimulationCommand {
 	float x = 0.0F;
 	float y = 0.0F;
 	float hp = 1.0F;
+	float threat_level = 1.0F;
 	float velocity_x = 0.0F;
 	float velocity_y = 0.0F;
 	double delta_seconds = 0.0;

@@ -39,7 +39,7 @@ func _run() -> void:
 		if state.is_empty():
 			_fail("Timed out waiting for command %d" % sequence)
 			return
-	var expectation_error := _check_expected(scenario.get("expected", {}), state)
+	var expectation_error := _check_expected(scenario.get("expected", {}), state, simulation)
 	if not expectation_error.is_empty():
 		_fail(expectation_error)
 		return
@@ -107,6 +107,8 @@ func _validate_scenario(scenario: Variant) -> String:
 					return "Command %d position and velocity must be finite 2-number arrays" % index
 				if not _valid_number(command.get("hp", 1)) or float(command.get("hp", 1)) <= 0.0:
 					return "Command %d hp must be a positive finite number" % index
+				if not _valid_number(command.get("threat_level", 1)) or float(command.get("threat_level", 1)) <= 0.0:
+					return "Command %d threat_level must be positive and finite" % index
 			"spawn_projectile":
 				if typeof(command.get("projectile_type")) != TYPE_STRING or String(command["projectile_type"]).is_empty():
 					return "Command %d requires projectile_type" % index
@@ -142,7 +144,7 @@ func _validate_scenario(scenario: Variant) -> String:
 				return "Command %d has unsupported type: %s" % [index, kind]
 	return ""
 
-func _check_expected(expected: Dictionary, state: Dictionary) -> String:
+func _check_expected(expected: Dictionary, state: Dictionary, simulation: Object) -> String:
 	if expected.has("simulation_time"):
 		if not _valid_number(expected["simulation_time"]) or not is_equal_approx(float(expected["simulation_time"]), float(state["simulation_time"])):
 			return "Scenario simulation_time did not match expected value"
@@ -181,6 +183,20 @@ func _check_expected(expected: Dictionary, state: Dictionary) -> String:
 					count += 1
 			if count != int(expected[expected_key]):
 				return "Scenario %s did not match expected value" % expected_key
+	if expected.has("death_threat_level") or expected.has("kill_heal_preview"):
+		var death_event: Dictionary = {}
+		for event in state["events"]:
+			if event["type"] == "death":
+				death_event = event
+				break
+		if death_event.is_empty():
+			return "Scenario expected a death event to check kill healing"
+		if expected.has("death_threat_level"):
+			if not _valid_number(expected["death_threat_level"]) or not is_equal_approx(float(expected["death_threat_level"]), float(death_event["threat_level"])):
+				return "Scenario death_threat_level did not match expected value"
+		if expected.has("kill_heal_preview"):
+			if not _valid_number(expected["kill_heal_preview"]) or not is_equal_approx(float(expected["kill_heal_preview"]), simulation.kill_heal_amount(float(death_event["threat_level"]))):
+				return "Scenario kill_heal_preview did not match expected value"
 	return ""
 
 func _valid_number(value: Variant) -> bool:
@@ -203,7 +219,7 @@ func _submit(simulation: Object, command: Dictionary) -> int:
 			return simulation.spawn(
 				command["entity_type"], int(command.get("count", 1)),
 				Vector2(float(position[0]), float(position[1])), float(command.get("hp", 1)),
-				Vector2(float(velocity[0]), float(velocity[1]))
+				Vector2(float(velocity[0]), float(velocity[1])), float(command.get("threat_level", 1))
 			)
 		"spawn_projectile":
 			var position: Array = command["position"]

@@ -127,7 +127,8 @@ func _refresh() -> void:
 		if event["type"] == "damage":
 			visible_logs.append("DAMAGE  %d → %d  %.1f HP left" % [event["source"]["index"], event["target"]["index"], event["remaining_health"]])
 		else:
-			visible_logs.append("DEATH  entity %d" % event["target"]["index"])
+			var heal_preview: float = simulation.kill_heal_amount(float(event["threat_level"]))
+			visible_logs.append("DEATH  entity %d  THREAT %.1f  HEAL PREVIEW +%.1f HP" % [event["target"]["index"], event["threat_level"], heal_preview])
 	if latest_event_sequence > _last_combat_event_sequence:
 		_last_combat_event_sequence = latest_event_sequence
 		simulation.acknowledge_events(latest_event_sequence)

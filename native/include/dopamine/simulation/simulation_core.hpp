@@ -53,8 +53,18 @@ struct HealthDecayConfig {
 double health_decay_amount(double active_time_seconds, double delta_seconds,
 		HealthDecayConfig config = {});
 
+struct KillHealConfig {
+	double base_amount = 2.0;
+	double amount_per_sqrt_threat = 3.0;
+	double minimum_threat = 0.5;
+	double maximum_threat = 25.0;
+};
+
+double kill_heal_amount(double threat_level, KillHealConfig config = {});
+
 struct EnemyType {
 	std::string id;
+	float threat_level = 1.0F;
 };
 
 struct ProjectileData {
@@ -75,6 +85,7 @@ struct CombatEvent {
 	EntityId target;
 	float amount = 0.0F;
 	float remaining_health = 0.0F;
+	float threat_level = 1.0F;
 };
 
 struct Entity {
@@ -89,7 +100,8 @@ struct Entity {
 
 class SimulationCore {
 public:
-	EntityId spawn(std::string type, float x, float y, float hp, float velocity_x, float velocity_y);
+	EntityId spawn(std::string type, float x, float y, float hp, float velocity_x, float velocity_y,
+			float threat_level = 1.0F);
 	EntityId spawn_projectile(std::string type, float x, float y, float damage, float radius,
 			double lifetime_seconds, float velocity_x, float velocity_y);
 	bool despawn(EntityId id);

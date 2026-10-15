@@ -24,9 +24,27 @@ double health_decay_amount(double active_time_seconds, double delta_seconds, Hea
 	return amount;
 }
 
-EntityId SimulationCore::spawn(std::string type, float x, float y, float hp, float velocity_x, float velocity_y) {
+double kill_heal_amount(double threat_level, KillHealConfig config) {
+	if (!std::isfinite(threat_level) || threat_level <= 0.0 ||
+			!std::isfinite(config.base_amount) || config.base_amount < 0.0 ||
+			!std::isfinite(config.amount_per_sqrt_threat) || config.amount_per_sqrt_threat < 0.0 ||
+			!std::isfinite(config.minimum_threat) || config.minimum_threat <= 0.0 ||
+			!std::isfinite(config.maximum_threat) || config.maximum_threat < config.minimum_threat) {
+		throw std::invalid_argument("invalid kill heal threat or configuration");
+	}
+	const double bounded_threat = std::clamp(threat_level, config.minimum_threat, config.maximum_threat);
+	const double amount = config.base_amount + config.amount_per_sqrt_threat * std::sqrt(bounded_threat);
+	if (!std::isfinite(amount)) {
+		throw std::overflow_error("kill heal amount overflowed");
+	}
+	return amount;
+}
+
+EntityId SimulationCore::spawn(std::string type, float x, float y, float hp, float velocity_x,
+		float velocity_y, float threat_level) {
 	if (type.empty() || !std::isfinite(x) || !std::isfinite(y) || !std::isfinite(hp) || hp <= 0.0F ||
-			!std::isfinite(velocity_x) || !std::isfinite(velocity_y)) {
+			!std::isfinite(velocity_x) || !std::isfinite(velocity_y) || !std::isfinite(threat_level) ||
+			threat_level <= 0.0F) {
 		throw std::invalid_argument("invalid simulation entity");
 	}
 
@@ -54,7 +72,7 @@ EntityId SimulationCore::spawn(std::string type, float x, float y, float hp, flo
 	transforms_[index] = {x, y};
 	velocities_[index] = {velocity_x, velocity_y};
 	health_[index] = {hp, hp};
-	enemy_types_[index] = {std::move(type)};
+	enemy_types_[index] = {std::move(type), threat_level};
 	projectile_flags_[index] = false;
 	projectiles_[index] = {};
 	++entity_count_;
@@ -353,9 +371,10 @@ void SimulationCore::apply_damage(EntityId source, EntityId target, float amount
 	Health &target_health = health_[target.index];
 	target_health.current = std::max(0.0F, target_health.current - amount);
 	events.push_back({next_event_sequence_++, CombatEventType::Damage, source, target,
-			amount, target_health.current});
+			amount, target_health.current, enemy_types_[target.index].threat_level});
 	if (target_health.current <= 0.0F) {
-		events.push_back({next_event_sequence_++, CombatEventType::Death, source, target, 0.0F, 0.0F});
+		events.push_back({next_event_sequence_++, CombatEventType::Death, source, target,
+				0.0F, 0.0F, enemy_types_[target.index].threat_level});
 		deferred_despawns.push_back(target);
 	}
 }

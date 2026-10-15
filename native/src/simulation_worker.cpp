@@ -129,7 +129,7 @@ void SimulationWorker::apply(const SimulationCommand &command) {
 			try {
 				for (uint32_t i = 0; i < command.count; ++i) {
 					simulation_.spawn(command.entity_type, command.x, command.y, command.hp,
-							command.velocity_x, command.velocity_y);
+							command.velocity_x, command.velocity_y, command.threat_level);
 				}
 				log("spawned " + std::to_string(command.count) + " " + command.entity_type);
 			} catch (const std::exception &error) {

@@ -6,7 +6,9 @@
     "entity_count": 0,
     "collision_count": 1,
     "damage_events": 1,
-    "death_events": 1
+    "death_events": 1,
+    "death_threat_level": 4.0,
+    "kill_heal_preview": 8.0
   },
   "commands": [
     {
@@ -14,7 +16,8 @@
       "entity_type": "chaser",
       "position": [50.0, -100.0],
       "velocity": [0.0, 1000.0],
-      "hp": 10.0
+      "hp": 10.0,
+      "threat_level": 4.0
     },
     {
       "type": "spawn_projectile",

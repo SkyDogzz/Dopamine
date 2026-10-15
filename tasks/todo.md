@@ -25,7 +25,8 @@
 - [x] Steering de poursuite et séparation locale avec cible fournie par le mode ; paramètres initiaux provisoires.
 - [x] Projectiles ECS, collisions balayées, dégâts centraux, mort et file d’événements non perdus tant que l’acquittement est différé.
 - [x] Fonction pure de HP decay, paramètres par défaut encore proposés, exemples GDD validés par test.
-- [ ] Relier le HP decay à l’horloge du mode ; ajouter soins et autres règles de combat dans le Sandbox.
+- [x] Menace portée par les ennemis et événements de mort ; formule de soin proposée calculée comme preview, sans changer le HP joueur.
+- [ ] Relier HP decay et soins à l’horloge et au HP du mode ; ajouter les autres règles de combat au Sandbox.
 
 ## Phase 4 — Premier playable Survival
 

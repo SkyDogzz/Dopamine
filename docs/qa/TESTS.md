@@ -11,6 +11,7 @@
 - [x] P2 ciblé : poursuite d’une cible explicite et séparation locale, y compris deux entités superposées ; scénario Godot headless vérifie les positions obtenues.
 - [x] P2 ciblé : projectile rapide contre cible en mouvement, dégâts et mort séquencés, expiration, file d’événements acquittable et affichage Sandbox.
 - [x] P2 ciblé : HP initial validé à 100 et fonction pure de HP decay aux exemples de 60 s et 720 s marqués proposés dans le GDD.
+- [x] P2 ciblé : menace d’ennemi conservée jusqu’à l’événement de mort ; preview du soin proposé testée à T=1 et aux bornes de menace.
 - [ ] Godot 4.7.2 charge la GDExtension sur Windows et Linux.
 - [ ] Le projet C++23 compile avec versions verrouillées.
 - [ ] Aucune API Godot non thread-safe n'est appelée depuis le worker.
