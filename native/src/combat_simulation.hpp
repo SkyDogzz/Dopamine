@@ -33,6 +33,7 @@ public:
 	int64_t acknowledge_events(int64_t event_sequence);
 	double health_decay_amount(double active_time_seconds, double delta_seconds) const;
 	double kill_heal_amount(double threat_level) const;
+	double initial_player_hp() const;
 	int64_t reset();
 	Dictionary snapshot() const;
 

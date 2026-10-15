@@ -43,7 +43,8 @@ Livrer d’abord un Sandbox développeur autonome, puis le premier playable Surv
 - [x] Ajouter une scène joueur Godot avec mouvement configurable WASD/manette ; garder l’autorité du transform dans Godot.
 - [x] Relier le transform Godot du joueur au steering de l’ECS dans une scène Survival, en préservant les vitesses de profil proposées.
 - [ ] Ajouter les comportements d’ennemis autres que la poursuite ; arbitrer la synchronisation du joueur/boss.
-- [ ] Intégrer HP decay et soins à l’horloge active et au HP du mode ; compléter les modificateurs et statuts.
+- [x] Intégrer HP decay et soins aux événements de combat et à l’horloge active de `SurvivalSession`, avec HP possédé côté Godot.
+- [ ] Compléter les modificateurs de dégâts, lifesteal, statuts et collisions joueur.
 - [ ] Tester les règles indépendamment dans le Sandbox et respecter les budgets de simulation.
 
 ### Phase 4 — Premier playable Survival

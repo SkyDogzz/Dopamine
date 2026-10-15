@@ -37,9 +37,9 @@ Chaque impact produit un événement `damage` ; un impact létal produit ensuite
 
 `set_steering_target(position, max_speed, separation_radius, separation_weight)` transmet une cible monde fournie par le mode. Une commande `Step` ou une frame active recalcule le steering des entités simulées avant l’intégration. Pour `spawn_enemy`, le cœur préserve la vitesse propre de chaque profil **[PROPOSÉ]** ; `max_speed` s’applique aux entités créées par le spawn générique. La scène `survival_session.tscn` garde l’autorité sur le `CharacterBody2D` joueur et transmet sa position globale à chaque changement ; le worker ne publie aucune transform joueur. Les rayons et poids restent configurables et provisoires.
 
-`health_decay_amount(active_time_seconds, delta_seconds)` calcule une perte sans muter d’état HP. Avec la config par défaut issue de la formule **[PROPOSÉE]** du GDD, le calcul exact est `delta × (base_rate + slope × (active_time + delta/2))`, avec base 1,5 HP/s et pente 0,004 HP/s². `HealthDecayConfig` permet de tester/ajuster les coefficients. Le GDD fixe **[VALIDÉ]** le HP initial à 100 ; le cœur expose cette constante, mais l’instance de HP et l’horloge active restent à intégrer au contrat du mode quand l’autorité joueur sera définie.
+`health_decay_amount(active_time_seconds, delta_seconds)` calcule une perte sans muter d’état HP. Avec la config par défaut issue de la formule **[PROPOSÉE]** du GDD, le calcul exact est `delta × (base_rate + slope × (active_time + delta/2))`, avec base 1,5 HP/s et pente 0,004 HP/s². `HealthDecayConfig` permet de tester/ajuster les coefficients. Le GDD fixe **[VALIDÉ]** le HP initial à 100 ; `SurvivalSession` garde l’instance HP côté Godot et consomme le temps actif publié par la simulation. La décroissance s’arrête lorsque son horloge est en pause.
 
-`kill_heal_amount(threat_level)` calcule le soin **[PROPOSÉ]** `2 + 3√T`, en bornant T à `[0,5 ; 25]`. La menace de l’événement `death` permet au mode de demander ce montant ; le cœur et le Sandbox ne mutent pas de HP joueur. L’interface Sandbox l’affiche comme preview. Les coefficients et bornes sont configurables via `KillHealConfig` dans le cœur natif.
+`kill_heal_amount(threat_level)` calcule le soin **[PROPOSÉ]** `2 + 3√T`, en bornant T à `[0,5 ; 25]`. `SurvivalSession` consomme chaque événement `death` une fois, ajoute ce montant au HP Godot et le plafonne au HP initial courant ; le cœur reste sans état joueur et le Sandbox n’applique que le preview. Les coefficients et bornes sont configurables via `KillHealConfig` dans le cœur natif.
 
 ## Scénarios headless Sandbox P1
 
@@ -102,7 +102,7 @@ Les méthodes GDExtension n'exposent pas de pointeurs ECS ni de références mut
 
 - Simulation : autorité sur HP/positions des ennemis et impacts de projectiles.
 - Godot : autorité sur menus, progression permanente, rendu et entrées.
-- Joueur/boss : établir explicitement le point de vérité pour HP, hitboxes et transforms ; **OUVERT**, à valider dans un test d'intégration.
+- Joueur/boss : `SurvivalSession` garde provisoirement le HP et le transform joueur sous autorité Godot, testés dans l’intégration ; l’autorité des hitboxes/collisions joueur-boss et leur contrat complet restent **OUVERTS**.
 - Un événement consommé par les achievements doit être identifié pour empêcher le double comptage.
 
 ## Contrat des configurations

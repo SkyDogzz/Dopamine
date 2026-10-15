@@ -29,6 +29,44 @@ func _run() -> void:
 	if state.is_empty():
 		_fail("Enemy should follow the updated Godot player position")
 		return
+	session.simulation.set_speed(4.0)
+	state = await _wait_until(session, func(_snapshot: Dictionary) -> bool:
+		return session.get("player_hp") != null and float(session.get("player_hp")) < 100.0
+	)
+	if state.is_empty():
+		_fail("Active simulation time should apply HP decay to the Survival player")
+		return
+	session.simulation.pause()
+	state = await _wait_until(session, func(snapshot: Dictionary) -> bool: return snapshot["paused"])
+	if state.is_empty():
+		_fail("Survival should pause before a deterministic kill-heal check")
+		return
+	var hp_when_paused: float = float(session.get("player_hp"))
+	await process_frame
+	await process_frame
+	if not is_equal_approx(float(session.get("player_hp")), hp_when_paused):
+		_fail("HP decay should stop while the Survival simulation is paused")
+		return
+	session.set("player_hp", 80.0)
+	var enemy_position: Dictionary = state["entities"][0]["components"]["Transform2D"]
+	var projectile_sequence: int = session.simulation.spawn_projectile("test_bolt",
+		Vector2(float(enemy_position["x"]), float(enemy_position["y"])), Vector2.ZERO, 1000.0, 12.0, 1.0)
+	if projectile_sequence <= 0:
+		_fail("Survival simulation should accept a test projectile")
+		return
+	state = await _wait_until(session, func(snapshot: Dictionary) -> bool:
+		return snapshot["last_sequence"] >= projectile_sequence
+	)
+	if state.is_empty():
+		_fail("Survival test projectile spawn timed out")
+		return
+	session.simulation.step(0.01)
+	state = await _wait_until(session, func(_snapshot: Dictionary) -> bool:
+		return float(session.get("player_hp")) > 84.0
+	)
+	if state.is_empty():
+		_fail("Enemy death should apply the proposed kill heal to Survival HP")
+		return
 	print("Survival player-to-enemy steering smoke passed")
 	quit()
 

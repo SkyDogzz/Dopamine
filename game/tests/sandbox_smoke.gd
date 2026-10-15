@@ -14,6 +14,8 @@ func _run() -> void:
 			"GDExtension kill heal rule should match the proposed ordinary enemy value")
 	assert(is_equal_approx(simulation.kill_heal_amount(100.0), 17.0),
 			"GDExtension kill heal rule should clamp to the proposed maximum threat")
+	assert(is_equal_approx(simulation.initial_player_hp(), 100.0),
+			"GDExtension should expose the GDD-validated initial player HP")
 	assert(simulation.spawn_enemy("not_an_enemy", 1, Vector2.ZERO, Vector2.ZERO) == 0,
 			"GDExtension should reject unknown enemy profiles")
 	var profile_sequence: int = simulation.spawn_enemy("chaser", 1, Vector2.ZERO, Vector2(0.0, 1.0))

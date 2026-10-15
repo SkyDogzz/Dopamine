@@ -29,7 +29,8 @@
 - [x] Profils d’ennemis proposés disponibles dans le cœur et dans les scénarios Sandbox.
 - [x] Scène de déplacement joueur configurable sous Godot, avec actions clavier et manette.
 - [x] Scène Survival minimale : position monde du joueur transmise au steering ECS ; vitesses des profils conservées.
-- [ ] Relier HP decay et soins à l’horloge et au HP du mode ; ajouter les autres règles de combat au Sandbox.
+- [x] Relier HP decay à l’horloge active Survival et appliquer les soins des événements de mort au HP Godot.
+- [ ] Ajouter lifesteal, statuts, contact joueur-ennemi et contrôles de ces règles dans le Sandbox.
 
 ## Phase 4 — Premier playable Survival
 

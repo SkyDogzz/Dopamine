@@ -30,6 +30,7 @@ void CombatSimulation::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("health_decay_amount", "active_time_seconds", "delta_seconds"),
 			&CombatSimulation::health_decay_amount);
 	ClassDB::bind_method(D_METHOD("kill_heal_amount", "threat_level"), &CombatSimulation::kill_heal_amount);
+	ClassDB::bind_method(D_METHOD("initial_player_hp"), &CombatSimulation::initial_player_hp);
 	ClassDB::bind_method(D_METHOD("reset"), &CombatSimulation::reset);
 	ClassDB::bind_method(D_METHOD("snapshot"), &CombatSimulation::snapshot);
 }
@@ -186,6 +187,10 @@ double CombatSimulation::health_decay_amount(double active_time_seconds, double 
 
 double CombatSimulation::kill_heal_amount(double threat_level) const {
 	return dopamine::sim::kill_heal_amount(threat_level);
+}
+
+double CombatSimulation::initial_player_hp() const {
+	return dopamine::sim::gdd_validated_player_initial_hp;
 }
 
 int64_t CombatSimulation::reset() {
