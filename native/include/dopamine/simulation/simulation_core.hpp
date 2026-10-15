@@ -47,20 +47,44 @@ struct EnemyType {
 	std::string id;
 };
 
+struct ProjectileData {
+	float damage = 1.0F;
+	float radius = 3.0F;
+	double remaining_seconds = 5.0;
+};
+
+enum class CombatEventType {
+	Damage,
+	Death,
+};
+
+struct CombatEvent {
+	uint64_t sequence = 0;
+	CombatEventType type = CombatEventType::Damage;
+	EntityId source;
+	EntityId target;
+	float amount = 0.0F;
+	float remaining_health = 0.0F;
+};
+
 struct Entity {
 	EntityId id;
 	Transform2D transform;
 	Velocity2D velocity;
 	Health health;
 	EnemyType type;
+	bool is_projectile = false;
+	ProjectileData projectile;
 };
 
 class SimulationCore {
 public:
 	EntityId spawn(std::string type, float x, float y, float hp, float velocity_x, float velocity_y);
+	EntityId spawn_projectile(std::string type, float x, float y, float damage, float radius,
+			double lifetime_seconds, float velocity_x, float velocity_y);
 	bool despawn(EntityId id);
 	void reset();
-	void advance(double delta_seconds);
+	std::vector<CombatEvent> advance(double delta_seconds);
 	void steer_enemies_towards(float target_x, float target_y, SteeringConfig config = {});
 	std::vector<EntityId> query_radius(float x, float y, float radius,
 			SpatialHashConfig config = {}) const;
@@ -87,14 +111,19 @@ private:
 	SpatialIndex build_spatial_index(SpatialHashConfig config) const;
 	std::vector<uint32_t> query_spatial_index(const SpatialIndex &index, float x, float y,
 			float radius, SpatialHashConfig config) const;
+	void apply_damage(EntityId source, EntityId target, float amount,
+			std::vector<CombatEvent> &events, std::vector<EntityId> &deferred_despawns);
 	std::vector<Slot> slots_;
 	std::vector<Transform2D> transforms_;
 	std::vector<Velocity2D> velocities_;
 	std::vector<Health> health_;
 	std::vector<EnemyType> enemy_types_;
+	std::vector<bool> projectile_flags_;
+	std::vector<ProjectileData> projectiles_;
 	std::vector<uint32_t> free_indices_;
 	std::size_t entity_count_ = 0;
 	double simulation_time_ = 0.0;
+	uint64_t next_event_sequence_ = 1;
 };
 
 } // namespace dopamine::sim

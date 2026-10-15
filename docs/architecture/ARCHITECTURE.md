@@ -59,6 +59,8 @@ Config Resolver ← JSON balance + Resources + Sandbox Overrides
 
 Pour le steering, l’index spatial est construit une fois par passe et réutilisé pour toutes les entités. La cible monde vient du mode appelant ; son point d’autorité joueur reste **OUVERT**.
 
+P2 implémente les projectiles ECS comme entités distinctes, leur durée de vie et un test balayé relatif au mouvement des cibles. Les impacts passent par `apply_damage`, émettent des événements séquencés et appliquent le despawn en fin de passe. Les rayons d’ennemi (12 unités) et le rayon projectile par défaut (3 unités) sont des paramètres provisoires faute de hitboxes validées.
+
 ## Delta variable : risques et invariants
 
 **ACCEPTÉ :** delta variable, non déterministe. **PROPOSÉ :** bornage par sous-étapes lorsque `dt` devient excessif. Ne jamais jeter silencieusement le temps excédentaire : conserver un accumulateur ou documenter le ralentissement. Les statuts exprimés en secondes doivent produire des résultats raisonnablement stables quel que soit le nombre de frames ; les collisions rapides utilisent des swept tests. `Step` dans le Sandbox signifie avancer une durée explicite, par exemple 1/60 s, sans imposer un tick fixe global.

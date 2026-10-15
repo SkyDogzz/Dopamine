@@ -1,8 +1,8 @@
 #include "dopamine/simulation/simulation_core.hpp"
 
+#include <algorithm>
 #include <cmath>
 #include <limits>
-#include <algorithm>
 #include <stdexcept>
 #include <utility>
 
@@ -25,6 +25,8 @@ EntityId SimulationCore::spawn(std::string type, float x, float y, float hp, flo
 		velocities_.emplace_back();
 		health_.emplace_back();
 		enemy_types_.emplace_back();
+		projectile_flags_.push_back(false);
+		projectiles_.emplace_back();
 	} else {
 		index = free_indices_.back();
 		free_indices_.pop_back();
@@ -37,7 +39,21 @@ EntityId SimulationCore::spawn(std::string type, float x, float y, float hp, flo
 	velocities_[index] = {velocity_x, velocity_y};
 	health_[index] = {hp, hp};
 	enemy_types_[index] = {std::move(type)};
+	projectile_flags_[index] = false;
+	projectiles_[index] = {};
 	++entity_count_;
+	return id;
+}
+
+EntityId SimulationCore::spawn_projectile(std::string type, float x, float y, float damage, float radius,
+		double lifetime_seconds, float velocity_x, float velocity_y) {
+	if (!std::isfinite(damage) || damage <= 0.0F || !std::isfinite(radius) || radius < 0.0F ||
+			!std::isfinite(lifetime_seconds) || lifetime_seconds <= 0.0) {
+		throw std::invalid_argument("invalid projectile");
+	}
+	const EntityId id = spawn(std::move(type), x, y, 1.0F, velocity_x, velocity_y);
+	projectile_flags_[id.index] = true;
+	projectiles_[id.index] = {damage, radius, lifetime_seconds};
 	return id;
 }
 
@@ -71,17 +87,97 @@ void SimulationCore::reset() {
 	simulation_time_ = 0.0;
 }
 
-void SimulationCore::advance(double delta_seconds) {
+	std::vector<CombatEvent> SimulationCore::advance(double delta_seconds) {
 	if (!std::isfinite(delta_seconds) || delta_seconds < 0.0) {
 		throw std::invalid_argument("simulation delta must be finite and non-negative");
 	}
+	bool has_active_projectile = false;
 	for (std::size_t index = 0; index < slots_.size(); ++index) {
-		if (slots_[index].active) {
+		has_active_projectile = has_active_projectile || (slots_[index].active && projectile_flags_[index]);
+	}
+	const std::vector<Transform2D> start_positions = has_active_projectile
+			? transforms_
+			: std::vector<Transform2D>{};
+	for (std::size_t index = 0; index < slots_.size(); ++index) {
+		if (slots_[index].active && !projectile_flags_[index]) {
 			transforms_[index].x += velocities_[index].x * static_cast<float>(delta_seconds);
 			transforms_[index].y += velocities_[index].y * static_cast<float>(delta_seconds);
 		}
 	}
+
+	std::vector<CombatEvent> events;
+	std::vector<EntityId> to_despawn;
+	if (has_active_projectile) {
+		float max_target_displacement = 0.0F;
+		for (uint32_t index = 0; index < slots_.size(); ++index) {
+			if (slots_[index].active && !projectile_flags_[index]) {
+				max_target_displacement = std::max(max_target_displacement,
+						static_cast<float>(std::hypot(transforms_[index].x - start_positions[index].x,
+								transforms_[index].y - start_positions[index].y)));
+			}
+		}
+		constexpr float enemy_collision_radius = 12.0F; // Provisional until hitboxes are specified.
+		const SpatialIndex spatial_index = build_spatial_index({});
+		for (uint32_t projectile_index = 0; projectile_index < slots_.size(); ++projectile_index) {
+			if (!slots_[projectile_index].active || !projectile_flags_[projectile_index]) {
+				continue;
+			}
+			ProjectileData &projectile = projectiles_[projectile_index];
+			const Transform2D projectile_start = start_positions[projectile_index];
+			const double travel_seconds = std::min(delta_seconds, projectile.remaining_seconds);
+			const Transform2D projectile_end = transforms_[projectile_index] = {
+				projectile_start.x + velocities_[projectile_index].x * static_cast<float>(travel_seconds),
+				projectile_start.y + velocities_[projectile_index].y * static_cast<float>(travel_seconds),
+			};
+			const float segment_x = projectile_end.x - projectile_start.x;
+			const float segment_y = projectile_end.y - projectile_start.y;
+			const float half_segment_length = std::hypot(segment_x, segment_y) * 0.5F;
+			const float broadphase_radius = half_segment_length + max_target_displacement + projectile.radius + enemy_collision_radius;
+			const float midpoint_x = (projectile_start.x + projectile_end.x) * 0.5F;
+			const float midpoint_y = (projectile_start.y + projectile_end.y) * 0.5F;
+			const auto candidates = query_spatial_index(spatial_index, midpoint_x, midpoint_y,
+					broadphase_radius, {});
+			bool hit = false;
+			for (uint32_t target_index : candidates) {
+				if (target_index == projectile_index || projectile_flags_[target_index] ||
+						health_[target_index].current <= 0.0F) {
+					continue;
+				}
+				const double relative_start_x = static_cast<double>(projectile_start.x) - start_positions[target_index].x;
+				const double relative_start_y = static_cast<double>(projectile_start.y) - start_positions[target_index].y;
+				const double relative_end_x = static_cast<double>(projectile_end.x) - transforms_[target_index].x;
+				const double relative_end_y = static_cast<double>(projectile_end.y) - transforms_[target_index].y;
+				const double relative_delta_x = relative_end_x - relative_start_x;
+				const double relative_delta_y = relative_end_y - relative_start_y;
+				const double segment_length_squared = relative_delta_x * relative_delta_x + relative_delta_y * relative_delta_y;
+				const double closest_t = segment_length_squared > 0.0
+						? std::clamp(-(relative_start_x * relative_delta_x + relative_start_y * relative_delta_y) /
+								segment_length_squared, 0.0, 1.0)
+						: 0.0;
+				const double closest_x = relative_start_x + relative_delta_x * closest_t;
+				const double closest_y = relative_start_y + relative_delta_y * closest_t;
+				const double combined_radius = projectile.radius + enemy_collision_radius;
+				if (closest_x * closest_x + closest_y * closest_y > combined_radius * combined_radius) {
+					continue;
+				}
+
+				const EntityId projectile_id{projectile_index, slots_[projectile_index].generation};
+				const EntityId target_id{target_index, slots_[target_index].generation};
+				apply_damage(projectile_id, target_id, projectile.damage, events, to_despawn);
+				hit = true;
+				break;
+			}
+			projectile.remaining_seconds -= delta_seconds;
+			if (hit || projectile.remaining_seconds <= 0.0) {
+				to_despawn.push_back({projectile_index, slots_[projectile_index].generation});
+			}
+		}
+	}
+	for (EntityId id : to_despawn) {
+		despawn(id);
+	}
 	simulation_time_ += delta_seconds;
+	return events;
 }
 
 void SimulationCore::steer_enemies_towards(float target_x, float target_y, SteeringConfig config) {
@@ -98,7 +194,7 @@ void SimulationCore::steer_enemies_towards(float target_x, float target_y, Steer
 			? build_spatial_index(config.spatial_hash)
 			: SpatialIndex{};
 	for (uint32_t index = 0; index < slots_.size(); ++index) {
-		if (!slots_[index].active) {
+		if (!slots_[index].active || projectile_flags_[index]) {
 			continue;
 		}
 		const Transform2D &position = transforms_[index];
@@ -179,7 +275,7 @@ SimulationCore::SpatialIndex SimulationCore::build_spatial_index(SpatialHashConf
 	SpatialIndex index;
 	index.reserve(entity_count_);
 	for (uint32_t slot_index = 0; slot_index < slots_.size(); ++slot_index) {
-		if (!slots_[slot_index].active) {
+		if (!slots_[slot_index].active || projectile_flags_[slot_index]) {
 			continue;
 		}
 		const Transform2D &position = transforms_[slot_index];
@@ -197,13 +293,13 @@ std::vector<uint32_t> SimulationCore::query_spatial_index(const SpatialIndex &in
 	const int64_t max_y = cell_coordinate(y + radius, config.cell_size);
 	const double radius_squared = static_cast<double>(radius) * radius;
 	std::vector<uint32_t> result;
-	for (int64_t cell_x = min_x; cell_x <= max_x; ++cell_x) {
-		for (int64_t cell_y = min_y; cell_y <= max_y; ++cell_y) {
-			const auto found = index.find({cell_x, cell_y});
-			if (found == index.end()) {
-				continue;
-			}
-			for (uint32_t slot_index : found->second) {
+	const long double queried_cells =
+			(static_cast<long double>(max_x) - min_x + 1.0L) *
+			(static_cast<long double>(max_y) - min_y + 1.0L);
+	if (queried_cells > static_cast<long double>(index.size()) * 4.0L) {
+		for (const auto &[cell, entities] : index) {
+			(void)cell;
+			for (uint32_t slot_index : entities) {
 				const double dx = static_cast<double>(transforms_[slot_index].x) - x;
 				const double dy = static_cast<double>(transforms_[slot_index].y) - y;
 				if (dx * dx + dy * dy <= radius_squared) {
@@ -211,9 +307,41 @@ std::vector<uint32_t> SimulationCore::query_spatial_index(const SpatialIndex &in
 				}
 			}
 		}
+	} else {
+		for (int64_t cell_x = min_x; cell_x <= max_x; ++cell_x) {
+			for (int64_t cell_y = min_y; cell_y <= max_y; ++cell_y) {
+				const auto found = index.find({cell_x, cell_y});
+				if (found == index.end()) {
+					continue;
+				}
+				for (uint32_t slot_index : found->second) {
+					const double dx = static_cast<double>(transforms_[slot_index].x) - x;
+					const double dy = static_cast<double>(transforms_[slot_index].y) - y;
+					if (dx * dx + dy * dy <= radius_squared) {
+						result.push_back(slot_index);
+					}
+				}
+			}
+		}
 	}
 	std::sort(result.begin(), result.end());
 	return result;
+}
+
+void SimulationCore::apply_damage(EntityId source, EntityId target, float amount,
+		std::vector<CombatEvent> &events, std::vector<EntityId> &deferred_despawns) {
+	if (target.index >= slots_.size() || !slots_[target.index].active ||
+			slots_[target.index].generation != target.generation || !std::isfinite(amount) || amount <= 0.0F) {
+		return;
+	}
+	Health &target_health = health_[target.index];
+	target_health.current = std::max(0.0F, target_health.current - amount);
+	events.push_back({next_event_sequence_++, CombatEventType::Damage, source, target,
+			amount, target_health.current});
+	if (target_health.current <= 0.0F) {
+		events.push_back({next_event_sequence_++, CombatEventType::Death, source, target, 0.0F, 0.0F});
+		deferred_despawns.push_back(target);
+	}
 }
 
 std::optional<Entity> SimulationCore::entity(EntityId id) const {
@@ -225,7 +353,8 @@ std::optional<Entity> SimulationCore::entity(EntityId id) const {
 		return std::nullopt;
 	}
 	const size_t index = static_cast<size_t>(id.index);
-	return Entity{id, transforms_[index], velocities_[index], health_[index], enemy_types_[index]};
+	return Entity{id, transforms_[index], velocities_[index], health_[index], enemy_types_[index],
+			projectile_flags_[index], projectiles_[index]};
 }
 
 std::vector<Entity> SimulationCore::snapshot() const {
@@ -234,7 +363,8 @@ std::vector<Entity> SimulationCore::snapshot() const {
 	for (uint32_t index = 0; index < slots_.size(); ++index) {
 		if (slots_[index].active) {
 			const EntityId id{index, slots_[index].generation};
-			result.push_back({id, transforms_[index], velocities_[index], health_[index], enemy_types_[index]});
+			result.push_back({id, transforms_[index], velocities_[index], health_[index], enemy_types_[index],
+					projectile_flags_[index], projectiles_[index]});
 		}
 	}
 	return result;

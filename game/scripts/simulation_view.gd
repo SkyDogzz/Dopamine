@@ -47,6 +47,9 @@ func _draw() -> void:
 		var point := center + Vector2(transform["x"], transform["y"])
 		if point.x < -12 or point.y < -12 or point.x > size.x + 12 or point.y > size.y + 12:
 			continue
+		if components.get("IsProjectile", false):
+			draw_rect(Rect2(point - Vector2(3, 3), Vector2(6, 6)), COLOR_AMBER)
+			continue
 		var color := _entity_color(String(components["EnemyType"]))
 		draw_circle(point, 6.0, color.darkened(0.55))
 		draw_circle(point, 3.0, color)

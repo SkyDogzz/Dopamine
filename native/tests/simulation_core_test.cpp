@@ -51,6 +51,8 @@ int main() {
 	const auto after_despawn = spatial.query_radius(0.0F, 0.0F, 5.0F, {.cell_size = 4.0F});
 	require(after_despawn.size() == 1 && after_despawn.front() == near,
 			"spatial query should not return despawned entities");
+	require(spatial.query_radius(0.0F, 0.0F, 10000.0F, {.cell_size = 4.0F}).size() == 2,
+			"wide spatial queries should scan occupied cells without iterating the empty grid");
 	bool rejected_query = false;
 	try {
 		spatial.query_radius(0.0F, 0.0F, -1.0F);
@@ -89,6 +91,28 @@ int main() {
 	require(coincident.entity(coincident_first)->velocity.x < 0.0F &&
 			coincident.entity(coincident_second)->velocity.x > 0.0F,
 			"coincident entities should separate deterministically without random state");
+
+	SimulationCore combat;
+	const auto target = combat.spawn("chaser", 50.0F, -100.0F, 10.0F, 0.0F, 1000.0F);
+	const auto projectile = combat.spawn_projectile("test_projectile", 0.0F, 0.0F, 12.0F, 2.0F, 1.0, 500.0F, 0.0F);
+	const auto combat_events = combat.advance(0.2);
+	require(combat_events.size() == 2, "swept projectile hit should emit damage and death events");
+	require(combat_events[0].type == dopamine::sim::CombatEventType::Damage &&
+			combat_events[0].target == target && combat_events[0].source == projectile,
+			"damage event should identify projectile and target");
+	require(combat_events[1].type == dopamine::sim::CombatEventType::Death &&
+			combat_events[1].sequence > combat_events[0].sequence,
+			"lethal damage should emit a following death event");
+	require(!combat.entity(target).has_value() && !combat.entity(projectile).has_value(),
+			"lethal hit should remove the enemy and consumed projectile");
+	require(std::abs(combat.simulation_time() - 0.2) < 0.001,
+			"combat step should retain its explicit duration");
+
+	SimulationCore expiring_projectile;
+	const auto expires = expiring_projectile.spawn_projectile("test_projectile", 0.0F, 0.0F,
+			1.0F, 1.0F, 0.1, 10.0F, 0.0F);
+	require(expiring_projectile.advance(0.2).empty(), "expired projectile without a target should emit no combat event");
+	require(!expiring_projectile.entity(expires).has_value(), "projectile should despawn when its lifetime expires");
 
 	bool rejected_negative_delta = false;
 	try {

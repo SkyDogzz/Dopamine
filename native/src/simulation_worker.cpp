@@ -1,5 +1,6 @@
 #include "dopamine/simulation/simulation_worker.hpp"
 
+#include <algorithm>
 #include <cmath>
 #include <utility>
 
@@ -98,10 +99,16 @@ void SimulationWorker::run(std::stop_token stop_token) {
 		last_update = now;
 		double frame_time_ms = elapsed * 1000.0;
 		if (!paused_ && elapsed > 0.0) {
-			if (has_steering_target_) {
-				simulation_.steer_enemies_towards(steering_target_x_, steering_target_y_, steering_config_);
+			if (has_event_capacity()) {
+				if (has_steering_target_) {
+					simulation_.steer_enemies_towards(steering_target_x_, steering_target_y_, steering_config_);
+				}
+				const double delta = deferred_elapsed_ + elapsed * speed_multiplier_;
+				deferred_elapsed_ = 0.0;
+				append_events(simulation_.advance(delta));
+			} else {
+				deferred_elapsed_ += elapsed * speed_multiplier_;
 			}
-			simulation_.advance(elapsed * speed_multiplier_);
 		} else if (paused_) {
 			frame_time_ms = 0.0;
 		}
@@ -155,10 +162,14 @@ void SimulationWorker::apply(const SimulationCommand &command) {
 				break;
 			}
 			try {
+				if (!has_event_capacity()) {
+					log("step rejected: acknowledge pending combat events first");
+					break;
+				}
 				if (has_steering_target_) {
 					simulation_.steer_enemies_towards(steering_target_x_, steering_target_y_, steering_config_);
 				}
-				simulation_.advance(command.delta_seconds * speed_multiplier_);
+				append_events(simulation_.advance(command.delta_seconds * speed_multiplier_));
 				log("stepped " + std::to_string(command.delta_seconds) + " seconds");
 			} catch (const std::exception &error) {
 				log(std::string("step rejected: ") + error.what());
@@ -190,11 +201,35 @@ void SimulationWorker::apply(const SimulationCommand &command) {
 			steering_config_ = command.steering;
 			log("steering target updated");
 			break;
+		case CommandType::SpawnProjectile:
+			if (simulation_.entity_count() >= max_entities_) {
+				log("projectile rejected: entity count outside limits");
+				break;
+			}
+			try {
+				simulation_.spawn_projectile(command.entity_type, command.x, command.y, command.projectile_damage,
+						command.projectile_radius, command.projectile_lifetime, command.velocity_x, command.velocity_y);
+				log("spawned projectile " + command.entity_type);
+			} catch (const std::exception &error) {
+				log(std::string("projectile rejected: ") + error.what());
+			}
+			break;
+		case CommandType::AcknowledgeEvents:
+			if (command.event_sequence <= last_event_sequence_) {
+				const auto first_pending = std::find_if(pending_events_.begin(), pending_events_.end(),
+						[&command](const CombatEvent &event) { return event.sequence > command.event_sequence; });
+				pending_events_.erase(pending_events_.begin(), first_pending);
+			} else {
+				log("event acknowledgement ignored: sequence is ahead of the event stream");
+			}
+			break;
 		case CommandType::Reset:
 			simulation_.reset();
 			paused_ = true;
 			speed_multiplier_ = 1.0;
 			has_steering_target_ = false;
+			collision_count_ = 0;
+			deferred_elapsed_ = 0.0;
 			log("simulation reset");
 			break;
 	}
@@ -212,9 +247,30 @@ void SimulationWorker::publish(double frame_time_ms) {
 	next->last_sequence = pending_sequence_;
 	next->rejected_commands = rejected_commands_.load();
 	next->entities = simulation_.snapshot();
+	next->events = pending_events_;
+	next->collision_count = collision_count_;
+	for (const Entity &entity : next->entities) {
+		if (entity.is_projectile) {
+			++next->projectile_count;
+		}
+	}
 	next->logs = logs_;
 	published_.store(std::move(next));
 	applied_cv_.notify_all();
+}
+
+void SimulationWorker::append_events(std::vector<CombatEvent> events) {
+	for (const CombatEvent &event : events) {
+		last_event_sequence_ = event.sequence;
+		if (event.type == CombatEventType::Damage) {
+			++collision_count_;
+		}
+		pending_events_.push_back(event);
+	}
+}
+
+bool SimulationWorker::has_event_capacity() const {
+	return pending_events_.size() <= max_pending_events_ - max_events_per_advance_;
 }
 
 void SimulationWorker::log(std::string message) {

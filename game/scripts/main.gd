@@ -13,6 +13,7 @@ var simulation: Object
 var _refresh_elapsed := 0.0
 var _selected_index := -1
 var _selected_generation := -1
+var _last_combat_event_sequence := 0
 
 @onready var _view = $Shell/Content/MainColumn/SimulationView
 @onready var _state_label: Label = $Shell/Header/StateLabel
@@ -116,7 +117,21 @@ func _refresh() -> void:
 	$Shell/Content/MainColumn/Metrics/MetricRow/MetricEntities.text = "ENTITIES  %d" % metrics["entity_count"]
 	$Shell/Content/MainColumn/Metrics/MetricRow/MetricProjectiles.text = "PROJECTILES  %d" % metrics["projectile_count"]
 	$Shell/Content/MainColumn/Metrics/MetricRow/MetricCollisions.text = "COLLISIONS  %d" % metrics["collision_count"]
-	_log_text.text = "\n".join(state["logs"])
+	var visible_logs: Array = Array(state["logs"])
+	var latest_event_sequence := _last_combat_event_sequence
+	for event in state["events"]:
+		var event_sequence: int = event["sequence"]
+		if event_sequence <= _last_combat_event_sequence:
+			continue
+		latest_event_sequence = event_sequence
+		if event["type"] == "damage":
+			visible_logs.append("DAMAGE  %d → %d  %.1f HP left" % [event["source"]["index"], event["target"]["index"], event["remaining_health"]])
+		else:
+			visible_logs.append("DEATH  entity %d" % event["target"]["index"])
+	if latest_event_sequence > _last_combat_event_sequence:
+		_last_combat_event_sequence = latest_event_sequence
+		simulation.acknowledge_events(latest_event_sequence)
+	_log_text.text = "\n".join(visible_logs)
 	_refresh_inspector(state["entities"])
 
 func _select_speed(speed: float) -> void:

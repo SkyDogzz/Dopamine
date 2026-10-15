@@ -115,6 +115,33 @@ int main() {
 	require(after_reset->paused, "reset should leave simulation paused");
 	require(after_reset->speed_multiplier == 1.0, "reset should restore normal speed");
 
+	spawn.x = 100.0F;
+	spawn.y = 0.0F;
+	spawn.velocity_x = 0.0F;
+	spawn.count = 1;
+	submit_and_wait(worker, spawn);
+	SimulationCommand projectile;
+	projectile.type = CommandType::SpawnProjectile;
+	projectile.entity_type = "test_projectile";
+	projectile.x = 0.0F;
+	projectile.y = 0.0F;
+	projectile.velocity_x = 1000.0F;
+	projectile.projectile_damage = 12.0F;
+	projectile.projectile_radius = 2.0F;
+	projectile.projectile_lifetime = 1.0;
+	submit_and_wait(worker, projectile);
+	step.delta_seconds = 0.2;
+	submit_and_wait(worker, step);
+	const auto with_events = worker.snapshot();
+	require(with_events->events.size() == 2, "worker snapshot should retain damage and death events");
+	require(with_events->collision_count == 1, "worker should count projectile impacts");
+	require(with_events->projectile_count == 0, "consumed projectile should be absent from the snapshot");
+	SimulationCommand acknowledge;
+	acknowledge.type = CommandType::AcknowledgeEvents;
+	acknowledge.event_sequence = with_events->events.back().sequence;
+	submit_and_wait(worker, acknowledge);
+	require(worker.snapshot()->events.empty(), "acknowledged combat events should leave the pending queue");
+
 	worker.stop();
 	worker.stop();
 	require(!worker.is_running(), "stop should be safe and leave no worker thread");

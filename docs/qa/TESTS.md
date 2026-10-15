@@ -6,9 +6,10 @@
 - [x] P1 ciblé : handles index/génération, snapshots immuables, spawn/despawn, kill all, step, pause/reprise, reset et arrêt du worker.
 - [x] P1 intégration : GDScript charge `CombatSimulation`, soumet un spawn et reçoit le snapshot acquitté sous Godot headless.
 - [x] P1 UI : scène Sandbox sans save, inspection par sélection, despawn ciblé et kill all vérifiés sous Godot headless ; rendu revu à 1280×800.
-- [x] P1 scénario : runner JSON vérifie les attentes et exporte métriques, entités et logs ; scénario inclus dans CTest quand Godot est détecté.
+- [x] P1 scénario : runner JSON vérifie les attentes et exporte métriques, entités, événements et logs ; scénario inclus dans CTest quand Godot est détecté.
 - [x] P2 ciblé : requêtes de rayon du spatial hash aux coordonnées négatives, bord de rayon et cellules ; les entités détruites sont exclues.
 - [x] P2 ciblé : poursuite d’une cible explicite et séparation locale, y compris deux entités superposées ; scénario Godot headless vérifie les positions obtenues.
+- [x] P2 ciblé : projectile rapide contre cible en mouvement, dégâts et mort séquencés, expiration, file d’événements acquittable et affichage Sandbox.
 - [ ] Godot 4.7.2 charge la GDExtension sur Windows et Linux.
 - [ ] Le projet C++23 compile avec versions verrouillées.
 - [ ] Aucune API Godot non thread-safe n'est appelée depuis le worker.
@@ -19,7 +20,7 @@
 - [ ] ID index+génération rejette les handles obsolètes.
 - [ ] Spawn/despawn via command buffer ne casse aucun itérateur.
 - [ ] Spatial hash trouve les collisions attendues aux frontières des cellules.
-- [ ] Swept collision détecte les projectiles rapides.
+- [x] Swept collision détecte les projectiles rapides contre une cible en mouvement.
 - [ ] Deltas 1/120, 1/60, 1/30 et pics 100 ms ne causent pas de NaN ni de téléportation non maîtrisée.
 - [ ] Timers de statuts exprimés en secondes, indépendants du nombre de frames.
 - [ ] Les chaînes d'effets respectent le budget sans perdre silencieusement les événements critiques.

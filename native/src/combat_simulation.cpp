@@ -14,6 +14,8 @@ using dopamine::sim::SimulationCommand;
 void CombatSimulation::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("spawn", "entity_type", "count", "position", "hp", "velocity"),
 			&CombatSimulation::spawn);
+	ClassDB::bind_method(D_METHOD("spawn_projectile", "projectile_type", "position", "velocity", "damage", "radius", "lifetime_seconds"),
+			&CombatSimulation::spawn_projectile);
 	ClassDB::bind_method(D_METHOD("despawn", "index", "generation"), &CombatSimulation::despawn);
 	ClassDB::bind_method(D_METHOD("kill_all"), &CombatSimulation::kill_all);
 	ClassDB::bind_method(D_METHOD("pause"), &CombatSimulation::pause);
@@ -22,6 +24,7 @@ void CombatSimulation::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("set_speed", "multiplier"), &CombatSimulation::set_speed);
 	ClassDB::bind_method(D_METHOD("set_steering_target", "position", "max_speed", "separation_radius", "separation_weight"),
 			&CombatSimulation::set_steering_target);
+	ClassDB::bind_method(D_METHOD("acknowledge_events", "event_sequence"), &CombatSimulation::acknowledge_events);
 	ClassDB::bind_method(D_METHOD("reset"), &CombatSimulation::reset);
 	ClassDB::bind_method(D_METHOD("snapshot"), &CombatSimulation::snapshot);
 }
@@ -45,6 +48,26 @@ int64_t CombatSimulation::spawn(String entity_type, int64_t count, Vector2 posit
 	command.hp = hp;
 	command.velocity_x = static_cast<float>(velocity.x);
 	command.velocity_y = static_cast<float>(velocity.y);
+	return submit(std::move(command));
+}
+
+int64_t CombatSimulation::spawn_projectile(String projectile_type, Vector2 position, Vector2 velocity,
+		float damage, float radius, double lifetime_seconds) {
+	if (projectile_type.is_empty() || !std::isfinite(position.x) || !std::isfinite(position.y) ||
+			!std::isfinite(velocity.x) || !std::isfinite(velocity.y) || !std::isfinite(damage) || damage <= 0.0F ||
+			!std::isfinite(radius) || radius < 0.0F || !std::isfinite(lifetime_seconds) || lifetime_seconds <= 0.0) {
+		return 0;
+	}
+	SimulationCommand command;
+	command.type = CommandType::SpawnProjectile;
+	command.entity_type = projectile_type.utf8().get_data();
+	command.x = static_cast<float>(position.x);
+	command.y = static_cast<float>(position.y);
+	command.velocity_x = static_cast<float>(velocity.x);
+	command.velocity_y = static_cast<float>(velocity.y);
+	command.projectile_damage = damage;
+	command.projectile_radius = radius;
+	command.projectile_lifetime = lifetime_seconds;
 	return submit(std::move(command));
 }
 
@@ -114,6 +137,16 @@ int64_t CombatSimulation::set_steering_target(Vector2 position, float max_speed,
 	return submit(std::move(command));
 }
 
+int64_t CombatSimulation::acknowledge_events(int64_t event_sequence) {
+	if (event_sequence < 0) {
+		return 0;
+	}
+	SimulationCommand command;
+	command.type = CommandType::AcknowledgeEvents;
+	command.event_sequence = static_cast<uint64_t>(event_sequence);
+	return submit(std::move(command));
+}
+
 int64_t CombatSimulation::reset() {
 	SimulationCommand command;
 	command.type = CommandType::Reset;
@@ -157,6 +190,14 @@ Dictionary CombatSimulation::snapshot() const {
 		components["Velocity2D"] = velocity;
 		components["Health"] = health;
 		components["EnemyType"] = String(entity.type.id.c_str());
+		components["IsProjectile"] = entity.is_projectile;
+		if (entity.is_projectile) {
+			Dictionary projectile;
+			projectile["damage"] = entity.projectile.damage;
+			projectile["radius"] = entity.projectile.radius;
+			projectile["remaining_seconds"] = entity.projectile.remaining_seconds;
+			components["Projectile"] = projectile;
+		}
 
 		Dictionary entry;
 		entry["id"] = id;
@@ -164,6 +205,24 @@ Dictionary CombatSimulation::snapshot() const {
 		entities.push_back(entry);
 	}
 	result["entities"] = entities;
+	Array events;
+	for (const dopamine::sim::CombatEvent &event : state->events) {
+		Dictionary source;
+		source["index"] = static_cast<int64_t>(event.source.index);
+		source["generation"] = static_cast<int64_t>(event.source.generation);
+		Dictionary target;
+		target["index"] = static_cast<int64_t>(event.target.index);
+		target["generation"] = static_cast<int64_t>(event.target.generation);
+		Dictionary entry;
+		entry["sequence"] = static_cast<int64_t>(event.sequence);
+		entry["type"] = event.type == dopamine::sim::CombatEventType::Damage ? "damage" : "death";
+		entry["source"] = source;
+		entry["target"] = target;
+		entry["amount"] = event.amount;
+		entry["remaining_health"] = event.remaining_health;
+		events.push_back(entry);
+	}
+	result["events"] = events;
 
 	PackedStringArray logs;
 	for (const std::string &message : state->logs) {

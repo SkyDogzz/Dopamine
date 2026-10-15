@@ -52,6 +52,7 @@ func _run() -> void:
 		"simulation_time": state["simulation_time"],
 		"metrics": state["metrics"],
 		"entities": state["entities"],
+		"combat_events": state["events"],
 		"logs": Array(state["logs"]),
 	}
 	var output_directory := ProjectSettings.globalize_path(output_path.get_base_dir())
@@ -106,6 +107,17 @@ func _validate_scenario(scenario: Variant) -> String:
 					return "Command %d position and velocity must be finite 2-number arrays" % index
 				if not _valid_number(command.get("hp", 1)) or float(command.get("hp", 1)) <= 0.0:
 					return "Command %d hp must be a positive finite number" % index
+			"spawn_projectile":
+				if typeof(command.get("projectile_type")) != TYPE_STRING or String(command["projectile_type"]).is_empty():
+					return "Command %d requires projectile_type" % index
+				if not _valid_vector(command.get("position")) or not _valid_vector(command.get("velocity")):
+					return "Command %d projectile position and velocity must be finite 2-number arrays" % index
+				if not _valid_number(command.get("damage")) or float(command["damage"]) <= 0.0:
+					return "Command %d projectile damage must be positive and finite" % index
+				if not _valid_number(command.get("radius", 3)) or float(command.get("radius", 3)) < 0.0:
+					return "Command %d projectile radius must be non-negative and finite" % index
+				if not _valid_number(command.get("lifetime_seconds", 5)) or float(command.get("lifetime_seconds", 5)) <= 0.0:
+					return "Command %d projectile lifetime must be positive and finite" % index
 			"despawn":
 				if not _valid_id(command.get("index")) or not _valid_id(command.get("generation")) or int(command["generation"]) == 0:
 					return "Command %d requires a valid entity index and generation" % index
@@ -152,6 +164,23 @@ func _check_expected(expected: Dictionary, state: Dictionary) -> String:
 			var transform: Dictionary = state["entities"][index]["components"]["Transform2D"]
 			if not is_equal_approx(float(position[0]), float(transform["x"])) or not is_equal_approx(float(position[1]), float(transform["y"])):
 				return "Scenario entity position %d did not match expected value" % index
+	if expected.has("collision_count"):
+		if not _valid_integer(expected["collision_count"]) or int(expected["collision_count"]) != state["metrics"]["collision_count"]:
+			return "Scenario collision_count did not match expected value"
+	if expected.has("projectile_count"):
+		if not _valid_integer(expected["projectile_count"]) or int(expected["projectile_count"]) != state["metrics"]["projectile_count"]:
+			return "Scenario projectile_count did not match expected value"
+	for event_type in ["damage", "death"]:
+		var expected_key := "%s_events" % event_type
+		if expected.has(expected_key):
+			if not _valid_integer(expected[expected_key]) or int(expected[expected_key]) < 0:
+				return "Scenario %s must be a non-negative integer" % expected_key
+			var count := 0
+			for event in state["events"]:
+				if event["type"] == event_type:
+					count += 1
+			if count != int(expected[expected_key]):
+				return "Scenario %s did not match expected value" % expected_key
 	return ""
 
 func _valid_number(value: Variant) -> bool:
@@ -175,6 +204,17 @@ func _submit(simulation: Object, command: Dictionary) -> int:
 				command["entity_type"], int(command.get("count", 1)),
 				Vector2(float(position[0]), float(position[1])), float(command.get("hp", 1)),
 				Vector2(float(velocity[0]), float(velocity[1]))
+			)
+		"spawn_projectile":
+			var position: Array = command["position"]
+			var velocity: Array = command["velocity"]
+			return simulation.spawn_projectile(
+				command["projectile_type"],
+				Vector2(float(position[0]), float(position[1])),
+				Vector2(float(velocity[0]), float(velocity[1])),
+				float(command["damage"]),
+				float(command.get("radius", 3)),
+				float(command.get("lifetime_seconds", 5))
 			)
 		"despawn":
 			return simulation.despawn(int(command["index"]), int(command["generation"]))

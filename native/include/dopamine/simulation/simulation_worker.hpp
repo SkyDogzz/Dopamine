@@ -24,6 +24,8 @@ enum class CommandType {
 	Step,
 	SetSpeed,
 	SetSteeringTarget,
+	SpawnProjectile,
+	AcknowledgeEvents,
 	Reset,
 };
 
@@ -40,6 +42,10 @@ struct SimulationCommand {
 	float velocity_y = 0.0F;
 	double delta_seconds = 0.0;
 	double speed_multiplier = 1.0;
+	float projectile_damage = 1.0F;
+	float projectile_radius = 3.0F;
+	double projectile_lifetime = 5.0;
+	uint64_t event_sequence = 0;
 	SteeringConfig steering;
 };
 
@@ -53,6 +59,7 @@ struct SimulationSnapshot {
 	uint64_t collision_count = 0;
 	uint64_t projectile_count = 0;
 	std::vector<Entity> entities;
+	std::vector<CombatEvent> events;
 	std::vector<std::string> logs;
 };
 
@@ -75,9 +82,13 @@ private:
 	void apply(const SimulationCommand &command);
 	void publish(double frame_time_ms);
 	void log(std::string message);
+	void append_events(std::vector<CombatEvent> events);
+	bool has_event_capacity() const;
 
 	static constexpr std::size_t max_queued_commands_ = 2048;
 	static constexpr std::size_t max_entities_ = 2000;
+	static constexpr std::size_t max_pending_events_ = 8192;
+	static constexpr std::size_t max_events_per_advance_ = 4000;
 
 	mutable std::mutex lifecycle_mutex_;
 	std::jthread thread_;
@@ -101,6 +112,10 @@ private:
 	float steering_target_x_ = 0.0F;
 	float steering_target_y_ = 0.0F;
 	SteeringConfig steering_config_;
+	std::vector<CombatEvent> pending_events_;
+	uint64_t last_event_sequence_ = 0;
+	uint64_t collision_count_ = 0;
+	double deferred_elapsed_ = 0.0;
 	std::vector<std::string> logs_;
 };
 
