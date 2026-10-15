@@ -150,5 +150,7 @@ user://sandbox/logs/<id>.jsonl
 
 - Écriture de save : fichier temporaire → validation → backup → remplacement atomique lorsque supporté.
 - Migrations versionnées automatiques et checksum ; restauration du backup si corruption.
+- `SaveService` est instancié explicitement par le code de progression, jamais chargé comme autoload : `save_slot(id, payload)` et `load_slot(id)` utilisent un identifiant de slot borné, un JSON version 1 et un checksum SHA-256. Le payload reste validé par son propriétaire de mode. La fixture v0 du service (dictionnaire JSON brut sans enveloppe) migre en version 1 au chargement ; aucun ancien schéma de save de production n’est défini par cette fixture. Un slot courant invalide déclenche la lecture du `.bak`. Le service n’est pas référencé par la scène Sandbox.
+- Le remplacement écrit et relit d’abord `.tmp`, copie le slot courant valide en `.bak`, puis renomme le temporaire (remplacement direct lorsque le système le permet). Le test ciblé couvre checksum invalide, JSON corrompu, backup et migration.
 - Snapshot : capture sur état quiescent avec version de format, ECS, générations, clocks, RNG, files en attente, build, config, gameplay Godot.
 - Preset partageable : JSON canonique, compression, code versionné, checksum, validation des tailles et limites ; jamais de code arbitraire.

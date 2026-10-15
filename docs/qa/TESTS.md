@@ -84,7 +84,7 @@
 - [ ] Une récompense d'équipement permanent par run Survival, y compris défaite.
 - [ ] Achievement tiers débloqué une seule fois ; bonus cumulés.
 - [ ] Armorless : 3 équipements proposés après chaque vague, 1 choisi ; Flux temporaire.
-- [ ] Save JSON atomique, backup et migrations sur fixtures anciennes.
+- [x] `SaveService` : slot JSON versionné, checksum SHA-256, remplacement via temporaire, backup relu après altération/corruption et migration de la fixture v0 dictionnaire brut ; vérifié par `save_service_smoke`. Cette fixture ne définit pas un ancien schéma de production. Le service n’est pas chargé par le Sandbox.
 - [ ] Le mode Endless standard reste à finaliser avant ses tests de validation.
 
 ## Runner headless (CLI P1 implémentée)
