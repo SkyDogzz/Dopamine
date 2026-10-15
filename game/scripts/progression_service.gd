@@ -16,8 +16,8 @@ const PROPOSED_DISMANTLE_REWARDS := {
 	"mythic": {"powder_pure": 1},
 }
 const PROTOTYPE_SKILL_NODES := {
-	"vitality_starter": {"essence_cost": 50, "max_hp_pct": 0.05, "prerequisites": [], "status": "PROPOSED", "depth": 3},
-	"focused_training": {"essence_cost": 80, "damage_pct": 0.03, "prerequisites": ["vitality_starter"], "status": "PROPOSED", "depth": 6},
+	"vitality_starter": {"category": "core_stats", "depth": 3, "max_hp_pct": 0.05, "prerequisites": [], "status": "PROPOSED"},
+	"focused_training": {"category": "core_stats", "depth": 6, "damage_pct": 0.03, "prerequisites": ["vitality_starter"], "status": "PROPOSED"},
 }
 const PROPOSED_EXTERMINATOR_THRESHOLDS := [100, 1000, 10000, 100000]
 const PROPOSED_EXTERMINATOR_DAMAGE_BONUSES := [0.0005, 0.001, 0.0015, 0.002]
@@ -253,7 +253,7 @@ func unlock_skill_node(node_id: String) -> Dictionary:
 	for prerequisite in PROTOTYPE_SKILL_NODES[node_id]["prerequisites"]:
 		if prerequisite not in profile["unlocked_skill_nodes"]:
 			return {"ok": false, "error": "skill_prerequisite_locked"}
-	var cost := int(PROTOTYPE_SKILL_NODES[node_id]["essence_cost"])
+	var cost := skill_node_cost(node_id)
 	if int(profile["resources"]["essence"]) < cost:
 		return {"ok": false, "error": "insufficient_essence"}
 	profile["resources"]["essence"] -= cost
@@ -262,6 +262,13 @@ func unlock_skill_node(node_id: String) -> Dictionary:
 		return {"ok": false, "error": "save_failed"}
 	return {"ok": true, "profile": profile.duplicate(true)}
 
+func skill_node_cost(node_id: String) -> int:
+	if not PROTOTYPE_SKILL_NODES.has(node_id):
+		return 0
+	var node: Dictionary = PROTOTYPE_SKILL_NODES[node_id]
+	var unlock_surcharge := 80 if node["category"] in ["weapon_unlocks", "relic_unlocks"] else 0
+	return 20 + 10 * int(node["depth"]) + unlock_surcharge
+
 func respec_skill_tree() -> Dictionary:
 	var result := load_profile()
 	if not result.get("ok", false):
@@ -269,7 +276,7 @@ func respec_skill_tree() -> Dictionary:
 	var profile: Dictionary = result["profile"]
 	for node_id in profile["unlocked_skill_nodes"]:
 		if PROTOTYPE_SKILL_NODES.has(node_id):
-			profile["resources"]["essence"] += int(PROTOTYPE_SKILL_NODES[node_id]["essence_cost"])
+			profile["resources"]["essence"] += skill_node_cost(node_id)
 	profile["unlocked_skill_nodes"] = []
 	if not _save_service.save_slot(_slot_id, profile):
 		return {"ok": false, "error": "save_failed"}

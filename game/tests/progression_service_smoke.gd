@@ -129,7 +129,8 @@ func _run() -> void:
 		return
 	var unlocked: Dictionary = service.unlock_skill_node("vitality_starter")
 	var focused: Dictionary = service.unlock_skill_node("focused_training")
-	if not unlocked.get("ok", false) or not focused.get("ok", false) or \
+	if service.skill_node_cost("vitality_starter") != 50 or service.skill_node_cost("focused_training") != 80 or \
+			not unlocked.get("ok", false) or not focused.get("ok", false) or \
 			service.skill_bonus("max_hp_pct") != 0.05 or service.skill_bonus("damage_pct") != 0.03 or \
 			focused["profile"]["resources"]["essence"] != 70 or \
 			service.unlock_skill_node("vitality_starter").get("ok", false):

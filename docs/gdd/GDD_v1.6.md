@@ -1,4 +1,4 @@
-# DOPAMINE SURVIVOR — GDD COMPLET v1.5
+# DOPAMINE SURVIVOR — GDD COMPLET v1.6
 
 > Document de référence consolidé · 15 octobre 2026 · Français
 
@@ -30,14 +30,16 @@
 
 ## 01 — Vision et périmètre
 
-DOPAMINE SURVIVOR — GAME DESIGN DOCUMENT v1.5
+DOPAMINE SURVIVOR — GAME DESIGN DOCUMENT v1.6
 Statut : spécification consolidée de conception, 15 octobre 2026.
+
+La version 1.6 intègre les décisions et propositions du delta v1.6. Les règles inchangées de v1.5 sont conservées. Les statuts [VALIDÉ], [PROPOSÉ] et [OUVERT] restent distincts. En cas de contradiction, les règles validées du delta prévalent, sous réserve des ADR acceptés et de l’architecture technique.
 
 Dopamine Survivor est un roguelite top-down à combat automatique inspiré du genre bullet heaven. Son identité repose sur une pression de survie permanente : les points de vie diminuent continuellement et les éliminations permettent de les restaurer. Le joueur optimise armes, reliques, évolutions, équipement, arbre de compétences et achievements afin de vaincre des vagues toujours plus dangereuses.
 
 Direction : pixel art néon, ambiance électronique synthwave/EDM dont les couches s'intensifient avec les vagues ; nombres de dégâts agrégés ; lisibilité prioritaire malgré des centaines d'ennemis.
 
-Plateforme initiale : Windows PC. Modèle économique : achat premium unique. Moteur : Godot 4.x. Cible : 60 FPS sur GPU intégré dans les configurations représentatives. Contrôles : clavier WASD et manette. Arène infinie, caméra orthographique, ennemis générés autour du joueur.
+Plateforme initiale : Windows PC. Modèle économique : achat premium unique. Moteur : Godot 4.x. Cible : 60 FPS sur GPU intégré dans les configurations représentatives. Contrôles : clavier WASD, flèches directionnelles et manette. Arène infinie, caméra orthographique, ennemis générés autour du joueur.
 
 Quatre expériences : Survival (24 vagues), Endless standard, Endless Armorless et Sandbox Lab. Sandbox est un laboratoire hors progression et accessible sans sauvegarde.
 
@@ -51,25 +53,27 @@ Légende de statut : [VALIDÉ] décision explicitement retenue ; [PROPOSÉ] para
 
 Boucle Survival : choisir difficulté et arme initiale → survivre à une vague de 30 secondes → tuer pour se soigner et gagner XP → ramasser chests → améliorer armes/reliques → vaincre le mid-boss vague 12 → vaincre le boss final vague 24 → récompenses permanentes → recommencer.
 
-[VALIDÉ] La durée de base est de 24 × 30 secondes = 12 minutes de combat actif, plus les pauses de boss et les choix. Objectif d'une run : 10–15 minutes. Le timer de vague s'arrête durant les boss ; le HP decay continue. Les joueurs peuvent poursuivre en Endless après la victoire finale selon le design proposé, mais les règles d'accès exactes d'Endless standard restent [OUVERTES].
+[VALIDÉ] La durée de base est de 24 × 30 secondes = 12 minutes de combat actif, plus les pauses de boss et les choix. Objectif d'une run : 10–15 minutes. Le timer de vague s’arrête durant les boss ; le HP decay continue pendant le gameplay et se suspend durant les vraies pauses, notamment les choix de coffre. La possibilité de poursuivre en Endless après la victoire finale reste une proposition ; les règles d’accès exactes d’Endless standard sont [OUVERTES].
 
-[PROPOSÉ] Chaque niveau d'XP donne un petit bonus automatique de stats, sans écran de sélection. La courbe d'XP, les bonus par niveau et le comportement des pauses d'interface restent à spécifier.
+[PROPOSÉ] Chaque niveau d'XP donne un petit bonus automatique de stats, sans écran de sélection. La courbe d'XP et les bonus par niveau restent à spécifier.
 
 <a id="3"></a>
 
 ## 03 — Combat, HP decay et guérison
 
-[VALIDÉ] HP initial = 100. Perte passive de HP initiale = 1,5 HP/s, croissante linéairement avec le temps de combat actif. Les kills soignent selon le niveau de menace des ennemis. Lifesteal sur dégâts avec soft cap. Dégâts de contact accordent une courte invulnérabilité. Revives rares.
+[VALIDÉ] Mouvement précis et instantané, sans inertie significative ; pas de dash de base, certains équipements peuvent en accorder un. HP initial = 100. Perte passive de HP initiale = 1,5 HP/s, croissante linéairement avec le temps de combat actif. Les kills soignent selon le niveau de menace des ennemis. Lifesteal sur dégâts avec soft cap. Dégâts de contact accordent une courte invulnérabilité. Revives rares.
 
-[PROPOSÉ] D(t) = 1,5 + 0,004 t HP/s (t en secondes actives). Perte exacte sur [t,t+Δt] = 1,5 Δt + 0,002((t+Δt)^2 - t²). Après 60 secondes sans soin : 97,2 HP perdus. Après 720 secondes : 2 116,8 HP perdus. Le timer ne progresse pas pendant les menus en pause, mais progresse pendant les combats de boss.
+[PROPOSÉ] Le HP decay s’applique pendant tout le gameplay, y compris hors combat et pendant les boss, mais est suspendu par une vraie pause, dont la sélection d’un chest. D(t) = 1,5 + 0,004 t HP/s (t en secondes actives). Perte exacte sur [t,t+Δt] = 1,5 Δt + 0,002((t+Δt)^2 - t²). Après 60 secondes sans soin : 97,2 HP perdus. Après 720 secondes : 2 116,8 HP perdus. Le timer ne progresse pas pendant les menus en pause, mais progresse pendant les combats de boss.
 
 [PROPOSÉ] Soin par kill H(T)=2+3√T, menace T bornée dans [0,5 ; 25] ; ennemi ordinaire T=1 → +5 HP. Menace calculée depuis archétype et multiplicateurs HP/dégâts/vitesse. Lifesteal : rendement normal jusqu'à 10 HP/s puis efficacité de 25 % au-delà ; dégâts sur la durée donnent 25 % de leur lifesteal théorique. Invulnérabilité après impact : 0,35 s.
 
-[À TESTER] Taux de kills nécessaire pour compenser le decay, situations sans ennemis, builds à faible DPS, boucles de guérison infinie, survie à 1 HP et comportement pendant les transitions.
+[[À TESTER]] Taux de kills nécessaire pour compenser le decay, situations sans ennemis, builds à faible DPS, boucles de guérison infinie, survie à 1 HP et comportement pendant les transitions.
 
 <a id="4"></a>
 
 ## 04 — Ennemis, vagues et difficultés
+
+[VALIDÉ] Le jeu comporte 8 à 12 familles au lancement : mêlée, rapides, tanks, distance, soutien et explosifs, interactions de groupe, élites à affixes et projectiles télégraphiés esquivables.
 
 [VALIDÉ] Cinq difficultés progressives : Easy, Normal, Hard, Nightmare, Chaos. Chaque difficulté se débloque en battant la précédente. Les statistiques et la densité des ennemis augmentent avec la difficulté ; Chaos ajoute des comportements particuliers. Élites aléatoires pilotées par un budget de menace et cooldown. Mid-boss à la vague 12, boss final à la vague 24. Pas de limite de temps pour battre un boss.
 
@@ -83,9 +87,11 @@ Boucle Survival : choisir difficulté et arme initiale → survivre à une vague
 
 ## 05 — Armes, reliques et évolutions
 
-[VALIDÉ] Deux armes et deux reliques initialement débloquées ; les autres se débloquent dans l'arbre de compétences. Le choix d'arme de départ propose deux armes initialement, puis trois après le troisième déblocage. Maximum normal : cinq armes et cinq reliques ; certains effets uniques Legendary/Mythic peuvent étendre chacun à six. Pas de doublons d'armes dans une run normale. Niveau maximum : 5 pour chaque arme/relique. Les améliorations des armes sont spécifiques à leur identité ; les bonus des reliques sont linéaires. Une évolution se déclenche lorsque l'arme atteint le niveau 5 et que la relique associée est possédée, quel que soit le niveau de cette relique.
+[VALIDÉ] Les interactions entre armes émergent des dégâts et statuts ; les réactions élémentaires sont prévues. Aucune limite artificielle aux synergies n’est ajoutée pour le seul équilibrage, sous réserve des protections techniques.
 
-Paires de contenu :
+[VALIDÉ] Dix armes distinctes, chacune à ciblage automatique intelligent propre, dont l’efficacité dépend fortement du positionnement et du déplacement. Le choix de départ se fait parmi deux armes débloquées. Aucun doublon d’arme en run normale (doublons autorisés dans le Sandbox). Chaque arme et relique a cinq niveaux ; les niveaux d’arme ont des améliorations fixes, principalement statistiques, et une évolution majeure conserve le niveau 5. L’arme évolue automatiquement dès qu’elle est niveau 5 et que sa relique associée est possédée, quel que soit le niveau de relique. Une seule évolution par arme ; une arme niveau 5 non évoluée ne peut plus apparaître comme amélioration ordinaire de chest. Chaque niveau d’arme reçoit un retour visuel, même pour une hausse uniquement statistique. Les bonus de relique progressent linéairement.
+
+Paires de contenu validées :
 1. Lightning Conductor + Storm Core → Infinite Circuit : éclairs ramifiés.
 2. Inferno Sprayer + Infernal Heart → Wildfire : brûlures qui explosent et se propagent.
 3. Crimson Daggers + Blood Chalice → Bloodstorm : entailles et lifesteal.
@@ -100,23 +106,27 @@ Paires de contenu :
 [PROPOSÉ] Blood Chalice accorde 5 % de lifesteal par niveau sur les dégâts directs. Le prototype applique le soft cap décrit en section 03; la valeur n'est pas validée et les dégâts sur la durée restent à intégrer.
 [OUVERT] Le taux de lifesteal général indépendant de Blood Chalice n'est pas défini.
 
-[PROPOSÉ] Lightning Conductor niveaux 1–5 : 2 chaînes → 3 chaînes → +25 % dégâts → 5 chaînes → 2 cibles initiales. Les 9 autres tables de niveaux, cooldowns, dégâts, portée, ciblage et bonus précis des reliques restent [À RÉDIGER].
+[PROPOSÉ] Les valeurs chiffrées de progression des dix armes (niveaux 2–5) figurent dans l’annexe v1.6 ci-dessous et restent des hypothèses de balancing. Les nombres précis des reliques et le calibrage des armes restent à confirmer.
 
-[VALIDÉ] Les armes/reliques débloquées deviennent disponibles pour les tirages et ne sont pas automatiquement équipées dans chaque run.
+[VALIDÉ] Chaque arme a le comportement distinct décrit dans le tableau récapitulatif de l’annexe A.
+
+[VALIDÉ] Les armes/reliques débloquées deviennent disponibles pour les tirages et ne sont pas automatiquement équipées dans chaque run. Le total cible est de 10 armes et 11 reliques (10 reliques associées et Magnet Heart), avec cinq slots normaux de relique ; les exceptions de capacité Legendary/Mythic de la règle v1.5 restent applicables si leurs effets sont retenus.
 
 <a id="6"></a>
 
 ## 06 — Chests et progression pendant une run
 
-[VALIDÉ] Deux familles de chests : armes et reliques, obtenues sur les ennemis. Trois choix par ouverture. Le tirage favorise les synergies et les améliorations des objets équipés. Un directeur dynamique de loot garantit une progression minimale sans imposer un build.
+[VALIDÉ] Chests d’armes et de reliques obtenus sur les ennemis, trois choix par ouverture, préférence pour les améliorations et synergies, et protection anti-malchance. Les slots pleins limitent les propositions aux améliorations encore disponibles. Les rerolls sont limités et obtenus via la progression. Le gameplay est en pause pendant le choix. Toute acquisition/amélioration vérifie immédiatement si une évolution est due.
 
 [PROPOSÉ] Probabilité de drop par ennemi ordinaire : 0,5 % pour chaque famille ; élite : 15 % par famille ; boss : un chest de chaque famille garanti. Filet de sécurité : au moins un chest éligible de chaque famille toutes les 60 secondes. Poids de proposition : ×1,5 upgrade équipé ; ×2 relique correspondant à une arme ; ×1,5 arme correspondant à une relique ; ×1,25 évolution proche ; multiplicateur combiné plafonné à ×3.
 
-[À TESTER] Éviter les tirages impossibles lorsque les slots sont pleins ; définir les alternatives quand tout est niveau 5 ; ne pas compter plusieurs fois les drops garantis ; prévenir les biais extrêmes ; empêcher l'ouverture en double après chargement.
+[[À TESTER]] Éviter les tirages impossibles lorsque les slots sont pleins ; définir les alternatives quand tout est niveau 5 ; ne pas compter plusieurs fois les drops garantis ; prévenir les biais extrêmes ; empêcher l'ouverture en double après chargement.
 
 <a id="7"></a>
 
 ## 07 — Équipement permanent
+
+[VALIDÉ] Les effets d’équipement ont un impact significatif sans trivialiser les runs ; les effets Legendary/Mythic peuvent transformer les mécaniques. Les stats couvrent offense, défense et utilitaire, et les synergies peuvent dépendre d’une arme ou d’un statut. Le changement d’équipement se fait hors run.
 
 [VALIDÉ] Six slots : helmet, armor, gloves, boots, amulet, ring. Une seule pièce d'équipement garantie par run classique, y compris en cas de mort. Slot tiré aléatoirement. Inventaire permanent illimité ; équiper, vendre ou démanteler. Pas de bonus de set. Pas de type de statistique répété sur un même objet.
 
@@ -162,11 +172,11 @@ Douze statistiques candidates : dégâts %, vitesse d'attaque %, chance critique
 
 Exemple Exterminator : 100 / 1 000 / 10 000 / 100 000 kills cumulés ; bonus par palier +0,05 / +0,10 / +0,15 / +0,20 points de pourcentage de dégâts ; total +0,50 % au Diamond. Autres exemples : coups critiques, élites tuées, dégâts par arme, guérison cumulée, boss vaincus, équipement démantelé, enhancements réussis, runs Chaos, évolutions déclenchées.
 
-Effets uniques proposés : Lightning supplémentaire occasionnel ; bouclier temporaire issu du soin excédentaire ; onde de choc à la première évolution ; vitesse temporaire après élimination d'élite ; reroll gratuit du premier chest ; onde de recul à la résurrection. Aucun achievement ne désactive le HP decay ni ne procure de revive infini.
+Effets uniques proposés : Lightning supplémentaire occasionnel ; bouclier temporaire issu du soin excédentaire ; onde de choc à la première évolution ; vitesse temporaire après élimination d’élite ; reroll gratuit du premier chest ; onde de recul à la résurrection. Les comportements de prototype détaillés dans `docs/planning/PROPOSITION_P5.md` ne deviennent pas des décisions du GDD sans validation. Aucun achievement ne désactive le HP decay ni ne procure de revive infini.
 
 Données : AchievementDefinition {id, category, secret, metric, aggregation, tiers[threshold,rewards]}; métriques de vie cumulées (sum), records (max), et état des tiers. Les récompenses sont reconstruites à partir des tiers acquis au chargement ; jamais dupliquées dans le save. Events idempotents ; secrets suivis avant révélation.
 
-[À TESTER] Les bonus spécialisés et utilitaires ne s'additionnent pas naïvement au budget de puissance ; mesurer des builds de référence complets.
+[[À TESTER]] Les bonus spécialisés et utilitaires ne s'additionnent pas naïvement au budget de puissance ; mesurer des builds de référence complets.
 
 <a id="11"></a>
 
@@ -202,7 +212,7 @@ Données : AchievementDefinition {id, category, secret, metric, aggregation, tie
 
 [PROPOSÉ] Récompenses persistantes possibles : Essence, Powder, achievements et records, mais pas d'équipement permanent garanti. Ce dernier point reste une proposition à confirmer ; la règle d'un équipement garanti s'applique explicitement aux runs classiques.
 
-[À TESTER] Draft à trois slots identiques, objets multiples d'un slot, gestion de l'inventaire temporaire, remplacement d'un équipement qui fournit un slot d'arme, destruction de Flux à la mort, sauvegarde/reprise et anti-double-attribution.
+[[À TESTER]] Draft à trois slots identiques, objets multiples d'un slot, gestion de l'inventaire temporaire, remplacement d'un équipement qui fournit un slot d'arme, destruction de Flux à la mort, sauvegarde/reprise et anti-double-attribution.
 
 <a id="14"></a>
 
@@ -225,6 +235,8 @@ Architecture : BaseBalanceConfig → SandboxOverrideLayer → RuntimeConfigResol
 <a id="15"></a>
 
 ## 15 — Interface et expérience utilisateur
+
+[VALIDÉ] Les retours de dégâts sont agrégés et les critiques mis en évidence. Les impacts combinent flash, particules et audio avec hitstop sélectif ; les dangers et télégraphes ennemis restent prioritaires visuellement. Des options réduisent les VFX ; la musique EDM/synthwave s’adapte aux vagues et boss.
 
 [VALIDÉ] Direction pixel art néon ; HUD lisible à très forte densité ; support manette. Menus : écran d'accueil avec Play et Sandbox Lab accessibles indépendamment ; choix de sauvegarde seulement pour Play ; choix de mode et difficulté ; préparation de run ; HUD ; chests ; écran de mort/victoire ; inventaire ; enhancement ; skill tree ; achievements ; records ; Sandbox configuration et panneau live.
 
@@ -293,14 +305,9 @@ Performance : tests sur iGPU, worst-case densité, 10+ armes, effets chaînés, 
 
 ## 20 — MVP, roadmap et questions ouvertes
 
-[VALIDÉ] Premier playable : 3 armes et 3 reliques, une run complète de 24 vagues, core loop jouable. Contenu final visé : 10 paires d'armes/reliques, 120 nodes de skill tree, ~120 familles d'achievements, 5 difficultés et les quatre expériences.
+La roadmap de livraison de référence est P0–P9 dans `docs/planning/ROADMAP.md`. Elle respecte le Sandbox dès P1 et décrit les critères de sortie, l’état réel, les dépendances et les points ouverts.
 
-[PROPOSÉ] Étape 1 — Vertical slice : mouvement, HP decay, soin par kill, 4 ennemis, 3 armes/reliques, chests, XP, vagues et boss, HUD, sauvegarde minimale.
-Étape 2 — Métaprogression : équipement, enhancement, Powder, Essence, skill tree, difficultés.
-Étape 3 — Contenu : 10 paires, boss, élites, Chaos, achievements, équilibrage.
-Étape 4 — Endless et Armorless : règles, Flux, drafts, records.
-Étape 5 — Sandbox Lab : override registry, éditeur live, métriques, presets, codes de partage.
-Étape 6 — QA, optimisation, accessibilité, tuning et publication.
+[VALIDÉ] Premier playable : trois armes et trois reliques, une run complète de 24 vagues, core loop jouable. Contenu final visé : dix paires d'armes/reliques, 120 nodes de skill tree, environ 120 familles d'achievements, cinq difficultés et les quatre expériences.
 
 QUESTIONS OUVERTES PRIORITAIRES :
 1. Accès et déblocage exacts du Endless standard ; récompenses et sortie.
@@ -314,4 +321,326 @@ QUESTIONS OUVERTES PRIORITAIRES :
 9. Récompenses permanentes exactes d'Armorless.
 10. Maquettes UI et règles de sauvegarde/reprise en plein draft.
 
-Cette version v1.5 est une consolidation fidèle des décisions connues ; elle ne présente pas les propositions de balancing comme des décisions validées.
+La base éditoriale v1.5 est conservée dans ce document avec les règles non modifiées ; les changements v1.6 intégrés et leur annexe prévalent en cas de contradiction. Les propositions de balancing restent explicitement non validées.
+
+
+---
+
+# Annexe — Détails du delta v1.6 intégrés
+
+Les tableaux ci-dessous précisent les comportements et hypothèses numériques du delta. Les contenus explicitement proposés restent [PROPOSÉ].
+
+## A. Armes
+
+### Règles validées
+
+- 10 armes, chacune avec un gameplay distinct.
+- Ciblage automatique intelligent et spécifique à chaque arme.
+- Le positionnement et les déplacements du joueur influencent fortement leur efficacité.
+- Choix de l'arme de départ parmi 2 armes débloquées.
+- Aucun doublon d'arme, sauf dans le Sandbox.
+- 5 niveaux par arme, avec améliorations fixes, principalement statistiques.
+- Évolution majeure, visuellement spectaculaire, conservant le niveau 5.
+- Évolution automatique dès que l'arme atteint le niveau 5 et que sa relique associée est possédée, quel que soit le niveau de cette relique.
+- Une seule évolution par arme.
+- Une arme niveau 5 non évoluée n'apparaît plus comme amélioration ordinaire dans les coffres.
+- Évolution visuelle de l'arme à chaque niveau, même lorsque l'amélioration est purement statistique.
+
+### Comportements des armes
+
+| Arme                | Comportement validé                         | Évolution existante |
+| ------------------- | ------------------------------------------- | ------------------- |
+| Lightning Conductor | Chaînes électriques entre ennemis           | Infinite Circuit    |
+| Inferno Sprayer     | Jet de feu directionnel automatique         | Wildfire            |
+| Crimson Daggers     | Dagues orbitant autour du joueur            | Bloodstorm          |
+| Void Orb            | Orbe lente traversante attirant les ennemis | Event Horizon       |
+| Frost Nova          | Onde de gel autour du joueur                | Absolute Zero       |
+| Minigun             | Tir automatique très rapide sur une cible   | Redline             |
+| Meteor Staff        | Météores ciblant des groupes d'ennemis      | Starfall            |
+| Sawblades           | Lames rebondissant entre ennemis            | Razorstorm          |
+| Toxic Cloud         | Nuages persistants empoisonnant les ennemis | Pandemic            |
+| Prism Laser         | Rayon continu ciblant les ennemis           | Spectrum Collapse   |
+
+### Progression numérique proposée (non validée)
+
+| Arme      | Niveau 2    | Niveau 3                | Niveau 4              | Niveau 5                |
+| --------- | ----------- | ----------------------- | --------------------- | ----------------------- |
+| Lightning | +20% dégâts | +1 rebond               | -15% cooldown         | +25% dégâts             |
+| Inferno   | +20% dégâts | +15% portée             | +20% largeur          | +25% Burn               |
+| Daggers   | +20% dégâts | +1 dague                | +20% vitesse orbitale | +25% dégâts             |
+| Void      | +20% dégâts | +20% rayon d'attraction | +15% durée            | +25% force d'attraction |
+| Frost     | +20% dégâts | +20% rayon              | +20% durée de Chill   | -20% cooldown           |
+| Minigun   | +20% dégâts | +25% cadence            | +15% précision        | +25% cadence            |
+| Meteor    | +20% dégâts | +20% rayon              | -15% délai d'impact   | +30% dégâts             |
+| Sawblades | +20% dégâts | +1 rebond               | +20% vitesse          | +25% dégâts             |
+| Toxic     | +20% DOT    | +20% rayon              | +20% durée            | +25% DOT                |
+| Prism     | +20% dégâts | +20% portée             | +15% suivi            | +25% dégâts             |
+
+Ces valeurs sont des hypothèses de balancing, pas des valeurs définitives.
+
+## B. Reliques
+
+### Règles validées
+
+- Les reliques offrent des bonus passifs et une mécanique spéciale à haut niveau.
+- Leurs bonus s'appliquent globalement lorsque cela est pertinent.
+- Chaque relique doit être utile indépendamment de son arme associée.
+- Progression statistique linéaire du niveau 1 au niveau 5.
+- Certaines combinaisons de reliques déclenchent des interactions particulières.
+
+### Effets proposés pour les 10 reliques existantes
+
+| Relique          | Bonus niv. 5 proposé    | Mécanique spéciale proposée               |
+| ---------------- | ----------------------- | ----------------------------------------- |
+| Storm Core       | +20% application Shock  | Propagation électrique                    |
+| Infernal Heart   | +25% puissance Burn     | Explosion des cibles fortement brûlées    |
+| Blood Chalice    | +5% lifesteal           | Soins excédentaires convertis en bouclier |
+| Singularity      | +25% contrôle           | Dégâts bonus sur ennemis regroupés        |
+| Frozen Crown     | +25% Chill              | Vulnérabilité des cibles gelées           |
+| Overdrive Engine | +20% cadence            | Accélération après attaques consécutives  |
+| Celestial Eye    | +15% zone               | Chance de double impact                   |
+| Magnetic Coil    | +20% vitesse projectile | Correction de trajectoire                 |
+| Plague Mask      | +25% DOT                | Transmission de statut à la mort          |
+| Prism Crystal    | +15% dégâts critiques   | Projectile secondaire sur critique        |
+
+Ces effets et chiffres restent à valider.
+
+### Nouvelle relique : Magnet Heart
+
+**Statut : ajout validé au GDD v1.6.**
+
+- Type : utilitaire.
+- Aucune arme associée.
+- Aucune évolution d'arme associée.
+- Occupe un slot de relique normal.
+- Augmente la distance de ramassage des objets.
+- Attire XP, soins, ressources, monnaies et bonus temporaires ramassables.
+- **N'attire jamais les coffres.**
+- Les coffres restent au sol et nécessitent un déplacement du joueur.
+- Cette exclusion s'applique aussi aux effets de ramassage provenant des équipements, du skill tree et des autres reliques.
+
+Progression proposée :
+
+| Niveau | Bonus de rayon |
+| ------ | -------------- |
+| 1      | +25%           |
+| 2      | +50%           |
+| 3      | +75%           |
+| 4      | +100%          |
+| 5      | +125%          |
+
+**Effet niv. 5 proposé — Magnetic Pulse :** toutes les 20 secondes, attire les objets éligibles dans un rayon de 300% du rayon de base, sans attirer les coffres.
+
+Synergies proposées :
+
+- Magnet Heart + Magnetic Coil : attraction plus rapide.
+- Magnet Heart + Singularity : les effets gravitationnels attirent également les objets éligibles.
+- Magnet Heart + Celestial Eye : rayon des impulsions augmenté.
+
+**Nouveau total : 10 armes, 11 reliques, toujours 5 slots de reliques.**
+
+## C. Évolutions et synergies
+
+### Décisions validées
+
+- Évolutions automatiques, une par arme.
+- Interactions émergentes entre armes via dégâts et statuts.
+- Réactions élémentaires entre statuts.
+- Pas de limitation artificielle des synergies pour des raisons d'équilibrage ; seules les protections techniques nécessaires sont autorisées.
+
+### Évolutions proposées
+
+- Infinite Circuit : ramifications électriques supplémentaires.
+- Wildfire : propagation de Burn et explosions à la mort.
+- Bloodstorm : tempête de dagues, Bleed et soins.
+- Event Horizon : trou noir persistant et effondrement.
+- Absolute Zero : bris des ennemis gelés et dégâts de zone.
+- Redline : cadence croissante en tir continu.
+- Starfall : fragmentation des météores.
+- Razorstorm : ricochets et pénétration supplémentaires.
+- Pandemic : propagation de Poison et création de nuages.
+- Spectrum Collapse : rayons laser secondaires.
+
+### Réactions élémentaires proposées
+
+| Réaction         | Combinaison           | Résultat                              |
+| ---------------- | --------------------- | ------------------------------------- |
+| Thermal Shock    | Burn + Freeze         | Dégâts immédiats                      |
+| Toxic Ignition   | Poison + Burn         | Explosion chimique                    |
+| Shatter          | Freeze + Impact/Shred | Dégâts et fragments                   |
+| Electroplague    | Poison + Shock        | Propagation de Poison                 |
+| Gravity Collapse | Gravity + Impact      | Dégâts de zone amplifiés              |
+| Hemorrhage       | Bleed + Crit          | Accélération des dégâts de saignement |
+
+Une éventuelle réaction Overcharge nécessitant un statut conducteur supplémentaire reste à définir.
+
+Synergies proposées entre reliques :
+
+- Storm Core + Frozen Crown.
+- Infernal Heart + Plague Mask.
+- Blood Chalice + Overdrive Engine.
+- Singularity + Celestial Eye.
+- Magnetic Coil + Prism Crystal.
+
+## D. Coffres et progression pendant une run
+
+### Décisions validées
+
+- Coffres proposant 3 choix : armes, reliques ou améliorations selon le type de coffre.
+- Drops aléatoires avec protection anti-malchance.
+- Lorsque les slots sont pleins, seules les améliorations encore disponibles sont proposées.
+- Rerolls limités, obtenus via la progression.
+- Pause du gameplay pendant la sélection d'une récompense.
+- Évolution automatique vérifiée après chaque acquisition ou amélioration.
+
+À définir : récompense de substitution lorsque plus aucune amélioration n'est disponible, pondérations exactes, pity et nombre de rerolls.
+
+## E. Ennemis
+
+### Décisions validées
+
+- 8 à 12 familles au lancement.
+- Comportements variés : mêlée, rapides, tanks, ranged, supports, explosifs.
+- Certaines interactions entre ennemis : buffs, protections, invocations.
+- Élites avec affixes.
+- Projectiles ennemis esquivables et télégraphiés.
+
+### Dix familles proposées
+
+1. Swarmers : ennemis nombreux.
+2. Rushers : charges rapides.
+3. Bruisers : tanks.
+4. Spitters : projectiles à distance.
+5. Snipers : tirs puissants télégraphiés.
+6. Exploders : explosions de proximité.
+7. Shielders : protection des alliés.
+8. Buffers : renforcement des groupes.
+9. Summoners : invocations limitées.
+10. Phasers : déplacements intermittents.
+
+Affixes proposés : Armored, Hasted, Volatile, Regenerating, Shielded, Split-on-Death.
+
+Proposition : Threat Director distribuant un budget de menace entre les familles d'ennemis, avec règles de compatibilité des affixes et prévention des combinaisons impossibles à esquiver.
+
+## F. Boss
+
+### Décisions validées
+
+- Bullet hell lisible, avec phases et patterns.
+- 2 à 3 phases selon les HP.
+- Difficultés supérieures ajoutant des patterns et des mécaniques, pas seulement des multiplicateurs.
+- Invocations limitées par budget.
+- Coffres garantis et ressources de run comme récompenses.
+- Conservation des boss aux vagues 12 et 24.
+
+### Boss proposés
+
+**Wave 12 — The Pulse Warden**
+
+- Phase 1 : projectiles radiaux.
+- Phase 2 : charges et invocations.
+- Phase 3 : combinaisons de patterns.
+
+**Wave 24 — The Dopamine Core**
+
+- Phase 1 : rayons et zones dangereuses.
+- Phase 2 : spirales, déplacements et invocations.
+- Phase 3 : patterns combinés plus exigeants.
+
+Les noms et patterns restent des propositions.
+
+## G. Mouvement et survie
+
+### Décisions validées
+
+- Mouvement instantané, précis, sans inertie significative.
+- Aucun dash de base.
+- Dash possible via certains équipements.
+- Contact ennemi : dégâts et courte invulnérabilité.
+- HP decay toujours actif pendant le gameplay, y compris hors combat et pendant les boss.
+- Guérison via kills, lifesteal et effets rares.
+
+### Précision proposée
+
+Suspendre le HP decay pendant les véritables pauses du gameplay, notamment la sélection des coffres.
+
+Conserver provisoirement la formule existante :
+
+`HP_decay_per_second = 1.5 + 0.004 * elapsed_gameplay_seconds`
+
+Séparer horloge de gameplay, horloge de vague et temps réel.
+
+## H. Équipement et progression permanente
+
+### Décisions validées
+
+- Équipement avec impact majeur sur les builds, sans rendre les runs triviales.
+- Effets uniques Legendary/Mythic transformant des mécaniques.
+- Stats offensives, défensives et utilitaires.
+- Synergies d'équipement spécialisées par type d'arme ou statut.
+- Skill tree avec respec gratuit.
+- Équipement interchangeable hors run.
+
+### Ajout proposé
+
+Introduire `pickup_radius` comme statistique globale, utilisable par :
+
+- Magnet Heart.
+- Certains équipements.
+- Certains nœuds du skill tree.
+- Éventuels effets temporaires.
+
+La statistique doit respecter une règle globale d'exclusion des coffres : aucun effet de ramassage ne les attire ou ne les collecte ; ils restent au sol jusqu'au déplacement du joueur.
+
+Conserver les autres règles d'équipement, enhancement, achievements et raretés de la base v1.5 intégrée à ce document.
+
+## I. Feedback audiovisuel
+
+### Décisions validées
+
+- Damage numbers agrégés intelligemment, critiques mis en avant.
+- Feedback d'impact : flash, particules, son et hitstop sélectif.
+- Évolution visuelle à chaque niveau d'arme.
+- Transformation visuelle majeure lors des évolutions.
+- Priorité visuelle aux dangers et télégraphes ennemis.
+- Options de réduction des VFX.
+- Musique EDM/synthwave adaptative aux vagues et boss.
+
+## J. Équilibrage et rejouabilité
+
+### Décisions validées
+
+- Toutes les armes doivent être viables, avec des rôles différents.
+- RNG contrôlé et protection anti-malchance.
+- Rééquilibrage des builds dominants pour préserver plusieurs stratégies.
+- Synergies cachées, achievements et effets spéciaux secrets.
+- Rejouabilité fondée sur les builds, la progression, les difficultés et Endless.
+
+## K. ADR à modifier
+
+- **ADR-007** : intégrer les réactions élémentaires et la gestion de causalité.
+- **ADR-014** : compléter la stratégie Sandbox-first avec les tests d'armes, de DPS, de statuts et de synergies.
+- **ADR-015 — Weapon & Relic Framework** : nouvel ADR proposé.
+- **ADR-016 — Status & Reaction System** : nouvel ADR proposé.
+- **ADR-017 — Loot & Run Progression** : nouvel ADR proposé.
+- **ADR-018 — Enemy & Boss Director** : nouvel ADR proposé.
+
+Ne pas renuméroter les ADR existants si les identifiants sont déjà utilisés.
+
+## Phases de roadmap v1.6
+
+| Phase | Contenu                                                   |
+| ----- | --------------------------------------------------------- |
+| P0    | Fondations techniques                                     |
+| P1    | Sandbox minimal                                           |
+| P2    | Combat core et statuts                                    |
+| P3    | Prototype de 3 armes, 3 reliques, évolutions et DPS meter |
+| P4    | Vertical slice Survival                                   |
+| P5    | 10 armes, 11 reliques, évolutions, ennemis                |
+| P6    | Progression permanente                                    |
+| P7    | Endless et Armorless                                      |
+| P8    | Sandbox Lab complet                                       |
+| P9    | Équilibrage, polish, livraison                            |
+
+Le Sandbox doit être utilisable dès P1 et enrichi progressivement, pas développé uniquement en P8.
+

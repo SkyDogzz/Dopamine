@@ -1,5 +1,7 @@
 # Tests d'acceptation et validation
 
+> Les cases cochées sont des exécutions historiques documentées. Lors de l’audit documentaire du 2026-10-15, Godot/Godot 4 n’est pas présent dans le PATH ; les smoke tests GDScript n’ont pas été relancés. Cette session vérifie les diffs et références, pas les résultats runtime historiques.
+
 ## Build et intégration
 
 - [x] Linux P0 : Godot 4.7.2 charge la GDExtension C++23 après import headless du projet.
@@ -84,14 +86,15 @@
 
 - [x] Survival : run intégrée aux durées nominales de 24 × 30 s (720 s simulées, accélérées ×4), timer arrêté pendant les deux boss et HP decay actif. Le harness augmente les HP du joueur pour isoler le déroulement, applique les dégâts de test aux placeholders et choisit automatiquement les chests ; il ne valide pas l'équilibrage.
 - [x] Une instance d'équipement permanente par run Survival, y compris défaite ; slot parmi les six validés, lignes sans statistique répétée, rarité selon la table Normal **[PROPOSÉE]**. Smoke victoire/défaite et unicité par `run_id`.
-- [x] Inventaire Survival consultable : affiche rareté, slot, percentiles et état non calibré ; l’ouverture suspend la simulation et la fermeture la reprend seulement si elle tournait déjà. Test headless et revue du rendu fenêtré.
-- [x] Équipement persistant : équiper, déséquiper et remplacer une pièce du même slot ; migration des profils précédents. Aucun bonus de statistique n’est appliqué tant que les rolls restent non calibrés.
+- [x] Inventaire Survival consultable : affiche rareté, slot, percentiles et état des rolls proposés ; l’ouverture suspend la simulation et la fermeture la reprend seulement si elle tournait déjà. Test headless et revue du rendu fenêtré.
+- [x] Équipement persistant : équiper, déséquiper et remplacer une pièce du même slot ; migration des profils précédents. Le prototype P6 applique maintenant les lignes portées à Survival ; leurs plages restent proposées et non calibrées.
 - [x] Progression v5 : migration des profils précédents vers quatre tiers de Powder, conversion 10:1, amélioration de ligne +0..+10, coût de rareté/niveau et pity au dixième essai ; probabilités et coûts restent les valeurs **[PROPOSÉES]** du GDD.
 - [x] UI Enhancement : sélection du tier Powder, affichage du niveau de ligne et ressources, consommation, retour de résultat et inventaire persistant vérifiés dans `survival_inventory_smoke` et revue fenêtrée.
-- [x] Équipement : choix d'un effet unique éligible et démontage persistés. Liste d'effets proposée, aucun effet n'est appliqué au combat ; rendement de démontage d'un Powder par rareté provisoire.
+- [x] Équipement : choix d'un effet unique éligible et démontage persistés. Rendement provisoire. Lightning burst, overflow shield, evolution shockwave et elite haste ont des prototypes ; reroll gratuit et knockback de résurrection sont sans comportement faute de contrats requis.
 - [x] Skill tree prototype : nodes Vitality (+5 % HP, 50 Essence) et Focused Training (+3 % dégâts, prérequis Vitality, 80 Essence), valeurs **[PROPOSÉES]** ; respec gratuit vérifié.
 - [x] Achievement prototype : kills cumulés et quatre paliers Exterminator **[PROPOSÉS]** crédités une seule fois par run ; bonus dégâts cumulés de l'exemple vérifiés.
-- [ ] Rareté ajustée par difficulté/vague et mort précoce, plages de rolls calibrées et application des bonus ; l'interface de vente reste à créer. Les percentiles d'instance sont normalisés et n'affectent pas encore le combat.
+- [ ] Rareté ajustée par difficulté/vague et mort précoce, calibrage des rolls, arbitrage vente/démantèlement et validation des bonus. Le rayon de ramassage ne doit jamais affecter la collecte de coffres selon GDD v1.6.
+- [x] Revue de code v1.6 : collecte de coffres utilise uniquement `chest_collection_radius`; `pickup_radius_pct` ne l’élargit pas. Runtime smoke non relancé faute de Godot dans l’environnement.
 - [x] Achievement tiers débloqués une seule fois et bonus cumulés vérifiés pour la famille prototype Exterminator ; le catalogue et les seuils complets restent à définir.
 - [ ] Armorless : 3 équipements proposés après chaque vague, 1 choisi ; Flux temporaire.
 - [x] `SaveService` : slot JSON versionné, checksum SHA-256, remplacement via temporaire, backup relu après altération/corruption et migration de la fixture v0 dictionnaire brut ; vérifié par `save_service_smoke`. Cette fixture ne définit pas un ancien schéma de production. Le service n’est pas chargé par le Sandbox.
@@ -105,3 +108,10 @@ dopamine-sim --scenario benchmark_500_enemies --duration 60 --output results.jso
 ```
 
 Le runner est fourni par `game/scripts/scenario_runner.gd` et consomme un fichier JSON de commandes. Le nom `dopamine-sim` et les options de durée illustrés ci-dessus restent une proposition distincte.
+
+## Audit du 2026-10-15
+
+- `git diff --check` exécuté ; résultat attendu consigné dans la revue du changement.
+- Godot n’est pas installé/détectable par `command -v godot` ou `command -v godot4` dans cet environnement ; tests GDScript non relancés.
+- Cibles natives non reconstruites dans cet audit ; les résultats historiques ci-dessus restent datés de leurs exécutions précédentes.
+- P5 v1.6 (dix armes, onze reliques, familles d’ennemis) n’est pas livré ; la progression permanente existante est un prototype anticipé P6.

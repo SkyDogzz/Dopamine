@@ -1,6 +1,6 @@
-# Proposition de réglages P5
+# Proposition de réglages de progression permanente (prototype P6 v1.6)
 
-**Statut : [PROPOSÉ] — document de revue, non accepté.** Cette proposition fournit des valeurs de départ pour calibrer P5. Elle ne ferme aucun point `[OUVERT]` du GDD v1.5 et ne change aucun contrat de gameplay. Les valeurs ci-dessous sont des hypothèses de prototype, à mesurer en jeu avant toute validation.
+**Statut : [PROPOSÉ] — document de revue, non accepté.** Cette proposition fournit des valeurs de départ pour calibrer les prototypes de progression (jalon P6 dans la roadmap v1.6). Elle ne ferme aucun point `[OUVERT]` du GDD v1.6 et ne change aucun contrat de gameplay. Les valeurs ci-dessous sont des hypothèses de prototype, à mesurer en jeu avant toute validation.
 
 ## 1. Équipement : plages de statistiques
 
@@ -58,7 +58,7 @@ Pour les six exemples du GDD, proposition d'un comportement borné, soumis à in
 
 Proposition : conserver la répartition éditoriale de 120 nœuds déjà marquée `[PROPOSÉ]` dans le GDD : 30 stats centrales, 8 déblocages d'armes, 8 déblocages de reliques, 20 maîtrises d'armes, 20 maîtrises de reliques, 14 utilitaires et 20 passerelles.
 
-Pour éviter que le coût dépende de l'ordre d'achat, proposer une profondeur fixe dans le graphe et la formule suivante : `coût Essence = 20 + 10 × profondeur + supplément de déblocage`. Suppléments : 0 pour bonus simples ; +80 pour un déblocage d'arme ou relique. Les prérequis restent déterministes et le respec reste gratuit. Les deux nœuds actuels (50 et 80 Essence) restent des exemples provisoires et seront remplacés si cette formule est retenue.
+Pour éviter que le coût dépende de l'ordre d'achat, proposer une profondeur fixe dans le graphe et la formule suivante : `coût Essence = 20 + 10 × profondeur + supplément de déblocage`. Suppléments : 0 pour bonus simples ; +80 pour un déblocage d'arme ou relique. Les prérequis restent déterministes et le respec reste gratuit. La formule est branchée sur les deux nœuds actuels, dont les profondeurs 3 et 6 donnent 50 et 80 Essence.
 
 Garde-fou de puissance proposé : attribuer un budget de puissance à chaque nœud et vérifier que l'ensemble atteignable reste dans la cible GDD d'environ +30% sur un build de référence. Aucun nœud ne doit réduire le HP decay à zéro ni accorder de revive infini.
 
@@ -68,7 +68,7 @@ Proposition : conserver les quatre seuils Exterminator et les bonus par palier d
 
 Répartition de 120 familles proposée par le GDD à garder comme squelette éditorial : Combat 25, Survival 15, Weapons 20, Relics & Evolutions 15, Equipment 15, Difficulty & Bosses 15, Progression 10, Secrets 5. Les bonus permanents doivent rester dans le budget GDD proposé de +12% global, mesuré sur plusieurs builds ; les récompenses utilitaires/effets spéciaux sont incluses dans ce budget après mesure.
 
-Proposition de priorité de contenu pour fermer P5 : compléter d'abord un petit ensemble traversant toutes les catégories et tous les types de métriques, valider l'idempotence/migration/persistance, puis remplir le catalogue complet par lots. La cible éditoriale de 120 n'est pas un prérequis technique au fonctionnement du système, mais le critère de contenu final indiqué par le GDD reste à satisfaire avant de déclarer P5 entièrement fini.
+Proposition de priorité pour le catalogue de progression : compléter d'abord un petit ensemble traversant toutes les catégories et tous les types de métriques, valider l'idempotence/migration/persistance, puis remplir le catalogue complet par lots. La cible éditoriale de 120 n'est pas un prérequis technique au fonctionnement du système, mais le contenu complet reste à satisfaire avant de déclarer le prototype de progression terminé.
 
 ## Revue et critères de validation
 
@@ -76,4 +76,4 @@ Avant d'accepter ces réglages, tester au minimum plusieurs builds de référenc
 
 ## État d'implémentation
 
-Les plages percentiles et leur affichage sont branchés ; les douze statistiques équipées modifient actuellement Survival (dégâts, vitesse d'attaque, critiques, PV, mobilité, soin par élimination, zone, cooldown, XP, collecte et vitesse projectile). Les rendements de démantèlement suivent le tableau proposé. Lightning burst, overflow shield et evolution shockwave ont des comportements de prototype. Les autres effets uniques restent des choix persistés sans comportement, et le générateur de catalogue de 120 nœuds/achievements n'est pas encore un contenu jouable. Ces limites sont reflétées dans la roadmap : cette tranche ne clôt pas P5.
+Les plages percentiles et leur affichage sont branchés ; les douze statistiques équipées modifient actuellement Survival (dégâts, vitesse d'attaque, critiques, PV, mobilité, soin par élimination, zone, cooldown, XP, collecte et vitesse projectile). Les rendements de démantèlement suivent le tableau proposé. Lightning burst, overflow shield, evolution shockwave et elite haste ont des comportements de prototype (elite haste n’est pas déclenchable avant l’arrivée des ennemis élites). Les effets free_first_chest_reroll et revive_knockback restent des choix persistés sans comportement, et le générateur de catalogue de 120 nœuds/achievements n'est pas encore un contenu jouable. Ces limites sont reflétées dans la roadmap : cette tranche ne clôt pas P6.

@@ -82,39 +82,34 @@ Livrer d’abord un Sandbox développeur autonome, puis le premier playable Surv
 - Batterie plus complète aux checkpoints Sandbox puis Survival ; benchmark de charge aux étapes P2/P4.
 - Commit par tranche cohérente ; pousser chaque commit lorsque `origin` est configurée.
 
-## Suite de la roadmap — P5 à P8
+## Suite de la roadmap — phases v1.6
 
-Cette suite suit `docs/planning/ROADMAP.md` et ne transforme pas les points **[PROPOSÉ]** ou **[OUVERT]** du GDD en décisions. Les jalons historiques ci-dessus restent inchangés.
+Le détail de référence est [`docs/planning/ROADMAP.md`](../docs/planning/ROADMAP.md). Le découpage a changé avec le GDD v1.6 : P5 désigne désormais le contenu de dix armes, onze reliques, évolutions et ennemis ; la progression permanente devient P6. Le prototype de progression déjà présent est un travail anticipé, non une clôture du jalon. L'arrêt demandé est après P5.
 
-### P5 — Progression persistante
+### P5 — Contenu de combat v1.6 (à réaliser)
 
-- [x] Étendre le profil versionné (v5) aux quatre poudres, nodes et progrès d'achievement ; migrer les profils existants sans perdre ressources/inventaire.
-- [x] Ajouter l'amélioration +0..+10 par ligne, conversion 10:1, démantèlement et choix d'effet unique ; les chances/coûts proposés et le rendement provisoire restent étiquetés.
-- [x] Ajouter deux nodes de compétences avec prérequis et respec gratuit ; coûts/bonus explicitement **[PROPOSÉS]**, graphe complet restant hors prototype.
-- [x] Ajouter le compteur de kills idempotent, les quatre tiers Exterminator d'exemple et leurs bonus cumulés **[PROPOSÉS]**.
-- [ ] Étendre le contenu aux 100–150 nodes et au catalogue complet d'achievements/effets ; calibrer équipement et économies selon les points **[OUVERTS]**.
-- [ ] Vérifier migration, sauvegarde/reprise et absence de double attribution.
+- [ ] Étendre les trois paires prototypes aux dix armes et onze reliques, dont Magnet Heart.
+- [ ] Implémenter cinq niveaux visibles, évolutions uniques automatiques et règles de coffre.
+- [ ] Garantir que le ramassage étendu n'attire jamais les coffres, quelle que soit la source du bonus.
+- [ ] Compléter statuts, synergies, 8–12 familles d'ennemis et boss multi-phases selon contrats validés ; garder exemples chiffrés/patterns proposés.
+- [ ] Vérifier tout le contenu dans Sandbox, une run Survival, et batterie complète de fin de jalon.
 
-### P6 — Modes sans arbitrage implicite
+### P6 — Progression permanente (prototype existant, jalon incomplet)
 
-- [ ] Implémenter Armorless selon les règles marquées **[VALIDÉ]** : départ sans équipement permanent, draft de trois objets après chaque vague, choix d'un seul, objets et Flux temporaires.
-- [ ] Garder les taux de rareté, économie Flux, récompenses, scaling et difficulté proposés configurables et clairement identifiés.
-- [ ] Ne pas ajouter l'entrée ni la poursuite Endless standard tant que ses règles **[OUVERTES]** n'ont pas été arbitrées.
-- [ ] Ajouter les tests de draft, pauses, mort/victoire et non-persistance temporaire.
+- [ ] Finaliser équipement, enhancement, économie, skill tree et achievements après résolution des points ouverts.
+- [ ] Migrer/reprendre les profils, vérifier idempotence et calibrer les effets en run.
 
-### P7 — Sandbox Lab
+### P7 — Endless et Armorless
 
-- [ ] Ajouter validation bornée, versionnée et isolée des presets JSON et codes de partage.
-- [ ] Étendre la capture/restauration native au build et à l'état Godot pour produire un snapshot complet, puis vérifier reprise et isolation bit-à-bit des saves normales.
-- [ ] Garder imports et exports Sandbox hors de `user://saves` et sans effets de progression officielle.
+- [ ] Livrer Armorless selon ses règles validées et garder les nombres proposés configurables.
+- [ ] Arbitrer le contrat Endless standard avant implémentation.
 
-### P8 — Finition et plateformes
+### P8 — Sandbox Lab complet
 
-- [ ] Vérifier build et chargement GDExtension Windows avec outil disponible ou CI Windows.
-- [ ] Mesurer CPU/GPU/P95/P99 et cible 60 FPS sur une machine de référence documentée ; le rendu logiciel ne suffit pas.
-- [ ] Parcourir les lacunes de contenu, accessibilité/manette, équilibrage, longues runs et préparation Steam sans déclarer les seuils atteints sans mesures.
+- [ ] Presets/codes versionnés et bornés, import en copie isolée, snapshots complets et reprise déterministe.
 
-### Checkpoints
+### P9 — Équilibrage, polish et livraison
 
-- [ ] Après chaque tranche P5/P6/P7 : tests ciblés, régression aux avancées majeures, commit explicite et push `origin`.
-- [ ] À P8 : build Linux et Windows, suite complète, mesures de performance et revue de livraison.
+- [ ] Mesures de performance sur matériel de référence, build Windows, régression, accessibilité et préparation de livraison.
+
+Les détails, critères de sortie, risques et points ouverts sont dans la roadmap de référence. Ne pas commencer P6 avant fin de P5 ; chaque évolution du statut doit être vérifiée à l'exécution et documentée.

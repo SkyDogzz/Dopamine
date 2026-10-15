@@ -48,17 +48,15 @@
 - [ ] Vagues, chests, 3 armes/reliques, mid-boss et boss final.
 - [ ] HUD, fin de run, sauvegarde minimale et vérification QA complète.
 
-## Jalons restants — P5 à P8
+## Jalons v1.6 — P5 à P9 (état actualisé)
 
-- [x] **P5.1** Migration profil v1–v4→v5 et prise en charge Basic/Refined/Pure/Prismatic Powder.
-- [x] **P5.2** Amélioration d'une ligne +0..+10, échecs, pity, conversion Powder et UI ; taux/probabilités explicitement proposés.
-- [x] **P5.3 prototype** Démantèlement (rendement provisoire) et choix d'effet unique persistant ; aucun effet de combat avant validation du catalogue.
-- [x] **P5.4 prototype** Node Vitality/respec gratuit et Exterminator jusqu'au premier seuil ; aucune prime de gameplay proposée appliquée.
-- [ ] **P5 restant** Graphe 100–150 nodes, seuils/bonus complets d'achievements, catalogue unique effects et plage des rolls à définir dans le GDD.
-- [ ] **P6.1** Mode Armorless conforme aux règles **[VALIDÉES]** avec draft à trois, choix unique et Flux temporaire.
-- [ ] **P6.2** Reprise des vagues Endless et records Armorless selon contrats validés ; garder la progression permanente proposée désactivée/non attribuée tant que non arbitrée.
-- [ ] **P7.1** Presets Sandbox JSON versionnés, bornés, UI et code de partage sans charge utile exécutable.
-- [ ] **P7.2** Snapshot complet incluant état Godot/build et restauration, séparé des saves normales.
-- [ ] **P8.1** Build Windows via toolchain locale ou CI et documentation de son résultat.
-- [ ] **P8.2** Profiling 60 FPS sur machine de référence, métriques CPU/GPU P95/P99.
-- [ ] **P8.3** Audit contenu, accessibilité/manette, équilibrage, soak test et préparation Steam.
+Les prototypes de progression des anciennes tâches P5 correspondent maintenant à du travail anticipé pour P6. Le prochain jalon attendu est le contenu P5 du GDD v1.6.
+
+- [ ] **P5 contenu** Dix armes, onze reliques incluant Magnet Heart, évolutions automatiques, règles de coffre, 8–12 familles d'ennemis et boss à phases.
+- [ ] Invariant P5 : aucun bonus de pickup n'attire un coffre ; tests d'armes/statuts/synergies dans le Sandbox.
+- [~] **P6 progression (prototype anticipé, non terminé)** Profil v5, Powder/enhancement, deux nodes et Exterminator, équipement/effets prototypes existent. Valeurs encore proposées ; catalogue et migrations/calibrations incomplets ; certains effets ne font rien.
+- [ ] **P7** Armorless selon décisions validées ; arbitrer Endless standard avant développement.
+- [ ] **P8** Sandbox Lab joueur : presets/codes, import isolé, snapshot/reprise complets.
+- [ ] **P9** Équilibrage, accessibilité, performance mesurée sur GPU intégré, Windows et préparation de livraison.
+
+Les critères de sortie détaillés figurent dans [`docs/planning/ROADMAP.md`](../docs/planning/ROADMAP.md). Les tests historiques cochés plus haut restent les résultats documentés au moment de leur exécution ; ils ne signifient pas qu'ils ont été relancés pendant le présent audit.

@@ -124,6 +124,7 @@ var _cached_unique_effects: Array[String] = []
 var _base_player_move_speed := 240.0
 var _next_unique_lightning_time := 0.0
 var _evolution_shockwave_triggered := false
+var _elite_haste_expires_at := 0.0
 
 @onready var _hp_value: Label = $HUD/RunPanel/RunInfo/HPValue
 @onready var _hp_bar: ProgressBar = $HUD/RunPanel/RunInfo/HPBar
@@ -176,6 +177,7 @@ func _ready() -> void:
 	_skill_tree_panel.close_requested.connect(_close_skill_tree)
 	_skill_tree_panel.unlock_requested.connect(_unlock_skill_node)
 	_skill_tree_panel.respec_requested.connect(_respec_skill_tree)
+	_skill_tree_panel.progression_service = progression_service
 	_equipment_button.visible = progression_service != null
 	_skill_tree_button.visible = progression_service != null
 	player_max_hp = simulation.initial_player_hp()
@@ -212,6 +214,7 @@ func _process(_delta: float) -> void:
 			player_shield = 0.0
 		_take_player_damage(simulation.health_decay_amount(player_active_time, elapsed_active_time))
 		player_active_time += elapsed_active_time
+	_refresh_player_move_speed()
 	_last_simulation_time = current_simulation_time
 	var latest_event_sequence := _last_combat_event_sequence
 	for event in state["events"]:
@@ -228,6 +231,9 @@ func _process(_delta: float) -> void:
 			"death":
 				kill_count += 1
 				var dead_enemy_type: String = str(event.get("target_type", ""))
+				if dead_enemy_type == "elite" and _has_unique_effect("elite_haste"):
+					_elite_haste_expires_at = player_active_time + 3.0
+					_refresh_player_move_speed()
 				if dead_enemy_type == "mid_boss":
 					_boss_spawn_pending = false
 					wave_director.boss_defeated()
@@ -515,7 +521,7 @@ func _choose_unique_effect(instance_id: String, effect_id: String) -> void:
 	if result.get("ok", false):
 		_refresh_persistent_bonuses()
 		_equipment_panel.present(result["profile"])
-		_equipment_panel.show_feedback("EFFECT SAVED — PROPOSED BEHAVIOR ACTIVE WHEN EQUIPPED" if effect_id in ["lightning_burst", "overflow_shield", "evolution_shockwave"] else "EFFECT SAVED — PROTOTYPE ONLY; NO GAMEPLAY EFFECT")
+		_equipment_panel.show_feedback("EFFECT SAVED — PROPOSED BEHAVIOR ACTIVE WHEN EQUIPPED" if effect_id in ["lightning_burst", "overflow_shield", "evolution_shockwave", "elite_haste"] else "EFFECT SAVED — PROTOTYPE ONLY; NO GAMEPLAY EFFECT")
 	else:
 		_equipment_panel.show_feedback("EFFECT CHOICE FAILED: %s" % str(result.get("error", "unknown")))
 
@@ -558,8 +564,7 @@ func _collect_nearby_chests(state: Dictionary) -> void:
 		return
 	for index in range(_world_chests.size()):
 		var chest: Dictionary = _world_chests[index]
-		var pickup_radius := chest_collection_radius * (1.0 + _equipment_bonus("pickup_radius_pct") / 100.0)
-		if player.global_position.distance_squared_to(chest["position"]) > pickup_radius * pickup_radius:
+		if player.global_position.distance_squared_to(chest["position"]) > chest_collection_radius * chest_collection_radius:
 			continue
 		if open_chest_family(str(chest["family"])):
 			_world_chests.remove_at(index)
@@ -859,10 +864,14 @@ func _refresh_persistent_bonuses() -> void:
 		_cached_persistent_damage_multiplier += progression_service.skill_bonus("damage_pct")
 		_cached_persistent_damage_multiplier += progression_service.achievement_bonus("damage_pct")
 		_cached_persistent_damage_multiplier += _equipment_bonus("damage_pct") / 100.0
-		player.move_speed = _base_player_move_speed * (1.0 + _equipment_bonus("move_speed_pct") / 100.0)
+		_refresh_player_move_speed()
 
 func _equipment_bonus(stat_id: String) -> float:
 	return float(_cached_equipment_bonuses.get(stat_id, 0.0))
+
+func _refresh_player_move_speed() -> void:
+	var haste_multiplier := 1.15 if _has_unique_effect("elite_haste") and player_active_time < _elite_haste_expires_at else 1.0
+	player.move_speed = _base_player_move_speed * (1.0 + _equipment_bonus("move_speed_pct") / 100.0) * haste_multiplier
 
 func _effective_weapon_cooldown(base_cooldown: float) -> float:
 	var speed_multiplier := 1.0 + _equipment_bonus("attack_speed_pct") / 100.0
