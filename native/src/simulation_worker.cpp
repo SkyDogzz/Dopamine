@@ -2,9 +2,22 @@
 
 #include <algorithm>
 #include <cmath>
+#include <limits>
 #include <utility>
 
 namespace dopamine::sim {
+
+namespace {
+
+bool valid_steering_config(const SteeringConfig &config) {
+	return std::isfinite(config.max_speed) && config.max_speed >= 0.0F &&
+			std::isfinite(config.separation_radius) && config.separation_radius >= 0.0F &&
+			std::isfinite(config.separation_weight) && config.separation_weight >= 0.0F &&
+			config.separation_weight <= 1.0F && std::isfinite(config.spatial_hash.cell_size) &&
+			config.spatial_hash.cell_size > 0.0F;
+}
+
+} // namespace
 
 SimulationWorker::SimulationWorker() {
 	published_.store(std::make_shared<SimulationSnapshot>());
@@ -34,8 +47,18 @@ void SimulationWorker::stop() {
 	thread_.join();
 	{
 		std::lock_guard queue_lock(queue_mutex_);
+		for (const SimulationCommand &command : queue_) {
+			if (command.capture_promise) {
+				try {
+					command.capture_promise->set_exception(std::make_exception_ptr(
+							std::runtime_error("worker stopped before state capture")));
+				} catch (const std::future_error &) {
+				}
+			}
+		}
 		queue_.clear();
 	}
+	capture_pending_.store(false);
 	running_.store(false);
 	apply(SimulationCommand{.type = CommandType::Pause});
 	publish(0.0);
@@ -57,6 +80,101 @@ uint64_t SimulationWorker::submit(SimulationCommand command) {
 		queue_cv_.notify_one();
 		return sequence;
 	}
+}
+
+std::optional<SimulationWorkerState> SimulationWorker::capture_state(std::chrono::milliseconds timeout) {
+	if (!running_.load()) {
+		return std::nullopt;
+	}
+	bool expected = false;
+	if (!capture_pending_.compare_exchange_strong(expected, true)) {
+		return std::nullopt;
+	}
+	auto promise = std::make_shared<std::promise<SimulationWorkerState>>();
+	auto result = promise->get_future();
+	SimulationCommand command;
+	command.type = CommandType::CaptureState;
+	command.capture_promise = std::move(promise);
+	if (submit(std::move(command)) == 0) {
+		capture_pending_.store(false);
+		return std::nullopt;
+	}
+	if (result.wait_for(timeout) != std::future_status::ready) {
+		return std::nullopt;
+	}
+	try {
+		return result.get();
+	} catch (const std::exception &) {
+		return std::nullopt;
+	}
+}
+
+bool SimulationWorker::restore_state(const SimulationWorkerState &state) {
+	if (state.format_version != 1 || state.next_sequence == 0 ||
+			state.next_sequence <= state.pending_sequence ||
+			state.pending_commands.size() > max_queued_commands_ ||
+			state.pending_events.size() > max_pending_events_ || state.logs.size() > 100 ||
+			!std::isfinite(state.speed_multiplier) || state.speed_multiplier < 0.25 || state.speed_multiplier > 4.0 ||
+			!std::isfinite(state.deferred_elapsed) || state.deferred_elapsed < 0.0 ||
+			!valid_steering_config(state.steering_config) ||
+			(state.has_steering_target && (!std::isfinite(state.steering_target_x) ||
+					!std::isfinite(state.steering_target_y))) ||
+			state.core_state.next_event_sequence <= state.last_event_sequence) {
+		return false;
+	}
+	uint64_t previous_event_sequence = 0;
+	for (const CombatEvent &event : state.pending_events) {
+		if (event.sequence == 0 || event.sequence <= previous_event_sequence ||
+				event.sequence > state.last_event_sequence) {
+			return false;
+		}
+		previous_event_sequence = event.sequence;
+	}
+	uint64_t previous_command_sequence = state.pending_sequence;
+	for (const SimulationCommand &command : state.pending_commands) {
+		if (previous_command_sequence == std::numeric_limits<uint64_t>::max() ||
+				command.sequence != previous_command_sequence + 1 || command.capture_promise ||
+				static_cast<uint8_t>(command.type) >= static_cast<uint8_t>(CommandType::CaptureState)) {
+			return false;
+		}
+		previous_command_sequence = command.sequence;
+	}
+	if (previous_command_sequence == std::numeric_limits<uint64_t>::max() ||
+			state.next_sequence != previous_command_sequence + 1) {
+		return false;
+	}
+	SimulationCore restored_core;
+	try {
+		restored_core.restore_state(state.core_state);
+	} catch (const std::exception &) {
+		return false;
+	}
+
+	std::lock_guard lifecycle_lock(lifecycle_mutex_);
+	if (thread_.joinable() || running_.load() || capture_pending_.load()) {
+		return false;
+	}
+	{
+		std::lock_guard queue_lock(queue_mutex_);
+		queue_ = state.pending_commands;
+		next_sequence_ = state.next_sequence;
+	}
+	simulation_ = std::move(restored_core);
+	paused_ = state.paused;
+	speed_multiplier_ = state.speed_multiplier;
+	has_steering_target_ = state.has_steering_target;
+	steering_target_x_ = state.steering_target_x;
+	steering_target_y_ = state.steering_target_y;
+	steering_config_ = state.steering_config;
+	pending_sequence_ = state.pending_sequence;
+	rejected_commands_.store(state.rejected_commands);
+	pending_events_ = state.pending_events;
+	last_event_sequence_ = state.last_event_sequence;
+	collision_count_ = state.collision_count;
+	deferred_elapsed_ = state.deferred_elapsed;
+	logs_ = state.logs;
+	publish(0.0);
+	return true;
 }
 
 std::shared_ptr<const SimulationSnapshot> SimulationWorker::snapshot() const {
@@ -90,8 +208,10 @@ void SimulationWorker::run(std::stop_token stop_token) {
 			commands.swap(queue_);
 		}
 
-		for (const SimulationCommand &command : commands) {
-			apply(command);
+		while (!commands.empty()) {
+			SimulationCommand command = std::move(commands.front());
+			commands.pop_front();
+			apply(command, &commands);
 		}
 
 		const auto now = std::chrono::steady_clock::now();
@@ -140,7 +260,8 @@ void SimulationWorker::run(std::stop_token stop_token) {
 	applied_cv_.notify_all();
 }
 
-void SimulationWorker::apply(const SimulationCommand &command) {
+void SimulationWorker::apply(const SimulationCommand &command,
+		const std::deque<SimulationCommand> *batch_pending) {
 	switch (command.type) {
 		case CommandType::Spawn: {
 			if (command.count == 0 || command.count > 500 || simulation_.entity_count() + command.count > max_entities_) {
@@ -316,6 +437,45 @@ void SimulationWorker::apply(const SimulationCommand &command) {
 			collision_count_ = 0;
 			deferred_elapsed_ = 0.0;
 			log("simulation reset");
+			break;
+		case CommandType::CaptureState:
+			if (!command.capture_promise) {
+				log("state capture ignored: missing response channel");
+				break;
+			}
+			{
+				SimulationWorkerState state;
+				state.core_state = simulation_.capture_state();
+				state.paused = paused_;
+				state.speed_multiplier = speed_multiplier_;
+				state.has_steering_target = has_steering_target_;
+				state.steering_target_x = steering_target_x_;
+				state.steering_target_y = steering_target_y_;
+				state.steering_config = steering_config_;
+				state.pending_sequence = command.sequence;
+				state.rejected_commands = rejected_commands_.load();
+				state.pending_events = pending_events_;
+				state.last_event_sequence = last_event_sequence_;
+				state.collision_count = collision_count_;
+				state.deferred_elapsed = deferred_elapsed_;
+				state.logs = logs_;
+				{
+					std::lock_guard queue_lock(queue_mutex_);
+					if (batch_pending != nullptr) {
+						state.pending_commands = *batch_pending;
+					}
+					state.pending_commands.insert(state.pending_commands.end(), queue_.begin(), queue_.end());
+					for (SimulationCommand &pending : state.pending_commands) {
+						pending.capture_promise.reset();
+					}
+					state.next_sequence = next_sequence_;
+				}
+				capture_pending_.store(false);
+				try {
+					command.capture_promise->set_value(std::move(state));
+				} catch (const std::future_error &) {
+				}
+			}
 			break;
 	}
 	if (command.sequence != 0) {

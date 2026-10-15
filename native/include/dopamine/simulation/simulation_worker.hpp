@@ -7,8 +7,10 @@
 #include <condition_variable>
 #include <cstdint>
 #include <deque>
+#include <future>
 #include <memory>
 #include <mutex>
+#include <optional>
 #include <string>
 #include <thread>
 #include <vector>
@@ -31,7 +33,10 @@ enum class CommandType {
 	ApplyDamageOverTime,
 	AcknowledgeEvents,
 	Reset,
+	CaptureState,
 };
+
+struct SimulationWorkerState;
 
 struct SimulationCommand {
 	CommandType type = CommandType::Pause;
@@ -62,6 +67,27 @@ struct SimulationCommand {
 	double status_duration_seconds = 0.0;
 	uint64_t event_sequence = 0;
 	SteeringConfig steering;
+	std::shared_ptr<std::promise<SimulationWorkerState>> capture_promise;
+};
+
+struct SimulationWorkerState {
+	uint32_t format_version = 1;
+	SimulationCoreState core_state;
+	bool paused = true;
+	double speed_multiplier = 1.0;
+	bool has_steering_target = false;
+	float steering_target_x = 0.0F;
+	float steering_target_y = 0.0F;
+	SteeringConfig steering_config;
+	std::deque<SimulationCommand> pending_commands;
+	uint64_t next_sequence = 1;
+	uint64_t pending_sequence = 0;
+	uint64_t rejected_commands = 0;
+	std::vector<CombatEvent> pending_events;
+	uint64_t last_event_sequence = 0;
+	uint64_t collision_count = 0;
+	double deferred_elapsed = 0.0;
+	std::vector<std::string> logs;
 };
 
 struct SimulationSnapshot {
@@ -91,12 +117,15 @@ public:
 	void stop();
 	bool is_running() const { return running_.load(); }
 	uint64_t submit(SimulationCommand command);
+	std::optional<SimulationWorkerState> capture_state(std::chrono::milliseconds timeout = std::chrono::seconds(1));
+	bool restore_state(const SimulationWorkerState &state);
 	std::shared_ptr<const SimulationSnapshot> snapshot() const;
 	bool wait_until_applied(uint64_t sequence, std::chrono::milliseconds timeout) const;
 
 private:
 	void run(std::stop_token stop_token);
-	void apply(const SimulationCommand &command);
+	void apply(const SimulationCommand &command,
+			const std::deque<SimulationCommand> *batch_pending = nullptr);
 	void publish(double frame_time_ms);
 	void log(std::string message);
 	void append_events(std::vector<CombatEvent> events);
@@ -115,6 +144,7 @@ private:
 	std::condition_variable queue_cv_;
 	std::deque<SimulationCommand> queue_;
 	uint64_t next_sequence_ = 1;
+	std::atomic<bool> capture_pending_ = false;
 
 	mutable std::mutex applied_mutex_;
 	mutable std::condition_variable applied_cv_;

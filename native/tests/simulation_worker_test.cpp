@@ -11,6 +11,7 @@ using namespace std::chrono_literals;
 using dopamine::sim::CommandType;
 using dopamine::sim::SimulationCommand;
 using dopamine::sim::SimulationWorker;
+using dopamine::sim::SimulationWorkerState;
 
 namespace {
 
@@ -257,7 +258,78 @@ int main() {
 	require(benchmark_combat->projectile_count == 0 && benchmark_combat->collision_count >= 2000 &&
 			benchmark_combat->events.size() <= 4000,
 			"worker should resolve the full projectile workload without exceeding its reserved event budget");
+	SimulationCommand capture_speed;
+	capture_speed.type = CommandType::SetSpeed;
+	capture_speed.speed_multiplier = 2.0;
+	submit_and_wait(worker, capture_speed);
+	SimulationCommand capture_overrides;
+	capture_overrides.type = CommandType::ApplySandboxOverrides;
+	capture_overrides.steering.max_speed = 48.0F;
+	capture_overrides.steering.separation_radius = 30.0F;
+	capture_overrides.steering.separation_weight = 0.25F;
+	capture_overrides.steering.spatial_hash.cell_size = 32.0F;
+	submit_and_wait(worker, capture_overrides);
+	SimulationCommand capture_target;
+	capture_target.type = CommandType::SetSteeringTarget;
+	capture_target.x = 12.0F;
+	capture_target.y = -6.0F;
+	capture_target.steering = capture_overrides.steering;
+	submit_and_wait(worker, capture_target);
+	const auto captured_worker_state = worker.capture_state(1s);
+	require(captured_worker_state.has_value(), "worker should capture a coherent state at a command barrier");
+	const SimulationWorkerState saved_worker_state = *captured_worker_state;
+	require(saved_worker_state.paused && saved_worker_state.speed_multiplier == 2.0 &&
+			saved_worker_state.has_steering_target && saved_worker_state.steering_target_x == 12.0F &&
+			saved_worker_state.steering_target_y == -6.0F && saved_worker_state.steering_config.max_speed == 48.0F &&
+			saved_worker_state.collision_count == benchmark_combat->collision_count &&
+			saved_worker_state.pending_events.size() == benchmark_combat->events.size() &&
+			!saved_worker_state.logs.empty() && saved_worker_state.pending_commands.empty() &&
+			saved_worker_state.next_sequence == saved_worker_state.pending_sequence + 1,
+			"worker state should include simulation controls, queues, events, logs and sequence counters");
+	require(!worker.restore_state(saved_worker_state), "worker restore should require a stopped worker");
 
+	worker.stop();
+	SimulationWorkerState invalid_worker_state = saved_worker_state;
+	invalid_worker_state.speed_multiplier = 8.0;
+	const auto stopped_snapshot = worker.snapshot();
+	require(!worker.restore_state(invalid_worker_state) &&
+			worker.snapshot()->simulation_time == stopped_snapshot->simulation_time &&
+			worker.snapshot()->entities.size() == stopped_snapshot->entities.size(),
+			"invalid worker state should be rejected without changing the stopped worker");
+	SimulationWorkerState gapped_queue_state = saved_worker_state;
+	SimulationCommand queued_spawn;
+	queued_spawn.type = CommandType::Spawn;
+	queued_spawn.sequence = gapped_queue_state.next_sequence + 1;
+	queued_spawn.entity_type = "capture_probe";
+	gapped_queue_state.pending_commands.push_back(queued_spawn);
+	++gapped_queue_state.next_sequence;
+	require(!worker.restore_state(gapped_queue_state), "worker restore should reject command sequence gaps");
+	SimulationWorkerState queued_command_state = saved_worker_state;
+	queued_spawn.sequence = queued_command_state.next_sequence;
+	queued_command_state.pending_commands.push_back(queued_spawn);
+	++queued_command_state.next_sequence;
+	require(worker.restore_state(queued_command_state), "stopped worker should restore a validated full worker state");
+	const auto restored_worker_snapshot = worker.snapshot();
+	require(restored_worker_snapshot->paused && restored_worker_snapshot->speed_multiplier == 2.0 &&
+			restored_worker_snapshot->collision_count == saved_worker_state.collision_count &&
+			restored_worker_snapshot->events.size() == saved_worker_state.pending_events.size() &&
+			restored_worker_snapshot->last_sequence == saved_worker_state.pending_sequence &&
+			restored_worker_snapshot->steering_config.max_speed == 48.0F,
+			"restored worker snapshot should match the captured worker state");
+	worker.start();
+	SimulationCommand acknowledge_restored_events;
+	acknowledge_restored_events.type = CommandType::AcknowledgeEvents;
+	acknowledge_restored_events.event_sequence = queued_command_state.last_event_sequence;
+	const uint64_t acknowledge_sequence = submit_and_wait(worker, acknowledge_restored_events);
+	require(acknowledge_sequence == queued_command_state.next_sequence &&
+			worker.snapshot()->entities.size() == queued_command_state.core_state.entity_count + 1,
+			"restored worker should continue command numbering after the captured queue");
+	step.delta_seconds = 0.01;
+	const uint64_t restored_step_sequence = submit_and_wait(worker, step);
+	const auto after_restored_step = worker.snapshot();
+	require(restored_step_sequence == acknowledge_sequence + 1 && after_restored_step->events.empty() &&
+			std::abs(after_restored_step->simulation_time - queued_command_state.core_state.simulation_time - 0.02) < 0.001,
+			"restored worker should continue from its saved simulation clock and speed");
 	worker.stop();
 	worker.stop();
 	require(!worker.is_running(), "stop should be safe and leave no worker thread");
