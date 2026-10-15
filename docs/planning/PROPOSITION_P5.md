@@ -52,7 +52,7 @@ Pour les six exemples du GDD, proposition d'un comportement borné, soumis à in
 | Premier chest relançable | Le premier choix de chest de la run peut être relancé une fois gratuitement. | Le reroll ne peut pas reproduire les options déjà proposées dans ce chest. |
 | Onde de recul à la résurrection | À la résurrection, repousse les ennemis proches de 120 px. | Une fois par run ; n'accorde ni soin, ni invulnérabilité, ni résurrection supplémentaire. |
 
-Dépendances à respecter : l'effet de bouclier nécessite un état de bouclier visible et sauvegardable pendant la run ; le reroll gratuit nécessite une UI de choix de chest ; l'onde de recul nécessite une résurrection de gameplay déjà définie. Tant que ces contrats n'existent pas, l'effet reste sélectionnable/affiché comme prototype sans prétendre qu'il agit.
+État : l'overflow shield a un état temporaire visible dans le HUD et absorbe les dégâts de la run ; il n'est pas sauvegardé, car la run ne peut pas encore être reprise après fermeture. Le reroll gratuit nécessite une UI de choix de chest avec un pool d'options suffisant ; l'onde de recul nécessite une résurrection de gameplay définie. Ces deux effets restent sélectionnables mais sans comportement.
 
 ## 4. Skill tree
 
@@ -76,4 +76,4 @@ Avant d'accepter ces réglages, tester au minimum plusieurs builds de référenc
 
 ## État d'implémentation
 
-Les plages percentiles et leur affichage sont branchés ; les douze statistiques équipées modifient actuellement Survival (dégâts, vitesse d'attaque, critiques, PV, mobilité, soin par élimination, zone, cooldown, XP, collecte et vitesse projectile). Les rendements de démantèlement suivent le tableau proposé. Les effets uniques sont toujours des choix persistés sans comportement, et le générateur de catalogue de 120 nœuds/achievements n'est pas encore un contenu jouable. Ces limites sont reflétées dans la roadmap : cette tranche ne clôt pas P5.
+Les plages percentiles et leur affichage sont branchés ; les douze statistiques équipées modifient actuellement Survival (dégâts, vitesse d'attaque, critiques, PV, mobilité, soin par élimination, zone, cooldown, XP, collecte et vitesse projectile). Les rendements de démantèlement suivent le tableau proposé. Lightning burst, overflow shield et evolution shockwave ont des comportements de prototype. Les autres effets uniques restent des choix persistés sans comportement, et le générateur de catalogue de 120 nœuds/achievements n'est pas encore un contenu jouable. Ces limites sont reflétées dans la roadmap : cette tranche ne clôt pas P5.

@@ -62,6 +62,8 @@ func _run() -> void:
 	if choose_effect_button.text != "CHOOSE EFFECT":
 		_fail("Legendary equipment should expose its unique effect choice")
 		return
+	var effect_options: OptionButton = item_content.get_child(5).get_child(0)
+	effect_options.select(1)
 	choose_effect_button.pressed.emit()
 	var chosen_effect_profile: Dictionary = progression.load_profile()["profile"]
 	if chosen_effect_profile["equipment_inventory"][0]["unique_effect_id"] == "pending_choice":
@@ -92,6 +94,16 @@ func _run() -> void:
 				not _find_label(items.get_child(0).get_child(0).get_child(1),
 				"EQUIPPED — proposed stat rolls active"):
 		_fail("Equipping an item should persist and show that its proposed stat rolls are active")
+		return
+	session.player_hp = session.player_max_hp
+	session._pending_lifesteal = 10.0
+	session._apply_pending_lifesteal(1.0)
+	if not is_equal_approx(session.player_shield, 5.0):
+		_fail("Equipped Overflow Shield should convert half of overhealing into a capped temporary shield")
+		return
+	session._take_player_damage(4.0)
+	if not is_equal_approx(session.player_shield, 1.0) or not is_equal_approx(session.player_hp, session.player_max_hp):
+		_fail("The temporary shield should absorb incoming damage before player HP")
 		return
 	_find_button(items.get_child(1).get_child(0).get_child(1), "EQUIP").pressed.emit()
 	var replaced_profile: Dictionary = progression.load_profile()["profile"]

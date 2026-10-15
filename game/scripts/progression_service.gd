@@ -19,14 +19,6 @@ const PROTOTYPE_SKILL_NODES := {
 	"vitality_starter": {"essence_cost": 50, "max_hp_pct": 0.05, "prerequisites": [], "status": "PROPOSED", "depth": 3},
 	"focused_training": {"essence_cost": 80, "damage_pct": 0.03, "prerequisites": ["vitality_starter"], "status": "PROPOSED", "depth": 6},
 }
-const SKILL_CATEGORIES := {
-	"core_stats": 30, "weapon_unlocks": 8, "relic_unlocks": 8,
-	"weapon_mastery": 20, "relic_mastery": 20, "utilities": 14, "bridges": 20,
-}
-const ACHIEVEMENT_CATEGORIES := {
-	"combat": 25, "survival": 15, "weapons": 20, "relics_evolutions": 15,
-	"equipment": 15, "difficulty_bosses": 15, "progression": 10, "secrets": 5,
-}
 const PROPOSED_EXTERMINATOR_THRESHOLDS := [100, 1000, 10000, 100000]
 const PROPOSED_EXTERMINATOR_DAMAGE_BONUSES := [0.0005, 0.001, 0.0015, 0.002]
 const RUN_ID_PATTERN := "^[A-Za-z0-9_-]{1,128}$"
@@ -313,29 +305,16 @@ func equipment_bonuses() -> Dictionary:
 			)
 	return bonuses
 
-func proposed_skill_catalog() -> Array[Dictionary]:
-	var nodes: Array[Dictionary] = []
-	for category in SKILL_CATEGORIES:
-		for index in range(SKILL_CATEGORIES[category]):
-			var node_id := "%s_%02d" % [category, index + 1]
-			var depth := 1 + index % 10
-			nodes.append({
-				"id": node_id, "category": category, "depth": depth,
-				"essence_cost": 20 + 10 * depth + (80 if category in ["weapon_unlocks", "relic_unlocks"] else 0),
-				"prerequisites": [], "status": "PROPOSED_CONTENT_PLACEHOLDER",
-			})
-	return nodes
-
-func proposed_achievement_catalog() -> Array[Dictionary]:
-	var achievements: Array[Dictionary] = []
-	for category in ACHIEVEMENT_CATEGORIES:
-		for index in range(ACHIEVEMENT_CATEGORIES[category]):
-			achievements.append({
-				"id": "%s_%02d" % [category, index + 1], "category": category,
-				"tiers": PROPOSED_EXTERMINATOR_THRESHOLDS.duplicate(),
-				"status": "PROPOSED_CONTENT_PLACEHOLDER",
-			})
-	return achievements
+func equipped_unique_effects() -> Array[String]:
+	var effects: Array[String] = []
+	var result := load_profile()
+	if not result.get("ok", false):
+		return effects
+	for equipment in result["profile"]["equipment_inventory"]:
+		var effect_id := str(equipment.get("unique_effect_id", ""))
+		if equipment.get("equipped", false) and effect_id in PROPOSED_UNIQUE_EFFECTS and not effects.has(effect_id):
+			effects.append(effect_id)
+	return effects
 
 func achievement_bonus(stat_id: String) -> float:
 	if stat_id != "damage_pct":

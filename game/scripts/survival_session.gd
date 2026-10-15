@@ -91,6 +91,8 @@ var loadout: RefCounted
 var last_target_sequence := 0
 var player_hp := 0.0
 var player_max_hp := 0.0
+var player_shield := 0.0
+var _shield_expires_at := 0.0
 var player_active_time := 0.0
 var wave_director: RefCounted
 var _next_enemy_spawn_time := 0.0
@@ -118,7 +120,10 @@ var _pending_lifesteal := 0.0
 var _inventory_was_running := false
 var _cached_persistent_damage_multiplier := 1.0
 var _cached_equipment_bonuses: Dictionary = {}
+var _cached_unique_effects: Array[String] = []
 var _base_player_move_speed := 240.0
+var _next_unique_lightning_time := 0.0
+var _evolution_shockwave_triggered := false
 
 @onready var _hp_value: Label = $HUD/RunPanel/RunInfo/HPValue
 @onready var _hp_bar: ProgressBar = $HUD/RunPanel/RunInfo/HPBar
@@ -203,7 +208,9 @@ func _process(_delta: float) -> void:
 	var current_simulation_time: float = float(state["simulation_time"])
 	var elapsed_active_time := current_simulation_time - _last_simulation_time
 	if elapsed_active_time > 0.0 and not run_over:
-		player_hp = maxf(0.0, player_hp - simulation.health_decay_amount(player_active_time, elapsed_active_time))
+		if player_shield > 0.0 and player_active_time >= _shield_expires_at:
+			player_shield = 0.0
+		_take_player_damage(simulation.health_decay_amount(player_active_time, elapsed_active_time))
 		player_active_time += elapsed_active_time
 	_last_simulation_time = current_simulation_time
 	var latest_event_sequence := _last_combat_event_sequence
@@ -276,7 +283,7 @@ func _apply_contact_damage(state: Dictionary, current_simulation_time: float) ->
 		var enemy_position := Vector2(float(transform["x"]), float(transform["y"]))
 		if player.global_position.distance_squared_to(enemy_position) > contact_distance * contact_distance:
 			continue
-		player_hp = maxf(0.0, player_hp - contact_damage_per_hit)
+		_take_player_damage(contact_damage_per_hit)
 		_contact_invulnerable_until = current_simulation_time + contact_invulnerability_seconds
 		return
 
@@ -287,10 +294,21 @@ func _apply_pending_lifesteal(elapsed_active_time: float) -> void:
 	var healing := minf(_pending_lifesteal, normal_healing_limit)
 	healing += maxf(0.0, _pending_lifesteal - normal_healing_limit) * 0.25
 	_pending_lifesteal = 0.0
-	player_hp = minf(player_max_hp, player_hp + healing)
+	var applied_healing := minf(healing, player_max_hp - player_hp)
+	player_hp += applied_healing
+	if _has_unique_effect("overflow_shield") and healing > applied_healing:
+		player_shield = minf(player_max_hp * 0.1, player_shield + (healing - applied_healing) * 0.5)
+		_shield_expires_at = player_active_time + 5.0
+
+func _take_player_damage(amount: float) -> void:
+	var absorbed := minf(player_shield, amount)
+	player_shield -= absorbed
+	player_hp = maxf(0.0, player_hp - (amount - absorbed))
 
 func _refresh_hud(state: Dictionary) -> void:
-	_hp_value.text = "HP  %.1f / %.0f" % [player_hp, player_max_hp]
+	_hp_value.text = "HP  %.1f / %.0f%s" % [
+		player_hp, player_max_hp, "  •  SHIELD %.1f" % player_shield if player_shield > 0.0 else "",
+	]
 	_hp_bar.max_value = player_max_hp
 	_hp_bar.value = player_hp
 	_xp_value.text = "LV %d  XP %.0f / %.0f" % [player_level, player_xp, player_xp_to_next]
@@ -495,8 +513,9 @@ func _choose_unique_effect(instance_id: String, effect_id: String) -> void:
 		return
 	var result: Dictionary = progression_service.choose_unique_effect(instance_id, effect_id)
 	if result.get("ok", false):
+		_refresh_persistent_bonuses()
 		_equipment_panel.present(result["profile"])
-		_equipment_panel.show_feedback("EFFECT SAVED — PROTOTYPE ONLY; NO GAMEPLAY EFFECT")
+		_equipment_panel.show_feedback("EFFECT SAVED — PROPOSED BEHAVIOR ACTIVE WHEN EQUIPPED" if effect_id in ["lightning_burst", "overflow_shield", "evolution_shockwave"] else "EFFECT SAVED — PROTOTYPE ONLY; NO GAMEPLAY EFFECT")
 	else:
 		_equipment_panel.show_feedback("EFFECT CHOICE FAILED: %s" % str(result.get("error", "unknown")))
 
@@ -651,6 +670,7 @@ func _fire_lightning_conductor(active_time: float, paused: bool) -> void:
 	damage_multiplier *= _roll_equipment_critical_multiplier()
 	if level >= 5 and loadout.relic_level("storm_core") > 0:
 		_fire_infinite_circuit(active_time, chain_count, damage_multiplier)
+		_try_evolution_shockwave(lightning_damage * damage_multiplier)
 		return
 	var selected_ids: Array[Vector2i] = []
 	var max_distance_squared := lightning_range * lightning_range
@@ -687,6 +707,8 @@ func _fire_lightning_conductor(active_time: float, paused: bool) -> void:
 			var id: Dictionary = best["id"]
 			selected_ids.append(Vector2i(int(id["index"]), int(id["generation"])))
 	if not selected_ids.is_empty():
+		_try_unique_lightning_burst(lightning_damage * damage_multiplier)
+		_try_evolution_shockwave(lightning_damage * damage_multiplier)
 		_next_weapon_time = active_time + _effective_weapon_cooldown(lightning_cooldown)
 
 func _fire_infinite_circuit(active_time: float, target_budget: int, damage_multiplier: float) -> void:
@@ -735,6 +757,7 @@ func _fire_infinite_circuit(active_time: float, target_budget: int, damage_multi
 					break
 			frontier = next_frontier
 	if fired:
+		_try_unique_lightning_burst(lightning_damage * damage_multiplier)
 		_next_weapon_time = active_time + _effective_weapon_cooldown(lightning_cooldown)
 
 func _nearest_lightning_targets(origin: Vector2, excluded_ids: Array[Vector2i], limit: int) -> Array[Dictionary]:
@@ -785,6 +808,8 @@ func _fire_inferno_sprayer(active_time: float, paused: bool) -> void:
 			inferno_burn_interval_seconds, inferno_burn_duration_seconds,
 			explosion_radius, explosion_multiplier)
 	if projectile_sequence > 0:
+		_try_unique_lightning_burst(damage)
+		_try_evolution_shockwave(damage)
 		_next_inferno_time = active_time + _effective_weapon_cooldown(inferno_cooldown)
 
 func _fire_crimson_daggers(active_time: float, paused: bool) -> void:
@@ -817,6 +842,8 @@ func _fire_crimson_daggers(active_time: float, paused: bool) -> void:
 				daggers_projectile_lifetime, status_damage, status_interval, status_duration) > 0:
 			fired += 1
 	if fired > 0:
+		_try_unique_lightning_burst(damage)
+		_try_evolution_shockwave(damage)
 		_next_daggers_time = active_time + _effective_weapon_cooldown(daggers_cooldown)
 
 func _persistent_damage_multiplier() -> float:
@@ -825,8 +852,10 @@ func _persistent_damage_multiplier() -> float:
 func _refresh_persistent_bonuses() -> void:
 	_cached_persistent_damage_multiplier = 1.0
 	_cached_equipment_bonuses = {}
+	_cached_unique_effects = []
 	if progression_service != null:
 		_cached_equipment_bonuses = progression_service.equipment_bonuses()
+		_cached_unique_effects = progression_service.equipped_unique_effects()
 		_cached_persistent_damage_multiplier += progression_service.skill_bonus("damage_pct")
 		_cached_persistent_damage_multiplier += progression_service.achievement_bonus("damage_pct")
 		_cached_persistent_damage_multiplier += _equipment_bonus("damage_pct") / 100.0
@@ -851,6 +880,38 @@ func _equipment_projectile_speed(base_speed: float) -> float:
 
 func _equipment_area(base_area: float) -> float:
 	return base_area * (1.0 + _equipment_bonus("area_pct") / 100.0)
+
+func _has_unique_effect(effect_id: String) -> bool:
+	return _cached_unique_effects.has(effect_id)
+
+func _try_unique_lightning_burst(base_damage: float) -> void:
+	if not _has_unique_effect("lightning_burst") or player_active_time < _next_unique_lightning_time or randf() >= 0.1:
+		return
+	var target := _nearest_enemy(lightning_range)
+	if target.is_empty():
+		return
+	var direction: Vector2 = (target["position"] - player.global_position).normalized()
+	if direction == Vector2.ZERO:
+		direction = Vector2.RIGHT
+	if simulation.spawn_projectile("unique_lightning_burst", player.global_position + direction * 14.0,
+			direction * _equipment_projectile_speed(lightning_projectile_speed), base_damage * 0.5,
+			_equipment_area(lightning_projectile_radius), lightning_projectile_lifetime) > 0:
+		_next_unique_lightning_time = player_active_time + 2.0
+
+func _try_evolution_shockwave(base_damage: float) -> void:
+	if _evolution_shockwave_triggered or not _has_unique_effect("evolution_shockwave"):
+		return
+	var evolved := (loadout.weapon_level("lightning_conductor") >= 5 and loadout.relic_level("storm_core") > 0) or \
+			(loadout.weapon_level("inferno_sprayer") >= 5 and loadout.relic_level("infernal_heart") > 0) or \
+			(loadout.weapon_level("crimson_daggers") >= 5 and loadout.relic_level("blood_chalice") > 0)
+	if not evolved:
+		return
+	_evolution_shockwave_triggered = true
+	var count := 8
+	for index in range(count):
+		var direction := Vector2.RIGHT.rotated(TAU * float(index) / float(count))
+		simulation.spawn_projectile("evolution_shockwave", player.global_position + direction * 14.0,
+			direction * 400.0, base_damage, 6.0, 0.3)
 
 func _nearest_enemy(max_range: float) -> Dictionary:
 	var nearest: Dictionary = {}

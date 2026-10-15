@@ -32,11 +32,6 @@ func _run() -> void:
 			equipment_generator.stat_value("damage_pct", 1.0, 0) != 5.0:
 		_fail("Proposed equipment stat percentiles and enhancements should produce calibrated values")
 		return
-	var skill_catalog: Array = service.proposed_skill_catalog()
-	var achievement_catalog: Array = service.proposed_achievement_catalog()
-	if skill_catalog.size() != 120 or achievement_catalog.size() != 120:
-		_fail("Proposed content catalogs should preserve the 120 node and achievement targets")
-		return
 	var unique_stat_ids := ["damage_pct", "max_hp", "attack_speed_pct"]
 	inventory[0]["rarity"] = "legendary"
 	inventory[0]["stat_lines"] = []
@@ -109,7 +104,8 @@ func _run() -> void:
 	if not first_equipped.get("ok", false) or \
 			not first_equipped["profile"]["equipment_inventory"][0].get("equipped", false) or \
 				not is_equal_approx(service.equipment_bonus("damage_pct"), 3.24) or \
-				not is_equal_approx(service.equipment_bonus("max_hp"), 5.0):
+				not is_equal_approx(service.equipment_bonus("max_hp"), 5.0) or \
+				service.equipped_unique_effects() != ["overflow_shield"]:
 		_fail("Equipping a permanent item should persist its state and activate proposed damage/HP lines")
 		return
 	var replacement: Dictionary = service.set_equipped("survival_run-loss_equipment", true)
