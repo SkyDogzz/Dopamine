@@ -37,7 +37,7 @@
 - [x] Linux : Godot 4.7.2 charge la GDExtension et GCC 14.2 compile le projet avec `-std=gnu++23`.
 - [ ] Godot 4.7.2 charge la GDExtension sur Windows.
 - [ ] Vérifier le build Windows et le couple compilateur/dépendances verrouillé.
-- [ ] Aucune API Godot non thread-safe n'est appelée depuis le worker.
+- [x] Le worker natif ne dépend pas de Godot : ses deux sources n'incluent ni n'appellent l'API Godot; la cible `dopamine_simulation` ne lie pas `godot-cpp`.
 - [x] `stop()` libère le worker sans deadlock pendant des soumissions concurrentes; test CTest répété 10 fois avec limite de 10 s.
 
 ## ECS / simulation

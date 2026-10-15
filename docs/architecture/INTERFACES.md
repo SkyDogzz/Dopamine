@@ -6,6 +6,8 @@ Les exemples ci-dessous sont des **interfaces de conception proposées**, pas un
 
 `SimulationCore` reste indépendant de Godot et appartient exclusivement à `SimulationWorker`. Le worker possède le thread de simulation ; aucun Node ni élément du `SceneTree` n'est accédé depuis ce thread.
 
+Cette frontière est aussi imposée par le build : `dopamine_simulation` contient seulement `simulation_core.cpp` et `simulation_worker.cpp`, expose uniquement `native/include` et ne lie pas `godot-cpp`. Les types Godot restent dans la cible GDExtension `dopamine` et le pont `CombatSimulation`; le worker ne reçoit que des commandes natives et publie des snapshots C++ immuables.
+
 - `submit(command)` ajoute une commande ordonnée et renvoie son numéro de séquence ; `0` signifie qu'elle a été refusée.
 - La file accepte jusqu'à 2 048 commandes en attente. Le snapshot publie le dernier numéro appliqué.
 - Le worker démarre en pause. `Step` exige une durée positive et finie, et seulement une simulation en pause ; la vitesse configurée (×0,25 à ×4) multiplie sa durée.
