@@ -86,6 +86,8 @@ struct ProjectileData {
 	float status_damage_per_tick = 0.0F;
 	double status_interval_seconds = 0.0;
 	double status_duration_seconds = 0.0;
+	bool ignores_source_entity = false;
+	EntityId source_entity;
 };
 
 struct DamageOverTime {

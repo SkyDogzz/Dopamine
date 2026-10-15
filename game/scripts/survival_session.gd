@@ -476,6 +476,9 @@ func _fire_lightning_conductor(active_time: float, paused: bool) -> void:
 	if level >= 4:
 		chain_count = 5
 	var damage_multiplier := (1.25 if level >= 3 else 1.0) * (1.0 + float(loadout.relic_level("storm_core")) * storm_core_damage_per_level)
+	if level >= 5 and loadout.relic_level("storm_core") > 0:
+		_fire_infinite_circuit(active_time, chain_count, damage_multiplier)
+		return
 	var selected_ids: Array[Vector2i] = []
 	var max_distance_squared := lightning_range * lightning_range
 	for _chain in range(chain_count):
@@ -512,6 +515,75 @@ func _fire_lightning_conductor(active_time: float, paused: bool) -> void:
 			selected_ids.append(Vector2i(int(id["index"]), int(id["generation"])))
 	if not selected_ids.is_empty():
 		_next_weapon_time = active_time + lightning_cooldown
+
+func _fire_infinite_circuit(active_time: float, target_budget: int, damage_multiplier: float) -> void:
+	var roots := _nearest_lightning_targets(player.global_position, [], 2)
+	var used_ids: Array[Vector2i] = []
+	var fired := false
+	var branch_factor := 2 # GDD prototype value; tuning remains proposed.
+	var target_count := 0
+	for root_target in roots:
+		if target_count >= target_budget:
+			break
+		var root_id: Vector2i = root_target["id"]
+		used_ids.append(root_id)
+		var root_position: Vector2 = root_target["position"]
+		var root_direction := (root_position - player.global_position).normalized()
+		if root_direction == Vector2.ZERO:
+			root_direction = Vector2.RIGHT
+		if simulation.spawn_projectile("lightning_conductor", player.global_position + root_direction * 14.0,
+				root_direction * lightning_projectile_speed, lightning_damage * damage_multiplier,
+				lightning_projectile_radius, lightning_projectile_lifetime) <= 0:
+			continue
+		fired = true
+		target_count += 1
+		var frontier: Array[Dictionary] = [root_target]
+		while not frontier.is_empty() and target_count < target_budget:
+			var next_frontier: Array[Dictionary] = []
+			var needed_targets := target_budget - target_count
+			for parent in frontier:
+				var children := _nearest_lightning_targets(parent["position"], used_ids, mini(branch_factor, needed_targets))
+				for child in children:
+					var target_id: Vector2i = child["id"]
+					var direction: Vector2 = (child["position"] - parent["position"]).normalized()
+					if direction == Vector2.ZERO:
+						direction = Vector2.RIGHT
+					if simulation.spawn_projectile("infinite_circuit_branch", child["position"] + direction * 14.0,
+							direction * lightning_projectile_speed, lightning_damage * damage_multiplier,
+							lightning_projectile_radius, lightning_projectile_lifetime) <= 0:
+						continue
+					used_ids.append(child["id"])
+					next_frontier.append(child)
+					target_count += 1
+					fired = true
+					if target_count >= target_budget:
+						break
+				if target_count >= target_budget:
+					break
+			frontier = next_frontier
+	if fired:
+		_next_weapon_time = active_time + lightning_cooldown
+
+func _nearest_lightning_targets(origin: Vector2, excluded_ids: Array[Vector2i], limit: int) -> Array[Dictionary]:
+	var candidates: Array[Dictionary] = []
+	var max_distance_squared := lightning_range * lightning_range
+	for entity in _entities:
+		var components: Dictionary = entity["components"]
+		if components.get("IsProjectile", false) or components.get("IsXpOrb", false):
+			continue
+		var id: Dictionary = entity["id"]
+		var entity_id := Vector2i(int(id["index"]), int(id["generation"]))
+		if excluded_ids.has(entity_id):
+			continue
+		var transform: Dictionary = components["Transform2D"]
+		var position := Vector2(float(transform["x"]), float(transform["y"]))
+		var distance_squared := origin.distance_squared_to(position)
+		if distance_squared < max_distance_squared:
+			candidates.append({"id": entity_id, "position": position, "distance_squared": distance_squared})
+	candidates.sort_custom(func(a: Dictionary, b: Dictionary) -> bool: return a["distance_squared"] < b["distance_squared"])
+	if candidates.size() > limit:
+		candidates.resize(limit)
+	return candidates
 
 func _fire_inferno_sprayer(active_time: float, paused: bool) -> void:
 	if not weapon_enabled or loadout.weapon_level("inferno_sprayer") == 0 or paused or _chest_open or run_over or inferno_cooldown <= 0.0 or active_time < _next_inferno_time:

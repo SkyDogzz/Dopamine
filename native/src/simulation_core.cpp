@@ -8,6 +8,12 @@
 
 namespace dopamine::sim {
 
+namespace {
+
+constexpr float enemy_collision_radius = 12.0F; // Provisional until hitboxes are specified.
+
+} // namespace
+
 std::optional<EnemyProfile> enemy_profile(std::string_view id) {
 	// Starting values from the GDD are proposed and remain tunable.
 	if (id == "chaser") return EnemyProfile{"chaser", 20.0F, 75.0F, 1.0F};
@@ -109,8 +115,25 @@ EntityId SimulationCore::spawn_projectile(std::string type, float x, float y, fl
 	}
 	const EntityId id = spawn(type, x, y, 1.0F, velocity_x, velocity_y);
 	projectile_flags_[id.index] = true;
-	projectiles_[id.index] = {damage, radius, lifetime_seconds, applies_damage_over_time,
+	ProjectileData projectile{damage, radius, lifetime_seconds, applies_damage_over_time,
 			status_damage_per_tick, status_interval_seconds, status_duration_seconds};
+	if (type == "infinite_circuit_branch") {
+		float nearest_distance_squared = enemy_collision_radius * enemy_collision_radius;
+		for (uint32_t index = 0; index < slots_.size(); ++index) {
+			if (!slots_[index].active || projectile_flags_[index] || xp_orb_flags_[index] || health_[index].current <= 0.0F) {
+				continue;
+			}
+			const float dx = transforms_[index].x - x;
+			const float dy = transforms_[index].y - y;
+			const float distance_squared = dx * dx + dy * dy;
+			if (distance_squared < nearest_distance_squared) {
+				nearest_distance_squared = distance_squared;
+				projectile.ignores_source_entity = true;
+				projectile.source_entity = {index, slots_[index].generation};
+			}
+		}
+	}
+	projectiles_[id.index] = projectile;
 	return id;
 }
 
@@ -264,8 +287,10 @@ std::vector<CombatEvent> SimulationCore::advance(double delta_seconds) {
 					broadphase_radius, {});
 			bool hit = false;
 			for (uint32_t target_index : candidates) {
+				const EntityId potential_target{target_index, slots_[target_index].generation};
 				if (target_index == projectile_index || projectile_flags_[target_index] || xp_orb_flags_[target_index] ||
-						health_[target_index].current <= 0.0F) {
+						health_[target_index].current <= 0.0F ||
+						(projectile.ignores_source_entity && potential_target == projectile.source_entity)) {
 					continue;
 				}
 				const double relative_start_x = static_cast<double>(projectile_start.x) - start_positions[target_index].x;

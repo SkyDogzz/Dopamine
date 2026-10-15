@@ -196,7 +196,6 @@ int main() {
 	const auto burn_ticks = inferno_burn.advance(0.25);
 	require(burn_ticks.size() == 1 && burn_ticks[0].is_damage_over_time && burn_ticks[0].amount == 2.5F,
 			"Inferno burn should emit a tagged tick using its configured damage");
-
 	SimulationCore combat;
 	const auto target = combat.spawn("chaser", 50.0F, -100.0F, 10.0F, 0.0F, 1000.0F, 4.0F);
 	const auto projectile = combat.spawn_projectile("test_projectile", 0.0F, 0.0F, 12.0F, 2.0F, 1.0, 500.0F, 0.0F);

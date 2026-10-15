@@ -19,8 +19,98 @@ func _run() -> void:
 	if not await _bloodstorm_requires_level_five_and_bleeds():
 		_fail("Bloodstorm should require a level-5 Crimson Daggers and Blood Chalice and apply bleed")
 		return
+	if not await _infinite_circuit_branches():
+		_fail("Infinite Circuit should branch from its two initial lightning targets")
+		return
 	print("Survival weapon catalog smoke passed")
 	quit()
+
+func _infinite_circuit_branches() -> bool:
+	var session: Node2D = load("res://scenes/survival_session.tscn").instantiate()
+	session.spawn_initial_enemy = false
+	session.wave_spawning_enabled = false
+	session.weapon_enabled = false
+	session.skip_starting_weapon_choice = true
+	session.contact_damage_per_hit = 0.0
+	session.xp_collection_radius = 0.0
+	session.lightning_cooldown = 1000.0
+	root.add_child(session)
+	await process_frame
+	if not session.loadout.apply_offer("relic:storm_core"):
+		session.queue_free()
+		return false
+	for _level in range(3):
+		if not session.loadout.apply_offer("weapon:lightning_conductor"):
+			session.queue_free()
+			return false
+	session.weapon_enabled = true
+	session.simulation.set_speed(4.0)
+	var points := [Vector2(140.0, -300.0), Vector2(140.0, 300.0), Vector2(220.0, -300.0), Vector2(220.0, 300.0), Vector2(300.0, -300.0), Vector2(300.0, 300.0)]
+	for point in points:
+		session.simulation.spawn("test_target", 1, point, 100.0, Vector2.ZERO)
+	var targets := await _wait_for_targets(session, 6)
+	if targets.size() != 6:
+		session.queue_free()
+		return false
+	var baseline := int(session.simulation.snapshot()["metrics"]["collision_count"])
+	# At level 4, the normal chain can directly hit only five targets.
+	session._next_weapon_time = session.player_active_time
+	if not await _wait_for_projectiles_to_clear(session, baseline + 5):
+		session.queue_free()
+		return false
+	var normal_hits := _target_count_below_health(session, 100.0)
+	if normal_hits != 5:
+		session.queue_free()
+		return false
+	# Evolve the weapon and keep the same two-root target layout.
+	session.simulation.kill_all()
+	if not await _wait_for_no_entities(session):
+		session.queue_free()
+		return false
+	if not session.loadout.apply_offer("weapon:lightning_conductor"):
+		session.queue_free()
+		return false
+	session._next_weapon_time = session.player_active_time
+	for point in points:
+		session.simulation.spawn("test_target", 1, point, 100.0, Vector2.ZERO)
+	targets = await _wait_for_targets(session, 6)
+	if targets.size() != 6:
+		session.queue_free()
+		return false
+	baseline = int(session.simulation.snapshot()["metrics"]["collision_count"])
+	session._next_weapon_time = session.player_active_time
+	var branched := await _wait_for_projectiles_to_clear(session, baseline + 4)
+	var branch_hits := int(session.simulation.snapshot()["metrics"]["collision_count"]) - baseline
+	session.queue_free()
+	return branched and branch_hits > 2
+
+func _wait_for_targets(session: Node2D, count: int) -> Array:
+	var deadline := Time.get_ticks_msec() + 1000
+	while Time.get_ticks_msec() < deadline:
+		await process_frame
+		var targets: Array = []
+		for entity in session.simulation.snapshot()["entities"]:
+			if entity["components"].get("EnemyType", "") == "test_target":
+				targets.append(entity)
+		if targets.size() == count:
+			return targets
+	return []
+
+func _wait_for_projectiles_to_clear(session: Node2D, collisions: int) -> bool:
+	var deadline := Time.get_ticks_msec() + 2000
+	while Time.get_ticks_msec() < deadline:
+		await process_frame
+		var metrics: Dictionary = session.simulation.snapshot()["metrics"]
+		if int(metrics["collision_count"]) >= collisions and int(metrics["projectile_count"]) == 0:
+			return true
+	return false
+
+func _target_count_below_health(session: Node2D, health: float) -> int:
+	var count := 0
+	for entity in session.simulation.snapshot()["entities"]:
+		if entity["components"].get("EnemyType", "") == "test_target" and float(entity["components"]["Health"]["current"]) < health:
+			count += 1
+	return count
 
 func _bloodstorm_requires_level_five_and_bleeds() -> bool:
 	var session: Node2D = load("res://scenes/survival_session.tscn").instantiate()
