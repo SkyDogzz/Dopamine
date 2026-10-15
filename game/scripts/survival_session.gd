@@ -3,6 +3,13 @@ extends Node2D
 signal chest_option_chosen(option_id: String)
 
 const PLAYER_SCENE := preload("res://scenes/player.tscn")
+const SPRITE_RENDERER_SCRIPT := preload("res://scripts/sprite_batch_renderer.gd")
+const CHEST_TEXTURE: Texture2D = preload("res://assets/sprites/chest_closed.png")
+const WEAPON_ICONS := {
+	"lightning_conductor": preload("res://assets/sprites/projectile_lightning.png"),
+	"inferno_sprayer": preload("res://assets/sprites/projectile_inferno.png"),
+	"crimson_daggers": preload("res://assets/sprites/projectile_crimson.png"),
+}
 const WAVE_DIRECTOR_SCRIPT := preload("res://scripts/survival_wave_director.gd")
 const LOADOUT_SCRIPT := preload("res://scripts/survival_loadout.gd")
 const CHEST_DIRECTOR_SCRIPT := preload("res://scripts/survival_chest_director.gd")
@@ -77,6 +84,7 @@ const WAVE_HP_CAP := 12.0
 
 var simulation: Object
 var progression_service: RefCounted
+var _sprite_renderer: RefCounted
 var _run_id := ""
 var player: CharacterBody2D
 var loadout: RefCounted
@@ -113,6 +121,7 @@ var _inventory_was_running := false
 @onready var _hp_bar: ProgressBar = $HUD/RunPanel/RunInfo/HPBar
 @onready var _time_value: Label = $HUD/RunPanel/RunInfo/TimeValue
 @onready var _weapon_value: Label = $HUD/RunPanel/RunInfo/WeaponValue
+@onready var _weapon_icon: TextureRect = $HUD/RunPanel/RunInfo/WeaponIcon
 @onready var _xp_value: Label = $HUD/RunPanel/RunInfo/XPValue
 @onready var _xp_bar: ProgressBar = $HUD/RunPanel/RunInfo/XPBar
 @onready var _run_state: Label = $HUD/RunPanel/RunInfo/RunState
@@ -127,6 +136,8 @@ var _inventory_was_running := false
 @onready var _run_result: PanelContainer = $HUD/RunResultOverlay/RunResultPanel
 
 func _ready() -> void:
+	texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	_sprite_renderer = SPRITE_RENDERER_SCRIPT.new()
 	_run_id = Crypto.new().generate_random_bytes(16).hex_encode()
 	player = PLAYER_SCENE.instantiate()
 	player.name = "Player"
@@ -217,6 +228,7 @@ func _process(_delta: float) -> void:
 		_last_combat_event_sequence = latest_event_sequence
 		simulation.acknowledge_events(latest_event_sequence)
 	_entities = state["entities"]
+	_sprite_renderer.set_entities(_entities)
 	_advance_wave_director(elapsed_active_time, state["paused"])
 	_apply_contact_damage(state, current_simulation_time)
 	_collect_nearby_xp_orbs(state)
@@ -270,7 +282,9 @@ func _refresh_hud(state: Dictionary) -> void:
 	_time_value.text = "%02d:%02d" % [total_seconds / 60, total_seconds % 60]
 	var equipped_names: Array[String] = []
 	var short_names := {"lightning_conductor": "LC", "inferno_sprayer": "IS", "crimson_daggers": "CD"}
-	for weapon_id in loadout.owned_weapons():
+	var owned_weapons: Array[String] = loadout.owned_weapons()
+	_weapon_icon.texture = WEAPON_ICONS.get(owned_weapons[0]) if not owned_weapons.is_empty() else null
+	for weapon_id in owned_weapons:
 		equipped_names.append("%s Lv%d" % [short_names.get(weapon_id, weapon_id), loadout.weapon_level(weapon_id)])
 	_weapon_value.text = "  •  ".join(equipped_names)
 	if wave_director != null and wave_director.state == WAVE_DIRECTOR_SCRIPT.State.VICTORY:
@@ -708,31 +722,6 @@ func _publish_player_target() -> void:
 	)
 
 func _draw() -> void:
+	_sprite_renderer.draw_batches(self)
 	for chest in _world_chests:
-		var chest_color := Color("#61e7ff") if chest["family"] == "weapon" else Color("#c7a4ff")
-		draw_rect(Rect2(chest["position"] - Vector2(7.0, 7.0), Vector2(14.0, 14.0)), chest_color)
-	for entity in _entities:
-		var components: Dictionary = entity["components"]
-		if components.get("IsProjectile", false):
-			var projectile_transform: Dictionary = components["Transform2D"]
-			var projectile_type: String = components.get("EnemyType", "")
-			var projectile_color := Color("#ffd166")
-			if projectile_type == "inferno_sprayer":
-				projectile_color = Color("#ff7547")
-			elif projectile_type == "crimson_dagger":
-				projectile_color = Color("#ff3155")
-			draw_circle(Vector2(float(projectile_transform["x"]), float(projectile_transform["y"])), 3.0, projectile_color)
-			continue
-		if components.get("IsXpOrb", false):
-			var orb_transform: Dictionary = components["Transform2D"]
-			draw_circle(Vector2(float(orb_transform["x"]), float(orb_transform["y"])), 4.0, Color("#b19cff"))
-			continue
-		var transform: Dictionary = components["Transform2D"]
-		var position := Vector2(float(transform["x"]), float(transform["y"]))
-		var enemy_type: String = components.get("EnemyType", "chaser")
-		var radius := 8.0
-		var color := Color("#ff5ca8")
-		if enemy_type == "mid_boss" or enemy_type == "final_boss":
-			radius = 20.0
-			color = Color("#ff7b54") if enemy_type == "mid_boss" else Color("#ff304f")
-		draw_circle(position, radius, color)
+		draw_texture_rect(CHEST_TEXTURE, Rect2(chest["position"] - Vector2(16.0, 16.0), Vector2(32.0, 32.0)), false)

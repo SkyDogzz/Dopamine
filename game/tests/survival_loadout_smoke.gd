@@ -19,10 +19,18 @@ func _initialize() -> void:
 	if not _has_three_unique(weapon_offers) or not _contains(weapon_offers, "weapon:lightning_conductor"):
 		_fail("Weapon chest should offer three unique eligible upgrades or new weapons")
 		return
+	for offer in weapon_offers:
+		if str(offer.get("icon", "")).is_empty() or not ResourceLoader.exists(str(offer["icon"])):
+			_fail("Weapon offers should include their generated icon assets")
+			return
 	var relic_offers: Array = loadout.offers("relic")
 	if not _has_three_unique(relic_offers):
 		_fail("Relic chest should offer the three prototype relic choices")
 		return
+	for offer in relic_offers:
+		if str(offer.get("icon", "")).is_empty() or not ResourceLoader.exists(str(offer["icon"])):
+			_fail("Relic offers should include their generated icon assets")
+			return
 	if not loadout.apply_offer("weapon:inferno_sprayer") or loadout.weapon_level("inferno_sprayer") != 1:
 		_fail("Selecting a new weapon should add it at level 1")
 		return

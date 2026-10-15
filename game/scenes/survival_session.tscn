@@ -38,6 +38,12 @@ custom_minimum_size = Vector2(56, 0)
 layout_mode = 2
 text = "00:00"
 
+[node name="WeaponIcon" type="TextureRect" parent="HUD/RunPanel/RunInfo"]
+custom_minimum_size = Vector2(30, 30)
+layout_mode = 2
+texture_filter = 1
+stretch_mode = 5
+
 [node name="WeaponValue" type="Label" parent="HUD/RunPanel/RunInfo"]
 custom_minimum_size = Vector2(190, 0)
 layout_mode = 2

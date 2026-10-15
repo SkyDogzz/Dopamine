@@ -15,10 +15,15 @@ func _run() -> void:
 	for index in range(2000):
 		entities.append(_entity(500 + index, "projectile", float(index % 40) * 12.0 - 240.0, float(index / 40) * 8.0 - 200.0))
 	entities.append(_entity(2500, "xp", 0, -20))
+	entities.append(_entity(2501, "tank", 80, 0))
+	entities.append(_entity(2502, "projectile_inferno", 100, 0))
 	view.set_entities(entities)
 	assert(view._enemy_multimesh.instance_count == 500, "500 enemies should fit one MultiMesh batch")
 	assert(view._projectile_multimesh.instance_count == 2000, "2,000 projectiles should fit one MultiMesh batch")
 	assert(view._xp_multimesh.instance_count == 1, "XP orbs should use a separate MultiMesh batch")
+	assert(view._sprite_renderer.multimesh_for("enemy_tank").instance_count == 1, "Enemy profiles should use their sprite batches")
+	assert(view._sprite_renderer.multimesh_for("projectile_inferno").instance_count == 1, "Weapon projectile art should remain distinct")
+	assert(view._sprite_renderer._batches["enemy_chaser"]["texture"].resource_path.ends_with("enemy_chaser.png"), "Chaser batch should load its pixel-art sprite")
 	view.set_selected_entity(10, 1)
 	assert(view._selected_entity_found, "Selecting an enemy should preserve its overlay above the batches")
 	if view._selected_point != Vector2(200, 160):
@@ -34,10 +39,14 @@ func _run() -> void:
 
 func _entity(index: int, entity_type: String, x: float, y: float) -> Dictionary:
 	var components := {"Transform2D": {"x": x, "y": y}}
-	if entity_type == "projectile":
+	if entity_type == "projectile" or entity_type.begins_with("projectile_"):
 		components["IsProjectile"] = true
+		if entity_type == "projectile_inferno":
+			components["EnemyType"] = "inferno_sprayer"
 	elif entity_type == "xp":
 		components["IsXpOrb"] = true
+	elif entity_type == "tank":
+		components["EnemyType"] = "tank"
 	else:
 		components["EnemyType"] = entity_type
 	return {"id": {"index": index, "generation": 1}, "components": components}

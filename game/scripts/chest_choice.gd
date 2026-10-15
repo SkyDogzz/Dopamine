@@ -41,6 +41,10 @@ func present(options: Array, required_count: int = 3, heading: String = "CHEST â
 		button.custom_minimum_size.y = 72.0
 		button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		button.focus_mode = Control.FOCUS_ALL
+		var icon_path := str(option.get("icon", ""))
+		if not icon_path.is_empty():
+			button.icon = load(icon_path)
+			button.expand_icon = true
 		button.pressed.connect(_choose.bind(str(option["id"])))
 		_options.add_child(button)
 	visible = true

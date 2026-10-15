@@ -42,26 +42,31 @@ func _run() -> void:
 		_fail("The inventory should list both permanent items saved in this profile")
 		return
 	var items: VBoxContainer = panel.get_node("Panel/Content/Scroll/Items")
-	var item_row: VBoxContainer = items.get_child(0).get_child(0)
-	if not item_row.get_child(0).text.contains(" • ") or \
-			not item_row.get_child(2).text.contains("ROLLS UNCALIBRATED"):
+	var item_row: HBoxContainer = items.get_child(0).get_child(0)
+	var item_content: VBoxContainer = item_row.get_child(1)
+	var rarity_icon: TextureRect = item_row.get_child(0)
+	if rarity_icon.texture == null or rarity_icon.texture.resource_path != "res://assets/icons/rarity_%s.png" % fixture_profile["equipment_inventory"][0]["rarity"]:
+		_fail("Inventory rows should display their equipment rarity icon")
+		return
+	if not item_content.get_child(0).text.contains(" • ") or \
+			not item_content.get_child(2).text.contains("ROLLS UNCALIBRATED"):
 		_fail("An inventory item should show its slot, rarity and inactive roll state")
 		return
-	item_row.get_child(3).pressed.emit()
+	item_content.get_child(3).pressed.emit()
 	var equipped_profile: Dictionary = progression.load_profile()["profile"]
 	if not equipped_profile["equipment_inventory"][0].get("equipped", false) or \
 			equipped_profile["equipment_inventory"][1].get("equipped", false) or \
-			not items.get_child(0).get_child(0).get_child(2).text.contains(
+				not items.get_child(0).get_child(0).get_child(1).get_child(2).text.contains(
 				"EQUIPPED — rolls uncalibrated; no gameplay bonus yet"):
 		_fail("Equipping an item should persist and show that its rolls remain inactive")
 		return
-	items.get_child(1).get_child(0).get_child(3).pressed.emit()
+	items.get_child(1).get_child(0).get_child(1).get_child(3).pressed.emit()
 	var replaced_profile: Dictionary = progression.load_profile()["profile"]
 	if replaced_profile["equipment_inventory"][0].get("equipped", false) or \
 			not replaced_profile["equipment_inventory"][1].get("equipped", false):
 		_fail("Equipping another item in the same slot should replace the first one")
 		return
-	items.get_child(1).get_child(0).get_child(3).pressed.emit()
+	items.get_child(1).get_child(0).get_child(1).get_child(3).pressed.emit()
 	var unequipped_profile: Dictionary = progression.load_profile()["profile"]
 	if unequipped_profile["equipment_inventory"][0].get("equipped", false) or \
 			unequipped_profile["equipment_inventory"][1].get("equipped", false):

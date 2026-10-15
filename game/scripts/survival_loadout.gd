@@ -11,6 +11,14 @@ const RELICS := {
 	"infernal_heart": "Infernal Heart",
 	"blood_chalice": "Blood Chalice",
 }
+const ICONS := {
+	"lightning_conductor": "res://assets/sprites/projectile_lightning.png",
+	"inferno_sprayer": "res://assets/sprites/projectile_inferno.png",
+	"crimson_daggers": "res://assets/sprites/projectile_crimson.png",
+	"storm_core": "res://assets/sprites/relic_storm_core.png",
+	"infernal_heart": "res://assets/sprites/relic_infernal_heart.png",
+	"blood_chalice": "res://assets/sprites/relic_blood_chalice.png",
+}
 const STARTING_WEAPONS := ["lightning_conductor", "inferno_sprayer"]
 const MAX_SLOTS := 5
 const MAX_LEVEL := 5
@@ -45,12 +53,14 @@ func offers(family: String) -> Array[Dictionary]:
 				"id": "%s:%s" % [family, item_id],
 				"title": "%s — niveau %d" % [catalog[item_id], int(owned[item_id]) + 1],
 				"description": "Améliore l’objet équipé.",
+				"icon": ICONS.get(item_id, ""),
 			})
 		elif owned.size() < MAX_SLOTS:
 			candidates.append({
 				"id": "%s:%s" % [family, item_id],
 				"title": catalog[item_id],
 				"description": "Ajoute cet objet à la run au niveau 1.",
+				"icon": ICONS.get(item_id, ""),
 			})
 	if candidates.size() < 3:
 		return []
@@ -68,6 +78,7 @@ func starting_weapon_options() -> Array[Dictionary]:
 			"id": "start:%s" % weapon_id,
 			"title": WEAPONS[weapon_id],
 			"description": "Arme de départ du prototype.",
+			"icon": ICONS[weapon_id],
 		})
 	return options
 

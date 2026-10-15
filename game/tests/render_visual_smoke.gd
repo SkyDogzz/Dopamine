@@ -59,9 +59,19 @@ func _run() -> void:
 		_fail("Godot did not produce a full-size rendered frame")
 		return
 	var enemy_pixel: Vector2 = view.get_global_transform_with_canvas() * (view.size * 0.5 + Vector2(-350.0, -260.0))
-	var sampled_color := image.get_pixel(int(enemy_pixel.x), int(enemy_pixel.y))
-	if sampled_color.g < 0.5 or sampled_color.b < 0.5 or sampled_color.r > 0.5:
-		_fail("The known cyan enemy was not visible in the rendered frame: %s" % sampled_color)
+	var cyan_highlight_visible := false
+	var sampled_color := Color.TRANSPARENT
+	for y in range(int(enemy_pixel.y) - 12, int(enemy_pixel.y) + 13):
+		for x in range(int(enemy_pixel.x) - 12, int(enemy_pixel.x) + 13):
+			var candidate := image.get_pixel(x, y)
+			if candidate.g > 0.4 and candidate.b > 0.55 and candidate.r < 0.5:
+				cyan_highlight_visible = true
+				sampled_color = candidate
+				break
+		if cyan_highlight_visible:
+			break
+	if not cyan_highlight_visible:
+		_fail("The cyan highlight on the known enemy sprite was not visible in the rendered frame: %s" % sampled_color)
 		return
 	if image.save_png(SCREENSHOT_PATH) != OK:
 		_fail("Could not save render smoke screenshot")

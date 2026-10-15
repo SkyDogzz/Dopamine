@@ -11,9 +11,3 @@ func _physics_process(_delta: float) -> void:
 	var direction := Input.get_vector("move_left", "move_right", "move_up", "move_down")
 	velocity = direction * move_speed
 	move_and_slide()
-
-func _draw() -> void:
-	draw_circle(Vector2.ZERO, 10.0, Color("#152b35"))
-	draw_arc(Vector2.ZERO, 11.0, 0.0, TAU, 32, Color("#45e5ed"), 1.0)
-	draw_line(Vector2(-18, 0), Vector2(18, 0), Color("#45e5ed"), 1.0)
-	draw_line(Vector2(0, -18), Vector2(0, 18), Color("#45e5ed"), 1.0)

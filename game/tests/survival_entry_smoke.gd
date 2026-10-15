@@ -21,6 +21,15 @@ func _run() -> void:
 	if not current_scene.get_node("HUD/ChestOverlay/ChestChoice").visible:
 		_fail("Opening Survival should show the starting weapon choice")
 		return
+	var player_sprite: Sprite2D = current_scene.player.get_node("Sprite")
+	if player_sprite.texture == null or not player_sprite.texture.resource_path.ends_with("player_cyan.png"):
+		_fail("The Survival player should use the generated pixel-art sprite")
+		return
+	var choice_buttons: VBoxContainer = current_scene.get_node("HUD/ChestOverlay/ChestChoice/Content/Options")
+	for button in choice_buttons.get_children():
+		if button.icon == null:
+			_fail("Starting weapon choices should display their weapon sprites")
+			return
 	if current_scene.progression_service == null:
 		_fail("The normal Survival entry should receive progression save capability")
 		return

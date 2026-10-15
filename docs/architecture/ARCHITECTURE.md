@@ -79,7 +79,8 @@ La règle de HP decay est une fonction pure du temps actif fourni par le mode et
 
 ## Rendu
 
-- `MultiMeshInstance2D` pour ennemis et projectiles simples ; regroupement par matériau/atlas.
+- Les scènes Sandbox et Survival utilisent des sprites pixel art RGBA pour le joueur, les quatre profils ennemis, les placeholders de boss, les projectiles des trois armes jouables, les orbes XP et les chests. Les icônes des armes/reliques apparaissent aussi dans les choix.
+- `SpriteBatchRenderer` regroupe les entités en MultiMesh par sprite afin de garder un lot par type visuel ; la planche source est découpée en tuiles 64×64 avec `game/tools/slice_sprite_atlas.gd`.
 - Animation par shader et index de frame d'atlas ; shaders 2D, glow mesuré, particules GPU.
 - Résolution logique pixel art fixe, upscale entier lorsque l'affichage le permet.
 - Réduire le nombre de draw calls et le coût de transfert des buffers ; mesurer CPU et GPU séparément.

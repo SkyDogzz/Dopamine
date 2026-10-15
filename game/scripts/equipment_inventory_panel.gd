@@ -8,6 +8,22 @@ signal equipment_state_requested(instance_id: String, equipped: bool)
 @onready var _error_state: Label = $Panel/Content/ErrorState
 @onready var _close_button: Button = $Panel/Content/CloseButton
 
+const SLOT_ICONS := {
+	"helmet": "res://assets/icons/equipment_helmet.png",
+	"armor": "res://assets/icons/equipment_armor.png",
+	"gloves": "res://assets/icons/equipment_gloves.png",
+	"boots": "res://assets/icons/equipment_boots.png",
+	"amulet": "res://assets/icons/equipment_amulet.png",
+	"ring": "res://assets/icons/equipment_ring.png",
+}
+const RARITY_ICONS := {
+	"normal": "res://assets/icons/rarity_normal.png",
+	"magic": "res://assets/icons/rarity_magic.png",
+	"mystic": "res://assets/icons/rarity_mystic.png",
+	"legendary": "res://assets/icons/rarity_legendary.png",
+	"mythic": "res://assets/icons/rarity_mythic.png",
+}
+
 func _ready() -> void:
 	visible = false
 	_close_button.pressed.connect(_close)
@@ -37,11 +53,26 @@ func present_error() -> void:
 func _create_item_row(equipment: Dictionary) -> Control:
 	var row := PanelContainer.new()
 	row.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	var layout := HBoxContainer.new()
+	layout.add_theme_constant_override("separation", 10)
+	row.add_child(layout)
+	var icon := TextureRect.new()
+	icon.custom_minimum_size = Vector2(48, 48)
+	icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	icon.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	var slot := str(equipment.get("slot", ""))
+	var rarity := str(equipment.get("rarity", ""))
+	var icon_path: String = RARITY_ICONS.get(rarity, SLOT_ICONS.get(slot, ""))
+	if not icon_path.is_empty() and ResourceLoader.exists(icon_path):
+		icon.texture = load(icon_path)
+	layout.add_child(icon)
 	var content := VBoxContainer.new()
+	content.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	content.add_theme_constant_override("separation", 4)
-	row.add_child(content)
+	layout.add_child(content)
 	var title := Label.new()
-	title.text = "%s  •  %s" % [str(equipment.get("rarity", "")).to_upper(), str(equipment.get("slot", "")).to_upper()]
+	title.text = "%s  •  %s" % [rarity.to_upper(), slot.to_upper()]
 	content.add_child(title)
 	var stats: Array[String] = []
 	for line in equipment.get("stat_lines", []):
