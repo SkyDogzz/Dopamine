@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.21)
 project(dopamine_survivor LANGUAGES CXX)
 
+include(CTest)
+
 include(FetchContent)
 
 set(GODOTCPP_API_VERSION "4.7" CACHE STRING "Godot API version" FORCE)
@@ -13,6 +15,17 @@ FetchContent_Declare(
     GIT_SHALLOW TRUE
 )
 FetchContent_MakeAvailable(godot-cpp)
+
+add_library(dopamine_simulation STATIC native/src/simulation_core.cpp)
+target_include_directories(dopamine_simulation PUBLIC native/include)
+target_compile_features(dopamine_simulation PUBLIC cxx_std_23)
+set_target_properties(dopamine_simulation PROPERTIES POSITION_INDEPENDENT_CODE ON)
+
+if(BUILD_TESTING)
+    add_executable(simulation_core_tests native/tests/simulation_core_test.cpp)
+    target_link_libraries(simulation_core_tests PRIVATE dopamine_simulation)
+    add_test(NAME simulation_core COMMAND simulation_core_tests)
+endif()
 
 add_library(dopamine SHARED
     native/src/register_types.cpp

@@ -8,7 +8,7 @@
 
 ## Phase 1 — Cœur partagé
 
-- [ ] Modèle ECS minimal et tests ciblés.
+- [x] Modèle ECS minimal (Transform2D, Velocity2D, Health, EnemyType) et test ciblé.
 - [ ] Worker, file de commandes et snapshots cohérents.
 - [ ] Contrat natif documenté.
 

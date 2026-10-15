@@ -21,7 +21,7 @@ Livrer d’abord un Sandbox développeur autonome, puis le premier playable Surv
 
 ### Phase 1 — Cœur de simulation partagé
 
-- [ ] Définir et tester les `EntityId` index/génération, le stockage ECS minimal et les commandes spawn/despawn/reset.
+- [x] Définir et tester les `EntityId` index/génération, le stockage SoA minimal et spawn/despawn/reset.
 - [ ] Ajouter le thread de simulation, commandes ordonnées, pause/reprise/step explicite, arrêt propre et snapshots cohérents.
 - [ ] Exposer le contrat natif minimal à Godot et documenter les règles de propriété/thread.
 
