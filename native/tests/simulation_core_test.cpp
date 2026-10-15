@@ -203,6 +203,8 @@ int main() {
 		const auto moving_entity = timed_status.spawn("chaser", 0.0F, 20.0F, 100.0F, 100.0F, 0.0F);
 		timed_status.apply_damage_over_time(timed_target, 2.0F, 0.25, 1.0);
 		int ticks = 0;
+		float previous_x = 0.0F;
+		float previous_y = 20.0F;
 		for (double elapsed = 0.0; elapsed < 1.0 - 1e-12; elapsed += step_seconds) {
 			const double step = std::min(step_seconds, 1.0 - elapsed);
 			for (const auto &event : timed_status.advance(step)) {
@@ -211,6 +213,21 @@ int main() {
 					require(std::isfinite(event.remaining_health), "status ticks should retain finite health across supported frame deltas");
 				}
 			}
+			const auto moving_entity_state = timed_status.entity(moving_entity);
+			require(moving_entity_state && std::isfinite(moving_entity_state->transform.x) &&
+					std::isfinite(moving_entity_state->transform.y) &&
+					std::isfinite(moving_entity_state->velocity.x) &&
+					std::isfinite(moving_entity_state->velocity.y) &&
+					std::isfinite(moving_entity_state->health.current),
+					"positions, velocities and health should remain finite for supported frame deltas");
+			const float actual_distance = std::hypot(moving_entity_state->transform.x - previous_x,
+				moving_entity_state->transform.y - previous_y);
+			const float expected_distance = std::hypot(moving_entity_state->velocity.x,
+				moving_entity_state->velocity.y) * static_cast<float>(step);
+			require(std::abs(actual_distance - expected_distance) < 0.001F,
+					"each supported frame delta should integrate movement without an uncontrolled jump");
+			previous_x = moving_entity_state->transform.x;
+			previous_y = moving_entity_state->transform.y;
 		}
 		require(ticks == 4 && timed_status.entity(timed_target)->health.current == 92.0F,
 				"DoT tick count and damage should be independent of supported simulation step sizes");

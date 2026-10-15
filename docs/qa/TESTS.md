@@ -48,8 +48,7 @@
 - [x] Swept collision détecte les projectiles rapides contre une cible en mouvement.
 - [x] DoT partagé : ticks en temps simulé, durée, grand pas, remplacement, cible obsolète et événements identifiés.
 - [x] Scénario Sandbox JSON applique un DoT, vérifie la santé restante et compte les événements de tick tagués.
-- [ ] Deltas 1/120, 1/60, 1/30 et pics 100 ms ne causent pas de NaN ni de téléportation non maîtrisée.
-- [x] Pas de simulation 1/120, 1/60, 1/30 et 100 ms : mouvement à distance intégrée constante et cadence/dégâts DoT indépendants du nombre de frames.
+- [x] Pas de simulation 1/120, 1/60, 1/30 et 100 ms : position, vitesse et HP restent finis; déplacement égal à la vitesse intégrée, sans saut; DoT indépendant du pas.
 - [x] Timers de statuts exprimés en secondes, indépendants du nombre de frames pour les pas testés.
 - [ ] Les chaînes d'effets respectent le budget sans perdre silencieusement les événements critiques.
 
