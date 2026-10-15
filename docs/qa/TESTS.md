@@ -59,7 +59,7 @@
 - [ ] Spawn, kill all, pause, resume, step, speed, reset et logs fonctionnent.
 - [x] Sandbox applique un DoT configurable à l’entité sélectionnée et expose ses valeurs à l’inspecteur.
 - [ ] Changement live valide est atomique ; changement invalide rollback.
-- [ ] DPS meter et inspecteur affichent des métriques cohérentes.
+- [x] DPS moyen du Sandbox additionne les événements `damage` (dont DoT) et les divise par le temps simulé ; vérifié sur un Step explicite et remis à zéro avec la simulation.
 - [ ] Import d'une save produit une copie isolée ; original inchangé.
 - [ ] Preset JSON et share code sont validés, versionnés, avec limites de taille.
 - [ ] Snapshot complet reprend composants, queues, clocks, RNG et build.

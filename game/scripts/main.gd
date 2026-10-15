@@ -14,6 +14,7 @@ var _refresh_elapsed := 0.0
 var _selected_index := -1
 var _selected_generation := -1
 var _last_combat_event_sequence := 0
+var _damage_total := 0.0
 
 @onready var _view = $Shell/Content/MainColumn/SimulationView
 @onready var _state_label: Label = $Shell/Header/StateLabel
@@ -123,6 +124,7 @@ func _refresh() -> void:
 	$Shell/Content/MainColumn/Metrics/MetricRow/MetricFPS.text = "FPS  %d" % Engine.get_frames_per_second()
 	$Shell/Content/MainColumn/Metrics/MetricRow/MetricFrame.text = "FRAME  %.2f ms" % metrics["frame_time_ms"]
 	$Shell/Content/MainColumn/Metrics/MetricRow/MetricTime.text = "SIM  %.2f s" % state["simulation_time"]
+	var simulation_time := float(state["simulation_time"])
 	$Shell/Content/MainColumn/Metrics/MetricRow/MetricEntities.text = "ENTITIES  %d" % metrics["entity_count"]
 	$Shell/Content/MainColumn/Metrics/MetricRow/MetricProjectiles.text = "PROJECTILES  %d" % metrics["projectile_count"]
 	$Shell/Content/MainColumn/Metrics/MetricRow/MetricCollisions.text = "COLLISIONS  %d" % metrics["collision_count"]
@@ -134,6 +136,7 @@ func _refresh() -> void:
 			continue
 		latest_event_sequence = event_sequence
 		if event["type"] == "damage":
+			_damage_total += float(event["amount"])
 			visible_logs.append("DAMAGE  %d → %d  %.1f HP left" % [event["source"]["index"], event["target"]["index"], event["remaining_health"]])
 		elif event["type"] == "death":
 			var heal_preview: float = simulation.kill_heal_amount(float(event["threat_level"]))
@@ -143,6 +146,7 @@ func _refresh() -> void:
 	if latest_event_sequence > _last_combat_event_sequence:
 		_last_combat_event_sequence = latest_event_sequence
 		simulation.acknowledge_events(latest_event_sequence)
+	$Shell/Content/MainColumn/Metrics/MetricRow/MetricDPS.text = "AVG DPS  %.1f" % (_damage_total / simulation_time if simulation_time > 0.0 else 0.0)
 	_log_text.text = "\n".join(visible_logs)
 	_refresh_inspector(state["entities"])
 
@@ -190,6 +194,12 @@ func _on_speed_selected(index: int) -> void:
 	simulation.set_speed(float(_speed_select.get_item_metadata(index)))
 
 func _on_reset_pressed() -> void:
+	var state: Dictionary = simulation.snapshot()
+	for event in state["events"]:
+		_last_combat_event_sequence = maxi(_last_combat_event_sequence, int(event["sequence"]))
+	if _last_combat_event_sequence > 0:
+		simulation.acknowledge_events(_last_combat_event_sequence)
+	_damage_total = 0.0
 	_selected_index = -1
 	_selected_generation = -1
 	simulation.reset()

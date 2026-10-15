@@ -137,6 +137,12 @@ layout_mode = 2
 size_flags_horizontal = 3
 text = "SIM  0.00 s"
 
+[node name="MetricDPS" type="Label" parent="Shell/Content/MainColumn/Metrics/MetricRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "AVG DPS  0.0"
+tooltip_text = "Dégâts de combat cumulés divisés par le temps simulé depuis le dernier reset."
+
 [node name="MetricEntities" type="Label" parent="Shell/Content/MainColumn/Metrics/MetricRow"]
 layout_mode = 2
 size_flags_horizontal = 3

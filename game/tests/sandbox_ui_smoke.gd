@@ -56,13 +56,29 @@ func _run() -> void:
 	sandbox.simulation.step(0.2)
 	state = await _wait_for_damage(sandbox.simulation)
 	assert(state["events"][0]["is_damage_over_time"], "Status damage events should be identified")
-	sandbox.simulation.acknowledge_events(state["events"][0]["sequence"])
+	var expected_damage := 0.0
+	for event in state["events"]:
+		if event["type"] == "damage":
+			expected_damage += float(event["amount"])
+	sandbox._refresh()
+	var dps_label: Label = sandbox.get_node("Shell/Content/MainColumn/Metrics/MetricRow/MetricDPS")
+	var expected_dps := expected_damage / float(state["simulation_time"])
+	assert(dps_label.text == "AVG DPS  %.1f" % expected_dps, "Sandbox DPS should use damage events divided by simulated time")
 	sandbox.get_node("Shell/Content/SidePanel/Sections/SpawnPanel/SpawnForm/SpawnActions/DespawnButton").pressed.emit()
 	await _wait_for_entity_count(sandbox.simulation, 1)
 
 	sandbox.get_node("Shell/Content/SidePanel/Sections/SpawnPanel/SpawnForm/SpawnActions/KillButton").pressed.emit()
 	state = await _wait_for_entity_count(sandbox.simulation, 0)
 	assert(state["entities"].is_empty())
+	sandbox.get_node("Shell/Content/MainColumn/Toolbar/Row/ResetButton").pressed.emit()
+	var reset_deadline := Time.get_ticks_msec() + 1000
+	state = sandbox.simulation.snapshot()
+	while state["simulation_time"] > 0.0 and Time.get_ticks_msec() < reset_deadline:
+		await process_frame
+		state = sandbox.simulation.snapshot()
+	assert(state["simulation_time"] == 0.0, "Sandbox reset should restart simulated time")
+	sandbox._refresh()
+	assert(dps_label.text == "AVG DPS  0.0", "Sandbox reset should clear accumulated damage")
 	print("Sandbox UI spawn, inspect, despawn and kill-all checks passed")
 	quit()
 
