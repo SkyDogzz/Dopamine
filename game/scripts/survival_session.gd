@@ -1,9 +1,19 @@
 extends Node2D
 
 const PLAYER_SCENE := preload("res://scenes/player.tscn")
-const ENEMY_SPAWN_OFFSET := Vector2(140.0, 0.0)
+const WAVE_DIRECTOR_SCRIPT := preload("res://scripts/survival_wave_director.gd")
+const WAVE_HP_GROWTH := 1.12
+const WAVE_HP_CAP := 12.0
 
 @export var spawn_initial_enemy: bool = true
+@export var wave_spawning_enabled: bool = true
+@export_group("Prototype wave director — proposed tuning")
+@export var wave_duration_seconds: float = 30.0
+@export_range(1, 400) var wave_population_cap: int = 80
+@export var wave_population_scale: float = 1.0
+@export var enemy_spawn_interval: float = 1.0
+@export var enemy_spawn_radius: float = 520.0
+@export var boss_placeholder_hp: float = 1000.0
 @export var enemy_separation_radius: float = 18.0
 @export_range(0.0, 1.0) var enemy_separation_weight: float = 0.5
 @export_group("Prototype Lightning Conductor — proposed tuning")
@@ -27,6 +37,9 @@ var last_target_sequence := 0
 var player_hp := 0.0
 var player_max_hp := 0.0
 var player_active_time := 0.0
+var wave_director: RefCounted
+var _next_enemy_spawn_time := 0.0
+var _boss_spawn_pending := false
 var player_level := 1
 var player_xp := 0.0
 var player_xp_to_next := 10.0
@@ -45,6 +58,7 @@ var _pending_xp_orbs: Dictionary = {}
 @onready var _xp_value: Label = $HUD/RunPanel/RunInfo/XPValue
 @onready var _xp_bar: ProgressBar = $HUD/RunPanel/RunInfo/XPBar
 @onready var _run_state: Label = $HUD/RunPanel/RunInfo/RunState
+@onready var _wave_value: Label = $HUD/RunPanel/RunInfo/WaveValue
 
 func _ready() -> void:
 	player = PLAYER_SCENE.instantiate()
@@ -58,9 +72,11 @@ func _ready() -> void:
 	player_max_hp = simulation.initial_player_hp()
 	player_hp = player_max_hp
 	player_xp_to_next = xp_base_to_next_level
+	wave_director = WAVE_DIRECTOR_SCRIPT.new()
+	wave_director.wave_duration_seconds = wave_duration_seconds
 	_publish_player_target()
-	if spawn_initial_enemy:
-		simulation.spawn_enemy("chaser", 1, ENEMY_SPAWN_OFFSET, Vector2.ZERO)
+	if spawn_initial_enemy and not wave_spawning_enabled:
+		simulation.spawn_enemy("chaser", 1, player.global_position + Vector2(140.0, 0.0), Vector2.ZERO)
 	simulation.resume()
 
 func _physics_process(_delta: float) -> void:
@@ -84,6 +100,15 @@ func _process(_delta: float) -> void:
 		latest_event_sequence = sequence
 		match event["type"]:
 			"death":
+				var dead_enemy_type: String = str(event.get("target_type", ""))
+				if dead_enemy_type == "mid_boss":
+					_boss_spawn_pending = false
+					wave_director.boss_defeated()
+				elif dead_enemy_type == "final_boss":
+					_boss_spawn_pending = false
+					wave_director.boss_defeated()
+					run_over = true
+					simulation.pause()
 				if not run_over:
 					var healing: float = float(simulation.kill_heal_amount(float(event["threat_level"])))
 					player_hp = minf(player_max_hp, player_hp + healing)
@@ -98,6 +123,7 @@ func _process(_delta: float) -> void:
 		_last_combat_event_sequence = latest_event_sequence
 		simulation.acknowledge_events(latest_event_sequence)
 	_entities = state["entities"]
+	_advance_wave_director(elapsed_active_time, state["paused"])
 	_collect_nearby_xp_orbs(state)
 	_fire_lightning_conductor(current_simulation_time, state["paused"])
 	if player_hp <= 0.0 and not run_over:
@@ -113,6 +139,8 @@ func _refresh_hud(state: Dictionary) -> void:
 	_xp_value.text = "LV %d  XP %.0f / %.0f" % [player_level, player_xp, player_xp_to_next]
 	_xp_bar.max_value = player_xp_to_next
 	_xp_bar.value = player_xp
+	if wave_director != null:
+		_wave_value.text = _wave_status_text()
 	var total_seconds := int(floor(player_active_time))
 	_time_value.text = "%02d:%02d" % [total_seconds / 60, total_seconds % 60]
 	_weapon_value.text = "LIGHTNING CONDUCTOR  •  %d CHAINS" % lightning_chain_count
@@ -150,6 +178,92 @@ func _add_xp(amount: float) -> void:
 		player_xp -= player_xp_to_next
 		player_level += 1
 		player_xp_to_next = xp_base_to_next_level + xp_growth_per_level * float(player_level - 1)
+
+func _advance_wave_director(delta_seconds: float, paused: bool) -> void:
+	if paused or run_over or wave_director == null or not wave_spawning_enabled:
+		return
+	if wave_director.state == WAVE_DIRECTOR_SCRIPT.State.WAVE:
+		wave_director.advance(delta_seconds)
+		if spawn_initial_enemy and player_active_time >= _next_enemy_spawn_time:
+			_spawn_wave_enemy()
+			_next_enemy_spawn_time = player_active_time + maxf(0.05, enemy_spawn_interval)
+	elif wave_director.state == WAVE_DIRECTOR_SCRIPT.State.MID_BOSS:
+		_spawn_boss_placeholder("mid_boss")
+	elif wave_director.state == WAVE_DIRECTOR_SCRIPT.State.FINAL_BOSS:
+		_spawn_boss_placeholder("final_boss")
+
+func _spawn_wave_enemy() -> void:
+	var target_population := _wave_population(wave_director.wave)
+	var active_enemies := 0
+	for entity in _entities:
+		var components: Dictionary = entity["components"]
+		if not components.get("IsProjectile", false) and not components.get("IsXpOrb", false):
+			active_enemies += 1
+	if active_enemies >= target_population:
+		return
+	var angle := randf() * TAU
+	var spawn_position := player.global_position + Vector2.from_angle(angle) * enemy_spawn_radius
+	var enemy_type := "chaser"
+	if wave_director.wave >= 4 and randf() < 0.25:
+		enemy_type = "sprinter"
+	if wave_director.wave >= 8 and randf() < 0.12:
+		enemy_type = "tank"
+	if wave_director.wave >= 10 and randf() < 0.15:
+		enemy_type = "shooter"
+	var hp_multiplier := minf(pow(WAVE_HP_GROWTH, float(wave_director.wave - 1)), WAVE_HP_CAP)
+	var profile_hp := {"chaser": 20.0, "sprinter": 12.0, "tank": 80.0, "shooter": 25.0}
+	var hp: float = profile_hp[enemy_type] * hp_multiplier
+	simulation.spawn(enemy_type, 1, spawn_position, hp, Vector2.ZERO, 1.0)
+
+func _spawn_boss_placeholder(boss_type: String) -> void:
+	if not spawn_initial_enemy or _boss_spawn_pending:
+		return
+	for entity in _entities:
+		var components: Dictionary = entity["components"]
+		if components.get("EnemyType", "") == boss_type:
+			return
+	var spawn_position := player.global_position + Vector2.RIGHT.rotated(randf() * TAU) * enemy_spawn_radius
+	simulation.spawn(boss_type, 1, spawn_position, boss_placeholder_hp, Vector2.ZERO, 25.0)
+	_boss_spawn_pending = true
+
+func debug_advance_wave() -> void:
+	if wave_director == null or run_over:
+		return
+	if wave_director.state == WAVE_DIRECTOR_SCRIPT.State.WAVE:
+		wave_director.elapsed_in_wave = wave_duration_seconds
+		wave_director.advance(0.0)
+	elif wave_director.state == WAVE_DIRECTOR_SCRIPT.State.MID_BOSS:
+		_kill_boss_placeholder("mid_boss")
+	elif wave_director.state == WAVE_DIRECTOR_SCRIPT.State.FINAL_BOSS:
+		_kill_boss_placeholder("final_boss")
+
+func _kill_boss_placeholder(boss_type: String) -> void:
+	for entity in _entities:
+		var components: Dictionary = entity["components"]
+		if components.get("EnemyType", "") == boss_type:
+			var id: Dictionary = entity["id"]
+			simulation.despawn(int(id["index"]), int(id["generation"]))
+			wave_director.boss_defeated()
+			if wave_director.state == WAVE_DIRECTOR_SCRIPT.State.VICTORY:
+				run_over = true
+				simulation.pause()
+			return
+
+func _wave_population(wave_number: int) -> int:
+	var progress := float(wave_number - 1) / 23.0
+	var proposed_population := roundi(10.0 + 390.0 * pow(progress, 1.5))
+	return clampi(roundi(float(proposed_population) * wave_population_scale), 1, wave_population_cap)
+
+func _wave_status_text() -> String:
+	match wave_director.state:
+		WAVE_DIRECTOR_SCRIPT.State.MID_BOSS:
+			return "WAVE 12  •  MID-BOSS"
+		WAVE_DIRECTOR_SCRIPT.State.FINAL_BOSS:
+			return "WAVE 24  •  FINAL BOSS"
+		WAVE_DIRECTOR_SCRIPT.State.VICTORY:
+			return "VICTORY"
+		_:
+			return "WAVE %02d  •  %02d s" % [wave_director.wave, ceili(wave_duration_seconds - wave_director.elapsed_in_wave)]
 
 func _entity_key(index: int, generation: int) -> String:
 	return "%d:%d" % [index, generation]
@@ -216,4 +330,10 @@ func _draw() -> void:
 			continue
 		var transform: Dictionary = components["Transform2D"]
 		var position := Vector2(float(transform["x"]), float(transform["y"]))
-		draw_circle(position, 8.0, Color("#ff5ca8"))
+		var enemy_type: String = components.get("EnemyType", "chaser")
+		var radius := 8.0
+		var color := Color("#ff5ca8")
+		if enemy_type == "mid_boss" or enemy_type == "final_boss":
+			radius = 20.0
+			color = Color("#ff7b54") if enemy_type == "mid_boss" else Color("#ff304f")
+		draw_circle(position, radius, color)

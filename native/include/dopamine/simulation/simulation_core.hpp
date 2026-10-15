@@ -100,6 +100,7 @@ struct CombatEvent {
 	float threat_level = 1.0F;
 	float position_x = 0.0F;
 	float position_y = 0.0F;
+	std::string target_type;
 };
 
 struct Entity {

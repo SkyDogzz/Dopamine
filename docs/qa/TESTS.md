@@ -16,6 +16,7 @@
 - [x] P3 ciblé : Lightning Conductor cible deux ennemis distincts, tue les cibles avec ses projectiles et consomme les événements de mort pour le soin.
 - [x] P3 UI : HUD Survival affiche le HP initial, l’état de run et les champs temps actif/arme prototype.
 - [x] P3 XP : orbe ECS créée à la mort, collecte unique via événements acquittables, progression et HUD niveau vérifiés dans le smoke test Survival headless.
+- [x] P3 vagues ciblé : progression de 24 vagues et transitions aux boss 12/24; timer bloqué pendant les placeholders et type d’ennemi préservé dans les événements de mort.
 - [ ] Godot 4.7.2 charge la GDExtension sur Windows et Linux.
 - [ ] Le projet C++23 compile avec versions verrouillées.
 - [ ] Aucune API Godot non thread-safe n'est appelée depuis le worker.

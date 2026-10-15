@@ -165,8 +165,8 @@ int main() {
 			"damage event should identify projectile and target");
 	require(combat_events[1].type == dopamine::sim::CombatEventType::Death &&
 			combat_events[1].sequence > combat_events[0].sequence &&
-			combat_events[1].threat_level == 4.0F,
-			"death event should preserve the target threat for reward calculation");
+			combat_events[1].threat_level == 4.0F && combat_events[1].target_type == "chaser",
+			"death event should preserve target type and threat for mode rules");
 	require(kill_heal_amount(combat_events[1].threat_level) == 8.0,
 			"death threat should feed the proposed kill heal rule");
 	require(!combat.entity(target).has_value() && !combat.entity(projectile).has_value(),
