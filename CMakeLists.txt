@@ -38,6 +38,17 @@ if(BUILD_TESTING)
 
     find_program(DOPAMINE_GODOT_EXECUTABLE NAMES godot godot4 Godot)
     if(DOPAMINE_GODOT_EXECUTABLE)
+        if(UNIX AND NOT APPLE)
+            find_program(DOPAMINE_XVFB_RUN_EXECUTABLE NAMES xvfb-run)
+            if(DOPAMINE_XVFB_RUN_EXECUTABLE)
+                add_test(NAME render_visual_smoke
+                    COMMAND "${DOPAMINE_XVFB_RUN_EXECUTABLE}" -a -s "-screen 0 1280x800x24"
+                        "${CMAKE_COMMAND}" -E env LIBGL_ALWAYS_SOFTWARE=1
+                        "${DOPAMINE_GODOT_EXECUTABLE}" --path "${PROJECT_SOURCE_DIR}/game"
+                        --audio-driver Dummy --script res://tests/render_visual_smoke.gd)
+                set_tests_properties(render_visual_smoke PROPERTIES FIXTURES_REQUIRED godot_project_ready TIMEOUT 45)
+            endif()
+        endif()
         add_test(NAME godot_project_import
             COMMAND "${DOPAMINE_GODOT_EXECUTABLE}" --headless --editor --path "${PROJECT_SOURCE_DIR}/game" --quit)
         set_tests_properties(godot_project_import PROPERTIES FIXTURES_SETUP godot_project_ready)
