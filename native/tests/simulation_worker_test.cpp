@@ -1,9 +1,11 @@
 #include "dopamine/simulation/simulation_worker.hpp"
 
+#include <atomic>
 #include <chrono>
 #include <cmath>
 #include <cstdlib>
 #include <iostream>
+#include <thread>
 
 using namespace std::chrono_literals;
 using dopamine::sim::CommandType;
@@ -200,5 +202,24 @@ int main() {
 	worker.stop();
 	require(!worker.is_running(), "stop should be safe and leave no worker thread");
 	require(worker.submit(spawn) == 0, "stopped worker should reject new commands");
+
+	SimulationWorker loaded_worker;
+	loaded_worker.start();
+	std::atomic<bool> keep_submitting = true;
+	std::jthread producer([&loaded_worker, &keep_submitting] {
+		SimulationCommand load;
+		load.type = CommandType::Spawn;
+		load.entity_type = "stop_stress";
+		load.hp = 1.0F;
+		while (keep_submitting.load()) {
+			loaded_worker.submit(load);
+		}
+	});
+	std::this_thread::sleep_for(10ms);
+	loaded_worker.stop();
+	keep_submitting.store(false);
+	producer.join();
+	require(!loaded_worker.is_running(), "stop under concurrent command load should join the worker");
+	require(loaded_worker.submit(spawn) == 0, "worker stopped under load should reject new commands");
 	return 0;
 }

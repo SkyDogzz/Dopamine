@@ -32,6 +32,7 @@ if(BUILD_TESTING)
     add_executable(simulation_worker_tests native/tests/simulation_worker_test.cpp)
     target_link_libraries(simulation_worker_tests PRIVATE dopamine_simulation)
     add_test(NAME simulation_worker COMMAND simulation_worker_tests)
+    set_tests_properties(simulation_worker PROPERTIES TIMEOUT 10)
 
     add_executable(simulation_benchmark native/benchmarks/simulation_benchmark.cpp)
     target_link_libraries(simulation_benchmark PRIVATE dopamine_simulation)

@@ -38,7 +38,7 @@
 - [ ] Godot 4.7.2 charge la GDExtension sur Windows.
 - [ ] Vérifier le build Windows et le couple compilateur/dépendances verrouillé.
 - [ ] Aucune API Godot non thread-safe n'est appelée depuis le worker.
-- [ ] `stop()` libère le worker sans deadlock, même sous charge.
+- [x] `stop()` libère le worker sans deadlock pendant des soumissions concurrentes; test CTest répété 10 fois avec limite de 10 s.
 
 ## ECS / simulation
 
