@@ -5,8 +5,12 @@ func _initialize() -> void:
 
 func _run() -> void:
 	var session: Node2D = load("res://scenes/survival_session.tscn").instantiate()
+	if not session.has_method("open_chest_family"):
+		_fail("Survival session script should load")
+		return
 	session.spawn_initial_enemy = false
 	session.xp_collection_radius = 200.0
+	session.ordinary_chest_drop_chance = 0.0
 	root.add_child(session)
 	await process_frame
 	if session.simulation == null:
@@ -17,12 +21,8 @@ func _run() -> void:
 		return
 	var selected_chest_options := [""]
 	session.chest_option_chosen.connect(func(option_id: String) -> void: selected_chest_options[0] = option_id)
-	var chest_options := [
-		{"id": "weapon_upgrade", "title": "Weapon upgrade", "description": "Improve an equipped weapon."},
-		{"id": "new_weapon", "title": "New weapon", "description": "Add a weapon to this run."},
-		{"id": "relic", "title": "Relic", "description": "Add a matching relic."},
-	]
-	if not session.open_chest(chest_options):
+	var chest_options: Array = session.loadout.offers("weapon")
+	if chest_options.size() != 3 or not session.open_chest(chest_options):
 		_fail("Survival should open a chest with three valid offers")
 		return
 	var paused: Dictionary = await _wait_until(session, func(snapshot: Dictionary) -> bool: return snapshot["paused"])
@@ -31,10 +31,14 @@ func _run() -> void:
 		return
 	session.get_node("HUD/ChestOverlay/ChestChoice/Content/Options/Choice0").emit_signal("pressed")
 	var resumed: Dictionary = await _wait_until(session, func(snapshot: Dictionary) -> bool:
-		return not snapshot["paused"] and selected_chest_options[0] == "weapon_upgrade"
+		return not snapshot["paused"] and selected_chest_options[0] == chest_options[0]["id"]
 	)
 	if resumed.is_empty() or session.get_node("HUD/ChestOverlay/ChestChoice").visible:
 		_fail("Choosing an offer should emit its ID and resume the run")
+		return
+	var selected_weapon_id: String = str(chest_options[0]["id"]).trim_prefix("weapon:")
+	if session.loadout.weapon_level(selected_weapon_id) < 1:
+		_fail("Choosing a weapon offer should update this run's loadout")
 		return
 	session.simulation.set_speed(4.0)
 	session.player_hp = 80.0

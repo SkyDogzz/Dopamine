@@ -4,6 +4,8 @@ signal chest_option_chosen(option_id: String)
 
 const PLAYER_SCENE := preload("res://scenes/player.tscn")
 const WAVE_DIRECTOR_SCRIPT := preload("res://scripts/survival_wave_director.gd")
+const LOADOUT_SCRIPT := preload("res://scripts/survival_loadout.gd")
+const CHEST_DIRECTOR_SCRIPT := preload("res://scripts/survival_chest_director.gd")
 const WAVE_HP_GROWTH := 1.12
 const WAVE_HP_CAP := 12.0
 
@@ -16,6 +18,11 @@ const WAVE_HP_CAP := 12.0
 @export var enemy_spawn_interval: float = 1.0
 @export var enemy_spawn_radius: float = 520.0
 @export var boss_placeholder_hp: float = 1000.0
+@export_group("Prototype loot — proposed rates")
+@export var ordinary_chest_drop_chance: float = 0.005
+@export var elite_chest_drop_chance: float = 0.15
+@export var chest_guarantee_interval_seconds: float = 60.0
+@export var chest_collection_radius: float = 36.0
 @export var enemy_separation_radius: float = 18.0
 @export_range(0.0, 1.0) var enemy_separation_weight: float = 0.5
 @export_group("Prototype Lightning Conductor — proposed tuning")
@@ -35,6 +42,7 @@ const WAVE_HP_CAP := 12.0
 
 var simulation: Object
 var player: CharacterBody2D
+var loadout: RefCounted
 var last_target_sequence := 0
 var player_hp := 0.0
 var player_max_hp := 0.0
@@ -52,6 +60,8 @@ var _last_combat_event_sequence := 0
 var _next_weapon_time := 0.0
 var _entities: Array = []
 var _pending_xp_orbs: Dictionary = {}
+var _chest_director: RefCounted
+var _world_chests: Array[Dictionary] = []
 var _chest_open := false
 
 @onready var _hp_value: Label = $HUD/RunPanel/RunInfo/HPValue
@@ -71,6 +81,11 @@ func _ready() -> void:
 	player = PLAYER_SCENE.instantiate()
 	player.name = "Player"
 	add_child(player)
+	loadout = LOADOUT_SCRIPT.new()
+	_chest_director = CHEST_DIRECTOR_SCRIPT.new()
+	_chest_director.ordinary_drop_chance = ordinary_chest_drop_chance
+	_chest_director.elite_drop_chance = elite_chest_drop_chance
+	_chest_director.guarantee_interval_seconds = chest_guarantee_interval_seconds
 	simulation = ClassDB.instantiate("CombatSimulation")
 	if simulation == null:
 		push_error("CombatSimulation GDExtension class is unavailable")
@@ -117,6 +132,9 @@ func _process(_delta: float) -> void:
 					wave_director.boss_defeated()
 					run_over = true
 					simulation.pause()
+				_roll_enemy_chests(dead_enemy_type, Vector2(
+					float(event["position"]["x"]), float(event["position"]["y"])
+				))
 				if not run_over:
 					var healing: float = float(simulation.kill_heal_amount(float(event["threat_level"])))
 					player_hp = minf(player_max_hp, player_hp + healing)
@@ -133,6 +151,7 @@ func _process(_delta: float) -> void:
 	_entities = state["entities"]
 	_advance_wave_director(elapsed_active_time, state["paused"])
 	_collect_nearby_xp_orbs(state)
+	_collect_nearby_chests(state)
 	_fire_lightning_conductor(current_simulation_time, state["paused"])
 	if player_hp <= 0.0 and not run_over:
 		run_over = true
@@ -152,7 +171,10 @@ func _refresh_hud(state: Dictionary) -> void:
 	_refresh_boss_hud()
 	var total_seconds := int(floor(player_active_time))
 	_time_value.text = "%02d:%02d" % [total_seconds / 60, total_seconds % 60]
-	_weapon_value.text = "LIGHTNING CONDUCTOR  •  %d CHAINS" % lightning_chain_count
+	var equipped_names: Array[String] = []
+	for weapon_id in loadout.owned_weapons():
+		equipped_names.append("%s Lv%d" % [LOADOUT_SCRIPT.WEAPONS[weapon_id], loadout.weapon_level(weapon_id)])
+	_weapon_value.text = "  •  ".join(equipped_names)
 	if wave_director != null and wave_director.state == WAVE_DIRECTOR_SCRIPT.State.VICTORY:
 		_run_state.text = "VICTORY"
 	elif run_over:
@@ -213,10 +235,36 @@ func open_chest(options: Array) -> bool:
 	simulation.pause()
 	return true
 
+func open_chest_family(family: String) -> bool:
+	return open_chest(loadout.offers(family))
+
 func _on_chest_option_selected(option_id: String) -> void:
 	_chest_open = false
+	loadout.apply_offer(option_id)
 	chest_option_chosen.emit(option_id)
 	simulation.resume()
+
+func _roll_enemy_chests(enemy_type: String, position: Vector2) -> void:
+	var eligible_families: Array[String] = []
+	if loadout.offers("weapon").size() == 3:
+		eligible_families.append("weapon")
+	if loadout.offers("relic").size() == 3:
+		eligible_families.append("relic")
+	var is_boss := enemy_type == "mid_boss" or enemy_type == "final_boss"
+	var is_elite := enemy_type == "elite"
+	for family in _chest_director.roll_drops(player_active_time, eligible_families, is_elite, is_boss):
+		_world_chests.append({"family": family, "position": position})
+
+func _collect_nearby_chests(state: Dictionary) -> void:
+	if state["paused"] or run_over or _chest_open:
+		return
+	for index in range(_world_chests.size()):
+		var chest: Dictionary = _world_chests[index]
+		if player.global_position.distance_squared_to(chest["position"]) > chest_collection_radius * chest_collection_radius:
+			continue
+		if open_chest_family(str(chest["family"])):
+			_world_chests.remove_at(index)
+			return
 
 func _advance_wave_director(delta_seconds: float, paused: bool) -> void:
 	if paused or run_over or wave_director == null or not wave_spawning_enabled:
@@ -313,11 +361,18 @@ func _entity_key(index: int, generation: int) -> String:
 	return "%d:%d" % [index, generation]
 
 func _fire_lightning_conductor(active_time: float, paused: bool) -> void:
-	if not weapon_enabled or paused or run_over or lightning_cooldown <= 0.0 or active_time < _next_weapon_time:
+	if not weapon_enabled or loadout.weapon_level("lightning_conductor") == 0 or paused or _chest_open or run_over or lightning_cooldown <= 0.0 or active_time < _next_weapon_time:
 		return
+	var level: int = loadout.weapon_level("lightning_conductor")
+	var chain_count := lightning_chain_count
+	if level >= 2:
+		chain_count = 3
+	if level >= 4:
+		chain_count = 5
+	var damage_multiplier := 1.25 if level >= 3 else 1.0
 	var selected_ids: Array[Vector2i] = []
 	var max_distance_squared := lightning_range * lightning_range
-	for _chain in range(lightning_chain_count):
+	for _chain in range(chain_count):
 		var best: Dictionary = {}
 		var best_distance_squared := max_distance_squared
 		for entity in _entities:
@@ -343,7 +398,7 @@ func _fire_lightning_conductor(active_time: float, paused: bool) -> void:
 			direction = Vector2.RIGHT
 		var sequence: int = simulation.spawn_projectile(
 			"lightning_conductor", player.global_position + direction * 14.0,
-			direction * lightning_projectile_speed, lightning_damage,
+			direction * lightning_projectile_speed, lightning_damage * damage_multiplier,
 			lightning_projectile_radius, lightning_projectile_lifetime
 		)
 		if sequence > 0:
@@ -362,6 +417,9 @@ func _publish_player_target() -> void:
 	)
 
 func _draw() -> void:
+	for chest in _world_chests:
+		var chest_color := Color("#61e7ff") if chest["family"] == "weapon" else Color("#c7a4ff")
+		draw_rect(Rect2(chest["position"] - Vector2(7.0, 7.0), Vector2(14.0, 14.0)), chest_color)
 	for entity in _entities:
 		var components: Dictionary = entity["components"]
 		if components.get("IsProjectile", false):
