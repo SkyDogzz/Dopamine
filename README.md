@@ -42,6 +42,14 @@ godot --headless --path game --script res://tests/sandbox_smoke.gd
 godot --headless --path game --script res://tests/sandbox_ui_smoke.gd
 ```
 
+Pour parcourir une run Survival de validation avec ses 24 vagues de 30 secondes, à vitesse ×4, dans une fenêtre :
+
+```bash
+godot --path game --script res://tests/survival_wave_director_smoke.gd -- --production-duration --stay-open
+```
+
+Le test simule les ennemis et les transitions de boss, puis attend Échap après l’écran de victoire. Il augmente les HP du joueur pour isoler la durée et les transitions ; ce n’est pas un test d’équilibrage.
+
 Scénario headless avec export JSON des métriques (l’option `--output` peut aussi viser `user://sandbox/logs/...`) :
 
 ```bash

@@ -17,13 +17,11 @@ func advance(delta_seconds: float) -> bool:
 	while state == State.WAVE and elapsed_in_wave >= wave_duration_seconds:
 		elapsed_in_wave -= wave_duration_seconds
 		advanced = true
-		if wave == 11:
-			wave = 12
+		if wave == 12:
 			state = State.MID_BOSS
 			elapsed_in_wave = 0.0
 			break
-		if wave == 23:
-			wave = 24
+		if wave == 24:
 			state = State.FINAL_BOSS
 			elapsed_in_wave = 0.0
 			break

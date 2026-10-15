@@ -80,7 +80,7 @@
 
 ## Progression et modes
 
-- [ ] Survival : 24 vagues de 30 s, timer boss en pause, HP decay actif.
+- [x] Survival : run intégrée aux durées nominales de 24 × 30 s (720 s simulées, accélérées ×4), timer arrêté pendant les deux boss et HP decay actif. Le harness augmente les HP du joueur pour isoler le déroulement, applique les dégâts de test aux placeholders et choisit automatiquement les chests ; il ne valide pas l'équilibrage.
 - [ ] Une récompense d'équipement permanent par run Survival, y compris défaite.
 - [ ] Achievement tiers débloqué une seule fois ; bonus cumulés.
 - [ ] Armorless : 3 équipements proposés après chaque vague, 1 choisi ; Flux temporaire.
