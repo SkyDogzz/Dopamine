@@ -43,6 +43,8 @@ Chaque impact produit un événement `damage` ; un impact létal produit ensuite
 
 La session Survival utilise un prototype automatique **[PROPOSÉ]** Lightning Conductor. L’interprétation de travail de ses deux chaînes au niveau 1 est de tirer sur les deux ennemis distincts les plus proches. Cadence 0,5 s, dégâts 12, portée 600 unités, vitesse de projectile 800 unités/s, rayon 4 et durée 2 s sont des valeurs configurables de départ, car ces paramètres restent à rédiger dans le GDD. Le smoke test headless vérifie deux cibles, leurs morts, le soin et l’acquittement des événements.
 
+Le HUD de `SurvivalSession` affiche le HP courant/plafond, l’horloge active en minutes/secondes, le nom et le nombre de chaînes de l’arme prototype, et l’état `IN RUN`/`PAUSED`/`RUN OVER`. Les vagues, l’XP, le boss et les statistiques complètes d’arme ne sont pas encore représentés.
+
 ## Scénarios headless Sandbox P1
 
 `game/scripts/scenario_runner.gd` lit un scénario JSON versionné (limite 1 Mio et 1 000 commandes), soumet les mêmes commandes au pont `CombatSimulation`, vérifie les attentes déclarées et exporte un JSON horodaté avec la version Godot, le temps simulé, les métriques, les entités, les événements de combat et les logs. Les scénarios acceptent `spawn`, `spawn_enemy`, `spawn_projectile`, `despawn`, `kill_all`, `pause`, `resume`, `step`, `set_speed`, `set_steering_target` et `reset`. Le runner ne charge ni n’écrit de sauvegarde normale.

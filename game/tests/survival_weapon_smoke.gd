@@ -11,6 +11,9 @@ func _run() -> void:
 	if session.simulation == null:
 		_fail("Survival session should create the shared simulation")
 		return
+	if session.get_node("HUD/RunPanel/RunInfo/HPBar").value != 100.0:
+		_fail("Survival HUD should start at the validated player HP")
+		return
 	session.simulation.set_speed(4.0)
 	session.player_hp = 80.0
 	for position in [Vector2(140.0, -30.0), Vector2(140.0, 30.0)]:
@@ -32,6 +35,9 @@ func _run() -> void:
 		return
 	if session.player_hp <= 85.0 or int(state["metrics"]["collision_count"]) < 4:
 		_fail("Lightning Conductor should hit both enemies twice and apply both kill heals")
+		return
+	if session.get_node("HUD/RunPanel/RunInfo/RunState").text != "IN RUN":
+		_fail("Survival HUD should reflect the active run state")
 		return
 	print("Survival automatic weapon smoke passed")
 	quit()

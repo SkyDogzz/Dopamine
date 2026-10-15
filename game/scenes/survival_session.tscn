@@ -4,3 +4,43 @@
 
 [node name="SurvivalSession" type="Node2D"]
 script = ExtResource("1_session")
+
+[node name="HUD" type="CanvasLayer" parent="."]
+layer = 5
+
+[node name="RunPanel" type="PanelContainer" parent="HUD"]
+offset_left = 20.0
+offset_top = 20.0
+offset_right = 730.0
+offset_bottom = 80.0
+mouse_filter = 2
+
+[node name="RunInfo" type="HBoxContainer" parent="HUD/RunPanel"]
+theme_override_constants/separation = 14
+mouse_filter = 2
+
+[node name="HPValue" type="Label" parent="HUD/RunPanel/RunInfo"]
+custom_minimum_size = Vector2(125, 0)
+layout_mode = 2
+text = "HP  100 / 100"
+
+[node name="HPBar" type="ProgressBar" parent="HUD/RunPanel/RunInfo"]
+custom_minimum_size = Vector2(170, 0)
+layout_mode = 2
+show_percentage = false
+value = 100.0
+
+[node name="TimeValue" type="Label" parent="HUD/RunPanel/RunInfo"]
+custom_minimum_size = Vector2(56, 0)
+layout_mode = 2
+text = "00:00"
+
+[node name="WeaponValue" type="Label" parent="HUD/RunPanel/RunInfo"]
+custom_minimum_size = Vector2(205, 0)
+layout_mode = 2
+text = "LIGHTNING CONDUCTOR  •  2 CHAINS"
+
+[node name="RunState" type="Label" parent="HUD/RunPanel/RunInfo"]
+custom_minimum_size = Vector2(86, 0)
+layout_mode = 2
+text = "IN RUN"

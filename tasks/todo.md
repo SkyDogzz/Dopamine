@@ -35,5 +35,6 @@
 
 ## Phase 4 — Premier playable Survival
 
+- [x] HUD minimal HP/temps actif/arme/état de run dans la scène Survival.
 - [ ] Vagues, XP, chests, 3 armes/reliques, mid-boss et boss final.
 - [ ] HUD, fin de run, sauvegarde minimale et vérification QA complète.

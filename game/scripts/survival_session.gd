@@ -20,6 +20,7 @@ var simulation: Object
 var player: CharacterBody2D
 var last_target_sequence := 0
 var player_hp := 0.0
+var player_max_hp := 0.0
 var player_active_time := 0.0
 var run_over := false
 var _last_target := Vector2(INF, INF)
@@ -27,6 +28,12 @@ var _last_simulation_time := 0.0
 var _last_combat_event_sequence := 0
 var _next_weapon_time := 0.0
 var _entities: Array = []
+
+@onready var _hp_value: Label = $HUD/RunPanel/RunInfo/HPValue
+@onready var _hp_bar: ProgressBar = $HUD/RunPanel/RunInfo/HPBar
+@onready var _time_value: Label = $HUD/RunPanel/RunInfo/TimeValue
+@onready var _weapon_value: Label = $HUD/RunPanel/RunInfo/WeaponValue
+@onready var _run_state: Label = $HUD/RunPanel/RunInfo/RunState
 
 func _ready() -> void:
 	player = PLAYER_SCENE.instantiate()
@@ -37,7 +44,8 @@ func _ready() -> void:
 		push_error("CombatSimulation GDExtension class is unavailable")
 		set_physics_process(false)
 		return
-	player_hp = simulation.initial_player_hp()
+	player_max_hp = simulation.initial_player_hp()
+	player_hp = player_max_hp
 	_publish_player_target()
 	if spawn_initial_enemy:
 		simulation.spawn_enemy("chaser", 1, ENEMY_SPAWN_OFFSET, Vector2.ZERO)
@@ -73,7 +81,22 @@ func _process(_delta: float) -> void:
 	if player_hp <= 0.0 and not run_over:
 		run_over = true
 		simulation.pause()
+	_refresh_hud(state)
 	queue_redraw()
+
+func _refresh_hud(state: Dictionary) -> void:
+	_hp_value.text = "HP  %.1f / %.0f" % [player_hp, player_max_hp]
+	_hp_bar.max_value = player_max_hp
+	_hp_bar.value = player_hp
+	var total_seconds := int(floor(player_active_time))
+	_time_value.text = "%02d:%02d" % [total_seconds / 60, total_seconds % 60]
+	_weapon_value.text = "LIGHTNING CONDUCTOR  •  %d CHAINS" % lightning_chain_count
+	if run_over:
+		_run_state.text = "RUN OVER"
+	elif state["paused"]:
+		_run_state.text = "PAUSED"
+	else:
+		_run_state.text = "IN RUN"
 
 func _fire_lightning_conductor(active_time: float, paused: bool) -> void:
 	if not weapon_enabled or paused or run_over or lightning_cooldown <= 0.0 or active_time < _next_weapon_time:
