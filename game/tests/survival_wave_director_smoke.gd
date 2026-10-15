@@ -50,9 +50,17 @@ func _run() -> void:
 		elif session.wave_director.state == director_script.State.FINAL_BOSS:
 			if not await _wait_for_entity_type(session, "final_boss"):
 				return
+		if session.wave_director.state == director_script.State.MID_BOSS or session.wave_director.state == director_script.State.FINAL_BOSS:
+			await process_frame
+			if not session.get_node("HUD/BossPanel/BossInfo/BossHPBar").visible:
+				_fail("Survival HUD should show the active boss health bar")
+				return
 		await process_frame
 	if not session.run_over or not session.simulation.snapshot()["paused"]:
 		_fail("Defeating the final boss placeholder should complete and pause the Survival run")
+		return
+	if session.get_node("HUD/RunPanel/RunInfo/RunState").text != "VICTORY":
+		_fail("The final boss should show a distinct victory state")
 		return
 	print("Survival wave director smoke passed")
 	quit()

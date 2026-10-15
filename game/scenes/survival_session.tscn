@@ -59,3 +59,25 @@ text = "WAVE 01  •  30 s"
 custom_minimum_size = Vector2(86, 0)
 layout_mode = 2
 text = "IN RUN"
+
+[node name="BossPanel" type="PanelContainer" parent="HUD"]
+visible = false
+offset_left = 420.0
+offset_top = 90.0
+offset_right = 860.0
+offset_bottom = 132.0
+mouse_filter = 2
+
+[node name="BossInfo" type="HBoxContainer" parent="HUD/BossPanel"]
+theme_override_constants/separation = 12
+mouse_filter = 2
+
+[node name="BossValue" type="Label" parent="HUD/BossPanel/BossInfo"]
+custom_minimum_size = Vector2(130, 0)
+layout_mode = 2
+text = "BOSS  1000 / 1000"
+
+[node name="BossHPBar" type="ProgressBar" parent="HUD/BossPanel/BossInfo"]
+custom_minimum_size = Vector2(260, 0)
+layout_mode = 2
+show_percentage = false

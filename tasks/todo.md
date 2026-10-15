@@ -38,5 +38,6 @@
 - [x] HUD HP/temps actif/arme/XP/niveau/état de run dans la scène Survival.
 - [x] Prototype XP : une orbe partagée apparaît à la mort d’un ennemi, se collecte une fois et fait progresser le niveau.
 - [x] Prototype vagues : 24 vagues, horloge arrêtée pendant les placeholders boss, spawns selon courbes proposées et HUD vague.
+- [x] HUD boss : barre HP courants/max et état de victoire distinct de la défaite.
 - [ ] Vagues, chests, 3 armes/reliques, mid-boss et boss final.
 - [ ] HUD, fin de run, sauvegarde minimale et vérification QA complète.

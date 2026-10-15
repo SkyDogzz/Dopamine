@@ -54,7 +54,8 @@ Livrer d’abord un Sandbox développeur autonome, puis le premier playable Surv
 - [x] Ajouter le directeur de vagues 24 × 30 s, spawn configurable selon les courbes **[PROPOSÉES]** et transitions de placeholders boss.
 - [ ] Ajouter chests et contenu minimal de trois armes/reliques selon les données de référence.
 - [x] Ajouter un HUD Survival minimal pour le HP, temps actif, arme prototype, XP/niveau et état de run.
-- [ ] Ajouter le HUD boss, les patterns et récompenses de boss, l’écran de fin de run et la sauvegarde minimale isolée du Sandbox.
+- [x] Afficher les HP courants/max des placeholders boss et distinguer l’état logique de victoire de la mort.
+- [ ] Implémenter les patterns/récompenses de boss et un écran de fin de run complet avec sauvegarde minimale isolée du Sandbox.
 - [ ] Vérifier une run Survival complète de 24 vagues et les critères QA associés.
 - [ ] Checkpoint final : build Linux, démarrage sans save existante, run complète et régression Sandbox.
 

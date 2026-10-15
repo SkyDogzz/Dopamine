@@ -59,6 +59,9 @@ var _pending_xp_orbs: Dictionary = {}
 @onready var _xp_bar: ProgressBar = $HUD/RunPanel/RunInfo/XPBar
 @onready var _run_state: Label = $HUD/RunPanel/RunInfo/RunState
 @onready var _wave_value: Label = $HUD/RunPanel/RunInfo/WaveValue
+@onready var _boss_panel: PanelContainer = $HUD/BossPanel
+@onready var _boss_value: Label = $HUD/BossPanel/BossInfo/BossValue
+@onready var _boss_hp_bar: ProgressBar = $HUD/BossPanel/BossInfo/BossHPBar
 
 func _ready() -> void:
 	player = PLAYER_SCENE.instantiate()
@@ -141,15 +144,34 @@ func _refresh_hud(state: Dictionary) -> void:
 	_xp_bar.value = player_xp
 	if wave_director != null:
 		_wave_value.text = _wave_status_text()
+	_refresh_boss_hud()
 	var total_seconds := int(floor(player_active_time))
 	_time_value.text = "%02d:%02d" % [total_seconds / 60, total_seconds % 60]
 	_weapon_value.text = "LIGHTNING CONDUCTOR  •  %d CHAINS" % lightning_chain_count
-	if run_over:
+	if wave_director != null and wave_director.state == WAVE_DIRECTOR_SCRIPT.State.VICTORY:
+		_run_state.text = "VICTORY"
+	elif run_over:
 		_run_state.text = "RUN OVER"
 	elif state["paused"]:
 		_run_state.text = "PAUSED"
 	else:
 		_run_state.text = "IN RUN"
+
+func _refresh_boss_hud() -> void:
+	_boss_panel.visible = false
+	for entity in _entities:
+		var components: Dictionary = entity["components"]
+		var enemy_type: String = components.get("EnemyType", "")
+		if enemy_type != "mid_boss" and enemy_type != "final_boss":
+			continue
+		var health: Dictionary = components["Health"]
+		var current_hp := float(health["current"])
+		var maximum_hp := float(health["maximum"])
+		_boss_value.text = "%s  %.0f / %.0f" % ["MID-BOSS" if enemy_type == "mid_boss" else "BOSS", current_hp, maximum_hp]
+		_boss_hp_bar.max_value = maximum_hp
+		_boss_hp_bar.value = current_hp
+		_boss_panel.visible = true
+		return
 
 func _collect_nearby_xp_orbs(state: Dictionary) -> void:
 	if state["paused"] or run_over:
