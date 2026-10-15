@@ -17,6 +17,14 @@ func _run() -> void:
 	var fixture_profile: Dictionary = progression.load_profile()["profile"]
 	fixture_profile["equipment_inventory"][1]["slot"] = fixture_profile["equipment_inventory"][0]["slot"]
 	fixture_profile["resources"]["powder_basic"] = 100
+	fixture_profile["resources"]["essence"] = 200
+	fixture_profile["equipment_inventory"][0]["rarity"] = "legendary"
+	fixture_profile["equipment_inventory"][0]["stat_lines"] = [
+		{"stat_id": "damage_pct", "roll_percentile": 0.5, "enhancement_level": 0, "fail_streak": 9},
+		{"stat_id": "attack_speed_pct", "roll_percentile": 0.5, "enhancement_level": 0, "fail_streak": 0},
+		{"stat_id": "critical_chance_pct", "roll_percentile": 0.5, "enhancement_level": 0, "fail_streak": 0},
+	]
+	fixture_profile["equipment_inventory"][0]["unique_effect_id"] = "pending_choice"
 	fixture_profile["equipment_inventory"][0]["stat_lines"][0]["fail_streak"] = 9
 	if not save_service.save_slot("0", fixture_profile):
 		_fail("Could not save the same-slot inventory fixture")
@@ -50,6 +58,16 @@ func _run() -> void:
 	if rarity_icon.texture == null or rarity_icon.texture.resource_path != "res://assets/icons/rarity_%s.png" % fixture_profile["equipment_inventory"][0]["rarity"]:
 		_fail("Inventory rows should display their equipment rarity icon")
 		return
+	var choose_effect_button: Button = _find_button(item_content, "CHOOSE EFFECT")
+	if choose_effect_button.text != "CHOOSE EFFECT":
+		_fail("Legendary equipment should expose its unique effect choice")
+		return
+	choose_effect_button.pressed.emit()
+	var chosen_effect_profile: Dictionary = progression.load_profile()["profile"]
+	if chosen_effect_profile["equipment_inventory"][0]["unique_effect_id"] == "pending_choice":
+		_fail("Selecting a unique effect should persist the choice")
+		return
+	item_content = items.get_child(0).get_child(0).get_child(1)
 	var status_label: Label = _find_label(item_content, "ROLLS UNCALIBRATED")
 	if not item_content.get_child(0).text.contains(" • ") or status_label == null:
 		_fail("An inventory item should show its slot, rarity and inactive roll state")
@@ -87,6 +105,20 @@ func _run() -> void:
 			unequipped_profile["equipment_inventory"][1].get("equipped", false):
 		_fail("The inventory should allow its equipped item to be unequipped")
 		return
+	var dismantle_button: Button = _find_button(items.get_child(1).get_child(0).get_child(1), "DISMANTLE  •  +1 BASIC POWDER")
+	if dismantle_button == null:
+		var second_content: VBoxContainer = items.get_child(1).get_child(0).get_child(1)
+		for child in second_content.get_children():
+			if child is Button and child.text.begins_with("DISMANTLE"):
+				dismantle_button = child
+				break
+	if dismantle_button == null:
+		_fail("Equipment should expose a dismantle action")
+		return
+	dismantle_button.pressed.emit()
+	if items.get_child_count() != 1 or not panel.get_node("Panel/Content/Feedback").text.contains("ITEM DISMANTLED"):
+		_fail("Dismantling should remove the item from the inventory and report the powder reward")
+		return
 	if "--capture" in OS.get_cmdline_user_args():
 		await RenderingServer.frame_post_draw
 		if root.get_texture().get_image().save_png("/tmp/dopamine-equipment-inventory.png") != OK:
@@ -101,6 +133,37 @@ func _run() -> void:
 	if not await _wait_for_pause_state(session, false) or panel.visible or \
 			get_root().gui_get_focus_owner() != button:
 		_fail("Closing the inventory should resume the run that was previously active")
+		return
+	var skills_button: Button = session.get_node("HUD/SkillsButton")
+	skills_button.pressed.emit()
+	if not await _wait_for_pause_state(session, true):
+		_fail("Opening the skill tree should pause the running simulation")
+		return
+	var skill_panel = session.get_node("HUD/SkillTreeOverlay")
+	if not skill_panel.visible or skill_panel.get_node("Panel/Content/VitalityButton").disabled:
+		_fail("The skill tree should show the proposed node when enough Essence is available")
+		return
+	skill_panel.get_node("Panel/Content/VitalityButton").pressed.emit()
+	if not is_equal_approx(progression.skill_bonus("max_hp_pct"), 0.05):
+		_fail("Unlocking the vitality node should apply its proposed maximum HP bonus")
+		return
+	var focus_button: Button = skill_panel.get_node("Panel/Content/FocusButton")
+	if focus_button.disabled:
+		_fail("The dependent prototype skill node should become available after Vitality")
+		return
+	focus_button.pressed.emit()
+	if not is_equal_approx(progression.skill_bonus("damage_pct"), 0.03):
+		_fail("Unlocking Focused Training should apply its proposed damage bonus")
+		return
+	skill_panel.get_node("Panel/Content/RespecButton").pressed.emit()
+	if not is_zero_approx(progression.skill_bonus("max_hp_pct")) or \
+			not is_zero_approx(progression.skill_bonus("damage_pct")) or \
+			progression.load_profile()["profile"]["resources"]["essence"] != 200:
+		_fail("Free skill respec should restore Essence and remove the prototype bonus")
+		return
+	skill_panel.get_node("Panel/Content/CloseButton").pressed.emit()
+	if not await _wait_for_pause_state(session, false):
+		_fail("Closing the skill tree should resume the previously running simulation")
 		return
 	session.simulation.pause()
 	if not await _wait_for_pause_state(session, true):
@@ -140,4 +203,8 @@ func _find_button(parent: Node, text_value: String) -> Button:
 	for child in parent.get_children():
 		if child is Button and child.text == text_value:
 			return child
+		if child.get_child_count() > 0:
+			var nested := _find_button(child, text_value)
+			if nested != null:
+				return nested
 	return null

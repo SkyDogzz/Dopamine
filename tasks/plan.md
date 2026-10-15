@@ -88,10 +88,11 @@ Cette suite suit `docs/planning/ROADMAP.md` et ne transforme pas les points **[P
 
 ### P5 — Progression persistante
 
-- [ ] Étendre le profil versionné aux quatre poudres et migrer les profils existants sans perdre ressources/inventaire.
-- [ ] Ajouter l'amélioration +0..+10 par ligne, conversion 10:1, démantèlement et choix d'effet unique ; les chances et coûts proposés doivent rester configurables et signalés comme provisoires.
-- [ ] Ajouter un arbre de compétences réduit et données de définition uniquement si les coûts/prérequis peuvent être documentés sans figer le graphe **[OUVERT]** de 120 nodes.
-- [ ] Ajouter le suivi cumulatif idempotent d'achievements avec un petit catalogue prototype, sans attribuer les bonus chiffrés proposés comme décisions finales.
+- [x] Étendre le profil versionné (v5) aux quatre poudres, nodes et progrès d'achievement ; migrer les profils existants sans perdre ressources/inventaire.
+- [x] Ajouter l'amélioration +0..+10 par ligne, conversion 10:1, démantèlement et choix d'effet unique ; les chances/coûts proposés et le rendement provisoire restent étiquetés.
+- [x] Ajouter deux nodes de compétences avec prérequis et respec gratuit ; coûts/bonus explicitement **[PROPOSÉS]**, graphe complet restant hors prototype.
+- [x] Ajouter le compteur de kills idempotent, les quatre tiers Exterminator d'exemple et leurs bonus cumulés **[PROPOSÉS]**.
+- [ ] Étendre le contenu aux 100–150 nodes et au catalogue complet d'achievements/effets ; calibrer équipement et économies selon les points **[OUVERTS]**.
 - [ ] Vérifier migration, sauvegarde/reprise et absence de double attribution.
 
 ### P6 — Modes sans arbitrage implicite

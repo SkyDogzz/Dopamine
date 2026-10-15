@@ -3,6 +3,8 @@ extends CenterContainer
 signal close_requested
 signal equipment_state_requested(instance_id: String, equipped: bool)
 signal enhancement_requested(instance_id: String, stat_id: String, powder_tier: String)
+signal unique_effect_requested(instance_id: String, effect_id: String)
+signal dismantle_requested(instance_id: String)
 
 @onready var _items: VBoxContainer = $Panel/Content/Scroll/Items
 @onready var _empty_state: Label = $Panel/Content/EmptyState
@@ -29,6 +31,14 @@ const RARITY_ICONS := {
 	"mythic": "res://assets/icons/rarity_mythic.png",
 }
 const POWDER_TIERS := ["basic", "refined", "pure", "prismatic"]
+const UNIQUE_EFFECTS := [
+	"lightning_burst", "overflow_shield", "evolution_shockwave",
+	"elite_haste", "free_first_chest_reroll", "revive_knockback",
+]
+const DISMANTLE_POWDER := {
+	"normal": "BASIC", "magic": "REFINED", "mystic": "PURE",
+	"legendary": "PRISMATIC", "mythic": "PRISMATIC",
+}
 
 func _ready() -> void:
 	visible = false
@@ -132,7 +142,26 @@ func _create_item_row(equipment: Dictionary, resources: Dictionary) -> Control:
 		status.text = "EQUIPPED — rolls uncalibrated; no gameplay bonus yet"
 	if equipment.get("unique_effect_id") == "pending_choice":
 		status.text += "\nUnique effect choice pending"
+	elif str(equipment.get("unique_effect_id", "")) != "":
+		status.text += "\nUNIQUE: %s — prototype only, no gameplay effect" % str(equipment["unique_effect_id"]).to_upper()
 	content.add_child(status)
+	if equipment.get("unique_effect_id") == "pending_choice":
+		var effect_row := HBoxContainer.new()
+		var effect_choice := OptionButton.new()
+		for effect_id in UNIQUE_EFFECTS:
+			effect_choice.add_item(effect_id.replace("_", " ").to_upper())
+			effect_choice.set_item_metadata(effect_choice.item_count - 1, effect_id)
+		effect_row.add_child(effect_choice)
+		var choose_effect := Button.new()
+		choose_effect.text = "CHOOSE EFFECT"
+		choose_effect.pressed.connect(func() -> void:
+			unique_effect_requested.emit(
+				str(equipment.get("instance_id", "")),
+				str(effect_choice.get_item_metadata(effect_choice.selected))
+			)
+		)
+		effect_row.add_child(choose_effect)
+		content.add_child(effect_row)
 	var equip_button := Button.new()
 	var is_equipped := bool(equipment.get("equipped", false))
 	equip_button.text = "UNEQUIP" if is_equipped else "EQUIP"
@@ -140,6 +169,13 @@ func _create_item_row(equipment: Dictionary, resources: Dictionary) -> Control:
 		equipment_state_requested.emit(str(equipment.get("instance_id", "")), not is_equipped)
 	)
 	content.add_child(equip_button)
+	var dismantle_button := Button.new()
+	dismantle_button.text = "DISMANTLE  •  +1 %s POWDER" % DISMANTLE_POWDER[rarity]
+	dismantle_button.tooltip_text = "Prototype yield; final dismantle economy is still open."
+	dismantle_button.pressed.connect(func() -> void:
+		dismantle_requested.emit(str(equipment.get("instance_id", "")))
+	)
+	content.add_child(dismantle_button)
 	return row
 
 func _close() -> void:

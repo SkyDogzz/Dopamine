@@ -26,6 +26,11 @@ layout_mode = 2
 text = "NO PROFILE ATTACHED"
 horizontal_alignment = 1
 
+[node name="Achievement" type="Label" parent="Content"]
+layout_mode = 2
+text = ""
+horizontal_alignment = 1
+
 [node name="Equipment" type="Label" parent="Content"]
 layout_mode = 2
 text = ""

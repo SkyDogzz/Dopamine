@@ -17,7 +17,7 @@ func _run() -> void:
 		_fail("A Normal wave 24 victory should grant the GDD proposed 88 Essence and 122 Basic Powder")
 		return
 	var profile: Dictionary = save_service.load_slot("0")["payload"]
-	if profile.get("profile_version") != 4 or profile["resources"].get("powder_refined") != 0 or \
+	if profile.get("profile_version") != 5 or profile["resources"].get("powder_refined") != 0 or \
 			profile["resources"].get("powder_pure") != 0 or profile["resources"].get("powder_prismatic") != 0:
 		_fail("New progression profiles should initialize all four powder tiers")
 		return
@@ -26,6 +26,25 @@ func _run() -> void:
 			inventory[0].get("instance_id") != "survival_run-win_equipment":
 		_fail("Every completed Survival run should add one permanent equipment instance")
 		return
+	var unique_stat_ids := ["damage_pct", "attack_speed_pct", "critical_chance_pct"]
+	inventory[0]["rarity"] = "legendary"
+	inventory[0]["stat_lines"] = []
+	for stat_id in unique_stat_ids:
+		inventory[0]["stat_lines"].append({
+			"stat_id": stat_id, "roll_percentile": 0.5,
+			"enhancement_level": 0, "fail_streak": 0,
+		})
+	inventory[0]["unique_effect_id"] = "pending_choice"
+	if not save_service.save_slot("0", profile):
+		_fail("The unique effect fixture should save")
+		return
+	var chosen_effect: Dictionary = service.choose_unique_effect(inventory[0]["instance_id"], "overflow_shield")
+	if not chosen_effect.get("ok", false) or \
+			chosen_effect["profile"]["equipment_inventory"][0]["unique_effect_id"] != "overflow_shield":
+		_fail("Legendary equipment should persist one eligible unique effect choice")
+		return
+	profile = chosen_effect["profile"]
+	inventory = profile["equipment_inventory"]
 	profile["resources"]["powder_basic"] = 100
 	inventory[0]["stat_lines"][0]["fail_streak"] = 9
 	profile["equipment_inventory"] = inventory
@@ -91,6 +110,27 @@ func _run() -> void:
 			unequipped["profile"]["equipment_inventory"][1].get("equipped", true):
 		_fail("A permanent item should be unequippable")
 		return
+	profile = service.load_profile()["profile"]
+	profile["resources"]["essence"] = 200
+	if not save_service.save_slot("0", profile):
+		_fail("The skill tree fixture should save")
+		return
+	if service.unlock_skill_node("focused_training").get("error") != "skill_prerequisite_locked":
+		_fail("A skill node should reject purchase until its prerequisite is unlocked")
+		return
+	var unlocked: Dictionary = service.unlock_skill_node("vitality_starter")
+	var focused: Dictionary = service.unlock_skill_node("focused_training")
+	if not unlocked.get("ok", false) or not focused.get("ok", false) or \
+			service.skill_bonus("max_hp_pct") != 0.05 or service.skill_bonus("damage_pct") != 0.03 or \
+			focused["profile"]["resources"]["essence"] != 70 or \
+			service.unlock_skill_node("vitality_starter").get("ok", false):
+		_fail("The prototype skill node should spend Essence once and expose its proposed passive bonus")
+		return
+	var respecced: Dictionary = service.respec_skill_tree()
+	if not respecced.get("ok", false) or service.skill_bonus("max_hp_pct") != 0.0 or \
+			service.skill_bonus("damage_pct") != 0.0 or respecced["profile"]["resources"]["essence"] != 200:
+		_fail("Skill respec should be free and refund the spent Essence")
+		return
 	var legacy_service = load("res://scripts/progression_service.gd").new(save_service, "legacy")
 	if not save_service.save_slot("legacy", {
 		"profile_version": 1,
@@ -102,7 +142,7 @@ func _run() -> void:
 	var migrated_duplicate: Dictionary = legacy_service.award_survival_run("already-awarded", 24, true)
 	var migrated_profile: Dictionary = save_service.load_slot("legacy")["payload"]
 	if not migrated_duplicate.get("ok", false) or not migrated_duplicate.get("duplicate", false) or \
-			migrated_profile.get("profile_version") != 4 or migrated_profile["resources"].get("essence") != 7 or \
+			migrated_profile.get("profile_version") != 5 or migrated_profile["resources"].get("essence") != 7 or \
 			migrated_profile["equipment_inventory"].size() != 0:
 		_fail("A previous progression profile should migrate without losing resources or replaying a reward")
 		return
@@ -116,9 +156,36 @@ func _run() -> void:
 	var version_two_service = load("res://scripts/progression_service.gd").new(save_service, "version-two")
 	var migrated_profile_result: Dictionary = version_two_service.load_profile()
 	var migrated_inventory: Array = migrated_profile_result.get("profile", {}).get("equipment_inventory", [])
-	if not migrated_profile_result.get("ok", false) or migrated_profile_result["profile"].get("profile_version") != 4 or \
+	if not migrated_profile_result.get("ok", false) or migrated_profile_result["profile"].get("profile_version") != 5 or \
 			migrated_inventory.size() != 2 or migrated_inventory[0].get("equipped", true) or migrated_inventory[1].get("equipped", true):
 		_fail("Version 2 equipment should migrate as unequipped without losing items")
+		return
+	var dismantled: Dictionary = service.dismantle_equipment("survival_run-win_equipment")
+	if not dismantled.get("ok", false) or dismantled["profile"]["equipment_inventory"].size() != 1 or \
+			dismantled["profile"]["resources"]["powder_prismatic"] != 1 or \
+			service.dismantle_equipment("survival_run-win_equipment").get("ok", false):
+		_fail("Dismantling should remove the item once and persist its prototype rarity-tier powder reward")
+		return
+	var achievement_service = load("res://scripts/progression_service.gd").new(save_service, "achievement")
+	var achievement_run: Dictionary = achievement_service.award_survival_run("kill-run", 24, true, 100)
+	var achievement_profile: Dictionary = achievement_service.load_profile()["profile"]
+	if achievement_run.get("new_achievement_tiers") != 1 or \
+			achievement_profile["achievement_progress"]["total_kills"] != 100 or \
+			achievement_service.achievement_bonus("damage_pct") != 0.0005:
+		_fail("The first Exterminator tier should grant only its proposed cumulative damage bonus")
+		return
+	var second_achievement_run: Dictionary = achievement_service.award_survival_run("kill-run-two", 24, true, 900)
+	if second_achievement_run.get("new_achievement_tiers") != 1 or \
+			achievement_service.achievement_bonus("damage_pct") != 0.0015 or \
+			achievement_service.award_survival_run("kill-run-two", 24, true, 1000).get("duplicate") != true or \
+			achievement_service.load_profile()["profile"]["achievement_progress"]["total_kills"] != 1000:
+		_fail("The proposed Exterminator tier should unlock once and run rewards should stay idempotent")
+		return
+	achievement_service.award_survival_run("kill-run-three", 24, true, 9000)
+	achievement_service.award_survival_run("kill-run-four", 24, true, 90000)
+	if achievement_service.achievement_bonus("damage_pct") != 0.005 or \
+			achievement_service.load_profile()["profile"]["achievement_progress"]["exterminator_tier"] != 4:
+		_fail("All four proposed Exterminator tiers should accumulate the example total bonus")
 		return
 	print("Progression service smoke passed")
 	quit()
@@ -141,4 +208,4 @@ func _valid_equipment_instance(equipment: Dictionary) -> bool:
 	return ["helmet", "armor", "gloves", "boots", "amulet", "ring"].has(equipment["slot"]) and \
 			line_counts.has(rarity) and equipment["stat_lines"].size() == line_counts[rarity] and \
 		equipment.get("equipped") is bool and \
-			(not rarity in ["legendary", "mythic"] or equipment["unique_effect_id"] == "pending_choice")
+			(not rarity in ["legendary", "mythic"] or equipment["unique_effect_id"] in ["pending_choice", "overflow_shield"])

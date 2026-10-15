@@ -50,10 +50,11 @@
 
 ## Jalons restants — P5 à P8
 
-- [ ] **P5.1** Migration profil v3→v4 et prise en charge Basic/Refined/Pure/Prismatic Powder.
-- [ ] **P5.2** Amélioration d'une ligne +0..+10, échecs, pity, conversion Powder et UI ; taux proposés configurables.
-- [ ] **P5.3** Démantèlement équipement et choix d'effet unique Legendary/Mythic ; calibrer les bonus sans inventer les plages **[OUVERTES]**.
-- [ ] **P5.4** Arbre de compétences et achievements : commencer par contrats/données bornées, sans figer le graphe ou les catalogues **[OUVERTS]**.
+- [x] **P5.1** Migration profil v1–v4→v5 et prise en charge Basic/Refined/Pure/Prismatic Powder.
+- [x] **P5.2** Amélioration d'une ligne +0..+10, échecs, pity, conversion Powder et UI ; taux/probabilités explicitement proposés.
+- [x] **P5.3 prototype** Démantèlement (rendement provisoire) et choix d'effet unique persistant ; aucun effet de combat avant validation du catalogue.
+- [x] **P5.4 prototype** Node Vitality/respec gratuit et Exterminator jusqu'au premier seuil ; aucune prime de gameplay proposée appliquée.
+- [ ] **P5 restant** Graphe 100–150 nodes, seuils/bonus complets d'achievements, catalogue unique effects et plage des rolls à définir dans le GDD.
 - [ ] **P6.1** Mode Armorless conforme aux règles **[VALIDÉES]** avec draft à trois, choix unique et Flux temporaire.
 - [ ] **P6.2** Reprise des vagues Endless et records Armorless selon contrats validés ; garder la progression permanente proposée désactivée/non attribuée tant que non arbitrée.
 - [ ] **P7.1** Presets Sandbox JSON versionnés, bornés, UI et code de partage sans charge utile exécutable.

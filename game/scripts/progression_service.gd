@@ -1,11 +1,25 @@
 extends RefCounted
 
-const PROFILE_VERSION := 4
+const PROFILE_VERSION := 5
 const POWDER_TIERS := ["basic", "refined", "pure", "prismatic"]
 const ENHANCEMENT_BASE_COSTS := [10, 15, 22, 32, 46, 65, 90, 125, 175, 250]
 const RARITY_COST_MULTIPLIERS := {"normal": 1.0, "magic": 1.5, "mystic": 2.0, "legendary": 3.0, "mythic": 4.0}
 const PROPOSED_SUCCESS_CHANCE := {"basic": 50.0, "refined": 70.0, "pure": 85.0, "prismatic": 95.0}
 const PROPOSED_CRITICAL_FAILURE_CHANCE := {"basic": 10.0, "refined": 5.0, "pure": 2.0, "prismatic": 0.5}
+const PROPOSED_UNIQUE_EFFECTS := [
+	"lightning_burst", "overflow_shield", "evolution_shockwave",
+	"elite_haste", "free_first_chest_reroll", "revive_knockback",
+]
+const PROTOTYPE_DISMANTLE_REWARD := {
+	"normal": "powder_basic", "magic": "powder_refined", "mystic": "powder_pure",
+	"legendary": "powder_prismatic", "mythic": "powder_prismatic",
+}
+const PROTOTYPE_SKILL_NODES := {
+	"vitality_starter": {"essence_cost": 50, "max_hp_pct": 0.05, "prerequisites": [], "status": "PROPOSED"},
+	"focused_training": {"essence_cost": 80, "damage_pct": 0.03, "prerequisites": ["vitality_starter"], "status": "PROPOSED"},
+}
+const PROPOSED_EXTERMINATOR_THRESHOLDS := [100, 1000, 10000, 100000]
+const PROPOSED_EXTERMINATOR_DAMAGE_BONUSES := [0.0005, 0.001, 0.0015, 0.002]
 const RUN_ID_PATTERN := "^[A-Za-z0-9_-]{1,128}$"
 const EQUIPMENT_GENERATOR_SCRIPT := preload("res://scripts/equipment_generator.gd")
 
@@ -20,7 +34,7 @@ func _init(save_service: RefCounted, slot_id: String = "0") -> void:
 	_equipment_generator = EQUIPMENT_GENERATOR_SCRIPT.new()
 	_rng.randomize()
 
-func award_survival_run(run_id: String, wave_reached: int, victory: bool) -> Dictionary:
+func award_survival_run(run_id: String, wave_reached: int, victory: bool, kills: int = 0) -> Dictionary:
 	if _save_service == null or not _valid_run_id(run_id):
 		return _award_error("invalid_run")
 	var profile_result := load_profile()
@@ -39,6 +53,15 @@ func award_survival_run(run_id: String, wave_reached: int, victory: bool) -> Dic
 	profile["resources"]["powder_basic"] = int(profile["resources"]["powder_basic"]) + powder_reward
 	var equipment: Dictionary = _equipment_generator.generate_survival_item(run_id)
 	profile["equipment_inventory"].append(equipment)
+	var achievements: Dictionary = profile["achievement_progress"]
+	var previous_tier := int(achievements["exterminator_tier"])
+	achievements["total_kills"] = int(achievements["total_kills"]) + maxi(0, kills)
+	var current_tier := 0
+	for threshold in PROPOSED_EXTERMINATOR_THRESHOLDS:
+		if int(achievements["total_kills"]) >= threshold:
+			current_tier += 1
+	achievements["exterminator_tier"] = current_tier
+	profile["achievement_progress"] = achievements
 	rewarded_runs.append(run_id)
 	profile["rewarded_survival_runs"] = rewarded_runs
 	if not _save_service.save_slot(_slot_id, profile):
@@ -49,6 +72,7 @@ func award_survival_run(run_id: String, wave_reached: int, victory: bool) -> Dic
 		"essence": essence_reward,
 		"powder_basic": powder_reward,
 		"equipment": equipment,
+		"new_achievement_tiers": current_tier - previous_tier,
 	}
 
 func load_profile() -> Dictionary:
@@ -78,6 +102,13 @@ func load_profile() -> Dictionary:
 		}
 		profile["profile_version"] = PROFILE_VERSION
 		migrated = true
+	elif version == 4:
+		profile["profile_version"] = PROFILE_VERSION
+		migrated = true
+	profile["unlocked_skill_nodes"] = profile.get("unlocked_skill_nodes", [])
+	profile["achievement_progress"] = profile.get("achievement_progress", {
+		"total_kills": 0, "exterminator_tier": 0,
+	})
 	if not _valid_profile(profile):
 		return {"ok": false, "error": "invalid_profile"}
 	if migrated and not _save_service.save_slot(_slot_id, profile):
@@ -173,6 +204,97 @@ func convert_powder(source_tier: String, amount: int) -> Dictionary:
 		return {"ok": false, "error": "save_failed"}
 	return {"ok": true, "profile": profile.duplicate(true)}
 
+func choose_unique_effect(instance_id: String, effect_id: String) -> Dictionary:
+	if effect_id not in PROPOSED_UNIQUE_EFFECTS:
+		return {"ok": false, "error": "invalid_unique_effect"}
+	var profile_result := load_profile()
+	if not profile_result.get("ok", false):
+		return {"ok": false, "error": str(profile_result.get("error", "load_failed"))}
+	var profile: Dictionary = profile_result["profile"]
+	for equipment in profile["equipment_inventory"]:
+		if equipment["instance_id"] != instance_id:
+			continue
+		if equipment["rarity"] not in ["legendary", "mythic"] or equipment["unique_effect_id"] != "pending_choice":
+			return {"ok": false, "error": "unique_effect_already_set_or_unavailable"}
+		equipment["unique_effect_id"] = effect_id
+		if not _save_service.save_slot(_slot_id, profile):
+			return {"ok": false, "error": "save_failed"}
+		return {"ok": true, "profile": profile.duplicate(true)}
+	return {"ok": false, "error": "equipment_not_found"}
+
+func dismantle_equipment(instance_id: String) -> Dictionary:
+	var profile_result := load_profile()
+	if not profile_result.get("ok", false):
+		return {"ok": false, "error": str(profile_result.get("error", "load_failed"))}
+	var profile: Dictionary = profile_result["profile"]
+	for index in range(profile["equipment_inventory"].size()):
+		var equipment: Dictionary = profile["equipment_inventory"][index]
+		if equipment["instance_id"] != instance_id:
+			continue
+		var resource_key: String = PROTOTYPE_DISMANTLE_REWARD[equipment["rarity"]]
+		profile["equipment_inventory"].remove_at(index)
+		profile["resources"][resource_key] += 1
+		if not _save_service.save_slot(_slot_id, profile):
+			return {"ok": false, "error": "save_failed"}
+		return {"ok": true, "powder": resource_key, "profile": profile.duplicate(true)}
+	return {"ok": false, "error": "equipment_not_found"}
+
+func unlock_skill_node(node_id: String) -> Dictionary:
+	if not PROTOTYPE_SKILL_NODES.has(node_id):
+		return {"ok": false, "error": "unknown_skill_node"}
+	var result := load_profile()
+	if not result.get("ok", false):
+		return {"ok": false, "error": str(result.get("error", "load_failed"))}
+	var profile: Dictionary = result["profile"]
+	if node_id in profile["unlocked_skill_nodes"]:
+		return {"ok": false, "error": "skill_node_already_unlocked"}
+	for prerequisite in PROTOTYPE_SKILL_NODES[node_id]["prerequisites"]:
+		if prerequisite not in profile["unlocked_skill_nodes"]:
+			return {"ok": false, "error": "skill_prerequisite_locked"}
+	var cost := int(PROTOTYPE_SKILL_NODES[node_id]["essence_cost"])
+	if int(profile["resources"]["essence"]) < cost:
+		return {"ok": false, "error": "insufficient_essence"}
+	profile["resources"]["essence"] -= cost
+	profile["unlocked_skill_nodes"].append(node_id)
+	if not _save_service.save_slot(_slot_id, profile):
+		return {"ok": false, "error": "save_failed"}
+	return {"ok": true, "profile": profile.duplicate(true)}
+
+func respec_skill_tree() -> Dictionary:
+	var result := load_profile()
+	if not result.get("ok", false):
+		return {"ok": false, "error": str(result.get("error", "load_failed"))}
+	var profile: Dictionary = result["profile"]
+	for node_id in profile["unlocked_skill_nodes"]:
+		if PROTOTYPE_SKILL_NODES.has(node_id):
+			profile["resources"]["essence"] += int(PROTOTYPE_SKILL_NODES[node_id]["essence_cost"])
+	profile["unlocked_skill_nodes"] = []
+	if not _save_service.save_slot(_slot_id, profile):
+		return {"ok": false, "error": "save_failed"}
+	return {"ok": true, "profile": profile.duplicate(true)}
+
+func skill_bonus(stat_id: String) -> float:
+	var result := load_profile()
+	if not result.get("ok", false):
+		return 0.0
+	var bonus := 0.0
+	for node_id in result["profile"]["unlocked_skill_nodes"]:
+		if PROTOTYPE_SKILL_NODES.has(node_id):
+			bonus += float(PROTOTYPE_SKILL_NODES[node_id].get(stat_id, 0.0))
+	return bonus
+
+func achievement_bonus(stat_id: String) -> float:
+	if stat_id != "damage_pct":
+		return 0.0
+	var result := load_profile()
+	if not result.get("ok", false):
+		return 0.0
+	var tier := int(result["profile"]["achievement_progress"]["exterminator_tier"])
+	var bonus := 0.0
+	for index in range(mini(tier, PROPOSED_EXTERMINATOR_DAMAGE_BONUSES.size())):
+		bonus += PROPOSED_EXTERMINATOR_DAMAGE_BONUSES[index]
+	return bonus
+
 func _empty_profile() -> Dictionary:
 	return {
 		"profile_version": PROFILE_VERSION,
@@ -182,11 +304,14 @@ func _empty_profile() -> Dictionary:
 		},
 		"equipment_inventory": [],
 		"rewarded_survival_runs": [],
+		"unlocked_skill_nodes": [],
+		"achievement_progress": {"total_kills": 0, "exterminator_tier": 0},
 	}
 
 func _valid_profile(profile: Dictionary) -> bool:
 	if profile.get("profile_version") != PROFILE_VERSION or not profile.get("resources") is Dictionary or \
-			not profile.get("equipment_inventory") is Array or not profile.get("rewarded_survival_runs") is Array:
+			not profile.get("equipment_inventory") is Array or not profile.get("rewarded_survival_runs") is Array or \
+				not profile.get("unlocked_skill_nodes") is Array or not profile.get("achievement_progress") is Dictionary:
 		return false
 	var resources: Dictionary = profile["resources"]
 	for resource in ["essence", "powder_basic", "powder_refined", "powder_pure", "powder_prismatic"]:
@@ -196,6 +321,20 @@ func _valid_profile(profile: Dictionary) -> bool:
 	for run_id in profile["rewarded_survival_runs"]:
 		if typeof(run_id) != TYPE_STRING or not _valid_run_id(run_id):
 			return false
+	var achievements: Dictionary = profile["achievement_progress"]
+	var total_kills = achievements.get("total_kills", -1)
+	var achievement_tier = achievements.get("exterminator_tier", -1)
+	if typeof(total_kills) not in [TYPE_INT, TYPE_FLOAT] or not is_finite(float(total_kills)) or \
+			int(total_kills) != total_kills or total_kills < 0 or \
+			typeof(achievement_tier) not in [TYPE_INT, TYPE_FLOAT] or not is_finite(float(achievement_tier)) or \
+			int(achievement_tier) != achievement_tier or achievement_tier < 0 or \
+			achievement_tier > PROPOSED_EXTERMINATOR_THRESHOLDS.size():
+		return false
+	var seen_skill_nodes: Dictionary = {}
+	for node_id in profile["unlocked_skill_nodes"]:
+		if typeof(node_id) != TYPE_STRING or not PROTOTYPE_SKILL_NODES.has(node_id) or seen_skill_nodes.has(node_id):
+			return false
+		seen_skill_nodes[node_id] = true
 	var equipped_slots: Dictionary = {}
 	for equipment in profile["equipment_inventory"]:
 		if not _valid_equipment(equipment):
@@ -218,7 +357,7 @@ func _valid_equipment(equipment: Variant) -> bool:
 		return false
 	var effect_id = equipment.get("unique_effect_id")
 	if typeof(effect_id) != TYPE_STRING or \
-			(equipment["rarity"] in ["legendary", "mythic"] and effect_id != "pending_choice") or \
+		(equipment["rarity"] in ["legendary", "mythic"] and effect_id != "pending_choice" and effect_id not in PROPOSED_UNIQUE_EFFECTS) or \
 			(equipment["rarity"] not in ["legendary", "mythic"] and not effect_id.is_empty()):
 		return false
 	var used_stats: Dictionary = {}

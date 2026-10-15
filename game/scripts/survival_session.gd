@@ -116,6 +116,7 @@ var _starting_weapon_choice_open := false
 var _contact_invulnerable_until := 0.0
 var _pending_lifesteal := 0.0
 var _inventory_was_running := false
+var _cached_persistent_damage_multiplier := 1.0
 
 @onready var _hp_value: Label = $HUD/RunPanel/RunInfo/HPValue
 @onready var _hp_bar: ProgressBar = $HUD/RunPanel/RunInfo/HPBar
@@ -132,6 +133,8 @@ var _inventory_was_running := false
 @onready var _chest_choice: PanelContainer = $HUD/ChestOverlay/ChestChoice
 @onready var _equipment_button: Button = $HUD/EquipmentButton
 @onready var _equipment_panel: CenterContainer = $HUD/EquipmentInventoryOverlay
+@onready var _skill_tree_button: Button = $HUD/SkillsButton
+@onready var _skill_tree_panel: CenterContainer = $HUD/SkillTreeOverlay
 @onready var _run_result_overlay: CenterContainer = $HUD/RunResultOverlay
 @onready var _run_result: PanelContainer = $HUD/RunResultOverlay/RunResultPanel
 
@@ -156,12 +159,22 @@ func _ready() -> void:
 	_chest_choice.option_selected.connect(_on_chest_option_selected)
 	_run_result.restart_requested.connect(_restart_run)
 	_equipment_button.pressed.connect(_open_equipment_inventory)
+	_skill_tree_button.pressed.connect(_open_skill_tree)
 	_equipment_panel.close_requested.connect(_close_equipment_inventory)
 	_equipment_panel.equipment_state_requested.connect(_set_equipment_state)
 	_equipment_panel.enhancement_requested.connect(_enhance_equipment)
+	_equipment_panel.unique_effect_requested.connect(_choose_unique_effect)
+	_equipment_panel.dismantle_requested.connect(_dismantle_equipment)
 	_equipment_panel.progression_service = progression_service
+	_skill_tree_panel.close_requested.connect(_close_skill_tree)
+	_skill_tree_panel.unlock_requested.connect(_unlock_skill_node)
+	_skill_tree_panel.respec_requested.connect(_respec_skill_tree)
 	_equipment_button.visible = progression_service != null
+	_skill_tree_button.visible = progression_service != null
 	player_max_hp = simulation.initial_player_hp()
+	if progression_service != null:
+		player_max_hp *= 1.0 + progression_service.skill_bonus("max_hp_pct")
+		_refresh_persistent_bonuses()
 	player_hp = player_max_hp
 	player_xp_to_next = xp_base_to_next_level
 	wave_director = WAVE_DIRECTOR_SCRIPT.new()
@@ -377,7 +390,7 @@ func _finish_run(victory: bool) -> void:
 	_run_result_overlay.visible = true
 	var reward := {}
 	if progression_service != null:
-		reward = progression_service.award_survival_run(_run_id, wave_director.wave, victory)
+		reward = progression_service.award_survival_run(_run_id, wave_director.wave, victory, kill_count)
 	_run_result.show_result(victory, wave_director.wave, player_active_time, kill_count, reward)
 
 func _open_equipment_inventory() -> void:
@@ -392,11 +405,53 @@ func _open_equipment_inventory() -> void:
 	else:
 		_equipment_panel.present_error()
 
+func _open_skill_tree() -> void:
+	if progression_service == null or run_over or _chest_open or _starting_weapon_choice_open or \
+			_equipment_panel.visible or _skill_tree_panel.visible:
+		return
+	_inventory_was_running = not bool(simulation.snapshot()["paused"])
+	if _inventory_was_running:
+		simulation.pause()
+	var result: Dictionary = progression_service.load_profile()
+	if result.get("ok", false):
+		_skill_tree_panel.present(result["profile"])
+	else:
+		_skill_tree_panel.present_error()
+
 func _close_equipment_inventory() -> void:
 	if _inventory_was_running and not run_over:
 		simulation.resume()
 	_inventory_was_running = false
 	_equipment_button.grab_focus()
+
+func _close_skill_tree() -> void:
+	_skill_tree_panel.visible = false
+	if _inventory_was_running and not run_over:
+		simulation.resume()
+	_inventory_was_running = false
+	_skill_tree_button.grab_focus()
+
+func _unlock_skill_node(node_id: String) -> void:
+	var result: Dictionary = progression_service.unlock_skill_node(node_id)
+	if result.get("ok", false):
+		var health_ratio := player_hp / player_max_hp if player_max_hp > 0.0 else 1.0
+		player_max_hp = simulation.initial_player_hp() * (1.0 + progression_service.skill_bonus("max_hp_pct"))
+		player_hp = player_max_hp * health_ratio
+		_refresh_persistent_bonuses()
+		_skill_tree_panel.present(result["profile"])
+	else:
+		_skill_tree_panel.present_error()
+
+func _respec_skill_tree() -> void:
+	var result: Dictionary = progression_service.respec_skill_tree()
+	if result.get("ok", false):
+		var health_ratio := player_hp / player_max_hp if player_max_hp > 0.0 else 1.0
+		player_max_hp = simulation.initial_player_hp() * (1.0 + progression_service.skill_bonus("max_hp_pct"))
+		player_hp = player_max_hp * health_ratio
+		_refresh_persistent_bonuses()
+		_skill_tree_panel.present(result["profile"])
+	else:
+		_skill_tree_panel.present_error()
 
 func _set_equipment_state(instance_id: String, equipped: bool) -> void:
 	if progression_service == null or not _equipment_panel.visible:
@@ -419,6 +474,26 @@ func _enhance_equipment(instance_id: String, stat_id: String, powder_tier: Strin
 		)
 	else:
 		_equipment_panel.show_feedback("ENHANCEMENT FAILED: %s" % str(result.get("error", "unknown")))
+
+func _choose_unique_effect(instance_id: String, effect_id: String) -> void:
+	if progression_service == null or not _equipment_panel.visible:
+		return
+	var result: Dictionary = progression_service.choose_unique_effect(instance_id, effect_id)
+	if result.get("ok", false):
+		_equipment_panel.present(result["profile"])
+		_equipment_panel.show_feedback("EFFECT SAVED — PROTOTYPE ONLY; NO GAMEPLAY EFFECT")
+	else:
+		_equipment_panel.show_feedback("EFFECT CHOICE FAILED: %s" % str(result.get("error", "unknown")))
+
+func _dismantle_equipment(instance_id: String) -> void:
+	if progression_service == null or not _equipment_panel.visible:
+		return
+	var result: Dictionary = progression_service.dismantle_equipment(instance_id)
+	if result.get("ok", false):
+		_equipment_panel.present(result["profile"])
+		_equipment_panel.show_feedback("ITEM DISMANTLED — +1 %s" % str(result["powder"]).trim_prefix("powder_").to_upper())
+	else:
+		_equipment_panel.show_feedback("DISMANTLE FAILED: %s" % str(result.get("error", "unknown")))
 
 func _restart_run() -> void:
 	get_tree().reload_current_scene()
@@ -545,7 +620,8 @@ func _fire_lightning_conductor(active_time: float, paused: bool) -> void:
 		chain_count = 3
 	if level >= 4:
 		chain_count = 5
-	var damage_multiplier := (1.25 if level >= 3 else 1.0) * (1.0 + float(loadout.relic_level("storm_core")) * storm_core_damage_per_level)
+	var damage_multiplier := (1.25 if level >= 3 else 1.0) * \
+			(1.0 + float(loadout.relic_level("storm_core")) * storm_core_damage_per_level) * _persistent_damage_multiplier()
 	if level >= 5 and loadout.relic_level("storm_core") > 0:
 		_fire_infinite_circuit(active_time, chain_count, damage_multiplier)
 		return
@@ -667,6 +743,7 @@ func _fire_inferno_sprayer(active_time: float, paused: bool) -> void:
 	var level: int = loadout.weapon_level("inferno_sprayer")
 	var damage := inferno_damage * (1.0 + 0.15 * float(level - 1))
 	damage *= 1.0 + float(loadout.relic_level("infernal_heart")) * infernal_heart_damage_per_level
+	damage *= _persistent_damage_multiplier()
 	var projectile_type := "inferno_sprayer"
 	var explosion_radius := 0.0
 	var explosion_multiplier := 0.0
@@ -693,6 +770,7 @@ func _fire_crimson_daggers(active_time: float, paused: bool) -> void:
 		direction = Vector2.RIGHT
 	var level: int = loadout.weapon_level("crimson_daggers")
 	var damage := daggers_damage * (1.0 + 0.15 * float(level - 1))
+	damage *= _persistent_damage_multiplier()
 	var projectile_type := "crimson_dagger"
 	var status_damage := 2.0
 	var status_interval := 0.5
@@ -711,6 +789,15 @@ func _fire_crimson_daggers(active_time: float, paused: bool) -> void:
 			fired += 1
 	if fired > 0:
 		_next_daggers_time = active_time + daggers_cooldown
+
+func _persistent_damage_multiplier() -> float:
+	return _cached_persistent_damage_multiplier
+
+func _refresh_persistent_bonuses() -> void:
+	_cached_persistent_damage_multiplier = 1.0
+	if progression_service != null:
+		_cached_persistent_damage_multiplier += progression_service.skill_bonus("damage_pct")
+		_cached_persistent_damage_multiplier += progression_service.achievement_bonus("damage_pct")
 
 func _nearest_enemy(max_range: float) -> Dictionary:
 	var nearest: Dictionary = {}

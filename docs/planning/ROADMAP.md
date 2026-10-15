@@ -15,6 +15,8 @@
 | P7 | Sandbox Lab joueur complet : presets, share codes, snapshots, isolation, UI | Accessible sans save ; aucune progression normale altérée |
 | P8 | Contenu complet, balance, accessibilité, Steam, optimisation | Régressions vertes et cible perf atteinte |
 
+P5 progress status (2026-10-15): the first persistent progression slice is implemented (four Powder tiers, equipment enhancement, dismantling/effect-choice prototype, two proposed skill nodes with respec, and cumulative Exterminator prototype tiers). P5 is **not complete**: calibrated equipment stat ranges/application and sale, final unique-effect behavior, and the full skill/achievement content remain outstanding or open in the GDD. No P6 work should begin before these P5 gates are resolved.
+
 P3 groundwork: the shared simulation core, developer Sandbox UI, and JSON scenarios can apply and verify one configurable damage-over-time status per selected entity. Inferno Sprayer and the level-5 Bloodstorm evolution use the same core status and apply the GDD-proposed reduced lifesteal rate. Infinite Circuit branches lightning from its level-5 initial targets, and level-5 Wildfire adds a proposed area explosion that spreads burn to nearby enemies. Evolution tuning remains proposed; other weapon-specific evolution effects remain future work.
 
 ## Sandbox MVP — spécification minimum

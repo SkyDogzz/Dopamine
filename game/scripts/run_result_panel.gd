@@ -6,6 +6,7 @@ signal restart_requested
 @onready var _summary: Label = $Content/Summary
 @onready var _rewards: Label = $Content/Rewards
 @onready var _equipment: Label = $Content/Equipment
+@onready var _achievement: Label = $Content/Achievement
 
 const RESOURCE_ICONS := [
 	"res://assets/icons/resource_essence.png",
@@ -24,7 +25,9 @@ func show_result(victory: bool, wave_number: int, active_seconds: float, kills: 
 	if reward.is_empty():
 		_rewards.text = "NO PROFILE ATTACHED"
 		_equipment.text = ""
+		_achievement.text = ""
 	elif reward.get("ok", false):
+		_achievement.text = "EXTERMINATOR TIER +%d  •  PROPOSED THRESHOLDS" % int(reward.get("new_achievement_tiers", 0)) if int(reward.get("new_achievement_tiers", 0)) > 0 else ""
 		if reward.get("duplicate", false):
 			_rewards.text = "ALREADY REWARDED"
 			_equipment.text = ""
@@ -43,6 +46,7 @@ func show_result(victory: bool, wave_number: int, active_seconds: float, kills: 
 	else:
 		_rewards.text = "PROGRESSION SAVE FAILED"
 		_equipment.text = ""
+		_achievement.text = ""
 	visible = true
 
 func _add_icon_row(row_name: String, anchor: Control, paths: Array) -> void:

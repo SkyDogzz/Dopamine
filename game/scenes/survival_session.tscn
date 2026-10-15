@@ -1,9 +1,10 @@
-[gd_scene load_steps=5 format=3]
+[gd_scene load_steps=6 format=3]
 
 [ext_resource type="Script" path="res://scripts/survival_session.gd" id="1_session"]
 [ext_resource type="PackedScene" path="res://scenes/chest_choice.tscn" id="2_chest_choice"]
 [ext_resource type="PackedScene" path="res://scenes/run_result_panel.tscn" id="3_run_result"]
 [ext_resource type="PackedScene" path="res://scenes/equipment_inventory_panel.tscn" id="4_inventory"]
+[ext_resource type="PackedScene" path="res://scenes/skill_tree_panel.tscn" id="5_skills"]
 
 [node name="SurvivalSession" type="Node2D"]
 script = ExtResource("1_session")
@@ -109,7 +110,17 @@ offset_bottom = 132.0
 text = "EQUIPMENT"
 tooltip_text = "Open the permanent equipment inventory. Simulation pauses while it is open."
 
+[node name="SkillsButton" type="Button" parent="HUD"]
+offset_left = 190.0
+offset_top = 92.0
+offset_right = 350.0
+offset_bottom = 132.0
+text = "SKILL TREE"
+tooltip_text = "Spend Essence on permanent skill nodes."
+
 [node name="EquipmentInventoryOverlay" parent="HUD" instance=ExtResource("4_inventory")]
+
+[node name="SkillTreeOverlay" parent="HUD" instance=ExtResource("5_skills")]
 
 [node name="RunResultOverlay" type="CenterContainer" parent="HUD"]
 visible = false
