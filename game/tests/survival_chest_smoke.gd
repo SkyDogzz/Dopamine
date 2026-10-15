@@ -16,9 +16,34 @@ func _run() -> void:
 	session.chest_collection_radius = 100.0
 	session.xp_collection_radius = 0.0
 	root.add_child(session)
-	await process_frame
+	var active_session: Dictionary = await _wait_until(session, func(snapshot: Dictionary) -> bool:
+		return not snapshot["paused"]
+	)
+	if active_session.is_empty():
+		_fail("Survival should resume before pickup range checks")
+		return
 	session.player_hp = 1000.0
 	session.simulation.set_speed(4.0)
+	session._cached_equipment_bonuses["pickup_radius_pct"] = 900.0
+	session.xp_collection_radius = 10.0
+	session.chest_collection_radius = 10.0
+	session._world_chests.append({"family": "weapon", "position": session.player.global_position + Vector2(50.0, 0.0)})
+	session._collect_nearby_chests(session.simulation.snapshot())
+	if session._chest_open or session._world_chests.size() != 1:
+		_fail("A large pickup bonus must not extend chest collection range")
+		return
+	session._world_chests.clear()
+	var xp_before := session.player_xp
+	if session.simulation.spawn_xp_orb(session.player.global_position + Vector2(50.0, 0.0), 5.0) <= 0:
+		_fail("Survival should spawn the long-range XP pickup fixture")
+		return
+	var collected_xp: Dictionary = await _wait_until(session, func(_snapshot: Dictionary) -> bool:
+		return session.player_xp > xp_before
+	)
+	if collected_xp.is_empty():
+		_fail("A large pickup bonus should extend XP collection range")
+		return
+	session.chest_collection_radius = 100.0
 	if session.simulation.spawn_enemy("chaser", 1, Vector2(20.0, 0.0), Vector2.ZERO) <= 0:
 		_fail("Survival should spawn the chest-drop test enemy")
 		return

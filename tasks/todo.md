@@ -47,7 +47,8 @@ Roadmap détaillée et audit GDD/code : [`docs/planning/ROADMAP.md`](../docs/pla
   - [ ] Vérifier trois options uniques, objets max, slots pleins et armes niveau 5 non évoluées.
   - [ ] Vérifier pause/reprise et évolution après chaque acquisition/amélioration.
   - [ ] Garder probabilités/poids/rerolls proposés configurables tant qu’ils ne sont pas arbitrés.
-  - [ ] Ajouter la régression `pickup_radius` élevé : XP collectée à distance, chest inchangé.
+  - [x] Ajouter le smoke `pickup_radius` élevé : XP collectée à distance, chest inchangé.
+  - [ ] Exécuter ce smoke sous Godot avant de clore P5.3.
   - **Vérifier :** smoke chest ciblé puis test de run.
 
 - [ ] **P5.4 — Ennemis et boss**
