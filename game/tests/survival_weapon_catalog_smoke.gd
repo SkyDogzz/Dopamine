@@ -25,8 +25,68 @@ func _run() -> void:
 	if not await _wildfire_explodes_and_spreads():
 		_fail("Wildfire should explode on impact and ignite nearby enemies")
 		return
+	if not await _minigun_hits_target():
+		_fail("Minigun should hit a target and the Overdrive/Redline build should shorten its firing interval")
+		return
 	print("Survival weapon catalog smoke passed")
 	quit()
+
+func _minigun_hits_target() -> bool:
+	var session: Node2D = load("res://scenes/survival_session.tscn").instantiate()
+	session.spawn_initial_enemy = false
+	session.wave_spawning_enabled = false
+	session.weapon_enabled = false
+	session.skip_starting_weapon_choice = true
+	session.contact_damage_per_hit = 0.0
+	session.xp_collection_radius = 0.0
+	session.minigun_cooldown = 0.2
+	root.add_child(session)
+	await process_frame
+	if not session.loadout.apply_offer("weapon:minigun") or not session.loadout.apply_offer("relic:overdrive_engine"):
+		session.queue_free()
+		return false
+	session.weapon_enabled = true
+	session.simulation.spawn("test_target", 1, Vector2(180.0, 0.0), 100.0, Vector2.ZERO)
+	var deadline := Time.get_ticks_msec() + 1000
+	while Time.get_ticks_msec() < deadline:
+		await process_frame
+		var state: Dictionary = session.simulation.snapshot()
+		if state["entities"].size() > 0:
+			session._entities = state["entities"]
+			break
+	if session._entities.is_empty():
+		session.queue_free()
+		return false
+	var active_time := float(session.simulation.snapshot()["simulation_time"])
+	session._fire_minigun(active_time, false)
+	var base_interval: float = session._next_minigun_time - active_time
+	var first_hit_deadline := Time.get_ticks_msec() + 1000
+	while Time.get_ticks_msec() < first_hit_deadline:
+		await process_frame
+		if int(session.simulation.snapshot()["metrics"]["collision_count"]) > 0:
+			break
+	if int(session.simulation.snapshot()["metrics"]["collision_count"]) == 0:
+		session.queue_free()
+		return false
+	for _level in range(4):
+		if not session.loadout.apply_offer("weapon:minigun"):
+			session.queue_free()
+			return false
+	if not session.loadout.apply_offer("relic:overdrive_engine"):
+		session.queue_free()
+		return false
+	session._next_minigun_time = active_time + 0.01
+	session._fire_minigun(active_time + 0.01, false)
+	var redline_interval: float = session._next_minigun_time - (active_time + 0.01)
+	var collision_baseline := int(session.simulation.snapshot()["metrics"]["collision_count"])
+	var deadline_for_hit := Time.get_ticks_msec() + 1500
+	while Time.get_ticks_msec() < deadline_for_hit:
+		await process_frame
+		if int(session.simulation.snapshot()["metrics"]["collision_count"]) > collision_baseline:
+			session.queue_free()
+			return redline_interval < base_interval
+	session.queue_free()
+	return false
 
 func _infinite_circuit_branches() -> bool:
 	var session: Node2D = load("res://scenes/survival_session.tscn").instantiate()

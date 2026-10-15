@@ -12,7 +12,7 @@ Cette roadmap transforme le [GDD consolidé v1.6](../gdd/GDD_v1.6.md), l’archi
 - **QA historique** : `docs/qa/TESTS.md` décrit un test réellement exécuté antérieurement. Les coches ne signifient pas qu’il a été relancé pendant cet audit.
 - **[VALIDÉ] / [PROPOSÉ] / [OUVERT]** décrivent le statut de conception du GDD, pas l’état d’implémentation. Une valeur proposée codée en dur reste proposée.
 
-L’audit courant est statique. Godot/Godot 4 n’est pas détecté dans le PATH de cet environnement ; les tests GDScript et la scène fenêtrée n’ont donc pas été relancés. Les preuves d’exécution citées ci-dessous sont celles archivées dans les QA précédentes. Aucun statut de conception n’est promu par cette roadmap.
+L’audit initial était statique. Durant la tranche Minigun du 2026-10-15, Godot 4.7.2 a été lancé depuis `tools/local/godot-4.7.2/` pour l’import éditeur et les smokes catalogue, loadout, armes et coffres concernés. Cela ne revalide pas les autres preuves d’exécution archivées dans les QA. Aucun statut de conception n’est promu par cette roadmap.
 
 ## Résumé d’avancement vérifié
 
@@ -23,7 +23,7 @@ L’audit courant est statique. Godot/Godot 4 n’est pas détecté dans le PATH
 | P2 Simulation/combat | **Fondation présente, couverture partielle** | Diversité des IA, règles complètes d’ennemis/boss, instrumentation et performance iGPU. |
 | P3 Prototype de combat | **Trois paires et trois évolutions de prototype présentes** | Contrats génériques, retours visuels par niveau, ciblage fidèle, mesures DPS détaillées. |
 | P4 Vertical slice Survival | **Boucle de run prototype présente** | Boss réels, difficulté sélectionnable, run équilibrée et vérifiée sans harness. |
-| P5 Contenu v1.6 | **Non livré** | 7 armes et leurs 7 reliques associées sont définies mais indisponibles en Survival ; Magnet Heart n'agit que sur l'XP ; le contenu complet, 8–12 familles ennemies et boss multi-phases restent à implémenter. |
+| P5 Contenu v1.6 | **Non livré** | 6 armes et leurs reliques associées restent indisponibles en Survival ; Magnet Heart n'agit que sur l'XP ; contenu complet, 8–12 familles ennemies et boss multi-phases restent à implémenter. |
 | P6 Progression permanente | **Prototype anticipé seulement** | Catalogue complet, règles et contenus validés, récompenses calibrées et effets uniques actifs. |
 | P7 Modes Endless | **À faire** | Armorless complet ; arbitrages nécessaires pour Endless standard. |
 | P8 Sandbox Lab joueur | **À faire au-delà des outils développeur P1** | Builds libres, presets/import/export, copie de save, snapshots complets et règles de sécurité. |
@@ -31,11 +31,11 @@ L’audit courant est statique. Godot/Godot 4 n’est pas détecté dans le PATH
 
 ### Lecture rapide : livré, prototype ou survolé
 
-**Bien intégré comme fondation :** simulation native découplée de Godot, worker, commandes/snapshots, limites de charge, outils Sandbox, loop de run Survival, pause/chest/XP, trois armes et effets de combat de base, sauvegarde versionnée, premiers écrans d’équipement.
+**Bien intégré comme fondation :** simulation native découplée de Godot, worker, commandes/snapshots, limites de charge, outils Sandbox, loop de run Survival, pause/chest/XP, quatre armes et effets de combat de base, sauvegarde versionnée, premiers écrans d’équipement.
 
-**Intégré en prototype, à ne pas confondre avec une feature finie :** boss (apparition/HP/transition, mais pas leurs patterns), XP auto-bonus, loot/probabilités, trois évolutions, équipement et enhancement, deux nodes de skill tree, famille Exterminator, effets uniques, récompenses de run. Les paramètres restent souvent **[PROPOSÉS]**.
+**Intégré en prototype, à ne pas confondre avec une feature finie :** boss (apparition/HP/transition, mais pas leurs patterns), XP auto-bonus, loot/probabilités, quatre évolutions, équipement et enhancement, deux nodes de skill tree, famille Exterminator, effets uniques, récompenses de run. Les paramètres restent souvent **[PROPOSÉS]**.
 
-**Survolé ou absent par rapport au GDD :** 7 armes et 7 reliques associées restantes ; Magnet Heart n'agit que sur XP (autres pickups et impulsion de niveau 5 absents) ; animation/identité spécifique à chaque niveau ; dagues réellement orbitantes dans Bloodstorm (le code actuel tire des projectiles en éventail) ; 8–12 familles ennemies et leurs rôles ; élites à affixes ; boss à phases ; difficultés ; réactions élémentaires nommées ; tree ~120 nodes ; achievements ~120 familles ; modes Endless ; Sandbox Lab joueur ; performance iGPU et build Windows.
+**Survolé ou absent par rapport au GDD :** 6 armes et 6 reliques associées restantes ; Minigun réutilise encore l’identité visuelle Lightning et n’a pas de feedback par niveau ; Magnet Heart n'agit que sur XP (autres pickups et impulsion de niveau 5 absents) ; animation/identité spécifique à chaque niveau ; dagues réellement orbitantes dans Bloodstorm (le code actuel tire des projectiles en éventail) ; 8–12 familles ennemies et leurs rôles ; élites à affixes ; boss à phases ; difficultés ; réactions élémentaires nommées ; tree ~120 nodes ; achievements ~120 familles ; modes Endless ; Sandbox Lab joueur ; performance iGPU et build Windows.
 
 ## Dépendances principales
 
@@ -270,7 +270,7 @@ Catalogue d’évolution défini dans le GDD :
 | Crimson Daggers | Blood Chalice | Bloodstorm | Prototype présent ; dagues en éventail, alors que le GDD exige une tempête orbitale. |
 | Void Orb | Singularity | Event Horizon | Définition catalogue présente ; gameplay absent. |
 | Frost Nova | Frozen Crown | Absolute Zero | Définition catalogue présente ; gameplay absent. |
-| Minigun | Overdrive Engine | Redline | Définition catalogue présente ; gameplay absent. |
+| Minigun | Overdrive Engine | Redline | Prototype ajouté : tirs mono-cible, progression de cadence proposée, Redline accélère en continu ; valeurs configurables et **[PROPOSÉES]**. QA smoke ciblée. |
 | Meteor Staff | Celestial Eye | Starfall | Définition catalogue présente ; gameplay absent. |
 | Sawblades | Magnetic Coil | Razorstorm | Définition catalogue présente ; gameplay absent. |
 | Toxic Cloud | Plague Mask | Pandemic | Définition catalogue présente ; gameplay absent. |
@@ -280,32 +280,34 @@ Catalogue d’évolution défini dans le GDD :
 Travail requis :
 
 - [x] **P5.1.1 — Définitions catalogue** — les dix armes et leurs dix reliques associées, plus Magnet Heart sans paire, sont définies et les relations sont vérifiées au chargement.
-- [ ] **P5.1.1 — Schéma et activation** — brancher JSON Schema, puis activer chaque entrée en Survival uniquement après son implémentation gameplay.
-- [ ] **P5.1.2 — Ciblage des armes**
+- [ ] **P5.1.1 — Schéma et activation** — brancher JSON Schema ; n’activer en Survival que les armes dont le prototype gameplay existe.
+- [x] **P5.1.2 — Minigun + Overdrive Engine → Redline (prototype)** — tir automatique, bonus de cadence Overdrive linéaire et cadence Redline croissante en tir continu ; chiffres de départ configurables et **[PROPOSÉS]**.
+- [ ] **P5.1.3 — Feedback Minigun** — tous les paliers proposés de gameplay sont branchés, avec la précision interprétée comme une dispersion réduite ; retour visuel par niveau et identité visuelle restent à faire.
+- [ ] **P5.1.4 — Ciblage des armes**
   - [ ] Décrire la règle de ciblage de chaque arme avant son comportement visuel.
   - [ ] Implémenter un prototype par politique réutilisable et exposer ses cibles dans Sandbox.
   - [ ] Vérifier les armes de contact/orbitantes et longue portée avec placements différents.
-- [ ] **P5.1.3 — Niveaux et feedback**
+- [ ] **P5.1.5 — Niveaux et feedback des autres armes**
   - [ ] Compléter les niveaux 1–5 d’une arme à la fois à partir des valeurs proposées.
   - [ ] Ajouter feedback visuel/UI pour les cinq niveaux.
   - [ ] Compléter niveaux 1–5 des reliques et valider leurs bonus linéaires proposés.
   - [ ] Ajouter le changement visuel majeur à l’évolution.
-- [ ] **P5.1.4 — Règle d’évolution/catalogue**
+- [ ] **P5.1.6 — Règle d’évolution/catalogue**
   - [ ] Brancher une évolution de données sur l’armement existant.
   - [ ] Couvrir relique avant niveau 5 et relique après niveau 5.
   - [ ] Vérifier conservation du niveau 5, non-consommation de relique et unicité.
   - [ ] Couvrir les choix chest impossibles après niveau max.
-- [ ] **P5.1.5 — Magnet Heart et pickups**
+- [ ] **P5.1.7 — Magnet Heart et pickups**
   - [x] Ajouter Magnet Heart comme relique utilitaire sans évolution et l'inclure dans les offres Survival.
   - [x] Appliquer le bonus de rayon **[PROPOSÉ]** configurable de 25 % par niveau aux orbes XP.
   - [x] Vérifier orbe XP et chest séparément : le bonus n'élargit jamais le rayon du chest.
   - [ ] Étendre l'attraction aux soins, ressources, monnaies et bonus temporaires lorsqu'ils existent.
   - [ ] Implémenter l'impulsion de niveau 5 **[PROPOSÉE]** (20 s, rayon 300 %) sans téléporter les objets.
-- [ ] **P5.1.6 — Slots et effets de capacité**
+- [ ] **P5.1.8 — Slots et effets de capacité**
   - [ ] Vérifier cinq slots de reliques en run normale.
   - [ ] Tester une extension Legendary/Mythic seulement avec effet unique actif.
   - [ ] Vérifier absence de cumul automatique d’un même effet unique.
-- [ ] **P5.1.7 — Statut du balancing**
+- [ ] **P5.1.9 — Statut du balancing**
   - [ ] Charger les valeurs chiffrées proposées depuis une configuration modifiable.
   - [ ] Garder les valeurs marquées **[PROPOSÉES]** jusqu’à leur décision formelle.
 
