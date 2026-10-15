@@ -30,6 +30,26 @@ func _run() -> void:
 	if play_requests[0] != 1:
 		_fail("Play should emit the hub navigation request")
 		return
+	var options_button := launch_menu.get_node("Content/Card/Columns/Menu/OptionsButton") as Button
+	options_button.pressed.emit()
+	await process_frame
+	var options_panel := launch_menu.get_node_or_null("OptionsPanel")
+	if options_panel == null:
+		_fail("Options should open from the launch menu")
+		return
+	var back_button := options_panel.get_node_or_null("Content/Center/OptionsCard/OptionsContent/BackButton") as Button
+	if back_button == null:
+		_fail("Options panel should expose its Back action")
+		return
+	back_button.pressed.emit()
+	await process_frame
+	await process_frame
+	if launch_menu.get_node_or_null("OptionsPanel") != null:
+		_fail("Back should close Options")
+		return
+	if root.gui_get_focus_owner() != options_button:
+		_fail("Closing Options should restore focus to its launch button")
+		return
 	print("Launch menu controls, initial focus and hub navigation contract passed")
 	quit()
 

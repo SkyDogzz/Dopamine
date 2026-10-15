@@ -24,11 +24,11 @@
 **Description :** Instancier le panneau Options existant, gérer sa fermeture et restaurer le focus sur le bouton qui l’a ouvert.
 
 **Critères d’acceptation :**
-- [ ] Options s’ouvre depuis l’accueil et applique les réglages existants.
-- [ ] Retour et Échap ferment le panneau sans quitter l’accueil.
-- [ ] À la fermeture, le focus est rendu à Options.
+- [x] Options s’ouvre depuis l’accueil et applique les réglages existants.
+- [x] Retour et Échap ferment le panneau sans quitter l’accueil. (Retour testé ici; Échap couvert par `ui_settings_smoke.gd`.)
+- [x] À la fermeture, le focus est rendu à Options.
 
-**Vérification :** Smoke d’ouverture/fermeture clavier et signal de fermeture; régression `ui_settings_smoke.gd`.
+**Vérification :** `launch_navigation_smoke.gd` valide l’ouverture, Retour et la restauration du focus; `ui_settings_smoke.gd` confirme les Options et Échap. Les deux passent sous Godot 4.7.2 headless.
 
 **Dépendances :** Tâche 1.
 
