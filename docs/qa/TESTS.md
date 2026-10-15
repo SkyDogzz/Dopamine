@@ -87,6 +87,7 @@
 - [x] Inventaire Survival consultable : affiche rareté, slot, percentiles et état non calibré ; l’ouverture suspend la simulation et la fermeture la reprend seulement si elle tournait déjà. Test headless et revue du rendu fenêtré.
 - [x] Équipement persistant : équiper, déséquiper et remplacer une pièce du même slot ; migration du profil v2 vers v3. Aucun bonus de statistique n’est appliqué tant que les rolls restent non calibrés.
 - [x] Progression v4 : migration des profils précédents vers quatre tiers de Powder, conversion 10:1, amélioration de ligne +0..+10, coût de rareté/niveau et pity au dixième essai ; probabilités et coûts restent les valeurs **[PROPOSÉES]** du GDD.
+- [x] UI Enhancement : sélection du tier Powder, affichage du niveau de ligne et ressources, consommation, retour de résultat et inventaire persistant vérifiés dans `survival_inventory_smoke` et revue fenêtrée.
 - [ ] Rareté ajustée par difficulté/vague et mort précoce, plages de rolls calibrées et application des bonus, vente/démantèlement et choix d'effet unique Legendary/Mythic ; les percentiles d'instance sont normalisés et non appliqués.
 - [ ] Achievement tiers débloqué une seule fois ; bonus cumulés.
 - [ ] Armorless : 3 équipements proposés après chaque vague, 1 choisi ; Flux temporaire.

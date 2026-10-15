@@ -2,11 +2,16 @@ extends CenterContainer
 
 signal close_requested
 signal equipment_state_requested(instance_id: String, equipped: bool)
+signal enhancement_requested(instance_id: String, stat_id: String, powder_tier: String)
 
 @onready var _items: VBoxContainer = $Panel/Content/Scroll/Items
 @onready var _empty_state: Label = $Panel/Content/EmptyState
 @onready var _error_state: Label = $Panel/Content/ErrorState
 @onready var _close_button: Button = $Panel/Content/CloseButton
+@onready var _resources: Label = $Panel/Content/Resources
+@onready var _feedback: Label = $Panel/Content/Feedback
+
+var progression_service: RefCounted
 
 const SLOT_ICONS := {
 	"helmet": "res://assets/icons/equipment_helmet.png",
@@ -23,6 +28,7 @@ const RARITY_ICONS := {
 	"legendary": "res://assets/icons/rarity_legendary.png",
 	"mythic": "res://assets/icons/rarity_mythic.png",
 }
+const POWDER_TIERS := ["basic", "refined", "pure", "prismatic"]
 
 func _ready() -> void:
 	visible = false
@@ -36,10 +42,17 @@ func _input(event: InputEvent) -> void:
 func present(profile: Dictionary) -> void:
 	_clear_items()
 	_error_state.visible = false
+	_feedback.visible = false
 	var inventory: Array = profile.get("equipment_inventory", [])
+	var resources: Dictionary = profile.get("resources", {})
+	_resources.text = "ESSENCE %d  •  BASIC %d  •  REFINED %d  •  PURE %d  •  PRISMATIC %d" % [
+		int(resources.get("essence", 0)), int(resources.get("powder_basic", 0)),
+		int(resources.get("powder_refined", 0)), int(resources.get("powder_pure", 0)),
+		int(resources.get("powder_prismatic", 0)),
+	]
 	_empty_state.visible = inventory.is_empty()
 	for equipment in inventory:
-		_items.add_child(_create_item_row(equipment))
+		_items.add_child(_create_item_row(equipment, resources))
 	visible = true
 	_close_button.grab_focus()
 
@@ -50,7 +63,11 @@ func present_error() -> void:
 	visible = true
 	_close_button.grab_focus()
 
-func _create_item_row(equipment: Dictionary) -> Control:
+func show_feedback(message: String) -> void:
+	_feedback.text = message
+	_feedback.visible = true
+
+func _create_item_row(equipment: Dictionary, resources: Dictionary) -> Control:
 	var row := PanelContainer.new()
 	row.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	var layout := HBoxContainer.new()
@@ -74,13 +91,40 @@ func _create_item_row(equipment: Dictionary) -> Control:
 	var title := Label.new()
 	title.text = "%s  •  %s" % [rarity.to_upper(), slot.to_upper()]
 	content.add_child(title)
-	var stats: Array[String] = []
 	for line in equipment.get("stat_lines", []):
-		stats.append("%s — roll %d%%" % [str(line.get("stat_id", "")).replace("_", " ").to_upper(), roundi(float(line.get("roll_percentile", 0.0)) * 100.0)])
-	var details := Label.new()
-	details.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	details.text = "  •  ".join(stats)
-	content.add_child(details)
+		var enhancement_row := HBoxContainer.new()
+		content.add_child(enhancement_row)
+		var details := Label.new()
+		details.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		details.text = "%s — roll %d%%  +%d/10" % [
+			str(line.get("stat_id", "")).replace("_", " ").to_upper(),
+			roundi(float(line.get("roll_percentile", 0.0)) * 100.0),
+			int(line.get("enhancement_level", 0)),
+		]
+		enhancement_row.add_child(details)
+		var powder_choice := OptionButton.new()
+		powder_choice.custom_minimum_size.x = 115
+		for tier_index in range(POWDER_TIERS.size()):
+			powder_choice.add_item(POWDER_TIERS[tier_index].to_upper())
+			powder_choice.set_item_metadata(tier_index, POWDER_TIERS[tier_index])
+		enhancement_row.add_child(powder_choice)
+		var enhance_button := Button.new()
+		enhance_button.text = "ENHANCE"
+		var level := int(line.get("enhancement_level", 0))
+		var update_enabled := func(_index: int = 0) -> void:
+			var selected_tier: String = str(powder_choice.get_item_metadata(powder_choice.selected))
+			var powder_key := "powder_%s" % selected_tier
+			enhance_button.disabled = level >= 10 or progression_service == null or \
+					int(resources.get(powder_key, 0)) < progression_service.enhancement_cost(rarity, level)
+		powder_choice.item_selected.connect(update_enabled)
+		update_enabled.call()
+		enhance_button.pressed.connect(func() -> void:
+			enhancement_requested.emit(
+				str(equipment.get("instance_id", "")), str(line.get("stat_id", "")),
+				str(powder_choice.get_item_metadata(powder_choice.selected))
+			)
+		)
+		enhancement_row.add_child(enhance_button)
 	var status := Label.new()
 	status.add_theme_color_override("font_color", Color("#ffd166"))
 	status.text = "ROLLS UNCALIBRATED — no gameplay bonus yet"

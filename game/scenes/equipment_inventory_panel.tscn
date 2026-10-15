@@ -40,6 +40,16 @@ layout_mode = 2
 text = "Stat rolls are not calibrated and do not affect combat yet."
 horizontal_alignment = 1
 
+[node name="Resources" type="Label" parent="Panel/Content"]
+layout_mode = 2
+text = "ESSENCE 0  •  BASIC 0  •  REFINED 0  •  PURE 0  •  PRISMATIC 0"
+horizontal_alignment = 1
+
+[node name="Feedback" type="Label" parent="Panel/Content"]
+visible = false
+layout_mode = 2
+horizontal_alignment = 1
+
 [node name="EmptyState" type="Label" parent="Panel/Content"]
 layout_mode = 2
 text = "No permanent equipment collected yet."

@@ -16,6 +16,8 @@ func _run() -> void:
 	progression.award_survival_run("inventory-fixture-two", 5, false)
 	var fixture_profile: Dictionary = progression.load_profile()["profile"]
 	fixture_profile["equipment_inventory"][1]["slot"] = fixture_profile["equipment_inventory"][0]["slot"]
+	fixture_profile["resources"]["powder_basic"] = 100
+	fixture_profile["equipment_inventory"][0]["stat_lines"][0]["fail_streak"] = 9
 	if not save_service.save_slot("0", fixture_profile):
 		_fail("Could not save the same-slot inventory fixture")
 		return
@@ -48,25 +50,38 @@ func _run() -> void:
 	if rarity_icon.texture == null or rarity_icon.texture.resource_path != "res://assets/icons/rarity_%s.png" % fixture_profile["equipment_inventory"][0]["rarity"]:
 		_fail("Inventory rows should display their equipment rarity icon")
 		return
-	if not item_content.get_child(0).text.contains(" • ") or \
-			not item_content.get_child(2).text.contains("ROLLS UNCALIBRATED"):
+	var status_label: Label = _find_label(item_content, "ROLLS UNCALIBRATED")
+	if not item_content.get_child(0).text.contains(" • ") or status_label == null:
 		_fail("An inventory item should show its slot, rarity and inactive roll state")
 		return
-	item_content.get_child(3).pressed.emit()
+	var enhancement_row: HBoxContainer = item_content.get_child(1)
+	var enhance_button: Button = enhancement_row.get_child(2)
+	if enhance_button.disabled or not enhancement_row.get_child(1).text.contains("BASIC"):
+		_fail("The inventory should expose an enabled enhancement control and Powder tier selector")
+		return
+	enhance_button.pressed.emit()
+	var enhanced_profile: Dictionary = progression.load_profile()["profile"]
+	if enhanced_profile["equipment_inventory"][0]["stat_lines"][0]["enhancement_level"] != 1 or \
+			"SUCCESS" not in panel.get_node("Panel/Content/Feedback").text:
+		_fail("The inventory enhancement action should persist and report its guaranteed success")
+		return
+	item_content = items.get_child(0).get_child(0).get_child(1)
+	var equip_button: Button = _find_button(item_content, "EQUIP")
+	equip_button.pressed.emit()
 	var equipped_profile: Dictionary = progression.load_profile()["profile"]
 	if not equipped_profile["equipment_inventory"][0].get("equipped", false) or \
 			equipped_profile["equipment_inventory"][1].get("equipped", false) or \
-				not items.get_child(0).get_child(0).get_child(1).get_child(2).text.contains(
+				not _find_label(items.get_child(0).get_child(0).get_child(1),
 				"EQUIPPED — rolls uncalibrated; no gameplay bonus yet"):
 		_fail("Equipping an item should persist and show that its rolls remain inactive")
 		return
-	items.get_child(1).get_child(0).get_child(1).get_child(3).pressed.emit()
+	_find_button(items.get_child(1).get_child(0).get_child(1), "EQUIP").pressed.emit()
 	var replaced_profile: Dictionary = progression.load_profile()["profile"]
 	if replaced_profile["equipment_inventory"][0].get("equipped", false) or \
 			not replaced_profile["equipment_inventory"][1].get("equipped", false):
 		_fail("Equipping another item in the same slot should replace the first one")
 		return
-	items.get_child(1).get_child(0).get_child(1).get_child(3).pressed.emit()
+	_find_button(items.get_child(1).get_child(0).get_child(1), "UNEQUIP").pressed.emit()
 	var unequipped_profile: Dictionary = progression.load_profile()["profile"]
 	if unequipped_profile["equipment_inventory"][0].get("equipped", false) or \
 			unequipped_profile["equipment_inventory"][1].get("equipped", false):
@@ -114,3 +129,15 @@ func _wait_for_pause_state(session: Node2D, expected_paused: bool) -> bool:
 func _fail(message: String) -> void:
 	push_error(message)
 	quit(1)
+
+func _find_label(parent: Node, text_fragment: String) -> Label:
+	for child in parent.get_children():
+		if child is Label and text_fragment in child.text:
+			return child
+	return null
+
+func _find_button(parent: Node, text_value: String) -> Button:
+	for child in parent.get_children():
+		if child is Button and child.text == text_value:
+			return child
+	return null

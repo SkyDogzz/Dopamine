@@ -158,6 +158,8 @@ func _ready() -> void:
 	_equipment_button.pressed.connect(_open_equipment_inventory)
 	_equipment_panel.close_requested.connect(_close_equipment_inventory)
 	_equipment_panel.equipment_state_requested.connect(_set_equipment_state)
+	_equipment_panel.enhancement_requested.connect(_enhance_equipment)
+	_equipment_panel.progression_service = progression_service
 	_equipment_button.visible = progression_service != null
 	player_max_hp = simulation.initial_player_hp()
 	player_hp = player_max_hp
@@ -404,6 +406,19 @@ func _set_equipment_state(instance_id: String, equipped: bool) -> void:
 		_equipment_panel.present(result["profile"])
 	else:
 		_equipment_panel.present_error()
+
+func _enhance_equipment(instance_id: String, stat_id: String, powder_tier: String) -> void:
+	if progression_service == null or not _equipment_panel.visible:
+		return
+	var result: Dictionary = progression_service.enhance_equipment(instance_id, stat_id, powder_tier)
+	if result.get("ok", false):
+		_equipment_panel.present(result["profile"])
+		_equipment_panel.show_feedback(
+			"ENHANCEMENT SUCCESS" if result["success"] else \
+				"CRITICAL FAILURE — LEVEL LOST" if result["critical_failure"] else "ENHANCEMENT FAILED"
+		)
+	else:
+		_equipment_panel.show_feedback("ENHANCEMENT FAILED: %s" % str(result.get("error", "unknown")))
 
 func _restart_run() -> void:
 	get_tree().reload_current_scene()

@@ -126,7 +126,7 @@ func enhance_equipment(instance_id: String, stat_id: String, powder_tier: String
 		var level := int(line["enhancement_level"])
 		if level >= 10:
 			return {"ok": false, "error": "enhancement_max_level"}
-		var cost := ceili(float(ENHANCEMENT_BASE_COSTS[level]) * RARITY_COST_MULTIPLIERS[equipment["rarity"]])
+		var cost := enhancement_cost(str(equipment["rarity"]), level)
 		var resource_key := "powder_%s" % powder_tier
 		if int(profile["resources"].get(resource_key, 0)) < cost:
 			return {"ok": false, "error": "insufficient_powder", "cost": cost}
@@ -149,6 +149,11 @@ func enhance_equipment(instance_id: String, stat_id: String, powder_tier: String
 			"cost": cost, "profile": profile.duplicate(true),
 		}
 	return {"ok": false, "error": "equipment_not_found"}
+
+func enhancement_cost(rarity: String, current_level: int) -> int:
+	if not RARITY_COST_MULTIPLIERS.has(rarity) or current_level < 0 or current_level >= ENHANCEMENT_BASE_COSTS.size():
+		return 0
+	return ceili(float(ENHANCEMENT_BASE_COSTS[current_level]) * RARITY_COST_MULTIPLIERS[rarity])
 
 func convert_powder(source_tier: String, amount: int) -> Dictionary:
 	var source_index := POWDER_TIERS.find(source_tier)
