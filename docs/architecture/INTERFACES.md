@@ -44,6 +44,8 @@ Quand Godot est disponible à la configuration, CTest inclut les smoke tests GDS
 
 ## Simulation native
 
+Le cœur expose aussi `query_radius(x, y, radius, SpatialHashConfig)` pour les recherches locales nécessaires au steering et aux collisions. Il valide les valeurs finies, utilise `floor` pour les coordonnées négatives et retourne uniquement les entités actives dans le rayon (bord inclus), dans l’ordre stable des IDs. L’index est reconstruit à l’appel pour garder cette première tranche minimale ; sa durée de vie pourra évoluer si le profiling P2 le justifie. La taille de cellule par défaut est une valeur provisoire, modifiable à l’appel.
+
 ```cpp
 struct EntityId { uint32_t index; uint32_t generation; };
 struct SimulationCommand { uint64_t sequence; /* type + payload typé */ };

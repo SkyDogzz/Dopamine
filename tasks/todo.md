@@ -21,6 +21,7 @@
 ## Phase 3 — Combat core
 
 - [ ] Mouvement, ennemis, spatial hash, projectiles et dégâts.
+- [x] Spatial hash uniforme minimal avec requête de rayon native ; paramètres de cellule à profiler.
 - [ ] HP decay, soins et règles de combat testables dans le Sandbox.
 
 ## Phase 4 — Premier playable Survival

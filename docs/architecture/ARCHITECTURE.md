@@ -43,6 +43,7 @@ Config Resolver ← JSON balance + Resources + Sandbox Overrides
 - Composants initiaux : `Transform2D`, `Velocity2D`, `Health`, `EnemyType`, `Projectile`, `StatusEffect`, `Lifetime`.
 - Command buffers appliqués entre phases pour éviter l'invalidation des itérateurs.
 - Aucun nœud `CharacterBody2D` individuel pour les ennemis ordinaires.
+- P2 : `SimulationCore::query_radius` utilise un hash uniforme reconstruit à la requête et filtre précisément le rayon ; la taille de cellule (64 unités par défaut dans le contrat natif) reste un paramètre technique provisoire à profiler, pas une décision de design.
 
 ## Pipeline de simulation (ordre initial proposé)
 

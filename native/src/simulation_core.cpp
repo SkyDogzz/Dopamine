@@ -3,6 +3,7 @@
 #include <cmath>
 #include <limits>
 #include <stdexcept>
+#include <unordered_map>
 #include <utility>
 
 namespace dopamine::sim {
@@ -83,6 +84,58 @@ void SimulationCore::advance(double delta_seconds) {
 	simulation_time_ += delta_seconds;
 }
 
+std::vector<EntityId> SimulationCore::query_radius(float x, float y, float radius, SpatialHashConfig config) const {
+	if (!std::isfinite(x) || !std::isfinite(y) || !std::isfinite(radius) || radius < 0.0F ||
+			!std::isfinite(config.cell_size) || config.cell_size <= 0.0F) {
+		throw std::invalid_argument("invalid spatial query");
+	}
+	if (entity_count_ == 0) {
+		return {};
+	}
+
+	using Cell = std::pair<int64_t, int64_t>;
+	struct CellHash {
+		size_t operator()(const Cell &cell) const noexcept {
+			const size_t first = std::hash<int64_t>{}(cell.first);
+			const size_t second = std::hash<int64_t>{}(cell.second);
+			return first ^ (second + 0x9e3779b9U + (first << 6U) + (first >> 2U));
+		}
+	};
+	std::unordered_map<Cell, std::vector<uint32_t>, CellHash> cells;
+	cells.reserve(entity_count_);
+	for (uint32_t index = 0; index < slots_.size(); ++index) {
+		if (!slots_[index].active) {
+			continue;
+		}
+		const Transform2D &position = transforms_[index];
+		cells[{cell_coordinate(position.x, config.cell_size), cell_coordinate(position.y, config.cell_size)}]
+				.push_back(index);
+	}
+
+	const int64_t min_x = cell_coordinate(x - radius, config.cell_size);
+	const int64_t max_x = cell_coordinate(x + radius, config.cell_size);
+	const int64_t min_y = cell_coordinate(y - radius, config.cell_size);
+	const int64_t max_y = cell_coordinate(y + radius, config.cell_size);
+	const double radius_squared = static_cast<double>(radius) * radius;
+	std::vector<EntityId> result;
+	for (int64_t cell_x = min_x; cell_x <= max_x; ++cell_x) {
+		for (int64_t cell_y = min_y; cell_y <= max_y; ++cell_y) {
+			const auto found = cells.find({cell_x, cell_y});
+			if (found == cells.end()) {
+				continue;
+			}
+			for (uint32_t index : found->second) {
+				const double dx = static_cast<double>(transforms_[index].x) - x;
+				const double dy = static_cast<double>(transforms_[index].y) - y;
+				if (dx * dx + dy * dy <= radius_squared) {
+					result.push_back({index, slots_[index].generation});
+				}
+			}
+		}
+	}
+	return result;
+}
+
 std::optional<Entity> SimulationCore::entity(EntityId id) const {
 	if (id.index >= slots_.size()) {
 		return std::nullopt;
@@ -112,6 +165,15 @@ void SimulationCore::invalidate(Slot &slot) {
 	if (slot.generation == 0) {
 		++slot.generation;
 	}
+}
+
+int64_t SimulationCore::cell_coordinate(float value, float cell_size) {
+	const double coordinate = std::floor(static_cast<double>(value) / cell_size);
+	if (coordinate < static_cast<double>(std::numeric_limits<int64_t>::min()) ||
+			coordinate > static_cast<double>(std::numeric_limits<int64_t>::max())) {
+		throw std::invalid_argument("spatial coordinate outside supported range");
+	}
+	return static_cast<int64_t>(coordinate);
 }
 
 } // namespace dopamine::sim

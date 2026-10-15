@@ -25,6 +25,10 @@ struct Velocity2D {
 	float y = 0.0F;
 };
 
+struct SpatialHashConfig {
+	float cell_size = 64.0F;
+};
+
 struct Health {
 	float current = 1.0F;
 	float maximum = 1.0F;
@@ -48,6 +52,8 @@ public:
 	bool despawn(EntityId id);
 	void reset();
 	void advance(double delta_seconds);
+	std::vector<EntityId> query_radius(float x, float y, float radius,
+			SpatialHashConfig config = {}) const;
 
 	std::optional<Entity> entity(EntityId id) const;
 	std::vector<Entity> snapshot() const;
@@ -61,6 +67,7 @@ private:
 	};
 
 	static void invalidate(Slot &slot);
+	static int64_t cell_coordinate(float value, float cell_size);
 	std::vector<Slot> slots_;
 	std::vector<Transform2D> transforms_;
 	std::vector<Velocity2D> velocities_;

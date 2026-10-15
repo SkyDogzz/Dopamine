@@ -36,6 +36,29 @@ int main() {
 	require(second.index == first.index, "despawned index should be reused");
 	require(second.generation != first.generation, "reused index should get a new generation");
 	require(!simulation.despawn(first), "stale handle must not despawn a new entity");
+
+	SimulationCore spatial;
+	const auto left = spatial.spawn("chaser", -0.01F, 0.0F, 1.0F, 0.0F, 0.0F);
+	const auto near = spatial.spawn("tank", 3.0F, 4.0F, 1.0F, 0.0F, 0.0F);
+	spatial.spawn("outside", 5.01F, 0.0F, 1.0F, 0.0F, 0.0F);
+	const auto around_origin = spatial.query_radius(0.0F, 0.0F, 5.0F, {.cell_size = 4.0F});
+	require(around_origin.size() == 2, "spatial query should include radius boundary and nearby negative cell");
+	require(around_origin[0] == left && around_origin[1] == near, "spatial query should keep stable entity order");
+	const auto negative_cell = spatial.query_radius(-0.01F, 0.0F, 0.01F, {.cell_size = 4.0F});
+	require(negative_cell.size() == 1 && negative_cell.front() == left,
+			"negative coordinates should map to floor-based spatial cells");
+	spatial.despawn(left);
+	const auto after_despawn = spatial.query_radius(0.0F, 0.0F, 5.0F, {.cell_size = 4.0F});
+	require(after_despawn.size() == 1 && after_despawn.front() == near,
+			"spatial query should not return despawned entities");
+	bool rejected_query = false;
+	try {
+		spatial.query_radius(0.0F, 0.0F, -1.0F);
+	} catch (const std::invalid_argument &) {
+		rejected_query = true;
+	}
+	require(rejected_query, "negative spatial query radius must be rejected");
+
 	bool rejected_negative_delta = false;
 	try {
 		simulation.advance(-1.0);
