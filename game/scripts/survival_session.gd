@@ -76,6 +76,8 @@ const WAVE_HP_CAP := 12.0
 @export var xp_growth_per_level: float = 5.0
 
 var simulation: Object
+var progression_service: RefCounted
+var _run_id := ""
 var player: CharacterBody2D
 var loadout: RefCounted
 var last_target_sequence := 0
@@ -122,6 +124,7 @@ var _pending_lifesteal := 0.0
 @onready var _run_result: PanelContainer = $HUD/RunResultOverlay/RunResultPanel
 
 func _ready() -> void:
+	_run_id = Crypto.new().generate_random_bytes(16).hex_encode()
 	player = PLAYER_SCENE.instantiate()
 	player.name = "Player"
 	add_child(player)
@@ -349,7 +352,10 @@ func _finish_run(victory: bool) -> void:
 	run_over = true
 	simulation.pause()
 	_run_result_overlay.visible = true
-	_run_result.show_result(victory, wave_director.wave, player_active_time, kill_count)
+	var reward := {}
+	if progression_service != null:
+		reward = progression_service.award_survival_run(_run_id, wave_director.wave, victory)
+	_run_result.show_result(victory, wave_director.wave, player_active_time, kill_count, reward)
 
 func _restart_run() -> void:
 	get_tree().reload_current_scene()

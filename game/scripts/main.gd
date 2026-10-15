@@ -70,9 +70,9 @@ func _ready() -> void:
 	_refresh()
 
 func _on_survival_pressed() -> void:
-	var error := get_tree().change_scene_to_file("res://scenes/survival_session.tscn")
+	var error := get_tree().change_scene_to_file("res://scenes/survival_entry.tscn")
 	if error != OK:
-		push_error("Could not open Survival prototype scene: %s" % error_string(error))
+		push_error("Could not open Survival entry scene: %s" % error_string(error))
 
 func _process(delta: float) -> void:
 	_refresh_elapsed += delta

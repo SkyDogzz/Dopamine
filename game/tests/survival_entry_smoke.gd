@@ -21,6 +21,9 @@ func _run() -> void:
 	if not current_scene.get_node("HUD/ChestOverlay/ChestChoice").visible:
 		_fail("Opening Survival should show the starting weapon choice")
 		return
+	if current_scene.progression_service == null:
+		_fail("The normal Survival entry should receive progression save capability")
+		return
 	print("Survival entry smoke passed")
 	quit()
 
