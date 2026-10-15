@@ -132,6 +132,16 @@ struct Entity {
 	std::optional<DamageOverTime> damage_over_time;
 };
 
+struct SimulationCoreState {
+	// Slot-aligned data keeps inactive generations and free-index reuse intact.
+	std::vector<Entity> entities;
+	std::vector<bool> active_slots;
+	std::vector<uint32_t> free_indices;
+	std::size_t entity_count = 0;
+	double simulation_time = 0.0;
+	uint64_t next_event_sequence = 1;
+};
+
 class SimulationCore {
 public:
 	EntityId spawn(std::string type, float x, float y, float hp, float velocity_x, float velocity_y,
@@ -146,6 +156,8 @@ public:
 	bool collect_xp_orb(EntityId id, std::vector<CombatEvent> &events);
 	bool despawn(EntityId id);
 	void reset();
+	SimulationCoreState capture_state() const;
+	void restore_state(const SimulationCoreState &state);
 	std::size_t estimate_event_count_upper_bound(double delta_seconds) const;
 	std::vector<CombatEvent> advance(double delta_seconds);
 	void steer_enemies_towards(float target_x, float target_y, SteeringConfig config = {});

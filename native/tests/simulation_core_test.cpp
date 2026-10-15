@@ -316,6 +316,63 @@ int main() {
 	require(expiring_projectile.advance(0.2).empty(), "expired projectile without a target should emit no combat event");
 	require(!expiring_projectile.entity(expires).has_value(), "projectile should despawn when its lifetime expires");
 
+	SimulationCore resumable;
+	const auto recycled = resumable.spawn("chaser", -5.0F, 0.0F, 10.0F, 0.0F, 0.0F);
+	require(resumable.despawn(recycled), "snapshot fixture should create a recycled generation");
+	const auto resumable_enemy = resumable.spawn("tank", 0.0F, 0.0F, 30.0F, 4.0F, 0.0F, 2.0F, 45.0F);
+	require(resumable.apply_damage_over_time(resumable_enemy, 2.0F, 0.5, 2.0),
+			"snapshot fixture should have a live status effect");
+	const auto resumable_projectile = resumable.spawn_projectile("inferno_sprayer", 50.0F, 10.0F,
+			5.0F, 3.0F, 4.0, 20.0F, 0.0F, 1.5F, 0.25, 1.5, 12.0F, 0.5F);
+	const auto resumable_orb = resumable.spawn_xp_orb(-20.0F, 4.0F, 9.0F);
+	const auto free_slot = resumable.spawn("chaser", 100.0F, 0.0F, 10.0F, 0.0F, 0.0F);
+	require(resumable.despawn(free_slot), "snapshot fixture should retain a reusable free slot");
+	resumable.advance(0.2);
+	const auto core_state = resumable.capture_state();
+	SimulationCore restored;
+	restored.restore_state(core_state);
+	require(restored.entity_count() == resumable.entity_count() &&
+			std::abs(restored.simulation_time() - resumable.simulation_time()) < 1e-12 &&
+		restored.entity(resumable_enemy)->id == resumable_enemy,
+			"core restore should preserve active IDs, entity count and simulation clock");
+	const auto restored_projectile = restored.entity(resumable_projectile);
+	require(restored_projectile && restored_projectile->is_projectile &&
+			restored_projectile->projectile.applies_damage_over_time &&
+			restored_projectile->projectile.explosion_radius == 12.0F &&
+			std::abs(restored_projectile->projectile.remaining_seconds - 3.8) < 1e-9,
+			"core restore should preserve projectile state and remaining lifetime");
+	const auto restored_dot_target = restored.entity(resumable_enemy);
+	require(restored_dot_target && restored_dot_target->damage_over_time &&
+			std::abs(restored_dot_target->damage_over_time->time_to_tick - 0.3) < 1e-9,
+			"core restore should preserve damage-over-time clocks");
+	const auto restored_orb = restored.entity(resumable_orb);
+	require(restored_orb && restored_orb->is_xp_orb && restored_orb->xp_value == 9.0F,
+			"core restore should preserve XP orb components");
+	const auto original_events = resumable.advance(0.3);
+	const auto restored_events = restored.advance(0.3);
+	require(original_events.size() == restored_events.size() && original_events.size() == 1 &&
+			original_events[0].sequence == restored_events[0].sequence &&
+			original_events[0].target == restored_events[0].target &&
+			original_events[0].amount == restored_events[0].amount,
+			"restored and original cores should continue with the same event sequence and result");
+	const auto original_recycled = resumable.spawn("sprinter", 0.0F, 0.0F, 5.0F, 0.0F, 0.0F);
+	const auto restored_recycled = restored.spawn("sprinter", 0.0F, 0.0F, 5.0F, 0.0F, 0.0F);
+	require(original_recycled == restored_recycled && original_recycled.index == free_slot.index &&
+			original_recycled.generation == free_slot.generation + 1,
+			"core restore should preserve free indices and entity generations");
+	auto invalid_core_state = core_state;
+	invalid_core_state.active_slots.pop_back();
+	const auto unchanged_time = restored.simulation_time();
+	bool rejected_invalid_core_state = false;
+	try {
+		restored.restore_state(invalid_core_state);
+	} catch (const std::invalid_argument &) {
+		rejected_invalid_core_state = true;
+	}
+	require(rejected_invalid_core_state && restored.simulation_time() == unchanged_time &&
+			restored.entity_count() == resumable.entity_count(),
+			"invalid core snapshots should be rejected without changing the live core");
+
 	bool rejected_negative_delta = false;
 	try {
 		simulation.advance(-1.0);

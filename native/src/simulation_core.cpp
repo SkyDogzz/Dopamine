@@ -216,6 +216,136 @@ void SimulationCore::reset() {
 	simulation_time_ = 0.0;
 }
 
+SimulationCoreState SimulationCore::capture_state() const {
+	SimulationCoreState state;
+	state.entities.reserve(slots_.size());
+	state.active_slots.reserve(slots_.size());
+	for (uint32_t index = 0; index < slots_.size(); ++index) {
+		Entity entity;
+		entity.id = {index, slots_[index].generation};
+		entity.transform = transforms_[index];
+		entity.velocity = velocities_[index];
+		entity.health = health_[index];
+		entity.type = enemy_types_[index];
+		entity.is_projectile = projectile_flags_[index];
+		entity.projectile = projectiles_[index];
+		entity.is_xp_orb = xp_orb_flags_[index];
+		entity.xp_value = xp_values_[index];
+		entity.damage_over_time = damage_over_time_[index];
+		state.entities.push_back(std::move(entity));
+		state.active_slots.push_back(slots_[index].active);
+	}
+	state.free_indices = free_indices_;
+	state.entity_count = entity_count_;
+	state.simulation_time = simulation_time_;
+	state.next_event_sequence = next_event_sequence_;
+	return state;
+}
+
+void SimulationCore::restore_state(const SimulationCoreState &state) {
+	const std::size_t slot_count = state.entities.size();
+	if (slot_count > std::numeric_limits<uint32_t>::max() || state.active_slots.size() != slot_count ||
+			state.entity_count > slot_count || !std::isfinite(state.simulation_time) || state.simulation_time < 0.0 ||
+			state.next_event_sequence == 0) {
+		throw std::invalid_argument("invalid simulation core state header");
+	}
+
+	std::vector<bool> free_slots(slot_count, false);
+	for (uint32_t index : state.free_indices) {
+		if (index >= slot_count || free_slots[index] || state.active_slots[index]) {
+			throw std::invalid_argument("invalid simulation core free-index list");
+		}
+		free_slots[index] = true;
+	}
+
+	std::size_t active_count = 0;
+	for (std::size_t index = 0; index < slot_count; ++index) {
+		const Entity &entity = state.entities[index];
+		if (entity.id.index != index || entity.id.generation == 0) {
+			throw std::invalid_argument("invalid simulation core entity identity");
+		}
+		if (!state.active_slots[index]) {
+			if (!free_slots[index]) {
+				throw std::invalid_argument("inactive simulation core slot is not reusable");
+			}
+			continue;
+		}
+		++active_count;
+		const bool valid_transform = std::isfinite(entity.transform.x) && std::isfinite(entity.transform.y) &&
+				std::isfinite(entity.velocity.x) && std::isfinite(entity.velocity.y);
+		const bool valid_health = std::isfinite(entity.health.current) && std::isfinite(entity.health.maximum) &&
+				entity.health.maximum > 0.0F && entity.health.current > 0.0F &&
+				entity.health.current <= entity.health.maximum;
+		const bool valid_type = !entity.type.id.empty() && std::isfinite(entity.type.threat_level) &&
+				entity.type.threat_level > 0.0F && std::isfinite(entity.type.move_speed) && entity.type.move_speed >= 0.0F;
+		if (!valid_transform || !valid_health || !valid_type || (entity.is_projectile && entity.is_xp_orb)) {
+			throw std::invalid_argument("invalid active simulation core entity");
+		}
+		if (entity.is_projectile) {
+			const ProjectileData &projectile = entity.projectile;
+			if (!std::isfinite(projectile.damage) || projectile.damage <= 0.0F ||
+					!std::isfinite(projectile.radius) || projectile.radius < 0.0F ||
+					!std::isfinite(projectile.remaining_seconds) || projectile.remaining_seconds <= 0.0 ||
+					!std::isfinite(projectile.explosion_radius) || projectile.explosion_radius < 0.0F ||
+					!std::isfinite(projectile.explosion_damage_multiplier) ||
+					projectile.explosion_damage_multiplier < 0.0F ||
+					(projectile.applies_damage_over_time && (!std::isfinite(projectile.status_damage_per_tick) ||
+							!std::isfinite(projectile.status_interval_seconds) ||
+							!std::isfinite(projectile.status_duration_seconds) || projectile.status_damage_per_tick <= 0.0F ||
+							projectile.status_interval_seconds <= 0.0 || projectile.status_duration_seconds <= 0.0)) ||
+					entity.damage_over_time.has_value()) {
+				throw std::invalid_argument("invalid simulation core projectile state");
+			}
+		} else if (entity.is_xp_orb) {
+			if (!std::isfinite(entity.xp_value) || entity.xp_value <= 0.0F || entity.damage_over_time.has_value()) {
+				throw std::invalid_argument("invalid simulation core XP orb state");
+			}
+		} else if (entity.damage_over_time.has_value()) {
+			const DamageOverTime &status = *entity.damage_over_time;
+			if (!std::isfinite(status.damage_per_tick) || status.damage_per_tick <= 0.0F ||
+					!std::isfinite(status.interval_seconds) || status.interval_seconds <= 0.0 ||
+					!std::isfinite(status.remaining_seconds) || status.remaining_seconds <= 0.0 ||
+					!std::isfinite(status.time_to_tick) || status.time_to_tick < 0.0 ||
+					status.time_to_tick > status.interval_seconds) {
+				throw std::invalid_argument("invalid simulation core damage-over-time state");
+			}
+		}
+	}
+	if (active_count != state.entity_count || state.free_indices.size() + active_count != slot_count) {
+		throw std::invalid_argument("inconsistent simulation core entity counts");
+	}
+
+	SimulationCore restored;
+	restored.slots_.reserve(slot_count);
+	restored.transforms_.reserve(slot_count);
+	restored.velocities_.reserve(slot_count);
+	restored.health_.reserve(slot_count);
+	restored.enemy_types_.reserve(slot_count);
+	restored.projectile_flags_.reserve(slot_count);
+	restored.projectiles_.reserve(slot_count);
+	restored.xp_orb_flags_.reserve(slot_count);
+	restored.xp_values_.reserve(slot_count);
+	restored.damage_over_time_.reserve(slot_count);
+	for (std::size_t index = 0; index < slot_count; ++index) {
+		const Entity &entity = state.entities[index];
+		restored.slots_.push_back({entity.id.generation, state.active_slots[index]});
+		restored.transforms_.push_back(entity.transform);
+		restored.velocities_.push_back(entity.velocity);
+		restored.health_.push_back(entity.health);
+		restored.enemy_types_.push_back(entity.type);
+		restored.projectile_flags_.push_back(entity.is_projectile);
+		restored.projectiles_.push_back(entity.projectile);
+		restored.xp_orb_flags_.push_back(entity.is_xp_orb);
+		restored.xp_values_.push_back(entity.xp_value);
+		restored.damage_over_time_.push_back(entity.damage_over_time);
+	}
+	restored.free_indices_ = state.free_indices;
+	restored.entity_count_ = state.entity_count;
+	restored.simulation_time_ = state.simulation_time;
+	restored.next_event_sequence_ = state.next_event_sequence;
+	*this = std::move(restored);
+}
+
 std::size_t SimulationCore::estimate_event_count_upper_bound(double delta_seconds) const {
 	if (!std::isfinite(delta_seconds) || delta_seconds < 0.0) {
 		throw std::invalid_argument("simulation delta must be finite and non-negative");

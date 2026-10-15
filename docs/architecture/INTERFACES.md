@@ -101,6 +101,8 @@ public:
 };
 ```
 
+`SimulationCore.capture_state()` produit une copie native indexée par slots et `restore_state(state)` valide l’ensemble avant de remplacer l’état courant. Elle conserve les générations, les slots libres, les composants ECS, les horloges de simulation/DoT, les projectiles et le prochain numéro d’événement. Cette première primitive ne sérialise pas encore les commandes du worker, ses files d’événements/logs, sa vitesse/cible de steering, ni le build et l’état de gameplay Godot ; elle ne constitue donc pas encore un snapshot Sandbox complet.
+
 ## GDExtension / GDScript
 
 ```gdscript
