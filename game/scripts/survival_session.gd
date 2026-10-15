@@ -10,6 +10,7 @@ const WEAPON_ICONS := {
 	"inferno_sprayer": preload("res://assets/sprites/projectile_inferno.png"),
 	"crimson_daggers": preload("res://assets/sprites/projectile_crimson.png"),
 	"minigun": preload("res://assets/sprites/projectile_minigun.svg"),
+	"toxic_cloud": preload("res://assets/sprites/projectile_toxic_cloud.svg"),
 }
 const WAVE_DIRECTOR_SCRIPT := preload("res://scripts/survival_wave_director.gd")
 const LOADOUT_SCRIPT := preload("res://scripts/survival_loadout.gd")
@@ -79,6 +80,22 @@ const WAVE_HP_CAP := 12.0
 @export_range(0.0, 1.0) var overdrive_cadence_per_level: float = 0.04
 @export var redline_max_cadence_bonus: float = 0.5
 @export var redline_ramp_seconds: float = 5.0
+@export_group("Prototype Toxic Cloud — proposed tuning")
+@export var toxic_cooldown: float = 1.4
+@export var toxic_impact_damage: float = 3.0
+@export var toxic_range: float = 560.0
+@export var toxic_projectile_speed: float = 430.0
+@export var toxic_projectile_radius: float = 4.0
+@export var toxic_projectile_lifetime: float = 1.8
+@export var toxic_cloud_radius: float = 52.0
+@export_range(0.0, 1.0) var toxic_splash_damage_multiplier: float = 0.5
+@export var toxic_damage_per_tick: float = 1.5
+@export var toxic_tick_interval_seconds: float = 0.5
+@export var toxic_status_duration_seconds: float = 2.0
+@export_range(0.0, 1.0) var plague_mask_dot_per_level: float = 0.05
+@export var pandemic_spread_radius: float = 140.0
+@export_range(1, 8) var pandemic_max_spread_targets: int = 3
+@export var pandemic_feedback_seconds: float = 0.35
 @export_group("Prototype Bloodstorm — proposed tuning")
 @export var bloodstorm_bleed_damage_per_tick: float = 2.0
 @export var bloodstorm_bleed_interval_seconds: float = 0.5
@@ -124,8 +141,13 @@ var _next_weapon_time := 0.0
 var _next_inferno_time := 0.0
 var _next_daggers_time := 0.0
 var _next_minigun_time := 0.0
+var _next_toxic_time := 0.0
 var _redline_fire_time := 0.0
 var _redline_target_id := Vector2i(-1, -1)
+var _projectile_types: Dictionary = {}
+var _pandemic_poisoned_targets: Dictionary = {}
+var _pandemic_spread_targets: Dictionary = {}
+var _pandemic_bursts: Array[Dictionary] = []
 var _entities: Array = []
 var _pending_xp_orbs: Dictionary = {}
 var _chest_director: RefCounted
@@ -226,6 +248,10 @@ func _process(_delta: float) -> void:
 	var state: Dictionary = simulation.snapshot()
 	var current_simulation_time: float = float(state["simulation_time"])
 	var elapsed_active_time := current_simulation_time - _last_simulation_time
+	for index in range(_pandemic_bursts.size() - 1, -1, -1):
+		_pandemic_bursts[index]["remaining"] = float(_pandemic_bursts[index]["remaining"]) - elapsed_active_time
+		if float(_pandemic_bursts[index]["remaining"]) <= 0.0:
+			_pandemic_bursts.remove_at(index)
 	if elapsed_active_time > 0.0 and not run_over:
 		if player_shield > 0.0 and player_active_time >= _shield_expires_at:
 			player_shield = 0.0
@@ -241,12 +267,24 @@ func _process(_delta: float) -> void:
 		latest_event_sequence = sequence
 		match event["type"]:
 			"damage":
+				var damage_source: Dictionary = event["source"]
+				var damage_target: Dictionary = event["target"]
+				var source_key := _entity_key(int(damage_source["index"]), int(damage_source["generation"]))
+				var target_key := _entity_key(int(damage_target["index"]), int(damage_target["generation"]))
+				if _projectile_types.get(source_key, "") == "pandemic_cloud":
+					_pandemic_poisoned_targets[target_key] = true
 				var damage_lifesteal := float(event["amount"]) * float(loadout.relic_level("blood_chalice")) * blood_chalice_lifesteal_per_level
 				if bool(event.get("is_damage_over_time", false)):
 					damage_lifesteal *= 0.25
 				_pending_lifesteal += damage_lifesteal
 			"death":
 				kill_count += 1
+				var dead_target: Dictionary = event["target"]
+				var dead_key := _entity_key(int(dead_target["index"]), int(dead_target["generation"]))
+				if _pandemic_poisoned_targets.has(dead_key) and not _pandemic_spread_targets.has(dead_key):
+					_pandemic_spread_targets[dead_key] = true
+					_spread_pandemic(Vector2(float(event["position"]["x"]), float(event["position"]["y"])), state["entities"])
+				_pandemic_poisoned_targets.erase(dead_key)
 				var dead_enemy_type: String = str(event.get("target_type", ""))
 				if dead_enemy_type == "elite" and _has_unique_effect("elite_haste"):
 					_elite_haste_expires_at = player_active_time + 3.0
@@ -278,6 +316,12 @@ func _process(_delta: float) -> void:
 	if latest_event_sequence > _last_combat_event_sequence:
 		_last_combat_event_sequence = latest_event_sequence
 		simulation.acknowledge_events(latest_event_sequence)
+	_projectile_types.clear()
+	for entity in state["entities"]:
+		var components: Dictionary = entity["components"]
+		if components.get("IsProjectile", false) and components.get("EnemyType", "") == "pandemic_cloud":
+			var id: Dictionary = entity["id"]
+			_projectile_types[_entity_key(int(id["index"]), int(id["generation"]))] = "pandemic_cloud"
 	_entities = state["entities"]
 	_sprite_renderer.set_entities(_entities)
 	_advance_wave_director(elapsed_active_time, state["paused"])
@@ -289,6 +333,7 @@ func _process(_delta: float) -> void:
 	_fire_inferno_sprayer(current_simulation_time, state["paused"])
 	_fire_crimson_daggers(current_simulation_time, state["paused"])
 	_fire_minigun(current_simulation_time, state["paused"])
+	_fire_toxic_cloud(current_simulation_time, state["paused"])
 	if player_hp <= 0.0 and not run_over:
 		_finish_run(false)
 	player.controls_enabled = not state["paused"] and not run_over and not _chest_open and not _starting_weapon_choice_open
@@ -345,12 +390,15 @@ func _refresh_hud(state: Dictionary) -> void:
 	_time_value.text = "%02d:%02d" % [total_seconds / 60, total_seconds % 60]
 	var equipped_names: Array[String] = []
 	var short_names := {"lightning_conductor": "LC", "inferno_sprayer": "IS", "crimson_daggers": "CD", "minigun": "MG"}
+	short_names["toxic_cloud"] = "TC"
 	var owned_weapons: Array[String] = loadout.owned_weapons()
 	_weapon_icon.texture = WEAPON_ICONS.get(owned_weapons[0]) if not owned_weapons.is_empty() else null
 	for weapon_id in owned_weapons:
 		var label := "%s Lv%d" % [short_names.get(weapon_id, weapon_id), loadout.weapon_level(weapon_id)]
 		if weapon_id == "minigun" and loadout.weapon_level(weapon_id) >= 5 and loadout.relic_level("overdrive_engine") > 0:
 			label += " REDLINE"
+		if weapon_id == "toxic_cloud" and loadout.weapon_level(weapon_id) >= 5 and loadout.relic_level("plague_mask") > 0:
+			label += " PANDEMIC"
 		equipped_names.append(label)
 	_weapon_value.text = "  •  ".join(equipped_names)
 	if wave_director != null and wave_director.state == WAVE_DIRECTOR_SCRIPT.State.VICTORY:
@@ -908,6 +956,59 @@ func _fire_minigun(active_time: float, paused: bool) -> void:
 		cadence_multiplier *= 1.0 + redline_max_cadence_bonus * ramp
 	_next_minigun_time = active_time + minigun_cooldown / cadence_multiplier / overdrive_multiplier
 
+func _fire_toxic_cloud(active_time: float, paused: bool) -> void:
+	if not weapon_enabled or loadout.weapon_level("toxic_cloud") == 0 or paused or _chest_open or run_over or toxic_cooldown <= 0.0 or active_time < _next_toxic_time:
+		return
+	var target := _nearest_enemy(toxic_range)
+	if target.is_empty():
+		return
+	var level: int = loadout.weapon_level("toxic_cloud")
+	var relic_level: int = loadout.relic_level("plague_mask")
+	var dot_multiplier := (1.0 + (0.2 if level >= 2 else 0.0) + (0.25 if level >= 5 else 0.0))
+	dot_multiplier *= 1.0 + float(relic_level) * plague_mask_dot_per_level
+	var duration := toxic_status_duration_seconds * (1.2 if level >= 4 else 1.0)
+	var cloud_radius := _equipment_area(toxic_cloud_radius * (1.2 if level >= 3 else 1.0))
+	var direction: Vector2 = (target["position"] - player.global_position).normalized()
+	if direction == Vector2.ZERO:
+		direction = Vector2.RIGHT
+	var projectile_type := "toxic_cloud"
+	if level >= 5 and relic_level > 0:
+		projectile_type = "pandemic_cloud"
+	var sequence: int = simulation.spawn_status_projectile(projectile_type,
+			player.global_position + direction * 14.0,
+		direction * _equipment_projectile_speed(toxic_projectile_speed),
+		toxic_impact_damage * _persistent_damage_multiplier() * _roll_equipment_critical_multiplier(),
+		_equipment_area(toxic_projectile_radius), toxic_projectile_lifetime,
+		toxic_damage_per_tick * dot_multiplier, toxic_tick_interval_seconds, duration,
+		cloud_radius, toxic_splash_damage_multiplier)
+	if sequence > 0:
+		_next_toxic_time = active_time + _effective_weapon_cooldown(toxic_cooldown)
+
+func _spread_pandemic(origin: Vector2, entities: Array) -> void:
+	var status_damage := toxic_damage_per_tick * (1.0 + (0.2 if loadout.weapon_level("toxic_cloud") >= 2 else 0.0) +
+			(0.25 if loadout.weapon_level("toxic_cloud") >= 5 else 0.0))
+	status_damage *= 1.0 + float(loadout.relic_level("plague_mask")) * plague_mask_dot_per_level
+	var status_duration := toxic_status_duration_seconds * (1.2 if loadout.weapon_level("toxic_cloud") >= 4 else 1.0)
+	var affected := 0
+	for entity in entities:
+		if affected >= pandemic_max_spread_targets:
+			break
+		var components: Dictionary = entity["components"]
+		if components.get("IsProjectile", false) or components.get("IsXpOrb", false):
+			continue
+		var health: Dictionary = components["Health"]
+		if float(health["current"]) <= 0.0:
+			continue
+		var transform: Dictionary = components["Transform2D"]
+		var position := Vector2(float(transform["x"]), float(transform["y"]))
+		if origin.distance_squared_to(position) > pandemic_spread_radius * pandemic_spread_radius:
+			continue
+		var id: Dictionary = entity["id"]
+		if simulation.apply_damage_over_time(int(id["index"]), int(id["generation"]),
+				status_damage, toxic_tick_interval_seconds, status_duration) > 0:
+			affected += 1
+	_pandemic_bursts.append({"position": origin, "remaining": pandemic_feedback_seconds})
+
 func _persistent_damage_multiplier() -> float:
 	return _cached_persistent_damage_multiplier
 
@@ -1005,5 +1106,8 @@ func _publish_player_target() -> void:
 
 func _draw() -> void:
 	_sprite_renderer.draw_batches(self)
+	for burst in _pandemic_bursts:
+		var fade := clampf(float(burst["remaining"]) / maxf(pandemic_feedback_seconds, 0.01), 0.0, 1.0)
+		draw_circle(burst["position"], pandemic_spread_radius * (1.0 - fade * 0.35), Color(0.35, 1.0, 0.4, 0.18 * fade))
 	for chest in _world_chests:
 		draw_texture_rect(CHEST_TEXTURE, Rect2(chest["position"] - Vector2(16.0, 16.0), Vector2(32.0, 32.0)), false)

@@ -35,7 +35,7 @@ func _initialize() -> void:
 			return
 	var relic_offers: Array = loadout.offers("relic")
 	if not _has_three_unique(relic_offers):
-		_fail("Relic chest should offer the three prototype relic choices")
+		_fail("Relic chest should offer three unique relic choices")
 		return
 	for offer in relic_offers:
 		if str(offer.get("icon", "")).is_empty() or not ResourceLoader.exists(str(offer["icon"])):

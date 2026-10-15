@@ -111,7 +111,8 @@ EntityId SimulationCore::spawn_projectile(std::string type, float x, float y, fl
 			!std::isfinite(damage * explosion_damage_multiplier)) {
 		throw std::invalid_argument("invalid projectile");
 	}
-	const bool applies_damage_over_time = type == "inferno_sprayer" || type == "bloodstorm_dagger" || type == "wildfire_sprayer";
+	const bool applies_damage_over_time = type == "inferno_sprayer" || type == "bloodstorm_dagger" ||
+			type == "wildfire_sprayer" || type == "toxic_cloud" || type == "pandemic_cloud";
 	if (applies_damage_over_time && (!std::isfinite(status_damage_per_tick) || status_damage_per_tick <= 0.0F ||
 			!std::isfinite(status_interval_seconds) || status_interval_seconds <= 0.0 ||
 			!std::isfinite(status_duration_seconds) || status_duration_seconds <= 0.0)) {

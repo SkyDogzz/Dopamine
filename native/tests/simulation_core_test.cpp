@@ -224,6 +224,20 @@ int main() {
 	const auto burn_ticks = inferno_burn.advance(0.25);
 	require(burn_ticks.size() == 1 && burn_ticks[0].is_damage_over_time && burn_ticks[0].amount == 2.5F,
 			"Inferno burn should emit a tagged tick using its configured damage");
+	SimulationCore toxic_cloud;
+	const auto poison_primary = toxic_cloud.spawn("chaser", 60.0F, 0.0F, 20.0F, 0.0F, 0.0F);
+	const auto poison_splash = toxic_cloud.spawn("chaser", 60.0F, 25.0F, 20.0F, 0.0F, 0.0F);
+	toxic_cloud.spawn_projectile("toxic_cloud", 0.0F, 0.0F, 1.0F, 3.0F, 2.0,
+			100.0F, 0.0F, 2.0F, 0.5, 1.0, 40.0F, 0.5F);
+	toxic_cloud.advance(0.6);
+	const auto poison_direct = toxic_cloud.entity(poison_primary);
+	const auto poison_affected = toxic_cloud.entity(poison_splash);
+	require(poison_direct && poison_direct->damage_over_time && poison_affected && poison_affected->damage_over_time &&
+			poison_direct->health.current == 19.0F && poison_affected->health.current == 19.5F,
+			"Toxic Cloud should apply poison and its bounded area splash to nearby enemies");
+	const auto poison_ticks = toxic_cloud.advance(0.5);
+	require(poison_ticks.size() == 2 && poison_ticks[0].is_damage_over_time && poison_ticks[1].is_damage_over_time,
+			"Toxic Cloud poison should use the shared bounded DoT event path");
 	for (double step_seconds : {1.0 / 120.0, 1.0 / 60.0, 1.0 / 30.0, 0.1}) {
 		SimulationCore timed_status;
 		const auto timed_target = timed_status.spawn("chaser", 0.0F, 0.0F, 100.0F, 0.0F, 0.0F);

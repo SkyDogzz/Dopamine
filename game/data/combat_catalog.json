@@ -9,7 +9,7 @@
     {"id": "minigun", "name": "Minigun", "behavior": "Tir automatique très rapide sur une cible", "relic_id": "overdrive_engine", "evolution_id": "redline", "available_in_survival": true},
     {"id": "meteor_staff", "name": "Meteor Staff", "behavior": "Météores ciblant des groupes d'ennemis", "relic_id": "celestial_eye", "evolution_id": "starfall", "available_in_survival": false},
     {"id": "sawblades", "name": "Sawblades", "behavior": "Lames rebondissant entre ennemis", "relic_id": "magnetic_coil", "evolution_id": "razorstorm", "available_in_survival": false},
-    {"id": "toxic_cloud", "name": "Toxic Cloud", "behavior": "Nuages persistants empoisonnant les ennemis", "relic_id": "plague_mask", "evolution_id": "pandemic", "available_in_survival": false},
+    {"id": "toxic_cloud", "name": "Toxic Cloud", "behavior": "Nuages persistants empoisonnant les ennemis", "relic_id": "plague_mask", "evolution_id": "pandemic", "available_in_survival": true},
     {"id": "prism_laser", "name": "Prism Laser", "behavior": "Rayon continu suivant la cible prioritaire", "relic_id": "prism_crystal", "evolution_id": "spectrum_collapse", "available_in_survival": false}
   ],
   "relics": [
@@ -21,7 +21,7 @@
     {"id": "overdrive_engine", "name": "Overdrive Engine", "weapon_id": "minigun", "available_in_survival": true},
     {"id": "celestial_eye", "name": "Celestial Eye", "weapon_id": "meteor_staff", "available_in_survival": false},
     {"id": "magnetic_coil", "name": "Magnetic Coil", "weapon_id": "sawblades", "available_in_survival": false},
-    {"id": "plague_mask", "name": "Plague Mask", "weapon_id": "toxic_cloud", "available_in_survival": false},
+    {"id": "plague_mask", "name": "Plague Mask", "weapon_id": "toxic_cloud", "available_in_survival": true},
     {"id": "prism_crystal", "name": "Prism Crystal", "weapon_id": "prism_laser", "available_in_survival": false},
     {"id": "magnet_heart", "name": "Magnet Heart", "behavior": "Utilitaire : augmente la distance de ramassage sans attirer les coffres", "available_in_survival": true}
   ]

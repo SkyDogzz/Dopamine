@@ -108,7 +108,8 @@ int64_t CombatSimulation::spawn_status_projectile(String projectile_type, Vector
 		double status_interval_seconds, double status_duration_seconds, float explosion_radius,
 		float explosion_damage_multiplier) {
 	const std::string type = projectile_type.utf8().get_data();
-	const bool applies_damage_over_time = type == "inferno_sprayer" || type == "bloodstorm_dagger" || type == "wildfire_sprayer";
+	const bool applies_damage_over_time = type == "inferno_sprayer" || type == "bloodstorm_dagger" ||
+			type == "wildfire_sprayer" || type == "toxic_cloud" || type == "pandemic_cloud";
 	if (projectile_type.is_empty() || !std::isfinite(position.x) || !std::isfinite(position.y) ||
 			!std::isfinite(velocity.x) || !std::isfinite(velocity.y) || !std::isfinite(damage) || damage <= 0.0F ||
 			!std::isfinite(radius) || radius < 0.0F || !std::isfinite(lifetime_seconds) || lifetime_seconds <= 0.0 ||

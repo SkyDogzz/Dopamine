@@ -28,8 +28,110 @@ func _run() -> void:
 	if not await _minigun_hits_target():
 		_fail("Minigun should hit a target and the Overdrive/Redline build should shorten its firing interval")
 		return
+	if not await _toxic_cloud_poison_and_pandemic():
+		_fail("Toxic Cloud should poison its impact area and Pandemic should spread poison when an infected target dies")
+		return
 	print("Survival weapon catalog smoke passed")
 	quit()
+
+func _toxic_cloud_poison_and_pandemic() -> bool:
+	var session: Node2D = load("res://scenes/survival_session.tscn").instantiate()
+	session.spawn_initial_enemy = false
+	session.wave_spawning_enabled = false
+	session.weapon_enabled = false
+	session.skip_starting_weapon_choice = true
+	session.contact_damage_per_hit = 0.0
+	session.xp_collection_radius = 0.0
+	session.lightning_cooldown = 0.0
+	session.toxic_cooldown = 1000.0
+	root.add_child(session)
+	await process_frame
+	if not session.loadout.apply_offer("weapon:toxic_cloud"):
+		session.queue_free()
+		return false
+	session.weapon_enabled = true
+	session.simulation.spawn("test_target", 1, Vector2(180.0, 0.0), 100.0, Vector2.ZERO)
+	session.simulation.spawn("test_target", 1, Vector2(215.0, 0.0), 100.0, Vector2.ZERO)
+	session.simulation.spawn("test_target", 1, Vector2(320.0, 0.0), 100.0, Vector2.ZERO)
+	if (await _wait_for_targets(session, 3)).size() != 3:
+		session.queue_free()
+		return false
+	var active_time := float(session.simulation.snapshot()["simulation_time"])
+	session._fire_toxic_cloud(active_time, false)
+	var close_poisoned := await _wait_for_toxic_targets(session, 2)
+	var far_unpoisoned := not _target_has_poison(session, Vector2(320.0, 0.0))
+	if not close_poisoned or not far_unpoisoned:
+		session.queue_free()
+		return false
+	session.simulation.kill_all()
+	if not await _wait_for_no_entities(session):
+		session.queue_free()
+		return false
+	for _level in range(4):
+		if not session.loadout.apply_offer("weapon:toxic_cloud"):
+			session.queue_free()
+			return false
+	for _level in range(5):
+		if not session.loadout.apply_offer("relic:plague_mask"):
+			session.queue_free()
+			return false
+	session.simulation.spawn("test_target", 1, Vector2(180.0, 0.0), 0.5, Vector2.ZERO)
+	session.simulation.spawn("test_target", 1, Vector2(220.0, 0.0), 100.0, Vector2.ZERO)
+	session.simulation.spawn("test_target", 1, Vector2(300.0, 0.0), 100.0, Vector2.ZERO)
+	if (await _wait_for_targets(session, 3)).size() != 3:
+		session.queue_free()
+		return false
+	var spread_target_id := _find_target_id_at(session, Vector2(300.0, 0.0))
+	if spread_target_id.is_empty():
+		session.queue_free()
+		return false
+	active_time = float(session.simulation.snapshot()["simulation_time"])
+	session._next_toxic_time = active_time
+	session._fire_toxic_cloud(active_time, false)
+	var spread_applied := await _wait_for_toxic_id(session, spread_target_id)
+	session.queue_free()
+	return spread_applied
+
+func _wait_for_toxic_targets(session: Node2D, count: int) -> bool:
+	var deadline := Time.get_ticks_msec() + 1500
+	while Time.get_ticks_msec() < deadline:
+		await process_frame
+		var poisoned := 0
+		for entity in session.simulation.snapshot()["entities"]:
+			if entity["components"].get("EnemyType", "") == "test_target" and entity["components"].has("DamageOverTime"):
+				poisoned += 1
+		if poisoned >= count:
+			return true
+	return false
+
+func _find_target_id_at(session: Node2D, point: Vector2) -> Dictionary:
+	for entity in session.simulation.snapshot()["entities"]:
+		var components: Dictionary = entity["components"]
+		if components.get("EnemyType", "") != "test_target":
+			continue
+		var transform: Dictionary = components["Transform2D"]
+		if Vector2(float(transform["x"]), float(transform["y"])).distance_to(point) < 20.0:
+			return entity["id"]
+	return {}
+
+func _wait_for_toxic_id(session: Node2D, target_id: Dictionary) -> bool:
+	var deadline := Time.get_ticks_msec() + 1500
+	while Time.get_ticks_msec() < deadline:
+		await process_frame
+		for entity in session.simulation.snapshot()["entities"]:
+			if entity["id"] == target_id and entity["components"].has("DamageOverTime"):
+				return true
+	return false
+
+func _target_has_poison(session: Node2D, point: Vector2) -> bool:
+	for entity in session.simulation.snapshot()["entities"]:
+		var components: Dictionary = entity["components"]
+		if components.get("EnemyType", "") != "test_target" or not components.has("DamageOverTime"):
+			continue
+		var transform: Dictionary = components["Transform2D"]
+		if Vector2(float(transform["x"]), float(transform["y"])).distance_to(point) < 20.0:
+			return true
+	return false
 
 func _minigun_hits_target() -> bool:
 	var session: Node2D = load("res://scenes/survival_session.tscn").instantiate()

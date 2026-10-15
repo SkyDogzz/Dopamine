@@ -16,7 +16,7 @@ Roadmap détaillée et audit GDD/code : [`docs/planning/ROADMAP.md`](../docs/pla
 ## P5 — Contenu v1.6 (jalon actif)
 
 - [ ] **P5.1 — Compléter les armes, reliques et évolutions**
-  - [x] **P5.1.1 — Contrat catalogue :** définitions des dix armes, dix reliques associées et Magnet Heart ; relations contrôlées au chargement ; quatre paires prototypées et Magnet Heart sont disponibles en Survival. JSON Schema reste à intégrer.
+  - [x] **P5.1.1 — Contrat catalogue :** définitions des dix armes, dix reliques associées et Magnet Heart ; relations contrôlées au chargement ; cinq paires prototypées et Magnet Heart sont disponibles en Survival. JSON Schema reste à intégrer.
   - Pour chaque nouvelle paire, faire les petites tranches suivantes dans l’ordre :
     - [ ] Ajouter les définitions stables arme/relique/évolution et valider les références.
     - [ ] Ajouter uniquement l’attaque de base de l’arme et vérifier son ciblage Sandbox.
@@ -27,6 +27,7 @@ Roadmap détaillée et audit GDD/code : [`docs/planning/ROADMAP.md`](../docs/pla
   - [ ] Ajouter une définition de données Void Orb/Singularity/Event Horizon.
   - [ ] Ajouter Frost Nova/Frozen Crown/Absolute Zero.
   - [x] Ajouter un prototype Minigun/Overdrive Engine/Redline ; chiffres de progression et cadence **[PROPOSÉS]**, projectile propre ajouté ; feedback par niveau/évolution encore à faire.
+  - [x] Ajouter un prototype Toxic Cloud/Plague Mask/Pandemic ; DoT partagé en zone et propagation bornée à la mort ; le nuage visuel persistant et les statuts multiples restent à faire, valeurs **[PROPOSÉES]**.
   - [ ] Ajouter Meteor Staff/Celestial Eye/Starfall.
   - [ ] Ajouter Sawblades/Magnetic Coil/Razorstorm.
   - [ ] Ajouter Toxic Cloud/Plague Mask/Pandemic.
