@@ -30,6 +30,8 @@ int main() {
 	const auto elite_profile = enemy_profile("elite");
 	const auto exploder_profile = enemy_profile("exploder");
 	const auto shielder_profile = enemy_profile("shielder");
+	const auto summoner_profile = enemy_profile("summoner");
+	const auto summoned_profile = enemy_profile("summoned");
 	require(chaser_profile && chaser_profile->health == 20.0F && chaser_profile->speed == 75.0F,
 			"proposed chaser profile should match GDD starting values");
 	require(sprinter_profile && sprinter_profile->health == 12.0F && sprinter_profile->speed == 125.0F,
@@ -50,6 +52,9 @@ int main() {
 	require(shielder_profile && shielder_profile->shield_radius == 150.0F &&
 			shielder_profile->shield_damage_multiplier == 0.65F,
 			"proposed Shielder profile should expose bounded ally protection");
+	require(summoner_profile && summoner_profile->health == 42.0F && summoned_profile &&
+			summoned_profile->threat_level == 0.5F,
+			"proposed Summoner and summoned enemy profiles should be available to Survival");
 	require(!enemy_profile("unknown"), "unknown enemy profiles should be rejected");
 	SimulationCore profile_steering;
 	const auto profile_entity = profile_steering.spawn("tank", -100.0F, 0.0F, 80.0F,

@@ -2,10 +2,10 @@
   "schema_version": 1,
   "scenario_id": "enemy_profiles_smoke",
   "expected": {
-    "entity_count": 8,
-    "entity_health": [20.0, 24.0, 80.0, 25.0, 35.0, 50.0, 30.0, 40.0],
-    "entity_speeds": [75.0, 125.0, 45.0, 65.0, 55.0, 100.0, 60.0, 45.0],
-    "enemy_move_speeds": [75.0, 125.0, 45.0, 65.0, 55.0, 100.0, 60.0, 45.0]
+    "entity_count": 10,
+    "entity_health": [20.0, 24.0, 80.0, 25.0, 35.0, 50.0, 30.0, 40.0, 42.0, 12.0],
+    "entity_speeds": [75.0, 125.0, 45.0, 65.0, 55.0, 100.0, 60.0, 45.0, 42.0, 90.0],
+    "enemy_move_speeds": [75.0, 125.0, 45.0, 65.0, 55.0, 100.0, 60.0, 45.0, 42.0, 90.0]
   },
   "commands": [
     {"type": "spawn_enemy", "enemy_type": "chaser"},
@@ -15,6 +15,8 @@
     {"type": "spawn_enemy", "enemy_type": "buffer"},
     {"type": "spawn_enemy", "enemy_type": "elite"},
     {"type": "spawn_enemy", "enemy_type": "exploder"},
-    {"type": "spawn_enemy", "enemy_type": "shielder"}
+    {"type": "spawn_enemy", "enemy_type": "shielder"},
+    {"type": "spawn_enemy", "enemy_type": "summoner"},
+    {"type": "spawn_enemy", "enemy_type": "summoned"}
   ]
 }

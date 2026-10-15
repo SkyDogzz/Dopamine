@@ -79,6 +79,11 @@ const WAVE_HP_CAP := 12.0
 @export var exploder_blast_radius: float = 82.0
 @export var exploder_fuse_seconds: float = 0.8
 @export var exploder_damage: float = 18.0
+@export_group("Prototype Summoner attacks — proposed tuning")
+@export var summoner_warmup_seconds: float = 1.2
+@export var summoner_cooldown_seconds: float = 8.0
+@export var summoner_spawn_radius: float = 42.0
+@export_range(1, 8) var summoner_max_active_summons: int = 3
 @export_group("Prototype Lightning Conductor — proposed tuning")
 @export var weapon_enabled: bool = true
 @export var lightning_cooldown: float = 0.5
@@ -272,6 +277,8 @@ var _evolution_shockwave_triggered := false
 var _elite_haste_expires_at := 0.0
 var _shooter_attacks: Dictionary = {}
 var _exploder_attacks: Dictionary = {}
+var _summoner_attacks: Dictionary = {}
+var _pending_summon_sequences: Dictionary = {}
 
 @onready var _hp_value: Label = $HUD/RunPanel/RunInfo/HPValue
 @onready var _hp_bar: ProgressBar = $HUD/RunPanel/RunInfo/HPBar
@@ -483,6 +490,7 @@ func _process(_delta: float) -> void:
 	_apply_contact_damage(state, current_simulation_time)
 	_update_shooter_attacks(current_simulation_time, bool(state["paused"]))
 	_update_exploder_attacks(current_simulation_time, bool(state["paused"]))
+	_update_summoner_attacks(current_simulation_time, bool(state["paused"]))
 	_collect_nearby_xp_orbs(state)
 	_collect_nearby_chests(state)
 	_complete_pending_victory()
@@ -614,6 +622,53 @@ func _update_exploder_attacks(current_simulation_time: float, paused: bool) -> v
 	for exploder_key in _exploder_attacks.keys():
 		if not active_exploders.has(exploder_key):
 			_exploder_attacks.erase(exploder_key)
+
+func _update_summoner_attacks(current_simulation_time: float, paused: bool) -> void:
+	if paused or run_over:
+		return
+	var active_summoners: Dictionary = {}
+	var active_summons := 0
+	var state: Dictionary = simulation.snapshot()
+	for sequence in _pending_summon_sequences.keys():
+		if int(state["last_sequence"]) >= int(sequence):
+			_pending_summon_sequences.erase(sequence)
+	for entity in state["entities"]:
+		var components: Dictionary = entity["components"]
+		if components.get("IsProjectile", false) or components.get("IsXpOrb", false):
+			continue
+		if str(components.get("EnemyType", "")) == "summoned":
+			active_summons += 1
+	var free_summon_slots := maxi(0, summoner_max_active_summons - active_summons - _pending_summon_sequences.size())
+	for entity in _entities:
+		var components: Dictionary = entity["components"]
+		if components.get("IsProjectile", false) or components.get("EnemyType", "") != "summoner":
+			continue
+		var id: Dictionary = entity["id"]
+		var key := _entity_key(int(id["index"]), int(id["generation"]))
+		active_summoners[key] = true
+		var transform: Dictionary = components["Transform2D"]
+		var origin := Vector2(float(transform["x"]), float(transform["y"]))
+		if not _summoner_attacks.has(key):
+			var spawn_position := origin + Vector2.from_angle(randf() * TAU) * summoner_spawn_radius
+			_summoner_attacks[key] = {
+				"origin": origin,
+				"spawn_position": spawn_position,
+				"summon_at": current_simulation_time + maxf(0.05, summoner_warmup_seconds),
+			}
+		var attack: Dictionary = _summoner_attacks[key]
+		attack["origin"] = origin
+		if current_simulation_time < float(attack["summon_at"]) or free_summon_slots <= 0:
+			continue
+		var sequence: int = simulation.spawn_enemy("summoned", 1, attack["spawn_position"], Vector2.ZERO)
+		if sequence <= 0:
+			continue
+		_pending_summon_sequences[sequence] = true
+		free_summon_slots -= 1
+		attack["summon_at"] = current_simulation_time + maxf(0.05, summoner_cooldown_seconds)
+		attack["spawn_position"] = origin + Vector2.from_angle(randf() * TAU) * summoner_spawn_radius
+	for summoner_key in _summoner_attacks.keys():
+		if not active_summoners.has(summoner_key):
+			_summoner_attacks.erase(summoner_key)
 
 func _apply_pending_lifesteal(elapsed_active_time: float) -> void:
 	if elapsed_active_time <= 0.0 or _pending_lifesteal <= 0.0 or run_over:
@@ -976,6 +1031,10 @@ func _spawn_wave_enemy() -> void:
 		enemy_type = "buffer"
 	if wave_director.wave >= 8 and randf() < 0.12:
 		enemy_type = "exploder"
+	if wave_director.wave >= 10 and randf() < 0.10:
+		enemy_type = "shielder"
+	if wave_director.wave >= 12 and randf() < 0.08:
+		enemy_type = "summoner"
 	var hp_multiplier := minf(pow(WAVE_HP_GROWTH, float(wave_director.wave - 1)), WAVE_HP_CAP)
 	simulation.spawn_enemy(enemy_type, 1, spawn_position, Vector2.ZERO, hp_multiplier)
 
@@ -1731,6 +1790,13 @@ func _draw() -> void:
 				Color(1.0, 0.24, 0.08, 0.4 + alpha * 0.5), 2.0 + alpha * 2.0, true)
 		draw_arc(origin, 16.0 + alpha * 8.0, 0.0, TAU, 32,
 				Color(1.0, 0.72, 0.25, 0.5 + alpha * 0.45), 2.0, true)
+	for attack in _summoner_attacks.values():
+		var time_left := clampf(float(attack["summon_at"]) - _last_simulation_time, 0.0, summoner_warmup_seconds)
+		var alpha := 1.0 - time_left / maxf(summoner_warmup_seconds, 0.01)
+		var spawn_position: Vector2 = attack["spawn_position"]
+		draw_circle(spawn_position, 12.0, Color(0.7, 0.45, 1.0, 0.12 + alpha * 0.16))
+		draw_arc(spawn_position, 14.0 + alpha * 4.0, 0.0, TAU, 32,
+				Color(0.76, 0.58, 1.0, 0.45 + alpha * 0.5), 2.0, true)
 	for entity in _entities:
 		var components: Dictionary = entity["components"]
 		if not components.get("IsProjectile", false) or not ["void_orb", "event_horizon"].has(str(components.get("EnemyType", ""))):

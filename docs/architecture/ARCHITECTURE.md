@@ -63,7 +63,7 @@ Pour le steering, l’index spatial est construit une fois par passe et réutili
 
 P2 implémente les projectiles ECS comme entités distinctes, leur durée de vie et un test balayé relatif au mouvement des cibles. Les impacts passent par `apply_damage`, émettent des événements séquencés et appliquent le despawn en fin de passe. Les rayons d’ennemi (12 unités) et le rayon projectile par défaut (3 unités) sont des paramètres provisoires faute de hitboxes validées.
 
-Les tirs des ennemis ordinaires utilisent aussi des entités projectile ECS pour le déplacement et la durée de vie. Comme le joueur reste un `CharacterBody2D` Godot hors de l'ECS, Survival résout leur collision avec le joueur et applique les dégâts côté Godot ; ces projectiles sont exclus des impacts contre les ennemis ECS. Le fuse et l'explosion de proximité des Exploders sont résolus par Survival à partir des snapshots ECS ; leur délai suit `simulation_time` et se fige en pause.
+Les tirs des ennemis ordinaires utilisent aussi des entités projectile ECS pour le déplacement et la durée de vie. Comme le joueur reste un `CharacterBody2D` Godot hors de l'ECS, Survival résout leur collision avec le joueur et applique les dégâts côté Godot ; ces projectiles sont exclus des impacts contre les ennemis ECS. Le fuse et l'explosion de proximité des Exploders, ainsi que les cycles d'invocation des Summoners, sont résolus par Survival à partir des snapshots ECS ; leurs délais suivent `simulation_time` et se figent en pause.
 
 La règle de HP decay est une fonction pure du temps actif fourni par le mode et d’une durée. Elle reprend la formule exacte marquée **[PROPOSÉ]** dans le GDD ; la propriété du HP joueur et de son horloge n’est pas encore fixée par le code.
 

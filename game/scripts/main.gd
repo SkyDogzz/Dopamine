@@ -47,6 +47,8 @@ func _ready() -> void:
 		"buffer": "enemy_buffer.svg",
 		"exploder": "enemy_exploder.svg",
 		"shielder": "enemy_shielder.svg",
+		"summoner": "enemy_summoner.svg",
+		"summoned": "enemy_summoned.svg",
 		"elite": "enemy_sprinter",
 	}
 	for entity_type in enemy_icons:
