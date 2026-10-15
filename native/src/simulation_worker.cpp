@@ -192,6 +192,7 @@ void SimulationWorker::run(std::stop_token stop_token) {
 	auto last_update = std::chrono::steady_clock::now();
 	while (!stop_token.stop_requested()) {
 		std::deque<SimulationCommand> commands;
+		bool paused_before_commands = false;
 		{
 			std::unique_lock lock(queue_mutex_);
 			auto has_command_or_stopping = [this, &stop_token] {
@@ -205,6 +206,7 @@ void SimulationWorker::run(std::stop_token stop_token) {
 			if (stop_token.stop_requested()) {
 				break;
 			}
+			paused_before_commands = paused_;
 			commands.swap(queue_);
 		}
 
@@ -215,6 +217,9 @@ void SimulationWorker::run(std::stop_token stop_token) {
 		}
 
 		const auto now = std::chrono::steady_clock::now();
+		if (paused_before_commands && !paused_) {
+			last_update = now;
+		}
 		const double elapsed = std::chrono::duration<double>(now - last_update).count();
 		last_update = now;
 		double frame_time_ms = elapsed * 1000.0;
