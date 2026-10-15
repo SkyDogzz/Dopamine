@@ -54,6 +54,8 @@ func _run() -> void:
 		"separation_weight": 0.5,
 		"cell_size": 64.0,
 	}) == 0, "GDExtension should reject non-numeric override values")
+	var clear_tuning_sequence: int = simulation.reset()
+	await _wait_for_sequence(simulation, clear_tuning_sequence)
 
 	var spawn_sequence: int = simulation.spawn("chaser", 1, Vector2(1.0, 2.0), 10.0, Vector2(2.0, 0.0))
 	var state: Dictionary = await _wait_for_sequence(simulation, spawn_sequence)

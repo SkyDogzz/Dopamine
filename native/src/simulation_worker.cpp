@@ -195,6 +195,9 @@ void SimulationWorker::apply(const SimulationCommand &command) {
 				break;
 			}
 			steering_config_ = command.steering;
+			has_steering_target_ = true;
+			steering_target_x_ = 0.0F;
+			steering_target_y_ = 0.0F;
 			log("sandbox overrides committed atomically");
 			break;
 		case CommandType::SetSteeringTarget:

@@ -18,6 +18,12 @@ func _run() -> void:
 		"Shell/Content/SidePanel/Sections/InspectorPanel/InspectorForm/StatusIntervalSpin",
 		"Shell/Content/SidePanel/Sections/InspectorPanel/InspectorForm/StatusDurationSpin",
 		"Shell/Content/SidePanel/Sections/InspectorPanel/InspectorForm/ApplyStatusButton",
+		"Shell/Content/SidePanel/Sections/TuningPanel/TuningForm/TuningTitle",
+		"Shell/Content/SidePanel/Sections/TuningPanel/TuningForm/TuningGrid/MaxSpeedSpin",
+		"Shell/Content/SidePanel/Sections/TuningPanel/TuningForm/TuningGrid/SeparationRadiusSpin",
+		"Shell/Content/SidePanel/Sections/TuningPanel/TuningForm/TuningGrid/SeparationWeightSpin",
+		"Shell/Content/SidePanel/Sections/TuningPanel/TuningForm/TuningGrid/CellSizeSpin",
+		"Shell/Content/SidePanel/Sections/TuningPanel/TuningForm/ApplyTuningButton",
 	]:
 		if sandbox.get_node(node_path).tooltip_text.is_empty():
 			_fail("%s should explain itself on hover" % node_path)
@@ -41,6 +47,7 @@ func _run() -> void:
 
 	var count_spin: SpinBox = sandbox.get_node("Shell/Content/SidePanel/Sections/SpawnPanel/SpawnForm/TypeRow/CountSpin")
 	count_spin.value = 2
+	sandbox.get_node("Shell/Content/SidePanel/Sections/SpawnPanel/SpawnForm/PositionRow/XSpin").value = 100.0
 	sandbox.get_node("Shell/Content/SidePanel/Sections/SpawnPanel/SpawnForm/SpawnActions/SpawnButton").pressed.emit()
 	var state: Dictionary = await _wait_for_entity_count(sandbox.simulation, 2)
 	var id: Dictionary = state["entities"][0]["id"]
@@ -85,6 +92,27 @@ func _run() -> void:
 	state = await _wait_for_simulation_time(sandbox.simulation, time_before_step + 0.2)
 	assert(is_equal_approx(float(state["speed_multiplier"]), 2.0), "Sandbox UI should apply the selected speed")
 	assert(is_equal_approx(float(state["simulation_time"]), time_before_step + 0.2), "Sandbox UI Step should advance its explicit duration at selected speed")
+	var tuning_form: Control = sandbox.get_node("Shell/Content/SidePanel/Sections/TuningPanel/TuningForm/TuningGrid")
+	tuning_form.get_node("MaxSpeedSpin").value = 10.0
+	tuning_form.get_node("SeparationRadiusSpin").value = 0.0
+	tuning_form.get_node("SeparationWeightSpin").value = 0.0
+	tuning_form.get_node("CellSizeSpin").value = 32.0
+	var sequence_before_tuning: int = int(state["last_sequence"])
+	sandbox.get_node("Shell/Content/SidePanel/Sections/TuningPanel/TuningForm/ApplyTuningButton").pressed.emit()
+	state = await _wait_for_sequence(sandbox.simulation, sequence_before_tuning + 1)
+	assert(state["sandbox_overrides"] == {
+		"max_speed": 10.0,
+		"separation_radius": 0.0,
+		"separation_weight": 0.0,
+		"cell_size": 32.0,
+	}, "Sandbox should publish its complete live steering transaction")
+	sandbox._refresh()
+	assert(sandbox.get_node("Shell/Content/SidePanel/Sections/TuningPanel/TuningForm/TuningStatus").text == "LIVE TUNING APPLIED",
+		"Sandbox should report the transaction only after worker acknowledgement")
+	var tuning_step_sequence: int = sandbox.simulation.step(0.1)
+	state = await _wait_for_sequence(sandbox.simulation, tuning_step_sequence)
+	assert(float(state["entities"][0]["components"]["Transform2D"]["x"]) < 100.0,
+		"Applied steering should move generic enemies toward the Sandbox world origin")
 	sandbox.get_node("Shell/Content/SidePanel/Sections/SpawnPanel/SpawnForm/SpawnActions/DespawnButton").pressed.emit()
 	await _wait_for_entity_count(sandbox.simulation, 1)
 
@@ -110,6 +138,15 @@ func _wait_for_entity_count(simulation: Object, expected_count: int) -> Dictiona
 		await process_frame
 		state = simulation.snapshot()
 	assert(state["entities"].size() == expected_count, "Sandbox UI command timed out")
+	return state
+
+func _wait_for_sequence(simulation: Object, expected_sequence: int) -> Dictionary:
+	var deadline := Time.get_ticks_msec() + 1000
+	var state: Dictionary = simulation.snapshot()
+	while int(state["last_sequence"]) < expected_sequence and Time.get_ticks_msec() < deadline:
+		await process_frame
+		state = simulation.snapshot()
+	assert(int(state["last_sequence"]) >= expected_sequence, "Sandbox command timed out")
 	return state
 
 func _wait_for_status(simulation: Object, entity_index: int) -> Dictionary:

@@ -284,6 +284,70 @@ size_flags_horizontal = 3
 text = "KILL ALL"
 tooltip_text = "Remove every entity from the simulation."
 
+[node name="TuningPanel" type="PanelContainer" parent="Shell/Content/SidePanel/Sections"]
+layout_mode = 2
+
+[node name="TuningForm" type="VBoxContainer" parent="Shell/Content/SidePanel/Sections/TuningPanel"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="TuningTitle" type="Label" parent="Shell/Content/SidePanel/Sections/TuningPanel/TuningForm"]
+layout_mode = 2
+text = "AI STEERING"
+tooltip_text = "Live tuning for generic spawned enemies. The Sandbox target is world origin (0, 0)."
+theme_override_font_sizes/font_size = 16
+
+[node name="TuningGrid" type="GridContainer" parent="Shell/Content/SidePanel/Sections/TuningPanel/TuningForm"]
+layout_mode = 2
+columns = 2
+theme_override_constants/h_separation = 8
+theme_override_constants/v_separation = 6
+
+[node name="MaxSpeedSpin" type="SpinBox" parent="Shell/Content/SidePanel/Sections/TuningPanel/TuningForm/TuningGrid"]
+custom_minimum_size = Vector2(140, 34)
+layout_mode = 2
+max_value = 500.0
+value = 75.0
+prefix = "SPEED "
+tooltip_text = "Maximum steering speed for generic spawned enemies, in units per second."
+
+[node name="SeparationRadiusSpin" type="SpinBox" parent="Shell/Content/SidePanel/Sections/TuningPanel/TuningForm/TuningGrid"]
+custom_minimum_size = Vector2(140, 34)
+layout_mode = 2
+max_value = 500.0
+value = 18.0
+prefix = "SEP "
+tooltip_text = "Distance used to separate nearby enemies, in world units."
+
+[node name="SeparationWeightSpin" type="SpinBox" parent="Shell/Content/SidePanel/Sections/TuningPanel/TuningForm/TuningGrid"]
+custom_minimum_size = Vector2(140, 34)
+layout_mode = 2
+max_value = 1.0
+step = 0.05
+value = 0.5
+prefix = "WEIGHT "
+tooltip_text = "Strength of local separation, from 0 to 1."
+
+[node name="CellSizeSpin" type="SpinBox" parent="Shell/Content/SidePanel/Sections/TuningPanel/TuningForm/TuningGrid"]
+custom_minimum_size = Vector2(140, 34)
+layout_mode = 2
+min_value = 1.0
+max_value = 512.0
+value = 64.0
+prefix = "CELL "
+tooltip_text = "Spatial hash cell size used by steering, in world units."
+
+[node name="ApplyTuningButton" type="Button" parent="Shell/Content/SidePanel/Sections/TuningPanel/TuningForm"]
+custom_minimum_size = Vector2(0, 36)
+layout_mode = 2
+text = "APPLY LIVE TUNING"
+tooltip_text = "Validate and apply all four steering settings together."
+
+[node name="TuningStatus" type="Label" parent="Shell/Content/SidePanel/Sections/TuningPanel/TuningForm"]
+layout_mode = 2
+text = "TUNING READY"
+theme_override_colors/font_color = Color(0.556863, 0.639216, 0.678431, 1)
+
 [node name="InspectorPanel" type="PanelContainer" parent="Shell/Content/SidePanel/Sections"]
 layout_mode = 2
 

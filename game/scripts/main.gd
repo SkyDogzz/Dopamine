@@ -15,6 +15,7 @@ var _selected_index := -1
 var _selected_generation := -1
 var _last_combat_event_sequence := 0
 var _damage_total := 0.0
+var _pending_tuning_sequence := 0
 
 @onready var _view = $Shell/Content/MainColumn/SimulationView
 @onready var _state_label: Label = $Shell/Header/StateLabel
@@ -51,6 +52,7 @@ func _ready() -> void:
 	$Shell/Content/SidePanel/Sections/SpawnPanel/SpawnForm/SpawnActions/SpawnButton.pressed.connect(_on_spawn_pressed)
 	$Shell/Content/SidePanel/Sections/SpawnPanel/SpawnForm/SpawnActions/DespawnButton.pressed.connect(_on_despawn_pressed)
 	$Shell/Content/SidePanel/Sections/SpawnPanel/SpawnForm/SpawnActions/KillButton.pressed.connect(_on_kill_all_pressed)
+	$Shell/Content/SidePanel/Sections/TuningPanel/TuningForm/ApplyTuningButton.pressed.connect(_on_apply_tuning_pressed)
 	$Shell/Content/SidePanel/Sections/InspectorPanel/InspectorForm/ApplyStatusButton.pressed.connect(_on_apply_status_pressed)
 	_view.entity_selected.connect(_on_entity_selected)
 
@@ -111,6 +113,10 @@ func _flat(background: Color, border: Color, border_width: int) -> StyleBoxFlat:
 
 func _refresh() -> void:
 	var state: Dictionary = simulation.snapshot()
+	if _pending_tuning_sequence > 0 and int(state["last_sequence"]) >= _pending_tuning_sequence:
+		$Shell/Content/SidePanel/Sections/TuningPanel/TuningForm/TuningStatus.text = "LIVE TUNING APPLIED"
+		$Shell/Content/SidePanel/Sections/TuningPanel/TuningForm/TuningStatus.add_theme_color_override("font_color", COLOR_CYAN)
+		_pending_tuning_sequence = 0
 	var paused: bool = state["paused"]
 	_state_label.text = "PAUSED  /  NO SAVE" if paused else "RUNNING  /  NO SAVE"
 	_state_label.add_theme_color_override("font_color", COLOR_AMBER if paused else COLOR_CYAN)
@@ -244,3 +250,21 @@ func _on_apply_status_pressed() -> void:
 			form.get_node("StatusDurationSpin").value) == 0:
 		_state_label.text = "STATUS REJECTED"
 	_refresh()
+
+func _on_apply_tuning_pressed() -> void:
+	var form := $Shell/Content/SidePanel/Sections/TuningPanel/TuningForm/TuningGrid
+	var overrides := {
+		"max_speed": form.get_node("MaxSpeedSpin").value,
+		"separation_radius": form.get_node("SeparationRadiusSpin").value,
+		"separation_weight": form.get_node("SeparationWeightSpin").value,
+		"cell_size": form.get_node("CellSizeSpin").value,
+	}
+	var sequence: int = simulation.apply_sandbox_overrides(overrides)
+	var status: Label = $Shell/Content/SidePanel/Sections/TuningPanel/TuningForm/TuningStatus
+	if sequence == 0:
+		status.text = "TUNING REJECTED — PREVIOUS VALUES KEPT"
+		status.add_theme_color_override("font_color", COLOR_PINK)
+		return
+	_pending_tuning_sequence = sequence
+	status.text = "TUNING QUEUED — TARGET (0, 0)"
+	status.add_theme_color_override("font_color", COLOR_AMBER)

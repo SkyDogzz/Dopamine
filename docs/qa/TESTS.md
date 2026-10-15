@@ -5,7 +5,7 @@
 - [x] Linux P0 : Godot 4.7.2 charge la GDExtension C++23 après import headless du projet.
 - [x] P1 ciblé : handles index/génération, snapshots immuables, spawn/despawn, kill all, step, pause/reprise, reset et arrêt du worker.
 - [x] P1 intégration : GDScript charge `CombatSimulation`, soumet un spawn et reçoit le snapshot acquitté sous Godot headless.
-- [x] P1 UI : scène Sandbox sans save, inspection par sélection, despawn ciblé et kill all vérifiés sous Godot headless ; infobulles de tous les champs et actions de `SPAWN ENTITIES` et du formulaire de statut vérifiées ; rendu revu à 1280×800.
+- [x] P1 UI : scène Sandbox sans save, inspection par sélection, despawn ciblé et kill all vérifiés sous Godot headless ; tooltips spawn, statut et réglage live vérifiés ; rendu revu à 1280×800.
 - [x] P2 UI : le Sandbox applique un DoT configurable à l’entité sélectionnée, montre l’état dans l’inspecteur et reçoit un événement de tick identifié.
 - [x] P1 scénario : runner JSON vérifie les attentes et exporte métriques, entités, événements et logs ; scénario inclus dans CTest quand Godot est détecté.
 - [x] P2 ciblé : requêtes de rayon du spatial hash aux coordonnées négatives, bord de rayon et cellules ; les entités détruites sont exclues.
@@ -69,7 +69,7 @@
 - [x] UI Sandbox : spawn, despawn, kill all, pause, reprise, step à durée explicite, vitesse ×2, reset et logs vérifiés sous Godot headless.
 - [x] Contrat GDExtension `apply_sandbox_overrides` : quatre paramètres de steering validés avant soumission et exposés dans le snapshot; le worker rejette une configuration invalide sans commit partiel.
 - [x] Sandbox applique un DoT configurable à l’entité sélectionnée et expose ses valeurs à l’inspecteur.
-- [ ] Changement live valide est atomique ; changement invalide rollback.
+- [x] Transaction live de steering : changements UI valides appliqués ensemble et visibles dans le snapshot; entrée native invalide ou mal typée conserve toute la configuration précédente.
 - [x] DPS moyen du Sandbox additionne les événements `damage` (dont DoT) et les divise par le temps simulé ; vérifié sur un Step explicite et remis à zéro avec la simulation.
 - [ ] Import d'une save produit une copie isolée ; original inchangé.
 - [ ] Preset JSON et share code sont validés, versionnés, avec limites de taille.
