@@ -196,6 +196,28 @@ int main() {
 	const auto burn_ticks = inferno_burn.advance(0.25);
 	require(burn_ticks.size() == 1 && burn_ticks[0].is_damage_over_time && burn_ticks[0].amount == 2.5F,
 			"Inferno burn should emit a tagged tick using its configured damage");
+	for (double step_seconds : {1.0 / 120.0, 1.0 / 60.0, 1.0 / 30.0, 0.1}) {
+		SimulationCore timed_status;
+		const auto timed_target = timed_status.spawn("chaser", 0.0F, 0.0F, 100.0F, 0.0F, 0.0F);
+		const auto moving_entity = timed_status.spawn("chaser", 0.0F, 20.0F, 100.0F, 100.0F, 0.0F);
+		timed_status.apply_damage_over_time(timed_target, 2.0F, 0.25, 1.0);
+		int ticks = 0;
+		for (double elapsed = 0.0; elapsed < 1.0 - 1e-12; elapsed += step_seconds) {
+			const double step = std::min(step_seconds, 1.0 - elapsed);
+			for (const auto &event : timed_status.advance(step)) {
+				if (event.is_damage_over_time) {
+					++ticks;
+					require(std::isfinite(event.remaining_health), "status ticks should retain finite health across supported frame deltas");
+				}
+			}
+		}
+		require(ticks == 4 && timed_status.entity(timed_target)->health.current == 92.0F,
+				"DoT tick count and damage should be independent of supported simulation step sizes");
+		const auto moved_entity = timed_status.entity(moving_entity);
+		require(moved_entity && std::isfinite(moved_entity->transform.x) &&
+				std::abs(moved_entity->transform.x - 100.0F) < 0.001F,
+				"movement should remain finite and integrate the same distance across supported step sizes");
+	}
 	SimulationCore wildfire;
 	const auto wildfire_primary = wildfire.spawn("chaser", 60.0F, 0.0F, 100.0F, 0.0F, 0.0F);
 	const auto wildfire_near = wildfire.spawn("chaser", 60.0F, 25.0F, 100.0F, 0.0F, 0.0F);
