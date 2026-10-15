@@ -56,7 +56,7 @@
 ## Sandbox-first
 
 - [ ] Sandbox démarre sans sauvegarde créée ou chargée.
-- [ ] Spawn, kill all, pause, resume, step, speed, reset et logs fonctionnent.
+- [x] UI Sandbox : spawn, despawn, kill all, pause, reprise, step à durée explicite, vitesse ×2, reset et logs vérifiés sous Godot headless.
 - [x] Sandbox applique un DoT configurable à l’entité sélectionnée et expose ses valeurs à l’inspecteur.
 - [ ] Changement live valide est atomique ; changement invalide rollback.
 - [x] DPS moyen du Sandbox additionne les événements `damage` (dont DoT) et les divise par le temps simulé ; vérifié sur un Step explicite et remis à zéro avec la simulation.

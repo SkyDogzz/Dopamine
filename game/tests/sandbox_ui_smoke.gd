@@ -64,6 +64,24 @@ func _run() -> void:
 	var dps_label: Label = sandbox.get_node("Shell/Content/MainColumn/Metrics/MetricRow/MetricDPS")
 	var expected_dps := expected_damage / float(state["simulation_time"])
 	assert(dps_label.text == "AVG DPS  %.1f" % expected_dps, "Sandbox DPS should use damage events divided by simulated time")
+	var pause_button: Button = sandbox.get_node("Shell/Content/MainColumn/Toolbar/Row/PauseButton")
+	pause_button.pressed.emit()
+	state = await _wait_for_paused(sandbox.simulation, false)
+	assert(not state["paused"], "Sandbox UI should resume the simulation")
+	pause_button.pressed.emit()
+	state = await _wait_for_paused(sandbox.simulation, true)
+	assert(state["paused"], "Sandbox UI should pause the simulation")
+	sandbox._refresh()
+	state = sandbox.simulation.snapshot()
+	var time_before_step := float(state["simulation_time"])
+	var speed_select: OptionButton = sandbox.get_node("Shell/Content/MainColumn/Toolbar/Row/SpeedSelect")
+	speed_select.item_selected.emit(3)
+	var duration: SpinBox = sandbox.get_node("Shell/Content/MainColumn/Toolbar/Row/StepDuration")
+	duration.value = 0.1
+	sandbox.get_node("Shell/Content/MainColumn/Toolbar/Row/StepButton").pressed.emit()
+	state = await _wait_for_simulation_time(sandbox.simulation, time_before_step + 0.2)
+	assert(is_equal_approx(float(state["speed_multiplier"]), 2.0), "Sandbox UI should apply the selected speed")
+	assert(is_equal_approx(float(state["simulation_time"]), time_before_step + 0.2), "Sandbox UI Step should advance its explicit duration at selected speed")
 	sandbox.get_node("Shell/Content/SidePanel/Sections/SpawnPanel/SpawnForm/SpawnActions/DespawnButton").pressed.emit()
 	await _wait_for_entity_count(sandbox.simulation, 1)
 
@@ -112,6 +130,24 @@ func _wait_for_damage(simulation: Object) -> Dictionary:
 		await process_frame
 		state = simulation.snapshot()
 	_fail("Sandbox status tick timed out")
+	return state
+
+func _wait_for_paused(simulation: Object, expected_paused: bool) -> Dictionary:
+	var deadline := Time.get_ticks_msec() + 1000
+	var state: Dictionary = simulation.snapshot()
+	while state["paused"] != expected_paused and Time.get_ticks_msec() < deadline:
+		await process_frame
+		state = simulation.snapshot()
+	assert(state["paused"] == expected_paused, "Sandbox pause command timed out")
+	return state
+
+func _wait_for_simulation_time(simulation: Object, expected_time: float) -> Dictionary:
+	var deadline := Time.get_ticks_msec() + 1000
+	var state: Dictionary = simulation.snapshot()
+	while not is_equal_approx(float(state["simulation_time"]), expected_time) and Time.get_ticks_msec() < deadline:
+		await process_frame
+		state = simulation.snapshot()
+	assert(is_equal_approx(float(state["simulation_time"]), expected_time), "Sandbox Step timed out")
 	return state
 
 func _fail(message: String) -> void:
