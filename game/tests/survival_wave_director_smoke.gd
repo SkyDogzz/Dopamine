@@ -20,6 +20,18 @@ func _run() -> void:
 	if not director.advance(1.0) or director.wave != 2:
 		_fail("A completed wave should advance exactly once")
 		return
+	var long_step_director = director_script.new()
+	if not long_step_director.advance(70.0) or long_step_director.wave != 3 or \
+			not is_equal_approx(long_step_director.elapsed_in_wave, 10.0):
+		_fail("A long delta should preserve its remainder across ordinary wave transitions")
+		return
+	var boss_boundary_director = director_script.new()
+	boss_boundary_director.wave = 11
+	if not boss_boundary_director.advance(70.0) or \
+			boss_boundary_director.state != director_script.State.MID_BOSS or \
+			not is_zero_approx(boss_boundary_director.elapsed_in_wave):
+		_fail("A long delta should stop at a boss boundary and leave its wave clock paused")
+		return
 	for wave in range(2, 12):
 		director.advance(30.0)
 	if director.state != director_script.State.MID_BOSS or director.wave != 12:

@@ -12,19 +12,22 @@ func advance(delta_seconds: float) -> bool:
 	if state != State.WAVE or delta_seconds < 0.0:
 		return false
 	elapsed_in_wave += delta_seconds
-	if elapsed_in_wave < wave_duration_seconds:
-		return false
-	elapsed_in_wave = 0.0
-	if wave == 11:
-		wave = 12
-		state = State.MID_BOSS
-		return true
-	if wave == 23:
-		wave = 24
-		state = State.FINAL_BOSS
-		return true
-	wave += 1
-	return true
+	var advanced := false
+	while state == State.WAVE and elapsed_in_wave >= wave_duration_seconds:
+		elapsed_in_wave -= wave_duration_seconds
+		advanced = true
+		if wave == 11:
+			wave = 12
+			state = State.MID_BOSS
+			elapsed_in_wave = 0.0
+			break
+		if wave == 23:
+			wave = 24
+			state = State.FINAL_BOSS
+			elapsed_in_wave = 0.0
+			break
+		wave += 1
+	return advanced
 
 func boss_defeated() -> bool:
 	if state == State.MID_BOSS:
