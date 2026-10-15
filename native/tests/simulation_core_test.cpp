@@ -196,6 +196,20 @@ int main() {
 	const auto burn_ticks = inferno_burn.advance(0.25);
 	require(burn_ticks.size() == 1 && burn_ticks[0].is_damage_over_time && burn_ticks[0].amount == 2.5F,
 			"Inferno burn should emit a tagged tick using its configured damage");
+	SimulationCore wildfire;
+	const auto wildfire_primary = wildfire.spawn("chaser", 60.0F, 0.0F, 100.0F, 0.0F, 0.0F);
+	const auto wildfire_near = wildfire.spawn("chaser", 60.0F, 25.0F, 100.0F, 0.0F, 0.0F);
+	const auto wildfire_far = wildfire.spawn("chaser", 60.0F, 50.0F, 100.0F, 0.0F, 0.0F);
+	wildfire.spawn_projectile("wildfire_sprayer", 0.0F, 0.0F, 10.0F, 3.0F, 2.0,
+			100.0F, 0.0F, 2.0F, 0.5, 2.0, 40.0F, 0.5F);
+	wildfire.advance(0.6);
+	const auto wildfire_direct = wildfire.entity(wildfire_primary);
+	const auto wildfire_splash = wildfire.entity(wildfire_near);
+	const auto wildfire_unaffected = wildfire.entity(wildfire_far);
+	require(wildfire_direct && wildfire_direct->health.current == 90.0F &&
+			wildfire_splash && wildfire_splash->health.current == 95.0F && wildfire_splash->damage_over_time &&
+			wildfire_unaffected && wildfire_unaffected->health.current == 100.0F,
+			"Wildfire should damage and ignite nearby enemies within its explosion radius only");
 	SimulationCore combat;
 	const auto target = combat.spawn("chaser", 50.0F, -100.0F, 10.0F, 0.0F, 1000.0F, 4.0F);
 	const auto projectile = combat.spawn_projectile("test_projectile", 0.0F, 0.0F, 12.0F, 2.0F, 1.0, 500.0F, 0.0F);

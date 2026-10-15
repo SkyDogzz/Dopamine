@@ -31,7 +31,7 @@
 - [x] Scène Survival minimale : position monde du joueur transmise au steering ECS ; vitesses des profils conservées.
 - [x] Relier HP decay à l’horloge active Survival et appliquer les soins des événements de mort au HP Godot.
 - [x] Prototype de tir automatique Lightning Conductor ; chaînes distinctes ciblées et valeurs de combat configurables, toutes proposées.
-- [ ] Ajouter les contrôles Sandbox pour lifesteal et statuts; intégrer le lifesteal des dégâts sur la durée et clarifier le taux de base **[OUVERT]**.
+- [x] Contrôles Sandbox pour les statuts, lifesteal Blood Chalice sur dégâts directs et ticks DoT à 25 % du taux théorique; le taux de base indépendant de la relique reste **[OUVERT]**.
 - [x] Dégâts de contact joueur-ennemi et invulnérabilité provisoires en Survival; contrôles suspendus pendant les pauses et fins de run.
 
 ## Phase 4 — Premier playable Survival
@@ -41,9 +41,9 @@
 - [x] Prototype vagues : 24 vagues, horloge arrêtée pendant les placeholders boss, spawns selon courbes proposées et HUD vague.
 - [x] HUD boss : barre HP courants/max et état de victoire distinct de la défaite.
 - [x] Chests Survival : mort→drop→pickup→modal à trois choix→mise à jour du loadout et reprise; sélection du catalogue **[PROPOSÉE]**.
-- [x] Projectiles prototypes Inferno/Crimson, brûlure, saignement Bloodstorm, Infinite Circuit ramifié et modificateurs de reliques testés. Les explosions Inferno restent à implémenter. Blood Chalice accorde un lifesteal direct de 5 %/niveau **[PROPOSÉ]** avec soft cap.
+- [x] Projectiles prototypes Inferno/Crimson, brûlure, saignement Bloodstorm, Infinite Circuit ramifié, explosion Wildfire et modificateurs de reliques testés. Blood Chalice accorde un lifesteal direct de 5 %/niveau **[PROPOSÉ]** avec soft cap.
 - [x] Écran de choix d’arme initiale parmi deux prototypes **[PROPOSÉS]**, entrée Survival depuis le Sandbox, victoire/défaite avec résumé et redémarrage.
 - [x] Déclencheur Bloodstorm au niveau 5 avec Blood Chalice; saignement et lifesteal sur ticks testés, réglages encore **[PROPOSÉS]**.
-- [ ] Wildfire et effets d’évolution restants; confirmer le pool de départ du vertical slice. Le facteur de branchement Infinite Circuit reste **[PROPOSÉ]**.
+- [ ] Effets d’évolution restants; confirmer le pool de départ du vertical slice. Les réglages d’explosion Wildfire et de branchement Infinite Circuit restent **[PROPOSÉS]**.
 - [ ] Vagues, chests, 3 armes/reliques, mid-boss et boss final.
 - [ ] HUD, fin de run, sauvegarde minimale et vérification QA complète.

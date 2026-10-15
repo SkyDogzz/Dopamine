@@ -15,7 +15,7 @@
 | P7 | Sandbox Lab joueur complet : presets, share codes, snapshots, isolation, UI | Accessible sans save ; aucune progression normale altérée |
 | P8 | Contenu complet, balance, accessibilité, Steam, optimisation | Régressions vertes et cible perf atteinte |
 
-P3 groundwork: the shared simulation core, developer Sandbox UI, and JSON scenarios can apply and verify one configurable damage-over-time status per selected entity. Inferno Sprayer and the level-5 Bloodstorm evolution use the same core status and apply the GDD-proposed reduced lifesteal rate. Infinite Circuit now branches lightning from its level-5 initial targets; its two roots and maximum branch factor remain proposed prototype tuning. Wildfire and other weapon-specific evolution effects remain future work.
+P3 groundwork: the shared simulation core, developer Sandbox UI, and JSON scenarios can apply and verify one configurable damage-over-time status per selected entity. Inferno Sprayer and the level-5 Bloodstorm evolution use the same core status and apply the GDD-proposed reduced lifesteal rate. Infinite Circuit branches lightning from its level-5 initial targets, and level-5 Wildfire adds a proposed area explosion that spreads burn to nearby enemies. Evolution tuning remains proposed; other weapon-specific evolution effects remain future work.
 
 ## Sandbox MVP — spécification minimum
 

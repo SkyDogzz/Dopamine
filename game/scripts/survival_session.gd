@@ -50,6 +50,9 @@ const WAVE_HP_CAP := 12.0
 @export var inferno_burn_damage_per_tick: float = 2.0
 @export var inferno_burn_interval_seconds: float = 0.5
 @export var inferno_burn_duration_seconds: float = 2.0
+@export_group("Prototype Wildfire — proposed tuning")
+@export var wildfire_explosion_radius: float = 60.0
+@export_range(0.0, 1.0) var wildfire_explosion_damage_multiplier: float = 0.5
 @export_group("Prototype Crimson Daggers — proposed tuning")
 @export var daggers_cooldown: float = 0.8
 @export var daggers_damage: float = 7.0
@@ -597,10 +600,18 @@ func _fire_inferno_sprayer(active_time: float, paused: bool) -> void:
 	var level: int = loadout.weapon_level("inferno_sprayer")
 	var damage := inferno_damage * (1.0 + 0.15 * float(level - 1))
 	damage *= 1.0 + float(loadout.relic_level("infernal_heart")) * infernal_heart_damage_per_level
-	var projectile_sequence: int = simulation.spawn_status_projectile("inferno_sprayer", player.global_position + direction * 14.0,
+	var projectile_type := "inferno_sprayer"
+	var explosion_radius := 0.0
+	var explosion_multiplier := 0.0
+	if level >= 5 and loadout.relic_level("infernal_heart") > 0:
+		projectile_type = "wildfire_sprayer"
+		explosion_radius = wildfire_explosion_radius
+		explosion_multiplier = wildfire_explosion_damage_multiplier
+	var projectile_sequence: int = simulation.spawn_status_projectile(projectile_type, player.global_position + direction * 14.0,
 			direction * inferno_projectile_speed, damage, inferno_projectile_radius,
 			inferno_projectile_lifetime, inferno_burn_damage_per_tick,
-			inferno_burn_interval_seconds, inferno_burn_duration_seconds)
+			inferno_burn_interval_seconds, inferno_burn_duration_seconds,
+			explosion_radius, explosion_multiplier)
 	if projectile_sequence > 0:
 		_next_inferno_time = active_time + inferno_cooldown
 

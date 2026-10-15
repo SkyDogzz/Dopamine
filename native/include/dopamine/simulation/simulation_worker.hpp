@@ -53,6 +53,8 @@ struct SimulationCommand {
 	float projectile_status_damage = 2.0F;
 	double projectile_status_interval = 0.5;
 	double projectile_status_duration = 2.0;
+	float projectile_explosion_radius = 0.0F;
+	float projectile_explosion_damage_multiplier = 0.0F;
 	float xp_value = 1.0F;
 	float status_damage_per_tick = 0.0F;
 	double status_interval_seconds = 0.0;

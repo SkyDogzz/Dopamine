@@ -22,6 +22,9 @@ func _run() -> void:
 	if not await _infinite_circuit_branches():
 		_fail("Infinite Circuit should branch from its two initial lightning targets")
 		return
+	if not await _wildfire_explodes_and_spreads():
+		_fail("Wildfire should explode on impact and ignite nearby enemies")
+		return
 	print("Survival weapon catalog smoke passed")
 	quit()
 
@@ -95,6 +98,57 @@ func _wait_for_targets(session: Node2D, count: int) -> Array:
 		if targets.size() == count:
 			return targets
 	return []
+
+func _wildfire_explodes_and_spreads() -> bool:
+	var session: Node2D = load("res://scenes/survival_session.tscn").instantiate()
+	session.spawn_initial_enemy = false
+	session.wave_spawning_enabled = false
+	session.weapon_enabled = false
+	session.skip_starting_weapon_choice = true
+	session.contact_damage_per_hit = 0.0
+	session.xp_collection_radius = 0.0
+	session.inferno_cooldown = 1000.0
+	root.add_child(session)
+	await process_frame
+	if not session.loadout.apply_offer("relic:infernal_heart"):
+		session.queue_free()
+		return false
+	for _level in range(5):
+		if not session.loadout.apply_offer("weapon:inferno_sprayer"):
+			session.queue_free()
+			return false
+	session.weapon_enabled = true
+	session.simulation.set_speed(4.0)
+	for point in [Vector2(160.0, 0.0), Vector2(160.0, 25.0), Vector2(160.0, 100.0)]:
+		session.simulation.spawn("test_target", 1, point, 100.0, Vector2.ZERO)
+	var targets := await _wait_for_targets(session, 3)
+	if targets.size() != 3:
+		session.queue_free()
+		return false
+	var deadline := Time.get_ticks_msec() + 2000
+	var affected := false
+	while Time.get_ticks_msec() < deadline:
+		await process_frame
+		var snapshot: Dictionary = session.simulation.snapshot()
+		var hit_targets := 0
+		var burned_targets := 0
+		var untouched_far_target := false
+		for entity in snapshot["entities"]:
+			if entity["components"].get("EnemyType", "") != "test_target":
+				continue
+			var components: Dictionary = entity["components"]
+			var transform: Dictionary = components["Transform2D"]
+			if float(transform["y"]) > 50.0:
+				untouched_far_target = is_equal_approx(float(components["Health"]["current"]), 100.0)
+			elif float(components["Health"]["current"]) < 100.0:
+				hit_targets += 1
+				if components.has("DamageOverTime"):
+					burned_targets += 1
+		if hit_targets >= 2 and burned_targets >= 2 and untouched_far_target:
+			affected = true
+			break
+	session.queue_free()
+	return affected
 
 func _wait_for_projectiles_to_clear(session: Node2D, collisions: int) -> bool:
 	var deadline := Time.get_ticks_msec() + 2000
