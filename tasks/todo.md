@@ -1,69 +1,170 @@
-# Suivi du goal
+# Suivi du goal — roadmap Dopamine Survivor
 
-## Phase 0 — Fondations Linux
+Roadmap détaillée et audit GDD/code : [`docs/planning/ROADMAP.md`](../docs/planning/ROADMAP.md). Chaque ligne parente reste un jalon ; les sous-tâches sont des tranches courtes à fermer séparément avec leur vérification. Garder les propositions et questions ouvertes au statut indiqué dans le GDD.
 
-- [x] Projet Godot 4.7.2 + GDExtension C++23 créé.
-- [x] `godot-cpp` verrouillé au commit `b8530af7546a3fcae80cef2477526569fd42ffc2`.
-- [x] CMake compile et Godot charge l’extension via import headless puis lancement headless.
+## Terminé (QA historique)
 
-## Phase 1 — Cœur partagé
+- [x] **P0** Linux/Godot 4.7.2/C++23/GDExtension : build et import headless documentés.
+- [x] **P1** Cœur natif, worker, snapshots et Sandbox développeur MVP ; isolation de sauvegarde couverte historiquement.
+- [x] **P2 fondation** ECS, spatial hash, steering, projectiles balayés, dégâts, événements et DoT.
+- [x] **P3 prototype** Trois armes/reliques/évolutions et compteur DPS Sandbox prototypés.
+- [x] **P4 prototype** Parcours Survival 24 vagues, XP, chests, HUD, résultats et boss placeholders.
+- [x] Audit statique GDD/code et roadmap détaillée P0–P9 mis à jour.
 
-- [x] Modèle ECS minimal (Transform2D, Velocity2D, Health, EnemyType) et test ciblé.
-- [x] Worker, file de commandes, pause/reprise/step et snapshots immuables.
-- [x] Contrat natif documenté et pont GDExtension smoke-testé.
+> Les coches précédentes résument l’implémentation et QA historique, pas une réexécution des tests dans la session courante. Voir `docs/qa/TESTS.md`.
 
-## Phase 2 — Sandbox développeur MVP
+## P5 — Contenu v1.6 (jalon actif)
 
-- [x] Contrôles de simulation et spawn/despawn.
-- [x] Inspecteur, métriques et logs.
-- [x] Runner headless, export JSON des métriques et absence d’accès aux saves normales.
+- [ ] **P5.1 — Compléter les armes, reliques et évolutions**
+  - Pour chaque nouvelle paire, faire les petites tranches suivantes dans l’ordre :
+    - [ ] Ajouter les définitions stables arme/relique/évolution et valider les références.
+    - [ ] Ajouter uniquement l’attaque de base de l’arme et vérifier son ciblage Sandbox.
+    - [ ] Ajouter l’effet de relique et vérifier chacun de ses niveaux.
+    - [ ] Ajouter l’évolution et tester avant/après acquisition de la relique.
+    - [ ] Ajouter le feedback visuel des niveaux et de l’évolution.
+    - [ ] Faire le smoke de cette paire avant de commencer la suivante.
+  - [ ] Ajouter une définition de données Void Orb/Singularity/Event Horizon.
+  - [ ] Ajouter Frost Nova/Frozen Crown/Absolute Zero.
+  - [ ] Ajouter Minigun/Overdrive Engine/Redline.
+  - [ ] Ajouter Meteor Staff/Celestial Eye/Starfall.
+  - [ ] Ajouter Sawblades/Magnetic Coil/Razorstorm.
+  - [ ] Ajouter Toxic Cloud/Plague Mask/Pandemic.
+  - [ ] Ajouter Prism Laser/Prism Crystal/Spectrum Collapse.
+  - [ ] Ajouter Magnet Heart comme relique sans évolution.
+  - [ ] Vérifier les niveaux 1–5, feedback visuel et règles d’évolution sur une paire à la fois.
+  - [ ] Corriger Bloodstorm : dagues orbitantes, puis smoke collisions/saignement/lifesteal.
+  - [ ] Vérifier les cinq slots normaux et les exceptions de capacité par effet unique actif.
+  - **Vérifier :** smoke Sandbox pour chaque paire, niveaux max, évolution avant/après acquisition de relique.
 
-## Phase 3 — Combat core
+- [ ] **P5.2 — Statuts et synergies**
+  - [ ] Définir durée, cumul/remplacement et expiration des statuts utilisés par le catalogue.
+  - [ ] Vérifier dégâts directs, DoT, lifesteal et événements de mort sans double attribution.
+  - [ ] Garder les réactions nommées désactivées jusqu’à validation ; Overcharge reste **[OUVERT]**.
+  - **Vérifier :** scénarios Sandbox d’application, expiration et effets en chaîne bornés.
 
-- [ ] Mouvement joueur et profils d’ennemis, avant la liaison au mode Survival.
-- [x] Spatial hash uniforme minimal avec requête de rayon native ; paramètres de cellule à profiler.
-- [x] Steering de poursuite et séparation locale avec cible fournie par le mode ; paramètres initiaux provisoires.
-- [x] Projectiles ECS, collisions balayées, dégâts centraux, mort et file d’événements non perdus tant que l’acquittement est différé.
-- [x] Fonction pure de HP decay, paramètres par défaut encore proposés, exemples GDD validés par test.
-- [x] Menace portée par les ennemis et événements de mort ; formule de soin proposée calculée comme preview, sans changer le HP joueur.
-- [x] Profils d’ennemis proposés disponibles dans le cœur et dans les scénarios Sandbox.
-- [x] Scène de déplacement joueur configurable sous Godot, avec actions clavier et manette.
-- [x] Scène Survival minimale : position monde du joueur transmise au steering ECS ; vitesses des profils conservées.
-- [x] Relier HP decay à l’horloge active Survival et appliquer les soins des événements de mort au HP Godot.
-- [x] Prototype de tir automatique Lightning Conductor ; chaînes distinctes ciblées et valeurs de combat configurables, toutes proposées.
-- [x] Contrôles Sandbox pour les statuts, lifesteal Blood Chalice sur dégâts directs et ticks DoT à 25 % du taux théorique; le taux de base indépendant de la relique reste **[OUVERT]**.
-- [x] Dégâts de contact joueur-ennemi et invulnérabilité provisoires en Survival; contrôles suspendus pendant les pauses et fins de run.
+- [ ] **P5.3 — Chests et règles de run**
+  - [ ] Vérifier trois options uniques, objets max, slots pleins et armes niveau 5 non évoluées.
+  - [ ] Vérifier pause/reprise et évolution après chaque acquisition/amélioration.
+  - [ ] Garder probabilités/poids/rerolls proposés configurables tant qu’ils ne sont pas arbitrés.
+  - [ ] Ajouter la régression `pickup_radius` élevé : XP collectée à distance, chest inchangé.
+  - **Vérifier :** smoke chest ciblé puis test de run.
 
-## Phase 4 — Premier playable Survival
+- [ ] **P5.4 — Ennemis et boss**
+  - [ ] Ajouter une famille mêlée distincte et smoke spawn/déplacement/mort.
+  - [ ] Ajouter une famille rapide et smoke son contre-jeu.
+  - [ ] Ajouter une famille distance et projectile télégraphié esquivable.
+  - [ ] Ajouter soutien puis explosif comme deux comportements séparés.
+  - [ ] Compléter jusqu’à 8–12 familles et couvrir les compositions de vagues.
+  - [ ] Ajouter un affixe d’élite avec budget et récompense, puis étendre le catalogue.
+  - [ ] Implémenter une phase de mid-boss à la fois, puis boss final à phases.
+  - [ ] Ajouter sélection/déblocage séquentiel des difficultés ; conserver multiplicateurs proposés.
+  - **Vérifier :** scénario par famille/affixe, esquive des projectiles et transitions de boss.
 
-- [x] HUD HP/temps actif/arme/XP/niveau/état de run dans la scène Survival.
-- [x] Prototype XP : une orbe partagée apparaît à la mort d’un ennemi, se collecte une fois et fait progresser le niveau.
-- [x] Prototype vagues : 24 vagues, horloge arrêtée pendant les placeholders boss, spawns selon courbes proposées et HUD vague.
-- [x] HUD boss : barre HP courants/max et état de victoire distinct de la défaite.
-- [x] Chests Survival : mort→drop→pickup→modal à trois choix→mise à jour du loadout et reprise; sélection du catalogue **[PROPOSÉE]**.
-- [x] Projectiles prototypes Inferno/Crimson, brûlure, saignement Bloodstorm, Infinite Circuit ramifié, explosion Wildfire et modificateurs de reliques testés. Blood Chalice accorde un lifesteal direct de 5 %/niveau **[PROPOSÉ]** avec soft cap.
-- [x] Écran de choix d’arme initiale parmi deux prototypes **[PROPOSÉS]**, entrée Survival depuis le Sandbox, victoire/défaite avec résumé et redémarrage.
-- [x] Déclencheur Bloodstorm au niveau 5 avec Blood Chalice; saignement et lifesteal sur ticks testés, réglages encore **[PROPOSÉS]**.
-- [ ] Effets d’évolution restants; confirmer le pool de départ du vertical slice. Les réglages d’explosion Wildfire et de branchement Infinite Circuit restent **[PROPOSÉS]**.
-- [ ] Vagues, chests, 3 armes/reliques, mid-boss et boss final.
-- [ ] HUD, fin de run, sauvegarde minimale et vérification QA complète.
+- [ ] **P5.5 — Validation de sortie**
+  - [ ] Parcourir tout le catalogue dans Sandbox sans harness qui choisit les résultats.
+  - [ ] Jouer une run Survival complète avec HP normaux et boss pilotés par le joueur.
+  - [ ] Exécuter la batterie QA P5 et profilage représentatif.
+  - [ ] Mettre à jour GDD/interfaces/ADR selon les seules décisions confirmées.
+  - [ ] Committer le jalon puis s’arrêter avant P6.
 
-## Jalons v1.6 — P5 à P9 (état actualisé)
+## P6 — Progression permanente (prototype anticipé, non terminée)
 
-Les prototypes de progression des anciennes tâches P5 correspondent maintenant à du travail anticipé pour P6. Le prochain jalon attendu est le contenu P5 du GDD v1.6.
+- [ ] **P6.1 — Équipement**
+  - [ ] Vérifier chacun des six slots, remplacement et lignes sans doublon.
+  - [ ] Vérifier une pièce garantie après victoire et défaite classique.
+  - [ ] Ajouter rolls selon difficulté/vague/mort précoce après décision des valeurs.
+- [ ] **P6.2 — Statistiques et effets uniques**
+  - [ ] Vérifier HP, vitesse, dégâts, cadence, critique, soin, aire, cooldown, XP et vitesse projectile.
+  - [ ] Vérifier bonus de pickup sur XP, jamais sur chest.
+  - [ ] Relier chaque effet unique à un déclencheur ou le retirer des choix actifs.
+- [ ] **P6.3 — Powder/enhancement**
+  - [ ] Vérifier chaque tier, conversion 10:1 et niveaux +0 à +10.
+  - [ ] Couvrir échec critique et garantie à la dixième tentative.
+  - [ ] Arbitrer vente/démantèlement, reroll et anti-exploit avant verrouillage.
+- [ ] **P6.4 — Skill tree**
+  - [ ] Valider schéma d’un node et ses prérequis/coût/effet.
+  - [ ] Étendre par petites branches vers 100–150 nodes.
+  - [ ] Vérifier bonus, achats et respec gratuit.
+- [ ] **P6.5 — Achievements**
+  - [ ] Valider schéma d’une famille et quatre paliers.
+  - [ ] Étendre par catégories vers 100–150 familles.
+  - [ ] Vérifier attribution idempotente et budget de bonus.
+- [ ] **P6.6 — Saves et calibration**
+  - [ ] Tester fixtures de migration, backup et restauration après corruption.
+  - [ ] Vérifier absence de double récompense après redémarrage.
+  - [ ] Mesurer plusieurs builds/difficultés et retoucher uniquement les valeurs arbitrées.
 
-- [ ] **P5 contenu** Dix armes, onze reliques incluant Magnet Heart, évolutions automatiques, règles de coffre, 8–12 familles d'ennemis et boss à phases.
-- [ ] Invariant P5 : aucun bonus de pickup n'attire un coffre ; tests d'armes/statuts/synergies dans le Sandbox.
-- [~] **P6 progression (prototype anticipé, non terminé)** Profil v5, Powder/enhancement, deux nodes et Exterminator, équipement/effets prototypes existent. Valeurs encore proposées ; catalogue et migrations/calibrations incomplets ; certains effets ne font rien.
-- [ ] **P7** Armorless selon décisions validées ; arbitrer Endless standard avant développement.
-- [ ] **P8** Sandbox Lab joueur : presets/codes, import isolé, snapshot/reprise complets.
-- [ ] **P9** Équilibrage, accessibilité, performance mesurée sur GPU intégré, Windows et préparation de livraison.
+## P7 — Endless / Armorless
 
-Les critères de sortie détaillés figurent dans [`docs/planning/ROADMAP.md`](../docs/planning/ROADMAP.md). Les tests historiques cochés plus haut restent les résultats documentés au moment de leur exécution ; ils ne signifient pas qu'ils ont été relancés pendant le présent audit.
+- [ ] **Armorless — règles et contexte**
+  - [ ] Ajouter le contexte de mode sans équipement permanent.
+  - [ ] Vérifier skill tree et achievements actifs.
+  - [ ] Ajouter une transition après une vague vers l’écran de draft.
+- [ ] **Armorless — draft temporaire**
+  - [ ] Générer trois équipements temporaires.
+  - [ ] Appliquer un choix et reprendre la simulation.
+  - [ ] Vérifier que l’équipement temporaire est supprimé en fin de run.
+- [ ] **Armorless — Flux et vague**
+  - [ ] Ajouter solde Flux temporaire.
+  - [ ] Améliorer une ligne puis vérifier coûts/plafond +10.
+  - [ ] Ajouter boss toutes les 12 vagues et pause de timer.
+  - [ ] Vérifier HP decay et budget de densité sur une session longue.
+- [ ] **Armorless — récompenses**
+  - [ ] Faire arbitrer les récompenses persistantes avant de les créditer.
+  - [ ] Tester absence d’équipement permanent garanti tant que la règle reste ouverte.
+- [ ] **Endless standard — décision avant code**
+  - [ ] Décider déblocage et entrée depuis le menu.
+  - [ ] Décider continuation après Survival et conservation du build/HP.
+  - [ ] Décider difficulté, sortie, records, boss et récompenses.
+- **Vérifier :** une vague, un boss, un draft, une amélioration et un test de longue durée.
 
-## Audit code/GDD du 2026-10-15
+## P8 — Sandbox Lab joueur
 
-- [x] Revue statique des scripts/catalogues Survival, progression, sauvegarde, scènes, QA et contrats GDD v1.6.
-- [x] Statuts distingués entre code présent, prototype, absence de fonctionnalité et QA historique.
-- [x] Godot n'est pas détecté dans cet environnement ; aucune suite GDScript n'a été relancée pour cet audit documentaire.
-- [x] Roadmap détaillée P0–P9 mise à jour dans `docs/planning/ROADMAP.md`.
+- [ ] **P8.1 — Entrée isolée**
+  - [ ] Ajouter l’entrée Sandbox au menu principal.
+  - [ ] Vérifier qu’elle démarre sans créer/lire le profil normal.
+- [ ] **P8.2 — Build et overrides**
+  - [ ] Ajouter la sélection d’une arme/relique/niveau au build initial.
+  - [ ] Implémenter une commande LIVE et vérifier son application.
+  - [ ] Implémenter une commande REBUILD puis une RESTART, chacune testée séparément.
+- [ ] **P8.3 — Presets et partage**
+  - [ ] Ajouter export/import JSON versionné.
+  - [ ] Rejeter les JSON trop grands et champs inconnus.
+  - [ ] Ajouter code de partage avec checksum et tester un code altéré.
+- [ ] **P8.4 — Import de save en copie**
+  - [ ] Charger un profil en lecture seule.
+  - [ ] Construire sa copie modifiable dans Sandbox.
+  - [ ] Comparer le profil source avant/après import.
+- [ ] **P8.5 — Outils et snapshots**
+  - [ ] Ajouter god mode, spawn, kill all et commandes de vague séparément.
+  - [ ] Ajouter logs et DPS par source.
+  - [ ] Capturer puis restaurer horloges, RNG, queues, config et build.
+- [ ] **P8.6 — Caps et séparation**
+  - [ ] Mesurer une commande extrême et fixer une limite.
+  - [ ] Tester preset invalide sans effet secondaire.
+  - [ ] Vérifier absence de récompense, succès officiel, classement et écriture de save.
+- **Vérifier :** tests sentinelles prouvent absence de récompense, succès, classement et écriture de save.
+
+## P9 — Équilibrage et livraison
+
+- [ ] **P9.1 — Équilibrage**
+  - [ ] Mesurer une arme à la fois avec la même scène et le même build.
+  - [ ] Comparer armes de base puis évolutions.
+  - [ ] Mesurer durée et fréquence des chests sur un build courant.
+  - [ ] Calibrer soin/decay/lifesteal/XP/économie par difficulté.
+- [ ] **P9.2 — Présentation/commandes**
+  - [ ] Vérifier feedback d’un dégât direct et d’un critique.
+  - [ ] Vérifier lisibilité d’un télégraphe lorsque l’écran est chargé.
+  - [ ] Vérifier options audio/VFX et réduction d’effets.
+  - [ ] Parcourir les menus clavier/flèches puis manette avec focus visible.
+- [ ] **P9.3 — Performance/stabilité**
+  - [ ] Choisir iGPU et scène de charge de référence.
+  - [ ] Mesurer CPU/GPU/mémoire et P50/P95/P99.
+  - [ ] Faire un soak test Sandbox puis un soak test Survival.
+  - [ ] Tester fermeture worker et reprise après interruption de save.
+- [ ] **P9.4 — Livraison**
+  - [ ] Refaire build/import/lancement Linux sur checkout propre.
+  - [ ] Refaire build/import/lancement Windows sur checkout propre.
+  - [ ] Vérifier licences/dépendances puis rédiger notes de version.
+  - [ ] Compléter la checklist release avant toute publication.
+- **Vérifier :** joindre configuration, résultats et dates aux rapports QA de release.

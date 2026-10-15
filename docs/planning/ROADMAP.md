@@ -67,11 +67,23 @@ P6 a déjà du code anticipé, mais le chemin nominal reste P5 puis P6. P7 stand
 
 ### Travaux restants
 
-- [ ] Documenter les versions réellement détectées et une procédure de machine Linux propre, incluant import, build, lancement et répertoire de données.
-- [ ] Distinguer les dépendances récupérées par CMake des dépendances préinstallées ; rendre leur résolution et leurs erreurs lisibles.
-- [ ] Construire le projet et charger l’extension sous Windows selon ADR-013 avant de revendiquer la plateforme.
-- [ ] Ajouter une vérification automatisée Linux/Windows si la stratégie de livraison le demande ; ne pas introduire CI comme décision produit implicite.
-- [ ] Vérifier les artefacts générés et les chemins utilisateur pour qu’aucun build local ou save ne pollue le dépôt.
+- [ ] **P0.1 — Inventaire Linux**
+  - [ ] Noter les versions de Godot, CMake, compilateur et dépendance native réellement utilisées.
+  - [ ] Vérifier les commandes de clone, configure, build, import et lancement sur un clone propre.
+  - [ ] Documenter où vont les binaires locaux et les données `user://`.
+- [ ] **P0.2 — Dépendances**
+  - [ ] Lister les paquets système requis et les dépendances récupérées par CMake.
+  - [ ] Vérifier que le commit de `godot-cpp` reste verrouillé et que la config explique les erreurs de téléchargement.
+- [ ] **P0.3 — Artefacts locaux**
+  - [ ] Vérifier `.gitignore` pour les builds CMake, imports Godot et binaires de runtime.
+  - [ ] Vérifier qu’un import/build ne laisse aucun fichier généré suivi par Git.
+- [ ] **P0.4 — Compatibilité Windows**
+  - [ ] Configurer puis compiler avec la chaîne Windows convenue.
+  - [ ] Lancer l’éditeur et confirmer le chargement de la GDExtension sous Windows.
+  - [ ] Consigner les écarts au build Linux sans changer la cible plateforme implicitement.
+- [ ] **P0.5 — Automatisation éventuelle**
+  - [ ] Décider si les builds Linux/Windows doivent être automatisés.
+  - [ ] Si oui, créer un job minimal par plateforme qui configure, compile et charge le projet.
 
 **Critère de sortie :** un clone propre s’importe, se compile et démarre sous Linux ; compatibilité Windows séparément vérifiée avant livraison Windows.
 
@@ -88,10 +100,22 @@ P6 a déjà du code anticipé, mais le chemin nominal reste P5 puis P6. P7 stand
 
 ### Travaux/critères de maintien
 
-- [ ] Garder chaque nouvelle commande contrôlée, bornée, observable et rejetée sans mutation partielle en cas de configuration invalide.
-- [ ] Pour chaque nouveau comportement de combat, proposer un scénario Sandbox reproductible ou expliquer pourquoi il ne relève pas de la simulation partagée.
-- [ ] Vérifier à toute intégration de progression qu’aucun chemin Sandbox ne charge `SaveService`, n’émet une récompense officielle ou ne modifie un profil.
-- [ ] Conserver l’inspection et les logs utiles aux événements de dégâts, statuts, morts, pickups et boss.
+- [ ] **P1.1 — Contrat des commandes**
+  - [ ] Répertorier les commandes Sandbox exposées et leurs paramètres.
+  - [ ] Pour chaque commande, vérifier une entrée valide et une entrée invalide.
+  - [ ] Vérifier qu’un rejet ne modifie pas partiellement l’état.
+- [ ] **P1.2 — Observable par défaut**
+  - [ ] Vérifier que spawn, dégât, mort, pause, step, vitesse et reset apparaissent dans les métriques/logs utiles.
+  - [ ] Vérifier l’inspecteur après sélection, despawn et réutilisation d’un handle.
+- [ ] **P1.3 — Scénarios de simulation**
+  - [ ] Ajouter un scénario JSON reproductible pour chaque nouvelle règle de combat partagée.
+  - [ ] Exporter les événements et métriques attendus, sans dépendance au profil utilisateur.
+- [ ] **P1.4 — Barrière de sauvegarde**
+  - [ ] Vérifier statiquement qu’aucun service de save n’est injecté dans l’entrée Sandbox.
+  - [ ] Lancer le smoke d’isolation avec un profil Survival sentinelle et comparer les octets avant/après.
+- [ ] **P1.5 — Checkpoint Sandbox**
+  - [ ] Lancer les smokes natifs et GDScript pertinents.
+  - [ ] Ouvrir la scène sous résolution documentée et vérifier les contrôles essentiels.
 
 **Critère de sortie :** les critères MVP listés dans `docs/qa/TESTS.md` restent verts à l’exécution ; aucun accès save requis.
 
@@ -109,14 +133,34 @@ P6 a déjà du code anticipé, mais le chemin nominal reste P5 puis P6. P7 stand
 
 ### Travaux
 
-- [ ] Définir séparément états/effets : dégâts directs, DoT, Shock, Burn, Bleed, Poison, Freeze, knockback et résistances nécessaires aux armes réellement retenues.
-- [ ] Décider/consigner si un statut remplace, cumule, rafraîchit ou empile ses instances ; garder les réactions nommées non implémentées tant qu’elles ne sont pas validées.
-- [ ] Définir les enveloppes d’événements, IDs/idempotence, ordre des modificateurs et budgets des effets en chaîne selon ADR-007 et les ADR proposés.
-- [ ] Ajouter des politiques d’IA d’ennemi distinctes (distance, soutien, explosif, etc.) sans confondre leur identité de données avec un type de mouvement générique.
-- [ ] Maintenir les frontières d’autorité joueur/boss/simulation explicites, sans deux propriétaires d’un même état mutable.
-- [ ] Tester scénarios de grandes avances, expirations, statuts concurrents, ennemis morts/handles périmés et budgets d’événements.
-- [ ] Exposer les comportements testables dans Sandbox et ses métriques.
-- [ ] Profiler les charges représentatives et relever P50/P95/P99 ; les benchmarks natifs existants ne prouvent pas le budget de frame GPU/CPU d’un iGPU.
+- [ ] **P2.1 — Contrat des états de combat**
+  - [ ] Lister les statuts nécessaires aux armes planifiées, en commençant par Burn et Bleed déjà utilisés.
+  - [ ] Pour chaque statut, fixer les champs minimaux : durée, intervalle, puissance, cible admissible.
+  - [ ] Écrire un test court pour application, expiration et remplacement/rafraîchissement.
+- [ ] **P2.2 — Événements et dégâts**
+  - [ ] Documenter les champs obligatoires d’un événement damage/death/status.
+  - [ ] Vérifier l’identifiant stable et l’acquittement sans double consommation.
+  - [ ] Couvrir une cible morte/handle obsolète et une source DoT.
+- [ ] **P2.3 — Effets en chaîne**
+  - [ ] Cartographier les chemins qui peuvent engendrer de nouveaux dégâts/événements.
+  - [ ] Définir les budgets et le comportement de refus avant d’ajouter des réactions nouvelles.
+  - [ ] Garder les réactions nommées du GDD hors du code tant que leur statut reste **[PROPOSÉ]**.
+- [ ] **P2.4 — IA typées**
+  - [ ] Décrire le comportement observable des ennemis distance, soutien et explosif.
+  - [ ] Implémenter une politique à la fois et l’exposer via un scénario Sandbox.
+  - [ ] Vérifier qu’une identité d’ennemi ne dépend pas seulement d’une vitesse/HP distincte.
+- [ ] **P2.5 — Autorité d’état**
+  - [ ] Établir une source d’autorité par état joueur/boss/simulation.
+  - [ ] Documenter les commandes et snapshots à la frontière Godot/C++.
+  - [ ] Tester pause, reprise et destruction pendant une commande en attente.
+- [ ] **P2.6 — Robustesse temporelle**
+  - [ ] Vérifier les pas 1/120, 1/60, 1/30 et un grand delta pour une attaque/status représentatif.
+  - [ ] Couvrir expiration et plusieurs ticks dus dans un même pas.
+  - [ ] Vérifier refus atomique quand le budget d’événements est dépassé.
+- [ ] **P2.7 — Profilage**
+  - [ ] Relancer le benchmark natif sur une configuration enregistrée.
+  - [ ] Mesurer CPU, GPU et frame-time dans Godot sur la machine iGPU de référence.
+  - [ ] Consigner P50/P95/P99, charge et limites matérielles.
 
 **Critère de sortie :** les comportements réellement retenus sont inspectables, bornés, cohérents avec leur horloge et testés sous différents pas de simulation.
 
@@ -134,15 +178,35 @@ P6 a déjà du code anticipé, mais le chemin nominal reste P5 puis P6. P7 stand
 
 ### Travaux
 
-- [ ] Créer les contrats de données d’arme/relique/évolution : ID stable, cible, effets par niveau, conditions, source, icônes et statut de validation.
-- [ ] Garder les comportements distincts et fortement influencés par le placement, comme demandé par le GDD.
-- [ ] Vérifier chaque niveau 1–5 et rendre visible l’augmentation, même lorsque celle-ci est principalement statistique.
-- [ ] Remplacer le tir en éventail des Crimson Daggers par le comportement orbitant requis pour Bloodstorm avant de déclarer cette paire conforme.
-- [ ] Implémenter une seule évolution automatique à niveau 5 si la relique associée est possédée à n’importe quel niveau ; ne pas consommer la relique et conserver le niveau 5.
-- [ ] Exclure les armes niveau 5 déjà évoluées ou en attente d’évolution des choix ordinaires, sans doublons normaux ; permettre les doublons uniquement dans Sandbox.
-- [ ] Étendre les métriques DPS pour pouvoir isoler source, arme/évolution, cible, critique et statut si cela aide au balancing.
-- [ ] Ajouter une couverture Sandbox aux niveaux, évolutions, synergies émergentes et effets secondaires bornés.
-- [ ] Mettre à jour ADR-014 et proposer les ADR-015/016 seulement lorsque les contrats sont mûrs ; préserver leur statut documentaire.
+- [ ] **P3.1 — Schéma de contenu**
+  - [ ] Définir les champs d’une arme, relique et évolution avec exemples des trois paires actuelles.
+  - [ ] Valider les IDs, valeurs manquantes et références invalides au chargement.
+  - [ ] Déplacer une seule paire vers les données pour éprouver le schéma avant conversion générale.
+- [ ] **P3.2 — Niveaux et feedback**
+  - [ ] Vérifier les choix d’amélioration de niveau 1 à 5 sur une arme prototype.
+  - [ ] Ajouter un retour visuel/UI distinct à chaque augmentation.
+  - [ ] Vérifier niveaux max et absence d’offre d’amélioration impossible.
+- [ ] **P3.3 — Évolution**
+  - [ ] Vérifier le passage au niveau 5 sans relique : pas d’évolution.
+  - [ ] Vérifier le passage au niveau 5 avec relique déjà possédée : évolution immédiate.
+  - [ ] Vérifier l’acquisition de la relique après niveau 5 : évolution immédiate, niveau conservé.
+  - [ ] Vérifier qu’une évolution ne se déclenche qu’une fois et ne consomme pas la relique.
+- [ ] **P3.4 — Bloodstorm conforme**
+  - [ ] Remplacer les projectiles en éventail par une attaque orbitante contrôlable.
+  - [ ] Vérifier les collisions, saignements et lifesteal sur cibles proches et multiples.
+  - [ ] Conserver les nombres de dégâts au statut **[PROPOSÉ]**.
+- [ ] **P3.5 — Règles du draft normal/Sandbox**
+  - [ ] Refuser le doublon en Survival normal.
+  - [ ] Autoriser le doublon dans le contexte Sandbox seulement.
+  - [ ] Exclure les choix niveau max et appliquer la règle des armes niveau 5.
+- [ ] **P3.6 — DPS et instrumentation**
+  - [ ] Attribuer un identifiant source aux dégâts d’une arme prototype.
+  - [ ] Afficher le total et le DPS sur une fenêtre explicitement nommée.
+  - [ ] Vérifier séparément critique, DoT et dégâts d’évolution.
+- [ ] **P3.7 — Décisions et checkpoint**
+  - [ ] Comparer le contrat aux ADR acceptés et proposer une mise à jour ADR-014 si nécessaire.
+  - [ ] Garder ADR-015/016 au statut proposé tant que leur contenu n’est pas décidé.
+  - [ ] Exécuter les scénarios Sandbox des trois paires avant de clore le prototype.
 
 **Critère de sortie :** les trois paires prototypes respectent les comportements validés et passent par les mêmes règles partagées Sandbox/Survival.
 
@@ -160,13 +224,34 @@ P6 a déjà du code anticipé, mais le chemin nominal reste P5 puis P6. P7 stand
 
 ### Travaux
 
-- [ ] Vérifier le parcours normal au clavier/manette depuis l’entrée jusqu’à mort/victoire, sans injection de dégâts ni choix automatique du harness.
-- [ ] Compléter les cas d’offre de chest vide, slots pleins, objets niveau 5, choix successifs, pause/reprise, rerolls et déclenchement immédiat de l’évolution.
-- [ ] Implémenter les comportements de boss lisibles 2–3 phases et changements de patterns ; les patterns et noms doivent rester **[PROPOSÉS]** tant qu’ils ne sont pas décidés.
-- [ ] Confirmer les horloges : timer de vague arrêté pendant boss ; HP decay actif pendant tout gameplay, suspendu sur vraie pause/choix/modal.
-- [ ] Distinguer clairement victoire, défaite, reprise locale et crédit de récompense persistante idempotent.
-- [ ] Remplacer le prototype d’XP auto-bonus par la règle retenue quand sa courbe et ses bonus auront été définis ; les valeurs restent proposées.
-- [ ] Garder le contrat de sauvegarde hors du Sandbox et prévoir des essais de migration/reprise avant d’étendre les profils.
+- [ ] **P4.1 — Démarrage de run**
+  - [ ] Vérifier l’entrée Survival et le choix entre les deux armes affichées.
+  - [ ] Parcourir choix et validation au clavier, flèches et manette.
+  - [ ] Confirmer le loadout et le HUD au début de run.
+- [ ] **P4.2 — Boucle d’une vague**
+  - [ ] Jouer une vague sans harness et vérifier le timer de 30 secondes simulées.
+  - [ ] Vérifier spawn, déplacement ennemi, dégâts, XP, soins et mort du joueur.
+  - [ ] Vérifier les pauses de menu/chest et la reprise de l’horloge attendue.
+- [ ] **P4.3 — Coffres**
+  - [ ] Vérifier drop, rayon de collecte, modal à trois choix et reprise.
+  - [ ] Vérifier inventaire plein et aucune option éligible.
+  - [ ] Vérifier qu’un choix de niveau 5/relique déclenche l’évolution requise.
+- [ ] **P4.4 — Mid-boss**
+  - [ ] Faire apparaître le mid-boss à la vague 12.
+  - [ ] Vérifier pause du timer, HP affichés et reprise après sa mort.
+  - [ ] Implémenter et vérifier des phases lisibles sans figer les patterns proposés.
+- [ ] **P4.5 — Boss final et résultats**
+  - [ ] Faire apparaître le boss final à la vague 24.
+  - [ ] Vérifier la victoire après défaite du boss et traitement des coffres garantis.
+  - [ ] Vérifier RUN OVER par mort, écran de résultat et redémarrage local.
+- [ ] **P4.6 — Horloges/XP/récompenses**
+  - [ ] Vérifier HP decay actif en gameplay et suspendu pendant vraies pauses.
+  - [ ] Isoler la règle de gain d’XP et garder sa courbe au statut proposé jusqu’à décision.
+  - [ ] Vérifier qu’un `run_id` ne crédite pas deux fois les gains persistants.
+- [ ] **P4.7 — Checkpoint vertical slice**
+  - [ ] Jouer une run complète sans hausse forcée de HP ni actions automatiques de harness.
+  - [ ] Relancer les smokes ciblés Survival, chests, résultat et contrôles.
+  - [ ] Consigner les limites d’équilibrage et les bugs restant ouverts.
 
 **Critère de sortie :** Survival se joue bout en bout avec règles lisibles et transitions cohérentes. Une run harness ne ferme pas les critères de balancing.
 
@@ -194,46 +279,124 @@ Catalogue d’évolution défini dans le GDD :
 
 Travail requis :
 
-- [ ] Porter le catalogue à 10 armes et 11 reliques sans remplir artificiellement les cases par des variantes de dégâts.
-- [ ] Créer les politiques de ciblage et de déplacement propres aux armes ; l’efficacité doit dépendre notablement du positionnement.
-- [ ] Définir/charger les niveaux 1–5, progressions visuelles, cinq niveaux de relique et évolution visuellement majeure.
-- [ ] Implémenter la règle d’évolution automatique unique et le comportement du pool de chest indiqué en P3.
-- [ ] Intégrer Magnet Heart aux offres sans paire d’évolution. Bonus de collecte limité aux collectibles autorisés par le GDD ; ne jamais attirer ni collecter un chest via `pickup_radius`.
-- [ ] Conserver cinq slots de reliques normaux ; appliquer les extensions Legendary/Mythic uniquement si l’effet unique correspondant est réellement actif et conforme.
-- [ ] Garder les chiffres des tables de progression comme **[PROPOSÉS]**, configurables, tant qu’ils ne sont pas arbitrés.
+- [ ] **P5.1.1 — Catalogue**
+  - [ ] Ajouter une définition de données pour Void Orb/Singularity.
+  - [ ] Ajouter Frost Nova/Frozen Crown, puis Minigun/Overdrive Engine.
+  - [ ] Ajouter Meteor Staff/Celestial Eye, puis Sawblades/Magnetic Coil.
+  - [ ] Ajouter Toxic Cloud/Plague Mask, puis Prism Laser/Prism Crystal.
+  - [ ] Vérifier que le catalogue de run contient exactement les dix armes et dix reliques associées.
+- [ ] **P5.1.2 — Ciblage des armes**
+  - [ ] Décrire la règle de ciblage de chaque arme avant son comportement visuel.
+  - [ ] Implémenter un prototype par politique réutilisable et exposer ses cibles dans Sandbox.
+  - [ ] Vérifier les armes de contact/orbitantes et longue portée avec placements différents.
+- [ ] **P5.1.3 — Niveaux et feedback**
+  - [ ] Compléter les niveaux 1–5 d’une arme à la fois à partir des valeurs proposées.
+  - [ ] Ajouter feedback visuel/UI pour les cinq niveaux.
+  - [ ] Compléter niveaux 1–5 des reliques et valider leurs bonus linéaires proposés.
+  - [ ] Ajouter le changement visuel majeur à l’évolution.
+- [ ] **P5.1.4 — Règle d’évolution/catalogue**
+  - [ ] Brancher une évolution de données sur l’armement existant.
+  - [ ] Couvrir relique avant niveau 5 et relique après niveau 5.
+  - [ ] Vérifier conservation du niveau 5, non-consommation de relique et unicité.
+  - [ ] Couvrir les choix chest impossibles après niveau max.
+- [ ] **P5.1.5 — Magnet Heart et pickups**
+  - [ ] Ajouter Magnet Heart comme relique utilitaire sans évolution.
+  - [ ] Définir les collectibles éligibles à l’attraction selon le GDD.
+  - [ ] Vérifier séparément orbe XP et chest : le rayon augmenté ne modifie jamais le chest.
+- [ ] **P5.1.6 — Slots et effets de capacité**
+  - [ ] Vérifier cinq slots de reliques en run normale.
+  - [ ] Tester une extension Legendary/Mythic seulement avec effet unique actif.
+  - [ ] Vérifier absence de cumul automatique d’un même effet unique.
+- [ ] **P5.1.7 — Statut du balancing**
+  - [ ] Charger les valeurs chiffrées proposées depuis une configuration modifiable.
+  - [ ] Garder les valeurs marquées **[PROPOSÉES]** jusqu’à leur décision formelle.
 
 ### P5.2 — Statuts et synergies
 
-- [ ] Établir le besoin gameplay de chaque statut et les règles de cumul/rafraîchissement/durée avant de relier tout le catalogue.
-- [ ] Distinguer les synergies émergentes de réactions élémentaires explicitement codées. Les réactions nommées en annexe restent **[PROPOSÉES]** ; Overcharge est **[OUVERT]**.
-- [ ] Si les réactions sont validées plus tard, implémenter les limites de causalité, les budgets de chaîne et l’instrumentation avant de multiplier les sources de déclenchement.
-- [ ] Couvrir dégâts directs, DoT, lifesteal et interactions avec les événements de mort sans double attribution.
+- [ ] **P5.2.1 — Contrats de statut**
+  - [ ] Lister les statuts utilisés par les dix paires.
+  - [ ] Fixer durée, tick, remplacement/empilement et affichage pour un statut à la fois.
+  - [ ] Vérifier application, expiration et cible morte avant connexion aux armes.
+- [ ] **P5.2.2 — Synergies émergentes**
+  - [ ] Relier les effets par les événements standards de dégâts/statut.
+  - [ ] Vérifier qu’une synergie ne requiert pas une réaction élémentaire non validée.
+- [ ] **P5.2.3 — Réactions proposées**
+  - [ ] Garder Thermal Shock, Toxic Ignition, Shatter, Electroplague, Gravity Collapse et Hemorrhage désactivées tant que non validées.
+  - [ ] Faire arbitrer chaque réaction avant son implémentation.
+  - [ ] Garder Overcharge bloquée par son statut **[OUVERT]**.
+- [ ] **P5.2.4 — Causalité et dégâts**
+  - [ ] Ajouter un ID de chaîne et un budget aux réactions seulement après validation du contrat.
+  - [ ] Vérifier événements directs, DoT, lifesteal et mort sans double crédit.
 
 ### P5.3 — Coffres et économie de run
 
-- [ ] Vérifier trois options uniques, préférence de synergie, anti-malchance, disponibilité lorsque slots pleins et exclusion des armes niveau 5 non évoluées.
-- [ ] Assurer pause complète du gameplay pendant le choix ; un éventuel écran d’inventaire reprend seulement si la simulation tournait avant ouverture.
-- [ ] Faire le check d’évolution après chaque acquisition/amélioration.
-- [ ] Ne pas figer les taux 0,5 %, 15 %, poids, pity, rerolls ni substitution sans arbitrage : ce sont des nombres proposés/ouverts.
-- [ ] Garder la collecte de chest à proximité ou interaction et son rayon propre. Code présent : `chest_collection_radius` est distinct du rayon d’orbes XP ; l’invariant doit rester couvert pour tout nouveau bonus.
+- [ ] **P5.3.1 — Éligibilité des offres**
+  - [ ] Produire trois choix distincts quand au moins trois choix existent.
+  - [ ] Ajouter la préférence synergie comme poids, sans retirer les offres valides.
+  - [ ] Vérifier objets niveau max, slots pleins et arme niveau 5 sans relique.
+- [ ] **P5.3.2 — Pause et reprise**
+  - [ ] Suspendre simulation et horloge pendant le modal.
+  - [ ] Vérifier reprise après sélection, fermeture invalide et retour d’inventaire.
+- [ ] **P5.3.3 — Évolution post-choix**
+  - [ ] Vérifier l’évolution après ajout d’une arme.
+  - [ ] Vérifier l’évolution après montée de niveau d’arme.
+  - [ ] Vérifier l’évolution après acquisition ou amélioration de relique.
+- [ ] **P5.3.4 — Probabilités**
+  - [ ] Garder taux, poids, pity et rerolls accessibles en configuration.
+  - [ ] Faire arbitrer les valeurs nécessaires avant leur verrouillage.
+- [ ] **P5.3.5 — Collecte**
+  - [ ] Préserver le rayon séparé `chest_collection_radius`.
+  - [ ] Ajouter un test de régression où pickup est très élevé et chest éloigné.
+  - [ ] Vérifier collecte à proximité et interaction si cette dernière est implémentée.
 
 ### P5.4 — Ennemis, élites et boss
 
-- [ ] Livrer 8–12 familles jouables couvrant au minimum mêlée, rapides, tanks, distance, soutien et explosifs avec rôles compréhensibles.
-- [ ] Construire buffs, protection, invocations et interactions de groupe comme comportements bornés et visibles.
-- [ ] Ajouter élites à affixes, budget de menace/cooldown et projectiles télégraphiés esquivables.
-- [ ] Concevoir mid-boss vague 12 et boss final vague 24 avec 2–3 phases lisibles ; conserver les exemples de noms/patterns au statut proposé.
-- [ ] Décliner les difficultés Easy → Normal → Hard → Nightmare → Chaos et déblocage séquentiel. Les multiplicateurs chiffrés restent proposés.
-- [ ] Ne pas considérer les quatre profils natifs actuels comme catalogue final : ils ne donnent pas à eux seuls support, explosif, affixes, élites ou bosses multi-phases.
+- [ ] **P5.4.1 — Familles ennemies**
+  - [ ] Ajouter une famille de mêlée avec spawn, steering et mort.
+  - [ ] Ajouter une famille rapide avec un contre-jeu lisible.
+  - [ ] Ajouter une famille tank et vérifier sa menace/HP proposés.
+  - [ ] Ajouter une famille distance avec projectile télégraphié.
+  - [ ] Ajouter soutien et explosif comme deux comportements séparés.
+  - [ ] Compléter le catalogue jusqu’à 8–12 familles et vérifier les compositions.
+- [ ] **P5.4.2 — Interactions ennemies**
+  - [ ] Ajouter un buff de soutien visible et borné.
+  - [ ] Ajouter protection ou invocation avec nombre maximum documenté.
+  - [ ] Tester destruction du soutien et fin de son effet.
+- [ ] **P5.4.3 — Élites**
+  - [ ] Définir les affixes éligibles à chaque famille.
+  - [ ] Générer un élite avec budget/cooldown de menace.
+  - [ ] Vérifier télégraphe, effet d’affixe et récompense.
+- [ ] **P5.4.4 — Mid-boss**
+  - [ ] Définir les phases et les transitions visibles.
+  - [ ] Implémenter chaque phase comme tranche testable.
+  - [ ] Vérifier timer suspendu et réapparition du spawn après la vague 12.
+- [ ] **P5.4.5 — Boss final**
+  - [ ] Définir les phases et signaux de danger.
+  - [ ] Implémenter chaque phase et vérifier invocations sous budget.
+  - [ ] Vérifier victoire, loot garanti proposé/configurable et écran final.
+- [ ] **P5.4.6 — Difficultés**
+  - [ ] Ajouter état de difficulté choisi/débloqué.
+  - [ ] Débloquer la suivante après victoire de la précédente.
+  - [ ] Vérifier séparation des multiplicateurs HP/dégâts/densité/récompense.
+  - [ ] Garder les multiplicateurs du GDD **[PROPOSÉS]**.
 
 ### Vérification et sortie P5
 
-- [ ] Smoke unitaire de chaque arme/relique/niveau/évolution dans Sandbox ; comparer ciblage, événements et effets.
-- [ ] Tests de coffres : slots/niveaux pleins, pas de doublon, pause, rerolls, évolution immédiate et exclusion absolue du chest du ramassage augmenté.
-- [ ] Tests d’ennemis : chaque famille, affixes compatibles, télégraphes esquivables, invocation/effets bornés et boss multi-phases.
-- [ ] Run Survival complète avec contenu de release, sans harness qui gonfle les HP, choisit les coffres ou tue les boss à la place du joueur.
-- [ ] Revue des GDD, interfaces et ADR ; mise à jour des statuts sans convertir les propositions en décisions.
-- [ ] Batterie de QA de checkpoint, suivi des performances et commit explicite du jalon.
+- [ ] **P5.V1 — Validation du catalogue**
+  - [ ] Exécuter un scénario Sandbox par arme.
+  - [ ] Vérifier relique, niveaux et évolution par paire.
+  - [ ] Vérifier Magnet Heart avec XP et chest.
+- [ ] **P5.V2 — Validation des ennemis**
+  - [ ] Exécuter un scénario de chaque famille et affixe.
+  - [ ] Vérifier projectiles esquivables et budgets d’invocation/effets.
+  - [ ] Parcourir les phases de chaque boss.
+- [ ] **P5.V3 — Run de bout en bout**
+  - [ ] Jouer Survival sans harness, HP forcés, choix automatiques ou boss tués par script.
+  - [ ] Vérifier mort, victoire, coffre et récompense/idempotence.
+- [ ] **P5.V4 — Revue et checkpoint**
+  - [ ] Mettre à jour GDD/interfaces/ADR avec décisions effectivement prises.
+  - [ ] Lancer la batterie de QA P5 et le profilage défini.
+  - [ ] Corriger les erreurs bloquantes, consigner le résiduel, committer le checkpoint.
 
 **Critère de sortie :** dix armes, onze reliques, leurs évolutions, 8–12 familles, élites et boss utilisables dans une run complète ; Sandbox et progression séparés. À la fermeture de P5, s’arrêter conformément à la portée active.
 
@@ -253,17 +416,45 @@ Travail requis :
 
 ### Travaux
 
-- [ ] Vérifier les six slots, unicité des lignes, valeurs, equip/replace, inventaire illimité et une pièce garantie après victoire comme défaite classique.
-- [ ] Finaliser les rolls selon difficulté, vague et mort précoce, après calibration/validation des nombres proposés.
-- [ ] Relier chaque stat aux systèmes concernés ; auditer spécifiquement HP, vitesse, critique, lifesteal, aire, cooldown, XP, projectile speed et pickups.
-- [ ] Garder l’invariant : aucune stat/unique/skill/bonus de pickup ne collecte les coffres.
-- [ ] Finaliser Powder, conversion 10:1, coût, succès, échec critique et garantie au dixième essai ; préserver les valeurs proposées et traiter l’économie anti-exploit ouverte.
-- [ ] Arbitrer vente vs démantèlement et coûts/conditions de reroll d’effet unique.
-- [ ] Développer et valider le graphe ~120 nodes (cible 100–150), prérequis, déblocages, respec gratuit et plafond de puissance.
-- [ ] Développer et valider ~120 familles d’achievements (cible 100–150), quatre tiers, secrets, métriques idempotentes et plafond de bonus.
-- [ ] Compléter effets uniques avec systèmes qui les déclenchent ou les laisser explicitement inéligibles ; aucun effet sélectionnable ne doit être silencieusement inerte.
-- [ ] Vérifier migrations, sauvegarde atomique, backup, absence de double gain et reprise après fermeture.
-- [ ] Mesurer les builds de référence à différentes difficultés et corriger les valeurs sans altérer leurs statuts.
+- [ ] **P6.1 — Équipement de run classique**
+  - [ ] Tester chacun des six slots et le remplacement d’une pièce du même slot.
+  - [ ] Vérifier qu’une run finie (victoire ou défaite) donne une seule pièce.
+  - [ ] Vérifier que les lignes d’un objet n’ont pas de statistique dupliquée.
+- [ ] **P6.2 — Rareté et rolls**
+  - [ ] Ajouter difficulté et vague aux entrées du générateur.
+  - [ ] Implémenter la pénalité de mort précoce après validation des règles.
+  - [ ] Vérifier distribution par seed et consigner les valeurs encore proposées.
+- [ ] **P6.3 — Application des statistiques**
+  - [ ] Vérifier une stat à la fois dans une session Survival.
+  - [ ] Couvrir HP, mobilité, dégât, cadence, critique, soin, aire, cooldown, XP et vitesse projectile.
+  - [ ] Vérifier pickup sur XP puis régression chest à grand rayon.
+- [ ] **P6.4 — Enhancement**
+  - [ ] Tester une ligne de stat de +0 à +10 avec chacun des quatre tiers Powder.
+  - [ ] Vérifier réussite, échec normal, échec critique et dixième tentative garantie.
+  - [ ] Vérifier coûts/conversions et l’absence de conversion inverse.
+  - [ ] Faire arbitrer économie de démantèlement, vente et protections anti-exploit ouvertes.
+- [ ] **P6.5 — Effets uniques**
+  - [ ] Lister effet, déclencheur, prérequis, portée et feedback de chaque ID disponible.
+  - [ ] Relier un effet à son événement de jeu et écrire un scénario ciblé.
+  - [ ] Retirer de la sélection les effets sans comportement défini.
+  - [ ] Vérifier non-cumul automatique et extensions de capacité réelles.
+- [ ] **P6.6 — Skill tree**
+  - [ ] Établir le schéma node/prérequis/coût/effet.
+  - [ ] Ajouter et tester une tranche de branche à la fois jusqu’à la cible décidée (100–150).
+  - [ ] Vérifier coût, déblocages, bonus appliqué et respec gratuit.
+  - [ ] Mesurer le bonus cumulatif avant de fermer l’arbre.
+- [ ] **P6.7 — Achievements**
+  - [ ] Établir le schéma métrique/paliers/récompenses/secret.
+  - [ ] Implémenter une famille par catégorie puis étendre vers la cible 100–150.
+  - [ ] Vérifier seuils, quatre paliers, attribution unique et cumul des bonus.
+- [ ] **P6.8 — Sauvegarde et migrations**
+  - [ ] Ajouter une fixture versionnée pour chaque schéma supporté.
+  - [ ] Vérifier migration, sauvegarde, backup et restauration après corruption.
+  - [ ] Vérifier idempotence d’un même `run_id` après redémarrage.
+- [ ] **P6.9 — Calibration**
+  - [ ] Collecter des builds sans bonus, moyens et fortement avancés.
+  - [ ] Comparer survie/dégâts/temps de run sur chaque difficulté disponible.
+  - [ ] Ajuster uniquement les paramètres dont le statut autorise l’équilibrage.
 
 **Critère de sortie :** boucle permanente complète, compréhensible, migrable, idempotente et calibrée sans fuite vers Sandbox.
 
@@ -271,18 +462,39 @@ Travail requis :
 
 ### P7A — Armorless (règles centrales validées)
 
-- [ ] Ajouter mode autonome sans équipement permanent actif ; garder skill tree et Achievement Mastery actifs.
-- [ ] Après chaque vague achevée, proposer trois équipements temporaires et en appliquer un ; gérer répétition de slots et absence de filet de sécurité.
-- [ ] Implémenter Flux temporaire, amélioration temporaire jusqu’à +10, effets Legendary/Mythic et destruction des objets à la fin.
-- [ ] Implémenter difficultés, bosses toutes les 12 vagues, HP decay persistant et budgets de densité.
-- [ ] Isoler les récompenses persistantes : les gains d’Essence/Powder, achievements, records et absence d’équipement garanti restent à arbitrer lorsqu’ils sont marqués proposés.
-- [ ] Couvrir run complète, draft, pause, mort, Flux, classement par difficulté et idempotence.
+- [ ] **P7A.1 — Règles du mode**
+  - [ ] Créer une définition Armorless avec équipement permanent inactif.
+  - [ ] Vérifier skill tree et achievements toujours actifs.
+  - [ ] Ajouter la configuration de vague et boss toutes les 12 vagues.
+- [ ] **P7A.2 — Draft temporaire**
+  - [ ] Générer trois propositions temporaires.
+  - [ ] Appliquer un choix et autoriser les doublons de slot indiqués par la règle.
+  - [ ] Vérifier que les objets disparaissent en fin de run.
+- [ ] **P7A.3 — Flux**
+  - [ ] Ajouter solde Flux propre à la run.
+  - [ ] Améliorer une ligne temporaire et vérifier consommation/coût.
+  - [ ] Vérifier échec, pity et disparition du Flux à la fin.
+- [ ] **P7A.4 — Longue durée**
+  - [ ] Vérifier HP decay sans reset, pauses boss et budgets de densité.
+  - [ ] Tester plusieurs cycles de boss et scaling proposé.
+- [ ] **P7A.5 — Récompenses ouvertes**
+  - [ ] Décider quels gains permanents sont attribués à Armorless.
+  - [ ] Vérifier qu’aucun équipement permanent n’est accordé avant validation explicite.
+- [ ] **P7A.6 — Validation**
+  - [ ] Tester une vague, une transition boss, un draft, une amélioration et la mort.
+  - [ ] Tester une session longue et l’idempotence des résultats/classements.
 
 ### P7B — Endless standard (contrat ouvert)
 
-- [ ] Avant codage, trancher et documenter accès/déblocage, démarrage depuis menu vs continuation après vague 24, difficulté, sortie, records, cadence boss et récompenses.
-- [ ] Après arbitrage, préserver les deux contextes de build tels que retenus : une entrée menu peut repartir niveau 1 tandis qu’une continuation peut conserver build/HP ; les propositions actuelles ne sont pas encore des règles.
-- [ ] Ne pas assimiler les exemples de scaling/cycles à des décisions acceptées.
+- [ ] **P7B.1 — Arbitrages avant code**
+  - [ ] Décider déblocage et lancement depuis menu.
+  - [ ] Décider continuation après vague 24 et état du build/HP.
+  - [ ] Décider sortie, records, cadence boss et récompenses.
+  - [ ] Donner un statut explicite aux règles de difficulté/scaling.
+- [ ] **P7B.2 — Implémentation post-décision**
+  - [ ] Ajouter chaque mode d’entrée comme parcours séparé vérifiable.
+  - [ ] Tester transition Survival→Endless et lancement menu indépendamment.
+  - [ ] Vérifier records et récompenses idempotents.
 
 **Critère de sortie :** Armorless conforme aux règles validées et propositions clairement paramétrées ; Endless standard seulement après arbitrages.
 
@@ -290,27 +502,77 @@ Travail requis :
 
 P1 livre le Sandbox développeur et ne remplace pas cette feature produit.
 
-- [ ] Ouvrir Sandbox depuis le menu sans créer/lire un profil Survival.
-- [ ] Fournir un build initial libre et des overrides live (LIVE/REBUILD/RESTART) transactionnels pour les familles du GDD.
-- [ ] Ajouter presets versionnés, JSON et share code bornés ; valider toute charge entrante, interdire script, chemin arbitraire et données privées.
-- [ ] Importer une sauvegarde normale uniquement en copie unidirectionnelle Normal → Sandbox ; original inchangé.
-- [ ] Implémenter god mode, spawn/kill all, gestion de vagues, commandes de simulation, logs/RNG et DPS détaillé.
-- [ ] Implémenter des snapshots complets comprenant simulation, état gameplay, commandes, horloges, RNG, configuration et build ; préciser déterminisme/reprise sans promettre un replay exact si la simulation est non déterministe.
-- [ ] Séparer chemins `user://saves` et `user://sandbox`; ne jamais publier récompenses, succès officiels, records ni scores classés.
-- [ ] Profiler puis fixer des hard caps qui protègent stabilité sans présenter les nombres indicatifs du GDD comme des garanties de performance.
+- [ ] **P8.1 — Entrée et contexte isolé**
+  - [ ] Ajouter l’accès Sandbox au menu avant sélection/création de save.
+  - [ ] Créer un contexte mémoire sans ProgressionService.
+  - [ ] Vérifier sentinelle et chemins de sauvegarde séparés.
+- [ ] **P8.2 — Build et configuration**
+  - [ ] Créer l’éditeur de build initial.
+  - [ ] Ajouter overrides LIVE d’un paramètre à la fois.
+  - [ ] Ajouter overrides REBUILD/RESTART avec validation atomique.
+- [ ] **P8.3 — Presets et share codes**
+  - [ ] Écrire un schéma versionné avec exemple minimal.
+  - [ ] Sérialiser/désérialiser JSON borné et rejeter champs inconnus/données trop grosses.
+  - [ ] Encoder/décoder le code de partage et vérifier checksum.
+  - [ ] Vérifier absence de script, chemin local et donnée privée.
+- [ ] **P8.4 — Import de sauvegarde**
+  - [ ] Lire un profil normal en lecture seule.
+  - [ ] Construire une copie Sandbox modifiable.
+  - [ ] Comparer la sauvegarde source avant/après et tester import invalide.
+- [ ] **P8.5 — Outils de simulation**
+  - [ ] Ajouter God mode et confirmer qu’il ne traverse pas vers Survival.
+  - [ ] Ajouter commandes kill/spawn/clear/reset/wave progressivement.
+  - [ ] Ajouter logs RNG et DPS par fenêtre/source.
+- [ ] **P8.6 — Snapshots**
+  - [ ] Lister l’état minimal à capturer, y compris RNG, clocks, queues et build.
+  - [ ] Capturer puis restaurer sans perte sur une scène simple.
+  - [ ] Vérifier reprise avec commandes en attente et version incompatible.
+  - [ ] Documenter les limites de déterminisme.
+- [ ] **P8.7 — Limites et sécurité**
+  - [ ] Mesurer les ressources d’une commande extrême.
+  - [ ] Ajouter avertissement puis hard cap pour chaque ressource retenue.
+  - [ ] Tester qu’un preset hostile n’exécute aucune action ni accès fichier arbitraire.
+- [ ] **P8.8 — Validation d’isolation**
+  - [ ] Vérifier absence d’Essence/Powder, achievements officiels et leaderboard.
+  - [ ] Tester import, partage, snapshot et reset sans modifier une save normale.
 
 **Critère de sortie :** expérimentations librement configurables, persistables/partageables et isolées de la progression normale.
 
 ## P9 — Équilibrage, accessibilité, polish et livraison
 
-- [ ] Équilibrer rôles/viabilité des dix armes et reliques, synergies, RNG de chest et durée de run à partir de données de plusieurs profils.
-- [ ] Calibrer HP decay, soins, dégâts de contact, lifesteal, XP, loot, économie et progression sur tous les niveaux de difficulté.
-- [ ] Vérifier les retours de dégâts/critique, télégraphes, audio, VFX et options de réduction d’effets ; la direction artistique pixel art néon a des assets de prototype, pas l’ensemble final.
-- [ ] Compléter navigation clavier, flèches, manette, focus, lisibilité HUD et contrôles/accessibilité selon GDD.
-- [ ] Mesurer cible 60 FPS sur GPU intégré représentatif : temps CPU/GPU, P95/P99, densité ennemie/projectile et mémoire. Mesa/llvmpipe et benchmark natif ne remplacent pas ce test.
-- [ ] Faire tests de charge prolongée, stabilité, progression et corruption/récupération de profil.
-- [ ] Valider import/build/lancement Linux et Windows sur artefacts propres.
-- [ ] Préparer la livraison commerciale/Steam après critères de release, sans confondre disponibilité d’un build local et validation de publication.
+- [ ] **P9.1 — Équilibrage combat**
+  - [ ] Collecter DPS/survie par arme et archétype sur une configuration documentée.
+  - [ ] Comparer les dix armes et leurs évolutions sur scénarios équivalents.
+  - [ ] Ajuster les valeurs proposées via données de balance, pas par changements cachés.
+- [ ] **P9.2 — Économie et durée**
+  - [ ] Mesurer durée réelle d’une run et fréquence de choix chest.
+  - [ ] Mesurer Essence/Powder et progression de profils de niveaux différents.
+  - [ ] Vérifier paramètres de soin/decay/lifesteal en modes retenus.
+- [ ] **P9.3 — Présentation audiovisuelle**
+  - [ ] Vérifier feedback des dégâts directs/critique/statut.
+  - [ ] Vérifier télégraphes au milieu d’effets chargés.
+  - [ ] Ajouter options de réduction VFX et régler audio par vague/boss.
+  - [ ] Remplacer progressivement les assets placeholders, un lot visuel par lot.
+- [ ] **P9.4 — Accessibilité et commandes**
+  - [ ] Parcourir menus et choix uniquement au clavier.
+  - [ ] Parcourir les mêmes écrans à la manette avec focus visible.
+  - [ ] Vérifier contraste, taille/hiérarchie HUD et réglages d’effets.
+- [ ] **P9.5 — Performance**
+  - [ ] Fixer le matériel iGPU de référence et la scène de charge.
+  - [ ] Mesurer frame-time CPU/GPU, mémoire, P50/P95/P99.
+  - [ ] Refaire les mesures après optimisations et archiver la configuration.
+- [ ] **P9.6 — Stabilité/saves**
+  - [ ] Faire un soak test de run et de Sandbox.
+  - [ ] Tester sauvegarde interrompue, backup, restauration et migrations.
+  - [ ] Vérifier double récompense et clôture propre des threads.
+- [ ] **P9.7 — Plateformes**
+  - [ ] Refaire build Linux propre sur machine propre.
+  - [ ] Refaire build Windows propre et lancer la GDExtension.
+  - [ ] Tester contrôles, chemins et rendu sur les deux plateformes.
+- [ ] **P9.8 — Préparation de livraison**
+  - [ ] Établir checklist release et versions d’artefacts.
+  - [ ] Vérifier contenu, dépendances, licences, sauvegarde et notes de version.
+  - [ ] Préparer publication après validation des critères, sans la confondre avec un build local.
 
 **Critère de sortie :** critères de contenu, stabilité, performance, plateformes et QA mesurés, datés et approuvés.
 
