@@ -17,6 +17,25 @@ func _run() -> void:
 		_fail("Choosing a starting weapon should resume player controls")
 		return
 	session.player.global_position = Vector2.ZERO
+	session.player_hp = 100.0
+	session._entities = [{"components": {
+		"EnemyType": "inferno_sprayer",
+		"IsProjectile": true,
+		"Transform2D": {"x": 14.0, "y": 0.0},
+	}}]
+	session._apply_contact_damage({"paused": false}, 5.0)
+	if not is_equal_approx(session.player_hp, 100.0):
+		_fail("Friendly projectiles near the player must not cause contact damage")
+		return
+	session._entities = [{"components": {
+		"EnemyType": "xp_orb",
+		"IsXpOrb": true,
+		"Transform2D": {"x": 14.0, "y": 0.0},
+	}}]
+	session._apply_contact_damage({"paused": false}, 5.0)
+	if not is_equal_approx(session.player_hp, 100.0):
+		_fail("XP orbs near the player must not cause contact damage")
+		return
 	session._entities = [{"components": {
 		"EnemyType": "chaser",
 		"Transform2D": {"x": 0.0, "y": 0.0},

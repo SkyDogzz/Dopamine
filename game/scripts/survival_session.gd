@@ -220,7 +220,7 @@ func _apply_contact_damage(state: Dictionary, current_simulation_time: float) ->
 	var contact_distance := player_contact_radius + enemy_contact_radius
 	for entity in _entities:
 		var components: Dictionary = entity["components"]
-		if not components.has("EnemyType"):
+		if not components.has("EnemyType") or components.get("IsProjectile", false) or components.get("IsXpOrb", false):
 			continue
 		var transform: Dictionary = components["Transform2D"]
 		var enemy_position := Vector2(float(transform["x"]), float(transform["y"]))
