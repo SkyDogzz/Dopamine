@@ -32,6 +32,8 @@ var _weapon_levels := {}
 var _relic_levels := {}
 var _weapons := {}
 var _relics := {}
+var _weapon_descriptions := {}
+var _relic_descriptions := {}
 var _rng := RandomNumberGenerator.new()
 
 func _init(seed_value: int = 0) -> void:
@@ -39,9 +41,13 @@ func _init(seed_value: int = 0) -> void:
 	if not catalog.error.is_empty():
 		push_error(catalog.error)
 	for item_id in catalog.available_ids("weapon"):
-		_weapons[item_id] = catalog.weapons[item_id]["name"]
+		var weapon_definition: Dictionary = catalog.weapons[item_id]
+		_weapons[item_id] = weapon_definition["name"]
+		_weapon_descriptions[item_id] = weapon_definition["behavior"]
 	for item_id in catalog.available_ids("relic"):
-		_relics[item_id] = catalog.relics[item_id]["name"]
+		var relic_definition: Dictionary = catalog.relics[item_id]
+		_relics[item_id] = relic_definition["name"]
+		_relic_descriptions[item_id] = relic_definition["behavior"]
 	if seed_value == 0:
 		_rng.randomize()
 	else:
@@ -50,19 +56,20 @@ func _init(seed_value: int = 0) -> void:
 func offers(family: String) -> Array[Dictionary]:
 	var catalog: Dictionary
 	var owned: Dictionary
+	var descriptions: Dictionary
 	if family == "weapon":
 		catalog = _weapons
 		owned = _weapon_levels
+		descriptions = _weapon_descriptions
 	elif family == "relic":
 		catalog = _relics
 		owned = _relic_levels
+		descriptions = _relic_descriptions
 	else:
 		return []
 	var candidates: Array[Dictionary] = []
 	for item_id in catalog:
-		var description := "Améliore l’objet équipé." if owned.has(item_id) else "Ajoute cet objet à la run au niveau 1."
-		if family == "relic" and item_id == "magnet_heart":
-			description = "Augmente le ramassage d’XP ; n’attire jamais les coffres."
+		var description: String = str(descriptions[item_id])
 		if owned.has(item_id):
 			if int(owned[item_id]) >= MAX_LEVEL:
 				continue
@@ -94,7 +101,7 @@ func starting_weapon_options() -> Array[Dictionary]:
 		options.append({
 			"id": "start:%s" % weapon_id,
 			"title": _weapons[weapon_id],
-			"description": "Arme de départ du prototype.",
+			"description": _weapon_descriptions[weapon_id],
 			"icon": ICONS[weapon_id],
 		})
 	return options

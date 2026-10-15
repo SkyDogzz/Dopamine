@@ -38,7 +38,9 @@ func present(options: Array, required_count: int = 3, heading: String = "CHEST â
 		var button := Button.new()
 		button.name = "Choice%d" % index
 		button.text = "%s\n%s" % [str(option["title"]), str(option["description"])]
-		button.custom_minimum_size.y = 72.0
+		button.autowrap_mode = TextServer.AUTOWRAP_WORD
+		button.alignment = HORIZONTAL_ALIGNMENT_LEFT
+		button.custom_minimum_size.y = 96.0
 		button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		button.focus_mode = Control.FOCUS_ALL
 		var icon_path := str(option.get("icon", ""))

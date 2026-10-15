@@ -1,28 +1,28 @@
 {
   "schema_version": 1,
   "weapons": [
-    {"id": "lightning_conductor", "name": "Lightning Conductor", "behavior": "Chaînes électriques entre ennemis", "relic_id": "storm_core", "evolution_id": "infinite_circuit", "available_in_survival": true},
-    {"id": "inferno_sprayer", "name": "Inferno Sprayer", "behavior": "Jet de feu directionnel automatique", "relic_id": "infernal_heart", "evolution_id": "wildfire", "available_in_survival": true},
-    {"id": "crimson_daggers", "name": "Crimson Daggers", "behavior": "Dagues en orbite autour du joueur, non lancées", "relic_id": "blood_chalice", "evolution_id": "bloodstorm", "available_in_survival": true},
-    {"id": "void_orb", "name": "Void Orb", "behavior": "Orbe lente traversante attirant les ennemis", "relic_id": "singularity", "evolution_id": "event_horizon", "available_in_survival": true},
-    {"id": "frost_nova", "name": "Frost Nova", "behavior": "Onde de gel autour du joueur", "relic_id": "frozen_crown", "evolution_id": "absolute_zero", "available_in_survival": true},
-    {"id": "minigun", "name": "Minigun", "behavior": "Tir automatique très rapide sur une cible", "relic_id": "overdrive_engine", "evolution_id": "redline", "available_in_survival": true},
-    {"id": "meteor_staff", "name": "Meteor Staff", "behavior": "Météores ciblant des groupes d'ennemis", "relic_id": "celestial_eye", "evolution_id": "starfall", "available_in_survival": true},
-    {"id": "sawblades", "name": "Sawblades", "behavior": "Lames rebondissant entre ennemis", "relic_id": "magnetic_coil", "evolution_id": "razorstorm", "available_in_survival": true},
-    {"id": "toxic_cloud", "name": "Toxic Cloud", "behavior": "Nuages persistants empoisonnant les ennemis", "relic_id": "plague_mask", "evolution_id": "pandemic", "available_in_survival": true},
-    {"id": "prism_laser", "name": "Prism Laser", "behavior": "Rayon continu suivant la cible prioritaire", "relic_id": "prism_crystal", "evolution_id": "spectrum_collapse", "available_in_survival": true}
+    {"id": "lightning_conductor", "name": "Lightning Conductor", "behavior": "Shoots one bolt at the nearest enemy, then arcs to nearby enemies with reduced damage.", "relic_id": "storm_core", "evolution_id": "infinite_circuit", "available_in_survival": true},
+    {"id": "inferno_sprayer", "name": "Inferno Sprayer", "behavior": "Shoots a fire projectile that burns its target; Infernal Heart unlocks an explosive evolution.", "relic_id": "infernal_heart", "evolution_id": "wildfire", "available_in_survival": true},
+    {"id": "crimson_daggers", "name": "Crimson Daggers", "behavior": "Fires two daggers in a spread; Blood Chalice unlocks bleeding at weapon level 5.", "relic_id": "blood_chalice", "evolution_id": "bloodstorm", "available_in_survival": true},
+    {"id": "void_orb", "name": "Void Orb", "behavior": "A slow orb pierces enemies and pulls nearby foes toward its path.", "relic_id": "singularity", "evolution_id": "event_horizon", "available_in_survival": true},
+    {"id": "frost_nova", "name": "Frost Nova", "behavior": "Damages and chills enemies around you; Frozen Crown unlocks its level 5 evolution.", "relic_id": "frozen_crown", "evolution_id": "absolute_zero", "available_in_survival": true},
+    {"id": "minigun", "name": "Minigun", "behavior": "Rapidly fires at the nearest enemy; Overdrive Engine increases its fire rate.", "relic_id": "overdrive_engine", "evolution_id": "redline", "available_in_survival": true},
+    {"id": "meteor_staff", "name": "Meteor Staff", "behavior": "Targets an enemy group and explodes on impact; Celestial Eye unlocks Starfall.", "relic_id": "celestial_eye", "evolution_id": "starfall", "available_in_survival": true},
+    {"id": "sawblades", "name": "Sawblades", "behavior": "Fires a sawblade that ricochets between enemies; Magnetic Coil unlocks Razorstorm.", "relic_id": "magnetic_coil", "evolution_id": "razorstorm", "available_in_survival": true},
+    {"id": "toxic_cloud", "name": "Toxic Cloud", "behavior": "Creates a poison cloud on impact that damages and poisons nearby enemies.", "relic_id": "plague_mask", "evolution_id": "pandemic", "available_in_survival": true},
+    {"id": "prism_laser", "name": "Prism Laser", "behavior": "Fires rapid beams at the nearest target; Prism Crystal unlocks splitting beams at level 5.", "relic_id": "prism_crystal", "evolution_id": "spectrum_collapse", "available_in_survival": true}
   ],
   "relics": [
-    {"id": "storm_core", "name": "Storm Core", "weapon_id": "lightning_conductor", "available_in_survival": true},
-    {"id": "infernal_heart", "name": "Infernal Heart", "weapon_id": "inferno_sprayer", "available_in_survival": true},
-    {"id": "blood_chalice", "name": "Blood Chalice", "weapon_id": "crimson_daggers", "available_in_survival": true},
-    {"id": "singularity", "name": "Singularity", "weapon_id": "void_orb", "available_in_survival": true},
-    {"id": "frozen_crown", "name": "Frozen Crown", "weapon_id": "frost_nova", "available_in_survival": true},
-    {"id": "overdrive_engine", "name": "Overdrive Engine", "weapon_id": "minigun", "available_in_survival": true},
-    {"id": "celestial_eye", "name": "Celestial Eye", "weapon_id": "meteor_staff", "available_in_survival": true},
-    {"id": "magnetic_coil", "name": "Magnetic Coil", "weapon_id": "sawblades", "available_in_survival": true},
-    {"id": "plague_mask", "name": "Plague Mask", "weapon_id": "toxic_cloud", "available_in_survival": true},
-    {"id": "prism_crystal", "name": "Prism Crystal", "weapon_id": "prism_laser", "available_in_survival": true},
-    {"id": "magnet_heart", "name": "Magnet Heart", "behavior": "Utilitaire : augmente la distance de ramassage sans attirer les coffres", "available_in_survival": true}
+    {"id": "storm_core", "name": "Storm Core", "behavior": "Increases Lightning Conductor damage by 5% per level; unlocks Infinite Circuit at weapon level 5.", "weapon_id": "lightning_conductor", "available_in_survival": true},
+    {"id": "infernal_heart", "name": "Infernal Heart", "behavior": "Increases Inferno Sprayer damage by 5% per level; unlocks Wildfire at weapon level 5.", "weapon_id": "inferno_sprayer", "available_in_survival": true},
+    {"id": "blood_chalice", "name": "Blood Chalice", "behavior": "Adds 10% kill healing and 5% lifesteal per level; unlocks Bloodstorm at Daggers level 5.", "weapon_id": "crimson_daggers", "available_in_survival": true},
+    {"id": "singularity", "name": "Singularity", "behavior": "With Void Orb at level 5, unlocks Event Horizon and its stronger pull.", "weapon_id": "void_orb", "available_in_survival": true},
+    {"id": "frozen_crown", "name": "Frozen Crown", "behavior": "Extends chill duration by 5% per level; unlocks Absolute Zero at Frost Nova level 5.", "weapon_id": "frost_nova", "available_in_survival": true},
+    {"id": "overdrive_engine", "name": "Overdrive Engine", "behavior": "Increases Minigun fire rate by 4% per level; unlocks Redline at weapon level 5.", "weapon_id": "minigun", "available_in_survival": true},
+    {"id": "celestial_eye", "name": "Celestial Eye", "behavior": "Increases area size by 3% per level; unlocks Starfall with Meteor Staff at level 5.", "weapon_id": "meteor_staff", "available_in_survival": true},
+    {"id": "magnetic_coil", "name": "Magnetic Coil", "behavior": "Increases all projectile speed by 4% per level; unlocks Razorstorm at Sawblades level 5.", "weapon_id": "sawblades", "available_in_survival": true},
+    {"id": "plague_mask", "name": "Plague Mask", "behavior": "Increases Toxic Cloud poison damage by 5% per level; unlocks Pandemic at weapon level 5.", "weapon_id": "toxic_cloud", "available_in_survival": true},
+    {"id": "prism_crystal", "name": "Prism Crystal", "behavior": "Adds 3% critical damage per level; unlocks Spectrum Collapse at Prism Laser level 5.", "weapon_id": "prism_laser", "available_in_survival": true},
+    {"id": "magnet_heart", "name": "Magnet Heart", "behavior": "Increases XP pickup radius by 25% per level; does not attract chests.", "available_in_survival": true}
   ]
 }

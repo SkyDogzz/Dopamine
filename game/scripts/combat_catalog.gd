@@ -27,7 +27,7 @@ func _load_definitions(data: Dictionary) -> bool:
 		if not _valid_definition(entry, ["id", "name", "behavior", "relic_id", "evolution_id", "available_in_survival"], weapons):
 			return false
 	for entry in data["relics"]:
-		if not _valid_definition(entry, ["id", "name", "available_in_survival"], relics):
+		if not _valid_definition(entry, ["id", "name", "behavior", "available_in_survival"], relics):
 			return false
 	if weapons.size() != 10 or relics.size() != 11:
 		error = "Combat catalog must define ten weapons and eleven relics"
