@@ -54,6 +54,7 @@ Livrer d’abord un Sandbox développeur autonome, puis le premier playable Surv
 - [x] Ajouter le directeur de vagues 24 × 30 s, spawn configurable selon les courbes **[PROPOSÉES]** et transitions de placeholders boss.
 - [x] Poser le contrat testable du directeur de drop proposé et du modal à trois choix, sans accès aux saves Sandbox.
 - [x] Relier les drops aux morts/pickup et appliquer les choix à un loadout de run avec capacités et niveaux plafonnés.
+- [x] Ajouter les projectiles Inferno/Crimson et relier les trois reliques à des modificateurs provisoires vérifiés.
 - [ ] Compléter les comportements des 3 armes/reliques, l’écran de choix d’arme initiale et confirmer le pool de contenu du vertical slice.
 - [x] Ajouter un HUD Survival minimal pour le HP, temps actif, arme prototype, XP/niveau et état de run.
 - [x] Afficher les HP courants/max des placeholders boss et distinguer l’état logique de victoire de la mort.

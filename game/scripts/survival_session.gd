@@ -34,6 +34,24 @@ const WAVE_HP_CAP := 12.0
 @export var lightning_projectile_radius: float = 4.0
 @export var lightning_projectile_lifetime: float = 2.0
 @export_range(1, 5) var lightning_chain_count: int = 2
+@export_group("Prototype Inferno Sprayer — proposed tuning")
+@export var inferno_cooldown: float = 0.7
+@export var inferno_damage: float = 8.0
+@export var inferno_range: float = 520.0
+@export var inferno_projectile_speed: float = 650.0
+@export var inferno_projectile_radius: float = 5.0
+@export var inferno_projectile_lifetime: float = 1.2
+@export_group("Prototype Crimson Daggers — proposed tuning")
+@export var daggers_cooldown: float = 0.8
+@export var daggers_damage: float = 7.0
+@export var daggers_range: float = 480.0
+@export var daggers_projectile_speed: float = 900.0
+@export var daggers_projectile_radius: float = 2.5
+@export var daggers_projectile_lifetime: float = 0.8
+@export_group("Prototype relic bonuses — proposed tuning")
+@export_range(0.0, 1.0) var storm_core_damage_per_level: float = 0.05
+@export_range(0.0, 1.0) var infernal_heart_damage_per_level: float = 0.05
+@export_range(0.0, 1.0) var blood_chalice_heal_per_level: float = 0.10
 @export_group("Prototype XP — proposed tuning")
 @export var xp_per_enemy: float = 5.0
 @export var xp_collection_radius: float = 36.0
@@ -58,6 +76,8 @@ var _last_target := Vector2(INF, INF)
 var _last_simulation_time := 0.0
 var _last_combat_event_sequence := 0
 var _next_weapon_time := 0.0
+var _next_inferno_time := 0.0
+var _next_daggers_time := 0.0
 var _entities: Array = []
 var _pending_xp_orbs: Dictionary = {}
 var _chest_director: RefCounted
@@ -137,6 +157,7 @@ func _process(_delta: float) -> void:
 				))
 				if not run_over:
 					var healing: float = float(simulation.kill_heal_amount(float(event["threat_level"])))
+					healing *= 1.0 + float(loadout.relic_level("blood_chalice")) * blood_chalice_heal_per_level
 					player_hp = minf(player_max_hp, player_hp + healing)
 					simulation.spawn_xp_orb(
 						Vector2(float(event["position"]["x"]), float(event["position"]["y"])), xp_per_enemy
@@ -153,6 +174,8 @@ func _process(_delta: float) -> void:
 	_collect_nearby_xp_orbs(state)
 	_collect_nearby_chests(state)
 	_fire_lightning_conductor(current_simulation_time, state["paused"])
+	_fire_inferno_sprayer(current_simulation_time, state["paused"])
+	_fire_crimson_daggers(current_simulation_time, state["paused"])
 	if player_hp <= 0.0 and not run_over:
 		run_over = true
 		simulation.pause()
@@ -172,8 +195,9 @@ func _refresh_hud(state: Dictionary) -> void:
 	var total_seconds := int(floor(player_active_time))
 	_time_value.text = "%02d:%02d" % [total_seconds / 60, total_seconds % 60]
 	var equipped_names: Array[String] = []
+	var short_names := {"lightning_conductor": "LC", "inferno_sprayer": "IS", "crimson_daggers": "CD"}
 	for weapon_id in loadout.owned_weapons():
-		equipped_names.append("%s Lv%d" % [LOADOUT_SCRIPT.WEAPONS[weapon_id], loadout.weapon_level(weapon_id)])
+		equipped_names.append("%s Lv%d" % [short_names.get(weapon_id, weapon_id), loadout.weapon_level(weapon_id)])
 	_weapon_value.text = "  •  ".join(equipped_names)
 	if wave_director != null and wave_director.state == WAVE_DIRECTOR_SCRIPT.State.VICTORY:
 		_run_state.text = "VICTORY"
@@ -369,7 +393,7 @@ func _fire_lightning_conductor(active_time: float, paused: bool) -> void:
 		chain_count = 3
 	if level >= 4:
 		chain_count = 5
-	var damage_multiplier := 1.25 if level >= 3 else 1.0
+	var damage_multiplier := (1.25 if level >= 3 else 1.0) * (1.0 + float(loadout.relic_level("storm_core")) * storm_core_damage_per_level)
 	var selected_ids: Array[Vector2i] = []
 	var max_distance_squared := lightning_range * lightning_range
 	for _chain in range(chain_count):
@@ -377,7 +401,7 @@ func _fire_lightning_conductor(active_time: float, paused: bool) -> void:
 		var best_distance_squared := max_distance_squared
 		for entity in _entities:
 			var components: Dictionary = entity["components"]
-			if components.get("IsProjectile", false):
+			if components.get("IsProjectile", false) or components.get("IsXpOrb", false):
 				continue
 			var id: Dictionary = entity["id"]
 			var entity_id := Vector2i(int(id["index"]), int(id["generation"]))
@@ -407,6 +431,59 @@ func _fire_lightning_conductor(active_time: float, paused: bool) -> void:
 	if not selected_ids.is_empty():
 		_next_weapon_time = active_time + lightning_cooldown
 
+func _fire_inferno_sprayer(active_time: float, paused: bool) -> void:
+	if not weapon_enabled or loadout.weapon_level("inferno_sprayer") == 0 or paused or _chest_open or run_over or inferno_cooldown <= 0.0 or active_time < _next_inferno_time:
+		return
+	var target := _nearest_enemy(inferno_range)
+	if target.is_empty():
+		return
+	var direction: Vector2 = (target["position"] - player.global_position).normalized()
+	if direction == Vector2.ZERO:
+		direction = Vector2.RIGHT
+	var level: int = loadout.weapon_level("inferno_sprayer")
+	var damage := inferno_damage * (1.0 + 0.15 * float(level - 1))
+	damage *= 1.0 + float(loadout.relic_level("infernal_heart")) * infernal_heart_damage_per_level
+	if simulation.spawn_projectile("inferno_sprayer", player.global_position + direction * 14.0,
+			direction * inferno_projectile_speed, damage, inferno_projectile_radius,
+			inferno_projectile_lifetime) > 0:
+		_next_inferno_time = active_time + inferno_cooldown
+
+func _fire_crimson_daggers(active_time: float, paused: bool) -> void:
+	if not weapon_enabled or loadout.weapon_level("crimson_daggers") == 0 or paused or _chest_open or run_over or daggers_cooldown <= 0.0 or active_time < _next_daggers_time:
+		return
+	var target := _nearest_enemy(daggers_range)
+	if target.is_empty():
+		return
+	var direction: Vector2 = (target["position"] - player.global_position).normalized()
+	if direction == Vector2.ZERO:
+		direction = Vector2.RIGHT
+	var level: int = loadout.weapon_level("crimson_daggers")
+	var damage := daggers_damage * (1.0 + 0.15 * float(level - 1))
+	var fired := 0
+	for spread in [-0.06, 0.06]:
+		var shot_direction: Vector2 = direction.rotated(spread)
+		if simulation.spawn_projectile("crimson_dagger", player.global_position + shot_direction * 14.0,
+				shot_direction * daggers_projectile_speed, damage, daggers_projectile_radius,
+				daggers_projectile_lifetime) > 0:
+			fired += 1
+	if fired > 0:
+		_next_daggers_time = active_time + daggers_cooldown
+
+func _nearest_enemy(max_range: float) -> Dictionary:
+	var nearest: Dictionary = {}
+	var best_distance_squared := max_range * max_range
+	for entity in _entities:
+		var components: Dictionary = entity["components"]
+		if components.get("IsProjectile", false) or components.get("IsXpOrb", false):
+			continue
+		var transform: Dictionary = components["Transform2D"]
+		var position := Vector2(float(transform["x"]), float(transform["y"]))
+		var distance_squared := player.global_position.distance_squared_to(position)
+		if distance_squared < best_distance_squared:
+			best_distance_squared = distance_squared
+			nearest = {"position": position}
+	return nearest
+
 func _publish_player_target() -> void:
 	var target := player.global_position
 	if target.distance_squared_to(_last_target) < 0.01:
@@ -424,7 +501,13 @@ func _draw() -> void:
 		var components: Dictionary = entity["components"]
 		if components.get("IsProjectile", false):
 			var projectile_transform: Dictionary = components["Transform2D"]
-			draw_circle(Vector2(float(projectile_transform["x"]), float(projectile_transform["y"])), 3.0, Color("#ffd166"))
+			var projectile_type: String = components.get("EnemyType", "")
+			var projectile_color := Color("#ffd166")
+			if projectile_type == "inferno_sprayer":
+				projectile_color = Color("#ff7547")
+			elif projectile_type == "crimson_dagger":
+				projectile_color = Color("#ff3155")
+			draw_circle(Vector2(float(projectile_transform["x"]), float(projectile_transform["y"])), 3.0, projectile_color)
 			continue
 		if components.get("IsXpOrb", false):
 			var orb_transform: Dictionary = components["Transform2D"]
