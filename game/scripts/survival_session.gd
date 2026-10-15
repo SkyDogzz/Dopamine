@@ -73,6 +73,7 @@ var player_level := 1
 var player_xp := 0.0
 var player_xp_to_next := 10.0
 var run_over := false
+var _victory_pending := false
 var kill_count := 0
 var _last_target := Vector2(INF, INF)
 var _last_simulation_time := 0.0
@@ -162,7 +163,7 @@ func _process(_delta: float) -> void:
 				elif dead_enemy_type == "final_boss":
 					_boss_spawn_pending = false
 					wave_director.boss_defeated()
-					_finish_run(true)
+					_victory_pending = true
 				_roll_enemy_chests(dead_enemy_type, Vector2(
 					float(event["position"]["x"]), float(event["position"]["y"])
 				))
@@ -184,6 +185,7 @@ func _process(_delta: float) -> void:
 	_advance_wave_director(elapsed_active_time, state["paused"])
 	_collect_nearby_xp_orbs(state)
 	_collect_nearby_chests(state)
+	_complete_pending_victory()
 	_fire_lightning_conductor(current_simulation_time, state["paused"])
 	_fire_inferno_sprayer(current_simulation_time, state["paused"])
 	_fire_crimson_daggers(current_simulation_time, state["paused"])
@@ -282,6 +284,12 @@ func _on_chest_option_selected(option_id: String) -> void:
 	loadout.apply_offer(option_id)
 	chest_option_chosen.emit(option_id)
 	simulation.resume()
+	_complete_pending_victory()
+
+func _complete_pending_victory() -> void:
+	if _victory_pending and not _chest_open and _world_chests.is_empty():
+		_victory_pending = false
+		_finish_run(true)
 
 func _finish_run(victory: bool) -> void:
 	if run_over:
