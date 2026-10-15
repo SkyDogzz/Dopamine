@@ -30,16 +30,18 @@
 - [x] P3 contact : projectiles et orbes exclus; le rayon de contact enemy correspond au disque affiché (8 unités).
 - [x] P3 lifesteal : Blood Chalice soigne sur un événement de dégâts non létal; soft cap, efficacité au-dessus du cap et HP maximum vérifiés sous Godot 4.7.2 headless.
 - [x] P3 Inferno : impact applique la brûlure configurée et ses ticks contribuent au lifesteal à 25 % du taux théorique.
-- [ ] Godot 4.7.2 charge la GDExtension sur Windows et Linux.
-- [ ] Le projet C++23 compile avec versions verrouillées.
+- [x] Charge worker : 500 ennemis + 2 000 projectiles sont acceptés, le plafond de 2 500 entités est appliqué, puis 2 000 impacts se résolvent sans dépasser le budget réservé d’événements.
+- [x] Linux : Godot 4.7.2 charge la GDExtension et GCC 14.2 compile le projet avec `-std=gnu++23`.
+- [ ] Godot 4.7.2 charge la GDExtension sur Windows.
+- [ ] Vérifier le build Windows et le couple compilateur/dépendances verrouillé.
 - [ ] Aucune API Godot non thread-safe n'est appelée depuis le worker.
 - [ ] `stop()` libère le worker sans deadlock, même sous charge.
 
 ## ECS / simulation
 
-- [ ] ID index+génération rejette les handles obsolètes.
-- [ ] Spawn/despawn via command buffer ne casse aucun itérateur.
-- [ ] Spatial hash trouve les collisions attendues aux frontières des cellules.
+- [x] ID index+génération rejette les handles obsolètes après réutilisation d’un index.
+- [x] Spawn/despawn via worker et cœur natif ne casse aucun itérateur.
+- [x] Spatial hash trouve les cibles aux coordonnées négatives, au bord du rayon et aux frontières testées.
 - [x] Swept collision détecte les projectiles rapides contre une cible en mouvement.
 - [x] DoT partagé : ticks en temps simulé, durée, grand pas, remplacement, cible obsolète et événements identifiés.
 - [x] Scénario Sandbox JSON applique un DoT, vérifie la santé restante et compte les événements de tick tagués.
@@ -50,11 +52,12 @@
 
 ## Communication / rendu
 
-- [ ] Snapshot lu par Godot reste immuable jusqu'à release.
-- [ ] Snapshots périmés jetables sans perte d'événements de mort/récompense.
-- [ ] IDs/numéros de séquence permettent de dédupliquer les événements.
+- [x] Snapshots publiés restent immuables après l’étape suivante.
+- [x] Les événements restent dans la file jusqu’à acquittement, indépendamment de l’ancienneté du snapshot consommé.
+- [x] IDs/numéros de séquence identifient les événements et l’acquittement vide uniquement les événements déjà publiés.
 - [ ] Rendu MultiMesh fonctionne avec 500 ennemis et 2 000 projectiles.
 - [ ] 60 FPS cible sur machine de référence ; consigner CPU/GPU, P95/P99.
+- [x] Benchmark natif reproductible SimulationCore à 500 ennemis + 2 000 projectiles, avec charge sans impacts et rafale Wildfire dense, mesures P50/P95/P99 (voir `PERFORMANCE.md`).
 
 ## Sandbox-first
 

@@ -101,7 +101,7 @@ private:
 	bool has_event_capacity() const;
 
 	static constexpr std::size_t max_queued_commands_ = 2048;
-	static constexpr std::size_t max_entities_ = 2000;
+	static constexpr std::size_t max_entities_ = 2500;
 	static constexpr std::size_t max_pending_events_ = 8192;
 	static constexpr std::size_t max_events_per_advance_ = 4000;
 

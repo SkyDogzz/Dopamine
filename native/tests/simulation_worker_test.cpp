@@ -142,6 +142,41 @@ int main() {
 	submit_and_wait(worker, acknowledge);
 	require(worker.snapshot()->events.empty(), "acknowledged combat events should leave the pending queue");
 
+	SimulationCommand capacity_enemies;
+	capacity_enemies.type = CommandType::Spawn;
+	capacity_enemies.entity_type = "chaser";
+	capacity_enemies.count = 500;
+	capacity_enemies.hp = 20.0F;
+	const uint64_t enemies_sequence = submit_and_wait(worker, capacity_enemies);
+	uint64_t projectiles_sequence = 0;
+	for (int index = 0; index < 2000; ++index) {
+		SimulationCommand capacity_projectile;
+		capacity_projectile.type = CommandType::SpawnProjectile;
+		capacity_projectile.entity_type = "benchmark_projectile";
+	capacity_projectile.x = 0.0F;
+		capacity_projectile.y = 0.0F;
+		capacity_projectile.projectile_lifetime = 60.0;
+		projectiles_sequence = worker.submit(capacity_projectile);
+		require(projectiles_sequence != 0, "worker command queue should accept the benchmark projectile workload");
+	}
+	require(projectiles_sequence > enemies_sequence && worker.wait_until_applied(projectiles_sequence, 5s),
+			"worker should apply 500 enemies and 2,000 projectiles");
+	const auto benchmark_snapshot = worker.snapshot();
+	require(benchmark_snapshot->entities.size() == 2500 && benchmark_snapshot->projectile_count == 2000,
+			"worker capacity should match the documented 500-enemy plus 2,000-projectile target");
+	SimulationCommand over_capacity_projectile;
+	over_capacity_projectile.type = CommandType::SpawnProjectile;
+	over_capacity_projectile.entity_type = "benchmark_projectile";
+	const uint64_t over_capacity_sequence = submit_and_wait(worker, over_capacity_projectile);
+	require(over_capacity_sequence > projectiles_sequence && worker.snapshot()->entities.size() == 2500,
+			"worker should keep its hard entity cap after reaching the benchmark capacity");
+	step.delta_seconds = 1.0 / 60.0;
+	submit_and_wait(worker, step);
+	const auto benchmark_combat = worker.snapshot();
+	require(benchmark_combat->projectile_count == 0 && benchmark_combat->collision_count >= 2000 &&
+			benchmark_combat->events.size() <= 4000,
+			"worker should resolve the full projectile workload without exceeding its reserved event budget");
+
 	worker.stop();
 	worker.stop();
 	require(!worker.is_running(), "stop should be safe and leave no worker thread");

@@ -33,6 +33,9 @@ if(BUILD_TESTING)
     target_link_libraries(simulation_worker_tests PRIVATE dopamine_simulation)
     add_test(NAME simulation_worker COMMAND simulation_worker_tests)
 
+    add_executable(simulation_benchmark native/benchmarks/simulation_benchmark.cpp)
+    target_link_libraries(simulation_benchmark PRIVATE dopamine_simulation)
+
     find_program(DOPAMINE_GODOT_EXECUTABLE NAMES godot godot4 Godot)
     if(DOPAMINE_GODOT_EXECUTABLE)
         add_test(NAME godot_project_import

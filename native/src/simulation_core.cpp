@@ -217,6 +217,7 @@ void SimulationCore::reset() {
 }
 
 std::vector<CombatEvent> SimulationCore::advance(double delta_seconds) {
+	constexpr std::size_t max_explosion_targets_per_advance = 500; // Proposed safety budget for secondary blast hits.
 	if (!std::isfinite(delta_seconds) || delta_seconds < 0.0) {
 		throw std::invalid_argument("simulation delta must be finite and non-negative");
 	}
@@ -236,6 +237,7 @@ std::vector<CombatEvent> SimulationCore::advance(double delta_seconds) {
 
 	std::vector<CombatEvent> events;
 	std::vector<EntityId> to_despawn;
+	std::size_t explosion_targets_processed = 0;
 	for (uint32_t index = 0; index < slots_.size(); ++index) {
 		if (!slots_[index].active || !damage_over_time_[index].has_value()) {
 			continue;
@@ -327,10 +329,14 @@ std::vector<CombatEvent> SimulationCore::advance(double delta_seconds) {
 					const auto splash_targets = query_spatial_index(spatial_index, transforms_[target_index].x,
 							transforms_[target_index].y, projectile.explosion_radius, {});
 					for (uint32_t splash_index : splash_targets) {
+						if (explosion_targets_processed >= max_explosion_targets_per_advance) {
+							break;
+						}
 						if (splash_index == target_index || projectile_flags_[splash_index] || xp_orb_flags_[splash_index] ||
 								health_[splash_index].current <= 0.0F) {
 							continue;
 						}
+						++explosion_targets_processed;
 						const EntityId splash_id{splash_index, slots_[splash_index].generation};
 						apply_damage(projectile_id, splash_id, projectile.damage * projectile.explosion_damage_multiplier,
 								events, to_despawn);

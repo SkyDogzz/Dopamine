@@ -1,5 +1,6 @@
 #include "dopamine/simulation/simulation_core.hpp"
 
+#include <algorithm>
 #include <cmath>
 #include <cstdlib>
 #include <iostream>
@@ -232,6 +233,20 @@ int main() {
 			wildfire_splash && wildfire_splash->health.current == 95.0F && wildfire_splash->damage_over_time &&
 			wildfire_unaffected && wildfire_unaffected->health.current == 100.0F,
 			"Wildfire should damage and ignite nearby enemies within its explosion radius only");
+	SimulationCore bounded_explosions;
+	for (int index = 0; index < 502; ++index) {
+		bounded_explosions.spawn("chaser", 60.0F, 0.0F, 100.0F, 0.0F, 0.0F);
+	}
+	for (int index = 0; index < 2; ++index) {
+		bounded_explosions.spawn_projectile("wildfire_sprayer", 0.0F, 0.0F, 1.0F, 3.0F, 2.0,
+				100.0F, 0.0F, 1.0F, 0.5, 2.0, 1000.0F, 0.1F);
+	}
+	const auto bounded_explosion_events = bounded_explosions.advance(0.6);
+	const auto bounded_targets = bounded_explosions.snapshot();
+	const int splash_damaged_targets = static_cast<int>(std::count_if(bounded_targets.begin(), bounded_targets.end(),
+			[](const auto &entity) { return entity.health.current < entity.health.maximum - 0.01F; }));
+	require(bounded_explosion_events.size() == 502 && splash_damaged_targets == 501,
+			"Wildfire splash should process no more than its proposed per-step target budget");
 	SimulationCore combat;
 	const auto target = combat.spawn("chaser", 50.0F, -100.0F, 10.0F, 0.0F, 1000.0F, 4.0F);
 	const auto projectile = combat.spawn_projectile("test_projectile", 0.0F, 0.0F, 12.0F, 2.0F, 1.0, 500.0F, 0.0F);
