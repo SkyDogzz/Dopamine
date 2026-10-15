@@ -85,7 +85,7 @@ func draw_batches(canvas: CanvasItem) -> void:
 		if multimesh.instance_count > 0:
 			canvas.draw_multimesh(multimesh, batch["texture"])
 
-func draw_support_feedback(canvas: CanvasItem, entities: Array, origin: Vector2 = Vector2.ZERO) -> void:
+func draw_enemy_feedback(canvas: CanvasItem, entities: Array, origin: Vector2 = Vector2.ZERO) -> void:
 	for entity in entities:
 		var components: Dictionary = entity["components"]
 		if components.get("IsProjectile", false):
@@ -98,6 +98,8 @@ func draw_support_feedback(canvas: CanvasItem, entities: Array, origin: Vector2 
 			canvas.draw_arc(center, radius, 0.0, TAU, 64, Color(0.25, 1.0, 0.78, 0.45), 2.0, true)
 		elif components.get("Supported", false):
 			canvas.draw_arc(center, 14.0, 0.0, TAU, 24, Color(0.3, 1.0, 0.72, 0.8), 2.0, true)
+		if components.get("Affix", "") == "Hasted":
+			canvas.draw_arc(center, 18.0, 0.0, TAU, 32, Color(1.0, 0.36, 0.25, 0.95), 2.5, true)
 
 func multimesh_for(sprite_id: String) -> MultiMesh:
 	if not _batches.has(sprite_id):
@@ -148,6 +150,8 @@ func _sprite_for_entity(components: Dictionary) -> String:
 			return "enemy_shooter"
 		"buffer":
 			return "enemy_buffer"
+		"elite":
+			return "enemy_sprinter"
 		"mid_boss":
 			return "boss_mid_placeholder"
 		"final_boss":

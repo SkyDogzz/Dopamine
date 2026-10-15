@@ -45,6 +45,7 @@ func _ready() -> void:
 		"tank": "enemy_tank",
 		"shooter": "enemy_shooter",
 		"buffer": "enemy_buffer.svg",
+		"elite": "enemy_sprinter",
 	}
 	for entity_type in enemy_icons:
 		var icon_file: String = enemy_icons[entity_type]
@@ -195,11 +196,12 @@ func _refresh_inspector(entities: Array) -> void:
 			var health: Dictionary = components["Health"]
 			var speed := Vector2(velocity["x"], velocity["y"]).length()
 			var status_text := "NONE"
+			var affix_text: String = str(components.get("Affix", "NONE"))
 			if components.has("DamageOverTime"):
 				var status: Dictionary = components["DamageOverTime"]
 				status_text = "%.1f / %.1fs  (%.1fs left)" % [status["damage_per_tick"], status["interval_seconds"], status["remaining_seconds"]]
-			_entity_info.text = "[b]ENTITY %04d / G%03d[/b]\n[b]TYPE[/b]  %s\n[b]POSITION[/b]  (%.1f, %.1f)\n[b]VELOCITY[/b]  (%.1f, %.1f)  /  SPEED %.1f\n[b]HEALTH[/b]  %.1f / %.1f\n[b]DAMAGE OVER TIME[/b]  %s" % [
-				_selected_index, _selected_generation, components["EnemyType"],
+			_entity_info.text = "[b]ENTITY %04d / G%03d[/b]\n[b]TYPE[/b]  %s\n[b]AFFIX[/b]  %s\n[b]POSITION[/b]  (%.1f, %.1f)\n[b]VELOCITY[/b]  (%.1f, %.1f)  /  SPEED %.1f\n[b]HEALTH[/b]  %.1f / %.1f\n[b]DAMAGE OVER TIME[/b]  %s" % [
+				_selected_index, _selected_generation, components["EnemyType"], affix_text,
 				transform["x"], transform["y"], velocity["x"], velocity["y"], speed, health["current"], health["maximum"], status_text
 			]
 			return

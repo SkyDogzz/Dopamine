@@ -22,6 +22,8 @@ std::optional<EnemyProfile> enemy_profile(std::string_view id) {
 	if (id == "shooter") return EnemyProfile{"shooter", 25.0F, 65.0F, 1.0F};
 	// Buffer stats and aura are proposed tuning, kept isolated from accepted GDD behavior.
 	if (id == "buffer") return EnemyProfile{"buffer", 35.0F, 55.0F, 2.0F, 150.0F, 1.2F};
+	// The Hasted elite profile is a proposed first affix prototype.
+	if (id == "elite") return EnemyProfile{"elite", 50.0F, 100.0F, 3.0F};
 	return std::nullopt;
 }
 

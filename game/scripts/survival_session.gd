@@ -51,6 +51,10 @@ const WAVE_HP_CAP := 12.0
 @export var enemy_spawn_interval: float = 0.5
 @export var enemy_spawn_radius: float = 520.0
 @export var boss_placeholder_hp: float = 1000.0
+@export_group("Prototype elite director — proposed tuning")
+@export var elite_spawn_interval_seconds: float = 45.0
+@export_range(0.0, 1.0) var elite_spawn_chance: float = 0.35
+@export_range(1, 5) var elite_max_active: int = 1
 @export_group("Prototype loot — proposed rates")
 @export var ordinary_chest_drop_chance: float = 0.005
 @export var elite_chest_drop_chance: float = 0.15
@@ -212,6 +216,7 @@ var _shield_expires_at := 0.0
 var player_active_time := 0.0
 var wave_director: RefCounted
 var _next_enemy_spawn_time := 0.0
+var _next_elite_spawn_time := 0.0
 var _boss_spawn_pending := false
 var player_level := 1
 var player_xp := 0.0
@@ -327,6 +332,7 @@ func _ready() -> void:
 	player_xp_to_next = xp_base_to_next_level
 	wave_director = WAVE_DIRECTOR_SCRIPT.new()
 	wave_director.wave_duration_seconds = wave_duration_seconds
+	_next_elite_spawn_time = maxf(0.0, elite_spawn_interval_seconds)
 	_publish_player_target()
 	if spawn_initial_enemy and not wave_spawning_enabled:
 		simulation.spawn_enemy("chaser", 1, player.global_position + Vector2(140.0, 0.0), Vector2.ZERO)
@@ -893,6 +899,7 @@ func _advance_wave_director(delta_seconds: float, paused: bool) -> void:
 		if spawn_initial_enemy and player_active_time >= _next_enemy_spawn_time:
 			_spawn_wave_enemy()
 			_next_enemy_spawn_time = player_active_time + maxf(0.05, enemy_spawn_interval)
+		_try_spawn_elite()
 	elif wave_director.state == WAVE_DIRECTOR_SCRIPT.State.MID_BOSS:
 		_spawn_boss_placeholder("mid_boss")
 	elif wave_director.state == WAVE_DIRECTOR_SCRIPT.State.FINAL_BOSS:
@@ -920,6 +927,33 @@ func _spawn_wave_enemy() -> void:
 		enemy_type = "buffer"
 	var hp_multiplier := minf(pow(WAVE_HP_GROWTH, float(wave_director.wave - 1)), WAVE_HP_CAP)
 	simulation.spawn_enemy(enemy_type, 1, spawn_position, Vector2.ZERO, hp_multiplier)
+
+func _try_spawn_elite() -> void:
+	if wave_director == null or wave_director.state != WAVE_DIRECTOR_SCRIPT.State.WAVE or \
+			player_active_time < _next_elite_spawn_time or elite_max_active <= 0:
+		return
+	var active_enemies := 0
+	var active_elites := 0
+	var active_threat := 0.0
+	for entity in _entities:
+		var components: Dictionary = entity["components"]
+		if components.get("IsProjectile", false) or components.get("IsXpOrb", false):
+			continue
+		active_enemies += 1
+		active_threat += float(components.get("ThreatLevel", 1.0))
+		if components.get("EnemyType", "") == "elite":
+			active_elites += 1
+	if active_elites >= elite_max_active or active_enemies >= maxi(0, _wave_population(wave_director.wave) - 1):
+		return
+	var wave_threat_budget := float(_wave_population(wave_director.wave))
+	if active_threat + 3.0 > wave_threat_budget:
+		return
+	_next_elite_spawn_time = player_active_time + maxf(0.05, elite_spawn_interval_seconds)
+	if randf() > clampf(elite_spawn_chance, 0.0, 1.0):
+		return
+	var spawn_position := player.global_position + Vector2.from_angle(randf() * TAU) * enemy_spawn_radius
+	var hp_multiplier := minf(pow(WAVE_HP_GROWTH, float(wave_director.wave - 1)), WAVE_HP_CAP)
+	simulation.spawn_enemy("elite", 1, spawn_position, Vector2.ZERO, hp_multiplier)
 
 func _spawn_boss_placeholder(boss_type: String) -> void:
 	if not spawn_initial_enemy or _boss_spawn_pending:
@@ -1626,7 +1660,7 @@ func _draw() -> void:
 	draw_texture_rect(GROUND_TEXTURE, Rect2(-8192.0, -8192.0, 16384.0, 16384.0), true)
 	draw_texture_rect(RUINS_TEXTURE, Rect2(-768.0, -768.0, 1536.0, 1536.0), false, Color(1.0, 1.0, 1.0, 0.88))
 	_sprite_renderer.draw_batches(self)
-	_sprite_renderer.draw_support_feedback(self, _entities)
+	_sprite_renderer.draw_enemy_feedback(self, _entities)
 	for attack in _shooter_attacks.values():
 		if str(attack["phase"]) != "telegraph":
 			continue

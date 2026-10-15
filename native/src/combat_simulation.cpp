@@ -377,6 +377,9 @@ Dictionary CombatSimulation::snapshot() const {
 		components["EnemyType"] = String(entity.type.id.c_str());
 		components["ThreatLevel"] = entity.type.threat_level;
 		components["MoveSpeed"] = entity.type.move_speed;
+		if (entity.type.id == "elite") {
+			components["Affix"] = "Hasted";
+		}
 		components["Supported"] = entity.type.supported;
 		if (entity.type.support_radius > 0.0F) {
 			components["SupportRadius"] = entity.type.support_radius;

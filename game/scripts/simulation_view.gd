@@ -57,7 +57,7 @@ func _draw() -> void:
 	_sprite_renderer.draw_batches(self)
 
 	var center := size * 0.5
-	_sprite_renderer.draw_support_feedback(self, _entities, center)
+	_sprite_renderer.draw_enemy_feedback(self, _entities, center)
 	draw_circle(center, 10.0, Color("#152b35"))
 	draw_arc(center, 11.0, 0.0, TAU, 32, COLOR_CYAN, 1.0)
 	draw_line(center + Vector2(-18, 0), center + Vector2(18, 0), COLOR_CYAN, 1.0)

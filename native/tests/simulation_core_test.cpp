@@ -27,6 +27,7 @@ int main() {
 	const auto tank_profile = enemy_profile("tank");
 	const auto shooter_profile = enemy_profile("shooter");
 	const auto buffer_profile = enemy_profile("buffer");
+	const auto elite_profile = enemy_profile("elite");
 	require(chaser_profile && chaser_profile->health == 20.0F && chaser_profile->speed == 75.0F,
 			"proposed chaser profile should match GDD starting values");
 	require(sprinter_profile && sprinter_profile->health == 12.0F && sprinter_profile->speed == 125.0F,
@@ -38,6 +39,9 @@ int main() {
 	require(buffer_profile && buffer_profile->support_radius == 150.0F &&
 			buffer_profile->support_speed_multiplier == 1.2F,
 			"proposed support profile should expose a bounded speed aura");
+	require(elite_profile && elite_profile->health == 50.0F && elite_profile->speed == 100.0F &&
+			elite_profile->threat_level == 3.0F,
+			"proposed Hasted elite profile should have a distinct combat profile");
 	require(!enemy_profile("unknown"), "unknown enemy profiles should be rejected");
 	SimulationCore profile_steering;
 	const auto profile_entity = profile_steering.spawn("tank", -100.0F, 0.0F, 80.0F,

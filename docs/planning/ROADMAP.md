@@ -357,7 +357,7 @@ Travail requis :
 
 ### P5.4 — Ennemis, élites et boss
 
-**Avancement :** le profil Shooter tire des projectiles lents après un télégraphe visible ; la pause et l’invulnérabilité s’appliquent. Le profil Buffer (35 HP, vitesse 55, menace 2) renforce de 20 % la vitesse des alliés dans son aura de 150 unités, visible en Survival et dans le Sandbox ; l’effet cesse à sa mort. Ses stats, rayon, multiplicateur et taux d’apparition restent **[PROPOSÉS]**. Les familles explosives, élites et patterns de boss restent à faire.
+**Avancement :** le profil Shooter tire des projectiles lents après un télégraphe visible ; la pause et l’invulnérabilité s’appliquent. Le profil Buffer (35 HP, vitesse 55, menace 2) renforce de 20 % la vitesse des alliés dans son aura de 150 unités, visible en Survival et dans le Sandbox ; l’effet cesse à sa mort. Un premier prototype d’élite **Hasted** (50 HP, vitesse 100, menace 3), marqué visuellement, apparaît selon un cooldown, un plafond actif et un budget égal à la population de la vague ; son coût de menace est 3. Il utilise le chemin de récompense élite existant. Tous ces réglages et ce budget restent **[PROPOSÉS]**. Les familles explosives et les patterns de boss restent à faire.
 
 - [ ] **P5.4.1 — Familles ennemies**
   - [ ] Ajouter une famille de mêlée avec spawn, steering et mort.
@@ -373,8 +373,9 @@ Travail requis :
   - [x] Tester destruction du soutien et fin de son effet.
 - [ ] **P5.4.3 — Élites**
   - [ ] Définir les affixes éligibles à chaque famille.
-  - [ ] Générer un élite avec budget/cooldown de menace.
-  - [ ] Vérifier télégraphe, effet d’affixe et récompense.
+  - [x] Générer le prototype Hasted avec plafond actif et cooldown **[PROPOSÉS]**.
+  - [x] Appliquer le budget proposé : somme des menaces actives + coût élite ≤ population cible de la vague.
+  - [x] Vérifier affixe visible, profil de vitesse, mort et récompense élite.
 - [ ] **P5.4.4 — Mid-boss**
   - [ ] Définir les phases et les transitions visibles.
   - [ ] Implémenter chaque phase comme tranche testable.
