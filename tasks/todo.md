@@ -35,6 +35,7 @@
 
 ## Phase 4 — Premier playable Survival
 
-- [x] HUD minimal HP/temps actif/arme/état de run dans la scène Survival.
-- [ ] Vagues, XP, chests, 3 armes/reliques, mid-boss et boss final.
+- [x] HUD HP/temps actif/arme/XP/niveau/état de run dans la scène Survival.
+- [x] Prototype XP : une orbe partagée apparaît à la mort d’un ennemi, se collecte une fois et fait progresser le niveau.
+- [ ] Vagues, chests, 3 armes/reliques, mid-boss et boss final.
 - [ ] HUD, fin de run, sauvegarde minimale et vérification QA complète.

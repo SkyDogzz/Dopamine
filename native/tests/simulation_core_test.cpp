@@ -40,6 +40,18 @@ int main() {
 	profile_steering.steer_enemies_towards(0.0F, 0.0F, {.max_speed = 10.0F});
 	require(std::abs(profile_steering.entity(profile_entity)->velocity.x - tank_profile->speed) < 0.001F,
 			"enemy steering should preserve the profile-specific proposed movement speed");
+	SimulationCore xp_simulation;
+	const auto xp_orb = xp_simulation.spawn_xp_orb(12.0F, -4.0F, 7.0F);
+	const auto spawned_orb = xp_simulation.entity(xp_orb);
+	require(spawned_orb.has_value() && spawned_orb->is_xp_orb && spawned_orb->xp_value == 7.0F,
+			"XP orb should exist as a typed shared-core entity");
+	std::vector<dopamine::sim::CombatEvent> xp_events;
+	require(xp_simulation.collect_xp_orb(xp_orb, xp_events), "active XP orb should be collectable");
+	require(xp_events.size() == 1 && xp_events[0].type == dopamine::sim::CombatEventType::XpCollected &&
+			xp_events[0].amount == 7.0F && xp_events[0].target == xp_orb,
+			"XP collection should emit its value once through a sequenced gameplay event");
+	require(!xp_simulation.entity(xp_orb).has_value() && !xp_simulation.collect_xp_orb(xp_orb, xp_events),
+			"collected XP orb should be removed and reject duplicate collection");
 	require(dopamine::sim::gdd_validated_player_initial_hp == 100.0F,
 			"validated initial player HP should remain 100");
 	require(std::abs(health_decay_amount(0.0, 60.0) - 97.2) < 0.000001,

@@ -70,6 +70,8 @@ EntityId SimulationCore::spawn(std::string type, float x, float y, float hp, flo
 		enemy_types_.emplace_back();
 		projectile_flags_.push_back(false);
 		projectiles_.emplace_back();
+		xp_orb_flags_.push_back(false);
+		xp_values_.push_back(0.0F);
 	} else {
 		index = free_indices_.back();
 		free_indices_.pop_back();
@@ -84,6 +86,8 @@ EntityId SimulationCore::spawn(std::string type, float x, float y, float hp, flo
 	enemy_types_[index] = {std::move(type), threat_level, move_speed};
 	projectile_flags_[index] = false;
 	projectiles_[index] = {};
+	xp_orb_flags_[index] = false;
+	xp_values_[index] = 0.0F;
 	++entity_count_;
 	return id;
 }
@@ -98,6 +102,35 @@ EntityId SimulationCore::spawn_projectile(std::string type, float x, float y, fl
 	projectile_flags_[id.index] = true;
 	projectiles_[id.index] = {damage, radius, lifetime_seconds};
 	return id;
+}
+
+EntityId SimulationCore::spawn_xp_orb(float x, float y, float xp_value) {
+	if (!std::isfinite(xp_value) || xp_value <= 0.0F) {
+		throw std::invalid_argument("XP orb value must be positive and finite");
+	}
+	const EntityId id = spawn("xp_orb", x, y, 1.0F, 0.0F, 0.0F);
+	xp_orb_flags_[id.index] = true;
+	xp_values_[id.index] = xp_value;
+	return id;
+}
+
+bool SimulationCore::collect_xp_orb(EntityId id, std::vector<CombatEvent> &events) {
+	if (id.index >= slots_.size() || !slots_[id.index].active ||
+			slots_[id.index].generation != id.generation || !xp_orb_flags_[id.index]) {
+		return false;
+	}
+	CombatEvent event;
+	event.sequence = next_event_sequence_++;
+	event.type = CombatEventType::XpCollected;
+	event.target = id;
+	event.amount = xp_values_[id.index];
+	event.position_x = transforms_[id.index].x;
+	event.position_y = transforms_[id.index].y;
+	if (!despawn(id)) {
+		return false;
+	}
+	events.push_back(event);
+	return true;
 }
 
 bool SimulationCore::despawn(EntityId id) {
@@ -142,7 +175,7 @@ void SimulationCore::reset() {
 			? transforms_
 			: std::vector<Transform2D>{};
 	for (std::size_t index = 0; index < slots_.size(); ++index) {
-		if (slots_[index].active && !projectile_flags_[index]) {
+		if (slots_[index].active && !projectile_flags_[index] && !xp_orb_flags_[index]) {
 			transforms_[index].x += velocities_[index].x * static_cast<float>(delta_seconds);
 			transforms_[index].y += velocities_[index].y * static_cast<float>(delta_seconds);
 		}
@@ -153,7 +186,7 @@ void SimulationCore::reset() {
 	if (has_active_projectile) {
 		float max_target_displacement = 0.0F;
 		for (uint32_t index = 0; index < slots_.size(); ++index) {
-			if (slots_[index].active && !projectile_flags_[index]) {
+			if (slots_[index].active && !projectile_flags_[index] && !xp_orb_flags_[index]) {
 				max_target_displacement = std::max(max_target_displacement,
 						static_cast<float>(std::hypot(transforms_[index].x - start_positions[index].x,
 								transforms_[index].y - start_positions[index].y)));
@@ -182,7 +215,7 @@ void SimulationCore::reset() {
 					broadphase_radius, {});
 			bool hit = false;
 			for (uint32_t target_index : candidates) {
-				if (target_index == projectile_index || projectile_flags_[target_index] ||
+				if (target_index == projectile_index || projectile_flags_[target_index] || xp_orb_flags_[target_index] ||
 						health_[target_index].current <= 0.0F) {
 					continue;
 				}
@@ -237,7 +270,7 @@ void SimulationCore::steer_enemies_towards(float target_x, float target_y, Steer
 			? build_spatial_index(config.spatial_hash)
 			: SpatialIndex{};
 	for (uint32_t index = 0; index < slots_.size(); ++index) {
-		if (!slots_[index].active || projectile_flags_[index]) {
+		if (!slots_[index].active || projectile_flags_[index] || xp_orb_flags_[index]) {
 			continue;
 		}
 		const Transform2D &position = transforms_[index];
@@ -321,7 +354,7 @@ SimulationCore::SpatialIndex SimulationCore::build_spatial_index(SpatialHashConf
 	SpatialIndex index;
 	index.reserve(entity_count_);
 	for (uint32_t slot_index = 0; slot_index < slots_.size(); ++slot_index) {
-		if (!slots_[slot_index].active || projectile_flags_[slot_index]) {
+		if (!slots_[slot_index].active || projectile_flags_[slot_index] || xp_orb_flags_[slot_index]) {
 			continue;
 		}
 		const Transform2D &position = transforms_[slot_index];
@@ -383,10 +416,12 @@ void SimulationCore::apply_damage(EntityId source, EntityId target, float amount
 	Health &target_health = health_[target.index];
 	target_health.current = std::max(0.0F, target_health.current - amount);
 	events.push_back({next_event_sequence_++, CombatEventType::Damage, source, target,
-			amount, target_health.current, enemy_types_[target.index].threat_level});
+			amount, target_health.current, enemy_types_[target.index].threat_level,
+			transforms_[target.index].x, transforms_[target.index].y});
 	if (target_health.current <= 0.0F) {
 		events.push_back({next_event_sequence_++, CombatEventType::Death, source, target,
-				0.0F, 0.0F, enemy_types_[target.index].threat_level});
+				0.0F, 0.0F, enemy_types_[target.index].threat_level,
+				transforms_[target.index].x, transforms_[target.index].y});
 		deferred_despawns.push_back(target);
 	}
 }
@@ -401,7 +436,7 @@ std::optional<Entity> SimulationCore::entity(EntityId id) const {
 	}
 	const size_t index = static_cast<size_t>(id.index);
 	return Entity{id, transforms_[index], velocities_[index], health_[index], enemy_types_[index],
-			projectile_flags_[index], projectiles_[index]};
+			projectile_flags_[index], projectiles_[index], xp_orb_flags_[index], xp_values_[index]};
 }
 
 std::vector<Entity> SimulationCore::snapshot() const {
@@ -411,7 +446,7 @@ std::vector<Entity> SimulationCore::snapshot() const {
 		if (slots_[index].active) {
 			const EntityId id{index, slots_[index].generation};
 			result.push_back({id, transforms_[index], velocities_[index], health_[index], enemy_types_[index],
-					projectile_flags_[index], projectiles_[index]});
+					projectile_flags_[index], projectiles_[index], xp_orb_flags_[index], xp_values_[index]});
 		}
 	}
 	return result;

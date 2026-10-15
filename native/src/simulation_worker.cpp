@@ -214,6 +214,33 @@ void SimulationWorker::apply(const SimulationCommand &command) {
 				log(std::string("projectile rejected: ") + error.what());
 			}
 			break;
+		case CommandType::SpawnXpOrb:
+			if (simulation_.entity_count() >= max_entities_) {
+				log("XP orb rejected: entity count outside limits");
+				break;
+			}
+			try {
+				simulation_.spawn_xp_orb(command.x, command.y, command.xp_value);
+				log("spawned XP orb worth " + std::to_string(command.xp_value));
+			} catch (const std::exception &error) {
+				log(std::string("XP orb rejected: ") + error.what());
+			}
+			break;
+		case CommandType::CollectXpOrb:
+			if (pending_events_.size() >= max_pending_events_) {
+				log("XP collection delayed: acknowledge pending events first");
+				break;
+			}
+			{
+				std::vector<CombatEvent> events;
+				if (simulation_.collect_xp_orb(command.entity, events)) {
+					append_events(std::move(events));
+					log("XP orb collected");
+				} else {
+					log("XP collection ignored: stale or non-XP entity ID");
+				}
+			}
+			break;
 		case CommandType::AcknowledgeEvents:
 			if (command.event_sequence <= last_event_sequence_) {
 				const auto first_pending = std::find_if(pending_events_.begin(), pending_events_.end(),
@@ -252,6 +279,9 @@ void SimulationWorker::publish(double frame_time_ms) {
 	for (const Entity &entity : next->entities) {
 		if (entity.is_projectile) {
 			++next->projectile_count;
+		}
+		if (entity.is_xp_orb) {
+			++next->xp_orb_count;
 		}
 	}
 	next->logs = logs_;

@@ -25,6 +25,8 @@ enum class CommandType {
 	SetSpeed,
 	SetSteeringTarget,
 	SpawnProjectile,
+	SpawnXpOrb,
+	CollectXpOrb,
 	AcknowledgeEvents,
 	Reset,
 };
@@ -47,6 +49,7 @@ struct SimulationCommand {
 	float projectile_damage = 1.0F;
 	float projectile_radius = 3.0F;
 	double projectile_lifetime = 5.0;
+	float xp_value = 1.0F;
 	uint64_t event_sequence = 0;
 	SteeringConfig steering;
 };
@@ -60,6 +63,7 @@ struct SimulationSnapshot {
 	uint64_t rejected_commands = 0;
 	uint64_t collision_count = 0;
 	uint64_t projectile_count = 0;
+	uint64_t xp_orb_count = 0;
 	std::vector<Entity> entities;
 	std::vector<CombatEvent> events;
 	std::vector<std::string> logs;

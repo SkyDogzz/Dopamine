@@ -23,6 +23,8 @@ public:
 	int64_t spawn_enemy(String enemy_type, int64_t count, Vector2 position, Vector2 velocity);
 	int64_t spawn_projectile(String projectile_type, Vector2 position, Vector2 velocity, float damage,
 			float radius, double lifetime_seconds);
+	int64_t spawn_xp_orb(Vector2 position, float xp_value);
+	int64_t collect_xp_orb(int64_t index, int64_t generation);
 	int64_t despawn(int64_t index, int64_t generation);
 	int64_t kill_all();
 	int64_t pause();

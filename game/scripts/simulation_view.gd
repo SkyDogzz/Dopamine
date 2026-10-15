@@ -50,6 +50,9 @@ func _draw() -> void:
 		if components.get("IsProjectile", false):
 			draw_rect(Rect2(point - Vector2(3, 3), Vector2(6, 6)), COLOR_AMBER)
 			continue
+		if components.get("IsXpOrb", false):
+			draw_circle(point, 4.0, COLOR_VIOLET)
+			continue
 		var color := _entity_color(String(components["EnemyType"]))
 		draw_circle(point, 6.0, color.darkened(0.55))
 		draw_circle(point, 3.0, color)

@@ -87,6 +87,7 @@ struct ProjectileData {
 enum class CombatEventType {
 	Damage,
 	Death,
+	XpCollected,
 };
 
 struct CombatEvent {
@@ -97,6 +98,8 @@ struct CombatEvent {
 	float amount = 0.0F;
 	float remaining_health = 0.0F;
 	float threat_level = 1.0F;
+	float position_x = 0.0F;
+	float position_y = 0.0F;
 };
 
 struct Entity {
@@ -107,6 +110,8 @@ struct Entity {
 	EnemyType type;
 	bool is_projectile = false;
 	ProjectileData projectile;
+	bool is_xp_orb = false;
+	float xp_value = 0.0F;
 };
 
 class SimulationCore {
@@ -115,6 +120,8 @@ public:
 			float threat_level = 1.0F, float move_speed = 0.0F);
 	EntityId spawn_projectile(std::string type, float x, float y, float damage, float radius,
 			double lifetime_seconds, float velocity_x, float velocity_y);
+	EntityId spawn_xp_orb(float x, float y, float xp_value);
+	bool collect_xp_orb(EntityId id, std::vector<CombatEvent> &events);
 	bool despawn(EntityId id);
 	void reset();
 	std::vector<CombatEvent> advance(double delta_seconds);
@@ -153,6 +160,8 @@ private:
 	std::vector<EnemyType> enemy_types_;
 	std::vector<bool> projectile_flags_;
 	std::vector<ProjectileData> projectiles_;
+	std::vector<bool> xp_orb_flags_;
+	std::vector<float> xp_values_;
 	std::vector<uint32_t> free_indices_;
 	std::size_t entity_count_ = 0;
 	double simulation_time_ = 0.0;

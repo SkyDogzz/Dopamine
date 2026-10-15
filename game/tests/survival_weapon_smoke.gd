@@ -6,6 +6,7 @@ func _initialize() -> void:
 func _run() -> void:
 	var session: Node2D = load("res://scenes/survival_session.tscn").instantiate()
 	session.spawn_initial_enemy = false
+	session.xp_collection_radius = 200.0
 	root.add_child(session)
 	await process_frame
 	if session.simulation == null:
@@ -38,6 +39,12 @@ func _run() -> void:
 		return
 	if session.get_node("HUD/RunPanel/RunInfo/RunState").text != "IN RUN":
 		_fail("Survival HUD should reflect the active run state")
+		return
+	if session.player_level != 2 or session.player_xp != 0.0:
+		_fail("Collected enemy XP should advance the player level")
+		return
+	if not session.get_node("HUD/RunPanel/RunInfo/XPValue").text.begins_with("LV 2"):
+		_fail("Survival HUD should display the new XP level")
 		return
 	print("Survival automatic weapon smoke passed")
 	quit()

@@ -15,6 +15,11 @@ const ENEMY_SPAWN_OFFSET := Vector2(140.0, 0.0)
 @export var lightning_projectile_radius: float = 4.0
 @export var lightning_projectile_lifetime: float = 2.0
 @export_range(1, 5) var lightning_chain_count: int = 2
+@export_group("Prototype XP — proposed tuning")
+@export var xp_per_enemy: float = 5.0
+@export var xp_collection_radius: float = 36.0
+@export var xp_base_to_next_level: float = 10.0
+@export var xp_growth_per_level: float = 5.0
 
 var simulation: Object
 var player: CharacterBody2D
@@ -22,17 +27,23 @@ var last_target_sequence := 0
 var player_hp := 0.0
 var player_max_hp := 0.0
 var player_active_time := 0.0
+var player_level := 1
+var player_xp := 0.0
+var player_xp_to_next := 10.0
 var run_over := false
 var _last_target := Vector2(INF, INF)
 var _last_simulation_time := 0.0
 var _last_combat_event_sequence := 0
 var _next_weapon_time := 0.0
 var _entities: Array = []
+var _pending_xp_orbs: Dictionary = {}
 
 @onready var _hp_value: Label = $HUD/RunPanel/RunInfo/HPValue
 @onready var _hp_bar: ProgressBar = $HUD/RunPanel/RunInfo/HPBar
 @onready var _time_value: Label = $HUD/RunPanel/RunInfo/TimeValue
 @onready var _weapon_value: Label = $HUD/RunPanel/RunInfo/WeaponValue
+@onready var _xp_value: Label = $HUD/RunPanel/RunInfo/XPValue
+@onready var _xp_bar: ProgressBar = $HUD/RunPanel/RunInfo/XPBar
 @onready var _run_state: Label = $HUD/RunPanel/RunInfo/RunState
 
 func _ready() -> void:
@@ -46,6 +57,7 @@ func _ready() -> void:
 		return
 	player_max_hp = simulation.initial_player_hp()
 	player_hp = player_max_hp
+	player_xp_to_next = xp_base_to_next_level
 	_publish_player_target()
 	if spawn_initial_enemy:
 		simulation.spawn_enemy("chaser", 1, ENEMY_SPAWN_OFFSET, Vector2.ZERO)
@@ -70,13 +82,23 @@ func _process(_delta: float) -> void:
 		if sequence <= _last_combat_event_sequence:
 			continue
 		latest_event_sequence = sequence
-		if event["type"] == "death" and not run_over:
-			var healing: float = float(simulation.kill_heal_amount(float(event["threat_level"])))
-			player_hp = minf(float(simulation.initial_player_hp()), player_hp + healing)
+		match event["type"]:
+			"death":
+				if not run_over:
+					var healing: float = float(simulation.kill_heal_amount(float(event["threat_level"])))
+					player_hp = minf(player_max_hp, player_hp + healing)
+					simulation.spawn_xp_orb(
+						Vector2(float(event["position"]["x"]), float(event["position"]["y"])), xp_per_enemy
+					)
+			"xp_collected":
+				var id: Dictionary = event["target"]
+				_pending_xp_orbs.erase(_entity_key(int(id["index"]), int(id["generation"])))
+				_add_xp(float(event["amount"]))
 	if latest_event_sequence > _last_combat_event_sequence:
 		_last_combat_event_sequence = latest_event_sequence
 		simulation.acknowledge_events(latest_event_sequence)
 	_entities = state["entities"]
+	_collect_nearby_xp_orbs(state)
 	_fire_lightning_conductor(current_simulation_time, state["paused"])
 	if player_hp <= 0.0 and not run_over:
 		run_over = true
@@ -88,6 +110,9 @@ func _refresh_hud(state: Dictionary) -> void:
 	_hp_value.text = "HP  %.1f / %.0f" % [player_hp, player_max_hp]
 	_hp_bar.max_value = player_max_hp
 	_hp_bar.value = player_hp
+	_xp_value.text = "LV %d  XP %.0f / %.0f" % [player_level, player_xp, player_xp_to_next]
+	_xp_bar.max_value = player_xp_to_next
+	_xp_bar.value = player_xp
 	var total_seconds := int(floor(player_active_time))
 	_time_value.text = "%02d:%02d" % [total_seconds / 60, total_seconds % 60]
 	_weapon_value.text = "LIGHTNING CONDUCTOR  •  %d CHAINS" % lightning_chain_count
@@ -97,6 +122,37 @@ func _refresh_hud(state: Dictionary) -> void:
 		_run_state.text = "PAUSED"
 	else:
 		_run_state.text = "IN RUN"
+
+func _collect_nearby_xp_orbs(state: Dictionary) -> void:
+	if state["paused"] or run_over:
+		return
+	for entity in _entities:
+		var components: Dictionary = entity["components"]
+		if not components.get("IsXpOrb", false):
+			continue
+		var id: Dictionary = entity["id"]
+		var key := _entity_key(int(id["index"]), int(id["generation"]))
+		if _pending_xp_orbs.has(key):
+			if int(state["last_sequence"]) < int(_pending_xp_orbs[key]):
+				continue
+			_pending_xp_orbs.erase(key)
+		var transform: Dictionary = components["Transform2D"]
+		var orb_position := Vector2(float(transform["x"]), float(transform["y"]))
+		if player.global_position.distance_squared_to(orb_position) > xp_collection_radius * xp_collection_radius:
+			continue
+		var sequence: int = simulation.collect_xp_orb(int(id["index"]), int(id["generation"]))
+		if sequence > 0:
+			_pending_xp_orbs[key] = sequence
+
+func _add_xp(amount: float) -> void:
+	player_xp += amount
+	while player_xp >= player_xp_to_next:
+		player_xp -= player_xp_to_next
+		player_level += 1
+		player_xp_to_next = xp_base_to_next_level + xp_growth_per_level * float(player_level - 1)
+
+func _entity_key(index: int, generation: int) -> String:
+	return "%d:%d" % [index, generation]
 
 func _fire_lightning_conductor(active_time: float, paused: bool) -> void:
 	if not weapon_enabled or paused or run_over or lightning_cooldown <= 0.0 or active_time < _next_weapon_time:
@@ -153,6 +209,10 @@ func _draw() -> void:
 		if components.get("IsProjectile", false):
 			var projectile_transform: Dictionary = components["Transform2D"]
 			draw_circle(Vector2(float(projectile_transform["x"]), float(projectile_transform["y"])), 3.0, Color("#ffd166"))
+			continue
+		if components.get("IsXpOrb", false):
+			var orb_transform: Dictionary = components["Transform2D"]
+			draw_circle(Vector2(float(orb_transform["x"]), float(orb_transform["y"])), 4.0, Color("#b19cff"))
 			continue
 		var transform: Dictionary = components["Transform2D"]
 		var position := Vector2(float(transform["x"]), float(transform["y"]))

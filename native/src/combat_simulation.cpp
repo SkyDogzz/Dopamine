@@ -18,6 +18,8 @@ void CombatSimulation::_bind_methods() {
 			&CombatSimulation::spawn_enemy);
 	ClassDB::bind_method(D_METHOD("spawn_projectile", "projectile_type", "position", "velocity", "damage", "radius", "lifetime_seconds"),
 			&CombatSimulation::spawn_projectile);
+	ClassDB::bind_method(D_METHOD("spawn_xp_orb", "position", "xp_value"), &CombatSimulation::spawn_xp_orb);
+	ClassDB::bind_method(D_METHOD("collect_xp_orb", "index", "generation"), &CombatSimulation::collect_xp_orb);
 	ClassDB::bind_method(D_METHOD("despawn", "index", "generation"), &CombatSimulation::despawn);
 	ClassDB::bind_method(D_METHOD("kill_all"), &CombatSimulation::kill_all);
 	ClassDB::bind_method(D_METHOD("pause"), &CombatSimulation::pause);
@@ -102,6 +104,29 @@ int64_t CombatSimulation::spawn_projectile(String projectile_type, Vector2 posit
 	command.projectile_damage = damage;
 	command.projectile_radius = radius;
 	command.projectile_lifetime = lifetime_seconds;
+	return submit(std::move(command));
+}
+
+int64_t CombatSimulation::spawn_xp_orb(Vector2 position, float xp_value) {
+	if (!std::isfinite(position.x) || !std::isfinite(position.y) || !std::isfinite(xp_value) || xp_value <= 0.0F) {
+		return 0;
+	}
+	SimulationCommand command;
+	command.type = CommandType::SpawnXpOrb;
+	command.x = static_cast<float>(position.x);
+	command.y = static_cast<float>(position.y);
+	command.xp_value = xp_value;
+	return submit(std::move(command));
+}
+
+int64_t CombatSimulation::collect_xp_orb(int64_t index, int64_t generation) {
+	constexpr int64_t max_id = std::numeric_limits<uint32_t>::max();
+	if (index < 0 || index > max_id || generation <= 0 || generation > max_id) {
+		return 0;
+	}
+	SimulationCommand command;
+	command.type = CommandType::CollectXpOrb;
+	command.entity = {static_cast<uint32_t>(index), static_cast<uint32_t>(generation)};
 	return submit(std::move(command));
 }
 
@@ -212,6 +237,7 @@ Dictionary CombatSimulation::snapshot() const {
 	metrics["frame_time_ms"] = state->frame_time_ms;
 	metrics["entity_count"] = static_cast<int64_t>(state->entities.size());
 	metrics["projectile_count"] = static_cast<int64_t>(state->projectile_count);
+	metrics["xp_orb_count"] = static_cast<int64_t>(state->xp_orb_count);
 	metrics["collision_count"] = static_cast<int64_t>(state->collision_count);
 	result["metrics"] = metrics;
 
@@ -239,6 +265,8 @@ Dictionary CombatSimulation::snapshot() const {
 		components["ThreatLevel"] = entity.type.threat_level;
 		components["MoveSpeed"] = entity.type.move_speed;
 		components["IsProjectile"] = entity.is_projectile;
+		components["IsXpOrb"] = entity.is_xp_orb;
+		components["XpValue"] = entity.xp_value;
 		if (entity.is_projectile) {
 			Dictionary projectile;
 			projectile["damage"] = entity.projectile.damage;
@@ -263,12 +291,20 @@ Dictionary CombatSimulation::snapshot() const {
 		target["generation"] = static_cast<int64_t>(event.target.generation);
 		Dictionary entry;
 		entry["sequence"] = static_cast<int64_t>(event.sequence);
-		entry["type"] = event.type == dopamine::sim::CombatEventType::Damage ? "damage" : "death";
+		switch (event.type) {
+			case dopamine::sim::CombatEventType::Damage: entry["type"] = "damage"; break;
+			case dopamine::sim::CombatEventType::Death: entry["type"] = "death"; break;
+			case dopamine::sim::CombatEventType::XpCollected: entry["type"] = "xp_collected"; break;
+		}
 		entry["source"] = source;
 		entry["target"] = target;
 		entry["amount"] = event.amount;
 		entry["remaining_health"] = event.remaining_health;
 		entry["threat_level"] = event.threat_level;
+		Dictionary position;
+		position["x"] = event.position_x;
+		position["y"] = event.position_y;
+		entry["position"] = position;
 		events.push_back(entry);
 	}
 	result["events"] = events;

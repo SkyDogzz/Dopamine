@@ -50,8 +50,9 @@ Livrer d’abord un Sandbox développeur autonome, puis le premier playable Surv
 
 ### Phase 4 — Premier playable Survival
 
-- [ ] Ajouter vagues, XP, chests et contenu minimal de trois armes/reliques selon les données de référence.
-- [x] Ajouter un HUD Survival minimal pour le HP, temps actif, arme prototype et état de run.
+- [x] Ajouter les orbes XP au cœur ECS partagé et le prototype de progression automatique avec paramètres **[PROPOSÉS]**.
+- [ ] Ajouter vagues, chests et contenu minimal de trois armes/reliques selon les données de référence.
+- [x] Ajouter un HUD Survival minimal pour le HP, temps actif, arme prototype, XP/niveau et état de run.
 - [ ] Ajouter le HUD vague/XP/boss, les boss, l’écran de fin de run et la sauvegarde minimale isolée du Sandbox.
 - [ ] Vérifier une run Survival complète de 24 vagues et les critères QA associés.
 - [ ] Checkpoint final : build Linux, démarrage sans save existante, run complète et régression Sandbox.
