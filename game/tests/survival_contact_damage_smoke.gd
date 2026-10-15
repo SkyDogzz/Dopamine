@@ -38,6 +38,14 @@ func _run() -> void:
 		return
 	session._entities = [{"components": {
 		"EnemyType": "chaser",
+		"Transform2D": {"x": 20.0, "y": 0.0},
+	}}]
+	session._apply_contact_damage({"paused": false}, 5.0)
+	if not is_equal_approx(session.player_hp, 100.0):
+		_fail("Enemy contact damage should not trigger before the visible hit circles touch")
+		return
+	session._entities = [{"components": {
+		"EnemyType": "chaser",
 		"Transform2D": {"x": 0.0, "y": 0.0},
 	}}]
 	session.player_hp = 100.0

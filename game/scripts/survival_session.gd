@@ -28,7 +28,7 @@ const WAVE_HP_CAP := 12.0
 @export var contact_damage_per_hit: float = 10.0
 @export var contact_invulnerability_seconds: float = 0.35
 @export var player_contact_radius: float = 10.0
-@export var enemy_contact_radius: float = 12.0
+@export var enemy_contact_radius: float = 8.0
 @export var enemy_separation_radius: float = 18.0
 @export_range(0.0, 1.0) var enemy_separation_weight: float = 0.5
 @export_group("Prototype Lightning Conductor — proposed tuning")
