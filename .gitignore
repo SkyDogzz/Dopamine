@@ -1,4 +1,4 @@
 /build/
 /cmake-build-*/
 /game/.godot/
-/game/bin/
+/game/bin/linux/
