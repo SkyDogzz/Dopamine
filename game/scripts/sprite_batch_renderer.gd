@@ -15,6 +15,8 @@ const SPRITE_FILES := {
 	"projectile_minigun": "projectile_minigun.svg",
 	"projectile_toxic_cloud": "projectile_toxic_cloud.svg",
 	"projectile_sawblades": "projectile_sawblades.svg",
+	"projectile_meteor": "projectile_meteor.svg",
+	"projectile_starfall_fragment": "projectile_starfall_fragment.svg",
 }
 
 var _batches: Dictionary = {}
@@ -99,6 +101,10 @@ func _sprite_for_entity(components: Dictionary) -> String:
 				return "projectile_toxic_cloud"
 			"sawblades", "razorstorm":
 				return "projectile_sawblades"
+			"meteor_staff", "starfall":
+				return "projectile_meteor"
+			"starfall_fragment":
+				return "projectile_starfall_fragment"
 			_:
 				return "projectile_lightning"
 	if components.get("IsXpOrb", false):
@@ -119,6 +125,8 @@ func _sprite_for_entity(components: Dictionary) -> String:
 			return "enemy_chaser"
 
 func _size_for_entity(sprite_id: String) -> float:
+	if sprite_id == "projectile_starfall_fragment":
+		return 10.0
 	if sprite_id.begins_with("boss_"):
 		return 52.0
 	if sprite_id.begins_with("projectile_"):

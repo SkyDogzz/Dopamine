@@ -12,6 +12,7 @@ const WEAPON_ICONS := {
 	"minigun": preload("res://assets/sprites/projectile_minigun.svg"),
 	"toxic_cloud": preload("res://assets/sprites/projectile_toxic_cloud.svg"),
 	"sawblades": preload("res://assets/sprites/projectile_sawblades.svg"),
+	"meteor_staff": preload("res://assets/sprites/projectile_meteor.svg"),
 }
 const WAVE_DIRECTOR_SCRIPT := preload("res://scripts/survival_wave_director.gd")
 const LOADOUT_SCRIPT := preload("res://scripts/survival_loadout.gd")
@@ -105,6 +106,21 @@ const WAVE_HP_CAP := 12.0
 @export var sawblades_projectile_radius: float = 7.0
 @export var sawblades_projectile_lifetime: float = 2.5
 @export_range(0.0, 1.0) var magnetic_coil_projectile_speed_per_level: float = 0.04
+@export_group("Prototype Meteor Staff — proposed tuning")
+@export var meteor_staff_cooldown: float = 2.8
+@export var meteor_staff_damage: float = 12.0
+@export var meteor_staff_range: float = 620.0
+@export var meteor_staff_projectile_speed: float = 300.0
+@export var meteor_staff_projectile_radius: float = 8.0
+@export var meteor_staff_projectile_lifetime: float = 2.5
+@export var meteor_staff_cluster_radius: float = 110.0
+@export var meteor_staff_blast_radius: float = 82.0
+@export_range(0.0, 1.0) var meteor_staff_splash_damage_multiplier: float = 0.55
+@export_range(0.0, 1.0) var celestial_eye_area_per_level: float = 0.03
+@export_range(0.0, 1.0) var celestial_eye_double_impact_chance: float = 0.12
+@export var starfall_fragment_radius: float = 150.0
+@export var starfall_fragment_damage_multiplier: float = 0.4
+@export_range(0, 8) var starfall_fragment_count: int = 2
 @export_group("Prototype Bloodstorm — proposed tuning")
 @export var bloodstorm_bleed_damage_per_tick: float = 2.0
 @export var bloodstorm_bleed_interval_seconds: float = 0.5
@@ -152,12 +168,13 @@ var _next_daggers_time := 0.0
 var _next_minigun_time := 0.0
 var _next_toxic_time := 0.0
 var _next_sawblades_time := 0.0
+var _next_meteor_time := 0.0
 var _redline_fire_time := 0.0
 var _redline_target_id := Vector2i(-1, -1)
-var _projectile_types: Dictionary = {}
 var _pandemic_poisoned_targets: Dictionary = {}
 var _pandemic_spread_targets: Dictionary = {}
 var _pandemic_bursts: Array[Dictionary] = []
+var _starfall_fragments_spawned: Dictionary = {}
 var _entities: Array = []
 var _pending_xp_orbs: Dictionary = {}
 var _chest_director: RefCounted
@@ -281,8 +298,14 @@ func _process(_delta: float) -> void:
 				var damage_target: Dictionary = event["target"]
 				var source_key := _entity_key(int(damage_source["index"]), int(damage_source["generation"]))
 				var target_key := _entity_key(int(damage_target["index"]), int(damage_target["generation"]))
-				if _projectile_types.get(source_key, "") == "pandemic_cloud":
+				var source_type: String = str(event.get("source_type", ""))
+				if source_type == "pandemic_cloud":
 					_pandemic_poisoned_targets[target_key] = true
+				elif source_type == "starfall":
+					if not _starfall_fragments_spawned.has(source_key):
+						_starfall_fragments_spawned[source_key] = true
+						_spawn_starfall_fragments(Vector2(float(event["position"]["x"]), float(event["position"]["y"])),
+								damage_target, state["entities"])
 				var damage_lifesteal := float(event["amount"]) * float(loadout.relic_level("blood_chalice")) * blood_chalice_lifesteal_per_level
 				if bool(event.get("is_damage_over_time", false)):
 					damage_lifesteal *= 0.25
@@ -326,12 +349,15 @@ func _process(_delta: float) -> void:
 	if latest_event_sequence > _last_combat_event_sequence:
 		_last_combat_event_sequence = latest_event_sequence
 		simulation.acknowledge_events(latest_event_sequence)
-	_projectile_types.clear()
+	var active_projectiles: Dictionary = {}
 	for entity in state["entities"]:
 		var components: Dictionary = entity["components"]
-		if components.get("IsProjectile", false) and components.get("EnemyType", "") == "pandemic_cloud":
+		if components.get("IsProjectile", false):
 			var id: Dictionary = entity["id"]
-			_projectile_types[_entity_key(int(id["index"]), int(id["generation"]))] = "pandemic_cloud"
+			active_projectiles[_entity_key(int(id["index"]), int(id["generation"]))] = true
+	for projectile_key in _starfall_fragments_spawned.keys():
+		if not active_projectiles.has(projectile_key):
+			_starfall_fragments_spawned.erase(projectile_key)
 	_entities = state["entities"]
 	_sprite_renderer.set_entities(_entities)
 	_advance_wave_director(elapsed_active_time, state["paused"])
@@ -345,6 +371,7 @@ func _process(_delta: float) -> void:
 	_fire_minigun(current_simulation_time, state["paused"])
 	_fire_toxic_cloud(current_simulation_time, state["paused"])
 	_fire_sawblades(current_simulation_time, state["paused"])
+	_fire_meteor_staff(current_simulation_time, state["paused"])
 	if player_hp <= 0.0 and not run_over:
 		_finish_run(false)
 	player.controls_enabled = not state["paused"] and not run_over and not _chest_open and not _starting_weapon_choice_open
@@ -403,6 +430,7 @@ func _refresh_hud(state: Dictionary) -> void:
 	var short_names := {"lightning_conductor": "LC", "inferno_sprayer": "IS", "crimson_daggers": "CD", "minigun": "MG"}
 	short_names["toxic_cloud"] = "TC"
 	short_names["sawblades"] = "SB"
+	short_names["meteor_staff"] = "MS"
 	var owned_weapons: Array[String] = loadout.owned_weapons()
 	_weapon_icon.texture = WEAPON_ICONS.get(owned_weapons[0]) if not owned_weapons.is_empty() else null
 	for weapon_id in owned_weapons:
@@ -413,6 +441,8 @@ func _refresh_hud(state: Dictionary) -> void:
 			label += " PANDEMIC"
 		if weapon_id == "sawblades" and loadout.weapon_level("sawblades") >= 5 and loadout.relic_level("magnetic_coil") > 0:
 			label += " RAZORSTORM"
+		if weapon_id == "meteor_staff" and loadout.weapon_level("meteor_staff") >= 5 and loadout.relic_level("celestial_eye") > 0:
+			label += " STARFALL"
 		equipped_names.append(label)
 	_weapon_value.text = "  •  ".join(equipped_names)
 	if wave_director != null and wave_director.state == WAVE_DIRECTOR_SCRIPT.State.VICTORY:
@@ -1021,6 +1051,83 @@ func _fire_sawblades(active_time: float, paused: bool) -> void:
 	if sequence > 0:
 		_next_sawblades_time = active_time + _effective_weapon_cooldown(sawblades_cooldown)
 
+func _fire_meteor_staff(active_time: float, paused: bool) -> void:
+	if not weapon_enabled or loadout.weapon_level("meteor_staff") == 0 or paused or _chest_open or run_over or meteor_staff_cooldown <= 0.0 or active_time < _next_meteor_time:
+		return
+	var target := _meteor_cluster_target()
+	if target.is_empty():
+		return
+	var level: int = loadout.weapon_level("meteor_staff")
+	var evolved: bool = level >= 5 and loadout.relic_level("celestial_eye") > 0
+	var projectile_type := "starfall" if evolved else "meteor_staff"
+	var damage_multiplier := (1.2 if level >= 2 else 1.0) * (1.3 if level >= 5 else 1.0)
+	var blast_radius := meteor_staff_blast_radius * (1.2 if level >= 3 else 1.0)
+	var direction: Vector2 = (target["position"] - player.global_position).normalized()
+	if direction == Vector2.ZERO:
+		direction = Vector2.RIGHT
+	var shot_count := 2 if loadout.relic_level("celestial_eye") >= 5 and randf() < celestial_eye_double_impact_chance else 1
+	var fired := false
+	for _shot in range(shot_count):
+		if simulation.spawn_projectile(projectile_type, player.global_position + direction * 14.0,
+				direction * _equipment_projectile_speed(meteor_staff_projectile_speed),
+				meteor_staff_damage * damage_multiplier * _persistent_damage_multiplier() * _roll_equipment_critical_multiplier(),
+				_equipment_area(meteor_staff_projectile_radius), meteor_staff_projectile_lifetime,
+				2.0, 0.5, 2.0, _equipment_area(blast_radius), meteor_staff_splash_damage_multiplier) > 0:
+			fired = true
+	if fired:
+		var cooldown_multiplier := 0.85 if level >= 4 else 1.0
+		_next_meteor_time = active_time + _effective_weapon_cooldown(meteor_staff_cooldown * cooldown_multiplier)
+
+func _meteor_cluster_target() -> Dictionary:
+	var anchor := _nearest_enemy(meteor_staff_range)
+	if anchor.is_empty():
+		return {}
+	var anchor_position: Vector2 = anchor["position"]
+	var center := anchor_position
+	var target_count := 1
+	for entity in _entities:
+		var components: Dictionary = entity["components"]
+		if components.get("IsProjectile", false) or components.get("IsXpOrb", false):
+			continue
+		if float(components["Health"]["current"]) <= 0.0:
+			continue
+		var id: Dictionary = entity["id"]
+		if Vector2i(int(id["index"]), int(id["generation"])) == anchor["id"]:
+			continue
+		var transform: Dictionary = components["Transform2D"]
+		var position := Vector2(float(transform["x"]), float(transform["y"]))
+		if anchor_position.distance_squared_to(position) <= meteor_staff_cluster_radius * meteor_staff_cluster_radius:
+			center += position
+			target_count += 1
+	return {"id": anchor["id"], "position": center / float(target_count)}
+
+func _spawn_starfall_fragments(origin: Vector2, primary_target: Dictionary, entities: Array) -> void:
+	var candidates: Array[Dictionary] = []
+	var fragment_radius_squared := starfall_fragment_radius * starfall_fragment_radius
+	for entity in entities:
+		var components: Dictionary = entity["components"]
+		if components.get("IsProjectile", false) or components.get("IsXpOrb", false) or float(components["Health"]["current"]) <= 0.0:
+			continue
+		var id: Dictionary = entity["id"]
+		if int(id["index"]) == int(primary_target["index"]) and int(id["generation"]) == int(primary_target["generation"]):
+			continue
+		var transform: Dictionary = components["Transform2D"]
+		var position := Vector2(float(transform["x"]), float(transform["y"]))
+		var distance_squared := origin.distance_squared_to(position)
+		if distance_squared <= fragment_radius_squared:
+			candidates.append({"position": position, "distance_squared": distance_squared})
+	candidates.sort_custom(func(a: Dictionary, b: Dictionary) -> bool: return a["distance_squared"] < b["distance_squared"])
+	var fragment_count := mini(maxi(starfall_fragment_count, 0), candidates.size())
+	for index in range(fragment_count):
+		var direction: Vector2 = (candidates[index]["position"] - origin).normalized()
+		if direction == Vector2.ZERO:
+			continue
+		simulation.spawn_projectile("starfall_fragment", origin + direction * 22.0,
+				direction * _equipment_projectile_speed(meteor_staff_projectile_speed * 1.25),
+				meteor_staff_damage * starfall_fragment_damage_multiplier * _persistent_damage_multiplier() *
+						_roll_equipment_critical_multiplier(), _equipment_area(meteor_staff_projectile_radius * 0.65),
+					meteor_staff_projectile_lifetime)
+
 func _spread_pandemic(origin: Vector2, entities: Array) -> void:
 	var status_damage := toxic_damage_per_tick * (1.0 + (0.2 if loadout.weapon_level("toxic_cloud") >= 2 else 0.0) +
 			(0.25 if loadout.weapon_level("toxic_cloud") >= 5 else 0.0))
@@ -1084,7 +1191,8 @@ func _equipment_projectile_speed(base_speed: float) -> float:
 	return base_speed * (1.0 + _equipment_bonus("projectile_speed_pct") / 100.0 + magnetic_coil_bonus)
 
 func _equipment_area(base_area: float) -> float:
-	return base_area * (1.0 + _equipment_bonus("area_pct") / 100.0)
+	var celestial_eye_bonus := float(loadout.relic_level("celestial_eye")) * celestial_eye_area_per_level
+	return base_area * (1.0 + _equipment_bonus("area_pct") / 100.0 + celestial_eye_bonus)
 
 func _has_unique_effect(effect_id: String) -> bool:
 	return _cached_unique_effects.has(effect_id)

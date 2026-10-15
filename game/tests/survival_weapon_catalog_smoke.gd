@@ -34,6 +34,9 @@ func _run() -> void:
 	if not await _sawblades_ricochet_between_targets():
 		_fail("Sawblades should hit their first target and ricochet to another target")
 		return
+	if not await _meteor_staff_targets_groups_and_starfall_fragments():
+		_fail("Meteor Staff should hit a group and Starfall should fragment toward nearby enemies")
+		return
 	print("Survival weapon catalog smoke passed")
 	quit()
 
@@ -68,6 +71,85 @@ func _sawblades_ricochet_between_targets() -> bool:
 			session.queue_free()
 			return true
 	session.queue_free()
+	return false
+
+func _meteor_staff_targets_groups_and_starfall_fragments() -> bool:
+	var session: Node2D = load("res://scenes/survival_session.tscn").instantiate()
+	session.spawn_initial_enemy = false
+	session.wave_spawning_enabled = false
+	session.weapon_enabled = false
+	session.skip_starting_weapon_choice = true
+	session.contact_damage_per_hit = 0.0
+	session.xp_collection_radius = 0.0
+	session.meteor_staff_cooldown = 1000.0
+	root.add_child(session)
+	await process_frame
+	if not session.loadout.apply_offer("weapon:meteor_staff"):
+		session.queue_free()
+		return false
+	session.simulation.set_speed(4.0)
+	for point in [Vector2(200.0, 0.0), Vector2(220.0, 30.0), Vector2(350.0, 0.0)]:
+		session.simulation.spawn("test_target", 1, point, 100.0, Vector2.ZERO)
+	var targets := await _wait_for_targets(session, 3)
+	if targets.size() != 3:
+		session.queue_free()
+		return false
+	session._entities = targets
+	var meteor_id := _find_target_id_at(session, Vector2(200.0, 0.0))
+	var group_id := _find_target_id_at(session, Vector2(220.0, 30.0))
+	var distant_id := _find_target_id_at(session, Vector2(350.0, 0.0))
+	session.weapon_enabled = true
+	var active_time := float(session.simulation.snapshot()["simulation_time"])
+	session._fire_meteor_staff(active_time, false)
+	if not await _wait_for_target_health_below(session, meteor_id, 99.0) or not await _wait_for_target_health_below(session, group_id, 99.0):
+		session.queue_free()
+		return false
+	if _target_health(session, distant_id) < 99.0:
+		session.queue_free()
+		return false
+	session.simulation.kill_all()
+	if not await _wait_for_no_entities(session):
+		session.queue_free()
+		return false
+	for _level in range(4):
+		if not session.loadout.apply_offer("weapon:meteor_staff"):
+			session.queue_free()
+			return false
+	for _level in range(5):
+		if not session.loadout.apply_offer("relic:celestial_eye"):
+			session.queue_free()
+			return false
+	for point in [Vector2(200.0, 0.0), Vector2(330.0, 0.0), Vector2(200.0, 145.0)]:
+		session.simulation.spawn("test_target", 1, point, 100.0, Vector2.ZERO)
+	targets = await _wait_for_targets(session, 3)
+	if targets.size() != 3:
+		session.queue_free()
+		return false
+	session._entities = targets
+	var active_projectile_time := float(session.simulation.snapshot()["simulation_time"])
+	session._next_meteor_time = active_projectile_time
+	session._fire_meteor_staff(active_projectile_time, false)
+	var deadline := Time.get_ticks_msec() + 2500
+	while Time.get_ticks_msec() < deadline:
+		await process_frame
+		if _target_count_below_health(session, 99.0) >= 3:
+			session.queue_free()
+			return true
+	session.queue_free()
+	return false
+
+func _target_health(session: Node2D, target_id: Dictionary) -> float:
+	for entity in session.simulation.snapshot()["entities"]:
+		if entity["id"] == target_id:
+			return float(entity["components"]["Health"]["current"])
+	return 0.0
+
+func _wait_for_target_health_below(session: Node2D, target_id: Dictionary, health: float) -> bool:
+	var deadline := Time.get_ticks_msec() + 2000
+	while Time.get_ticks_msec() < deadline:
+		await process_frame
+		if _target_health(session, target_id) < health:
+			return true
 	return false
 
 func _toxic_cloud_poison_and_pandemic() -> bool:

@@ -404,6 +404,7 @@ Dictionary CombatSimulation::snapshot() const {
 		entry["remaining_health"] = event.remaining_health;
 		entry["threat_level"] = event.threat_level;
 		entry["target_type"] = event.target_type.c_str();
+		entry["source_type"] = event.source_type.c_str();
 		Dictionary position;
 		position["x"] = event.position_x;
 		position["y"] = event.position_y;

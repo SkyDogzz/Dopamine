@@ -756,13 +756,17 @@ void SimulationCore::apply_damage(EntityId source, EntityId target, float amount
 	}
 	Health &target_health = health_[target.index];
 	target_health.current = std::max(0.0F, target_health.current - amount);
+	const std::string source_type = source.index < slots_.size() && slots_[source.index].active &&
+			slots_[source.index].generation == source.generation ? enemy_types_[source.index].id : std::string{};
 	events.push_back({next_event_sequence_++, CombatEventType::Damage, source, target,
 			amount, target_health.current, enemy_types_[target.index].threat_level,
 			transforms_[target.index].x, transforms_[target.index].y, enemy_types_[target.index].id});
+	events.back().source_type = source_type;
 	if (target_health.current <= 0.0F) {
 		events.push_back({next_event_sequence_++, CombatEventType::Death, source, target,
 				0.0F, 0.0F, enemy_types_[target.index].threat_level,
 				transforms_[target.index].x, transforms_[target.index].y, enemy_types_[target.index].id});
+		events.back().source_type = source_type;
 		deferred_despawns.push_back(target);
 	}
 }

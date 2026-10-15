@@ -311,8 +311,9 @@ int main() {
 	const auto combat_events = combat.advance(0.2);
 	require(combat_events.size() == 2, "swept projectile hit should emit damage and death events");
 	require(combat_events[0].type == dopamine::sim::CombatEventType::Damage &&
-			combat_events[0].target == target && combat_events[0].source == projectile,
-			"damage event should identify projectile and target");
+			combat_events[0].target == target && combat_events[0].source == projectile &&
+			combat_events[0].source_type == "test_projectile",
+			"damage event should identify projectile type, source and target");
 	require(combat_events[1].type == dopamine::sim::CombatEventType::Death &&
 			combat_events[1].sequence > combat_events[0].sequence &&
 			combat_events[1].threat_level == 4.0F && combat_events[1].target_type == "chaser",
