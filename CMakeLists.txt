@@ -47,6 +47,10 @@ if(BUILD_TESTING)
                 COMMAND "${DOPAMINE_GODOT_EXECUTABLE}" --headless --path "${PROJECT_SOURCE_DIR}/game" --script "res://tests/${script_name}.gd")
             set_tests_properties(${script_name} PROPERTIES FIXTURES_REQUIRED godot_project_ready TIMEOUT 15)
         endforeach()
+        if(UNIX AND NOT APPLE)
+            set_tests_properties(sandbox_ui_smoke PROPERTIES
+                ENVIRONMENT "XDG_DATA_HOME=${CMAKE_CURRENT_BINARY_DIR}/sandbox_ui_test_data")
+        endif()
 
         add_test(NAME sandbox_scenario
             COMMAND "${DOPAMINE_GODOT_EXECUTABLE}" --headless --path "${PROJECT_SOURCE_DIR}/game"

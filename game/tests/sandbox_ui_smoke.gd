@@ -4,9 +4,12 @@ func _initialize() -> void:
 	call_deferred("_run")
 
 func _run() -> void:
+	var save_directory := ProjectSettings.globalize_path("user://saves")
+	assert(not DirAccess.dir_exists_absolute(save_directory), "Sandbox smoke must start without a save directory")
 	var sandbox: Control = load("res://scenes/main.tscn").instantiate()
 	root.add_child(sandbox)
 	await process_frame
+	assert(not DirAccess.dir_exists_absolute(save_directory), "Starting the Sandbox must not create a save directory")
 	assert(sandbox.get_node("Shell/Header/SurvivalButton").text == "PLAY SURVIVAL", "Sandbox should expose the Survival prototype entry")
 	assert(sandbox.simulation != null, "Sandbox UI should create its simulation without a save")
 	for node_path in [

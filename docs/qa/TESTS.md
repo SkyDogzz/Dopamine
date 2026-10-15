@@ -61,7 +61,7 @@
 
 ## Sandbox-first
 
-- [ ] Sandbox démarre sans sauvegarde créée ou chargée.
+- [x] Sandbox démarre sans save : le smoke UI utilise un répertoire utilisateur Linux isolé et confirme l’absence de `user://saves` avant et après le lancement.
 - [x] UI Sandbox : spawn, despawn, kill all, pause, reprise, step à durée explicite, vitesse ×2, reset et logs vérifiés sous Godot headless.
 - [x] Sandbox applique un DoT configurable à l’entité sélectionnée et expose ses valeurs à l’inspecteur.
 - [ ] Changement live valide est atomique ; changement invalide rollback.
