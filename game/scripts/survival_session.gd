@@ -117,6 +117,8 @@ var _contact_invulnerable_until := 0.0
 var _pending_lifesteal := 0.0
 var _inventory_was_running := false
 var _cached_persistent_damage_multiplier := 1.0
+var _cached_equipment_bonuses: Dictionary = {}
+var _base_player_move_speed := 240.0
 
 @onready var _hp_value: Label = $HUD/RunPanel/RunInfo/HPValue
 @onready var _hp_bar: ProgressBar = $HUD/RunPanel/RunInfo/HPBar
@@ -172,10 +174,11 @@ func _ready() -> void:
 	_equipment_button.visible = progression_service != null
 	_skill_tree_button.visible = progression_service != null
 	player_max_hp = simulation.initial_player_hp()
+	_base_player_move_speed = player.move_speed
 	if progression_service != null:
-		player_max_hp *= 1.0 + progression_service.skill_bonus("max_hp_pct")
-		player_max_hp += progression_service.equipment_bonus("max_hp")
 		_refresh_persistent_bonuses()
+		player_max_hp *= 1.0 + progression_service.skill_bonus("max_hp_pct")
+		player_max_hp += _equipment_bonus("max_hp")
 	player_hp = player_max_hp
 	player_xp_to_next = xp_base_to_next_level
 	wave_director = WAVE_DIRECTOR_SCRIPT.new()
@@ -231,9 +234,11 @@ func _process(_delta: float) -> void:
 				if not run_over:
 					var healing: float = float(simulation.kill_heal_amount(float(event["threat_level"])))
 					healing *= 1.0 + float(loadout.relic_level("blood_chalice")) * blood_chalice_heal_per_level
+					healing *= 1.0 + _equipment_bonus("kill_healing_pct") / 100.0
 					player_hp = minf(player_max_hp, player_hp + healing)
 					simulation.spawn_xp_orb(
-						Vector2(float(event["position"]["x"]), float(event["position"]["y"])), xp_per_enemy
+						Vector2(float(event["position"]["x"]), float(event["position"]["y"])),
+						xp_per_enemy * (1.0 + _equipment_bonus("xp_pct") / 100.0)
 					)
 			"xp_collected":
 				var id: Dictionary = event["target"]
@@ -343,7 +348,8 @@ func _collect_nearby_xp_orbs(state: Dictionary) -> void:
 			_pending_xp_orbs.erase(key)
 		var transform: Dictionary = components["Transform2D"]
 		var orb_position := Vector2(float(transform["x"]), float(transform["y"]))
-		if player.global_position.distance_squared_to(orb_position) > xp_collection_radius * xp_collection_radius:
+		var pickup_radius := xp_collection_radius * (1.0 + _equipment_bonus("pickup_radius_pct") / 100.0)
+		if player.global_position.distance_squared_to(orb_position) > pickup_radius * pickup_radius:
 			continue
 		var sequence: int = simulation.collect_xp_orb(int(id["index"]), int(id["generation"]))
 		if sequence > 0:
@@ -436,7 +442,7 @@ func _unlock_skill_node(node_id: String) -> void:
 	var result: Dictionary = progression_service.unlock_skill_node(node_id)
 	if result.get("ok", false):
 		var health_ratio := player_hp / player_max_hp if player_max_hp > 0.0 else 1.0
-		player_max_hp = simulation.initial_player_hp() * (1.0 + progression_service.skill_bonus("max_hp_pct")) + progression_service.equipment_bonus("max_hp")
+		player_max_hp = simulation.initial_player_hp() * (1.0 + progression_service.skill_bonus("max_hp_pct")) + _equipment_bonus("max_hp")
 		player_hp = player_max_hp * health_ratio
 		_refresh_persistent_bonuses()
 		_skill_tree_panel.present(result["profile"])
@@ -447,7 +453,7 @@ func _respec_skill_tree() -> void:
 	var result: Dictionary = progression_service.respec_skill_tree()
 	if result.get("ok", false):
 		var health_ratio := player_hp / player_max_hp if player_max_hp > 0.0 else 1.0
-		player_max_hp = simulation.initial_player_hp() * (1.0 + progression_service.skill_bonus("max_hp_pct")) + progression_service.equipment_bonus("max_hp")
+		player_max_hp = simulation.initial_player_hp() * (1.0 + progression_service.skill_bonus("max_hp_pct")) + _equipment_bonus("max_hp")
 		player_hp = player_max_hp * health_ratio
 		_refresh_persistent_bonuses()
 		_skill_tree_panel.present(result["profile"])
@@ -461,7 +467,7 @@ func _set_equipment_state(instance_id: String, equipped: bool) -> void:
 	if result.get("ok", false):
 		_refresh_persistent_bonuses()
 		var health_ratio := player_hp / player_max_hp if player_max_hp > 0.0 else 1.0
-		player_max_hp = simulation.initial_player_hp() * (1.0 + progression_service.skill_bonus("max_hp_pct")) + progression_service.equipment_bonus("max_hp")
+		player_max_hp = simulation.initial_player_hp() * (1.0 + progression_service.skill_bonus("max_hp_pct")) + _equipment_bonus("max_hp")
 		player_hp = minf(player_max_hp, player_max_hp * health_ratio)
 		_equipment_panel.present(result["profile"])
 	else:
@@ -474,7 +480,7 @@ func _enhance_equipment(instance_id: String, stat_id: String, powder_tier: Strin
 	if result.get("ok", false):
 		_refresh_persistent_bonuses()
 		var health_ratio := player_hp / player_max_hp if player_max_hp > 0.0 else 1.0
-		player_max_hp = simulation.initial_player_hp() * (1.0 + progression_service.skill_bonus("max_hp_pct")) + progression_service.equipment_bonus("max_hp")
+		player_max_hp = simulation.initial_player_hp() * (1.0 + progression_service.skill_bonus("max_hp_pct")) + _equipment_bonus("max_hp")
 		player_hp = minf(player_max_hp, player_max_hp * health_ratio)
 		_equipment_panel.present(result["profile"])
 		_equipment_panel.show_feedback(
@@ -501,7 +507,7 @@ func _dismantle_equipment(instance_id: String) -> void:
 	if result.get("ok", false):
 		_refresh_persistent_bonuses()
 		var health_ratio := player_hp / player_max_hp if player_max_hp > 0.0 else 1.0
-		player_max_hp = simulation.initial_player_hp() * (1.0 + progression_service.skill_bonus("max_hp_pct")) + progression_service.equipment_bonus("max_hp")
+		player_max_hp = simulation.initial_player_hp() * (1.0 + progression_service.skill_bonus("max_hp_pct")) + _equipment_bonus("max_hp")
 		player_hp = minf(player_max_hp, player_max_hp * health_ratio)
 		_equipment_panel.present(result["profile"])
 		var reward_parts: PackedStringArray = []
@@ -533,7 +539,8 @@ func _collect_nearby_chests(state: Dictionary) -> void:
 		return
 	for index in range(_world_chests.size()):
 		var chest: Dictionary = _world_chests[index]
-		if player.global_position.distance_squared_to(chest["position"]) > chest_collection_radius * chest_collection_radius:
+		var pickup_radius := chest_collection_radius * (1.0 + _equipment_bonus("pickup_radius_pct") / 100.0)
+		if player.global_position.distance_squared_to(chest["position"]) > pickup_radius * pickup_radius:
 			continue
 		if open_chest_family(str(chest["family"])):
 			_world_chests.remove_at(index)
@@ -641,6 +648,7 @@ func _fire_lightning_conductor(active_time: float, paused: bool) -> void:
 		chain_count = 5
 	var damage_multiplier := (1.25 if level >= 3 else 1.0) * \
 			(1.0 + float(loadout.relic_level("storm_core")) * storm_core_damage_per_level) * _persistent_damage_multiplier()
+	damage_multiplier *= _roll_equipment_critical_multiplier()
 	if level >= 5 and loadout.relic_level("storm_core") > 0:
 		_fire_infinite_circuit(active_time, chain_count, damage_multiplier)
 		return
@@ -672,14 +680,14 @@ func _fire_lightning_conductor(active_time: float, paused: bool) -> void:
 			direction = Vector2.RIGHT
 		var sequence: int = simulation.spawn_projectile(
 			"lightning_conductor", player.global_position + direction * 14.0,
-			direction * lightning_projectile_speed, lightning_damage * damage_multiplier,
-			lightning_projectile_radius, lightning_projectile_lifetime
+			direction * _equipment_projectile_speed(lightning_projectile_speed), lightning_damage * damage_multiplier,
+			_equipment_area(lightning_projectile_radius), lightning_projectile_lifetime
 		)
 		if sequence > 0:
 			var id: Dictionary = best["id"]
 			selected_ids.append(Vector2i(int(id["index"]), int(id["generation"])))
 	if not selected_ids.is_empty():
-		_next_weapon_time = active_time + lightning_cooldown
+		_next_weapon_time = active_time + _effective_weapon_cooldown(lightning_cooldown)
 
 func _fire_infinite_circuit(active_time: float, target_budget: int, damage_multiplier: float) -> void:
 	var roots := _nearest_lightning_targets(player.global_position, [], 2)
@@ -697,8 +705,8 @@ func _fire_infinite_circuit(active_time: float, target_budget: int, damage_multi
 		if root_direction == Vector2.ZERO:
 			root_direction = Vector2.RIGHT
 		if simulation.spawn_projectile("lightning_conductor", player.global_position + root_direction * 14.0,
-				root_direction * lightning_projectile_speed, lightning_damage * damage_multiplier,
-				lightning_projectile_radius, lightning_projectile_lifetime) <= 0:
+				root_direction * _equipment_projectile_speed(lightning_projectile_speed), lightning_damage * damage_multiplier,
+				_equipment_area(lightning_projectile_radius), lightning_projectile_lifetime) <= 0:
 			continue
 		fired = true
 		target_count += 1
@@ -714,8 +722,8 @@ func _fire_infinite_circuit(active_time: float, target_budget: int, damage_multi
 					if direction == Vector2.ZERO:
 						direction = Vector2.RIGHT
 					if simulation.spawn_projectile("infinite_circuit_branch", child["position"] + direction * 14.0,
-							direction * lightning_projectile_speed, lightning_damage * damage_multiplier,
-							lightning_projectile_radius, lightning_projectile_lifetime) <= 0:
+							direction * _equipment_projectile_speed(lightning_projectile_speed), lightning_damage * damage_multiplier,
+							_equipment_area(lightning_projectile_radius), lightning_projectile_lifetime) <= 0:
 						continue
 					used_ids.append(child["id"])
 					next_frontier.append(child)
@@ -727,7 +735,7 @@ func _fire_infinite_circuit(active_time: float, target_budget: int, damage_multi
 					break
 			frontier = next_frontier
 	if fired:
-		_next_weapon_time = active_time + lightning_cooldown
+		_next_weapon_time = active_time + _effective_weapon_cooldown(lightning_cooldown)
 
 func _nearest_lightning_targets(origin: Vector2, excluded_ids: Array[Vector2i], limit: int) -> Array[Dictionary]:
 	var candidates: Array[Dictionary] = []
@@ -763,20 +771,21 @@ func _fire_inferno_sprayer(active_time: float, paused: bool) -> void:
 	var damage := inferno_damage * (1.0 + 0.15 * float(level - 1))
 	damage *= 1.0 + float(loadout.relic_level("infernal_heart")) * infernal_heart_damage_per_level
 	damage *= _persistent_damage_multiplier()
+	damage *= _roll_equipment_critical_multiplier()
 	var projectile_type := "inferno_sprayer"
 	var explosion_radius := 0.0
 	var explosion_multiplier := 0.0
 	if level >= 5 and loadout.relic_level("infernal_heart") > 0:
 		projectile_type = "wildfire_sprayer"
-		explosion_radius = wildfire_explosion_radius
+		explosion_radius = _equipment_area(wildfire_explosion_radius)
 		explosion_multiplier = wildfire_explosion_damage_multiplier
 	var projectile_sequence: int = simulation.spawn_status_projectile(projectile_type, player.global_position + direction * 14.0,
-			direction * inferno_projectile_speed, damage, inferno_projectile_radius,
+			direction * _equipment_projectile_speed(inferno_projectile_speed), damage, _equipment_area(inferno_projectile_radius),
 			inferno_projectile_lifetime, inferno_burn_damage_per_tick,
 			inferno_burn_interval_seconds, inferno_burn_duration_seconds,
 			explosion_radius, explosion_multiplier)
 	if projectile_sequence > 0:
-		_next_inferno_time = active_time + inferno_cooldown
+		_next_inferno_time = active_time + _effective_weapon_cooldown(inferno_cooldown)
 
 func _fire_crimson_daggers(active_time: float, paused: bool) -> void:
 	if not weapon_enabled or loadout.weapon_level("crimson_daggers") == 0 or paused or _chest_open or run_over or daggers_cooldown <= 0.0 or active_time < _next_daggers_time:
@@ -790,6 +799,7 @@ func _fire_crimson_daggers(active_time: float, paused: bool) -> void:
 	var level: int = loadout.weapon_level("crimson_daggers")
 	var damage := daggers_damage * (1.0 + 0.15 * float(level - 1))
 	damage *= _persistent_damage_multiplier()
+	damage *= _roll_equipment_critical_multiplier()
 	var projectile_type := "crimson_dagger"
 	var status_damage := 2.0
 	var status_interval := 0.5
@@ -803,21 +813,44 @@ func _fire_crimson_daggers(active_time: float, paused: bool) -> void:
 	for spread in [-0.06, 0.06]:
 		var shot_direction: Vector2 = direction.rotated(spread)
 		if simulation.spawn_status_projectile(projectile_type, player.global_position + shot_direction * 14.0,
-				shot_direction * daggers_projectile_speed, damage, daggers_projectile_radius,
+				shot_direction * _equipment_projectile_speed(daggers_projectile_speed), damage, _equipment_area(daggers_projectile_radius),
 				daggers_projectile_lifetime, status_damage, status_interval, status_duration) > 0:
 			fired += 1
 	if fired > 0:
-		_next_daggers_time = active_time + daggers_cooldown
+		_next_daggers_time = active_time + _effective_weapon_cooldown(daggers_cooldown)
 
 func _persistent_damage_multiplier() -> float:
 	return _cached_persistent_damage_multiplier
 
 func _refresh_persistent_bonuses() -> void:
 	_cached_persistent_damage_multiplier = 1.0
+	_cached_equipment_bonuses = {}
 	if progression_service != null:
+		_cached_equipment_bonuses = progression_service.equipment_bonuses()
 		_cached_persistent_damage_multiplier += progression_service.skill_bonus("damage_pct")
 		_cached_persistent_damage_multiplier += progression_service.achievement_bonus("damage_pct")
-		_cached_persistent_damage_multiplier += progression_service.equipment_bonus("damage_pct") / 100.0
+		_cached_persistent_damage_multiplier += _equipment_bonus("damage_pct") / 100.0
+		player.move_speed = _base_player_move_speed * (1.0 + _equipment_bonus("move_speed_pct") / 100.0)
+
+func _equipment_bonus(stat_id: String) -> float:
+	return float(_cached_equipment_bonuses.get(stat_id, 0.0))
+
+func _effective_weapon_cooldown(base_cooldown: float) -> float:
+	var speed_multiplier := 1.0 + _equipment_bonus("attack_speed_pct") / 100.0
+	var cooldown_multiplier := maxf(0.1, 1.0 - _equipment_bonus("cooldown_reduction_pct") / 100.0)
+	return base_cooldown * cooldown_multiplier / speed_multiplier
+
+func _roll_equipment_critical_multiplier() -> float:
+	var chance := clampf(_equipment_bonus("critical_chance_pct"), 0.0, 100.0)
+	if randf() * 100.0 < chance:
+		return 1.5 + _equipment_bonus("critical_damage_pct") / 100.0
+	return 1.0
+
+func _equipment_projectile_speed(base_speed: float) -> float:
+	return base_speed * (1.0 + _equipment_bonus("projectile_speed_pct") / 100.0)
+
+func _equipment_area(base_area: float) -> float:
+	return base_area * (1.0 + _equipment_bonus("area_pct") / 100.0)
 
 func _nearest_enemy(max_range: float) -> Dictionary:
 	var nearest: Dictionary = {}

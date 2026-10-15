@@ -23,6 +23,8 @@ Proposition : chaque ligne tire uniformément un percentile `r ∈ [0,1]`, puis 
 
 Proposition complémentaire : garder les mêmes plages pour toutes les raretés ; la rareté augmente le nombre de lignes selon le contrat existant. Cela facilite la comparaison et évite de cumuler une plage supérieure avec plus de lignes. Limiter les statistiques finales par des caps globaux documentés avant d'activer des bonus de compétence/achievement qui peuvent les amplifier.
 
+Pour rendre les statistiques critiques jouables, ajouter comme hypothèse de prototype un multiplicateur de critique de base de 150% auquel s'ajoute la ligne `critical_damage_pct`. Ce socle est une proposition de combat supplémentaire, pas une valeur validée par le GDD.
+
 ## 2. Poudre, démantèlement et vente
 
 Le coût de tentative d'amélioration déjà proposé au GDD reste inchangé. Pour tester l'économie sans introduire plusieurs monnaies, proposition de rendement du démantèlement selon la rareté :
@@ -74,4 +76,4 @@ Avant d'accepter ces réglages, tester au minimum plusieurs builds de référenc
 
 ## État d'implémentation
 
-Les plages percentiles et leur affichage sont branchés ; les lignes dégâts et PV max équipées modifient actuellement Survival. Les rendements de démantèlement suivent le tableau proposé. Les autres statistiques restent affichées mais sans effet gameplay. Les effets uniques sont toujours des choix persistés sans comportement, et le générateur de catalogue de 120 nœuds/achievements n'est pas encore un contenu jouable. Ces limites sont reflétées dans la roadmap : cette tranche ne clôt pas P5.
+Les plages percentiles et leur affichage sont branchés ; les douze statistiques équipées modifient actuellement Survival (dégâts, vitesse d'attaque, critiques, PV, mobilité, soin par élimination, zone, cooldown, XP, collecte et vitesse projectile). Les rendements de démantèlement suivent le tableau proposé. Les effets uniques sont toujours des choix persistés sans comportement, et le générateur de catalogue de 120 nœuds/achievements n'est pas encore un contenu jouable. Ces limites sont reflétées dans la roadmap : cette tranche ne clôt pas P5.

@@ -140,9 +140,9 @@ func _create_item_row(equipment: Dictionary, resources: Dictionary) -> Control:
 		enhancement_row.add_child(enhance_button)
 	var status := Label.new()
 	status.add_theme_color_override("font_color", Color("#ffd166"))
-	status.text = "PROPOSED ROLLS — damage and HP currently affect Survival"
+	status.text = "PROPOSED STAT ROLLS — experimental balance"
 	if equipment.get("equipped", false):
-		status.text = "EQUIPPED — damage and HP rolls active; other stats are display-only"
+		status.text = "EQUIPPED — proposed stat rolls active"
 	if equipment.get("unique_effect_id") == "pending_choice":
 		status.text += "\nUnique effect choice pending"
 	elif str(equipment.get("unique_effect_id", "")) != "":

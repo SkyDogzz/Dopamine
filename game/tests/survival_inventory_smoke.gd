@@ -68,7 +68,7 @@ func _run() -> void:
 		_fail("Selecting a unique effect should persist the choice")
 		return
 	item_content = items.get_child(0).get_child(0).get_child(1)
-	var status_label: Label = _find_label(item_content, "PROPOSED ROLLS")
+	var status_label: Label = _find_label(item_content, "PROPOSED STAT ROLLS")
 	if not item_content.get_child(0).text.contains(" • ") or status_label == null:
 		_fail("An inventory item should show its slot, rarity and proposed roll status")
 		return
@@ -90,8 +90,8 @@ func _run() -> void:
 	if not equipped_profile["equipment_inventory"][0].get("equipped", false) or \
 			equipped_profile["equipment_inventory"][1].get("equipped", false) or \
 				not _find_label(items.get_child(0).get_child(0).get_child(1),
-				"EQUIPPED — damage and HP rolls active; other stats are display-only"):
-		_fail("Equipping an item should persist and show the active and display-only proposed stats")
+				"EQUIPPED — proposed stat rolls active"):
+		_fail("Equipping an item should persist and show that its proposed stat rolls are active")
 		return
 	_find_button(items.get_child(1).get_child(0).get_child(1), "EQUIP").pressed.emit()
 	var replaced_profile: Dictionary = progression.load_profile()["profile"]

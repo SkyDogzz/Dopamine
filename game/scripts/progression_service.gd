@@ -294,21 +294,24 @@ func skill_bonus(stat_id: String) -> float:
 	return bonus
 
 func equipment_bonus(stat_id: String) -> float:
-	if not EQUIPMENT_GENERATOR_SCRIPT.PROPOSED_STAT_RANGES.has(stat_id):
-		return 0.0
+	return equipment_bonuses().get(stat_id, 0.0)
+
+func equipment_bonuses() -> Dictionary:
+	var bonuses: Dictionary = {}
+	for stat_id in EQUIPMENT_GENERATOR_SCRIPT.PROPOSED_STAT_RANGES:
+		bonuses[stat_id] = 0.0
 	var result := load_profile()
 	if not result.get("ok", false):
-		return 0.0
-	var bonus := 0.0
+		return bonuses
 	for equipment in result["profile"]["equipment_inventory"]:
 		if not equipment.get("equipped", false):
 			continue
 		for line in equipment["stat_lines"]:
-			if line["stat_id"] == stat_id:
-				bonus += EQUIPMENT_GENERATOR_SCRIPT.stat_value(
-					stat_id, float(line["roll_percentile"]), int(line["enhancement_level"])
-				)
-	return bonus
+			var stat_id: String = line["stat_id"]
+			bonuses[stat_id] += EQUIPMENT_GENERATOR_SCRIPT.stat_value(
+				stat_id, float(line["roll_percentile"]), int(line["enhancement_level"])
+			)
+	return bonuses
 
 func proposed_skill_catalog() -> Array[Dictionary]:
 	var nodes: Array[Dictionary] = []
