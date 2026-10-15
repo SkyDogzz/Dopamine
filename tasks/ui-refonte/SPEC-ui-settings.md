@@ -1,6 +1,6 @@
 # Spec : `ui-settings`
 
-**Statut : proposition à valider.** Cette spec suit `ui-foundation` dans la carte approuvée. Aucune implémentation ni plan détaillé ne commence avant validation.
+**Statut : approuvée par l’utilisateur.** Cette spec suit `ui-foundation` dans la carte approuvée. Le plan détaillé reste à valider avant toute implémentation.
 
 ## Statuts de référence
 
