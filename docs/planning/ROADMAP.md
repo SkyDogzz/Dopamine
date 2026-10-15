@@ -4,7 +4,7 @@
 
 | Phase | Objectif | Critère de sortie |
 |---|---|---|
-| P0 | Godot 4.7.2, GDExtension, C++23, monorepo, CI, schémas JSON | Build Windows/Linux et test appel C++ depuis Godot |
+| P0 | Godot 4.7.2, GDExtension, C++23, monorepo, CI, schémas JSON | Build Linux et appel C++ depuis Godot ; validation Windows avant livraison multi-plateforme |
 | P1 | **Developer Sandbox MVP** : spawn, despawn, pause, step, vitesse, métriques, logs, reset | Simuler des entités sans Survival et exporter métriques |
 | P2 | Combat Core : ECS, AI, spatial hash, collisions, dégâts, HP | 500 ennemis + 2 000 projectiles dans benchmark reproductible ; vérifier 60 FPS |
 | P3 | Sandbox Combat : éditeur de stats, armes, god mode, DPS meter, inspecteur | Tester une arme et son DPS sans jouer une run |
@@ -40,3 +40,9 @@
 - **P2** : mesurer CPU/GPU, P95/P99, tester les grands deltas et swept collisions.
 - **P4** : valider les contrats joueur/boss ↔ ECS et la progression par événements.
 - **P7** : tester les snapshots complets et la reprise, ainsi que la séparation des saves.
+
+## Priorités d'implémentation retenues
+
+- Le développement et la première validation se font sous Linux ; la livraison Windows prévue par ADR-013 reste inchangée.
+- Le Sandbox développeur P1 est le premier environnement jouable, avant le mode Survival complet, conformément à ADR-014.
+- La validation accompagne chaque étape ; la batterie complète intervient aux grandes avancées, pas après chaque petite implémentation.
