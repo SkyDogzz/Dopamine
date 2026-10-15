@@ -7,6 +7,20 @@ const SPRITE_RENDERER_SCRIPT := preload("res://scripts/sprite_batch_renderer.gd"
 const CHEST_TEXTURE: Texture2D = preload("res://assets/sprites/chest_closed.png")
 const GROUND_TEXTURE: Texture2D = preload("res://assets/sprites/survival_ground.svg")
 const RUINS_TEXTURE: Texture2D = preload("res://assets/sprites/survival_ruins.svg")
+const WEAPON_IMPACTS_TEXTURE: Texture2D = preload("res://assets/sprites/weapon_impacts.svg")
+const WEAPON_IMPACT_TYPES := {
+	"lightning_conductor": 0, "infinite_circuit_branch": 0, "unique_lightning_burst": 0,
+	"inferno_sprayer": 1, "wildfire_sprayer": 1,
+	"crimson_dagger": 2, "bloodstorm_dagger": 2,
+	"minigun": 3,
+	"toxic_cloud": 4, "pandemic_cloud": 4,
+	"sawblades": 5, "razorstorm": 5,
+	"meteor_staff": 6, "starfall": 6, "starfall_fragment": 6,
+	"prism_laser": 7, "spectrum_collapse": 7, "prism_secondary": 7,
+	"void_orb": 8, "event_horizon": 8,
+}
+const WEAPON_IMPACT_LIFETIME := 0.22
+const MAX_VISIBLE_WEAPON_IMPACTS := 32
 const WEAPON_ICONS := {
 	"lightning_conductor": preload("res://assets/sprites/projectile_lightning.png"),
 	"inferno_sprayer": preload("res://assets/sprites/projectile_inferno.png"),
@@ -199,6 +213,7 @@ var _redline_target_id := Vector2i(-1, -1)
 var _pandemic_poisoned_targets: Dictionary = {}
 var _pandemic_spread_targets: Dictionary = {}
 var _pandemic_bursts: Array[Dictionary] = []
+var _weapon_impacts: Array[Dictionary] = []
 var _starfall_fragments_spawned: Dictionary = {}
 var _entities: Array = []
 var _pending_xp_orbs: Dictionary = {}
@@ -304,6 +319,10 @@ func _process(_delta: float) -> void:
 		_pandemic_bursts[index]["remaining"] = float(_pandemic_bursts[index]["remaining"]) - elapsed_active_time
 		if float(_pandemic_bursts[index]["remaining"]) <= 0.0:
 			_pandemic_bursts.remove_at(index)
+	for index in range(_weapon_impacts.size() - 1, -1, -1):
+		_weapon_impacts[index]["remaining"] = float(_weapon_impacts[index]["remaining"]) - elapsed_active_time
+		if float(_weapon_impacts[index]["remaining"]) <= 0.0:
+			_weapon_impacts.remove_at(index)
 	if elapsed_active_time > 0.0 and not run_over:
 		if player_shield > 0.0 and player_active_time >= _shield_expires_at:
 			player_shield = 0.0
@@ -324,6 +343,8 @@ func _process(_delta: float) -> void:
 				var source_key := _entity_key(int(damage_source["index"]), int(damage_source["generation"]))
 				var target_key := _entity_key(int(damage_target["index"]), int(damage_target["generation"]))
 				var source_type: String = str(event.get("source_type", ""))
+				_add_weapon_impact(source_type, Vector2(float(event["position"]["x"]), float(event["position"]["y"])),
+						bool(event.get("is_damage_over_time", false)))
 				if source_type == "pandemic_cloud":
 					_pandemic_poisoned_targets[target_key] = true
 				elif source_type == "starfall":
@@ -1395,3 +1416,23 @@ func _draw() -> void:
 		draw_circle(burst["position"], pandemic_spread_radius * (1.0 - fade * 0.35), Color(0.35, 1.0, 0.4, 0.18 * fade))
 	for chest in _world_chests:
 		draw_texture_rect(CHEST_TEXTURE, Rect2(chest["position"] - Vector2(16.0, 16.0), Vector2(32.0, 32.0)), false)
+	for impact in _weapon_impacts:
+		var remaining: float = float(impact["remaining"])
+		var fade := clampf(remaining / WEAPON_IMPACT_LIFETIME, 0.0, 1.0)
+		var scale := 0.7 + 0.5 * (1.0 - fade)
+		draw_set_transform(impact["position"], float(impact["rotation"]), Vector2.ONE * scale)
+		draw_texture_rect_region(WEAPON_IMPACTS_TEXTURE, Rect2(-32.0, -32.0, 64.0, 64.0),
+			Rect2(float(impact["type"]) * 64.0, 0.0, 64.0, 64.0), Color(1.0, 1.0, 1.0, fade))
+		draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
+
+func _add_weapon_impact(source_type: String, position: Vector2, is_damage_over_time: bool) -> void:
+	if is_damage_over_time or not WEAPON_IMPACT_TYPES.has(source_type):
+		return
+	if _weapon_impacts.size() >= MAX_VISIBLE_WEAPON_IMPACTS:
+		_weapon_impacts.pop_front()
+	_weapon_impacts.append({
+		"type": int(WEAPON_IMPACT_TYPES[source_type]),
+		"position": position,
+		"rotation": randf_range(-0.25, 0.25),
+		"remaining": WEAPON_IMPACT_LIFETIME,
+	})
