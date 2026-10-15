@@ -42,7 +42,7 @@ if(BUILD_TESTING)
             COMMAND "${DOPAMINE_GODOT_EXECUTABLE}" --headless --editor --path "${PROJECT_SOURCE_DIR}/game" --quit)
         set_tests_properties(godot_project_import PROPERTIES FIXTURES_SETUP godot_project_ready)
 
-        foreach(script_name IN ITEMS sandbox_smoke sandbox_ui_smoke sandbox_combat_smoke player_controller_smoke survival_entry_smoke survival_steering_smoke survival_weapon_smoke survival_weapon_catalog_smoke survival_starting_weapon_smoke survival_run_result_smoke survival_final_boss_loot_smoke survival_contact_damage_smoke survival_lifesteal_smoke survival_wave_director_smoke chest_choice_smoke survival_chest_director_smoke survival_loadout_smoke survival_chest_smoke)
+        foreach(script_name IN ITEMS sandbox_smoke sandbox_ui_smoke sandbox_combat_smoke render_batching_smoke player_controller_smoke survival_entry_smoke survival_steering_smoke survival_weapon_smoke survival_weapon_catalog_smoke survival_starting_weapon_smoke survival_run_result_smoke survival_final_boss_loot_smoke survival_contact_damage_smoke survival_lifesteal_smoke survival_wave_director_smoke chest_choice_smoke survival_chest_director_smoke survival_loadout_smoke survival_chest_smoke)
             add_test(NAME ${script_name}
                 COMMAND "${DOPAMINE_GODOT_EXECUTABLE}" --headless --path "${PROJECT_SOURCE_DIR}/game" --script "res://tests/${script_name}.gd")
             set_tests_properties(${script_name} PROPERTIES FIXTURES_REQUIRED godot_project_ready TIMEOUT 15)

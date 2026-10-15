@@ -55,8 +55,8 @@
 - [x] Snapshots publiés restent immuables après l’étape suivante.
 - [x] Les événements restent dans la file jusqu’à acquittement, indépendamment de l’ancienneté du snapshot consommé.
 - [x] IDs/numéros de séquence identifient les événements et l’acquittement vide uniquement les événements déjà publiés.
-- [ ] Rendu MultiMesh fonctionne avec 500 ennemis et 2 000 projectiles.
-- [ ] 60 FPS cible sur machine de référence ; consigner CPU/GPU, P95/P99.
+- [x] Smoke Godot headless : 500 ennemis et 2 000 projectiles alimentent trois batches MultiMesh (ennemis, projectiles, orbes XP).
+- [ ] Vérifier visuellement le rendu MultiMesh et confirmer la cible 60 FPS sur machine de référence ; consigner CPU/GPU, P95/P99.
 - [x] Benchmark natif reproductible SimulationCore à 500 ennemis + 2 000 projectiles, avec charge sans impacts et rafale Wildfire dense, mesures P50/P95/P99 (voir `PERFORMANCE.md`).
 
 ## Sandbox-first
