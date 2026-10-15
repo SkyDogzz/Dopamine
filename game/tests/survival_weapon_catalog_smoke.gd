@@ -460,7 +460,7 @@ func _infinite_circuit_branches() -> bool:
 			return false
 	session.weapon_enabled = true
 	session.simulation.set_speed(4.0)
-	var points := [Vector2(140.0, -300.0), Vector2(140.0, 300.0), Vector2(220.0, -300.0), Vector2(220.0, 300.0), Vector2(300.0, -300.0), Vector2(300.0, 300.0)]
+	var points := [Vector2(160.0, -20.0), Vector2(160.0, 20.0), Vector2(200.0, -20.0), Vector2(200.0, 20.0), Vector2(240.0, -20.0), Vector2(240.0, 20.0)]
 	for point in points:
 		session.simulation.spawn("test_target", 1, point, 100.0, Vector2.ZERO)
 	var targets := await _wait_for_targets(session, 6)
@@ -468,7 +468,7 @@ func _infinite_circuit_branches() -> bool:
 		session.queue_free()
 		return false
 	var baseline := int(session.simulation.snapshot()["metrics"]["collision_count"])
-	# At level 4, the normal chain can directly hit only five targets.
+	# At level 4, one primary projectile can arc through at most five nearby targets.
 	session._next_weapon_time = session.player_active_time
 	if not await _wait_for_projectiles_to_clear(session, baseline + 5):
 		session.queue_free()

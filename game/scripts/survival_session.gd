@@ -22,6 +22,7 @@ const WEAPON_IMPACT_TYPES := {
 }
 const WEAPON_IMPACT_LIFETIME := 0.22
 const MAX_VISIBLE_WEAPON_IMPACTS := 32
+const LIGHTNING_ARC_LIFETIME := 0.12
 const WEAPON_ICONS := {
 	"lightning_conductor": preload("res://assets/sprites/projectile_lightning.png"),
 	"inferno_sprayer": preload("res://assets/sprites/projectile_inferno.png"),
@@ -71,6 +72,8 @@ const WAVE_HP_CAP := 12.0
 @export var lightning_projectile_radius: float = 4.0
 @export var lightning_projectile_lifetime: float = 2.0
 @export_range(1, 5) var lightning_chain_count: int = 2
+@export_range(1.0, 1000.0, 1.0) var lightning_chain_range: float = 120.0
+@export_range(0.0, 1.0, 0.05) var lightning_chain_damage_multiplier: float = 0.75
 @export_group("Prototype Inferno Sprayer — proposed tuning")
 @export var inferno_cooldown: float = 0.7
 @export var inferno_damage: float = 8.0
@@ -223,6 +226,9 @@ var _next_prism_time := 0.0
 var _next_void_orb_time := 0.0
 var _next_frost_nova_time := 0.0
 var _prism_beams: Array[Dictionary] = []
+var _lightning_chain_states: Dictionary = {}
+var _lightning_arcs: Array[Dictionary] = []
+var _next_lightning_chain_id := 0
 var _redline_fire_time := 0.0
 var _redline_target_id := Vector2i(-1, -1)
 var _pandemic_poisoned_targets: Dictionary = {}
@@ -348,6 +354,9 @@ func _process(_delta: float) -> void:
 	var state: Dictionary = simulation.snapshot()
 	var current_simulation_time: float = float(state["simulation_time"])
 	var elapsed_active_time := current_simulation_time - _last_simulation_time
+	for chain_id in _lightning_chain_states.keys():
+		if current_simulation_time > float(_lightning_chain_states[chain_id]["expires_at"]):
+			_lightning_chain_states.erase(chain_id)
 	for index in range(_pandemic_bursts.size() - 1, -1, -1):
 		_pandemic_bursts[index]["remaining"] = float(_pandemic_bursts[index]["remaining"]) - elapsed_active_time
 		if float(_pandemic_bursts[index]["remaining"]) <= 0.0:
@@ -356,6 +365,10 @@ func _process(_delta: float) -> void:
 		_weapon_impacts[index]["remaining"] = float(_weapon_impacts[index]["remaining"]) - elapsed_active_time
 		if float(_weapon_impacts[index]["remaining"]) <= 0.0:
 			_weapon_impacts.remove_at(index)
+	for index in range(_lightning_arcs.size() - 1, -1, -1):
+		_lightning_arcs[index]["remaining"] = float(_lightning_arcs[index]["remaining"]) - elapsed_active_time
+		if float(_lightning_arcs[index]["remaining"]) <= 0.0:
+			_lightning_arcs.remove_at(index)
 	if elapsed_active_time > 0.0 and not run_over:
 		if player_shield > 0.0 and player_active_time >= _shield_expires_at:
 			player_shield = 0.0
@@ -376,6 +389,7 @@ func _process(_delta: float) -> void:
 				var source_key := _entity_key(int(damage_source["index"]), int(damage_source["generation"]))
 				var target_key := _entity_key(int(damage_target["index"]), int(damage_target["generation"]))
 				var source_type: String = str(event.get("source_type", ""))
+				_advance_lightning_chain(event, state["entities"], current_simulation_time)
 				_add_weapon_impact(source_type, Vector2(float(event["position"]["x"]), float(event["position"]["y"])),
 						bool(event.get("is_damage_over_time", false)))
 				if source_type == "pandemic_cloud":
@@ -910,44 +924,90 @@ func _fire_lightning_conductor(active_time: float, paused: bool) -> void:
 		_fire_infinite_circuit(active_time, chain_count, damage_multiplier)
 		_try_evolution_shockwave(lightning_damage * damage_multiplier)
 		return
-	var selected_ids: Array[Vector2i] = []
-	var max_distance_squared := lightning_range * lightning_range
-	for _chain in range(chain_count):
-		var best: Dictionary = {}
-		var best_distance_squared := max_distance_squared
-		for entity in _entities:
-			var components: Dictionary = entity["components"]
-			if components.get("IsProjectile", false) or components.get("IsXpOrb", false):
-				continue
-			var id: Dictionary = entity["id"]
-			var entity_id := Vector2i(int(id["index"]), int(id["generation"]))
-			if selected_ids.has(entity_id):
-				continue
-			var transform: Dictionary = components["Transform2D"]
-			var target := Vector2(float(transform["x"]), float(transform["y"]))
-			var distance_squared := player.global_position.distance_squared_to(target)
-			if distance_squared < best_distance_squared:
-				best_distance_squared = distance_squared
-				best = entity
-		if best.is_empty():
-			break
-		var target_transform: Dictionary = best["components"]["Transform2D"]
-		var target_position := Vector2(float(target_transform["x"]), float(target_transform["y"]))
-		var direction := (target_position - player.global_position).normalized()
-		if direction == Vector2.ZERO:
-			direction = Vector2.RIGHT
-		var sequence: int = simulation.spawn_projectile(
-			"lightning_conductor", player.global_position + direction * 14.0,
-			direction * _equipment_projectile_speed(lightning_projectile_speed), lightning_damage * damage_multiplier,
-			_equipment_area(lightning_projectile_radius), lightning_projectile_lifetime
-		)
-		if sequence > 0:
-			var id: Dictionary = best["id"]
-			selected_ids.append(Vector2i(int(id["index"]), int(id["generation"])))
-	if not selected_ids.is_empty():
-		_try_unique_lightning_burst(lightning_damage * damage_multiplier)
-		_try_evolution_shockwave(lightning_damage * damage_multiplier)
-		_next_weapon_time = active_time + _effective_weapon_cooldown(lightning_cooldown)
+	var targets := _nearest_lightning_targets(player.global_position, [], 1)
+	if targets.is_empty():
+		return
+	var target: Dictionary = targets[0]
+	var direction: Vector2 = (target["position"] - player.global_position).normalized()
+	if direction == Vector2.ZERO:
+		direction = Vector2.RIGHT
+	_next_lightning_chain_id += 1
+	var chain_id := str(_next_lightning_chain_id)
+	_lightning_chain_states[chain_id] = {
+		"visited_ids": [],
+		"reserved_ids": [target["id"]],
+		"remaining": chain_count - 1,
+		"next_damage": lightning_damage * damage_multiplier * lightning_chain_damage_multiplier,
+		"expires_at": active_time + lightning_projectile_lifetime,
+	}
+	var projectile_sequence: int = simulation.spawn_projectile(
+		"lightning_primary:%s" % chain_id, player.global_position + direction * 14.0,
+		direction * _equipment_projectile_speed(lightning_projectile_speed), lightning_damage * damage_multiplier,
+		_equipment_area(lightning_projectile_radius), lightning_projectile_lifetime
+	)
+	if projectile_sequence <= 0:
+		_lightning_chain_states.erase(chain_id)
+		return
+	_try_unique_lightning_burst(lightning_damage * damage_multiplier)
+	_try_evolution_shockwave(lightning_damage * damage_multiplier)
+	_next_weapon_time = active_time + _effective_weapon_cooldown(lightning_cooldown)
+
+func _advance_lightning_chain(event: Dictionary, entities: Array, active_time: float) -> void:
+	var source_parts := str(event.get("source_type", "")).split(":", false, 1)
+	if source_parts.size() != 2 or not ["lightning_primary", "lightning_arc"].has(source_parts[0]):
+		return
+	var chain_id: String = source_parts[1]
+	if not _lightning_chain_states.has(chain_id):
+		return
+	var chain: Dictionary = _lightning_chain_states[chain_id]
+	if active_time > float(chain["expires_at"]):
+		_lightning_chain_states.erase(chain_id)
+		return
+	var target: Dictionary = event["target"]
+	var target_id := Vector2i(int(target["index"]), int(target["generation"]))
+	var visited_ids: Array = chain["visited_ids"]
+	chain["reserved_ids"].erase(target_id)
+	if visited_ids.has(target_id):
+		return
+	visited_ids.append(target_id)
+	if int(chain["remaining"]) <= 0 or float(chain["next_damage"]) <= 0.0:
+		_lightning_chain_states.erase(chain_id)
+		return
+	var excluded_ids: Array[Vector2i] = []
+	for visited_id in visited_ids:
+		excluded_ids.append(visited_id)
+	for reserved_id in chain["reserved_ids"]:
+		excluded_ids.append(reserved_id)
+	var origin := Vector2(float(event["position"]["x"]), float(event["position"]["y"]))
+	var next_targets := _nearest_lightning_targets(origin, excluded_ids, 1, lightning_chain_range, entities)
+	if next_targets.is_empty():
+		_lightning_chain_states.erase(chain_id)
+		return
+	var next_target: Dictionary = next_targets[0]
+	var direction: Vector2 = (next_target["position"] - origin).normalized()
+	if direction == Vector2.ZERO:
+		direction = Vector2.RIGHT
+	var damage := float(chain["next_damage"])
+	var sequence: int = simulation.spawn_projectile("lightning_arc:%s" % chain_id, origin,
+		direction * _equipment_projectile_speed(lightning_projectile_speed), damage,
+		_equipment_area(lightning_projectile_radius), lightning_projectile_lifetime)
+	if sequence <= 0:
+		_lightning_chain_states.erase(chain_id)
+		return
+	chain["reserved_ids"].append(next_target["id"])
+	chain["remaining"] = int(chain["remaining"]) - 1
+	chain["next_damage"] = damage * lightning_chain_damage_multiplier
+	chain["expires_at"] = active_time + lightning_projectile_lifetime
+	_add_lightning_arc(origin, next_target["position"])
+
+func _add_lightning_arc(from: Vector2, to: Vector2) -> void:
+	var perpendicular := (to - from).orthogonal().normalized()
+	var points := PackedVector2Array()
+	points.append(from)
+	points.append(from.lerp(to, 0.34) + perpendicular * randf_range(-10.0, 10.0))
+	points.append(from.lerp(to, 0.68) + perpendicular * randf_range(-10.0, 10.0))
+	points.append(to)
+	_lightning_arcs.append({"points": points, "remaining": LIGHTNING_ARC_LIFETIME})
 
 func _fire_infinite_circuit(active_time: float, target_budget: int, damage_multiplier: float) -> void:
 	var roots := _nearest_lightning_targets(player.global_position, [], 2)
@@ -998,10 +1058,13 @@ func _fire_infinite_circuit(active_time: float, target_budget: int, damage_multi
 		_try_unique_lightning_burst(lightning_damage * damage_multiplier)
 		_next_weapon_time = active_time + _effective_weapon_cooldown(lightning_cooldown)
 
-func _nearest_lightning_targets(origin: Vector2, excluded_ids: Array[Vector2i], limit: int) -> Array[Dictionary]:
+func _nearest_lightning_targets(origin: Vector2, excluded_ids: Array[Vector2i], limit: int,
+		max_range: float = -1.0, entities: Variant = null) -> Array[Dictionary]:
 	var candidates: Array[Dictionary] = []
-	var max_distance_squared := lightning_range * lightning_range
-	for entity in _entities:
+	var range_limit := lightning_range if max_range < 0.0 else max_range
+	var max_distance_squared := range_limit * range_limit
+	var search_entities: Array = _entities if entities == null else entities
+	for entity in search_entities:
 		var components: Dictionary = entity["components"]
 		if components.get("IsProjectile", false) or components.get("IsXpOrb", false):
 			continue
@@ -1522,6 +1585,10 @@ func _draw() -> void:
 		var beam_color := Color(0.55, 0.95, 1.0, 0.78) if bool(beam["secondary"]) else Color(1.0, 0.92, 0.55, 0.9)
 		draw_line(beam["from"], beam["to"], beam_color, 5.0 if not beam["secondary"] else 3.0, true)
 		draw_line(beam["from"], beam["to"], Color(1.0, 1.0, 1.0, 0.9), 1.5, true)
+	for arc in _lightning_arcs:
+		var fade: float = clampf(float(arc["remaining"]) / LIGHTNING_ARC_LIFETIME, 0.0, 1.0)
+		draw_polyline(arc["points"], Color(0.2, 0.9, 1.0, 0.85 * fade), 4.0, true)
+		draw_polyline(arc["points"], Color(1.0, 1.0, 1.0, 0.95 * fade), 1.3, true)
 	for burst in _pandemic_bursts:
 		var fade := clampf(float(burst["remaining"]) / maxf(pandemic_feedback_seconds, 0.01), 0.0, 1.0)
 		draw_circle(burst["position"], pandemic_spread_radius * (1.0 - fade * 0.35), Color(0.35, 1.0, 0.4, 0.18 * fade))
@@ -1537,12 +1604,15 @@ func _draw() -> void:
 		draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
 
 func _add_weapon_impact(source_type: String, position: Vector2, is_damage_over_time: bool) -> void:
-	if is_damage_over_time or not WEAPON_IMPACT_TYPES.has(source_type):
+	var impact_type := source_type.get_slice(":", 0)
+	if impact_type in ["lightning_primary", "lightning_arc"]:
+		impact_type = "lightning_conductor"
+	if is_damage_over_time or not WEAPON_IMPACT_TYPES.has(impact_type):
 		return
 	if _weapon_impacts.size() >= MAX_VISIBLE_WEAPON_IMPACTS:
 		_weapon_impacts.pop_front()
 	_weapon_impacts.append({
-		"type": int(WEAPON_IMPACT_TYPES[source_type]),
+		"type": int(WEAPON_IMPACT_TYPES[impact_type]),
 		"position": position,
 		"rotation": randf_range(-0.25, 0.25),
 		"remaining": WEAPON_IMPACT_LIFETIME,

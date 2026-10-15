@@ -59,10 +59,10 @@ func _run() -> void:
 		return snapshot["entities"].is_empty() and snapshot["events"].is_empty() and session.player_hp > 85.0
 	)
 	if state.is_empty():
-		_fail("Lightning Conductor should fire both chains, kill both chasers and heal the player")
+		_fail("Lightning Conductor should fire one projectile, arc to a nearby chaser, kill both and heal the player")
 		return
 	if session.player_hp <= 85.0 or int(state["metrics"]["collision_count"]) < 4:
-		_fail("Lightning Conductor should hit both enemies twice and apply both kill heals")
+		_fail("Lightning Conductor should chain damage across both enemies and apply both kill heals")
 		return
 	if session.get_node("HUD/RunPanel/RunInfo/RunState").text != "IN RUN":
 		_fail("Survival HUD should reflect the active run state")
