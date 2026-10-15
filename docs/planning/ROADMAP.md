@@ -337,9 +337,10 @@ Travail requis :
 ### P5.3 — Coffres et économie de run
 
 - [ ] **P5.3.1 — Éligibilité des offres**
-  - [ ] Produire trois choix distincts quand au moins trois choix existent.
+  - [x] Produire trois choix distincts quand au moins trois choix existent ; test ciblé des armes niveau max, slots pleins et absence de choix éligibles.
   - [ ] Ajouter la préférence synergie comme poids, sans retirer les offres valides.
-  - [ ] Vérifier objets niveau max, slots pleins et arme niveau 5 sans relique.
+  - [x] Vérifier objets niveau max, slots pleins et arme niveau 5 sans relique. La relique garde ses offres même lorsque l’arme est niveau 5.
+  - La pondération reste en attente : les synergies et leurs règles d’association ne sont pas encore validées dans P5.2.
 - [ ] **P5.3.2 — Pause et reprise**
   - [ ] Suspendre simulation et horloge pendant le modal.
   - [ ] Vérifier reprise après sélection, fermeture invalide et retour d’inventaire.

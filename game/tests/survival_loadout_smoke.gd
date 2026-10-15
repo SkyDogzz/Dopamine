@@ -57,6 +57,34 @@ func _initialize() -> void:
 	if loadout.weapon_level("lightning_conductor") != 5 or loadout.apply_offer("weapon:lightning_conductor"):
 		_fail("Weapon level 5 should be the cap")
 		return
+	if not _has_three_unique(loadout.offers("weapon")):
+		_fail("A max-level weapon should be excluded while other weapon choices remain")
+		return
+	loadout._weapon_levels["inferno_sprayer"] = loadout.MAX_LEVEL
+	if loadout.weapon_level("inferno_sprayer") != 5 or not _has_three_unique(loadout.offers("weapon")):
+		_fail("Max-level weapons should not consume slots or remove unrelated offers")
+		return
+	for weapon_id in loadout._weapons:
+		if weapon_id in ["lightning_conductor", "inferno_sprayer"]:
+			continue
+		if loadout.owned_weapons().size() >= loadout.MAX_SLOTS:
+			break
+		if not loadout.apply_offer("weapon:%s" % weapon_id):
+			_fail("A free weapon slot should accept each distinct weapon")
+			return
+	if loadout.owned_weapons().size() != loadout.MAX_SLOTS or not _has_three_unique(loadout.offers("weapon")):
+		_fail("A full weapon loadout should still offer eligible upgrades")
+		return
+	for weapon_id in loadout._weapons:
+		if not loadout._weapon_levels.has(weapon_id):
+			continue
+		loadout._weapon_levels[weapon_id] = loadout.MAX_LEVEL
+	if not loadout.offers("weapon").is_empty():
+		_fail("A full loadout with all weapons at max level should expose no chest choices")
+		return
+	if loadout.offers("relic").size() != 3:
+		_fail("A max-level weapon without its matching relic should not block relic choices")
+		return
 	print("Survival loadout smoke passed")
 	quit()
 
