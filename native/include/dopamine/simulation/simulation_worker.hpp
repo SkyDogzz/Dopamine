@@ -61,6 +61,7 @@ struct SimulationCommand {
 	double projectile_status_duration = 2.0;
 	float projectile_explosion_radius = 0.0F;
 	float projectile_explosion_damage_multiplier = 0.0F;
+	uint32_t projectile_ricochets = 0;
 	float xp_value = 1.0F;
 	float status_damage_per_tick = 0.0F;
 	double status_interval_seconds = 0.0;
@@ -71,7 +72,7 @@ struct SimulationCommand {
 };
 
 struct SimulationWorkerState {
-	uint32_t format_version = 1;
+	uint32_t format_version = 2;
 	SimulationCoreState core_state;
 	bool paused = true;
 	double speed_multiplier = 1.0;

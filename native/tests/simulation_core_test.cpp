@@ -324,6 +324,19 @@ int main() {
 	require(std::abs(combat.simulation_time() - 0.2) < 0.001,
 			"combat step should retain its explicit duration");
 
+	SimulationCore sawblades;
+	const auto first_blade_target = sawblades.spawn("chaser", 30.0F, 0.0F, 100.0F, 0.0F, 0.0F);
+	const auto second_blade_target = sawblades.spawn("chaser", 0.0F, 80.0F, 100.0F, 0.0F, 0.0F);
+	sawblades.spawn_projectile("sawblades", 0.0F, 0.0F, 10.0F, 3.0F, 2.0,
+			100.0F, 0.0F, 2.0F, 0.5, 2.0, 0.0F, 0.0F, 1);
+	const auto first_ricochet = sawblades.advance(0.5);
+	SimulationCore restored_sawblades;
+	restored_sawblades.restore_state(sawblades.capture_state());
+	const auto second_ricochet = restored_sawblades.advance(1.0);
+	require(!first_ricochet.empty() && first_ricochet[0].target == first_blade_target &&
+			!second_ricochet.empty() && second_ricochet[0].target == second_blade_target,
+			"Sawblades should ricochet toward a new living target after each impact");
+
 	SimulationCore expiring_projectile;
 	const auto expires = expiring_projectile.spawn_projectile("test_projectile", 0.0F, 0.0F,
 			1.0F, 1.0F, 0.1, 10.0F, 0.0F);

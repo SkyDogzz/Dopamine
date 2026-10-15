@@ -7,11 +7,13 @@ const ICONS := {
 	"crimson_daggers": "res://assets/sprites/projectile_crimson.png",
 	"minigun": "res://assets/sprites/projectile_minigun.svg",
 	"toxic_cloud": "res://assets/sprites/projectile_toxic_cloud.svg",
+	"sawblades": "res://assets/sprites/projectile_sawblades.svg",
 	"storm_core": "res://assets/sprites/relic_storm_core.png",
 	"infernal_heart": "res://assets/sprites/relic_infernal_heart.png",
 	"blood_chalice": "res://assets/sprites/relic_blood_chalice.png",
 	"overdrive_engine": "res://assets/sprites/relic_overdrive_engine.svg",
 	"plague_mask": "res://assets/sprites/relic_plague_mask.svg",
+	"magnetic_coil": "res://assets/sprites/relic_magnetic_coil.svg",
 	"magnet_heart": "res://assets/sprites/relic_magnet_heart.svg",
 }
 const STARTING_WEAPONS := ["lightning_conductor", "inferno_sprayer"]

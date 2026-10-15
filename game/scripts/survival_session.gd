@@ -11,6 +11,7 @@ const WEAPON_ICONS := {
 	"crimson_daggers": preload("res://assets/sprites/projectile_crimson.png"),
 	"minigun": preload("res://assets/sprites/projectile_minigun.svg"),
 	"toxic_cloud": preload("res://assets/sprites/projectile_toxic_cloud.svg"),
+	"sawblades": preload("res://assets/sprites/projectile_sawblades.svg"),
 }
 const WAVE_DIRECTOR_SCRIPT := preload("res://scripts/survival_wave_director.gd")
 const LOADOUT_SCRIPT := preload("res://scripts/survival_loadout.gd")
@@ -96,6 +97,14 @@ const WAVE_HP_CAP := 12.0
 @export var pandemic_spread_radius: float = 140.0
 @export_range(1, 8) var pandemic_max_spread_targets: int = 3
 @export var pandemic_feedback_seconds: float = 0.35
+@export_group("Prototype Sawblades — proposed tuning")
+@export var sawblades_cooldown: float = 1.8
+@export var sawblades_damage: float = 8.0
+@export var sawblades_range: float = 520.0
+@export var sawblades_projectile_speed: float = 360.0
+@export var sawblades_projectile_radius: float = 7.0
+@export var sawblades_projectile_lifetime: float = 2.5
+@export_range(0.0, 1.0) var magnetic_coil_projectile_speed_per_level: float = 0.04
 @export_group("Prototype Bloodstorm — proposed tuning")
 @export var bloodstorm_bleed_damage_per_tick: float = 2.0
 @export var bloodstorm_bleed_interval_seconds: float = 0.5
@@ -142,6 +151,7 @@ var _next_inferno_time := 0.0
 var _next_daggers_time := 0.0
 var _next_minigun_time := 0.0
 var _next_toxic_time := 0.0
+var _next_sawblades_time := 0.0
 var _redline_fire_time := 0.0
 var _redline_target_id := Vector2i(-1, -1)
 var _projectile_types: Dictionary = {}
@@ -334,6 +344,7 @@ func _process(_delta: float) -> void:
 	_fire_crimson_daggers(current_simulation_time, state["paused"])
 	_fire_minigun(current_simulation_time, state["paused"])
 	_fire_toxic_cloud(current_simulation_time, state["paused"])
+	_fire_sawblades(current_simulation_time, state["paused"])
 	if player_hp <= 0.0 and not run_over:
 		_finish_run(false)
 	player.controls_enabled = not state["paused"] and not run_over and not _chest_open and not _starting_weapon_choice_open
@@ -391,6 +402,7 @@ func _refresh_hud(state: Dictionary) -> void:
 	var equipped_names: Array[String] = []
 	var short_names := {"lightning_conductor": "LC", "inferno_sprayer": "IS", "crimson_daggers": "CD", "minigun": "MG"}
 	short_names["toxic_cloud"] = "TC"
+	short_names["sawblades"] = "SB"
 	var owned_weapons: Array[String] = loadout.owned_weapons()
 	_weapon_icon.texture = WEAPON_ICONS.get(owned_weapons[0]) if not owned_weapons.is_empty() else null
 	for weapon_id in owned_weapons:
@@ -399,6 +411,8 @@ func _refresh_hud(state: Dictionary) -> void:
 			label += " REDLINE"
 		if weapon_id == "toxic_cloud" and loadout.weapon_level(weapon_id) >= 5 and loadout.relic_level("plague_mask") > 0:
 			label += " PANDEMIC"
+		if weapon_id == "sawblades" and loadout.weapon_level("sawblades") >= 5 and loadout.relic_level("magnetic_coil") > 0:
+			label += " RAZORSTORM"
 		equipped_names.append(label)
 	_weapon_value.text = "  •  ".join(equipped_names)
 	if wave_director != null and wave_director.state == WAVE_DIRECTOR_SCRIPT.State.VICTORY:
@@ -984,6 +998,29 @@ func _fire_toxic_cloud(active_time: float, paused: bool) -> void:
 	if sequence > 0:
 		_next_toxic_time = active_time + _effective_weapon_cooldown(toxic_cooldown)
 
+func _fire_sawblades(active_time: float, paused: bool) -> void:
+	if not weapon_enabled or loadout.weapon_level("sawblades") == 0 or paused or _chest_open or run_over or sawblades_cooldown <= 0.0 or active_time < _next_sawblades_time:
+		return
+	var target := _nearest_enemy(sawblades_range)
+	if target.is_empty():
+		return
+	var direction: Vector2 = (target["position"] - player.global_position).normalized()
+	if direction == Vector2.ZERO:
+		direction = Vector2.RIGHT
+	var level: int = loadout.weapon_level("sawblades")
+	var evolved: bool = level >= 5 and loadout.relic_level("magnetic_coil") > 0
+	var damage_multiplier := (1.2 if level >= 2 else 1.0) * (1.25 if level >= 5 else 1.0)
+	var ricochets := 1 + (1 if level >= 3 else 0) + (1 if evolved else 0)
+	var projectile_speed := sawblades_projectile_speed * (1.2 if level >= 4 else 1.0)
+	var sequence: int = simulation.spawn_projectile("razorstorm" if evolved else "sawblades",
+			player.global_position + direction * 14.0,
+		direction * _equipment_projectile_speed(projectile_speed),
+		sawblades_damage * damage_multiplier * _persistent_damage_multiplier() * _roll_equipment_critical_multiplier(),
+		_equipment_area(sawblades_projectile_radius), sawblades_projectile_lifetime,
+		2.0, 0.5, 2.0, 0.0, 0.0, ricochets)
+	if sequence > 0:
+		_next_sawblades_time = active_time + _effective_weapon_cooldown(sawblades_cooldown)
+
 func _spread_pandemic(origin: Vector2, entities: Array) -> void:
 	var status_damage := toxic_damage_per_tick * (1.0 + (0.2 if loadout.weapon_level("toxic_cloud") >= 2 else 0.0) +
 			(0.25 if loadout.weapon_level("toxic_cloud") >= 5 else 0.0))
@@ -1043,7 +1080,8 @@ func _roll_equipment_critical_multiplier() -> float:
 	return 1.0
 
 func _equipment_projectile_speed(base_speed: float) -> float:
-	return base_speed * (1.0 + _equipment_bonus("projectile_speed_pct") / 100.0)
+	var magnetic_coil_bonus := float(loadout.relic_level("magnetic_coil")) * magnetic_coil_projectile_speed_per_level
+	return base_speed * (1.0 + _equipment_bonus("projectile_speed_pct") / 100.0 + magnetic_coil_bonus)
 
 func _equipment_area(base_area: float) -> float:
 	return base_area * (1.0 + _equipment_bonus("area_pct") / 100.0)

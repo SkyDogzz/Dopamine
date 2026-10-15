@@ -14,6 +14,7 @@ const SPRITE_FILES := {
 	"projectile_enemy": "projectile_enemy",
 	"projectile_minigun": "projectile_minigun.svg",
 	"projectile_toxic_cloud": "projectile_toxic_cloud.svg",
+	"projectile_sawblades": "projectile_sawblades.svg",
 }
 
 var _batches: Dictionary = {}
@@ -96,6 +97,8 @@ func _sprite_for_entity(components: Dictionary) -> String:
 				return "projectile_minigun"
 			"toxic_cloud", "pandemic_cloud":
 				return "projectile_toxic_cloud"
+			"sawblades", "razorstorm":
+				return "projectile_sawblades"
 			_:
 				return "projectile_lightning"
 	if components.get("IsXpOrb", false):

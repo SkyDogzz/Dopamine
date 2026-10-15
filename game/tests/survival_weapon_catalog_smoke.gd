@@ -31,8 +31,44 @@ func _run() -> void:
 	if not await _toxic_cloud_poison_and_pandemic():
 		_fail("Toxic Cloud should poison its impact area and Pandemic should spread poison when an infected target dies")
 		return
+	if not await _sawblades_ricochet_between_targets():
+		_fail("Sawblades should hit their first target and ricochet to another target")
+		return
 	print("Survival weapon catalog smoke passed")
 	quit()
+
+func _sawblades_ricochet_between_targets() -> bool:
+	var session: Node2D = load("res://scenes/survival_session.tscn").instantiate()
+	session.spawn_initial_enemy = false
+	session.wave_spawning_enabled = false
+	session.weapon_enabled = false
+	session.skip_starting_weapon_choice = true
+	session.contact_damage_per_hit = 0.0
+	session.xp_collection_radius = 0.0
+	session.sawblades_cooldown = 1000.0
+	root.add_child(session)
+	await process_frame
+	if not session.loadout.apply_offer("weapon:sawblades"):
+		session.queue_free()
+		return false
+	session.simulation.set_speed(4.0)
+	session.simulation.spawn("test_target", 1, Vector2(150.0, 0.0), 100.0, Vector2.ZERO)
+	session.simulation.spawn("test_target", 1, Vector2(150.0, 150.0), 100.0, Vector2.ZERO)
+	if (await _wait_for_targets(session, 2)).size() != 2:
+		session.queue_free()
+		return false
+	session.weapon_enabled = true
+	var before_hits := int(session.simulation.snapshot()["metrics"]["collision_count"])
+	var active_time := float(session.simulation.snapshot()["simulation_time"])
+	session._fire_sawblades(active_time, false)
+	var deadline := Time.get_ticks_msec() + 2500
+	while Time.get_ticks_msec() < deadline:
+		await process_frame
+		if int(session.simulation.snapshot()["metrics"]["collision_count"]) >= before_hits + 2:
+			session.queue_free()
+			return true
+	session.queue_free()
+	return false
 
 func _toxic_cloud_poison_and_pandemic() -> bool:
 	var session: Node2D = load("res://scenes/survival_session.tscn").instantiate()

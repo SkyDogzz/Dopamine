@@ -103,9 +103,10 @@ EntityId SimulationCore::spawn(std::string type, float x, float y, float hp, flo
 EntityId SimulationCore::spawn_projectile(std::string type, float x, float y, float damage, float radius,
 		double lifetime_seconds, float velocity_x, float velocity_y, float status_damage_per_tick,
 		double status_interval_seconds, double status_duration_seconds, float explosion_radius,
-		float explosion_damage_multiplier) {
+		float explosion_damage_multiplier, uint32_t ricochets) {
 	if (!std::isfinite(damage) || damage <= 0.0F || !std::isfinite(radius) || radius < 0.0F ||
 			!std::isfinite(lifetime_seconds) || lifetime_seconds <= 0.0 || type.empty() ||
+			ricochets > 64 ||
 			!std::isfinite(explosion_radius) || explosion_radius < 0.0F ||
 			!std::isfinite(explosion_damage_multiplier) || explosion_damage_multiplier < 0.0F ||
 			!std::isfinite(damage * explosion_damage_multiplier)) {
@@ -120,9 +121,17 @@ EntityId SimulationCore::spawn_projectile(std::string type, float x, float y, fl
 	}
 	const EntityId id = spawn(type, x, y, 1.0F, velocity_x, velocity_y);
 	projectile_flags_[id.index] = true;
-	ProjectileData projectile{damage, radius, lifetime_seconds, applies_damage_over_time,
-			status_damage_per_tick, status_interval_seconds, status_duration_seconds,
-			explosion_radius, explosion_damage_multiplier};
+	ProjectileData projectile;
+	projectile.damage = damage;
+	projectile.radius = radius;
+	projectile.remaining_seconds = lifetime_seconds;
+	projectile.applies_damage_over_time = applies_damage_over_time;
+	projectile.status_damage_per_tick = status_damage_per_tick;
+	projectile.status_interval_seconds = status_interval_seconds;
+	projectile.status_duration_seconds = status_duration_seconds;
+	projectile.explosion_radius = explosion_radius;
+	projectile.explosion_damage_multiplier = explosion_damage_multiplier;
+	projectile.ricochets_remaining = ricochets;
 	if (type == "infinite_circuit_branch") {
 		float nearest_distance_squared = enemy_collision_radius * enemy_collision_radius;
 		for (uint32_t index = 0; index < slots_.size(); ++index) {
@@ -284,12 +293,19 @@ void SimulationCore::restore_state(const SimulationCoreState &state) {
 		}
 		if (entity.is_projectile) {
 			const ProjectileData &projectile = entity.projectile;
+			bool valid_hit_targets = projectile.ricochets_remaining <= 64 && projectile.hit_targets.size() <= 64;
+			for (std::size_t hit_index = 0; valid_hit_targets && hit_index < projectile.hit_targets.size(); ++hit_index) {
+				const EntityId hit_target = projectile.hit_targets[hit_index];
+				valid_hit_targets = hit_target.index < slot_count && hit_target.generation != 0 &&
+						std::find(projectile.hit_targets.begin(), projectile.hit_targets.begin() + hit_index, hit_target) ==
+						projectile.hit_targets.begin() + hit_index;
+			}
 			if (!std::isfinite(projectile.damage) || projectile.damage <= 0.0F ||
 					!std::isfinite(projectile.radius) || projectile.radius < 0.0F ||
 					!std::isfinite(projectile.remaining_seconds) || projectile.remaining_seconds <= 0.0 ||
 					!std::isfinite(projectile.explosion_radius) || projectile.explosion_radius < 0.0F ||
 					!std::isfinite(projectile.explosion_damage_multiplier) ||
-					projectile.explosion_damage_multiplier < 0.0F ||
+					projectile.explosion_damage_multiplier < 0.0F || !valid_hit_targets ||
 					(projectile.applies_damage_over_time && (!std::isfinite(projectile.status_damage_per_tick) ||
 							!std::isfinite(projectile.status_interval_seconds) ||
 							!std::isfinite(projectile.status_duration_seconds) || projectile.status_damage_per_tick <= 0.0F ||
@@ -479,6 +495,7 @@ std::vector<CombatEvent> SimulationCore::advance(double delta_seconds) {
 				const EntityId potential_target{target_index, slots_[target_index].generation};
 				if (target_index == projectile_index || projectile_flags_[target_index] || xp_orb_flags_[target_index] ||
 						health_[target_index].current <= 0.0F ||
+						std::find(projectile.hit_targets.begin(), projectile.hit_targets.end(), potential_target) != projectile.hit_targets.end() ||
 						(projectile.ignores_source_entity && potential_target == projectile.source_entity)) {
 					continue;
 				}
@@ -503,6 +520,7 @@ std::vector<CombatEvent> SimulationCore::advance(double delta_seconds) {
 				const EntityId projectile_id{projectile_index, slots_[projectile_index].generation};
 				const EntityId target_id{target_index, slots_[target_index].generation};
 				apply_damage(projectile_id, target_id, projectile.damage, events, to_despawn);
+				bool ricocheted = false;
 				if (projectile.applies_damage_over_time && health_[target_index].current > 0.0F) {
 					apply_damage_over_time(target_id, projectile.status_damage_per_tick,
 							projectile.status_interval_seconds, projectile.status_duration_seconds);
@@ -528,7 +546,42 @@ std::vector<CombatEvent> SimulationCore::advance(double delta_seconds) {
 						}
 					}
 				}
-				hit = true;
+				if (projectile.ricochets_remaining > 0) {
+					projectile.hit_targets.push_back(target_id);
+					--projectile.ricochets_remaining;
+					const float speed = std::hypot(velocities_[projectile_index].x, velocities_[projectile_index].y);
+					float nearest_distance_squared = std::numeric_limits<float>::infinity();
+					uint32_t nearest_target = static_cast<uint32_t>(slots_.size());
+					// ponytail: one slot scan per hit; replace with a spatial query if dense-world profiling warrants it.
+					for (uint32_t candidate_index = 0; candidate_index < slots_.size(); ++candidate_index) {
+						if (!slots_[candidate_index].active || projectile_flags_[candidate_index] || xp_orb_flags_[candidate_index] ||
+								health_[candidate_index].current <= 0.0F) {
+							continue;
+						}
+						const EntityId candidate_id{candidate_index, slots_[candidate_index].generation};
+						if (std::find(projectile.hit_targets.begin(), projectile.hit_targets.end(), candidate_id) != projectile.hit_targets.end()) {
+							continue;
+						}
+						const float dx = transforms_[candidate_index].x - transforms_[target_index].x;
+						const float dy = transforms_[candidate_index].y - transforms_[target_index].y;
+						const float distance_squared = dx * dx + dy * dy;
+						if (distance_squared < nearest_distance_squared) {
+							nearest_distance_squared = distance_squared;
+							nearest_target = candidate_index;
+						}
+					}
+					if (nearest_target < slots_.size() && speed > 0.0F) {
+						const float dx = transforms_[nearest_target].x - transforms_[target_index].x;
+						const float dy = transforms_[nearest_target].y - transforms_[target_index].y;
+						const float distance = std::hypot(dx, dy);
+						if (distance > 0.0F) {
+							transforms_[projectile_index] = transforms_[target_index];
+							velocities_[projectile_index] = {dx / distance * speed, dy / distance * speed};
+							ricocheted = true;
+						}
+					}
+				}
+				hit = !ricocheted;
 				break;
 			}
 			projectile.remaining_seconds -= delta_seconds;
