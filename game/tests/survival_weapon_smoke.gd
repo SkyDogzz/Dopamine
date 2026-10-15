@@ -27,6 +27,9 @@ func _run() -> void:
 	if chest_options.size() != 3 or not session.open_chest(chest_options):
 		_fail("Survival should open a chest with three valid offers")
 		return
+	if session.get_node("HUD/ChestOverlay/ChestChoice/Content/Title").text != "WEAPON CHEST — CHOOSE ONE":
+		_fail("Weapon chest type should be visible in the choice menu heading")
+		return
 	var paused: Dictionary = await _wait_until(session, func(snapshot: Dictionary) -> bool: return snapshot["paused"])
 	if paused.is_empty() or not session.get_node("HUD/ChestOverlay/ChestChoice").visible:
 		_fail("Opening a chest should pause the simulation and show its modal")
@@ -41,6 +44,19 @@ func _run() -> void:
 	var selected_weapon_id: String = str(chest_options[0]["id"]).trim_prefix("weapon:")
 	if session.loadout.weapon_level(selected_weapon_id) < 1:
 		_fail("Choosing a weapon offer should update this run's loadout")
+		return
+	var relic_options: Array = session.loadout.offers("relic")
+	if relic_options.size() != 3 or not session.open_chest_family("relic"):
+		_fail("Survival should open a chest with three valid relic offers")
+		return
+	if session.get_node("HUD/ChestOverlay/ChestChoice/Content/Title").text != "RELIC CHEST — CHOOSE ONE":
+		_fail("Relic chest type should be visible in the choice menu heading")
+		return
+	await _wait_until(session, func(snapshot: Dictionary) -> bool: return snapshot["paused"])
+	session.get_node("HUD/ChestOverlay/ChestChoice/Content/Options/Choice0").emit_signal("pressed")
+	var relic_resumed: Dictionary = await _wait_until(session, func(snapshot: Dictionary) -> bool: return not snapshot["paused"])
+	if relic_resumed.is_empty():
+		_fail("Choosing a relic should resume the run")
 		return
 	session.simulation.set_speed(4.0)
 	session.player_hp = 80.0

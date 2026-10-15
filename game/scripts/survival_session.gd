@@ -808,11 +808,23 @@ func _add_xp(amount: float) -> void:
 		player_xp_to_next = xp_base_to_next_level + xp_growth_per_level * float(player_level - 1)
 
 func open_chest(options: Array) -> bool:
-	return _open_chest(options, "CHEST — CHOOSE ONE")
+	var family := ""
+	if not options.is_empty() and options[0] is Dictionary:
+		var offer_id := str(options[0].get("id", ""))
+		var separator := offer_id.find(":")
+		if separator > 0:
+			family = offer_id.left(separator)
+	return _open_chest(options, _chest_heading(family))
 
 func open_chest_family(family: String) -> bool:
-	var item_type := "WEAPONS" if family == "weapon" else "RELICS"
-	return _open_chest(loadout.offers(family), "CHEST — CHOOSE %s" % item_type)
+	return _open_chest(loadout.offers(family), _chest_heading(family))
+
+func _chest_heading(family: String) -> String:
+	if family == "weapon":
+		return "WEAPON CHEST — CHOOSE ONE"
+	if family == "relic":
+		return "RELIC CHEST — CHOOSE ONE"
+	return "CHEST — CHOOSE ONE"
 
 func _open_chest(options: Array, heading: String) -> bool:
 	if simulation == null or run_over or _chest_open or not _chest_choice.present(options, 3, heading):

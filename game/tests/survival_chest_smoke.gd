@@ -100,6 +100,9 @@ func _run() -> void:
 	if opened.is_empty():
 		_fail("An eligible enemy chest drop should be collected and open the three-choice modal")
 		return
+	if session.get_node("HUD/ChestOverlay/ChestChoice/Content/Title").text != "WEAPON CHEST — CHOOSE ONE":
+		_fail("Collected weapon chests should identify their item type in the heading")
+		return
 	var chosen_ids := [""]
 	session.chest_option_chosen.connect(func(option_id: String) -> void: chosen_ids[0] = option_id)
 	session.get_node("HUD/ChestOverlay/ChestChoice/Content/Options/Choice0").emit_signal("pressed")
