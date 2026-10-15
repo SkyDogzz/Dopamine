@@ -9,7 +9,7 @@ const WEAPON_ICONS := {
 	"lightning_conductor": preload("res://assets/sprites/projectile_lightning.png"),
 	"inferno_sprayer": preload("res://assets/sprites/projectile_inferno.png"),
 	"crimson_daggers": preload("res://assets/sprites/projectile_crimson.png"),
-	"minigun": preload("res://assets/sprites/projectile_lightning.png"),
+	"minigun": preload("res://assets/sprites/projectile_minigun.svg"),
 }
 const WAVE_DIRECTOR_SCRIPT := preload("res://scripts/survival_wave_director.gd")
 const LOADOUT_SCRIPT := preload("res://scripts/survival_loadout.gd")

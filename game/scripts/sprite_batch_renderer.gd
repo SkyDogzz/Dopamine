@@ -12,6 +12,7 @@ const SPRITE_FILES := {
 	"projectile_inferno": "projectile_inferno",
 	"projectile_crimson": "projectile_crimson",
 	"projectile_enemy": "projectile_enemy",
+	"projectile_minigun": "projectile_minigun.svg",
 }
 
 var _batches: Dictionary = {}
@@ -28,8 +29,11 @@ func _init() -> void:
 		var quad := QuadMesh.new()
 		quad.size = Vector2.ONE
 		mesh.mesh = quad
+		var filename: String = SPRITE_FILES[sprite_id]
+		if not filename.contains("."):
+			filename += ".png"
 		_batches[sprite_id] = {
-			"texture": load("res://assets/sprites/%s.png" % SPRITE_FILES[sprite_id]),
+			"texture": load("res://assets/sprites/%s" % filename),
 			"multimesh": mesh,
 		}
 
@@ -87,6 +91,8 @@ func _sprite_for_entity(components: Dictionary) -> String:
 				return "projectile_crimson"
 			"enemy_projectile":
 				return "projectile_enemy"
+			"minigun":
+				return "projectile_minigun"
 			_:
 				return "projectile_lightning"
 	if components.get("IsXpOrb", false):

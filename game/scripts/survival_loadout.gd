@@ -5,7 +5,7 @@ const ICONS := {
 	"lightning_conductor": "res://assets/sprites/projectile_lightning.png",
 	"inferno_sprayer": "res://assets/sprites/projectile_inferno.png",
 	"crimson_daggers": "res://assets/sprites/projectile_crimson.png",
-	"minigun": "res://assets/sprites/projectile_lightning.png",
+	"minigun": "res://assets/sprites/projectile_minigun.svg",
 	"storm_core": "res://assets/sprites/relic_storm_core.png",
 	"infernal_heart": "res://assets/sprites/relic_infernal_heart.png",
 	"blood_chalice": "res://assets/sprites/relic_blood_chalice.png",

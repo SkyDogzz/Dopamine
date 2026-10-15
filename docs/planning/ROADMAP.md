@@ -282,7 +282,7 @@ Travail requis :
 - [x] **P5.1.1 — Définitions catalogue** — les dix armes et leurs dix reliques associées, plus Magnet Heart sans paire, sont définies et les relations sont vérifiées au chargement.
 - [ ] **P5.1.1 — Schéma et activation** — brancher JSON Schema ; n’activer en Survival que les armes dont le prototype gameplay existe.
 - [x] **P5.1.2 — Minigun + Overdrive Engine → Redline (prototype)** — tir automatique, bonus de cadence Overdrive linéaire et cadence Redline croissante en tir continu ; chiffres de départ configurables et **[PROPOSÉS]**.
-- [ ] **P5.1.3 — Feedback Minigun** — tous les paliers proposés de gameplay sont branchés, avec la précision interprétée comme une dispersion réduite ; retour visuel par niveau et identité visuelle restent à faire.
+- [ ] **P5.1.3 — Feedback Minigun** — tous les paliers proposés de gameplay sont branchés, avec la précision interprétée comme une dispersion réduite et un projectile distinct ; retour visuel par niveau et feedback d’évolution restent à faire.
 - [ ] **P5.1.4 — Ciblage des armes**
   - [ ] Décrire la règle de ciblage de chaque arme avant son comportement visuel.
   - [ ] Implémenter un prototype par politique réutilisable et exposer ses cibles dans Sandbox.

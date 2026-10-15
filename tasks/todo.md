@@ -26,7 +26,7 @@ Roadmap détaillée et audit GDD/code : [`docs/planning/ROADMAP.md`](../docs/pla
     - [ ] Faire le smoke de cette paire avant de commencer la suivante.
   - [ ] Ajouter une définition de données Void Orb/Singularity/Event Horizon.
   - [ ] Ajouter Frost Nova/Frozen Crown/Absolute Zero.
-  - [x] Ajouter un prototype Minigun/Overdrive Engine/Redline ; chiffres de progression et cadence **[PROPOSÉS]**, HUD/feedback visuel encore provisoire.
+  - [x] Ajouter un prototype Minigun/Overdrive Engine/Redline ; chiffres de progression et cadence **[PROPOSÉS]**, projectile propre ajouté ; feedback par niveau/évolution encore à faire.
   - [ ] Ajouter Meteor Staff/Celestial Eye/Starfall.
   - [ ] Ajouter Sawblades/Magnetic Coil/Razorstorm.
   - [ ] Ajouter Toxic Cloud/Plague Mask/Pandemic.

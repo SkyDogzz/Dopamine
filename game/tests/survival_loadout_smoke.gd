@@ -14,6 +14,11 @@ func _initialize() -> void:
 		if icon_path.is_empty() or not ResourceLoader.exists(icon_path):
 			_fail("Every available relic should have a loadable icon: %s" % relic_id)
 			return
+	for weapon_id in loadout._weapons:
+		var weapon_icon_path: String = loadout.ICONS.get(weapon_id, "")
+		if weapon_icon_path.is_empty() or not ResourceLoader.exists(weapon_icon_path):
+			_fail("Every available weapon should have a loadable icon: %s" % weapon_id)
+			return
 	if not loadout.choose_starting_weapon("lightning_conductor"):
 		_fail("The player should be able to choose an available starting weapon")
 		return

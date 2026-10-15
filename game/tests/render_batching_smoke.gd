@@ -17,12 +17,15 @@ func _run() -> void:
 	entities.append(_entity(2500, "xp", 0, -20))
 	entities.append(_entity(2501, "tank", 80, 0))
 	entities.append(_entity(2502, "projectile_inferno", 100, 0))
+	entities.append(_entity(2503, "projectile_minigun", 120, 0))
 	view.set_entities(entities)
 	assert(view._enemy_multimesh.instance_count == 500, "500 enemies should fit one MultiMesh batch")
 	assert(view._projectile_multimesh.instance_count == 2000, "2,000 projectiles should fit one MultiMesh batch")
 	assert(view._xp_multimesh.instance_count == 1, "XP orbs should use a separate MultiMesh batch")
 	assert(view._sprite_renderer.multimesh_for("enemy_tank").instance_count == 1, "Enemy profiles should use their sprite batches")
 	assert(view._sprite_renderer.multimesh_for("projectile_inferno").instance_count == 1, "Weapon projectile art should remain distinct")
+	assert(view._sprite_renderer.multimesh_for("projectile_minigun").instance_count == 1, "Minigun should use its own projectile art")
+	assert(view._sprite_renderer._batches["projectile_minigun"]["texture"].resource_path.ends_with("projectile_minigun.svg"), "Minigun batch should load its distinct pixel-art sprite")
 	assert(view._sprite_renderer._batches["enemy_chaser"]["texture"].resource_path.ends_with("enemy_chaser.png"), "Chaser batch should load its pixel-art sprite")
 	view.set_selected_entity(10, 1)
 	assert(view._selected_entity_found, "Selecting an enemy should preserve its overlay above the batches")
@@ -43,6 +46,8 @@ func _entity(index: int, entity_type: String, x: float, y: float) -> Dictionary:
 		components["IsProjectile"] = true
 		if entity_type == "projectile_inferno":
 			components["EnemyType"] = "inferno_sprayer"
+		elif entity_type == "projectile_minigun":
+			components["EnemyType"] = "minigun"
 	elif entity_type == "xp":
 		components["IsXpOrb"] = true
 	elif entity_type == "tank":
