@@ -35,6 +35,7 @@ func generate_survival_item(run_id: String) -> Dictionary:
 		"slot": SLOTS[_rng.randi_range(0, SLOTS.size() - 1)],
 		"rarity": rarity,
 		"stat_lines": stat_lines,
+		"equipped": false,
 		"rolls_calibrated": false,
 		"unique_effect_id": "pending_choice" if rarity in ["legendary", "mythic"] else "",
 		"source_mode": "survival",

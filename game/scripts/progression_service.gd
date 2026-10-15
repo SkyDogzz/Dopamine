@@ -1,6 +1,6 @@
 extends RefCounted
 
-const PROFILE_VERSION := 2
+const PROFILE_VERSION := 3
 const RUN_ID_PATTERN := "^[A-Za-z0-9_-]{1,128}$"
 const EQUIPMENT_GENERATOR_SCRIPT := preload("res://scripts/equipment_generator.gd")
 
@@ -58,9 +58,35 @@ func load_profile() -> Dictionary:
 		profile["profile_version"] = PROFILE_VERSION
 		profile["equipment_inventory"] = profile.get("equipment_inventory", [])
 		migrated = true
+	elif profile.get("profile_version") == 2:
+		profile["profile_version"] = PROFILE_VERSION
+		for equipment in profile.get("equipment_inventory", []):
+			equipment["equipped"] = false
+		migrated = true
 	if not _valid_profile(profile):
 		return {"ok": false, "error": "invalid_profile"}
 	if migrated and not _save_service.save_slot(_slot_id, profile):
+		return {"ok": false, "error": "save_failed"}
+	return {"ok": true, "profile": profile.duplicate(true)}
+
+func set_equipped(instance_id: String, equipped: bool) -> Dictionary:
+	var profile_result := load_profile()
+	if not profile_result.get("ok", false):
+		return {"ok": false, "error": str(profile_result.get("error", "load_failed"))}
+	var profile: Dictionary = profile_result["profile"]
+	var target: Dictionary = {}
+	for equipment in profile["equipment_inventory"]:
+		if equipment["instance_id"] == instance_id:
+			target = equipment
+			break
+	if target.is_empty():
+		return {"ok": false, "error": "equipment_not_found"}
+	if equipped:
+		for equipment in profile["equipment_inventory"]:
+			if equipment["slot"] == target["slot"]:
+				equipment["equipped"] = false
+	target["equipped"] = equipped
+	if not _save_service.save_slot(_slot_id, profile):
 		return {"ok": false, "error": "save_failed"}
 	return {"ok": true, "profile": profile.duplicate(true)}
 
@@ -73,7 +99,7 @@ func _empty_profile() -> Dictionary:
 	}
 
 func _valid_profile(profile: Dictionary) -> bool:
-	if profile.get("profile_version") != 2 or not profile.get("resources") is Dictionary or \
+	if profile.get("profile_version") != PROFILE_VERSION or not profile.get("resources") is Dictionary or \
 			not profile.get("equipment_inventory") is Array or not profile.get("rewarded_survival_runs") is Array:
 		return false
 	var resources: Dictionary = profile["resources"]
@@ -84,9 +110,14 @@ func _valid_profile(profile: Dictionary) -> bool:
 	for run_id in profile["rewarded_survival_runs"]:
 		if typeof(run_id) != TYPE_STRING or not _valid_run_id(run_id):
 			return false
+	var equipped_slots: Dictionary = {}
 	for equipment in profile["equipment_inventory"]:
 		if not _valid_equipment(equipment):
 			return false
+		if equipment["equipped"]:
+			if equipped_slots.has(equipment["slot"]):
+				return false
+			equipped_slots[equipment["slot"]] = true
 	return true
 
 func _valid_equipment(equipment: Variant) -> bool:
@@ -94,7 +125,7 @@ func _valid_equipment(equipment: Variant) -> bool:
 			typeof(equipment.get("instance_id")) != TYPE_STRING or \
 			typeof(equipment.get("slot")) != TYPE_STRING or not EQUIPMENT_GENERATOR_SCRIPT.SLOTS.has(equipment["slot"]) or \
 			typeof(equipment.get("rarity")) != TYPE_STRING or not EQUIPMENT_GENERATOR_SCRIPT.RARITIES.has(equipment["rarity"]) or \
-			not equipment.get("stat_lines") is Array:
+			typeof(equipment.get("equipped")) != TYPE_BOOL or not equipment.get("stat_lines") is Array:
 		return false
 	var stat_lines: Array = equipment["stat_lines"]
 	if stat_lines.size() != EQUIPMENT_GENERATOR_SCRIPT.STAT_LINE_COUNTS[equipment["rarity"]]:

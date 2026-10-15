@@ -1,6 +1,7 @@
 extends CenterContainer
 
 signal close_requested
+signal equipment_state_requested(instance_id: String, equipped: bool)
 
 @onready var _items: VBoxContainer = $Panel/Content/Scroll/Items
 @onready var _empty_state: Label = $Panel/Content/EmptyState
@@ -52,9 +53,18 @@ func _create_item_row(equipment: Dictionary) -> Control:
 	var status := Label.new()
 	status.add_theme_color_override("font_color", Color("#ffd166"))
 	status.text = "ROLLS UNCALIBRATED — no gameplay bonus yet"
+	if equipment.get("equipped", false):
+		status.text = "EQUIPPED — rolls uncalibrated; no gameplay bonus yet"
 	if equipment.get("unique_effect_id") == "pending_choice":
 		status.text += "\nUnique effect choice pending"
 	content.add_child(status)
+	var equip_button := Button.new()
+	var is_equipped := bool(equipment.get("equipped", false))
+	equip_button.text = "UNEQUIP" if is_equipped else "EQUIP"
+	equip_button.pressed.connect(func() -> void:
+		equipment_state_requested.emit(str(equipment.get("instance_id", "")), not is_equipped)
+	)
+	content.add_child(equip_button)
 	return row
 
 func _close() -> void:

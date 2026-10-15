@@ -146,6 +146,7 @@ func _ready() -> void:
 	_run_result.restart_requested.connect(_restart_run)
 	_equipment_button.pressed.connect(_open_equipment_inventory)
 	_equipment_panel.close_requested.connect(_close_equipment_inventory)
+	_equipment_panel.equipment_state_requested.connect(_set_equipment_state)
 	_equipment_button.visible = progression_service != null
 	player_max_hp = simulation.initial_player_hp()
 	player_hp = player_max_hp
@@ -380,6 +381,15 @@ func _close_equipment_inventory() -> void:
 		simulation.resume()
 	_inventory_was_running = false
 	_equipment_button.grab_focus()
+
+func _set_equipment_state(instance_id: String, equipped: bool) -> void:
+	if progression_service == null or not _equipment_panel.visible:
+		return
+	var result: Dictionary = progression_service.set_equipped(instance_id, equipped)
+	if result.get("ok", false):
+		_equipment_panel.present(result["profile"])
+	else:
+		_equipment_panel.present_error()
 
 func _restart_run() -> void:
 	get_tree().reload_current_scene()

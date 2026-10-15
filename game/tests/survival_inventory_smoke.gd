@@ -13,6 +13,12 @@ func _run() -> void:
 	var save_service = load("res://scripts/save_service.gd").new(directory)
 	var progression = load("res://scripts/progression_service.gd").new(save_service, "0")
 	progression.award_survival_run("inventory-fixture", 4, false)
+	progression.award_survival_run("inventory-fixture-two", 5, false)
+	var fixture_profile: Dictionary = progression.load_profile()["profile"]
+	fixture_profile["equipment_inventory"][1]["slot"] = fixture_profile["equipment_inventory"][0]["slot"]
+	if not save_service.save_slot("0", fixture_profile):
+		_fail("Could not save the same-slot inventory fixture")
+		return
 	var session: Node2D = load("res://scenes/survival_session.tscn").instantiate()
 	session.progression_service = progression
 	session.skip_starting_weapon_choice = true
@@ -32,13 +38,33 @@ func _run() -> void:
 		_fail("Opening the equipment inventory should pause the simulation")
 		return
 	var panel = session.get_node("HUD/EquipmentInventoryOverlay")
-	if not panel.visible or panel.get_node("Panel/Content/Scroll/Items").get_child_count() != 1:
-		_fail("The inventory should list the permanent item saved in this profile")
+	if not panel.visible or panel.get_node("Panel/Content/Scroll/Items").get_child_count() != 2:
+		_fail("The inventory should list both permanent items saved in this profile")
 		return
-	var item_row: VBoxContainer = panel.get_node("Panel/Content/Scroll/Items").get_child(0).get_child(0)
+	var items: VBoxContainer = panel.get_node("Panel/Content/Scroll/Items")
+	var item_row: VBoxContainer = items.get_child(0).get_child(0)
 	if not item_row.get_child(0).text.contains(" • ") or \
 			not item_row.get_child(2).text.contains("ROLLS UNCALIBRATED"):
 		_fail("An inventory item should show its slot, rarity and inactive roll state")
+		return
+	item_row.get_child(3).pressed.emit()
+	var equipped_profile: Dictionary = progression.load_profile()["profile"]
+	if not equipped_profile["equipment_inventory"][0].get("equipped", false) or \
+			equipped_profile["equipment_inventory"][1].get("equipped", false) or \
+			items.get_child(0).get_child(0).get_child(2).text != "EQUIPPED — rolls uncalibrated; no gameplay bonus yet":
+		_fail("Equipping an item should persist and show that its rolls remain inactive")
+		return
+	items.get_child(1).get_child(0).get_child(3).pressed.emit()
+	var replaced_profile: Dictionary = progression.load_profile()["profile"]
+	if replaced_profile["equipment_inventory"][0].get("equipped", false) or \
+			not replaced_profile["equipment_inventory"][1].get("equipped", false):
+		_fail("Equipping another item in the same slot should replace the first one")
+		return
+	items.get_child(1).get_child(0).get_child(3).pressed.emit()
+	var unequipped_profile: Dictionary = progression.load_profile()["profile"]
+	if unequipped_profile["equipment_inventory"][0].get("equipped", false) or \
+			unequipped_profile["equipment_inventory"][1].get("equipped", false):
+		_fail("The inventory should allow its equipped item to be unequipped")
 		return
 	if "--capture" in OS.get_cmdline_user_args():
 		await RenderingServer.frame_post_draw
