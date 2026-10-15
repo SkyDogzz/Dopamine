@@ -1,0 +1,120 @@
+extends SceneTree
+
+const OPTIONS_SCENE_PATH := "res://scenes/options_panel.tscn"
+const THEME_PATH := "res://themes/dopamine_ui.tres"
+
+var _settings: SettingsService
+
+func _initialize() -> void:
+	call_deferred("_run")
+
+func _run() -> void:
+	_settings = root.get_node("Settings") as SettingsService
+	_settings.set_fullscreen_enabled(false)
+	_settings.set_master_volume_percent(100.0)
+	if not ResourceLoader.exists(OPTIONS_SCENE_PATH):
+		_fail("Options panel scene is missing")
+		return
+	var packed_scene: PackedScene = load(OPTIONS_SCENE_PATH)
+	if packed_scene == null:
+		_fail("Options panel scene could not be loaded")
+		return
+	var panel := packed_scene.instantiate() as Control
+	if panel == null:
+		_fail("Options panel root should be a Control")
+		return
+	root.add_child(panel)
+	await process_frame
+	var shared_theme: Theme = load(THEME_PATH)
+	if shared_theme == null or panel.theme != shared_theme:
+		_fail("Options panel should use the shared UI Theme")
+		return
+	for node_path in [
+		"Content/Center/OptionsCard/OptionsContent/FullscreenToggle",
+		"Content/Center/OptionsCard/OptionsContent/VolumeRow/VolumeSlider",
+		"Content/Center/OptionsCard/OptionsContent/VolumeRow/VolumeValue",
+		"Content/Center/OptionsCard/OptionsContent/BackButton",
+	]:
+		if panel.get_node_or_null(node_path) == null:
+			_fail("Options panel is missing control: %s" % node_path)
+			return
+	var fullscreen_toggle := panel.get_node("Content/Center/OptionsCard/OptionsContent/FullscreenToggle") as CheckButton
+	var volume_slider := panel.get_node("Content/Center/OptionsCard/OptionsContent/VolumeRow/VolumeSlider") as HSlider
+	var volume_value := panel.get_node("Content/Center/OptionsCard/OptionsContent/VolumeRow/VolumeValue") as Label
+	var back_button := panel.get_node("Content/Center/OptionsCard/OptionsContent/BackButton") as Button
+	var options_card := panel.get_node("Content/Center/OptionsCard") as Control
+	if fullscreen_toggle == null or fullscreen_toggle.focus_mode == Control.FOCUS_NONE:
+		_fail("Fullscreen setting should be focusable")
+		return
+	if root.gui_get_focus_owner() != fullscreen_toggle:
+		_fail("Fullscreen setting should receive initial focus")
+		return
+	volume_slider.value = 42.0
+	await process_frame
+	if _settings.master_volume_percent != 42.0 or volume_value.text != "42%":
+		_fail("Volume slider should update Settings and show its percentage")
+		return
+	fullscreen_toggle.toggled.emit(true)
+	await process_frame
+	if not _settings.fullscreen_enabled:
+		_fail("Fullscreen toggle should update Settings")
+		return
+	for action_name in ["ui_accept", "ui_cancel", "ui_up", "ui_down", "ui_left", "ui_right"]:
+		if not InputMap.has_action(action_name):
+			_fail("Standard UI action is missing: %s" % action_name)
+			return
+	var accept_a_found := false
+	var cancel_b_found := false
+	for input_event in InputMap.action_get_events("ui_accept"):
+		if input_event is InputEventJoypadButton and input_event.button_index == JOY_BUTTON_A:
+			accept_a_found = true
+	for input_event in InputMap.action_get_events("ui_cancel"):
+		if input_event is InputEventJoypadButton and input_event.button_index == JOY_BUTTON_B:
+			cancel_b_found = true
+	if not accept_a_found or not cancel_b_found:
+		_fail("Standard UI accept/cancel actions should map to gamepad A/B")
+		return
+	for viewport_size in [Vector2i(1280, 800), Vector2i(960, 600), Vector2i(1600, 900)]:
+		root.size = viewport_size
+		await process_frame
+		var card_rect := options_card.get_global_rect()
+		if card_rect.position.x < 0.0 or card_rect.position.y < 0.0 or card_rect.end.x > viewport_size.x or card_rect.end.y > viewport_size.y:
+			_fail("Options card should fit inside viewport %s" % viewport_size)
+			return
+	var close_signal_found := false
+	for signal_info in panel.get_signal_list():
+		if signal_info.name == "close_requested":
+			close_signal_found = true
+	if not close_signal_found:
+		_fail("Options panel should request closure from its owner")
+		return
+	var close_requests := [0]
+	panel.close_requested.connect(func(): close_requests[0] += 1)
+	back_button.pressed.emit()
+	if close_requests[0] != 1:
+		_fail("Back button should request closure from its owner")
+		return
+	var cancel_event := InputEventAction.new()
+	cancel_event.action = "ui_cancel"
+	cancel_event.pressed = true
+	panel._unhandled_key_input(cancel_event)
+	if close_requests[0] != 2:
+		_fail("ui_cancel should request closure from its owner")
+		return
+	var reopened_panel := packed_scene.instantiate() as Control
+	root.add_child(reopened_panel)
+	await process_frame
+	var reopened_toggle := reopened_panel.get_node("Content/Center/OptionsCard/OptionsContent/FullscreenToggle") as CheckButton
+	var reopened_slider := reopened_panel.get_node("Content/Center/OptionsCard/OptionsContent/VolumeRow/VolumeSlider") as HSlider
+	if not reopened_toggle.button_pressed or reopened_slider.value != 42.0:
+		_fail("Reopened Options panel should reflect the latest stored preferences")
+		return
+	_settings.set_fullscreen_enabled(false)
+	_settings.set_master_volume_percent(100.0)
+
+	print("Options panel theme, controls, focus, preference updates and close contract passed")
+	quit()
+
+func _fail(message: String) -> void:
+	push_error(message)
+	quit(1)

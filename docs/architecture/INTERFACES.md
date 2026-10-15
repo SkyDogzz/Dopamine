@@ -6,6 +6,12 @@ Les exemples ci-dessous sont des **interfaces de conception proposées**, pas un
 
 Les contrôles `Control` utilisent les actions natives `ui_accept`, `ui_cancel`, `ui_up`, `ui_down`, `ui_left` et `ui_right`. Le projet mappe la validation à Entrée, Entrée du pavé numérique, Espace et bouton A; l’annulation à Échap et bouton B. Cette configuration conserve le pilotage clavier/manette via `InputMap`, conformément à l’ADR-011 **[ACCEPTÉ]**. Les contrôles interactifs doivent exposer un focus visible; la vérification d’un mapping ne remplace pas un essai avec une manette physique.
 
+## Préférences système UI
+
+L’autoload Godot `Settings` (`SettingsService`) ne possède que `fullscreen_enabled` et `master_volume_percent`. Il charge et enregistre ces préférences avec `ConfigFile` dans `user://settings.cfg`, séparément des saves de progression (`user://saves`). Il applique le mode fenêtre/plein écran via `DisplayServer` et le volume au bus `Master` via `AudioServer`. Le défaut fenêtre/100 %, le plein écran exclusif et la conversion linéaire vers les décibels avec seuil de silence à −80 dB restent **[PROPOSÉS]**.
+
+`OptionsPanel` utilise le Theme partagé, affiche seulement ces deux réglages et émet `close_requested` via son bouton Retour ou `ui_cancel`. Son écran propriétaire garde l’autorité sur la navigation et sur l’état de toute simulation. L’intégration de ce panneau depuis une pause doit conserver la pause et ses horloges; cette propriété est vérifiée avec le module `survival-pause`. `Settings` n’a aucune référence à `SaveService`, à la progression ou à une run.
+
 ## Contrat natif P1 implémenté
 
 `SimulationCore` reste indépendant de Godot et appartient exclusivement à `SimulationWorker`. Le worker possède le thread de simulation ; aucun Node ni élément du `SceneTree` n'est accédé depuis ce thread.

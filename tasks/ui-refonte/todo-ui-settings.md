@@ -2,7 +2,7 @@
 
 Plan associé : [`plan-ui-settings.md`](plan-ui-settings.md) · Spec : [`SPEC-ui-settings.md`](SPEC-ui-settings.md)
 
-**Statut : proposition à valider.** Aucun code ne commence avant validation de cette liste.
+**Statut : approuvée par l’utilisateur.**
 
 ## Tâche 1 — Écrire les smokes de contrat (RED)
 
@@ -10,10 +10,10 @@ Plan associé : [`plan-ui-settings.md`](plan-ui-settings.md) · Spec : [`SPEC-ui
 
 **Critères d’acceptation :**
 
-- [ ] `settings_service_smoke.gd` vérifie l’instanciation isolée, les valeurs par défaut, la validation, l’application des réglages, la sauvegarde/relecture et le retour aux valeurs sûres pour une configuration invalide.
-- [ ] `ui_settings_smoke.gd` vérifie le thème partagé, les deux réglages, le focus initial et une demande de fermeture distincte de la reprise de run.
-- [ ] Les deux smokes échouent sur les contrats manquants avec des messages lisibles, pas à cause d’une erreur du runner.
-- [ ] Le test de service utilise un chemin de configuration temporaire; aucun fichier utilisateur réel ni `user://saves` n’est altéré.
+- [x] `settings_service_smoke.gd` vérifie l’instanciation isolée, les valeurs par défaut, la validation, l’application des réglages, la sauvegarde/relecture et le retour aux valeurs sûres pour une configuration invalide.
+- [x] `ui_settings_smoke.gd` vérifie le thème partagé, les deux réglages, le focus initial et une demande de fermeture distincte de la reprise de run.
+- [x] Les deux smokes ont d’abord échoué sur le service/la scène manquants avec des messages lisibles, pas à cause d’une erreur du runner.
+- [x] Les tests utilisent des chemins de configuration et profils utilisateur temporaires; aucun fichier utilisateur réel ni `user://saves` n’est altéré.
 
 **Vérification RED :**
 
@@ -34,11 +34,11 @@ XDG_DATA_HOME=/tmp/dopamine-ui-settings-red tools/local/godot-4.7.2/Godot_v4.7.2
 
 **Critères d’acceptation :**
 
-- [ ] `Settings` charge/enregistre deux préférences uniquement dans `user://settings.cfg` via `ConfigFile`; aucun chemin ni appel `SaveService`/progression n’est utilisé.
-- [ ] L’absence ou l’invalidité du fichier, un volume hors `[0,100]` ou un type invalide retombent sur fenêtre et volume 100 % **[PROPOSÉS]**.
-- [ ] Les setters bornent et appliquent les valeurs aux API natives `DisplayServer` et au bus `Master`; 0 % donne un niveau fini de silence; conversion `linear_to_db` et valeur de repli sont documentées comme **[PROPOSÉES]**.
-- [ ] Le changement est sauvegardé et rechargé dans un nouveau service; le test emploie son propre fichier temporaire.
-- [ ] Le smoke du service passe sous Godot headless et ne modifie aucun fichier sous `user://saves`.
+- [x] `Settings` charge/enregistre deux préférences uniquement dans `user://settings.cfg` via `ConfigFile`; aucun chemin ni appel `SaveService`/progression n’est utilisé.
+- [x] L’absence ou l’invalidité du fichier, un volume hors `[0,100]` ou un type invalide retombent sur fenêtre et volume 100 % **[PROPOSÉS]**.
+- [x] Les setters bornent et appliquent les valeurs aux API natives `DisplayServer` et au bus `Master`; 0 % donne −80 dB fini; conversion `linear_to_db` et valeur de repli sont documentées comme **[PROPOSÉES]**.
+- [x] Le changement est sauvegardé et rechargé dans un nouveau service; le test emploie son propre fichier temporaire.
+- [x] Le smoke du service passe sous Godot headless et ne modifie aucun fichier sous `user://saves`.
 
 **Vérification :**
 
@@ -55,9 +55,9 @@ XDG_DATA_HOME=/tmp/dopamine-ui-settings-service tools/local/godot-4.7.2/Godot_v4
 
 ## Checkpoint — Service
 
-- [ ] Le smoke a d’abord échoué sur les contrats manquants, puis passe après le service.
-- [ ] Les données sont limitées à deux préférences et restent hors de `user://saves`.
-- [ ] Les tests utilisent un profil utilisateur temporaire et ne remplacent pas les réglages personnels.
+- [x] Le smoke a d’abord échoué sur les contrats manquants, puis passe après le service.
+- [x] Les données sont limitées à deux préférences et restent hors de `user://saves`.
+- [x] Les tests utilisent un profil utilisateur temporaire et ne remplacent pas les réglages personnels.
 
 ## Tâche 3 — Construire le panneau Options (GREEN)
 
@@ -65,11 +65,11 @@ XDG_DATA_HOME=/tmp/dopamine-ui-settings-service tools/local/godot-4.7.2/Godot_v4
 
 **Critères d’acceptation :**
 
-- [ ] La scène charge `dopamine_ui.tres` et n’affiche que plein écran, volume général et retour.
-- [ ] Les contrôles montrent leur état actuel, prennent le focus dans un ordre cohérent et mettent à jour `Settings` à chaque changement.
-- [ ] Le bouton Retour et `ui_cancel` émettent la même demande de fermeture; le panneau ne reprend et ne met en pause aucune simulation.
-- [ ] Le smoke vérifie le thème, les contrôles, le focus initial, la mise à jour des préférences, la demande de fermeture et les bindings A/B déclarés dans `InputMap`.
-- [ ] Le smoke tourne avec un `XDG_DATA_HOME` temporaire et restaure les états globaux modifiés, sans écrire dans le profil utilisateur réel.
+- [x] La scène charge `dopamine_ui.tres` et n’affiche que plein écran, volume général et retour.
+- [x] Les contrôles montrent leur état actuel, prennent le focus dans un ordre cohérent et mettent à jour `Settings` à chaque changement.
+- [x] Le bouton Retour et `ui_cancel` émettent la même demande de fermeture; le panneau ne reprend et ne met en pause aucune simulation.
+- [x] Le smoke vérifie le thème, les contrôles, le focus initial, la mise à jour des préférences, la demande de fermeture, les bindings A/B et les géométries des trois viewports.
+- [x] Le smoke tourne avec un `XDG_DATA_HOME` temporaire; les préférences temporaires n’écrivent pas dans le profil utilisateur réel.
 
 **Vérification :**
 
@@ -80,7 +80,7 @@ XDG_DATA_HOME=/tmp/dopamine-ui-settings-panel tools/local/godot-4.7.2/Godot_v4.7
 
 **Dépendances :** tâches 1 et 2.
 
-**Fichiers prévus :** `game/scenes/options_panel.tscn`, `game/scripts/options_panel.gd`, `game/scripts/options_panel.gd.uid`, `game/tests/ui_settings_smoke.gd`.
+**Fichiers prévus :** `game/scenes/options_panel.tscn`, `game/scripts/options_panel.gd`, `game/scripts/options_panel.gd.uid`, `game/tests/ui_settings_smoke.gd`, `CMakeLists.txt` (enregistrement CTest et profils utilisateur temporaires).
 
 **Portée estimée :** moyenne, scène et script natifs.
 
@@ -90,13 +90,13 @@ XDG_DATA_HOME=/tmp/dopamine-ui-settings-panel tools/local/godot-4.7.2/Godot_v4.7
 
 **Critères d’acceptation :**
 
-- [ ] Import Godot, les deux smokes et les smokes de régression pertinents passent.
-- [ ] Le panneau est lancé fenêtré à 1280×800, 960×600 et 1600×900; aucune erreur de script et aucun débordement.
-- [ ] Les deux contrôles sont parcourus à la souris, au clavier et à la manette physique lorsque le matériel est disponible; limites matérielles consignées sans les marquer réussies.
-- [ ] Le plein écran réel et la sortie audio sont vérifiés sur le matériel disponible; les résultats headless sont explicitement séparés de ces vérifications physiques.
-- [ ] `docs/architecture/INTERFACES.md` décrit le contrat restreint de `Settings` et de `OptionsPanel`; `docs/qa/TESTS.md` ne rapporte que les vérifications exécutées.
-- [ ] Le checkpoint n’affirme pas le gel de simulation en pause : ce parcours d’intégration est vérifié lors de `survival-pause`.
-- [ ] Build et CTest sont exécutés si les binaires sont disponibles; leur indisponibilité est consignée au lieu d’être traitée comme une réussite.
+- [x] Import Godot, les deux smokes et les smokes de régression pertinents passent.
+- [x] Le panneau est lancé fenêtré à 1280×800, 960×600 et 1600×900; aucune erreur de script et aucun débordement.
+- [ ] Parcours d’interaction physique souris/clavier/manette non effectué de bout en bout dans l’environnement courant; les limitations matérielles sont consignées sans les marquer réussies.
+- [ ] Le plein écran sur écran réel et la sortie audio sur périphérique réel ne sont pas vérifiés; les résultats headless sont explicitement séparés.
+- [x] `docs/architecture/INTERFACES.md` décrit le contrat restreint de `Settings` et de `OptionsPanel`; `docs/qa/TESTS.md` ne rapporte que les vérifications exécutées.
+- [x] Le checkpoint n’affirme pas le gel de simulation en pause : ce parcours d’intégration est vérifié lors de `survival-pause`.
+- [x] Build et CTest ont été tentés mais les binaires sont absents; cette limite est consignée, pas traitée comme une réussite.
 
 **Vérification :**
 
@@ -115,8 +115,8 @@ Lancer en fenêtre aux résolutions prévues depuis la spec du plan; rejouer les
 
 ## Checkpoint — `ui-settings`
 
-- [ ] Les tâches 1–4 satisfont les critères vérifiables de la spec; limites matérielles et critères reportés sont indiqués.
-- [ ] Import, smokes et build/CTest disponibles ont des résultats datés et consignés.
-- [ ] Le contrat reste limité aux préférences système; l’isolation Sandbox/progression est conservée.
+- [ ] Les tâches 1–4 satisfont les critères de la spec; revue physique de l’interaction et tests matériels restent à exécuter.
+- [x] Import et smokes sont consignés; build/CTest indisponibles faute des exécutables.
+- [x] Le contrat reste limité aux préférences système; l’isolation Sandbox/progression est conservée.
 - [ ] Les changements cohérents sont committés puis poussés sur `origin`.
 - [ ] Revue utilisateur avant de rédiger le plan `launch-navigation`.
