@@ -5,6 +5,8 @@ signal chest_option_chosen(option_id: String)
 const PLAYER_SCENE := preload("res://scenes/player.tscn")
 const SPRITE_RENDERER_SCRIPT := preload("res://scripts/sprite_batch_renderer.gd")
 const CHEST_TEXTURE: Texture2D = preload("res://assets/sprites/chest_closed.png")
+const GROUND_TEXTURE: Texture2D = preload("res://assets/sprites/survival_ground.svg")
+const RUINS_TEXTURE: Texture2D = preload("res://assets/sprites/survival_ruins.svg")
 const WEAPON_ICONS := {
 	"lightning_conductor": preload("res://assets/sprites/projectile_lightning.png"),
 	"inferno_sprayer": preload("res://assets/sprites/projectile_inferno.png"),
@@ -1370,6 +1372,8 @@ func _publish_player_target() -> void:
 	)
 
 func _draw() -> void:
+	draw_texture_rect(GROUND_TEXTURE, Rect2(-8192.0, -8192.0, 16384.0, 16384.0), true)
+	draw_texture_rect(RUINS_TEXTURE, Rect2(-768.0, -768.0, 1536.0, 1536.0), false, Color(1.0, 1.0, 1.0, 0.88))
 	_sprite_renderer.draw_batches(self)
 	for entity in _entities:
 		var components: Dictionary = entity["components"]
