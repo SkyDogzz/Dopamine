@@ -46,8 +46,8 @@ Livrer d’abord un Sandbox développeur autonome, puis le premier playable Surv
 - [x] Intégrer HP decay et soins aux événements de combat et à l’horloge active de `SurvivalSession`, avec HP possédé côté Godot.
 - [x] Ajouter un prototype automatique Lightning Conductor configurable ; la cadence, les dégâts et l’interprétation des deux chaînes restent **[PROPOSÉS]**.
 - [x] Ajouter les dégâts de contact joueur-ennemi et l’invulnérabilité provisoires; suspendre les contrôles joueur en pause et après la fin.
-- [ ] Ajouter les contrôles Sandbox pour les modificateurs de dégâts/lifesteal/statuts; compléter le lifesteal des dégâts sur la durée et les statuts.
-- [ ] Tester les règles indépendamment dans le Sandbox et respecter les budgets de simulation.
+- [x] Ajouter les contrôles Sandbox pour les modificateurs de dégâts/lifesteal/statuts; le lifesteal DoT et les statuts partagés sont couverts par les smoke tests.
+- [x] Tester les règles indépendamment dans le Sandbox et respecter les budgets de simulation, y compris les plafonds d'entités, commandes et événements.
 
 ### Phase 4 — Premier playable Survival
 
@@ -57,13 +57,14 @@ Livrer d’abord un Sandbox développeur autonome, puis le premier playable Surv
 - [x] Relier les drops aux morts/pickup et appliquer les choix à un loadout de run avec capacités et niveaux plafonnés.
 - [x] Ajouter les projectiles Inferno/Crimson et relier les trois reliques à des modificateurs provisoires vérifiés.
 - [x] Ajouter l’écran de choix de départ et l’entrée vers Survival depuis le Sandbox; la paire de départ reste **[PROPOSÉE]**.
-- [ ] Confirmer le pool de contenu du vertical slice et compléter les effets/évolutions des 3 armes/reliques.
+- [x] Implémenter les trois paires prototypes Lightning Conductor/Storm Core, Inferno Sprayer/Infernal Heart et Crimson Daggers/Blood Chalice, avec Infinite Circuit, Wildfire et Bloodstorm. Les valeurs de tuning restent **[PROPOSÉES]** et les autres paires restent hors vertical slice.
 - [x] Ajouter un HUD Survival minimal pour le HP, temps actif, arme prototype, XP/niveau et état de run.
 - [x] Afficher les HP courants/max des placeholders boss et distinguer l’état logique de victoire de la mort.
 - [x] Ajouter un écran de fin avec résumé de run et redémarrage local sans sauvegarde.
-- [ ] Implémenter les patterns/récompenses de boss et la sauvegarde minimale isolée du Sandbox.
-- [ ] Vérifier une run Survival complète de 24 vagues et les critères QA associés.
-- [ ] Checkpoint final : build Linux, démarrage sans save existante, run complète et régression Sandbox.
+- [x] Récompenses de boss par chests garantis et progression minimale persistée dans Survival ; le Sandbox n'a pas accès au service de sauvegarde et son test d'isolation protège un slot sentinelle.
+- [ ] Définir les patterns détaillés des boss : point **[OUVERT]** dans le GDD; les boss du playable gardent leur comportement placeholder.
+- [x] Vérifier une run Survival complète de 24 vagues et les critères QA associés, à durée nominale accélérée.
+- [x] Checkpoint du premier playable : build Linux, démarrage Sandbox sans save, run complète et régression Sandbox.
 
 ## Risques
 
@@ -79,4 +80,4 @@ Livrer d’abord un Sandbox développeur autonome, puis le premier playable Surv
 - Test ciblé après chaque tranche de logique (ECS, commandes, worker, combat).
 - Smoke test Godot headless après changement du pont ou des scènes.
 - Batterie plus complète aux checkpoints Sandbox puis Survival ; benchmark de charge aux étapes P2/P4.
-- Commit par tranche cohérente. Ne pas pousser tant qu’aucune remote n’est configurée.
+- Commit par tranche cohérente ; pousser chaque commit lorsque `origin` est configurée.
