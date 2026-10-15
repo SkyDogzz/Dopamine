@@ -18,6 +18,7 @@ const WEAPON_IMPACT_TYPES := {
 	"meteor_staff": 6, "starfall": 6, "starfall_fragment": 6,
 	"prism_laser": 7, "spectrum_collapse": 7, "prism_secondary": 7,
 	"void_orb": 8, "event_horizon": 8,
+	"frost_nova": 9, "absolute_zero": 9,
 }
 const WEAPON_IMPACT_LIFETIME := 0.22
 const MAX_VISIBLE_WEAPON_IMPACTS := 32
@@ -31,6 +32,7 @@ const WEAPON_ICONS := {
 	"meteor_staff": preload("res://assets/sprites/projectile_meteor.svg"),
 	"prism_laser": preload("res://assets/sprites/projectile_prism_laser.svg"),
 	"void_orb": preload("res://assets/sprites/projectile_void_orb.svg"),
+	"frost_nova": preload("res://assets/sprites/projectile_frost_nova.svg"),
 }
 const WAVE_DIRECTOR_SCRIPT := preload("res://scripts/survival_wave_director.gd")
 const LOADOUT_SCRIPT := preload("res://scripts/survival_loadout.gd")

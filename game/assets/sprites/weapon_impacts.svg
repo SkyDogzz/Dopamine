@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="576" height="64" viewBox="0 0 576 64" shape-rendering="crispEdges">
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="64" viewBox="0 0 640 64" shape-rendering="crispEdges">
   <!-- Lightning -->
   <g transform="translate(0)">
     <path d="M30 2h8l-5 18 12-4-21 26 4-18-12 4z" fill="#56edff"/>
@@ -59,5 +59,12 @@
     <circle cx="32" cy="32" r="10" fill="#18152c"/>
     <path d="M31 2h4v8h-4zM54 30h8v4h-8zM9 30h8v4H9zM29 54h4v8h-4z" fill="#c19cff"/>
     <path d="m20 14 4 4-6 6-4-4zm24 26 4 4-6 6-4-4z" fill="#e4d5ff"/>
+  </g>
+  <!-- Frost -->
+  <g transform="translate(576)">
+    <path d="M30 4h5v18l12-12 4 4-12 12h18v5H39l12 12-4 4-12-12v18h-5V35L18 47l-4-4 12-12H8v-5h18L14 14l4-4 12 12z" fill="#72cfff"/>
+    <path d="M31 13h3v17h17v3H34v17h-3V33H14v-3h17z" fill="#e5ffff"/>
+    <path d="M31 22h3v20h-3zm-10 8h23v3H21z" fill="#fff"/>
+    <path d="M7 15h6v3H7zm44 28h7v3h-7zM42 6h4v7h-4zM14 52h5v5h-5z" fill="#a7a5ff"/>
   </g>
 </svg>

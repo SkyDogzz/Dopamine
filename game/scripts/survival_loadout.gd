@@ -11,6 +11,7 @@ const ICONS := {
 	"meteor_staff": "res://assets/sprites/projectile_meteor.svg",
 	"prism_laser": "res://assets/sprites/projectile_prism_laser.svg",
 	"void_orb": "res://assets/sprites/projectile_void_orb.svg",
+	"frost_nova": "res://assets/sprites/projectile_frost_nova.svg",
 	"storm_core": "res://assets/sprites/relic_storm_core.png",
 	"infernal_heart": "res://assets/sprites/relic_infernal_heart.png",
 	"blood_chalice": "res://assets/sprites/relic_blood_chalice.png",
@@ -20,6 +21,7 @@ const ICONS := {
 	"celestial_eye": "res://assets/sprites/relic_celestial_eye.svg",
 	"prism_crystal": "res://assets/sprites/relic_prism_crystal.svg",
 	"singularity": "res://assets/sprites/relic_singularity.svg",
+	"frozen_crown": "res://assets/sprites/relic_frozen_crown.svg",
 	"magnet_heart": "res://assets/sprites/relic_magnet_heart.svg",
 }
 const STARTING_WEAPONS := ["lightning_conductor", "inferno_sprayer"]
