@@ -94,6 +94,37 @@ int main() {
 	require(std::abs(moved->transform.x - 3.5F) < 0.001F, "step should integrate velocity");
 	require(std::abs(simulation.simulation_time() - 0.5) < 0.001, "step should advance time");
 
+	SimulationCore void_orb;
+	const auto pulled_target = void_orb.spawn("chaser", -20.0F, 0.0F, 100.0F, 0.0F, 0.0F);
+	const auto gravity_orb = void_orb.spawn_projectile("void_orb", 80.0F, 0.0F, 2.0F, 3.0F, 3.0,
+			0.0F, 0.0F, 2.0F, 0.5, 2.0, 0.0F, 0.0F, 0, 150.0F, 40.0F, true);
+	void_orb.steer_enemies_towards(-100.0F, 0.0F, {.max_speed = 30.0F});
+	void_orb.advance(0.25);
+	const auto pulled_state = void_orb.entity(pulled_target);
+	const auto orb_state = void_orb.entity(gravity_orb);
+	require(pulled_state && pulled_state->transform.x > -20.0F &&
+			pulled_state->velocity.x > 0.0F,
+			"Void Orb attraction should pull nearby enemies toward its field centre");
+	require(orb_state && orb_state->is_projectile && orb_state->projectile.attraction_radius == 150.0F &&
+			orb_state->projectile.attraction_speed == 40.0F && orb_state->projectile.pierces_targets,
+			"Void Orb field parameters should remain on the shared projectile state");
+	SimulationCore restored_void_orb;
+	restored_void_orb.restore_state(void_orb.capture_state());
+	const auto restored_orb_state = restored_void_orb.entity(gravity_orb);
+	require(restored_orb_state && restored_orb_state->projectile.pierces_targets &&
+			restored_orb_state->projectile.attraction_radius == 150.0F,
+			"Void Orb attraction and piercing should survive a simulation snapshot restore");
+	SimulationCore piercing_orb;
+	const auto first_orb_target = piercing_orb.spawn("chaser", 0.0F, 0.0F, 100.0F, 0.0F, 0.0F);
+	const auto second_orb_target = piercing_orb.spawn("chaser", 35.0F, 0.0F, 100.0F, 0.0F, 0.0F);
+	const auto piercing_orb_id = piercing_orb.spawn_projectile("void_orb", -100.0F, 0.0F, 5.0F, 3.0F, 2.0,
+			1000.0F, 0.0F, 2.0F, 0.5, 2.0, 0.0F, 0.0F, 0, 0.0F, 0.0F, true);
+	const auto piercing_events = piercing_orb.advance(0.2);
+	const auto piercing_orb_state = piercing_orb.entity(piercing_orb_id);
+	require(piercing_events.size() == 2 && piercing_events[0].target == first_orb_target &&
+			piercing_events[1].target == second_orb_target && piercing_orb_state.has_value(),
+			"a piercing Void Orb should damage each target once and remain active after impacts");
+
 	require(simulation.despawn(first), "despawn should accept a live handle");
 	require(!simulation.entity(first).has_value(), "despawned handle should be stale");
 	const auto second = simulation.spawn("tank", 0.0F, 0.0F, 20.0F, 1.0F, 0.0F);

@@ -1,6 +1,7 @@
 #include "dopamine/simulation/simulation_worker.hpp"
 
 #include <atomic>
+#include <algorithm>
 #include <chrono>
 #include <cmath>
 #include <cstdlib>
@@ -168,6 +169,42 @@ int main() {
 	acknowledge.event_sequence = with_events->events.back().sequence;
 	submit_and_wait(worker, acknowledge);
 	require(worker.snapshot()->events.empty(), "acknowledged combat events should leave the pending queue");
+	SimulationCommand gravity_target;
+	gravity_target.type = CommandType::Spawn;
+	gravity_target.entity_type = "gravity_probe";
+	gravity_target.x = 0.0F;
+	gravity_target.hp = 100.0F;
+	submit_and_wait(worker, gravity_target);
+	SimulationCommand gravity_steering;
+	gravity_steering.type = CommandType::SetSteeringTarget;
+	gravity_steering.x = -100.0F;
+	gravity_steering.steering.max_speed = 30.0F;
+	submit_and_wait(worker, gravity_steering);
+	SimulationCommand void_orb;
+	void_orb.type = CommandType::SpawnProjectile;
+	void_orb.entity_type = "void_orb";
+	void_orb.x = 100.0F;
+	void_orb.projectile_damage = 5.0F;
+	void_orb.projectile_radius = 3.0F;
+	void_orb.projectile_lifetime = 3.0;
+	void_orb.projectile_attraction_radius = 200.0F;
+	void_orb.projectile_attraction_speed = 50.0F;
+	void_orb.projectile_pierces_targets = true;
+	submit_and_wait(worker, void_orb);
+	step.delta_seconds = 0.25;
+	submit_and_wait(worker, step);
+	const auto gravity_snapshot = worker.snapshot();
+	const auto gravity_entity = std::find_if(gravity_snapshot->entities.begin(), gravity_snapshot->entities.end(),
+			[](const auto &entity) { return entity.type.id == "gravity_probe"; });
+	const auto orb_entity = std::find_if(gravity_snapshot->entities.begin(), gravity_snapshot->entities.end(),
+			[](const auto &entity) { return entity.type.id == "void_orb"; });
+	require(gravity_entity != gravity_snapshot->entities.end() && gravity_entity->transform.x > 0.0F &&
+			orb_entity != gravity_snapshot->entities.end() && orb_entity->projectile.pierces_targets &&
+			orb_entity->projectile.attraction_radius == 200.0F,
+			"worker should apply, snapshot and retain Void Orb attraction fields");
+	SimulationCommand clear_gravity_test;
+	clear_gravity_test.type = CommandType::Reset;
+	submit_and_wait(worker, clear_gravity_test);
 	SimulationCommand dot_targets;
 	dot_targets.type = CommandType::Spawn;
 	dot_targets.entity_type = "chaser";
@@ -187,7 +224,7 @@ int main() {
 	const uint64_t rejected_dot_step = submit_and_wait(worker, step);
 	const auto after_rejected_dot_step = worker.snapshot();
 	require(after_rejected_dot_step->last_sequence == rejected_dot_step &&
-			after_rejected_dot_step->simulation_time == 0.2,
+			after_rejected_dot_step->simulation_time == 0.0,
 			"worker should acknowledge but not execute a step that exceeds the event budget");
 	for (const auto &entity : after_rejected_dot_step->entities) {
 		require(entity.health.current == 100000.0F && entity.damage_over_time.has_value(),
@@ -199,7 +236,7 @@ int main() {
 	step.delta_seconds = 0.1;
 	submit_and_wait(worker, step);
 	const auto after_bounded_dot_step = worker.snapshot();
-	require(std::abs(after_bounded_dot_step->simulation_time - 0.3) < 1e-9 &&
+	require(std::abs(after_bounded_dot_step->simulation_time - 0.1) < 1e-9 &&
 			after_bounded_dot_step->events.size() == 1000,
 			"a smaller step should preserve every due damage-over-time event");
 	acknowledge.event_sequence = after_bounded_dot_step->events.back().sequence;

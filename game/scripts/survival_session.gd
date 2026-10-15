@@ -14,6 +14,7 @@ const WEAPON_ICONS := {
 	"sawblades": preload("res://assets/sprites/projectile_sawblades.svg"),
 	"meteor_staff": preload("res://assets/sprites/projectile_meteor.svg"),
 	"prism_laser": preload("res://assets/sprites/projectile_prism_laser.svg"),
+	"void_orb": preload("res://assets/sprites/projectile_void_orb.svg"),
 }
 const WAVE_DIRECTOR_SCRIPT := preload("res://scripts/survival_wave_director.gd")
 const LOADOUT_SCRIPT := preload("res://scripts/survival_loadout.gd")
@@ -130,6 +131,16 @@ const WAVE_HP_CAP := 12.0
 @export var prism_laser_projectile_radius: float = 1.5
 @export var prism_crystal_critical_damage_per_level: float = 0.03
 @export_range(0, 4) var spectrum_collapse_secondary_beams: int = 2
+@export_group("Prototype Void Orb — proposed tuning")
+@export var void_orb_cooldown: float = 2.4
+@export var void_orb_damage: float = 7.0
+@export var void_orb_range: float = 620.0
+@export var void_orb_speed: float = 230.0
+@export var void_orb_lifetime: float = 3.0
+@export var void_orb_radius: float = 5.0
+@export var void_orb_attraction_radius: float = 135.0
+@export var void_orb_attraction_speed: float = 85.0
+@export_range(0.0, 1.0) var singularity_control_per_level: float = 0.05
 @export_group("Prototype Bloodstorm — proposed tuning")
 @export var bloodstorm_bleed_damage_per_tick: float = 2.0
 @export var bloodstorm_bleed_interval_seconds: float = 0.5
@@ -179,6 +190,7 @@ var _next_toxic_time := 0.0
 var _next_sawblades_time := 0.0
 var _next_meteor_time := 0.0
 var _next_prism_time := 0.0
+var _next_void_orb_time := 0.0
 var _prism_beams: Array[Dictionary] = []
 var _redline_fire_time := 0.0
 var _redline_target_id := Vector2i(-1, -1)
@@ -384,6 +396,7 @@ func _process(_delta: float) -> void:
 	_fire_sawblades(current_simulation_time, state["paused"])
 	_fire_meteor_staff(current_simulation_time, state["paused"])
 	_fire_prism_laser(current_simulation_time, state["paused"])
+	_fire_void_orb(current_simulation_time, state["paused"])
 	if player_hp <= 0.0 and not run_over:
 		_finish_run(false)
 	player.controls_enabled = not state["paused"] and not run_over and not _chest_open and not _starting_weapon_choice_open
@@ -1139,6 +1152,32 @@ func _fire_prism_laser(active_time: float, paused: bool) -> void:
 	if fired:
 		_next_prism_time = active_time + _effective_weapon_cooldown(prism_laser_cooldown)
 
+func _fire_void_orb(active_time: float, paused: bool) -> void:
+	if not weapon_enabled or loadout.weapon_level("void_orb") == 0 or paused or _chest_open or run_over or void_orb_cooldown <= 0.0 or active_time < _next_void_orb_time:
+		return
+	var target := _nearest_enemy(void_orb_range)
+	if target.is_empty():
+		return
+	var level: int = loadout.weapon_level("void_orb")
+	var singularity_level: int = loadout.relic_level("singularity")
+	var evolved: bool = level >= 5 and singularity_level > 0
+	var direction: Vector2 = (target["position"] - player.global_position).normalized()
+	var damage_multiplier := (1.2 if level >= 2 else 1.0) * (1.25 if level >= 5 else 1.0)
+	var attraction_radius := void_orb_attraction_radius * (1.2 if level >= 3 else 1.0)
+	var lifetime := void_orb_lifetime * (1.15 if level >= 4 else 1.0)
+	var attraction_speed := void_orb_attraction_speed * (1.0 + float(level) * singularity_control_per_level)
+	if evolved:
+		attraction_radius *= 1.5
+		attraction_speed *= 1.25
+	var projectile_type := "event_horizon" if evolved else "void_orb"
+	var sequence: int = simulation.spawn_projectile(projectile_type, player.global_position + direction * 14.0,
+			direction * _equipment_projectile_speed(void_orb_speed),
+			void_orb_damage * damage_multiplier * _persistent_damage_multiplier() * _roll_equipment_critical_multiplier(),
+			_equipment_area(void_orb_radius), lifetime, 2.0, 0.5, 2.0, 0.0, 0.0, 0,
+			_equipment_area(attraction_radius), attraction_speed, true)
+	if sequence > 0:
+		_next_void_orb_time = active_time + _effective_weapon_cooldown(void_orb_cooldown)
+
 func _nearest_enemy_excluding(max_range: float, excluded: Array[Vector2i]) -> Dictionary:
 	var nearest: Dictionary = {}
 	var best_distance_squared := max_range * max_range
@@ -1332,6 +1371,17 @@ func _publish_player_target() -> void:
 
 func _draw() -> void:
 	_sprite_renderer.draw_batches(self)
+	for entity in _entities:
+		var components: Dictionary = entity["components"]
+		if not components.get("IsProjectile", false) or not ["void_orb", "event_horizon"].has(str(components.get("EnemyType", ""))):
+			continue
+		var projectile: Dictionary = components.get("Projectile", {})
+		var radius := float(projectile.get("attraction_radius", 0.0))
+		if radius > 0.0:
+			var transform: Dictionary = components["Transform2D"]
+			var center := Vector2(float(transform["x"]), float(transform["y"]))
+			var ring_color := Color(0.75, 0.46, 1.0, 0.22) if str(components["EnemyType"]) == "event_horizon" else Color(0.48, 0.3, 0.9, 0.14)
+			draw_arc(center, radius, 0.0, TAU, 48, ring_color, 1.5, true)
 	for beam in _prism_beams:
 		var beam_color := Color(0.55, 0.95, 1.0, 0.78) if bool(beam["secondary"]) else Color(1.0, 0.92, 0.55, 0.9)
 		draw_line(beam["from"], beam["to"], beam_color, 5.0 if not beam["secondary"] else 3.0, true)

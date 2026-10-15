@@ -90,6 +90,9 @@ struct ProjectileData {
 	float explosion_damage_multiplier = 0.0F;
 	uint32_t ricochets_remaining = 0;
 	std::vector<EntityId> hit_targets;
+	float attraction_radius = 0.0F;
+	float attraction_speed = 0.0F;
+	bool pierces_targets = false;
 	bool ignores_source_entity = false;
 	EntityId source_entity;
 };
@@ -153,7 +156,8 @@ public:
 			double lifetime_seconds, float velocity_x, float velocity_y, float status_damage_per_tick = 2.0F,
 			double status_interval_seconds = 0.5, double status_duration_seconds = 2.0,
 			float explosion_radius = 0.0F, float explosion_damage_multiplier = 0.0F,
-			uint32_t ricochets = 0);
+			uint32_t ricochets = 0, float attraction_radius = 0.0F, float attraction_speed = 0.0F,
+			bool pierces_targets = false);
 	EntityId spawn_xp_orb(float x, float y, float xp_value);
 	bool apply_damage_over_time(EntityId target, float damage_per_tick, double interval_seconds,
 			double duration_seconds);

@@ -103,11 +103,15 @@ EntityId SimulationCore::spawn(std::string type, float x, float y, float hp, flo
 EntityId SimulationCore::spawn_projectile(std::string type, float x, float y, float damage, float radius,
 		double lifetime_seconds, float velocity_x, float velocity_y, float status_damage_per_tick,
 		double status_interval_seconds, double status_duration_seconds, float explosion_radius,
-		float explosion_damage_multiplier, uint32_t ricochets) {
+		float explosion_damage_multiplier, uint32_t ricochets, float attraction_radius,
+		float attraction_speed, bool pierces_targets) {
 	if (!std::isfinite(damage) || damage <= 0.0F || !std::isfinite(radius) || radius < 0.0F ||
 			!std::isfinite(lifetime_seconds) || lifetime_seconds <= 0.0 || type.empty() ||
 			ricochets > 64 ||
 			!std::isfinite(explosion_radius) || explosion_radius < 0.0F ||
+			!std::isfinite(attraction_radius) || attraction_radius < 0.0F ||
+			!std::isfinite(attraction_speed) || attraction_speed < 0.0F ||
+			((attraction_radius > 0.0F) != (attraction_speed > 0.0F)) ||
 			!std::isfinite(explosion_damage_multiplier) || explosion_damage_multiplier < 0.0F ||
 			!std::isfinite(damage * explosion_damage_multiplier)) {
 		throw std::invalid_argument("invalid projectile");
@@ -132,6 +136,12 @@ EntityId SimulationCore::spawn_projectile(std::string type, float x, float y, fl
 	projectile.explosion_radius = explosion_radius;
 	projectile.explosion_damage_multiplier = explosion_damage_multiplier;
 	projectile.ricochets_remaining = ricochets;
+	projectile.attraction_radius = attraction_radius;
+	projectile.attraction_speed = attraction_speed;
+	projectile.pierces_targets = pierces_targets;
+	projectile.attraction_radius = attraction_radius;
+	projectile.attraction_speed = attraction_speed;
+	projectile.pierces_targets = pierces_targets;
 	if (type == "infinite_circuit_branch") {
 		float nearest_distance_squared = enemy_collision_radius * enemy_collision_radius;
 		for (uint32_t index = 0; index < slots_.size(); ++index) {
@@ -293,7 +303,7 @@ void SimulationCore::restore_state(const SimulationCoreState &state) {
 		}
 		if (entity.is_projectile) {
 			const ProjectileData &projectile = entity.projectile;
-			bool valid_hit_targets = projectile.ricochets_remaining <= 64 && projectile.hit_targets.size() <= 64;
+			bool valid_hit_targets = projectile.ricochets_remaining <= 64 && projectile.hit_targets.size() < slot_count;
 			for (std::size_t hit_index = 0; valid_hit_targets && hit_index < projectile.hit_targets.size(); ++hit_index) {
 				const EntityId hit_target = projectile.hit_targets[hit_index];
 				valid_hit_targets = hit_target.index < slot_count && hit_target.generation != 0 &&
@@ -305,7 +315,11 @@ void SimulationCore::restore_state(const SimulationCoreState &state) {
 					!std::isfinite(projectile.remaining_seconds) || projectile.remaining_seconds <= 0.0 ||
 					!std::isfinite(projectile.explosion_radius) || projectile.explosion_radius < 0.0F ||
 					!std::isfinite(projectile.explosion_damage_multiplier) ||
-					projectile.explosion_damage_multiplier < 0.0F || !valid_hit_targets ||
+					projectile.explosion_damage_multiplier < 0.0F ||
+					!std::isfinite(projectile.attraction_radius) || projectile.attraction_radius < 0.0F ||
+					!std::isfinite(projectile.attraction_speed) || projectile.attraction_speed < 0.0F ||
+					((projectile.attraction_radius > 0.0F) != (projectile.attraction_speed > 0.0F)) ||
+					!valid_hit_targets ||
 					(projectile.applies_damage_over_time && (!std::isfinite(projectile.status_damage_per_tick) ||
 							!std::isfinite(projectile.status_interval_seconds) ||
 							!std::isfinite(projectile.status_duration_seconds) || projectile.status_damage_per_tick <= 0.0F ||
@@ -376,6 +390,8 @@ std::size_t SimulationCore::estimate_event_count_upper_bound(double delta_second
 		estimate += static_cast<std::size_t>(std::min(amount, remaining));
 	};
 	std::size_t projectile_count = 0;
+	std::size_t piercing_projectile_count = 0;
+	std::size_t target_count = 0;
 	bool has_explosive_projectile = false;
 	for (std::size_t index = 0; index < slots_.size(); ++index) {
 		if (!slots_[index].active) {
@@ -383,10 +399,14 @@ std::size_t SimulationCore::estimate_event_count_upper_bound(double delta_second
 		}
 		if (projectile_flags_[index]) {
 			++projectile_count;
+			piercing_projectile_count += projectiles_[index].pierces_targets ? 1U : 0U;
 			has_explosive_projectile = has_explosive_projectile ||
 					(projectiles_[index].explosion_radius > 0.0F &&
 					 projectiles_[index].explosion_damage_multiplier > 0.0F);
 			continue;
+		}
+		if (!xp_orb_flags_[index] && health_[index].current > 0.0F) {
+			++target_count;
 		}
 		if (!damage_over_time_[index].has_value() || health_[index].current <= 0.0F) {
 			continue;
@@ -403,6 +423,7 @@ std::size_t SimulationCore::estimate_event_count_upper_bound(double delta_second
 		add_saturated(ticks + 1.0L);
 	}
 	add_saturated(static_cast<long double>(projectile_count) * 2.0L);
+	add_saturated(static_cast<long double>(piercing_projectile_count) * target_count * 2.0L);
 	if (has_explosive_projectile) {
 		// The whole advance shares a 500-target splash cap; each hit can emit damage and death.
 		add_saturated(1000.0L);
@@ -422,6 +443,38 @@ std::vector<CombatEvent> SimulationCore::advance(double delta_seconds) {
 	bool has_active_projectile = false;
 	for (std::size_t index = 0; index < slots_.size(); ++index) {
 		has_active_projectile = has_active_projectile || (slots_[index].active && projectile_flags_[index]);
+	}
+	if (has_active_projectile) {
+		const SpatialIndex spatial_index = build_spatial_index({});
+		std::vector<float> attraction_strength(slots_.size(), 0.0F);
+		std::vector<Velocity2D> attracted_velocities = velocities_;
+		for (uint32_t field_index = 0; field_index < slots_.size(); ++field_index) {
+			if (!slots_[field_index].active || !projectile_flags_[field_index] ||
+					projectiles_[field_index].attraction_radius <= 0.0F) {
+				continue;
+			}
+			const Transform2D &center = transforms_[field_index];
+			const ProjectileData &field = projectiles_[field_index];
+			const auto candidates = query_spatial_index(spatial_index, center.x, center.y, field.attraction_radius, {});
+			for (uint32_t target_index : candidates) {
+				const float dx = center.x - transforms_[target_index].x;
+				const float dy = center.y - transforms_[target_index].y;
+				const float distance = std::hypot(dx, dy);
+				if (distance <= 0.0F || distance >= field.attraction_radius) {
+					continue;
+				}
+				const float strength = field.attraction_speed * (1.0F - distance / field.attraction_radius);
+				if (strength > attraction_strength[target_index]) {
+					attraction_strength[target_index] = strength;
+					attracted_velocities[target_index] = {dx / distance * strength, dy / distance * strength};
+				}
+			}
+		}
+		for (uint32_t index = 0; index < slots_.size(); ++index) {
+			if (attraction_strength[index] > 0.0F) {
+				velocities_[index] = attracted_velocities[index];
+			}
+		}
 	}
 	const std::vector<Transform2D> start_positions = has_active_projectile
 			? transforms_
@@ -545,6 +598,10 @@ std::vector<CombatEvent> SimulationCore::advance(double delta_seconds) {
 									projectile.status_interval_seconds, projectile.status_duration_seconds);
 						}
 					}
+				}
+				if (projectile.pierces_targets) {
+					projectile.hit_targets.push_back(target_id);
+					continue;
 				}
 				if (projectile.ricochets_remaining > 0) {
 					projectile.hit_targets.push_back(target_id);

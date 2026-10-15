@@ -21,7 +21,7 @@ L’audit initial était statique. Les tranches Minigun, Toxic Cloud, Sawblades 
 | P0 Fondations | **Présent, Linux documenté** | Reproductibilité sur installation propre et build/chargement Windows. |
 | P1 Sandbox développeur MVP | **Présent et bien couvert historiquement** | Continuer d’exposer les nouveaux systèmes et maintenir l’isolation au fil des intégrations. |
 | P2 Simulation/combat | **Fondation présente, couverture partielle** | Diversité des IA, règles complètes d’ennemis/boss, instrumentation et performance iGPU. |
-| P3 Prototype de combat | **Huit paires et huit évolutions de prototype présentes** | Contrats génériques, retours visuels par niveau, ciblage fidèle, mesures DPS détaillées. |
+| P3 Prototype de combat | **Neuf paires et neuf évolutions de prototype présentes** | Contrats génériques, retours visuels par niveau, ciblage fidèle, mesures DPS détaillées. |
 | P4 Vertical slice Survival | **Boucle de run prototype présente** | Boss réels, difficulté sélectionnable, run équilibrée et vérifiée sans harness. |
 | P5 Contenu v1.6 | **Non livré** | 2 armes et leurs reliques associées restent indisponibles en Survival ; Toxic Cloud est un prototype à impact, pas encore un nuage visuel persistant ; contenu ennemis/boss encore incomplet. |
 | P6 Progression permanente | **Prototype anticipé seulement** | Catalogue complet, règles et contenus validés, récompenses calibrées et effets uniques actifs. |
@@ -31,9 +31,9 @@ L’audit initial était statique. Les tranches Minigun, Toxic Cloud, Sawblades 
 
 ### Lecture rapide : livré, prototype ou survolé
 
-**Bien intégré comme fondation :** simulation native découplée de Godot, worker, commandes/snapshots, limites de charge, outils Sandbox, loop de run Survival, pause/chest/XP, huit armes et effets de combat de base, sauvegarde versionnée, premiers écrans d’équipement.
+**Bien intégré comme fondation :** simulation native découplée de Godot, worker, commandes/snapshots, limites de charge, outils Sandbox, loop de run Survival, pause/chest/XP, neuf armes et effets de combat de base, sauvegarde versionnée, premiers écrans d’équipement.
 
-**Intégré en prototype, à ne pas confondre avec une feature finie :** boss (apparition/HP/transition, mais pas leurs patterns), XP auto-bonus, loot/probabilités, huit évolutions, Sawblades à ricochets/Razorstorm, Meteor Staff en zone/Starfall fragmenté, Toxic Cloud à impact plutôt qu'en champ persistant, équipement et enhancement, deux nodes de skill tree, famille Exterminator, effets uniques, récompenses de run. Les paramètres restent souvent **[PROPOSÉS]**.
+**Intégré en prototype, à ne pas confondre avec une feature finie :** boss (apparition/HP/transition, mais pas leurs patterns), XP auto-bonus, loot/probabilités, neuf évolutions, Void Orb à attraction/percée, Sawblades à ricochets/Razorstorm, Meteor Staff en zone/Starfall fragmenté, Toxic Cloud à impact plutôt qu'en champ persistant, équipement et enhancement, deux nodes de skill tree, famille Exterminator, effets uniques, récompenses de run. Les paramètres restent souvent **[PROPOSÉS]**.
 
 **Survolé ou absent par rapport au GDD :** 3 armes et 3 reliques associées restantes ; Minigun, Toxic Cloud, Sawblades et Meteor Staff n’ont pas encore de feedback visuel par niveau ; Toxic Cloud n'a pas encore de champ visuel persistant ; Magnet Heart n'agit que sur XP (autres pickups et impulsion de niveau 5 absents) ; animation/identité spécifique à chaque niveau ; dagues réellement orbitantes dans Bloodstorm (le code actuel tire des projectiles en éventail) ; 8–12 familles ennemies et leurs rôles ; élites à affixes ; boss à phases ; difficultés ; réactions élémentaires nommées ; tree ~120 nodes ; achievements ~120 familles ; modes Endless ; Sandbox Lab joueur ; performance iGPU et build Windows.
 
@@ -170,7 +170,7 @@ P6 a déjà du code anticipé, mais le chemin nominal reste P5 puis P6. P7 stand
 
 ### État constaté
 
-- `survival_loadout.gd` expose huit paires implémentées dans le catalogue, niveau maximal 5, cinq slots et deux armes de départ codées.
+- `survival_loadout.gd` expose neuf paires implémentées dans le catalogue, niveau maximal 5, cinq slots et deux armes de départ codées.
 - Huit paires ont maintenant un prototype de combat : Lightning Conductor/Storm Core, Inferno Sprayer/Infernal Heart, Crimson Daggers/Blood Chalice, Minigun/Overdrive Engine, Toxic Cloud/Plague Mask, Sawblades/Magnetic Coil, Meteor Staff/Celestial Eye et Prism Laser/Prism Crystal. Les réglages restent **[PROPOSÉS]** et Bloodstorm ne respecte pas encore l’orbite validée.
 - Les QA historiques couvrent impacts, dégâts, lifesteal, brûlure, saignement, explosion Wildfire et branches Infinite Circuit.
 - Le DPS Sandbox documenté additionne les événements de dégâts sur le temps simulé, mais n’est pas un panneau complet par arme, statut, critique et fenêtre.
@@ -257,7 +257,7 @@ P6 a déjà du code anticipé, mais le chemin nominal reste P5 puis P6. P7 stand
 
 ## P5 — Contenu de combat v1.6 : armes, reliques, ennemis et boss
 
-**Intention :** atteindre la quantité et la variété du GDD. Le code actuel contient huit prototypes de paires ; P5 n’est donc pas livré.
+**Intention :** atteindre la quantité et la variété du GDD. Le code actuel contient neuf prototypes de paires ; P5 n’est donc pas livré.
 
 ### P5.1 — Catalogue de dix armes et onze reliques
 
@@ -268,7 +268,7 @@ Catalogue d’évolution défini dans le GDD :
 | Lightning Conductor | Storm Core | Infinite Circuit | Prototype présent ; QA historique ciblée. |
 | Inferno Sprayer | Infernal Heart | Wildfire | Prototype présent ; QA historique ciblée. |
 | Crimson Daggers | Blood Chalice | Bloodstorm | Prototype présent ; dagues en éventail, alors que le GDD exige une tempête orbitale. |
-| Void Orb | Singularity | Event Horizon | Définition catalogue présente ; gameplay absent. |
+| Void Orb | Singularity | Event Horizon | Prototype d’orbe lente perçante; champ d’attraction natif. Les valeurs d’attaque, durée, rayon et force sont **[PROPOSÉES]**. |
 | Frost Nova | Frozen Crown | Absolute Zero | Définition catalogue présente ; gameplay absent. |
 | Minigun | Overdrive Engine | Redline | Prototype ajouté : tirs mono-cible, progression de cadence proposée, Redline accélère en continu ; valeurs configurables et **[PROPOSÉES]**. QA smoke ciblée. |
 | Meteor Staff | Celestial Eye | Starfall | Prototype présent : tir sur groupe et explosion bornée ; Celestial Eye augmente les zones et peut doubler l'impact au niveau 5 ; Starfall envoie 2 fragments par défaut (maximum configurable 8) vers des cibles proches. Tous les réglages **[PROPOSÉS]**. |
@@ -286,32 +286,33 @@ Travail requis :
 - [x] **P5.1.5 — Sawblades + Magnetic Coil → Razorstorm (prototype)** — projectile natif ricoche vers des ennemis vivants non encore touchés ; Magnetic Coil augmente la vitesse des projectiles et l’évolution ajoute un rebond. Valeurs **[PROPOSÉES]**.
 - [x] **P5.1.6 — Meteor Staff + Celestial Eye → Starfall (prototype)** — l'attaque vise un groupe et inflige des dégâts d'explosion ; Starfall lance deux fragments par défaut, avec maximum configurable de huit, vers les cibles proches. Bonus de zone, chance de double impact et valeurs de dégâts **[PROPOSÉS]**.
 - [x] **P5.1.7 — Prism Laser + Prism Crystal → Spectrum Collapse (prototype)** — rayon visuel suit la cible prioritaire et dégâts répétés passent par les projectiles natifs ; l'évolution ajoute jusqu'à deux cibles secondaires configurables. Bonus de critique et valeurs d'attaque/progression **[PROPOSÉS]**.
-- [ ] **P5.1.8 — Feedback Minigun/Toxic Cloud/Sawblades/Meteor Staff/Prism** — projectiles distincts présents ; retour visuel par niveau, animation du nuage persistant et feedback d’évolution restent à faire.
-- [ ] **P5.1.9 — Ciblage des armes**
+- [x] **P5.1.8 — Void Orb + Singularity → Event Horizon (prototype)** — projectiles lents persistants traversent des cibles distinctes et les attirent dans un champ natif borné ; Event Horizon augmente le rayon et la force. Réglages **[PROPOSÉS]**.
+- [ ] **P5.1.9 — Feedback Minigun/Toxic Cloud/Sawblades/Meteor Staff/Prism/Void Orb** — projectiles distincts présents ; retour visuel par niveau, animation du nuage persistant et feedback d’évolution restent à faire.
+- [ ] **P5.1.10 — Ciblage des armes**
   - [ ] Décrire la règle de ciblage de chaque arme avant son comportement visuel.
   - [ ] Implémenter un prototype par politique réutilisable et exposer ses cibles dans Sandbox.
   - [ ] Vérifier les armes de contact/orbitantes et longue portée avec placements différents.
-- [ ] **P5.1.10 — Niveaux et feedback des autres armes**
+- [ ] **P5.1.11 — Niveaux et feedback des autres armes**
   - [ ] Compléter les niveaux 1–5 d’une arme à la fois à partir des valeurs proposées.
   - [ ] Ajouter feedback visuel/UI pour les cinq niveaux.
   - [ ] Compléter niveaux 1–5 des reliques et valider leurs bonus linéaires proposés.
   - [ ] Ajouter le changement visuel majeur à l’évolution.
-- [ ] **P5.1.11 — Règle d’évolution/catalogue**
+- [ ] **P5.1.12 — Règle d’évolution/catalogue**
   - [ ] Brancher une évolution de données sur l’armement existant.
   - [ ] Couvrir relique avant niveau 5 et relique après niveau 5.
   - [ ] Vérifier conservation du niveau 5, non-consommation de relique et unicité.
   - [ ] Couvrir les choix chest impossibles après niveau max.
-- [ ] **P5.1.12 — Magnet Heart et pickups**
+- [ ] **P5.1.13 — Magnet Heart et pickups**
   - [x] Ajouter Magnet Heart comme relique utilitaire sans évolution et l'inclure dans les offres Survival.
   - [x] Appliquer le bonus de rayon **[PROPOSÉ]** configurable de 25 % par niveau aux orbes XP.
   - [x] Vérifier orbe XP et chest séparément : le bonus n'élargit jamais le rayon du chest.
   - [ ] Étendre l'attraction aux soins, ressources, monnaies et bonus temporaires lorsqu'ils existent.
   - [ ] Implémenter l'impulsion de niveau 5 **[PROPOSÉE]** (20 s, rayon 300 %) sans téléporter les objets.
-- [ ] **P5.1.13 — Slots et effets de capacité**
+- [ ] **P5.1.14 — Slots et effets de capacité**
   - [ ] Vérifier cinq slots de reliques en run normale.
   - [ ] Tester une extension Legendary/Mythic seulement avec effet unique actif.
   - [ ] Vérifier absence de cumul automatique d’un même effet unique.
-- [ ] **P5.1.14 — Statut du balancing**
+- [ ] **P5.1.15 — Statut du balancing**
   - [ ] Charger les valeurs chiffrées proposées depuis une configuration modifiable.
   - [ ] Garder les valeurs marquées **[PROPOSÉES]** jusqu’à leur décision formelle.
 

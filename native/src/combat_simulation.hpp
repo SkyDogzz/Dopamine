@@ -26,12 +26,14 @@ public:
 			float radius, double lifetime_seconds, float burn_damage_per_tick = 2.0F,
 			double burn_interval_seconds = 0.5, double burn_duration_seconds = 2.0,
 			float explosion_radius = 0.0F, float explosion_damage_multiplier = 0.0F,
-			int64_t ricochets = 0);
+			int64_t ricochets = 0, float attraction_radius = 0.0F, float attraction_speed = 0.0F,
+			bool pierces_targets = false);
 	int64_t spawn_status_projectile(String projectile_type, Vector2 position, Vector2 velocity, float damage,
 			float radius, double lifetime_seconds, float status_damage_per_tick = 2.0F,
 			double status_interval_seconds = 0.5, double status_duration_seconds = 2.0,
 			float explosion_radius = 0.0F, float explosion_damage_multiplier = 0.0F,
-			int64_t ricochets = 0);
+			int64_t ricochets = 0, float attraction_radius = 0.0F, float attraction_speed = 0.0F,
+			bool pierces_targets = false);
 	int64_t spawn_xp_orb(Vector2 position, float xp_value);
 	int64_t collect_xp_orb(int64_t index, int64_t generation);
 	int64_t apply_damage_over_time(int64_t index, int64_t generation, float damage_per_tick,

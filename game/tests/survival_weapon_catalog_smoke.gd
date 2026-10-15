@@ -40,6 +40,9 @@ func _run() -> void:
 	if not await _prism_laser_tracks_and_splits():
 		_fail("Prism Laser should hit its priority target and Spectrum Collapse should fire secondary beams")
 		return
+	if not await _void_orb_pulls_and_pierces():
+		_fail("Void Orb should pull nearby enemies and pierce distinct targets")
+		return
 	print("Survival weapon catalog smoke passed")
 	quit()
 
@@ -73,6 +76,49 @@ func _prism_laser_tracks_and_splits() -> bool:
 	while Time.get_ticks_msec() < deadline:
 		await process_frame
 		if int(session.simulation.snapshot()["metrics"]["collision_count"]) >= before + 2:
+			session.queue_free()
+			return true
+	session.queue_free()
+	return false
+
+func _void_orb_pulls_and_pierces() -> bool:
+	var session: Node2D = load("res://scenes/survival_session.tscn").instantiate()
+	session.spawn_initial_enemy = false
+	session.wave_spawning_enabled = false
+	session.weapon_enabled = false
+	session.skip_starting_weapon_choice = true
+	session.contact_damage_per_hit = 0.0
+	session.xp_collection_radius = 0.0
+	session.void_orb_cooldown = 1000.0
+	session.void_orb_speed = 1000.0
+	session.void_orb_range = 400.0
+	session.void_orb_lifetime = 1.0
+	root.add_child(session)
+	await process_frame
+	if not session.loadout.apply_offer("weapon:void_orb"):
+		session.queue_free()
+		return false
+	session.simulation.set_speed(4.0)
+	session.simulation.spawn("test_target", 1, Vector2(150.0, 0.0), 100.0, Vector2.ZERO)
+	session.simulation.spawn("test_target", 1, Vector2(180.0, 0.0), 100.0, Vector2.ZERO)
+	if (await _wait_for_targets(session, 2)).size() != 2:
+		session.queue_free()
+		return false
+	session.weapon_enabled = true
+	session._entities = session.simulation.snapshot()["entities"]
+	var before := int(session.simulation.snapshot()["metrics"]["collision_count"])
+	session._fire_void_orb(float(session.simulation.snapshot()["simulation_time"]), false)
+	var deadline := Time.get_ticks_msec() + 2500
+	var field_is_shared := false
+	while Time.get_ticks_msec() < deadline:
+		await process_frame
+		var state: Dictionary = session.simulation.snapshot()
+		for entity in state["entities"]:
+			var components: Dictionary = entity["components"]
+			if components.get("EnemyType", "") == "void_orb":
+				var field: Dictionary = components["Projectile"]
+				field_is_shared = bool(field["pierces_targets"]) and float(field["attraction_radius"]) > 0.0
+		if field_is_shared and int(state["metrics"]["collision_count"]) >= before + 2:
 			session.queue_free()
 			return true
 	session.queue_free()
