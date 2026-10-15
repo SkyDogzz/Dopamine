@@ -4,7 +4,7 @@ Cette carte organise l’intention approuvée par interview avant la rédaction 
 
 | Module | Responsabilité | Dépendances |
 |---|---|---|
-| `ui-foundation` | Thème partagé, composants réutilisables, navigation au focus, adaptation aux résolutions et langage visuel pixel art néon lisible. | — |
+| [`ui-foundation`](tasks/ui-refonte/SPEC-ui-foundation.md) | Thème partagé, composants réutilisables, navigation au focus, adaptation aux résolutions et langage visuel pixel art néon lisible. | — |
 | `ui-settings` | Options accessibles depuis le menu et la pause : plein écran et volume général. Les réglages doivent préserver l’état de pause de la run. | `ui-foundation` |
 | `launch-navigation` | Écran de lancement, navigation vers le hub ou l’entrée Sandbox discrète, retour à l’accueil et fermeture du jeu. | `ui-foundation`, `ui-settings` |
 | `survival-hub` | Sélection Survival/difficulté, accès aux équipements et à l’arbre de compétences avant la run, boutons Succès/Bestiaire inactifs, lancement explicite de run. | `launch-navigation`, `ui-foundation` |
