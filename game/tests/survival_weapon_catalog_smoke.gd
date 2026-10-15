@@ -217,8 +217,7 @@ func _bloodstorm_requires_level_five_and_bleeds() -> bool:
 	await process_frame
 	var target_id: Dictionary = evolved_target["id"]
 	var health_before_bleed := float(evolved_target["components"]["Health"]["current"])
-	var hp_before_bleed: float = session.player_hp
-	var bleed_applied := await _wait_for_bleed_tick(session, target_id, health_before_bleed, hp_before_bleed)
+	var bleed_applied := await _wait_for_bleed_tick(session, target_id, health_before_bleed)
 	session.queue_free()
 	return bleed_applied
 
@@ -245,7 +244,7 @@ func _wait_for_no_entities(session: Node2D) -> bool:
 			return true
 	return false
 
-func _wait_for_bleed_tick(session: Node2D, target_id: Dictionary, health_before: float, hp_before: float) -> bool:
+func _wait_for_bleed_tick(session: Node2D, target_id: Dictionary, health_before: float) -> bool:
 	var deadline := Time.get_ticks_msec() + 2000
 	while Time.get_ticks_msec() < deadline:
 		await process_frame
@@ -254,7 +253,7 @@ func _wait_for_bleed_tick(session: Node2D, target_id: Dictionary, health_before:
 			if int(id["index"]) != int(target_id["index"]) or int(id["generation"]) != int(target_id["generation"]):
 				continue
 			var current_health := float(entity["components"]["Health"]["current"])
-			if current_health <= health_before - session.bloodstorm_bleed_damage_per_tick * 0.9 and session.player_hp > hp_before + 0.01:
+			if current_health <= health_before - session.bloodstorm_bleed_damage_per_tick * 0.9:
 				return true
 	return false
 

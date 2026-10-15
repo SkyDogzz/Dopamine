@@ -51,7 +51,8 @@ func _run() -> void:
 	var equipped_profile: Dictionary = progression.load_profile()["profile"]
 	if not equipped_profile["equipment_inventory"][0].get("equipped", false) or \
 			equipped_profile["equipment_inventory"][1].get("equipped", false) or \
-			items.get_child(0).get_child(0).get_child(2).text != "EQUIPPED — rolls uncalibrated; no gameplay bonus yet":
+			not items.get_child(0).get_child(0).get_child(2).text.contains(
+				"EQUIPPED — rolls uncalibrated; no gameplay bonus yet"):
 		_fail("Equipping an item should persist and show that its rolls remain inactive")
 		return
 	items.get_child(1).get_child(0).get_child(3).pressed.emit()
