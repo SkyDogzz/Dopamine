@@ -1,6 +1,6 @@
 # Plan d’implémentation — `ui-settings`
 
-**Statut : proposition à valider.** Ce plan suit la spec approuvée [`SPEC-ui-settings.md`](SPEC-ui-settings.md). La liste détaillée des tâches et toute modification de code attendent la validation du plan.
+**Statut : approuvé par l’utilisateur.** Ce plan suit la spec approuvée [`SPEC-ui-settings.md`](SPEC-ui-settings.md). La liste détaillée des tâches attend encore validation avant toute modification de code.
 
 ## Vue d’ensemble
 
@@ -71,4 +71,4 @@ Au checkpoint, lancer les smokes pertinents et `ctest --test-dir build --output-
 
 ## Point de validation
 
-Après validation de ce plan, rédiger `todo-ui-settings.md` avec le découpage, les fichiers par tâche, les commandes, critères d’acceptation et checkpoints. Aucun code ne commence avant validation de cette liste.
+La liste détaillée proposée est dans [`todo-ui-settings.md`](todo-ui-settings.md). Aucun code ne commence avant sa validation.
