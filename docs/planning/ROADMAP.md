@@ -1,201 +1,342 @@
-# Roadmap de Dopamine Survivor — GDD v1.6
+# Roadmap complète — Dopamine Survivor, GDD v1.6
 
-Cette roadmap traduit le GDD consolidé [v1.6](../gdd/GDD_v1.6.md) en jalons vérifiables. Les règles marquées **[VALIDÉ]** sont des contrats de conception ; les paramètres **[PROPOSÉ]** restent configurables et ne deviennent pas des décisions par leur implémentation ; les sujets **[OUVERT]** doivent être arbitrés avant d'en dépendre. Les numéros P0–P9 reprennent le découpage du delta v1.6.
+Cette roadmap transforme le [GDD consolidé v1.6](../gdd/GDD_v1.6.md), l’architecture, les ADR et les documents QA en travaux ordonnés et vérifiables. Elle décrit l’état constaté dans le dépôt au 2026-10-15 ainsi que le chemin restant. Elle ne remplace pas les décisions de ces documents.
 
-**Séquence confirmée :** Linux-first ; Sandbox développeur MVP dès P1 ; mode Survival jouable en P4 ; extension de contenu P5 ; progression permanente P6. Le Sandbox et Survival partagent le cœur de simulation, avec permissions et sauvegardes séparées. La fin de P5 est le prochain grand arrêt demandé ; P6 et les phases suivantes restent planifiées et ne sont pas engagées ici.
+**Ordre de travail :** Linux-first ; Sandbox développeur MVP d’abord ; Survival jouable ensuite ; contenu P5 avant progression P6. Le cœur de simulation est partagé, mais la progression et les sauvegardes normales restent inaccessibles au Sandbox. La consigne de portée active est de s’arrêter après P5.
 
-## État global vérifié
+## Comment lire l’audit
 
-| Phase | État | Vérification disponible / écart restant |
+- **Présent** : code ou données identifiables dans le dépôt. Cela ne certifie pas l’équilibrage ni le fonctionnement à l’exécution.
+- **Prototype** : un chemin fonctionne pour un sous-ensemble, avec contenu ou contrat incomplet.
+- **À faire** : aucune implémentation suffisante n’a été trouvée dans les scènes/scripts/données inspectés.
+- **QA historique** : `docs/qa/TESTS.md` décrit un test réellement exécuté antérieurement. Les coches ne signifient pas qu’il a été relancé pendant cet audit.
+- **[VALIDÉ] / [PROPOSÉ] / [OUVERT]** décrivent le statut de conception du GDD, pas l’état d’implémentation. Une valeur proposée codée en dur reste proposée.
+
+L’audit courant est statique. Godot/Godot 4 n’est pas détecté dans le PATH de cet environnement ; les tests GDScript et la scène fenêtrée n’ont donc pas été relancés. Les preuves d’exécution citées ci-dessous sont celles archivées dans les QA précédentes. Aucun statut de conception n’est promu par cette roadmap.
+
+## Résumé d’avancement vérifié
+
+| Jalon | État du code constaté | Ce qui manque pour le fermer |
 |---|---|---|
-| P0 — Fondations | **Terminé sous Linux** | QA documente Godot 4.7.2, C++23, GDExtension et build. Build Windows restant. |
-| P1 — Sandbox minimal | **Terminé** | Scénarios et tests Sandbox documentés, y compris pause, step, vitesse, reset, inspection, métriques, logs et isolation des saves. |
-| P2 — Combat core/statuts | **Partiellement terminé** | ECS, spatial hash, projectiles, DoT et HP decay testés. Familles d'ennemis, comportements et cible de performance iGPU restent à compléter/mesurer. |
-| P3 — Prototype armes/reliques | **Prototype livré, critères incomplets** | Trois armes/reliques et trois évolutions partiellement implémentées ; DPS Sandbox disponible. Réactions de statut générales, contrats complets et couverture de comportement restent à faire. |
-| P4 — Vertical slice Survival | **Prototype jouable livré, validation d'équilibrage incomplète** | Traversée QA des 24 vagues et placeholders boss ; run intégrée accélérée documentée. Patterns boss, difficulté équilibrée, sauvegarde/récompense finale complète et contenu final restent ouverts. |
-| P5 — Contenu v1.6 | **Non commencé comme jalon de contenu** | Il reste à livrer 10 armes, 11 reliques, évolutions et 8–12 familles d'ennemis. Les trois paires actuelles sont une base P3. |
-| P6 — Progression permanente | **Prototype anticipé, jalon incomplet** | Code de progression existe déjà (équipement, enhancement, deux nodes, Exterminator prototype) ; plusieurs valeurs restent proposées, contenu incomplet, et quelques effets uniques n'ont pas de gameplay. Ne pas confondre avec P5 v1.6. |
-| P7 — Endless et Armorless | **À faire** | Armorless a des règles validées et des paramètres proposés ; Endless standard conserve des règles [OUVERTES]. |
-| P8 — Sandbox Lab complet | **À faire** | Presets, codes de partage et snapshots/reprise complets restent à livrer ; le Sandbox développeur P1 est déjà utilisable. |
-| P9 — Équilibrage et livraison | **À faire** | Mesures iGPU réelles, build Windows, tuning, accessibilité, longues sessions et préparation release. |
+| P0 Fondations | **Présent, Linux documenté** | Reproductibilité sur installation propre et build/chargement Windows. |
+| P1 Sandbox développeur MVP | **Présent et bien couvert historiquement** | Continuer d’exposer les nouveaux systèmes et maintenir l’isolation au fil des intégrations. |
+| P2 Simulation/combat | **Fondation présente, couverture partielle** | Diversité des IA, règles complètes d’ennemis/boss, instrumentation et performance iGPU. |
+| P3 Prototype de combat | **Trois paires et trois évolutions de prototype présentes** | Contrats génériques, retours visuels par niveau, ciblage fidèle, mesures DPS détaillées. |
+| P4 Vertical slice Survival | **Boucle de run prototype présente** | Boss réels, difficulté sélectionnable, run équilibrée et vérifiée sans harness. |
+| P5 Contenu v1.6 | **Non livré** | 7 armes, 8 reliques, Magnet Heart, contenu complet de progression/évolutions, 8–12 familles ennemies et boss multi-phases. |
+| P6 Progression permanente | **Prototype anticipé seulement** | Catalogue complet, règles et contenus validés, récompenses calibrées et effets uniques actifs. |
+| P7 Modes Endless | **À faire** | Armorless complet ; arbitrages nécessaires pour Endless standard. |
+| P8 Sandbox Lab joueur | **À faire au-delà des outils développeur P1** | Builds libres, presets/import/export, copie de save, snapshots complets et règles de sécurité. |
+| P9 Qualité et livraison | **Partiel** | Performance sur vrai iGPU, accessibilité/VFX/audio, stabilité prolongée et Windows. |
 
-## P0 — Fondations techniques
+### Lecture rapide : livré, prototype ou survolé
 
-**Objectif :** rendre le dépôt reproductible sous Linux avant l'extension du gameplay.
+**Bien intégré comme fondation :** simulation native découplée de Godot, worker, commandes/snapshots, limites de charge, outils Sandbox, loop de run Survival, pause/chest/XP, trois armes et effets de combat de base, sauvegarde versionnée, premiers écrans d’équipement.
 
-- [x] Projet Godot 4.7.2, extension C++, standard C++23 et dépendance `godot-cpp` verrouillée.
-- [x] Cœur natif sans dépendance Godot, CMake et build Linux documentés.
-- [x] Vérifier l'import Godot headless et le chargement de l'extension.
-- [ ] Vérifier périodiquement versions/disponibilité des outils sur un environnement Linux propre.
-- [ ] Valider le build et chargement Windows (ADR-013).
-- [ ] Documenter CI/builds reproductibles multiplateformes si la voie de livraison l'exige.
+**Intégré en prototype, à ne pas confondre avec une feature finie :** boss (apparition/HP/transition, mais pas leurs patterns), XP auto-bonus, loot/probabilités, trois évolutions, équipement et enhancement, deux nodes de skill tree, famille Exterminator, effets uniques, récompenses de run. Les paramètres restent souvent **[PROPOSÉS]**.
 
-**Sortie :** build Linux propre + smoke d'intégration ; build Windows avant livraison Windows.
+**Survolé ou absent par rapport au GDD :** 7 armes et 8 reliques restantes dont Magnet Heart ; animation/identité spécifique à chaque niveau ; dagues réellement orbitantes dans Bloodstorm (le code actuel tire des projectiles en éventail) ; 8–12 familles ennemies et leurs rôles ; élites à affixes ; boss à phases ; difficultés ; réactions élémentaires nommées ; tree ~120 nodes ; achievements ~120 familles ; modes Endless ; Sandbox Lab joueur ; performance iGPU et build Windows.
 
-## P1 — Sandbox développeur minimal
+## Dépendances principales
 
-**Objectif :** premier environnement interactif, lançable sans save et avant Survival.
+```text
+P0 outils/build
+ └─ P1 cœur + Sandbox développeur
+     └─ P2 simulation/combat, dégâts/statuts et observabilité
+         └─ P3 contrats des armes/reliques, évolution et mesure
+             └─ P4 boucle Survival verticale
+                 └─ P5 catalogue de contenu + ennemis/boss
+                     ├─ P6 progression persistante complète
+                     ├─ P7 Armorless (après règles de run et équipements)
+                     └─ P8 Sandbox Lab (après contrats/configurations de tous les systèmes)
+P9 vérifie et calibre les tranches livrables, puis la version complète.
+```
 
-- [x] Spawn/despawn, kill all, pause/reprise, step à durée explicite, contrôle de vitesse et reset.
-- [x] Inspecteur d'entité, métriques, logs et scénarios headless JSON avec export.
-- [x] Transactions de configuration atomiques ; limites de ressources et arrêt propre du worker.
-- [x] Vérifier que le Sandbox ne lit ni n'altère les sauvegardes Survival.
-- [ ] Maintenir chaque nouveau comportement de combat accessible et observable dans le Sandbox.
+P6 a déjà du code anticipé, mais le chemin nominal reste P5 puis P6. P7 standard ne doit pas commencer avant résolution des sujets **[OUVERTS]**. Les travaux P8 peuvent avancer sur l’architecture après les contrats partagés, sans donner au Sandbox de droit d’écrire les sauvegardes normales.
 
-**Sortie :** critères MVP satisfaits sous Godot, sans progression normale ni sauvegarde nécessaire.
+## P0 — Fondations techniques et dépôt
 
-## P2 — Combat core et statuts
+**Intention :** pouvoir importer, compiler et lancer Dopamine de manière reproductible sous Linux avec Godot 4.7.2, GDExtension et C++23.
 
-**Objectif :** règles de simulation réutilisables et contrôlables dans Sandbox.
+### État constaté
 
-- [x] ECS, handles sûrs, snapshots, spatial hash et requêtes de proximité.
-- [x] Mouvement de poursuite/séparation, projectiles rapides, collisions balayées, dégâts et événements de mort acquittables.
-- [x] DoT générique, HP decay et soins proposés par menace avec horloge simulée.
-- [ ] Ajouter des comportements distincts d'ennemis et clarifier les interfaces joueur/boss ↔ simulation.
-- [ ] Définir les statuts nécessaires aux armes v1.6 ; les réactions élémentaires restent **[PROPOSÉES]** jusqu'à validation de leurs contrats et de l'ADR-007.
-- [ ] Ajouter budgets/causalité anti-boucles pour chaînes, explosions, statuts et réactions (ADR-007/015/016 à examiner, sans créer de décisions implicites).
-- [ ] Tester grands deltas, expirations, statuts concurrents, événements et scénarios Sandbox reproductibles.
-- [ ] Mesurer CPU/GPU et P95/P99 sur matériel représentatif ; les benchmarks natifs existants ne prouvent pas seuls 60 FPS iGPU.
+- Projet Godot et GDExtension déclarés dans `game/` ; cœur C++ et cible native séparés.
+- `godot-cpp` est verrouillé et les commandes Linux sont documentées.
+- QA historique : compilation C++23 GCC 14.2, import Godot headless et chargement de l’extension.
+- Le cœur natif n’inclut pas Godot et ne lie pas `godot-cpp` selon l’architecture/QA.
 
-**Sortie :** statuts et effets reproductibles, plafonnés, inspectables et couverts par scénarios.
+### Travaux restants
 
-## P3 — Prototype trois armes, reliques, évolutions et DPS
+- [ ] Documenter les versions réellement détectées et une procédure de machine Linux propre, incluant import, build, lancement et répertoire de données.
+- [ ] Distinguer les dépendances récupérées par CMake des dépendances préinstallées ; rendre leur résolution et leurs erreurs lisibles.
+- [ ] Construire le projet et charger l’extension sous Windows selon ADR-013 avant de revendiquer la plateforme.
+- [ ] Ajouter une vérification automatisée Linux/Windows si la stratégie de livraison le demande ; ne pas introduire CI comme décision produit implicite.
+- [ ] Vérifier les artefacts générés et les chemins utilisateur pour qu’aucun build local ou save ne pollue le dépôt.
 
-**Objectif :** éprouver les contrats de combat et le flux de test avant l'extension du catalogue.
+**Critère de sortie :** un clone propre s’importe, se compile et démarre sous Linux ; compatibilité Windows séparément vérifiée avant livraison Windows.
 
-- [x] Prototypes Lightning Conductor, Inferno Sprayer, Crimson Daggers et Storm Core, Infernal Heart, Blood Chalice.
-- [x] Infinite Circuit, Wildfire et Bloodstorm ont des comportements de prototype ; les valeurs sont **[PROPOSÉES]**.
-- [x] DPS Sandbox agrégé à partir des événements de dégâts.
-- [ ] Formaliser définitions data-driven, ciblage, niveaux 1–5, plafonds, unicité et résolutions d'évolution.
-- [ ] Compléter instrumentation DPS par source/arme/statut/critique si nécessaire aux tests d'équilibre.
-- [ ] Étendre scénarios Sandbox aux dégâts, statuts, évolutions, effets combinés et absence de réaction indésirable.
-- [ ] Modifier ADR-014 pour couvrir explicitement armes/DPS/statuts/synergies ; examiner ADR-015 Weapon & Relic Framework et ADR-016 Status & Reaction System comme propositions.
+## P1 — Cœur partagé et Sandbox développeur MVP
 
-**Sortie :** trois paires traversent les parcours Sandbox et Survival sans divergence du cœur partagé ; effets et mesures vérifiables.
+**Intention :** disposer du premier environnement de combat observable, sans sauvegarde ni progression normale.
 
-## P4 — Vertical slice Survival
+### État constaté
 
-**Objectif :** run classique complète de 24 vagues utilisant le combat core.
+- Le Sandbox expose spawn/despawn, kill all, pause/reprise, Step explicite, vitesse, reset, sélection/inspection d’entité, métriques et logs.
+- Il y a des scénarios JSON et une exportation de résultats.
+- Le cœur natif utilise worker dédié, handles index/génération, snapshots immuables, files bornées et arrêt coordonné.
+- L’isolation des saves est décrite comme vérifiée par slot sentinelle dans la QA historique ; les scripts de Sandbox ne reçoivent pas le service de progression.
 
-- [x] Déplacement joueur, HP decay, soins, XP, HUD, progression automatique d'XP prototype.
-- [x] Directeur 24 vagues de 30 s, événements de boss vagues 12/24 et transitions de fin.
-- [x] Drops, collecte de coffres, choix parmi trois options et application au loadout.
-- [x] Trois armes/reliques et évolution prototypes dans le flux de run.
-- [x] Scénario QA d'une run accélérée et run aux durées nominales simulées ; boss placeholders et HP joueur augmentés dans le harness pour isoler les transitions.
-- [ ] Implémenter patterns de boss lisibles en 2–3 phases ; noms et patterns précis restent **[PROPOSÉS]**, phases et boss aux vagues 12/24 **[VALIDÉS]**.
-- [ ] Vérifier les choix sans récompense disponible, pauses de chest et évolution automatique à chaque acquisition/amélioration.
-- [ ] Compléter et valider le contrat de récompense permanente par run sans donner accès aux saves depuis Sandbox.
-- [ ] Séparer/contrôler les horloges gameplay, vague et temps réel ; suspendre decay pendant les vraies pauses, y compris choix de chest.
-- [ ] Parcours de jeu normal sans harness : vérifier survie, progression, victoire/défaite et reprise des contrôles.
+### Travaux/critères de maintien
 
-**Sortie :** une run classique jouable bout en bout ; le harness QA n'est pas présenté comme preuve d'équilibrage.
+- [ ] Garder chaque nouvelle commande contrôlée, bornée, observable et rejetée sans mutation partielle en cas de configuration invalide.
+- [ ] Pour chaque nouveau comportement de combat, proposer un scénario Sandbox reproductible ou expliquer pourquoi il ne relève pas de la simulation partagée.
+- [ ] Vérifier à toute intégration de progression qu’aucun chemin Sandbox ne charge `SaveService`, n’émet une récompense officielle ou ne modifie un profil.
+- [ ] Conserver l’inspection et les logs utiles aux événements de dégâts, statuts, morts, pickups et boss.
 
-## P5 — Contenu v1.6 : dix armes, onze reliques, ennemis
+**Critère de sortie :** les critères MVP listés dans `docs/qa/TESTS.md` restent verts à l’exécution ; aucun accès save requis.
 
-**Objectif :** compléter le contenu de combat initial conforme aux décisions v1.6. Les comportements décrits comme validés fixent l'identité ; chiffres de progression, patterns nommés et effets de reliques demeurent proposés tant qu'ils ne sont pas validés.
+## P2 — Simulation de combat et contrats d’état
 
-### Armes et reliques
+**Intention :** porter dans le cœur partagé les comportements déterministes/observables qui doivent être réutilisés par Sandbox et les modes.
 
-- [ ] Livrer 10 armes distinctes avec ciblage adapté au comportement et influence notable du positionnement.
-- [ ] Compléter les sept armes au-delà des trois prototypes : Void Orb, Frost Nova, Minigun, Meteor Staff, Sawblades, Toxic Cloud et Prism Laser (sept nouvelles armes).
-- [ ] Livrer 11 reliques : dix associées aux armes et Magnet Heart utilitaire sans paire d'évolution ; conserver cinq slots normaux (huit reliques supplémentaires par rapport aux trois prototypes actuels).
-- [ ] Implémenter progression visuelle à chacun des cinq niveaux d'arme, et transformation visuelle majeure de l'évolution.
-- [ ] Une évolution unique automatique par arme au niveau 5 si la relique associée est possédée à n'importe quel niveau ; conserver le niveau 5.
-- [ ] Exclure l'arme niveau 5 non évoluée du pool de ses améliorations ordinaires ; aucun doublon en run normale, doublons autorisés dans Sandbox.
-- [ ] Respecter limites de capacité d'équipement v1.5 et exceptions Legendary/Mythic seulement si leur effet est actif et applicable.
-- [ ] Ajouter Magnet Heart au pool normal de reliques, sans arme associée, et respecter ses bonus globaux de ramassage.
-- [ ] Invariant obligatoire : aucun effet de rayon de ramassage (relique, équipement, skill tree, bonus temporaire) n'attire ni ne collecte les coffres. Les coffres ne sont jamais attirés ; ils sont collectés à proximité ou par interaction du joueur. Vérifier les orbes XP et autres collectibles éligibles indépendamment.
-- [ ] Tables de progression des armes dans le GDD annexe restent **[PROPOSÉES]** ; ne pas les verrouiller comme équilibre accepté.
+### État constaté
 
-### Statuts, synergies, coffre
+- Présent : ECS minimal, spatial hash, poursuite/séparation, projectiles ECS, collisions balayées, pipeline de dégâts, événements acquittables, durée de vie et DoT générique.
+- Survival possède le HP joueur dans Godot et transmet une cible de steering ; l’autorité et la synchronisation joueur/boss restent à garder explicites selon `ARCHITECTURE.md`.
+- L’HP decay et les soins par menace sont utilisés avec des valeurs **[PROPOSÉES]**.
+- Quatre profils natifs existent : Chaser, Sprinter, Tank, Shooter ; cela ne couvre pas les 8–12 familles validées au lancement.
+- Il n’y a pas un système complet de réaction élémentaire ; les réactions nommées sont **[PROPOSÉES]** dans le GDD.
 
-- [ ] Éprouver interactions émergentes via dégâts/statuts et réactions élémentaires proposées (Thermal Shock, Toxic Ignition, Shatter, Electroplague, Gravity Collapse, Hemorrhage) après décision de leurs contrats ; Overcharge reste **[OUVERT]**. Le GDD dit à la fois que les réactions entre statuts sont validées et que les exemples nommés sont proposés : préciser ce niveau de contrat avant implémentation globale.
-- [ ] Garder budgets/identifiants d'événement/idempotence pour empêcher cascades infinies sans limiter artificiellement les synergies.
-- [ ] Appliquer les trois choix, anti-malchance, disponibilité lorsque slots pleins, pause, rerolls limités issus de progression et vérification d'évolution après chaque récompense.
-- [ ] Garder poids, pity, nombre de rerolls et récompense de substitution **[OUVERTS]** ou configurables tant que non arbitrés.
+### Travaux
 
-### Ennemis et boss
+- [ ] Définir séparément états/effets : dégâts directs, DoT, Shock, Burn, Bleed, Poison, Freeze, knockback et résistances nécessaires aux armes réellement retenues.
+- [ ] Décider/consigner si un statut remplace, cumule, rafraîchit ou empile ses instances ; garder les réactions nommées non implémentées tant qu’elles ne sont pas validées.
+- [ ] Définir les enveloppes d’événements, IDs/idempotence, ordre des modificateurs et budgets des effets en chaîne selon ADR-007 et les ADR proposés.
+- [ ] Ajouter des politiques d’IA d’ennemi distinctes (distance, soutien, explosif, etc.) sans confondre leur identité de données avec un type de mouvement générique.
+- [ ] Maintenir les frontières d’autorité joueur/boss/simulation explicites, sans deux propriétaires d’un même état mutable.
+- [ ] Tester scénarios de grandes avances, expirations, statuts concurrents, ennemis morts/handles périmés et budgets d’événements.
+- [ ] Exposer les comportements testables dans Sandbox et ses métriques.
+- [ ] Profiler les charges représentatives et relever P50/P95/P99 ; les benchmarks natifs existants ne prouvent pas le budget de frame GPU/CPU d’un iGPU.
 
-- [ ] Livrer entre 8 et 12 familles au lancement couvrant mêlée, rapides, tank, distance, soutien et explosifs ; interactions buffs/protection/invocations ; élites à affixes ; projectiles télégraphiés et esquivables.
-- [ ] Les dix archétypes exemples, six affixes et Threat Director du GDD restent **[PROPOSÉS]** : sélectionner/valider un catalogue avant de les déclarer contractuels.
-- [ ] Boss lisibles de 2–3 phases, difficulté supérieure ajoutant patterns/mécaniques, invocations sous budget et présence aux vagues 12/24.
-- [ ] Les noms Pulse Warden/Dopamine Core et leurs patterns restent **[PROPOSÉS]**.
-- [ ] Ajouter assets, effets, sons et tests d'accessibilité visuelle pour télégraphes et projectiles.
+**Critère de sortie :** les comportements réellement retenus sont inspectables, bornés, cohérents avec leur horloge et testés sous différents pas de simulation.
+
+## P3 — Contrats de contenu prototype, évolution et DPS
+
+**Intention :** valider un petit nombre de parcours complets et les outils qui permettront d’industrialiser le catalogue P5.
+
+### État constaté
+
+- `survival_loadout.gd` définit 3 armes, 3 reliques, niveau maximal 5, cinq slots et deux armes de départ codées.
+- Les prototypes présents sont Lightning Conductor/Storm Core, Inferno Sprayer/Infernal Heart et Crimson Daggers/Blood Chalice ; l’évolution et les réglages restent provisoires.
+- Les QA historiques couvrent impacts, dégâts, lifesteal, brûlure, saignement, explosion Wildfire et branches Infinite Circuit.
+- Le DPS Sandbox documenté additionne les événements de dégâts sur le temps simulé, mais n’est pas un panneau complet par arme, statut, critique et fenêtre.
+- La définition de contenu reste principalement dans des constantes/scripts ; catalogue data-driven complet non établi.
+
+### Travaux
+
+- [ ] Créer les contrats de données d’arme/relique/évolution : ID stable, cible, effets par niveau, conditions, source, icônes et statut de validation.
+- [ ] Garder les comportements distincts et fortement influencés par le placement, comme demandé par le GDD.
+- [ ] Vérifier chaque niveau 1–5 et rendre visible l’augmentation, même lorsque celle-ci est principalement statistique.
+- [ ] Remplacer le tir en éventail des Crimson Daggers par le comportement orbitant requis pour Bloodstorm avant de déclarer cette paire conforme.
+- [ ] Implémenter une seule évolution automatique à niveau 5 si la relique associée est possédée à n’importe quel niveau ; ne pas consommer la relique et conserver le niveau 5.
+- [ ] Exclure les armes niveau 5 déjà évoluées ou en attente d’évolution des choix ordinaires, sans doublons normaux ; permettre les doublons uniquement dans Sandbox.
+- [ ] Étendre les métriques DPS pour pouvoir isoler source, arme/évolution, cible, critique et statut si cela aide au balancing.
+- [ ] Ajouter une couverture Sandbox aux niveaux, évolutions, synergies émergentes et effets secondaires bornés.
+- [ ] Mettre à jour ADR-014 et proposer les ADR-015/016 seulement lorsque les contrats sont mûrs ; préserver leur statut documentaire.
+
+**Critère de sortie :** les trois paires prototypes respectent les comportements validés et passent par les mêmes règles partagées Sandbox/Survival.
+
+## P4 — Vertical slice du mode Survival
+
+**Intention :** compléter un parcours de run classique de 24 vagues qui prouve la boucle de jeu, sans prétendre que l’équilibre ou le contenu final sont achevés.
+
+### État constaté
+
+- Présent : entrée Survival, déplacement clavier/manette, HP decay, dégâts de contact/invulnérabilité, HP/XP/HUD, orbes XP, chests en monde, modal trois choix, loadout et écran de résultat.
+- Le directeur déroule 24 vagues de 30 s et s’arrête aux transitions mid-boss/final boss.
+- Les boss sont des placeholders avec HP et transitions, pas des combats en phases.
+- La QA historique décrit une run accélérée et un parcours à durée simulée nominale, avec HP joueur renforcés et traitement harness. Ce n’est pas une preuve de run équilibrée ni de difficulté normale.
+- Le joueur choisit parmi deux armes codées en dur ; le choix du pool est encore **[PROPOSÉ]**.
+
+### Travaux
+
+- [ ] Vérifier le parcours normal au clavier/manette depuis l’entrée jusqu’à mort/victoire, sans injection de dégâts ni choix automatique du harness.
+- [ ] Compléter les cas d’offre de chest vide, slots pleins, objets niveau 5, choix successifs, pause/reprise, rerolls et déclenchement immédiat de l’évolution.
+- [ ] Implémenter les comportements de boss lisibles 2–3 phases et changements de patterns ; les patterns et noms doivent rester **[PROPOSÉS]** tant qu’ils ne sont pas décidés.
+- [ ] Confirmer les horloges : timer de vague arrêté pendant boss ; HP decay actif pendant tout gameplay, suspendu sur vraie pause/choix/modal.
+- [ ] Distinguer clairement victoire, défaite, reprise locale et crédit de récompense persistante idempotent.
+- [ ] Remplacer le prototype d’XP auto-bonus par la règle retenue quand sa courbe et ses bonus auront été définis ; les valeurs restent proposées.
+- [ ] Garder le contrat de sauvegarde hors du Sandbox et prévoir des essais de migration/reprise avant d’étendre les profils.
+
+**Critère de sortie :** Survival se joue bout en bout avec règles lisibles et transitions cohérentes. Une run harness ne ferme pas les critères de balancing.
+
+## P5 — Contenu de combat v1.6 : armes, reliques, ennemis et boss
+
+**Intention :** atteindre la quantité et la variété du GDD. Le code actuel contient seulement les prototypes de trois paires ; P5 n’est donc pas livré.
+
+### P5.1 — Catalogue de dix armes et onze reliques
+
+Catalogue d’évolution défini dans le GDD :
+
+| Arme | Relique associée | Évolution | État au code-audit |
+|---|---|---|---|
+| Lightning Conductor | Storm Core | Infinite Circuit | Prototype présent ; QA historique ciblée. |
+| Inferno Sprayer | Infernal Heart | Wildfire | Prototype présent ; QA historique ciblée. |
+| Crimson Daggers | Blood Chalice | Bloodstorm | Prototype présent ; dagues en éventail, alors que le GDD exige une tempête orbitale. |
+| Void Orb | Singularity | Event Horizon | Absent. |
+| Frost Nova | Frozen Crown | Absolute Zero | Absent. |
+| Minigun | Overdrive Engine | Redline | Absent. |
+| Meteor Staff | Celestial Eye | Starfall | Absent. |
+| Sawblades | Magnetic Coil | Razorstorm | Absent. |
+| Toxic Cloud | Plague Mask | Pandemic | Absent. |
+| Prism Laser | Prism Crystal | Spectrum Collapse | Absent. |
+| — | Magnet Heart (relique utilitaire) | Aucune | Absent. |
+
+Travail requis :
+
+- [ ] Porter le catalogue à 10 armes et 11 reliques sans remplir artificiellement les cases par des variantes de dégâts.
+- [ ] Créer les politiques de ciblage et de déplacement propres aux armes ; l’efficacité doit dépendre notablement du positionnement.
+- [ ] Définir/charger les niveaux 1–5, progressions visuelles, cinq niveaux de relique et évolution visuellement majeure.
+- [ ] Implémenter la règle d’évolution automatique unique et le comportement du pool de chest indiqué en P3.
+- [ ] Intégrer Magnet Heart aux offres sans paire d’évolution. Bonus de collecte limité aux collectibles autorisés par le GDD ; ne jamais attirer ni collecter un chest via `pickup_radius`.
+- [ ] Conserver cinq slots de reliques normaux ; appliquer les extensions Legendary/Mythic uniquement si l’effet unique correspondant est réellement actif et conforme.
+- [ ] Garder les chiffres des tables de progression comme **[PROPOSÉS]**, configurables, tant qu’ils ne sont pas arbitrés.
+
+### P5.2 — Statuts et synergies
+
+- [ ] Établir le besoin gameplay de chaque statut et les règles de cumul/rafraîchissement/durée avant de relier tout le catalogue.
+- [ ] Distinguer les synergies émergentes de réactions élémentaires explicitement codées. Les réactions nommées en annexe restent **[PROPOSÉES]** ; Overcharge est **[OUVERT]**.
+- [ ] Si les réactions sont validées plus tard, implémenter les limites de causalité, les budgets de chaîne et l’instrumentation avant de multiplier les sources de déclenchement.
+- [ ] Couvrir dégâts directs, DoT, lifesteal et interactions avec les événements de mort sans double attribution.
+
+### P5.3 — Coffres et économie de run
+
+- [ ] Vérifier trois options uniques, préférence de synergie, anti-malchance, disponibilité lorsque slots pleins et exclusion des armes niveau 5 non évoluées.
+- [ ] Assurer pause complète du gameplay pendant le choix ; un éventuel écran d’inventaire reprend seulement si la simulation tournait avant ouverture.
+- [ ] Faire le check d’évolution après chaque acquisition/amélioration.
+- [ ] Ne pas figer les taux 0,5 %, 15 %, poids, pity, rerolls ni substitution sans arbitrage : ce sont des nombres proposés/ouverts.
+- [ ] Garder la collecte de chest à proximité ou interaction et son rayon propre. Code présent : `chest_collection_radius` est distinct du rayon d’orbes XP ; l’invariant doit rester couvert pour tout nouveau bonus.
+
+### P5.4 — Ennemis, élites et boss
+
+- [ ] Livrer 8–12 familles jouables couvrant au minimum mêlée, rapides, tanks, distance, soutien et explosifs avec rôles compréhensibles.
+- [ ] Construire buffs, protection, invocations et interactions de groupe comme comportements bornés et visibles.
+- [ ] Ajouter élites à affixes, budget de menace/cooldown et projectiles télégraphiés esquivables.
+- [ ] Concevoir mid-boss vague 12 et boss final vague 24 avec 2–3 phases lisibles ; conserver les exemples de noms/patterns au statut proposé.
+- [ ] Décliner les difficultés Easy → Normal → Hard → Nightmare → Chaos et déblocage séquentiel. Les multiplicateurs chiffrés restent proposés.
+- [ ] Ne pas considérer les quatre profils natifs actuels comme catalogue final : ils ne donnent pas à eux seuls support, explosif, affixes, élites ou bosses multi-phases.
 
 ### Vérification et sortie P5
 
-- [ ] Scénarios Sandbox par famille d'arme, ciblage et positionnement, mesures DPS, niveaux 1–5, évolution, cumul de statuts, interactions et cas limites.
-- [ ] Tests de coffre : unicité, armes/reliques niveau max, slots pleins, Magnet Heart n'attire jamais les coffres, pause et évolution automatique.
-- [ ] Tests d'ennemis : affixes compatibles, buffs/protection/summons bornés, projectiles télégraphiés esquivables et boss en phases.
-- [ ] Une run complète Survival utilise le contenu de release P5 sans harness de progression forcé ; assurer performance représentative.
-- [ ] Batterie complète et revue des documents/ADR au checkpoint P5.
+- [ ] Smoke unitaire de chaque arme/relique/niveau/évolution dans Sandbox ; comparer ciblage, événements et effets.
+- [ ] Tests de coffres : slots/niveaux pleins, pas de doublon, pause, rerolls, évolution immédiate et exclusion absolue du chest du ramassage augmenté.
+- [ ] Tests d’ennemis : chaque famille, affixes compatibles, télégraphes esquivables, invocation/effets bornés et boss multi-phases.
+- [ ] Run Survival complète avec contenu de release, sans harness qui gonfle les HP, choisit les coffres ou tue les boss à la place du joueur.
+- [ ] Revue des GDD, interfaces et ADR ; mise à jour des statuts sans convertir les propositions en décisions.
+- [ ] Batterie de QA de checkpoint, suivi des performances et commit explicite du jalon.
 
-**Sortie :** dix armes, onze reliques, évolutions et 8–12 familles de créatures prêtes selon le GDD ; invariants du coffre et du Sandbox vérifiés. Après cette sortie, s'arrêter avant P6 conformément à la consigne de portée actuelle.
+**Critère de sortie :** dix armes, onze reliques, leurs évolutions, 8–12 familles, élites et boss utilisables dans une run complète ; Sandbox et progression séparés. À la fermeture de P5, s’arrêter conformément à la portée active.
 
-## P6 — Progression permanente
+## P6 — Progression permanente (code anticipé, jalon incomplet)
 
-**État :** un prototype a été développé en avance sur l'ordre des phases. Il ne vaut pas fermeture du jalon ; les exemples et valeurs de `PROPOSITION_P5.md` restent **[PROPOSÉ]**.
+**Intention :** transformer le prototype de profil v5, équipement, enhancement, arbre et succès en boucle complète et calibrée. L’existence du service ne signifie pas la fermeture du jalon.
 
-- [ ] Finaliser les six slots, rarités, une pièce garantie par run classique et les plages de rolls selon arbitrages v1.5/v1.6.
-- [ ] Valider application des 12 lignes de stat et effets globaux, notamment l'exclusion absolue des coffres pour `pickup_radius`.
-- [ ] Finaliser Powder, conversions, coûts/probabilités enhancement, démantèlement/vente et reroll d'effet après résolution des sujets **[OUVERTS]**.
-- [ ] Définir et livrer le graphe 100–150 nodes (cible éditoriale ~120), prérequis, déblocages, effets et respec gratuit ; répartitions et coût proposés non verrouillés.
-- [ ] Définir et livrer 100–150 familles d'achievements (cible ~120), quatre tiers, métriques, secrets et récompenses persistantes idempotentes.
-- [ ] Activer ou retirer proprement les six effets uniques ; les effets sans contrat (reroll chest, résurrection) restent sans effet de gameplay jusqu'à définition des systèmes requis.
-- [ ] Migrations versionnées, reprise, atomicité et non double-attribution ; vérifier isolation Sandbox.
-- [ ] Mesurer puissance cumulée par builds de référence et ajuster sans changer silencieusement les valeurs **[PROPOSÉES]**.
+### État actuel et écarts
 
-**Sortie :** progression complète, persistante, migrable et validée à travers runs ; aucune interaction avec Sandbox.
+- `SaveService` possède format versionné/checksum/backup et QA historique de migration/altération.
+- `ProgressionService` possède profils v5, récompenses de run, idempotence par `run_id`, inventaire, six slots, cinq raretés, stat lines, enhancement, conversion Powder, deux nodes de prototype et Exterminator.
+- Le générateur choisit pour l’instant une distribution de rareté Normal fixe et propose les plages de rolls ; les changements de difficulté et pénalité de mort précoce manquent.
+- Les achievements ne couvrent qu’un compteur de kills avec quatre paliers ; ce n’est pas le catalogue cible de 100–150 familles.
+- Les nodes sont deux prototypes, pas le graphe interconnecté de 100–150.
+- Quatre effets uniques ont un chemin gameplay prototype selon QA ; `free_first_chest_reroll` et `revive_knockback` sont stockables mais sans effet. `elite_haste` ne constitue pas un comportement vérifié tant que le système d’élites ne le déclenche pas.
+- Des bonus de stat sont consommés dans Survival ; `pickup_radius_pct` augmente actuellement le rayon des orbes XP seulement et le chest a son propre rayon.
 
-## P7 — Endless standard et Armorless
+### Travaux
 
-- [ ] Armorless : aucun équipement permanent actif ; skill tree/achievements actifs ; draft de trois après chaque vague, choix d'un ; objets temporaires ; Flux temporaire ; bosses toutes les 12 vagues. Règles de mode **[VALIDÉES]**.
-- [ ] Implémenter les transitions, pause/draft, inventaire temporaire, enhancements Flux, mort/victoire et destruction de Flux.
-- [ ] Garder raretés/scaling/Flux proposés configurables ; arbitrer récompenses persistantes Armorless, records et sauvegarde/reprise.
-- [ ] Endless standard : résoudre d'abord les règles **[OUVERTES]** d'accès, sortie, progression et récompenses ; ne pas supposer la poursuite après la vague 24.
-- [ ] Tests longue durée, scaling, budgets d'ennemis/projectiles et idempotence des récompenses.
+- [ ] Vérifier les six slots, unicité des lignes, valeurs, equip/replace, inventaire illimité et une pièce garantie après victoire comme défaite classique.
+- [ ] Finaliser les rolls selon difficulté, vague et mort précoce, après calibration/validation des nombres proposés.
+- [ ] Relier chaque stat aux systèmes concernés ; auditer spécifiquement HP, vitesse, critique, lifesteal, aire, cooldown, XP, projectile speed et pickups.
+- [ ] Garder l’invariant : aucune stat/unique/skill/bonus de pickup ne collecte les coffres.
+- [ ] Finaliser Powder, conversion 10:1, coût, succès, échec critique et garantie au dixième essai ; préserver les valeurs proposées et traiter l’économie anti-exploit ouverte.
+- [ ] Arbitrer vente vs démantèlement et coûts/conditions de reroll d’effet unique.
+- [ ] Développer et valider le graphe ~120 nodes (cible 100–150), prérequis, déblocages, respec gratuit et plafond de puissance.
+- [ ] Développer et valider ~120 familles d’achievements (cible 100–150), quatre tiers, secrets, métriques idempotentes et plafond de bonus.
+- [ ] Compléter effets uniques avec systèmes qui les déclenchent ou les laisser explicitement inéligibles ; aucun effet sélectionnable ne doit être silencieusement inerte.
+- [ ] Vérifier migrations, sauvegarde atomique, backup, absence de double gain et reprise après fermeture.
+- [ ] Mesurer les builds de référence à différentes difficultés et corriger les valeurs sans altérer leurs statuts.
 
-**Sortie :** Armorless conforme aux décisions retenues ; Endless standard seulement après arbitrages documentés.
+**Critère de sortie :** boucle permanente complète, compréhensible, migrable, idempotente et calibrée sans fuite vers Sandbox.
 
-## P8 — Sandbox Lab complet
+## P7 — Endless standard et Endless Armorless
 
-Le Sandbox développeur est livré dès P1 ; cette phase ajoute les capacités destinées au joueur.
+### P7A — Armorless (règles centrales validées)
 
-- [ ] Presets bornés/versionnés et codes de partage, JSON validé, charge utile limitée, sans exécution de script ou chemin arbitraire.
-- [ ] Build initial libre et overrides live transactionnels selon les contrats du GDD.
-- [ ] Import de save uniquement en copie isolée Normal → Sandbox, original inchangé.
-- [ ] Snapshot complet/restauration incluant simulation, RNG, horloges, commandes et build ; reprise déterministe.
-- [ ] UI et outils requis : spawn, kill all, god mode, DPS, vitesse, logs et commandes ; hard caps.
-- [ ] Tests bit-à-bit d'isolation ; aucune Essence/Powder, progression/achievement officiel ou classement produit.
+- [ ] Ajouter mode autonome sans équipement permanent actif ; garder skill tree et Achievement Mastery actifs.
+- [ ] Après chaque vague achevée, proposer trois équipements temporaires et en appliquer un ; gérer répétition de slots et absence de filet de sécurité.
+- [ ] Implémenter Flux temporaire, amélioration temporaire jusqu’à +10, effets Legendary/Mythic et destruction des objets à la fin.
+- [ ] Implémenter difficultés, bosses toutes les 12 vagues, HP decay persistant et budgets de densité.
+- [ ] Isoler les récompenses persistantes : les gains d’Essence/Powder, achievements, records et absence d’équipement garanti restent à arbitrer lorsqu’ils sont marqués proposés.
+- [ ] Couvrir run complète, draft, pause, mort, Flux, classement par difficulté et idempotence.
 
-**Sortie :** joueur peut expérimenter sans sauvegarde normale et sans fuite de progression.
+### P7B — Endless standard (contrat ouvert)
 
-## P9 — Équilibrage, polish et livraison
+- [ ] Avant codage, trancher et documenter accès/déblocage, démarrage depuis menu vs continuation après vague 24, difficulté, sortie, records, cadence boss et récompenses.
+- [ ] Après arbitrage, préserver les deux contextes de build tels que retenus : une entrée menu peut repartir niveau 1 tandis qu’une continuation peut conserver build/HP ; les propositions actuelles ne sont pas encore des règles.
+- [ ] Ne pas assimiler les exemples de scaling/cycles à des décisions acceptées.
 
-- [ ] Valider viabilité et rôles des dix armes, RNG anti-malchance, builds dominants et synergies.
-- [ ] Calibrer HP decay/soins/lifesteal, raretés, loot, économies et progression selon décisions acceptées.
-- [ ] VFX/audio adaptatifs, chiffres de dégâts agrégés/critiques visibles, télégraphes lisibles et option de réduction des VFX.
-- [ ] Accessibilité, clavier/flèches/manette, UI, lisibilité et options.
-- [ ] Mesurer 60 FPS sur GPU intégré de référence et consigner CPU/GPU/P95/P99 ; effectuer soak tests et tests de stabilité.
-- [ ] Build Linux et Windows propre, migration de save, sauvegarde/reprise et régression complète.
-- [ ] Préparer livraison premium/Steam seulement après la validation QA.
+**Critère de sortie :** Armorless conforme aux règles validées et propositions clairement paramétrées ; Endless standard seulement après arbitrages.
 
-**Sortie :** critères de performance, qualité, contenu et plateforme mesurés et documentés.
+## P8 — Sandbox Lab destiné au joueur
 
-## ADR et dépendances documentaires
+P1 livre le Sandbox développeur et ne remplace pas cette feature produit.
 
-- ADR-007 : examiner l'ajout des réactions élémentaires et de la causalité ; conserver le statut ACCEPTÉ et écrire une proposition de changement avant toute révision.
-- ADR-014 : compléter la stratégie de tests Sandbox-first pour armes, DPS, statuts et synergies ; ne pas changer son orientation ACCEPTÉE.
-- ADR-015 Weapon & Relic Framework, ADR-016 Status & Reaction System, ADR-017 Loot & Run Progression, ADR-018 Enemy & Boss Director : propositions de nouveaux ADR seulement. Lire les ADR existants et créer ces décisions lorsque la conception est prête ; ne pas inventer leur statut.
+- [ ] Ouvrir Sandbox depuis le menu sans créer/lire un profil Survival.
+- [ ] Fournir un build initial libre et des overrides live (LIVE/REBUILD/RESTART) transactionnels pour les familles du GDD.
+- [ ] Ajouter presets versionnés, JSON et share code bornés ; valider toute charge entrante, interdire script, chemin arbitraire et données privées.
+- [ ] Importer une sauvegarde normale uniquement en copie unidirectionnelle Normal → Sandbox ; original inchangé.
+- [ ] Implémenter god mode, spawn/kill all, gestion de vagues, commandes de simulation, logs/RNG et DPS détaillé.
+- [ ] Implémenter des snapshots complets comprenant simulation, état gameplay, commandes, horloges, RNG, configuration et build ; préciser déterminisme/reprise sans promettre un replay exact si la simulation est non déterministe.
+- [ ] Séparer chemins `user://saves` et `user://sandbox`; ne jamais publier récompenses, succès officiels, records ni scores classés.
+- [ ] Profiler puis fixer des hard caps qui protègent stabilité sans présenter les nombres indicatifs du GDD comme des garanties de performance.
 
-## Contradictions et points à surveiller
+**Critère de sortie :** expérimentations librement configurables, persistables/partageables et isolées de la progression normale.
 
-- Le maximum de cinq reliques normales (v1.5) et le total de 11 reliques (v1.6) décrivent respectivement la capacité équipée et le catalogue total : conserver cette distinction.
-- La règle v1.5 autorise certains effets Legendary/Mythic à étendre les capacités à six ; garder cette exception, sans qu'elle contredise cinq slots de base v1.6.
-- La règle de collecte v1.6 exclut toujours les coffres, quelle que soit la source du bonus `pickup_radius` ; c'est un invariant système.
-- Les nombres d'armes/reliques au stade P3 désignent le vertical slice ; les dix armes et onze reliques sont la cible P5.
-- Les patterns détaillés des boss, chiffres d'armes/reliques, familles et affixes exemples, réactions et synergies sont encore **[PROPOSÉS]** ou **[OUVERTS]** selon le GDD.
+## P9 — Équilibrage, accessibilité, polish et livraison
 
-## Méthode de validation
+- [ ] Équilibrer rôles/viabilité des dix armes et reliques, synergies, RNG de chest et durée de run à partir de données de plusieurs profils.
+- [ ] Calibrer HP decay, soins, dégâts de contact, lifesteal, XP, loot, économie et progression sur tous les niveaux de difficulté.
+- [ ] Vérifier les retours de dégâts/critique, télégraphes, audio, VFX et options de réduction d’effets ; la direction artistique pixel art néon a des assets de prototype, pas l’ensemble final.
+- [ ] Compléter navigation clavier, flèches, manette, focus, lisibilité HUD et contrôles/accessibilité selon GDD.
+- [ ] Mesurer cible 60 FPS sur GPU intégré représentatif : temps CPU/GPU, P95/P99, densité ennemie/projectile et mémoire. Mesa/llvmpipe et benchmark natif ne remplacent pas ce test.
+- [ ] Faire tests de charge prolongée, stabilité, progression et corruption/récupération de profil.
+- [ ] Valider import/build/lancement Linux et Windows sur artefacts propres.
+- [ ] Préparer la livraison commerciale/Steam après critères de release, sans confondre disponibilité d’un build local et validation de publication.
 
-Tests ciblés pour chaque tranche logique ; batterie plus large aux jalons P3/P4/P5/P6/P7/P8/P9. Les tests ne sont indiqués comme exécutés que lorsqu'une exécution réelle est documentée. Commit explicite à chaque tranche cohérente et push sur `origin` conformément à `AGENTS.md`.
+**Critère de sortie :** critères de contenu, stabilité, performance, plateformes et QA mesurés, datés et approuvés.
+
+## Registre des décisions et pièges d’implémentation
+
+- Les dix armes + Magnet Heart font onze reliques au total : dix reliques associées et une utilitaire. Cinq slots normaux sont une capacité, pas une taille de catalogue.
+- Les exceptions de capacité Legendary/Mythic v1.5 ne s’activent que si l’effet correspondant fonctionne et suit sa règle de non-cumul.
+- Les réactions entre statuts ne sont pas une autorisation d’implémenter les exemples nommés : ces exemples restent **[PROPOSÉS]** ; Overcharge est **[OUVERT]**.
+- Les valeurs de progression, poids de loot, chances et patterns des boss demeurent proposés/ouverts tant que les docs ne disent pas explicitement le contraire.
+- Le coffre doit rester hors de tout rayon d’attraction et de collecte de pickup ; code actuel sépare rayon chest et XP. Régression à protéger dès qu’un autre collectible apparaît.
+- Le Prototype P6 existant est anticipé : il ne prouve pas que P5 ou P6 est achevé.
+- Les coches QA historiques sont datées ; absence d’outil dans l’environnement empêche de les revalider à chaque audit documentaire.
+- Les statuts des ADR existants restent intacts. ADR-015 à ADR-018 dans les documents de travail restent des propositions jusqu’à décision formelle.
+
+## Méthode d’avancement
+
+1. Choisir une tranche petite, ordonnée par les dépendances ci-dessus ; ne pas commencer un travail dépendant d’un **[OUVERT]** avant l’arbitrage nécessaire.
+2. Définir critères d’acceptation, fichiers/systèmes concernés et vérification avant de coder.
+3. Faire une vérification ciblée après chaque tranche ; lancer la batterie plus large aux checkpoints P3/P4/P5/P6/P7/P8/P9.
+4. Indiquer séparément code écrit, test exécuté, environnement et date ; ne pas cocher sur la seule présence de code.
+5. Revoir les docs de contrat dès qu’une interface ou décision change.
+6. Faire un commit explicite à chaque tranche cohérente et pousser sur `origin` selon `AGENTS.md` lorsque la remote est disponible.
+
+## Références
+
+- [GDD v1.6](../gdd/GDD_v1.6.md) et [index des versions historiques](../gdd/archive/VERSIONS.md)
+- [Architecture](../architecture/ARCHITECTURE.md), [interfaces natives/Godot](../architecture/INTERFACES.md), [dépendances](../architecture/DEPENDANCES_ET_DEPOT.md)
+- [Registre ADR](../adr/README.md), [tests d’acceptation](../qa/TESTS.md), [performance](../qa/PERFORMANCE.md), [risques](RISQUES.md)
+- [Plan d’implémentation](../../tasks/plan.md), [suivi du goal](../../tasks/todo.md)

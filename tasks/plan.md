@@ -84,14 +84,14 @@ Livrer d’abord un Sandbox développeur autonome, puis le premier playable Surv
 
 ## Suite de la roadmap — phases v1.6
 
-Le détail de référence est [`docs/planning/ROADMAP.md`](../docs/planning/ROADMAP.md). Le découpage a changé avec le GDD v1.6 : P5 désigne désormais le contenu de dix armes, onze reliques, évolutions et ennemis ; la progression permanente devient P6. Le prototype de progression déjà présent est un travail anticipé, non une clôture du jalon. L'arrêt demandé est après P5.
+Le détail exhaustif et l’audit code/GDD sont dans [`docs/planning/ROADMAP.md`](../docs/planning/ROADMAP.md). Le découpage v1.6 place le contenu de dix armes, onze reliques, évolutions et ennemis en P5 ; la progression permanente est P6. Le prototype de progression déjà présent est un travail anticipé, non une clôture du jalon. L'arrêt demandé est après P5.
 
 ### P5 — Contenu de combat v1.6 (à réaliser)
 
-- [ ] Étendre les trois paires prototypes aux dix armes et onze reliques, dont Magnet Heart.
+- [ ] Étendre les trois paires prototypes aux dix armes et onze reliques, dont Magnet Heart ; corriger Crimson Daggers/Bloodstorm pour respecter le comportement orbitant validé.
 - [ ] Implémenter cinq niveaux visibles, évolutions uniques automatiques et règles de coffre.
 - [ ] Garantir que le ramassage étendu n'attire jamais les coffres, quelle que soit la source du bonus.
-- [ ] Compléter statuts, synergies, 8–12 familles d'ennemis et boss multi-phases selon contrats validés ; garder exemples chiffrés/patterns proposés.
+- [ ] Compléter statuts, synergies, 8–12 familles d'ennemis, élites et boss multi-phases selon contrats validés ; garder les réactions nommées, chiffres et patterns proposés tant qu'ils ne sont pas arbitrés.
 - [ ] Vérifier tout le contenu dans Sandbox, une run Survival, et batterie complète de fin de jalon.
 
 ### P6 — Progression permanente (prototype existant, jalon incomplet)

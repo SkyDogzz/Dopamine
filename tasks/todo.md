@@ -60,3 +60,10 @@ Les prototypes de progression des anciennes tâches P5 correspondent maintenant 
 - [ ] **P9** Équilibrage, accessibilité, performance mesurée sur GPU intégré, Windows et préparation de livraison.
 
 Les critères de sortie détaillés figurent dans [`docs/planning/ROADMAP.md`](../docs/planning/ROADMAP.md). Les tests historiques cochés plus haut restent les résultats documentés au moment de leur exécution ; ils ne signifient pas qu'ils ont été relancés pendant le présent audit.
+
+## Audit code/GDD du 2026-10-15
+
+- [x] Revue statique des scripts/catalogues Survival, progression, sauvegarde, scènes, QA et contrats GDD v1.6.
+- [x] Statuts distingués entre code présent, prototype, absence de fonctionnalité et QA historique.
+- [x] Godot n'est pas détecté dans cet environnement ; aucune suite GDScript n'a été relancée pour cet audit documentaire.
+- [x] Roadmap détaillée P0–P9 mise à jour dans `docs/planning/ROADMAP.md`.
