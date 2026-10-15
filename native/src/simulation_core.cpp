@@ -79,6 +79,7 @@ EntityId SimulationCore::spawn(std::string type, float x, float y, float hp, flo
 		xp_orb_flags_.push_back(false);
 		xp_values_.push_back(0.0F);
 		damage_over_time_.emplace_back();
+		chill_effects_.emplace_back();
 	} else {
 		index = free_indices_.back();
 		free_indices_.pop_back();
@@ -96,6 +97,7 @@ EntityId SimulationCore::spawn(std::string type, float x, float y, float hp, flo
 	xp_orb_flags_[index] = false;
 	xp_values_[index] = 0.0F;
 	damage_over_time_[index].reset();
+	chill_effects_[index].reset();
 	++entity_count_;
 	return id;
 }
@@ -104,7 +106,8 @@ EntityId SimulationCore::spawn_projectile(std::string type, float x, float y, fl
 		double lifetime_seconds, float velocity_x, float velocity_y, float status_damage_per_tick,
 		double status_interval_seconds, double status_duration_seconds, float explosion_radius,
 		float explosion_damage_multiplier, uint32_t ricochets, float attraction_radius,
-		float attraction_speed, bool pierces_targets) {
+		float attraction_speed, bool pierces_targets, double chill_duration_seconds,
+		float chill_speed_multiplier, float chill_damage_multiplier) {
 	if (!std::isfinite(damage) || damage <= 0.0F || !std::isfinite(radius) || radius < 0.0F ||
 			!std::isfinite(lifetime_seconds) || lifetime_seconds <= 0.0 || type.empty() ||
 			ricochets > 64 ||
@@ -112,6 +115,11 @@ EntityId SimulationCore::spawn_projectile(std::string type, float x, float y, fl
 			!std::isfinite(attraction_radius) || attraction_radius < 0.0F ||
 			!std::isfinite(attraction_speed) || attraction_speed < 0.0F ||
 			((attraction_radius > 0.0F) != (attraction_speed > 0.0F)) ||
+			!std::isfinite(chill_duration_seconds) || chill_duration_seconds < 0.0 ||
+			!std::isfinite(chill_speed_multiplier) || chill_speed_multiplier < 0.0F ||
+			chill_speed_multiplier > 1.0F ||
+			((chill_duration_seconds > 0.0) != (chill_speed_multiplier < 1.0F)) ||
+			!std::isfinite(chill_damage_multiplier) || chill_damage_multiplier < 1.0F ||
 			!std::isfinite(explosion_damage_multiplier) || explosion_damage_multiplier < 0.0F ||
 			!std::isfinite(damage * explosion_damage_multiplier)) {
 		throw std::invalid_argument("invalid projectile");
@@ -139,9 +147,9 @@ EntityId SimulationCore::spawn_projectile(std::string type, float x, float y, fl
 	projectile.attraction_radius = attraction_radius;
 	projectile.attraction_speed = attraction_speed;
 	projectile.pierces_targets = pierces_targets;
-	projectile.attraction_radius = attraction_radius;
-	projectile.attraction_speed = attraction_speed;
-	projectile.pierces_targets = pierces_targets;
+	projectile.chill_duration_seconds = chill_duration_seconds;
+	projectile.chill_speed_multiplier = chill_speed_multiplier;
+	projectile.chill_damage_multiplier = chill_damage_multiplier;
 	if (type == "infinite_circuit_branch") {
 		float nearest_distance_squared = enemy_collision_radius * enemy_collision_radius;
 		for (uint32_t index = 0; index < slots_.size(); ++index) {
@@ -185,6 +193,41 @@ bool SimulationCore::apply_damage_over_time(EntityId target, float damage_per_ti
 	}
 	damage_over_time_[target.index] = DamageOverTime{damage_per_tick, interval_seconds, duration_seconds, interval_seconds};
 	return true;
+}
+
+bool SimulationCore::apply_chill(EntityId target, double duration_seconds, float speed_multiplier,
+		float damage_taken_multiplier) {
+	if (!std::isfinite(duration_seconds) || duration_seconds <= 0.0 || !std::isfinite(speed_multiplier) ||
+			speed_multiplier < 0.0F || speed_multiplier >= 1.0F ||
+			!std::isfinite(damage_taken_multiplier) || damage_taken_multiplier < 1.0F) {
+		throw std::invalid_argument("invalid chill duration or multipliers");
+	}
+	if (target.index >= slots_.size() || !slots_[target.index].active ||
+			slots_[target.index].generation != target.generation || projectile_flags_[target.index] ||
+			xp_orb_flags_[target.index]) {
+		return false;
+	}
+	if (chill_effects_[target.index].has_value()) {
+		ChillEffect &current = *chill_effects_[target.index];
+		current.remaining_seconds = std::max(current.remaining_seconds, duration_seconds);
+		current.speed_multiplier = std::min(current.speed_multiplier, speed_multiplier);
+		current.damage_taken_multiplier = std::max(current.damage_taken_multiplier, damage_taken_multiplier);
+	} else {
+		chill_effects_[target.index] = ChillEffect{duration_seconds, speed_multiplier, damage_taken_multiplier};
+	}
+	return true;
+}
+
+void SimulationCore::apply_direct_damage(EntityId source, EntityId target, float amount,
+		std::vector<CombatEvent> &events) {
+	if (!std::isfinite(amount) || amount <= 0.0F) {
+		throw std::invalid_argument("invalid direct damage");
+	}
+	std::vector<EntityId> to_despawn;
+	apply_damage(source, target, amount, events, to_despawn);
+	for (const EntityId id : to_despawn) {
+		despawn(id);
+	}
 }
 
 bool SimulationCore::collect_xp_orb(EntityId id, std::vector<CombatEvent> &events) {
@@ -234,6 +277,8 @@ void SimulationCore::reset() {
 	}
 	entity_count_ = 0;
 	simulation_time_ = 0.0;
+	for (auto &effect : damage_over_time_) effect.reset();
+	for (auto &effect : chill_effects_) effect.reset();
 }
 
 SimulationCoreState SimulationCore::capture_state() const {
@@ -252,6 +297,7 @@ SimulationCoreState SimulationCore::capture_state() const {
 		entity.is_xp_orb = xp_orb_flags_[index];
 		entity.xp_value = xp_values_[index];
 		entity.damage_over_time = damage_over_time_[index];
+		entity.chill_effect = chill_effects_[index];
 		state.entities.push_back(std::move(entity));
 		state.active_slots.push_back(slots_[index].active);
 	}
@@ -319,16 +365,22 @@ void SimulationCore::restore_state(const SimulationCoreState &state) {
 					!std::isfinite(projectile.attraction_radius) || projectile.attraction_radius < 0.0F ||
 					!std::isfinite(projectile.attraction_speed) || projectile.attraction_speed < 0.0F ||
 					((projectile.attraction_radius > 0.0F) != (projectile.attraction_speed > 0.0F)) ||
+					!std::isfinite(projectile.chill_duration_seconds) || projectile.chill_duration_seconds < 0.0 ||
+					!std::isfinite(projectile.chill_speed_multiplier) || projectile.chill_speed_multiplier < 0.0F ||
+					projectile.chill_speed_multiplier > 1.0F ||
+					((projectile.chill_duration_seconds > 0.0) != (projectile.chill_speed_multiplier < 1.0F)) ||
+					!std::isfinite(projectile.chill_damage_multiplier) || projectile.chill_damage_multiplier < 1.0F ||
 					!valid_hit_targets ||
 					(projectile.applies_damage_over_time && (!std::isfinite(projectile.status_damage_per_tick) ||
 							!std::isfinite(projectile.status_interval_seconds) ||
 							!std::isfinite(projectile.status_duration_seconds) || projectile.status_damage_per_tick <= 0.0F ||
 							projectile.status_interval_seconds <= 0.0 || projectile.status_duration_seconds <= 0.0)) ||
-					entity.damage_over_time.has_value()) {
+					(entity.damage_over_time.has_value() || entity.chill_effect.has_value())) {
 				throw std::invalid_argument("invalid simulation core projectile state");
 			}
 		} else if (entity.is_xp_orb) {
-			if (!std::isfinite(entity.xp_value) || entity.xp_value <= 0.0F || entity.damage_over_time.has_value()) {
+			if (!std::isfinite(entity.xp_value) || entity.xp_value <= 0.0F || entity.damage_over_time.has_value() ||
+					entity.chill_effect.has_value()) {
 				throw std::invalid_argument("invalid simulation core XP orb state");
 			}
 		} else if (entity.damage_over_time.has_value()) {
@@ -339,6 +391,16 @@ void SimulationCore::restore_state(const SimulationCoreState &state) {
 					!std::isfinite(status.time_to_tick) || status.time_to_tick < 0.0 ||
 					status.time_to_tick > status.interval_seconds) {
 				throw std::invalid_argument("invalid simulation core damage-over-time state");
+			}
+		}
+		if (entity.chill_effect.has_value()) {
+			const ChillEffect &chill = *entity.chill_effect;
+			if (!std::isfinite(chill.remaining_seconds) || chill.remaining_seconds <= 0.0 ||
+					!std::isfinite(chill.speed_multiplier) || chill.speed_multiplier < 0.0F ||
+					chill.speed_multiplier >= 1.0F ||
+					!std::isfinite(chill.damage_taken_multiplier) || chill.damage_taken_multiplier < 1.0F ||
+					entity.is_projectile || entity.is_xp_orb) {
+				throw std::invalid_argument("invalid simulation core chill state");
 			}
 		}
 	}
@@ -357,6 +419,7 @@ void SimulationCore::restore_state(const SimulationCoreState &state) {
 	restored.xp_orb_flags_.reserve(slot_count);
 	restored.xp_values_.reserve(slot_count);
 	restored.damage_over_time_.reserve(slot_count);
+	restored.chill_effects_.reserve(slot_count);
 	for (std::size_t index = 0; index < slot_count; ++index) {
 		const Entity &entity = state.entities[index];
 		restored.slots_.push_back({entity.id.generation, state.active_slots[index]});
@@ -369,6 +432,7 @@ void SimulationCore::restore_state(const SimulationCoreState &state) {
 		restored.xp_orb_flags_.push_back(entity.is_xp_orb);
 		restored.xp_values_.push_back(entity.xp_value);
 		restored.damage_over_time_.push_back(entity.damage_over_time);
+		restored.chill_effects_.push_back(entity.chill_effect);
 	}
 	restored.free_indices_ = state.free_indices;
 	restored.entity_count_ = state.entity_count;
@@ -574,6 +638,10 @@ std::vector<CombatEvent> SimulationCore::advance(double delta_seconds) {
 				const EntityId target_id{target_index, slots_[target_index].generation};
 				apply_damage(projectile_id, target_id, projectile.damage, events, to_despawn);
 				bool ricocheted = false;
+				if (projectile.chill_duration_seconds > 0.0 && health_[target_index].current > 0.0F) {
+					apply_chill(target_id, projectile.chill_duration_seconds, projectile.chill_speed_multiplier,
+							projectile.chill_damage_multiplier);
+				}
 				if (projectile.applies_damage_over_time && health_[target_index].current > 0.0F) {
 					apply_damage_over_time(target_id, projectile.status_damage_per_tick,
 							projectile.status_interval_seconds, projectile.status_duration_seconds);
@@ -593,6 +661,10 @@ std::vector<CombatEvent> SimulationCore::advance(double delta_seconds) {
 						const EntityId splash_id{splash_index, slots_[splash_index].generation};
 						apply_damage(projectile_id, splash_id, projectile.damage * projectile.explosion_damage_multiplier,
 								events, to_despawn);
+						if (projectile.chill_duration_seconds > 0.0 && health_[splash_index].current > 0.0F) {
+							apply_chill(splash_id, projectile.chill_duration_seconds,
+									projectile.chill_speed_multiplier, projectile.chill_damage_multiplier);
+						}
 						if (projectile.applies_damage_over_time && health_[splash_index].current > 0.0F) {
 							apply_damage_over_time(splash_id, projectile.status_damage_per_tick,
 									projectile.status_interval_seconds, projectile.status_duration_seconds);
@@ -649,6 +721,15 @@ std::vector<CombatEvent> SimulationCore::advance(double delta_seconds) {
 	}
 	for (EntityId id : to_despawn) {
 		despawn(id);
+	}
+	for (std::size_t index = 0; index < slots_.size(); ++index) {
+		if (!slots_[index].active || !chill_effects_[index].has_value()) {
+			continue;
+		}
+		chill_effects_[index]->remaining_seconds -= delta_seconds;
+		if (chill_effects_[index]->remaining_seconds <= 1e-12 || health_[index].current <= 0.0F) {
+			chill_effects_[index].reset();
+		}
 	}
 	simulation_time_ += delta_seconds;
 	return events;
@@ -709,9 +790,12 @@ void SimulationCore::steer_enemies_towards(float target_x, float target_y, Steer
 
 		const double steering_length = std::hypot(steering_x, steering_y);
 		if (steering_length > 0.0) {
-			const float max_speed = enemy_types_[index].move_speed > 0.0F
+			float max_speed = enemy_types_[index].move_speed > 0.0F
 					? enemy_types_[index].move_speed
 					: config.max_speed;
+			if (chill_effects_[index].has_value()) {
+				max_speed *= chill_effects_[index]->speed_multiplier;
+			}
 			next_velocities[index] = {
 				static_cast<float>(steering_x / steering_length * max_speed),
 				static_cast<float>(steering_y / steering_length * max_speed),
@@ -812,6 +896,10 @@ void SimulationCore::apply_damage(EntityId source, EntityId target, float amount
 		return;
 	}
 	Health &target_health = health_[target.index];
+	const bool target_was_chilled = chill_effects_[target.index].has_value();
+	if (target_was_chilled) {
+		amount *= chill_effects_[target.index]->damage_taken_multiplier;
+	}
 	target_health.current = std::max(0.0F, target_health.current - amount);
 	const std::string source_type = source.index < slots_.size() && slots_[source.index].active &&
 			slots_[source.index].generation == source.generation ? enemy_types_[source.index].id : std::string{};
@@ -819,11 +907,13 @@ void SimulationCore::apply_damage(EntityId source, EntityId target, float amount
 			amount, target_health.current, enemy_types_[target.index].threat_level,
 			transforms_[target.index].x, transforms_[target.index].y, enemy_types_[target.index].id});
 	events.back().source_type = source_type;
+	events.back().target_was_chilled = target_was_chilled;
 	if (target_health.current <= 0.0F) {
 		events.push_back({next_event_sequence_++, CombatEventType::Death, source, target,
 				0.0F, 0.0F, enemy_types_[target.index].threat_level,
 				transforms_[target.index].x, transforms_[target.index].y, enemy_types_[target.index].id});
 		events.back().source_type = source_type;
+		events.back().target_was_chilled = target_was_chilled;
 		deferred_despawns.push_back(target);
 	}
 }
@@ -839,7 +929,7 @@ std::optional<Entity> SimulationCore::entity(EntityId id) const {
 	const size_t index = static_cast<size_t>(id.index);
 	return Entity{id, transforms_[index], velocities_[index], health_[index], enemy_types_[index],
 			projectile_flags_[index], projectiles_[index], xp_orb_flags_[index], xp_values_[index],
-			damage_over_time_[index]};
+			damage_over_time_[index], chill_effects_[index]};
 }
 
 std::vector<Entity> SimulationCore::snapshot() const {
@@ -850,7 +940,7 @@ std::vector<Entity> SimulationCore::snapshot() const {
 			const EntityId id{index, slots_[index].generation};
 			result.push_back({id, transforms_[index], velocities_[index], health_[index], enemy_types_[index],
 					projectile_flags_[index], projectiles_[index], xp_orb_flags_[index], xp_values_[index],
-					damage_over_time_[index]});
+					damage_over_time_[index], chill_effects_[index]});
 		}
 	}
 	return result;

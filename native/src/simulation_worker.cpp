@@ -110,7 +110,7 @@ std::optional<SimulationWorkerState> SimulationWorker::capture_state(std::chrono
 }
 
 bool SimulationWorker::restore_state(const SimulationWorkerState &state) {
-	if (state.format_version != 4 || state.next_sequence == 0 ||
+	if (state.format_version != 5 || state.next_sequence == 0 ||
 			state.next_sequence <= state.pending_sequence ||
 			state.pending_commands.size() > max_queued_commands_ ||
 			state.pending_events.size() > max_pending_events_ || state.logs.size() > 100 ||
@@ -376,7 +376,8 @@ void SimulationWorker::apply(const SimulationCommand &command,
 						command.projectile_status_duration, command.projectile_explosion_radius,
 						command.projectile_explosion_damage_multiplier, command.projectile_ricochets,
 						command.projectile_attraction_radius, command.projectile_attraction_speed,
-						command.projectile_pierces_targets);
+						command.projectile_pierces_targets, command.projectile_chill_duration,
+						command.projectile_chill_speed_multiplier, command.projectile_chill_damage_multiplier);
 				log("spawned projectile " + command.entity_type);
 			} catch (const std::exception &error) {
 				log(std::string("projectile rejected: ") + error.what());

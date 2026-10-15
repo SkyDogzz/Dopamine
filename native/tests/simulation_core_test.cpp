@@ -125,6 +125,45 @@ int main() {
 			piercing_events[1].target == second_orb_target && piercing_orb_state.has_value(),
 			"a piercing Void Orb should damage each target once and remain active after impacts");
 
+	SimulationCore frost_nova;
+	const auto chilled_target = frost_nova.spawn("chaser", 50.0F, 0.0F, 100.0F, 0.0F, 0.0F, 1.0F, 75.0F);
+	const auto outside_target = frost_nova.spawn("chaser", 90.0F, 0.0F, 100.0F, 0.0F, 0.0F, 1.0F, 75.0F);
+	const auto frost_pulse = frost_nova.spawn_projectile("frost_nova", 0.0F, 0.0F, 8.0F, 60.0F, 0.1,
+			0.0F, 0.0F, 2.0F, 0.5, 2.0, 0.0F, 0.0F, 0, 0.0F, 0.0F, true, 2.0, 0.5);
+	const auto frost_events = frost_nova.advance(0.01);
+	const auto chilled_state = frost_nova.entity(chilled_target);
+	require(frost_events.size() == 1 && frost_events[0].target == chilled_target &&
+			frost_nova.entity(outside_target)->health.current == 100.0F,
+			"Frost Nova should damage every target inside its radius and leave targets outside untouched");
+	require(chilled_state && chilled_state->chill_effect &&
+			chilled_state->chill_effect->speed_multiplier == 0.5F,
+			"Frost Nova should apply a timed Chill effect to hit enemies");
+	const auto frost_pierce_state = frost_nova.entity(frost_pulse);
+	require(frost_pierce_state && frost_pierce_state->projectile.chill_duration_seconds == 2.0 &&
+			frost_pierce_state->projectile.chill_speed_multiplier == 0.5F,
+			"Frost projectile Chill parameters should remain in native projectile state");
+	SimulationCore vulnerable_frost;
+	const auto vulnerable_target = vulnerable_frost.spawn("chaser", 0.0F, 0.0F, 100.0F, 0.0F, 0.0F);
+	vulnerable_frost.apply_chill(vulnerable_target, 1.0, 0.5F, 1.25F);
+	std::vector<dopamine::sim::CombatEvent> vulnerability_events;
+	vulnerable_frost.apply_direct_damage(dopamine::sim::EntityId{}, vulnerable_target, 8.0F, vulnerability_events);
+	require(vulnerability_events.size() == 1 && vulnerability_events.front().amount == 10.0F &&
+			vulnerability_events.front().target_was_chilled,
+			"Frozen Crown vulnerability should increase damage to chilled targets and tag the combat event");
+	frost_nova.steer_enemies_towards(-100.0F, 0.0F, {.max_speed = 20.0F, .separation_radius = 0.0F});
+	require(std::abs(frost_nova.entity(chilled_target)->velocity.x + 37.5F) < 0.001F &&
+			std::abs(frost_nova.entity(outside_target)->velocity.x + 75.0F) < 0.001F,
+			"Chill should reduce only affected enemies' movement speed");
+	SimulationCore restored_frost;
+	restored_frost.restore_state(frost_nova.capture_state());
+	require(restored_frost.entity(chilled_target)->chill_effect.has_value(),
+			"Chill should survive a native simulation snapshot restore");
+	restored_frost.advance(2.1);
+	restored_frost.steer_enemies_towards(-100.0F, 0.0F, {.max_speed = 20.0F, .separation_radius = 0.0F});
+	require(!restored_frost.entity(chilled_target)->chill_effect.has_value() &&
+			std::abs(restored_frost.entity(chilled_target)->velocity.x + 75.0F) < 0.001F,
+			"Chill should expire in simulation time and restore the enemy's proposed base speed");
+
 	require(simulation.despawn(first), "despawn should accept a live handle");
 	require(!simulation.entity(first).has_value(), "despawned handle should be stale");
 	const auto second = simulation.spawn("tank", 0.0F, 0.0F, 20.0F, 1.0F, 0.0F);

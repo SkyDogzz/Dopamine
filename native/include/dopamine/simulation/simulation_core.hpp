@@ -93,6 +93,9 @@ struct ProjectileData {
 	float attraction_radius = 0.0F;
 	float attraction_speed = 0.0F;
 	bool pierces_targets = false;
+	double chill_duration_seconds = 0.0;
+	float chill_speed_multiplier = 1.0F;
+	float chill_damage_multiplier = 1.0F;
 	bool ignores_source_entity = false;
 	EntityId source_entity;
 };
@@ -102,6 +105,12 @@ struct DamageOverTime {
 	double interval_seconds = 0.0;
 	double remaining_seconds = 0.0;
 	double time_to_tick = 0.0;
+};
+
+struct ChillEffect {
+	double remaining_seconds = 0.0;
+	float speed_multiplier = 1.0F;
+	float damage_taken_multiplier = 1.0F;
 };
 
 enum class CombatEventType {
@@ -123,6 +132,7 @@ struct CombatEvent {
 	std::string target_type;
 	std::string source_type;
 	bool is_damage_over_time = false;
+	bool target_was_chilled = false;
 };
 
 struct Entity {
@@ -136,6 +146,7 @@ struct Entity {
 	bool is_xp_orb = false;
 	float xp_value = 0.0F;
 	std::optional<DamageOverTime> damage_over_time;
+	std::optional<ChillEffect> chill_effect;
 };
 
 struct SimulationCoreState {
@@ -157,10 +168,14 @@ public:
 			double status_interval_seconds = 0.5, double status_duration_seconds = 2.0,
 			float explosion_radius = 0.0F, float explosion_damage_multiplier = 0.0F,
 			uint32_t ricochets = 0, float attraction_radius = 0.0F, float attraction_speed = 0.0F,
-			bool pierces_targets = false);
+			bool pierces_targets = false, double chill_duration_seconds = 0.0,
+			float chill_speed_multiplier = 1.0F, float chill_damage_multiplier = 1.0F);
 	EntityId spawn_xp_orb(float x, float y, float xp_value);
 	bool apply_damage_over_time(EntityId target, float damage_per_tick, double interval_seconds,
 			double duration_seconds);
+	bool apply_chill(EntityId target, double duration_seconds, float speed_multiplier,
+		float damage_taken_multiplier = 1.0F);
+	void apply_direct_damage(EntityId source, EntityId target, float amount, std::vector<CombatEvent> &events);
 	bool collect_xp_orb(EntityId id, std::vector<CombatEvent> &events);
 	bool despawn(EntityId id);
 	void reset();
@@ -206,6 +221,7 @@ private:
 	std::vector<bool> xp_orb_flags_;
 	std::vector<float> xp_values_;
 	std::vector<std::optional<DamageOverTime>> damage_over_time_;
+	std::vector<std::optional<ChillEffect>> chill_effects_;
 	std::vector<uint32_t> free_indices_;
 	std::size_t entity_count_ = 0;
 	double simulation_time_ = 0.0;

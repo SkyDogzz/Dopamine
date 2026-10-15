@@ -43,6 +43,9 @@ func _run() -> void:
 	if not await _void_orb_pulls_and_pierces():
 		_fail("Void Orb should pull nearby enemies and pierce distinct targets")
 		return
+	if not await _frost_nova_chills_and_shatters():
+		_fail("Frost Nova should Chill nearby targets and Absolute Zero should shatter a frozen kill")
+		return
 	print("Survival weapon catalog smoke passed")
 	quit()
 
@@ -119,6 +122,51 @@ func _void_orb_pulls_and_pierces() -> bool:
 				var field: Dictionary = components["Projectile"]
 				field_is_shared = bool(field["pierces_targets"]) and float(field["attraction_radius"]) > 0.0
 		if field_is_shared and int(state["metrics"]["collision_count"]) >= before + 2:
+			session.queue_free()
+			return true
+	session.queue_free()
+	return false
+
+func _frost_nova_chills_and_shatters() -> bool:
+	var session: Node2D = load("res://scenes/survival_session.tscn").instantiate()
+	session.spawn_initial_enemy = false
+	session.wave_spawning_enabled = false
+	session.weapon_enabled = false
+	session.skip_starting_weapon_choice = true
+	session.contact_damage_per_hit = 0.0
+	session.xp_collection_radius = 0.0
+	session.frost_nova_radius = 160.0
+	session.frost_nova_cooldown = 1000.0
+	session.frost_nova_damage = 10.0
+	root.add_child(session)
+	await process_frame
+	for _level in range(5):
+		if not session.loadout.apply_offer("weapon:frost_nova") or not session.loadout.apply_offer("relic:frozen_crown"):
+			session.queue_free()
+			return false
+	session.simulation.set_speed(4.0)
+	session.simulation.spawn("test_target", 1, Vector2(100.0, 0.0), 8.0, Vector2.ZERO)
+	session.simulation.spawn("test_target", 1, Vector2(130.0, 0.0), 100.0, Vector2.ZERO)
+	if (await _wait_for_targets(session, 2)).size() != 2:
+		session.queue_free()
+		return false
+	session.weapon_enabled = true
+	session._entities = session.simulation.snapshot()["entities"]
+	session._fire_frost_nova(float(session.simulation.snapshot()["simulation_time"]), false)
+	var deadline := Time.get_ticks_msec() + 2500
+	var saw_absolute_zero := false
+	var shattered_neighbor := false
+	while Time.get_ticks_msec() < deadline:
+		await process_frame
+		var state: Dictionary = session.simulation.snapshot()
+		for entity in state["entities"]:
+			var components: Dictionary = entity["components"]
+			if components.get("EnemyType", "") == "absolute_zero" and components.has("Projectile"):
+				saw_absolute_zero = float(components["Projectile"].get("chill_damage_multiplier", 1.0)) == 1.0
+		for event in state["events"]:
+			if event.get("type", "") == "damage" and event.get("source_type", "") == "absolute_zero":
+				shattered_neighbor = true
+		if saw_absolute_zero and shattered_neighbor:
 			session.queue_free()
 			return true
 	session.queue_free()

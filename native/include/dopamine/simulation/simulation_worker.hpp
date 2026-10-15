@@ -65,6 +65,9 @@ struct SimulationCommand {
 	float projectile_attraction_radius = 0.0F;
 	float projectile_attraction_speed = 0.0F;
 	bool projectile_pierces_targets = false;
+	double projectile_chill_duration = 0.0;
+	float projectile_chill_speed_multiplier = 1.0F;
+	float projectile_chill_damage_multiplier = 1.0F;
 	float xp_value = 1.0F;
 	float status_damage_per_tick = 0.0F;
 	double status_interval_seconds = 0.0;
@@ -75,7 +78,7 @@ struct SimulationCommand {
 };
 
 struct SimulationWorkerState {
-	uint32_t format_version = 4;
+	uint32_t format_version = 5;
 	SimulationCoreState core_state;
 	bool paused = true;
 	double speed_multiplier = 1.0;

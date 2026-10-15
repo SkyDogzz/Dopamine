@@ -21,9 +21,9 @@ L’audit initial était statique. Les tranches Minigun, Toxic Cloud, Sawblades 
 | P0 Fondations | **Présent, Linux documenté** | Reproductibilité sur installation propre et build/chargement Windows. |
 | P1 Sandbox développeur MVP | **Présent et bien couvert historiquement** | Continuer d’exposer les nouveaux systèmes et maintenir l’isolation au fil des intégrations. |
 | P2 Simulation/combat | **Fondation présente, couverture partielle** | Diversité des IA, règles complètes d’ennemis/boss, instrumentation et performance iGPU. |
-| P3 Prototype de combat | **Neuf paires et neuf évolutions de prototype présentes** | Contrats génériques, retours visuels par niveau, ciblage fidèle, mesures DPS détaillées. |
+| P3 Prototype de combat | **Dix paires et dix évolutions de prototype présentes** | Contrats génériques, retours visuels par niveau, ciblage fidèle, mesures DPS détaillées. |
 | P4 Vertical slice Survival | **Boucle de run prototype présente** | Boss réels, difficulté sélectionnable, run équilibrée et vérifiée sans harness. |
-| P5 Contenu v1.6 | **Non livré** | 2 armes et leurs reliques associées restent indisponibles en Survival ; Toxic Cloud est un prototype à impact, pas encore un nuage visuel persistant ; contenu ennemis/boss encore incomplet. |
+| P5 Contenu v1.6 | **Non livré** | Les dix paires ont un prototype, mais Toxic Cloud est un prototype à impact, pas encore un nuage visuel persistant ; contenu ennemis/boss encore incomplet. |
 | P6 Progression permanente | **Prototype anticipé seulement** | Catalogue complet, règles et contenus validés, récompenses calibrées et effets uniques actifs. |
 | P7 Modes Endless | **À faire** | Armorless complet ; arbitrages nécessaires pour Endless standard. |
 | P8 Sandbox Lab joueur | **À faire au-delà des outils développeur P1** | Builds libres, presets/import/export, copie de save, snapshots complets et règles de sécurité. |
@@ -31,9 +31,9 @@ L’audit initial était statique. Les tranches Minigun, Toxic Cloud, Sawblades 
 
 ### Lecture rapide : livré, prototype ou survolé
 
-**Bien intégré comme fondation :** simulation native découplée de Godot, worker, commandes/snapshots, limites de charge, outils Sandbox, loop de run Survival, pause/chest/XP, neuf armes et effets de combat de base, sauvegarde versionnée, premiers écrans d’équipement.
+**Bien intégré comme fondation :** simulation native découplée de Godot, worker, commandes/snapshots, limites de charge, outils Sandbox, loop de run Survival, pause/chest/XP, dix armes et effets de combat de base, sauvegarde versionnée, premiers écrans d’équipement.
 
-**Intégré en prototype, à ne pas confondre avec une feature finie :** boss (apparition/HP/transition, mais pas leurs patterns), XP auto-bonus, loot/probabilités, neuf évolutions, Void Orb à attraction/percée, Sawblades à ricochets/Razorstorm, Meteor Staff en zone/Starfall fragmenté, Toxic Cloud à impact plutôt qu'en champ persistant, équipement et enhancement, deux nodes de skill tree, famille Exterminator, effets uniques, récompenses de run. Les paramètres restent souvent **[PROPOSÉS]**.
+**Intégré en prototype, à ne pas confondre avec une feature finie :** boss (apparition/HP/transition, mais pas leurs patterns), XP auto-bonus, loot/probabilités, dix évolutions, Void Orb à attraction/percée, Frost Nova avec Chill/Absolute Zero, Sawblades à ricochets/Razorstorm, Meteor Staff en zone/Starfall fragmenté, Toxic Cloud à impact plutôt qu'en champ persistant, équipement et enhancement, deux nodes de skill tree, famille Exterminator, effets uniques, récompenses de run. Les paramètres restent souvent **[PROPOSÉS]**.
 
 **Survolé ou absent par rapport au GDD :** 3 armes et 3 reliques associées restantes ; Minigun, Toxic Cloud, Sawblades et Meteor Staff n’ont pas encore de feedback visuel par niveau ; Toxic Cloud n'a pas encore de champ visuel persistant ; Magnet Heart n'agit que sur XP (autres pickups et impulsion de niveau 5 absents) ; animation/identité spécifique à chaque niveau ; dagues réellement orbitantes dans Bloodstorm (le code actuel tire des projectiles en éventail) ; 8–12 familles ennemies et leurs rôles ; élites à affixes ; boss à phases ; difficultés ; réactions élémentaires nommées ; tree ~120 nodes ; achievements ~120 familles ; modes Endless ; Sandbox Lab joueur ; performance iGPU et build Windows.
 
@@ -170,7 +170,7 @@ P6 a déjà du code anticipé, mais le chemin nominal reste P5 puis P6. P7 stand
 
 ### État constaté
 
-- `survival_loadout.gd` expose neuf paires implémentées dans le catalogue, niveau maximal 5, cinq slots et deux armes de départ codées.
+- `survival_loadout.gd` expose dix paires implémentées dans le catalogue, niveau maximal 5, cinq slots et deux armes de départ codées.
 - Huit paires ont maintenant un prototype de combat : Lightning Conductor/Storm Core, Inferno Sprayer/Infernal Heart, Crimson Daggers/Blood Chalice, Minigun/Overdrive Engine, Toxic Cloud/Plague Mask, Sawblades/Magnetic Coil, Meteor Staff/Celestial Eye et Prism Laser/Prism Crystal. Les réglages restent **[PROPOSÉS]** et Bloodstorm ne respecte pas encore l’orbite validée.
 - Les QA historiques couvrent impacts, dégâts, lifesteal, brûlure, saignement, explosion Wildfire et branches Infinite Circuit.
 - Le DPS Sandbox documenté additionne les événements de dégâts sur le temps simulé, mais n’est pas un panneau complet par arme, statut, critique et fenêtre.
@@ -257,7 +257,7 @@ P6 a déjà du code anticipé, mais le chemin nominal reste P5 puis P6. P7 stand
 
 ## P5 — Contenu de combat v1.6 : armes, reliques, ennemis et boss
 
-**Intention :** atteindre la quantité et la variété du GDD. Le code actuel contient neuf prototypes de paires ; P5 n’est donc pas livré.
+**Intention :** atteindre la quantité et la variété du GDD. Le code actuel contient dix prototypes de paires ; P5 n’est donc pas livré.
 
 ### P5.1 — Catalogue de dix armes et onze reliques
 
@@ -269,7 +269,7 @@ Catalogue d’évolution défini dans le GDD :
 | Inferno Sprayer | Infernal Heart | Wildfire | Prototype présent ; QA historique ciblée. |
 | Crimson Daggers | Blood Chalice | Bloodstorm | Prototype présent ; dagues en éventail, alors que le GDD exige une tempête orbitale. |
 | Void Orb | Singularity | Event Horizon | Prototype d’orbe lente perçante; champ d’attraction natif. Les valeurs d’attaque, durée, rayon et force sont **[PROPOSÉES]**. |
-| Frost Nova | Frozen Crown | Absolute Zero | Définition catalogue présente ; gameplay absent. |
+| Frost Nova | Frozen Crown | Absolute Zero | Prototype présent : onde circulaire de dégâts et Chill natif ralentissant les ennemis ; Absolute Zero améliore les dégâts reçus sur cibles gelées et produit un shatter de zone à leur mort. Valeurs **[PROPOSÉES]** configurables. |
 | Minigun | Overdrive Engine | Redline | Prototype ajouté : tirs mono-cible, progression de cadence proposée, Redline accélère en continu ; valeurs configurables et **[PROPOSÉES]**. QA smoke ciblée. |
 | Meteor Staff | Celestial Eye | Starfall | Prototype présent : tir sur groupe et explosion bornée ; Celestial Eye augmente les zones et peut doubler l'impact au niveau 5 ; Starfall envoie 2 fragments par défaut (maximum configurable 8) vers des cibles proches. Tous les réglages **[PROPOSÉS]**. |
 | Sawblades | Magnetic Coil | Razorstorm | Prototype présent : lames natives ricochets sur cibles vivantes non déjà touchées ; dégâts, cadence, vitesse et nombre de rebonds **[PROPOSÉS]**. Magnetic Coil augmente la vitesse des projectiles, bonus linéaire **[PROPOSÉ]** ; Razorstorm ajoute un rebond. Effets d'homing et feedback par niveau restent à faire. |
@@ -287,6 +287,7 @@ Travail requis :
 - [x] **P5.1.6 — Meteor Staff + Celestial Eye → Starfall (prototype)** — l'attaque vise un groupe et inflige des dégâts d'explosion ; Starfall lance deux fragments par défaut, avec maximum configurable de huit, vers les cibles proches. Bonus de zone, chance de double impact et valeurs de dégâts **[PROPOSÉS]**.
 - [x] **P5.1.7 — Prism Laser + Prism Crystal → Spectrum Collapse (prototype)** — rayon visuel suit la cible prioritaire et dégâts répétés passent par les projectiles natifs ; l'évolution ajoute jusqu'à deux cibles secondaires configurables. Bonus de critique et valeurs d'attaque/progression **[PROPOSÉS]**.
 - [x] **P5.1.8 — Void Orb + Singularity → Event Horizon (prototype)** — projectiles lents persistants traversent des cibles distinctes et les attirent dans un champ natif borné ; Event Horizon augmente le rayon et la force. Réglages **[PROPOSÉS]**.
+- [x] **P5.1.9 — Frost Nova + Frozen Crown → Absolute Zero (prototype)** — pulsation de zone avec Chill natif (durée, ralentissement et vulnérabilité) ; Absolute Zero produit un shatter borné quand une cible gelée meurt. Le statut est inclus dans les snapshots et le drapeau d'événement ; aucune réaction élémentaire n'est activée. Tous les chiffres sont **[PROPOSÉS]** et configurables.
 - [ ] **P5.1.9 — Feedback Minigun/Toxic Cloud/Sawblades/Meteor Staff/Prism/Void Orb** — projectiles distincts présents ; retour visuel par niveau, animation du nuage persistant et feedback d’évolution restent à faire.
 - [ ] **P5.1.10 — Ciblage des armes**
   - [ ] Décrire la règle de ciblage de chaque arme avant son comportement visuel.

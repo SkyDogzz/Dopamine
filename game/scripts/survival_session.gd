@@ -159,6 +159,17 @@ const WAVE_HP_CAP := 12.0
 @export var void_orb_attraction_radius: float = 135.0
 @export var void_orb_attraction_speed: float = 85.0
 @export_range(0.0, 1.0) var singularity_control_per_level: float = 0.05
+@export_group("Prototype Frost Nova — proposed tuning")
+@export var frost_nova_cooldown: float = 3.0
+@export var frost_nova_damage: float = 8.0
+@export var frost_nova_radius: float = 145.0
+@export var frost_nova_duration_seconds: float = 0.12
+@export var frost_chill_duration_seconds: float = 2.0
+@export_range(0.0, 1.0) var frost_chill_speed_multiplier: float = 0.65
+@export_range(0.0, 1.0) var frozen_crown_chill_duration_per_level: float = 0.05
+@export var frozen_crown_vulnerability_at_level_five: float = 0.25
+@export var absolute_zero_shatter_radius: float = 76.0
+@export_range(0.0, 2.0) var absolute_zero_shatter_damage_multiplier: float = 0.75
 @export_group("Prototype Bloodstorm — proposed tuning")
 @export var bloodstorm_bleed_damage_per_tick: float = 2.0
 @export var bloodstorm_bleed_interval_seconds: float = 0.5
@@ -209,6 +220,7 @@ var _next_sawblades_time := 0.0
 var _next_meteor_time := 0.0
 var _next_prism_time := 0.0
 var _next_void_orb_time := 0.0
+var _next_frost_nova_time := 0.0
 var _prism_beams: Array[Dictionary] = []
 var _redline_fire_time := 0.0
 var _redline_target_id := Vector2i(-1, -1)
@@ -361,6 +373,12 @@ func _process(_delta: float) -> void:
 			"death":
 				kill_count += 1
 				var dead_target: Dictionary = event["target"]
+				if bool(event.get("target_was_chilled", false)) and loadout.weapon_level("frost_nova") >= 5 and loadout.relic_level("frozen_crown") > 0 and str(event.get("source_type", "")) != "absolute_zero":
+					var shatter_position := Vector2(float(event["position"]["x"]), float(event["position"]["y"]))
+					simulation.spawn_projectile("absolute_zero", shatter_position, Vector2.ZERO,
+							frost_nova_damage * absolute_zero_shatter_damage_multiplier,
+							_equipment_area(absolute_zero_shatter_radius), frost_nova_duration_seconds,
+							2.0, 0.5, 2.0, 0.0, 0.0, 0, 0.0, 0.0, true)
 				var dead_key := _entity_key(int(dead_target["index"]), int(dead_target["generation"]))
 				if _pandemic_poisoned_targets.has(dead_key) and not _pandemic_spread_targets.has(dead_key):
 					_pandemic_spread_targets[dead_key] = true
@@ -422,6 +440,7 @@ func _process(_delta: float) -> void:
 	_fire_meteor_staff(current_simulation_time, state["paused"])
 	_fire_prism_laser(current_simulation_time, state["paused"])
 	_fire_void_orb(current_simulation_time, state["paused"])
+	_fire_frost_nova(current_simulation_time, state["paused"])
 	if player_hp <= 0.0 and not run_over:
 		_finish_run(false)
 	player.controls_enabled = not state["paused"] and not run_over and not _chest_open and not _starting_weapon_choice_open
@@ -1203,6 +1222,33 @@ func _fire_void_orb(active_time: float, paused: bool) -> void:
 	if sequence > 0:
 		_next_void_orb_time = active_time + _effective_weapon_cooldown(void_orb_cooldown)
 
+func _fire_frost_nova(active_time: float, paused: bool) -> void:
+	var level: int = loadout.weapon_level("frost_nova")
+	if not weapon_enabled or level == 0 or paused or _chest_open or run_over or frost_nova_cooldown <= 0.0 or active_time < _next_frost_nova_time:
+		return
+	var evolved: bool = level >= 5 and loadout.relic_level("frozen_crown") > 0
+	var radius := _equipment_area(frost_nova_radius * (1.2 if level >= 3 else 1.0))
+	var duration := frost_chill_duration_seconds * (1.2 if level >= 4 else 1.0)
+	duration *= 1.0 + float(loadout.relic_level("frozen_crown")) * frozen_crown_chill_duration_per_level
+	var target_count := 0
+	for entity in _entities:
+		var components: Dictionary = entity["components"]
+		if components.get("IsProjectile", false) or components.get("IsXpOrb", false):
+			continue
+		var transform: Dictionary = components["Transform2D"]
+		var position := Vector2(float(transform["x"]), float(transform["y"]))
+		if player.global_position.distance_squared_to(position) <= radius * radius:
+			target_count += 1
+	if target_count == 0:
+		return
+	var projectile_type := "absolute_zero" if evolved else "frost_nova"
+	var damage := frost_nova_damage * (1.2 if level >= 2 else 1.0) * _persistent_damage_multiplier()
+	var vulnerability := 1.0 + frozen_crown_vulnerability_at_level_five if evolved else 1.0
+	if simulation.spawn_projectile(projectile_type, player.global_position, Vector2.ZERO, damage,
+			radius, frost_nova_duration_seconds, 2.0, 0.5, 2.0, 0.0, 0.0, 0, 0.0, 0.0,
+			true, duration, frost_chill_speed_multiplier, vulnerability) > 0:
+		_next_frost_nova_time = active_time + _effective_weapon_cooldown(frost_nova_cooldown * (0.8 if level >= 5 else 1.0))
+
 func _nearest_enemy_excluding(max_range: float, excluded: Array[Vector2i]) -> Dictionary:
 	var nearest: Dictionary = {}
 	var best_distance_squared := max_range * max_range
@@ -1409,6 +1455,20 @@ func _draw() -> void:
 			var center := Vector2(float(transform["x"]), float(transform["y"]))
 			var ring_color := Color(0.75, 0.46, 1.0, 0.22) if str(components["EnemyType"]) == "event_horizon" else Color(0.48, 0.3, 0.9, 0.14)
 			draw_arc(center, radius, 0.0, TAU, 48, ring_color, 1.5, true)
+	for entity in _entities:
+		var components: Dictionary = entity["components"]
+		if components.get("IsProjectile", false) and ["frost_nova", "absolute_zero"].has(str(components.get("EnemyType", ""))):
+			var projectile: Dictionary = components.get("Projectile", {})
+			var transform: Dictionary = components["Transform2D"]
+			var center := Vector2(float(transform["x"]), float(transform["y"]))
+			var radius := float(projectile.get("radius", 0.0))
+			var alpha := clampf(float(projectile.get("remaining_seconds", 0.0)) / maxf(frost_nova_duration_seconds, 0.01), 0.0, 1.0)
+			draw_circle(center, radius, Color(0.45, 0.83, 1.0, 0.10 * alpha))
+			draw_arc(center, radius, 0.0, TAU, 64, Color(0.72, 0.95, 1.0, 0.8 * alpha), 3.0, true)
+		elif components.has("Chill"):
+			var transform: Dictionary = components["Transform2D"]
+			var center := Vector2(float(transform["x"]), float(transform["y"]))
+			draw_arc(center, 12.0, 0.0, TAU, 24, Color(0.55, 0.85, 1.0, 0.65), 2.0, true)
 	for beam in _prism_beams:
 		var beam_color := Color(0.55, 0.95, 1.0, 0.78) if bool(beam["secondary"]) else Color(1.0, 0.92, 0.55, 0.9)
 		draw_line(beam["from"], beam["to"], beam_color, 5.0 if not beam["secondary"] else 3.0, true)
