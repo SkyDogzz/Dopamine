@@ -74,6 +74,8 @@ func _run() -> void:
 	await process_frame
 	if not await _verify_live_wave_clock():
 		return
+	if not await _verify_live_full_run():
+		return
 	print("Survival wave director smoke passed")
 	quit()
 
@@ -123,6 +125,81 @@ func _wait_for_wave(session: Node2D, expected_wave: int) -> bool:
 		if session.wave_director.wave >= expected_wave:
 			return true
 	return false
+
+func _verify_live_full_run() -> bool:
+	var session: Node2D = load("res://scenes/survival_session.tscn").instantiate()
+	session.skip_starting_weapon_choice = true
+	session.wave_duration_seconds = 0.05
+	session.enemy_spawn_interval = 1000.0
+	session.enemy_spawn_radius = 80.0
+	session.chest_collection_radius = 200.0
+	session.xp_collection_radius = 200.0
+	session.boss_placeholder_hp = 1.0
+	session.weapon_enabled = false
+	session.contact_damage_per_hit = 0.0
+	root.add_child(session)
+	var chosen_offers := [0]
+	session.chest_option_chosen.connect(func(_option_id: String) -> void: chosen_offers[0] += 1)
+	var treated_bosses: Dictionary = {}
+	var verified_boss_states: Dictionary = {}
+	var deadline := Time.get_ticks_msec() + 10000
+	while not session.run_over and Time.get_ticks_msec() < deadline:
+		var snapshot: Dictionary = session.simulation.snapshot()
+		for entity in snapshot["entities"]:
+			var components: Dictionary = entity["components"]
+			var enemy_type: String = components.get("EnemyType", "")
+			if enemy_type != "mid_boss" and enemy_type != "final_boss":
+				continue
+			var id: Dictionary = entity["id"]
+			var key := "%d:%d" % [id["index"], id["generation"]]
+			if not verified_boss_states.has(enemy_type):
+				var initial_active_time: float = session.player_active_time
+				var initial_wave_elapsed := float(session.wave_director.elapsed_in_wave)
+				var initial_hp: float = session.player_hp
+				while session.player_active_time <= initial_active_time and Time.get_ticks_msec() < deadline:
+					await process_frame
+				if session.player_active_time <= initial_active_time:
+					_fail("Active time and HP decay should continue during a boss fight")
+					return false
+				if not is_equal_approx(float(session.wave_director.elapsed_in_wave), initial_wave_elapsed):
+					_fail("The wave timer should remain stopped during a boss fight")
+					return false
+				if session.player_hp >= initial_hp:
+					_fail("HP decay should continue during a boss fight")
+					return false
+				verified_boss_states[enemy_type] = true
+			if treated_bosses.has(key):
+				continue
+			var sequence: int = session.simulation.apply_damage_over_time(
+				int(id["index"]), int(id["generation"]), 1.0, 0.01, 0.02
+			)
+			if sequence > 0:
+				treated_bosses[key] = true
+		if session._chest_open:
+			var choice: Button = session.get_node("HUD/ChestOverlay/ChestChoice/Content/Options/Choice0")
+			choice.pressed.emit()
+		await process_frame
+	if not session.run_over:
+		_fail("A live accelerated Survival run should reach the final result")
+		return false
+	if session.wave_director.state != session.WAVE_DIRECTOR_SCRIPT.State.VICTORY:
+		_fail("A live full run should defeat the final boss")
+		return false
+	if session.wave_director.wave != 24 or session.kill_count < 2:
+		_fail("A live full run should pass both bosses and finish at wave 24")
+		return false
+	if session._chest_open or not session._world_chests.is_empty() or chosen_offers[0] < 2:
+		_fail("A live victory should collect and resolve the boss chest choices")
+		return false
+	if verified_boss_states.size() != 2:
+		_fail("The live run should verify both boss fights")
+		return false
+	if session.player_active_time < 1.0:
+		_fail("A live run should account for elapsed simulation time")
+		return false
+	session.queue_free()
+	await process_frame
+	return true
 
 func _wait_for_entity_type(session: Node2D, expected_type: String) -> bool:
 	var deadline := Time.get_ticks_msec() + 1000
