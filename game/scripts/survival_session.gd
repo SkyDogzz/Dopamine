@@ -69,6 +69,11 @@ const WAVE_DIRECTOR_SCRIPT := preload("res://scripts/survival_wave_director.gd")
 const ARMORLESS_RUN_STATE_SCRIPT := preload("res://scripts/armorless_run_state.gd")
 const EQUIPMENT_GENERATOR_SCRIPT := preload("res://scripts/equipment_generator.gd")
 const LOADOUT_SCRIPT := preload("res://scripts/survival_loadout.gd")
+const XP_LEVEL_STAT_ROTATION := [
+	"damage_pct", "attack_speed_pct", "critical_chance_pct", "critical_damage_pct",
+	"max_hp", "move_speed_pct", "kill_healing_pct", "area_pct",
+	"cooldown_reduction_pct", "xp_pct", "pickup_radius_pct", "projectile_speed_pct",
+]
 const WEAPON_PROGRESSION_IDS := ["lightning_conductor", "inferno_sprayer", "crimson_daggers", "void_orb",
 		"frost_nova", "minigun", "meteor_staff", "sawblades", "toxic_cloud", "prism_laser"]
 const CHEST_DIRECTOR_SCRIPT := preload("res://scripts/survival_chest_director.gd")
@@ -301,6 +306,8 @@ var _dopamine_core_attacks: Dictionary = {}
 var player_level := 1
 var player_xp := 0.0
 var player_xp_to_next := 10.0
+var _xp_run_stat_bonuses: Dictionary = {}
+var _xp_level_bonus_count := 0
 var run_over := false
 var _victory_pending := false
 var kill_count := 0
@@ -657,7 +664,7 @@ func _enhance_armorless_equipment(instance_id: String, stat_id: String) -> void:
 	var previous_max_hp_bonus := _equipment_bonus("max_hp")
 	var result: Dictionary = armorless_run_state.enhance_equipment(instance_id, stat_id)
 	if result.get("ok", false):
-		player_max_hp += _equipment_bonus("max_hp") - previous_max_hp_bonus
+		player_max_hp += (_equipment_bonus("max_hp") - previous_max_hp_bonus) * (1.0 + _xp_run_stat_bonus("max_hp") / 100.0)
 		player_hp = minf(player_hp, player_max_hp)
 		_refresh_persistent_bonuses()
 	var message := ""
@@ -1343,7 +1350,7 @@ func _refresh_hud(state: Dictionary) -> void:
 		_set_run_status("IN RUN", Color("#48E69B"))
 	if _run_stat_hub != null and (_run_stat_hub_dirty or \
 			(_run_stat_hub.detail_open and player_active_time >= _next_run_stat_hub_refresh_at)):
-		_run_stat_hub.update_stats(_run_stat_breakdown(), "XP LEVEL %d  ·  AUTO BONUS NOT CONFIGURED" % player_level)
+		_run_stat_hub.update_stats(_run_stat_breakdown(), "XP LEVEL %d  ·  RUN BONUSES %d" % [player_level, _xp_level_bonus_count])
 		_run_stat_hub_dirty = false
 		_next_run_stat_hub_refresh_at = player_active_time + 0.25
 
@@ -1355,7 +1362,7 @@ func _run_stat_breakdown() -> Dictionary:
 	]
 	var stats := {}
 	for stat_id in stat_ids:
-		var run_value: float = loadout.global_relic_bonus(stat_id) if loadout != null else 0.0
+		var run_value: float = (loadout.global_relic_bonus(stat_id) if loadout != null else 0.0) + _xp_run_stat_bonus(stat_id)
 		var equipment_value: float = _equipment_bonus(stat_id)
 		var achievement_value := float(_cached_achievement_stat_bonuses.get(stat_id, 0.0))
 		var skill_value := float(_cached_skill_stat_bonuses.get(stat_id, 0.0))
@@ -1374,8 +1381,8 @@ func _run_stat_breakdown() -> Dictionary:
 				label = "DAMAGE"
 			"move_speed_pct":
 				if _has_unique_effect("elite_haste") and player_active_time < _elite_haste_expires_at:
-					run_value = 15.0
-					source_text["run"] = "+15.0%"
+					run_value += 15.0
+					source_text["run"] = "%+.1f%%" % run_value
 				total_value = player.move_speed if is_instance_valid(player) else _base_player_move_speed
 				total_text = "%.0f px/s" % total_value
 				compact = "%.0f" % total_value
@@ -1422,7 +1429,8 @@ func _run_stat_breakdown() -> Dictionary:
 			"area_pct": label = "AREA"
 			"projectile_speed_pct": label = "PROJECTILE SPEED"
 			"kill_healing_pct":
-				run_value = float(loadout.relic_level("blood_chalice")) * blood_chalice_heal_per_level * 100.0 if loadout != null else 0.0
+				if loadout != null:
+					run_value += float(loadout.relic_level("blood_chalice")) * blood_chalice_heal_per_level * 100.0
 				total_value = ((1.0 + run_value / 100.0) * (1.0 + equipment_value / 100.0) - 1.0) * 100.0
 				total_text = "%+.1f%%" % total_value
 				compact = total_text
@@ -1541,7 +1549,7 @@ func _collect_nearby_xp_orbs(state: Dictionary) -> void:
 			_pending_xp_orbs[key] = sequence
 
 func _xp_pickup_radius(current_simulation_time: float) -> float:
-	var pickup_radius_bonus_pct: float = _equipment_bonus("pickup_radius_pct") + loadout.global_relic_bonus("pickup_radius_pct")
+	var pickup_radius_bonus_pct: float = _equipment_bonus("pickup_radius_pct") + loadout.global_relic_bonus("pickup_radius_pct") + _xp_run_stat_bonus("pickup_radius_pct")
 	var pickup_radius := xp_collection_radius * (1.0 + pickup_radius_bonus_pct / 100.0)
 	if loadout.relic_level("magnet_heart") >= loadout.MAX_LEVEL and \
 			current_simulation_time < _magnet_heart_impulse_expires_at:
@@ -1550,14 +1558,33 @@ func _xp_pickup_radius(current_simulation_time: float) -> float:
 
 func _add_xp(amount: float) -> void:
 	player_xp += amount
-	var previous_level := player_level
+	var leveled_up := false
 	while player_xp >= player_xp_to_next:
 		player_xp -= player_xp_to_next
 		player_level += 1
 		player_xp_to_next = xp_base_to_next_level + xp_growth_per_level * float(player_level - 1)
-	if player_level > previous_level:
+		_apply_xp_level_stat_bonus()
+		leveled_up = true
+	if leveled_up:
 		_run_stat_hub_dirty = true
-		Sfx.play("level_up")
+
+func _apply_xp_level_stat_bonus() -> void:
+	var stat_id: String = XP_LEVEL_STAT_ROTATION[_xp_level_bonus_count % XP_LEVEL_STAT_ROTATION.size()]
+	var previous_value := float(_xp_run_stat_bonuses.get(stat_id, 0.0))
+	_xp_run_stat_bonuses[stat_id] = previous_value + 1.0
+	_xp_level_bonus_count += 1
+	if stat_id == "max_hp":
+		var health_ratio := player_hp / player_max_hp if player_max_hp > 0.0 else 1.0
+		player_max_hp *= 1.01
+		player_hp = player_max_hp * health_ratio
+	elif stat_id == "move_speed_pct":
+		_refresh_player_move_speed()
+
+func _xp_run_stat_bonus(stat_id: String) -> float:
+	var bonus_count := float(_xp_run_stat_bonuses.get(stat_id, 0.0))
+	if stat_id == "max_hp":
+		return (pow(1.01, bonus_count) - 1.0) * 100.0
+	return bonus_count
 
 func open_chest(options: Array) -> bool:
 	var family := ""
@@ -1668,7 +1695,7 @@ func _choose_armorless_draft_option(option_id: String) -> void:
 	if not armorless_run_state.select_draft_option(selected_index):
 		_chest_choice.present(_active_chest_options, _active_chest_options.size(), _active_chest_heading)
 		return
-	player_max_hp += _equipment_bonus("max_hp") - previous_max_hp_bonus
+	player_max_hp += (_equipment_bonus("max_hp") - previous_max_hp_bonus) * (1.0 + _xp_run_stat_bonus("max_hp") / 100.0)
 	player_hp = minf(player_hp, player_max_hp)
 	_refresh_persistent_bonuses()
 	_chest_open = false
@@ -2486,7 +2513,7 @@ func _fire_prism_laser(active_time: float, paused: bool) -> void:
 		return
 	var level: int = loadout.weapon_level("prism_laser")
 	var range_multiplier := _weapon_level_multiplier("prism_laser", "range_multiplier", level)
-	var area_multiplier: float = 1.0 + (_equipment_bonus("area_pct") + loadout.global_relic_bonus("area_pct")) / 100.0
+	var area_multiplier: float = 1.0 + (_equipment_bonus("area_pct") + loadout.global_relic_bonus("area_pct") + _xp_run_stat_bonus("area_pct")) / 100.0
 	var laser_range := SURVIVAL_TARGETING.weapon_range(prism_laser_range, range_multiplier, area_multiplier)
 	var target := _prism_cluster_target(laser_range)
 	if target.is_empty():
@@ -2567,7 +2594,7 @@ func _fire_frost_nova(active_time: float, paused: bool) -> void:
 	if not weapon_enabled or level == 0 or paused or _chest_open or run_over or frost_nova_cooldown <= 0.0 or active_time < _next_frost_nova_time:
 		return
 	var evolved: bool = loadout.is_evolved("frost_nova")
-	var area_multiplier: float = 1.0 + (_equipment_bonus("area_pct") + loadout.global_relic_bonus("area_pct")) / 100.0
+	var area_multiplier: float = 1.0 + (_equipment_bonus("area_pct") + loadout.global_relic_bonus("area_pct") + _xp_run_stat_bonus("area_pct")) / 100.0
 	var radius := SURVIVAL_TARGETING.weapon_range(frost_nova_radius,
 		_weapon_level_multiplier("frost_nova", "area_multiplier", level), area_multiplier)
 	var duration := frost_chill_duration_seconds * _weapon_level_multiplier("frost_nova", "chill_duration_multiplier", level)
@@ -2678,7 +2705,7 @@ func _spread_pandemic(origin: Vector2, entities: Array) -> void:
 	_pandemic_bursts.append({"position": origin, "remaining": pandemic_feedback_seconds})
 
 func _persistent_damage_multiplier() -> float:
-	return _cached_persistent_damage_multiplier * (1.0 + loadout.global_relic_bonus("damage_pct") / 100.0)
+	return _cached_persistent_damage_multiplier * (1.0 + (loadout.global_relic_bonus("damage_pct") + _xp_run_stat_bonus("damage_pct")) / 100.0)
 
 func _weapon_combo_damage_multiplier(weapon_id: String) -> float:
 	return 1.25 if loadout.is_evolved(weapon_id) else 1.0
@@ -2730,37 +2757,37 @@ func _equipment_bonus(stat_id: String) -> float:
 	return bonus
 
 func _equipment_kill_healing(base_healing: float) -> float:
-	return base_healing * (1.0 + _equipment_bonus("kill_healing_pct") / 100.0)
+	return base_healing * (1.0 + (_equipment_bonus("kill_healing_pct") + _xp_run_stat_bonus("kill_healing_pct")) / 100.0)
 
 func _equipment_xp_value(base_xp: float) -> float:
-	return base_xp * (1.0 + _equipment_bonus("xp_pct") / 100.0)
+	return base_xp * (1.0 + (_equipment_bonus("xp_pct") + _xp_run_stat_bonus("xp_pct")) / 100.0)
 
 func _refresh_player_move_speed() -> void:
 	var haste_multiplier := 1.15 if _has_unique_effect("elite_haste") and player_active_time < _elite_haste_expires_at else 1.0
-	var next_speed := _base_player_move_speed * (1.0 + (_equipment_bonus("move_speed_pct") / 100.0) + _cached_skill_move_speed_pct) * haste_multiplier
+	var next_speed := _base_player_move_speed * (1.0 + (_equipment_bonus("move_speed_pct") + _xp_run_stat_bonus("move_speed_pct")) / 100.0 + _cached_skill_move_speed_pct) * haste_multiplier
 	if not is_equal_approx(player.move_speed, next_speed):
 		_run_stat_hub_dirty = true
 	player.move_speed = next_speed
 
 func _effective_weapon_cooldown(base_cooldown: float) -> float:
-	var speed_multiplier: float = 1.0 + (_equipment_bonus("attack_speed_pct") + loadout.global_relic_bonus("attack_speed_pct")) / 100.0
-	var cooldown_multiplier: float = maxf(0.1, 1.0 - (_equipment_bonus("cooldown_reduction_pct") + loadout.global_relic_bonus("cooldown_reduction_pct")) / 100.0)
+	var speed_multiplier: float = 1.0 + (_equipment_bonus("attack_speed_pct") + loadout.global_relic_bonus("attack_speed_pct") + _xp_run_stat_bonus("attack_speed_pct")) / 100.0
+	var cooldown_multiplier: float = maxf(0.1, 1.0 - (_equipment_bonus("cooldown_reduction_pct") + loadout.global_relic_bonus("cooldown_reduction_pct") + _xp_run_stat_bonus("cooldown_reduction_pct")) / 100.0)
 	return base_cooldown * cooldown_multiplier / speed_multiplier
 
 func _roll_equipment_critical_multiplier() -> float:
 	var chance := _critical_chance()
 	if randf() * 100.0 < chance:
-		return 1.5 + (_equipment_bonus("critical_damage_pct") + loadout.global_relic_bonus("critical_damage_pct")) / 100.0
+		return 1.5 + (_equipment_bonus("critical_damage_pct") + loadout.global_relic_bonus("critical_damage_pct") + _xp_run_stat_bonus("critical_damage_pct")) / 100.0
 	return 1.0
 
 func _critical_chance() -> float:
-	return clampf(_equipment_bonus("critical_chance_pct") + _cached_skill_critical_chance_pct, 0.0, 100.0)
+	return clampf(_equipment_bonus("critical_chance_pct") + _cached_skill_critical_chance_pct + _xp_run_stat_bonus("critical_chance_pct"), 0.0, 100.0)
 
 func _equipment_projectile_speed(base_speed: float) -> float:
-	return base_speed * (1.0 + (_equipment_bonus("projectile_speed_pct") + loadout.global_relic_bonus("projectile_speed_pct")) / 100.0)
+	return base_speed * (1.0 + (_equipment_bonus("projectile_speed_pct") + loadout.global_relic_bonus("projectile_speed_pct") + _xp_run_stat_bonus("projectile_speed_pct")) / 100.0)
 
 func _equipment_area(base_area: float) -> float:
-	return base_area * (1.0 + (_equipment_bonus("area_pct") + loadout.global_relic_bonus("area_pct")) / 100.0)
+	return base_area * (1.0 + (_equipment_bonus("area_pct") + loadout.global_relic_bonus("area_pct") + _xp_run_stat_bonus("area_pct")) / 100.0)
 
 func _has_unique_effect(effect_id: String) -> bool:
 	return _cached_unique_effects.has(effect_id)

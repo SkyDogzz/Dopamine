@@ -55,11 +55,9 @@ Boucle Survival : choisir difficulté et arme initiale → survivre à une vague
 
 [VALIDÉ] La durée de base est de 24 × 30 secondes = 12 minutes de combat actif, plus les pauses de boss et les choix. Objectif d'une run : 10–15 minutes. Le timer de vague s’arrête durant les boss ; le HP decay continue pendant le gameplay et se suspend durant les vraies pauses, notamment les choix de coffre. La possibilité de poursuivre en Endless après la victoire finale reste une proposition ; les règles d’accès exactes d’Endless standard sont [OUVERTES].
 
-[PROPOSÉ] Chaque niveau d'XP donne un petit bonus automatique de stats, sans écran de sélection. La courbe d'XP et les bonus par niveau restent à spécifier.
+[VALIDÉ — EXTENSION DU 2026-10-16] Chaque montée de niveau d'XP accorde automatiquement un bonus, à partir du passage du niveau 1 au niveau 2. Une rotation fixe, commune aux runs, suit cet ordre puis recommence : dégâts %, vitesse d'attaque %, chance critique %, dégâts critiques %, PV maximum, vitesse de déplacement %, soin par élimination %, zone %, réduction de cooldown %, gain d'XP %, rayon de collecte XP % et vitesse projectile %. Chaque stat en pourcentage gagne 1 point de pourcentage à son tour ; le PV maximum est multiplié par 1,01 à son tour et les PV actuels sont ajustés pour conserver leur ratio. Ces bonus ne persistent pas entre les runs. Aucun choix ni retour ponctuel n'accompagne le gain ; les contributions sont consultables dans les statistiques de run.
 
-[VALIDÉ — EXTENSION DU 2026-10-16] À chaque niveau, la progression automatique d'XP améliore une statistique selon une rotation fixe, commune à toutes les runs. La rotation couvre les statistiques de combat et utilitaires qui influencent directement la run. Aucun choix, toast, animation ou autre retour ponctuel n'est affiché lors du gain ; le bonus reste consultable dans les statistiques de run.
-
-[À DÉFINIR AVANT CALIBRAGE] Liste et ordre exacts des statistiques de la rotation, valeur de chaque bonus, caps éventuels et interaction chiffrée avec les autres sources. Tant que ces paramètres ne sont pas décidés, le code ne doit pas présenter de valeurs comme validées.
+[OUVERT] Les caps d'équilibrage restent à mesurer ; les plafonds déjà appliqués par le combat (chance critique et réduction de cooldown) restent en vigueur.
 
 <a id="3"></a>
 

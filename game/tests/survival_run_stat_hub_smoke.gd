@@ -68,8 +68,8 @@ func _run() -> void:
 	if not hub.detail_open or bool(state["paused"]) or float(state["simulation_time"]) <= start_time:
 		_fail("Opening run stats must leave gameplay and the simulation clock running: %s / %s / %s" % [hub.detail_open, state["paused"], state["simulation_time"]])
 		return
-	if not hub.get_node("Detail/Content/XPStatus").text.contains("NOT CONFIGURED"):
-		_fail("The detail panel should make the unconfigured XP stat bonus explicit")
+	if not hub.get_node("Detail/Content/XPStatus").text.contains("RUN BONUSES 0"):
+		_fail("The detail panel should show the current XP run bonus count")
 		return
 	session._unhandled_input(tab)
 	if hub.detail_open:

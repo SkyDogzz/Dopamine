@@ -101,10 +101,10 @@ func _build_detail_panel() -> void:
 	_close_button.add_theme_color_override("font_focus_color", CYAN)
 	_close_button.pressed.connect(func() -> void: set_detail_open(false))
 	header.add_child(_close_button)
-	_xp_status = _label("XP LEVEL 1  ·  AUTO BONUS NOT CONFIGURED", 8, YELLOW)
+	_xp_status = _label("XP LEVEL 1  ·  RUN BONUSES 0", 8, YELLOW)
 	_xp_status.name = "XPStatus"
 	content.add_child(_xp_status)
-	var source_legend := _label("RUN     GEAR     ACH     TREE", 7, MUTED)
+	var source_legend := _label("RUN/XP     GEAR     ACH     TREE", 7, MUTED)
 	content.add_child(source_legend)
 	_detail_scroll = ScrollContainer.new()
 	_detail_scroll.name = "StatsScroll"
@@ -137,7 +137,7 @@ func _stat_row(stat: Dictionary) -> Control:
 		var source_value := float(stat.get(source, 0.0))
 		if is_zero_approx(source_value):
 			continue
-		var source_name: String = {"run": "R", "equipment": "G", "achievements": "A", "skill_tree": "T"}[source]
+		var source_name: String = {"run": "R/XP", "equipment": "G", "achievements": "A", "skill_tree": "T"}[source]
 		var source_color: Color = {"run": CYAN, "equipment": MAGENTA, "achievements": YELLOW, "skill_tree": GREEN}[source]
 		contributions.add_child(_label("%s %s" % [source_name, str(stat.get("source_text", {}).get(source, "0"))], 7, source_color))
 	return column
