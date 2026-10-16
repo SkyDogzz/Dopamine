@@ -21,6 +21,10 @@ func _run() -> void:
 	var action_pause: Button = sandbox.get_node("Shell/Content/MainColumn/Toolbar/Row/PauseButton")
 	var action_step: Button = sandbox.get_node("Shell/Content/MainColumn/Toolbar/Row/StepButton")
 	var action_reset: Button = sandbox.get_node("Shell/Content/MainColumn/Toolbar/Row/ResetButton")
+	var state_badge: PanelContainer = sandbox.get_node("Shell/Header/StateBadge")
+	var state_label: Label = state_badge.get_node("StateLabel")
+	assert(state_badge.custom_minimum_size.x >= 140 and state_label.text.contains("NO SAVE"), "Sandbox should group its isolated simulation state in a clear badge")
+	assert(sandbox.get_node("Shell/Header/Title").get_theme_font_size("font_size") == 11, "Sandbox title should retain its intended readable heading size")
 	assert(action_pause.get_theme_color("font_color").to_html(false) == "37e8f5", "Pause/resume should use the cyan action accent")
 	assert(action_step.get_theme_color("font_color").to_html(false) == "ffd447", "Single-step should use the yellow action accent")
 	assert(action_reset.get_theme_color("font_color").to_html(false) == "ff7181", "Reset should use the danger accent")
@@ -117,6 +121,9 @@ func _run() -> void:
 	state = await _wait_for_paused(sandbox.simulation, true)
 	assert(state["paused"], "Sandbox UI should pause the simulation")
 	sandbox._refresh()
+	var state_badge_style := state_badge.get_theme_stylebox("panel") as StyleBoxFlat
+	assert(state_label.text == "PAUSED  /  NO SAVE" and state_badge_style.border_color.to_html(false) == "ffd166" and \
+		state_badge_style.border_width_left >= 2, "Sandbox paused state should use its amber status badge")
 	state = sandbox.simulation.snapshot()
 	var time_before_step := float(state["simulation_time"])
 	var speed_select: OptionButton = sandbox.get_node("Shell/Content/MainColumn/Toolbar/Row/SpeedSelect")

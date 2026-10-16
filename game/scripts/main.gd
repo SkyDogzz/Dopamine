@@ -15,7 +15,8 @@ var _pending_tuning_sequence := 0
 var _pending_reset_sequence := 0
 
 @onready var _view = $Shell/Content/MainColumn/SimulationView
-@onready var _state_label: Label = $Shell/Header/StateLabel
+@onready var _state_badge: PanelContainer = $Shell/Header/StateBadge
+@onready var _state_label: Label = $Shell/Header/StateBadge/StateLabel
 @onready var _survival_button: Button = $Shell/Header/SurvivalButton
 @onready var _home_button: Button = $Shell/Header/HomeButton
 @onready var _pause_button: Button = $Shell/Content/MainColumn/Toolbar/Row/PauseButton
@@ -26,14 +27,27 @@ var _pending_reset_sequence := 0
 @onready var _count: SpinBox = $Shell/Content/SidePanel/Sections/SpawnPanel/SpawnForm/TypeRow/CountSpin
 @onready var _entity_info: RichTextLabel = $Shell/Content/SidePanel/Sections/InspectorPanel/InspectorForm/EntityInfo
 @onready var _log_text: RichTextLabel = $Shell/Content/SidePanel/Sections/LogPanel/LogForm/LogText
+var _state_badge_style: StyleBoxFlat
 
 func _ready() -> void:
+	_state_badge_style = StyleBoxFlat.new()
+	_state_badge_style.bg_color = Color("#10172B")
+	_state_badge_style.border_color = COLOR_CYAN
+	_state_badge_style.set_border_width_all(1)
+	_state_badge_style.border_width_left = 2
+	_state_badge_style.set_corner_radius_all(0)
+	_state_badge_style.content_margin_left = 5.0
+	_state_badge_style.content_margin_top = 2.0
+	_state_badge_style.content_margin_right = 5.0
+	_state_badge_style.content_margin_bottom = 2.0
+	_state_badge.add_theme_stylebox_override("panel", _state_badge_style)
 	_survival_button.pressed.connect(_on_survival_pressed)
 	_home_button.pressed.connect(_on_home_pressed)
 	_home_button.grab_focus()
 	simulation = ClassDB.instantiate("CombatSimulation")
 	if simulation == null:
 		_state_label.text = "SIMULATION EXTENSION UNAVAILABLE"
+		_set_state_accent(COLOR_PINK)
 		push_error("CombatSimulation GDExtension class is unavailable")
 		return
 
@@ -117,7 +131,7 @@ func _refresh() -> void:
 		_pending_tuning_sequence = 0
 	var paused: bool = state["paused"]
 	_state_label.text = "PAUSED  /  NO SAVE" if paused else "RUNNING  /  NO SAVE"
-	_state_label.add_theme_color_override("font_color", COLOR_AMBER if paused else COLOR_CYAN)
+	_set_state_accent(COLOR_AMBER if paused else COLOR_CYAN)
 	_pause_button.text = "RESUME" if paused else "PAUSE"
 	_step_button.disabled = not paused
 	_select_speed(float(state["speed_multiplier"]))
@@ -194,6 +208,7 @@ func _on_pause_pressed() -> void:
 func _on_step_pressed() -> void:
 	if simulation.step(_step_duration.value) == 0:
 		_state_label.text = "STEP REJECTED"
+		_set_state_accent(COLOR_PINK)
 
 func _on_speed_selected(index: int) -> void:
 	simulation.set_speed(float(_speed_select.get_item_metadata(index)))
@@ -231,6 +246,7 @@ func _on_spawn_pressed() -> void:
 	var hp: float = $Shell/Content/SidePanel/Sections/SpawnPanel/SpawnForm/HealthRow/HealthSpin.value
 	if simulation.spawn(entity_type, int(_count.value), position, hp, velocity) == 0:
 		_state_label.text = "SPAWN REJECTED"
+		_set_state_accent(COLOR_PINK)
 
 func _on_kill_all_pressed() -> void:
 	simulation.kill_all()
@@ -256,6 +272,7 @@ func _on_apply_status_pressed() -> void:
 			form.get_node("StatusDamageSpin").value, form.get_node("StatusIntervalSpin").value,
 			form.get_node("StatusDurationSpin").value) == 0:
 		_state_label.text = "STATUS REJECTED"
+		_set_state_accent(COLOR_PINK)
 	_refresh()
 
 func _on_apply_tuning_pressed() -> void:
@@ -275,3 +292,7 @@ func _on_apply_tuning_pressed() -> void:
 	_pending_tuning_sequence = sequence
 	status.text = "TUNING QUEUED — TARGET (0, 0)"
 	status.add_theme_color_override("font_color", COLOR_AMBER)
+
+func _set_state_accent(color: Color) -> void:
+	_state_label.add_theme_color_override("font_color", color)
+	_state_badge_style.border_color = color

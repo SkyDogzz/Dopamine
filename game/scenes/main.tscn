@@ -44,9 +44,8 @@ theme_override_constants/separation = 7
 [node name="Title" type="Label" parent="Shell/Header"]
 layout_mode = 2
 theme_type_variation = "PixelHeading"
-theme_override_font_sizes/font_size = 8
-text = "DOPAMINE  /  SANDBOX DEV"
 theme_override_font_sizes/font_size = 11
+text = "DOPAMINE  /  SANDBOX DEV"
 
 [node name="SurvivalButton" type="Button" parent="Shell/Header"]
 custom_minimum_size = Vector2(95, 19)
@@ -63,9 +62,16 @@ text = "ACCUEIL"
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="StateLabel" type="Label" parent="Shell/Header"]
+[node name="StateBadge" type="PanelContainer" parent="Shell/Header"]
+custom_minimum_size = Vector2(150, 22)
 layout_mode = 2
+
+[node name="StateLabel" type="Label" parent="Shell/Header/StateBadge"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 8
 text = "PAUSED"
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="Content" type="HSplitContainer" parent="Shell"]
 layout_mode = 2
