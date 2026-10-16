@@ -29,6 +29,9 @@ func _run() -> void:
 		if not bounds.encloses(modal):
 			_fail("Chest panel must fit %s gameplay viewport: %s" % [size, modal])
 			return
+		if modal.get_center().distance_to(bounds.get_center()) > 1.0:
+			_fail("Chest panel should be centered in the %s gameplay viewport: %s" % [size, modal])
+			return
 		for button in choice.get_node("Content/Options").get_children():
 			if not bounds.encloses(button.get_global_rect()) or button.size.y > 80.0:
 				_fail("Chest option must fit %s and remain compact: %s" % [size, button.get_global_rect()])
