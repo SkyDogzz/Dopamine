@@ -25,6 +25,9 @@ func _run() -> void:
 	if player_sprite.texture == null or not player_sprite.texture.resource_path.ends_with("player_cyan.png"):
 		_fail("The Survival player should use the generated pixel-art sprite")
 		return
+	if player_sprite.texture.get_width() != 32 or player_sprite.texture.get_height() != 32 or player_sprite.scale != Vector2.ONE:
+		_fail("The 32x32 Art Bible player sprite should render at native logical size")
+		return
 	var choice_buttons: VBoxContainer = current_scene.get_node("HUD/ChestOverlay/ChestChoice/Content/Options")
 	for button in choice_buttons.get_children():
 		if button.icon == null:
