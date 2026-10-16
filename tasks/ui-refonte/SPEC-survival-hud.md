@@ -8,6 +8,7 @@
 - **[VALIDÉ]** Un coffre distingue explicitement arme et relique; chaque choix décrit son effet. Choisir un coffre suspend la simulation et ses horloges.
 - **[VALIDÉ]** Le résultat de run distingue victoire et défaite, présente résumé/récompenses disponibles, et ne reprend pas la simulation terminée.
 - **[PROPOSÉ]** Réorganiser les composants existants en une hiérarchie compacte et persistante : santé/XP et progression de vague en premier, puis état de run, boss et équipement de run.
+- **[PROPOSÉ]** Pour tenir dans le viewport logique 640×360 tout en respectant le HUD minimal dans les coins **[VALIDÉ]**, placer HP/XP/armes dans une carte à gauche et temps/vague/difficulté/état dans une carte à droite. Les dimensions exactes sont un choix d’implémentation et restent à valider visuellement.
 - **[PROPOSÉ]** Conserver seulement les informations déjà produites par les systèmes Survival. Aucun nouveau compteur, bonus ou comportement de combat n’est inventé pour remplir l’interface.
 - **[OUVERT]** Wireframe final, affichage du nombre d’ennemis et réglages VFX restent ouverts dans le GDD; ce module ne les tranche pas.
 

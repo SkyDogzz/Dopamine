@@ -11,7 +11,7 @@ func _run() -> void:
 	session.wave_spawning_enabled = false
 	root.add_child(session)
 	await process_frame
-	var difficulty: Label = session.get_node_or_null("HUD/RunPanel/RunInfo/StatusRow/MetaPanel/DifficultyValue")
+	var difficulty: Label = session.get_node_or_null("HUD/MetaPanel/MetaRow/DifficultyValue")
 	if difficulty == null:
 		_fail("The run HUD should expose the selected difficulty")
 		return
@@ -30,8 +30,8 @@ func _run() -> void:
 	session._refresh_hud({"paused": false})
 	if not session.get_node("HUD/RunPanel/RunInfo/StatusRow/HPValue").text.contains("SHIELD 6") or \
 		session.get_node("HUD/RunPanel/RunInfo/StatusRow/XPValue").text != "LV 2  XP 5 / 20" or \
-		session.get_node("HUD/RunPanel/RunInfo/StatusRow/MetaPanel/TimeValue").text != "01:03" or \
-		not session.get_node("HUD/RunPanel/RunInfo/StatusRow/MetaPanel/WaveValue").text.contains("WAVE 04") or \
+		session.get_node("HUD/MetaPanel/MetaRow/TimeValue").text != "01:03" or \
+		not session.get_node("HUD/MetaPanel/MetaRow/WaveValue").text.contains("WAVE 04") or \
 		session.get_node("HUD/RunPanel/RunInfo/LoadoutRow/LoadoutLabel").text != "LC Lv1" or \
 		session.get_node("HUD/RunPanel/RunInfo/StatusRow/HPBar").value != 42.0 or \
 		session.get_node("HUD/RunPanel/RunInfo/StatusRow/XPBar").value != 5.0:
@@ -59,18 +59,24 @@ func _run() -> void:
 		_fail("The HUD should show an evolution marker from the current run loadout")
 		return
 	var original_size: Vector2i = root.size
-	for size in [Vector2i(960, 600), Vector2i(1280, 800), Vector2i(1600, 900)]:
+	for size in [Vector2i(640, 360), Vector2i(960, 600), Vector2i(1280, 720), Vector2i(1600, 900), Vector2i(1920, 1080)]:
 		root.size = size
 		await process_frame
-		var bounds := Rect2(Vector2.ZERO, Vector2(size))
+		var bounds := Rect2(Vector2.ZERO, session.get_viewport().get_visible_rect().size)
 		var panel_rect := (session.get_node("HUD/RunPanel") as Control).get_global_rect()
-		if not bounds.encloses(panel_rect):
+		var meta_rect := (session.get_node("HUD/MetaPanel") as Control).get_global_rect()
+		if not bounds.encloses(panel_rect) or not bounds.encloses(meta_rect):
 			_fail("The run HUD should fit viewport %s, got %s" % [size, panel_rect])
 			return
-		for row_path in ["HUD/RunPanel/RunInfo/StatusRow", "HUD/RunPanel/RunInfo/LoadoutRow"]:
+		if panel_rect.size.x > bounds.size.x * 0.45 or panel_rect.end.x > bounds.size.x * 0.45 or \
+			meta_rect.position.x < bounds.size.x * 0.55:
+			_fail("Run status and metadata should stay in separate screen corners at viewport %s (visible %s): %s / %s" % [size, bounds.size, panel_rect, meta_rect])
+			return
+		for row_path in ["HUD/RunPanel/RunInfo/StatusRow", "HUD/RunPanel/RunInfo/LoadoutRow", "HUD/MetaPanel/MetaRow"]:
 			var row := session.get_node(row_path) as HBoxContainer
+			var row_bounds := panel_rect if row_path.begins_with("HUD/RunPanel") else meta_rect
 			for child in row.get_children():
-				if not panel_rect.encloses((child as Control).get_global_rect()):
+				if not row_bounds.encloses((child as Control).get_global_rect()):
 					_fail("HUD child %s should fit viewport %s" % [child.name, size])
 					return
 	root.size = original_size

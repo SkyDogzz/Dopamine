@@ -23,9 +23,9 @@ func _run() -> void:
 		return
 	var hud: Control = session.get_node("HUD/RunPanel")
 	var hud_rect := hud.get_global_rect()
-	var meta: Control = session.get_node("HUD/RunPanel/RunInfo/StatusRow/MetaPanel")
-	if hud_rect.position.x > 9.0 or hud_rect.end.x < 631.0 or meta.get_global_rect().position.x < 200.0:
-		_fail("Run HUD should be one full-width bar with run metadata aligned on the right")
+	var meta_rect := (session.get_node("HUD/MetaPanel") as Control).get_global_rect()
+	if hud_rect.position.x > 9.0 or hud_rect.end.x > 256.0 or meta_rect.position.x < 352.0 or meta_rect.end.x < 631.0:
+		_fail("Run HUD status and metadata should occupy separate screen corners")
 		return
 	for position in [Vector2(80, 20), Vector2(-60, -30), Vector2(-90, 40)]:
 		if session.simulation.spawn_enemy("chaser", 1, position, Vector2.ZERO) <= 0:

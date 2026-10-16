@@ -307,14 +307,14 @@ var _pending_summon_sequences: Dictionary = {}
 
 @onready var _hp_value: Label = $HUD/RunPanel/RunInfo/StatusRow/HPValue
 @onready var _hp_bar: ProgressBar = $HUD/RunPanel/RunInfo/StatusRow/HPBar
-@onready var _time_value: Label = $HUD/RunPanel/RunInfo/StatusRow/MetaPanel/TimeValue
+@onready var _time_value: Label = $HUD/MetaPanel/MetaRow/TimeValue
 @onready var _weapon_value: Label = $HUD/RunPanel/RunInfo/LoadoutRow/LoadoutLabel
 @onready var _weapon_icon: TextureRect = $HUD/RunPanel/RunInfo/LoadoutRow/WeaponIcon
 @onready var _xp_value: Label = $HUD/RunPanel/RunInfo/StatusRow/XPValue
 @onready var _xp_bar: ProgressBar = $HUD/RunPanel/RunInfo/StatusRow/XPBar
-@onready var _run_state: Label = $HUD/RunPanel/RunInfo/StatusRow/MetaPanel/RunState
-@onready var _wave_value: Label = $HUD/RunPanel/RunInfo/StatusRow/MetaPanel/WaveValue
-@onready var _difficulty_value: Label = $HUD/RunPanel/RunInfo/StatusRow/MetaPanel/DifficultyValue
+@onready var _run_state: Label = $HUD/MetaPanel/MetaRow/RunState
+@onready var _wave_value: Label = $HUD/MetaPanel/MetaRow/WaveValue
+@onready var _difficulty_value: Label = $HUD/MetaPanel/MetaRow/DifficultyValue
 @onready var _boss_panel: PanelContainer = $HUD/BossPanel
 @onready var _boss_value: Label = $HUD/BossPanel/BossInfo/BossValue
 @onready var _boss_hp_bar: ProgressBar = $HUD/BossPanel/BossInfo/BossHPBar
@@ -956,6 +956,10 @@ func _style_run_hud() -> void:
 	panel_style.content_margin_right = 5.0
 	panel_style.content_margin_bottom = 2.0
 	$HUD/RunPanel.add_theme_stylebox_override("panel", panel_style)
+	var meta_style := panel_style.duplicate() as StyleBoxFlat
+	meta_style.border_color = Color("#C25BFF")
+	meta_style.border_width_left = 1
+	$HUD/MetaPanel.add_theme_stylebox_override("panel", meta_style)
 	var bar_background := StyleBoxFlat.new()
 	bar_background.bg_color = Color("#293354")
 	bar_background.set_corner_radius_all(0)

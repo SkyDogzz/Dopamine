@@ -12,10 +12,9 @@ script = ExtResource("1_session")
 layer = 5
 
 [node name="RunPanel" type="PanelContainer" parent="HUD"]
-anchor_right = 1.0
 offset_left = 8
 offset_top = 7
-offset_right = -8
+offset_right = 222
 offset_bottom = 51
 mouse_filter = 2
 theme_override_constants/margin_left = 7
@@ -75,21 +74,33 @@ stretch_mode = 5
 
 [node name="LoadoutLabel" type="Label" parent="HUD/RunPanel/RunInfo/LoadoutRow"]
 custom_minimum_size = Vector2(0, 13)
+custom_maximum_size = Vector2(210, 0)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.964706, 0.968627, 1, 1)
 theme_override_font_sizes/font_size = 8
 text = "ARMES"
 size_flags_horizontal = 3
 vertical_alignment = 1
+clip_text = true
 
-[node name="MetaPanel" type="HBoxContainer" parent="HUD/RunPanel/RunInfo/StatusRow"]
-layout_mode = 2
-size_flags_horizontal = 4
+[node name="MetaPanel" type="PanelContainer" parent="HUD"]
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -248
+offset_top = 7
+offset_right = -8
+offset_bottom = 29
+mouse_filter = 2
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 2
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 2
+
+[node name="MetaRow" type="HBoxContainer" parent="HUD/MetaPanel"]
 theme_override_constants/separation = 4
 mouse_filter = 2
-alignment = 2
 
-[node name="TimeValue" type="Label" parent="HUD/RunPanel/RunInfo/StatusRow/MetaPanel"]
+[node name="TimeValue" type="Label" parent="HUD/MetaPanel/MetaRow"]
 custom_minimum_size = Vector2(27, 0)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.215686, 0.909804, 0.960784, 1)
@@ -97,15 +108,15 @@ theme_override_font_sizes/font_size = 8
 text = "00:00"
 vertical_alignment = 1
 
-[node name="WaveValue" type="Label" parent="HUD/RunPanel/RunInfo/StatusRow/MetaPanel"]
-custom_minimum_size = Vector2(52, 0)
+[node name="WaveValue" type="Label" parent="HUD/MetaPanel/MetaRow"]
+custom_minimum_size = Vector2(60, 0)
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.82, 0.4, 1)
 theme_override_font_sizes/font_size = 8
 text = "WAVE 01  •  30 s"
 vertical_alignment = 1
 
-[node name="DifficultyValue" type="Label" parent="HUD/RunPanel/RunInfo/StatusRow/MetaPanel"]
+[node name="DifficultyValue" type="Label" parent="HUD/MetaPanel/MetaRow"]
 custom_minimum_size = Vector2(36, 0)
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.458824, 0.890196, 1)
@@ -114,7 +125,7 @@ text = "NORMAL"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="RunState" type="Label" parent="HUD/RunPanel/RunInfo/StatusRow/MetaPanel"]
+[node name="RunState" type="Label" parent="HUD/MetaPanel/MetaRow"]
 custom_minimum_size = Vector2(38, 0)
 layout_mode = 2
 tooltip_text = "Press Escape to pause or resume"
