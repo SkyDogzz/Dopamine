@@ -723,6 +723,7 @@ func _process(_delta: float) -> void:
 				if dead_enemy_type == "elite" and _has_unique_effect("elite_haste"):
 					_elite_haste_expires_at = player_active_time + 3.0
 					_refresh_player_move_speed()
+					_show_effect_feedback("ELITE HASTE  ·  +15% MOVE")
 				if dead_enemy_type == "mid_boss":
 					_boss_spawn_pending = false
 					wave_director.boss_defeated()
@@ -1484,6 +1485,12 @@ func _show_item_level_feedback(family: String, item_id: String, previous_level: 
 	_item_level_feedback_label.text = "%s  ·  %s  ·  LV %d" % [action, item_name, level]
 	_item_level_feedback_label.add_theme_color_override("font_color",
 			Color("#37E8F5") if previous_level == 0 else Color("#48E69B"))
+	_item_level_feedback.show()
+	_item_level_feedback_expires_at = float(simulation.snapshot().get("simulation_time", 0.0)) + 1.75
+
+func _show_effect_feedback(message: String) -> void:
+	_item_level_feedback_label.text = message
+	_item_level_feedback_label.add_theme_color_override("font_color", Color("#FFD447"))
 	_item_level_feedback.show()
 	_item_level_feedback_expires_at = float(simulation.snapshot().get("simulation_time", 0.0)) + 1.75
 
@@ -2408,6 +2415,7 @@ func _try_unique_lightning_burst(base_damage: float) -> void:
 			direction * _equipment_projectile_speed(lightning_projectile_speed), base_damage * 0.5,
 			_equipment_area(lightning_projectile_radius), lightning_projectile_lifetime) > 0:
 		_next_unique_lightning_time = player_active_time + 2.0
+		_show_effect_feedback("LIGHTNING BURST")
 
 func _try_evolution_shockwave(base_damage: float) -> void:
 	if _evolution_shockwave_triggered or not _has_unique_effect("evolution_shockwave"):
@@ -2415,6 +2423,7 @@ func _try_evolution_shockwave(base_damage: float) -> void:
 	if not loadout.has_any_evolved_weapon():
 		return
 	_evolution_shockwave_triggered = true
+	_show_effect_feedback("EVOLUTION SHOCKWAVE")
 	var count := 8
 	for index in range(count):
 		var direction := Vector2.RIGHT.rotated(TAU * float(index) / float(count))

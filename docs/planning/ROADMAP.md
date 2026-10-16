@@ -466,8 +466,8 @@ Travail requis :
   - [x] Prototype d’économie choisi : vente contre Essence seule (5/10/20/40/80 selon rareté), démantèlement contre Powder seule selon `PROPOSITION_P5.md`; la vente demande confirmation et ne rembourse pas les enhancements. Rendements et chances restent **[PROPOSÉS]**, à calibrer.
   - [x] `equipment_economy_smoke.gd` vérifie les ventes par rareté, l’impossibilité de repayer une pièce supprimée et le rejet d’un `fail_streak` supérieur à 9, garde-fou de la tentative garantie.
 - [ ] **P6.5 — Effets uniques**
-  - [ ] Lister effet, déclencheur, prérequis, portée et feedback de chaque ID disponible.
-  - [ ] Relier un effet à son événement de jeu et écrire un scénario ciblé.
+  - [x] `EFFETS_UNIQUES_P6.md` inventorie les cinq IDs actifs, leurs prérequis, déclencheurs, portée/limites, feedback et statuts **[PROPOSÉ]**; `revive_knockback` est identifié comme legacy sans gameplay.
+  - [ ] Finir les scénarios gameplay ciblés pour `lightning_burst` et `evolution_shockwave`; `survival_inventory_smoke.gd`, `survival_elite_smoke.gd` et `free_chest_reroll_smoke.gd` couvrent déjà Overflow Shield, Elite Haste et le reroll.
   - [x] `elite_haste` est chargé depuis un équipement unique équipé, déclenché par la mort d’un élite et actif 3 secondes simulées avec +15 % de mobilité **[PROPOSÉ]**; `survival_elite_smoke.gd` vérifie activation et expiration.
   - [x] `free_first_chest_reroll` relance une fois les options du premier coffre de run sans répéter les choix affichés; le run reste en pause. `free_chest_reroll_smoke.gd` couvre profil équipé, activation clavier, options inédites et absence de bouton aux coffres suivants; comportement **[PROPOSÉ]**.
   - [x] Retirer `revive_knockback` du choix des nouveaux effets sans supprimer la compatibilité de lecture des profils qui le stockent; vérifié par `progression_service_smoke.gd`.

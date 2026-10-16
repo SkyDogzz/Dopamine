@@ -132,6 +132,10 @@ func _run() -> void:
 	if not await _wait_until(func() -> bool: return session.kill_count == 1):
 		_fail("Elite death should enter the ordinary kill reward path")
 		return
+	if not session._item_level_feedback.visible or \
+			not session._item_level_feedback_label.text.contains("ELITE HASTE"):
+		_fail("Elite Haste activation should show a short, readable HUD cue")
+		return
 	if not is_equal_approx(session._elite_haste_expires_at, session.player_active_time + 3.0) or \
 		not is_equal_approx(session.player.move_speed, base_move_speed * 1.15):
 		_fail("Elite Haste should grant 15% move speed for three active seconds after an elite death")

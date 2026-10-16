@@ -30,7 +30,7 @@
 
 ## P6.5 — Effet Elite Haste — 2026-10-16
 
-- [x] `survival_elite_smoke.gd` équipe `elite_haste` dans un profil temporaire isolé, tue un élite via le pipeline de dégâts natif, puis vérifie le bonus de mobilité de 15 % et son expiration après trois secondes simulées. Ces valeurs restent **[PROPOSÉES]**.
+- [x] `survival_elite_smoke.gd` équipe `elite_haste` dans un profil temporaire isolé, tue un élite via le pipeline de dégâts natif, puis vérifie le bonus de mobilité de 15 %, son expiration après trois secondes simulées et le feedback HUD. Ces valeurs restent **[PROPOSÉES]**.
 
 ## P6.5 — Reroll gratuit du premier coffre — 2026-10-16
 
