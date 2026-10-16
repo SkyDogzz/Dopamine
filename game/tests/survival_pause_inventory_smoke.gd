@@ -33,6 +33,27 @@ func _run() -> void:
 		_fail("The run inventory should open over the paused run")
 		return
 	var items: VBoxContainer = inventory.get_node("Center/Panel/Content/Scroll/Items")
+	var scroll: ScrollContainer = inventory.get_node("Center/Panel/Content/Scroll")
+	if root.gui_get_focus_owner() != items.get_child(1) or not scroll.draw_focus_border or not scroll.follow_focus:
+		_fail("Run inventory should focus its first read-only item when opened")
+		return
+	var down_event := InputEventKey.new()
+	down_event.keycode = KEY_DOWN
+	down_event.physical_keycode = KEY_DOWN
+	down_event.pressed = true
+	Input.parse_input_event(down_event)
+	await process_frame
+	down_event.pressed = false
+	Input.parse_input_event(down_event)
+	await process_frame
+	if root.gui_get_focus_owner() != items.get_child(2) or scroll.scroll_vertical <= 0:
+		_fail("Keyboard navigation should focus the next item and scroll it into view")
+		return
+	var focused_item_style := (items.get_child(2) as PanelContainer).get_theme_stylebox("panel") as StyleBoxFlat
+	if focused_item_style.border_color != Color("#FFD447"):
+		_fail("Focused read-only items should show the visible gold focus outline")
+		return
+	(items.get_child(1) as Control).grab_focus()
 	if (items.get_child(0) as Label).theme_type_variation != "PixelHeading" or \
 			(items.get_child(3) as Label).theme_type_variation != "PixelHeading":
 		_fail("Run inventory section labels should use the Art Bible pixel heading font")
@@ -43,6 +64,12 @@ func _run() -> void:
 		if child.name.begins_with("ItemRow_"):
 			row_count += 1
 			var icon: TextureRect = child.get_child(0).get_child(0)
+			if icon.custom_minimum_size != Vector2(24, 24):
+				_fail("Run inventory catalog icons should use the 24x24 readability size")
+				return
+			if icon.texture_filter != CanvasItem.TEXTURE_FILTER_NEAREST:
+				_fail("Run inventory catalog icons should use nearest filtering")
+				return
 			if icon.texture != null:
 				icon_count += 1
 	if row_count != 4:
