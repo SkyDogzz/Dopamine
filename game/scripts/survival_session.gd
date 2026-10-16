@@ -305,13 +305,13 @@ var _exploder_attacks: Dictionary = {}
 var _summoner_attacks: Dictionary = {}
 var _pending_summon_sequences: Dictionary = {}
 
-@onready var _hp_value: Label = $HUD/RunPanel/RunInfo/StatusRow/HPValue
-@onready var _hp_bar: ProgressBar = $HUD/RunPanel/RunInfo/StatusRow/HPBar
+@onready var _hp_value: Label = $HUD/RunPanel/RunInfo/StatusRow/HPRow/HPValue
+@onready var _hp_bar: ProgressBar = $HUD/RunPanel/RunInfo/StatusRow/HPRow/HPBar
 @onready var _time_value: Label = $HUD/MetaPanel/MetaRow/TimeValue
 @onready var _weapon_value: Label = $HUD/RunPanel/RunInfo/LoadoutRow/LoadoutLabel
 @onready var _weapon_icon: TextureRect = $HUD/RunPanel/RunInfo/LoadoutRow/WeaponIcon
-@onready var _xp_value: Label = $HUD/RunPanel/RunInfo/StatusRow/XPValue
-@onready var _xp_bar: ProgressBar = $HUD/RunPanel/RunInfo/StatusRow/XPBar
+@onready var _xp_value: Label = $HUD/RunPanel/RunInfo/StatusRow/XPRow/XPValue
+@onready var _xp_bar: ProgressBar = $HUD/RunPanel/RunInfo/StatusRow/XPRow/XPBar
 @onready var _run_state: Label = $HUD/MetaPanel/MetaRow/RunState
 @onready var _wave_value: Label = $HUD/MetaPanel/MetaRow/WaveValue
 @onready var _difficulty_value: Label = $HUD/MetaPanel/MetaRow/DifficultyValue

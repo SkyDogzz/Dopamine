@@ -28,17 +28,22 @@ func _run() -> void:
 	session.wave_director.wave = 4
 	session.wave_director.elapsed_in_wave = 5.0
 	session._refresh_hud({"paused": false})
-	if not session.get_node("HUD/RunPanel/RunInfo/StatusRow/HPValue").text.contains("SHIELD 6") or \
-		session.get_node("HUD/RunPanel/RunInfo/StatusRow/XPValue").text != "LV 2  XP 5 / 20" or \
+	if not session.get_node("HUD/RunPanel/RunInfo/StatusRow/HPRow/HPValue").text.contains("SHIELD 6") or \
+		session.get_node("HUD/RunPanel/RunInfo/StatusRow/XPRow/XPValue").text != "LV 2  XP 5 / 20" or \
 		session.get_node("HUD/MetaPanel/MetaRow/TimeValue").text != "01:03" or \
 		not session.get_node("HUD/MetaPanel/MetaRow/WaveValue").text.contains("WAVE 04") or \
 		session.get_node("HUD/RunPanel/RunInfo/LoadoutRow/LoadoutLabel").text != "LC Lv1" or \
-		session.get_node("HUD/RunPanel/RunInfo/StatusRow/HPBar").value != 42.0 or \
-		session.get_node("HUD/RunPanel/RunInfo/StatusRow/XPBar").value != 5.0:
+		session.get_node("HUD/RunPanel/RunInfo/StatusRow/HPRow/HPBar").value != 42.0 or \
+		session.get_node("HUD/RunPanel/RunInfo/StatusRow/XPRow/XPBar").value != 5.0:
 		_fail("The run HUD should display current health, XP, time, wave and weapon state")
 		return
 	var boss_panel: Control = session.get_node("HUD/BossPanel")
 	var weapon_label: Label = session.get_node("HUD/RunPanel/RunInfo/LoadoutRow/LoadoutLabel")
+	var hp_row: HBoxContainer = session.get_node_or_null("HUD/RunPanel/RunInfo/StatusRow/HPRow")
+	var xp_row: HBoxContainer = session.get_node_or_null("HUD/RunPanel/RunInfo/StatusRow/XPRow")
+	if hp_row == null or xp_row == null or hp_row == xp_row:
+		_fail("Health and XP should have separate, readable HUD rows")
+		return
 	if weapon_label.text.is_empty() or weapon_label.size.y <= 0.0:
 		_fail("The weapon names in the loadout row should be visible, not clipped to zero height")
 		return
@@ -76,8 +81,8 @@ func _run() -> void:
 			meta_rect.position.x < bounds.size.x * 0.55:
 			_fail("Run status and metadata should stay in separate screen corners at viewport %s (visible %s): %s / %s" % [size, bounds.size, panel_rect, meta_rect])
 			return
-		for row_path in ["HUD/RunPanel/RunInfo/StatusRow", "HUD/RunPanel/RunInfo/LoadoutRow", "HUD/MetaPanel/MetaRow"]:
-			var row := session.get_node(row_path) as HBoxContainer
+		for row_path in ["HUD/RunPanel/RunInfo/StatusRow/HPRow", "HUD/RunPanel/RunInfo/StatusRow/XPRow", "HUD/RunPanel/RunInfo/LoadoutRow", "HUD/MetaPanel/MetaRow"]:
+			var row := session.get_node(row_path) as Control
 			var row_bounds := panel_rect if row_path.begins_with("HUD/RunPanel") else meta_rect
 			for child in row.get_children():
 				if not row_bounds.encloses((child as Control).get_global_rect()):
