@@ -22,6 +22,9 @@ func _run() -> void:
 	if not await _inferno_level_progression():
 		_fail("Inferno levels 2–5 should apply their proposed damage, range, width and burn upgrades")
 		return
+	if not await _crimson_dagger_level_progression():
+		_fail("Crimson Daggers levels 2–5 should apply their proposed damage, count and orbit-speed upgrades")
+		return
 	if not await _toxic_cloud_prioritizes_durable_targets():
 		_fail("Toxic Cloud should prioritize the highest-health living enemy in range, breaking ties by distance")
 		return
@@ -392,13 +395,60 @@ func _inferno_level_progression() -> bool:
 	session.queue_free()
 	return false
 
-func _wait_for_projectile_count(session: Node2D, expected_count: int) -> Array[Dictionary]:
+func _crimson_dagger_level_progression() -> bool:
+	var session: Node2D = load("res://scenes/survival_session.tscn").instantiate()
+	session.spawn_initial_enemy = false
+	session.wave_spawning_enabled = false
+	session.skip_starting_weapon_choice = true
+	session.weapon_enabled = false
+	session.daggers_projectile_speed = 0.0
+	root.add_child(session)
+	await process_frame
+	session.simulation.set_speed(1.0)
+	if not await _wait_for_simulation_speed(session, 1.0):
+		session.queue_free()
+		return false
+	for level in range(1, session.loadout.MAX_LEVEL + 1):
+		if not session.loadout.apply_offer("weapon:crimson_daggers"):
+			session.queue_free()
+			return false
+		var origin: Vector2 = session.player.global_position
+		session._entities = [{"id": {"index": 101, "generation": 1}, "components": {
+			"Health": {"current": 100.0}, "Transform2D": {"x": origin.x + 40.0, "y": origin.y},
+		}}]
+		session._next_daggers_time = 0.0
+		session.weapon_enabled = true
+		session._fire_crimson_daggers(float(level), false)
+		session.weapon_enabled = false
+		var expected_count := 3 if level >= 3 else 2
+		var shots := await _wait_for_projectile_count(session, expected_count, "crimson_dagger")
+		if shots.size() != expected_count:
+			session.queue_free()
+			return false
+		var projectile: Dictionary = shots[0]["components"]["Projectile"]
+		var expected_damage: float = session.daggers_damage * (1.2 if level >= 2 else 1.0) * (1.25 if level >= 5 else 1.0)
+		var expected_orbit_speed: float = 6.0 if level >= 4 else 5.0
+		if not is_equal_approx(float(projectile["damage"]), expected_damage) or \
+			not is_equal_approx(float(projectile["orbit_angular_speed"]), expected_orbit_speed):
+			session.queue_free()
+			return false
+		session.simulation.kill_all()
+		if not await _wait_for_no_entities(session):
+			session.queue_free()
+			return false
+	session.queue_free()
+	return true
+
+func _wait_for_projectile_count(session: Node2D, expected_count: int, projectile_type: String = "inferno_sprayer") -> Array[Dictionary]:
+	return await _wait_for_projectile_count_of_type(session, expected_count, projectile_type)
+
+func _wait_for_projectile_count_of_type(session: Node2D, expected_count: int, projectile_type: String) -> Array[Dictionary]:
 	var deadline := Time.get_ticks_msec() + 1000
 	while Time.get_ticks_msec() < deadline:
 		await process_frame
 		var projectiles: Array[Dictionary] = []
 		for entity in session.simulation.snapshot()["entities"]:
-			if entity["components"].get("EnemyType", "") == "inferno_sprayer":
+			if entity["components"].get("EnemyType", "") == projectile_type:
 				projectiles.append(entity)
 		if projectiles.size() >= expected_count:
 			return projectiles

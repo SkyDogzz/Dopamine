@@ -199,7 +199,7 @@ func _weapon_level_description(item_id: String, level: int) -> String:
 		"inferno_sprayer":
 			return "+20% direct damage" if level == 2 else "+15% range" if level == 3 else "+20% jet width" if level == 4 else "Max level; +25% Burn, collect combo when Infernal Heart is also level 5" if level == 5 else "Improves the fire jet"
 		"crimson_daggers":
-			return "Max level; collect combo when matching relic is also level 5" if level == 5 else "+15% damage"
+			return "Max level; +25% damage; collect Bloodstorm when Blood Chalice is level 5" if level == 5 else "+20% damage" if level == 2 else "+1 orbiting dagger" if level == 3 else "+20% orbit speed" if level == 4 else "Improves orbiting daggers"
 		"minigun":
 			return "+20% damage" if level == 2 else "+25% fire rate" if level in [3, 5] else "15% tighter spread" if level == 4 else "Improves shots"
 		"toxic_cloud":

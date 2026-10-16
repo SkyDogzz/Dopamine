@@ -90,6 +90,12 @@ func _initialize() -> void:
 		not loadout._weapon_level_description("inferno_sprayer", 5).contains("+25% Burn"):
 		_fail("Inferno level descriptions should match the proposed level 2–5 progression")
 		return
+	if loadout._weapon_level_description("crimson_daggers", 2) != "+20% damage" or \
+		loadout._weapon_level_description("crimson_daggers", 3) != "+1 orbiting dagger" or \
+		loadout._weapon_level_description("crimson_daggers", 4) != "+20% orbit speed" or \
+		not loadout._weapon_level_description("crimson_daggers", 5).contains("+25% damage"):
+		_fail("Crimson level descriptions should match the proposed level 2–5 progression")
+		return
 	if not loadout.apply_offer("relic:storm_core") or loadout.relic_level("storm_core") != 1:
 		_fail("Selecting a new relic should add it at level 1")
 		return

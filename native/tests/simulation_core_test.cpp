@@ -292,8 +292,15 @@ int main() {
 	const auto orbiting_crimson_dagger = crimson_daggers.entity(crimson_dagger_id);
 	require(orbiting_crimson_dagger && orbiting_crimson_dagger->is_projectile &&
 			std::abs(std::hypot(orbiting_crimson_dagger->transform.x, orbiting_crimson_dagger->transform.y) - 30.0F) < 0.01F &&
-			std::abs(orbiting_crimson_dagger->transform.y) > 1.0F,
+			std::abs(orbiting_crimson_dagger->transform.y) > 1.0F &&
+			orbiting_crimson_dagger->projectile.orbit_angular_speed == 5.0F,
 			"Crimson Daggers should orbit the player instead of travelling in a straight line");
+	SimulationCore faster_crimson_daggers;
+	const auto faster_crimson_dagger_id = faster_crimson_daggers.spawn_projectile("crimson_dagger", 14.0F, 0.0F,
+			5.0F, 2.5F, 0.8, 0.0F, 0.0F, 2.0F, 0.5, 2.0, 0.0F, 0.0F, 0, 0.0F, 0.0F,
+			false, 0.0, 1.0F, 1.0F, 6.0F);
+	require(faster_crimson_daggers.entity(faster_crimson_dagger_id)->projectile.orbit_angular_speed == 6.0F,
+			"Crimson Daggers level 4 should accept the proposed faster orbit speed");
 
 	SimulationCore bloodstorm;
 	const auto bloodstorm_first_target = bloodstorm.spawn("test_target", 30.0F, 0.0F, 100.0F, 0.0F, 0.0F);

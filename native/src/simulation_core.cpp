@@ -146,7 +146,7 @@ EntityId SimulationCore::spawn_projectile(std::string type, float x, float y, fl
 		double status_interval_seconds, double status_duration_seconds, float explosion_radius,
 		float explosion_damage_multiplier, uint32_t ricochets, float attraction_radius,
 		float attraction_speed, bool pierces_targets, double chill_duration_seconds,
-		float chill_speed_multiplier, float chill_damage_multiplier) {
+		float chill_speed_multiplier, float chill_damage_multiplier, float orbit_angular_speed) {
 	if (!std::isfinite(damage) || damage <= 0.0F || !std::isfinite(radius) || radius < 0.0F ||
 			!std::isfinite(lifetime_seconds) || lifetime_seconds <= 0.0 || type.empty() ||
 			ricochets > 64 ||
@@ -159,6 +159,7 @@ EntityId SimulationCore::spawn_projectile(std::string type, float x, float y, fl
 			chill_speed_multiplier > 1.0F ||
 			((chill_duration_seconds > 0.0) != (chill_speed_multiplier < 1.0F)) ||
 			!std::isfinite(chill_damage_multiplier) || chill_damage_multiplier < 1.0F ||
+			!std::isfinite(orbit_angular_speed) || orbit_angular_speed < 0.0F ||
 			!std::isfinite(explosion_damage_multiplier) || explosion_damage_multiplier < 0.0F ||
 			!std::isfinite(damage * explosion_damage_multiplier)) {
 		throw std::invalid_argument("invalid projectile");
@@ -191,7 +192,8 @@ EntityId SimulationCore::spawn_projectile(std::string type, float x, float y, fl
 		projectile.pierces_targets = true;
 		projectile.orbits_target = true;
 		projectile.orbit_radius = proposed_bloodstorm_orbit_radius;
-		projectile.orbit_angular_speed = proposed_bloodstorm_orbit_angular_speed;
+		projectile.orbit_angular_speed = orbit_angular_speed > 0.0F ? orbit_angular_speed :
+				proposed_bloodstorm_orbit_angular_speed;
 	}
 	projectile.chill_duration_seconds = chill_duration_seconds;
 	projectile.chill_speed_multiplier = chill_speed_multiplier;

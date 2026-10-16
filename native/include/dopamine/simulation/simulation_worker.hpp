@@ -75,6 +75,7 @@ struct SimulationCommand {
 	double projectile_chill_duration = 0.0;
 	float projectile_chill_speed_multiplier = 1.0F;
 	float projectile_chill_damage_multiplier = 1.0F;
+	float projectile_orbit_angular_speed = 0.0F;
 	float xp_value = 1.0F;
 	float status_damage_per_tick = 0.0F;
 	double status_interval_seconds = 0.0;

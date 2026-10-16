@@ -206,7 +206,8 @@ public:
 			float explosion_radius = 0.0F, float explosion_damage_multiplier = 0.0F,
 			uint32_t ricochets = 0, float attraction_radius = 0.0F, float attraction_speed = 0.0F,
 			bool pierces_targets = false, double chill_duration_seconds = 0.0,
-			float chill_speed_multiplier = 1.0F, float chill_damage_multiplier = 1.0F);
+			float chill_speed_multiplier = 1.0F, float chill_damage_multiplier = 1.0F,
+			float orbit_angular_speed = 0.0F);
 	EntityId spawn_xp_orb(float x, float y, float xp_value);
 	bool apply_damage_over_time(EntityId target, float damage_per_tick, double interval_seconds,
 			double duration_seconds, std::string status_type = "generic");

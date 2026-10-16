@@ -1839,7 +1839,7 @@ func _fire_crimson_daggers(active_time: float, paused: bool) -> void:
 	if direction == Vector2.ZERO:
 		direction = Vector2.RIGHT
 	var level: int = loadout.weapon_level("crimson_daggers")
-	var damage := daggers_damage * (1.0 + 0.15 * float(level - 1))
+	var damage := daggers_damage * (1.2 if level >= 2 else 1.0) * (1.25 if level >= 5 else 1.0)
 	damage *= _persistent_damage_multiplier()
 	damage *= _roll_equipment_critical_multiplier()
 	var projectile_type := "crimson_dagger"
@@ -1855,12 +1855,14 @@ func _fire_crimson_daggers(active_time: float, paused: bool) -> void:
 		status_duration = bloodstorm_bleed_duration_seconds
 		projectile_lifetime = maxf(projectile_lifetime, bloodstorm_orbit_lifetime_seconds)
 	var fired := 0
-	for spread in [-0.06, 0.06]:
+	var spreads := [-0.06, 0.06] if level < 3 else [-0.08, 0.0, 0.08]
+	var orbit_speed := 6.0 if level >= 4 else 5.0
+	for spread in spreads:
 		var shot_direction: Vector2 = direction.rotated(spread)
 		if simulation.spawn_status_projectile(projectile_type, player.global_position + shot_direction * 14.0,
 				shot_direction * _equipment_projectile_speed(daggers_projectile_speed), damage, _equipment_area(daggers_projectile_radius),
 				projectile_lifetime, status_damage * _persistent_damage_multiplier() * _weapon_combo_damage_multiplier("crimson_daggers"),
-				status_interval, status_duration) > 0:
+				status_interval, status_duration, 0.0, 0.0, 0, 0.0, 0.0, true, 0.0, 1.0, 1.0, orbit_speed) > 0:
 			fired += 1
 	if fired > 0:
 		_try_unique_lightning_burst(damage)
