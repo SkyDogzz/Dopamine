@@ -50,3 +50,9 @@ custom_minimum_size = Vector2(0, 48)
 layout_mode = 2
 focus_mode = 2
 text = "RESUME"
+
+[node name="OptionsButton" type="Button" parent="Center/Panel/Content"]
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 2
+focus_mode = 2
+text = "OPTIONS"

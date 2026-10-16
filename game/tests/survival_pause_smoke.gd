@@ -31,6 +31,41 @@ func _run() -> void:
 	var paused_active_time := float(session.player_active_time)
 	var paused_wave_time := float(session.wave_director.elapsed_in_wave)
 	var paused_player_position: Vector2 = session.player.global_position
+	var options_button: Button = pause_menu.get_node("Center/Panel/Content/OptionsButton")
+	options_button.pressed.emit()
+	await process_frame
+	var options_panel: Control = session.get_node_or_null("HUD/OptionsPanel")
+	if options_panel == null or not options_panel.visible:
+		_fail("Options should open above the visible pause menu")
+		return
+	if not bool(session.simulation.snapshot()["paused"]):
+		_fail("Opening Options from pause must not resume the run")
+		return
+	await create_timer(0.1).timeout
+	state = session.simulation.snapshot()
+	if not is_equal_approx(float(state["simulation_time"]), paused_simulation_time) or \
+		not is_equal_approx(session.player_active_time, paused_active_time) or \
+		session.player.global_position != paused_player_position:
+		_fail("Simulation clocks and player position should stay frozen with Options open")
+		return
+	var back_button: Button = options_panel.get_node("Content/Center/OptionsCard/OptionsContent/BackButton")
+	back_button.pressed.emit()
+	await process_frame
+	await process_frame
+	if session.get_node_or_null("HUD/OptionsPanel") != null or not pause_menu.visible or \
+		root.gui_get_focus_owner() != options_button or not bool(session.simulation.snapshot()["paused"]):
+		_fail("Closing Options should return to Pause, restore focus and keep the run paused")
+		return
+	options_button.pressed.emit()
+	await process_frame
+	options_panel = session.get_node("HUD/OptionsPanel")
+	options_panel._unhandled_key_input(_escape_event())
+	await process_frame
+	await process_frame
+	if session.get_node_or_null("HUD/OptionsPanel") != null or not pause_menu.visible or \
+		root.gui_get_focus_owner() != options_button or not bool(session.simulation.snapshot()["paused"]):
+		_fail("Escape in Options should return to Pause without resuming the run")
+		return
 	await create_timer(0.2).timeout
 	state = session.simulation.snapshot()
 	if not is_equal_approx(float(state["simulation_time"]), paused_simulation_time) or \

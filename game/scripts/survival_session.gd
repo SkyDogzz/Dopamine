@@ -310,6 +310,9 @@ var _pending_summon_sequences: Dictionary = {}
 @onready var _run_result: PanelContainer = $HUD/RunResultOverlay/RunResultPanel
 @onready var _pause_overlay: Control = $HUD/PauseOverlay
 @onready var _pause_resume_button: Button = $HUD/PauseOverlay/Center/Panel/Content/ResumeButton
+@onready var _pause_options_button: Button = $HUD/PauseOverlay/Center/Panel/Content/OptionsButton
+
+var _options_overlay: Control
 
 func _ready() -> void:
 	texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
@@ -333,6 +336,7 @@ func _ready() -> void:
 	_chest_choice.option_selected.connect(_on_chest_option_selected)
 	_run_result.restart_requested.connect(_restart_run)
 	_pause_resume_button.pressed.connect(_resume_manually_paused_run)
+	_pause_options_button.pressed.connect(_open_pause_options)
 	player_max_hp = simulation.initial_player_hp()
 	_base_player_move_speed = player.move_speed
 	if progression_service != null:
@@ -380,6 +384,26 @@ func _resume_manually_paused_run() -> void:
 	_manually_paused = false
 	_pause_overlay.hide()
 	simulation.resume()
+
+func _open_pause_options() -> void:
+	if not _manually_paused or _options_overlay != null:
+		return
+	var options_scene: PackedScene = load("res://scenes/options_panel.tscn")
+	_options_overlay = options_scene.instantiate() as Control
+	_options_overlay.name = "OptionsPanel"
+	_options_overlay.close_requested.connect(_close_pause_options)
+	$HUD.add_child(_options_overlay)
+
+func _close_pause_options() -> void:
+	if _options_overlay == null:
+		return
+	_options_overlay.queue_free()
+	_options_overlay = null
+	call_deferred("_restore_pause_options_focus")
+
+func _restore_pause_options_focus() -> void:
+	if _manually_paused and is_instance_valid(_pause_options_button):
+		_pause_options_button.grab_focus()
 
 func _process(_delta: float) -> void:
 	if simulation == null:

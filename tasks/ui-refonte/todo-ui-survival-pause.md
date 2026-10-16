@@ -2,7 +2,7 @@
 
 Plan : [`plan-ui-survival-pause.md`](plan-ui-survival-pause.md) · Spec : [`SPEC-survival-pause.md`](SPEC-survival-pause.md)
 
-**Statut : validé par l’utilisateur.** Tâche 1 terminée; tâches 2 à 5 restent à faire. Le plan principal reste en pause et inchangé.
+**Statut : validé par l’utilisateur.** Tâches 1 et 2 terminées; tâches 3 à 5 restent à faire. Le plan principal reste en pause et inchangé.
 
 ## Tâche 1 — Pause manuelle et invariance temporelle
 
@@ -28,12 +28,12 @@ Plan : [`plan-ui-survival-pause.md`](plan-ui-survival-pause.md) · Spec : [`SPEC
 **Description :** Ouvrir le `OptionsPanel` existant par-dessus la pause et restituer correctement la navigation à sa fermeture.
 
 **Critères d’acceptation :**
-- [ ] Options s’ouvre par bouton depuis Pause et conserve Pause affichée sous le panneau.
-- [ ] Retour ou Échap ferme seulement Options et rend le focus à Options dans Pause.
-- [ ] Simulation et horloges restent immobiles pendant ouverture, réglages, fermeture et attente.
-- [ ] Les réglages gardent les comportements et persistance du panneau partagé; aucune logique pause ne s’y ajoute.
+- [x] Options s’ouvre par bouton depuis Pause et conserve Pause affichée sous le panneau.
+- [x] Retour ou Échap ferme seulement Options et rend le focus à Options dans Pause.
+- [x] Simulation et horloges restent immobiles pendant ouverture, attente, fermeture et attente.
+- [x] Les réglages gardent les comportements et persistance du panneau partagé; aucune logique pause ne s’y ajoute.
 
-**Vérification :** smoke intégré Pause → Options → Pause avec assertions de focus, état pause et snapshots d’horloge.
+**Vérification :** `survival_pause_smoke.gd` ouvre et ferme Options via Retour et Échap; vérifie focus, état pause, temps de simulation/activité et position joueur. Le smoke, l’import headless Godot 4.7.2 et `git diff --check` passent.
 
 **Dépendances :** Tâche 1 et `ui-settings`.
 
