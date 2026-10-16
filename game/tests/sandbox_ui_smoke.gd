@@ -23,6 +23,10 @@ func _run() -> void:
 	var action_reset: Button = sandbox.get_node("Shell/Content/MainColumn/Toolbar/Row/ResetButton")
 	var state_badge: PanelContainer = sandbox.get_node("Shell/Header/StateBadge")
 	var state_label: Label = state_badge.get_node("StateLabel")
+	var max_speed_spin: SpinBox = sandbox.get_node("Shell/Content/SidePanel/Sections/TuningPanel/TuningForm/TuningGrid/MaxSpeedSpin")
+	var separation_radius_spin: SpinBox = sandbox.get_node("Shell/Content/SidePanel/Sections/TuningPanel/TuningForm/TuningGrid/SeparationRadiusSpin")
+	var separation_weight_spin: SpinBox = sandbox.get_node("Shell/Content/SidePanel/Sections/TuningPanel/TuningForm/TuningGrid/SeparationWeightSpin")
+	var cell_size_spin: SpinBox = sandbox.get_node("Shell/Content/SidePanel/Sections/TuningPanel/TuningForm/TuningGrid/CellSizeSpin")
 	assert(state_badge.custom_minimum_size.x >= 140 and state_label.text.contains("NO SAVE"), "Sandbox should group its isolated simulation state in a clear badge")
 	assert(sandbox.get_node("Shell/Header/Title").get_theme_font_size("font_size") == 11, "Sandbox title should retain its intended readable heading size")
 	assert(action_pause.get_theme_color("font_color").to_html(false) == "37e8f5", "Pause/resume should use the cyan action accent")
@@ -35,6 +39,9 @@ func _run() -> void:
 		await process_frame
 		await process_frame
 		var panel_rect := side_panel.get_global_rect()
+		assert(side_panel.size.x >= 194 and max_speed_spin.size.x > 70 and separation_radius_spin.size.x > 70 and \
+			separation_weight_spin.size.x > 70 and cell_size_spin.size.x > 70,
+			"Sandbox tuning fields should grow with the sidebar at %s" % viewport_size)
 		for button in spawn_actions.get_children():
 			var button_rect := (button as Control).get_global_rect()
 			assert(button_rect.position.x >= panel_rect.position.x, "Sandbox spawn actions should stay inside the side panel at %s" % viewport_size)
@@ -92,6 +99,13 @@ func _run() -> void:
 	var id: Dictionary = state["entities"][0]["id"]
 
 	sandbox.get_node("Shell/Content/MainColumn/SimulationView").entity_selected.emit(id["index"], id["generation"])
+	if "--capture" in OS.get_cmdline_user_args():
+		sandbox._refresh()
+		await process_frame
+		await RenderingServer.frame_post_draw
+		if root.get_texture().get_image().save_png("/tmp/dopamine-sandbox-ui.png") != OK:
+			_fail("Could not capture the developer Sandbox render")
+			return
 	var status_damage: SpinBox = sandbox.get_node("Shell/Content/SidePanel/Sections/InspectorPanel/InspectorForm/StatusDamageSpin")
 	status_damage.value = 2.0
 	var status_interval: SpinBox = sandbox.get_node("Shell/Content/SidePanel/Sections/InspectorPanel/InspectorForm/StatusIntervalSpin")

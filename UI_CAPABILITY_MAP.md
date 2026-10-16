@@ -14,7 +14,7 @@ La direction artistique partagée est décrite dans [`docs/ART_BIBLE.txt`](docs/
 | [`survival-hub`](tasks/ui-refonte/SPEC-survival-hub.md) | Sélection Survival/difficulté, accès aux équipements et à l’arbre de compétences avant la run, boutons Succès/Bestiaire inactifs, lancement explicite de run. | `launch-navigation`, `ui-foundation` | Fonctionnel livré; détails visuels de l’arbre et confirmation de difficulté au CTA en cours |
 | `survival-hud` | Refonte de l’interface en run : HUD, choix de coffre et écran de résultat, avec hiérarchie lisible et états de run clairs. | `ui-foundation`, `survival-hub` | Fonctionnel livré; visuel en cours |
 | `survival-pause` | Pause/reprise, options, inventaire de run en lecture seule et abandon avec confirmation; la simulation et les horloges restent figées dans les écrans de pause. | `ui-settings`, `survival-hud` | Fonctionnel livré; visuel à reprendre |
-| `sandbox-ui` | Refonte des écrans du Sandbox développeur existant et de ses contrôles, en conservant son isolation stricte des sauvegardes et de la progression normale. | `ui-foundation`, `ui-settings` | Fonctionnel livré; visuel à reprendre |
+| `sandbox-ui` | Refonte des écrans du Sandbox développeur existant et de ses contrôles, en conservant son isolation stricte des sauvegardes et de la progression normale. | `ui-foundation`, `ui-settings` | Fonctionnel livré; largeur des réglages de steering adaptée, reste du poste à reprendre visuellement |
 
 ## Ordre de réalisation
 

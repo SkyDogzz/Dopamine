@@ -22,6 +22,12 @@
 - [x] `survival_hub_smoke.gd` passe; `survival_hub_layout_smoke.gd` passe aux viewports 640×360, 1280×720 et 1920×1080.
 - [x] Capture fenêtrée du hub relue à 640×360 logique : sélection, statut et bouton principal sont visibles avec le focus.
 
+## Sandbox développeur — largeur du panneau de réglages — 2026-10-16
+
+- [x] `sandbox_ui_smoke.gd` vérifie que la sidebar garde au moins 194 px et que les quatre champs AI Steering s’étendent au-delà de leur minimum de 70 px à 640×360, 1280×720 et 1920×1080.
+- [x] Le smoke passe sous Godot 4.7.2 avec un `XDG_DATA_HOME` isolé; son fixture sentinelle de sauvegarde normale reste inchangé et aucune autre sauvegarde n’est créée.
+- [x] Capture fenêtrée Xvfb relue au viewport logique 640×360 avec deux entités; réglages et sélection restent visibles, sans débordement horizontal. Souris/manette physiques non testées.
+
 ## Inventaire d’équipement — hiérarchie des cartes — 2026-10-16
 
 - [x] `equipment_panel_visual_smoke.gd` contrôle la largeur réservée aux contrôles, la bordure de rareté et le maintien dans les 640 px logiques.
