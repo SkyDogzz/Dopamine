@@ -13,7 +13,8 @@
 
 ## Revalidation intégrée P5 — 2026-10-16
 
-- [x] Godot 4.7.2 officiel exécuté depuis `/tmp`; `ctest --test-dir build --output-on-failure` passe avec 45/45 tests, dont import, rendus, Survival, progression, inventaire, élites et scénarios Sandbox.
+- [x] La suite CTest complète passe à 47/47 sous Godot 4.7.2 et Linux C++23 après la configuration des progressions d’armes et les smokes de boss final; temps CTest total 39,64 s, qui ne constitue pas une mesure de performance en jeu.
+- [x] Au contrôle précédent, Godot 4.7.2 officiel exécuté depuis `/tmp`; la suite CTest passait avec 45/45 tests. Depuis, deux tests ont été ajoutés; résultat courant ci-dessus.
 - [x] `survival_inventory_smoke.gd` utilise désormais deux équipements de fixture valides et déterministes au lieu de dépendre de récompenses aléatoires; équipement, enhancement, effet unique, compétences et démantèlement passent dans la suite intégrée.
 - [x] `survival_elite_smoke.gd` vérifie le Split-on-Death plafonné sous Godot 4.7.2; les smokes voisins Summoner, boss, vagues et durée passent également.
 

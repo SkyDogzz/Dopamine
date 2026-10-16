@@ -409,21 +409,21 @@ Travail requis :
 ### Vérification et sortie P5
 
 - [ ] **P5.V1 — Validation du catalogue**
-  - [ ] Exécuter un scénario Sandbox par arme.
-  - [ ] Vérifier relique, niveaux et évolution par paire.
-  - [ ] Vérifier Magnet Heart avec XP et chest.
-- [ ] **P5.V2 — Validation des ennemis**
-  - [ ] Exécuter un scénario de chaque famille et affixe.
-  - [ ] Vérifier projectiles esquivables et budgets d’invocation/effets.
-  - [ ] Parcourir les phases de chaque boss.
+  - [ ] Exécuter un scénario Sandbox par arme. Le Sandbox développeur ne propose pas encore les armes comme fixtures; les dix armes sont actuellement couvertes par `survival_weapon_catalog_smoke.gd`.
+  - [x] Vérifier relique, niveaux et évolution par paire dans `survival_weapon_catalog_smoke.gd`.
+  - [x] Vérifier Magnet Heart avec XP et chest dans `survival_chest_smoke.gd`.
+- [x] **P5.V2 — Validation des ennemis**
+  - [x] Vérifier le roster des huit familles et les six affixes élite dans les smokes Survival et `simulation_core_test`.
+  - [x] Vérifier les attaques esquivables, réactions bornées et plafonds d’invocation dans `survival_exploder_smoke.gd`, `survival_boss_attack_smoke.gd` et `simulation_core_test`.
+  - [x] Parcourir sous smoke les phases du Pulse Warden et du Dopamine Core.
   - [x] Exécuter `survival_elite_smoke.gd` sous Godot 4.7.2 : l’affixe Split-on-Death génère deux adds sous le plafond global.
 - [ ] **P5.V3 — Run de bout en bout**
   - [ ] Jouer Survival sans harness, HP forcés, choix automatiques ou boss tués par script.
   - [ ] Vérifier mort, victoire, coffre et récompense/idempotence.
 - [ ] **P5.V4 — Revue et checkpoint**
-  - [ ] Mettre à jour GDD/interfaces/ADR avec décisions effectivement prises.
-  - [ ] Lancer la batterie de QA P5 et le profilage défini.
-  - [ ] Corriger les erreurs bloquantes, consigner le résiduel, committer le checkpoint.
+  - [x] Consigner les validations et les limites sans changer les statuts de décision du GDD.
+  - [x] Relancer la suite CTest complète : 47/47 passent le 2026-10-16. Les critères de profilage P5 n’étant pas définis, aucun budget de performance n’est déclaré validé.
+  - [ ] Faire le parcours sans assistance de P5.V3, réaliser les scénarios d’armes dans le Sandbox et définir/exécuter le profilage requis avant de clore le jalon.
 
 **Critère de sortie :** dix armes, onze reliques, leurs évolutions, 8–12 familles, élites et boss utilisables dans une run complète ; Sandbox et progression séparés. Après P5, poursuivre P6–P9 selon le goal principal actif.
 
