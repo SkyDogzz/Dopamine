@@ -460,9 +460,9 @@ Travail requis :
   - [x] `equipment_stats_smoke.gd` équipe une seule stat par profil et ouvre une vraie session Survival pour vérifier l’effet de HP, mobilité, dégâts, cadence, critiques, soin, aire, cooldown, XP, rayon de ramassage et vitesse projectile.
   - [x] `survival_chest_smoke.gd` vérifie l’application du rayon de ramassage aux XP, dont l’impulsion Magnet Heart, puis confirme qu’un grand rayon ne collecte jamais un coffre hors de sa portée dédiée.
 - [ ] **P6.4 — Enhancement**
-  - [ ] Tester une ligne de stat de +0 à +10 avec chacun des quatre tiers Powder.
-  - [ ] Vérifier réussite, échec normal, échec critique et dixième tentative garantie.
-  - [ ] Vérifier coûts/conversions et l’absence de conversion inverse.
+  - [x] `equipment_enhancement_smoke.gd` vérifie une ligne +0..+10 avec Basic, Refined, Pure et Prismatic, y compris le +8 % par niveau.
+  - [x] Le smoke vérifie réussite, échec normal, échec critique avec protection au niveau 0, et réussite garantie après neuf échecs.
+  - [x] Le smoke vérifie la table proposée de coûts pour chaque rareté/niveau, les conversions 10:1 vers le tier suivant et le refus de conversion depuis Prismatic.
   - [ ] Faire arbitrer économie de démantèlement, vente et protections anti-exploit ouvertes.
 - [ ] **P6.5 — Effets uniques**
   - [ ] Lister effet, déclencheur, prérequis, portée et feedback de chaque ID disponible.
