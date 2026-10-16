@@ -347,9 +347,9 @@ Travail requis :
   - [x] Suspendre la simulation et vérifier que ses horloges ne progressent pas pendant le modal; `survival_chest_smoke.gd` contrôle aussi l’horloge active affichée.
   - [x] Vérifier la reprise après sélection dans `survival_chest_smoke.gd`; fermeture invalide et retour d’inventaire restent à couvrir.
 - [ ] **P5.3.3 — Évolution post-choix**
-  - [ ] Vérifier l’évolution après ajout d’une arme.
-  - [ ] Vérifier l’évolution après montée de niveau d’arme.
-  - [ ] Vérifier l’évolution après acquisition ou amélioration de relique.
+  - [x] Pour les dix paires, vérifier qu’une arme nouvellement acquise au niveau 1 n’offre pas l’évolution même si sa relique est déjà niveau 5; l’offre apparaît au niveau 5 de l’arme.
+  - [x] Vérifier l’offre après chaque chemin de niveaux de l’arme, et après acquisition/amélioration de la relique jusqu’au niveau 5.
+  - [x] Ouvrir un vrai coffre d’arme, afficher l’unique évolution devenue éligible et la collecter; `survival_weapon_catalog_smoke.gd` vérifie que le combo s’active après cette collecte.
 - [ ] **P5.3.4 — Probabilités**
   - [ ] Garder taux, poids, pity et rerolls accessibles en configuration.
   - [ ] Faire arbitrer les valeurs nécessaires avant leur verrouillage.

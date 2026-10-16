@@ -17,6 +17,7 @@
 
 - [x] `survival_weapon_catalog_smoke.gd` vérifie les bonus globaux des onze reliques aux cinq niveaux; les chiffres sont exercés comme valeurs **[PROPOSÉES]**, sans valider leur équilibre.
 - [x] Le même smoke vérifie les dix paires d’évolution : l’offre reste verrouillée jusqu’au niveau 5 de l’arme et de la relique, quel que soit leur ordre d’acquisition; le niveau 5 et la relique sont conservés, l’offre est unique, et seul le dégât de l’arme évoluée gagne le multiplicateur proposé de 25 % après collecte.
+- [x] Avec les cinq slots d’armes saturés, il vérifie l’absence d’évolution au niveau 1 lors de l’acquisition d’une arme dont la relique est déjà niveau 5, puis l’apparition au niveau 5; dans l’autre ordre, le coffre réel présente et collecte l’évolution lorsque la relique atteint le niveau 5 après l’arme.
 - [x] Vérifie aussi que les armes/évolutions déjà maximisées ne réapparaissent pas dans les offres.
 - [x] `survival_contact_damage_smoke.gd` couvre séparément le délai de contact corporel par ennemi et confirme que les projectiles ennemis ne partagent pas ce délai.
 

@@ -96,6 +96,7 @@ func _relic_bonuses_and_evolution_are_scoped() -> bool:
 				return false
 
 	var session: Node2D = load("res://scenes/survival_session.tscn").instantiate()
+	session.skip_starting_weapon_choice = true
 	session.spawn_initial_enemy = false
 	session.wave_spawning_enabled = false
 	root.add_child(session)
@@ -112,17 +113,30 @@ func _relic_bonuses_and_evolution_are_scoped() -> bool:
 			if not pair_loadout.apply_offer("relic:" + relic_id):
 				session.queue_free()
 				return false
-		if pair_loadout.is_evolution_ready(weapon_id):
+		if not _fill_other_weapon_slots(pair_loadout, weapon_id) or pair_loadout.is_evolution_ready(weapon_id) or \
+				not pair_loadout.offers("weapon").is_empty():
 			session.queue_free()
 			return false
 		if not pair_loadout.apply_offer("relic:" + relic_id) or not pair_loadout.is_evolution_ready(weapon_id):
+			session.queue_free()
+			return false
+		var evolution_offers: Array[Dictionary] = pair_loadout.offers("weapon")
+		if evolution_offers.size() != 1 or str(evolution_offers[0].get("id", "")) != "evolution:" + weapon_id:
 			session.queue_free()
 			return false
 		session.loadout = pair_loadout
 		if not is_equal_approx(session._weapon_combo_damage_multiplier(weapon_id), 1.0):
 			session.queue_free()
 			return false
-		if not pair_loadout.apply_offer("evolution:" + weapon_id) or \
+		if not session.open_chest_family("weapon") or not session._chest_open:
+			session.queue_free()
+			return false
+		var evolution_button: Button = session._chest_choice.get_node("Content/Options/Choice0")
+		if not evolution_button.text.contains("EVOLUTION —"):
+			session.queue_free()
+			return false
+		evolution_button.emit_signal("pressed")
+		if not pair_loadout.is_evolved(weapon_id) or \
 				not is_equal_approx(session._weapon_combo_damage_multiplier(weapon_id), 1.25):
 			session.queue_free()
 			return false
@@ -144,16 +158,38 @@ func _relic_bonuses_and_evolution_are_scoped() -> bool:
 			if not reverse_loadout.apply_offer("relic:" + relic_id):
 				session.queue_free()
 				return false
+		if not _fill_other_weapon_slots(reverse_loadout, weapon_id, 1):
+			session.queue_free()
+			return false
+		if not reverse_loadout.apply_offer("weapon:" + weapon_id) or reverse_loadout.is_evolution_ready(weapon_id):
+			session.queue_free()
+			return false
 		for _level in range(reverse_loadout.MAX_LEVEL - 1):
 			if not reverse_loadout.apply_offer("weapon:" + weapon_id):
 				session.queue_free()
 				return false
-		if reverse_loadout.is_evolution_ready(weapon_id) or not reverse_loadout.apply_offer("weapon:" + weapon_id) or \
-				not reverse_loadout.is_evolution_ready(weapon_id):
+			if _level < reverse_loadout.MAX_LEVEL - 2 and reverse_loadout.is_evolution_ready(weapon_id):
+				session.queue_free()
+				return false
+		var reverse_evolution_offers: Array[Dictionary] = reverse_loadout.offers("weapon")
+		if not reverse_loadout.is_evolution_ready(weapon_id) or reverse_evolution_offers.size() != 1 or \
+				str(reverse_evolution_offers[0].get("id", "")) != "evolution:" + weapon_id:
 			session.queue_free()
 			return false
 	session.queue_free()
 	return true
+
+func _fill_other_weapon_slots(loadout: RefCounted, excluded_weapon_id: String, reserved_slots: int = 0) -> bool:
+	var target_slot_count: int = loadout.MAX_SLOTS - reserved_slots
+	for weapon_id in loadout._weapon_definitions:
+		if weapon_id == excluded_weapon_id:
+			continue
+		for _level in range(loadout.MAX_LEVEL):
+			if not loadout.apply_offer("weapon:" + weapon_id):
+				return false
+		if loadout.owned_weapons().size() == target_slot_count:
+			return true
+	return false
 
 func _nearest_weapon_targets_skip_dead_enemies() -> bool:
 	var session: Node2D = load("res://scenes/survival_session.tscn").instantiate()
