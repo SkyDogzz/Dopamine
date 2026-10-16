@@ -5,7 +5,8 @@ class FakeProgression:
 	var awarded_runs := 0
 	func can_save_profile() -> bool: return true
 	func skill_bonus(stat_id: String) -> float:
-		return 0.10 if stat_id == "max_hp_pct" else 0.02 if stat_id == "move_speed_pct" else 0.05
+		return 0.10 if stat_id == "max_hp_pct" else 0.02 if stat_id == "move_speed_pct" else \
+			1.0 if stat_id == "critical_chance_pct" else 0.05
 	func achievement_bonus(_stat_id: String) -> float: return 0.03
 	func equipment_bonuses() -> Dictionary: return {"max_hp": 25.0, "damage_pct": 20.0}
 	func equipped_unique_effects() -> Array[String]: return ["expanded_loadout"]
@@ -30,6 +31,7 @@ func _initialize() -> void:
 		return
 	if not is_equal_approx(session._cached_persistent_damage_multiplier, 1.08) or \
 		not is_equal_approx(session.player.move_speed, 240.0 * 1.02) or \
+		not is_equal_approx(session._critical_chance(), 1.0) or \
 		not session.wave_director.endless_armorless or session.armorless_run_state == null or \
 		not session.armorless_run_state.is_active():
 		_fail("Armorless should preserve skill and achievement bonuses and initialize its endless run state")

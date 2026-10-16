@@ -144,6 +144,10 @@ func _run() -> void:
 			_equipment_rows(items).size() != 0:
 		_fail("Confirmed sale should remove the item, credit Essence once and refresh the empty state")
 		return
+	sold_profile["resources"]["essence"] = 500
+	if not save_service.save_slot("0", sold_profile):
+		_fail("The skill tree fixture should save enough Essence for its proposed four-node branch")
+		return
 	panel.get_node("Panel/Content/CloseButton").pressed.emit()
 	if panel.visible or root.gui_get_focus_owner() != equipment_button:
 		_fail("Closing the hub inventory should restore focus to its opener")
@@ -174,6 +178,14 @@ func _run() -> void:
 	if not is_equal_approx(progression.skill_bonus("move_speed_pct"), 0.02):
 		_fail("Unlocking Fleet Footed should persist its proposed move speed bonus")
 		return
+	var precision_button: Button = skill_panel.get_node("Panel/Content/NodeBranch/FollowupCard/Content/PrecisionButton")
+	if precision_button.disabled:
+		_fail("The advanced critical node should become available after its mastery prerequisite")
+		return
+	precision_button.pressed.emit()
+	if not is_equal_approx(progression.skill_bonus("critical_chance_pct"), 1.0):
+		_fail("Unlocking Steady Aim should persist its proposed critical chance bonus")
+		return
 	var skill_session: Node2D = load("res://scenes/survival_session.tscn").instantiate()
 	skill_session.progression_service = progression
 	skill_session.spawn_initial_enemy = false
@@ -181,8 +193,9 @@ func _run() -> void:
 	skill_session.skip_starting_weapon_choice = true
 	root.add_child(skill_session)
 	await process_frame
-	if not is_equal_approx(skill_session.player.move_speed, 240.0 * 1.02):
-		_fail("The unlocked proposed move speed node should affect a real Survival session")
+	if not is_equal_approx(skill_session.player.move_speed, 240.0 * 1.02) or \
+		not is_equal_approx(skill_session._critical_chance(), 1.0):
+		_fail("The unlocked proposed movement and critical nodes should affect a real Survival session")
 		return
 	skill_session.queue_free()
 	await process_frame
@@ -190,7 +203,8 @@ func _run() -> void:
 	if not is_zero_approx(progression.skill_bonus("max_hp_pct")) or \
 		not is_zero_approx(progression.skill_bonus("damage_pct")) or \
 		not is_zero_approx(progression.skill_bonus("move_speed_pct")) or \
-		progression.load_profile()["profile"]["resources"]["essence"] != 240:
+		not is_zero_approx(progression.skill_bonus("critical_chance_pct")) or \
+		progression.load_profile()["profile"]["resources"]["essence"] != 500:
 		_fail("Free skill respec should restore Essence and remove prototype bonuses")
 		return
 	skill_panel.get_node("Panel/Content/CloseButton").pressed.emit()

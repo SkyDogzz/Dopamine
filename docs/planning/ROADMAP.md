@@ -442,7 +442,7 @@ Travail requis :
 - `ProgressionService` possède des profils v6 avec difficulté maximale débloquée (Easy par défaut), récompenses de run, idempotence par `run_id`, inventaire, six slots, cinq raretés, stat lines, enhancement, conversion Powder, deux nodes de prototype et Exterminator. La règle [VALIDÉE] de déblocage séquentiel après victoire sur le boss de vague 24 est codée; les récompenses d’une difficulté verrouillée sont refusées. Les facteurs de difficulté [PROPOSÉS] sont centralisés et appliqués à la simulation ainsi qu’aux récompenses. Le hub injecte profil et difficulté dans la run; le raccourci Sandbox fonctionne sans service de progression.
 - Le générateur choisit les poids de rareté par difficulté et vague, selon une règle **[PROPOSÉE]**; la pénalité de mort précoce et la calibration statistique/équilibrage des plages restent à faire.
 - Les achievements ne couvrent qu’un compteur de kills avec quatre paliers ; ce n’est pas le catalogue cible de 100–150 familles.
-- L’arbre contient maintenant une tranche de trois nodes Core Stats en chaîne, mais pas encore le graphe interconnecté de 100–150 ni son budget cumulatif calibré.
+- L’arbre contient maintenant une tranche de quatre nodes Core Stats en chaîne, mais pas encore le graphe interconnecté de 100–150 ni son budget cumulatif calibré.
 - Cinq effets uniques ont un chemin gameplay prototype vérifié; `revive_knockback` reste stockable pour préserver les profils existants, mais n’est plus sélectionnable tant que son comportement n’est pas défini. Les chiffres de ces prototypes restent **[PROPOSÉS]**.
 - Des bonus de stat sont consommés dans Survival ; `pickup_radius_pct` augmente actuellement le rayon des orbes XP seulement et le chest a son propre rayon.
 
@@ -475,7 +475,7 @@ Travail requis :
   - [x] Vérifier non-cumul automatique et extensions de capacité réelles : le smoke équipe deux pièces porteuses du même effet, confirme la déduplication et applique six armes/reliques au maximum. Extension **[PROPOSÉE]**.
 - [ ] **P6.6 — Skill tree**
   - [ ] Établir le schéma node/prérequis/coût/effet.
-  - [x] Étendre la branche Core Stats de deux à trois nodes avec Fleet Footed (+2 % vitesse, 110 Essence, après Focused Training); bonus et coût **[PROPOSÉS]**, vérifiés jusqu'à leur application dans une session Survival et au respec.
+  - [x] Étendre la branche Core Stats à quatre nodes avec Fleet Footed (+2 % vitesse, 110 Essence) et Steady Aim (+1 point de critique, 140 Essence); prérequis, bonus et coûts **[PROPOSÉS]**, vérifiés jusqu'à leur application en Survival/Armorless et au respec.
   - [ ] Ajouter et tester une tranche de branche à la fois jusqu’à la cible décidée (100–150).
   - [ ] Vérifier coût, déblocages, bonus appliqué et respec gratuit.
   - [ ] Mesurer le bonus cumulatif avant de fermer l’arbre.

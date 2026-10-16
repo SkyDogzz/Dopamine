@@ -12,6 +12,7 @@ func _run() -> void:
 	var vitality: Button = panel.get_node("Panel/Content/NodeBranch/FoundationCard/Content/VitalityButton")
 	var focus: Button = panel.get_node("Panel/Content/NodeBranch/FollowupCard/Content/FocusButton")
 	var mastery: Button = panel.get_node("Panel/Content/NodeBranch/FollowupCard/Content/MasteryButton")
+	var precision: Button = panel.get_node("Panel/Content/NodeBranch/FollowupCard/Content/PrecisionButton")
 	var branch: HBoxContainer = panel.get_node("Panel/Content/NodeBranch")
 	var foundation_card: PanelContainer = panel.get_node("Panel/Content/NodeBranch/FoundationCard")
 	var followup_card: PanelContainer = panel.get_node("Panel/Content/NodeBranch/FollowupCard")
@@ -29,7 +30,8 @@ func _run() -> void:
 		return
 	if vitality.icon == null or vitality.icon.resource_path != "res://assets/icons/catalog/skill_node.png" or \
 		focus.icon == null or focus.icon.resource_path != "res://assets/icons/catalog/skill_node.png" or \
-		mastery.icon == null or mastery.icon.resource_path != "res://assets/icons/catalog/skill_node.png":
+		mastery.icon == null or mastery.icon.resource_path != "res://assets/icons/catalog/skill_node.png" or \
+		precision.icon == null or precision.icon.resource_path != "res://assets/icons/catalog/skill_node.png":
 		_fail("Existing skill node artwork should identify all three prototype choices")
 		return
 	if vitality.get_theme_constant("icon_max_width") != 12 or focus.get_theme_constant("icon_max_width") != 12 or \
@@ -37,13 +39,14 @@ func _run() -> void:
 		_fail("Skill node icons should remain compact and pixel crisp")
 		return
 	if branch.get_child_count() != 3 or foundation_card.size.x < 150 or followup_card.size.x < 150 or \
-		followup_card.size.y < 128:
-		_fail("The three existing skill nodes should form a readable connected branch")
+		followup_card.size.y < 188:
+		_fail("The four existing skill nodes should form a readable connected branch")
 		return
 	if vitality.text != "UNLOCK NODE" or focus.text != "UNLOCK NODE" or \
 		panel.get_node("Panel/Content/NodeBranch/FoundationCard/Content/Effect").text != "+5% MAX HP  •  50 ESSENCE  •  PROPOSED" or \
 		panel.get_node("Panel/Content/NodeBranch/FollowupCard/Content/Effect").text != "+3% DAMAGE  •  80 ESSENCE  •  PROPOSED" or \
-		panel.get_node("Panel/Content/NodeBranch/FollowupCard/Content/MasteryEffect").text != "+2% MOVE SPEED  •  110 ESSENCE  •  PROPOSED":
+		panel.get_node("Panel/Content/NodeBranch/FollowupCard/Content/MasteryEffect").text != "+2% MOVE SPEED  •  110 ESSENCE  •  PROPOSED" or \
+		panel.get_node("Panel/Content/NodeBranch/FollowupCard/Content/PrecisionEffect").text != "+1% CRIT CHANCE  •  140 ESSENCE  •  PROPOSED":
 		_fail("Node actions should stay concise while proposed effects and costs remain explicit")
 		return
 	if panel.get_node("Panel/Content/NodeBranch/FoundationCard/Content/Effect").get_theme_font_size("font_size") < 8 or \
@@ -53,7 +56,8 @@ func _run() -> void:
 	if not panel.get_global_rect().encloses(frame.get_global_rect()):
 		_fail("Skill tree frame should remain within the 640x360 logical viewport")
 		return
-	if vitality.disabled or not focus.disabled or not mastery.disabled or vitality.focus_mode == Control.FOCUS_NONE:
+	if vitality.disabled or not focus.disabled or not mastery.disabled or not precision.disabled or \
+		vitality.focus_mode == Control.FOCUS_NONE:
 		_fail("Skill choices should preserve their current prerequisites and keyboard focus")
 		return
 	panel.present({"resources": {"essence": 130}, "unlocked_skill_nodes": ["vitality_starter"]})
@@ -63,6 +67,9 @@ func _run() -> void:
 		return
 	if not mastery.disabled or panel.get_node("Panel/Content/NodeBranch/FollowupCard/Content/MasteryKicker").text != "MASTERY · LOCKED":
 		_fail("The skill mastery node should remain locked until Focused Training is unlocked")
+		return
+	if not precision.disabled or panel.get_node("Panel/Content/NodeBranch/FollowupCard/Content/PrecisionKicker").text != "ADVANCED · LOCKED":
+		_fail("The advanced critical node should remain locked until Fleet Footed is unlocked")
 		return
 	if "--capture" in OS.get_cmdline_user_args():
 		await RenderingServer.frame_post_draw

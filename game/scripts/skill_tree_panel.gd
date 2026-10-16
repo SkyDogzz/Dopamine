@@ -13,6 +13,9 @@ signal respec_requested
 @onready var _mastery_button: Button = $Panel/Content/NodeBranch/FollowupCard/Content/MasteryButton
 @onready var _mastery_effect: Label = $Panel/Content/NodeBranch/FollowupCard/Content/MasteryEffect
 @onready var _mastery_kicker: Label = $Panel/Content/NodeBranch/FollowupCard/Content/MasteryKicker
+@onready var _precision_button: Button = $Panel/Content/NodeBranch/FollowupCard/Content/PrecisionButton
+@onready var _precision_effect: Label = $Panel/Content/NodeBranch/FollowupCard/Content/PrecisionEffect
+@onready var _precision_kicker: Label = $Panel/Content/NodeBranch/FollowupCard/Content/PrecisionKicker
 @onready var _respec_button: Button = $Panel/Content/RespecButton
 @onready var _close_button: Button = $Panel/Content/CloseButton
 
@@ -25,6 +28,7 @@ func _ready() -> void:
 	_node_button.pressed.connect(func() -> void: unlock_requested.emit(NODE_ID))
 	_focus_button.pressed.connect(func() -> void: unlock_requested.emit("focused_training"))
 	_mastery_button.pressed.connect(func() -> void: unlock_requested.emit("fleet_footed"))
+	_precision_button.pressed.connect(func() -> void: unlock_requested.emit("steady_aim"))
 	_respec_button.pressed.connect(func() -> void: respec_requested.emit())
 
 func present(profile: Dictionary) -> void:
@@ -34,9 +38,11 @@ func present(profile: Dictionary) -> void:
 	var vitality_cost: int = progression_service.skill_node_cost(NODE_ID) if progression_service != null else 50
 	var focus_cost: int = progression_service.skill_node_cost("focused_training") if progression_service != null else 80
 	var mastery_cost: int = progression_service.skill_node_cost("fleet_footed") if progression_service != null else 110
+	var precision_cost: int = progression_service.skill_node_cost("steady_aim") if progression_service != null else 140
 	var has_node := NODE_ID in unlocked
 	var has_focus := "focused_training" in unlocked
 	var has_mastery := "fleet_footed" in unlocked
+	var has_precision := "steady_aim" in unlocked
 	_essence.text = "ESSENCE %d" % essence
 	_node_button.text = "UNLOCKED" if has_node else "UNLOCK NODE"
 	_node_effect.text = "+5%% MAX HP  •  %d ESSENCE  •  PROPOSED" % vitality_cost
@@ -51,6 +57,11 @@ func present(profile: Dictionary) -> void:
 	_mastery_kicker.text = "MASTERY · UNLOCKED" if has_mastery else \
 		"MASTERY · AVAILABLE" if has_focus and essence >= mastery_cost else "MASTERY · LOCKED"
 	_mastery_button.disabled = has_mastery or not has_focus or essence < mastery_cost
+	_precision_button.text = "UNLOCKED" if has_precision else "UNLOCK NODE"
+	_precision_effect.text = "+1%% CRIT CHANCE  •  %d ESSENCE  •  PROPOSED" % precision_cost
+	_precision_kicker.text = "ADVANCED · UNLOCKED" if has_precision else \
+		"ADVANCED · AVAILABLE" if has_mastery and essence >= precision_cost else "ADVANCED · LOCKED"
+	_precision_button.disabled = has_precision or not has_mastery or essence < precision_cost
 	_respec_button.disabled = unlocked.is_empty()
 	visible = true
 	_node_button.grab_focus()
@@ -60,15 +71,19 @@ func present_error() -> void:
 	_node_effect.text = "PROFILE COULD NOT BE READ"
 	_focus_effect.text = "PROFILE COULD NOT BE READ"
 	_mastery_effect.text = "PROFILE COULD NOT BE READ"
+	_precision_effect.text = "PROFILE COULD NOT BE READ"
 	_node_button.disabled = true
 	_focus_button.disabled = true
 	_mastery_button.disabled = true
+	_precision_button.disabled = true
 	_respec_button.disabled = true
 	_node_button.text = "UNAVAILABLE"
 	_focus_button.text = "UNAVAILABLE"
 	_mastery_button.text = "UNAVAILABLE"
+	_precision_button.text = "UNAVAILABLE"
 	_focus_kicker.text = "FOLLOW-UP · LOCKED"
 	_mastery_kicker.text = "MASTERY · LOCKED"
+	_precision_kicker.text = "ADVANCED · LOCKED"
 	visible = true
 	_close_button.grab_focus()
 

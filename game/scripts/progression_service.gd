@@ -27,6 +27,7 @@ const PROTOTYPE_SKILL_NODES := {
 	"vitality_starter": {"category": "core_stats", "depth": 3, "max_hp_pct": 0.05, "prerequisites": [], "status": "PROPOSED"},
 	"focused_training": {"category": "core_stats", "depth": 6, "damage_pct": 0.03, "prerequisites": ["vitality_starter"], "status": "PROPOSED"},
 	"fleet_footed": {"category": "core_stats", "depth": 9, "move_speed_pct": 0.02, "prerequisites": ["focused_training"], "status": "PROPOSED"},
+	"steady_aim": {"category": "core_stats", "depth": 12, "critical_chance_pct": 1.0, "prerequisites": ["fleet_footed"], "status": "PROPOSED"},
 }
 const RUN_ID_PATTERN := "^[A-Za-z0-9_-]{1,128}$"
 const EQUIPMENT_GENERATOR_SCRIPT := preload("res://scripts/equipment_generator.gd")

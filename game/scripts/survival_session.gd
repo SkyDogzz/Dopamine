@@ -347,6 +347,7 @@ var _contact_damage_until: Dictionary = {}
 var _pending_lifesteal := 0.0
 var _cached_persistent_damage_multiplier := 1.0
 var _cached_skill_move_speed_pct := 0.0
+var _cached_skill_critical_chance_pct := 0.0
 var _cached_equipment_bonuses: Dictionary = {}
 var _cached_unique_effects: Array[String] = []
 var _base_player_move_speed := 240.0
@@ -2497,6 +2498,7 @@ func _weapon_combo_damage_multiplier(weapon_id: String) -> float:
 func _refresh_persistent_bonuses() -> void:
 	_cached_persistent_damage_multiplier = 1.0
 	_cached_skill_move_speed_pct = 0.0
+	_cached_skill_critical_chance_pct = 0.0
 	_cached_equipment_bonuses = {}
 	_cached_unique_effects = []
 	if progression_service != null:
@@ -2505,6 +2507,7 @@ func _refresh_persistent_bonuses() -> void:
 			_cached_unique_effects = progression_service.equipped_unique_effects()
 		_cached_persistent_damage_multiplier += progression_service.skill_bonus("damage_pct")
 		_cached_skill_move_speed_pct = progression_service.skill_bonus("move_speed_pct")
+		_cached_skill_critical_chance_pct = progression_service.skill_bonus("critical_chance_pct")
 		_cached_persistent_damage_multiplier += progression_service.achievement_bonus("damage_pct")
 		_cached_persistent_damage_multiplier += _equipment_bonus("damage_pct") / 100.0
 	var capacity_bonus := 1 if _has_unique_effect("expanded_loadout") else 0
@@ -2539,10 +2542,13 @@ func _effective_weapon_cooldown(base_cooldown: float) -> float:
 	return base_cooldown * cooldown_multiplier / speed_multiplier
 
 func _roll_equipment_critical_multiplier() -> float:
-	var chance := clampf(_equipment_bonus("critical_chance_pct"), 0.0, 100.0)
+	var chance := _critical_chance()
 	if randf() * 100.0 < chance:
 		return 1.5 + (_equipment_bonus("critical_damage_pct") + loadout.global_relic_bonus("critical_damage_pct")) / 100.0
 	return 1.0
+
+func _critical_chance() -> float:
+	return clampf(_equipment_bonus("critical_chance_pct") + _cached_skill_critical_chance_pct, 0.0, 100.0)
 
 func _equipment_projectile_speed(base_speed: float) -> float:
 	return base_speed * (1.0 + (_equipment_bonus("projectile_speed_pct") + loadout.global_relic_bonus("projectile_speed_pct")) / 100.0)
