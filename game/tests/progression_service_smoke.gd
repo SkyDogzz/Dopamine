@@ -286,6 +286,13 @@ func _run() -> void:
 		_fail("Dismantling should remove the item once and persist its proposed rarity powder reward")
 		return
 	var achievement_service = load("res://scripts/progression_service.gd").new(save_service, "achievement")
+	var exterminator_definition: Dictionary = achievement_service._achievement_definitions.get("exterminator", {})
+	if exterminator_definition.get("category", "") != "combat" or \
+		exterminator_definition.get("metric", "") != "total_kills" or \
+		exterminator_definition.get("aggregation", "") != "sum" or \
+		exterminator_definition.get("secret", true) or exterminator_definition.get("tiers", []).size() != 4:
+		_fail("Achievement definitions should load the metric/category/secret/tier schema from JSON")
+		return
 	var achievement_run: Dictionary = achievement_service.award_survival_run("kill-run", 24, true, 100, "easy")
 	var achievement_profile: Dictionary = achievement_service.load_profile()["profile"]
 	if achievement_run.get("new_achievement_tiers") != 1 or \

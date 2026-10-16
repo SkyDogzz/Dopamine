@@ -22,12 +22,11 @@ const PROPOSED_DISMANTLE_REWARDS := {
 const PROPOSED_SELL_ESSENCE := {
 	"normal": 5, "magic": 10, "mystic": 20, "legendary": 40, "mythic": 80,
 }
+const ACHIEVEMENT_CATALOG_PATH := "res://data/achievement_catalog.json"
 const PROTOTYPE_SKILL_NODES := {
 	"vitality_starter": {"category": "core_stats", "depth": 3, "max_hp_pct": 0.05, "prerequisites": [], "status": "PROPOSED"},
 	"focused_training": {"category": "core_stats", "depth": 6, "damage_pct": 0.03, "prerequisites": ["vitality_starter"], "status": "PROPOSED"},
 }
-const PROPOSED_EXTERMINATOR_THRESHOLDS := [100, 1000, 10000, 100000]
-const PROPOSED_EXTERMINATOR_DAMAGE_BONUSES := [0.0005, 0.001, 0.0015, 0.002]
 const RUN_ID_PATTERN := "^[A-Za-z0-9_-]{1,128}$"
 const EQUIPMENT_GENERATOR_SCRIPT := preload("res://scripts/equipment_generator.gd")
 const SURVIVAL_DIFFICULTY_SCRIPT := preload("res://scripts/survival_difficulty.gd")
@@ -35,12 +34,14 @@ const SURVIVAL_DIFFICULTY_SCRIPT := preload("res://scripts/survival_difficulty.g
 var _save_service: RefCounted
 var _slot_id: String
 var _equipment_generator: RefCounted
+var _achievement_definitions: Dictionary
 var _rng := RandomNumberGenerator.new()
 
 func _init(save_service: RefCounted, slot_id: String = "0") -> void:
 	_save_service = save_service
 	_slot_id = slot_id
 	_equipment_generator = EQUIPMENT_GENERATOR_SCRIPT.new()
+	_achievement_definitions = _load_achievement_catalog()
 	_rng.randomize()
 
 func award_survival_run(
@@ -51,6 +52,9 @@ func award_survival_run(
 	var difficulty_index := SURVIVAL_DIFFICULTY_SCRIPT.ORDER.find(difficulty_id)
 	if difficulty_index < 0:
 		return _award_error("invalid_difficulty")
+	var exterminator: Dictionary = _achievement_definitions.get("exterminator", {})
+	if exterminator.is_empty():
+		return _award_error("achievement_catalog_invalid")
 	var profile_result := load_profile()
 	if not profile_result.get("ok", false):
 		return _award_error(str(profile_result.get("error", "load_failed")))
@@ -77,10 +81,7 @@ func award_survival_run(
 	var achievements: Dictionary = profile["achievement_progress"]
 	var previous_tier := int(achievements["exterminator_tier"])
 	achievements["total_kills"] = int(achievements["total_kills"]) + maxi(0, kills)
-	var current_tier := 0
-	for threshold in PROPOSED_EXTERMINATOR_THRESHOLDS:
-		if int(achievements["total_kills"]) >= threshold:
-			current_tier += 1
+	var current_tier := _achievement_tier_for_metric(exterminator, float(achievements["total_kills"]))
 	achievements["exterminator_tier"] = current_tier
 	profile["achievement_progress"] = achievements
 	rewarded_runs.append(run_id)
@@ -374,16 +375,66 @@ func equipped_unique_effects() -> Array[String]:
 	return effects
 
 func achievement_bonus(stat_id: String) -> float:
-	if stat_id != "damage_pct":
-		return 0.0
 	var result := load_profile()
 	if not result.get("ok", false):
 		return 0.0
 	var tier := int(result["profile"]["achievement_progress"]["exterminator_tier"])
+	var exterminator: Dictionary = _achievement_definitions.get("exterminator", {})
+	if exterminator.is_empty():
+		return 0.0
 	var bonus := 0.0
-	for index in range(mini(tier, PROPOSED_EXTERMINATOR_DAMAGE_BONUSES.size())):
-		bonus += PROPOSED_EXTERMINATOR_DAMAGE_BONUSES[index]
+	var tiers: Array = exterminator["tiers"]
+	for index in range(mini(tier, tiers.size())):
+		bonus += float(tiers[index]["rewards"].get(stat_id, 0.0))
 	return bonus
+
+func _load_achievement_catalog() -> Dictionary:
+	if not FileAccess.file_exists(ACHIEVEMENT_CATALOG_PATH):
+		return {}
+	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(ACHIEVEMENT_CATALOG_PATH))
+	if not parsed is Dictionary or parsed.size() != 2 or int(parsed.get("version", 0)) != 1 or \
+			not parsed.get("achievements") is Array or parsed["achievements"].is_empty() or \
+			parsed["achievements"].size() > 150:
+		return {}
+	var definitions: Dictionary = {}
+	for definition in parsed["achievements"]:
+		if not definition is Dictionary or definition.size() != 6 or typeof(definition.get("id")) != TYPE_STRING or \
+				str(definition["id"]).is_empty() or definitions.has(definition["id"]) or \
+				typeof(definition.get("category")) != TYPE_STRING or str(definition["category"]).is_empty() or \
+				typeof(definition.get("secret")) != TYPE_BOOL or \
+				typeof(definition.get("metric")) != TYPE_STRING or str(definition["metric"]).is_empty() or \
+				str(definition.get("aggregation", "")) not in ["sum", "max"] or \
+				not definition.get("tiers") is Array or definition["tiers"].size() != 4:
+			return {}
+		var previous_threshold := 0
+		var tier_ids: Dictionary = {}
+		for achievement_tier in definition["tiers"]:
+			if not achievement_tier is Dictionary or achievement_tier.size() != 3 or \
+					typeof(achievement_tier.get("id")) != TYPE_STRING or \
+					str(achievement_tier["id"]).is_empty() or \
+					tier_ids.has(achievement_tier["id"]) or \
+					typeof(achievement_tier.get("threshold")) not in [TYPE_INT, TYPE_FLOAT] or \
+					not is_finite(float(achievement_tier["threshold"])) or \
+					int(achievement_tier["threshold"]) != float(achievement_tier["threshold"]) or \
+					float(achievement_tier["threshold"]) <= previous_threshold or \
+					not achievement_tier.get("rewards") is Dictionary:
+				return {}
+			tier_ids[achievement_tier["id"]] = true
+			previous_threshold = int(achievement_tier["threshold"])
+			for stat_id in achievement_tier["rewards"]:
+				var reward = achievement_tier["rewards"][stat_id]
+				if typeof(stat_id) != TYPE_STRING or str(stat_id).is_empty() or \
+						typeof(reward) not in [TYPE_INT, TYPE_FLOAT] or not is_finite(float(reward)):
+					return {}
+		definitions[definition["id"]] = definition.duplicate(true)
+	return definitions
+
+func _achievement_tier_for_metric(definition: Dictionary, metric_value: float) -> int:
+	var tier := 0
+	for achievement_tier in definition["tiers"]:
+		if metric_value >= float(achievement_tier["threshold"]):
+			tier += 1
+	return tier
 
 func _empty_profile() -> Dictionary:
 	return {
@@ -422,7 +473,7 @@ func _valid_profile(profile: Dictionary) -> bool:
 			int(total_kills) != total_kills or total_kills < 0 or \
 			typeof(achievement_tier) not in [TYPE_INT, TYPE_FLOAT] or not is_finite(float(achievement_tier)) or \
 			int(achievement_tier) != achievement_tier or achievement_tier < 0 or \
-			achievement_tier > PROPOSED_EXTERMINATOR_THRESHOLDS.size():
+			achievement_tier > _achievement_definitions.get("exterminator", {}).get("tiers", []).size():
 		return false
 	var seen_skill_nodes: Dictionary = {}
 	for node_id in profile["unlocked_skill_nodes"]:

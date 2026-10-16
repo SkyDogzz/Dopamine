@@ -479,8 +479,9 @@ Travail requis :
   - [ ] Vérifier coût, déblocages, bonus appliqué et respec gratuit.
   - [ ] Mesurer le bonus cumulatif avant de fermer l’arbre.
 - [ ] **P6.7 — Achievements**
-  - [ ] Établir le schéma métrique/paliers/récompenses/secret.
-  - [ ] Implémenter une famille par catégorie puis étendre vers la cible 100–150.
+  - [x] Établir le schéma JSON métrique/catégorie/secret/agrégation/paliers/récompenses, aligné sur `AchievementDefinition` du GDD.
+  - [x] Migrer Exterminator en première famille `combat` chargée depuis `game/data/achievement_catalog.json`; seuils et bonus de l’exemple restent **[PROPOSÉS]**.
+  - [ ] Étendre à une famille par catégorie puis vers la cible 100–150; la répartition de catégories reste **[PROPOSÉE]**.
   - [ ] Vérifier seuils, quatre paliers, attribution unique et cumul des bonus.
 - [ ] **P6.8 — Sauvegarde et migrations**
   - [x] `progression_service_smoke.gd` couvre une fixture pour chaque profil supporté v1–v5 et vérifie migration vers v6, données conservées et champs ajoutés.

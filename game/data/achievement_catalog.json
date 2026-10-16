@@ -1,0 +1,18 @@
+{
+  "version": 1,
+  "achievements": [
+    {
+      "id": "exterminator",
+      "category": "combat",
+      "secret": false,
+      "metric": "total_kills",
+      "aggregation": "sum",
+      "tiers": [
+        { "id": "bronze", "threshold": 100, "rewards": { "damage_pct": 0.0005 } },
+        { "id": "silver", "threshold": 1000, "rewards": { "damage_pct": 0.001 } },
+        { "id": "gold", "threshold": 10000, "rewards": { "damage_pct": 0.0015 } },
+        { "id": "diamond", "threshold": 100000, "rewards": { "damage_pct": 0.002 } }
+      ]
+    }
+  ]
+}
