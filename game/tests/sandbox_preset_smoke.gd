@@ -28,6 +28,26 @@ func _run() -> void:
 			decoded["preset"]["initial_build"]["weapons"][0]["id"] != "lightning_conductor":
 		_fail("A preset should survive a share-code round trip: %s" % decoded)
 		return
+	var directory := ProjectSettings.globalize_path("user://sandbox_preset_smoke/presets")
+	DirAccess.make_dir_recursive_absolute(directory)
+	for file_name in DirAccess.get_files_at(directory):
+		DirAccess.remove_absolute(directory.path_join(file_name))
+	var preset_store = load("res://scripts/sandbox_preset_store.gd").new(directory, preset_service)
+	if not preset_store.save_preset(preset).get("ok", false):
+		_fail("A validated preset should save inside the sandbox preset directory")
+		return
+	var listed: Dictionary = preset_store.list_presets()
+	if not listed.get("ok", false) or listed["presets"].size() != 1 or \
+			listed["presets"][0]["preset_id"] != preset["preset_id"]:
+		_fail("The sandbox preset store should list saved presets")
+		return
+	if preset_store.load_preset("../slot_0").get("ok", false):
+		_fail("Preset identifiers must not escape the sandbox preset directory")
+		return
+	if not preset_store.delete_preset("test_build").get("ok", false) or \
+			preset_store.load_preset("test_build").get("ok", false):
+		_fail("A preset should be deletable without touching other files")
+		return
 	var hostile := preset.duplicate(true)
 	hostile["file_path"] = "/tmp/save.json"
 	if preset_service.validate_preset(hostile).get("ok", false):

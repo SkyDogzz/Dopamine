@@ -550,7 +550,8 @@ P1 livre le Sandbox développeur et ne remplace pas cette feature produit.
   - [x] Exporter/importer JSON limité à 1 Mio et refuser champs inconnus, types et métadonnées invalides.
   - [x] Ajouter `DSLAB1:` avec DEFLATE, Base64URL, SHA-256 d’intégrité et décompression plafonnée; smoke de round-trip et corruption.
   - [x] Borner récursivement profondeur (16), collections (256 éléments chacune) et types JSON autorisés; tests hostiles ciblés.
-  - [ ] Brancher les exports au menu Sandbox et ajouter stockage/import interactifs.
+  - [x] Ajouter `SandboxPresetStore` pour sauvegarder, lister, charger et supprimer les presets sous `user://sandbox/presets`; noms bornés et écriture temporaire validée.
+  - [ ] Brancher ces actions à l’écran Lab et ajouter l’import de fichier interactif.
   - [ ] Vérifier absence de script, chemin local et donnée privée.
 - [ ] **P8.4 — Import de sauvegarde**
   - [ ] Lire un profil normal en lecture seule.
