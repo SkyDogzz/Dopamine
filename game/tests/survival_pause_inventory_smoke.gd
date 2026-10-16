@@ -82,8 +82,8 @@ func _run() -> void:
 	if row_count != 4:
 		_fail("Inventory should list exactly two weapons and two relics")
 		return
-	if inventory.get_node("Center/Panel/Content/Counts").text != "WEAPONS 2  •  RELICS 2":
-		_fail("Run inventory should keep weapon and relic totals visible above its scroll area")
+	if inventory.get_node("Center/Panel/Content/Counts").text != "WEAPONS 2  •  RELICS 2  •  SCROLL ↑↓ / WHEEL":
+		_fail("Run inventory should keep counts and its scroll hint visible above the item list")
 		return
 	if icon_count != 4:
 		_fail("Every equipped weapon and relic should show its catalog icon")

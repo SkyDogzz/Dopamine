@@ -20,7 +20,7 @@ func _ready() -> void:
 	_close_button.grab_focus()
 
 func show_items(weapons: Array[Dictionary], relics: Array[Dictionary]) -> void:
-	_counts.text = "WEAPONS %d  •  RELICS %d" % [weapons.size(), relics.size()]
+	_counts.text = "WEAPONS %d  •  RELICS %d  •  SCROLL ↑↓ / WHEEL" % [weapons.size(), relics.size()]
 	_add_section("WEAPONS")
 	_add_items(weapons)
 	_add_section("RELICS")

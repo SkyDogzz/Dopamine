@@ -332,6 +332,11 @@ Le runner est fourni par `game/scripts/scenario_runner.gd` et consomme un fichie
 - [x] Les trois smokes ci-dessus passent sous Godot 4.7.2 via Xvfb avec `XDG_DATA_HOME` isolé. Les avertissements ALSA indiquent l’absence de sortie audio et le fallback vers le driver dummy; aucun échec de script n’est émis.
 - [ ] Interaction avec une manette physique non exécutée; les événements synthétiques vérifient la logique UI et ne remplacent pas le contrôle sur matériel.
 
+## Repère de défilement — inventaire de run (2026-10-16)
+
+- [x] Les totaux d’armes/reliques indiquent maintenant les commandes de défilement clavier et molette, au-dessus de la liste.
+- [ ] `survival_pause_inventory_smoke.gd` n’a pas été rejoué après ce changement; Godot est absent du PATH dans l’environnement courant.
+
 ## Art combat — roster statique (2026-10-16)
 
 - [x] Import Godot 4.7.2, `catalog_icon_assets_smoke.gd` (9 ennemis, élite, 2 boss; dimensions 24×24/96×96, impacts 64×64, palette et sources), `render_batching_smoke.gd`, `sandbox_ui_smoke.gd` avec profil isolé et `survival_entry_smoke.gd` passent.
