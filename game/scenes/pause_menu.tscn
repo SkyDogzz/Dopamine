@@ -31,7 +31,7 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="Panel" type="PanelContainer" parent="Center"]
-custom_minimum_size = Vector2(180, 0)
+custom_minimum_size = Vector2(250, 0)
 layout_mode = 2
 
 [node name="Content" type="VBoxContainer" parent="Center/Panel"]
@@ -45,6 +45,19 @@ theme_override_colors/font_color = Color(0.215686, 0.909804, 0.960784, 1)
 theme_override_font_sizes/font_size = 14
 text = "RUN PAUSED"
 horizontal_alignment = 1
+
+[node name="PausedStatus" type="Label" parent="Center/Panel/Content"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.831373, 0.278431, 1)
+theme_override_font_sizes/font_size = 8
+text = "SIMULATION FROZEN"
+horizontal_alignment = 1
+
+[node name="SpeedLabel" type="Label" parent="Center/Panel/Content"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.647059, 0.682353, 0.764706, 1)
+theme_override_font_sizes/font_size = 8
+text = "SIMULATION SPEED"
 
 [node name="SpeedSelect" type="OptionButton" parent="Center/Panel/Content"]
 custom_minimum_size = Vector2(0, 22)
@@ -115,7 +128,7 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="Panel" type="PanelContainer" parent="ConfirmationOverlay/Center"]
-custom_minimum_size = Vector2(220, 0)
+custom_minimum_size = Vector2(280, 0)
 layout_mode = 2
 
 [node name="Content" type="VBoxContainer" parent="ConfirmationOverlay/Center/Panel"]
