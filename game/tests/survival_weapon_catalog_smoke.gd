@@ -4,6 +4,9 @@ func _initialize() -> void:
 	call_deferred("_run")
 
 func _run() -> void:
+	if not await _nearest_weapon_targets_skip_dead_enemies():
+		_fail("Automatic weapons should ignore dead enemies that remain in a simulation snapshot")
+		return
 	if not await _weapon_kills_target("lightning_conductor", "storm_core", 12.4):
 		_fail("Storm Core should boost Lightning Conductor enough to defeat the test target")
 		return
@@ -48,6 +51,34 @@ func _run() -> void:
 		return
 	print("Survival weapon catalog smoke passed")
 	quit()
+
+func _nearest_weapon_targets_skip_dead_enemies() -> bool:
+	var session: Node2D = load("res://scenes/survival_session.tscn").instantiate()
+	session.spawn_initial_enemy = false
+	session.wave_spawning_enabled = false
+	root.add_child(session)
+	await process_frame
+	var origin: Vector2 = session.player.global_position
+	session._entities = [
+		{"id": {"index": 1, "generation": 1}, "components": {
+			"Health": {"current": 0.0}, "Transform2D": {"x": origin.x + 12.0, "y": origin.y},
+		}},
+		{"id": {"index": 2, "generation": 1}, "components": {
+			"Health": {"current": 10.0}, "Transform2D": {"x": origin.x + 50.0, "y": origin.y},
+		}},
+	]
+	var nearest: Dictionary = session._nearest_enemy(100.0)
+	var excluded_ids: Array[Vector2i] = []
+	var lightning_targets: Array = session._nearest_lightning_targets(origin, excluded_ids, 1, 100.0)
+	session._entities = [session._entities[0]]
+	if not session.loadout.apply_offer("weapon:frost_nova"):
+		session.queue_free()
+		return false
+	session._fire_frost_nova(float(session.simulation.snapshot()["simulation_time"]), false)
+	var frost_skipped_dead_targets := is_zero_approx(session._next_frost_nova_time)
+	session.queue_free()
+	return nearest.get("id", Vector2i(-1, -1)) == Vector2i(2, 1) and \
+		lightning_targets.size() == 1 and lightning_targets[0].get("id") == Vector2i(2, 1) and frost_skipped_dead_targets
 
 func _prism_laser_tracks_and_splits() -> bool:
 	var session: Node2D = load("res://scenes/survival_session.tscn").instantiate()

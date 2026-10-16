@@ -1640,7 +1640,7 @@ func _nearest_lightning_targets(origin: Vector2, excluded_ids: Array[Vector2i], 
 	var search_entities: Array = _entities if entities == null else entities
 	for entity in search_entities:
 		var components: Dictionary = entity["components"]
-		if components.get("IsProjectile", false) or components.get("IsXpOrb", false):
+		if not _is_targetable_enemy(components):
 			continue
 		var id: Dictionary = entity["id"]
 		var entity_id := Vector2i(int(id["index"]), int(id["generation"]))
@@ -1911,7 +1911,7 @@ func _fire_frost_nova(active_time: float, paused: bool) -> void:
 	var target_count := 0
 	for entity in _entities:
 		var components: Dictionary = entity["components"]
-		if components.get("IsProjectile", false) or components.get("IsXpOrb", false):
+		if not _is_targetable_enemy(components):
 			continue
 		var transform: Dictionary = components["Transform2D"]
 		var position := Vector2(float(transform["x"]), float(transform["y"]))
@@ -1932,7 +1932,7 @@ func _nearest_enemy_excluding(max_range: float, excluded: Array[Vector2i]) -> Di
 	var best_distance_squared := max_range * max_range
 	for entity in _entities:
 		var components: Dictionary = entity["components"]
-		if components.get("IsProjectile", false) or components.get("IsXpOrb", false) or float(components.get("Health", {}).get("current", 0.0)) <= 0.0:
+		if not _is_targetable_enemy(components):
 			continue
 		var id: Dictionary = entity["id"]
 		var key := Vector2i(int(id["index"]), int(id["generation"]))
@@ -1955,9 +1955,7 @@ func _meteor_cluster_target() -> Dictionary:
 	var target_count := 1
 	for entity in _entities:
 		var components: Dictionary = entity["components"]
-		if components.get("IsProjectile", false) or components.get("IsXpOrb", false):
-			continue
-		if float(components["Health"]["current"]) <= 0.0:
+		if not _is_targetable_enemy(components):
 			continue
 		var id: Dictionary = entity["id"]
 		if Vector2i(int(id["index"]), int(id["generation"])) == anchor["id"]:
@@ -1974,7 +1972,7 @@ func _spawn_starfall_fragments(origin: Vector2, primary_target: Dictionary, enti
 	var fragment_radius_squared := starfall_fragment_radius * starfall_fragment_radius
 	for entity in entities:
 		var components: Dictionary = entity["components"]
-		if components.get("IsProjectile", false) or components.get("IsXpOrb", false) or float(components["Health"]["current"]) <= 0.0:
+		if not _is_targetable_enemy(components):
 			continue
 		var id: Dictionary = entity["id"]
 		if int(id["index"]) == int(primary_target["index"]) and int(id["generation"]) == int(primary_target["generation"]):
@@ -2097,7 +2095,7 @@ func _nearest_enemy(max_range: float) -> Dictionary:
 	var best_distance_squared := max_range * max_range
 	for entity in _entities:
 		var components: Dictionary = entity["components"]
-		if components.get("IsProjectile", false) or components.get("IsXpOrb", false):
+		if not _is_targetable_enemy(components):
 			continue
 		var transform: Dictionary = components["Transform2D"]
 		var position := Vector2(float(transform["x"]), float(transform["y"]))
@@ -2106,6 +2104,14 @@ func _nearest_enemy(max_range: float) -> Dictionary:
 			best_distance_squared = distance_squared
 			nearest = {"position": position, "id": Vector2i(int(entity["id"]["index"]), int(entity["id"]["generation"]))}
 	return nearest
+
+func _is_targetable_enemy(components: Dictionary) -> bool:
+	if components.get("IsProjectile", false) or components.get("IsXpOrb", false):
+		return false
+	if not components.has("Health"):
+		return true
+	var health: Variant = components["Health"]
+	return health is Dictionary and float(health.get("current", 0.0)) > 0.0
 
 func _publish_player_target() -> void:
 	var target := player.global_position
