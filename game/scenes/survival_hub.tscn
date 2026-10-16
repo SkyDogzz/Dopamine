@@ -171,6 +171,7 @@ custom_minimum_size = Vector2(0, 21)
 layout_mode = 2
 size_flags_horizontal = 3
 focus_mode = 2
+theme_type_variation = "InactiveButton"
 theme_override_font_sizes/font_size = 8
 text = "SUCCÈS  ·  BIENTÔT"
 
@@ -179,6 +180,7 @@ custom_minimum_size = Vector2(0, 21)
 layout_mode = 2
 size_flags_horizontal = 3
 focus_mode = 2
+theme_type_variation = "InactiveButton"
 theme_override_font_sizes/font_size = 8
 text = "BESTIAIRE  ·  BIENTÔT"
 

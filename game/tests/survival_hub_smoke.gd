@@ -53,6 +53,15 @@ func _run() -> void:
 		not bestiary.pressed.get_connections().is_empty():
 		_fail("Successes and Bestiary should be focusable and inert")
 		return
+	if achievements.theme_type_variation != "InactiveButton" or bestiary.theme_type_variation != "InactiveButton" or \
+		achievements.disabled or bestiary.disabled:
+		_fail("Inactive hub features should use muted visuals but remain focusable")
+		return
+	var inactive_style := achievements.get_theme_stylebox("normal") as StyleBoxFlat
+	if inactive_style.bg_color.to_html(false) != "1b2340" or \
+		achievements.get_theme_stylebox("focus") != hub.theme.get_stylebox("focus", "Button"):
+		_fail("Inactive features should look disabled and retain the shared visible focus style")
+		return
 	var equipment_button := hub.get_node("Content/Main/PreparationCard/Body/EquipmentButton") as Button
 	equipment_button.pressed.emit()
 	await process_frame

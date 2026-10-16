@@ -9,6 +9,7 @@
 - **[VALIDÉ]** L’équipement permanent et l’arbre de compétences se consultent et se modifient dans le hub avant la run; ils ne sont pas modifiables pendant une run.
 - **[VALIDÉ]** Succès et Bestiaire sont visibles mais sans fonctionnalité ni contenu inventé.
 - **[VALIDÉ]** La scène de démarrage est l’accueil; **Jouer** transmet au hub. Le Sandbox reste strictement séparé de la progression normale et de `SaveService`.
+- **[PROPOSÉ]** Les entrées visibles mais inactives Succès/Bestiaire gardent un style atténué tout en conservant le focus clavier/manette visible; elles ne sont pas désactivées pour préserver leur atteignabilité.
 - **[PROPOSÉ]** Le choix Easy/Normal/Hard/Nightmare/Chaos applique provisoirement les multiplicateurs numériques du GDD, centralisés pour pouvoir être recalibrés. Les chiffres gardent le statut **[PROPOSÉ]** et ne sont pas présentés comme équilibrés ou validés.
 - **[PROPOSÉ]** Une nouvelle visite du hub présélectionne Easy; le choix de difficulté n’est mémorisé qu’au lancement de la run.
 - **[PROPOSÉ]** Le dernier boss de la vague 24 vaincu constitue la victoire qui débloque la difficulté suivante. Une défaite ou un abandon ne débloque rien.
