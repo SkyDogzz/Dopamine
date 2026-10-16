@@ -74,6 +74,21 @@ func _run() -> void:
 	if preset_service.validate_preset(too_deep).get("ok", false):
 		_fail("Preset payloads must reject excessive nesting")
 		return
+	var context = load("res://scripts/sandbox_lab_context.gd").new(preset_service)
+	if not context.start(preset).get("ok", false) or context.progression_service != null or \
+			context.normal_save_service != null or context.seed != preset["seed"]:
+		_fail("Sandbox Lab context must start from validated data without normal progression services")
+		return
+	var invalid_apply: Dictionary = await context.apply_preset(too_deep)
+	if invalid_apply.get("ok", false) or context.active_preset["preset_id"] != preset["preset_id"]:
+		_fail("A rejected preset must not replace the active Sandbox Lab context")
+		return
+	context.simulation.pause()
+	var reset_apply: Dictionary = await context.apply_preset(preset)
+	if not reset_apply.get("ok", false) or context.seed != preset["seed"]:
+		_fail("A paused Lab should transactionally reset into a validated preset")
+		return
+	context.stop()
 	print("Sandbox preset smoke passed")
 	quit()
 

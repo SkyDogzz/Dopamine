@@ -538,8 +538,8 @@ Travail requis :
 P1 livre le Sandbox développeur et ne remplace pas cette feature produit.
 
 - [ ] **P8.1 — Entrée et contexte isolé**
-  - [ ] Ajouter l’accès Sandbox au menu avant sélection/création de save.
-  - [ ] Créer un contexte mémoire sans ProgressionService.
+  - [ ] Ajouter l’accès Sandbox Lab au menu avant sélection/création de save; l’entrée actuelle reste le Sandbox développeur P1.
+  - [x] Ajouter `SandboxLabContext` mémoire : il valide le preset, instancie uniquement `CombatSimulation`, n’injecte aucun service de progression/save et réinitialise transactionnellement seulement lorsque la simulation est en pause.
   - [ ] Vérifier sentinelle et chemins de sauvegarde séparés.
 - [ ] **P8.2 — Build et configuration**
   - [ ] Créer l’éditeur de build initial.
