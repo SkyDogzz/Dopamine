@@ -151,6 +151,8 @@ Les méthodes GDExtension n'exposent pas de pointeurs ECS ni de références mut
 
 Dans Survival, le joueur accepte WASD et les quatre flèches via les mêmes actions de déplacement. Le modal des armes de départ et des coffres place le focus sur le premier bouton; les directions parcourent les choix et Espace ou Entrée confirme le bouton focalisé.
 
+Le HUD Survival expose un `RunStatHub` compact à gauche. Tab ouvre son détail en lecture seule; Échap ou Annuler ferme ce détail avant que la pause puisse s'ouvrir. La session reste propriétaire de l'agrégation des statistiques et transmet au composant UI un snapshot de valeurs et de contributions run, équipement, achievements et skill tree. Le composant n'accède ni à `SaveService` ni à `ProgressionService`; le Sandbox partagé continue donc à l'utiliser sans dépendance de progression. La rotation des bonus automatiques au niveau XP est **[VALIDÉE]** comme règle, mais reste désactivée tant que sa table de statistiques et ses valeurs ne sont pas définies.
+
 ## Messages
 
 | Message | Direction | Garantie attendue |

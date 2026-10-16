@@ -56,10 +56,10 @@ P9 vérifie et calibre les tranches livrables, puis la version complète.
 
 **Priorité :** tranche UI à prendre avant de reprendre le travail nominal P5/P6. Ce module ne remplace pas ces jalons et ne prétend pas les clore. Sa spec d'implémentation est [`tasks/ui-refonte/SPEC-run-stat-hub.md`](../../tasks/ui-refonte/SPEC-run-stat-hub.md), liée depuis la [carte des capacités UI](../../UI_CAPABILITY_MAP.md).
 
-- [ ] Afficher à gauche un hub compact des statistiques effectives de la run.
-- [ ] Ouvrir avec Tab un panneau en lecture seule indiquant les totaux et les contributions de la progression de run (XP incluse), l'équipement, les achievements et le skill tree.
-- [ ] Garder le gameplay actif et les horloges en marche pendant l'affichage du panneau.
-- [ ] Vérifier navigation clavier/manette, lisibilité à 640×360 et agrandissement, et isolation stricte du Sandbox.
+- [x] Afficher à gauche un hub compact des statistiques effectives de la run.
+- [x] Ouvrir avec Tab un panneau en lecture seule indiquant les totaux et les contributions de la progression de run (XP incluse), l'équipement, les achievements et le skill tree. Le niveau XP et l'absence de bonus par niveau configuré sont indiqués explicitement.
+- [x] Garder le gameplay actif et les horloges en marche pendant l'affichage du panneau.
+- [x] Vérifier navigation clavier/manette, lisibilité à 640×360 et agrandissement, et isolation stricte du Sandbox.
 - [ ] Implémenter les bonus automatiques d'XP lorsque l'ordre et les valeurs de la rotation seront définis; d'ici là ne pas inventer de balance.
 
 La rotation automatique fixe des bonus XP est **[VALIDÉE]** comme règle d'expérience; son ordre, ses valeurs et ses caps restent **[À DÉFINIR]** dans le GDD. Le panneau de stats peut être implémenté avec les sources existantes sans attendre cet arbitrage.

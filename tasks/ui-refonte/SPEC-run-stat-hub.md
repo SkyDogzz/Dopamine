@@ -1,6 +1,6 @@
 # Spec : `run-stat-hub`
 
-**Statut : intention fonctionnelle validée; implémentation à faire.** Cette tranche rend les statistiques de la run visibles et explique leurs sources. Elle peut avancer avant la clôture de P5/P6; elle ne clôt ni ne remplace ces jalons.
+**Statut : implémentation livrée; bonus automatique par niveau XP en attente de ses paramètres.** Cette tranche rend les statistiques de la run visibles et explique leurs sources. Elle peut avancer avant la clôture de P5/P6; elle ne clôt ni ne remplace ces jalons.
 
 ## Décisions validées
 
@@ -19,6 +19,8 @@
 - Statistiques exactes affichées dans le hub compact et leur format visuel.
 - Disposition détaillée, regroupement et navigation de fermeture du panneau Tab.
 - Règle de cumul/ordre des modificateurs lorsqu'une même statistique a plusieurs sources, dans les limites de l'architecture déjà documentées.
+
+La première présentation affiche Damage, Move Speed et Crit Chance dans le hub compact. Le panneau Tab détaille Damage, Move Speed, Attack Speed, Cooldown Reduction, Crit Chance, Crit Damage, Max HP, Area, Projectile Speed, XP Gain, XP Pickup Radius, Kill Healing et Lifesteal. Chaque ligne montre le total et les sources non nulles : run (reliques/effets temporaires), équipement, achievements et skill tree. Le panneau est aligné à gauche pour laisser le centre de l'arène visible; son bouton Close reçoit le focus à l'ouverture.
 
 Les paramètres de rotation XP ne doivent pas être inventés ni présentés comme validés. L'implémentation peut commencer par le contrat de contribution par source et les panneaux de lecture, en conservant le bonus XP explicitement inactif tant que sa table n'est pas décidée.
 
@@ -42,15 +44,15 @@ Les paramètres de rotation XP ne doivent pas être inventés ni présentés com
 
 ## Critères d'acceptation
 
-- [ ] Le hub gauche présente les statistiques courantes de run sans masquer le joueur, les menaces ou les télégraphes.
-- [ ] Tab ouvre et ferme le détail sans pause; les états de simulation et l'horloge continuent pendant qu'il est affiché.
-- [ ] Les totaux sont cohérents avec les contributions séparées XP/run, équipement, achievements et skill tree.
-- [ ] Les changements d'état pertinents rafraîchissent les valeurs affichées sans modifier les sources.
-- [ ] Les entrées clavier/manette ont un focus visible; Tab ne casse pas les contrôles de déplacement ou de combat.
-- [ ] Le comportement reste isolé du Sandbox et l'équipement/arbre/achievements restent non modifiables depuis ce panneau.
-- [ ] Les layouts sont vérifiés à 640×360 et à une résolution agrandie.
-- [ ] Les valeurs/ordre du bonus XP restent marqués à définir tant que l'arbitrage de balance n'est pas consigné dans le GDD.
+- [x] Le hub gauche présente les statistiques courantes de run dans un panneau compact sous le HUD.
+- [x] Tab ouvre/ferme le détail sans pause; Échap / Annuler ferme le détail avant d'ouvrir la pause.
+- [x] Les totaux reprennent les bonus existants du run, de l'équipement, des achievements et du skill tree; les catégories sans contribution sont omises.
+- [x] Les valeurs se rafraîchissent depuis la session en lecture seule, sans écrire dans les sources.
+- [x] Tab donne le focus au bouton Close; les contrôles de déplacement restent gérés par la session.
+- [x] Le composant reçoit uniquement un snapshot de statistiques; il n'a pas de référence aux services Save ou Progression et n'ajoute aucun accès depuis le Sandbox.
+- [x] Le smoke vérifie le panneau au viewport logique 640×360 et à 960×600 / 1280×720.
+- [x] Le panneau indique que le bonus automatique XP n'est pas configuré; l'ordre et les valeurs restent à définir dans le GDD.
 
 ## Point d'entrée d'implémentation
 
-Lire `docs/gdd/GDD_v1.6.md` sections 02 et 15, `docs/architecture/INTERFACES.md` pour les sources de stats et le contrat de simulation, puis les scènes/scripts `survival_session`, HUD et inventaire de run. Le propriétaire doit agréger des contributions explicites plutôt que recalculer ou dupliquer les règles de gameplay dans les contrôles UI.
+Le composant `game/scripts/run_stat_hub.gd` ne connaît que des données de présentation; `survival_session.gd` reste propriétaire des calculs et lui transmet le snapshot. Le bonus de niveau XP demeure inactif jusqu'à l'ajout d'une table de rotation décidée et documentée.

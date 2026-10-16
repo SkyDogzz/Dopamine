@@ -42,7 +42,7 @@ godot --path game
 Le premier lancement de l’éditeur importe le projet et vérifie la GDExtension. Le dernier lancement ouvre l’accueil. Le Sandbox développeur reste accessible par son entrée secondaire et fonctionne sans sauvegarde.
 Le jeu utilise un viewport logique 640×360 et une fenêtre initiale 1280×720.
 Depuis l’accueil, `JOUER` ouvre le hub de préparation et lance une run Survival avec la difficulté choisie. Le bouton `PLAY SURVIVAL` du Sandbox développeur ouvre toujours le prototype et son choix d’arme initial, sans `SaveService` ni progression normale; `ACCUEIL` revient au menu.
-En Survival, le menu de pause propose une vitesse de run de ×0,25 à ×4, le verrouillage des dégâts et la sélection automatique de la première option des coffres. La simulation de combat et le temps Godot suivent ce multiplicateur; le jeu revient à ×1 à la sortie de la run.
+En Survival, le HUD garde un aperçu des statistiques à gauche; Tab ouvre leur détail sans interrompre la run, et Échap le ferme avant d'ouvrir la pause. Le menu de pause propose une vitesse de run de ×0,25 à ×4, le verrouillage des dégâts et la sélection automatique de la première option des coffres. La simulation de combat et le temps Godot suivent ce multiplicateur; le jeu revient à ×1 à la sortie de la run.
 Le hub propose aussi `RUN TEMPORAIRE · SANS SAUVEGARDE` : cette partie démarre avec un profil vide en mémoire, en difficulté Easy, et ses récompenses de fin sont abandonnées sans modifier la sauvegarde normale.
 
 Vérifications ciblées :
