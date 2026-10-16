@@ -9,7 +9,7 @@
 - Refaire visuellement toutes les interfaces existantes et les rendre conformes à l’Art Bible sans modifier leurs comportements validés.
 - Garder le rôle du héros cyan, mais redessiner sa silhouette en personnage top-down chibi.
 - Garder l’isolation stricte du Sandbox et ne pas inventer d’écrans fonctionnels pour Succès ou Bestiaire, qui restent inactifs selon l’interview UI précédente.
-- Pour les sprites, livrer PNG et source Aseprite. Le premier lot pilote produit maintenant une source Aseprite éditable pour le héros, le chaser et Lightning Conductor; les autres assets existants, dont la skyline, restent à reprendre dans cette filière.
+- Pour les sprites, livrer PNG et source Aseprite. Le lot pilote produit une source éditable pour le héros, le chaser et Lightning Conductor. Le lot catalogue ajoute 10 icônes d’armes, 10 variantes d’évolution et 11 icônes de reliques avec leurs sources.
 - Distinguer **[VALIDÉ]**, **[PROPOSÉ]** et **[OUVERT]** comme dans la Bible et le GDD. Une case vide ou une convention habituelle ne vaut pas décision.
 
 ## Référence technique importante
@@ -18,7 +18,7 @@ La résolution logique **640×360 est [VALIDÉE]** dans l’Art Bible. Le projet
 
 ## État présent du dépôt
 
-Inventaire physique : `game/assets/sprites/` contient 42 fichiers graphiques (17 PNG, dont un atlas source, et 25 SVG); `game/assets/icons/` contient 17 PNG (16 icônes utilisables et un atlas source); `game/assets/backgrounds/` contient 1 PNG; `game/assets/fonts/` contient 2 polices et leurs licences. Le héros, le chaser et le projectile Lightning Conductor du lot pilote ont chacun un `.aseprite` dans `game/assets/source/pilot/`; aucun autre asset du jeu n’a encore de source Aseprite.
+Les nouveaux exports de catalogue sont dans `game/assets/sprites/catalog/` et leurs sources dans `game/assets/source/catalog_weapons/` et `game/assets/source/catalog_relics/`. Chaque image de catalogue fait 32×32 pixels et utilise au plus 16 couleurs opaques. Les icônes d’armes et reliques alimentent maintenant les coffres, le HUD et l’inventaire; l’inventaire affiche l’icône d’évolution quand la combinaison d’arme et relique l’a effectivement débloquée.
 
 La plupart des PNG historiques découpés ont 64×64 px. Le héros pilote est maintenant 32×32, le chaser 24×24 et le projectile Lightning Conductor 16×16; aucune animation n’est incluse. Les autres images restent un mélange de sprites issus d’atlas, d’illustrations SVG et d’icônes.
 
@@ -32,7 +32,7 @@ La plupart des PNG historiques découpés ont 64×64 px. Le héros pilote est ma
 | Boss | `boss_mid_placeholder.png`, `boss_final_placeholder.png` | Remplacer les placeholders par les boss réellement utilisés; sprite standard demandé de 96×96 px. Les identités/patterns encore proposés ne doivent pas être inventés comme décisions de design. |
 | Projectiles | `projectile_lightning.png` (pilote 16×16; source `source/pilot/projectile_lightning.aseprite`), `projectile_inferno.png`, `projectile_crimson.png`, `projectile_enemy.png`, `projectile_minigun.svg`, `projectile_toxic_cloud.svg`, `projectile_sawblades.svg`, `projectile_meteor.svg`, `projectile_starfall_fragment.svg`, `projectile_prism_laser.svg`, `projectile_prism_secondary.svg`, `projectile_void_orb.svg`, `projectile_frost_nova.svg` | Refondre les silhouettes comme sprites nets. Le renderer réutilise des sprites pour certaines évolutions; vérifier et produire un visuel distinct quand l’évolution exige une transformation complète. Les traînées restent des VFX séparés. |
 | Récompenses en run | `xp_orb.png`, `chest_closed.png` | Recréer l’orbe XP et le coffre; créer les variantes/frames d’ouverture ou de récompense nécessaires aux animations de récompense validées. Les autres catégories de pickups ne sont pas implémentées et ne sont pas à inventer dans cette passe. |
-| Reliques | `relic_storm_core.png`, `relic_infernal_heart.png`, `relic_blood_chalice.png`, `relic_celestial_eye.svg`, `relic_frozen_crown.svg`, `relic_magnet_heart.svg`, `relic_magnetic_coil.svg`, `relic_overdrive_engine.svg`, `relic_plague_mask.svg`, `relic_prism_crystal.svg`, `relic_singularity.svg` | Recréer les 11 icônes/sprites avec un style homogène. Les icônes d’inventaire ne doivent pas dépendre des projectiles. |
+| Icônes catalogue | `sprites/catalog/weapon_*.png`, `evolution_*.png`, `relic_*.png` (10 armes, 10 évolutions, 11 reliques; sources dans `source/catalog_weapons/` et `source/catalog_relics/`) | Première série homogène livrée et branchée à la présentation. Les dessins restent des prototypes raster issus d’une référence générée; la finition artistique et les animations complètes restent à produire. |
 | Terrain de l’arène actuelle | `survival_ground.svg`, `survival_ruins.svg` | Remplacer par des tiles 16×16 et éléments décoratifs pixel art nets, à faible contraste. Un premier motif généré est resté hors du jeu après revue visuelle, car sa répétition surchargeait le sol. Le premier biome officiel et sa palette secondaire restent **[OUVERTS]**; le moss/stone/ruins existant sert de référence provisoire, pas de décision. |
 | Impacts et combat VFX | `weapon_impacts.svg` (atlas de 10 cellules), plus anneaux, arcs, lignes de visée et explosions dessinés par `survival_session.gd` | Refaire les 10 familles d’impact selon la puissance; ajouter explosions de mort en pixels et feedback d’évolution/récompense requis. Garder impacts, télégraphes, traînées, halos et particules séparés des sprites. Répartitions élément/couleur, plafonds VFX et timings détaillés restent **[OUVERTS]**. |
 | Atlases actuels | `dopamine_atlas_source.png` (sprites), `progression_atlas_source.png` (icônes) | Sources aplaties de découpe 4×4, sans couches ni fichiers Aseprite. À remplacer par sources éditables rangées par famille/animation; le script actuel `game/tools/slice_sprite_atlas.gd` n’établit pas une convention d’animation validée. |
@@ -54,7 +54,7 @@ Le catalogue actif est défini dans `game/data/combat_catalog.json` :
 | Toxic Cloud | Plague Mask | Pandemic |
 | Prism Laser | Prism Crystal | Spectrum Collapse |
 
-**Assets à produire pour ce catalogue :** 10 icônes dédiées d’armes (le HUD et les choix réutilisent actuellement des sprites de projectile); les 11 icônes de reliques listées plus haut; les sprites de projectile/silhouette nécessaires; un traitement visuel par évolution répondant à la transformation complète validée. Magnet Heart n’a pas d’arme associée ni d’évolution. Les chiffres de puissance/couleur ou tout effet proposé ne doivent pas guider les dessins comme s’ils étaient validés.
+**Assets de catalogue livrés :** 10 icônes dédiées d’armes, 10 icônes transformées pour leurs évolutions et les 11 icônes de reliques. Les sprites de projectiles/silhouettes et leurs effets restent à reprendre. Magnet Heart n’a pas d’arme associée ni d’évolution. Les chiffres de puissance/couleur ou tout effet proposé ne doivent pas guider les dessins comme s’ils étaient validés.
 
 ### Icônes UI et polices existantes
 

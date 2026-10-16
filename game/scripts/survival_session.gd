@@ -24,16 +24,16 @@ const WEAPON_IMPACT_LIFETIME := 0.22
 const MAX_VISIBLE_WEAPON_IMPACTS := 32
 const LIGHTNING_ARC_LIFETIME := 0.12
 const WEAPON_ICONS := {
-	"lightning_conductor": preload("res://assets/sprites/projectile_lightning.png"),
-	"inferno_sprayer": preload("res://assets/sprites/projectile_inferno.png"),
-	"crimson_daggers": preload("res://assets/sprites/projectile_crimson.png"),
-	"minigun": preload("res://assets/sprites/projectile_minigun.svg"),
-	"toxic_cloud": preload("res://assets/sprites/projectile_toxic_cloud.svg"),
-	"sawblades": preload("res://assets/sprites/projectile_sawblades.svg"),
-	"meteor_staff": preload("res://assets/sprites/projectile_meteor.svg"),
-	"prism_laser": preload("res://assets/sprites/projectile_prism_laser.svg"),
-	"void_orb": preload("res://assets/sprites/projectile_void_orb.svg"),
-	"frost_nova": preload("res://assets/sprites/projectile_frost_nova.svg"),
+	"lightning_conductor": preload("res://assets/sprites/catalog/weapon_lightning_conductor.png"),
+	"inferno_sprayer": preload("res://assets/sprites/catalog/weapon_inferno_sprayer.png"),
+	"crimson_daggers": preload("res://assets/sprites/catalog/weapon_crimson_daggers.png"),
+	"minigun": preload("res://assets/sprites/catalog/weapon_minigun.png"),
+	"toxic_cloud": preload("res://assets/sprites/catalog/weapon_toxic_cloud.png"),
+	"sawblades": preload("res://assets/sprites/catalog/weapon_sawblades.png"),
+	"meteor_staff": preload("res://assets/sprites/catalog/weapon_meteor_staff.png"),
+	"prism_laser": preload("res://assets/sprites/catalog/weapon_prism_laser.png"),
+	"void_orb": preload("res://assets/sprites/catalog/weapon_void_orb.png"),
+	"frost_nova": preload("res://assets/sprites/catalog/weapon_frost_nova.png"),
 }
 const WAVE_DIRECTOR_SCRIPT := preload("res://scripts/survival_wave_director.gd")
 const LOADOUT_SCRIPT := preload("res://scripts/survival_loadout.gd")

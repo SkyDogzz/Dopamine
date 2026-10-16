@@ -2,27 +2,39 @@ extends RefCounted
 
 const COMBAT_CATALOG_SCRIPT := preload("res://scripts/combat_catalog.gd")
 const ICONS := {
-	"lightning_conductor": "res://assets/sprites/projectile_lightning.png",
-	"inferno_sprayer": "res://assets/sprites/projectile_inferno.png",
-	"crimson_daggers": "res://assets/sprites/projectile_crimson.png",
-	"minigun": "res://assets/sprites/projectile_minigun.svg",
-	"toxic_cloud": "res://assets/sprites/projectile_toxic_cloud.svg",
-	"sawblades": "res://assets/sprites/projectile_sawblades.svg",
-	"meteor_staff": "res://assets/sprites/projectile_meteor.svg",
-	"prism_laser": "res://assets/sprites/projectile_prism_laser.svg",
-	"void_orb": "res://assets/sprites/projectile_void_orb.svg",
-	"frost_nova": "res://assets/sprites/projectile_frost_nova.svg",
-	"storm_core": "res://assets/sprites/relic_storm_core.png",
-	"infernal_heart": "res://assets/sprites/relic_infernal_heart.png",
-	"blood_chalice": "res://assets/sprites/relic_blood_chalice.png",
-	"overdrive_engine": "res://assets/sprites/relic_overdrive_engine.svg",
-	"plague_mask": "res://assets/sprites/relic_plague_mask.svg",
-	"magnetic_coil": "res://assets/sprites/relic_magnetic_coil.svg",
-	"celestial_eye": "res://assets/sprites/relic_celestial_eye.svg",
-	"prism_crystal": "res://assets/sprites/relic_prism_crystal.svg",
-	"singularity": "res://assets/sprites/relic_singularity.svg",
-	"frozen_crown": "res://assets/sprites/relic_frozen_crown.svg",
-	"magnet_heart": "res://assets/sprites/relic_magnet_heart.svg",
+	"lightning_conductor": "res://assets/sprites/catalog/weapon_lightning_conductor.png",
+	"inferno_sprayer": "res://assets/sprites/catalog/weapon_inferno_sprayer.png",
+	"crimson_daggers": "res://assets/sprites/catalog/weapon_crimson_daggers.png",
+	"minigun": "res://assets/sprites/catalog/weapon_minigun.png",
+	"toxic_cloud": "res://assets/sprites/catalog/weapon_toxic_cloud.png",
+	"sawblades": "res://assets/sprites/catalog/weapon_sawblades.png",
+	"meteor_staff": "res://assets/sprites/catalog/weapon_meteor_staff.png",
+	"prism_laser": "res://assets/sprites/catalog/weapon_prism_laser.png",
+	"void_orb": "res://assets/sprites/catalog/weapon_void_orb.png",
+	"frost_nova": "res://assets/sprites/catalog/weapon_frost_nova.png",
+	"storm_core": "res://assets/sprites/catalog/relic_storm_core.png",
+	"infernal_heart": "res://assets/sprites/catalog/relic_infernal_heart.png",
+	"blood_chalice": "res://assets/sprites/catalog/relic_blood_chalice.png",
+	"overdrive_engine": "res://assets/sprites/catalog/relic_overdrive_engine.png",
+	"plague_mask": "res://assets/sprites/catalog/relic_plague_mask.png",
+	"magnetic_coil": "res://assets/sprites/catalog/relic_magnetic_coil.png",
+	"celestial_eye": "res://assets/sprites/catalog/relic_celestial_eye.png",
+	"prism_crystal": "res://assets/sprites/catalog/relic_prism_crystal.png",
+	"singularity": "res://assets/sprites/catalog/relic_singularity.png",
+	"frozen_crown": "res://assets/sprites/catalog/relic_frozen_crown.png",
+	"magnet_heart": "res://assets/sprites/catalog/relic_magnet_heart.png",
+}
+const EVOLUTION_ICONS := {
+	"lightning_conductor": "res://assets/sprites/catalog/evolution_lightning_conductor.png",
+	"inferno_sprayer": "res://assets/sprites/catalog/evolution_inferno_sprayer.png",
+	"crimson_daggers": "res://assets/sprites/catalog/evolution_crimson_daggers.png",
+	"minigun": "res://assets/sprites/catalog/evolution_minigun.png",
+	"toxic_cloud": "res://assets/sprites/catalog/evolution_toxic_cloud.png",
+	"sawblades": "res://assets/sprites/catalog/evolution_sawblades.png",
+	"meteor_staff": "res://assets/sprites/catalog/evolution_meteor_staff.png",
+	"prism_laser": "res://assets/sprites/catalog/evolution_prism_laser.png",
+	"void_orb": "res://assets/sprites/catalog/evolution_void_orb.png",
+	"frost_nova": "res://assets/sprites/catalog/evolution_frost_nova.png",
 }
 const STARTING_WEAPONS := ["lightning_conductor", "inferno_sprayer"]
 const MAX_SLOTS := 5
@@ -183,5 +195,7 @@ func owned_item_details(family: String) -> Array[Dictionary]:
 			item["evolution_id"] = definition["evolution_id"]
 			item["evolved"] = int(levels[item_id]) >= MAX_LEVEL and relic_level(relic_id) > 0
 			item["required_relic_name"] = _relics.get(relic_id, relic_id)
+			if bool(item["evolved"]):
+				item["icon"] = EVOLUTION_ICONS.get(item_id, item["icon"])
 		result.append(item)
 	return result
