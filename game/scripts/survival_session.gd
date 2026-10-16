@@ -1063,14 +1063,8 @@ func _refresh_hud(state: Dictionary) -> void:
 	_weapon_icon.texture = WEAPON_ICONS.get(owned_weapons[0]) if not owned_weapons.is_empty() else null
 	for weapon_id in owned_weapons:
 		var label := "%s Lv%d" % [short_names.get(weapon_id, weapon_id), loadout.weapon_level(weapon_id)]
-		if weapon_id == "minigun" and loadout.is_evolved(weapon_id):
-			label += " REDLINE"
-		if weapon_id == "toxic_cloud" and loadout.is_evolved(weapon_id):
-			label += " PANDEMIC"
-		if weapon_id == "sawblades" and loadout.is_evolved(weapon_id):
-			label += " RAZORSTORM"
-		if weapon_id == "meteor_staff" and loadout.is_evolved(weapon_id):
-			label += " STARFALL"
+		if loadout.is_evolved(weapon_id):
+			label += " EVO"
 		equipped_names.append(label)
 	_weapon_value.text = "  •  ".join(equipped_names)
 	if wave_director != null and wave_director.state == WAVE_DIRECTOR_SCRIPT.State.VICTORY:

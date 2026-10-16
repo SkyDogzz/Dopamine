@@ -68,6 +68,7 @@
 ## Badge d’état du HUD Survival — 2026-10-16
 
 - [x] `survival_hud_smoke.gd` vérifie que le badge d’état change sa bordure avec les états marche et pause, en plus du libellé; exécuté sous Godot 4.7.2, passe.
+- [x] (2026-10-16) `survival_hud_smoke.gd` vérifie que le HUD marque comme EVO chacune des dix évolutions du catalogue; l’indicateur compact reste uniforme, les noms complets figurent dans l’inventaire de run.
 
 ## Coffres — accent de famille — 2026-10-16
 

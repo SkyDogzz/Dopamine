@@ -87,9 +87,18 @@ func _run() -> void:
 		_fail("The HUD evolution fixture should claim the ready max-level combo")
 		return
 	session._refresh_hud({"paused": false})
-	if not session.get_node("HUD/RunPanel/RunInfo/LoadoutRow/LoadoutLabel").text.contains("MG Lv5 REDLINE"):
-		_fail("The HUD should show an evolution marker from the current run loadout")
+	if not session.get_node("HUD/RunPanel/RunInfo/LoadoutRow/LoadoutLabel").text.contains("MG Lv5 EVO"):
+		_fail("The HUD should show a compact evolution marker from the current run loadout")
 		return
+	for weapon_id in session.loadout._weapon_definitions:
+		session.loadout._weapon_levels.clear()
+		session.loadout._weapon_levels[weapon_id] = 5
+		session.loadout._evolved_weapons.clear()
+		session.loadout._evolved_weapons[weapon_id] = true
+		session._refresh_hud({"paused": false})
+		if not session.get_node("HUD/RunPanel/RunInfo/LoadoutRow/LoadoutLabel").text.contains("Lv5 EVO"):
+			_fail("The HUD should show the evolution marker for %s" % weapon_id)
+			return
 	var original_size: Vector2i = root.size
 	for size in [Vector2i(640, 360), Vector2i(960, 600), Vector2i(1280, 720), Vector2i(1600, 900), Vector2i(1920, 1080)]:
 		root.size = size
