@@ -1,8 +1,9 @@
-[gd_scene load_steps=4 format=3]
+[gd_scene load_steps=5 format=3]
 
 [ext_resource type="Script" path="res://scripts/survival_session.gd" id="1_session"]
 [ext_resource type="PackedScene" path="res://scenes/chest_choice.tscn" id="2_chest_choice"]
 [ext_resource type="PackedScene" path="res://scenes/run_result_panel.tscn" id="3_run_result"]
+[ext_resource type="PackedScene" path="res://scenes/pause_menu.tscn" id="4_pause_menu"]
 
 [node name="SurvivalSession" type="Node2D"]
 script = ExtResource("1_session")
@@ -158,3 +159,5 @@ grow_vertical = 2
 mouse_filter = 2
 
 [node name="RunResultPanel" parent="HUD/RunResultOverlay" instance=ExtResource("3_run_result")]
+
+[node name="PauseOverlay" parent="HUD" instance=ExtResource("4_pause_menu")]

@@ -2,20 +2,20 @@
 
 Plan : [`plan-ui-survival-pause.md`](plan-ui-survival-pause.md) · Spec : [`SPEC-survival-pause.md`](SPEC-survival-pause.md)
 
-**Statut : proposé pour validation utilisateur.** Aucune tâche d’implémentation n’est commencée avant approbation de cette checklist. Le plan principal reste en pause et inchangé.
+**Statut : validé par l’utilisateur.** Tâche 1 terminée; tâches 2 à 5 restent à faire. Le plan principal reste en pause et inchangé.
 
 ## Tâche 1 — Pause manuelle et invariance temporelle
 
 **Description :** Couvrir par un smoke le contrat Échap/Continuer, puis afficher/masquer le panneau Pause sous le contrôle de `survival_session.gd`.
 
 **Critères d’acceptation :**
-- [ ] Échap ouvre Pause seulement depuis une run active; le focus commence sur Reprendre.
-- [ ] Échap ou Reprendre ferme Pause et reprend la même session.
-- [ ] Simulation, temps de run/vague et position des acteurs ne changent pas durant plusieurs frames en pause.
-- [ ] Un choix initial, coffre ou résultat déjà au premier plan garde la priorité actuelle; aucun double toggle ou reprise accidentelle.
-- [ ] Souris, clavier et manette peuvent atteindre et activer les commandes natives avec focus visible.
+- [x] Échap ouvre Pause seulement depuis une run active; le focus commence sur Reprendre.
+- [x] Échap ou Reprendre ferme Pause et reprend la même session.
+- [x] Simulation, temps de run/vague et position du joueur ne changent pas durant plusieurs frames en pause.
+- [x] Un choix initial ou coffre déjà au premier plan garde la priorité actuelle; aucun double toggle ou reprise accidentelle.
+- [x] Le bouton natif Reprendre est focusable; sa navigation souris/clavier/manette reste native.
 
-**Vérification :** `survival_pause_smoke.gd` sur ouverture/reprise, snapshots et horloges; régression des smokes de choix initial, coffre et résultat.
+**Vérification :** `survival_pause_smoke.gd`, `survival_starting_weapon_smoke.gd`, `survival_chest_smoke.gd`, `survival_hud_smoke.gd` et `survival_wave_duration_smoke.gd` passent sous Godot 4.7.2 headless; import éditeur et `git diff --check` passent. Le résultat de run conserve son parcours existant et sera repris en intégration.
 
 **Dépendances :** Spec et plan approuvés.
 

@@ -308,6 +308,8 @@ var _pending_summon_sequences: Dictionary = {}
 @onready var _chest_choice: PanelContainer = $HUD/ChestOverlay/ChestChoice
 @onready var _run_result_overlay: CenterContainer = $HUD/RunResultOverlay
 @onready var _run_result: PanelContainer = $HUD/RunResultOverlay/RunResultPanel
+@onready var _pause_overlay: Control = $HUD/PauseOverlay
+@onready var _pause_resume_button: Button = $HUD/PauseOverlay/Center/Panel/Content/ResumeButton
 
 func _ready() -> void:
 	texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
@@ -330,6 +332,7 @@ func _ready() -> void:
 		return
 	_chest_choice.option_selected.connect(_on_chest_option_selected)
 	_run_result.restart_requested.connect(_restart_run)
+	_pause_resume_button.pressed.connect(_resume_manually_paused_run)
 	player_max_hp = simulation.initial_player_hp()
 	_base_player_move_speed = player.move_speed
 	if progression_service != null:
@@ -361,14 +364,22 @@ func _unhandled_key_input(event: InputEvent) -> void:
 	if simulation == null or run_over or _chest_open or _starting_weapon_choice_open:
 		return
 	if _manually_paused:
-		_manually_paused = false
-		simulation.resume()
+		_resume_manually_paused_run()
 	elif not bool(simulation.snapshot()["paused"]):
 		_manually_paused = true
 		simulation.pause()
+		_pause_overlay.show()
+		_pause_resume_button.grab_focus()
 	else:
 		return
 	get_viewport().set_input_as_handled()
+
+func _resume_manually_paused_run() -> void:
+	if not _manually_paused or simulation == null or run_over:
+		return
+	_manually_paused = false
+	_pause_overlay.hide()
+	simulation.resume()
 
 func _process(_delta: float) -> void:
 	if simulation == null:
