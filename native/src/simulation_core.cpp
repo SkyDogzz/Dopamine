@@ -39,7 +39,7 @@ std::optional<EnemyProfile> enemy_profile(std::string_view id) {
 	if (id == "summoned") return EnemyProfile{"summoned", 12.0F, 90.0F, 0.5F};
 	// Buffer stats and aura are proposed tuning, kept isolated from accepted GDD behavior.
 	if (id == "buffer") return EnemyProfile{"buffer", 35.0F, 55.0F, 2.0F, 150.0F, 1.2F};
-	// The Hasted elite profile is a proposed first affix prototype.
+	// Elite base stats and affix tuning remain proposed prototypes.
 	if (id == "elite") return EnemyProfile{"elite", 50.0F, 100.0F, 3.0F};
 	return std::nullopt;
 }
@@ -78,12 +78,16 @@ double kill_heal_amount(double threat_level, KillHealConfig config) {
 
 EntityId SimulationCore::spawn(std::string type, float x, float y, float hp, float velocity_x,
 		float velocity_y, float threat_level, float move_speed, std::string affix,
-		float damage_taken_multiplier, float health_regen_per_second) {
+		float damage_taken_multiplier, float health_regen_per_second,
+		float death_explosion_radius, float death_explosion_damage) {
 	if (type.empty() || !std::isfinite(x) || !std::isfinite(y) || !std::isfinite(hp) || hp <= 0.0F ||
 			!std::isfinite(velocity_x) || !std::isfinite(velocity_y) || !std::isfinite(threat_level) ||
 			threat_level <= 0.0F || !std::isfinite(move_speed) || move_speed < 0.0F ||
 			!std::isfinite(damage_taken_multiplier) || damage_taken_multiplier <= 0.0F || damage_taken_multiplier > 1.0F ||
-			!std::isfinite(health_regen_per_second) || health_regen_per_second < 0.0F) {
+			!std::isfinite(health_regen_per_second) || health_regen_per_second < 0.0F ||
+			!std::isfinite(death_explosion_radius) || death_explosion_radius < 0.0F ||
+			!std::isfinite(death_explosion_damage) || death_explosion_damage < 0.0F ||
+			((death_explosion_radius > 0.0F) != (death_explosion_damage > 0.0F))) {
 		throw std::invalid_argument("invalid simulation entity");
 	}
 
@@ -118,7 +122,7 @@ EntityId SimulationCore::spawn(std::string type, float x, float y, float hp, flo
 	health_[index] = {hp, hp};
 	const auto profile = enemy_profile(type);
 	enemy_types_[index] = {std::move(type), std::move(affix), threat_level, move_speed, damage_taken_multiplier,
-			health_regen_per_second,
+			health_regen_per_second, death_explosion_radius, death_explosion_damage,
 			profile ? profile->support_radius : 0.0F,
 			profile ? profile->support_speed_multiplier : 1.0F,
 			false,
@@ -285,7 +289,8 @@ void SimulationCore::apply_direct_damage(EntityId source, EntityId target, float
 		throw std::invalid_argument("invalid direct damage");
 	}
 	std::vector<EntityId> to_despawn;
-	apply_damage(source, target, amount, events, to_despawn);
+	std::size_t volatile_targets_remaining = 500;
+	apply_damage(source, target, amount, events, to_despawn, volatile_targets_remaining);
 	for (const EntityId id : to_despawn) {
 		despawn(id);
 	}
@@ -409,7 +414,10 @@ void SimulationCore::restore_state(const SimulationCoreState &state) {
 				entity.type.threat_level > 0.0F && std::isfinite(entity.type.move_speed) && entity.type.move_speed >= 0.0F &&
 				std::isfinite(entity.type.damage_taken_multiplier) && entity.type.damage_taken_multiplier > 0.0F &&
 				entity.type.damage_taken_multiplier <= 1.0F && std::isfinite(entity.type.health_regen_per_second) &&
-				entity.type.health_regen_per_second >= 0.0F;
+				entity.type.health_regen_per_second >= 0.0F && std::isfinite(entity.type.death_explosion_radius) &&
+				entity.type.death_explosion_radius >= 0.0F && std::isfinite(entity.type.death_explosion_damage) &&
+				entity.type.death_explosion_damage >= 0.0F &&
+				((entity.type.death_explosion_radius > 0.0F) == (entity.type.death_explosion_damage > 0.0F));
 		const bool valid_support = std::isfinite(entity.type.support_radius) && entity.type.support_radius >= 0.0F &&
 				std::isfinite(entity.type.support_speed_multiplier) && entity.type.support_speed_multiplier >= 1.0F &&
 				(!entity.type.supported || entity.type.support_radius == 0.0F);
@@ -556,6 +564,7 @@ std::size_t SimulationCore::estimate_event_count_upper_bound(double delta_second
 	std::size_t piercing_projectile_count = 0;
 	std::size_t target_count = 0;
 	bool has_explosive_projectile = false;
+	bool has_volatile_enemy = false;
 	for (std::size_t index = 0; index < slots_.size(); ++index) {
 		if (!slots_[index].active) {
 			continue;
@@ -570,6 +579,7 @@ std::size_t SimulationCore::estimate_event_count_upper_bound(double delta_second
 		}
 		if (!xp_orb_flags_[index] && health_[index].current > 0.0F) {
 			++target_count;
+			has_volatile_enemy = has_volatile_enemy || enemy_types_[index].death_explosion_radius > 0.0F;
 		}
 		if (!damage_over_time_[index].has_value() || health_[index].current <= 0.0F) {
 			continue;
@@ -589,6 +599,9 @@ std::size_t SimulationCore::estimate_event_count_upper_bound(double delta_second
 	add_saturated(static_cast<long double>(piercing_projectile_count) * target_count * 2.0L);
 	if (has_explosive_projectile) {
 		// The whole advance shares a 500-target splash cap; each hit can emit damage and death.
+		add_saturated(1000.0L);
+	}
+	if (has_volatile_enemy) {
 		add_saturated(1000.0L);
 	}
 	return estimate;
@@ -680,7 +693,8 @@ std::vector<CombatEvent> SimulationCore::advance(double delta_seconds) {
 		const EntityId target{index, slots_[index].generation};
 		while (status.time_to_tick <= 1e-12 && status.remaining_seconds >= -1e-12) {
 			const std::size_t event_start = events.size();
-			apply_damage(target, target, status.damage_per_tick, events, to_despawn);
+			apply_damage(target, target, status.damage_per_tick, events, to_despawn,
+					explosion_targets_processed);
 			for (std::size_t event_index = event_start; event_index < events.size(); ++event_index) {
 				events[event_index].is_damage_over_time = true;
 				events[event_index].status_type = status.status_type;
@@ -798,7 +812,8 @@ std::vector<CombatEvent> SimulationCore::advance(double delta_seconds) {
 
 				const EntityId projectile_id{projectile_index, slots_[projectile_index].generation};
 				const EntityId target_id{target_index, slots_[target_index].generation};
-				apply_damage(projectile_id, target_id, projectile.damage, events, to_despawn);
+				apply_damage(projectile_id, target_id, projectile.damage, events, to_despawn,
+						explosion_targets_processed);
 				bool ricocheted = false;
 				if (projectile.chill_duration_seconds > 0.0 && health_[target_index].current > 0.0F) {
 					apply_chill(target_id, projectile.chill_duration_seconds, projectile.chill_speed_multiplier,
@@ -825,7 +840,7 @@ std::vector<CombatEvent> SimulationCore::advance(double delta_seconds) {
 						++explosion_targets_processed;
 						const EntityId splash_id{splash_index, slots_[splash_index].generation};
 						apply_damage(projectile_id, splash_id, projectile.damage * projectile.explosion_damage_multiplier,
-								events, to_despawn);
+								events, to_despawn, explosion_targets_processed);
 						if (projectile.chill_duration_seconds > 0.0 && health_[splash_index].current > 0.0F) {
 							apply_chill(splash_id, projectile.chill_duration_seconds,
 									projectile.chill_speed_multiplier, projectile.chill_damage_multiplier);
@@ -1134,7 +1149,8 @@ std::vector<uint32_t> SimulationCore::query_spatial_index(const SpatialIndex &in
 }
 
 void SimulationCore::apply_damage(EntityId source, EntityId target, float amount,
-		std::vector<CombatEvent> &events, std::vector<EntityId> &deferred_despawns) {
+		std::vector<CombatEvent> &events, std::vector<EntityId> &deferred_despawns,
+		std::size_t &volatile_targets_remaining, bool allow_volatile_explosion) {
 	if (target.index >= slots_.size() || !slots_[target.index].active ||
 			slots_[target.index].generation != target.generation || !std::isfinite(amount) || amount <= 0.0F) {
 		return;
@@ -1180,6 +1196,27 @@ void SimulationCore::apply_damage(EntityId source, EntityId target, float amount
 				transforms_[target.index].x, transforms_[target.index].y, enemy_types_[target.index].id});
 		events.back().source_type = source_type;
 		events.back().target_was_chilled = target_was_chilled;
+		if (allow_volatile_explosion && target_type.death_explosion_radius > 0.0F &&
+				volatile_targets_remaining > 0) {
+			const Transform2D center = transforms_[target.index];
+			const float radius = target_type.death_explosion_radius;
+			const float radius_squared = radius * radius;
+			const float explosion_damage = target_type.death_explosion_damage;
+			for (uint32_t index = 0; index < slots_.size() && volatile_targets_remaining > 0; ++index) {
+				if (index == target.index || !slots_[index].active || projectile_flags_[index] ||
+						xp_orb_flags_[index] || health_[index].current <= 0.0F) {
+					continue;
+				}
+				const float dx = transforms_[index].x - center.x;
+				const float dy = transforms_[index].y - center.y;
+				if (dx * dx + dy * dy > radius_squared) {
+					continue;
+				}
+				--volatile_targets_remaining;
+				apply_damage(target, {index, slots_[index].generation}, explosion_damage,
+						events, deferred_despawns, volatile_targets_remaining, false);
+			}
+		}
 		deferred_despawns.push_back(target);
 	}
 }

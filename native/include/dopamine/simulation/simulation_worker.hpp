@@ -53,6 +53,8 @@ struct SimulationCommand {
 	float enemy_move_speed = 0.0F;
 	float enemy_damage_taken_multiplier = 1.0F;
 	float enemy_health_regen_per_second = 0.0F;
+	float enemy_death_explosion_radius = 0.0F;
+	float enemy_death_explosion_damage = 0.0F;
 	float velocity_x = 0.0F;
 	float velocity_y = 0.0F;
 	double delta_seconds = 0.0;
@@ -83,7 +85,7 @@ struct SimulationCommand {
 };
 
 struct SimulationWorkerState {
-	uint32_t format_version = 12;
+	uint32_t format_version = 13;
 	SimulationCoreState core_state;
 	bool paused = true;
 	double speed_multiplier = 1.0;

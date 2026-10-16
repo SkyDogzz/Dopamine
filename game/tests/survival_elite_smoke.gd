@@ -5,9 +5,9 @@ func _initialize() -> void:
 
 func _run() -> void:
 	var session: Node2D = load("res://scenes/survival_session.tscn").instantiate()
-	if session._elite_affix_for_roll(0.0) != "Hasted" or session._elite_affix_for_roll(0.34) != "Armored" or \
-			session._elite_affix_for_roll(0.67) != "Regenerating":
-		_fail("Elite roll should select all three supported affixes at their thresholds")
+	if session._elite_affix_for_roll(0.1) != "Hasted" or session._elite_affix_for_roll(0.3) != "Armored" or \
+			session._elite_affix_for_roll(0.6) != "Regenerating" or session._elite_affix_for_roll(0.9) != "Volatile":
+		_fail("Elite roll should select all four supported affixes at their thresholds")
 		return
 	session.spawn_initial_enemy = false
 	session.wave_spawning_enabled = true
@@ -17,7 +17,7 @@ func _run() -> void:
 	session.elite_chest_drop_chance = 1.0
 	root.add_child(session)
 	await process_frame
-	if session.simulation.spawn_enemy("elite", 1, Vector2.ZERO, Vector2.ZERO, 1.0, "Volatile") != 0:
+	if session.simulation.spawn_enemy("elite", 1, Vector2.ZERO, Vector2.ZERO, 1.0, "Shielded") != 0:
 		_fail("Elite spawn should reject an affix that has no gameplay implementation")
 		return
 	if session.simulation.spawn_enemy("chaser", 1, Vector2.ZERO, Vector2.ZERO, 1.0, "Hasted") != 0:
@@ -49,8 +49,10 @@ func _run() -> void:
 			is_equal_approx(float(components["DamageTakenMultiplier"]), 0.65)
 	var valid_regenerating := affix == "Regenerating" and is_equal_approx(float(components["HealthRegenPerSecond"]),
 			float(components["Health"]["maximum"]) * 0.01)
-	if not valid_hasted and not valid_armored and not valid_regenerating:
-		_fail("Elite snapshot should expose a working Hasted, Armored or Regenerating affix")
+	var valid_volatile := affix == "Volatile" and is_equal_approx(float(components["DeathExplosionRadius"]), 82.0) and \
+			is_equal_approx(float(components["DeathExplosionDamage"]), 18.0)
+	if not valid_hasted and not valid_armored and not valid_regenerating and not valid_volatile:
+		_fail("Elite snapshot should expose a working Hasted, Armored, Regenerating or Volatile affix")
 		return
 	session._try_spawn_elite()
 	await process_frame

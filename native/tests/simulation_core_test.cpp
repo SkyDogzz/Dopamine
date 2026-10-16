@@ -67,6 +67,19 @@ int main() {
 	regenerating_elite.advance(100.0);
 	require(regenerating_elite.entity(regenerating_id)->health.current == 50.0F,
 			"proposed Regenerating elite affix should not exceed maximum health");
+	SimulationCore volatile_elite;
+	const auto volatile_id = volatile_elite.spawn("elite", 0.0F, 0.0F, 50.0F, 0.0F, 0.0F,
+			3.0F, 75.0F, "Volatile", 1.0F, 0.0F, 82.0F, 18.0F);
+	const auto blast_target = volatile_elite.spawn("chaser", 20.0F, 0.0F, 10.0F, 0.0F, 0.0F);
+	const auto chain_volatile_id = volatile_elite.spawn("elite", 70.0F, 0.0F, 10.0F, 0.0F, 0.0F,
+			3.0F, 75.0F, "Volatile", 1.0F, 0.0F, 82.0F, 18.0F);
+	const auto chain_guard_id = volatile_elite.spawn("chaser", 145.0F, 0.0F, 10.0F, 0.0F, 0.0F);
+	std::vector<dopamine::sim::CombatEvent> volatile_events;
+	volatile_elite.apply_direct_damage({}, volatile_id, 50.0F, volatile_events);
+	const auto chain_guard = volatile_elite.entity(chain_guard_id);
+	require(!volatile_elite.entity(volatile_id) && !volatile_elite.entity(blast_target) &&
+			!volatile_elite.entity(chain_volatile_id) && chain_guard.has_value() && chain_guard->health.current == 10.0F,
+			"proposed Volatile elite blast should hit nearby enemies once without chaining explosions");
 	require(exploder_profile && exploder_profile->health == 30.0F && exploder_profile->speed == 60.0F &&
 			exploder_profile->threat_level == 2.0F,
 			"proposed Exploder profile should be available to Survival");

@@ -110,7 +110,7 @@ std::optional<SimulationWorkerState> SimulationWorker::capture_state(std::chrono
 }
 
 bool SimulationWorker::restore_state(const SimulationWorkerState &state) {
-	if (state.format_version != 12 || state.next_sequence == 0 ||
+	if (state.format_version != 13 || state.next_sequence == 0 ||
 			state.next_sequence <= state.pending_sequence ||
 			state.pending_commands.size() > max_queued_commands_ ||
 			state.pending_events.size() > max_pending_events_ || state.logs.size() > 100 ||
@@ -278,7 +278,8 @@ void SimulationWorker::apply(const SimulationCommand &command,
 					simulation_.spawn(command.entity_type, command.x, command.y, command.hp,
 							command.velocity_x, command.velocity_y, command.threat_level, command.enemy_move_speed,
 							command.enemy_affix, command.enemy_damage_taken_multiplier,
-							command.enemy_health_regen_per_second);
+							command.enemy_health_regen_per_second, command.enemy_death_explosion_radius,
+							command.enemy_death_explosion_damage);
 				}
 				log("spawned " + std::to_string(command.count) + " " + command.entity_type);
 			} catch (const std::exception &error) {
