@@ -49,6 +49,7 @@ const ENEMY_DEATH_PIXEL_LIFETIME := 0.32
 const ENEMY_DEATH_PIXEL_COUNT := 8
 const MAX_ENEMY_DEATH_PIXELS := 256
 const ENEMY_DEATH_TYPES := ["chaser", "sprinter", "tank", "shooter", "buffer", "exploder", "shielder", "summoner", "summoned", "elite", "mid_boss", "final_boss"]
+const WEAPON_DAMAGE_IDS := ["lightning_conductor", "inferno_sprayer", "crimson_daggers", "minigun", "toxic_cloud", "sawblades", "meteor_staff", "prism_laser", "void_orb", "frost_nova"]
 const ENEMY_DEATH_PALETTE := [Color("#D4D9E8"), Color("#37E8F5"), Color("#087FB2"), Color("#F6F7FF")]
 const WEAPON_ICONS := {
 	"lightning_conductor": preload("res://assets/sprites/catalog/weapon_lightning_conductor.png"),
@@ -303,6 +304,8 @@ var run_over := false
 var _victory_pending := false
 var kill_count := 0
 var _enemy_kills_by_type: Dictionary = {}
+var _weapon_damage_by_id: Dictionary = {}
+var _weapon_kills_by_id: Dictionary = {}
 var _last_target := Vector2(INF, INF)
 var _last_simulation_time := 0.0
 var _last_combat_event_sequence := 0
@@ -748,6 +751,7 @@ func _process(_delta: float) -> void:
 				var source_key := _entity_key(int(damage_source["index"]), int(damage_source["generation"]))
 				var target_key := _entity_key(int(damage_target["index"]), int(damage_target["generation"]))
 				var source_type: String = str(event.get("source_type", ""))
+				_record_weapon_damage(source_type, float(event["amount"]))
 				if not bool(event.get("is_damage_over_time", false)):
 					var target_type := str(event.get("target_type", ""))
 					Sfx.play("hit_heavy" if target_type in ["mid_boss", "final_boss"] else "hit_light")
@@ -770,6 +774,7 @@ func _process(_delta: float) -> void:
 				var dead_target: Dictionary = event["target"]
 				var dead_enemy_type: String = str(event.get("target_type", ""))
 				_record_enemy_kill(dead_enemy_type)
+				_record_weapon_kill(str(event.get("source_type", "")))
 				var dead_enemy_affix: String = str(event.get("target_affix", ""))
 				var death_position := Vector2(float(event["position"]["x"]), float(event["position"]["y"]))
 				Sfx.play("boss_defeat" if dead_enemy_type in ["mid_boss", "final_boss"] else "enemy_kill")
@@ -1659,6 +1664,9 @@ func _finish_run(victory: bool) -> void:
 		}
 		for enemy_type in ENEMY_DEATH_TYPES:
 			run_metrics["enemy_kills_%s" % enemy_type] = int(_enemy_kills_by_type.get(enemy_type, 0))
+		for weapon_id in WEAPON_DAMAGE_IDS:
+			run_metrics["weapon_damage_%s" % weapon_id] = float(_weapon_damage_by_id.get(weapon_id, 0.0))
+			run_metrics["weapon_kills_%s" % weapon_id] = int(_weapon_kills_by_id.get(weapon_id, 0))
 		reward = progression_service.award_survival_run(
 			_run_id, wave_director.wave, victory, kill_count, difficulty_id, run_metrics
 		)
@@ -1667,6 +1675,25 @@ func _finish_run(victory: bool) -> void:
 func _record_enemy_kill(enemy_type: String) -> void:
 	if enemy_type in ENEMY_DEATH_TYPES:
 		_enemy_kills_by_type[enemy_type] = int(_enemy_kills_by_type.get(enemy_type, 0)) + 1
+
+func _record_weapon_damage(source_type: String, amount: float) -> void:
+	if not is_finite(amount) or amount <= 0.0:
+		return
+	var weapon_id := _weapon_id_for_source_type(source_type)
+	if weapon_id in WEAPON_DAMAGE_IDS:
+		_weapon_damage_by_id[weapon_id] = float(_weapon_damage_by_id.get(weapon_id, 0.0)) + amount
+
+func _record_weapon_kill(source_type: String) -> void:
+	var weapon_id := _weapon_id_for_source_type(source_type)
+	if weapon_id in WEAPON_DAMAGE_IDS:
+		_weapon_kills_by_id[weapon_id] = int(_weapon_kills_by_id.get(weapon_id, 0)) + 1
+
+func _weapon_id_for_source_type(source_type: String) -> String:
+	var normalized_source := source_type.get_slice(":", 0)
+	var weapon_id := str(WEAPON_IMPACT_SOURCE_IDS.get(normalized_source, ""))
+	if normalized_source in ["lightning_primary", "lightning_arc"]:
+		weapon_id = "lightning_conductor"
+	return weapon_id
 
 func _restart_run() -> void:
 	var replacement: Node2D = load("res://scenes/survival_session.tscn").instantiate()

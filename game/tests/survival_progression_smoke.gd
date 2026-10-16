@@ -54,6 +54,12 @@ func _run() -> void:
 	session._record_enemy_kill("tank")
 	session._record_enemy_kill("tank")
 	session._record_enemy_kill("not_an_enemy")
+	session._record_weapon_damage("lightning_primary:1", 1200.0)
+	session._record_weapon_damage("lightning_arc:1", 300.0)
+	session._record_weapon_damage("enemy_projectile", 5000.0)
+	session._record_weapon_kill("lightning_primary:1")
+	session._record_weapon_kill("lightning_arc:1")
+	session._record_weapon_kill("enemy_projectile")
 	session._finish_run(false)
 	var reward_label: Label = session.get_node("HUD/RunResultOverlay/RunResultPanel/Content/Rewards")
 	var equipment_label: Label = session.get_node("HUD/RunResultOverlay/RunResultPanel/Content/Equipment")
@@ -67,8 +73,11 @@ func _run() -> void:
 		return
 	if not achievement_label.text.contains("EXTERMINATOR TIER +1") or \
 			profile["achievement_progress"]["metrics"]["total_kills"] != 100 or \
-			profile["achievement_progress"]["metrics"]["enemy_kills_tank"] != 2:
-		_fail("Survival results should persist Exterminator and per-enemy kill metrics exactly once")
+			profile["achievement_progress"]["metrics"]["enemy_kills_tank"] != 2 or \
+			profile["achievement_progress"]["metrics"]["weapon_damage_lightning_conductor"] != 1500.0 or \
+			profile["achievement_progress"]["metrics"]["weapon_kills_lightning_conductor"] != 2 or \
+			profile["achievement_progress"]["metrics"]["weapon_damage_minigun"] != 0.0:
+		_fail("Survival results should persist Exterminator, per-enemy kills and mapped weapon damage metrics")
 		return
 	if profile["resources"].get("essence") != 17 or profile["resources"].get("powder_basic") != 23:
 		_fail("The Survival result should save its reward to the progression profile")
@@ -80,7 +89,9 @@ func _run() -> void:
 	profile = save_service.load_slot("0")["payload"]
 	if profile["resources"].get("essence") != 17 or profile["rewarded_survival_runs"].size() != 1 or \
 			profile["achievement_progress"]["metrics"]["total_kills"] != 100 or \
-			profile["achievement_progress"]["metrics"]["enemy_kills_tank"] != 2:
+			profile["achievement_progress"]["metrics"]["enemy_kills_tank"] != 2 or \
+			profile["achievement_progress"]["metrics"]["weapon_damage_lightning_conductor"] != 1500.0 or \
+			profile["achievement_progress"]["metrics"]["weapon_kills_lightning_conductor"] != 2:
 		_fail("Finishing the same run twice must not duplicate its persistent reward")
 		return
 	var temporary_session: Node2D = load("res://scenes/survival_session.tscn").instantiate()

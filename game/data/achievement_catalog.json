@@ -273,6 +273,266 @@
         { "id": "gold", "threshold": 10, "rewards": {"damage_pct": 0.000075} },
         { "id": "diamond", "threshold": 25, "rewards": {"damage_pct": 0.0001} }
       ]
+    },
+    {
+      "id": "weapon_mastery_lightning_conductor",
+      "category": "weapons",
+      "secret": false,
+      "metric": "weapon_damage_lightning_conductor",
+      "aggregation": "sum",
+      "tiers": [
+        { "id": "bronze", "threshold": 1000, "rewards": {"damage_pct": 0.000025} },
+        { "id": "silver", "threshold": 10000, "rewards": {"damage_pct": 0.00005} },
+        { "id": "gold", "threshold": 50000, "rewards": {"damage_pct": 0.000075} },
+        { "id": "diamond", "threshold": 250000, "rewards": {"damage_pct": 0.0001} }
+      ]
+    },
+    {
+      "id": "weapon_mastery_inferno_sprayer",
+      "category": "weapons",
+      "secret": false,
+      "metric": "weapon_damage_inferno_sprayer",
+      "aggregation": "sum",
+      "tiers": [
+        { "id": "bronze", "threshold": 1000, "rewards": {"damage_pct": 0.000025} },
+        { "id": "silver", "threshold": 10000, "rewards": {"damage_pct": 0.00005} },
+        { "id": "gold", "threshold": 50000, "rewards": {"damage_pct": 0.000075} },
+        { "id": "diamond", "threshold": 250000, "rewards": {"damage_pct": 0.0001} }
+      ]
+    },
+    {
+      "id": "weapon_mastery_crimson_daggers",
+      "category": "weapons",
+      "secret": false,
+      "metric": "weapon_damage_crimson_daggers",
+      "aggregation": "sum",
+      "tiers": [
+        { "id": "bronze", "threshold": 1000, "rewards": {"damage_pct": 0.000025} },
+        { "id": "silver", "threshold": 10000, "rewards": {"damage_pct": 0.00005} },
+        { "id": "gold", "threshold": 50000, "rewards": {"damage_pct": 0.000075} },
+        { "id": "diamond", "threshold": 250000, "rewards": {"damage_pct": 0.0001} }
+      ]
+    },
+    {
+      "id": "weapon_mastery_minigun",
+      "category": "weapons",
+      "secret": false,
+      "metric": "weapon_damage_minigun",
+      "aggregation": "sum",
+      "tiers": [
+        { "id": "bronze", "threshold": 1000, "rewards": {"damage_pct": 0.000025} },
+        { "id": "silver", "threshold": 10000, "rewards": {"damage_pct": 0.00005} },
+        { "id": "gold", "threshold": 50000, "rewards": {"damage_pct": 0.000075} },
+        { "id": "diamond", "threshold": 250000, "rewards": {"damage_pct": 0.0001} }
+      ]
+    },
+    {
+      "id": "weapon_mastery_toxic_cloud",
+      "category": "weapons",
+      "secret": false,
+      "metric": "weapon_damage_toxic_cloud",
+      "aggregation": "sum",
+      "tiers": [
+        { "id": "bronze", "threshold": 1000, "rewards": {"damage_pct": 0.000025} },
+        { "id": "silver", "threshold": 10000, "rewards": {"damage_pct": 0.00005} },
+        { "id": "gold", "threshold": 50000, "rewards": {"damage_pct": 0.000075} },
+        { "id": "diamond", "threshold": 250000, "rewards": {"damage_pct": 0.0001} }
+      ]
+    },
+    {
+      "id": "weapon_mastery_sawblades",
+      "category": "weapons",
+      "secret": false,
+      "metric": "weapon_damage_sawblades",
+      "aggregation": "sum",
+      "tiers": [
+        { "id": "bronze", "threshold": 1000, "rewards": {"damage_pct": 0.000025} },
+        { "id": "silver", "threshold": 10000, "rewards": {"damage_pct": 0.00005} },
+        { "id": "gold", "threshold": 50000, "rewards": {"damage_pct": 0.000075} },
+        { "id": "diamond", "threshold": 250000, "rewards": {"damage_pct": 0.0001} }
+      ]
+    },
+    {
+      "id": "weapon_mastery_meteor_staff",
+      "category": "weapons",
+      "secret": false,
+      "metric": "weapon_damage_meteor_staff",
+      "aggregation": "sum",
+      "tiers": [
+        { "id": "bronze", "threshold": 1000, "rewards": {"damage_pct": 0.000025} },
+        { "id": "silver", "threshold": 10000, "rewards": {"damage_pct": 0.00005} },
+        { "id": "gold", "threshold": 50000, "rewards": {"damage_pct": 0.000075} },
+        { "id": "diamond", "threshold": 250000, "rewards": {"damage_pct": 0.0001} }
+      ]
+    },
+    {
+      "id": "weapon_mastery_prism_laser",
+      "category": "weapons",
+      "secret": false,
+      "metric": "weapon_damage_prism_laser",
+      "aggregation": "sum",
+      "tiers": [
+        { "id": "bronze", "threshold": 1000, "rewards": {"damage_pct": 0.000025} },
+        { "id": "silver", "threshold": 10000, "rewards": {"damage_pct": 0.00005} },
+        { "id": "gold", "threshold": 50000, "rewards": {"damage_pct": 0.000075} },
+        { "id": "diamond", "threshold": 250000, "rewards": {"damage_pct": 0.0001} }
+      ]
+    },
+    {
+      "id": "weapon_mastery_void_orb",
+      "category": "weapons",
+      "secret": false,
+      "metric": "weapon_damage_void_orb",
+      "aggregation": "sum",
+      "tiers": [
+        { "id": "bronze", "threshold": 1000, "rewards": {"damage_pct": 0.000025} },
+        { "id": "silver", "threshold": 10000, "rewards": {"damage_pct": 0.00005} },
+        { "id": "gold", "threshold": 50000, "rewards": {"damage_pct": 0.000075} },
+        { "id": "diamond", "threshold": 250000, "rewards": {"damage_pct": 0.0001} }
+      ]
+    },
+    {
+      "id": "weapon_mastery_frost_nova",
+      "category": "weapons",
+      "secret": false,
+      "metric": "weapon_damage_frost_nova",
+      "aggregation": "sum",
+      "tiers": [
+        { "id": "bronze", "threshold": 1000, "rewards": {"damage_pct": 0.000025} },
+        { "id": "silver", "threshold": 10000, "rewards": {"damage_pct": 0.00005} },
+        { "id": "gold", "threshold": 50000, "rewards": {"damage_pct": 0.000075} },
+        { "id": "diamond", "threshold": 250000, "rewards": {"damage_pct": 0.0001} }
+      ]
+    },
+    {
+      "id": "weapon_killer_lightning_conductor",
+      "category": "weapons",
+      "secret": false,
+      "metric": "weapon_kills_lightning_conductor",
+      "aggregation": "sum",
+      "tiers": [
+        { "id": "bronze", "threshold": 10, "rewards": {"damage_pct": 0.000025} },
+        { "id": "silver", "threshold": 50, "rewards": {"damage_pct": 0.00005} },
+        { "id": "gold", "threshold": 250, "rewards": {"damage_pct": 0.000075} },
+        { "id": "diamond", "threshold": 1000, "rewards": {"damage_pct": 0.0001} }
+      ]
+    },
+    {
+      "id": "weapon_killer_inferno_sprayer",
+      "category": "weapons",
+      "secret": false,
+      "metric": "weapon_kills_inferno_sprayer",
+      "aggregation": "sum",
+      "tiers": [
+        { "id": "bronze", "threshold": 10, "rewards": {"damage_pct": 0.000025} },
+        { "id": "silver", "threshold": 50, "rewards": {"damage_pct": 0.00005} },
+        { "id": "gold", "threshold": 250, "rewards": {"damage_pct": 0.000075} },
+        { "id": "diamond", "threshold": 1000, "rewards": {"damage_pct": 0.0001} }
+      ]
+    },
+    {
+      "id": "weapon_killer_crimson_daggers",
+      "category": "weapons",
+      "secret": false,
+      "metric": "weapon_kills_crimson_daggers",
+      "aggregation": "sum",
+      "tiers": [
+        { "id": "bronze", "threshold": 10, "rewards": {"damage_pct": 0.000025} },
+        { "id": "silver", "threshold": 50, "rewards": {"damage_pct": 0.00005} },
+        { "id": "gold", "threshold": 250, "rewards": {"damage_pct": 0.000075} },
+        { "id": "diamond", "threshold": 1000, "rewards": {"damage_pct": 0.0001} }
+      ]
+    },
+    {
+      "id": "weapon_killer_minigun",
+      "category": "weapons",
+      "secret": false,
+      "metric": "weapon_kills_minigun",
+      "aggregation": "sum",
+      "tiers": [
+        { "id": "bronze", "threshold": 10, "rewards": {"damage_pct": 0.000025} },
+        { "id": "silver", "threshold": 50, "rewards": {"damage_pct": 0.00005} },
+        { "id": "gold", "threshold": 250, "rewards": {"damage_pct": 0.000075} },
+        { "id": "diamond", "threshold": 1000, "rewards": {"damage_pct": 0.0001} }
+      ]
+    },
+    {
+      "id": "weapon_killer_toxic_cloud",
+      "category": "weapons",
+      "secret": false,
+      "metric": "weapon_kills_toxic_cloud",
+      "aggregation": "sum",
+      "tiers": [
+        { "id": "bronze", "threshold": 10, "rewards": {"damage_pct": 0.000025} },
+        { "id": "silver", "threshold": 50, "rewards": {"damage_pct": 0.00005} },
+        { "id": "gold", "threshold": 250, "rewards": {"damage_pct": 0.000075} },
+        { "id": "diamond", "threshold": 1000, "rewards": {"damage_pct": 0.0001} }
+      ]
+    },
+    {
+      "id": "weapon_killer_sawblades",
+      "category": "weapons",
+      "secret": false,
+      "metric": "weapon_kills_sawblades",
+      "aggregation": "sum",
+      "tiers": [
+        { "id": "bronze", "threshold": 10, "rewards": {"damage_pct": 0.000025} },
+        { "id": "silver", "threshold": 50, "rewards": {"damage_pct": 0.00005} },
+        { "id": "gold", "threshold": 250, "rewards": {"damage_pct": 0.000075} },
+        { "id": "diamond", "threshold": 1000, "rewards": {"damage_pct": 0.0001} }
+      ]
+    },
+    {
+      "id": "weapon_killer_meteor_staff",
+      "category": "weapons",
+      "secret": false,
+      "metric": "weapon_kills_meteor_staff",
+      "aggregation": "sum",
+      "tiers": [
+        { "id": "bronze", "threshold": 10, "rewards": {"damage_pct": 0.000025} },
+        { "id": "silver", "threshold": 50, "rewards": {"damage_pct": 0.00005} },
+        { "id": "gold", "threshold": 250, "rewards": {"damage_pct": 0.000075} },
+        { "id": "diamond", "threshold": 1000, "rewards": {"damage_pct": 0.0001} }
+      ]
+    },
+    {
+      "id": "weapon_killer_prism_laser",
+      "category": "weapons",
+      "secret": false,
+      "metric": "weapon_kills_prism_laser",
+      "aggregation": "sum",
+      "tiers": [
+        { "id": "bronze", "threshold": 10, "rewards": {"damage_pct": 0.000025} },
+        { "id": "silver", "threshold": 50, "rewards": {"damage_pct": 0.00005} },
+        { "id": "gold", "threshold": 250, "rewards": {"damage_pct": 0.000075} },
+        { "id": "diamond", "threshold": 1000, "rewards": {"damage_pct": 0.0001} }
+      ]
+    },
+    {
+      "id": "weapon_killer_void_orb",
+      "category": "weapons",
+      "secret": false,
+      "metric": "weapon_kills_void_orb",
+      "aggregation": "sum",
+      "tiers": [
+        { "id": "bronze", "threshold": 10, "rewards": {"damage_pct": 0.000025} },
+        { "id": "silver", "threshold": 50, "rewards": {"damage_pct": 0.00005} },
+        { "id": "gold", "threshold": 250, "rewards": {"damage_pct": 0.000075} },
+        { "id": "diamond", "threshold": 1000, "rewards": {"damage_pct": 0.0001} }
+      ]
+    },
+    {
+      "id": "weapon_killer_frost_nova",
+      "category": "weapons",
+      "secret": false,
+      "metric": "weapon_kills_frost_nova",
+      "aggregation": "sum",
+      "tiers": [
+        { "id": "bronze", "threshold": 10, "rewards": {"damage_pct": 0.000025} },
+        { "id": "silver", "threshold": 50, "rewards": {"damage_pct": 0.00005} },
+        { "id": "gold", "threshold": 250, "rewards": {"damage_pct": 0.000075} },
+        { "id": "diamond", "threshold": 1000, "rewards": {"damage_pct": 0.0001} }
+      ]
     }
   ]
 }
