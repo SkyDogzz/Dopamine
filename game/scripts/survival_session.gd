@@ -1498,7 +1498,7 @@ func _fire_lightning_conductor(active_time: float, paused: bool) -> void:
 		_fire_infinite_circuit(active_time, chain_count, damage_multiplier)
 		_try_evolution_shockwave(lightning_damage * damage_multiplier)
 		return
-	var targets := _nearest_lightning_targets(player.global_position, [], 1)
+	var targets := _lightning_initial_targets(1)
 	if targets.is_empty():
 		return
 	var target: Dictionary = targets[0]
@@ -1585,7 +1585,7 @@ func _add_lightning_arc(from: Vector2, to: Vector2) -> void:
 	_lightning_arcs.append({"points": points, "remaining": LIGHTNING_ARC_LIFETIME})
 
 func _fire_infinite_circuit(active_time: float, target_budget: int, damage_multiplier: float) -> void:
-	var roots := _nearest_lightning_targets(player.global_position, [], 2)
+	var roots := _lightning_initial_targets(2)
 	var used_ids: Array[Vector2i] = []
 	var fired := false
 	var branch_factor := 2 # GDD prototype value; tuning remains proposed.
@@ -1657,6 +1657,34 @@ func _nearest_lightning_targets(origin: Vector2, excluded_ids: Array[Vector2i], 
 	if candidates.size() > limit:
 		candidates.resize(limit)
 	return candidates
+
+func _lightning_initial_targets(limit: int) -> Array[Dictionary]:
+	if limit <= 0:
+		return []
+	var candidates := _nearest_lightning_targets(player.global_position, [], _entities.size())
+	if candidates.is_empty():
+		return []
+	var primary: Dictionary = {}
+	var best_neighbor_count := -1
+	var best_distance_squared := INF
+	var chain_radius_squared := lightning_chain_range * lightning_chain_range
+	for candidate in candidates:
+		var neighbor_count := 0
+		for other in candidates:
+			if candidate["position"].distance_squared_to(other["position"]) <= chain_radius_squared:
+				neighbor_count += 1
+		var distance_squared := float(candidate["distance_squared"])
+		if neighbor_count > best_neighbor_count or (neighbor_count == best_neighbor_count and distance_squared < best_distance_squared):
+			primary = candidate
+			best_neighbor_count = neighbor_count
+			best_distance_squared = distance_squared
+	var targets: Array[Dictionary] = [primary]
+	if limit == 1:
+		return targets
+	var excluded: Array[Vector2i] = [primary["id"]]
+	var remaining := _nearest_lightning_targets(primary["position"], excluded, limit - 1, lightning_chain_range)
+	targets.append_array(remaining)
+	return targets
 
 func _fire_inferno_sprayer(active_time: float, paused: bool) -> void:
 	if not weapon_enabled or loadout.weapon_level("inferno_sprayer") == 0 or paused or _chest_open or run_over or inferno_cooldown <= 0.0 or active_time < _next_inferno_time:

@@ -7,6 +7,9 @@ func _run() -> void:
 	if not await _nearest_weapon_targets_skip_dead_enemies():
 		_fail("Automatic weapons should ignore dead enemies that remain in a simulation snapshot")
 		return
+	if not await _lightning_prioritizes_chainable_clusters():
+		_fail("Lightning Conductor should start at the nearest target in the densest chainable cluster")
+		return
 	if not await _crimson_daggers_prioritize_finishable_targets():
 		_fail("Crimson Daggers should prioritize the lowest-health living target in range")
 		return
@@ -121,6 +124,26 @@ func _crimson_daggers_prioritize_finishable_targets() -> bool:
 	var selected: Dictionary = session._lowest_health_enemy(session.daggers_range)
 	session.queue_free()
 	return selected.get("id", Vector2i(-1, -1)) == Vector2i(42, 1)
+
+func _lightning_prioritizes_chainable_clusters() -> bool:
+	var session: Node2D = load("res://scenes/survival_session.tscn").instantiate()
+	session.spawn_initial_enemy = false
+	session.wave_spawning_enabled = false
+	root.add_child(session)
+	await process_frame
+	var origin: Vector2 = session.player.global_position
+	session.lightning_range = 400.0
+	session.lightning_chain_range = 90.0
+	session._entities = [
+		{"id": {"index": 81, "generation": 1}, "components": {"Health": {"current": 100.0}, "Transform2D": {"x": origin.x + 40.0, "y": origin.y}}},
+		{"id": {"index": 82, "generation": 1}, "components": {"Health": {"current": 100.0}, "Transform2D": {"x": origin.x + 160.0, "y": origin.y}}},
+		{"id": {"index": 83, "generation": 1}, "components": {"Health": {"current": 100.0}, "Transform2D": {"x": origin.x + 200.0, "y": origin.y + 10.0}}},
+		{"id": {"index": 84, "generation": 1}, "components": {"Health": {"current": 100.0}, "Transform2D": {"x": origin.x + 240.0, "y": origin.y}}},
+		{"id": {"index": 85, "generation": 1}, "components": {"Health": {"current": 0.0}, "Transform2D": {"x": origin.x + 180.0, "y": origin.y + 5.0}}},
+	]
+	var targets: Array[Dictionary] = session._lightning_initial_targets(2)
+	session.queue_free()
+	return targets.size() == 2 and targets[0].get("id") == Vector2i(82, 1) and targets[1].get("id") == Vector2i(83, 1)
 
 func _inferno_prioritizes_high_threat() -> bool:
 	var session: Node2D = load("res://scenes/survival_session.tscn").instantiate()
