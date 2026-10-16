@@ -34,8 +34,8 @@
 
 ## P5.2.3 — Toxic Ignition — 2026-10-16
 
-- [x] Décision utilisateur **[VALIDÉE]** : une explosion immédiate lorsque la cible réunit Poison et Burn.
-- [ ] Le type de déclencheur, dégâts, rayon, consommation des statuts et chaînage restent **[OUVERTS]**; aucune implémentation ni valeur n’est validée.
+- [x] Décision utilisateur **[VALIDÉE]** : explosion immédiate à l’application directe du second statut, si la cible porte déjà l’autre (Poison/Burn).
+- [ ] Le modèle de dégâts, rayon, consommation des statuts et chaînage restent **[OUVERTS]**; aucune implémentation ni valeur n’est validée.
 
 ## P7A.4 — Cycle Armorless intégré — 2026-10-16
 

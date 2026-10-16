@@ -506,7 +506,7 @@ Les combinaisons et résultats sont proposés et non validés : voir le tableau 
 
 Une éventuelle réaction Overcharge nécessitant un statut conducteur supplémentaire reste à définir.
 
-**Décision utilisateur [VALIDÉE, 2026-10-16] — Toxic Ignition :** produire une explosion immédiate lorsqu’une cible réunit Poison et Burn. Le déclencheur exact (application directe ou tick), les dégâts, le rayon, la consommation éventuelle des statuts et le chaînage restent **[OUVERTS]**; ne pas traiter le concept comme une règle complète tant que ces points ne sont pas arbitrés.
+**Décision utilisateur [VALIDÉE, 2026-10-16] — Toxic Ignition :** produire une explosion immédiate à l’application directe du second statut, lorsque la cible porte déjà Poison ou Burn. Le modèle de dégâts, le rayon, la consommation éventuelle des statuts et le chaînage restent **[OUVERTS]**; ne pas traiter le concept comme une règle complète tant que ces points ne sont pas arbitrés.
 
 Synergies proposées entre reliques :
 
