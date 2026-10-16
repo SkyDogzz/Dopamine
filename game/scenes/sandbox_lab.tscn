@@ -27,6 +27,14 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/separation = 5
 
+[node name="PresetFileDialog" type="FileDialog" parent="."]
+title = "Open Sandbox preset"
+size = Vector2i(680, 420)
+ok_button_text = "OPEN"
+file_mode = 0
+access = 2
+filters = PackedStringArray("*.json ; Sandbox preset JSON")
+
 [node name="Header" type="HBoxContainer" parent="Root"]
 layout_mode = 2
 
@@ -170,6 +178,22 @@ custom_minimum_size = Vector2(58, 21)
 layout_mode = 2
 focus_mode = 2
 text = "IMPORT"
+
+[node name="PresetFileActions" type="HBoxContainer" parent="Root/Body/Side/Sections"]
+layout_mode = 2
+theme_override_constants/separation = 3
+
+[node name="ImportFile" type="Button" parent="Root/Body/Side/Sections/PresetFileActions"]
+custom_minimum_size = Vector2(58, 21)
+layout_mode = 2
+focus_mode = 2
+text = "OPEN JSON"
+
+[node name="ExportFile" type="Button" parent="Root/Body/Side/Sections/PresetFileActions"]
+custom_minimum_size = Vector2(58, 21)
+layout_mode = 2
+focus_mode = 2
+text = "SAVE JSON"
 
 [node name="ShareCode" type="LineEdit" parent="Root/Body/Side/Sections"]
 custom_minimum_size = Vector2(0, 20)

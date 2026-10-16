@@ -34,6 +34,27 @@ func _run() -> void:
 	if not lab.preset_store.load_preset("smoke_build").get("ok", false):
 		_fail("The Lab UI should save a valid preset in the isolated Sandbox store")
 		return
+	var imported_path := directory.path_join("imported.json")
+	var imported_preset: Dictionary = lab._default_preset()
+	imported_preset["preset_id"] = "file_import"
+	var imported_file := FileAccess.open(imported_path, FileAccess.WRITE)
+	imported_file.store_string(JSON.stringify(imported_preset))
+	imported_file.close()
+	await lab._import_preset_file(imported_path)
+	if lab.context.active_preset.get("preset_id", "") != "file_import":
+		_fail("A valid JSON file should import and apply to the isolated Lab: status=%s error=%s" % [
+			lab.get_node("Root/Body/Side/Sections/Status").text,
+			str(lab.preset_service.import_json(FileAccess.get_file_as_string(imported_path))),
+		])
+		return
+	var active_before_invalid_import: String = str(lab.context.active_preset["preset_id"])
+	var invalid_file := FileAccess.open(imported_path, FileAccess.WRITE)
+	invalid_file.store_string("{invalid json")
+	invalid_file.close()
+	await lab._import_preset_file(imported_path)
+	if lab.context.active_preset["preset_id"] != active_before_invalid_import:
+		_fail("Invalid JSON imports must not replace the active Lab preset")
+		return
 	lab.context.simulation.pause()
 	if not await _wait_for_pause(lab.context.simulation, true):
 		_fail("The Lab simulation should pause before deterministic spawn checks")

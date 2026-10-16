@@ -34,6 +34,9 @@ func _ready() -> void:
 	$Root/Body/Side/Sections/PresetActions/LoadPreset.pressed.connect(_load_preset)
 	$Root/Body/Side/Sections/PresetActions/ExportCode.pressed.connect(_copy_share_code)
 	$Root/Body/Side/Sections/PresetActions/ImportCode.pressed.connect(_import_share_code)
+	$Root/Body/Side/Sections/PresetFileActions/ImportFile.pressed.connect(_open_preset_file)
+	$Root/Body/Side/Sections/PresetFileActions/ExportFile.pressed.connect(_save_preset_file)
+	$PresetFileDialog.file_selected.connect(_on_preset_file_selected)
 	$Root/Body/Side/Sections/GodModeToggle.toggled.connect(_set_god_mode)
 	for enemy_id in ["chaser", "sprinter", "tank", "shooter", "buffer", "exploder", "shielder", "summoner", "elite"]:
 		_enemy_select.add_item(enemy_id.to_upper())
@@ -126,7 +129,7 @@ func _load_preset() -> void:
 	if not result.get("ok", false):
 		_set_status("LOAD FAILED: %s" % str(result.get("error", "unknown")), true)
 		return
-	_apply_preset(result["preset"])
+	await _apply_preset(result["preset"])
 
 func _copy_share_code() -> void:
 	var data := _preset_from_editor()
@@ -145,7 +148,65 @@ func _import_share_code() -> void:
 	if not result.get("ok", false):
 		_set_status("IMPORT FAILED: %s" % str(result.get("error", "invalid")), true)
 		return
-	_apply_preset(result["preset"])
+	await _apply_preset(result["preset"])
+
+func _open_preset_file() -> void:
+	$PresetFileDialog.file_mode = FileDialog.FILE_MODE_OPEN_FILE
+	$PresetFileDialog.title = "Open Sandbox preset"
+	$PresetFileDialog.popup_centered_ratio(0.8)
+
+func _on_preset_file_selected(path: String) -> void:
+	if $PresetFileDialog.file_mode == FileDialog.FILE_MODE_SAVE_FILE:
+		_export_preset_file(path)
+	else:
+		await _import_preset_file(path)
+
+func _import_preset_file(path: String) -> void:
+	var file := FileAccess.open(path, FileAccess.READ)
+	if file == null:
+		_set_status("IMPORT FAILED: FILE UNAVAILABLE", true)
+		return
+	if file.get_length() > preset_service.MAX_JSON_BYTES:
+		file.close()
+		_set_status("IMPORT FAILED: FILE TOO LARGE", true)
+		return
+	var result: Dictionary = preset_service.import_json(file.get_as_text())
+	file.close()
+	if not result.get("ok", false):
+		_set_status("IMPORT FAILED: %s" % str(result.get("error", "invalid")), true)
+		return
+	var build = load("res://scripts/sandbox_build.gd").new()
+	if not build.load_build(result["preset"]["initial_build"]).get("ok", false):
+		_set_status("IMPORT FAILED: INVALID BUILD", true)
+		return
+	await _apply_preset(result["preset"])
+
+func _save_preset_file() -> void:
+	var preset := _preset_from_editor()
+	if preset.is_empty():
+		return
+	$PresetFileDialog.file_mode = FileDialog.FILE_MODE_SAVE_FILE
+	$PresetFileDialog.title = "Save Sandbox preset"
+	$PresetFileDialog.current_file = "%s.json" % str(preset["preset_id"])
+	$PresetFileDialog.popup_centered_ratio(0.8)
+
+func _export_preset_file(path: String) -> void:
+	var preset := _preset_from_editor()
+	if preset.is_empty():
+		return
+	var result: Dictionary = preset_service.export_json(preset)
+	if not result.get("ok", false):
+		_set_status("EXPORT FAILED: %s" % str(result.get("error", "invalid")), true)
+		return
+	var file := FileAccess.open(path, FileAccess.WRITE)
+	if file == null:
+		_set_status("EXPORT FAILED: FILE UNAVAILABLE", true)
+		return
+	file.store_string(str(result["json"]))
+	file.flush()
+	var write_ok := file.get_error() == OK
+	file.close()
+	_set_status("PRESET EXPORTED: %s" % path if write_ok else "EXPORT FAILED: WRITE ERROR", not write_ok)
 
 func _preset_from_editor() -> Dictionary:
 	var parser := JSON.new()
@@ -176,7 +237,7 @@ func _apply_preset(preset: Dictionary) -> void:
 		return
 	_preset_id.text = str(preset["preset_id"])
 	_build_json.text = JSON.stringify(preset["initial_build"], "  ")
-	_set_status("PRESET APPLIED · BUILD STORED, COMBAT ROUTING INCOMPLETE", false)
+	_set_status("PRESET APPLIED TO COMBAT", false)
 
 func _refresh() -> void:
 	var state: Dictionary = context.simulation.snapshot()

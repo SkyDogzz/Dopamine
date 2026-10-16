@@ -553,7 +553,7 @@ P1 livre le Sandbox développeur et ne remplace pas cette feature produit.
   - [x] Ajouter `DSLAB1:` avec DEFLATE, Base64URL, SHA-256 d’intégrité et décompression plafonnée; smoke de round-trip et corruption.
   - [x] Borner récursivement profondeur (16), collections (256 éléments chacune) et types JSON autorisés; tests hostiles ciblés.
   - [x] Ajouter `SandboxPresetStore` pour sauvegarder, lister, charger et supprimer les presets sous `user://sandbox/presets`; noms bornés et écriture temporaire validée.
-  - [ ] Brancher ces actions à l’écran Lab et ajouter l’import de fichier interactif.
+  - [x] Brancher les actions preset/share code à l’écran Lab; ajouter l’import JSON par sélecteur de fichier avec validation bornée avant application et l’export JSON par sélecteur de destination.
   - [ ] Vérifier absence de script, chemin local et donnée privée.
 - [ ] **P8.4 — Import de sauvegarde**
   - [ ] Lire un profil normal en lecture seule.
