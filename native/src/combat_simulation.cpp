@@ -104,6 +104,9 @@ int64_t CombatSimulation::spawn_enemy(String enemy_type, int64_t count, Vector2 
 			command.enemy_move_speed = 75.0F;
 			command.enemy_death_explosion_radius = 82.0F;
 			command.enemy_death_explosion_damage = 18.0F;
+		} else if (command.enemy_affix == "Shielded") {
+			command.enemy_move_speed = 75.0F;
+			command.enemy_damage_taken_multiplier = 0.5F;
 		} else {
 			return 0;
 		}
@@ -424,7 +427,7 @@ Dictionary CombatSimulation::snapshot() const {
 		components["DeathExplosionRadius"] = entity.type.death_explosion_radius;
 		components["DeathExplosionDamage"] = entity.type.death_explosion_damage;
 		components["Supported"] = entity.type.supported;
-		components["Shielded"] = entity.type.shielded;
+		components["Shielded"] = entity.type.shielded || entity.type.affix == "Shielded";
 		if (entity.type.support_radius > 0.0F) {
 			components["SupportRadius"] = entity.type.support_radius;
 			components["SupportSpeedMultiplier"] = entity.type.support_speed_multiplier;

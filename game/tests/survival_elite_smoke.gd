@@ -6,8 +6,9 @@ func _initialize() -> void:
 func _run() -> void:
 	var session: Node2D = load("res://scenes/survival_session.tscn").instantiate()
 	if session._elite_affix_for_roll(0.1) != "Hasted" or session._elite_affix_for_roll(0.3) != "Armored" or \
-			session._elite_affix_for_roll(0.6) != "Regenerating" or session._elite_affix_for_roll(0.9) != "Volatile":
-		_fail("Elite roll should select all four supported affixes at their thresholds")
+			session._elite_affix_for_roll(0.5) != "Regenerating" or session._elite_affix_for_roll(0.7) != "Volatile" or \
+			session._elite_affix_for_roll(0.9) != "Shielded":
+		_fail("Elite roll should select all five supported affixes at their thresholds")
 		return
 	session.spawn_initial_enemy = false
 	session.wave_spawning_enabled = true
@@ -17,7 +18,7 @@ func _run() -> void:
 	session.elite_chest_drop_chance = 1.0
 	root.add_child(session)
 	await process_frame
-	if session.simulation.spawn_enemy("elite", 1, Vector2.ZERO, Vector2.ZERO, 1.0, "Shielded") != 0:
+	if session.simulation.spawn_enemy("elite", 1, Vector2.ZERO, Vector2.ZERO, 1.0, "Split-on-Death") != 0:
 		_fail("Elite spawn should reject an affix that has no gameplay implementation")
 		return
 	if session.simulation.spawn_enemy("chaser", 1, Vector2.ZERO, Vector2.ZERO, 1.0, "Hasted") != 0:
@@ -51,8 +52,10 @@ func _run() -> void:
 			float(components["Health"]["maximum"]) * 0.01)
 	var valid_volatile := affix == "Volatile" and is_equal_approx(float(components["DeathExplosionRadius"]), 82.0) and \
 			is_equal_approx(float(components["DeathExplosionDamage"]), 18.0)
-	if not valid_hasted and not valid_armored and not valid_regenerating and not valid_volatile:
-		_fail("Elite snapshot should expose a working Hasted, Armored, Regenerating or Volatile affix")
+	var valid_shielded := affix == "Shielded" and bool(components["Shielded"]) and \
+			is_equal_approx(float(components["DamageTakenMultiplier"]), 0.5)
+	if not valid_hasted and not valid_armored and not valid_regenerating and not valid_volatile and not valid_shielded:
+		_fail("Elite snapshot should expose a working Hasted, Armored, Regenerating, Volatile or Shielded affix")
 		return
 	session._try_spawn_elite()
 	await process_frame

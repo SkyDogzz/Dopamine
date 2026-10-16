@@ -80,6 +80,15 @@ int main() {
 	require(!volatile_elite.entity(volatile_id) && !volatile_elite.entity(blast_target) &&
 			!volatile_elite.entity(chain_volatile_id) && chain_guard.has_value() && chain_guard->health.current == 10.0F,
 			"proposed Volatile elite blast should hit nearby enemies once without chaining explosions");
+	SimulationCore shielded_elite;
+	const auto shielded_id = shielded_elite.spawn("elite", 0.0F, 0.0F, 50.0F, 0.0F, 0.0F,
+			3.0F, 75.0F, "Shielded", 0.5F);
+	std::vector<dopamine::sim::CombatEvent> shielded_events;
+	shielded_elite.apply_direct_damage({}, shielded_id, 10.0F, shielded_events);
+	require(shielded_elite.entity(shielded_id)->health.current == 45.0F &&
+			shielded_elite.entity(shielded_id)->type.affix == "Shielded" &&
+			shielded_elite.entity(shielded_id)->type.damage_taken_multiplier == 0.5F,
+			"proposed Shielded elite affix should visibly mark and reduce incoming damage");
 	require(exploder_profile && exploder_profile->health == 30.0F && exploder_profile->speed == 60.0F &&
 			exploder_profile->threat_level == 2.0F,
 			"proposed Exploder profile should be available to Survival");
