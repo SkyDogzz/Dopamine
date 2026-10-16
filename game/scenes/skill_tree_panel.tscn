@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=3]
+[gd_scene load_steps=4 format=3]
 
 [ext_resource type="Theme" path="res://themes/dopamine_ui.tres" id="1_theme"]
 [ext_resource type="Script" path="res://scripts/skill_tree_panel.gd" id="2_script"]
+[ext_resource type="Texture2D" path="res://assets/icons/catalog/skill_node.png" id="3_skill_node"]
 
 [node name="SkillTreePanel" type="CenterContainer"]
 anchors_preset = 15
@@ -60,6 +61,9 @@ text = "FOUNDATION NODE"
 custom_minimum_size = Vector2(0, 23)
 layout_mode = 2
 text = "VITALITY STARTER"
+icon = ExtResource("3_skill_node")
+theme_override_constants/icon_max_width = 12
+texture_filter = 1
 
 [node name="FollowupNodeLabel" type="Label" parent="Panel/Content"]
 layout_mode = 2
@@ -71,6 +75,9 @@ text = "FOLLOW-UP  ·  REQUIRES FOUNDATION"
 custom_minimum_size = Vector2(0, 23)
 layout_mode = 2
 text = "FOCUSED TRAINING"
+icon = ExtResource("3_skill_node")
+theme_override_constants/icon_max_width = 12
+texture_filter = 1
 
 [node name="RespecButton" type="Button" parent="Panel/Content"]
 custom_minimum_size = Vector2(0, 20)

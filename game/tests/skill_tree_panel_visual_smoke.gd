@@ -11,6 +11,14 @@ func _run() -> void:
 	var frame: Control = panel.get_node("Panel")
 	var vitality: Button = panel.get_node("Panel/Content/VitalityButton")
 	var focus: Button = panel.get_node("Panel/Content/FocusButton")
+	if vitality.icon == null or vitality.icon.resource_path != "res://assets/icons/catalog/skill_node.png" or \
+		focus.icon == null or focus.icon.resource_path != "res://assets/icons/catalog/skill_node.png":
+		_fail("Existing skill node artwork should identify both prototype choices")
+		return
+	if vitality.get_theme_constant("icon_max_width") != 12 or focus.get_theme_constant("icon_max_width") != 12 or \
+		vitality.texture_filter != CanvasItem.TEXTURE_FILTER_NEAREST or focus.texture_filter != CanvasItem.TEXTURE_FILTER_NEAREST:
+		_fail("Skill node icons should remain compact and pixel crisp")
+		return
 	if vitality.size.x < 390 or focus.size.x < 390:
 		_fail("Skill node choices should have enough width for their cost and effect text")
 		return
