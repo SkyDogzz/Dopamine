@@ -24,6 +24,7 @@ const SPRITE_FILES := {
 	"projectile_crimson": "projectiles/projectile_crimson",
 	"projectile_enemy": "projectiles/projectile_enemy",
 	"projectile_minigun": "projectiles/projectile_minigun",
+	"projectile_redline": "projectiles/projectile_minigun",
 	"projectile_toxic_cloud": "projectiles/projectile_toxic_cloud",
 	"projectile_sawblades": "projectiles/projectile_sawblades",
 	"projectile_meteor": "projectiles/projectile_meteor",
@@ -44,6 +45,7 @@ const SPRITE_FILES := {
 	"projectile_unique_lightning_burst": "projectiles/projectile_unique_lightning_burst",
 	"projectile_evolution_shockwave": "projectiles/projectile_evolution_shockwave",
 }
+const SPRITE_COLORS := {"projectile_redline": Color("#FF7181")}
 
 var _batches: Dictionary = {}
 var _projectile_trails: Array[Dictionary] = []
@@ -56,10 +58,10 @@ func _init() -> void:
 	for sprite_id in SPRITE_FILES:
 		var mesh := MultiMesh.new()
 		mesh.transform_format = MultiMesh.TRANSFORM_2D
-		mesh.use_colors = true
 		var quad := QuadMesh.new()
 		quad.size = Vector2.ONE
 		mesh.mesh = quad
+		mesh.use_colors = true
 		var filename: String = SPRITE_FILES[sprite_id]
 		if not filename.contains("."):
 			filename += ".png"
@@ -95,6 +97,7 @@ func set_entities(entities: Array, origin: Vector2 = Vector2.ZERO) -> void:
 						"end": trail_end,
 					})
 		instances_by_sprite[sprite_id].append({"point": point, "size": size, "rotation": rotation})
+		instances_by_sprite[sprite_id][-1]["color"] = SPRITE_COLORS.get(sprite_id, Color.WHITE)
 		var id: Dictionary = entity["id"]
 		if int(id["index"]) == _selected_index and int(id["generation"]) == _selected_generation:
 			selected_point = point
@@ -188,6 +191,8 @@ func _sprite_for_entity(components: Dictionary) -> String:
 				return "projectile_evolution_shockwave"
 			"minigun":
 				return "projectile_minigun"
+			"redline":
+				return "projectile_redline"
 			"toxic_cloud":
 				return "projectile_toxic_cloud"
 			"pandemic_cloud":
@@ -267,4 +272,4 @@ func _set_instances(multimesh: MultiMesh, instances: Array) -> void:
 		transform.x *= size
 		transform.y *= size
 		multimesh.set_instance_transform_2d(index, transform)
-		multimesh.set_instance_color(index, Color.WHITE)
+		multimesh.set_instance_color(index, instance.get("color", Color.WHITE))

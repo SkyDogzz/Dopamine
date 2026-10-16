@@ -24,6 +24,11 @@
 
 - [x] `survival_chest_smoke.gd` attend que l’interface ait rejoint le dernier snapshot, puis vérifie pendant 120 ms que la simulation, le temps actif affiché et l’état pause restent figés; il vérifie aussi la reprise après sélection.
 
+## Rendu des évolutions — 2026-10-16
+
+- [x] `survival_weapon_catalog_smoke.gd` observe le projectile `redline` réellement tiré après évolution et vérifie que la collision continue de fonctionner.
+- [x] `render_batching_smoke.gd` vérifie le lot de rendu propre à Redline, la silhouette Minigun réutilisée et la teinte rouge néon; les neuf autres formes évoluées restent vérifiées dans leurs lots dédiés.
+
 ## Hub Survival — état visuel des destinations inactives — 2026-10-16
 
 - [x] `survival_hub_smoke.gd` vérifie que Succès et Bestiaire utilisent le style atténué, restent activables au focus et gardent le cadre de focus partagé; ils ne sont pas désactivés.

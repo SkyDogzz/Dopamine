@@ -823,13 +823,19 @@ func _minigun_hits_target() -> bool:
 	session._next_minigun_time = active_time + 0.01
 	session._fire_minigun(active_time + 0.01, false)
 	var redline_interval: float = session._next_minigun_time - (active_time + 0.01)
+	await process_frame
+	var redline_projectile_seen := false
+	for entity in session.simulation.snapshot()["entities"]:
+		if str(entity["components"].get("EnemyType", "")) == "redline":
+			redline_projectile_seen = true
+			break
 	var collision_baseline := int(session.simulation.snapshot()["metrics"]["collision_count"])
 	var deadline_for_hit := Time.get_ticks_msec() + 1500
 	while Time.get_ticks_msec() < deadline_for_hit:
 		await process_frame
 		if int(session.simulation.snapshot()["metrics"]["collision_count"]) > collision_baseline:
 			session.queue_free()
-			return redline_interval < base_interval
+			return redline_projectile_seen and redline_interval < base_interval
 	session.queue_free()
 	return false
 

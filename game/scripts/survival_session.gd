@@ -18,7 +18,7 @@ const WEAPON_IMPACT_TYPES := {
 	"lightning_conductor": 0, "infinite_circuit_branch": 0, "unique_lightning_burst": 0,
 	"inferno_sprayer": 1, "wildfire_sprayer": 1,
 	"crimson_dagger": 2, "bloodstorm_dagger": 2,
-	"minigun": 3,
+	"minigun": 3, "redline": 3,
 	"toxic_cloud": 4, "pandemic_cloud": 4,
 	"sawblades": 5, "razorstorm": 5,
 	"meteor_staff": 6, "starfall": 6, "starfall_fragment": 6,
@@ -29,7 +29,7 @@ const WEAPON_IMPACT_TYPES := {
 const WEAPON_IMPACT_SOURCE_IDS := {
 	"lightning_conductor": "lightning_conductor", "unique_lightning_burst": "lightning_conductor",
 	"infinite_circuit_branch": "lightning_conductor", "inferno_sprayer": "inferno_sprayer",
-	"wildfire_sprayer": "inferno_sprayer", "crimson_dagger": "crimson_daggers",
+	"wildfire_sprayer": "inferno_sprayer", "redline": "minigun", "crimson_dagger": "crimson_daggers",
 	"bloodstorm_dagger": "crimson_daggers", "minigun": "minigun", "toxic_cloud": "toxic_cloud",
 	"pandemic_cloud": "toxic_cloud", "sawblades": "sawblades", "razorstorm": "sawblades",
 	"meteor_staff": "meteor_staff", "starfall": "meteor_staff", "starfall_fragment": "meteor_staff",
@@ -1826,7 +1826,8 @@ func _fire_minigun(active_time: float, paused: bool) -> void:
 		direction = Vector2.RIGHT
 	var spread := minigun_spread_radians * (0.85 if level >= 4 else 1.0)
 	direction = direction.rotated(randf_range(-spread, spread))
-	if simulation.spawn_projectile("minigun", player.global_position + direction * 14.0,
+	var projectile_type := "redline" if loadout.is_evolved("minigun") else "minigun"
+	if simulation.spawn_projectile(projectile_type, player.global_position + direction * 14.0,
 			direction * _equipment_projectile_speed(minigun_projectile_speed), damage,
 			_equipment_area(minigun_projectile_radius), minigun_projectile_lifetime) <= 0:
 		return
