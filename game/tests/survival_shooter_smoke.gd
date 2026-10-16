@@ -54,7 +54,7 @@ func _run() -> void:
 	session.player.global_position = Vector2(float(projectile_transform["x"]), float(projectile_transform["y"]))
 	session._entities = [spawned_projectile]
 	session.player_hp = 100.0
-	session._contact_invulnerable_until = 0.0
+	session._contact_damage_until.clear()
 	session._apply_contact_damage({"paused": false}, 10.0)
 	if not is_equal_approx(session.player_hp, 100.0 - float(components["Projectile"]["damage"])):
 		_fail("Enemy projectile should damage the player when its collision reaches them")

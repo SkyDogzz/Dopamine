@@ -61,11 +61,11 @@ Boucle Survival : choisir difficulté et arme initiale → survivre à une vague
 
 ## 03 — Combat, HP decay et guérison
 
-[VALIDÉ] Mouvement précis et instantané, sans inertie significative ; pas de dash de base, certains équipements peuvent en accorder un. HP initial = 100. Perte passive de HP initiale = 1,5 HP/s, croissante linéairement avec le temps de combat actif. Les kills soignent selon le niveau de menace des ennemis. Lifesteal sur dégâts avec soft cap. Dégâts de contact accordent une courte invulnérabilité. Revives rares.
+[VALIDÉ] Mouvement précis et instantané, sans inertie significative ; pas de dash de base, certains équipements peuvent en accorder un. HP initial = 100. Perte passive de HP initiale = 1,5 HP/s, croissante linéairement avec le temps de combat actif. Les kills soignent selon le niveau de menace des ennemis. Lifesteal sur dégâts avec soft cap. Le délai entre deux dégâts de contact corps à corps est suivi séparément pour chaque ennemi ; il ne bloque pas les projectiles ni les autres attaques. Revives rares.
 
 [PROPOSÉ] Le HP decay s’applique pendant tout le gameplay, y compris hors combat et pendant les boss, mais est suspendu par une vraie pause, dont la sélection d’un chest. D(t) = 1,5 + 0,004 t HP/s (t en secondes actives). Perte exacte sur [t,t+Δt] = 1,5 Δt + 0,002((t+Δt)^2 - t²). Après 60 secondes sans soin : 97,2 HP perdus. Après 720 secondes : 2 116,8 HP perdus. Le timer ne progresse pas pendant les menus en pause, mais progresse pendant les combats de boss.
 
-[PROPOSÉ] Soin par kill H(T)=2+3√T, menace T bornée dans [0,5 ; 25] ; ennemi ordinaire T=1 → +5 HP. Menace calculée depuis archétype et multiplicateurs HP/dégâts/vitesse. Lifesteal : rendement normal jusqu'à 10 HP/s puis efficacité de 25 % au-delà ; dégâts sur la durée donnent 25 % de leur lifesteal théorique. Invulnérabilité après impact : 0,35 s.
+[PROPOSÉ] Soin par kill H(T)=2+3√T, menace T bornée dans [0,5 ; 25] ; ennemi ordinaire T=1 → +5 HP. Menace calculée depuis archétype et multiplicateurs HP/dégâts/vitesse. Lifesteal : rendement normal jusqu'à 10 HP/s puis efficacité de 25 % au-delà ; dégâts sur la durée donnent 25 % de leur lifesteal théorique. Délai de contact corps à corps par ennemi : 0,35 s.
 
 [À TESTER] Taux de kills nécessaire pour compenser le decay, situations sans ennemis, builds à faible DPS, boucles de guérison infinie, survie à 1 HP et comportement pendant les transitions.
 
@@ -91,7 +91,7 @@ Boucle Survival : choisir difficulté et arme initiale → survivre à une vague
 
 [PROPOSÉ] Réactions élémentaires entre statuts ; les combinaisons et effets listés en annexe restent à valider.
 
-[VALIDÉ] Dix armes distinctes, chacune à ciblage automatique intelligent propre, dont l’efficacité dépend fortement du positionnement et du déplacement. Le choix de départ se fait parmi deux armes débloquées. Aucun doublon d’arme en run normale (doublons autorisés dans le Sandbox). Chaque arme et relique a cinq niveaux ; les niveaux d’arme ont des améliorations fixes, principalement statistiques, et une évolution majeure conserve le niveau 5. L’arme évolue automatiquement dès qu’elle est niveau 5 et que sa relique associée est possédée, quel que soit le niveau de relique ; l’évolution ne consomme pas la relique. Une seule évolution par arme ; une arme niveau 5 non évoluée ne peut plus apparaître comme amélioration ordinaire de chest. Chaque niveau d’arme reçoit un retour visuel, même pour une hausse uniquement statistique. Les bonus de relique progressent linéairement.
+[VALIDÉ] Dix armes distinctes, chacune à ciblage automatique intelligent propre, dont l’efficacité dépend fortement du positionnement et du déplacement. Le choix de départ se fait parmi deux armes débloquées. Aucun doublon d’arme en run normale (doublons autorisés dans le Sandbox). Chaque arme et relique a cinq niveaux ; les niveaux d’arme ont des améliorations fixes, principalement statistiques, et une évolution majeure conserve le niveau 5. Chaque relique accorde aussi un bonus à une statistique globale en run normale. Le combo associé ne renforce que son arme : il devient disponible comme choix d’évolution lorsque l’arme et la relique atteignent toutes deux le niveau 5, puis ne s’active qu’après collecte de ce choix. La relique n’est pas consommée. Une seule évolution par arme ; une arme niveau 5 non évoluée ne peut plus apparaître comme amélioration ordinaire de chest. Chaque niveau d’arme reçoit un retour visuel, même pour une hausse uniquement statistique. Les bonus de relique progressent linéairement.
 
 Paires de contenu validées :
 1. Lightning Conductor + Storm Core → Infinite Circuit : éclairs ramifiés et Shock.
@@ -105,7 +105,7 @@ Paires de contenu validées :
 9. Toxic Cloud + Plague Mask → Pandemic : poison contagieux.
 10. Prism Laser + Prism Crystal → Spectrum Collapse : faisceaux secondaires.
 
-[PROPOSÉ] Blood Chalice accorde 5 % de lifesteal par niveau sur les dégâts directs. Le prototype applique le soft cap décrit en section 03; la valeur n'est pas validée et les dégâts sur la durée restent à intégrer.
+[PROPOSÉ] Valeurs actuellement utilisées par le prototype pour les bonus globaux par niveau : Storm Core +5 % dégâts, Infernal Heart +5 % cadence, Blood Chalice +5 % lifesteal et +10 % de soin par élimination, Singularity +5 % réduction de cooldown, Frozen Crown +5 % zone, Overdrive Engine +4 % cadence, Celestial Eye +3 % zone, Magnetic Coil +4 % vitesse de projectile, Plague Mask +5 % dégâts, Prism Crystal +3 % dégâts critiques et Magnet Heart +25 % rayon de ramassage XP. Ces valeurs restent à équilibrer. Le lifesteal reste soumis au soft cap décrit en section 03.
 [OUVERT] Le taux de lifesteal général indépendant de Blood Chalice n'est pas défini.
 
 [PROPOSÉ] Les valeurs chiffrées de progression des dix armes (niveaux 2–5) figurent dans l’annexe v1.6 ci-dessous et restent des hypothèses de balancing. Les nombres précis des reliques et le calibrage des armes restent à confirmer.
@@ -118,7 +118,7 @@ Paires de contenu validées :
 
 ## 06 — Chests et progression pendant une run
 
-[VALIDÉ] Chests d’armes et de reliques obtenus sur les ennemis, trois choix par ouverture, préférence pour les améliorations et synergies, et protection anti-malchance. Les slots pleins limitent les propositions aux améliorations encore disponibles. Les rerolls sont limités et obtenus via la progression. Le gameplay est en pause pendant le choix. Toute acquisition/amélioration vérifie immédiatement si une évolution est due.
+[VALIDÉ] Chests d’armes et de reliques obtenus sur les ennemis, trois choix par ouverture, préférence pour les améliorations et synergies, et protection anti-malchance. Les slots pleins limitent les propositions aux améliorations encore disponibles. Les rerolls sont limités et obtenus via la progression. Le gameplay est en pause pendant le choix. Toute acquisition/amélioration peut rendre un choix d’évolution disponible ; le combo ne s’active qu’à sa collecte.
 
 [PROPOSÉ] Probabilité de drop par ennemi ordinaire : 0,5 % pour chaque famille ; élite : 15 % par famille ; boss : un chest de chaque famille garanti. Filet de sécurité : au moins un chest éligible de chaque famille toutes les 60 secondes. Poids de proposition : ×1,5 upgrade équipé ; ×2 relique correspondant à une arme ; ×1,5 arme correspondant à une relique ; ×1,25 évolution proche ; multiplicateur combiné plafonné à ×3.
 
@@ -287,9 +287,9 @@ Classements en ligne [PROPOSÉ] : résultats vérifiés côté serveur ou protoc
 
 ## 19 — Tests d’acceptation et QA
 
-Combat : decay exact sur intervalle et pause, guérison par menace, soft cap lifesteal, invulnérabilité après contact, revives rares, arrêt de wave timer pendant boss, pas d'arrêt du decay.
+Combat : decay exact sur intervalle et pause, guérison par menace, soft cap lifesteal, cooldown de collision corps à corps par ennemi, revives rares, arrêt de wave timer pendant boss, pas d'arrêt du decay.
 
-Loot : deux types de chest, trois choix, évolution niveau 5 + relique possédée, slots max 5/6, absence de doublons en mode normal, garanties de directeur, RNG reproductible.
+Loot : deux types de chest, trois choix, évolution disponible après niveau 5 de l'arme et de la relique associée puis activée à la collecte, slots max 5/6, absence de doublons en mode normal, garanties de directeur, RNG reproductible.
 
 Equipment : 1 objet garanti par run classique même en cas de mort, slots et raretés, nombre exact de lignes, unicité des types de stats, choix effet unique, inventaire illimité, démontage et vente.
 
@@ -343,7 +343,8 @@ Les tableaux ci-dessous précisent les comportements et hypothèses numériques 
 - Aucun doublon d'arme, sauf dans le Sandbox.
 - 5 niveaux par arme, avec améliorations fixes, principalement statistiques.
 - Évolution majeure, visuellement spectaculaire, conservant le niveau 5.
-- Évolution automatique dès que l'arme atteint le niveau 5 et que sa relique associée est possédée, quel que soit le niveau de cette relique.
+- Chaque relique donne un bonus de statistique globale en run normale.
+- Le combo d'évolution renforce uniquement l'arme associée et ne s'active qu'après le niveau 5 des deux objets et la collecte de l'offre d'évolution.
 - Une seule évolution par arme.
 - Une arme niveau 5 non évoluée n'apparaît plus comme amélioration ordinaire dans les coffres.
 - Évolution visuelle de l'arme à chaque niveau, même lorsque l'amélioration est purement statistique.
@@ -561,7 +562,7 @@ Les noms et patterns restent des propositions.
 - Mouvement instantané, précis, sans inertie significative.
 - Aucun dash de base.
 - Dash possible via certains équipements.
-- Contact ennemi : dégâts et courte invulnérabilité.
+- Contact corps à corps ennemi : dégâts avec cooldown séparé pour chaque ennemi. Les projectiles et autres attaques ne partagent pas ce délai.
 - HP decay toujours actif pendant le gameplay, y compris hors combat et pendant les boss.
 - Guérison via kills, lifesteal et effets rares.
 

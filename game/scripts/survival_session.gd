@@ -84,7 +84,7 @@ const WAVE_HP_CAP := 12.0
 @export var chest_collection_radius: float = 36.0
 @export_group("Prototype contact damage — proposed tuning")
 @export var contact_damage_per_hit: float = 10.0
-@export var contact_invulnerability_seconds: float = 0.35
+@export var body_contact_cooldown_seconds: float = 0.35
 @export var player_contact_radius: float = 10.0
 @export var enemy_contact_radius: float = 8.0
 @export var enemy_separation_radius: float = 18.0
@@ -145,7 +145,6 @@ const WAVE_HP_CAP := 12.0
 @export var minigun_projectile_speed: float = 1100.0
 @export var minigun_projectile_radius: float = 3.0
 @export var minigun_projectile_lifetime: float = 0.8
-@export_range(0.0, 1.0) var overdrive_cadence_per_level: float = 0.04
 @export var redline_max_cadence_bonus: float = 0.5
 @export var redline_ramp_seconds: float = 5.0
 @export_group("Prototype Toxic Cloud — proposed tuning")
@@ -160,7 +159,6 @@ const WAVE_HP_CAP := 12.0
 @export var toxic_damage_per_tick: float = 1.5
 @export var toxic_tick_interval_seconds: float = 0.5
 @export var toxic_status_duration_seconds: float = 2.0
-@export_range(0.0, 1.0) var plague_mask_dot_per_level: float = 0.05
 @export var pandemic_spread_radius: float = 140.0
 @export_range(1, 8) var pandemic_max_spread_targets: int = 3
 @export var pandemic_feedback_seconds: float = 0.35
@@ -212,7 +210,6 @@ const WAVE_HP_CAP := 12.0
 @export var frost_nova_duration_seconds: float = 0.12
 @export var frost_chill_duration_seconds: float = 2.0
 @export_range(0.0, 1.0) var frost_chill_speed_multiplier: float = 0.65
-@export_range(0.0, 1.0) var frozen_crown_chill_duration_per_level: float = 0.05
 @export var frozen_crown_vulnerability_at_level_five: float = 0.25
 @export var absolute_zero_shatter_radius: float = 76.0
 @export_range(0.0, 2.0) var absolute_zero_shatter_damage_multiplier: float = 0.75
@@ -221,12 +218,7 @@ const WAVE_HP_CAP := 12.0
 @export var bloodstorm_bleed_interval_seconds: float = 0.5
 @export var bloodstorm_bleed_duration_seconds: float = 2.0
 @export_group("Prototype relic bonuses — proposed tuning")
-@export_range(0.0, 1.0) var storm_core_damage_per_level: float = 0.05
-@export_range(0.0, 1.0) var infernal_heart_damage_per_level: float = 0.05
 @export_range(0.0, 1.0) var blood_chalice_heal_per_level: float = 0.10
-@export_range(0.0, 1.0) var blood_chalice_lifesteal_per_level: float = 0.05
-@export_group("Prototype Magnet Heart — proposed tuning")
-@export_range(0.0, 1.25, 0.01) var magnet_heart_pickup_radius_per_level: float = 0.25
 @export_group("Prototype XP — proposed tuning")
 @export var xp_per_enemy: float = 5.0
 @export var xp_collection_radius: float = 36.0
@@ -292,7 +284,7 @@ var _world_chests: Array[Dictionary] = []
 var _chest_open := false
 var _starting_weapon_choice_open := false
 var _manually_paused := false
-var _contact_invulnerable_until := 0.0
+var _contact_damage_until: Dictionary = {}
 var _pending_lifesteal := 0.0
 var _cached_persistent_damage_multiplier := 1.0
 var _cached_equipment_bonuses: Dictionary = {}
@@ -545,7 +537,7 @@ func _process(_delta: float) -> void:
 						_starfall_fragments_spawned[source_key] = true
 						_spawn_starfall_fragments(Vector2(float(event["position"]["x"]), float(event["position"]["y"])),
 								damage_target, state["entities"])
-				var damage_lifesteal := float(event["amount"]) * float(loadout.relic_level("blood_chalice")) * blood_chalice_lifesteal_per_level
+				var damage_lifesteal: float = float(event["amount"]) * (loadout.global_relic_bonus("lifesteal_pct") + _equipment_bonus("lifesteal_pct")) / 100.0
 				if bool(event.get("is_damage_over_time", false)):
 					damage_lifesteal *= 0.25
 				_pending_lifesteal += damage_lifesteal
@@ -555,9 +547,9 @@ func _process(_delta: float) -> void:
 				var dead_enemy_type: String = str(event.get("target_type", ""))
 				var death_position := Vector2(float(event["position"]["x"]), float(event["position"]["y"]))
 				_add_enemy_death_pixels(dead_enemy_type, death_position)
-				if bool(event.get("target_was_chilled", false)) and loadout.weapon_level("frost_nova") >= 5 and loadout.relic_level("frozen_crown") > 0 and str(event.get("source_type", "")) != "absolute_zero":
+				if bool(event.get("target_was_chilled", false)) and loadout.is_evolved("frost_nova") and str(event.get("source_type", "")) != "absolute_zero":
 					simulation.spawn_projectile("absolute_zero", death_position, Vector2.ZERO,
-							frost_nova_damage * absolute_zero_shatter_damage_multiplier,
+							frost_nova_damage * absolute_zero_shatter_damage_multiplier * _weapon_combo_damage_multiplier("frost_nova") * _persistent_damage_multiplier(),
 							_equipment_area(absolute_zero_shatter_radius), frost_nova_duration_seconds,
 							2.0, 0.5, 2.0, 0.0, 0.0, 0, 0.0, 0.0, true)
 				var dead_key := _entity_key(int(dead_target["index"]), int(dead_target["generation"]))
@@ -631,8 +623,18 @@ func _process(_delta: float) -> void:
 	queue_redraw()
 
 func _apply_contact_damage(state: Dictionary, current_simulation_time: float) -> void:
-	if state["paused"] or run_over or current_simulation_time < _contact_invulnerable_until:
+	if state["paused"] or run_over:
 		return
+	var active_contact_ids := {}
+	for entity in _entities:
+		var components: Dictionary = entity["components"]
+		if components.get("IsProjectile", false) or not components.has("EnemyType") or components.get("IsXpOrb", false):
+			continue
+		var id: Dictionary = entity.get("id", {})
+		active_contact_ids[_entity_key(int(id.get("index", -1)), int(id.get("generation", 0)))] = true
+	for enemy_key in _contact_damage_until.keys():
+		if not active_contact_ids.has(enemy_key):
+			_contact_damage_until.erase(enemy_key)
 	for entity in _entities:
 		var components: Dictionary = entity["components"]
 		if components.get("IsProjectile", false):
@@ -645,7 +647,6 @@ func _apply_contact_damage(state: Dictionary, current_simulation_time: float) ->
 			if player.global_position.distance_squared_to(projectile_position) > projectile_distance * projectile_distance:
 				continue
 			_take_enemy_damage(float(projectile.get("damage", shooter_projectile_damage)))
-			_contact_invulnerable_until = current_simulation_time + contact_invulnerability_seconds
 			var projectile_id: Dictionary = entity["id"]
 			simulation.despawn(int(projectile_id["index"]), int(projectile_id["generation"]))
 			return
@@ -656,9 +657,12 @@ func _apply_contact_damage(state: Dictionary, current_simulation_time: float) ->
 		var contact_distance := player_contact_radius + enemy_contact_radius
 		if player.global_position.distance_squared_to(enemy_position) > contact_distance * contact_distance:
 			continue
+		var id: Dictionary = entity.get("id", {})
+		var enemy_key := _entity_key(int(id.get("index", -1)), int(id.get("generation", 0)))
+		if current_simulation_time < float(_contact_damage_until.get(enemy_key, -INF)):
+			continue
 		_take_enemy_damage(contact_damage_per_hit)
-		_contact_invulnerable_until = current_simulation_time + contact_invulnerability_seconds
-		return
+		_contact_damage_until[enemy_key] = current_simulation_time + body_contact_cooldown_seconds
 
 func _update_shooter_attacks(current_simulation_time: float, paused: bool) -> void:
 	if paused or run_over:
@@ -725,10 +729,8 @@ func _update_exploder_attacks(current_simulation_time: float, paused: bool) -> v
 		if current_simulation_time < float(attack["detonate_at"]):
 			continue
 		var blast_origin: Vector2 = attack["origin"]
-		if player.global_position.distance_squared_to(blast_origin) <= exploder_blast_radius * exploder_blast_radius and \
-				current_simulation_time >= _contact_invulnerable_until:
+		if player.global_position.distance_squared_to(blast_origin) <= exploder_blast_radius * exploder_blast_radius:
 			_take_enemy_damage(exploder_damage)
-			_contact_invulnerable_until = current_simulation_time + contact_invulnerability_seconds
 		simulation.despawn(int(id["index"]), int(id["generation"]))
 		attack["phase"] = "detonated"
 		kill_count += 1
@@ -921,13 +923,13 @@ func _refresh_hud(state: Dictionary) -> void:
 	_weapon_icon.texture = WEAPON_ICONS.get(owned_weapons[0]) if not owned_weapons.is_empty() else null
 	for weapon_id in owned_weapons:
 		var label := "%s Lv%d" % [short_names.get(weapon_id, weapon_id), loadout.weapon_level(weapon_id)]
-		if weapon_id == "minigun" and loadout.weapon_level(weapon_id) >= 5 and loadout.relic_level("overdrive_engine") > 0:
+		if weapon_id == "minigun" and loadout.is_evolved(weapon_id):
 			label += " REDLINE"
-		if weapon_id == "toxic_cloud" and loadout.weapon_level(weapon_id) >= 5 and loadout.relic_level("plague_mask") > 0:
+		if weapon_id == "toxic_cloud" and loadout.is_evolved(weapon_id):
 			label += " PANDEMIC"
-		if weapon_id == "sawblades" and loadout.weapon_level("sawblades") >= 5 and loadout.relic_level("magnetic_coil") > 0:
+		if weapon_id == "sawblades" and loadout.is_evolved(weapon_id):
 			label += " RAZORSTORM"
-		if weapon_id == "meteor_staff" and loadout.weapon_level("meteor_staff") >= 5 and loadout.relic_level("celestial_eye") > 0:
+		if weapon_id == "meteor_staff" and loadout.is_evolved(weapon_id):
 			label += " STARFALL"
 		equipped_names.append(label)
 	_weapon_value.text = "  •  ".join(equipped_names)
@@ -1023,9 +1025,8 @@ func _collect_nearby_xp_orbs(state: Dictionary) -> void:
 			_pending_xp_orbs.erase(key)
 		var transform: Dictionary = components["Transform2D"]
 		var orb_position := Vector2(float(transform["x"]), float(transform["y"]))
-		var pickup_radius_bonus_pct := _equipment_bonus("pickup_radius_pct") + \
-				float(loadout.relic_level("magnet_heart")) * magnet_heart_pickup_radius_per_level * 100.0
-		var pickup_radius := xp_collection_radius * (1.0 + pickup_radius_bonus_pct / 100.0)
+		var pickup_radius_bonus_pct: float = _equipment_bonus("pickup_radius_pct") + loadout.global_relic_bonus("pickup_radius_pct")
+		var pickup_radius: float = xp_collection_radius * (1.0 + pickup_radius_bonus_pct / 100.0)
 		if player.global_position.distance_squared_to(orb_position) > pickup_radius * pickup_radius:
 			continue
 		var sequence: int = simulation.collect_xp_orb(int(id["index"]), int(id["generation"]))
@@ -1059,7 +1060,7 @@ func _chest_heading(family: String) -> String:
 	return "CHEST — CHOOSE ONE"
 
 func _open_chest(options: Array, heading: String) -> bool:
-	if simulation == null or run_over or _chest_open or not _chest_choice.present(options, 3, heading):
+	if simulation == null or run_over or _chest_open or not _chest_choice.present(options, options.size(), heading):
 		return false
 	_chest_open = true
 	simulation.pause()
@@ -1338,10 +1339,9 @@ func _fire_lightning_conductor(active_time: float, paused: bool) -> void:
 		chain_count = 3
 	if level >= 4:
 		chain_count = 5
-	var damage_multiplier := (1.25 if level >= 3 else 1.0) * \
-			(1.0 + float(loadout.relic_level("storm_core")) * storm_core_damage_per_level) * _persistent_damage_multiplier()
+	var damage_multiplier := (1.25 if level >= 3 else 1.0) * _weapon_combo_damage_multiplier("lightning_conductor") * _persistent_damage_multiplier()
 	damage_multiplier *= _roll_equipment_critical_multiplier()
-	if level >= 5 and loadout.relic_level("storm_core") > 0:
+	if loadout.is_evolved("lightning_conductor"):
 		_fire_infinite_circuit(active_time, chain_count, damage_multiplier)
 		_try_evolution_shockwave(lightning_damage * damage_multiplier)
 		return
@@ -1408,8 +1408,9 @@ func _advance_lightning_chain(event: Dictionary, entities: Array, active_time: f
 	var direction: Vector2 = (next_target["position"] - origin).normalized()
 	if direction == Vector2.ZERO:
 		direction = Vector2.RIGHT
+	var arc_origin := origin + direction * 24.0
 	var damage := float(chain["next_damage"])
-	var sequence: int = simulation.spawn_projectile("lightning_arc:%s" % chain_id, origin,
+	var sequence: int = simulation.spawn_projectile("lightning_arc:%s" % chain_id, arc_origin,
 		direction * _equipment_projectile_speed(lightning_projectile_speed), damage,
 		_equipment_area(lightning_projectile_radius), lightning_projectile_lifetime)
 	if sequence <= 0:
@@ -1419,7 +1420,7 @@ func _advance_lightning_chain(event: Dictionary, entities: Array, active_time: f
 	chain["remaining"] = int(chain["remaining"]) - 1
 	chain["next_damage"] = damage * lightning_chain_damage_multiplier
 	chain["expires_at"] = active_time + lightning_projectile_lifetime
-	_add_lightning_arc(origin, next_target["position"])
+	_add_lightning_arc(arc_origin, next_target["position"])
 
 func _add_lightning_arc(from: Vector2, to: Vector2) -> void:
 	var perpendicular := (to - from).orthogonal().normalized()
@@ -1514,19 +1515,19 @@ func _fire_inferno_sprayer(active_time: float, paused: bool) -> void:
 		direction = Vector2.RIGHT
 	var level: int = loadout.weapon_level("inferno_sprayer")
 	var damage := inferno_damage * (1.0 + 0.15 * float(level - 1))
-	damage *= 1.0 + float(loadout.relic_level("infernal_heart")) * infernal_heart_damage_per_level
+	damage *= _weapon_combo_damage_multiplier("inferno_sprayer")
 	damage *= _persistent_damage_multiplier()
 	damage *= _roll_equipment_critical_multiplier()
 	var projectile_type := "inferno_sprayer"
 	var explosion_radius := 0.0
 	var explosion_multiplier := 0.0
-	if level >= 5 and loadout.relic_level("infernal_heart") > 0:
+	if loadout.is_evolved("inferno_sprayer"):
 		projectile_type = "wildfire_sprayer"
 		explosion_radius = _equipment_area(wildfire_explosion_radius)
 		explosion_multiplier = wildfire_explosion_damage_multiplier
 	var projectile_sequence: int = simulation.spawn_status_projectile(projectile_type, player.global_position + direction * 14.0,
 			direction * _equipment_projectile_speed(inferno_projectile_speed), damage, _equipment_area(inferno_projectile_radius),
-			inferno_projectile_lifetime, inferno_burn_damage_per_tick,
+			inferno_projectile_lifetime, inferno_burn_damage_per_tick * _weapon_combo_damage_multiplier("inferno_sprayer") * _persistent_damage_multiplier(),
 			inferno_burn_interval_seconds, inferno_burn_duration_seconds,
 			explosion_radius, explosion_multiplier)
 	if projectile_sequence > 0:
@@ -1551,7 +1552,8 @@ func _fire_crimson_daggers(active_time: float, paused: bool) -> void:
 	var status_damage := 2.0
 	var status_interval := 0.5
 	var status_duration := 2.0
-	if level >= 5 and loadout.relic_level("blood_chalice") > 0:
+	damage *= _weapon_combo_damage_multiplier("crimson_daggers")
+	if loadout.is_evolved("crimson_daggers"):
 		projectile_type = "bloodstorm_dagger"
 		status_damage = bloodstorm_bleed_damage_per_tick
 		status_interval = bloodstorm_bleed_interval_seconds
@@ -1561,7 +1563,8 @@ func _fire_crimson_daggers(active_time: float, paused: bool) -> void:
 		var shot_direction: Vector2 = direction.rotated(spread)
 		if simulation.spawn_status_projectile(projectile_type, player.global_position + shot_direction * 14.0,
 				shot_direction * _equipment_projectile_speed(daggers_projectile_speed), damage, _equipment_area(daggers_projectile_radius),
-				daggers_projectile_lifetime, status_damage, status_interval, status_duration) > 0:
+				daggers_projectile_lifetime, status_damage * _persistent_damage_multiplier() * _weapon_combo_damage_multiplier("crimson_daggers"),
+				status_interval, status_duration) > 0:
 			fired += 1
 	if fired > 0:
 		_try_unique_lightning_burst(damage)
@@ -1585,7 +1588,8 @@ func _fire_minigun(active_time: float, paused: bool) -> void:
 	var level: int = loadout.weapon_level("minigun")
 	var damage_multiplier := 1.0 + (0.2 if level >= 2 else 0.0)
 	var cadence_multiplier := 1.0 + (0.25 if level >= 3 else 0.0) + (0.25 if level >= 5 else 0.0)
-	var damage := minigun_damage * damage_multiplier * _persistent_damage_multiplier() * _roll_equipment_critical_multiplier()
+	var combo_multiplier := _weapon_combo_damage_multiplier("minigun")
+	var damage := minigun_damage * damage_multiplier * combo_multiplier * _persistent_damage_multiplier() * _roll_equipment_critical_multiplier()
 	var direction: Vector2 = (target["position"] - player.global_position).normalized()
 	if direction == Vector2.ZERO:
 		direction = Vector2.RIGHT
@@ -1595,12 +1599,10 @@ func _fire_minigun(active_time: float, paused: bool) -> void:
 			direction * _equipment_projectile_speed(minigun_projectile_speed), damage,
 			_equipment_area(minigun_projectile_radius), minigun_projectile_lifetime) <= 0:
 		return
-	var overdrive_level: int = loadout.relic_level("overdrive_engine")
-	var overdrive_multiplier := 1.0 + float(overdrive_level) * overdrive_cadence_per_level
-	if level >= 5 and overdrive_level > 0:
+	if loadout.is_evolved("minigun"):
 		var ramp := clampf((active_time - _redline_fire_time) / maxf(redline_ramp_seconds, 0.01), 0.0, 1.0)
 		cadence_multiplier *= 1.0 + redline_max_cadence_bonus * ramp
-	_next_minigun_time = active_time + minigun_cooldown / cadence_multiplier / overdrive_multiplier
+	_next_minigun_time = active_time + _effective_weapon_cooldown(minigun_cooldown) / cadence_multiplier
 
 func _fire_toxic_cloud(active_time: float, paused: bool) -> void:
 	if not weapon_enabled or loadout.weapon_level("toxic_cloud") == 0 or paused or _chest_open or run_over or toxic_cooldown <= 0.0 or active_time < _next_toxic_time:
@@ -1609,23 +1611,22 @@ func _fire_toxic_cloud(active_time: float, paused: bool) -> void:
 	if target.is_empty():
 		return
 	var level: int = loadout.weapon_level("toxic_cloud")
-	var relic_level: int = loadout.relic_level("plague_mask")
 	var dot_multiplier := (1.0 + (0.2 if level >= 2 else 0.0) + (0.25 if level >= 5 else 0.0))
-	dot_multiplier *= 1.0 + float(relic_level) * plague_mask_dot_per_level
+	dot_multiplier *= _weapon_combo_damage_multiplier("toxic_cloud")
 	var duration := toxic_status_duration_seconds * (1.2 if level >= 4 else 1.0)
 	var cloud_radius := _equipment_area(toxic_cloud_radius * (1.2 if level >= 3 else 1.0))
 	var direction: Vector2 = (target["position"] - player.global_position).normalized()
 	if direction == Vector2.ZERO:
 		direction = Vector2.RIGHT
 	var projectile_type := "toxic_cloud"
-	if level >= 5 and relic_level > 0:
+	if loadout.is_evolved("toxic_cloud"):
 		projectile_type = "pandemic_cloud"
 	var sequence: int = simulation.spawn_status_projectile(projectile_type,
 			player.global_position + direction * 14.0,
 		direction * _equipment_projectile_speed(toxic_projectile_speed),
-		toxic_impact_damage * _persistent_damage_multiplier() * _roll_equipment_critical_multiplier(),
+		toxic_impact_damage * _weapon_combo_damage_multiplier("toxic_cloud") * _persistent_damage_multiplier() * _roll_equipment_critical_multiplier(),
 		_equipment_area(toxic_projectile_radius), toxic_projectile_lifetime,
-		toxic_damage_per_tick * dot_multiplier, toxic_tick_interval_seconds, duration,
+		toxic_damage_per_tick * dot_multiplier * _persistent_damage_multiplier(), toxic_tick_interval_seconds, duration,
 		cloud_radius, toxic_splash_damage_multiplier)
 	if sequence > 0:
 		_next_toxic_time = active_time + _effective_weapon_cooldown(toxic_cooldown)
@@ -1640,14 +1641,14 @@ func _fire_sawblades(active_time: float, paused: bool) -> void:
 	if direction == Vector2.ZERO:
 		direction = Vector2.RIGHT
 	var level: int = loadout.weapon_level("sawblades")
-	var evolved: bool = level >= 5 and loadout.relic_level("magnetic_coil") > 0
+	var evolved: bool = loadout.is_evolved("sawblades")
 	var damage_multiplier := (1.2 if level >= 2 else 1.0) * (1.25 if level >= 5 else 1.0)
 	var ricochets := 1 + (1 if level >= 3 else 0) + (1 if evolved else 0)
 	var projectile_speed := sawblades_projectile_speed * (1.2 if level >= 4 else 1.0)
 	var sequence: int = simulation.spawn_projectile("razorstorm" if evolved else "sawblades",
 			player.global_position + direction * 14.0,
 		direction * _equipment_projectile_speed(projectile_speed),
-		sawblades_damage * damage_multiplier * _persistent_damage_multiplier() * _roll_equipment_critical_multiplier(),
+		sawblades_damage * damage_multiplier * _weapon_combo_damage_multiplier("sawblades") * _persistent_damage_multiplier() * _roll_equipment_critical_multiplier(),
 		_equipment_area(sawblades_projectile_radius), sawblades_projectile_lifetime,
 		2.0, 0.5, 2.0, 0.0, 0.0, ricochets)
 	if sequence > 0:
@@ -1660,19 +1661,19 @@ func _fire_meteor_staff(active_time: float, paused: bool) -> void:
 	if target.is_empty():
 		return
 	var level: int = loadout.weapon_level("meteor_staff")
-	var evolved: bool = level >= 5 and loadout.relic_level("celestial_eye") > 0
+	var evolved: bool = loadout.is_evolved("meteor_staff")
 	var projectile_type := "starfall" if evolved else "meteor_staff"
 	var damage_multiplier := (1.2 if level >= 2 else 1.0) * (1.3 if level >= 5 else 1.0)
 	var blast_radius := meteor_staff_blast_radius * (1.2 if level >= 3 else 1.0)
 	var direction: Vector2 = (target["position"] - player.global_position).normalized()
 	if direction == Vector2.ZERO:
 		direction = Vector2.RIGHT
-	var shot_count := 2 if loadout.relic_level("celestial_eye") >= 5 and randf() < celestial_eye_double_impact_chance else 1
+	var shot_count := 2 if evolved and randf() < celestial_eye_double_impact_chance else 1
 	var fired := false
 	for _shot in range(shot_count):
 		if simulation.spawn_projectile(projectile_type, player.global_position + direction * 14.0,
 				direction * _equipment_projectile_speed(meteor_staff_projectile_speed),
-				meteor_staff_damage * damage_multiplier * _persistent_damage_multiplier() * _roll_equipment_critical_multiplier(),
+				meteor_staff_damage * damage_multiplier * _weapon_combo_damage_multiplier("meteor_staff") * _persistent_damage_multiplier() * _roll_equipment_critical_multiplier(),
 				_equipment_area(meteor_staff_projectile_radius), meteor_staff_projectile_lifetime,
 				2.0, 0.5, 2.0, _equipment_area(blast_radius), meteor_staff_splash_damage_multiplier) > 0:
 			fired = true
@@ -1690,9 +1691,9 @@ func _fire_prism_laser(active_time: float, paused: bool) -> void:
 	var target := _nearest_enemy(laser_range)
 	if target.is_empty():
 		return
-	var evolved: bool = level >= 5 and loadout.relic_level("prism_crystal") > 0
+	var evolved: bool = loadout.is_evolved("prism_laser")
 	var damage_multiplier := (1.2 if level >= 2 else 1.0) * (1.25 if level >= 5 else 1.0)
-	var prism_level: int = loadout.relic_level("prism_crystal")
+	damage_multiplier *= _weapon_combo_damage_multiplier("prism_laser")
 	var targets: Array[Dictionary] = [target]
 	if evolved:
 		var excluded: Array[Vector2i] = [target["id"]]
@@ -1718,14 +1719,6 @@ func _fire_prism_laser(active_time: float, paused: bool) -> void:
 				prism_laser_damage * damage_multiplier * _persistent_damage_multiplier() * critical * (0.65 if secondary_beam else 1.0),
 				prism_laser_projectile_radius, laser_range / prism_laser_projectile_speed) > 0:
 			fired = true
-	if critical > 1.0 and prism_level >= 5 and not evolved:
-		var secondary := _nearest_enemy_excluding(laser_range, [target["id"]])
-		if not secondary.is_empty():
-			var direction: Vector2 = (secondary["position"] - player.global_position).normalized()
-			if simulation.spawn_projectile("prism_secondary", player.global_position + direction * 14.0,
-					direction * prism_laser_projectile_speed, prism_laser_damage * damage_multiplier * critical * 0.5,
-					prism_laser_projectile_radius, laser_range / prism_laser_projectile_speed) > 0:
-				fired = true
 	if fired:
 		_next_prism_time = active_time + _effective_weapon_cooldown(prism_laser_cooldown)
 
@@ -1736,10 +1729,9 @@ func _fire_void_orb(active_time: float, paused: bool) -> void:
 	if target.is_empty():
 		return
 	var level: int = loadout.weapon_level("void_orb")
-	var singularity_level: int = loadout.relic_level("singularity")
-	var evolved: bool = level >= 5 and singularity_level > 0
+	var evolved: bool = loadout.is_evolved("void_orb")
 	var direction: Vector2 = (target["position"] - player.global_position).normalized()
-	var damage_multiplier := (1.2 if level >= 2 else 1.0) * (1.25 if level >= 5 else 1.0)
+	var damage_multiplier := (1.2 if level >= 2 else 1.0) * (1.25 if level >= 5 else 1.0) * _weapon_combo_damage_multiplier("void_orb")
 	var attraction_radius := void_orb_attraction_radius * (1.2 if level >= 3 else 1.0)
 	var lifetime := void_orb_lifetime * (1.15 if level >= 4 else 1.0)
 	var attraction_speed := void_orb_attraction_speed * (1.0 + float(level) * singularity_control_per_level)
@@ -1759,10 +1751,9 @@ func _fire_frost_nova(active_time: float, paused: bool) -> void:
 	var level: int = loadout.weapon_level("frost_nova")
 	if not weapon_enabled or level == 0 or paused or _chest_open or run_over or frost_nova_cooldown <= 0.0 or active_time < _next_frost_nova_time:
 		return
-	var evolved: bool = level >= 5 and loadout.relic_level("frozen_crown") > 0
+	var evolved: bool = loadout.is_evolved("frost_nova")
 	var radius := _equipment_area(frost_nova_radius * (1.2 if level >= 3 else 1.0))
 	var duration := frost_chill_duration_seconds * (1.2 if level >= 4 else 1.0)
-	duration *= 1.0 + float(loadout.relic_level("frozen_crown")) * frozen_crown_chill_duration_per_level
 	var target_count := 0
 	for entity in _entities:
 		var components: Dictionary = entity["components"]
@@ -1775,7 +1766,7 @@ func _fire_frost_nova(active_time: float, paused: bool) -> void:
 	if target_count == 0:
 		return
 	var projectile_type := "absolute_zero" if evolved else "frost_nova"
-	var damage := frost_nova_damage * (1.2 if level >= 2 else 1.0) * _persistent_damage_multiplier()
+	var damage := frost_nova_damage * (1.2 if level >= 2 else 1.0) * _weapon_combo_damage_multiplier("frost_nova") * _persistent_damage_multiplier()
 	var vulnerability := 1.0 + frozen_crown_vulnerability_at_level_five if evolved else 1.0
 	if simulation.spawn_projectile(projectile_type, player.global_position, Vector2.ZERO, damage,
 			radius, frost_nova_duration_seconds, 2.0, 0.5, 2.0, 0.0, 0.0, 0, 0.0, 0.0,
@@ -1847,14 +1838,14 @@ func _spawn_starfall_fragments(origin: Vector2, primary_target: Dictionary, enti
 			continue
 		simulation.spawn_projectile("starfall_fragment", origin + direction * 22.0,
 				direction * _equipment_projectile_speed(meteor_staff_projectile_speed * 1.25),
-				meteor_staff_damage * starfall_fragment_damage_multiplier * _persistent_damage_multiplier() *
+				meteor_staff_damage * starfall_fragment_damage_multiplier * _weapon_combo_damage_multiplier("meteor_staff") * _persistent_damage_multiplier() *
 						_roll_equipment_critical_multiplier(), _equipment_area(meteor_staff_projectile_radius * 0.65),
 					meteor_staff_projectile_lifetime)
 
 func _spread_pandemic(origin: Vector2, entities: Array) -> void:
 	var status_damage := toxic_damage_per_tick * (1.0 + (0.2 if loadout.weapon_level("toxic_cloud") >= 2 else 0.0) +
 			(0.25 if loadout.weapon_level("toxic_cloud") >= 5 else 0.0))
-	status_damage *= 1.0 + float(loadout.relic_level("plague_mask")) * plague_mask_dot_per_level
+	status_damage *= _weapon_combo_damage_multiplier("toxic_cloud") * _persistent_damage_multiplier()
 	var status_duration := toxic_status_duration_seconds * (1.2 if loadout.weapon_level("toxic_cloud") >= 4 else 1.0)
 	var affected := 0
 	for entity in entities:
@@ -1877,7 +1868,10 @@ func _spread_pandemic(origin: Vector2, entities: Array) -> void:
 	_pandemic_bursts.append({"position": origin, "remaining": pandemic_feedback_seconds})
 
 func _persistent_damage_multiplier() -> float:
-	return _cached_persistent_damage_multiplier
+	return _cached_persistent_damage_multiplier * (1.0 + loadout.global_relic_bonus("damage_pct") / 100.0)
+
+func _weapon_combo_damage_multiplier(weapon_id: String) -> float:
+	return 1.25 if loadout.is_evolved(weapon_id) else 1.0
 
 func _refresh_persistent_bonuses() -> void:
 	_cached_persistent_damage_multiplier = 1.0
@@ -1899,23 +1893,21 @@ func _refresh_player_move_speed() -> void:
 	player.move_speed = _base_player_move_speed * (1.0 + _equipment_bonus("move_speed_pct") / 100.0) * haste_multiplier
 
 func _effective_weapon_cooldown(base_cooldown: float) -> float:
-	var speed_multiplier := 1.0 + _equipment_bonus("attack_speed_pct") / 100.0
-	var cooldown_multiplier := maxf(0.1, 1.0 - _equipment_bonus("cooldown_reduction_pct") / 100.0)
+	var speed_multiplier: float = 1.0 + (_equipment_bonus("attack_speed_pct") + loadout.global_relic_bonus("attack_speed_pct")) / 100.0
+	var cooldown_multiplier: float = maxf(0.1, 1.0 - (_equipment_bonus("cooldown_reduction_pct") + loadout.global_relic_bonus("cooldown_reduction_pct")) / 100.0)
 	return base_cooldown * cooldown_multiplier / speed_multiplier
 
 func _roll_equipment_critical_multiplier() -> float:
 	var chance := clampf(_equipment_bonus("critical_chance_pct"), 0.0, 100.0)
 	if randf() * 100.0 < chance:
-		return 1.5 + _equipment_bonus("critical_damage_pct") / 100.0 + float(loadout.relic_level("prism_crystal")) * prism_crystal_critical_damage_per_level
+		return 1.5 + (_equipment_bonus("critical_damage_pct") + loadout.global_relic_bonus("critical_damage_pct")) / 100.0
 	return 1.0
 
 func _equipment_projectile_speed(base_speed: float) -> float:
-	var magnetic_coil_bonus := float(loadout.relic_level("magnetic_coil")) * magnetic_coil_projectile_speed_per_level
-	return base_speed * (1.0 + _equipment_bonus("projectile_speed_pct") / 100.0 + magnetic_coil_bonus)
+	return base_speed * (1.0 + (_equipment_bonus("projectile_speed_pct") + loadout.global_relic_bonus("projectile_speed_pct")) / 100.0)
 
 func _equipment_area(base_area: float) -> float:
-	var celestial_eye_bonus := float(loadout.relic_level("celestial_eye")) * celestial_eye_area_per_level
-	return base_area * (1.0 + _equipment_bonus("area_pct") / 100.0 + celestial_eye_bonus)
+	return base_area * (1.0 + (_equipment_bonus("area_pct") + loadout.global_relic_bonus("area_pct")) / 100.0)
 
 func _has_unique_effect(effect_id: String) -> bool:
 	return _cached_unique_effects.has(effect_id)
@@ -1937,10 +1929,7 @@ func _try_unique_lightning_burst(base_damage: float) -> void:
 func _try_evolution_shockwave(base_damage: float) -> void:
 	if _evolution_shockwave_triggered or not _has_unique_effect("evolution_shockwave"):
 		return
-	var evolved: bool = (loadout.weapon_level("lightning_conductor") >= 5 and loadout.relic_level("storm_core") > 0) or \
-			(loadout.weapon_level("inferno_sprayer") >= 5 and loadout.relic_level("infernal_heart") > 0) or \
-			(loadout.weapon_level("crimson_daggers") >= 5 and loadout.relic_level("blood_chalice") > 0)
-	if not evolved:
+	if not loadout.has_any_evolved_weapon():
 		return
 	_evolution_shockwave_triggered = true
 	var count := 8

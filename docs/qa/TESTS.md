@@ -138,8 +138,11 @@
 - [x] P3 flux de run : entrée Sandbox→Survival, choix parmi deux armes **[PROPOSÉES]**, résultat de défaite/victoire et vague finale enregistrée comme 24.
 - [x] Résultat de run : `run_result_panel_smoke.gd` passe sous Godot 4.7.2; `QUIT TO MENU` reste sous `RUN AGAIN`, émet son signal de navigation et le panneau tient aux viewports testés.
 - [x] P3 boss final : une mort réelle génère les chests boss éligibles et la victoire attend la collecte et le choix de chaque chest.
-- [x] P3 contact : collision joueur-ennemi, invulnérabilité temporaire, pause/reprise des contrôles et verrouillage après la fin vérifiés sous Godot 4.7.2 headless.
-- [x] P3 contact : projectiles et orbes exclus; le rayon de contact enemy correspond au disque affiché (8 unités).
+- [x] P3 contact : collision joueur-ennemi, cooldown corps à corps séparé par ennemi, projectiles indépendants, pause/reprise des contrôles et verrouillage après la fin vérifiés sous Godot 4.7.2 headless; 0,35 s **[PROPOSÉ]**.
+- [x] P3 contact : projectiles amis et orbes exclus; le rayon de contact enemy correspond au disque affiché (8 unités); les projectiles ennemis ne partagent pas le cooldown des collisions corps à corps.
+- [x] (2026-10-16) `survival_contact_damage_smoke.gd` passe sous Godot 4.7.2 : un même ennemi respecte son propre délai corps à corps, un autre peut toucher pendant ce délai, un projectile ennemi reste indépendant, puis le premier ennemi peut retoucher après expiration.
+- [x] (2026-10-16) `survival_loadout_smoke.gd` vérifie le bonus global de chacune des 11 reliques, les dix paires arrivées niveau 5 sans évolution automatique, puis l’activation uniquement après collecte de l’offre d’évolution.
+- [x] (2026-10-16) `survival_weapon_catalog_smoke.gd` passe sous Godot 4.7.2 avec l’offre d’évolution requise pour les prototypes d’évolution testés; les arcs Lightning ne retouchent plus leur cible d’origine au départ.
 - [x] Survival clavier : WASD et flèches déplacent le joueur; les choix de départ et de chest se parcourent au clavier et se confirment avec Espace/Entrée.
 - [x] P1 contrat natif : transaction complète de steering validée puis publiée atomiquement; transaction invalide ou mal typée conserve les valeurs précédentes.
 - [x] P3 lifesteal : Blood Chalice soigne sur un événement de dégâts non létal; soft cap, efficacité au-dessus du cap et HP maximum vérifiés sous Godot 4.7.2 headless.

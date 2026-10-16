@@ -14,6 +14,26 @@ func _initialize() -> void:
 		if icon_path.is_empty() or not ResourceLoader.exists(icon_path):
 			_fail("Every available relic should have a loadable icon: %s" % relic_id)
 			return
+		var definition: Dictionary = loadout._relic_definitions[relic_id]
+		var stat_id := str(definition.get("global_stat", ""))
+		var expected_bonus := float(definition.get("global_bonus_per_level", 0.0))
+		var relic_fixture = loadout_script.new(23)
+		if stat_id.is_empty() or expected_bonus <= 0.0 or not relic_fixture.apply_offer("relic:" + relic_id) or \
+			not is_equal_approx(relic_fixture.global_relic_bonus(stat_id), expected_bonus):
+			_fail("Every relic should grant its configured global stat bonus: %s" % relic_id)
+			return
+	for weapon_id in loadout._weapon_definitions:
+		var definition: Dictionary = loadout._weapon_definitions[weapon_id]
+		var pair_fixture = loadout_script.new(29)
+		for _level in range(loadout.MAX_LEVEL):
+			if not pair_fixture.apply_offer("weapon:" + weapon_id) or \
+				not pair_fixture.apply_offer("relic:" + str(definition["relic_id"])):
+				_fail("Each weapon/relic pair should be upgradeable to level 5: %s" % weapon_id)
+				return
+		if not pair_fixture.is_evolution_ready(weapon_id) or pair_fixture.is_evolved(weapon_id) or \
+			not pair_fixture.apply_offer("evolution:" + weapon_id) or not pair_fixture.is_evolved(weapon_id):
+			_fail("Each combo should activate only when its evolution offer is collected: %s" % weapon_id)
+			return
 	for weapon_id in loadout._weapons:
 		var weapon_icon_path: String = loadout.ICONS.get(weapon_id, "")
 		if weapon_icon_path.is_empty() or not ResourceLoader.exists(weapon_icon_path):
@@ -55,14 +75,20 @@ func _initialize() -> void:
 	if not loadout.apply_offer("relic:storm_core") or loadout.relic_level("storm_core") != 1:
 		_fail("Selecting a new relic should add it at level 1")
 		return
+	if not is_equal_approx(loadout.global_relic_bonus("damage_pct"), 5.0):
+		_fail("Storm Core should grant a global damage bonus before its weapon combo evolves")
+		return
+	if loadout.is_evolved("lightning_conductor"):
+		_fail("Owning the matching relic should not evolve an unmaxed weapon")
+		return
 	var upgraded_relic_offer := {}
 	for _attempt in range(50):
 		upgraded_relic_offer = _find_offer(loadout.offers("relic"), "relic:storm_core")
 		if not upgraded_relic_offer.is_empty():
 			break
 	if upgraded_relic_offer.is_empty() or not str(upgraded_relic_offer["title"]).contains("1 → 2") or \
-			not str(upgraded_relic_offer["description"]).contains("NEXT LEVEL: +5% damage for its weapon"):
-		_fail("Owned relic offers should explain the effect of the next level")
+		not str(upgraded_relic_offer["description"]).contains("NEXT LEVEL: +5% global damage"):
+		_fail("Owned relic offers should explain their next global stat bonus")
 		return
 	for level in range(2, 6):
 		if not loadout.apply_offer("weapon:lightning_conductor"):
@@ -70,6 +96,27 @@ func _initialize() -> void:
 			return
 	if loadout.weapon_level("lightning_conductor") != 5 or loadout.apply_offer("weapon:lightning_conductor"):
 		_fail("Weapon level 5 should be the cap")
+		return
+	if loadout.apply_offer("evolution:lightning_conductor"):
+		_fail("The matching relic must also reach max level before an evolution can be claimed")
+		return
+	for level in range(2, 6):
+		if not loadout.apply_offer("relic:storm_core"):
+			_fail("The matching relic should upgrade through level 5")
+			return
+	if loadout.is_evolved("lightning_conductor"):
+		_fail("Max-level weapon and relic should wait for the player to collect the evolution upgrade")
+		return
+	var evolution_offer := {}
+	for _attempt in range(100):
+		evolution_offer = _find_offer(loadout.offers("weapon"), "evolution:lightning_conductor")
+		if not evolution_offer.is_empty():
+			break
+	if evolution_offer.is_empty() or not str(evolution_offer.get("description", "")).to_lower().contains("weapon only"):
+		_fail("A max-level matching pair should offer its weapon-only evolution upgrade")
+		return
+	if not loadout.apply_offer("evolution:lightning_conductor") or not loadout.is_evolved("lightning_conductor"):
+		_fail("Collecting the eligible evolution offer should activate the weapon combo")
 		return
 	if not _has_three_unique(loadout.offers("weapon")):
 		_fail("A max-level weapon should be excluded while other weapon choices remain")

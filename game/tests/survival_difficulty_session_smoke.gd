@@ -26,7 +26,7 @@ func _run() -> void:
 		_fail("Player health decay should remain independent of enemy damage difficulty")
 		return
 	session.player_hp = 100.0
-	session._contact_invulnerable_until = 0.0
+	session._contact_damage_until.clear()
 	session.player.global_position = Vector2.ZERO
 	session._entities = [{
 		"components": {"EnemyType": "chaser", "Transform2D": {"x": 0.0, "y": 0.0}},

@@ -44,7 +44,7 @@ func _run() -> void:
 	if not is_equal_approx(session.player_hp, 100.0):
 		_fail("Enemy contact damage should not trigger before the visible hit circles touch")
 		return
-	session._entities = [{"components": {
+	session._entities = [{"id": {"index": 7, "generation": 1}, "components": {
 		"EnemyType": "chaser",
 		"Transform2D": {"x": 0.0, "y": 0.0},
 	}}]
@@ -56,11 +56,29 @@ func _run() -> void:
 		return
 	session._apply_contact_damage(active_state, 10.1)
 	if not is_equal_approx(session.player_hp, 90.0):
-		_fail("Contact damage should respect the invulnerability window")
+		_fail("The same enemy should respect its body-contact cooldown")
 		return
-	session._apply_contact_damage(active_state, 10.36)
+	session._entities = [{"id": {"index": 8, "generation": 1}, "components": {
+		"EnemyType": "chaser", "Transform2D": {"x": 0.0, "y": 0.0},
+	}}]
+	session._apply_contact_damage(active_state, 10.1)
 	if not is_equal_approx(session.player_hp, 80.0):
-		_fail("Contact damage should apply again after invulnerability expires")
+		_fail("A different enemy should have its own body-contact cooldown")
+		return
+	session._entities = [{"id": {"index": 9, "generation": 1}, "components": {
+		"EnemyType": "enemy_projectile", "IsProjectile": true, "Transform2D": {"x": 0.0, "y": 0.0},
+		"Projectile": {"damage": 7.0, "radius": 2.0},
+	}}]
+	session._apply_contact_damage(active_state, 10.11)
+	if not is_equal_approx(session.player_hp, 73.0):
+		_fail("An enemy projectile should not be blocked by a body-contact cooldown")
+		return
+	session._entities = [{"id": {"index": 7, "generation": 1}, "components": {
+		"EnemyType": "chaser", "Transform2D": {"x": 0.0, "y": 0.0},
+	}}]
+	session._apply_contact_damage(active_state, 10.36)
+	if not is_equal_approx(session.player_hp, 63.0):
+		_fail("The first enemy should damage again after its own contact cooldown expires")
 		return
 	session.simulation.pause()
 	if not await _wait_until(func() -> bool:

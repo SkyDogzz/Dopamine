@@ -32,6 +32,13 @@ func _load_definitions(data: Dictionary) -> bool:
 	if weapons.size() != 10 or relics.size() != 11:
 		error = "Combat catalog must define ten weapons and eleven relics"
 		return false
+	for relic_id in relics:
+		var relic: Dictionary = relics[relic_id]
+		if str(relic.get("global_stat", "")).is_empty() or \
+			not (relic.get("global_bonus_per_level", 0) is int or relic.get("global_bonus_per_level", 0) is float) or \
+			float(relic["global_bonus_per_level"]) <= 0.0:
+			error = "Relics must define a positive global stat bonus: %s" % relic_id
+			return false
 	for weapon_id in weapons:
 		var weapon: Dictionary = weapons[weapon_id]
 		var relic_id: String = weapon["relic_id"]

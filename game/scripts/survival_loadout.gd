@@ -42,6 +42,7 @@ const MAX_LEVEL := 5
 
 var _weapon_levels := {}
 var _relic_levels := {}
+var _evolved_weapons := {}
 var _weapons := {}
 var _relics := {}
 var _weapon_descriptions := {}
@@ -103,14 +104,27 @@ func offers(family: String) -> Array[Dictionary]:
 				"description": description,
 				"icon": ICONS.get(item_id, ""),
 			})
+	if family == "weapon":
+		for weapon_id in _weapon_definitions:
+			var definition: Dictionary = _weapon_definitions[weapon_id]
+			var relic_id: String = str(definition["relic_id"])
+			if is_evolution_ready(weapon_id):
+				candidates.append({
+					"id": "evolution:%s" % weapon_id,
+					"title": "EVOLUTION — %s" % str(definition["evolution_id"]).replace("_", " ").to_upper(),
+					"description": "WEAPON ONLY: +25%% damage and its evolution effect. Both %s and %s are level 5." % [
+						str(_weapons[weapon_id]), str(_relics[relic_id]),
+					],
+					"icon": EVOLUTION_ICONS.get(weapon_id, ICONS.get(weapon_id, "")),
+				})
 	if candidates.size() < 3:
-		return []
+		return candidates
 	for index in range(candidates.size() - 1, 0, -1):
 		var other := _rng.randi_range(0, index)
 		var temporary: Dictionary = candidates[index]
 		candidates[index] = candidates[other]
 		candidates[other] = temporary
-	return candidates.slice(0, 3)
+	return candidates.slice(0, mini(3, candidates.size()))
 
 func _next_level_description(family: String, item_id: String, level: int) -> String:
 	if family == "relic":
@@ -120,48 +134,36 @@ func _next_level_description(family: String, item_id: String, level: int) -> Str
 func _weapon_level_description(item_id: String, level: int) -> String:
 	match item_id:
 		"lightning_conductor":
-			return "+1 chain bounce" if level in [2, 4] else "+25% damage" if level == 3 else "Unlocks Infinite Circuit with Storm Core" if level == 5 else "Improves lightning damage"
+			return "+1 chain bounce" if level in [2, 4] else "+25% damage" if level == 3 else "Max level; collect combo when Storm Core is also level 5" if level == 5 else "Improves lightning damage"
 		"inferno_sprayer", "crimson_daggers":
-			return "Unlocks evolution with its matching relic" if level == 5 else "+15% damage"
+			return "Max level; collect combo when matching relic is also level 5" if level == 5 else "+15% damage"
 		"minigun":
 			return "+20% damage" if level == 2 else "+25% fire rate" if level in [3, 5] else "15% tighter spread" if level == 4 else "Improves shots"
 		"toxic_cloud":
 			return "+25% poison damage" if level == 5 else "+20% cloud radius" if level == 3 else "+20% poison duration" if level == 4 else "+20% poison damage" if level == 2 else "Improves poison"
 		"sawblades":
-			return "+20% damage" if level == 2 else "+1 ricochet" if level == 3 else "+20% projectile speed" if level == 4 else "+25% damage; unlocks evolution with Magnetic Coil" if level == 5 else "Improves ricochets"
+			return "+20% damage" if level == 2 else "+1 ricochet" if level == 3 else "+20% projectile speed" if level == 4 else "Max level; collect combo when Magnetic Coil is also level 5" if level == 5 else "Improves ricochets"
 		"meteor_staff":
-			return "+20% damage" if level == 2 else "+20% explosion radius" if level == 3 else "15% shorter cooldown" if level == 4 else "+30% damage; unlocks evolution with Celestial Eye" if level == 5 else "Improves impact"
+			return "+20% damage" if level == 2 else "+20% explosion radius" if level == 3 else "15% shorter cooldown" if level == 4 else "Max level; collect combo when Celestial Eye is also level 5" if level == 5 else "Improves impact"
 		"prism_laser":
-			return "+20% damage" if level == 2 else "+20% range" if level == 3 else "+15% range" if level == 4 else "+25% damage; unlocks evolution with Prism Crystal" if level == 5 else "Improves beam"
+			return "+20% damage" if level == 2 else "+20% range" if level == 3 else "+15% range" if level == 4 else "Max level; collect combo when Prism Crystal is also level 5" if level == 5 else "Improves beam"
 		"void_orb":
-			return "+20% damage" if level == 2 else "+20% attraction radius" if level == 3 else "+15% projectile lifetime" if level == 4 else "+25% damage; unlocks evolution with Singularity" if level == 5 else "Improves orb"
+			return "+20% damage" if level == 2 else "+20% attraction radius" if level == 3 else "+15% projectile lifetime" if level == 4 else "Max level; collect combo when Singularity is also level 5" if level == 5 else "Improves orb"
 		"frost_nova":
-			return "+20% damage" if level == 2 else "+20% area" if level == 3 else "+20% chill duration" if level == 4 else "20% shorter cooldown; unlocks evolution with Frozen Crown" if level == 5 else "Improves Nova"
+			return "+20% damage" if level == 2 else "+20% area" if level == 3 else "+20% chill duration" if level == 4 else "Max level; collect combo when Frozen Crown is also level 5" if level == 5 else "Improves Nova"
 	return "Improves the weapon"
 
 func _relic_level_description(item_id: String, level: int) -> String:
-	match item_id:
-		"storm_core", "infernal_heart":
-			return "+5% damage for its weapon"
-		"blood_chalice":
-			return "+10% kill healing and +5% lifesteal"
-		"overdrive_engine":
-			return "+4% Minigun fire rate"
-		"plague_mask":
-			return "+5% poison damage"
-		"magnetic_coil":
-			return "+4% projectile speed"
-		"celestial_eye":
-			return "+3% area size"
-		"prism_crystal":
-			return "+3% critical damage"
-		"singularity":
-			return "+5% Void control"
-		"frozen_crown":
-			return "+5% chill duration"
-		"magnet_heart":
-			return "+25% pickup radius"
-	return "Improves the relic bonus"
+	var definition: Dictionary = _relic_definitions.get(item_id, {})
+	var stat_id := str(definition.get("global_stat", ""))
+	var amount := float(definition.get("global_bonus_per_level", 0.0))
+	var description := "+%d%% global %s" % [int(amount), stat_id.replace("_pct", "").replace("_", " ")]
+	if item_id == "blood_chalice":
+		description += " and +10% kill healing"
+	var weapon_id := str(definition.get("weapon_id", ""))
+	if not weapon_id.is_empty():
+		description += "; combo requires both level 5 and its evolution pickup"
+	return description
 
 func starting_weapon_options() -> Array[Dictionary]:
 	var options: Array[Dictionary] = []
@@ -184,6 +186,12 @@ func apply_offer(offer_id: String) -> bool:
 	var parts := offer_id.split(":", false, 1)
 	if parts.size() != 2:
 		return false
+	if parts[0] == "evolution":
+		var weapon_id: String = parts[1]
+		if not is_evolution_ready(weapon_id):
+			return false
+		_evolved_weapons[weapon_id] = true
+		return true
 	var owned: Dictionary
 	var catalog: Dictionary
 	if parts[0] == "weapon":
@@ -212,6 +220,26 @@ func weapon_level(item_id: String) -> int:
 
 func relic_level(item_id: String) -> int:
 	return int(_relic_levels.get(item_id, 0))
+
+func global_relic_bonus(stat_id: String) -> float:
+	var bonus := 0.0
+	for relic_id in _relic_levels:
+		var definition: Dictionary = _relic_definitions[relic_id]
+		if str(definition.get("global_stat", "")) == stat_id:
+			bonus += float(definition.get("global_bonus_per_level", 0.0)) * float(_relic_levels[relic_id])
+	return bonus
+
+func is_evolution_ready(weapon_id: String) -> bool:
+	if not _weapon_definitions.has(weapon_id) or is_evolved(weapon_id):
+		return false
+	var definition: Dictionary = _weapon_definitions[weapon_id]
+	return weapon_level(weapon_id) >= MAX_LEVEL and relic_level(str(definition["relic_id"])) >= MAX_LEVEL
+
+func is_evolved(weapon_id: String) -> bool:
+	return bool(_evolved_weapons.get(weapon_id, false))
+
+func has_any_evolved_weapon() -> bool:
+	return not _evolved_weapons.is_empty()
 
 func owned_weapons() -> Array[String]:
 	var result: Array[String] = []
@@ -243,9 +271,9 @@ func owned_item_details(family: String) -> Array[Dictionary]:
 			"level": int(levels[item_id]),
 		}
 		if family == "weapon":
-			var relic_id: String = definition["relic_id"]
 			item["evolution_id"] = definition["evolution_id"]
-			item["evolved"] = int(levels[item_id]) >= MAX_LEVEL and relic_level(relic_id) > 0
+			item["evolved"] = is_evolved(item_id)
+			var relic_id: String = definition["relic_id"]
 			item["required_relic_name"] = _relics.get(relic_id, relic_id)
 			if bool(item["evolved"]):
 				item["icon"] = EVOLUTION_ICONS.get(item_id, item["icon"])

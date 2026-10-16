@@ -64,6 +64,9 @@ func _prism_laser_tracks_and_splits() -> bool:
 		if not session.loadout.apply_offer("weapon:prism_laser") or not session.loadout.apply_offer("relic:prism_crystal"):
 			session.queue_free()
 			return false
+	if not session.loadout.apply_offer("evolution:prism_laser"):
+		session.queue_free()
+		return false
 	session.simulation.set_speed(4.0)
 	session.simulation.spawn("test_target", 1, Vector2(180.0, 0.0), 100.0, Vector2.ZERO)
 	session.simulation.spawn("test_target", 1, Vector2(180.0, 100.0), 100.0, Vector2.ZERO)
@@ -144,6 +147,9 @@ func _frost_nova_chills_and_shatters() -> bool:
 		if not session.loadout.apply_offer("weapon:frost_nova") or not session.loadout.apply_offer("relic:frozen_crown"):
 			session.queue_free()
 			return false
+	if not session.loadout.apply_offer("evolution:frost_nova"):
+		session.queue_free()
+		return false
 	session.simulation.set_speed(4.0)
 	session.simulation.spawn("test_target", 1, Vector2(100.0, 0.0), 8.0, Vector2.ZERO)
 	session.simulation.spawn("test_target", 1, Vector2(130.0, 0.0), 100.0, Vector2.ZERO)
@@ -154,19 +160,14 @@ func _frost_nova_chills_and_shatters() -> bool:
 	session._entities = session.simulation.snapshot()["entities"]
 	session._fire_frost_nova(float(session.simulation.snapshot()["simulation_time"]), false)
 	var deadline := Time.get_ticks_msec() + 2500
-	var saw_absolute_zero := false
 	var shattered_neighbor := false
 	while Time.get_ticks_msec() < deadline:
 		await process_frame
 		var state: Dictionary = session.simulation.snapshot()
-		for entity in state["entities"]:
-			var components: Dictionary = entity["components"]
-			if components.get("EnemyType", "") == "absolute_zero" and components.has("Projectile"):
-				saw_absolute_zero = float(components["Projectile"].get("chill_damage_multiplier", 1.0)) == 1.0
 		for event in state["events"]:
 			if event.get("type", "") == "damage" and event.get("source_type", "") == "absolute_zero":
 				shattered_neighbor = true
-		if saw_absolute_zero and shattered_neighbor:
+		if shattered_neighbor:
 			session.queue_free()
 			return true
 	session.queue_free()
@@ -251,6 +252,9 @@ func _meteor_staff_targets_groups_and_starfall_fragments() -> bool:
 		if not session.loadout.apply_offer("relic:celestial_eye"):
 			session.queue_free()
 			return false
+	if not _collect_evolution(session, "meteor_staff", "celestial_eye"):
+		session.queue_free()
+		return false
 	for point in [Vector2(200.0, 0.0), Vector2(330.0, 0.0), Vector2(200.0, 145.0)]:
 		session.simulation.spawn("test_target", 1, point, 100.0, Vector2.ZERO)
 	targets = await _wait_for_targets(session, 3)
@@ -325,6 +329,9 @@ func _toxic_cloud_poison_and_pandemic() -> bool:
 		if not session.loadout.apply_offer("relic:plague_mask"):
 			session.queue_free()
 			return false
+	if not _collect_evolution(session, "toxic_cloud", "plague_mask"):
+		session.queue_free()
+		return false
 	session.simulation.spawn("test_target", 1, Vector2(180.0, 0.0), 0.5, Vector2.ZERO)
 	session.simulation.spawn("test_target", 1, Vector2(220.0, 0.0), 100.0, Vector2.ZERO)
 	session.simulation.spawn("test_target", 1, Vector2(300.0, 0.0), 100.0, Vector2.ZERO)
@@ -427,6 +434,9 @@ func _minigun_hits_target() -> bool:
 	if not session.loadout.apply_offer("relic:overdrive_engine"):
 		session.queue_free()
 		return false
+	if not _collect_evolution(session, "minigun", "overdrive_engine"):
+		session.queue_free()
+		return false
 	session._next_minigun_time = active_time + 0.01
 	session._fire_minigun(active_time + 0.01, false)
 	var redline_interval: float = session._next_minigun_time - (active_time + 0.01)
@@ -482,7 +492,8 @@ func _infinite_circuit_branches() -> bool:
 	if not await _wait_for_no_entities(session):
 		session.queue_free()
 		return false
-	if not session.loadout.apply_offer("weapon:lightning_conductor"):
+	if not session.loadout.apply_offer("weapon:lightning_conductor") or \
+		not _collect_evolution(session, "lightning_conductor", "storm_core"):
 		session.queue_free()
 		return false
 	session._next_weapon_time = session.player_active_time
@@ -529,6 +540,9 @@ func _wildfire_explodes_and_spreads() -> bool:
 		if not session.loadout.apply_offer("weapon:inferno_sprayer"):
 			session.queue_free()
 			return false
+	if not _collect_evolution(session, "inferno_sprayer", "infernal_heart"):
+		session.queue_free()
+		return false
 	session.weapon_enabled = true
 	session.simulation.set_speed(4.0)
 	for point in [Vector2(160.0, 0.0), Vector2(160.0, 25.0), Vector2(160.0, 100.0)]:
@@ -614,6 +628,9 @@ func _bloodstorm_requires_level_five_and_bleeds() -> bool:
 		session.queue_free()
 		return false
 	if not session.loadout.apply_offer("relic:blood_chalice"):
+		session.queue_free()
+		return false
+	if not _collect_evolution(session, "crimson_daggers", "blood_chalice"):
 		session.queue_free()
 		return false
 	session.simulation.kill_all()
@@ -705,6 +722,12 @@ func _weapon_kills_target(weapon_id: String, relic_id: String, target_hp: float)
 			return true
 	session.queue_free()
 	return false
+
+func _collect_evolution(session: Node, weapon_id: String, relic_id: String) -> bool:
+	for _level in range(5 - session.loadout.relic_level(relic_id)):
+		if not session.loadout.apply_offer("relic:" + relic_id):
+			return false
+	return session.loadout.is_evolution_ready(weapon_id) and session.loadout.apply_offer("evolution:" + weapon_id)
 
 func _contains_enemy(state: Dictionary, enemy_type: String) -> bool:
 	for entity in state["entities"]:

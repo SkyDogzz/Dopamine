@@ -26,7 +26,7 @@ func _input(event: InputEvent) -> void:
 		get_viewport().set_input_as_handled()
 
 func present(options: Array, required_count: int = 3, heading: String = "CHEST — CHOOSE ONE") -> bool:
-	if required_count < 2 or required_count > 3 or options.size() != required_count:
+	if required_count < 1 or required_count > 3 or options.size() != required_count:
 		return false
 	var seen_ids: Dictionary = {}
 	for option in options:
