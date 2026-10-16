@@ -451,7 +451,8 @@ int main() {
 	toxic_cloud.advance(0.6);
 	const auto poison_direct = toxic_cloud.entity(poison_primary);
 	const auto poison_affected = toxic_cloud.entity(poison_splash);
-	require(poison_direct && poison_direct->damage_over_time && poison_affected && poison_affected->damage_over_time &&
+	require(poison_direct && poison_direct->damage_over_time && poison_direct->damage_over_time->status_type == "poison" &&
+			poison_affected && poison_affected->damage_over_time && poison_affected->damage_over_time->status_type == "poison" &&
 			poison_direct->health.current == 19.0F && poison_affected->health.current == 19.5F,
 			"Toxic Cloud should apply poison and its bounded area splash to nearby enemies");
 	const auto poison_ticks = toxic_cloud.advance(0.5);
@@ -520,6 +521,7 @@ int main() {
 	const auto wildfire_unaffected = wildfire.entity(wildfire_far);
 	require(wildfire_direct && wildfire_direct->health.current == 90.0F &&
 			wildfire_splash && wildfire_splash->health.current == 95.0F && wildfire_splash->damage_over_time &&
+			wildfire_splash->damage_over_time->status_type == "burn" &&
 			wildfire_unaffected && wildfire_unaffected->health.current == 100.0F,
 			"Wildfire should damage and ignite nearby enemies within its explosion radius only");
 	SimulationCore bounded_explosions;
@@ -602,8 +604,10 @@ int main() {
 			"core restore should preserve projectile state and remaining lifetime");
 	const auto restored_dot_target = restored.entity(resumable_enemy);
 	require(restored_dot_target && restored_dot_target->damage_over_time &&
-			std::abs(restored_dot_target->damage_over_time->time_to_tick - 0.3) < 1e-9,
-			"core restore should preserve damage-over-time clocks");
+			std::abs(restored_dot_target->damage_over_time->time_to_tick - 0.3) < 1e-9 &&
+			restored_dot_target->damage_over_time->status_type == "generic" &&
+			restored_projectile->projectile.status_type == "burn",
+			"core restore should preserve damage-over-time clocks and status identity");
 	const auto restored_orb = restored.entity(resumable_orb);
 	require(restored_orb && restored_orb->is_xp_orb && restored_orb->xp_value == 9.0F,
 			"core restore should preserve XP orb components");
@@ -631,6 +635,16 @@ int main() {
 	require(rejected_invalid_core_state && restored.simulation_time() == unchanged_time &&
 			restored.entity_count() == resumable.entity_count(),
 			"invalid core snapshots should be rejected without changing the live core");
+	auto invalid_status_core_state = core_state;
+	invalid_status_core_state.entities[resumable_enemy.index].damage_over_time->status_type = "shock";
+	bool rejected_unknown_status_type = false;
+	try {
+		restored.restore_state(invalid_status_core_state);
+	} catch (const std::invalid_argument &) {
+		rejected_unknown_status_type = true;
+	}
+	require(rejected_unknown_status_type && restored.simulation_time() == unchanged_time,
+			"core restore should reject unknown damage-over-time identities without mutating live state");
 
 	bool rejected_negative_delta = false;
 	try {

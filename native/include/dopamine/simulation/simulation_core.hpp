@@ -97,6 +97,7 @@ struct ProjectileData {
 	float status_damage_per_tick = 0.0F;
 	double status_interval_seconds = 0.0;
 	double status_duration_seconds = 0.0;
+	std::string status_type = "generic";
 	float explosion_radius = 0.0F;
 	float explosion_damage_multiplier = 0.0F;
 	uint32_t ricochets_remaining = 0;
@@ -125,6 +126,7 @@ struct DamageOverTime {
 	double interval_seconds = 0.0;
 	double remaining_seconds = 0.0;
 	double time_to_tick = 0.0;
+	std::string status_type = "generic";
 };
 
 struct ChillEffect {
@@ -198,7 +200,7 @@ public:
 			float chill_speed_multiplier = 1.0F, float chill_damage_multiplier = 1.0F);
 	EntityId spawn_xp_orb(float x, float y, float xp_value);
 	bool apply_damage_over_time(EntityId target, float damage_per_tick, double interval_seconds,
-			double duration_seconds);
+			double duration_seconds, std::string status_type = "generic");
 	bool apply_chill(EntityId target, double duration_seconds, float speed_multiplier,
 		float damage_taken_multiplier = 1.0F);
 	bool dash_entity(EntityId target, float velocity_x, float velocity_y, double duration_seconds);

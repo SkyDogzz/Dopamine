@@ -80,7 +80,7 @@ struct SimulationCommand {
 };
 
 struct SimulationWorkerState {
-	uint32_t format_version = 8;
+	uint32_t format_version = 9;
 	SimulationCoreState core_state;
 	bool paused = true;
 	double speed_multiplier = 1.0;

@@ -14,6 +14,17 @@ constexpr float enemy_collision_radius = 12.0F; // Provisional until hitboxes ar
 constexpr float proposed_bloodstorm_orbit_radius = 30.0F;
 constexpr float proposed_bloodstorm_orbit_angular_speed = 5.0F;
 
+std::string status_type_for_projectile(const std::string &type) {
+	if (type == "inferno_sprayer" || type == "wildfire_sprayer") return "burn";
+	if (type == "toxic_cloud" || type == "pandemic_cloud") return "poison";
+	if (type == "bloodstorm_dagger") return "bleed";
+	return "generic";
+}
+
+bool is_known_status_type(const std::string &type) {
+	return type == "generic" || type == "burn" || type == "poison" || type == "bleed";
+}
+
 } // namespace
 
 std::optional<EnemyProfile> enemy_profile(std::string_view id) {
@@ -161,6 +172,7 @@ EntityId SimulationCore::spawn_projectile(std::string type, float x, float y, fl
 	projectile.status_damage_per_tick = status_damage_per_tick;
 	projectile.status_interval_seconds = status_interval_seconds;
 	projectile.status_duration_seconds = status_duration_seconds;
+	projectile.status_type = status_type_for_projectile(type);
 	projectile.explosion_radius = explosion_radius;
 	projectile.explosion_damage_multiplier = explosion_damage_multiplier;
 	projectile.ricochets_remaining = ricochets;
@@ -207,17 +219,20 @@ EntityId SimulationCore::spawn_xp_orb(float x, float y, float xp_value) {
 }
 
 bool SimulationCore::apply_damage_over_time(EntityId target, float damage_per_tick, double interval_seconds,
-		double duration_seconds) {
+		double duration_seconds, std::string status_type) {
 	if (!std::isfinite(damage_per_tick) || damage_per_tick <= 0.0F || !std::isfinite(interval_seconds) ||
-			interval_seconds <= 0.0 || !std::isfinite(duration_seconds) || duration_seconds <= 0.0) {
-		throw std::invalid_argument("damage-over-time values must be positive and finite");
+			interval_seconds <= 0.0 || !std::isfinite(duration_seconds) || duration_seconds <= 0.0 ||
+			!is_known_status_type(status_type)) {
+		throw std::invalid_argument("invalid damage-over-time values or status type");
 	}
 	if (target.index >= slots_.size() || !slots_[target.index].active ||
 			slots_[target.index].generation != target.generation || projectile_flags_[target.index] ||
 			xp_orb_flags_[target.index]) {
 		return false;
 	}
-	damage_over_time_[target.index] = DamageOverTime{damage_per_tick, interval_seconds, duration_seconds, interval_seconds};
+	damage_over_time_[target.index] = DamageOverTime{
+		damage_per_tick, interval_seconds, duration_seconds, interval_seconds, std::move(status_type),
+	};
 	return true;
 }
 
@@ -430,6 +445,7 @@ void SimulationCore::restore_state(const SimulationCoreState &state) {
 					!std::isfinite(projectile.orbit_angular_speed) || projectile.orbit_angular_speed < 0.0F ||
 					!std::isfinite(projectile.orbit_angle) ||
 					!std::isfinite(projectile.area_time_to_tick) ||
+					!is_known_status_type(projectile.status_type) ||
 					(projectile.persistent_area && ((entity.type.id != "toxic_cloud" && entity.type.id != "pandemic_cloud") ||
 						projectile.explosion_radius <= 0.0F || !projectile.applies_damage_over_time)) ||
 					(projectile.orbits_target && ((entity.type.id != "bloodstorm_dagger" &&
@@ -455,7 +471,7 @@ void SimulationCore::restore_state(const SimulationCoreState &state) {
 					!std::isfinite(status.interval_seconds) || status.interval_seconds <= 0.0 ||
 					!std::isfinite(status.remaining_seconds) || status.remaining_seconds <= 0.0 ||
 					!std::isfinite(status.time_to_tick) || status.time_to_tick < 0.0 ||
-					status.time_to_tick > status.interval_seconds) {
+					status.time_to_tick > status.interval_seconds || !is_known_status_type(status.status_type)) {
 				throw std::invalid_argument("invalid simulation core damage-over-time state");
 			}
 		}
@@ -697,7 +713,7 @@ std::vector<CombatEvent> SimulationCore::advance(double delta_seconds) {
 							continue;
 						}
 						apply_damage_over_time(target, projectile.status_damage_per_tick,
-								projectile.status_interval_seconds, projectile.status_duration_seconds);
+								projectile.status_interval_seconds, projectile.status_duration_seconds, projectile.status_type);
 						projectile.hit_targets.push_back(target);
 					}
 					projectile.area_time_to_tick += projectile.status_interval_seconds;
@@ -777,7 +793,7 @@ std::vector<CombatEvent> SimulationCore::advance(double delta_seconds) {
 				}
 				if (projectile.applies_damage_over_time && health_[target_index].current > 0.0F) {
 					apply_damage_over_time(target_id, projectile.status_damage_per_tick,
-							projectile.status_interval_seconds, projectile.status_duration_seconds);
+							projectile.status_interval_seconds, projectile.status_duration_seconds, projectile.status_type);
 					if (enemy_types_[projectile_index].id == "toxic_cloud" || enemy_types_[projectile_index].id == "pandemic_cloud") {
 						projectile.hit_targets.push_back(target_id);
 					}
@@ -803,7 +819,7 @@ std::vector<CombatEvent> SimulationCore::advance(double delta_seconds) {
 						}
 						if (projectile.applies_damage_over_time && health_[splash_index].current > 0.0F) {
 							apply_damage_over_time(splash_id, projectile.status_damage_per_tick,
-									projectile.status_interval_seconds, projectile.status_duration_seconds);
+									projectile.status_interval_seconds, projectile.status_duration_seconds, projectile.status_type);
 							if (enemy_types_[projectile_index].id == "toxic_cloud" || enemy_types_[projectile_index].id == "pandemic_cloud") {
 								projectile.hit_targets.push_back(splash_id);
 							}

@@ -192,6 +192,7 @@
 ## ECS / simulation
 
 - [x] (2026-10-15) Frost Nova/Frozen Crown/Absolute Zero sous Godot 4.7.2 : Chill natif ralentit les cibles et se reflète dans le snapshot, Frozen Crown ajoute la vulnérabilité proposée, puis la mort gelée déclenche un shatter non récursif ; smokes de catalogue et tests natifs passés.
+- [x] P5.2.1 DoT typés : `simulation_core_test` vérifie Burn/Poison/Bleed, remplacement et conservation en capture/restauration, ainsi que le rejet d’un type inconnu; `simulation_worker_test` vérifie le format 9; les smokes Survival vérifient Poison/Bleed dans les offres de combat, anneaux distincts et lifesteal Burn. Les durées et dégâts restent **[PROPOSÉS]**; l’empilement reste **[OUVERT]**.
 - [x] Catalogue de combat sous Godot 4.7.2 : dix armes, dix reliques associées et Magnet Heart sans paire ; validation des relations et disponibilité des dix paires prototypées plus Magnet Heart.
 - [x] (2026-10-15) Minigun/Overdrive/Redline sous Godot 4.7.2 headless : impact d’un projectile Minigun et baisse du délai de tir avec Overdrive au niveau 2 et Minigun au niveau 5 ; réglages marqués **[PROPOSÉS]**.
 - [x] (2026-10-15) Toxic Cloud/Plague Mask/Pandemic sous Godot 4.7.2 headless : poison direct et splash via DoT natif, puis transmission à la mort au niveau 5 ; réglages et limite de cibles **[PROPOSÉS]**.

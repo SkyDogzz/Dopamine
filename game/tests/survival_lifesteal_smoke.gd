@@ -60,6 +60,14 @@ func _run() -> void:
 	if burned_state.is_empty():
 		_fail("Inferno Sprayer impact should apply its configured burn")
 		return
+	var burn_type := ""
+	for entity in burned_state["entities"]:
+		if entity["components"].has("DamageOverTime"):
+			burn_type = str(entity["components"]["DamageOverTime"].get("status_type", ""))
+			break
+	if burn_type != "burn" or session._status_effect_color(burn_type) == session._status_effect_color("poison"):
+		_fail("Burn should preserve its type and use a visual color distinct from Poison")
+		return
 	var before_burn_heal: float = session.player_hp
 	if not await _wait_until(func() -> bool: return session.player_hp > before_burn_heal):
 		_fail("Burn ticks should contribute lifesteal in Survival")

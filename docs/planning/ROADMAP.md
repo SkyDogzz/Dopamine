@@ -322,9 +322,9 @@ Travail requis :
 ### P5.2 — Statuts et synergies
 
 - [ ] **P5.2.1 — Contrats de statut**
-  - [ ] Lister les statuts utilisés par les dix paires.
-  - [ ] Fixer durée, tick, remplacement/empilement et affichage pour un statut à la fois.
-  - [ ] Vérifier application, expiration et cible morte avant connexion aux armes.
+  - [x] Lister les statuts implémentés pour les paires : Burn (Inferno/Wildfire), Poison (Toxic/Pandemic), Bleed (Bloodstorm) et Chill (Frost/Absolute Zero). Les paires sans statut restent sans effet inventé.
+  - [x] Vérifier la durée, le tick, le remplacement et l’affichage des DoT : le DoT existant est remplacé, son identité et ses horloges sont publiées dans le snapshot, et un anneau dédié l’indique en Survival. L’empilement simultané reste **[OUVERT]**. Les paramètres chiffrés demeurent **[PROPOSÉS]**.
+  - [x] Vérifier application, expiration et exclusion des cibles mortes avant connexion aux armes.
 - [ ] **P5.2.2 — Synergies émergentes**
   - [ ] Relier les effets par les événements standards de dégâts/statut.
   - [ ] Vérifier qu’une synergie ne requiert pas une réaction élémentaire non validée.

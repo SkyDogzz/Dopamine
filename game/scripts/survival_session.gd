@@ -39,6 +39,10 @@ const WEAPON_IMPACT_SOURCE_IDS := {
 }
 const WEAPON_IMPACT_LIFETIME := 0.22
 const MAX_VISIBLE_WEAPON_IMPACTS := 32
+const STATUS_EFFECT_COLORS := {
+	"burn": Color("#FFD447"), "poison": Color("#48E69B"), "bleed": Color("#FF7181"),
+}
+const GENERIC_STATUS_COLOR := Color("#A6AEC4")
 const LIGHTNING_ARC_LIFETIME := 0.12
 const ENEMY_DEATH_PIXEL_LIFETIME := 0.32
 const ENEMY_DEATH_PIXEL_COUNT := 8
@@ -2505,6 +2509,12 @@ func _draw() -> void:
 			var transform: Dictionary = components["Transform2D"]
 			var center := Vector2(float(transform["x"]), float(transform["y"]))
 			draw_arc(center, 12.0, 0.0, TAU, 24, Color(0.55, 0.85, 1.0, 0.65), 2.0, true)
+		if components.has("DamageOverTime") and not components.get("IsProjectile", false):
+			var status_transform: Dictionary = components["Transform2D"]
+			var status_center := Vector2(float(status_transform["x"]), float(status_transform["y"]))
+			var status: Dictionary = components["DamageOverTime"]
+			var status_color := _status_effect_color(str(status.get("status_type", "generic")))
+			draw_arc(status_center, 14.0, 0.0, TAU, 24, status_color, 2.0, true)
 	for beam in _prism_beams:
 		var beam_color := Color(0.55, 0.95, 1.0, 0.78) if bool(beam["secondary"]) else Color(1.0, 0.92, 0.55, 0.9)
 		draw_line(beam["from"], beam["to"], beam_color, 5.0 if not beam["secondary"] else 3.0, true)
@@ -2570,3 +2580,6 @@ func _add_weapon_impact(source_type: String, position: Vector2, is_damage_over_t
 
 func _weapon_impact_level_scale(level: int) -> float:
 	return 1.0 + 0.06 * float(clampi(level - 1, 0, 4)) # [PROPOSED] visual-only emphasis per weapon level.
+
+func _status_effect_color(status_type: String) -> Color:
+	return STATUS_EFFECT_COLORS.get(status_type, GENERIC_STATUS_COLOR)

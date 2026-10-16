@@ -774,7 +774,9 @@ func _wait_for_toxic_targets(session: Node2D, count: int) -> bool:
 		await process_frame
 		var poisoned := 0
 		for entity in session.simulation.snapshot()["entities"]:
-			if entity["components"].get("EnemyType", "") == "test_target" and entity["components"].has("DamageOverTime"):
+			var components: Dictionary = entity["components"]
+			if components.get("EnemyType", "") == "test_target" and \
+					str(components.get("DamageOverTime", {}).get("status_type", "")) == "poison":
 				poisoned += 1
 		if poisoned >= count:
 			return true
@@ -1104,7 +1106,10 @@ func _spawn_crimson_target(session: Node2D, collision_baseline: int = 0, expect_
 		for entity in state["entities"]:
 			if entity["components"].get("EnemyType", "") != "test_target":
 				continue
-			if entity["components"].has("DamageOverTime") == expect_bleed:
+			var status: Dictionary = entity["components"].get("DamageOverTime", {})
+			if not expect_bleed and status.is_empty():
+				return entity
+			if expect_bleed and str(status.get("status_type", "")) == "bleed":
 				return entity
 	return {}
 

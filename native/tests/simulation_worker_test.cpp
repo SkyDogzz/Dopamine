@@ -315,7 +315,7 @@ int main() {
 	const auto captured_worker_state = worker.capture_state(1s);
 	require(captured_worker_state.has_value(), "worker should capture a coherent state at a command barrier");
 	const SimulationWorkerState saved_worker_state = *captured_worker_state;
-	require(saved_worker_state.format_version == 8 && saved_worker_state.paused && saved_worker_state.speed_multiplier == 2.0 &&
+	require(saved_worker_state.format_version == 9 && saved_worker_state.paused && saved_worker_state.speed_multiplier == 2.0 &&
 			saved_worker_state.has_steering_target && saved_worker_state.steering_target_x == 12.0F &&
 			saved_worker_state.steering_target_y == -6.0F && saved_worker_state.steering_config.max_speed == 48.0F &&
 			saved_worker_state.collision_count == benchmark_combat->collision_count &&

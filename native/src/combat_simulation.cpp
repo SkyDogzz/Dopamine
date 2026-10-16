@@ -417,6 +417,7 @@ Dictionary CombatSimulation::snapshot() const {
 			status["interval_seconds"] = entity.damage_over_time->interval_seconds;
 			status["remaining_seconds"] = entity.damage_over_time->remaining_seconds;
 			status["time_to_tick"] = entity.damage_over_time->time_to_tick;
+			status["status_type"] = entity.damage_over_time->status_type.c_str();
 			components["DamageOverTime"] = status;
 		}
 		if (entity.chill_effect.has_value()) {
