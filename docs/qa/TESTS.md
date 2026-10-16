@@ -922,6 +922,11 @@ Note de clôture : le blocage historique du smoke `sandbox_ui_smoke.gd` décrit 
 - [x] `survival_weapon_catalog_smoke.gd` passe sous Godot 4.7.2 : Toxic Ignition part d’un impact direct appliquant le second statut, inflige 50 % du coup dans le rayon configuré, respecte le cooldown par cible et ignore les ticks DoT.
 - [ ] La victoire P5.V3 sans assistance et l’équilibrage de Toxic Ignition restent à vérifier en run réelle; les tests automatisés ne les remplacent pas.
 
+## P5 — Stabilité du smoke Frost Nova — 2026-10-16
+
+- [x] Le smoke plaçait ses cibles à 20–30 unités malgré le facteur de portée Survival `180/620`, puis laissait les armes de départ tirer en parallèle du scénario Absolute Zero. Les cibles sont maintenant positionnées par rapport au joueur dans la zone effective et les attaques automatiques sont désactivées après le tir Frost explicite.
+- [x] `survival_weapon_catalog_smoke.gd` passe quatre exécutions consécutives avec un `XDG_DATA_HOME` isolé; `survival_loadout_smoke.gd` passe aussi sous Godot 4.7.2.
+
 ## P4 — Choix de l’arme de départ — 2026-10-16
 
 - [x] `survival_starting_weapon_smoke.gd` cherchait Inferno Sprayer par index fixe alors que les deux offres de départ sont mélangées. Le test sélectionne maintenant l’offre par son titre affiché.

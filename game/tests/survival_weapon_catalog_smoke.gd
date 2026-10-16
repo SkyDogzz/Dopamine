@@ -887,7 +887,7 @@ func _frost_nova_chills_and_shatters() -> bool:
 	session.skip_starting_weapon_choice = true
 	session.contact_damage_per_hit = 0.0
 	session.xp_collection_radius = 0.0
-	session.frost_nova_radius = 40.0
+	session.frost_nova_radius = 150.0
 	session.frost_nova_cooldown = 1000.0
 	session.frost_nova_damage = 10.0
 	root.add_child(session)
@@ -901,14 +901,16 @@ func _frost_nova_chills_and_shatters() -> bool:
 		return false
 	session.simulation.set_speed(4.0)
 	await _wait_for_simulation_speed(session, 4.0)
-	session.simulation.spawn("test_target", 1, Vector2(20.0, 0.0), 20.0, Vector2.ZERO)
-	session.simulation.spawn("test_target", 1, Vector2(30.0, 0.0), 100.0, Vector2.ZERO)
+	var origin: Vector2 = session.player.global_position
+	session.simulation.spawn("test_target", 1, origin + Vector2(20.0, 0.0), 20.0, Vector2.ZERO)
+	session.simulation.spawn("test_target", 1, origin + Vector2(30.0, 0.0), 100.0, Vector2.ZERO)
 	if (await _wait_for_targets(session, 2)).size() != 2:
 		session.queue_free()
 		return false
 	session.weapon_enabled = true
 	session._entities = session.simulation.snapshot()["entities"]
 	session._fire_frost_nova(float(session.simulation.snapshot()["simulation_time"]), false)
+	session.weapon_enabled = false
 	var deadline := Time.get_ticks_msec() + 2500
 	var shattered_neighbor := false
 	var finishing_projectile_fired := false
