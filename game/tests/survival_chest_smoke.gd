@@ -8,6 +8,9 @@ func _run() -> void:
 	if not session.has_method("open_chest_family"):
 		_fail("Survival session script should load")
 		return
+	if not session.CHEST_TEXTURE.resource_path.ends_with("rewards/chest_closed.png"):
+		_fail("Survival chests should load their dedicated pixel-art reward sprite")
+		return
 	session.spawn_initial_enemy = false
 	session.wave_spawning_enabled = false
 	session.skip_starting_weapon_choice = true

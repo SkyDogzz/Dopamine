@@ -22,6 +22,10 @@ const PROJECTILE_NAMES := [
 ]
 const GROUND_REFERENCE := "res://assets/source/environment/ground_candidate_reference.png"
 const RUINS_REFERENCE := "res://assets/source/environment/ruins_candidate_reference.png"
+const CHEST_REFERENCE := "res://assets/source/rewards/chest_reference.png"
+const XP_REFERENCE := "res://assets/source/rewards/xp_orb_reference.png"
+const CHEST_PALETTE := ["#080B18", "#10152B", "#1B2340", "#293354", "#3D4868", "#586381", "#D4D9E8", "#F6F7FF", "#A85B19", "#E69825", "#FFD447", "#FFF19A", "#075A80", "#087FB2", "#0EB8D4", "#37E8F5"]
+const XP_PALETTE := ["#080B18", "#10152B", "#1B2340", "#293354", "#3D4868", "#586381", "#D4D9E8", "#F6F7FF", "#075A80", "#087FB2", "#0EB8D4", "#37E8F5", "#7623A8", "#A52DCA", "#E13ACB", "#FF75E3"]
 const WEAPONS := [
 	"lightning_conductor", "inferno_sprayer", "crimson_daggers", "minigun", "toxic_cloud",
 	"sawblades", "meteor_staff", "prism_laser", "void_orb", "frost_nova",
@@ -159,7 +163,13 @@ func _initialize() -> void:
 		push_error("Could not save the palette-limited ruins candidate")
 		quit(1)
 		return
-	print("Built catalog/UI/roster icons, VFX, projectiles and pixel-environment candidates with editable Aseprite sources")
+	var chest_reference := load(CHEST_REFERENCE) as Texture2D
+	var xp_reference := load(XP_REFERENCE) as Texture2D
+	if chest_reference == null or xp_reference == null or not _export_transparent(chest_reference.get_image(), "chest_closed", 32, CHEST_PALETTE) or not _export_transparent(xp_reference.get_image(), "xp_orb", 16, XP_PALETTE):
+		push_error("Could not export the Survival chest and XP pickup references")
+		quit(1)
+		return
+	print("Built catalog/UI/roster icons, VFX, projectiles, environment and reward sprites with editable Aseprite sources")
 	quit()
 
 func _export_cell(source: Image, rect: Rect2i, name: String) -> bool:
@@ -205,13 +215,47 @@ func _export_crop(source: Image, rect: Rect2i, background: Color, name: String, 
 		return false
 	return true
 
+func _export_transparent(source: Image, name: String, output_size: int, palette: Array) -> bool:
+	var left := source.get_width()
+	var top := source.get_height()
+	var right := -1
+	var bottom := -1
+	for y in range(source.get_height()):
+		for x in range(source.get_width()):
+			if source.get_pixel(x, y).a < 0.5:
+				continue
+			left = mini(left, x)
+			top = mini(top, y)
+			right = maxi(right, x)
+			bottom = maxi(bottom, y)
+	if right < left:
+		return false
+	var crop := source.get_region(Rect2i(left, top, right - left + 1, bottom - top + 1))
+	var scale := minf(float(output_size - 4) / crop.get_width(), float(output_size - 4) / crop.get_height())
+	var draw_size := Vector2i(maxi(1, roundi(crop.get_width() * scale)), maxi(1, roundi(crop.get_height() * scale)))
+	crop.resize(draw_size.x, draw_size.y, Image.INTERPOLATE_NEAREST)
+	var result := Image.create(output_size, output_size, false, Image.FORMAT_RGBA8)
+	result.fill(Color.TRANSPARENT)
+	var offset := (Vector2i(output_size, output_size) - draw_size) / 2
+	for y in range(draw_size.y):
+		for x in range(draw_size.x):
+			var pixel := crop.get_pixel(x, y)
+			if pixel.a >= 0.5:
+				result.set_pixel(x + offset.x, y + offset.y, _nearest_palette_color_from(pixel, palette))
+	var output_dir := "res://assets/sprites/rewards"
+	var source_dir := "res://assets/source/rewards"
+	return result.save_png("%s/%s.png" % [output_dir, name]) == OK and _save_aseprite(result, "%s/%s.aseprite" % [source_dir, name], name)
+
 func _color_distance_squared(a: Color, b: Color) -> float:
 	return pow(a.r - b.r, 2.0) + pow(a.g - b.g, 2.0) + pow(a.b - b.b, 2.0)
 
 func _nearest_palette_color(pixel: Color) -> Color:
+	return _nearest_palette_color_from(pixel, PALETTE)
+
+func _nearest_palette_color_from(pixel: Color, palette: Array) -> Color:
 	var best := Color.BLACK
 	var best_distance := INF
-	for hex in PALETTE:
+	for hex in palette:
 		var candidate := Color.from_string(hex, Color.BLACK)
 		var distance := pixel.r * 0.299 * pow(candidate.r - pixel.r, 2.0) + pixel.g * 0.587 * pow(candidate.g - pixel.g, 2.0) + pixel.b * 0.114 * pow(candidate.b - pixel.b, 2.0)
 		if distance < best_distance:

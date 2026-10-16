@@ -12,7 +12,7 @@ const SPRITE_FILES := {
 	"enemy_summoned": "roster/enemy_summoned",
 	"boss_mid_placeholder": "roster/boss_mid_placeholder",
 	"boss_final_placeholder": "roster/boss_final_placeholder",
-	"xp_orb": "xp_orb",
+	"xp_orb": "rewards/xp_orb",
 	"projectile_lightning": "projectiles/projectile_lightning",
 	"projectile_inferno": "projectiles/projectile_inferno",
 	"projectile_crimson": "projectiles/projectile_crimson",

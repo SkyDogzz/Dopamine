@@ -35,12 +35,16 @@ func _initialize() -> void:
 	if not _check_ground_candidate():
 		quit(1)
 		return
+	for reward_name in ["chest_closed", "xp_orb"]:
+		if not _check_reward(reward_name):
+			quit(1)
+			return
 	var impact_atlas := load("res://assets/sprites/weapon_impacts_pixel.png") as Texture2D
 	if impact_atlas == null or impact_atlas.get_size() != Vector2(640.0, 64.0):
 		push_error("The impact atlas should contain ten horizontal 64x64 cells")
 		quit(1)
 		return
-	print("Asset smoke passed: weapons, evolutions, relics, UI, roster, impact VFX and projectiles")
+	print("Asset smoke passed: weapons, evolutions, relics, UI, roster, VFX, projectiles, environment and rewards")
 	quit()
 
 func _check_icon(asset_name: String) -> bool:
@@ -108,5 +112,31 @@ func _check_ground_candidate() -> bool:
 	var ruins_source := FileAccess.open(ruins_ase, FileAccess.READ)
 	if ruins_source == null or ruins_source.get_32() != ruins_source.get_length() or ruins_source.get_16() != 0xA5E0 or ruins_source.get_16() != 1 or ruins_source.get_16() != 1536 or ruins_source.get_16() != 1536:
 		push_error("Invalid editable Aseprite source for Survival ruins")
+		return false
+	return true
+
+func _check_reward(reward_name: String) -> bool:
+	var expected_size := 16 if reward_name == "xp_orb" else 32
+	var png_path := "res://assets/sprites/rewards/%s.png" % reward_name
+	var ase_path := "res://assets/source/rewards/%s.aseprite" % reward_name
+	if not FileAccess.file_exists(png_path) or not FileAccess.file_exists(ase_path):
+		push_error("Missing PNG or Aseprite source for %s" % reward_name)
+		return false
+	var image := (load(png_path) as Texture2D).get_image()
+	if image.get_size() != Vector2i(expected_size, expected_size):
+		push_error("Unexpected dimensions for %s" % reward_name)
+		return false
+	var colors := {}
+	for y in range(image.get_height()):
+		for x in range(image.get_width()):
+			var pixel := image.get_pixel(x, y)
+			if pixel.a > 0.0:
+				colors[pixel.to_html(false)] = true
+	if colors.size() > 16:
+		push_error("%s exceeds the 16-color sprite palette cap" % reward_name)
+		return false
+	var source := FileAccess.open(ase_path, FileAccess.READ)
+	if source == null or source.get_32() != source.get_length() or source.get_16() != 0xA5E0 or source.get_16() != 1 or source.get_16() != expected_size or source.get_16() != expected_size:
+		push_error("Invalid editable Aseprite source for %s" % reward_name)
 		return false
 	return true
