@@ -7,9 +7,14 @@ const CYAN := Color("#37E8F5")
 const MAGENTA := Color("#E879F9")
 const YELLOW := Color("#FFD447")
 const GREEN := Color("#48E69B")
+const COMPACT_STAT_ICONS := {
+	"damage_pct": "res://assets/sprites/catalog/weapon_crimson_daggers.png",
+	"move_speed_pct": "res://assets/icons/equipment_boots.png",
+	"critical_chance_pct": "res://assets/sprites/catalog/relic_celestial_eye.png",
+}
 
 var detail_open := false
-var _compact_values: Label
+var _compact_rows: Dictionary = {}
 var _detail_panel: PanelContainer
 var _detail_content: VBoxContainer
 var _detail_scroll: ScrollContainer
@@ -34,16 +39,12 @@ func toggle_detail() -> void:
 	set_detail_open(not detail_open)
 
 func update_stats(stats: Dictionary, xp_status: String) -> void:
-	if not is_instance_valid(_compact_values):
+	if _compact_rows.is_empty():
 		return
-	var damage: Dictionary = stats.get("damage_pct", {})
-	var move_speed: Dictionary = stats.get("move_speed_pct", {})
-	var crit: Dictionary = stats.get("critical_chance_pct", {})
-	_compact_values.text = "DMG %s   SPD %s   CRIT %s" % [
-		str(damage.get("compact", "100%")),
-		str(move_speed.get("compact", "240")),
-		str(crit.get("compact", "0%")),
-	]
+	for stat_id in COMPACT_STAT_ICONS:
+		var row: Dictionary = _compact_rows[stat_id]
+		var stat: Dictionary = stats.get(stat_id, {})
+		row["value"].text = str(stat.get("compact", "—"))
 	_xp_status.text = xp_status
 	if stats == _last_stats and xp_status == _last_xp_status:
 		return
@@ -59,13 +60,29 @@ func _build_compact_panel() -> void:
 	var content := VBoxContainer.new()
 	content.name = "Compact"
 	content.position = Vector2(8.0, 56.0)
-	content.custom_minimum_size = Vector2(214.0, 25.0)
+	content.custom_minimum_size = Vector2(92.0, 48.0)
 	content.add_theme_constant_override("separation", 1)
 	add_child(content)
-	var heading := _label("RUN STATS  ·  TAB", 8, CYAN)
-	content.add_child(heading)
-	_compact_values = _label("DMG 100%   SPD 240   CRIT 0%", 8, TEXT)
-	content.add_child(_compact_values)
+	for stat_id in COMPACT_STAT_ICONS:
+		var row := HBoxContainer.new()
+		row.name = str(stat_id)
+		row.custom_minimum_size = Vector2(72.0, 15.0)
+		row.add_theme_constant_override("separation", 4)
+		row.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		content.add_child(row)
+		var icon := TextureRect.new()
+		icon.name = "Icon"
+		icon.texture = load(COMPACT_STAT_ICONS[stat_id])
+		icon.custom_minimum_size = Vector2(14.0, 14.0)
+		icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		row.add_child(icon)
+		var value := _label("—", 8, TEXT)
+		value.name = "Value"
+		value.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		row.add_child(value)
+		_compact_rows[stat_id] = {"icon": icon, "value": value}
 
 func _build_detail_panel() -> void:
 	_detail_panel = PanelContainer.new()
