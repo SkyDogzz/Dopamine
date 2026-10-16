@@ -106,6 +106,8 @@ func _run() -> void:
 	session.queue_free()
 	if not await _verify_dopamine_core_patterns_and_phases():
 		return
+	if not await _verify_chaos_boss_cadence():
+		return
 	print("Survival boss attack smoke passed")
 	quit()
 
@@ -311,6 +313,97 @@ func _verify_dopamine_core_patterns_and_phases() -> bool:
 		_fail("The boss HUD should identify the Dopamine Core and its current phase")
 		return false
 	return true
+
+func _verify_chaos_boss_cadence() -> bool:
+	var session: Node2D = load("res://scenes/survival_session.tscn").instantiate()
+	session.wave_spawning_enabled = false
+	session.weapon_enabled = false
+	session.skip_starting_weapon_choice = true
+	root.add_child(session)
+	await process_frame
+	for difficulty in ["easy", "normal", "hard", "nightmare", "chaos"]:
+		session.difficulty_id = difficulty
+		var attack := {"stage": "telegraph", "pattern": "radial", "pattern_index": 0,
+			"normal_attack_count": 0, "chaos_followup_pending": false,
+			"chaos_followup_count": 0, "is_chaos_followup": false,
+			"next_attack_at": 0.0}
+		session._finish_boss_attack(attack, 1.0, 2.0, 0.4)
+		if bool(attack["chaos_followup_pending"]):
+			session.queue_free()
+			_fail("Chaos boss attacks should not chain after the first normal attack")
+			return false
+		session._finish_boss_attack(attack, 3.0, 2.0, 0.4)
+		if difficulty == "chaos":
+			if not bool(attack["chaos_followup_pending"]) or \
+					not is_equal_approx(float(attack["next_attack_at"]), 3.4):
+				session.queue_free()
+				_fail("Chaos should schedule a telegraphed follow-up after every second normal attack")
+				return false
+			for patterns in [["radial", "aimed", "charge"], ["ray", "zone", "spiral"]]:
+				attack["chaos_followup_pending"] = true
+				attack["last_normal_pattern"] = str(patterns[0])
+				if not session._schedule_chaos_followup(attack, patterns) or \
+						not patterns.has(str(attack["pattern"])) or \
+						str(attack["pattern"]) == str(patterns[0]):
+					session.queue_free()
+					_fail("Chaos should select the next distinct existing boss pattern")
+					return false
+			var normal_count := int(attack["normal_attack_count"])
+			var normal_pattern_index := int(attack["pattern_index"])
+			session._finish_boss_attack(attack, 3.8, 2.0, 0.4)
+			if int(attack["normal_attack_count"]) != normal_count or \
+					int(attack["pattern_index"]) != normal_pattern_index:
+				session.queue_free()
+				_fail("A Chaos follow-up should not count as a normal attack")
+				return false
+		elif bool(attack["chaos_followup_pending"]):
+			session.queue_free()
+			_fail("Easy through Nightmare must keep their existing boss cadence")
+			return false
+	if not _verify_chaos_attack_integration(session, "mid_boss") or \
+			not _verify_chaos_attack_integration(session, "final_boss"):
+		session.queue_free()
+		_fail("Both Survival bosses should schedule and pause their Chaos follow-up telegraphs")
+		return false
+	session.queue_free()
+	return true
+
+func _verify_chaos_attack_integration(session: Node2D, boss_type: String) -> bool:
+	session.difficulty_id = "chaos"
+	session.pulse_warden_attack_interval_seconds = 0.1
+	session.pulse_warden_telegraph_seconds = 0.1
+	session.final_boss_attack_interval_seconds = 0.1
+	session.final_boss_telegraph_seconds = 0.1
+	var components := {"EnemyType": boss_type, "Health": {"current": 100.0, "maximum": 100.0},
+		"Transform2D": {"x": 0.0, "y": -300.0}}
+	var entity := {"id": {"index": 2000, "generation": 1}, "components": components}
+	session._entities = [entity]
+	var boss_key: String = session._entity_key(2000, 1)
+	var update_boss := Callable(session, "_update_pulse_warden_attacks") if boss_type == "mid_boss" else \
+			Callable(session, "_update_dopamine_core_attacks")
+	update_boss.call(0.0, false)
+	var attacks: Dictionary = session._pulse_warden_attacks if boss_type == "mid_boss" else session._dopamine_core_attacks
+	var attack: Dictionary = attacks[boss_key]
+	for normal_attack_index in range(2):
+		update_boss.call(float(attack["next_attack_at"]), false)
+		attack = attacks[boss_key]
+		if str(attack["stage"]) != "telegraph":
+			return false
+		update_boss.call(float(attack["fire_at"]), false)
+		attack = attacks[boss_key]
+		if int(attack["normal_attack_count"]) != normal_attack_index + 1:
+			return false
+	if not bool(attack["chaos_followup_pending"]):
+		return false
+	update_boss.call(float(attack["next_attack_at"]), false)
+	attack = attacks[boss_key]
+	var expected_followup := "aimed" if boss_type == "mid_boss" else "spiral"
+	if str(attack["stage"]) != "telegraph" or str(attack["pattern"]) != expected_followup:
+		return false
+	var stage_before_pause := str(attack["stage"])
+	var pattern_before_pause := str(attack["pattern"])
+	update_boss.call(float(attack["fire_at"]) + 1.0, true)
+	return str(attack["stage"]) == stage_before_pause and str(attack["pattern"]) == pattern_before_pause
 
 func _find_entity(session: Node2D, enemy_type: String) -> Dictionary:
 	for entity in session.simulation.snapshot()["entities"]:

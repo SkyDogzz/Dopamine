@@ -16,7 +16,13 @@
 
 - [x] Sous Godot 4.7.2 avec données utilisateur isolées, `survival_boss_attack_smoke.gd`, `survival_elite_smoke.gd`, `survival_exploder_smoke.gd`, `survival_difficulty_profile_smoke.gd` et `survival_difficulty_unlock_smoke.gd` passent séquentiellement.
 - [x] `survival_elite_smoke.gd` affiche des avertissements ObjectDB/ressources encore référencées à la fermeture après réussite; aucun échec de scénario observé.
-- [ ] Ces smokes ne valident ni les patterns Chaos encore **[OUVERTS]**, ni le balancing, ni une victoire jouée sans harness (P5.V3).
+- [ ] Ces smokes ne valident pas les autres mutations Chaos **[OUVERTES]**, le balancing, ni une victoire jouée sans harness (P5.V3). La séquence de boss Chaos validée est couverte séparément ci-dessous.
+
+## P5 — Séquence télégraphiée des boss en Chaos — 2026-10-16
+
+- [x] Décision utilisateur **[VALIDÉE]** : après deux attaques normales télégraphiées, enchaîner une attaque télégraphiée existante en Chaos uniquement; Easy à Nightmare gardent leur cadence.
+- [x] `survival_boss_attack_smoke.gd` vérifie la cadence des cinq difficultés, les patterns distincts des deux boss et le gel du télégraphe en pause.
+- [ ] Le chemin d'invocation réutilise le plafond global existant, mais son plafond sous cadence Chaos accélérée n'est pas encore asserté par un test dédié. Dégâts/multiplicateurs et ressenti nécessitent aussi un parcours Chaos représentatif.
 
 ## P7A.4 — Cycle Armorless intégré — 2026-10-16
 

@@ -420,7 +420,7 @@ Travail requis :
   - [x] Vérifier que HP, dégâts ennemis, densité et récompenses utilisent leurs multiplicateurs séparés; les résultats Easy, Normal et Chaos ont un test dédié.
   - [x] Inclure les smokes de profil, d’unlock et de session dans CTest; l’unlock verrouillé vérifie explicitement l’erreur `difficulty_locked`.
   - Les règles de déblocage sont **[VALIDÉES]**; les multiplicateurs du GDD restent **[PROPOSÉS]**.
-  - [ ] Arbitrer les comportements particuliers Chaos avant implémentation; une option de séquence de boss réutilisant les patterns existants est documentée dans [`ARBITRAGE_CHAOS_BOSSES.md`](ARBITRAGE_CHAOS_BOSSES.md) et reste **[PROPOSÉE]**.
+  - [x] Arbitrer et prototyper la séquence de boss Chaos validée le 2026-10-16 : après deux attaques normales, enchaîner une attaque télégraphiée existante; Easy à Nightmare, dégâts et plafond d'invocations inchangés. Smokes pour cadence, patterns et gel en pause; une run Chaos représentative et le ressenti restent à vérifier. Les autres mutations Chaos restent **[OUVERTES]**.
 
 ### Vérification et sortie P5
 
