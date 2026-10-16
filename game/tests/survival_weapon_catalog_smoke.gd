@@ -28,6 +28,9 @@ func _run() -> void:
 	if not await _lightning_level_progression():
 		_fail("Lightning Conductor levels 2–5 should apply their proposed damage, chain and cooldown upgrades")
 		return
+	if not await _void_orb_level_progression():
+		_fail("Void Orb levels 2–5 should apply their proposed damage, radius, duration and pull-force upgrades")
+		return
 	if not await _toxic_cloud_prioritizes_durable_targets():
 		_fail("Toxic Cloud should prioritize the highest-health living enemy in range, breaking ties by distance")
 		return
@@ -483,6 +486,57 @@ func _lightning_level_progression() -> bool:
 		if not is_equal_approx(float(projectile["components"]["Projectile"]["damage"]), expected_damage) or \
 			chain_ids.size() != 1 or int(session._lightning_chain_states[chain_ids[0]]["remaining"]) != expected_chain_count - 1 or \
 			not is_equal_approx(float(session._next_weapon_time) - float(level), expected_cooldown):
+			session.queue_free()
+			return false
+		session.simulation.kill_all()
+		if not await _wait_for_no_entities(session):
+			session.queue_free()
+			return false
+	session.queue_free()
+	return true
+
+func _void_orb_level_progression() -> bool:
+	var session: Node2D = load("res://scenes/survival_session.tscn").instantiate()
+	session.spawn_initial_enemy = false
+	session.wave_spawning_enabled = false
+	session.skip_starting_weapon_choice = true
+	session.weapon_enabled = false
+	session.void_orb_speed = 0.0
+	root.add_child(session)
+	await process_frame
+	session.simulation.set_speed(1.0)
+	if not await _wait_for_simulation_speed(session, 1.0):
+		session.queue_free()
+		return false
+	session.loadout._weapon_levels.erase("void_orb")
+	var base_damage := 0.0
+	for level in range(1, session.loadout.MAX_LEVEL + 1):
+		if not session.loadout.apply_offer("weapon:void_orb"):
+			session.queue_free()
+			return false
+		var origin: Vector2 = session.player.global_position
+		session._entities = [{"id": {"index": 103, "generation": 1}, "components": {
+			"Health": {"current": 100.0}, "Transform2D": {"x": origin.x + 40.0, "y": origin.y},
+		}}]
+		session._next_void_orb_time = 0.0
+		session.weapon_enabled = true
+		session._fire_void_orb(float(level), false)
+		session.weapon_enabled = false
+		var shots := await _wait_for_projectile_count(session, 1, "void_orb")
+		if shots.is_empty():
+			session.queue_free()
+			return false
+		var projectile: Dictionary = shots[0]["components"]["Projectile"]
+		if level == 1:
+			base_damage = float(projectile["damage"])
+		var expected_damage: float = base_damage * (1.2 if level >= 2 else 1.0) * (1.25 if level >= 5 else 1.0)
+		var expected_radius: float = session.void_orb_attraction_radius * (1.2 if level >= 3 else 1.0)
+		var expected_lifetime: float = session.void_orb_lifetime * (1.15 if level >= 4 else 1.0)
+		var expected_force: float = session.void_orb_attraction_speed * (1.25 if level >= 5 else 1.0)
+		if not is_equal_approx(float(projectile["damage"]), expected_damage) or \
+			not is_equal_approx(float(projectile["attraction_radius"]), expected_radius) or \
+			absf(float(projectile["remaining_seconds"]) - expected_lifetime) > 0.1 or \
+			not is_equal_approx(float(projectile["attraction_speed"]), expected_force):
 			session.queue_free()
 			return false
 		session.simulation.kill_all()

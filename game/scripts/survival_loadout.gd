@@ -211,7 +211,7 @@ func _weapon_level_description(item_id: String, level: int) -> String:
 		"prism_laser":
 			return "+20% damage" if level == 2 else "+20% range" if level == 3 else "+15% range" if level == 4 else "Max level; collect combo when Prism Crystal is also level 5" if level == 5 else "Improves beam"
 		"void_orb":
-			return "+20% damage" if level == 2 else "+20% attraction radius" if level == 3 else "+15% projectile lifetime" if level == 4 else "Max level; collect combo when Singularity is also level 5" if level == 5 else "Improves orb"
+			return "+20% damage" if level == 2 else "+20% attraction radius" if level == 3 else "+15% projectile lifetime" if level == 4 else "Max level; +25% attraction force; collect Event Horizon when Singularity is level 5" if level == 5 else "Improves orb"
 		"frost_nova":
 			return "+20% damage" if level == 2 else "+20% area" if level == 3 else "+20% chill duration" if level == 4 else "Max level; collect combo when Frozen Crown is also level 5" if level == 5 else "Improves Nova"
 	return "Improves the weapon"

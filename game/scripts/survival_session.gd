@@ -245,7 +245,7 @@ const WAVE_HP_CAP := 12.0
 @export var void_orb_radius: float = 5.0
 @export var void_orb_attraction_radius: float = 135.0
 @export var void_orb_attraction_speed: float = 85.0
-@export_range(0.0, 1.0) var singularity_control_per_level: float = 0.05
+@export_range(0.0, 1.0) var void_orb_level_five_attraction_bonus: float = 0.25
 @export_group("Prototype Frost Nova — proposed tuning")
 @export var frost_nova_cooldown: float = 3.0
 @export var frost_nova_damage: float = 8.0
@@ -2036,7 +2036,7 @@ func _fire_void_orb(active_time: float, paused: bool) -> void:
 	var damage_multiplier := (1.2 if level >= 2 else 1.0) * (1.25 if level >= 5 else 1.0) * _weapon_combo_damage_multiplier("void_orb")
 	var attraction_radius := void_orb_attraction_radius * (1.2 if level >= 3 else 1.0)
 	var lifetime := void_orb_lifetime * (1.15 if level >= 4 else 1.0)
-	var attraction_speed := void_orb_attraction_speed * (1.0 + float(level) * singularity_control_per_level)
+	var attraction_speed := void_orb_attraction_speed * (1.0 + (void_orb_level_five_attraction_bonus if level >= 5 else 0.0))
 	if evolved:
 		attraction_radius *= 1.5
 		attraction_speed *= 1.25
