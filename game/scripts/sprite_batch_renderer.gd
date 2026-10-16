@@ -13,19 +13,30 @@ const SPRITE_FILES := {
 	"boss_mid_placeholder": "roster/boss_mid_placeholder",
 	"boss_final_placeholder": "roster/boss_final_placeholder",
 	"xp_orb": "xp_orb",
-	"projectile_lightning": "projectile_lightning",
-	"projectile_inferno": "projectile_inferno",
-	"projectile_crimson": "projectile_crimson",
-	"projectile_enemy": "projectile_enemy",
-	"projectile_minigun": "projectile_minigun.svg",
-	"projectile_toxic_cloud": "projectile_toxic_cloud.svg",
-	"projectile_sawblades": "projectile_sawblades.svg",
-	"projectile_meteor": "projectile_meteor.svg",
-	"projectile_starfall_fragment": "projectile_starfall_fragment.svg",
-	"projectile_prism_laser": "projectile_prism_laser.svg",
-	"projectile_prism_secondary": "projectile_prism_secondary.svg",
-	"projectile_void_orb": "projectile_void_orb.svg",
-	"projectile_frost_nova": "projectile_frost_nova.svg",
+	"projectile_lightning": "projectiles/projectile_lightning",
+	"projectile_inferno": "projectiles/projectile_inferno",
+	"projectile_crimson": "projectiles/projectile_crimson",
+	"projectile_enemy": "projectiles/projectile_enemy",
+	"projectile_minigun": "projectiles/projectile_minigun",
+	"projectile_toxic_cloud": "projectiles/projectile_toxic_cloud",
+	"projectile_sawblades": "projectiles/projectile_sawblades",
+	"projectile_meteor": "projectiles/projectile_meteor",
+	"projectile_starfall_fragment": "projectiles/projectile_starfall_fragment",
+	"projectile_prism_laser": "projectiles/projectile_prism_laser",
+	"projectile_prism_secondary": "projectiles/projectile_prism_secondary",
+	"projectile_void_orb": "projectiles/projectile_void_orb",
+	"projectile_frost_nova": "projectiles/projectile_frost_nova",
+	"projectile_infinite_circuit": "projectiles/projectile_infinite_circuit",
+	"projectile_wildfire": "projectiles/projectile_wildfire",
+	"projectile_bloodstorm": "projectiles/projectile_bloodstorm",
+	"projectile_event_horizon": "projectiles/projectile_event_horizon",
+	"projectile_absolute_zero": "projectiles/projectile_absolute_zero",
+	"projectile_pandemic": "projectiles/projectile_pandemic",
+	"projectile_razorstorm": "projectiles/projectile_razorstorm",
+	"projectile_starfall": "projectiles/projectile_starfall",
+	"projectile_spectrum_collapse": "projectiles/projectile_spectrum_collapse",
+	"projectile_unique_lightning_burst": "projectiles/projectile_unique_lightning_burst",
+	"projectile_evolution_shockwave": "projectiles/projectile_evolution_shockwave",
 }
 
 var _batches: Dictionary = {}
@@ -122,30 +133,50 @@ func _sprite_for_entity(components: Dictionary) -> String:
 		match projectile_type:
 			"inferno_sprayer":
 				return "projectile_inferno"
+			"wildfire_sprayer":
+				return "projectile_wildfire"
 			"crimson_dagger":
 				return "projectile_crimson"
+			"bloodstorm_dagger":
+				return "projectile_bloodstorm"
 			"enemy_projectile":
 				return "projectile_enemy"
+			"infinite_circuit_branch":
+				return "projectile_infinite_circuit"
+			"unique_lightning_burst":
+				return "projectile_unique_lightning_burst"
+			"evolution_shockwave":
+				return "projectile_evolution_shockwave"
 			"minigun":
 				return "projectile_minigun"
-			"toxic_cloud", "pandemic_cloud":
+			"toxic_cloud":
 				return "projectile_toxic_cloud"
-			"sawblades", "razorstorm":
+			"pandemic_cloud":
+				return "projectile_pandemic"
+			"sawblades":
 				return "projectile_sawblades"
-			"meteor_staff", "starfall":
+			"razorstorm":
+				return "projectile_razorstorm"
+			"meteor_staff":
 				return "projectile_meteor"
+			"starfall":
+				return "projectile_starfall"
 			"starfall_fragment":
 				return "projectile_starfall_fragment"
 			"spectrum_collapse":
-				return "projectile_prism_secondary"
+				return "projectile_spectrum_collapse"
 			"prism_secondary":
 				return "projectile_prism_secondary"
 			"prism_laser":
 				return "projectile_prism_laser"
-			"void_orb", "event_horizon":
+			"void_orb":
 				return "projectile_void_orb"
-			"frost_nova", "absolute_zero":
+			"event_horizon":
+				return "projectile_event_horizon"
+			"frost_nova":
 				return "projectile_frost_nova"
+			"absolute_zero":
+				return "projectile_absolute_zero"
 			_:
 				return "projectile_lightning"
 	if components.get("IsXpOrb", false):

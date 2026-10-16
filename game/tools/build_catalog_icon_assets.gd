@@ -13,6 +13,13 @@ const ROSTER_REFERENCE := "res://assets/source/roster/generated_reference.png"
 const ROSTER_NAMES := ["enemy_chaser", "enemy_sprinter", "enemy_tank", "enemy_shooter", "enemy_buffer", "enemy_exploder", "enemy_shielder", "enemy_summoner", "enemy_summoned", "elite_sprinter", "boss_mid_placeholder", "boss_final_placeholder"]
 const VFX_REFERENCE := "res://assets/source/vfx/weapon_impacts_reference.png"
 const IMPACT_NAMES := ["impact_spark", "impact_star", "impact_slash", "impact_pop", "impact_ring", "impact_burst", "impact_shards", "impact_shock_ring", "impact_angular", "impact_evolved"]
+const PROJECTILE_REFERENCE := "res://assets/source/projectiles/generated_reference.png"
+const PROJECTILE_NAMES := [
+	"projectile_lightning", "projectile_inferno", "projectile_crimson", "projectile_enemy", "projectile_minigun", "projectile_toxic_cloud",
+	"projectile_sawblades", "projectile_meteor", "projectile_starfall_fragment", "projectile_prism_laser", "projectile_prism_secondary", "projectile_void_orb",
+	"projectile_frost_nova", "projectile_infinite_circuit", "projectile_wildfire", "projectile_bloodstorm", "projectile_event_horizon", "projectile_absolute_zero",
+	"projectile_pandemic", "projectile_razorstorm", "projectile_starfall", "projectile_spectrum_collapse", "projectile_unique_lightning_burst", "projectile_evolution_shockwave",
+]
 const WEAPONS := [
 	"lightning_conductor", "inferno_sprayer", "crimson_daggers", "minigun", "toxic_cloud",
 	"sawblades", "meteor_staff", "prism_laser", "void_orb", "frost_nova",
@@ -104,7 +111,22 @@ func _initialize() -> void:
 		push_error("Could not save the horizontal impact atlas")
 		quit(1)
 		return
-	print("Built catalog/UI/roster icons and a 10-cell pixel impact atlas with editable Aseprite sources")
+	var projectile_texture := load(PROJECTILE_REFERENCE) as Texture2D
+	if projectile_texture == null:
+		push_error("Missing generated projectile reference: %s" % PROJECTILE_REFERENCE)
+		quit(1)
+		return
+	var projectile_source := projectile_texture.get_image()
+	var projectile_cell_width := projectile_source.get_width() / 6
+	var projectile_cell_height := projectile_source.get_height() / 4
+	for index in range(PROJECTILE_NAMES.size()):
+		var rect := Rect2i((index % 6) * projectile_cell_width, floori(float(index) / 6.0) * projectile_cell_height, projectile_cell_width, projectile_cell_height)
+		var content_rect := Rect2i(rect.position + Vector2i(8, 8), rect.size - Vector2i(16, 16))
+		var background := projectile_source.get_pixel(content_rect.position.x + 4, content_rect.position.y + 4)
+		if not _export_crop(projectile_source, content_rect, background, PROJECTILE_NAMES[index], "res://assets/sprites/projectiles", "res://assets/source/projectiles", 16):
+			quit(1)
+			return
+	print("Built catalog/UI/roster icons, impact VFX and 24 projectile sprites with editable Aseprite sources")
 	quit()
 
 func _export_cell(source: Image, rect: Rect2i, name: String) -> bool:

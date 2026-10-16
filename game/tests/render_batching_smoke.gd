@@ -23,6 +23,9 @@ func _run() -> void:
 	entities.append(_entity(2506, "projectile_meteor", 180, 0))
 	entities.append(_entity(2507, "projectile_starfall_fragment", 200, 0))
 	entities.append(_entity(2508, "projectile_void_orb", 220, 0))
+	for index in range(9):
+		var names := ["infinite_circuit", "wildfire", "bloodstorm", "event_horizon", "absolute_zero", "pandemic", "razorstorm", "starfall", "spectrum_collapse"]
+		entities.append(_entity(2510 + index, "projectile_" + names[index], -80.0 + index * 18.0, 0.0))
 	view.set_entities(entities)
 	assert(view._enemy_multimesh.instance_count == 500, "500 enemies should fit one MultiMesh batch")
 	assert(view._projectile_multimesh.instance_count == 2000, "2,000 projectiles should fit one MultiMesh batch")
@@ -30,17 +33,20 @@ func _run() -> void:
 	assert(view._sprite_renderer.multimesh_for("enemy_tank").instance_count == 1, "Enemy profiles should use their sprite batches")
 	assert(view._sprite_renderer.multimesh_for("projectile_inferno").instance_count == 1, "Weapon projectile art should remain distinct")
 	assert(view._sprite_renderer.multimesh_for("projectile_minigun").instance_count == 1, "Minigun should use its own projectile art")
-	assert(view._sprite_renderer._batches["projectile_minigun"]["texture"].resource_path.ends_with("projectile_minigun.svg"), "Minigun batch should load its distinct pixel-art sprite")
+	assert(view._sprite_renderer._batches["projectile_minigun"]["texture"].resource_path.ends_with("projectiles/projectile_minigun.png"), "Minigun batch should load its distinct pixel-art sprite")
 	assert(view._sprite_renderer.multimesh_for("projectile_toxic_cloud").instance_count == 1, "Toxic Cloud should use its own projectile art")
 	assert(view._sprite_renderer.multimesh_for("projectile_sawblades").instance_count == 1, "Sawblades should use their own projectile art")
 	assert(view._sprite_renderer.multimesh_for("projectile_meteor").instance_count == 1, "Meteor Staff should use dedicated meteor art")
 	assert(view._sprite_renderer.multimesh_for("projectile_starfall_fragment").instance_count == 1, "Starfall fragments should use separate art")
 	assert(view._sprite_renderer.multimesh_for("projectile_void_orb").instance_count == 1, "Void Orb and Event Horizon should use dedicated art")
-	assert(view._sprite_renderer._batches["projectile_sawblades"]["texture"].resource_path.ends_with("projectile_sawblades.svg"), "Sawblades should load their dedicated pixel-art sprite")
-	assert(view._sprite_renderer._batches["projectile_meteor"]["texture"].resource_path.ends_with("projectile_meteor.svg"), "Meteor Staff should load its pixel-art meteor")
-	assert(view._sprite_renderer._batches["projectile_starfall_fragment"]["texture"].resource_path.ends_with("projectile_starfall_fragment.svg"), "Starfall should load its fragment sprite")
-	assert(view._sprite_renderer._batches["projectile_void_orb"]["texture"].resource_path.ends_with("projectile_void_orb.svg"), "Void Orb should load its dedicated sprite")
-	assert(view._sprite_renderer._batches["projectile_toxic_cloud"]["texture"].resource_path.ends_with("projectile_toxic_cloud.svg"), "Toxic Cloud batch should load its distinct pixel-art sprite")
+	assert(view._sprite_renderer._batches["projectile_sawblades"]["texture"].resource_path.ends_with("projectiles/projectile_sawblades.png"), "Sawblades should load their dedicated pixel-art sprite")
+	assert(view._sprite_renderer._batches["projectile_meteor"]["texture"].resource_path.ends_with("projectiles/projectile_meteor.png"), "Meteor Staff should load its pixel-art meteor")
+	assert(view._sprite_renderer._batches["projectile_starfall_fragment"]["texture"].resource_path.ends_with("projectiles/projectile_starfall_fragment.png"), "Starfall should load its fragment sprite")
+	assert(view._sprite_renderer._batches["projectile_void_orb"]["texture"].resource_path.ends_with("projectiles/projectile_void_orb.png"), "Void Orb should load its dedicated sprite")
+	assert(view._sprite_renderer._batches["projectile_toxic_cloud"]["texture"].resource_path.ends_with("projectiles/projectile_toxic_cloud.png"), "Toxic Cloud batch should load its distinct pixel-art sprite")
+	for projectile_name in ["infinite_circuit", "wildfire", "bloodstorm", "event_horizon", "absolute_zero", "pandemic", "razorstorm", "starfall", "spectrum_collapse"]:
+		var batch_name: String = "projectile_" + projectile_name
+		assert(view._sprite_renderer.multimesh_for(batch_name).instance_count == 1, "Evolved projectile %s should use its own batch" % projectile_name)
 	assert(view._sprite_renderer._batches["enemy_chaser"]["texture"].resource_path.ends_with("enemy_chaser.png"), "Chaser batch should load its pixel-art sprite")
 	view.set_selected_entity(10, 1)
 	assert(view._selected_entity_found, "Selecting an enemy should preserve its overlay above the batches")
@@ -73,6 +79,13 @@ func _entity(index: int, entity_type: String, x: float, y: float) -> Dictionary:
 			components["EnemyType"] = "starfall_fragment"
 		elif entity_type == "projectile_void_orb":
 			components["EnemyType"] = "void_orb"
+		else:
+			components["EnemyType"] = entity_type.trim_prefix("projectile_")
+			match components["EnemyType"]:
+				"infinite_circuit": components["EnemyType"] = "infinite_circuit_branch"
+				"wildfire": components["EnemyType"] = "wildfire_sprayer"
+				"bloodstorm": components["EnemyType"] = "bloodstorm_dagger"
+				"pandemic": components["EnemyType"] = "pandemic_cloud"
 	elif entity_type == "xp":
 		components["IsXpOrb"] = true
 	elif entity_type == "tank":
