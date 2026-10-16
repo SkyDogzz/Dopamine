@@ -2,11 +2,17 @@
 
 ## Direction artistique appliquée — 2026-10-16
 
-L’Art Bible v1.1 reçue dans `docs/ART_BIBLE.txt` reste la référence visuelle partagée. Le viewport cible 640×360 y est [VALIDÉ], mais sa mise en service est [OUVERTE] jusqu’à l’adaptation responsive de toutes les interfaces, car plusieurs panneaux fixes dépassent cette surface. Le jeu reste actuellement en 1280×800. Le thème commun utilise les couleurs sémantiques de la palette validée, des panneaux opaques et des boutons carrés. Press Start 2P (SIL OFL) sert aux titres; DejaVu Sans (licence Bitstream Vera/DejaVu) reste la police du corps. Un feedback commun ajoute un léger agrandissement au survol et un décalage de 2 px à l’appui.
+Cette section résume la tranche fonctionnelle initiale au moment de sa livraison. Depuis, le viewport logique 640×360 est activé avec une fenêtre initiale 1280×720 et la refonte visuelle reste en cours. L’Art Bible v1.1 de `docs/ART_BIBLE.txt` reste la référence. Le thème commun utilise les couleurs sémantiques de la palette validée, des panneaux opaques et des boutons carrés. Press Start 2P (SIL OFL) sert aux titres; DejaVu Sans (licence Bitstream Vera/DejaVu) reste la police du corps. Un feedback commun ajoute un léger agrandissement au survol et un décalage de 2 px à l’appui.
 
 Avant la correction viewport, 21 smokes UI et d’intégration passaient avec un `XDG_DATA_HOME` isolé par script. Après le rétablissement à 1280×800, 10 smokes ciblés passent : fondation, hub/layouts 1280×800/1600×900/1920×1080, pause, inventaire, coffre, résultat, navigation et Sandbox. Le smoke fenêtré et la suite complète restent à relancer. Le smoke de résultat vérifie aussi le libellé « RUN SANS SAUVEGARDE ».
 
 **Statut de cette tranche : terminée et poussée.** Elle fournit les comportements fonctionnels et le premier thème, mais ne clôt pas l’objectif actuel. L’extension confirmée qui demande de refaire visuellement chaque écran et tous les assets du jeu est en cours. Voir l’[inventaire des assets et interfaces](../../docs/art/INVENTAIRE_ASSETS_UI.md) et le statut courant dans la [carte des capacités](../../UI_CAPABILITY_MAP.md). Le viewport 640×360 est activé dans le travail courant après adaptations initiales; tous les parcours et écrans restent à vérifier avant de considérer la refonte complète achevée.
+
+## Avancée visuelle après la tranche initiale
+
+- Le Sandbox développeur reste isolé; ses contrôles latéraux sont testés à 640×360, 1280×720 et 1920×1080.
+- Le sol actif de Survival est désormais un pixel art 256×256 répétable, sa palette est limitée à six couleurs de l’Art Bible et son fichier Aseprite reste éditable. Le SVG et l’ancien motif chargé sont conservés comme références inactives.
+- L’objectif de refonte de toutes les interfaces et de tous les assets visuels actifs reste **en cours**; cet état partiel ne vaut pas clôture.
 
 ## État des modules
 

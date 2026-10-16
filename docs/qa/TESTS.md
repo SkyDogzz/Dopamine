@@ -256,7 +256,7 @@ Note de clôture : le blocage historique du smoke `sandbox_ui_smoke.gd` décrit 
 ## Art environnement — sol Survival provisoire (2026-10-16)
 
 - [x] `catalog_icon_assets_smoke.gd` vérifie les dimensions et sources Aseprite du sol candidat et de l’overlay pixel art; le sol candidat respecte les 32 couleurs de la palette maître.
-- [x] `pilot_scene_visual_smoke.gd` confirme l’overlay pixel art à 1280×800; le sol candidat reste hors du jeu car son motif répétitif est trop perceptible, donc `survival_ground.svg` est conservé. Le biome canonique reste **[OUVERT]**.
+- [x] À ce stade historique, `pilot_scene_visual_smoke.gd` confirme l’overlay pixel art à 1280×800; le sol candidat reste hors du jeu car son motif répétitif est trop perceptible, donc `survival_ground.svg` est conservé. Ce sol a depuis été remplacé par `survival_ground_pixel.png` (section « Sol Survival pixel art »). Le biome canonique reste **[OUVERT]**.
 
 ## Art pickups Survival (2026-10-16)
 
@@ -273,3 +273,9 @@ Note de clôture : le blocage historique du smoke `sandbox_ui_smoke.gd` décrit 
 - [x] `sandbox_ui_smoke.gd` vérifie les limites des boutons Spawn/Despawn/Kill et l’absence de défilement horizontal à 640×360, 1280×720 et 1920×1080.
 - [x] Le formulaire de création place le type, le nombre, les PV et les vitesses sur des rangées étroites pour respecter la largeur de la colonne; les actions Sandbox et l’isolation de sauvegarde sont conservées.
 - [x] Smoke Sandbox UI sous Godot 4.7.2 avec `XDG_DATA_HOME` temporaire isolé.
+
+## Sol Survival pixel art (2026-10-16)
+
+- [x] `process_survival_ground.gd` produit une texture répétable 256×256, limitée à six couleurs de la palette maître, et sa source Aseprite mono-calque depuis le visuel généré.
+- [x] `catalog_icon_assets_smoke.gd` vérifie les dimensions, la palette, l’égalité des bords opposés, la source Aseprite et son branchement dans la scène Survival.
+- [x] La texture SVG et l’ancien candidat moss/stone restent hors du rendu actif; aucune collision ni logique de combat ne change.
