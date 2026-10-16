@@ -392,8 +392,14 @@ Note de clôture : le blocage historique du smoke `sandbox_ui_smoke.gd` décrit 
 
 - [x] Historique : `process_survival_ground.gd` produisait une texture répétable 256×256 depuis une référence générée; cette version est remplacée après revue du rendu répété.
 - [x] `process_survival_ground_tile.gd` produit le PNG et la source Aseprite mono-calque de la tuile 16×16 active, avec trois teintes sombres de la palette maître et des bords opposés identiques.
-- [x] `catalog_icon_assets_smoke.gd` vérifie dimensions, palette restreinte, couture sans joint visible, source Aseprite et branchement dans Survival; `pilot_scene_visual_smoke.gd` permet d’inspecter le sol répété en combat.
+- [x] `catalog_icon_assets_smoke.gd` vérifie dimensions, palette restreinte, densité maximale de six pixels d’accent par tuile, couture sans joint visible, source Aseprite et branchement dans Survival; `pilot_scene_visual_smoke.gd` permet d’inspecter le sol répété en combat.
 - [x] Les textures SVG, l’ancien sol 256×256 et le candidat moss/stone restent hors du rendu actif; aucune collision ni logique de combat ne change.
+
+### Réduction du bruit de répétition (2026-10-16)
+
+- [x] La tuile active passe des amas répétés de 2×2/3×3 pixels à cinq accents isolés sur 256 pixels, sans changer la grille 16×16, les trois teintes ou la couture.
+- [x] Le PNG et la source Aseprite sont régénérés; contrôle statique de l’en-tête PNG/Aseprite, de la palette, du nombre d’accents et des bords opposés réussi.
+- [ ] `catalog_icon_assets_smoke.gd` et le rendu de scène n’ont pas été rejoués après cette modification : aucun exécutable Godot n’est disponible dans cet environnement.
 
 ## Animations du héros pixel art (2026-10-16)
 

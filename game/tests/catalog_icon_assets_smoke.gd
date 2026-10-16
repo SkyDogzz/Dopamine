@@ -136,6 +136,7 @@ func _check_active_ground() -> bool:
 		return false
 	var allowed_colors := {"10152b": true, "1b2340": true, "293354": true}
 	var colors := {}
+	var accent_pixels := 0
 	for y in range(image.get_height()):
 		for x in range(image.get_width()):
 			var color_hex := image.get_pixel(x, y).to_html(false)
@@ -143,8 +144,13 @@ func _check_active_ground() -> bool:
 				push_error("Active Survival ground contains a color outside its Art Bible palette: %s" % color_hex)
 				return false
 			colors[color_hex] = true
+			if color_hex != "10152b":
+				accent_pixels += 1
 	if colors.size() > 3:
 		push_error("Active Survival ground should stay restrained to three low-contrast palette colors")
+		return false
+	if accent_pixels > 6:
+		push_error("Active Survival ground should use no more than six subtle pixels per 16x16 tile")
 		return false
 	for coordinate in range(16):
 		if image.get_pixel(0, coordinate) != image.get_pixel(15, coordinate) or image.get_pixel(coordinate, 0) != image.get_pixel(coordinate, 15):

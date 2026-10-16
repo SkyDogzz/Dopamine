@@ -7,19 +7,19 @@ const SIZE := 16
 const TILE := [
 	"................",
 	"................",
-	"..##............",
-	"..##............",
-	"...#....##......",
-	"........##......",
 	"................",
-	".....###........",
-	".....###........",
-	"......#.........",
-	"............##..",
-	"............##..",
+	"....#...........",
 	"................",
-	"..##............",
-	"..##............",
+	"...........+....",
+	"................",
+	"................",
+	"..#.............",
+	"................",
+	"................",
+	".............#..",
+	"................",
+	"......+.........",
+	"................",
 	"................",
 ]
 
@@ -37,7 +37,7 @@ func _initialize() -> void:
 		push_error("Could not save active 16x16 Survival ground tile and editable source")
 		quit(1)
 		return
-	print("Built seamless low-contrast 16x16 Survival ground tile from three Art Bible colors")
+	print("Built seamless sparse 16x16 Survival ground tile from three Art Bible colors")
 	quit()
 
 func _make_seamless(image: Image) -> void:
