@@ -926,6 +926,7 @@ Note de clôture : le blocage historique du smoke `sandbox_ui_smoke.gd` décrit 
 
 - [x] Le smoke plaçait ses cibles à 20–30 unités malgré le facteur de portée Survival `180/620`, puis laissait les armes de départ tirer en parallèle du scénario Absolute Zero. Les cibles sont maintenant positionnées par rapport au joueur dans la zone effective et les attaques automatiques sont désactivées après le tir Frost explicite.
 - [x] `survival_weapon_catalog_smoke.gd` passe quatre exécutions consécutives avec un `XDG_DATA_HOME` isolé; `survival_loadout_smoke.gd` passe aussi sous Godot 4.7.2.
+- [x] Suite CTest complète : `LastTest.log` enregistre 86/86 tests réussis en séquentiel sous Godot 4.7.2, après les modifications présentes dans le worktree. Le fichier `LastTestsFailed.log` était ancien et ne correspondait pas à cette exécution.
 
 ## P4 — Choix de l’arme de départ — 2026-10-16
 
