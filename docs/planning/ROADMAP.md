@@ -484,6 +484,8 @@ Travail requis :
   - [x] Acheter chaque nœud dans l’ordre de prérequis, appliquer les bonus, déverrouiller les 10 armes/11 reliques et rendre tous les coûts au respec gratuit; `progression_service_smoke.gd` couvre le graphe complet.
   - [x] `survival_armorless_mode_smoke.gd` vérifie l’application de tous les bonus persistants et le catalogue complet en Survival et Armorless; le Sandbox reste sans ProgressionService.
   - [x] La somme linéaire indicative des bonus complets donne 29,7 points (10,7 % HP + 9 % dégâts + 6 % vitesse + 4 points de critique); c’est un proxy **[PROPOSÉ]**, pas une mesure d’équivalence de puissance.
+  - [x] Analyse arithmétique des coûts **[PROPOSÉS]** : 15 900 Essence pour 100 nœuds, dont 4 160 pour 17 déblocages équipement; à 88 Essence par victoire normale vague 24, un déblocage équipement coûte en moyenne 2,78 victoires équivalentes. `progression_service_smoke.gd` verrouille ce calcul.
+  - [ ] Cette moyenne ignore défaites, vente d’équipement et temps de jeu; elle ne prouve pas le rythme ressenti et ne remplace pas les parcours réels de P6.9.
   - [ ] Calibrer la puissance réelle des profils débutant/moyen/complet dans P6.9; décider ensuite si le graphe doit s’étendre au-delà de 100 vers la cible éditoriale **[PROPOSÉE]** d’environ 120.
 - [ ] **P6.7 — Achievements**
   - [x] Établir le schéma JSON métrique/catégorie/secret/agrégation/paliers/récompenses, aligné sur `AchievementDefinition` du GDD.

@@ -684,6 +684,12 @@ Note de clôture : le blocage historique du smoke `sandbox_ui_smoke.gd` décrit 
 - [x] `skill_tree_panel_visual_smoke.gd` vérifie le rendu des 94 nœuds générés, le focus clavier jusqu’au dernier rang et la capture à 640×360 logique; les trois viewports passent dans `ui_viewport_layout_smoke.gd`.
 - [ ] Le proxy linéaire ne remplace pas la calibration d’équivalence de puissance des profils, qui reste dans P6.9.
 
+## Économie proposée de l’arbre de compétences (2026-10-16)
+
+- [x] `progression_service_smoke.gd` vérifie 15 900 Essence cumulée, 4 160 pour les 17 nœuds d’équipement et une moyenne de 2,78 victoires normales vague 24 par déblocage équipement, calculée sur la récompense GDD **[PROPOSÉE]** de 88 Essence.
+- [x] À supposer que chaque run atteigne le boss final et gagne, l’arbre complet équivaut à 257 victoires Easy, 181 Normal, 113 Hard, 73 Nightmare ou 46 Chaos avec les multiplicateurs d’Essence **[PROPOSÉS]**.
+- [ ] Cette conversion en victoires équivalentes est seulement analytique; fréquence de runs, récompenses de défaite, ventes et ressenti des coûts restent à observer en P6.9.
+
 - [x] Le HUD reprend l’orbe XP 16×16 à sa taille native et en nearest, sans changer les valeurs ni le calcul de progression.
 - [x] `survival_hud_smoke.gd` vérifie l’asset, sa taille, son filtrage et les bounds des lignes; exécuté avec Godot 4.7.2, passe.
 

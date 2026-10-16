@@ -201,6 +201,27 @@ func _run() -> void:
 	if every_skill_node.size() != 100:
 		_fail("The proposed skill tree should expose 100 interconnected nodes")
 		return
+	var all_node_cost := 0
+	var equipment_node_cost := 0
+	var equipment_node_count := 0
+	for node_id in every_skill_node:
+		var cost: int = service.skill_node_cost(node_id)
+		all_node_cost += cost
+		if node_id.begins_with("unlock_"):
+			equipment_node_cost += cost
+			equipment_node_count += 1
+	var normal_boss_reward := roundi((15.0 + 2.0 * 24.0 + 25.0) * 1.0)
+	if all_node_cost != 15900 or equipment_node_cost != 4160 or equipment_node_count != 17 or \
+		not is_equal_approx(float(equipment_node_cost) / float(equipment_node_count) / normal_boss_reward, 2.78075):
+		_fail("Proposed skill tree cost pacing should remain reproducible against a Normal boss victory")
+		return
+	var full_tree_victory_equivalents: Array[int] = []
+	for difficulty_id in difficulties.ORDER:
+		var reward := roundi(88.0 * float(difficulties.DATA[difficulty_id]["essence"]))
+		full_tree_victory_equivalents.append(ceili(float(all_node_cost) / float(reward)))
+	if full_tree_victory_equivalents != [257, 181, 113, 73, 46]:
+		_fail("Full-tree victory equivalents should reflect the proposed Essence multipliers per difficulty")
+		return
 	if service.unlocked_weapon_ids() != ["lightning_conductor", "inferno_sprayer"] or \
 		service.unlocked_relic_ids() != ["storm_core", "infernal_heart"]:
 		_fail("A new profile should start with the prototype starter weapon/relic pairs")
