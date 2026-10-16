@@ -114,6 +114,13 @@ func _initialize() -> void:
 		not loadout._weapon_level_description("prism_laser", 5).contains("+25% damage"):
 		_fail("Prism level descriptions should match the proposed level 2–5 progression")
 		return
+	if not loadout._weapon_level_description("minigun", 5).contains("collect Redline") or \
+		not loadout._weapon_level_description("toxic_cloud", 5).contains("collect Pandemic") or \
+		not loadout._weapon_level_description("sawblades", 5).contains("+25% damage") or \
+		not loadout._weapon_level_description("meteor_staff", 5).contains("+30% damage") or \
+		not loadout._weapon_level_description("frost_nova", 5).contains("-20% cooldown"):
+		_fail("Level-five offers should explain their proposed upgrade and available evolution")
+		return
 	if not loadout.apply_offer("relic:storm_core") or loadout.relic_level("storm_core") != 1:
 		_fail("Selecting a new relic should add it at level 1")
 		return

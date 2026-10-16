@@ -201,19 +201,19 @@ func _weapon_level_description(item_id: String, level: int) -> String:
 		"crimson_daggers":
 			return "Max level; +25% damage; collect Bloodstorm when Blood Chalice is level 5" if level == 5 else "+20% damage" if level == 2 else "+1 orbiting dagger" if level == 3 else "+20% orbit speed" if level == 4 else "Improves orbiting daggers"
 		"minigun":
-			return "+20% damage" if level == 2 else "+25% fire rate" if level in [3, 5] else "15% tighter spread" if level == 4 else "Improves shots"
+			return "+20% damage" if level == 2 else "+25% fire rate" if level == 3 else "15% tighter spread" if level == 4 else "Max level; +25% fire rate; collect Redline when Overdrive Engine is level 5" if level == 5 else "Improves shots"
 		"toxic_cloud":
-			return "+25% poison damage" if level == 5 else "+20% cloud radius" if level == 3 else "+20% poison duration" if level == 4 else "+20% poison damage" if level == 2 else "Improves poison"
+			return "Max level; +25% poison damage; collect Pandemic when Plague Mask is level 5" if level == 5 else "+20% cloud radius" if level == 3 else "+20% poison duration" if level == 4 else "+20% poison damage" if level == 2 else "Improves poison"
 		"sawblades":
-			return "+20% damage" if level == 2 else "+1 ricochet" if level == 3 else "+20% projectile speed" if level == 4 else "Max level; collect combo when Magnetic Coil is also level 5" if level == 5 else "Improves ricochets"
+			return "+20% damage" if level == 2 else "+1 ricochet" if level == 3 else "+20% projectile speed" if level == 4 else "Max level; +25% damage; collect Razorstorm when Magnetic Coil is level 5" if level == 5 else "Improves ricochets"
 		"meteor_staff":
-			return "+20% damage" if level == 2 else "+20% explosion radius" if level == 3 else "15% shorter cooldown" if level == 4 else "Max level; collect combo when Celestial Eye is also level 5" if level == 5 else "Improves impact"
+			return "+20% damage" if level == 2 else "+20% explosion radius" if level == 3 else "15% shorter cooldown" if level == 4 else "Max level; +30% damage; collect Starfall when Celestial Eye is level 5" if level == 5 else "Improves impact"
 		"prism_laser":
 			return "+20% damage" if level == 2 else "+20% range" if level == 3 else "+15% beam tracking speed" if level == 4 else "Max level; +25% damage; collect Spectrum Collapse when Prism Crystal is level 5" if level == 5 else "Improves beam"
 		"void_orb":
 			return "+20% damage" if level == 2 else "+20% attraction radius" if level == 3 else "+15% projectile lifetime" if level == 4 else "Max level; +25% attraction force; collect Event Horizon when Singularity is level 5" if level == 5 else "Improves orb"
 		"frost_nova":
-			return "+20% damage" if level == 2 else "+20% area" if level == 3 else "+20% chill duration" if level == 4 else "Max level; collect combo when Frozen Crown is also level 5" if level == 5 else "Improves Nova"
+			return "+20% damage" if level == 2 else "+20% area" if level == 3 else "+20% chill duration" if level == 4 else "Max level; -20% cooldown; collect Absolute Zero when Frozen Crown is level 5" if level == 5 else "Improves Nova"
 	return "Improves the weapon"
 
 func _relic_level_description(item_id: String, level: int) -> String:

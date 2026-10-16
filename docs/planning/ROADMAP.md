@@ -308,6 +308,7 @@ Travail requis :
   - [x] Les impacts dédiés des dix armes reprennent le niveau de leur arme et grossissent de 6 % par niveau, sans changer dégâts, collision ou cadence (**[PROPOSÉ]**).
   - [x] Les onze reliques appliquent leur bonus de stat globale à chacun des cinq niveaux; `survival_weapon_catalog_smoke.gd` vérifie l’accumulation par niveau. Les valeurs restent **[PROPOSÉES]** et ne sont pas déclarées équilibrées.
   - [x] Les dix évolutions changent le rendu du projectile : les neuf formes dédiées sont routées vers leur sprite et Redline conserve la silhouette Minigun avec une teinte rouge néon (**[PROPOSÉ]**); smokes `render_batching_smoke.gd` et `survival_weapon_catalog_smoke.gd`.
+  - [x] Les offres de niveau 5 nomment également leur effet numérique et l’évolution requise pour Minigun, Toxic Cloud, Sawblades, Meteor Staff et Frost Nova; vérifié dans `survival_loadout_smoke.gd`.
 - [ ] **P5.1.12 — Règle d’évolution/catalogue**
   - [x] L’évolution définie au catalogue est proposée après le niveau 5 de l’arme et de sa relique; `survival_weapon_catalog_smoke.gd` vérifie les deux ordres d’acquisition pour les dix paires.
   - [x] L’offre d’évolution n’applique que le bonus de dégâts de l’arme correspondante (**[PROPOSÉ]**, +25 %); aucune hausse avant collecte, aucun bonus sur les neuf autres armes.
