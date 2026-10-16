@@ -883,3 +883,10 @@ Note de clôture : le blocage historique du smoke `sandbox_ui_smoke.gd` décrit 
 - [x] Douze smokes ciblés passent sous Godot 4.7.2 via `tools/run_godot_test.sh` : catalogue d’armes, coffres, directeur de drops, élites, Buffer, Shielder, Summoner, Exploder, attaques de boss, loot du boss final, causalité des dégâts et difficulté de session.
 - [x] Certains smokes de session terminent avec des avertissements ObjectDB/ressources encore référencées; leurs assertions passent. Ces sorties ne prouvent pas l’absence de fuite mémoire en session longue.
 - [ ] Cette validation automatisée ne remplace pas P5.V3 : une victoire en interface réelle, sans HP forcés, sélection automatique ni boss tué par script, reste à réaliser.
+
+## P5 — Revalidation ciblée native et boss — 2026-10-16
+
+- [x] Les exécutables natifs existants `build/simulation_core_tests` et `build/simulation_worker_tests` terminent avec code 0.
+- [x] Sous Godot 4.7.2 headless, `survival_weapon_catalog_smoke.gd` et `survival_boss_attack_smoke.gd` terminent avec code 0.
+- [ ] Les deux smokes émettent encore des avertissements ObjectDB/ressources à la fermeture; la sortie détaillée du smoke boss identifie `boss_telegraph.wav` et ses `AudioStreamPlaybackWAV` encore référencés. La gestion SFX est suivie séparément; cette vérification ne démontre pas une fuite en session de production.
+- [ ] Ces smokes ciblés ne ferment pas l’équilibrage du combat ni P5.V3.
