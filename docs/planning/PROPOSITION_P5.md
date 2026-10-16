@@ -4,7 +4,7 @@
 
 ## 1. Équipement : plages de statistiques
 
-Proposition : chaque ligne tire uniformément un percentile `r ∈ [0,1]`, puis calcule `base = min + r × (max − min)`. Les bonus exprimés en `%` sont des points de pourcentage ajoutés à la statistique correspondante ; `max_hp` est un nombre de PV. L'amélioration conserve la formule GDD `valeur = base × (1 + 0,08 × niveau)`.
+Proposition : chaque ligne tire uniformément un percentile `r ∈ [0,1]`, bornes incluses, puis calcule `base = min + r × (max − min)`. Les rolls sauvegardés acceptent cette même plage; le calcul rejette les entrées hors plage ou non finies au lieu de les borner silencieusement. Les bonus exprimés en `%` sont des points de pourcentage ajoutés à la statistique correspondante ; `max_hp` est un nombre de PV. L'amélioration conserve la formule GDD `valeur = base × (1 + 0,08 × niveau)`.
 
 | ID | Plage de base proposée | Unité |
 |---|---:|---|

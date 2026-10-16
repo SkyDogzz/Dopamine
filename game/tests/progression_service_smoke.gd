@@ -72,9 +72,32 @@ func _run() -> void:
 		return
 	if not equipment_generator.PROPOSED_STAT_RANGES.has("damage_pct") or \
 				not is_equal_approx(equipment_generator.stat_value("damage_pct", 0.5, 2), 3.48) or \
-			equipment_generator.stat_value("damage_pct", 1.0, 0) != 5.0:
-		_fail("Proposed equipment stat percentiles and enhancements should produce calibrated values")
+			equipment_generator.stat_value("damage_pct", 1.0, 0) != 5.0 or \
+			equipment_generator.stat_value("damage_pct", 1.01, 0) != 0.0 or \
+			equipment_generator.stat_value("damage_pct", NAN, 0) != 0.0 or \
+			equipment_generator.stat_value("damage_pct", 0.5, 11) != 0.0:
+		_fail("Proposed equipment stat rolls should accept the inclusive percentile range and reject invalid input")
 		return
+	var max_roll_item: Dictionary = inventory[0].duplicate(true)
+	max_roll_item["rarity"] = "normal"
+	max_roll_item["stat_lines"] = [{
+		"stat_id": "damage_pct", "roll_percentile": 1.0,
+		"enhancement_level": 0, "fail_streak": 0,
+	}]
+	max_roll_item["unique_effect_id"] = ""
+	max_roll_item["instance_id"] = "inclusive_max_percentile"
+	profile["equipment_inventory"].append(max_roll_item)
+	if not save_service.save_slot("0", profile):
+		_fail("A profile with an inclusive maximum stat percentile should save")
+		return
+	var max_roll_profile: Dictionary = service.load_profile()
+	if not max_roll_profile.get("ok", false) or \
+			not is_equal_approx(float(max_roll_profile["profile"]["equipment_inventory"][-1]["stat_lines"][0]["roll_percentile"]), 1.0):
+		_fail("A profile should preserve and load the valid inclusive maximum percentile")
+		return
+	profile = max_roll_profile["profile"]
+	inventory = profile["equipment_inventory"]
+	inventory.pop_back()
 	var unique_stat_ids := ["damage_pct", "max_hp", "attack_speed_pct"]
 	inventory[0]["rarity"] = "legendary"
 	inventory[0]["stat_lines"] = []
@@ -669,7 +692,7 @@ func _valid_equipment_instance(equipment: Dictionary) -> bool:
 	for line in equipment["stat_lines"]:
 		var stat_id: String = line["stat_id"]
 		var percentile := float(line["roll_percentile"])
-		if stats.has(stat_id) or percentile < 0.0 or percentile >= 1.0 or \
+		if stats.has(stat_id) or percentile < 0.0 or percentile > 1.0 or \
 				line["enhancement_level"] < 0 or line["enhancement_level"] > 10 or line["fail_streak"] < 0:
 			return false
 		stats[stat_id] = true

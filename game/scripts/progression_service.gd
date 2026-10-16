@@ -739,7 +739,7 @@ func _valid_equipment(equipment: Variant) -> bool:
 			return false
 		var percentile = stat_line.get("roll_percentile")
 		if typeof(percentile) not in [TYPE_INT, TYPE_FLOAT] or not is_finite(float(percentile)) or \
-				percentile < 0.0 or percentile >= 1.0:
+				percentile < 0.0 or percentile > 1.0:
 			return false
 		var enhancement_level = stat_line.get("enhancement_level")
 		var fail_streak = stat_line.get("fail_streak")

@@ -110,11 +110,11 @@ static func armorless_rarity_weights_for(difficulty_id: String, wave_reached: in
 	return normalized
 
 static func stat_value(stat_id: String, percentile: float, enhancement_level: int = 0) -> float:
-	if not PROPOSED_STAT_RANGES.has(stat_id):
+	if not PROPOSED_STAT_RANGES.has(stat_id) or not is_finite(percentile) or \
+			percentile < 0.0 or percentile > 1.0 or enhancement_level < 0 or enhancement_level > 10:
 		return 0.0
 	var bounds: Vector2 = PROPOSED_STAT_RANGES[stat_id]
-	var roll := clampf(percentile, 0.0, 1.0)
-	return lerpf(bounds.x, bounds.y, roll) * (1.0 + 0.08 * clampi(enhancement_level, 0, 10))
+	return lerpf(bounds.x, bounds.y, percentile) * (1.0 + 0.08 * enhancement_level)
 
 static func stat_label(stat_id: String, value: float) -> String:
 	if stat_id == "max_hp":

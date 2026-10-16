@@ -8,6 +8,8 @@
 
 ## Progression permanente — équipement classique — 2026-10-16
 
+- [x] Contrat de roll d’équipement : `progression_service_smoke.gd` sauvegarde et recharge un percentile maximal `1.0`; le calcul accepte `[0,1]` inclus et refuse percentile non fini/hors plage et enhancement hors `0..10`. `equipment_stats_smoke.gd` et `equipment_enhancement_smoke.gd` passent également.
+
 - [x] `equipment_slots_smoke.gd` couvre les six slots, l’unicité des statistiques dans chaque pièce, et le remplacement d’un objet équipé du même slot sans déséquiper les cinq autres.
 - [x] `progression_service_smoke.gd` vérifie qu’une victoire et une défaite distinctes ajoutent chacune une seule pièce et que le retraitement du même `run_id` n’en ajoute pas une seconde.
 - [x] Les quatre smokes ciblés passent. La suite séquentielle passe 67/67 sous Godot 4.7.2; `survival_weapon_catalog_smoke` a échoué une première fois de façon intermittente, puis a passé seul et dans le rerun complet.
