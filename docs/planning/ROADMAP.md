@@ -377,7 +377,7 @@ Travail requis :
   - [x] Ajouter Summoner avec position télégraphiée et maximum global de trois adds actifs **[PROPOSÉ]**.
   - [x] Tester destruction du soutien et fin de son effet.
 - [ ] **P5.4.3 — Élites**
-  - [ ] Définir les affixes éligibles à chaque famille.
+  - [x] Définir la compatibilité du prototype : `elite` accepte Hasted, Armored et Regenerating; les familles ordinaires et les affixes non implémentés les refusent.
   - [x] Implémenter la sélection aléatoire entre Hasted, Armored et Regenerating sur l’unique famille élite; Hasted passe à 100 px/s, Armored se déplace à 75 px/s et reçoit 65 % des dégâts, Regenerating récupère 1 % de ses PV max par seconde simulée **[PROPOSÉS]**.
   - [x] Générer le prototype Hasted avec plafond actif et cooldown **[PROPOSÉS]**.
   - [x] Appliquer le budget proposé : somme des menaces actives + coût élite ≤ population cible de la vague.

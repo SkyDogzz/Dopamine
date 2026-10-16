@@ -17,6 +17,12 @@ func _run() -> void:
 	session.elite_chest_drop_chance = 1.0
 	root.add_child(session)
 	await process_frame
+	if session.simulation.spawn_enemy("elite", 1, Vector2.ZERO, Vector2.ZERO, 1.0, "Volatile") != 0:
+		_fail("Elite spawn should reject an affix that has no gameplay implementation")
+		return
+	if session.simulation.spawn_enemy("chaser", 1, Vector2.ZERO, Vector2.ZERO, 1.0, "Hasted") != 0:
+		_fail("Non-elite families should reject elite-only affixes")
+		return
 	if not await _wait_until(func() -> bool: return not session.simulation.snapshot()["paused"]):
 		_fail("Elite test session should start its simulation")
 		return
