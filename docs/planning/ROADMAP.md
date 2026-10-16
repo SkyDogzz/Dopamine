@@ -514,6 +514,8 @@ Travail requis :
   - [x] Vérifier réussite garantie par pity, échec, échec critique et disparition du Flux en fin de run avec `armorless_run_state_smoke.gd`.
   - [x] Rendre les améliorations temporaires accessibles depuis l'inventaire de pause Armorless; afficher coût/solde, résultat, focus restauré et simulation toujours suspendue.
 - [ ] **P7A.4 — Longue durée**
+  - [x] Vérifier que le directeur Armorless enchaîne cinq cycles de boss aux vagues 12, 24, 36, 48 et 60 sans terminer la run : `armorless_wave_director_smoke.gd`.
+  - [x] Vérifier que le budget de population ne bloque pas les spawns et que la densité suit la difficulté : `survival_wave_spawn_smoke.gd` et `survival_difficulty_session_smoke.gd`.
   - [ ] Vérifier HP decay sans reset, pauses boss et budgets de densité.
   - [ ] Tester plusieurs cycles de boss et scaling proposé.
 - [ ] **P7A.5 — Récompenses ouvertes**
