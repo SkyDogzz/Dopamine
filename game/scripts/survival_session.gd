@@ -2511,7 +2511,8 @@ func _draw() -> void:
 		var remaining: float = float(impact["remaining"])
 		var fade := clampf(remaining / WEAPON_IMPACT_LIFETIME, 0.0, 1.0)
 		var scale := 0.7 + 0.5 * (1.0 - fade)
-		draw_set_transform(impact["position"], float(impact["rotation"]), Vector2.ONE * scale)
+		draw_set_transform(impact["position"], float(impact["rotation"]),
+				Vector2.ONE * scale * _weapon_impact_level_scale(int(impact.get("level", 1))))
 		draw_texture_rect_region(WEAPON_IMPACTS_TEXTURE, Rect2(-32.0, -32.0, 64.0, 64.0),
 			Rect2(float(impact["type"]) * 64.0, 0.0, 64.0, 64.0), Color(1.0, 1.0, 1.0, fade))
 		draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
@@ -2545,9 +2546,14 @@ func _add_weapon_impact(source_type: String, position: Vector2, is_damage_over_t
 		return
 	if _weapon_impacts.size() >= MAX_VISIBLE_WEAPON_IMPACTS:
 		_weapon_impacts.pop_front()
+	var level: int = loadout.weapon_level("minigun") if impact_type == "minigun" else 1
 	_weapon_impacts.append({
 		"type": int(WEAPON_IMPACT_TYPES[impact_type]),
 		"position": position,
 		"rotation": randf_range(-0.25, 0.25),
+		"level": level,
 		"remaining": WEAPON_IMPACT_LIFETIME,
 	})
+
+func _weapon_impact_level_scale(level: int) -> float:
+	return 1.0 + 0.06 * float(clampi(level - 1, 0, 4)) # [PROPOSED] visual-only emphasis per Minigun level.

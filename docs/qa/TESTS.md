@@ -11,7 +11,7 @@
 
 ## Feedback des niveaux d’objets en run — 2026-10-16
 
-- [x] `survival_level_feedback_smoke.gd` vérifie les notifications d’acquisition et de niveaux 1–5 pour armes et reliques; le toast reste visible à temps de simulation figé, disparaît après expiration simulée et reste dans les viewports 640×360, 1280×800 et 1920×1080.
+- [x] `survival_level_feedback_smoke.gd` vérifie les notifications d’acquisition et de niveaux 1–5 pour armes et reliques; le toast reste visible à temps de simulation figé, disparaît après expiration simulée et reste dans les viewports 640×360, 1280×800 et 1920×1080. Il vérifie aussi la croissance visuelle proposée des impacts Minigun aux cinq niveaux.
 
 ## Hub Survival — état visuel des destinations inactives — 2026-10-16
 
