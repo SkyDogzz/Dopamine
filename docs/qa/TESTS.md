@@ -66,13 +66,13 @@
 
 ## Badge d’état du HUD Survival — 2026-10-16
 
-- [ ] `survival_hud_smoke.gd` vérifie que le badge d’état change sa bordure avec les états marche et pause, en plus du libellé; assertions à exécuter avec Godot.
+- [x] `survival_hud_smoke.gd` vérifie que le badge d’état change sa bordure avec les états marche et pause, en plus du libellé; exécuté sous Godot 4.7.2, passe.
 
 ## Coffres — accent de famille — 2026-10-16
 
 - [x] `survival_chest_choice_smoke.gd` vérifie le titre cyan du coffre d’arme, le titre magenta du coffre de relique, les icônes/descriptions, le focus et l’émission de sélection inchangée.
 - [x] `survival_chest_layout_smoke.gd` passe aux viewports 640×360, 1280×720 et 1920×1080 avec descriptions longues et bonus de prochain niveau.
-- [ ] Le smoke de choix vérifie maintenant les styles distincts du nom et de la description, l’icône 32×32 nearest et le texte complet du bouton; nouvelles assertions à exécuter avec Godot.
+- [x] Le smoke de choix vérifie les styles distincts du nom et de la description, l’icône 32×32 nearest et le texte complet du bouton; `survival_chest_choice_smoke.gd` exécuté sous Godot 4.7.2, passe.
 
 ## Accueil — emblème pixel art — 2026-10-16
 
@@ -93,12 +93,12 @@
 - [x] `survival_pause_inventory_smoke.gd` vérifie le cadre élargi, le focus visible, la navigation clavier, le défilement jusqu’au dernier item et l’absence de mutation du loadout.
 - [x] Le panneau reste dans les viewports 640×360, 960×600, 1280×800 et 1600×900; `ui_viewport_layout_smoke.gd` passe aussi aux tailles 640×360, 1280×720 et 1920×1080.
 - [x] Capture 640×360 logique relue avec quatre armes et quatre reliques : deux cartes complètes restent visibles avant défilement.
-- [ ] Le smoke vérifie maintenant la hiérarchie nom/évolution/description; ces nouvelles assertions attendent une exécution avec Godot.
+- [x] Le smoke vérifie la hiérarchie nom/évolution/description; `survival_pause_inventory_smoke.gd` exécuté sous Godot 4.7.2, passe.
 
 ## Résultat de run — poids des récompenses — 2026-10-16
 
 - [x] `run_result_panel_smoke.gd` vérifie carte 360 px, icône 24×24, focus initial, ordre des actions, victoire/défaite, doublon et échec de sauvegarde.
-- [ ] Le smoke vérifie maintenant que le résumé de palier reprend la médaille existante, et que l’icône disparaît lors d’un résultat sans nouveau palier; nouvelles assertions à exécuter avec Godot.
+- [x] Le smoke vérifie que le résumé de palier reprend la médaille existante, et que l’icône disparaît lors d’un résultat sans nouveau palier; `run_result_panel_smoke.gd` exécuté sous Godot 4.7.2, passe.
 - [x] Le même smoke vérifie que l’échec de sauvegarde prend l’accent rouge et que l’accent cyan des récompenses est rétabli au prochain résultat.
 - [x] `survival_run_result_smoke.gd` confirme que le parcours victoire/défaite et la navigation restent inchangés.
 - [x] Capture fenêtrée de l’état d’échec de sauvegarde relue à 640×360 logique; le message est distinguable des récompenses et actions.
@@ -258,7 +258,7 @@ Le runner est fourni par `game/scripts/scenario_runner.gd` et consomme un fichie
 - [x] Godot 4.7.2 Linux : import headless du projet et smokes `settings_service_smoke.gd`, `ui_settings_smoke.gd` passés avec `XDG_DATA_HOME` temporaire.
 - [x] Service : valeurs par défaut, clamp `[0,100]`, valeur non finie, persistance/relecture, fichier invalide, retour sûr et bus Master fini à −80 dB pour 0 % vérifiés.
 - [x] Panneau : Theme, deux réglages, focus initial, synchro/affichage du volume, demande de fermeture par bouton et `ui_cancel`, présence des actions A/B et limites géométriques à 1280×800, 960×600, 1600×900 vérifiés.
-- [ ] `ui_settings_smoke.gd` vérifie maintenant l’ordre DISPLAY → plein écran → séparateur → volume et le style PixelHeading; nouvelles assertions à exécuter avec Godot.
+- [x] `ui_settings_smoke.gd` vérifie l’ordre DISPLAY → plein écran → séparateur → volume et le style PixelHeading; exécuté sous Godot 4.7.2, passe.
 - [x] Slider et CheckButton du Theme utilisent les couleurs de la palette néon; la poignée de volume est un rond pixel 12×12 filtré nearest. `ui_settings_smoke.gd` vérifie aussi que le focus du slider reprend le cadre doré partagé. Smokes `ui_foundation_smoke.gd`, `ui_settings_smoke.gd` et `settings_service_smoke.gd` passent; la capture Options à 640×360 logique en fenêtre 1280×720 a été inspectée.
 - [x] Régression : `sandbox_smoke.gd`, `sandbox_ui_smoke.gd` et `survival_entry_smoke.gd` passés avec des profils `XDG_DATA_HOME` isolés. Le service ne dépend pas de `SaveService` et écrit seulement ses préférences dans `user://settings.cfg`.
 - [x] Prévisualisation fenêtrée sous Xvfb aux trois tailles sans erreur de script; rendu examiné à 1280×800.
@@ -289,7 +289,7 @@ Le runner est fourni par `game/scripts/scenario_runner.gd` et consomme un fichie
 - [x] `render_visual_smoke.gd` sous Xvfb/Mesa : scène Sandbox vérifiée à 640×360 logiques dans la fenêtre par défaut 1280×720; les entités restent découpées dans la zone de simulation, sans recouvrir l’accueil. llvmpipe passe le smoke; audio et V-Sync indisponibles dans le conteneur.
 - [x] `sandbox_ui_smoke.gd` : Theme partagé, grille métriques, focus initial, spawn/inspection/DoT, pause/reprise, step/vitesse, tuning/reset et sauvegarde sentinelle inchangée. Godot 4.7.2 headless passe avec `XDG_DATA_HOME` temporaire isolé.
 - [x] `sandbox_ui_smoke.gd` vérifie aussi la barre d’outils cyan (pause/reprise), jaune (step) et rouge (reset). Capture à 640×360 logique relue; les accentuations ne changent pas l’isolation de la sauvegarde sentinelle.
-- [ ] `sandbox_ui_smoke.gd` couvre maintenant le badge de statut dans ses états pause/marche; ces nouvelles assertions restent à exécuter avec Godot.
+- [x] `sandbox_ui_smoke.gd` couvre le badge de statut dans ses états pause/marche; exécuté sous Godot 4.7.2 avec `XDG_DATA_HOME` isolé, passe.
 - [x] `ui_foundation_smoke.gd` vérifie les états normal/survol/appui/focus des barres de défilement horizontales/verticales du Theme; `sandbox_ui_smoke.gd` vérifie que le préfixe compact `WGT` tient dans le réglage d’espacement tout en gardant le tooltip explicatif. Capture Sandbox 1280×720 inspectée : poignée bleu ardoise bordée cyan, champ `WGT 0.5` entier.
 - [x] `sandbox_smoke.gd` : vérification de base Sandbox.
 - [x] Vérification statique : `main.gd` et la scène Sandbox ne référencent pas `SaveService` ni les services de progression. Le Sandbox conserve son chemin isolé vers le prototype Survival.
