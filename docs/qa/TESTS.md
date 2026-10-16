@@ -437,17 +437,17 @@ Note de clôture : le blocage historique du smoke `sandbox_ui_smoke.gd` décrit 
 ## Repère XP du HUD (2026-10-16)
 
 - [x] Le HUD reprend l’orbe XP 16×16 à sa taille native et en nearest, sans changer les valeurs ni le calcul de progression.
-- [ ] `survival_hud_smoke.gd` vérifie l’asset, sa taille, son filtrage et les bounds des lignes; il reste à exécuter avec Godot.
+- [x] `survival_hud_smoke.gd` vérifie l’asset, sa taille, son filtrage et les bounds des lignes; exécuté avec Godot 4.7.2, passe.
 
 ## Icônes de préparation du hub (2026-10-16)
 
 - [x] Équipements et arbre de compétences réutilisent chacun leur icône pixel dédiée en taille compacte, nearest.
-- [ ] `survival_hub_smoke.gd` couvre les ressources d’icône, la taille et le filtrage; il reste à exécuter avec Godot.
+- [x] `survival_hub_smoke.gd` couvre les ressources d’icône, la taille et le filtrage; exécuté avec Godot 4.7.2, passe avec les parcours, destinations inactives et focus.
 
 ## Rappel de reprise dans la pause (2026-10-16)
 
 - [x] Le statut du menu indique que la touche Échap reprend la run; le contrôle et le gel de simulation restent inchangés.
-- [ ] `pause_panel_visual_smoke.gd` vérifie le rappel et les accents d’action; il reste à exécuter avec Godot.
+- [x] `pause_panel_visual_smoke.gd` vérifie le rappel et les accents d’action; exécuté avec Godot 4.7.2, passe.
 
 ## Actions compactes de l’équipement (2026-10-16)
 
