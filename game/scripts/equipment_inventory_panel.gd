@@ -118,7 +118,7 @@ func _create_item_row(equipment: Dictionary, resources: Dictionary) -> Control:
 			continue
 		var icon := TextureRect.new()
 		icon.name = badge_data[0]
-		icon.custom_minimum_size = Vector2(18, 18)
+		icon.custom_minimum_size = Vector2(24, 24)
 		icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 		icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 		icon.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
@@ -212,11 +212,12 @@ func _create_item_row(equipment: Dictionary, resources: Dictionary) -> Control:
 	)
 	actions.add_child(equip_button)
 	var dismantle_button := Button.new()
-	dismantle_button.text = "DISMANTLE  •  %s POWDER" % DISMANTLE_POWDER[rarity]
+	var dismantle_yield: String = DISMANTLE_POWDER[rarity]
+	dismantle_button.text = "DISMANTLE  •  %s" % dismantle_yield
 	dismantle_button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	dismantle_button.add_theme_color_override("font_color", Color("#FF7181"))
 	dismantle_button.add_theme_color_override("font_hover_color", Color("#FF7181"))
-	dismantle_button.tooltip_text = "Proposed prototype dismantle yield; economy remains open for calibration."
+	dismantle_button.tooltip_text = "Proposed prototype dismantle yield: %s POWDER; economy remains open for calibration." % dismantle_yield
 	dismantle_button.pressed.connect(func() -> void:
 		dismantle_requested.emit(str(equipment.get("instance_id", "")))
 	)

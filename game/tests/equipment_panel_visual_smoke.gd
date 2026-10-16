@@ -26,6 +26,7 @@ func _run() -> void:
 	var item_content: VBoxContainer = item_layout.get_child(1)
 	var status: Label = item_content.get_child(1)
 	var actions: HBoxContainer = item_content.get_child(2)
+	var dismantle_button: Button = actions.get_child(1)
 	if panel_frame.custom_minimum_size.x < 400:
 		_fail("Equipment panel should reserve enough width for item stats and actions")
 		return
@@ -38,8 +39,9 @@ func _run() -> void:
 		_fail("Equipment rows should identify both the item slot and its rarity")
 		return
 	for badge in badges.get_children():
-		if (badge as TextureRect).texture_filter != CanvasItem.TEXTURE_FILTER_NEAREST:
-			_fail("Equipment badges should preserve the pixel art at UI scale")
+		if (badge as TextureRect).texture_filter != CanvasItem.TEXTURE_FILTER_NEAREST or \
+			(badge as TextureRect).custom_minimum_size != Vector2(24, 24):
+			_fail("Equipment badges should be legible 24px nearest-filtered pixel art")
 			return
 	if not status.text.contains("UNIQUE: LIGHTNING BURST") or status.text.contains("LIGHTNING_BURST"):
 		_fail("Unique effect IDs should be presented as readable names without code separators")
@@ -49,6 +51,20 @@ func _run() -> void:
 		(actions.get_child(1) as Button).get_theme_color("font_color").to_html(false) != "ff7181":
 		_fail("Equipment actions should share a compact row with distinct equip and dismantle intent")
 		return
+	if dismantle_button.text != "DISMANTLE  •  3 REFINED" or not dismantle_button.tooltip_text.contains("3 REFINED POWDER"):
+		_fail("The dismantle action should fit on its button and keep its full proposed yield in the tooltip")
+		return
+	var original_size: Vector2i = root.size
+	for viewport_size in [Vector2i(640, 360), Vector2i(1280, 720), Vector2i(1920, 1080)]:
+		root.size = viewport_size
+		await process_frame
+		var bounds := Rect2(Vector2.ZERO, root.get_visible_rect().size)
+		var frame_bounds := panel_frame.get_global_rect()
+		if not bounds.encloses(frame_bounds) or not frame_bounds.encloses(row.get_global_rect()) or \
+			dismantle_button.size.x < dismantle_button.get_combined_minimum_size().x:
+			_fail("Equipment details and the dismantle action should fit viewport %s" % viewport_size)
+			return
+	root.size = original_size
 	if not panel_frame.get_global_rect().size.x <= 640:
 		_fail("Equipment panel should stay within the logical 640px viewport")
 		return

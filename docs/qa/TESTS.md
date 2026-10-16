@@ -418,8 +418,9 @@ Note de clôture : le blocage historique du smoke `sandbox_ui_smoke.gd` décrit 
 
 ## Repères visuels de l’équipement (2026-10-16)
 
-- [x] Les lignes d’équipement affichent séparément l’icône de leur emplacement et celle de leur rareté, toutes deux filtrées en nearest.
-- [ ] `equipment_panel_visual_smoke.gd` couvre les deux ressources d’icône et le rendu pixel net, mais reste à exécuter : aucun binaire Godot n’est présent dans le PATH.
+- [x] Les lignes d’équipement affichent séparément l’icône de leur emplacement et celle de leur rareté, en 24×24 et nearest.
+- [x] `equipment_panel_visual_smoke.gd` vérifie les ressources, les tailles, le filtrage et les bounds à 640×360, 1280×720 et 1920×1080 sous Godot 4.7.2.
+- [x] Capture fenêtrée Xvfb relue à 640×360 logique; les icônes sont distinctes et lisibles près du détail de l’objet.
 
 ## Icône de ressource dans l’arbre de compétences (2026-10-16)
 
@@ -450,4 +451,5 @@ Note de clôture : le blocage historique du smoke `sandbox_ui_smoke.gd` décrit 
 ## Actions compactes de l’équipement (2026-10-16)
 
 - [x] Équiper/déséquiper et démanteler partagent maintenant une rangée; cyan et rouge distinguent leurs intentions, sans changer les signaux ni les règles.
-- [ ] `equipment_panel_visual_smoke.gd` vérifie l’ordre, les libellés et les couleurs; il reste à exécuter avec Godot.
+- [x] `equipment_panel_visual_smoke.gd` vérifie l’ordre, les couleurs, le rendement complet dans l’infobulle et le libellé visible sans troncature.
+- [x] `survival_inventory_smoke.gd` passe sous Godot 4.7.2; équipement, amélioration, effet unique, compétences et démantèlement restent fonctionnels.
