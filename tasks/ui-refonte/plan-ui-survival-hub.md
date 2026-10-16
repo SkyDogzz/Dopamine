@@ -1,6 +1,6 @@
 # Plan d’implémentation : `survival-hub`
 
-**Statut : proposé pour validation utilisateur.** La spec est validée; aucune implémentation ne commence avant validation conjointe de ce plan et de [`todo-ui-survival-hub.md`](todo-ui-survival-hub.md).
+**Statut : terminé.** Le hub et son intégration Survival sont livrés; voir [`INTEGRATION-ui-refonte.md`](INTEGRATION-ui-refonte.md).
 
 ## Objectif et limites
 
@@ -52,4 +52,4 @@ Les tâches détaillées, critères, fichiers probables et vérifications sont d
 
 ## Gate de validation
 
-Après validation de ce plan et de la liste de tâches, implémenter tranche par tranche. À chaque tranche, lancer les vérifications adaptées, corriger les régressions, mettre à jour la documentation nécessaire, puis créer un commit explicite et le pousser sur `origin`. Ne pas modifier les plans existants du goal principal.
+Ce plan et sa liste de tâches sont exécutés, avec commits poussés sur `origin`. Le goal principal et ses plans restent inchangés et en pause.

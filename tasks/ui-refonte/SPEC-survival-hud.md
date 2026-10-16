@@ -1,6 +1,6 @@
 # Spec : `survival-hud`
 
-**Statut : validée par l’utilisateur.** Module suivant dans la carte de capacités approuvée; le plan et les tâches restent à valider avant toute implémentation.
+**Statut : implémentée et livrée.** HUD, coffre et résultat sont intégrés et vérifiés par smokes; les limites matérielles figurent dans le bilan UI.
 
 ## Statuts de référence
 
@@ -41,14 +41,14 @@ Refondre les interfaces directement liées à une run Survival — HUD, choix de
 
 ## Critères d’acceptation
 
-- [ ] Le HUD présente santé/bouclier, XP/niveau, temps, vague/état, difficulté sélectionnée et armes équipées sans chevauchement aux viewports validés.
-- [ ] L’indicateur de boss apparaît uniquement pendant le combat de boss et reflète les valeurs courantes; l’état de victoire/défaite reste distinct.
-- [ ] Chaque écran de coffre affiche clairement le type arme/relique, les offres existantes, leurs icônes si disponibles et une description compréhensible; aucune offre ni règle de choix n’est modifiée.
+- [x] Le HUD présente santé/bouclier, XP/niveau, temps, vague/état, difficulté sélectionnée et armes équipées sans chevauchement aux viewports validés.
+- [x] L’indicateur de boss apparaît uniquement pendant le combat de boss et reflète les valeurs courantes; l’état de victoire/défaite reste distinct.
+- [x] Chaque écran de coffre affiche clairement le type arme/relique, les offres existantes, leurs icônes si disponibles et une description compréhensible; aucune offre ni règle de choix n’est modifiée.
 - [ ] Le focus initial et le parcours de sélection du coffre sont visibles et utilisables à la souris, au clavier et à la manette; les choix restent suspendus jusqu’à sélection valide.
-- [ ] L’écran de résultat affiche les données réelles de run et de récompense, couvre absence de profil, doublon et échec de sauvegarde, et garde la run arrêtée.
-- [ ] La refonte ne change aucune horloge, formule de dégâts, récompense, sélection d’objet ou progression de simulation.
-- [ ] Aucun nouvel accès du Sandbox à la progression normale ou au `SaveService` n’est introduit.
-- [ ] Les scènes restent cohérentes avec le Theme partagé et passent les smokes ciblés et les revues de layout disponibles.
+- [x] L’écran de résultat affiche les données réelles de run et de récompense, couvre absence de profil, doublon et échec de sauvegarde, et garde la run arrêtée.
+- [x] La refonte ne change aucune horloge, formule de dégâts, récompense, sélection d’objet ou progression de simulation.
+- [x] Aucun nouvel accès du Sandbox à la progression normale ou au `SaveService` n’est introduit.
+- [x] Les scènes restent cohérentes avec le Theme partagé et passent les smokes ciblés et les revues de layout disponibles.
 
 ## Commandes et vérification prévues
 
@@ -76,4 +76,4 @@ Refondre les interfaces directement liées à une run Survival — HUD, choix de
 
 ## Critère de sortie
 
-Après validation de cette spec par l’utilisateur, produire un plan détaillé et une liste de tâches dans `tasks/ui-refonte/`, les soumettre séparément à validation, puis commencer l’implémentation incrémentale avec TDD.
+La spec, le plan et les tâches sont exécutés selon l’intention UI validée. Voir [`INTEGRATION-ui-refonte.md`](INTEGRATION-ui-refonte.md) pour les tests et limites.

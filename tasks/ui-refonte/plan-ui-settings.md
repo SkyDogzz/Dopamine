@@ -1,6 +1,6 @@
 # Plan d’implémentation — `ui-settings`
 
-**Statut : approuvé par l’utilisateur.** Ce plan suit la spec approuvée [`SPEC-ui-settings.md`](SPEC-ui-settings.md). La liste détaillée des tâches attend encore validation avant toute modification de code.
+**Statut : terminé.** Le service, le panneau et les intégrations prévues sont livrés; voir [`INTEGRATION-ui-refonte.md`](INTEGRATION-ui-refonte.md).
 
 ## Vue d’ensemble
 
@@ -71,4 +71,4 @@ Au checkpoint, lancer les smokes pertinents et `ctest --test-dir build --output-
 
 ## Point de validation
 
-La liste détaillée proposée est dans [`todo-ui-settings.md`](todo-ui-settings.md). Aucun code ne commence avant sa validation.
+La liste détaillée exécutée est dans [`todo-ui-settings.md`](todo-ui-settings.md); le gate est levé et les résultats figurent dans [`INTEGRATION-ui-refonte.md`](INTEGRATION-ui-refonte.md).

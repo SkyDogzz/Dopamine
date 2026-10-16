@@ -1,6 +1,6 @@
 # Spec : `sandbox-ui`
 
-**Statut : implémentée selon l’intention UI confirmée.** L’utilisateur a demandé de poursuivre les décisions et l’implémentation sans checkpoints intermédiaires.
+**Statut : implémentée et livrée.** Refonte visuelle locale, smoke et isolation Sandbox vérifiés; aucune capacité de progression n’a été ajoutée.
 
 ## Statuts de référence
 

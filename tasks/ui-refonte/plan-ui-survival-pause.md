@@ -1,6 +1,6 @@
 # Plan d’implémentation — `survival-pause`
 
-**Statut : proposé pour validation utilisateur.** La spec est approuvée. La liste de tâches puis l’implémentation attendent leurs validations respectives.
+**Statut : terminé.** Pause, Options, inventaire et abandon sont livrés; voir [`INTEGRATION-ui-refonte.md`](INTEGRATION-ui-refonte.md).
 
 Spec de référence : [`SPEC-survival-pause.md`](SPEC-survival-pause.md).
 
@@ -80,4 +80,4 @@ Le checkpoint doit aussi lancer les smokes ciblés sur options, inventaire, dép
 
 ## Gate de validation
 
-Après validation de ce plan, rédiger et soumettre la checklist détaillée. Après approbation de celle-ci seulement, démarrer tâche par tâche par le smoke, effectuer le changement minimal, vérifier et committer/pousser les tranches cohérentes. Ne pas toucher aux plans du goal principal, qui reste en pause.
+La checklist a été exécutée tâche par tâche; les commits sont poussés sur `origin`. Le goal principal reste inchangé et en pause.

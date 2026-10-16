@@ -1,6 +1,6 @@
 # Spec : `survival-pause`
 
-**Statut : proposée pour validation utilisateur.** Aucun plan détaillé, tâche ou code ne commence avant validation de cette spec.
+**Statut : implémentée et livrée.** Pause, Options, inventaire en lecture seule et abandon sont intégrés; les invariants de simulation et de progression sont vérifiés par smokes.
 
 ## Statuts de référence
 
@@ -52,17 +52,17 @@ Donner accès à une pause de run complète, explicite et navigable, sans progre
 
 ## Critères d’acceptation
 
-- [ ] Échap ouvre Pause pendant une run active; Échap et **Reprendre** restaurent la simulation sans saut d’horloge ni mouvement ennemi pendant l’intervalle suspendu.
-- [ ] La pause bloque toutes les horloges de jeu concernées, y compris le temps actif de run et de vague; les captures avant/après l’attente dans Pause/Options restent identiques.
-- [ ] Choix d’arme initial, coffre et écran de résultat conservent leurs états et priorités; Échap ne les ferme ni ne les remplace.
+- [x] Échap ouvre Pause pendant une run active; Échap et **Reprendre** restaurent la simulation sans saut d’horloge ni mouvement ennemi pendant l’intervalle suspendu.
+- [x] La pause bloque toutes les horloges de jeu concernées, y compris le temps actif de run et de vague; les captures avant/après l’attente dans Pause/Options restent identiques.
+- [x] Choix d’arme initial, coffre et écran de résultat conservent leurs états et priorités; Échap ne les ferme ni ne les remplace.
 - [ ] Pause présente les quatre actions prévues et un focus initial visible; navigation souris/clavier/manette fonctionne et le focus est restauré à chaque retour.
-- [ ] Options fonctionne depuis Pause; fermer Options revient à Pause sans reprise, et changements de réglages restent ceux du panneau partagé.
-- [ ] L’inventaire liste exactement les armes et reliques possédées dans le loadout courant, avec les icônes, noms, niveaux et descriptions correspondant au catalogue.
-- [ ] L’évolution affichée reflète les prérequis canoniques du catalogue et le niveau runtime; les éléments incomplets ou non évolués ne sont pas présentés comme évolués.
-- [ ] Aucun contrôle de la pause ou de l’inventaire ne permet de modifier équipement permanent, arbre de compétences, loadout de run ou progression sauvegardée.
-- [ ] Abandonner exige une confirmation. Annuler conserve état et run; confirmer retourne à l’accueil, n’octroie aucune récompense de victoire et ne laisse pas de simulation active.
-- [ ] Les tests d’isolation continuent de démontrer qu’aucun chemin du Sandbox ne dépend de `SaveService` ou des services de progression.
-- [ ] L’interface reste lisible aux tailles de viewport de référence et conserve la direction pixel art néon et le focus visible.
+- [x] Options fonctionne depuis Pause; fermer Options revient à Pause sans reprise, et changements de réglages restent ceux du panneau partagé.
+- [x] L’inventaire liste exactement les armes et reliques possédées dans le loadout courant, avec les icônes, noms, niveaux et descriptions correspondant au catalogue.
+- [x] L’évolution affichée reflète les prérequis canoniques du catalogue et le niveau runtime; les éléments incomplets ou non évolués ne sont pas présentés comme évolués.
+- [x] Aucun contrôle de la pause ou de l’inventaire ne permet de modifier équipement permanent, arbre de compétences, loadout de run ou progression sauvegardée.
+- [x] Abandonner exige une confirmation. Annuler conserve état et run; confirmer retourne à l’accueil, n’octroie aucune récompense de victoire et ne laisse pas de simulation active.
+- [x] Les tests d’isolation continuent de démontrer qu’aucun chemin du Sandbox ne dépend de `SaveService` ou des services de progression.
+- [x] L’interface reste lisible aux tailles de viewport de référence et conserve la direction pixel art néon et le focus visible.
 
 ## Vérifications prévues
 
@@ -85,4 +85,4 @@ Donner accès à une pause de run complète, explicite et navigable, sans progre
 
 ## Critère de sortie
 
-Après validation de cette spec, produire le plan détaillé et les tâches de `survival-pause` dans `tasks/ui-refonte/`, les soumettre à validation, puis seulement commencer l’implémentation.
+La spec, le plan et les tâches sont exécutés. Les tests d’intégration confirment les horloges gelées et la lecture seule de l’inventaire.

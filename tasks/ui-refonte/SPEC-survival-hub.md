@@ -1,6 +1,6 @@
 # Spec : `survival-hub`
 
-**Statut : proposée pour validation utilisateur.** Aucun plan détaillé, tâche ou code ne commence avant validation de cette spec.
+**Statut : implémentée et livrée.** Difficultés, préparation, panneaux existants et transmission vers Survival sont vérifiés par smokes; Chaos garde les limites [OUVERT] et les multiplicateurs restent [PROPOSÉ].
 
 ## Statuts de référence
 
@@ -65,19 +65,19 @@ Compléter le parcours **Jouer → préparation Survival → lancement explicite
 
 ## Critères d’acceptation
 
-- [ ] **Jouer** depuis l’accueil ouvre le hub; la navigation retour vers l’accueil fonctionne et restaure un focus visible.
-- [ ] Le hub présente Survival comme seul mode jouable et une commande clairement identifiée pour lancer la run.
-- [ ] Easy est disponible sur un profil neuf; Normal, Hard, Nightmare et Chaos respectent l’ordre séquentiel de déblocage.
-- [ ] Une victoire sur la difficulté courante débloque uniquement la suivante; défaite, abandon et doublon de récompense ne font pas progresser les déblocages.
-- [ ] Les déblocages sont persistés dans le profil normal et restaurés après redémarrage; les anciens profils migrent sans perte des données existantes.
-- [ ] Les multiplicateurs appliqués correspondent à la table GDD provisoire ci-dessus, restent centralisés et sont identifiés **[PROPOSÉS]** dans la documentation/code de tuning.
-- [ ] Le choix de difficulté atteint la session et la récompense; la session consomme les multiplicateurs pertinents sans modifier les comportements spéciaux encore ouverts de Chaos.
-- [ ] Les panneaux existants Équipement et Compétences sont utilisables dans le hub; les changements s’appliquent à la run suivante.
-- [ ] Pendant une run, aucun contrôle ou chemin UI ne permet de modifier l’équipement permanent ou l’arbre de compétences.
+- [x] **Jouer** depuis l’accueil ouvre le hub; la navigation retour vers l’accueil fonctionne et restaure un focus visible.
+- [x] Le hub présente Survival comme seul mode jouable et une commande clairement identifiée pour lancer la run.
+- [x] Easy est disponible sur un profil neuf; Normal, Hard, Nightmare et Chaos respectent l’ordre séquentiel de déblocage.
+- [x] Une victoire sur la difficulté courante débloque uniquement la suivante; défaite, abandon et doublon de récompense ne font pas progresser les déblocages.
+- [x] Les déblocages sont persistés dans le profil normal et restaurés après redémarrage; les anciens profils migrent sans perte des données existantes.
+- [x] Les multiplicateurs appliqués correspondent à la table GDD provisoire ci-dessus, restent centralisés et sont identifiés **[PROPOSÉS]** dans la documentation/code de tuning.
+- [x] Le choix de difficulté atteint la session et la récompense; la session consomme les multiplicateurs pertinents sans modifier les comportements spéciaux encore ouverts de Chaos.
+- [x] Les panneaux existants Équipement et Compétences sont utilisables dans le hub; les changements s’appliquent à la run suivante.
+- [x] Pendant une run, aucun contrôle ou chemin UI ne permet de modifier l’équipement permanent ou l’arbre de compétences.
 - [ ] Succès et Bestiaire sont visibles et atteignables par focus, restent inertes à la souris, au clavier et à la manette, et n’ajoutent aucune donnée fictive.
-- [ ] L’action **Lancer la run** ouvre le parcours de run normal, transmet la difficulté et conserve le choix d’arme initial.
-- [ ] Aucune donnée du Sandbox n’est lue/modifiée; aucune dépendance Sandbox → `SaveService` ou progression n’est ajoutée.
-- [ ] La navigation et les panneaux restent lisibles aux résolutions UI de référence, avec focus visible et sans action nécessitant une souris.
+- [x] L’action **Lancer la run** ouvre le parcours de run normal, transmet la difficulté et conserve le choix d’arme initial.
+- [x] Aucune donnée du Sandbox n’est lue/modifiée; aucune dépendance Sandbox → `SaveService` ou progression n’est ajoutée.
+- [x] La navigation et les panneaux restent lisibles aux résolutions UI de référence, avec focus visible et sans action nécessitant une souris.
 
 ## Vérifications prévues
 
@@ -100,4 +100,4 @@ Compléter le parcours **Jouer → préparation Survival → lancement explicite
 
 ## Critère de sortie
 
-Après validation de cette spec, produire le plan détaillé et la liste de tâches `survival-hub`, les soumettre à validation, puis seulement commencer l’implémentation.
+La spec, le plan et les tâches sont exécutés. Les multiplicateurs restent **[PROPOSÉS]** et les règles spéciales Chaos **[OUVERTES]**.

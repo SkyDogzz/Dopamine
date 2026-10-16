@@ -1,6 +1,6 @@
 # Tâches : `survival-hub`
 
-**Statut : validé par l’utilisateur.** Tâches 1 à 5 terminées; arrêt au checkpoint pour revue utilisateur avant le module suivant.
+**Statut : terminé.** Les tâches d’implémentation et d’intégration sont achevées; revue matérielle documentée comme non effectuée.
 
 ## Tâche 1 — Données de difficulté et contrat de profil
 
@@ -49,9 +49,9 @@
 - [x] Les panneaux Équipement et Compétences existants sont accessibles et utilisables dans le hub; fermeture rend le focus au contrôle d’origine.
 - [x] Succès et Bestiaire sont visibles et focalisables, mais ne déclenchent aucune action ni chargement de donnée dédiée.
 - [x] Une erreur de chargement du profil n’entraîne ni profil de secours ni contournement de progression.
-- [x] Les contrôles utilisent les commandes natives et le focus visible du thème partagé; validation automatisée souris/clavier/manette couverte par contrôles focusables. Essai matériel manette à faire au checkpoint.
+- [x] Les contrôles utilisent les commandes natives et le focus visible du thème partagé; validation automatisée souris/clavier/manette couverte par contrôles focusables. Essai matériel manette indisponible et consigné dans le bilan final.
 
-**Vérification :** `survival_hub_smoke.gd` passe : profil neuf ou illisible, difficultés sélectionnée/verrouillées puis déblocage, Succès/Bestiaire inertes, panneaux et restauration du focus; la revue fenêtrée et l’essai manette restent au checkpoint.
+**Vérification :** `survival_hub_smoke.gd` passe : profil neuf ou illisible, difficultés sélectionnée/verrouillées puis déblocage, Succès/Bestiaire inertes, panneaux et restauration du focus; la revue matérielle reste non effectuée et est consignée dans le bilan final.
 
 **Dépendances :** Tâches 1 et 2; contrat `play_requested` du module `launch-navigation`.
 
@@ -88,9 +88,9 @@
 - [x] La séparation Sandbox/progression normale est vérifiée statiquement et par smoke adapté.
 - [x] La navigation tient dans les viewports UI de référence; essai matériel manette et capture fenêtrée restent non vérifiés.
 - [x] Les docs de référence et statuts [VALIDÉ]/[PROPOSÉ]/[OUVERT] restent exacts.
-- [x] Diff revue, commit explicite créé et poussé sur `origin`; l’implémentation s’arrête pour revue utilisateur avant le module suivant.
+- [x] Diff revue, commit explicite créé et poussé sur `origin`; l’utilisateur a validé le passage au module suivant.
 
-**Vérification :** Avec `tools/local/godot-4.7.2/Godot_v4.7.2-stable_linux.x86_64`, passent `survival_difficulty_profile_smoke`, `survival_difficulty_unlock_smoke`, `survival_difficulty_session_smoke`, `survival_hub_smoke`, `survival_hub_layout_smoke`, `survival_entry_smoke`, `survival_run_meta_access_smoke`, `survival_inventory_smoke`, `survival_progression_smoke`, `survival_starting_weapon_smoke`, `survival_run_result_smoke`, `launch_navigation_smoke`, `progression_service_smoke`, `sandbox_smoke` et l’import headless de l’éditeur. La disposition est vérifiée à 960×600, 1280×800 et 1600×900. `git diff --check` passe. Une revue a aussi corrigé un appel de dégâts de contact inatteignable; le smoke de difficulté couvre désormais ce cas. La capture fenêtrée et la manette physique ne sont pas disponibles dans cet environnement. Les smokes lourds `render_visual_smoke` et `sandbox_ui_smoke` ont précédemment dépassé leur délai dans cet environnement headless et ne sont pas déclarés passants.
+**Vérification :** Les tests ciblés du hub et ses intégrations ont passé à leur livraison. Lors de la clôture du 2026-10-16, la suite intégrée de 21 smokes a aussi passé, dont `survival_hub_smoke`, `survival_hub_layout_smoke`, `launch_navigation_smoke`, `survival_entry_smoke`, `survival_inventory_smoke`, `survival_starting_weapon_smoke`, `survival_run_result_smoke`, `sandbox_smoke` et `sandbox_ui_smoke`. La disposition est couverte aux viewports de référence par les smokes de layout. Une revue a corrigé un appel de dégâts de contact inatteignable; le smoke de difficulté couvre ce cas. La revue matérielle d’une vraie manette reste indisponible.
 
 **Dépendances :** Tâches 1–4.
 

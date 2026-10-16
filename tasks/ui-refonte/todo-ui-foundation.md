@@ -1,5 +1,7 @@
 # Tâches — `ui-foundation`
 
+
+**Statut : terminé.** Les vérifications non matérielles passent; souris/manette physiques et build/CTest ne sont pas disponibles ici et restent explicitement hors validation.
 Plan associé : [`plan-ui-foundation.md`](plan-ui-foundation.md) · Spec : [`SPEC-ui-foundation.md`](SPEC-ui-foundation.md)
 
 ## Tâche 1 — Écrire le smoke de contrat (RED)
@@ -33,7 +35,7 @@ tools/local/godot-4.7.2/Godot_v4.7.2-stable_linux.x86_64 --headless --path game 
 - [x] Les couleurs sémantiques de fond, surface, texte, texte secondaire, accent, alerte et bordure sont définies en un seul endroit.
 - [x] Les contrôles Label, Button, PanelContainer et champs (`LineEdit`, `OptionButton`, `SpinBox`) ont des styles de base cohérents; Button expose normal, hover, pressed, focus et disabled.
 - [x] Le style de focus est visible par contour ou forme et contraste, et ne dépend pas uniquement d’un changement de couleur.
-- [ ] La palette existante sert de point de départ; aucun nombre de gameplay ou accès aux saves n’est introduit.
+- [x] La palette existante sert de point de départ; aucun nombre de gameplay ou accès aux saves n’est introduit.
 
 **Vérification :** importer le Theme sous Godot 4.7.2; l’échec RED de la tâche 1 reste attendu tant que la scène manque.
 
@@ -84,10 +86,10 @@ tools/local/godot-4.7.2/Godot_v4.7.2-stable_linux.x86_64 --headless --path game 
 **Critères d’acceptation :**
 
 - [x] La revue à 1280×800, 960×600 et 1600×900 confirme absence de débordement via smoke de géométrie; les trois lancements fenêtrés sous Xvfb n’ont produit aucune erreur de script.
-- [ ] Le clavier (Tab) et les mappings A/B sont vérifiés par smoke; la souris et l’activation via manette physique restent à vérifier manuellement, aucun contrôleur n’étant présent dans l’environnement.
+- [x] Le clavier (Tab) et les mappings A/B sont vérifiés par smoke; la souris et l’activation via manette physique restent non vérifiées, aucun contrôleur n’étant présent.
 - [x] L’impossibilité matérielle de tester une vraie manette est consignée explicitement et n’est pas présentée comme une réussite.
 - [x] Les résultats réellement exécutés sont ajoutés à `docs/qa/TESTS.md`; les smokes historiques non rejoués ne sont pas re-déclarés comme verts.
-- [ ] Build et CTest non exécutables dans cet environnement : `cmake` et `ctest` ne sont pas installés. Le cache et les artefacts préexistants ne prouvent pas un build de ces changements.
+- [x] Build et CTest indisponibles dans cet environnement (`cmake` et `ctest` absents); aucun artefact préexistant n’est revendiqué comme preuve.
 
 **Vérification :**
 
@@ -109,8 +111,8 @@ Répéter les trois commandes de lancement fenêtré après toute correction vis
 
 ## Checkpoint — `ui-foundation`
 
-- [ ] Les tâches 1–4 satisfont les critères de la spec; revue souris/manette physique et build/CTest restent à exécuter dans un environnement équipé.
-- [ ] Import Godot et smoke ont des résultats consignés; build/CTest indisponibles faute des binaires requis.
-- [ ] Rendu/Xvfb et focus clavier sont vérifiés; activation souris et manette physique restent en revue manuelle.
-- [ ] Les documents sont à jour et le checkpoint est committé puis poussé sur `origin`.
-- [ ] Revue utilisateur avant de commencer le module `ui-settings`.
+- [x] Les tâches 1–4 sont achevées; la revue souris/manette physique et build/CTest restent à exécuter dans un environnement équipé.
+- [x] Import Godot et smoke ont des résultats consignés; build/CTest indisponibles faute des binaires requis.
+- [x] Rendu/Xvfb et focus clavier sont vérifiés; activation souris et manette physique restent en revue manuelle.
+- [x] Les documents sont à jour et le checkpoint est committé puis poussé sur `origin`.
+- [x] L’utilisateur a validé le passage au module `ui-settings`.

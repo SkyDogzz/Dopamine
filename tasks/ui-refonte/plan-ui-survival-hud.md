@@ -1,6 +1,6 @@
 # Plan d’implémentation : `survival-hud`
 
-**Statut : plan validé par l’utilisateur.** La checklist détaillée et toute implémentation attendent encore validation.
+**Statut : terminé.** HUD, coffres et résultats sont livrés; voir [`INTEGRATION-ui-refonte.md`](INTEGRATION-ui-refonte.md).
 
 ## Objectif et limites
 
@@ -50,4 +50,4 @@ Les tâches détaillées, critères d’acceptation, fichiers probables et comma
 
 ## Gate de validation
 
-Après validation de ce plan, produire la checklist détaillée par tranches et la soumettre séparément. Après validation de la checklist, implémenter en petits incréments avec smokes d’abord, vérifications ciblées, documentation nécessaire, puis commits explicites poussés sur `origin`. Ne pas modifier les plans existants du goal principal.
+La checklist a été exécutée en incréments avec smokes et commits poussés sur `origin`. Le goal principal et ses plans restent inchangés et en pause.

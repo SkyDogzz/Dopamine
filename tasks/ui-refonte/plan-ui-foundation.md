@@ -1,6 +1,6 @@
 # Plan d’implémentation — `ui-foundation`
 
-**Statut : approuvé par l’utilisateur.** Ce plan suit la spec approuvée [`SPEC-ui-foundation.md`](SPEC-ui-foundation.md). Il ne couvre pas les autres modules UI.
+**Statut : terminé.** La séquence et les gates historiques sont achevés; le détail de validation est dans [`INTEGRATION-ui-refonte.md`](INTEGRATION-ui-refonte.md).
 
 ## Vue d’ensemble
 
@@ -80,4 +80,4 @@ tools/local/godot-4.7.2/Godot_v4.7.2-stable_linux.x86_64 --path game --scene res
 
 ## Point de validation
 
-Les tâches détaillées sont dans [`todo-ui-foundation.md`](todo-ui-foundation.md). Après approbation de cette liste, implémenter chaque tranche avec ses vérifications et commits. Les specs et plans des autres modules attendent la fin du cycle de `ui-foundation`, selon l’ordre validé de la carte.
+La liste détaillée est dans [`todo-ui-foundation.md`](todo-ui-foundation.md). Les sept modules ont depuis été exécutés dans l’ordre de la carte; les gates historiques sont levés. Voir [`INTEGRATION-ui-refonte.md`](INTEGRATION-ui-refonte.md).

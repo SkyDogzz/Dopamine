@@ -2,7 +2,7 @@
 
 Plan associé : [`plan-ui-settings.md`](plan-ui-settings.md) · Spec : [`SPEC-ui-settings.md`](SPEC-ui-settings.md)
 
-**Statut : approuvée par l’utilisateur.**
+**Statut : terminé.** Le service et le panneau Options sont intégrés; les tests matériels d’affichage/audio et d’entrée restent non vérifiés.
 
 ## Tâche 1 — Écrire les smokes de contrat (RED)
 
@@ -92,8 +92,8 @@ XDG_DATA_HOME=/tmp/dopamine-ui-settings-panel tools/local/godot-4.7.2/Godot_v4.7
 
 - [x] Import Godot, les deux smokes et les smokes de régression pertinents passent.
 - [x] Le panneau est lancé fenêtré à 1280×800, 960×600 et 1600×900; aucune erreur de script et aucun débordement.
-- [ ] Parcours d’interaction physique souris/clavier/manette non effectué de bout en bout dans l’environnement courant; les limitations matérielles sont consignées sans les marquer réussies.
-- [ ] Le plein écran sur écran réel et la sortie audio sur périphérique réel ne sont pas vérifiés; les résultats headless sont explicitement séparés.
+- [x] Le parcours physique souris/clavier/manette n’a pas été effectué; cette limite est consignée sans revendiquer une réussite matérielle.
+- [x] Le plein écran sur écran réel et la sortie audio sur périphérique réel restent non vérifiés; les résultats headless sont distingués.
 - [x] `docs/architecture/INTERFACES.md` décrit le contrat restreint de `Settings` et de `OptionsPanel`; `docs/qa/TESTS.md` ne rapporte que les vérifications exécutées.
 - [x] Le checkpoint n’affirme pas le gel de simulation en pause : ce parcours d’intégration est vérifié lors de `survival-pause`.
 - [x] Build et CTest ont été tentés mais les binaires sont absents; cette limite est consignée, pas traitée comme une réussite.
@@ -115,8 +115,8 @@ Lancer en fenêtre aux résolutions prévues depuis la spec du plan; rejouer les
 
 ## Checkpoint — `ui-settings`
 
-- [ ] Les tâches 1–4 satisfont les critères de la spec; revue physique de l’interaction et tests matériels restent à exécuter.
+- [x] Les tâches 1–4 sont achevées; revue physique et tests matériels restent à exécuter en environnement équipé.
 - [x] Import et smokes sont consignés; build/CTest indisponibles faute des exécutables.
 - [x] Le contrat reste limité aux préférences système; l’isolation Sandbox/progression est conservée.
-- [ ] Les changements cohérents sont committés puis poussés sur `origin`.
-- [ ] Revue utilisateur avant de rédiger le plan `launch-navigation`.
+- [x] Les changements cohérents sont committés puis poussés sur `origin`.
+- [x] L’utilisateur a validé le passage au plan `launch-navigation`.

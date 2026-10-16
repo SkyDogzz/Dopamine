@@ -1,6 +1,6 @@
 # Spec : `ui-settings`
 
-**Statut : approuvée par l’utilisateur.** Cette spec suit `ui-foundation` dans la carte approuvée. Le plan détaillé reste à valider avant toute implémentation.
+**Statut : implémentée et livrée.** Le service, le panneau et l’intégration de pause ont passé leurs smokes; les essais plein écran/audio sur matériel réel restent non vérifiés.
 
 ## Statuts de référence
 
@@ -41,14 +41,14 @@ Fournir un écran Options réutilisable depuis le menu d’accueil, puis depuis 
 
 ## Critères d’acceptation
 
-- [ ] Options montre les deux réglages confirmés, sans commandes ou réglages non implémentés.
-- [ ] Le plein écran et le volume général ont un état lisible, changent dès l’interaction et restent synchronisés quand l’écran est rouvert.
-- [ ] Les préférences choisies sont restaurées au démarrage si la persistance proposée est validée; fichier absent, illisible ou valeurs hors limites donnent des valeurs par défaut sûres.
+- [x] Options montre les deux réglages confirmés, sans commandes ou réglages non implémentés.
+- [x] Le plein écran et le volume général ont un état lisible, changent dès l’interaction et restent synchronisés quand l’écran est rouvert.
+- [x] Les préférences choisies sont restaurées au démarrage si la persistance proposée est validée; fichier absent, illisible ou valeurs hors limites donnent des valeurs par défaut sûres.
 - [ ] Le panneau se parcourt à la souris, au clavier et à la manette; le focus initial et le retour vers le propriétaire de navigation sont visibles et cohérents.
-- [ ] Le contrôle de volume couvre tout son intervalle, affiche sa valeur et permet le silence à 0 % sans valeur NaN ou infinie transmise à `AudioServer`.
-- [ ] L’ouverture et la fermeture du panneau ne manipulent aucun état de simulation. Une intégration depuis une pause maintient simulation et horloges suspendues; cette vérification d’intégration complète est réalisée avec `survival-pause`.
-- [ ] Les préférences utilisent un fichier distinct des saves; les tests confirment l’absence d’appel ou de dépendance vers `SaveService` et les services de progression.
-- [ ] L’interface utilise le thème partagé, conserve un focus visible et s’adapte au viewport logique existant.
+- [x] Le contrôle de volume couvre tout son intervalle, affiche sa valeur et permet le silence à 0 % sans valeur NaN ou infinie transmise à `AudioServer`.
+- [x] L’ouverture et la fermeture du panneau ne manipulent aucun état de simulation. Une intégration depuis une pause maintient simulation et horloges suspendues; cette vérification d’intégration complète est réalisée avec `survival-pause`.
+- [x] Les préférences utilisent un fichier distinct des saves; les tests confirment l’absence d’appel ou de dépendance vers `SaveService` et les services de progression.
+- [x] L’interface utilise le thème partagé, conserve un focus visible et s’adapte au viewport logique existant.
 
 ## Vérification prévue
 
@@ -68,4 +68,4 @@ Fournir un écran Options réutilisable depuis le menu d’accueil, puis depuis 
 
 ## Critère de sortie
 
-La spec est satisfaite quand son contenu et ses choix proposés/ouvert sont validés, puis décomposés en plan et tâches avant toute modification du code.
+La spec et son plan ont été exécutés; les choix **[PROPOSÉS]** et **[OUVERTS]** conservent leur statut éditorial.

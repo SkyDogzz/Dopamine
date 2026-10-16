@@ -1,6 +1,6 @@
 # Spec : `ui-foundation`
 
-**Statut : proposition à valider.** Cette spec couvre le premier module de la carte approuvée [`UI_CAPABILITY_MAP.md`](../../UI_CAPABILITY_MAP.md). Elle ne commence pas sa planification ni son implémentation avant revue.
+**Statut : implémentée et livrée.** La spec a été validée dans la conversation; les critères automatisables sont vérifiés. Le parcours matériel souris/manette reste non vérifié faute de périphériques.
 
 ## Hypothèses
 
@@ -22,13 +22,13 @@ Donner à toutes les interfaces une base visuelle et d’interaction cohérente,
 
 ## Critères d’acceptation
 
-- [ ] Un thème partagé fournit les couleurs, styles de texte, panneaux, boutons, champs et espacements nécessaires aux écrans de la carte.
-- [ ] Les styles distinguent au minimum les états normal, survol, pressé, focus et désactivé; le focus clavier/manette est visible sans dépendre uniquement de la couleur.
+- [x] Un thème partagé fournit les couleurs, styles de texte, panneaux, boutons, champs et espacements nécessaires aux écrans de la carte.
+- [x] Les styles distinguent au minimum les états normal, survol, pressé, focus et désactivé; le focus clavier/manette est visible sans dépendre uniquement de la couleur.
 - [ ] Un parcours d’exemple utilisant les composants partagés se parcourt à la souris, au clavier et à la manette avec activation cohérente.
-- [ ] Les conteneurs et composants s’adaptent au viewport étendu; aucune géométrie d’écran complet ne repose uniquement sur des positions absolues.
-- [ ] Les textes secondaires restent lisibles sur les surfaces choisies et la hiérarchie visuelle donne priorité à l’action principale.
-- [ ] Les écrans existants peuvent adopter le thème sans devoir recopier des styles locaux divergents.
-- [ ] Aucun changement n’affecte la logique de simulation, les saves, les règles de progression ou l’isolation du Sandbox.
+- [x] Les conteneurs et composants s’adaptent au viewport étendu; aucune géométrie d’écran complet ne repose uniquement sur des positions absolues.
+- [x] Les textes secondaires restent lisibles sur les surfaces choisies et la hiérarchie visuelle donne priorité à l’action principale.
+- [x] Les écrans existants peuvent adopter le thème sans devoir recopier des styles locaux divergents.
+- [x] Aucun changement n’affecte la logique de simulation, les saves, les règles de progression ou l’isolation du Sandbox.
 
 ## Commandes
 

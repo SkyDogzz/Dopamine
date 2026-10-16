@@ -102,4 +102,4 @@ Plan : [`plan-ui-survival-pause.md`](plan-ui-survival-pause.md) · Spec : [`SPEC
 
 ## Gate d’implémentation
 
-Après validation de la présente checklist, travailler une tâche à la fois selon smoke d’abord → changement minimal → vérification adaptée → commit/push explicite. Ne pas commencer le code avant cette validation.
+Checklist exécutée selon smoke d’abord → changement minimal → vérification adaptée → commit/push explicite. Le gate a été levé selon la demande de poursuivre sans checkpoints.

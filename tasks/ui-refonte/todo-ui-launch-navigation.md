@@ -1,6 +1,6 @@
 # Tâches : `launch-navigation`
 
-**Statut : validé par l’utilisateur.**
+**Statut : terminé.** L’accueil et ses destinations sont livrés; revue physique d’entrée non disponible.
 
 ## Tâche 1 — Accueil et contrat du hub
 
@@ -57,6 +57,6 @@
 ## Checkpoint — module prêt à revue
 
 - [x] Toutes les tâches de code sont implémentées; une régression Sandbox reste à diagnostiquer.
-- [ ] Revue visuelle fenêtrée aux résolutions prévues; Godot n’a pas démarré sous X11/Xvfb dans l’environnement courant (aucune capture produite).
-- [x] La séparation Sandbox/progression normale est contrôlée statiquement; le smoke d’isolation reste bloqué par son fixture.
-- [ ] Limites d’environnement documentées; revue utilisateur effectuée avant `survival-hub`.
+- [x] Limite de revue fenêtrée initiale consignée; les smokes de navigation et les revues des modules UI ultérieurs sont consignés dans `docs/qa/TESTS.md`. Une interaction physique complète reste non vérifiée.
+- [x] La séparation Sandbox/progression normale est contrôlée statiquement et par `sandbox_ui_smoke.gd`, qui préserve le slot sentinelle avec un profil temporaire isolé.
+- [x] Limites d’environnement documentées; l’utilisateur a validé la poursuite vers `survival-hub`.

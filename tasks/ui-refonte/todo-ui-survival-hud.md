@@ -2,7 +2,7 @@
 
 Plan associé : [`plan-ui-survival-hud.md`](plan-ui-survival-hud.md) · Spec : [`SPEC-survival-hud.md`](SPEC-survival-hud.md)
 
-**Statut : validé par l’utilisateur.** Tâches 1 à 4 terminées; arrêt pour revue utilisateur avant `survival-pause`.
+**Statut : terminé.** HUD, coffre et résultat sont achevés; revue matérielle documentée comme non effectuée.
 
 ## Tâche 1 — Contrat et refonte du HUD
 
@@ -67,7 +67,7 @@ Plan associé : [`plan-ui-survival-hud.md`](plan-ui-survival-hud.md) · Spec : [
 - [x] Les bounds et le focus sont validés aux trois viewports de référence; les essais physiques/fenêtrés indisponibles sont explicitement signalés.
 - [x] Les smokes Survival ciblés, smoke Sandbox d’isolation, import Godot et `git diff --check` passent; les limites sont décrites sans être masquées.
 - [x] La revue confirme l’absence de changement aux règles, récompenses, choix de coffre, services de sauvegarde et frontières Sandbox/progression.
-- [x] Les références n’ont pas nécessité de modification de contrat; commit explicite poussé sur `origin`, puis arrêt pour revue avant `survival-pause`.
+- [x] Les références n’ont pas nécessité de modification de contrat; commit explicite poussé sur `origin`. L’utilisateur a validé la poursuite vers `survival-pause`.
 
 **Vérification :** Godot 4.7.2 headless : passent `survival_hud_smoke`, `survival_chest_choice_smoke`, `survival_chest_smoke`, `run_result_panel_smoke`, `survival_run_result_smoke`, `survival_wave_director_smoke`, `survival_wave_duration_smoke`, `survival_weapon_smoke`, `survival_difficulty_session_smoke`, `survival_hub_smoke`, `survival_entry_smoke`, `survival_run_meta_access_smoke`, `survival_inventory_smoke`, `launch_navigation_smoke` et `sandbox_smoke`; import éditeur et `git diff --check` passent également. Les layouts HUD, coffre et résultat sont bornés aux viewports 960×600, 1280×800 et 1600×900; les tests de focus portent sur les contrôles natifs et la propriété du focus. Contrôle statique : aucun accès SaveService/progression dans `main.gd` (contrôleur Sandbox); `survival_entry.gd` ne crée pas de service et le service normal est injecté par le hub. La fenêtre rendue et une manette physique n’ont pas été disponibles; les parcours physiques ne sont pas déclarés validés.
 
@@ -79,4 +79,4 @@ Plan associé : [`plan-ui-survival-hud.md`](plan-ui-survival-hud.md) · Spec : [
 
 ## Gate d’implémentation
 
-Après validation de cette checklist, suivre tâche par tâche le workflow smoke d’abord → changement minimal → vérification → revue. Ne pas démarrer `survival-pause` avant le checkpoint utilisateur de la Tâche 4. Garder le goal principal en pause et ses plans intacts.
+Checklist exécutée selon le workflow smoke → changement minimal → vérification → revue. Le passage à `survival-pause` a été confirmé par l’utilisateur; le goal principal et ses plans restent en pause et intacts.

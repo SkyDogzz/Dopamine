@@ -1,6 +1,6 @@
 # Spec : `launch-navigation`
 
-**Statut : approuvée par l’utilisateur.** Le plan et la liste de tâches ont aussi été approuvés avant le début du code.
+**Statut : implémentée et livrée.** L’accueil, Options, le hub, la sortie et le trajet Sandbox sont intégrés; l’activation physique de la souris/manette n’a pas été testée.
 
 ## Statuts de référence
 
@@ -48,15 +48,15 @@ Jusqu’à l’intégration du module `survival-hub`, aucun hub factice n’est 
 
 ## Critères d’acceptation
 
-- [ ] Au démarrage du projet, l’accueil apparaît au lieu du Sandbox.
-- [ ] L’accueil affiche seulement les quatre destinations confirmées; l’accès Sandbox est moins saillant que Jouer.
+- [x] Au démarrage du projet, l’accueil apparaît au lieu du Sandbox.
+- [x] L’accueil affiche seulement les quatre destinations confirmées; l’accès Sandbox est moins saillant que Jouer.
 - [ ] Options s’ouvre, fonctionne et se ferme via souris, clavier et manette; le focus revient au bouton Options.
-- [ ] Le contrat de **Jouer** cible le futur hub sans créer de hub factice ni démarrer directement une run.
-- [ ] L’accès Sandbox ouvre le Sandbox développeur actuel et **Accueil** revient au menu.
-- [ ] Le parcours vers et depuis le Sandbox n’appelle pas `SaveService`, ne lit/écrit aucune progression et ne crée aucun pont vers ces systèmes.
-- [ ] Quitter déclenche la fermeture native du jeu.
-- [ ] Tous les contrôles interactifs ont un focus visible et un ordre de navigation cohérent; aucune destination confirmée n’est inaccessible sans souris.
-- [ ] L’écran reste lisible dans les résolutions utilisées par les vérifications UI existantes.
+- [x] Le contrat de **Jouer** cible le futur hub sans créer de hub factice ni démarrer directement une run.
+- [x] L’accès Sandbox ouvre le Sandbox développeur actuel et **Accueil** revient au menu.
+- [x] Le parcours vers et depuis le Sandbox n’appelle pas `SaveService`, ne lit/écrit aucune progression et ne crée aucun pont vers ces systèmes.
+- [x] Quitter déclenche la fermeture native du jeu.
+- [x] Tous les contrôles interactifs ont un focus visible et un ordre de navigation cohérent; aucune destination confirmée n’est inaccessible sans souris.
+- [x] L’écran reste lisible dans les résolutions utilisées par les vérifications UI existantes.
 
 ## Vérifications prévues
 
@@ -77,4 +77,4 @@ Jusqu’à l’intégration du module `survival-hub`, aucun hub factice n’est 
 
 ## Critère de sortie
 
-Après validation de cette spec, produire le plan détaillé et la liste de tâches `launch-navigation`, les soumettre à validation, puis seulement commencer l’implémentation.
+La spec, le plan et les tâches sont exécutés. Voir [`INTEGRATION-ui-refonte.md`](INTEGRATION-ui-refonte.md) pour les résultats et limites de vérification.

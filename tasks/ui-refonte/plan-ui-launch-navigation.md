@@ -1,6 +1,6 @@
 # Plan d’implémentation : `launch-navigation`
 
-**Statut : approuvé par l’utilisateur.** Implémentation suivie dans [`todo-ui-launch-navigation.md`](todo-ui-launch-navigation.md).
+**Statut : terminé.** Le parcours d’accueil et les retours sont livrés; voir [`INTEGRATION-ui-refonte.md`](INTEGRATION-ui-refonte.md).
 
 ## Vue d’ensemble
 
