@@ -5,6 +5,12 @@ signal chest_option_chosen(option_id: String)
 const PLAYER_SCENE := preload("res://scenes/player.tscn")
 const SPRITE_RENDERER_SCRIPT := preload("res://scripts/sprite_batch_renderer.gd")
 const CHEST_TEXTURE: Texture2D = preload("res://assets/sprites/rewards/chest_closed.png")
+const CHEST_SPRITE_SIZE := 32.0
+const XP_SPRITE_SIZE := 16.0
+const PICKUP_SPACING_STEP := 16.0
+const PICKUP_SPACING_DIRECTIONS := [Vector2.RIGHT, Vector2.DOWN, Vector2.LEFT, Vector2.UP,
+		Vector2(0.707107, 0.707107), Vector2(-0.707107, 0.707107),
+		Vector2(-0.707107, -0.707107), Vector2(0.707107, -0.707107)]
 const GROUND_TEXTURE: Texture2D = preload("res://assets/sprites/survival_ground.svg")
 const RUINS_TEXTURE: Texture2D = preload("res://assets/sprites/environment/survival_ruins_pixel.png")
 const WEAPON_IMPACTS_TEXTURE: Texture2D = preload("res://assets/sprites/weapon_impacts_pixel.png")
@@ -273,6 +279,7 @@ var _weapon_impacts: Array[Dictionary] = []
 var _starfall_fragments_spawned: Dictionary = {}
 var _entities: Array = []
 var _pending_xp_orbs: Dictionary = {}
+var _reserved_xp_drop_positions: Array[Vector2] = []
 var _chest_director: RefCounted
 var _world_chests: Array[Dictionary] = []
 var _chest_open := false
@@ -562,13 +569,14 @@ func _process(_delta: float) -> void:
 					healing *= 1.0 + float(loadout.relic_level("blood_chalice")) * blood_chalice_heal_per_level
 					healing *= 1.0 + _equipment_bonus("kill_healing_pct") / 100.0
 					player_hp = minf(player_max_hp, player_hp + healing)
-					simulation.spawn_xp_orb(
+					_spawn_xp_drop(
 						Vector2(float(event["position"]["x"]), float(event["position"]["y"])),
 						xp_per_enemy * (1.0 + _equipment_bonus("xp_pct") / 100.0)
 					)
 			"xp_collected":
 				var id: Dictionary = event["target"]
 				_pending_xp_orbs.erase(_entity_key(int(id["index"]), int(id["generation"])))
+				_remove_reserved_xp_position(Vector2(float(event["position"]["x"]), float(event["position"]["y"])))
 				_add_xp(float(event["amount"]))
 	_apply_pending_lifesteal(elapsed_active_time)
 	if latest_event_sequence > _last_combat_event_sequence:
@@ -718,7 +726,7 @@ func _update_exploder_attacks(current_simulation_time: float, paused: bool) -> v
 			healing *= 1.0 + float(loadout.relic_level("blood_chalice")) * blood_chalice_heal_per_level
 			healing *= 1.0 + _equipment_bonus("kill_healing_pct") / 100.0
 			player_hp = minf(player_max_hp, player_hp + healing)
-			simulation.spawn_xp_orb(blast_origin, xp_per_enemy * (1.0 + _equipment_bonus("xp_pct") / 100.0))
+			_spawn_xp_drop(blast_origin, xp_per_enemy * (1.0 + _equipment_bonus("xp_pct") / 100.0))
 	for exploder_key in _exploder_attacks.keys():
 		if not active_exploders.has(exploder_key):
 			_exploder_attacks.erase(exploder_key)
@@ -1072,7 +1080,75 @@ func _roll_enemy_chests(enemy_type: String, position: Vector2) -> void:
 	var is_boss := enemy_type == "mid_boss" or enemy_type == "final_boss"
 	var is_elite := enemy_type == "elite"
 	for family in _chest_director.roll_drops(player_active_time, eligible_families, is_elite, is_boss):
-		_world_chests.append({"family": family, "position": position})
+		_world_chests.append({"family": family, "position": _find_chest_drop_position(position)})
+
+func _spawn_xp_drop(position: Vector2, xp_value: float) -> int:
+	var drop_position := _find_xp_drop_position(position)
+	var entity_id: int = simulation.spawn_xp_orb(drop_position, xp_value)
+	if entity_id > 0:
+		_reserved_xp_drop_positions.append(drop_position)
+	return entity_id
+
+func _find_xp_drop_position(origin: Vector2) -> Vector2:
+	var chest_positions: Array[Vector2] = []
+	for chest in _world_chests:
+		chest_positions.append(chest["position"])
+	return _find_spaced_drop_position(origin, false, chest_positions, _active_xp_drop_positions())
+
+func _find_chest_drop_position(origin: Vector2) -> Vector2:
+	var chest_positions: Array[Vector2] = []
+	for chest in _world_chests:
+		chest_positions.append(chest["position"])
+	return _find_spaced_drop_position(origin, true, chest_positions, _active_xp_drop_positions())
+
+func _find_spaced_drop_position(origin: Vector2, is_chest: bool,
+		chest_positions: Array[Vector2], xp_positions: Array[Vector2]) -> Vector2:
+	for ring in range(0, 17):
+		for direction in PICKUP_SPACING_DIRECTIONS:
+			var candidate: Vector2 = origin if ring == 0 else origin + direction * PICKUP_SPACING_STEP * ring
+			var blocked := false
+			for chest_position in chest_positions:
+				if is_chest and candidate.distance_squared_to(chest_position) < PICKUP_SPACING_STEP * PICKUP_SPACING_STEP:
+					blocked = true
+					break
+				if not is_chest and _pickup_sprites_overlap(candidate, XP_SPRITE_SIZE, chest_position, CHEST_SPRITE_SIZE):
+					blocked = true
+					break
+			if blocked:
+				continue
+			for xp_position in xp_positions:
+				if is_chest and _pickup_sprites_overlap(candidate, CHEST_SPRITE_SIZE, xp_position, XP_SPRITE_SIZE):
+					blocked = true
+					break
+			if not blocked:
+				return candidate
+	return origin + Vector2(CHEST_SPRITE_SIZE + XP_SPRITE_SIZE, 0.0)
+
+func _pickup_sprites_overlap(first: Vector2, first_size: float, second: Vector2, second_size: float) -> bool:
+	var half_size_sum := (first_size + second_size) * 0.5
+	return absf(first.x - second.x) < half_size_sum and absf(first.y - second.y) < half_size_sum
+
+func _active_xp_drop_positions() -> Array[Vector2]:
+	var positions: Array[Vector2] = []
+	if simulation == null:
+		return positions
+	for entity in simulation.snapshot().get("entities", []):
+		var components: Dictionary = entity.get("components", {})
+		if not components.get("IsXpOrb", false):
+			continue
+		var transform: Dictionary = components.get("Transform2D", {})
+		var active_position := Vector2(float(transform.get("x", 0.0)), float(transform.get("y", 0.0)))
+		positions.append(active_position)
+		_remove_reserved_xp_position(active_position)
+	for reserved_position in _reserved_xp_drop_positions:
+		if not positions.has(reserved_position):
+			positions.append(reserved_position)
+	return positions
+
+func _remove_reserved_xp_position(position: Vector2) -> void:
+	for index in range(_reserved_xp_drop_positions.size() - 1, -1, -1):
+		if _reserved_xp_drop_positions[index].distance_squared_to(position) <= 1.0:
+			_reserved_xp_drop_positions.remove_at(index)
 
 func _collect_nearby_chests(state: Dictionary) -> void:
 	if state["paused"] or run_over or _chest_open:
@@ -1946,7 +2022,8 @@ func _draw() -> void:
 		var fade := clampf(float(burst["remaining"]) / maxf(pandemic_feedback_seconds, 0.01), 0.0, 1.0)
 		draw_circle(burst["position"], pandemic_spread_radius * (1.0 - fade * 0.35), Color(0.35, 1.0, 0.4, 0.18 * fade))
 	for chest in _world_chests:
-		draw_texture_rect(CHEST_TEXTURE, Rect2(chest["position"] - Vector2(16.0, 16.0), Vector2(32.0, 32.0)), false)
+		draw_texture_rect(CHEST_TEXTURE, Rect2(chest["position"] - Vector2.ONE * CHEST_SPRITE_SIZE * 0.5,
+			Vector2.ONE * CHEST_SPRITE_SIZE), false)
 	for impact in _weapon_impacts:
 		var remaining: float = float(impact["remaining"])
 		var fade := clampf(remaining / WEAPON_IMPACT_LIFETIME, 0.0, 1.0)
