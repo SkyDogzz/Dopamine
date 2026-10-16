@@ -21,7 +21,9 @@ func _run() -> void:
 	var panel_frame: Control = panel.get_node("Panel")
 	var row: Control = panel.get_node("Panel/Content/Scroll/Items/Equipment_visual-fixture")
 	var row_style := row.get_theme_stylebox("panel") as StyleBoxFlat
-	var item_content: VBoxContainer = row.get_child(0).get_child(1)
+	var item_layout: HBoxContainer = row.get_child(0)
+	var badges: HBoxContainer = item_layout.get_child(0)
+	var item_content: VBoxContainer = item_layout.get_child(1)
 	var status: Label = item_content.get_child(1)
 	if panel_frame.custom_minimum_size.x < 400:
 		_fail("Equipment panel should reserve enough width for item stats and actions")
@@ -29,6 +31,15 @@ func _run() -> void:
 	if row_style == null or row_style.border_color.to_html(false) != "ffd447" or row_style.border_width_left < 3:
 		_fail("Equipment rows should use the rarity color as a strong left edge")
 		return
+	if badges.get_child_count() != 2 or \
+		(badges.get_child(0) as TextureRect).texture.resource_path != "res://assets/icons/catalog/equipment_boots.png" or \
+		(badges.get_child(1) as TextureRect).texture.resource_path != "res://assets/icons/catalog/rarity_legendary.png":
+		_fail("Equipment rows should identify both the item slot and its rarity")
+		return
+	for badge in badges.get_children():
+		if (badge as TextureRect).texture_filter != CanvasItem.TEXTURE_FILTER_NEAREST:
+			_fail("Equipment badges should preserve the pixel art at UI scale")
+			return
 	if not status.text.contains("UNIQUE: LIGHTNING BURST") or status.text.contains("LIGHTNING_BURST"):
 		_fail("Unique effect IDs should be presented as readable names without code separators")
 		return

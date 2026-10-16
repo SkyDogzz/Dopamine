@@ -386,3 +386,8 @@ Note de clôture : le blocage historique du smoke `sandbox_ui_smoke.gd` décrit 
 - [x] `run_result_panel_smoke.gd`, `survival_hud_smoke.gd` et `ui_viewport_layout_smoke.gd` passent; les vues principales sont inspectées à 640×360 logiques.
 - [x] `run_result_panel_smoke.gd` vérifie les états sans sauvegarde, victoire, doublon et échec de sauvegarde avec une récompense longue; le panneau et chacun de ses contrôles restent contenus de 640×360 à 1920×1080.
 - [x] Press Start 2P est l’association **[PROPOSÉE]** pour `PixelHeading`; le choix exact de police reste **[OUVERT]**.
+
+## Repères visuels de l’équipement (2026-10-16)
+
+- [x] Les lignes d’équipement affichent séparément l’icône de leur emplacement et celle de leur rareté, toutes deux filtrées en nearest.
+- [ ] `equipment_panel_visual_smoke.gd` couvre les deux ressources d’icône et le rendu pixel net, mais reste à exécuter : aucun binaire Godot n’est présent dans le PATH.

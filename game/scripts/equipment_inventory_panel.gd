@@ -105,17 +105,27 @@ func _create_item_row(equipment: Dictionary, resources: Dictionary) -> Control:
 	var layout := HBoxContainer.new()
 	layout.add_theme_constant_override("separation", 5)
 	row.add_child(layout)
-	var icon := TextureRect.new()
-	icon.custom_minimum_size = Vector2(24, 24)
-	icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-	icon.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	var slot := str(equipment.get("slot", ""))
 	var rarity := str(equipment.get("rarity", ""))
-	var icon_path: String = RARITY_ICONS.get(rarity, SLOT_ICONS.get(slot, ""))
-	if not icon_path.is_empty() and ResourceLoader.exists(icon_path):
+	var badges := HBoxContainer.new()
+	badges.add_theme_constant_override("separation", 2)
+	for badge_data in [
+		["SlotIcon", SLOT_ICONS.get(slot, ""), slot.replace("_", " ").capitalize()],
+		["RarityIcon", RARITY_ICONS.get(rarity, ""), rarity.capitalize()],
+	]:
+		var icon_path: String = badge_data[1]
+		if icon_path.is_empty() or not ResourceLoader.exists(icon_path):
+			continue
+		var icon := TextureRect.new()
+		icon.name = badge_data[0]
+		icon.custom_minimum_size = Vector2(18, 18)
+		icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		icon.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 		icon.texture = load(icon_path)
-	layout.add_child(icon)
+		icon.tooltip_text = badge_data[2]
+		badges.add_child(icon)
+	layout.add_child(badges)
 	var content := VBoxContainer.new()
 	content.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	content.add_theme_constant_override("separation", 2)
