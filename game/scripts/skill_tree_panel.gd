@@ -4,7 +4,7 @@ signal close_requested
 signal unlock_requested(node_id: String)
 signal respec_requested
 
-@onready var _essence: Label = $Panel/Content/Essence
+@onready var _essence: Label = $Panel/Content/EssenceRow/Essence
 @onready var _node_button: Button = $Panel/Content/VitalityButton
 @onready var _focus_button: Button = $Panel/Content/FocusButton
 @onready var _respec_button: Button = $Panel/Content/RespecButton

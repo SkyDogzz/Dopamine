@@ -391,3 +391,8 @@ Note de clôture : le blocage historique du smoke `sandbox_ui_smoke.gd` décrit 
 
 - [x] Les lignes d’équipement affichent séparément l’icône de leur emplacement et celle de leur rareté, toutes deux filtrées en nearest.
 - [ ] `equipment_panel_visual_smoke.gd` couvre les deux ressources d’icône et le rendu pixel net, mais reste à exécuter : aucun binaire Godot n’est présent dans le PATH.
+
+## Icône de ressource dans l’arbre de compétences (2026-10-16)
+
+- [x] Le solde d’essence reprend l’icône dédiée de la Bible d’assets, en nearest, sans changer son calcul ni les prérequis des nœuds.
+- [ ] `skill_tree_panel_visual_smoke.gd` vérifie l’icône, le filtrage et la valeur affichée; il reste à exécuter avec Godot.

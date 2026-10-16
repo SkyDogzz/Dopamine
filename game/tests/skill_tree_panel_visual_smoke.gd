@@ -11,6 +11,12 @@ func _run() -> void:
 	var frame: Control = panel.get_node("Panel")
 	var vitality: Button = panel.get_node("Panel/Content/VitalityButton")
 	var focus: Button = panel.get_node("Panel/Content/FocusButton")
+	var essence_icon: TextureRect = panel.get_node("Panel/Content/EssenceRow/EssenceIcon")
+	var essence: Label = panel.get_node("Panel/Content/EssenceRow/Essence")
+	if essence_icon.texture == null or essence_icon.texture.resource_path != "res://assets/icons/catalog/resource_essence.png" or \
+		essence_icon.texture_filter != CanvasItem.TEXTURE_FILTER_NEAREST or essence.text != "ESSENCE 100":
+		_fail("The skill tree should pair its essence balance with the existing pixel icon")
+		return
 	if vitality.icon == null or vitality.icon.resource_path != "res://assets/icons/catalog/skill_node.png" or \
 		focus.icon == null or focus.icon.resource_path != "res://assets/icons/catalog/skill_node.png":
 		_fail("Existing skill node artwork should identify both prototype choices")
