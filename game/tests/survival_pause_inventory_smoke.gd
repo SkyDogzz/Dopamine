@@ -33,6 +33,10 @@ func _run() -> void:
 		_fail("The run inventory should open over the paused run")
 		return
 	var items: VBoxContainer = inventory.get_node("Center/Panel/Content/Scroll/Items")
+	if (items.get_child(0) as Label).theme_type_variation != "PixelHeading" or \
+			(items.get_child(3) as Label).theme_type_variation != "PixelHeading":
+		_fail("Run inventory section labels should use the Art Bible pixel heading font")
+		return
 	var row_count := 0
 	var icon_count := 0
 	for child in items.get_children():

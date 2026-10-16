@@ -56,6 +56,7 @@ text = "DOPAMINE  /  PRÉPARATION"
 
 [node name="Title" type="Label" parent="Content/Header/Identity"]
 layout_mode = 2
+theme_type_variation = "PixelHeading"
 theme_override_colors/font_color = Color(0.215686, 0.909804, 0.960784, 1)
 theme_override_font_sizes/font_size = 15
 text = "SURVIVAL"
@@ -84,6 +85,7 @@ theme_override_constants/separation = 6
 
 [node name="SectionTitle" type="Label" parent="Content/Main/DifficultyCard/Body"]
 layout_mode = 2
+theme_type_variation = "PixelHeading"
 theme_override_colors/font_color = Color(0.215686, 0.909804, 0.960784, 1)
 theme_override_font_sizes/font_size = 10
 text = "DIFFICULTÉ"
@@ -126,8 +128,9 @@ text = "MODE JOUABLE"
 
 [node name="ModeTitle" type="Label" parent="Content/Main/PreparationCard/Body"]
 layout_mode = 2
+theme_type_variation = "PixelHeading"
 theme_override_colors/font_color = Color(0.964706, 0.968627, 1, 1)
-theme_override_font_sizes/font_size = 14
+theme_override_font_sizes/font_size = 10
 text = "SURVIVAL  •  24 VAGUES"
 
 [node name="ModeDescription" type="Label" parent="Content/Main/PreparationCard/Body"]
@@ -142,6 +145,7 @@ layout_mode = 2
 
 [node name="PreparationTitle" type="Label" parent="Content/Main/PreparationCard/Body"]
 layout_mode = 2
+theme_type_variation = "PixelHeading"
 theme_override_colors/font_color = Color(0.215686, 0.909804, 0.960784, 1)
 theme_override_font_sizes/font_size = 8
 text = "PRÉPARATION PERMANENTE"

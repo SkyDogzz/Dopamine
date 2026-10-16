@@ -16,6 +16,7 @@ Avant la correction viewport, 21 smokes UI et d’intégration passaient avec un
 - Les morts d’ennemis produisent une courte explosion de pixels dessinée en code; elle suit le temps de simulation et ne crée aucune entité de combat. Ses paramètres restent **[PROPOSÉS]**.
 - Les projectiles mobiles ont une traînée discrète bleu nuit/cyan, dessinée sous le sprite en Survival et dans le Sandbox. Son budget de 256 simultanés reste **[PROPOSÉ]**; les couleurs par élément restent **[OUVERTES]**.
 - L’accueil anime trois enseignes visibles du skyline avec un VFX code-drawn; l’Art Bible demande ce clignotement, tandis que ses périodes détaillées restent **[PROPOSÉES]**.
+- Les titres d’écran et d’interfaces utilisent maintenant la variante pixel `PixelHeading`; descriptions et textes d’aide gardent DejaVu Sans. Press Start 2P reste **[PROPOSÉE]** comme fonte de titre.
 - L’objectif de refonte de toutes les interfaces et de tous les assets visuels actifs reste **en cours**; cet état partiel ne vaut pas clôture.
 
 ## État des modules

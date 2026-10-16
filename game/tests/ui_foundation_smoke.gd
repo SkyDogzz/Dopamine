@@ -2,6 +2,19 @@ extends SceneTree
 
 const PREVIEW_SCENE_PATH := "res://scenes/ui_foundation_preview.tscn"
 const THEME_PATH := "res://themes/dopamine_ui.tres"
+const PIXEL_HEADING_PATHS := {
+	"res://scenes/launch_menu.tscn": ["Content/Card/Columns/Identity/Title"],
+	"res://scenes/options_panel.tscn": ["Content/Center/OptionsCard/OptionsContent/Title"],
+	"res://scenes/survival_hub.tscn": ["Content/Header/Identity/Title", "Content/Main/DifficultyCard/Body/SectionTitle", "Content/Main/PreparationCard/Body/ModeTitle", "Content/Main/PreparationCard/Body/PreparationTitle"],
+	"res://scenes/chest_choice.tscn": ["Content/Title"],
+	"res://scenes/equipment_inventory_panel.tscn": ["Panel/Content/Title"],
+	"res://scenes/skill_tree_panel.tscn": ["Panel/Content/Title"],
+	"res://scenes/run_inventory_panel.tscn": ["Center/Panel/Content/Title"],
+	"res://scenes/run_result_panel.tscn": ["Content/Title"],
+	"res://scenes/pause_menu.tscn": ["Center/Panel/Content/Title", "ConfirmationOverlay/Center/Panel/Content/Title"],
+	"res://scenes/main.tscn": ["Shell/Header/Title", "Shell/Content/SidePanel/Sections/SpawnPanel/SpawnForm/SpawnTitle", "Shell/Content/SidePanel/Sections/TuningPanel/TuningForm/TuningTitle", "Shell/Content/SidePanel/Sections/InspectorPanel/InspectorForm/InspectorTitle", "Shell/Content/SidePanel/Sections/InspectorPanel/InspectorForm/StatusTitle", "Shell/Content/SidePanel/Sections/LogPanel/LogForm/LogTitle"],
+	"res://scenes/ui_foundation_preview.tscn": ["Content/PreviewCenter/SamplePanel/SampleContent/Title", "Content/PreviewCenter/SamplePanel/SampleContent/ControlTitle"],
+}
 
 func _initialize() -> void:
 	call_deferred("_run")
@@ -27,6 +40,17 @@ func _run() -> void:
 	if shared_theme == null or preview.theme != shared_theme:
 		_fail("Preview should use the shared UI Theme")
 		return
+	if not shared_theme.has_font("font", "PixelHeading"):
+		_fail("Shared Theme should provide the Art Bible pixel-heading font")
+		return
+	for scene_path in PIXEL_HEADING_PATHS:
+		var heading_scene: Control = load(scene_path).instantiate()
+		for node_path in PIXEL_HEADING_PATHS[scene_path]:
+			var heading := heading_scene.get_node_or_null(node_path) as Label
+			if heading == null or heading.theme_type_variation != "PixelHeading":
+				_fail("%s/%s should use the PixelHeading variation" % [scene_path, node_path])
+				return
+		heading_scene.free()
 	for color_name in ["background", "surface", "surface_hover", "text", "text_muted", "accent", "focus", "alert", "border"]:
 		if not shared_theme.has_color(color_name, "Dopamine"):
 			_fail("Shared Theme is missing semantic color: %s" % color_name)
