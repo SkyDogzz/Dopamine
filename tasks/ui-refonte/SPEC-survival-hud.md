@@ -1,6 +1,6 @@
 # Spec : `survival-hud`
 
-**Statut : proposée pour validation utilisateur.** Module suivant dans la carte de capacités approuvée; aucune implémentation ne commence avant validation de cette spec, puis du plan et des tâches.
+**Statut : validée par l’utilisateur.** Module suivant dans la carte de capacités approuvée; le plan et les tâches restent à valider avant toute implémentation.
 
 ## Statuts de référence
 
