@@ -103,6 +103,8 @@ func _run() -> void:
 	if session.get_node("HUD/ChestOverlay/ChestChoice/Content/Title").text != "WEAPON CHEST — CHOOSE ONE":
 		_fail("Collected weapon chests should identify their item type in the heading")
 		return
+	# Isolate the resume assertion from a second random chest opening immediately.
+	session._world_chests.clear()
 	var chosen_ids := [""]
 	session.chest_option_chosen.connect(func(option_id: String) -> void: chosen_ids[0] = option_id)
 	session.get_node("HUD/ChestOverlay/ChestChoice/Content/Options/Choice0").emit_signal("pressed")
