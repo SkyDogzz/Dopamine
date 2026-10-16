@@ -501,7 +501,7 @@ Travail requis :
 - [ ] **P7A.1 — Règles du mode**
   - [ ] Créer une définition Armorless avec équipement permanent inactif.
   - [ ] Vérifier skill tree et achievements toujours actifs.
-  - [ ] Ajouter la configuration de vague et boss toutes les 12 vagues.
+  - [x] Ajouter au directeur un profil Armorless optionnel : cycle de boss toutes les 12 vagues sans victoire forcée après la vague 24; profil Survival inchangé. La cadence de boss reste une valeur **[PROPOSÉE]** du GDD.
 - [ ] **P7A.2 — Draft temporaire**
   - [x] Générer trois propositions indépendantes depuis le pool d'équipement Armorless. Le tableau de rareté et les multiplicateurs de difficulté utilisent les valeurs GDD **[PROPOSÉES]** et restent identifiés comme tels dans le code.
   - [x] Ajouter l’état temporaire de run : accepte trois propositions à slots indépendants (doublons permis), consomme le draft au choix et conserve un seul objet sélectionné.
