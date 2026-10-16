@@ -503,11 +503,11 @@ Travail requis :
   - [ ] Vérifier skill tree et achievements toujours actifs.
   - [ ] Ajouter la configuration de vague et boss toutes les 12 vagues.
 - [ ] **P7A.2 — Draft temporaire**
-  - [ ] Générer trois propositions temporaires.
-  - [ ] Appliquer un choix et autoriser les doublons de slot indiqués par la règle.
-  - [ ] Vérifier que les objets disparaissent en fin de run.
+  - [ ] Générer trois propositions temporaires depuis le pool Armorless.
+  - [x] Ajouter l’état temporaire de run : accepte trois propositions à slots indépendants (doublons permis), consomme le draft au choix et conserve un seul objet sélectionné.
+  - [x] Effacer les objets temporaires en fin de run; vérification automatisée dans `armorless_run_state_smoke.gd`.
 - [ ] **P7A.3 — Flux**
-  - [ ] Ajouter solde Flux propre à la run.
+  - [x] Ajouter un solde Flux en mémoire de run, avec validation des montants et refus d’un débit supérieur au solde.
   - [ ] Améliorer une ligne temporaire et vérifier consommation/coût.
   - [ ] Vérifier échec, pity et disparition du Flux à la fin.
 - [ ] **P7A.4 — Longue durée**
