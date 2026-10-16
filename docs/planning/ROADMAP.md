@@ -341,7 +341,7 @@ Travail requis :
   - [x] Garder Overcharge bloquée par son statut **[OUVERT]**.
 - [ ] **P5.2.4 — Causalité et dégâts**
   - [ ] Ajouter un ID de chaîne et un budget aux réactions seulement après validation du contrat.
-  - [ ] Vérifier événements directs, DoT, lifesteal et mort sans double crédit.
+  - [x] Vérifier événements directs, DoT létal, lifesteal, mort et attribution XP sans double crédit; `survival_damage_causality_smoke.gd` compte une seule mort/orbe XP par cible directe et DoT, et `survival_lifesteal_smoke.gd` couvre le soin.
 
 ### P5.3 — Coffres et économie de run
 
