@@ -60,7 +60,7 @@ func _run() -> void:
 		_fail("Unknown movement pattern: %s" % movement_pattern)
 		return
 
-	print("tier,difficulty,movement,replicate,unlocked_nodes,hp_bonus_pct,damage_bonus_pct,speed_bonus_pct,crit_bonus_pct,active_seconds,wall_seconds,path_distance,wave,kills,level,outgoing_damage,outgoing_dps,net_hp_loss,result")
+	print("tier,difficulty,movement,replicate,unlocked_nodes,hp_bonus_pct,damage_bonus_pct,speed_bonus_pct,crit_bonus_pct,active_seconds,wall_seconds,path_distance,wave,kills,level,outgoing_damage,outgoing_dps,net_hp_loss,boss_defeated,result")
 	for tier in TIERS:
 		if selected_tier != "all" and tier != selected_tier:
 			continue
@@ -160,9 +160,11 @@ func _run_case(tier: String, difficulty_id: String, replicate: int, progression:
 	_clear_movement_actions()
 	var elapsed_wall := float(Time.get_ticks_msec() - started_at) / 1000.0
 	var active_seconds := float(session.player_active_time)
-	var result := "victory" if session.run_over and session._run_result_overlay.visible else "timeout"
-	if session.run_over and session.player_hp <= 0.0:
-		result = "defeat"
+	var result := "timeout"
+	if session.run_over:
+		var result_title := str(session.get_node("HUD/RunResultOverlay/RunResultPanel/Content/Title").text)
+		result = "victory" if result_title == "VICTORY" else "defeat" if result_title == "RUN OVER" else "unknown"
+	var boss_defeated := result == "victory"
 	var profile: Dictionary = progression.source.load_profile()["profile"]
 	var unlocked_count: int = profile["unlocked_skill_nodes"].size()
 	var hp_bonus: float = progression.skill_bonus("max_hp_pct") * 100.0
@@ -172,10 +174,10 @@ func _run_case(tier: String, difficulty_id: String, replicate: int, progression:
 	var outgoing_damage := monitor.total_damage
 	var outgoing_dps := outgoing_damage / active_seconds if active_seconds > 0.0 else 0.0
 	var net_hp_loss: float = initial_hp - session.player_hp
-	print("%s,%s,%s,%d,%d,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f,%d,%d,%d,%.2f,%.2f,%.2f,%s" % [
+	print("%s,%s,%s,%d,%d,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f,%d,%d,%d,%.2f,%.2f,%.2f,%s,%s" % [
 		tier, difficulty_id, movement_pattern, replicate + 1, unlocked_count, hp_bonus, damage_bonus, speed_bonus, crit_bonus,
 		active_seconds, elapsed_wall, path_distance, session.wave_director.wave, session.kill_count,
-		session.player_level, outgoing_damage, outgoing_dps, net_hp_loss, result,
+		session.player_level, outgoing_damage, outgoing_dps, net_hp_loss, boss_defeated, result,
 	])
 	if active_seconds <= 0.0 or monitor.last_sequence <= 0:
 		_case_failed = true

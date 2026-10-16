@@ -69,6 +69,7 @@
 ### Reruns mobiles Easy — profil neuf — 2026-10-16
 
 - [x] Commande : `tools/run_godot_test.sh /tmp/dopamine-godot-4.7.2/Godot_v4.7.2-stable_linux.x86_64 --headless --audio-driver Dummy --path game --script res://tests/progression_balance_survey.gd -- --tier=fresh --difficulty=easy --movement=square --replicates=3` avec un `XDG_DATA_HOME` isolé.
+- [x] Le CSV indique désormais explicitement `boss_defeated` et distingue `victory`, `defeat` et `timeout` à partir du titre du résultat Survival. Vérification ciblée : fresh/Easy/square, une réplication, 67,48 s simulées, vague 3, défaite et `boss_defeated=false`; aucune récompense persistée.
 - [x] Trois sessions Survival réelles du harness, sans invincibilité, XP et coffres accessibles automatiquement : 47,07 / 67,88 / 66,18 secondes simulées; 9 / 12 / 10 kills; vague 2 / 3 / 3; DPS sortant 4,05 / 4,10 / 4,84; distance 11 440 / 16 288 / 15 888 unités. Chaque run finit par défaite, sans récompense persistée.
 - [ ] Échantillon limité à un profil, une difficulté et une politique de mouvement carrée sans évitement. Il établit la dispersion de ce protocole seulement; aucun paramètre **[PROPOSÉ]** n’est ajusté et P6.9 reste ouvert.
 
