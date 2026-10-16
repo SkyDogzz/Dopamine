@@ -22,10 +22,11 @@ func _run() -> void:
 		_fail("Opening Survival should show the starting weapon choice")
 		return
 	var player_sprite: Sprite2D = current_scene.player.get_node("Sprite")
-	if player_sprite.texture == null or not player_sprite.texture.resource_path.ends_with("player_cyan.png"):
+	if player_sprite.texture == null or not player_sprite.texture.resource_path.ends_with("player_idle.png"):
 		_fail("The Survival player should use the generated pixel-art sprite")
 		return
-	if player_sprite.texture.get_width() != 32 or player_sprite.texture.get_height() != 32 or player_sprite.scale != Vector2.ONE:
+	if player_sprite.texture.get_width() != 128 or player_sprite.texture.get_height() != 128 or not player_sprite.region_enabled or \
+		player_sprite.region_rect.size != Vector2(32, 32) or player_sprite.scale != Vector2.ONE:
 		_fail("The 32x32 Art Bible player sprite should render at native logical size")
 		return
 	var choice_buttons: VBoxContainer = current_scene.get_node("HUD/ChestOverlay/ChestChoice/Content/Options")

@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3]
 
 [ext_resource type="Script" path="res://scripts/player_controller.gd" id="1_player"]
-[ext_resource type="Texture2D" path="res://assets/sprites/player_cyan.png" id="2_sprite"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player_idle.png" id="2_idle"]
 
 [node name="Player" type="CharacterBody2D"]
 script = ExtResource("1_player")
@@ -9,7 +9,9 @@ move_speed = 240.0
 
 [node name="Sprite" type="Sprite2D" parent="."]
 texture_filter = 1
-texture = ExtResource("2_sprite")
+texture = ExtResource("2_idle")
+region_enabled = true
+region_rect = Rect2(0, 0, 32, 32)
 scale = Vector2(1, 1)
 
 [node name="Camera2D" type="Camera2D" parent="."]

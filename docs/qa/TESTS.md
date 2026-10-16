@@ -279,3 +279,9 @@ Note de clôture : le blocage historique du smoke `sandbox_ui_smoke.gd` décrit 
 - [x] `process_survival_ground.gd` produit une texture répétable 256×256, limitée à six couleurs de la palette maître, et sa source Aseprite mono-calque depuis le visuel généré.
 - [x] `catalog_icon_assets_smoke.gd` vérifie les dimensions, la palette, l’égalité des bords opposés, la source Aseprite et son branchement dans la scène Survival.
 - [x] La texture SVG et l’ancien candidat moss/stone restent hors du rendu actif; aucune collision ni logique de combat ne change.
+
+## Animations du héros pixel art (2026-10-16)
+
+- [x] Les feuilles idle/marche 4×4 utilisent des frames natives 32×32, une palette limitée à 16 couleurs et des sources Aseprite éditables; ligne des directions Bas/Gauche/Droite/Haut **[PROPOSÉE]**.
+- [x] Le contrôleur choisit les frames selon la direction déjà lue par les contrôles et reprend l’image idle quand le joueur s’arrête; contrôles, vitesse et collisions inchangés.
+- [x] `catalog_icon_assets_smoke.gd`, `player_controller_smoke.gd`, `survival_entry_smoke.gd` et `pilot_scene_visual_smoke.gd` passent; rendu du personnage inspecté en jeu à 640×360 logique.

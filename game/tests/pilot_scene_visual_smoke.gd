@@ -17,7 +17,8 @@ func _run() -> void:
 		_fail("Combat simulation did not initialize")
 		return
 	var player_sprite: Sprite2D = session.player.get_node("Sprite")
-	if player_sprite.texture.get_size() != Vector2(32, 32) or player_sprite.scale != Vector2.ONE:
+	if player_sprite.texture.get_size() != Vector2(128, 128) or not player_sprite.region_enabled or \
+		player_sprite.region_rect.size != Vector2(32, 32) or player_sprite.scale != Vector2.ONE:
 		_fail("Player sprite does not use its native 32x32 size")
 		return
 	var hud: Control = session.get_node("HUD/RunPanel")

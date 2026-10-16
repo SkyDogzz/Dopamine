@@ -12,6 +12,7 @@ Avant la correction viewport, 21 smokes UI et d’intégration passaient avec un
 
 - Le Sandbox développeur reste isolé; ses contrôles latéraux sont testés à 640×360, 1280×720 et 1920×1080.
 - Le sol actif de Survival est désormais un pixel art 256×256 répétable, sa palette est limitée à six couleurs de l’Art Bible et son fichier Aseprite reste éditable. Le SVG et l’ancien motif chargé sont conservés comme références inactives.
+- Le joueur utilise maintenant des feuilles idle et marche 4×4, exportées en frames 32×32 et reliées aux directions de mouvement. L’ordre des lignes et les cadences restent **[PROPOSÉS]** dans l’inventaire d’assets.
 - L’objectif de refonte de toutes les interfaces et de tous les assets visuels actifs reste **en cours**; cet état partiel ne vaut pas clôture.
 
 ## État des modules

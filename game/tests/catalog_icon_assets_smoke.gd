@@ -45,6 +45,9 @@ func _initialize() -> void:
 	if not _check_title_skyline():
 		quit(1)
 		return
+	if not _check_player_animation_sheets():
+		quit(1)
+		return
 	var impact_atlas := load("res://assets/sprites/weapon_impacts_pixel.png") as Texture2D
 	if impact_atlas == null or impact_atlas.get_size() != Vector2(640.0, 64.0):
 		push_error("The impact atlas should contain ten horizontal 64x64 cells")
@@ -197,5 +200,48 @@ func _check_title_skyline() -> bool:
 	var source := FileAccess.open(ase_path, FileAccess.READ)
 	if source == null or source.get_32() != source.get_length() or source.get_16() != 0xA5E0 or source.get_16() != 1 or source.get_16() != 640 or source.get_16() != 360:
 		push_error("Invalid editable Aseprite source for the title skyline")
+		return false
+	return true
+
+func _check_player_animation_sheets() -> bool:
+	var allowed_colors := {
+		"080b18": true, "10152b": true, "1b2340": true, "293354": true,
+		"37314f": true, "59476f": true, "075a80": true, "087fb2": true,
+		"0eb8d4": true, "37e8f5": true, "7623a8": true, "826999": true,
+		"ad91bb": true, "e13acb": true, "ffd447": true, "fff19a": true,
+	}
+	for animation in ["idle", "walk"]:
+		var png_path := "res://assets/sprites/player_%s.png" % animation
+		var ase_path := "res://assets/source/pilot/player_%s.aseprite" % animation
+		if not FileAccess.file_exists(png_path) or not FileAccess.file_exists(ase_path):
+			push_error("Missing player %s sprite sheet or Aseprite source" % animation)
+			return false
+		var image := (load(png_path) as Texture2D).get_image()
+		if image.get_size() != Vector2i(128, 128):
+			push_error("Player %s sheet must be 4x4 frames of 32x32 pixels" % animation)
+			return false
+		for row in range(4):
+			for column in range(4):
+				var frame_colors := {}
+				for y in range(row * 32, (row + 1) * 32):
+					for x in range(column * 32, (column + 1) * 32):
+						var pixel := image.get_pixel(x, y)
+						if pixel.a == 0.0:
+							continue
+						var color_hex := pixel.to_html(false)
+						frame_colors[color_hex] = true
+						if not allowed_colors.has(color_hex):
+							push_error("Player %s contains a color outside the Art Bible palette: %s" % [animation, color_hex])
+							return false
+				if frame_colors.is_empty() or frame_colors.size() > 16:
+					push_error("Each player %s frame must be visible and use at most 16 colors" % animation)
+					return false
+		var source := FileAccess.open(ase_path, FileAccess.READ)
+		if source == null or source.get_32() != source.get_length() or source.get_16() != 0xA5E0 or source.get_16() != 1 or source.get_16() != 128 or source.get_16() != 128:
+			push_error("Invalid editable Aseprite source for player %s" % animation)
+			return false
+	var controller := FileAccess.get_file_as_string("res://scripts/player_controller.gd")
+	if not controller.contains("player_idle.png") or not controller.contains("player_walk.png"):
+		push_error("Player controller should use both Art Bible animation sheets")
 		return false
 	return true

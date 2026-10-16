@@ -14,12 +14,27 @@ func _run() -> void:
 	if player.move_speed <= 0.0:
 		_fail("Player should expose a positive configurable move speed")
 		return
+	var sprite: Sprite2D = player.get_node("Sprite")
+	if sprite.texture == null or not sprite.region_enabled or sprite.texture.get_size() != Vector2(128.0, 128.0):
+		_fail("Player should render a 32x32 region from the 4x4 animation sheet")
+		return
+	player._update_sprite_animation(Vector2.RIGHT, 0.125)
+	if sprite.texture.resource_path.get_file() != "player_walk.png" or sprite.region_rect != Rect2(32, 64, 32, 32):
+		_fail("Rightward movement should select the right-facing walk frame")
+		return
+	player._update_sprite_animation(Vector2.ZERO, 0.0)
+	if sprite.texture.resource_path.get_file() != "player_idle.png" or sprite.region_rect != Rect2(0, 64, 32, 32):
+		_fail("Stopping should return to idle while preserving the last facing direction")
+		return
 	Input.parse_input_event(_key_event(KEY_D, true))
 	await physics_frame
 	await physics_frame
 	Input.parse_input_event(_key_event(KEY_D, false))
 	if player.position.x <= 0.0:
 		_fail("Player should move from the right input action")
+		return
+	if sprite.region_rect.position.y != 64.0:
+		_fail("Right input should keep the player facing right")
 		return
 	for action_and_key in [["move_left", KEY_LEFT], ["move_right", KEY_RIGHT], ["move_up", KEY_UP], ["move_down", KEY_DOWN]]:
 		if not _has_physical_key(action_and_key[0], action_and_key[1]):
@@ -41,6 +56,9 @@ func _run() -> void:
 	if player.position.x >= before_left:
 		_fail("The left arrow should move the player through the left input action")
 		return
+	if sprite.region_rect.position.y != 32.0:
+		_fail("Left input should keep the player facing left")
+		return
 	var before_up := player.position.y
 	Input.action_press("move_up")
 	await physics_frame
@@ -49,6 +67,9 @@ func _run() -> void:
 	if player.position.y >= before_up:
 		_fail("The up arrow should move the player through the up input action")
 		return
+	if sprite.region_rect.position.y != 96.0:
+		_fail("Up input should keep the player facing up")
+		return
 	var before_down := player.position.y
 	Input.action_press("move_down")
 	await physics_frame
@@ -56,6 +77,9 @@ func _run() -> void:
 	Input.action_release("move_down")
 	if player.position.y <= before_down:
 		_fail("The down arrow should move the player through the down input action")
+		return
+	if sprite.region_rect.position.y != 0.0:
+		_fail("Down input should keep the player facing down")
 		return
 	Input.parse_input_event(_key_event(KEY_D, true))
 	Input.parse_input_event(_key_event(KEY_S, true))
