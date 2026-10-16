@@ -15,6 +15,7 @@ Avant la correction viewport, 21 smokes UI et d’intégration passaient avec un
 - Le joueur utilise maintenant des feuilles idle et marche 4×4, exportées en frames 32×32 et reliées aux directions de mouvement. L’ordre des lignes et les cadences restent **[PROPOSÉS]** dans l’inventaire d’assets.
 - Les morts d’ennemis produisent une courte explosion de pixels dessinée en code; elle suit le temps de simulation et ne crée aucune entité de combat. Ses paramètres restent **[PROPOSÉS]**.
 - Les projectiles mobiles ont une traînée discrète bleu nuit/cyan, dessinée sous le sprite en Survival et dans le Sandbox. Son budget de 256 simultanés reste **[PROPOSÉ]**; les couleurs par élément restent **[OUVERTES]**.
+- L’accueil anime trois enseignes visibles du skyline avec un VFX code-drawn; l’Art Bible demande ce clignotement, tandis que ses périodes détaillées restent **[PROPOSÉES]**.
 - L’objectif de refonte de toutes les interfaces et de tous les assets visuels actifs reste **en cours**; cet état partiel ne vaut pas clôture.
 
 ## État des modules

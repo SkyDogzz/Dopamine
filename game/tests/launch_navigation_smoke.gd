@@ -16,11 +16,20 @@ func _run() -> void:
 	if launch_menu == null:
 		_fail("Launch menu should instantiate as a Control")
 		return
+	if launch_menu.get_node_or_null("SkylineLights") == null:
+		_fail("The title skyline should include its neon signage layer")
+		return
 	var hub_route := Callable(launch_menu, "_open_survival_hub")
-	if launch_menu.play_requested.is_connected(hub_route):
-		launch_menu.play_requested.disconnect(hub_route)
 	root.add_child(launch_menu)
 	await process_frame
+	if launch_menu.play_requested.is_connected(hub_route):
+		launch_menu.play_requested.disconnect(hub_route)
+	var skyline_lights: Control = launch_menu.get_node("SkylineLights")
+	var initial_blink_step := int(skyline_lights.get("_last_blink_step"))
+	await create_timer(0.2).timeout
+	if int(skyline_lights.get("_last_blink_step")) <= initial_blink_step:
+		_fail("Neon skyline signage should animate while the launch menu is open")
+		return
 	for control_name in ["PlayButton", "OptionsButton", "QuitButton", "SandboxButton"]:
 		var button := launch_menu.get_node_or_null("Content/Card/Columns/Menu/%s" % control_name) as Button
 		if button == null or button.focus_mode == Control.FOCUS_NONE:
