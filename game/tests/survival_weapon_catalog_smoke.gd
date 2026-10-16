@@ -68,6 +68,7 @@ func _prism_laser_tracks_and_splits() -> bool:
 		session.queue_free()
 		return false
 	session.simulation.set_speed(4.0)
+	await _wait_for_simulation_speed(session, 4.0)
 	session.simulation.spawn("test_target", 1, Vector2(180.0, 0.0), 100.0, Vector2.ZERO)
 	session.simulation.spawn("test_target", 1, Vector2(180.0, 100.0), 100.0, Vector2.ZERO)
 	if (await _wait_for_targets(session, 2)).size() != 2:
@@ -105,6 +106,7 @@ func _void_orb_pulls_and_pierces() -> bool:
 		session.queue_free()
 		return false
 	session.simulation.set_speed(4.0)
+	await _wait_for_simulation_speed(session, 4.0)
 	session.simulation.spawn("test_target", 1, Vector2(150.0, 0.0), 100.0, Vector2.ZERO)
 	session.simulation.spawn("test_target", 1, Vector2(180.0, 0.0), 100.0, Vector2.ZERO)
 	if (await _wait_for_targets(session, 2)).size() != 2:
@@ -151,7 +153,8 @@ func _frost_nova_chills_and_shatters() -> bool:
 		session.queue_free()
 		return false
 	session.simulation.set_speed(4.0)
-	session.simulation.spawn("test_target", 1, Vector2(100.0, 0.0), 8.0, Vector2.ZERO)
+	await _wait_for_simulation_speed(session, 4.0)
+	session.simulation.spawn("test_target", 1, Vector2(100.0, 0.0), 20.0, Vector2.ZERO)
 	session.simulation.spawn("test_target", 1, Vector2(130.0, 0.0), 100.0, Vector2.ZERO)
 	if (await _wait_for_targets(session, 2)).size() != 2:
 		session.queue_free()
@@ -161,9 +164,21 @@ func _frost_nova_chills_and_shatters() -> bool:
 	session._fire_frost_nova(float(session.simulation.snapshot()["simulation_time"]), false)
 	var deadline := Time.get_ticks_msec() + 2500
 	var shattered_neighbor := false
+	var finishing_projectile_fired := false
 	while Time.get_ticks_msec() < deadline:
 		await process_frame
 		var state: Dictionary = session.simulation.snapshot()
+		if not finishing_projectile_fired:
+			for entity in state["entities"]:
+				var components: Dictionary = entity["components"]
+				if components.get("EnemyType", "") != "test_target" or not components.has("Chill"):
+					continue
+				var transform: Dictionary = components["Transform2D"]
+				session.simulation.spawn_projectile("test_chilled_target_finisher",
+						Vector2(float(transform["x"]), float(transform["y"])), Vector2.ZERO,
+						100.0, 2.0, 1.0)
+				finishing_projectile_fired = true
+				break
 		for event in state["events"]:
 			if event.get("type", "") == "damage" and event.get("source_type", "") == "absolute_zero":
 				shattered_neighbor = true
@@ -188,6 +203,7 @@ func _sawblades_ricochet_between_targets() -> bool:
 		session.queue_free()
 		return false
 	session.simulation.set_speed(4.0)
+	await _wait_for_simulation_speed(session, 4.0)
 	session.simulation.spawn("test_target", 1, Vector2(150.0, 0.0), 100.0, Vector2.ZERO)
 	session.simulation.spawn("test_target", 1, Vector2(150.0, 150.0), 100.0, Vector2.ZERO)
 	if (await _wait_for_targets(session, 2)).size() != 2:
@@ -221,6 +237,7 @@ func _meteor_staff_targets_groups_and_starfall_fragments() -> bool:
 		session.queue_free()
 		return false
 	session.simulation.set_speed(4.0)
+	await _wait_for_simulation_speed(session, 4.0)
 	for point in [Vector2(200.0, 0.0), Vector2(220.0, 30.0), Vector2(350.0, 0.0)]:
 		session.simulation.spawn("test_target", 1, point, 100.0, Vector2.ZERO)
 	var targets := await _wait_for_targets(session, 3)
@@ -484,8 +501,11 @@ func _infinite_circuit_branches() -> bool:
 		if not session.loadout.apply_offer("weapon:lightning_conductor"):
 			session.queue_free()
 			return false
-	session.weapon_enabled = true
+	session.weapon_enabled = false
 	session.simulation.set_speed(4.0)
+	if not await _wait_for_simulation_speed(session, 4.0):
+		session.queue_free()
+		return false
 	var points := [Vector2(160.0, -20.0), Vector2(160.0, 20.0), Vector2(200.0, -20.0), Vector2(200.0, 20.0), Vector2(240.0, -20.0), Vector2(240.0, 20.0)]
 	for point in points:
 		session.simulation.spawn("test_target", 1, point, 100.0, Vector2.ZERO)
@@ -495,6 +515,7 @@ func _infinite_circuit_branches() -> bool:
 		return false
 	var baseline := int(session.simulation.snapshot()["metrics"]["collision_count"])
 	# At level 4, one primary projectile can arc through at most five nearby targets.
+	session.weapon_enabled = true
 	session._next_weapon_time = session.player_active_time
 	if not await _wait_for_projectiles_to_clear(session, baseline + 5):
 		session.queue_free()
@@ -512,7 +533,7 @@ func _infinite_circuit_branches() -> bool:
 		not _collect_evolution(session, "lightning_conductor", "storm_core"):
 		session.queue_free()
 		return false
-	session._next_weapon_time = session.player_active_time
+	session.weapon_enabled = false
 	for point in points:
 		session.simulation.spawn("test_target", 1, point, 100.0, Vector2.ZERO)
 	targets = await _wait_for_targets(session, 6)
@@ -520,9 +541,11 @@ func _infinite_circuit_branches() -> bool:
 		session.queue_free()
 		return false
 	baseline = int(session.simulation.snapshot()["metrics"]["collision_count"])
+	session.weapon_enabled = true
 	session._next_weapon_time = session.player_active_time
 	var branched := await _wait_for_projectiles_to_clear(session, baseline + 4)
-	var branch_hits := int(session.simulation.snapshot()["metrics"]["collision_count"]) - baseline
+	var final_state: Dictionary = session.simulation.snapshot()
+	var branch_hits := int(final_state["metrics"]["collision_count"]) - baseline
 	session.queue_free()
 	return branched and branch_hits > 2
 
@@ -561,6 +584,7 @@ func _wildfire_explodes_and_spreads() -> bool:
 		return false
 	session.weapon_enabled = true
 	session.simulation.set_speed(4.0)
+	await _wait_for_simulation_speed(session, 4.0)
 	for point in [Vector2(160.0, 0.0), Vector2(160.0, 25.0), Vector2(160.0, 100.0)]:
 		session.simulation.spawn("test_target", 1, point, 100.0, Vector2.ZERO)
 	var targets := await _wait_for_targets(session, 3)
@@ -601,6 +625,15 @@ func _wait_for_projectiles_to_clear(session: Node2D, collisions: int) -> bool:
 			return true
 	return false
 
+func _wait_for_simulation_speed(session: Node2D, expected_speed: float) -> bool:
+	var deadline := Time.get_ticks_msec() + 1500
+	while Time.get_ticks_msec() < deadline:
+		var state: Dictionary = session.simulation.snapshot()
+		if not state["paused"] and is_equal_approx(float(state["speed_multiplier"]), expected_speed):
+			return true
+		await process_frame
+	return false
+
 func _target_count_below_health(session: Node2D, health: float) -> int:
 	var count := 0
 	for entity in session.simulation.snapshot()["entities"]:
@@ -625,6 +658,7 @@ func _bloodstorm_requires_level_five_and_bleeds() -> bool:
 		return false
 	session.weapon_enabled = true
 	session.simulation.set_speed(4.0)
+	await _wait_for_simulation_speed(session, 4.0)
 	var normal_target := await _spawn_crimson_target(session, 0, false, 30.0)
 	if normal_target.is_empty() or normal_target["components"].has("DamageOverTime"):
 		session.queue_free()
@@ -719,12 +753,14 @@ func _weapon_kills_target(weapon_id: String, relic_id: String, target_hp: float,
 	if not session.loadout.apply_offer("relic:" + relic_id):
 		session.queue_free()
 		return false
-	session.weapon_enabled = true
+	session.weapon_enabled = false
 	session.lightning_cooldown = 1000.0
 	session.ordinary_chest_drop_chance = 0.0
 	session.xp_collection_radius = 0.0
 	session.simulation.set_speed(4.0)
-	session.simulation.spawn("test_target", 1, Vector2(target_distance, 0.0), target_hp, Vector2.ZERO)
+	await _wait_for_simulation_speed(session, 4.0)
+	session.simulation.spawn("test_target", 1,
+			session.player.global_position + Vector2(target_distance, 0.0), target_hp, Vector2.ZERO)
 	var spawned := false
 	var deadline := Time.get_ticks_msec() + 2000
 	while Time.get_ticks_msec() < deadline:
@@ -734,7 +770,23 @@ func _weapon_kills_target(weapon_id: String, relic_id: String, target_hp: float,
 			if entity["components"].get("EnemyType", "") == "test_target":
 				spawned = true
 				break
-		if spawned and int(state["metrics"]["collision_count"]) > 0 and not _contains_enemy(state, "test_target"):
+		if spawned:
+			break
+	if not spawned:
+		session.queue_free()
+		return false
+	var baseline := int(session.simulation.snapshot()["metrics"]["collision_count"])
+	session.weapon_enabled = true
+	match weapon_id:
+		"lightning_conductor": session._next_weapon_time = session.player_active_time
+		"inferno_sprayer": session._next_inferno_time = session.player_active_time
+		"crimson_daggers": session._next_daggers_time = session.player_active_time
+	var required_hits := 2 if weapon_id == "crimson_daggers" else 1
+	deadline = Time.get_ticks_msec() + 2000
+	while Time.get_ticks_msec() < deadline:
+		await process_frame
+		var state: Dictionary = session.simulation.snapshot()
+		if int(state["metrics"]["collision_count"]) >= baseline + required_hits and not _contains_enemy(state, "test_target"):
 			session.queue_free()
 			return true
 	session.queue_free()
@@ -768,6 +820,7 @@ func _blood_chalice_boosts_kill_heal() -> bool:
 		session.queue_free()
 		return false
 	session.simulation.set_speed(4.0)
+	await _wait_for_simulation_speed(session, 4.0)
 	session.simulation.spawn_enemy("chaser", 1, Vector2(20.0, 0.0), Vector2.ZERO)
 	var deadline := Time.get_ticks_msec() + 2000
 	while Time.get_ticks_msec() < deadline:

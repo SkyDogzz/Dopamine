@@ -14,9 +14,21 @@ func _run() -> void:
 	session.weapon_enabled = false
 	root.add_child(session)
 	await process_frame
+	var speed_sequence: int = session.simulation.set_speed(4.0)
+	var deadline := Time.get_ticks_msec() + 3000
+	var simulation_started := false
+	while Time.get_ticks_msec() < deadline:
+		var state: Dictionary = session.simulation.snapshot()
+		if int(state["last_sequence"]) >= speed_sequence and not state["paused"] and \
+				float(state["simulation_time"]) > 0.0:
+			simulation_started = true
+			break
+		await process_frame
+	if not simulation_started:
+		_fail("Simulation should resume and accept its speed command before the death check")
+		return
 	session.player_hp = 0.001
-	session.simulation.set_speed(4.0)
-	var deadline := Time.get_ticks_msec() + 1000
+	deadline = Time.get_ticks_msec() + 3000
 	while Time.get_ticks_msec() < deadline:
 		await process_frame
 		if session.run_over:

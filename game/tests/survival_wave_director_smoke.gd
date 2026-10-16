@@ -169,7 +169,7 @@ func _verify_live_full_run() -> bool:
 	session.skip_starting_weapon_choice = true
 	var production_duration := PRODUCTION_DURATION_ARG in OS.get_cmdline_user_args()
 	session.wave_duration_seconds = 30.0 if production_duration else 0.05
-	session.enemy_spawn_interval = 1.0 if production_duration else 1000.0
+	session.enemy_spawn_interval = 1.0 if production_duration else 0.1
 	session.enemy_spawn_radius = 80.0
 	session.chest_collection_radius = 200.0
 	session.xp_collection_radius = 200.0
@@ -186,9 +186,19 @@ func _verify_live_full_run() -> bool:
 	session.chest_option_chosen.connect(func(_option_id: String) -> void: chosen_offers[0] += 1)
 	var treated_bosses: Dictionary = {}
 	var verified_boss_states: Dictionary = {}
+	var mid_boss_return_spawn_count := -1
+	var mid_boss_return_spawn_verified := false
 	var deadline := Time.get_ticks_msec() + (240000 if production_duration else 10000)
 	while not session.run_over and Time.get_ticks_msec() < deadline:
 		var snapshot: Dictionary = session.simulation.snapshot()
+		if session.wave_director.wave >= 13 and \
+				session.wave_director.state == session.WAVE_DIRECTOR_SCRIPT.State.WAVE and \
+				not session._boss_spawn_pending:
+			var active_enemy_count := _active_enemy_count(snapshot["entities"])
+			if mid_boss_return_spawn_count < 0:
+				mid_boss_return_spawn_count = active_enemy_count
+			elif active_enemy_count > mid_boss_return_spawn_count:
+				mid_boss_return_spawn_verified = true
 		for entity in snapshot["entities"]:
 			var components: Dictionary = entity["components"]
 			var enemy_type: String = components.get("EnemyType", "")
@@ -238,6 +248,9 @@ func _verify_live_full_run() -> bool:
 	if verified_boss_states.size() != 2:
 		_fail("The live run should verify both boss fights")
 		return false
+	if not mid_boss_return_spawn_verified:
+		_fail("Regular enemy spawning should resume after the wave-12 mid-boss")
+		return false
 	if session.player_active_time < 1.0:
 		_fail("A live run should account for elapsed simulation time")
 		return false
@@ -253,6 +266,15 @@ func _verify_live_full_run() -> bool:
 		session.queue_free()
 		await process_frame
 	return true
+
+func _active_enemy_count(entities: Array) -> int:
+	var count := 0
+	for entity in entities:
+		var components: Dictionary = entity["components"]
+		if components.get("IsProjectile", false) or components.get("IsXpOrb", false):
+			continue
+		count += 1
+	return count
 
 func _wait_for_entity_type(session: Node2D, expected_type: String) -> bool:
 	var deadline := Time.get_ticks_msec() + 1000

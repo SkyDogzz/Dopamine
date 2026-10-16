@@ -1600,12 +1600,13 @@ func _fire_infinite_circuit(active_time: float, target_budget: int, damage_multi
 			var needed_targets := target_budget - target_count
 			for parent in frontier:
 				var children := _nearest_lightning_targets(parent["position"], used_ids, mini(branch_factor, needed_targets))
+				var parent_position: Vector2 = parent["position"]
 				for child in children:
 					var target_id: Vector2i = child["id"]
-					var direction: Vector2 = (child["position"] - parent["position"]).normalized()
+					var direction: Vector2 = (child["position"] - parent_position).normalized()
 					if direction == Vector2.ZERO:
 						direction = Vector2.RIGHT
-					if simulation.spawn_projectile("infinite_circuit_branch", child["position"] + direction * 14.0,
+					if simulation.spawn_projectile("infinite_circuit_branch", parent_position + direction * 14.0,
 							direction * _equipment_projectile_speed(lightning_projectile_speed), lightning_damage * damage_multiplier,
 							_equipment_area(lightning_projectile_radius), lightning_projectile_lifetime) <= 0:
 						continue

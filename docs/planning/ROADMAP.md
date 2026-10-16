@@ -383,8 +383,8 @@ Travail requis :
 - [ ] **P5.4.4 — Mid-boss**
   - [x] Définir les phases proposées et rendre leurs transitions visibles dans le HUD/télégraphes.
   - [x] Implémenter les attaques de phase en tranches testables, dont la charge mobile télégraphiée de phase 3.
-  - [ ] Vérifier timer suspendu et réapparition du spawn après la vague 12.
-  - Prototype Pulse Warden : phases affichées selon les PV (seuils 66 % / 33 % **[PROPOSÉS]**), salve radiale annoncée en phase 1, alternance tir ciblé/charge avec invocation bornée en phase 2, puis alternance salve radiale/charge en phase 3. La charge trace sa trajectoire, déplace l’entité sous steering natif pendant 0,28 s et reprend ensuite le steering joueur. Le smoke vérifie télégraphie, gel en pause, transitions, invocation et charges des phases 2–3; patterns et valeurs demeurent **[PROPOSÉS]**.
+  - [x] Vérifier timer de vague suspendu pendant le boss, decay actif, puis reprise des spawns réguliers après la vague 12.
+  - Prototype Pulse Warden : phases affichées selon les PV (seuils 66 % / 33 % **[PROPOSÉS]**), salve radiale annoncée en phase 1, alternance tir ciblé/charge avec invocation bornée en phase 2, puis alternance salve radiale/charge en phase 3. La charge trace sa trajectoire, déplace l’entité sous steering natif pendant 0,28 s et reprend ensuite le steering joueur. Les smokes vérifient télégraphie, gel en pause, transitions, invocation, charges des phases 2–3, gel du timer de vague durant les boss, maintien du decay et reprise des spawns réguliers après le mid-boss; patterns et valeurs demeurent **[PROPOSÉS]**.
 - [ ] **P5.4.5 — Boss final**
   - [x] Définir et implémenter trois phases selon les PV : rayon puis zone esquivable, spirale tirée en salves successives avec invocation en phase 2, puis rayon/zone combinés avec spirale ; télégraphes et HUD de phase vérifiés. Motifs, seuils, dégâts et cadence **[PROPOSÉS]**.
   - [x] Smoke boss : les phases 2 et 3 saturent le plafond global d’invocations proposé à trois, rejettent les suivantes et réutilisent une place après la mort d’un add.
