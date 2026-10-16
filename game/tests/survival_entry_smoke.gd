@@ -30,8 +30,13 @@ func _run() -> void:
 		_fail("The 32x32 Art Bible player sprite should render at native logical size")
 		return
 	var choice_buttons: VBoxContainer = current_scene.get_node("HUD/ChestOverlay/ChestChoice/Content/Options")
-	for button in choice_buttons.get_children():
-		if button.icon == null:
+	var starting_options: Array[Dictionary] = current_scene.loadout.starting_weapon_options()
+	for index in range(choice_buttons.get_child_count()):
+		var button := choice_buttons.get_child(index) as Button
+		var offer_icon := button.get_node_or_null("ContentMargin/OfferRow/OfferIcon") as TextureRect
+		if offer_icon == null or offer_icon.texture == null or \
+			offer_icon.texture.resource_path != str(starting_options[index].get("icon", "")) or \
+			offer_icon.texture_filter != CanvasItem.TEXTURE_FILTER_NEAREST or offer_icon.custom_minimum_size != Vector2(32, 32):
 			_fail("Starting weapon choices should display their weapon sprites")
 			return
 	if current_scene.progression_service != null:

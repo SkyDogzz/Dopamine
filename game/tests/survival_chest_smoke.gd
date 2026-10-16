@@ -12,16 +12,19 @@ func _run() -> void:
 		_fail("Survival chests should load their dedicated pixel-art reward sprite")
 		return
 	var chest_position := Vector2.ZERO
-	var xp_position: Vector2 = session._find_spaced_drop_position(chest_position, false, [chest_position], [])
+	var chest_positions: Array[Vector2] = [chest_position]
+	var no_xp_positions: Array[Vector2] = []
+	var no_chest_positions: Array[Vector2] = []
+	var xp_position: Vector2 = session._find_spaced_drop_position(chest_position, false, chest_positions, no_xp_positions)
 	if session._pickup_sprites_overlap(xp_position, session.XP_SPRITE_SIZE,
 			chest_position, session.CHEST_SPRITE_SIZE):
 		_fail("XP orbs must be placed clear of weapon and relic chests")
 		return
-	var second_chest_position: Vector2 = session._find_spaced_drop_position(chest_position, true, [chest_position], [])
+	var second_chest_position: Vector2 = session._find_spaced_drop_position(chest_position, true, chest_positions, no_xp_positions)
 	if second_chest_position.distance_squared_to(chest_position) < session.PICKUP_SPACING_STEP * session.PICKUP_SPACING_STEP:
 		_fail("Weapon and relic chests must not completely overlap")
 		return
-	var moved_chest_position: Vector2 = session._find_spaced_drop_position(chest_position, true, [], [chest_position])
+	var moved_chest_position: Vector2 = session._find_spaced_drop_position(chest_position, true, no_chest_positions, chest_positions)
 	if session._pickup_sprites_overlap(moved_chest_position, session.CHEST_SPRITE_SIZE,
 			chest_position, session.XP_SPRITE_SIZE):
 		_fail("A chest must avoid overlapping a previously dropped XP orb")
