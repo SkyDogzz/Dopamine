@@ -890,3 +890,9 @@ Note de clôture : le blocage historique du smoke `sandbox_ui_smoke.gd` décrit 
 - [x] Sous Godot 4.7.2 headless, `survival_weapon_catalog_smoke.gd` et `survival_boss_attack_smoke.gd` terminent avec code 0.
 - [ ] Les deux smokes émettent encore des avertissements ObjectDB/ressources à la fermeture; la sortie détaillée du smoke boss identifie `boss_telegraph.wav` et ses `AudioStreamPlaybackWAV` encore référencés. La gestion SFX est suivie séparément; cette vérification ne démontre pas une fuite en session de production.
 - [ ] Ces smokes ciblés ne ferment pas l’équilibrage du combat ni P5.V3.
+
+## P4 — Choix de l’arme de départ — 2026-10-16
+
+- [x] `survival_starting_weapon_smoke.gd` cherchait Inferno Sprayer par index fixe alors que les deux offres de départ sont mélangées. Le test sélectionne maintenant l’offre par son titre affiché.
+- [x] Le smoke passe cinq exécutions consécutives sous Godot 4.7.2 headless, en vérifiant la pause avant sélection puis la reprise de simulation, du temps actif et du HP decay après choix.
+- [ ] Le smoke conserve un avertissement de ressource à la fermeture; cela n’affecte pas ses assertions fonctionnelles.

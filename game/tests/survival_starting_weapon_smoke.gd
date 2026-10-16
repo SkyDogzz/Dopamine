@@ -25,7 +25,15 @@ func _run() -> void:
 			not is_equal_approx(session.player_hp, paused_hp):
 		_fail("The starting weapon modal should pause simulation time, active time and HP decay")
 		return
-	choice.get_node("Content/Options/Choice1").emit_signal("pressed")
+	var inferno_choice: Button
+	for option in choice.get_node("Content/Options").get_children():
+		if option.get_node("ContentMargin/OfferRow/OfferDetails/OfferTitle").text == "Inferno Sprayer":
+			inferno_choice = option
+			break
+	if inferno_choice == null:
+		_fail("The starting weapon options should include Inferno Sprayer")
+		return
+	inferno_choice.emit_signal("pressed")
 	var deadline := Time.get_ticks_msec() + 1000
 	while Time.get_ticks_msec() < deadline:
 		state = session.simulation.snapshot()
