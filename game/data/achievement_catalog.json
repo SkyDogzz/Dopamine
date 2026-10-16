@@ -65,6 +65,58 @@
         { "id": "gold", "threshold": 10, "rewards": { "damage_pct": 0.0003 } },
         { "id": "diamond", "threshold": 25, "rewards": { "damage_pct": 0.0004 } }
       ]
+    },
+    {
+      "id": "arsenal_builder",
+      "category": "weapons",
+      "secret": false,
+      "metric": "max_weapon_loadout",
+      "aggregation": "max",
+      "tiers": [
+        { "id": "bronze", "threshold": 2, "rewards": { "damage_pct": 0.0001 } },
+        { "id": "silver", "threshold": 3, "rewards": { "damage_pct": 0.0002 } },
+        { "id": "gold", "threshold": 4, "rewards": { "damage_pct": 0.0003 } },
+        { "id": "diamond", "threshold": 5, "rewards": { "damage_pct": 0.0004 } }
+      ]
+    },
+    {
+      "id": "relic_collector",
+      "category": "relics_evolutions",
+      "secret": false,
+      "metric": "max_relic_loadout",
+      "aggregation": "max",
+      "tiers": [
+        { "id": "bronze", "threshold": 1, "rewards": { "damage_pct": 0.0001 } },
+        { "id": "silver", "threshold": 2, "rewards": { "damage_pct": 0.0002 } },
+        { "id": "gold", "threshold": 3, "rewards": { "damage_pct": 0.0003 } },
+        { "id": "diamond", "threshold": 5, "rewards": { "damage_pct": 0.0004 } }
+      ]
+    },
+    {
+      "id": "evolutionist",
+      "category": "relics_evolutions",
+      "secret": false,
+      "metric": "evolutions_in_run",
+      "aggregation": "sum",
+      "tiers": [
+        { "id": "bronze", "threshold": 1, "rewards": { "damage_pct": 0.0001 } },
+        { "id": "silver", "threshold": 5, "rewards": { "damage_pct": 0.0002 } },
+        { "id": "gold", "threshold": 25, "rewards": { "damage_pct": 0.0003 } },
+        { "id": "diamond", "threshold": 100, "rewards": { "damage_pct": 0.0004 } }
+      ]
+    },
+    {
+      "id": "equipment_collector",
+      "category": "equipment",
+      "secret": false,
+      "metric": "equipment_items_collected",
+      "aggregation": "sum",
+      "tiers": [
+        { "id": "bronze", "threshold": 10, "rewards": { "damage_pct": 0.00005 } },
+        { "id": "silver", "threshold": 25, "rewards": { "damage_pct": 0.0001 } },
+        { "id": "gold", "threshold": 50, "rewards": { "damage_pct": 0.00015 } },
+        { "id": "diamond", "threshold": 100, "rewards": { "damage_pct": 0.0002 } }
+      ]
     }
   ]
 }

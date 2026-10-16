@@ -22,9 +22,9 @@
 
 - [x] Le profil v7 stocke les valeurs de métriques et les paliers par ID d’achievement. `progression_service_smoke.gd` vérifie la migration des profils v1–v6, dont un profil v6 avec progression Exterminator existante, sans perte des kills/paliers/ressources; des données v7 malformed sont rejetées sans réécriture de la save.
 - [x] `award_survival_run` met à jour les métriques de kills cumulés, meilleure vague, runs terminées, victoires au boss final et victoires Chaos. Les répétitions de `run_id` ne progressent aucune métrique deux fois.
-- [x] Le catalogue compte cinq familles branchées aux catégories Combat, Survival, Progression, Difficulty & Bosses et Secrets. Les bonus de tous les paliers sont reconstruits depuis les définitions; le résultat de run distingue le nombre de paliers Exterminator du total générique.
+- [x] Le catalogue compte maintenant neuf familles couvrant les catégories Combat, Survival, Progression, Difficulty & Bosses, Secrets, Weapons, Relics & Evolutions et Equipment. `progression_service_smoke.gd` vérifie les métriques de build, le comptage de l’équipement garanti, les paliers et le rejet d’une métrique inconnue avant toute récompense. Les bonus restent reconstruits depuis les définitions; le résultat de run distingue le nombre de paliers Exterminator du total générique.
 - [x] Smokes ciblés passés sous Godot 4.7.2 : `progression_service_smoke.gd`, `survival_difficulty_profile_smoke.gd`, `survival_progression_smoke.gd`, `run_result_panel_smoke.gd`.
-- [ ] Les catégories Weapons, Relics & Evolutions et Equipment nécessitent leurs métriques de run/équipement; le catalogue cible de 100–150 familles reste à créer. Catégories, seuils et récompenses ajoutés ici restent **[PROPOSÉS]**; aucun statut du GDD n’est promu.
+- [ ] Le catalogue cible de 100–150 familles reste à étendre depuis ces neuf prototypes. Catégories, seuils et récompenses ajoutés ici restent **[PROPOSÉS]**; aucun statut du GDD n’est promu.
 - [x] Le chemin temporaire sans `SaveService` fournit seulement les quatre entrées d’équipement de départ et ne peut pas sauvegarder; `survival_progression_smoke.gd` couvre la run sans sauvegarde.
 
 ## P6.9 — Baseline synthétique de balance — 2026-10-16

@@ -400,7 +400,7 @@ func _run() -> void:
 		_fail("Dismantling should remove the item once and persist its proposed rarity powder reward")
 		return
 	var achievement_service = load("res://scripts/progression_service.gd").new(save_service, "achievement")
-	if achievement_service._achievement_definitions.size() != 5 or \
+	if achievement_service._achievement_definitions.size() != 9 or \
 		not achievement_service._achievement_definitions.has("survivor_depth") or \
 		not achievement_service._achievement_definitions.has("veteran_runner") or \
 		not achievement_service._achievement_definitions.has("boss_slayer") or \
@@ -412,9 +412,34 @@ func _run() -> void:
 		achievement_categories[str(definition["category"])] = true
 	if not achievement_categories.has("combat") or not achievement_categories.has("survival") or \
 			not achievement_categories.has("progression") or not achievement_categories.has("difficulty_bosses") or \
-			not achievement_categories.has("secrets") or \
+			not achievement_categories.has("secrets") or not achievement_categories.has("weapons") or \
+			not achievement_categories.has("relics_evolutions") or not achievement_categories.has("equipment") or \
 			not achievement_service._achievement_definitions["chaos_conqueror"]["secret"]:
-		_fail("The data-backed achievement tranche should cover its five current categories and retain secret state")
+		_fail("The data-backed achievement tranche should cover all eight categories and retain secret state")
+		return
+	var run_metrics_directory := directory.path_join("run_metrics")
+	DirAccess.make_dir_recursive_absolute(run_metrics_directory)
+	var run_metrics_save = load("res://scripts/save_service.gd").new(run_metrics_directory)
+	var run_metrics_service = load("res://scripts/progression_service.gd").new(run_metrics_save, "0")
+	var run_metrics_award: Dictionary = run_metrics_service.award_survival_run("metrics-run", 12, false, 0, "easy", {
+		"max_weapon_loadout": 3,
+		"max_relic_loadout": 4,
+		"evolutions_in_run": 2,
+	})
+	var run_metrics_profile: Dictionary = run_metrics_service.load_profile()["profile"]
+	if not run_metrics_award.get("ok", false) or run_metrics_award.get("new_achievement_tier_count") != 8 or \
+		run_metrics_profile["achievement_progress"]["metrics"].get("max_weapon_loadout") != 3 or \
+		run_metrics_profile["achievement_progress"]["metrics"].get("max_relic_loadout") != 4 or \
+		run_metrics_profile["achievement_progress"]["metrics"].get("evolutions_in_run") != 2 or \
+		run_metrics_profile["achievement_progress"]["metrics"].get("equipment_items_collected") != 1 or \
+		run_metrics_profile["achievement_progress"]["tiers"].get("arsenal_builder") != 2 or \
+		run_metrics_profile["achievement_progress"]["tiers"].get("relic_collector") != 3 or \
+		run_metrics_profile["achievement_progress"]["tiers"].get("evolutionist") != 1:
+		_fail("Run build metrics should advance weapon, relic, evolution and survival achievements: %s" % [str(run_metrics_award)])
+		return
+	if run_metrics_service.award_survival_run("invalid-metrics", 12, false, 0, "easy", {"unknown_metric": 1}).get("error") != "invalid_achievement_metrics" or \
+		run_metrics_service.load_profile()["profile"]["rewarded_survival_runs"].has("invalid-metrics"):
+		_fail("Unknown run metrics must be rejected before any reward or idempotency state is saved")
 		return
 	var exterminator_definition: Dictionary = achievement_service._achievement_definitions.get("exterminator", {})
 	if exterminator_definition.get("category", "") != "combat" or \

@@ -112,7 +112,8 @@ func _append_stat_nodes(stat_id: String, node_prefix: String, stat_name: String,
 		prerequisite = node_id
 
 func award_survival_run(
-	run_id: String, wave_reached: int, victory: bool, kills: int = 0, difficulty_id: String = "normal"
+	run_id: String, wave_reached: int, victory: bool, kills: int = 0, difficulty_id: String = "normal",
+	run_metrics: Dictionary = {}
 ) -> Dictionary:
 	if _save_service == null or not _valid_run_id(run_id):
 		return _award_error("invalid_run")
@@ -121,6 +122,13 @@ func award_survival_run(
 		return _award_error("invalid_difficulty")
 	if _achievement_definitions.is_empty():
 		return _award_error("achievement_catalog_invalid")
+	var metric_aggregations := _achievement_metric_aggregations()
+	var derived_metrics := ["total_kills", "highest_wave", "completed_runs", "boss_victories", "chaos_victories", "equipment_items_collected"]
+	for metric_id in run_metrics:
+		var metric_value: Variant = run_metrics[metric_id]
+		if typeof(metric_id) != TYPE_STRING or metric_id in derived_metrics or not metric_aggregations.has(metric_id) or \
+			typeof(metric_value) not in [TYPE_INT, TYPE_FLOAT] or not is_finite(float(metric_value)) or float(metric_value) < 0.0:
+			return _award_error("invalid_achievement_metrics")
 	var profile_result := load_profile()
 	if not profile_result.get("ok", false):
 		return _award_error(str(profile_result.get("error", "load_failed")))
@@ -153,8 +161,9 @@ func award_survival_run(
 		"completed_runs": 1,
 		"boss_victories": 1 if final_boss_vanquished else 0,
 		"chaos_victories": 1 if final_boss_vanquished and difficulty_id == "chaos" else 0,
+		"equipment_items_collected": 1,
 	}
-	var metric_aggregations := _achievement_metric_aggregations()
+	metric_deltas.merge(run_metrics)
 	for metric_id in metric_deltas:
 		if not achievement_metrics.has(metric_id) or not metric_aggregations.has(metric_id):
 			continue

@@ -1645,8 +1645,17 @@ func _finish_run(victory: bool) -> void:
 		armorless_run_state.end_run()
 		_pending_armorless_draft_waves.clear()
 	elif progression_service != null and progression_service.can_save_profile():
+		var evolved_weapons := 0
+		for weapon_id in loadout.owned_weapons():
+			if loadout.is_evolved(weapon_id):
+				evolved_weapons += 1
+		var run_metrics := {
+			"max_weapon_loadout": loadout.owned_weapons().size(),
+			"max_relic_loadout": loadout.owned_relics().size(),
+			"evolutions_in_run": evolved_weapons,
+		}
 		reward = progression_service.award_survival_run(
-			_run_id, wave_director.wave, victory, kill_count, difficulty_id
+			_run_id, wave_director.wave, victory, kill_count, difficulty_id, run_metrics
 		)
 	_run_result.show_result(victory, wave_director.wave, player_active_time, kill_count, reward)
 
