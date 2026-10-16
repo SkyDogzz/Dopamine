@@ -482,7 +482,7 @@ Travail requis :
   - [ ] Implémenter une famille par catégorie puis étendre vers la cible 100–150.
   - [ ] Vérifier seuils, quatre paliers, attribution unique et cumul des bonus.
 - [ ] **P6.8 — Sauvegarde et migrations**
-  - [ ] Ajouter une fixture versionnée pour chaque schéma supporté.
+  - [x] `progression_service_smoke.gd` couvre une fixture pour chaque profil supporté v1–v5 et vérifie migration vers v6, données conservées et champs ajoutés.
   - [ ] Vérifier migration, sauvegarde, backup et restauration après corruption.
   - [ ] Vérifier idempotence d’un même `run_id` après redémarrage.
 - [ ] **P6.9 — Calibration**

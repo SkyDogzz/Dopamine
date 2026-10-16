@@ -219,6 +219,43 @@ func _run() -> void:
 			migrated_profile["equipment_inventory"].size() != 0:
 		_fail("A previous progression profile should migrate without losing resources or replaying a reward")
 		return
+	var migration_template_service = load("res://scripts/progression_service.gd").new(save_service, "migration-template")
+	for version in range(3, 6):
+		var fixture: Dictionary = migration_template_service.load_profile()["profile"].duplicate(true)
+		fixture["profile_version"] = version
+		fixture["resources"] = {
+			"essence": 17, "powder_basic": 23, "powder_refined": 4,
+			"powder_pure": 2, "powder_prismatic": 1,
+		}
+		fixture["rewarded_survival_runs"] = ["migration-v%d-run" % version]
+		fixture["equipment_inventory"] = []
+		fixture.erase("highest_unlocked_difficulty")
+		fixture.erase("unlocked_skill_nodes")
+		fixture.erase("achievement_progress")
+		if version <= 4:
+			fixture["equipment_inventory"] = [
+				_capacity_migration_item("migration-v%d-item" % version),
+			]
+		if not save_service.save_slot("migration-v%d" % version, fixture):
+			_fail("A version %d profile fixture should save" % version)
+			return
+		var migration_service = load("res://scripts/progression_service.gd").new(
+			save_service, "migration-v%d" % version
+		)
+		var migration_result: Dictionary = migration_service.load_profile()
+		if not migration_result.get("ok", false):
+			_fail("A version %d profile should migrate: %s" % [version, migration_result])
+			return
+		var migrated_fixture: Dictionary = migration_result["profile"]
+		var migrated_resources: Dictionary = migrated_fixture["resources"]
+		var expected_equipment_count := 1 if version <= 4 else 0
+		if migrated_fixture["profile_version"] != 6 or migrated_fixture["highest_unlocked_difficulty"] != "easy" or \
+				migrated_fixture["rewarded_survival_runs"] != ["migration-v%d-run" % version] or \
+				migrated_resources["essence"] != 17 or migrated_resources["powder_basic"] != 23 or \
+				migrated_fixture["equipment_inventory"].size() != expected_equipment_count or \
+				migrated_fixture["achievement_progress"] != {"total_kills": 0, "exterminator_tier": 0}:
+			_fail("Version %d migration should preserve owned data and initialize only missing fields" % version)
+			return
 	var version_two_profile: Dictionary = profile.duplicate(true)
 	version_two_profile["profile_version"] = 2
 	for item in version_two_profile["equipment_inventory"]:
@@ -323,3 +360,13 @@ func _valid_equipment_instance(equipment: Dictionary) -> bool:
 			line_counts.has(rarity) and equipment["stat_lines"].size() == line_counts[rarity] and \
 		equipment.get("equipped") is bool and \
 			(not rarity in ["legendary", "mythic"] or equipment["unique_effect_id"] in ["pending_choice", "overflow_shield"])
+
+func _capacity_migration_item(instance_id: String) -> Dictionary:
+	return {
+		"instance_id": instance_id, "slot": "helmet", "rarity": "normal",
+		"equipped": false, "source_mode": "survival", "unique_effect_id": "",
+		"stat_lines": [{
+			"stat_id": "damage_pct", "roll_percentile": 0.5,
+			"enhancement_level": 0, "fail_streak": 0,
+		}],
+	}
