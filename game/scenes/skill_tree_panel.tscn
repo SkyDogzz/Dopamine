@@ -27,6 +27,7 @@ mouse_filter = 2
 [node name="Panel" type="PanelContainer" parent="."]
 custom_minimum_size = Vector2(420, 226)
 layout_mode = 2
+theme_type_variation = "CompactPanel"
 
 [node name="Content" type="VBoxContainer" parent="Panel"]
 layout_mode = 2
@@ -72,6 +73,7 @@ theme_override_constants/separation = 6
 custom_minimum_size = Vector2(164, 104)
 layout_mode = 2
 size_flags_horizontal = 3
+theme_type_variation = "InsetPanel"
 
 [node name="Content" type="VBoxContainer" parent="Panel/Content/NodeBranch/FoundationCard"]
 layout_mode = 2
@@ -113,6 +115,7 @@ vertical_alignment = 1
 custom_minimum_size = Vector2(164, 104)
 layout_mode = 2
 size_flags_horizontal = 3
+theme_type_variation = "InsetPanel"
 
 [node name="Content" type="VBoxContainer" parent="Panel/Content/NodeBranch/FollowupCard"]
 layout_mode = 2

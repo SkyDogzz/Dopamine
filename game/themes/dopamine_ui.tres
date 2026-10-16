@@ -1,4 +1,4 @@
-[gd_resource type="Theme" load_steps=25 format=3]
+[gd_resource type="Theme" load_steps=26 format=3]
 
 [ext_resource type="FontFile" path="res://assets/fonts/DejaVuSans.ttf" id="font_body"]
 [ext_resource type="FontFile" path="res://assets/fonts/PressStart2P-Regular.ttf" id="font_heading"]
@@ -34,6 +34,22 @@ content_margin_left = 4.0
 content_margin_top = 3.0
 content_margin_right = 4.0
 content_margin_bottom = 3.0
+
+[sub_resource type="StyleBoxFlat" id="InsetPanelSurface"]
+bg_color = Color(0.039216, 0.058824, 0.12549, 1)
+border_color = Color(0.239216, 0.282353, 0.407843, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+corner_radius_top_left = 0
+corner_radius_top_right = 0
+corner_radius_bottom_right = 0
+corner_radius_bottom_left = 0
+content_margin_left = 5.0
+content_margin_top = 4.0
+content_margin_right = 5.0
+content_margin_bottom = 4.0
 
 [sub_resource type="StyleBoxFlat" id="ButtonNormal"]
 bg_color = Color(0.105882, 0.137255, 0.251, 1)
@@ -332,7 +348,10 @@ OptionButton/styles/focus = SubResource("ButtonFocus")
 OptionButton/styles/disabled = SubResource("ButtonDisabled")
 Panel/styles/panel = SubResource("PanelSurface")
 PanelContainer/styles/panel = SubResource("PanelSurface")
+CompactPanel/base_type = "PanelContainer"
 CompactPanel/styles/panel = SubResource("CompactPanelSurface")
+InsetPanel/base_type = "PanelContainer"
+InsetPanel/styles/panel = SubResource("InsetPanelSurface")
 SpinBox/styles/normal = SubResource("FieldNormal")
 SpinBox/styles/focus = SubResource("FieldFocus")
 SpinBox/styles/disabled = SubResource("FieldDisabled")

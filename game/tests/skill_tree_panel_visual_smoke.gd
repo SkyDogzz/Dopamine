@@ -14,6 +14,12 @@ func _run() -> void:
 	var branch: HBoxContainer = panel.get_node("Panel/Content/NodeBranch")
 	var foundation_card: PanelContainer = panel.get_node("Panel/Content/NodeBranch/FoundationCard")
 	var followup_card: PanelContainer = panel.get_node("Panel/Content/NodeBranch/FollowupCard")
+	var frame_style := frame.get_theme_stylebox("panel") as StyleBoxFlat
+	var foundation_style := foundation_card.get_theme_stylebox("panel") as StyleBoxFlat
+	if frame_style == null or frame_style.border_color.to_html(false) != "37e8f5" or \
+		foundation_style == null or foundation_style.border_color.to_html(false) != "3d4868":
+		_fail("Skill tree frame and node cards should resolve their distinct shared theme variations")
+		return
 	var essence_icon: TextureRect = panel.get_node("Panel/Content/EssenceRow/EssenceIcon")
 	var essence: Label = panel.get_node("Panel/Content/EssenceRow/Essence")
 	if essence_icon.texture == null or essence_icon.texture.resource_path != "res://assets/icons/catalog/resource_essence.png" or \
