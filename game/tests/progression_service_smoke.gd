@@ -48,10 +48,16 @@ func _run() -> void:
 		_fail("A Normal wave 24 victory should grant the GDD proposed 88 Essence and 122 Basic Powder")
 		return
 	var profile: Dictionary = save_service.load_slot("0")["payload"]
-	if profile.get("profile_version") != 6 or profile.get("highest_unlocked_difficulty") != "hard" or \
+	if profile.get("profile_version") != 7 or profile.get("highest_unlocked_difficulty") != "hard" or \
 			profile["resources"].get("powder_refined") != 0 or \
 			profile["resources"].get("powder_pure") != 0 or profile["resources"].get("powder_prismatic") != 0:
 		_fail("Progression should initialize all powder tiers and unlock the next difficulty after the Normal victory fixture")
+		return
+	var no_save_progression = load("res://scripts/progression_service.gd").new(null, "temporary")
+	if no_save_progression.can_save_profile() or \
+			no_save_progression.unlocked_weapon_ids() != ["lightning_conductor", "inferno_sprayer"] or \
+			no_save_progression.unlocked_relic_ids() != ["storm_core", "infernal_heart"]:
+		_fail("A no-save progression context should expose only the starter loadout without enabling persistence")
 		return
 	var difficulties = load("res://scripts/survival_difficulty.gd")
 	if difficulties.ORDER != ["easy", "normal", "hard", "nightmare", "chaos"] or \
@@ -296,7 +302,7 @@ func _run() -> void:
 	var migrated_duplicate: Dictionary = legacy_service.award_survival_run("already-awarded", 24, true)
 	var migrated_profile: Dictionary = save_service.load_slot("legacy")["payload"]
 	if not migrated_duplicate.get("ok", false) or not migrated_duplicate.get("duplicate", false) or \
-			migrated_profile.get("profile_version") != 6 or \
+			migrated_profile.get("profile_version") != 7 or \
 			migrated_profile.get("highest_unlocked_difficulty") != "easy" or \
 			migrated_profile["resources"].get("essence") != 7 or \
 			migrated_profile["equipment_inventory"].size() != 0:
@@ -332,13 +338,47 @@ func _run() -> void:
 		var migrated_fixture: Dictionary = migration_result["profile"]
 		var migrated_resources: Dictionary = migrated_fixture["resources"]
 		var expected_equipment_count := 1 if version <= 4 else 0
-		if migrated_fixture["profile_version"] != 6 or migrated_fixture["highest_unlocked_difficulty"] != "easy" or \
+		if migrated_fixture["profile_version"] != 7 or migrated_fixture["highest_unlocked_difficulty"] != "easy" or \
 				migrated_fixture["rewarded_survival_runs"] != ["migration-v%d-run" % version] or \
 				migrated_resources["essence"] != 17 or migrated_resources["powder_basic"] != 23 or \
 				migrated_fixture["equipment_inventory"].size() != expected_equipment_count or \
-				migrated_fixture["achievement_progress"] != {"total_kills": 0, "exterminator_tier": 0}:
+				migrated_fixture["achievement_progress"]["metrics"]["total_kills"] != 0 or \
+				migrated_fixture["achievement_progress"]["tiers"]["exterminator"] != 0:
 			_fail("Version %d migration should preserve owned data and initialize only missing fields" % version)
 			return
+	if not save_service.save_slot("version-six", {
+		"profile_version": 6,
+		"resources": {"essence": 19, "powder_basic": 2, "powder_refined": 0, "powder_pure": 0, "powder_prismatic": 0},
+		"equipment_inventory": [], "rewarded_survival_runs": ["v6-run"], "unlocked_skill_nodes": [],
+		"highest_unlocked_difficulty": "normal",
+		"achievement_progress": {"total_kills": 1234, "exterminator_tier": 2},
+	}):
+		_fail("A version 6 profile fixture should save")
+		return
+	var v6_service = load("res://scripts/progression_service.gd").new(save_service, "version-six")
+	var v6_result: Dictionary = v6_service.load_profile()
+	var v6_profile: Dictionary = v6_result.get("profile", {})
+	if not v6_result.get("ok", false) or v6_profile.get("profile_version") != 7 or \
+			v6_profile["achievement_progress"]["metrics"]["total_kills"] != 1234 or \
+			v6_profile["achievement_progress"]["tiers"]["exterminator"] != 2 or \
+			v6_profile["achievement_progress"]["tiers"]["survivor_depth"] != 0 or \
+			v6_profile["resources"]["essence"] != 19 or v6_profile["rewarded_survival_runs"] != ["v6-run"]:
+		_fail("Version 6 achievement progress should migrate to the generic metric/tier shape without loss")
+		return
+	var invalid_achievement_profile: Dictionary = v6_service.load_profile()["profile"]
+	invalid_achievement_profile["achievement_progress"] = {"metrics": "invalid", "tiers": {}}
+	if not save_service.save_slot("invalid-achievements", invalid_achievement_profile):
+		_fail("Could not save a malformed achievement fixture")
+		return
+	var invalid_achievement_path := directory.path_join("slot_invalid-achievements.json")
+	var invalid_achievement_bytes := FileAccess.get_file_as_string(invalid_achievement_path)
+	var invalid_achievement_result: Dictionary = load("res://scripts/progression_service.gd").new(
+		save_service, "invalid-achievements"
+	).load_profile()
+	if invalid_achievement_result.get("ok", false) or \
+			FileAccess.get_file_as_string(invalid_achievement_path) != invalid_achievement_bytes:
+		_fail("Malformed current achievement data should be rejected without being overwritten by migration")
+		return
 	var version_two_profile: Dictionary = profile.duplicate(true)
 	version_two_profile["profile_version"] = 2
 	for item in version_two_profile["equipment_inventory"]:
@@ -349,7 +389,7 @@ func _run() -> void:
 	var version_two_service = load("res://scripts/progression_service.gd").new(save_service, "version-two")
 	var migrated_profile_result: Dictionary = version_two_service.load_profile()
 	var migrated_inventory: Array = migrated_profile_result.get("profile", {}).get("equipment_inventory", [])
-	if not migrated_profile_result.get("ok", false) or migrated_profile_result["profile"].get("profile_version") != 6 or \
+	if not migrated_profile_result.get("ok", false) or migrated_profile_result["profile"].get("profile_version") != 7 or \
 			migrated_inventory.size() != 2 or migrated_inventory[0].get("equipped", true) or migrated_inventory[1].get("equipped", true):
 		_fail("Version 2 equipment should migrate as unequipped without losing items")
 		return
@@ -360,6 +400,22 @@ func _run() -> void:
 		_fail("Dismantling should remove the item once and persist its proposed rarity powder reward")
 		return
 	var achievement_service = load("res://scripts/progression_service.gd").new(save_service, "achievement")
+	if achievement_service._achievement_definitions.size() != 5 or \
+		not achievement_service._achievement_definitions.has("survivor_depth") or \
+		not achievement_service._achievement_definitions.has("veteran_runner") or \
+		not achievement_service._achievement_definitions.has("boss_slayer") or \
+		not achievement_service._achievement_definitions.has("chaos_conqueror"):
+		_fail("Achievement catalog should include data-backed families across the currently supported run metrics")
+		return
+	var achievement_categories := {}
+	for definition in achievement_service._achievement_definitions.values():
+		achievement_categories[str(definition["category"])] = true
+	if not achievement_categories.has("combat") or not achievement_categories.has("survival") or \
+			not achievement_categories.has("progression") or not achievement_categories.has("difficulty_bosses") or \
+			not achievement_categories.has("secrets") or \
+			not achievement_service._achievement_definitions["chaos_conqueror"]["secret"]:
+		_fail("The data-backed achievement tranche should cover its five current categories and retain secret state")
+		return
 	var exterminator_definition: Dictionary = achievement_service._achievement_definitions.get("exterminator", {})
 	if exterminator_definition.get("category", "") != "combat" or \
 		exterminator_definition.get("metric", "") != "total_kills" or \
@@ -370,8 +426,12 @@ func _run() -> void:
 	var achievement_run: Dictionary = achievement_service.award_survival_run("kill-run", 24, true, 100, "easy")
 	var achievement_profile: Dictionary = achievement_service.load_profile()["profile"]
 	if achievement_run.get("new_achievement_tiers") != 1 or \
-			achievement_profile["achievement_progress"]["total_kills"] != 100 or \
-			achievement_service.achievement_bonus("damage_pct") != 0.0005:
+			achievement_run.get("new_achievement_tier_count") != 6 or \
+			achievement_profile["achievement_progress"]["metrics"]["total_kills"] != 100 or \
+			achievement_profile["achievement_progress"]["metrics"]["highest_wave"] != 24 or \
+			achievement_profile["achievement_progress"]["metrics"]["boss_victories"] != 1 or \
+			achievement_profile["achievement_progress"]["tiers"]["survivor_depth"] != 4 or \
+			not is_equal_approx(achievement_service.achievement_bonus("damage_pct"), 0.0016):
 		_fail("The first Exterminator tier should grant only its proposed cumulative damage bonus: award=%s progress=%s bonus=%s" % [
 			str(achievement_run), str(achievement_profile["achievement_progress"]),
 			str(achievement_service.achievement_bonus("damage_pct")),
@@ -379,16 +439,32 @@ func _run() -> void:
 		return
 	var second_achievement_run: Dictionary = achievement_service.award_survival_run("kill-run-two", 24, true, 900, "easy")
 	if second_achievement_run.get("new_achievement_tiers") != 1 or \
-			achievement_service.achievement_bonus("damage_pct") != 0.0015 or \
+			not is_equal_approx(achievement_service.achievement_bonus("damage_pct"), 0.0026) or \
 			achievement_service.award_survival_run("kill-run-two", 24, true, 1000, "easy").get("duplicate") != true or \
-			achievement_service.load_profile()["profile"]["achievement_progress"]["total_kills"] != 1000:
-		_fail("The proposed Exterminator tier should unlock once and run rewards should stay idempotent")
+			achievement_service.load_profile()["profile"]["achievement_progress"]["metrics"]["total_kills"] != 1000:
+		_fail("The proposed Exterminator tier should unlock once and run rewards should stay idempotent: run=%s bonus=%s progress=%s" % [
+			str(second_achievement_run), str(achievement_service.achievement_bonus("damage_pct")),
+			str(achievement_service.load_profile()["profile"]["achievement_progress"]),
+		])
 		return
 	achievement_service.award_survival_run("kill-run-three", 24, true, 9000, "easy")
 	achievement_service.award_survival_run("kill-run-four", 24, true, 90000, "easy")
-	if achievement_service.achievement_bonus("damage_pct") != 0.005 or \
-			achievement_service.load_profile()["profile"]["achievement_progress"]["exterminator_tier"] != 4:
+	if not is_equal_approx(achievement_service.achievement_bonus("damage_pct"), 0.0061) or \
+			achievement_service.load_profile()["profile"]["achievement_progress"]["tiers"]["exterminator"] != 4:
 		_fail("All four proposed Exterminator tiers should accumulate the example total bonus")
+		return
+	var achievement_before_chaos: Dictionary = achievement_service.load_profile()["profile"]
+	achievement_before_chaos["highest_unlocked_difficulty"] = "chaos"
+	if not save_service.save_slot("achievement", achievement_before_chaos):
+		_fail("Could not prepare the Chaos achievement fixture")
+		return
+	var chaos_achievement_run: Dictionary = achievement_service.award_survival_run("chaos-achievement", 24, true, 0, "chaos")
+	var chaos_achievement_profile: Dictionary = achievement_service.load_profile()["profile"]
+	if chaos_achievement_run.get("new_achievement_tier_count") != 2 or \
+			chaos_achievement_profile["achievement_progress"]["metrics"]["chaos_victories"] != 1 or \
+			chaos_achievement_profile["achievement_progress"]["tiers"]["chaos_conqueror"] != 1 or \
+			not is_equal_approx(achievement_service.achievement_bonus("damage_pct"), 0.0064):
+		_fail("Secret Chaos achievements should track their metric before revealing their first tier")
 		return
 	var unlock_directory := directory.path_join("difficulty_unlock")
 	DirAccess.make_dir_recursive_absolute(unlock_directory)

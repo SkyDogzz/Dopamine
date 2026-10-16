@@ -489,11 +489,12 @@ Travail requis :
   - [ ] Calibrer la puissance réelle des profils débutant/moyen/complet dans P6.9; décider ensuite si le graphe doit s’étendre au-delà de 100 vers la cible éditoriale **[PROPOSÉE]** d’environ 120.
 - [ ] **P6.7 — Achievements**
   - [x] Établir le schéma JSON métrique/catégorie/secret/agrégation/paliers/récompenses, aligné sur `AchievementDefinition` du GDD.
-  - [x] Migrer Exterminator en première famille `combat` chargée depuis `game/data/achievement_catalog.json`; seuils et bonus de l’exemple restent **[PROPOSÉS]**.
-  - [ ] Étendre à une famille par catégorie puis vers la cible 100–150; la répartition de catégories reste **[PROPOSÉE]**.
-  - [ ] Vérifier seuils, quatre paliers, attribution unique et cumul des bonus.
+  - [x] Remplacer le suivi isolé d’Exterminator par des métriques et paliers génériques; profils version 7 et migration additive v1–v6, vérifiés par fixtures dédiées.
+  - [x] Ajouter des familles reliées aux métriques actuelles : Combat, Survival, Progression, Difficulty & Bosses et Secrets. Catégories, seuils et bonus restent **[PROPOSÉS]**.
+  - [x] Reconstituer les bonus de tous les tiers au chargement, compter les paliers débloqués une fois par run idempotente et les résumer à l’écran de résultat.
+  - [ ] Ajouter les métriques d’usage armes, reliques/évolutions et équipement pour couvrir leurs catégories **[PROPOSÉES]**, puis étendre vers 100–150 familles.
 - [ ] **P6.8 — Sauvegarde et migrations**
-  - [x] `progression_service_smoke.gd` couvre une fixture pour chaque profil supporté v1–v5 et vérifie migration vers v6, données conservées et champs ajoutés.
+- [x] `progression_service_smoke.gd` couvre une fixture pour chaque profil supporté v1–v6 et vérifie migration vers v7, données conservées et champs ajoutés.
   - [x] Vérifier migration, sauvegarde, backup et restauration après corruption : `save_service_smoke.gd` couvre l’enveloppe générique; `progression_service_smoke.gd` récupère maintenant un profil complet via un nouveau SaveService/ProgressionService et valide ses ressources, runs récompensées et équipements.
   - [x] Vérifier idempotence d’un même `run_id` après recréation du service et rechargement du slot, sans nouveau gain de ressources ni pièce d’équipement.
 - [ ] **P6.9 — Calibration**

@@ -1,6 +1,6 @@
 extends RefCounted
 
-const PROFILE_VERSION := 6
+const PROFILE_VERSION := 7
 const STARTER_WEAPONS := ["lightning_conductor", "inferno_sprayer"]
 const STARTER_RELICS := ["storm_core", "infernal_heart"]
 const POWDER_TIERS := ["basic", "refined", "pure", "prismatic"]
@@ -119,8 +119,7 @@ func award_survival_run(
 	var difficulty_index := SURVIVAL_DIFFICULTY_SCRIPT.ORDER.find(difficulty_id)
 	if difficulty_index < 0:
 		return _award_error("invalid_difficulty")
-	var exterminator: Dictionary = _achievement_definitions.get("exterminator", {})
-	if exterminator.is_empty():
+	if _achievement_definitions.is_empty():
 		return _award_error("achievement_catalog_invalid")
 	var profile_result := load_profile()
 	if not profile_result.get("ok", false):
@@ -145,12 +144,39 @@ func award_survival_run(
 	profile["resources"]["powder_basic"] = int(profile["resources"]["powder_basic"]) + powder_reward
 	var equipment: Dictionary = _equipment_generator.generate_survival_item(run_id, difficulty_id, wave)
 	profile["equipment_inventory"].append(equipment)
-	var achievements: Dictionary = profile["achievement_progress"]
-	var previous_tier := int(achievements["exterminator_tier"])
-	achievements["total_kills"] = int(achievements["total_kills"]) + maxi(0, kills)
-	var current_tier := _achievement_tier_for_metric(exterminator, float(achievements["total_kills"]))
-	achievements["exterminator_tier"] = current_tier
-	profile["achievement_progress"] = achievements
+	var achievement_progress: Dictionary = profile["achievement_progress"]
+	var achievement_metrics: Dictionary = achievement_progress["metrics"]
+	var achievement_tiers: Dictionary = achievement_progress["tiers"]
+	var metric_deltas := {
+		"total_kills": maxi(0, kills),
+		"highest_wave": wave,
+		"completed_runs": 1,
+		"boss_victories": 1 if final_boss_vanquished else 0,
+		"chaos_victories": 1 if final_boss_vanquished and difficulty_id == "chaos" else 0,
+	}
+	var metric_aggregations := _achievement_metric_aggregations()
+	for metric_id in metric_deltas:
+		if not achievement_metrics.has(metric_id) or not metric_aggregations.has(metric_id):
+			continue
+		var delta: float = float(metric_deltas[metric_id])
+		if metric_aggregations[metric_id] == "max":
+			achievement_metrics[metric_id] = maxf(float(achievement_metrics[metric_id]), delta)
+		else:
+			achievement_metrics[metric_id] = float(achievement_metrics[metric_id]) + delta
+	var newly_unlocked_tiers := 0
+	var new_exterminator_tiers := 0
+	for achievement_id in _achievement_definitions:
+		var definition: Dictionary = _achievement_definitions[achievement_id]
+		var metric_id := str(definition["metric"])
+		var previous_tier := int(achievement_tiers[achievement_id])
+		var current_tier := _achievement_tier_for_metric(definition, float(achievement_metrics[metric_id]))
+		achievement_tiers[achievement_id] = current_tier
+		newly_unlocked_tiers += current_tier - previous_tier
+		if achievement_id == "exterminator":
+			new_exterminator_tiers = current_tier - previous_tier
+	achievement_progress["metrics"] = achievement_metrics
+	achievement_progress["tiers"] = achievement_tiers
+	profile["achievement_progress"] = achievement_progress
 	rewarded_runs.append(run_id)
 	profile["rewarded_survival_runs"] = rewarded_runs
 	if not _save_service.save_slot(_slot_id, profile):
@@ -161,7 +187,8 @@ func award_survival_run(
 		"essence": essence_reward,
 		"powder_basic": powder_reward,
 		"equipment": equipment,
-		"new_achievement_tiers": current_tier - previous_tier,
+		"new_achievement_tiers": new_exterminator_tiers,
+		"new_achievement_tier_count": newly_unlocked_tiers,
 	}
 	if not newly_unlocked_difficulty.is_empty():
 		result["newly_unlocked_difficulty"] = newly_unlocked_difficulty
@@ -200,11 +227,24 @@ func load_profile() -> Dictionary:
 	elif version == 5:
 		profile["profile_version"] = PROFILE_VERSION
 		migrated = true
+	elif version == 6:
+		profile["profile_version"] = PROFILE_VERSION
+		migrated = true
 	profile["highest_unlocked_difficulty"] = profile.get("highest_unlocked_difficulty", "easy")
 	profile["unlocked_skill_nodes"] = profile.get("unlocked_skill_nodes", [])
-	profile["achievement_progress"] = profile.get("achievement_progress", {
-		"total_kills": 0, "exterminator_tier": 0,
-	})
+	if not profile.has("achievement_progress"):
+		if version < PROFILE_VERSION:
+			profile["achievement_progress"] = _empty_achievement_progress()
+			migrated = true
+	else:
+		var achievement_progress: Variant = profile["achievement_progress"]
+		if achievement_progress is Dictionary:
+			var normalized_achievement_progress := _migrate_achievement_progress(achievement_progress)
+			if achievement_progress != normalized_achievement_progress:
+				profile["achievement_progress"] = normalized_achievement_progress
+				migrated = true
+	if migrated:
+		profile["profile_version"] = PROFILE_VERSION
 	if not _valid_profile(profile):
 		return {"ok": false, "error": "invalid_profile"}
 	if migrated and not _save_service.save_slot(_slot_id, profile):
@@ -416,6 +456,8 @@ func unlocked_weapon_ids() -> Array[String]:
 	var result: Array[String] = []
 	for weapon_id in STARTER_WEAPONS:
 		result.append(str(weapon_id))
+	if _save_service == null:
+		return result
 	var profile_result := load_profile()
 	if not profile_result.get("ok", false):
 		return []
@@ -429,6 +471,8 @@ func unlocked_relic_ids() -> Array[String]:
 	var result: Array[String] = []
 	for relic_id in STARTER_RELICS:
 		result.append(str(relic_id))
+	if _save_service == null:
+		return result
 	var profile_result := load_profile()
 	if not profile_result.get("ok", false):
 		return []
@@ -483,15 +527,52 @@ func achievement_bonus(stat_id: String) -> float:
 	var result := load_profile()
 	if not result.get("ok", false):
 		return 0.0
-	var tier := int(result["profile"]["achievement_progress"]["exterminator_tier"])
-	var exterminator: Dictionary = _achievement_definitions.get("exterminator", {})
-	if exterminator.is_empty():
-		return 0.0
 	var bonus := 0.0
-	var tiers: Array = exterminator["tiers"]
-	for index in range(mini(tier, tiers.size())):
-		bonus += float(tiers[index]["rewards"].get(stat_id, 0.0))
+	var acquired_tiers: Dictionary = result["profile"]["achievement_progress"]["tiers"]
+	for achievement_id in _achievement_definitions:
+		var definition: Dictionary = _achievement_definitions[achievement_id]
+		var tiers: Array = definition["tiers"]
+		for index in range(mini(int(acquired_tiers[achievement_id]), tiers.size())):
+			bonus += float(tiers[index]["rewards"].get(stat_id, 0.0))
 	return bonus
+
+func _achievement_metric_aggregations() -> Dictionary:
+	var result := {}
+	for definition in _achievement_definitions.values():
+		result[str(definition["metric"])] = str(definition["aggregation"])
+	return result
+
+func _empty_achievement_progress() -> Dictionary:
+	var metrics := {}
+	var tiers := {}
+	for achievement_id in _achievement_definitions:
+		var definition: Dictionary = _achievement_definitions[achievement_id]
+		metrics[str(definition["metric"])] = 0
+		tiers[str(achievement_id)] = 0
+	return {"metrics": metrics, "tiers": tiers}
+
+func _migrate_achievement_progress(previous: Variant) -> Dictionary:
+	var progress := _empty_achievement_progress()
+	if not previous is Dictionary:
+		return progress
+	var previous_metrics: Dictionary = previous
+	var previous_tiers: Dictionary = previous
+	if previous.has("metrics") or previous.has("tiers"):
+		if not previous.get("metrics") is Dictionary or not previous.get("tiers") is Dictionary:
+			return previous
+		previous_metrics = previous["metrics"]
+		previous_tiers = previous["tiers"]
+	for achievement_id in _achievement_definitions:
+		var definition: Dictionary = _achievement_definitions[achievement_id]
+		var metric_id := str(definition["metric"])
+		if previous_metrics.has(metric_id):
+			progress["metrics"][metric_id] = previous_metrics[metric_id]
+		var legacy_tier_key := "%s_tier" % str(achievement_id)
+		if previous_tiers.has(achievement_id):
+			progress["tiers"][achievement_id] = previous_tiers[achievement_id]
+		elif previous.has(legacy_tier_key):
+			progress["tiers"][achievement_id] = previous[legacy_tier_key]
+	return progress
 
 func _load_achievement_catalog() -> Dictionary:
 	if not FileAccess.file_exists(ACHIEVEMENT_CATALOG_PATH):
@@ -502,6 +583,7 @@ func _load_achievement_catalog() -> Dictionary:
 			parsed["achievements"].size() > 150:
 		return {}
 	var definitions: Dictionary = {}
+	var metric_aggregations: Dictionary = {}
 	for definition in parsed["achievements"]:
 		if not definition is Dictionary or definition.size() != 6 or typeof(definition.get("id")) != TYPE_STRING or \
 				str(definition["id"]).is_empty() or definitions.has(definition["id"]) or \
@@ -511,6 +593,11 @@ func _load_achievement_catalog() -> Dictionary:
 				str(definition.get("aggregation", "")) not in ["sum", "max"] or \
 				not definition.get("tiers") is Array or definition["tiers"].size() != 4:
 			return {}
+		var metric_id := str(definition["metric"])
+		var metric_aggregation := str(definition["aggregation"])
+		if metric_aggregations.has(metric_id) and metric_aggregations[metric_id] != metric_aggregation:
+			return {}
+		metric_aggregations[metric_id] = metric_aggregation
 		var previous_threshold := 0
 		var tier_ids: Dictionary = {}
 		for achievement_tier in definition["tiers"]:
@@ -552,7 +639,7 @@ func _empty_profile() -> Dictionary:
 		"rewarded_survival_runs": [],
 		"unlocked_skill_nodes": [],
 		"highest_unlocked_difficulty": "easy",
-		"achievement_progress": {"total_kills": 0, "exterminator_tier": 0},
+		"achievement_progress": _empty_achievement_progress(),
 	}
 
 func _valid_profile(profile: Dictionary) -> bool:
@@ -572,14 +659,20 @@ func _valid_profile(profile: Dictionary) -> bool:
 		if typeof(run_id) != TYPE_STRING or not _valid_run_id(run_id):
 			return false
 	var achievements: Dictionary = profile["achievement_progress"]
-	var total_kills = achievements.get("total_kills", -1)
-	var achievement_tier = achievements.get("exterminator_tier", -1)
-	if typeof(total_kills) not in [TYPE_INT, TYPE_FLOAT] or not is_finite(float(total_kills)) or \
-			int(total_kills) != total_kills or total_kills < 0 or \
-			typeof(achievement_tier) not in [TYPE_INT, TYPE_FLOAT] or not is_finite(float(achievement_tier)) or \
-			int(achievement_tier) != achievement_tier or achievement_tier < 0 or \
-			achievement_tier > _achievement_definitions.get("exterminator", {}).get("tiers", []).size():
+	if not achievements.get("metrics") is Dictionary or not achievements.get("tiers") is Dictionary or \
+			achievements["metrics"].size() != _achievement_metric_aggregations().size() or \
+			achievements["tiers"].size() != _achievement_definitions.size():
 		return false
+	for metric_id in _achievement_metric_aggregations():
+		var metric_value = achievements["metrics"].get(metric_id, -1)
+		if typeof(metric_value) not in [TYPE_INT, TYPE_FLOAT] or not is_finite(float(metric_value)) or float(metric_value) < 0.0:
+			return false
+	for achievement_id in _achievement_definitions:
+		var achievement_tier = achievements["tiers"].get(achievement_id, -1)
+		if typeof(achievement_tier) not in [TYPE_INT, TYPE_FLOAT] or not is_finite(float(achievement_tier)) or \
+				int(achievement_tier) != achievement_tier or achievement_tier < 0 or \
+				achievement_tier > _achievement_definitions[achievement_id]["tiers"].size():
+			return false
 	var seen_skill_nodes: Dictionary = {}
 	for node_id in profile["unlocked_skill_nodes"]:
 		if typeof(node_id) != TYPE_STRING or not _skill_nodes.has(node_id) or seen_skill_nodes.has(node_id):

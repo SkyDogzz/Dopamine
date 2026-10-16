@@ -66,6 +66,14 @@ func _run() -> void:
 	if victory_surface == null or victory_surface.border_color.to_html(false) != "48e69b":
 		_fail("Victory should use the shared compact frame with a matching green status edge")
 		return
+	panel.show_result(false, 12, 320.0, 40, {
+		"ok": true, "duplicate": false, "essence": 18, "powder_basic": 26,
+		"equipment": {"rarity": "normal", "slot": "boots"},
+		"new_achievement_tier_count": 3,
+	})
+	if not panel.get_node("Content/Achievement").text.contains("OTHER TIERS +3"):
+		_fail("The run result should summarize newly unlocked non-Exterminator achievement tiers")
+		return
 	panel.show_result(false, 8, 120.0, 30, {"ok": true, "duplicate": true})
 	if rewards.text != "ALREADY REWARDED" or not equipment.text.is_empty() or \
 		panel.get_node("Content").get_node_or_null("RewardIcons") != null or \

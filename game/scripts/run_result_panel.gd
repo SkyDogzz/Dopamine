@@ -50,7 +50,14 @@ func show_result(victory: bool, wave_number: int, active_seconds: float, kills: 
 		_equipment.text = ""
 		_achievement.text = ""
 	elif reward.get("ok", false):
-		_achievement.text = "EXTERMINATOR TIER +%d  •  PROPOSED THRESHOLDS" % int(reward.get("new_achievement_tiers", 0)) if int(reward.get("new_achievement_tiers", 0)) > 0 else ""
+		var exterminator_tiers := int(reward.get("new_achievement_tiers", 0))
+		var total_tiers := int(reward.get("new_achievement_tier_count", exterminator_tiers))
+		var achievement_summary := []
+		if exterminator_tiers > 0:
+			achievement_summary.append("EXTERMINATOR TIER +%d" % exterminator_tiers)
+		if total_tiers > exterminator_tiers:
+			achievement_summary.append("OTHER TIERS +%d" % (total_tiers - exterminator_tiers))
+		_achievement.text = "  •  ".join(achievement_summary)
 		if not _achievement.text.is_empty():
 			_add_icon_row("AchievementIcon", _achievement, [ACHIEVEMENT_ICON])
 		if reward.get("duplicate", false):

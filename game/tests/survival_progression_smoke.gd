@@ -63,7 +63,7 @@ func _run() -> void:
 		_fail("The Survival result should show its permanent equipment reward")
 		return
 	if not achievement_label.text.contains("EXTERMINATOR TIER +1") or \
-			profile["achievement_progress"]["total_kills"] != 100:
+			profile["achievement_progress"]["metrics"]["total_kills"] != 100:
 		_fail("Survival results should persist the proposed Exterminator threshold exactly once")
 		return
 	if profile["resources"].get("essence") != 17 or profile["resources"].get("powder_basic") != 23:
@@ -75,7 +75,7 @@ func _run() -> void:
 	session._finish_run(false)
 	profile = save_service.load_slot("0")["payload"]
 	if profile["resources"].get("essence") != 17 or profile["rewarded_survival_runs"].size() != 1 or \
-			profile["achievement_progress"]["total_kills"] != 100:
+			profile["achievement_progress"]["metrics"]["total_kills"] != 100:
 		_fail("Finishing the same run twice must not duplicate its persistent reward")
 		return
 	var temporary_session: Node2D = load("res://scenes/survival_session.tscn").instantiate()
