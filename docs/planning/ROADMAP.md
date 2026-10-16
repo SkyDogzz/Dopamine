@@ -550,8 +550,12 @@ Travail requis :
   - [x] Smoke d'intégration accéléré : une session Armorless de production traverse les 12 drafts et choix d'équipement, le boss de vague 12 puis reprend en vague 13; la fin nettoie équipement/Flux temporaires sans ProgressionService ni écriture de save.
   - [ ] Parcourir une session Armorless complète en durée de production avec ses drafts, ses boss et ses pauses de choix.
 - [ ] **P7A.5 — Récompenses ouvertes**
-  - [ ] Décider quels gains permanents sont attribués à Armorless.
-  - [ ] Vérifier qu’aucun équipement permanent n’est accordé avant validation explicite.
+  - [x] Décision utilisateur **[VALIDÉE, 2026-10-16]** : accorder Essence, Powder et achievements à la fin de run Armorless, sans équipement permanent.
+  - [x] Appliquer les récompenses et métriques d’achievements avec l’anti-double-attribution partagé; Armorless conserve ses records par difficulté et n’incrémente pas les métriques d’équipement permanent.
+  - [x] Afficher ressources, achievements et record dans le résultat de run sans ligne d’équipement.
+  - [x] Vérifier qu’un run au-delà de la vague 24 garde sa vague complète pour achievements et calcul de récompenses, sans bonus de boss final ni déblocage de difficulté.
+  - [x] Vérifier que l’équipement temporaire et le Flux restent supprimés à la fin de run.
+  - [ ] Calibrer la formule d’Essence/Powder **[PROPOSÉE]** pour le mode sans fin; elle est linéaire après la vague 24.
 - [ ] **P7A.6 — Validation**
   - [x] Tester une vague, une transition boss, un draft, une amélioration et la défaite; `armorless_session_cycle_smoke.gd`, `survival_armorless_mode_smoke.gd` et `armorless_run_state_smoke.gd` couvrent ces chemins.
   - [x] Vérifier l’idempotence des classements avec `armorless_records_smoke.gd`.

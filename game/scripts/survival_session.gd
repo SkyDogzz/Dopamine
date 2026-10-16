@@ -1908,33 +1908,41 @@ func _finish_run(victory: bool) -> void:
 			armorless_record = progression_service.record_armorless_result(
 				difficulty_id, wave_director.wave, player_active_time, kill_count
 			)
+		if progression_service != null and progression_service.can_save_profile() and \
+			progression_service.has_method("award_armorless_run"):
+			reward = progression_service.award_armorless_run(
+				_run_id, wave_director.wave, kill_count, difficulty_id, _run_achievement_metrics()
+			)
 		armorless_run_state.end_run()
 		_pending_armorless_draft_waves.clear()
 	elif progression_service != null and progression_service.can_save_profile():
-		var evolved_weapons := 0
-		for weapon_id in loadout.owned_weapons():
-			if loadout.is_evolved(weapon_id):
-				evolved_weapons += 1
-		var run_metrics := {
-			"max_weapon_loadout": loadout.owned_weapons().size(),
-			"max_relic_loadout": loadout.owned_relics().size(),
-			"evolutions_in_run": evolved_weapons,
-		}
-		for enemy_type in ENEMY_DEATH_TYPES:
-			run_metrics["enemy_kills_%s" % enemy_type] = int(_enemy_kills_by_type.get(enemy_type, 0))
-		for weapon_id in WEAPON_DAMAGE_IDS:
-			run_metrics["weapon_damage_%s" % weapon_id] = float(_weapon_damage_by_id.get(weapon_id, 0.0))
-			run_metrics["weapon_kills_%s" % weapon_id] = int(_weapon_kills_by_id.get(weapon_id, 0))
-			run_metrics["max_weapon_level_%s" % weapon_id] = loadout.weapon_level(weapon_id)
-			run_metrics["evolutions_%s" % weapon_id] = 1 if loadout.is_evolved(weapon_id) else 0
-		for affix_id in ELITE_AFFIX_ACHIEVEMENT_IDS.values():
-			run_metrics["elite_affix_kills_%s" % affix_id] = int(_elite_affix_kills.get(affix_id, 0))
-		for relic_id in RELIC_ACHIEVEMENT_IDS:
-			run_metrics["max_relic_level_%s" % relic_id] = loadout.relic_level(relic_id)
 		reward = progression_service.award_survival_run(
-			_run_id, wave_director.wave, victory, kill_count, difficulty_id, run_metrics
+			_run_id, wave_director.wave, victory, kill_count, difficulty_id, _run_achievement_metrics()
 		)
 	_run_result.show_result(victory, wave_director.wave, player_active_time, kill_count, reward, armorless_record)
+
+func _run_achievement_metrics() -> Dictionary:
+	var evolved_weapons := 0
+	for weapon_id in loadout.owned_weapons():
+		if loadout.is_evolved(weapon_id):
+			evolved_weapons += 1
+	var run_metrics := {
+		"max_weapon_loadout": loadout.owned_weapons().size(),
+		"max_relic_loadout": loadout.owned_relics().size(),
+		"evolutions_in_run": evolved_weapons,
+	}
+	for enemy_type in ENEMY_DEATH_TYPES:
+		run_metrics["enemy_kills_%s" % enemy_type] = int(_enemy_kills_by_type.get(enemy_type, 0))
+	for weapon_id in WEAPON_DAMAGE_IDS:
+		run_metrics["weapon_damage_%s" % weapon_id] = float(_weapon_damage_by_id.get(weapon_id, 0.0))
+		run_metrics["weapon_kills_%s" % weapon_id] = int(_weapon_kills_by_id.get(weapon_id, 0))
+		run_metrics["max_weapon_level_%s" % weapon_id] = loadout.weapon_level(weapon_id)
+		run_metrics["evolutions_%s" % weapon_id] = 1 if loadout.is_evolved(weapon_id) else 0
+	for affix_id in ELITE_AFFIX_ACHIEVEMENT_IDS.values():
+		run_metrics["elite_affix_kills_%s" % affix_id] = int(_elite_affix_kills.get(affix_id, 0))
+	for relic_id in RELIC_ACHIEVEMENT_IDS:
+		run_metrics["max_relic_level_%s" % relic_id] = loadout.relic_level(relic_id)
+	return run_metrics
 
 func _record_enemy_kill(enemy_type: String, affix: String = "") -> void:
 	if enemy_type in ENEMY_DEATH_TYPES:

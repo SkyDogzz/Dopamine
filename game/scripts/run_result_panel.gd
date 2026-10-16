@@ -8,6 +8,7 @@ signal quit_requested
 @onready var _rewards: Label = $Content/Rewards
 @onready var _equipment: Label = $Content/Equipment
 @onready var _achievement: Label = $Content/Achievement
+@onready var _record: Label = $Content/Record
 @onready var _restart_button: Button = $Content/RestartButton
 
 const RESOURCE_ICONS := [
@@ -38,6 +39,7 @@ func show_result(victory: bool, wave_number: int, active_seconds: float, kills: 
 	_rewards.add_theme_color_override("font_color", Color("#37E8F5"))
 	_equipment.text = ""
 	_achievement.text = ""
+	_record.text = ""
 	_title.text = "VICTORY" if victory else "RUN OVER"
 	var result_color := Color("#48E69B") if victory else Color("#FF7181")
 	_title.add_theme_color_override("font_color", result_color)
@@ -48,16 +50,16 @@ func show_result(victory: bool, wave_number: int, active_seconds: float, kills: 
 	_summary.text = "WAVE %02d  •  %02d:%02d  •  %d KILLS" % [wave_number, total_seconds / 60, total_seconds % 60, kills]
 	if not armorless_record.is_empty():
 		if not armorless_record.get("ok", false):
-			_rewards.text = "RECORD SAVE FAILED"
-			_rewards.add_theme_color_override("font_color", Color("#FF7181"))
+			_record.text = "RECORD SAVE FAILED"
+			_record.add_theme_color_override("font_color", Color("#FF7181"))
 		else:
 			var record: Dictionary = armorless_record["record"]
 			var record_seconds := int(floor(float(record["survival_time_seconds"])))
 			var prefix := "NEW PERSONAL BEST" if armorless_record.get("updated", false) else "PERSONAL BEST"
-			_rewards.text = "%s  ·  WAVE %02d  ·  %02d:%02d  ·  %d KILLS" % [
+			_record.text = "%s  ·  WAVE %02d  ·  %02d:%02d  ·  %d KILLS" % [
 				prefix, int(record["wave"]), record_seconds / 60, record_seconds % 60, int(record["kills"]),
 			]
-	elif reward.is_empty():
+	if reward.is_empty():
 		_rewards.text = "RUN SANS SAUVEGARDE"
 		_equipment.text = ""
 		_achievement.text = ""
@@ -79,14 +81,15 @@ func show_result(victory: bool, wave_number: int, active_seconds: float, kills: 
 			_rewards.text = "+%d ESSENCE  •  +%d BASIC POWDER" % [reward["essence"], reward["powder_basic"]]
 			_add_icon_row("RewardIcons", _rewards, RESOURCE_ICONS)
 			var equipment: Dictionary = reward.get("equipment", {})
-			_equipment.text = "EQUIPMENT: %s %s" % [str(equipment.get("rarity", "")).to_upper(), str(equipment.get("slot", "")).to_upper()]
-			var rarity := str(equipment.get("rarity", "normal"))
-			var icon_path := "res://assets/icons/catalog/rarity_%s.png" % rarity
-			if not ResourceLoader.exists(icon_path):
-				icon_path = "res://assets/icons/catalog/equipment_%s.png" % str(equipment.get("slot", ""))
-			_add_icon_row("EquipmentIcon", _equipment, [icon_path])
-			if equipment.get("unique_effect_id") == "pending_choice":
-				_equipment.text += "  •  UNIQUE EFFECT CHOICE PENDING"
+			if not equipment.is_empty():
+				_equipment.text = "EQUIPMENT: %s %s" % [str(equipment.get("rarity", "")).to_upper(), str(equipment.get("slot", "")).to_upper()]
+				var rarity := str(equipment.get("rarity", "normal"))
+				var icon_path := "res://assets/icons/catalog/rarity_%s.png" % rarity
+				if not ResourceLoader.exists(icon_path):
+					icon_path = "res://assets/icons/catalog/equipment_%s.png" % str(equipment.get("slot", ""))
+				_add_icon_row("EquipmentIcon", _equipment, [icon_path])
+				if equipment.get("unique_effect_id") == "pending_choice":
+					_equipment.text += "  •  UNIQUE EFFECT CHOICE PENDING"
 	else:
 		_rewards.text = "PROGRESSION SAVE FAILED"
 		_rewards.add_theme_color_override("font_color", Color("#FF7181"))

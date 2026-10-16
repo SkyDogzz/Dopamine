@@ -64,21 +64,46 @@ func _run() -> void:
 		return
 	var session: Node2D = load("res://scenes/survival_session.tscn").instantiate()
 	session.mode_id = "armorless"
+	session.difficulty_id = "easy"
 	session.progression_service = progression
 	session.spawn_initial_enemy = false
 	session.wave_spawning_enabled = false
 	session.skip_starting_weapon_choice = true
 	root.add_child(session)
 	await process_frame
-	session.wave_director.wave = 12
-	session.player_active_time = 300.0
-	session.kill_count = 11
+	session.wave_director.wave = 30
+	session.player_active_time = 1200.0
+	session.kill_count = 450
+	var resources_before_run: Dictionary = progression.load_profile()["profile"]["resources"].duplicate(true)
+	var equipment_count_before_run: int = progression.load_profile()["profile"]["equipment_inventory"].size()
 	session._finish_run(false)
 	var result_profile: Dictionary = progression.load_profile()["profile"]
-	if result_profile["armorless_records"]["normal"]["wave"] != 12 or \
-		result_profile["rewarded_survival_runs"].size() != 0 or \
-		not session.get_node("HUD/RunResultOverlay/RunResultPanel/Content/Rewards").text.contains("PERSONAL BEST"):
-		_fail("An Armorless result should save and display a local record without normal run rewards")
+	if result_profile["armorless_records"]["easy"]["wave"] != 30 or \
+		result_profile["rewarded_survival_runs"].size() != 1 or \
+		result_profile["resources"]["essence"] - resources_before_run["essence"] != 53 or \
+		result_profile["resources"]["powder_basic"] - resources_before_run["powder_basic"] != 77 or \
+		result_profile["equipment_inventory"].size() != equipment_count_before_run or \
+		float(result_profile["achievement_progress"]["metrics"]["total_kills"]) != 450.0 or \
+		float(result_profile["achievement_progress"]["metrics"]["highest_wave"]) != 30.0 or \
+		float(result_profile["achievement_progress"]["metrics"]["completed_runs"]) != 1.0 or \
+		float(result_profile["achievement_progress"]["metrics"]["equipment_items_collected"]) != 0.0:
+		_fail("An Armorless result should grant persistent resources without permanent equipment")
+		return
+	var result_panel: Control = session.get_node("HUD/RunResultOverlay/RunResultPanel")
+	if not result_panel.get_node("Content/Rewards").text.contains("ESSENCE") or \
+		not result_panel.get_node("Content/Record").text.contains("PERSONAL BEST") or \
+		not result_panel.get_node("Content/Equipment").text.is_empty():
+		_fail("Armorless results should show both rewards and the record without an equipment reward")
+		return
+	var repeated_reward: Dictionary = progression.award_armorless_run(
+		session._run_id, 30, 450, "easy", {}
+	)
+	var after_duplicate: Dictionary = progression.load_profile()["profile"]
+	if not repeated_reward.get("ok", false) or not repeated_reward.get("duplicate", false) or \
+		after_duplicate["resources"] != result_profile["resources"] or \
+		after_duplicate["achievement_progress"] != result_profile["achievement_progress"] or \
+		after_duplicate["equipment_inventory"].size() != equipment_count_before_run:
+		_fail("Repeating an Armorless run reward must not grant resources or achievements twice")
 		return
 	session.queue_free()
 	await process_frame

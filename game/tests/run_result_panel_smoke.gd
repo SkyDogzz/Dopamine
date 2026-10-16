@@ -96,6 +96,15 @@ func _run() -> void:
 	if rewards.get_theme_color("font_color").to_html(false) != "37e8f5":
 		_fail("A later reward result should restore the normal rewards color after a save error")
 		return
+	panel.show_result(false, 30, 1200.0, 450, {
+		"ok": true, "duplicate": false, "essence": 75, "powder_basic": 110,
+		"new_achievement_tier_count": 2,
+	}, {"ok": true, "updated": true, "record": {"wave": 30, "survival_time_seconds": 1200.0, "kills": 450}})
+	if not rewards.text.contains("+75 ESSENCE") or not panel.get_node("Content/Record").text.contains("NEW PERSONAL BEST") or \
+		not equipment.text.is_empty() or panel.get_node("Content").get_node_or_null("EquipmentIcon") != null or \
+		not panel.get_node("Content/Achievement").text.contains("OTHER TIERS +2"):
+		_fail("Armorless should display resources, achievement progress and its record without permanent equipment")
+		return
 	var original_size: Vector2i = root.size
 	for size in [Vector2i(640, 360), Vector2i(960, 600), Vector2i(1280, 720), Vector2i(1600, 900), Vector2i(1920, 1080)]:
 		root.size = size

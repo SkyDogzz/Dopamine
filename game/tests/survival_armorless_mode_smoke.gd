@@ -3,6 +3,7 @@ extends SceneTree
 class FakeProgression:
 	extends RefCounted
 	var awarded_runs := 0
+	var awarded_armorless_runs := 0
 	func can_save_profile() -> bool: return true
 	func skill_bonus(stat_id: String) -> float:
 		return 0.10 if stat_id == "max_hp_pct" else 0.02 if stat_id == "move_speed_pct" else \
@@ -13,6 +14,10 @@ class FakeProgression:
 	func award_survival_run(_run_id: String, _wave: int, _victory: bool, _kills: int, _difficulty: String) -> Dictionary:
 		awarded_runs += 1
 		return {"ok": true}
+	func award_armorless_run(_run_id: String, _wave: int, _kills: int, _difficulty: String,
+		_run_metrics: Dictionary) -> Dictionary:
+		awarded_armorless_runs += 1
+		return {"ok": true, "essence": 10, "powder_basic": 12}
 
 func _initialize() -> void:
 	var progression := FakeProgression.new()
@@ -37,8 +42,9 @@ func _initialize() -> void:
 		_fail("Armorless should preserve skill and achievement bonuses and initialize its endless run state")
 		return
 	session._finish_run(false)
-	if progression.awarded_runs != 0 or session.armorless_run_state.is_active():
-		_fail("Armorless must not award unvalidated permanent rewards and must clear its temporary state")
+	if progression.awarded_runs != 0 or progression.awarded_armorless_runs != 1 or \
+		session.armorless_run_state.is_active():
+		_fail("Armorless should award only its approved rewards and clear its temporary state")
 		return
 	session.queue_free()
 	await process_frame

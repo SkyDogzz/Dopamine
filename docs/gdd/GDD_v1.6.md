@@ -228,7 +228,9 @@ Données : AchievementDefinition {id, category, secret, metric, aggregation, tie
 
 [PROPOSÉ] HP ennemis Armorless : HP0 × multiplicateur_difficulté × (1,10^(w−1) si w≤24, sinon 1,10^23 × 1,055^(w−24)). HP decay identique au système de base, sans reset. Boss toutes les 12 vagues ; timers suspendus pendant boss, decay maintenu. Densité bornée par budget de performance.
 
-[PROPOSÉ] Récompenses persistantes possibles : Essence, Powder, achievements et records, mais pas d'équipement permanent garanti. Ce dernier point reste une proposition à confirmer ; la règle d'un équipement garanti s'applique explicitement aux runs classiques.
+[VALIDÉ — extension du 2026-10-16] À la fin d'une run Armorless, accorder de l'Essence, de la Basic Powder et le progrès des achievements ; ne pas accorder d'équipement permanent. Les records locaux restent séparés par difficulté.
+
+[PROPOSÉ] Réutiliser la formule de récompenses Survival sans bonus de boss final : Essence = arrondi((15 + 2 × vague atteinte) × multiplicateur de difficulté), Basic Powder = arrondi((20 + 3 × vague atteinte) × multiplicateur de difficulté). Comme Armorless est sans fin, la formule continue après la vague 24 ; montants et multiplicateurs restent à calibrer.
 
 [À TESTER] Draft à trois slots identiques, objets multiples d'un slot, gestion de l'inventaire temporaire, remplacement d'un équipement qui fournit un slot d'arme, destruction de Flux à la mort, sauvegarde/reprise et anti-double-attribution.
 
@@ -443,6 +445,8 @@ Ces effets et chiffres restent à valider.
 - **N'attire jamais les coffres.**
 - Les coffres restent au sol et exigent proximité ou interaction du joueur.
 - Cette exclusion s'applique aussi aux effets de ramassage provenant des équipements, du skill tree et des autres reliques.
+
+**[OUVERT]** Le GDD valide l'attraction des soins, ressources, monnaies et bonus temporaires lorsqu'ils existent, mais ne définit pas ces pickups (effet, valeur ou apparition). Ne pas créer ces objets par déduction de la règle Magnet Heart ; définir chaque pickup avant de l'ajouter au jeu.
 
 Progression proposée :
 

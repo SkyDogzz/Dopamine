@@ -115,6 +115,18 @@ func award_survival_run(
 	run_id: String, wave_reached: int, victory: bool, kills: int = 0, difficulty_id: String = "normal",
 	run_metrics: Dictionary = {}
 ) -> Dictionary:
+	return _award_run(run_id, wave_reached, victory, kills, difficulty_id, run_metrics, true)
+
+func award_armorless_run(
+	run_id: String, wave_reached: int, kills: int = 0, difficulty_id: String = "normal",
+	run_metrics: Dictionary = {}
+) -> Dictionary:
+	return _award_run(run_id, wave_reached, false, kills, difficulty_id, run_metrics, false)
+
+func _award_run(
+	run_id: String, wave_reached: int, victory: bool, kills: int, difficulty_id: String,
+	run_metrics: Dictionary, award_equipment: bool
+) -> Dictionary:
 	if _save_service == null or not _valid_run_id(run_id):
 		return _award_error("invalid_run")
 	var difficulty_index := SURVIVAL_DIFFICULTY_SCRIPT.ORDER.find(difficulty_id)
@@ -147,8 +159,8 @@ func award_survival_run(
 	var unlocked_index: int = SURVIVAL_DIFFICULTY_SCRIPT.ORDER.find(profile["highest_unlocked_difficulty"])
 	if difficulty_index > unlocked_index:
 		return _award_error("difficulty_locked")
-	var wave := clampi(wave_reached, 1, 24)
-	var final_boss_vanquished := victory and wave >= 24
+	var wave := clampi(wave_reached, 1, 24) if award_equipment else maxi(1, wave_reached)
+	var final_boss_vanquished := award_equipment and victory and wave >= 24
 	var difficulty_factors: Dictionary = SURVIVAL_DIFFICULTY_SCRIPT.DATA[difficulty_id]
 	var newly_unlocked_difficulty := ""
 	if final_boss_vanquished and difficulty_index == unlocked_index and unlocked_index < SURVIVAL_DIFFICULTY_SCRIPT.ORDER.size() - 1:
@@ -158,11 +170,11 @@ func award_survival_run(
 	var powder_reward := roundi((20.0 + 3.0 * wave + (30.0 if final_boss_vanquished else 0.0)) * difficulty_factors["powder"])
 	profile["resources"]["essence"] = int(profile["resources"]["essence"]) + essence_reward
 	profile["resources"]["powder_basic"] = int(profile["resources"]["powder_basic"]) + powder_reward
-	var early_death := not victory and wave < EQUIPMENT_GENERATOR_SCRIPT.PROPOSED_EARLY_DEATH_RECOVERY_WAVE
-	var equipment: Dictionary = _equipment_generator.generate_survival_item(
-		run_id, difficulty_id, wave, early_death
-	)
-	profile["equipment_inventory"].append(equipment)
+	var equipment: Dictionary = {}
+	if award_equipment:
+		var early_death := not victory and wave < EQUIPMENT_GENERATOR_SCRIPT.PROPOSED_EARLY_DEATH_RECOVERY_WAVE
+		equipment = _equipment_generator.generate_survival_item(run_id, difficulty_id, wave, early_death)
+		profile["equipment_inventory"].append(equipment)
 	var achievement_progress: Dictionary = profile["achievement_progress"]
 	var achievement_metrics: Dictionary = achievement_progress["metrics"]
 	var achievement_tiers: Dictionary = achievement_progress["tiers"]
@@ -172,12 +184,13 @@ func award_survival_run(
 		"completed_runs": 1,
 		"boss_victories": 1 if final_boss_vanquished else 0,
 		"chaos_victories": 1 if final_boss_vanquished and difficulty_id == "chaos" else 0,
-		"equipment_items_collected": 1,
-		"equipment_rarity_%s" % str(equipment["rarity"]): 1,
-		"equipment_slot_%s" % str(equipment["slot"]): 1,
 		"runs_at_difficulty_%s" % difficulty_id: 1,
 		"boss_victories_at_difficulty_%s" % difficulty_id: 1 if final_boss_vanquished else 0,
 	}
+	if award_equipment:
+		metric_deltas["equipment_items_collected"] = 1
+		metric_deltas["equipment_rarity_%s" % str(equipment["rarity"])] = 1
+		metric_deltas["equipment_slot_%s" % str(equipment["slot"])] = 1
 	metric_deltas.merge(run_metrics)
 	for metric_id in metric_deltas:
 		if not achievement_metrics.has(metric_id) or not metric_aggregations.has(metric_id):
@@ -215,10 +228,11 @@ func award_survival_run(
 		"duplicate": false,
 		"essence": essence_reward,
 		"powder_basic": powder_reward,
-		"equipment": equipment,
 		"new_achievement_tiers": new_exterminator_tiers,
 		"new_achievement_tier_count": newly_unlocked_tiers,
 	}
+	if award_equipment:
+		result["equipment"] = equipment
 	if not newly_unlocked_difficulty.is_empty():
 		result["newly_unlocked_difficulty"] = newly_unlocked_difficulty
 	return result
