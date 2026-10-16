@@ -20,8 +20,18 @@ func _run() -> void:
 		_fail("A run without progression should clearly identify its no-save result")
 		return
 	var restart := panel.get_node("Content/RestartButton") as Button
+	var quit := panel.get_node("Content/QuitButton") as Button
+	if quit.get_index() <= restart.get_index() or quit.text != "QUIT TO MENU":
+		_fail("Quit to menu should appear immediately below the restart action")
+		return
 	if root.gui_get_focus_owner() != restart:
 		_fail("The result action should receive visible keyboard/gamepad focus")
+		return
+	var quit_requested := [false]
+	panel.quit_requested.connect(func() -> void: quit_requested[0] = true)
+	quit.emit_signal("pressed")
+	if not quit_requested[0]:
+		_fail("Quit to menu should emit its navigation request")
 		return
 	var success_reward := {
 		"ok": true,

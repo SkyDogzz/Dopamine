@@ -350,6 +350,7 @@ func _ready() -> void:
 		return
 	_chest_choice.option_selected.connect(_on_chest_option_selected)
 	_run_result.restart_requested.connect(_restart_run)
+	_run_result.quit_requested.connect(_quit_after_run)
 	_pause_resume_button.pressed.connect(_resume_manually_paused_run)
 	_pause_speed_select.item_selected.connect(_on_pause_speed_selected)
 	_pause_options_button.pressed.connect(_open_pause_options)
@@ -1070,6 +1071,13 @@ func _finish_run(victory: bool) -> void:
 
 func _restart_run() -> void:
 	get_tree().reload_current_scene()
+
+func _quit_after_run() -> void:
+	if not run_over:
+		return
+	var error := get_tree().change_scene_to_file("res://scenes/launch_menu.tscn")
+	if error != OK:
+		push_error("Could not return to launch menu after the run: %s" % error_string(error))
 
 func _roll_enemy_chests(enemy_type: String, position: Vector2) -> void:
 	var eligible_families: Array[String] = []

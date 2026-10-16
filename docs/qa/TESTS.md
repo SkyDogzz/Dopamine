@@ -39,6 +39,7 @@
 - [ ] P3 placement des drops : le smoke `survival_chest_smoke.gd` vérifie que les orbes XP ne chevauchent pas les coffres, qu’un coffre reste partiellement visible face à un autre et que le spawn d’un coffre évite aussi un orbe déjà au sol; exécution Godot à relancer.
 - [x] P3 armes/reliques prototype : tests de collision/tuerie Inferno et Crimson, bonus de dégâts Storm Core/Infernal Heart, bonus de soin Blood Chalice, Bloodstorm niveau 5/relique avec saignement/lifesteal, Infinite Circuit niveau 5/Storm Core avec éclairs ramifiés, et Wildfire niveau 5/relique avec explosion et brûlure de zone. Les cibles initiales, branchements et dégâts/rayon d’explosion restent **[PROPOSÉS]**.
 - [x] P3 flux de run : entrée Sandbox→Survival, choix parmi deux armes **[PROPOSÉES]**, résultat de défaite/victoire et vague finale enregistrée comme 24.
+- [ ] Résultat de run : smoke ajouté pour vérifier `QUIT TO MENU` juste sous `RUN AGAIN`, son signal de navigation et l’ajustement responsive; exécution Godot à relancer.
 - [x] P3 boss final : une mort réelle génère les chests boss éligibles et la victoire attend la collecte et le choix de chaque chest.
 - [x] P3 contact : collision joueur-ennemi, invulnérabilité temporaire, pause/reprise des contrôles et verrouillage après la fin vérifiés sous Godot 4.7.2 headless.
 - [x] P3 contact : projectiles et orbes exclus; le rayon de contact enemy correspond au disque affiché (8 unités).

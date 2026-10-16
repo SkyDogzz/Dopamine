@@ -1,6 +1,7 @@
 extends PanelContainer
 
 signal restart_requested
+signal quit_requested
 
 @onready var _title: Label = $Content/Title
 @onready var _summary: Label = $Content/Summary
@@ -16,6 +17,7 @@ const RESOURCE_ICONS := [
 
 func _ready() -> void:
 	$Content/RestartButton.pressed.connect(_on_restart_pressed)
+	$Content/QuitButton.pressed.connect(_on_quit_pressed)
 	visible = false
 
 func show_result(victory: bool, wave_number: int, active_seconds: float, kills: int, reward: Dictionary = {}) -> void:
@@ -82,3 +84,6 @@ func _add_icon_row(row_name: String, anchor: Control, paths: Array) -> void:
 
 func _on_restart_pressed() -> void:
 	restart_requested.emit()
+
+func _on_quit_pressed() -> void:
+	quit_requested.emit()
