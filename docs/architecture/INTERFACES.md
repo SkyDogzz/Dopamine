@@ -12,6 +12,10 @@ L’autoload Godot `Settings` (`SettingsService`) ne possède que `fullscreen_en
 
 `OptionsPanel` utilise le Theme partagé, affiche seulement ces deux réglages et émet `close_requested` via son bouton Retour ou `ui_cancel`. Son écran propriétaire garde l’autorité sur la navigation et sur l’état de toute simulation. L’intégration de ce panneau depuis une pause doit conserver la pause et ses horloges; cette propriété est vérifiée avec le module `survival-pause`. `Settings` n’a aucune référence à `SaveService`, à la progression ou à une run.
 
+## Audio de jeu
+
+L’autoload `Sfx` expose `play(family: String)` pour les effets courts sous `res://assets/audio/sfx/`. Il fait tourner les variantes d’une famille, limite les répétitions et plafonne la lecture à huit voix; en cas de saturation, une voix de priorité inférieure peut être remplacée par un feedback important. `UIFeedback` joue les retours de focus, validation et annulation. Survival relie armes, impacts, morts, XP, récompenses, niveaux et télégraphes aux mêmes familles; le Sandbox utilise aussi les retours de combat, sans accès ni effet sur la progression ou les sauvegardes normales. Le volume passe par le bus `Master` déjà contrôlé par `Settings`.
+
 ## Contrat natif P1 implémenté
 
 `SimulationCore` reste indépendant de Godot et appartient exclusivement à `SimulationWorker`. Le worker possède le thread de simulation ; aucun Node ni élément du `SceneTree` n'est accédé depuis ce thread.

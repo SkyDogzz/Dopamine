@@ -566,6 +566,7 @@ func _resume_manually_paused_run() -> void:
 		return
 	_manually_paused = false
 	_pause_overlay.hide()
+	Sfx.play("ui_pause")
 	simulation.resume()
 
 func _open_pause_options() -> void:
@@ -678,6 +679,9 @@ func _process(_delta: float) -> void:
 				var source_key := _entity_key(int(damage_source["index"]), int(damage_source["generation"]))
 				var target_key := _entity_key(int(damage_target["index"]), int(damage_target["generation"]))
 				var source_type: String = str(event.get("source_type", ""))
+				if not bool(event.get("is_damage_over_time", false)):
+					var target_type := str(event.get("target_type", ""))
+					Sfx.play("hit_heavy" if target_type in ["mid_boss", "final_boss"] else "hit_light")
 				_advance_lightning_chain(event, state["entities"], current_simulation_time)
 				_add_weapon_impact(source_type, Vector2(float(event["position"]["x"]), float(event["position"]["y"])),
 						bool(event.get("is_damage_over_time", false)))
@@ -698,6 +702,7 @@ func _process(_delta: float) -> void:
 				var dead_enemy_type: String = str(event.get("target_type", ""))
 				var dead_enemy_affix: String = str(event.get("target_affix", ""))
 				var death_position := Vector2(float(event["position"]["x"]), float(event["position"]["y"]))
+				Sfx.play("boss_defeat" if dead_enemy_type in ["mid_boss", "final_boss"] else "enemy_kill")
 				_add_enemy_death_pixels(dead_enemy_type, death_position)
 				if dead_enemy_type == "elite" and dead_enemy_affix == "Split-on-Death":
 					_spawn_split_summons(death_position, state)
@@ -735,6 +740,7 @@ func _process(_delta: float) -> void:
 				var id: Dictionary = event["target"]
 				_pending_xp_orbs.erase(_entity_key(int(id["index"]), int(id["generation"])))
 				_remove_reserved_xp_position(Vector2(float(event["position"]["x"]), float(event["position"]["y"])))
+				Sfx.play("xp_pickup")
 				_add_xp(float(event["amount"]))
 	_apply_pending_lifesteal(elapsed_active_time)
 	if latest_event_sequence > _last_combat_event_sequence:
@@ -973,6 +979,7 @@ func _update_pulse_warden_attacks(current_simulation_time: float, paused: bool) 
 		attack["origin"] = origin
 		attack["entity_id"] = id
 		if int(attack["phase"]) != phase:
+			Sfx.play("boss_phase")
 			attack["phase"] = phase
 			attack["pattern_index"] = 0
 			attack["stage"] = "waiting"
@@ -1004,6 +1011,7 @@ func _update_pulse_warden_attacks(current_simulation_time: float, paused: bool) 
 			attack["aim"] = player.global_position
 			attack["fire_at"] = current_simulation_time + maxf(0.1, pulse_warden_telegraph_seconds)
 			attack["stage"] = "telegraph"
+			Sfx.play("boss_telegraph")
 	for key in _pulse_warden_attacks.keys():
 		if not active_wardens.has(key):
 			_pulse_warden_attacks.erase(key)
@@ -1067,6 +1075,7 @@ func _update_dopamine_core_attacks(current_simulation_time: float, paused: bool)
 		var attack: Dictionary = _dopamine_core_attacks[key]
 		attack["origin"] = origin
 		if int(attack["phase"]) != phase:
+			Sfx.play("boss_phase")
 			attack["phase"] = phase
 			attack["pattern_index"] = 0
 			attack["stage"] = "waiting"
@@ -1106,6 +1115,7 @@ func _update_dopamine_core_attacks(current_simulation_time: float, paused: bool)
 			attack["aim"] = player.global_position
 			attack["fire_at"] = current_simulation_time + maxf(0.1, final_boss_telegraph_seconds)
 			attack["stage"] = "telegraph"
+			Sfx.play("boss_telegraph")
 	for key in _dopamine_core_attacks.keys():
 		if not active_cores.has(key):
 			_dopamine_core_attacks.erase(key)
@@ -1337,10 +1347,13 @@ func _xp_pickup_radius(current_simulation_time: float) -> float:
 
 func _add_xp(amount: float) -> void:
 	player_xp += amount
+	var previous_level := player_level
 	while player_xp >= player_xp_to_next:
 		player_xp -= player_xp_to_next
 		player_level += 1
 		player_xp_to_next = xp_base_to_next_level + xp_growth_per_level * float(player_level - 1)
+	if player_level > previous_level:
+		Sfx.play("level_up")
 
 func open_chest(options: Array) -> bool:
 	var family := ""
@@ -1364,6 +1377,8 @@ func _chest_heading(family: String) -> String:
 func _open_chest(options: Array, heading: String) -> bool:
 	if simulation == null or run_over or _chest_open or not _chest_choice.present(options, options.size(), heading):
 		return false
+	if not _starting_weapon_choice_open:
+		Sfx.play("chest_open")
 	_chest_open = true
 	_active_chest_options = options.duplicate(true)
 	_active_chest_heading = heading
@@ -1375,12 +1390,15 @@ func _open_chest(options: Array, heading: String) -> bool:
 func _on_chest_option_selected(option_id: String) -> void:
 	if _starting_weapon_choice_open:
 		if loadout.choose_starting_weapon(option_id.trim_prefix("start:")):
+			Sfx.play("chest_reward")
 			_starting_weapon_choice_open = false
 			simulation.resume()
 		else:
+			Sfx.play("ui_error")
 			_chest_choice.present(loadout.starting_weapon_options(), 2, "CHOOSE YOUR STARTING WEAPON")
 		return
 	if _chest_open and not _is_active_chest_option(option_id):
+		Sfx.play("ui_error")
 		_chest_choice.present(_active_chest_options, _active_chest_options.size(), _active_chest_heading)
 		return
 	var offer_parts := option_id.split(":", false, 1)
@@ -1390,11 +1408,13 @@ func _on_chest_option_selected(option_id: String) -> void:
 	var previous_magnet_heart_level: int = loadout.relic_level("magnet_heart")
 	var applied: bool = loadout.apply_offer(option_id)
 	if not applied:
+		Sfx.play("ui_error")
 		if _chest_open:
 			_chest_choice.present(_active_chest_options, _active_chest_options.size(), _active_chest_heading)
 		return
 	_chest_open = false
 	_active_chest_options.clear()
+	Sfx.play("relic_pickup" if item_family == "relic" else "chest_reward")
 	if previous_item_level >= 0:
 		_show_item_level_feedback(item_family, item_id, previous_item_level)
 	if option_id == "relic:magnet_heart" and previous_magnet_heart_level < loadout.MAX_LEVEL and \
@@ -1926,6 +1946,7 @@ func _fire_inferno_sprayer(active_time: float, paused: bool) -> void:
 			inferno_burn_interval_seconds, inferno_burn_duration_seconds,
 			explosion_radius, explosion_multiplier)
 	if projectile_sequence > 0:
+		Sfx.play("weapon_shot")
 		_try_unique_lightning_burst(damage)
 		_try_evolution_shockwave(damage)
 		_next_inferno_time = active_time + _effective_weapon_cooldown(inferno_cooldown)
@@ -1970,6 +1991,7 @@ func _fire_crimson_daggers(active_time: float, paused: bool) -> void:
 				status_interval, status_duration, 0.0, 0.0, 0, 0.0, 0.0, true, 0.0, 1.0, 1.0, orbit_speed) > 0:
 			fired += 1
 	if fired > 0:
+		Sfx.play("weapon_sweep")
 		_try_unique_lightning_burst(damage)
 		_try_evolution_shockwave(damage)
 		_next_daggers_time = active_time + _effective_weapon_cooldown(daggers_cooldown)
@@ -2006,6 +2028,7 @@ func _fire_minigun(active_time: float, paused: bool) -> void:
 			direction * _equipment_projectile_speed(minigun_projectile_speed), damage,
 			_equipment_area(minigun_projectile_radius), minigun_projectile_lifetime) <= 0:
 		return
+	Sfx.play("weapon_shot")
 	if loadout.is_evolved("minigun"):
 		var ramp := clampf((active_time - _redline_fire_time) / maxf(redline_ramp_seconds, 0.01), 0.0, 1.0)
 		cadence_multiplier *= 1.0 + redline_max_cadence_bonus * ramp
@@ -2036,6 +2059,7 @@ func _fire_toxic_cloud(active_time: float, paused: bool) -> void:
 		toxic_damage_per_tick * dot_multiplier * _persistent_damage_multiplier(), toxic_tick_interval_seconds, duration,
 		cloud_radius, toxic_splash_damage_multiplier)
 	if sequence > 0:
+		Sfx.play("weapon_zap")
 		_next_toxic_time = active_time + _effective_weapon_cooldown(toxic_cooldown)
 
 func _fire_sawblades(active_time: float, paused: bool) -> void:
@@ -2059,6 +2083,7 @@ func _fire_sawblades(active_time: float, paused: bool) -> void:
 		_equipment_area(sawblades_projectile_radius), sawblades_projectile_lifetime,
 		2.0, 0.5, 2.0, 0.0, 0.0, ricochets)
 	if sequence > 0:
+		Sfx.play("weapon_sweep")
 		_next_sawblades_time = active_time + _effective_weapon_cooldown(sawblades_cooldown)
 
 func _fire_meteor_staff(active_time: float, paused: bool) -> void:
@@ -2085,6 +2110,7 @@ func _fire_meteor_staff(active_time: float, paused: bool) -> void:
 				2.0, 0.5, 2.0, _equipment_area(blast_radius), meteor_staff_splash_damage_multiplier) > 0:
 			fired = true
 	if fired:
+		Sfx.play("weapon_shot")
 		var cooldown_multiplier := _weapon_level_multiplier("meteor_staff", "cooldown_multiplier", level)
 		_next_meteor_time = active_time + _effective_weapon_cooldown(meteor_staff_cooldown * cooldown_multiplier)
 
@@ -2141,6 +2167,7 @@ func _fire_prism_laser(active_time: float, paused: bool) -> void:
 		if prism_sequence > 0:
 			fired = true
 	if fired:
+		Sfx.play("weapon_zap")
 		_next_prism_time = active_time + _effective_weapon_cooldown(prism_laser_cooldown)
 
 func _fire_void_orb(active_time: float, paused: bool) -> void:
@@ -2166,6 +2193,7 @@ func _fire_void_orb(active_time: float, paused: bool) -> void:
 			_equipment_area(void_orb_radius), lifetime, 2.0, 0.5, 2.0, 0.0, 0.0, 0,
 			_equipment_area(attraction_radius), attraction_speed, true)
 	if sequence > 0:
+		Sfx.play("weapon_zap")
 		_next_void_orb_time = active_time + _effective_weapon_cooldown(void_orb_cooldown)
 
 func _fire_frost_nova(active_time: float, paused: bool) -> void:
@@ -2194,6 +2222,7 @@ func _fire_frost_nova(active_time: float, paused: bool) -> void:
 	if simulation.spawn_projectile(projectile_type, player.global_position, Vector2.ZERO, damage,
 			radius, frost_nova_duration_seconds, 2.0, 0.5, 2.0, 0.0, 0.0, 0, 0.0, 0.0,
 			true, duration, frost_chill_speed_multiplier, vulnerability) > 0:
+		Sfx.play("weapon_zap")
 		_next_frost_nova_time = active_time + _effective_weapon_cooldown(frost_nova_cooldown * _weapon_level_multiplier("frost_nova", "cooldown_multiplier", level))
 
 func _nearest_enemy_excluding(origin: Vector2, max_range: float, excluded: Array[Vector2i]) -> Dictionary:
