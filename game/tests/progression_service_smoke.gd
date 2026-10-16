@@ -291,7 +291,10 @@ func _run() -> void:
 	if achievement_run.get("new_achievement_tiers") != 1 or \
 			achievement_profile["achievement_progress"]["total_kills"] != 100 or \
 			achievement_service.achievement_bonus("damage_pct") != 0.0005:
-		_fail("The first Exterminator tier should grant only its proposed cumulative damage bonus")
+		_fail("The first Exterminator tier should grant only its proposed cumulative damage bonus: award=%s progress=%s bonus=%s" % [
+			str(achievement_run), str(achievement_profile["achievement_progress"]),
+			str(achievement_service.achievement_bonus("damage_pct")),
+		])
 		return
 	var second_achievement_run: Dictionary = achievement_service.award_survival_run("kill-run-two", 24, true, 900, "easy")
 	if second_achievement_run.get("new_achievement_tiers") != 1 or \
@@ -346,6 +349,29 @@ func _run() -> void:
 	if not save_service.save_slot("0", legacy_effect_profile) or not service.load_profile().get("ok", false) or \
 		service.equipped_unique_effects().has("revive_knockback"):
 		_fail("A stored unsupported effect should remain loadable but must not activate or be newly selectable")
+		return
+	var recovery_baseline: Dictionary = service.load_profile()["profile"]
+	var newer_profile := recovery_baseline.duplicate(true)
+	newer_profile["resources"]["essence"] = int(newer_profile["resources"]["essence"]) + 1
+	if not save_service.save_slot("0", newer_profile):
+		_fail("A newer progression profile should be saved before corruption recovery")
+		return
+	var slot_path := directory.path_join("slot_0.json")
+	var corrupt_file := FileAccess.open(slot_path, FileAccess.WRITE)
+	corrupt_file.store_string("not json")
+	corrupt_file.close()
+	var restarted_save_service = load("res://scripts/save_service.gd").new(directory)
+	var recovered_slot: Dictionary = restarted_save_service.load_slot("0")
+	var restarted_progression_service = load("res://scripts/progression_service.gd").new(
+		restarted_save_service, "0"
+	)
+	var recovered_profile: Dictionary = restarted_progression_service.load_profile()
+	if not recovered_slot.get("ok", false) or not recovered_slot.get("recovered", false) or \
+			int(recovered_slot["payload"]["resources"]["essence"]) != int(recovery_baseline["resources"]["essence"]) or \
+			not recovered_profile.get("ok", false) or \
+			recovered_profile["profile"]["equipment_inventory"].size() != recovery_baseline["equipment_inventory"].size() or \
+			recovered_profile["profile"]["rewarded_survival_runs"] != recovery_baseline["rewarded_survival_runs"]:
+		_fail("A restarted progression service should recover and validate the previous full profile backup")
 		return
 	print("Progression service smoke passed")
 	quit()

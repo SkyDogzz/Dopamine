@@ -484,7 +484,7 @@ Travail requis :
   - [ ] Vérifier seuils, quatre paliers, attribution unique et cumul des bonus.
 - [ ] **P6.8 — Sauvegarde et migrations**
   - [x] `progression_service_smoke.gd` couvre une fixture pour chaque profil supporté v1–v5 et vérifie migration vers v6, données conservées et champs ajoutés.
-  - [ ] Vérifier migration, sauvegarde, backup et restauration après corruption.
+  - [x] Vérifier migration, sauvegarde, backup et restauration après corruption : `save_service_smoke.gd` couvre l’enveloppe générique; `progression_service_smoke.gd` récupère maintenant un profil complet via un nouveau SaveService/ProgressionService et valide ses ressources, runs récompensées et équipements.
   - [x] Vérifier idempotence d’un même `run_id` après recréation du service et rechargement du slot, sans nouveau gain de ressources ni pièce d’équipement.
 - [ ] **P6.9 — Calibration**
   - [ ] Collecter des builds sans bonus, moyens et fortement avancés.
