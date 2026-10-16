@@ -30,6 +30,8 @@ func _run() -> void:
 		_fail("Options panel should use the shared UI Theme")
 		return
 	for node_path in [
+		"Content/Center/OptionsCard/OptionsContent/DisplayTitle",
+		"Content/Center/OptionsCard/OptionsContent/DisplayDivider",
 		"Content/Center/OptionsCard/OptionsContent/FullscreenToggle",
 		"Content/Center/OptionsCard/OptionsContent/VolumeRow/VolumeSlider",
 		"Content/Center/OptionsCard/OptionsContent/VolumeRow/VolumeValue",
@@ -43,6 +45,16 @@ func _run() -> void:
 	var volume_value := panel.get_node("Content/Center/OptionsCard/OptionsContent/VolumeRow/VolumeValue") as Label
 	var back_button := panel.get_node("Content/Center/OptionsCard/OptionsContent/BackButton") as Button
 	var options_card := panel.get_node("Content/Center/OptionsCard") as Control
+	var display_title := panel.get_node("Content/Center/OptionsCard/OptionsContent/DisplayTitle") as Label
+	var display_divider := panel.get_node("Content/Center/OptionsCard/OptionsContent/DisplayDivider") as HSeparator
+	var options_content := panel.get_node("Content/Center/OptionsCard/OptionsContent") as VBoxContainer
+	if display_title.theme_type_variation != "PixelHeading" or \
+		display_title.get_theme_color("font_color").to_html(false) != "37e8f5" or \
+		display_divider.get_index() <= display_title.get_index() or \
+		options_content.get_node("FullscreenToggle").get_index() <= display_title.get_index() or \
+		options_content.get_node("VolumeTitle").get_index() <= display_divider.get_index():
+		_fail("Options should separate the display section from audio controls with the shared pixel heading style")
+		return
 	if fullscreen_toggle == null or fullscreen_toggle.focus_mode == Control.FOCUS_NONE:
 		_fail("Fullscreen setting should be focusable")
 		return
