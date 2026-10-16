@@ -21,6 +21,9 @@ func _run() -> void:
 		choice.get_node("Content/Instruction").text != "SELECT ONE UPGRADE TO CONTINUE":
 		_fail("A weapon chest should identify its family and show all three offers")
 		return
+	if title.get_theme_color("font_color") != Color("#37E8F5"):
+		_fail("Weapon chests should use the weapon-family cyan accent")
+		return
 	var original_size: Vector2i = root.size
 	for size in [Vector2i(960, 600), Vector2i(1280, 800), Vector2i(1600, 900)]:
 		root.size = size
@@ -61,6 +64,9 @@ func _run() -> void:
 	if not choice.present(relic_options, 3, "RELIC CHEST — CHOOSE ONE") or \
 		not title.text.contains("RELIC CHEST") or not (buttons.get_child(0) as Button).text.contains("Storm Core"):
 		_fail("A relic chest should identify its family and show its relic offer")
+		return
+	if title.get_theme_color("font_color") != Color("#FF75E3"):
+		_fail("Relic chests should use the relic-family magenta accent")
 		return
 	(buttons.get_child(0) as Button).pressed.emit()
 	if choice.visible or selected[0] != "relic:storm_core" or selection_count[0] != 2:

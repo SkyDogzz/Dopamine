@@ -40,6 +40,11 @@
 - [x] Capture 640×360 logique revue avec plusieurs armes; les noms ne sont plus coupés verticalement et les deux cartes restent dans leurs zones.
 - [x] `ui_viewport_layout_smoke.gd` passe à 640×360, 1280×720 et 1920×1080.
 
+## Coffres — accent de famille — 2026-10-16
+
+- [x] `survival_chest_choice_smoke.gd` vérifie le titre cyan du coffre d’arme, le titre magenta du coffre de relique, les icônes/descriptions, le focus et l’émission de sélection inchangée.
+- [x] `survival_chest_layout_smoke.gd` passe aux viewports 640×360, 1280×720 et 1920×1080 avec descriptions longues et bonus de prochain niveau.
+
 ## Build et intégration
 
 - [x] Linux P0 : Godot 4.7.2 charge la GDExtension C++23 après import headless du projet.

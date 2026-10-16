@@ -4,6 +4,11 @@ signal option_selected(option_id: String)
 
 @onready var _options: VBoxContainer = $Content/Options
 
+const FAMILY_COLORS := {
+	"weapon": Color("#37E8F5"),
+	"relic": Color("#FF75E3"),
+}
+
 func _ready() -> void:
 	visible = false
 
@@ -33,6 +38,9 @@ func present(options: Array, required_count: int = 3, heading: String = "CHEST â
 		seen_ids[option_id] = true
 	_clear_options()
 	$Content/Title.text = heading
+	var heading_upper := heading.to_upper()
+	var family := "relic" if heading_upper.contains("RELIC") else "weapon" if heading_upper.contains("WEAPON") else ""
+	$Content/Title.add_theme_color_override("font_color", FAMILY_COLORS.get(family, Color("#37E8F5")))
 	for index in range(options.size()):
 		var option: Dictionary = options[index]
 		var button := Button.new()
