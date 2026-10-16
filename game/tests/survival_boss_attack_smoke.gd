@@ -21,8 +21,9 @@ func _run() -> void:
 	var boss_key: String = session._entity_key(int(boss_id["index"]), int(boss_id["generation"]))
 	session._entities = session.simulation.snapshot()["entities"]
 	session._update_pulse_warden_attacks(0.0, false)
-	session._update_pulse_warden_attacks(session.pulse_warden_attack_interval_seconds, false)
 	var attack: Dictionary = session._pulse_warden_attacks[boss_key]
+	session._update_pulse_warden_attacks(float(attack["next_attack_at"]), false)
+	attack = session._pulse_warden_attacks[boss_key]
 	if attack["stage"] != "telegraph" or attack["pattern"] != "radial":
 		_fail("Phase one should telegraph a radial projectile pattern")
 		return

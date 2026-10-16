@@ -308,8 +308,8 @@ Travail requis :
   - [x] Ajouter Magnet Heart comme relique utilitaire sans évolution et l'inclure dans les offres Survival.
   - [x] Appliquer le bonus de rayon **[PROPOSÉ]** configurable de 25 % par niveau aux orbes XP.
   - [x] Vérifier orbe XP et chest séparément : le bonus n'élargit jamais le rayon du chest.
+  - [x] Au niveau 5, déclencher une impulsion **[PROPOSÉE]** de 20 s à 300 % du rayon XP, visualisée par un anneau; la durée suit l'horloge de simulation et gèle en pause, sans déplacer/téléporter les objets.
   - [ ] Étendre l'attraction aux soins, ressources, monnaies et bonus temporaires lorsqu'ils existent.
-  - [ ] Implémenter l'impulsion de niveau 5 **[PROPOSÉE]** (20 s, rayon 300 %) sans téléporter les objets.
 - [ ] **P5.1.14 — Slots et effets de capacité**
   - [ ] Vérifier cinq slots de reliques en run normale.
   - [ ] Tester une extension Legendary/Mythic seulement avec effet unique actif.

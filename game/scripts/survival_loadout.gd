@@ -160,6 +160,8 @@ func _relic_level_description(item_id: String, level: int) -> String:
 	var description := "+%d%% global %s" % [int(amount), stat_id.replace("_pct", "").replace("_", " ")]
 	if item_id == "blood_chalice":
 		description += " and +10% kill healing"
+	if item_id == "magnet_heart" and level == MAX_LEVEL:
+		description += "; reaching level 5 triggers a proposed 20 s impulse with 300% XP pickup radius"
 	var weapon_id := str(definition.get("weapon_id", ""))
 	if not weapon_id.is_empty():
 		description += "; combo requires both level 5 and its evolution pickup"

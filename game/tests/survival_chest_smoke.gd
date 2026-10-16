@@ -86,10 +86,11 @@ func _run() -> void:
 	if collected_xp.is_empty():
 		_fail("Magnet Heart should extend XP collection range")
 		return
-	for _level in range(4):
+	for _level in range(3):
 		if not session.loadout.apply_offer("relic:magnet_heart"):
 			_fail("Magnet Heart should upgrade through level 5")
 			return
+	session._on_chest_option_selected("relic:magnet_heart")
 	if session.loadout.relic_level("magnet_heart") != 5 or session.loadout.apply_offer("relic:magnet_heart"):
 		_fail("Magnet Heart should stop at the proposed level cap of 5")
 		return
@@ -100,15 +101,35 @@ func _run() -> void:
 		return
 	session._world_chests.clear()
 	xp_before = session.player_xp
-	if session.simulation.spawn_xp_orb(session.player.global_position + Vector2(85.0, 0.0), 1.0) <= 0:
+	if session.simulation.spawn_xp_orb(session.player.global_position + Vector2(115.0, 0.0), 1.0) <= 0:
 		_fail("Survival should spawn the level-5 Magnet Heart XP fixture")
 		return
 	collected_xp = await _wait_until(session, func(_snapshot: Dictionary) -> bool:
 		return session.player_xp > xp_before
 	)
 	if collected_xp.is_empty():
-		_fail("Magnet Heart level 5 should apply its configured pickup radius")
+		_fail("Magnet Heart level 5 should trigger its proposed pickup impulse")
 		return
+	var impulse_expires_at: float = session._magnet_heart_impulse_expires_at
+	var impulse_radius: float = session._xp_pickup_radius(impulse_expires_at - 0.001)
+	var expired_radius: float = session._xp_pickup_radius(impulse_expires_at)
+	if not is_equal_approx(impulse_radius, 120.0) or not is_equal_approx(expired_radius, 90.0):
+		_fail("Magnet Heart impulse should use a 300% pickup radius for 20 simulation seconds")
+		return
+	session.simulation.pause()
+	var paused_snapshot: Dictionary = await _wait_until(session, func(snapshot: Dictionary) -> bool:
+		return snapshot["paused"]
+	)
+	if paused_snapshot.is_empty():
+		_fail("Magnet Heart impulse should remain available while Survival is paused")
+		return
+	await create_timer(0.1).timeout
+	if not is_equal_approx(float(session.simulation.snapshot()["simulation_time"]),
+			float(paused_snapshot["simulation_time"])) or not is_equal_approx(
+				session._xp_pickup_radius(float(paused_snapshot["simulation_time"])), impulse_radius):
+		_fail("Magnet Heart impulse duration should freeze with the paused simulation clock")
+		return
+	session.simulation.resume()
 	session.chest_collection_radius = 100.0
 	if session.simulation.spawn_enemy("chaser", 1, Vector2(20.0, 0.0), Vector2.ZERO) <= 0:
 		_fail("Survival should spawn the chest-drop test enemy")
