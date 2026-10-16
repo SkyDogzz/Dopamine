@@ -507,9 +507,9 @@ Travail requis :
   - [x] Ajouter l’état temporaire de run : accepte trois propositions à slots indépendants (doublons permis), consomme le draft au choix et conserve un seul objet sélectionné.
   - [x] Effacer les objets temporaires en fin de run; vérification automatisée dans `armorless_run_state_smoke.gd`.
 - [ ] **P7A.3 — Flux**
-  - [x] Ajouter un solde Flux en mémoire de run, avec validation des montants et refus d’un débit supérieur au solde.
-  - [ ] Améliorer une ligne temporaire et vérifier consommation/coût.
-  - [ ] Vérifier échec, pity et disparition du Flux à la fin.
+  - [x] Ajouter un solde Flux en mémoire de run et le gain après chaque vague, avec validation et anti-double-crédit. Formule GDD **[PROPOSÉE]**.
+  - [x] Améliorer une ligne temporaire avec consommation du coût, progression +8 % par niveau et plafond +10. Coûts et chances restent **[PROPOSÉS]**.
+  - [x] Vérifier réussite garantie par pity, échec, échec critique et disparition du Flux en fin de run avec `armorless_run_state_smoke.gd`.
 - [ ] **P7A.4 — Longue durée**
   - [ ] Vérifier HP decay sans reset, pauses boss et budgets de densité.
   - [ ] Tester plusieurs cycles de boss et scaling proposé.
