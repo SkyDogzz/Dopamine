@@ -16,6 +16,7 @@ const SPRITE_FILES := {
 	"enemy_summoned": "roster/enemy_summoned",
 	"boss_mid_placeholder": "roster/boss_mid_placeholder",
 	"boss_final_placeholder": "roster/boss_final_placeholder",
+	"boss_dopamine_core": "roster/boss_dopamine_core",
 	"xp_orb": "rewards/xp_orb",
 	"projectile_lightning": "projectiles/projectile_lightning",
 	"projectile_inferno": "projectiles/projectile_inferno",
@@ -229,7 +230,7 @@ func _sprite_for_entity(components: Dictionary) -> String:
 		"mid_boss":
 			return "boss_mid_placeholder"
 		"final_boss":
-			return "boss_final_placeholder"
+			return "boss_dopamine_core"
 		_:
 			return "enemy_chaser"
 

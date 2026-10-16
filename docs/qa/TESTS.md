@@ -464,6 +464,7 @@ Note de clôture : le blocage historique du smoke `sandbox_ui_smoke.gd` décrit 
 ## Sources éditables des assets actifs (2026-10-16)
 
 - [x] `catalog_icon_assets_smoke.gd` passe sous Godot 4.7.2 pour catalogue, icônes UI, roster, projectiles, impacts, environnement, récompenses et fond skyline; il vérifie les dimensions, palettes et sources Aseprite attendues.
+- [x] Le smoke d’assets vérifie aussi le PNG/source Aseprite 96×96 du Dopamine Core, sa transparence, sa palette ≤16 couleurs et son routage depuis l’entité `final_boss`; `survival_boss_attack_smoke.gd` passe avec le nouveau sprite chargé.
 - [x] `pilot_asset_batch_smoke.gd` passe pour les exports animés du joueur et leurs sources; `signal_prism_asset_smoke.gd` passe pour l’emblème et son intégration à l’accueil.
 - [x] L’audit de références runtime ne trouve plus d’asset SVG parmi les visuels chargés par les scènes/scripts; les anciens SVG restants sont des références inactives, sauf une référence historique dans `combat_catalog_smoke.gd`.
 

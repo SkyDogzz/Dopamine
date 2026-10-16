@@ -1,8 +1,8 @@
 # Roadmap complète — Dopamine Survivor, GDD v1.6
 
-Cette roadmap transforme le [GDD consolidé v1.6](../gdd/GDD_v1.6.md), l’architecture, les ADR et les documents QA en travaux ordonnés et vérifiables. Elle décrit l’état constaté dans le dépôt au 2026-10-15 ainsi que le chemin restant. Elle ne remplace pas les décisions de ces documents.
+Cette roadmap transforme le [GDD consolidé v1.6](../gdd/GDD_v1.6.md), l’architecture, les ADR et les documents QA en travaux ordonnés et vérifiables. Elle décrit l’état constaté dans le dépôt au 2026-10-16 ainsi que le chemin restant. Elle ne remplace pas les décisions de ces documents.
 
-**Ordre de travail :** Linux-first ; Sandbox développeur MVP d’abord ; Survival jouable ensuite ; contenu P5 avant progression P6. Le cœur de simulation est partagé, mais la progression et les sauvegardes normales restent inaccessibles au Sandbox. La consigne de portée active est de s’arrêter après P5.
+**Ordre de travail :** Linux-first ; Sandbox développeur MVP d’abord ; Survival jouable ensuite ; contenu P5 avant progression P6. Le cœur de simulation est partagé, mais la progression et les sauvegardes normales restent inaccessibles au Sandbox. Le goal principal actif couvre les jalons P5 à P9.
 
 ## Comment lire l’audit
 
@@ -23,7 +23,7 @@ L’audit initial était statique. Les tranches Minigun, Toxic Cloud, Sawblades 
 | P2 Simulation/combat | **Fondation présente, couverture partielle** | Diversité des IA, règles complètes d’ennemis/boss, instrumentation et performance iGPU. |
 | P3 Prototype de combat | **Dix paires et dix évolutions de prototype présentes** | Contrats génériques, retours visuels par niveau, ciblage fidèle, mesures DPS détaillées. |
 | P4 Vertical slice Survival | **Boucle de run prototype présente** | Boss réels, difficulté sélectionnable, run équilibrée et vérifiée sans harness. |
-| P5 Contenu v1.6 | **Non livré** | Les dix paires ont un prototype, mais Toxic Cloud est un prototype à impact, pas encore un nuage visuel persistant ; contenu ennemis/boss encore incomplet. |
+| P5 Contenu v1.6 | **Non livré** | Les dix paires ont un prototype ; ciblage/feedback par niveau, réactions, contenu ennemi/boss et validations de run restent incomplets. Le Dopamine Core a un sprite dédié, mais son combat et la sortie P5 ne sont pas validés de bout en bout. |
 | P6 Progression permanente | **Prototype anticipé seulement** | Catalogue complet, règles et contenus validés, récompenses calibrées et effets uniques actifs. |
 | P7 Modes Endless | **À faire** | Armorless complet ; arbitrages nécessaires pour Endless standard. |
 | P8 Sandbox Lab joueur | **À faire au-delà des outils développeur P1** | Builds libres, presets/import/export, copie de save, snapshots complets et règles de sécurité. |
@@ -33,9 +33,9 @@ L’audit initial était statique. Les tranches Minigun, Toxic Cloud, Sawblades 
 
 **Bien intégré comme fondation :** simulation native découplée de Godot, worker, commandes/snapshots, limites de charge, outils Sandbox, loop de run Survival, pause/chest/XP, dix armes et effets de combat de base, sauvegarde versionnée, premiers écrans d’équipement.
 
-**Intégré en prototype, à ne pas confondre avec une feature finie :** boss (apparition/HP/transition, mais pas leurs patterns), XP auto-bonus, loot/probabilités, dix évolutions, Void Orb à attraction/percée, Frost Nova avec Chill/Absolute Zero, Sawblades à ricochets/Razorstorm, Meteor Staff en zone/Starfall fragmenté, Toxic Cloud à impact plutôt qu'en champ persistant, équipement et enhancement, deux nodes de skill tree, famille Exterminator, effets uniques, récompenses de run. Les paramètres restent souvent **[PROPOSÉS]**.
+**Intégré en prototype, à ne pas confondre avec une feature finie :** boss (patterns en phases, mais vérification du combat complet et équilibrage manquants), XP auto-bonus, loot/probabilités, dix évolutions, Void Orb à attraction/percée, Frost Nova avec Chill/Absolute Zero, Sawblades à ricochets/Razorstorm, Meteor Staff en zone/Starfall fragmenté, Toxic Cloud en champ persistant, équipement et enhancement, deux nodes de skill tree, famille Exterminator, effets uniques, récompenses de run. Les paramètres restent souvent **[PROPOSÉS]**.
 
-**Survolé ou absent par rapport au GDD :** 3 armes et 3 reliques associées restantes ; Minigun, Toxic Cloud, Sawblades et Meteor Staff n’ont pas encore de feedback visuel par niveau ; Toxic Cloud n'a pas encore de champ visuel persistant ; Magnet Heart n'agit que sur XP (autres pickups et impulsion de niveau 5 absents) ; animation/identité spécifique à chaque niveau ; la mécanique orbitale Crimson Daggers/Bloodstorm est maintenant prototypée, avec équilibrage et feedback visuel encore à revoir ; 8–12 familles ennemies et leurs rôles ; élites à affixes ; boss à phases ; difficultés ; réactions élémentaires nommées ; tree ~120 nodes ; achievements ~120 familles ; modes Endless ; Sandbox Lab joueur ; performance iGPU et build Windows.
+**Survolé ou absent par rapport au GDD :** 3 armes et 3 reliques associées restantes ; Minigun, Toxic Cloud, Sawblades et Meteor Staff n’ont pas encore de feedback visuel par niveau ; Magnet Heart n'agit que sur XP (autres pickups et impulsion de niveau 5 absents) ; animation/identité spécifique à chaque niveau ; la mécanique orbitale Crimson Daggers/Bloodstorm est maintenant prototypée, avec équilibrage et feedback visuel encore à revoir ; 8–12 familles ennemies et leurs rôles ; élites à affixes ; charges mobiles du Pulse Warden ; loot de boss et run complète vérifiés sans harness ; difficultés ; réactions élémentaires nommées ; tree ~120 nodes ; achievements ~120 familles ; modes Endless ; Sandbox Lab joueur ; performance iGPU et build Windows.
 
 ## Dépendances principales
 
@@ -359,7 +359,7 @@ Travail requis :
 
 ### P5.4 — Ennemis, élites et boss
 
-**Avancement :** le roster de vague comprend huit familles : Chaser, Sprinter, Tank, Shooter, Buffer, Exploder, Shielder et Summoner. Shooter télégraphie ses tirs ; Buffer augmente de 20 % la vitesse alliée dans son aura de 150 ; Shielder réduit à 65 % les dégâts reçus par les alliés couverts par son aura de 150 ; les deux auras cessent à la mort de leur source. Summoner (42 HP, vitesse 42, menace 2,5) annonce une position de spawn, puis invoque des adds (12 HP, vitesse 90, menace 0,5), avec trois invocations actives globalement au maximum. Un premier prototype d’élite **Hasted** (50 HP, vitesse 100, menace 3), marqué visuellement, apparaît selon un cooldown, un plafond actif et un budget égal à la population de la vague ; son coût de menace est 3. Il utilise le chemin de récompense élite existant. Le profil **Exploder** (30 HP, vitesse 60, menace 2) s’approche, déclenche un fuse de 0,8 s dans un rayon de 110 et inflige 18 dégâts dans un rayon de 82 ; le cercle de souffle est visible, la pause fige le fuse, et sortir du rayon esquive le souffle. Le Pulse Warden possède un premier prototype d’attaques en trois phases ; le boss final et les charges mobiles restent à faire. Les valeurs, rayons, délais, plafonds et chances de spawn de ces prototypes restent **[PROPOSÉS]**.
+**Avancement :** le roster de vague comprend huit familles : Chaser, Sprinter, Tank, Shooter, Buffer, Exploder, Shielder et Summoner. Shooter télégraphie ses tirs ; Buffer augmente de 20 % la vitesse alliée dans son aura de 150 ; Shielder réduit à 65 % les dégâts reçus par les alliés couverts par son aura de 150 ; les deux auras cessent à la mort de leur source. Summoner (42 HP, vitesse 42, menace 2,5) annonce une position de spawn, puis invoque des adds (12 HP, vitesse 90, menace 0,5), avec trois invocations actives globalement au maximum. Un premier prototype d’élite **Hasted** (50 HP, vitesse 100, menace 3), marqué visuellement, apparaît selon un cooldown, un plafond actif et un budget égal à la population de la vague ; son coût de menace est 3. Il utilise le chemin de récompense élite existant. Le profil **Exploder** (30 HP, vitesse 60, menace 2) s’approche, déclenche un fuse de 0,8 s dans un rayon de 110 et inflige 18 dégâts dans un rayon de 82 ; le cercle de souffle est visible, la pause fige le fuse, et sortir du rayon esquive le souffle. Le Pulse Warden et le Dopamine Core possèdent chacun un prototype d’attaques en trois phases; le Core a un sprite dédié. Les charges mobiles du Warden restent à faire. Les valeurs, rayons, délais, plafonds et chances de spawn de ces prototypes restent **[PROPOSÉS]**.
 
 - [ ] **P5.4.1 — Familles ennemies**
   - [ ] Ajouter une famille de mêlée avec spawn, steering et mort.
@@ -388,8 +388,9 @@ Travail requis :
 - [ ] **P5.4.5 — Boss final**
   - [x] Définir et implémenter trois phases selon les PV : rayon puis zone esquivable, spirale tirée en salves successives avec invocation en phase 2, puis rayon/zone combinés avec spirale ; télégraphes et HUD de phase vérifiés. Motifs, seuils, dégâts et cadence **[PROPOSÉS]**.
   - [x] Smoke boss : les phases 2 et 3 saturent le plafond global d’invocations proposé à trois, rejettent les suivantes et réutilisent une place après la mort d’un add.
-  - [ ] Remplacer l’apparence placeholder et vérifier victoire, loot garanti proposé/configurable et écran final.
-  - Prototype en cours : le Dopamine Core dispose de trois phases, de rayons/zones télégraphiés et esquivables, d’une spirale en tirs successifs et d’invocations en phases 2–3. Le smoke confirme le plafond d’invocations partagé en phases 2–3 ; son apparence est encore un placeholder. Tous ces patterns et nombres restent **[PROPOSÉS]**.
+  - [x] Remplacer l’apparence placeholder du Core par le sprite dédié `boss_dopamine_core` et vérifier sa route dans le renderer ainsi que PNG/source Aseprite, dimensions et palette.
+  - [ ] Vérifier victoire, loot garanti proposé/configurable et écran final en run réelle.
+  - Prototype en cours : le Dopamine Core dispose de trois phases, de rayons/zones télégraphiés et esquivables, d’une spirale en tirs successifs et d’invocations en phases 2–3. Le smoke confirme le plafond d’invocations partagé en phases 2–3 ; son identité visuelle est un prototype dédié, sans validation de canon. Tous ces patterns et nombres restent **[PROPOSÉS]**.
 - [ ] **P5.4.6 — Difficultés**
   - [ ] Ajouter état de difficulté choisi/débloqué.
   - [ ] Débloquer la suivante après victoire de la précédente.
@@ -414,7 +415,7 @@ Travail requis :
   - [ ] Lancer la batterie de QA P5 et le profilage défini.
   - [ ] Corriger les erreurs bloquantes, consigner le résiduel, committer le checkpoint.
 
-**Critère de sortie :** dix armes, onze reliques, leurs évolutions, 8–12 familles, élites et boss utilisables dans une run complète ; Sandbox et progression séparés. À la fermeture de P5, s’arrêter conformément à la portée active.
+**Critère de sortie :** dix armes, onze reliques, leurs évolutions, 8–12 familles, élites et boss utilisables dans une run complète ; Sandbox et progression séparés. Après P5, poursuivre P6–P9 selon le goal principal actif.
 
 ## P6 — Progression permanente (code anticipé, jalon incomplet)
 

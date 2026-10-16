@@ -3,7 +3,7 @@ extends SceneTree
 const WEAPONS := ["lightning_conductor", "inferno_sprayer", "crimson_daggers", "minigun", "toxic_cloud", "sawblades", "meteor_staff", "prism_laser", "void_orb", "frost_nova"]
 const RELICS := ["storm_core", "infernal_heart", "blood_chalice", "celestial_eye", "frozen_crown", "magnet_heart", "magnetic_coil", "overdrive_engine", "plague_mask", "prism_crystal", "singularity"]
 const UI_ICONS := ["equipment_helmet", "equipment_armor", "equipment_gloves", "equipment_boots", "equipment_amulet", "equipment_ring", "rarity_normal", "rarity_magic", "rarity_mystic", "rarity_legendary", "rarity_mythic", "resource_essence", "resource_powder", "skill_node", "achievement_medal", "run_record"]
-const ROSTER := ["enemy_chaser", "enemy_sprinter", "enemy_tank", "enemy_shooter", "enemy_buffer", "enemy_exploder", "enemy_shielder", "enemy_summoner", "enemy_summoned", "elite_sprinter", "boss_mid_placeholder", "boss_final_placeholder"]
+const ROSTER := ["enemy_chaser", "enemy_sprinter", "enemy_tank", "enemy_shooter", "enemy_buffer", "enemy_exploder", "enemy_shielder", "enemy_summoner", "enemy_summoned", "elite_sprinter", "boss_mid_placeholder", "boss_final_placeholder", "boss_dopamine_core"]
 const IMPACTS := ["impact_spark", "impact_star", "impact_slash", "impact_pop", "impact_ring", "impact_burst", "impact_shards", "impact_shock_ring", "impact_angular", "impact_evolved"]
 const PROJECTILES := ["projectile_lightning", "projectile_inferno", "projectile_crimson", "projectile_enemy", "projectile_minigun", "projectile_toxic_cloud", "projectile_sawblades", "projectile_meteor", "projectile_starfall_fragment", "projectile_prism_laser", "projectile_prism_secondary", "projectile_void_orb", "projectile_frost_nova", "projectile_infinite_circuit", "projectile_wildfire", "projectile_bloodstorm", "projectile_event_horizon", "projectile_absolute_zero", "projectile_pandemic", "projectile_razorstorm", "projectile_starfall", "projectile_spectrum_collapse", "projectile_unique_lightning_burst", "projectile_evolution_shockwave"]
 
@@ -30,6 +30,12 @@ func _initialize() -> void:
 		if not _check_icon(sprite_name):
 			quit(1)
 			return
+	var renderer: Variant = (load("res://scripts/sprite_batch_renderer.gd") as Script).new()
+	if renderer._sprite_for_entity({"EnemyType": "final_boss"}) != "boss_dopamine_core" or \
+			renderer._batches["boss_dopamine_core"]["texture"] == null:
+		push_error("The final boss should render the dedicated Dopamine Core sprite")
+		quit(1)
+		return
 	for impact_name in IMPACTS:
 		if not _check_icon(impact_name):
 			quit(1)
@@ -78,6 +84,9 @@ func _check_icon(asset_name: String) -> bool:
 	var expected_size := Vector2i(96, 96) if asset_name.begins_with("boss_") else Vector2i(64, 64) if is_vfx else Vector2i(16, 16) if is_projectile else Vector2i(24, 24) if is_roster else Vector2i(32, 32)
 	if image.get_size() != expected_size:
 		push_error("Catalog icon has unexpected dimensions: %s" % asset_name)
+		return false
+	if asset_name == "boss_dopamine_core" and (image.get_pixel(0, 0).a > 0.0 or image.get_pixel(48, 48).a <= 0.0):
+		push_error("The Dopamine Core should keep transparent margins around its opaque silhouette")
 		return false
 	var colors := {}
 	for y in range(image.get_height()):
