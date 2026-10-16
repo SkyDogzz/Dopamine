@@ -16,7 +16,13 @@
 
 - [x] `equipment_rarity_smoke.gd` compare 20 000 tirages seedés à la table attendue pour Easy, Normal, Hard, Nightmare et Chaos, aux vagues 1 et 24; les observations restent dans une tolérance de cinq écarts-types.
 - [x] `progression_service_smoke.gd` vérifie les poids, la somme de 100 %, le transfert proposé par paliers de vagues et que le contexte affecte effectivement le résultat généré.
-- [ ] Pénalité de mort précoce et calibration des taux restent à définir/mesurer; cette implémentation ne les déclare pas validés.
+- [ ] La pénalité de mort précoce est maintenant un prototype défini mais **[PROPOSÉ]**; son effet en run réelle et la calibration des taux de rareté restent à mesurer.
+
+### Pénalité de mort précoce — prototype proposé
+
+- [x] `equipment_rarity_smoke.gd` couvre les poids de base sur 20 000 tirages/difficulté/vague, la somme 100 % après pénalité, sa réduction monotone entre vagues 1 et 3, son absence à partir de la vague 6, et l’absence de pénalité pour une victoire. Un tirage de 20 000 objets confirme la distribution précoce pondérée dans une tolérance de cinq écarts-types.
+- [x] Le même smoke branche deux ProgressionService isolés et compare la rareté réellement récompensée avec les tirages seedés attendus pour une défaite et une victoire avant vague 6. `progression_service_smoke.gd`, `equipment_stats_smoke.gd` et `survival_progression_smoke.gd` passent sous Godot 4.7.2.
+- [ ] Les seuils (avant vague 6), le facteur maximal (50 %) et l’application aux raretés Mystic+ sont **[PROPOSÉS]** et ne sont pas équilibrés; ils n’influencent pas les paramètres de base ou les récompenses de progression.
 
 ## P6.7 — Évaluateur générique d’achievements — 2026-10-16
 

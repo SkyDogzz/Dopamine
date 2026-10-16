@@ -22,6 +22,9 @@ const PROPOSED_ARMORLESS_DIFFICULTY_MULTIPLIERS := {
 # A run reaching each six-wave milestone shifts one percentage point from Normal
 # into the existing non-Normal distribution. This remains a proposed tuning rule.
 const PROPOSED_WAVE_RARITY_SHIFT_PER_SIX_WAVES := 1.0
+# Early defeat before wave 6 halves the high-rarity weights on wave 1, fading linearly to zero.
+const PROPOSED_EARLY_DEATH_PENALTY_MAX := 0.5
+const PROPOSED_EARLY_DEATH_RECOVERY_WAVE := 6
 const STAT_IDS := [
 	"damage_pct", "attack_speed_pct", "critical_chance_pct", "critical_damage_pct",
 	"max_hp", "move_speed_pct", "kill_healing_pct", "area_pct", "cooldown_reduction_pct",
@@ -45,10 +48,12 @@ func _init(seed_value: int = 0) -> void:
 	else:
 		_rng.seed = seed_value
 
-func generate_survival_item(run_id: String, difficulty_id: String = "normal", wave_reached: int = 1) -> Dictionary:
+func generate_survival_item(
+	run_id: String, difficulty_id: String = "normal", wave_reached: int = 1, early_death: bool = false
+) -> Dictionary:
 	return _generate_item(
 		"survival_%s_equipment" % run_id,
-		rarity_weights_for(difficulty_id, wave_reached), "survival"
+		rarity_weights_for(difficulty_id, wave_reached, early_death), "survival"
 	)
 
 func generate_armorless_draft(run_id: String, difficulty_id: String, wave_reached: int) -> Array[Dictionary]:
@@ -116,7 +121,7 @@ static func stat_label(stat_id: String, value: float) -> String:
 		return "+%.1f HP" % value
 	return "+%.1f%%" % value
 
-static func rarity_weights_for(difficulty_id: String, wave_reached: int) -> Array[float]:
+static func rarity_weights_for(difficulty_id: String, wave_reached: int, early_death: bool = false) -> Array[float]:
 	var weights: Array = PROPOSED_RARITY_WEIGHTS_BY_DIFFICULTY.get(
 		difficulty_id, PROPOSED_RARITY_WEIGHTS_BY_DIFFICULTY["normal"]
 	).duplicate()
@@ -129,6 +134,17 @@ static func rarity_weights_for(difficulty_id: String, wave_reached: int) -> Arra
 	weights[0] = normal_weight - shift
 	for index in range(1, weights.size()):
 		weights[index] += shift * weights[index] / non_normal_weight
+	if early_death and wave_reached < PROPOSED_EARLY_DEATH_RECOVERY_WAVE:
+		var recovery := float(clampi(wave_reached, 1, PROPOSED_EARLY_DEATH_RECOVERY_WAVE) - 1) / \
+			float(PROPOSED_EARLY_DEATH_RECOVERY_WAVE - 1)
+		var rare_weight_multiplier := 1.0 - PROPOSED_EARLY_DEATH_PENALTY_MAX * (1.0 - recovery)
+		for index in range(2, weights.size()):
+			weights[index] *= rare_weight_multiplier
+		var adjusted_total := 0.0
+		for weight in weights:
+			adjusted_total += float(weight)
+		for index in range(weights.size()):
+			weights[index] = float(weights[index]) * 100.0 / adjusted_total
 	var typed_weights: Array[float] = []
 	for weight in weights:
 		typed_weights.append(float(weight))
