@@ -4,6 +4,9 @@ func _initialize() -> void:
 	call_deferred("_run")
 
 func _run() -> void:
+	if not await _thermal_shock_combines_burn_and_chill_once():
+		_fail("Thermal Shock should trigger from direct Burn/Chill combinations, obey cooldown, and ignore DoT ticks")
+		return
 	if not await _weapon_progression_config_is_loaded_and_modifiable():
 		_fail("Survival should load validated weapon progression milestones from the JSON config")
 		return
@@ -906,6 +909,7 @@ func _frost_nova_chills_and_shatters() -> bool:
 	var deadline := Time.get_ticks_msec() + 2500
 	var shattered_neighbor := false
 	var finishing_projectile_fired := false
+	var observed_damage_sources: Array[String] = []
 	while Time.get_ticks_msec() < deadline:
 		await process_frame
 		var state: Dictionary = session.simulation.snapshot()
@@ -921,13 +925,78 @@ func _frost_nova_chills_and_shatters() -> bool:
 				finishing_projectile_fired = true
 				break
 		for event in state["events"]:
+			if event.get("type", "") == "damage":
+				observed_damage_sources.append(str(event.get("source_type", "")))
 			if event.get("type", "") == "damage" and event.get("source_type", "") == "absolute_zero":
 				shattered_neighbor = true
 		if shattered_neighbor:
 			session.queue_free()
 			return true
+	push_error("Frost smoke diagnostics: finisher=%s damage_sources=%s" % [finishing_projectile_fired, observed_damage_sources])
 	session.queue_free()
 	return false
+
+func _thermal_shock_combines_burn_and_chill_once() -> bool:
+	var session: Node2D = load("res://scenes/survival_session.tscn").instantiate()
+	session.spawn_initial_enemy = false
+	session.wave_spawning_enabled = false
+	session.skip_starting_weapon_choice = true
+	root.add_child(session)
+	await process_frame
+	session.simulation.spawn("test_target", 1, Vector2(40.0, 50.0), 50.0, Vector2.ZERO)
+	session.simulation.spawn("test_target", 1, Vector2(60.0, 50.0), 50.0, Vector2.ZERO)
+	var targets: Array = await _wait_for_targets(session, 2)
+	if targets.size() != 2:
+		session.queue_free()
+		return false
+	var chilled_target_id: Dictionary = targets[0]["id"]
+	var burning_target_id: Dictionary = targets[1]["id"]
+	var chilled_position := Vector2(float(targets[0]["components"]["Transform2D"]["x"]),
+		float(targets[0]["components"]["Transform2D"]["y"]))
+	var burning_position := Vector2(float(targets[1]["components"]["Transform2D"]["x"]),
+		float(targets[1]["components"]["Transform2D"]["y"]))
+	var chilled_components: Dictionary = targets[0]["components"].duplicate(true)
+	chilled_components["Chill"] = {}
+	var burning_components: Dictionary = targets[1]["components"].duplicate(true)
+	burning_components["DamageOverTime"] = {"status_type": "burn"}
+	var entities := [
+		{"id": chilled_target_id, "components": chilled_components},
+		{"id": burning_target_id, "components": burning_components},
+	]
+	var burn_hit := {"target": chilled_target_id, "source_type": "inferno_sprayer",
+		"target_was_chilled": true, "is_damage_over_time": false, "amount": 10.0,
+		"position": {"x": chilled_position.x, "y": chilled_position.y}}
+	var burn_sequence: int = session._try_thermal_shock(burn_hit, entities, 0.0)
+	var repeated_sequence: int = session._try_thermal_shock(burn_hit, entities, 0.5)
+	var frost_hit := {"target": burning_target_id, "source_type": "frost_nova",
+		"target_was_chilled": false, "is_damage_over_time": false, "amount": 8.0,
+		"position": {"x": burning_position.x, "y": burning_position.y}}
+	var frost_sequence: int = session._try_thermal_shock(frost_hit, entities, 0.0)
+	var dot_hit := burn_hit.duplicate(true)
+	dot_hit["target"] = burning_target_id
+	dot_hit["is_damage_over_time"] = true
+	var dot_sequence: int = session._try_thermal_shock(dot_hit, entities, 2.0)
+	var reaction_hit := burn_hit.duplicate(true)
+	reaction_hit["source_type"] = "thermal_shock"
+	reaction_hit["target"] = burning_target_id
+	var reaction_sequence: int = session._try_thermal_shock(reaction_hit, entities, 2.0)
+	var burn_damage := false
+	var frost_damage := false
+	var deadline := Time.get_ticks_msec() + 2500
+	while Time.get_ticks_msec() < deadline and not (burn_damage and frost_damage):
+		await process_frame
+		for event in session.simulation.snapshot()["events"]:
+			if event.get("type", "") != "damage" or event.get("source_type", "") != "thermal_shock":
+				continue
+			var hit_id: Dictionary = event["target"]
+			if hit_id == chilled_target_id and is_equal_approx(float(event["amount"]), 5.0):
+				burn_damage = true
+			elif hit_id == burning_target_id and is_equal_approx(float(event["amount"]), 4.0):
+				frost_damage = true
+	var valid := burn_sequence > 0 and repeated_sequence == 0 and frost_sequence > 0 and dot_sequence == 0 and \
+		reaction_sequence == 0 and burn_damage and frost_damage
+	session.queue_free()
+	return valid
 
 func _sawblades_ricochet_between_targets() -> bool:
 	var session: Node2D = load("res://scenes/survival_session.tscn").instantiate()

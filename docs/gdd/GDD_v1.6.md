@@ -97,6 +97,8 @@ Boucle Survival : choisir difficulté et arme initiale → survivre à une vague
 
 [PROPOSÉ] Réactions élémentaires entre statuts ; les combinaisons et effets listés en annexe restent à valider.
 
+**Prototype [PROPOSÉ] — Thermal Shock :** une attaque directe de Burn sur une cible déjà Chill, ou une attaque directe de Chill sur une cible qui porte Burn, ajoute un impact immédiat égal à 50 % de l’attaque déclencheuse. Un cooldown proposé de 1 s par cible borne la répétition; les dégâts sur la durée et les impacts de Thermal Shock ne déclenchent pas la réaction. Ces coefficients restent à équilibrer et la règle n’est pas promue **[VALIDÉE]**.
+
 [VALIDÉ] Dix armes distinctes, chacune à ciblage automatique intelligent propre, dont l’efficacité dépend fortement du positionnement et du déplacement. Le choix de départ se fait parmi deux armes débloquées. Aucun doublon d’arme en run normale (doublons autorisés dans le Sandbox). Chaque arme et relique a cinq niveaux ; les niveaux d’arme ont des améliorations fixes, principalement statistiques, et une évolution majeure conserve le niveau 5. Chaque relique accorde aussi un bonus à une statistique globale en run normale. Le combo associé ne renforce que son arme : il devient disponible comme choix d’évolution lorsque l’arme et la relique atteignent toutes deux le niveau 5, puis ne s’active qu’après collecte de ce choix. La relique n’est pas consommée. Une seule évolution par arme ; une arme niveau 5 non évoluée ne peut plus apparaître comme amélioration ordinaire de chest. Chaque niveau d’arme reçoit un retour visuel, même pour une hausse uniquement statistique. Les bonus de relique progressent linéairement.
 
 Paires de contenu validées :

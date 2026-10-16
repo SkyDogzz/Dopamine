@@ -349,8 +349,9 @@ Travail requis :
   - [x] Les chemins existants consomment les événements standards : lifesteal sur damage, contagion Pandemic sur dégâts/statut et mort, Absolute Zero sur mort d’une cible Chill, fragments Starfall sur impact et chaînes Lightning sur dégâts. Les événements DoT portent maintenant leur identité jusqu’au damage/death.
   - [x] Vérifier que ces comportements utilisent les contrats d’évolution/statut existants; aucune réaction élémentaire proposée n’est activée. Les évolutions et paramètres de prototype gardent leur statut **[PROPOSÉ]** là où le GDD ne les valide pas.
 - [ ] **P5.2.3 — Réactions proposées**
-  - [x] Garder Thermal Shock, Toxic Ignition, Shatter, Electroplague, Gravity Collapse et Hemorrhage désactivées tant que non validées.
-  - [ ] Faire arbitrer chaque réaction avant son implémentation.
+  - [x] Implémenter un prototype Thermal Shock : déclenchement par impact direct Burn↔Chill, bonus à 50 % du coup initial et cooldown local de 1 s **[PROPOSÉS]**; le DoT et l’impact de réaction ne chaînent pas.
+  - [ ] Valider et équilibrer Thermal Shock sur des runs; son implémentation ne change pas son statut **[PROPOSÉ]**.
+  - [ ] Faire arbitrer Toxic Ignition, Shatter, Electroplague, Gravity Collapse et Hemorrhage avant leur implémentation.
   - [x] Garder Overcharge bloquée par son statut **[OUVERT]**.
 - [ ] **P5.2.4 — Causalité et dégâts**
   - [ ] Ajouter un ID de chaîne et un budget aux réactions seulement après validation du contrat.

@@ -26,7 +26,7 @@ const WEAPON_IMPACT_TYPES := {
 	"meteor_staff": 6, "starfall": 6, "starfall_fragment": 6,
 	"prism_laser": 7, "spectrum_collapse": 7, "prism_secondary": 7,
 	"void_orb": 8, "event_horizon": 8,
-	"frost_nova": 9, "absolute_zero": 9,
+	"frost_nova": 9, "absolute_zero": 9, "thermal_shock": 9,
 }
 const WEAPON_IMPACT_SOURCE_IDS := {
 	"lightning_conductor": "lightning_conductor", "unique_lightning_burst": "lightning_conductor",
@@ -37,7 +37,7 @@ const WEAPON_IMPACT_SOURCE_IDS := {
 	"meteor_staff": "meteor_staff", "starfall": "meteor_staff", "starfall_fragment": "meteor_staff",
 	"prism_laser": "prism_laser", "spectrum_collapse": "prism_laser", "prism_secondary": "prism_laser",
 	"void_orb": "void_orb", "event_horizon": "void_orb", "frost_nova": "frost_nova",
-	"absolute_zero": "frost_nova",
+	"absolute_zero": "frost_nova", "thermal_shock": "frost_nova",
 }
 const WEAPON_IMPACT_LIFETIME := 0.22
 const MAX_VISIBLE_WEAPON_IMPACTS := 32
@@ -273,6 +273,10 @@ var sandbox_rng_seed := 0
 @export var frozen_crown_vulnerability_at_level_five: float = 0.25
 @export var absolute_zero_shatter_radius: float = 76.0
 @export_range(0.0, 2.0) var absolute_zero_shatter_damage_multiplier: float = 0.75
+@export_group("Prototype Thermal Shock — proposed tuning")
+@export_range(0.0, 2.0, 0.05) var thermal_shock_damage_multiplier: float = 0.5
+@export_range(0.0, 10.0, 0.1) var thermal_shock_target_cooldown_seconds: float = 1.0
+@export_range(0.0, 64.0, 0.5) var thermal_shock_projectile_radius: float = 6.0
 @export_group("Prototype Bloodstorm — proposed tuning")
 @export var bloodstorm_bleed_damage_per_tick: float = 2.0
 @export var bloodstorm_bleed_interval_seconds: float = 0.5
@@ -349,6 +353,7 @@ var _minigun_target_id := Vector2i(-1, -1)
 var _pandemic_poisoned_targets: Dictionary = {}
 var _pandemic_spread_targets: Dictionary = {}
 var _pandemic_bursts: Array[Dictionary] = []
+var _thermal_shock_next_at: Dictionary = {}
 var _weapon_impacts: Array[Dictionary] = []
 var _enemy_death_pixels: Array[Dictionary] = []
 var _starfall_fragments_spawned: Dictionary = {}
@@ -753,6 +758,9 @@ func _process(_delta: float) -> void:
 	for chain_id in _lightning_chain_states.keys():
 		if current_simulation_time > float(_lightning_chain_states[chain_id]["expires_at"]):
 			_lightning_chain_states.erase(chain_id)
+	for target_key in _thermal_shock_next_at.keys():
+		if current_simulation_time >= float(_thermal_shock_next_at[target_key]):
+			_thermal_shock_next_at.erase(target_key)
 	for index in range(_pandemic_bursts.size() - 1, -1, -1):
 		_pandemic_bursts[index]["remaining"] = float(_pandemic_bursts[index]["remaining"]) - elapsed_active_time
 		if float(_pandemic_bursts[index]["remaining"]) <= 0.0:
@@ -795,6 +803,7 @@ func _process(_delta: float) -> void:
 					var target_type := str(event.get("target_type", ""))
 					Sfx.play("hit_heavy" if target_type in ["mid_boss", "final_boss"] else "hit_light")
 				_advance_lightning_chain(event, state["entities"], current_simulation_time)
+				_try_thermal_shock(event, state["entities"], current_simulation_time)
 				_add_weapon_impact(source_type, Vector2(float(event["position"]["x"]), float(event["position"]["y"])),
 						bool(event.get("is_damage_over_time", false)))
 				if source_type == "pandemic_cloud":
@@ -2220,6 +2229,41 @@ func _fire_lightning_conductor(active_time: float, paused: bool) -> void:
 	_try_unique_lightning_burst(lightning_damage * damage_multiplier)
 	_try_evolution_shockwave(lightning_damage * damage_multiplier)
 	_next_weapon_time = active_time + _effective_weapon_cooldown(cooldown)
+
+func _try_thermal_shock(event: Dictionary, entities: Array, active_time: float) -> int:
+	if bool(event.get("is_damage_over_time", false)) or float(event.get("amount", 0.0)) <= 0.0:
+		return 0
+	var target_id: Dictionary = event.get("target", {})
+	if target_id.is_empty():
+		return 0
+	var target_key := _entity_key(int(target_id.get("index", -1)), int(target_id.get("generation", -1)))
+	if active_time < float(_thermal_shock_next_at.get(target_key, 0.0)):
+		return 0
+	var target_components: Dictionary = {}
+	for entity in entities:
+		var id: Dictionary = entity.get("id", {})
+		if _entity_key(int(id.get("index", -2)), int(id.get("generation", -2))) == target_key:
+			target_components = entity.get("components", {})
+			break
+	if target_components.is_empty() or float(target_components.get("Health", {}).get("current", 0.0)) <= 0.0:
+		return 0
+	var source_type := str(event.get("source_type", ""))
+	var burn_hits_chilled := source_type in ["inferno_sprayer", "wildfire_sprayer"] and \
+			bool(event.get("target_was_chilled", false))
+	var chill_hits_burning := source_type in ["frost_nova", "absolute_zero"] and \
+			str(target_components.get("DamageOverTime", {}).get("status_type", "")) == "burn"
+	if not burn_hits_chilled and not chill_hits_burning:
+		return 0
+	var position: Dictionary = event.get("position", {})
+	if position.is_empty():
+		return 0
+	var sequence: int = simulation.spawn_projectile("thermal_shock",
+			Vector2(float(position.get("x", 0.0)), float(position.get("y", 0.0))), Vector2.ZERO,
+			float(event["amount"]) * thermal_shock_damage_multiplier,
+			thermal_shock_projectile_radius, 0.15)
+	if sequence > 0:
+		_thermal_shock_next_at[target_key] = active_time + thermal_shock_target_cooldown_seconds
+	return sequence
 
 func _advance_lightning_chain(event: Dictionary, entities: Array, active_time: float) -> void:
 	var source_parts := str(event.get("source_type", "")).split(":", false, 1)

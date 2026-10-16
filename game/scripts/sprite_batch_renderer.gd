@@ -221,6 +221,8 @@ func _sprite_for_entity(components: Dictionary) -> String:
 				return "projectile_frost_nova"
 			"absolute_zero":
 				return "projectile_absolute_zero"
+			"thermal_shock":
+				return "projectile_absolute_zero"
 			_:
 				return "projectile_lightning"
 	if components.get("IsXpOrb", false):
