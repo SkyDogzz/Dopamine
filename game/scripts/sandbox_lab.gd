@@ -29,6 +29,8 @@ const MAX_DPS_SAMPLES := 4096
 @onready var _equipment_slot: OptionButton = $Root/Body/Side/Sections/VisualBuild/EquipmentRow/EquipmentSlot
 @onready var _equipment_stat: OptionButton = $Root/Body/Side/Sections/VisualBuild/EquipmentRow/EquipmentStat
 @onready var _equipment_value: SpinBox = $Root/Body/Side/Sections/VisualBuild/EquipmentRow/EquipmentValue
+@onready var _live_stat_select: OptionButton = $Root/Body/Side/Sections/LiveOverride/StatSelect
+@onready var _live_stat_value: SpinBox = $Root/Body/Side/Sections/LiveOverride/StatValue
 
 var preset_service: RefCounted
 var preset_store: RefCounted
@@ -37,7 +39,7 @@ var _elapsed := 0.0
 var _diagnostic_session_id := 0
 var _damage_totals: Dictionary = {}
 var _dps_samples: Array[Dictionary] = []
-var _live_damage_override := 0.0
+var _live_stat_overrides: Dictionary = {}
 
 func _ready() -> void:
 	preset_service = PRESET_SERVICE_SCRIPT.new()
@@ -66,7 +68,7 @@ func _ready() -> void:
 	$Root/Body/Side/Sections/VisualBuild/AddStatButton.pressed.connect(_add_visual_stat)
 	$Root/Body/Side/Sections/VisualBuild/AddEquipmentButton.pressed.connect(_add_visual_equipment)
 	$Root/Body/Side/Sections/VisualBuild/ApplyBuildButton.pressed.connect(_apply_visual_build)
-	$Root/Body/Side/Sections/LiveOverride/ApplyDamage.pressed.connect(_apply_live_damage_override)
+	$Root/Body/Side/Sections/LiveOverride/ApplyStat.pressed.connect(_apply_live_stat_override)
 	_populate_visual_build_options()
 	for enemy_id in ["chaser", "sprinter", "tank", "shooter", "buffer", "exploder", "shielder", "summoner", "elite"]:
 		_enemy_select.add_item(enemy_id.to_upper())
@@ -119,6 +121,8 @@ func _populate_visual_build_options() -> void:
 		_stat_select.set_item_metadata(_stat_select.item_count - 1, stat_id)
 		_equipment_stat.add_item(str(stat_id).replace("_", " ").to_upper())
 		_equipment_stat.set_item_metadata(_equipment_stat.item_count - 1, stat_id)
+		_live_stat_select.add_item(str(stat_id).replace("_", " ").to_upper())
+		_live_stat_select.set_item_metadata(_live_stat_select.item_count - 1, stat_id)
 	for slot in EQUIPMENT_GENERATOR_SCRIPT.SLOTS:
 		_equipment_slot.add_item(str(slot).to_upper())
 		_equipment_slot.set_item_metadata(_equipment_slot.item_count - 1, slot)
@@ -194,19 +198,31 @@ func _add_visual_equipment() -> void:
 	equipment["stats"] = {stat_id: _equipment_value.value}
 	_write_visual_build(build_data)
 
-func _apply_live_damage_override() -> void:
+func _apply_live_stat_override() -> void:
 	if context.session == null:
 		_set_status("LIVE OVERRIDE UNAVAILABLE", true)
 		return
-	var new_value: float = $Root/Body/Side/Sections/LiveOverride/DamageValue.value
+	var stat_id := str(_live_stat_select.get_item_metadata(_live_stat_select.selected))
+	if stat_id.is_empty():
+		_set_status("LIVE STAT UNAVAILABLE", true)
+		return
+	var new_value: float = _live_stat_value.value
 	var session = context.session
-	var base_bonus := float(session._cached_equipment_bonuses.get("damage_pct", 0.0)) - _live_damage_override
+	var previous_value := float(_live_stat_overrides.get(stat_id, 0.0))
+	var base_bonus := float(session._cached_equipment_bonuses.get(stat_id, 0.0)) - previous_value
 	var total_bonus := base_bonus + new_value
-	session._cached_equipment_bonuses["damage_pct"] = total_bonus
-	session._cached_persistent_damage_multiplier = maxf(0.0, 1.0 + total_bonus / 100.0)
-	_live_damage_override = new_value
+	session._cached_equipment_bonuses[stat_id] = total_bonus
+	_live_stat_overrides[stat_id] = new_value
+	match stat_id:
+		"damage_pct":
+			session._cached_persistent_damage_multiplier = maxf(0.0, 1.0 + total_bonus / 100.0)
+		"move_speed_pct": session._refresh_player_move_speed()
+		"max_hp":
+			var max_hp_delta := new_value - previous_value
+			session.player_max_hp = maxf(1.0, session.player_max_hp + max_hp_delta)
+			session.player_hp = minf(session.player_hp, session.player_max_hp)
 	session._run_stat_hub_dirty = true
-	_set_status("LIVE DAMAGE %+0.1f%%" % new_value, false)
+	_set_status("LIVE %s %+0.1f" % [stat_id.to_upper(), new_value], false)
 
 func _read_visual_build() -> Dictionary:
 	var parser := JSON.new()
@@ -432,8 +448,8 @@ func _apply_preset(preset: Dictionary) -> void:
 		return
 	_preset_id.text = str(preset["preset_id"])
 	_build_json.text = JSON.stringify(preset["initial_build"], "  ")
-	_live_damage_override = 0.0
-	$Root/Body/Side/Sections/LiveOverride/DamageValue.value = 0.0
+	_live_stat_overrides.clear()
+	_live_stat_value.value = 0.0
 	_set_status("PRESET APPLIED TO COMBAT", false)
 
 func _refresh() -> void:

@@ -120,4 +120,7 @@ func _apply_build(target_session: Node2D, target_build: RefCounted) -> bool:
 	target_session._cached_persistent_damage_multiplier = maxf(
 		0.0, 1.0 + float(bonuses.get("damage_pct", 0.0)) / 100.0
 	)
+	target_session.player_max_hp = target_session.simulation.initial_player_hp() + float(bonuses.get("max_hp", 0.0))
+	target_session.player_hp = target_session.player_max_hp
+	target_session._refresh_player_move_speed()
 	return true

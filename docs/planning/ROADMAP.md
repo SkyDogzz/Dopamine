@@ -576,12 +576,12 @@ P1 livre le Sandbox développeur et ne remplace pas cette feature produit.
   - [x] Smoke dédié utilise un `XDG_DATA_HOME` isolé, vérifie le spawn et le stockage local du preset; aucune donnée n’est écrite sous `user://saves`.
 - [ ] **P8.2 — Build et configuration**
   - [x] Ajouter des contrôles visuels au Lab pour sélectionner une arme/relique et son niveau, ajouter une stat, puis appliquer le build à la session isolée en pause. Les valeurs restent des outils expérimentaux **[PROPOSÉES]**.
-  - [x] Ajouter l’édition d’un équipement de test par slot/stat et un override LIVE isolé de `damage_pct`; le multiplicateur de build et l’override sont appliqués au facteur de dégâts réellement utilisé par les armes.
-  - [ ] Exposer les équipements, les overrides LIVE/REBUILD/RESTART et les limites de contenu avancées, après définition de leur contrat.
+  - [x] Ajouter l’édition d’un équipement de test par slot/stat et des overrides LIVE isolés pour les statistiques existantes; les 12 statistiques du catalogue sont prises en charge, avec actualisation dédiée des dégâts, vitesse et HP maximum.
+  - [ ] Compléter les overrides de configuration LIVE/REBUILD/RESTART et les limites de contenu avancées, après définition de leur contrat.
   - [x] Ajouter `SandboxBuild` comme modèle isolé : armes/reliques, évolutions appariées, stats personnalisées finies et équipements de test; validation atomique avant remplacement.
   - [x] Ajouter un éditeur JSON initial et appliquer armes/reliques (niveaux 1–5), évolutions appariées, équipements et stats personnalisées à la session de combat existante.
-  - [ ] Ajouter les contrôles visuels d’équipement complets et overrides REBUILD/RESTART; niveaux au-delà de 5 restent à implémenter dans le combat.
-  - [ ] Étendre les overrides LIVE au-delà de `damage_pct`, un paramètre à la fois.
+  - [ ] Ajouter les overrides REBUILD/RESTART; niveaux au-delà de 5 restent à implémenter dans le combat.
+  - [x] Ajouter des overrides LIVE sélectionnables par statistique; ils restent transitoires et sont effacés lors d’une reconstruction du build.
   - [ ] Ajouter overrides REBUILD/RESTART avec validation atomique.
 - [ ] **P8.3 — Presets et share codes**
   - [x] Ajouter `sandbox_preset_service.gd` : schéma version 1 fermé, exemple minimal et modes Survival/Endless/Armorless.

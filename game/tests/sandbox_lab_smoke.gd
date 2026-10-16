@@ -29,13 +29,15 @@ func _run() -> void:
 	var equipment_stat: OptionButton = lab.get_node_or_null("Root/Body/Side/Sections/VisualBuild/EquipmentRow/EquipmentStat")
 	var equipment_value: SpinBox = lab.get_node_or_null("Root/Body/Side/Sections/VisualBuild/EquipmentRow/EquipmentValue")
 	var add_equipment: Button = lab.get_node_or_null("Root/Body/Side/Sections/VisualBuild/AddEquipmentButton")
-	var live_damage: SpinBox = lab.get_node_or_null("Root/Body/Side/Sections/LiveOverride/DamageValue")
-	var apply_live_damage: Button = lab.get_node_or_null("Root/Body/Side/Sections/LiveOverride/ApplyDamage")
+	var live_stat: OptionButton = lab.get_node_or_null("Root/Body/Side/Sections/LiveOverride/StatSelect")
+	var live_value: SpinBox = lab.get_node_or_null("Root/Body/Side/Sections/LiveOverride/StatValue")
+	var apply_live_stat: Button = lab.get_node_or_null("Root/Body/Side/Sections/LiveOverride/ApplyStat")
 	if weapon_select == null or weapon_level == null or add_weapon == null or relic_select == null or \
 			relic_level == null or add_relic == null or stat_select == null or stat_value == null or \
 			add_stat == null or apply_build == null or equipment_slot == null or equipment_stat == null or \
-			equipment_value == null or add_equipment == null or live_damage == null or apply_live_damage == null:
-		_fail("Sandbox Lab should provide visual build controls and a live damage override")
+			equipment_value == null or add_equipment == null or live_stat == null or live_value == null or \
+			apply_live_stat == null:
+		_fail("Sandbox Lab should provide visual build controls and live stat overrides")
 		return
 	weapon_select.select(_option_index_for(weapon_select, "minigun"))
 	weapon_level.value = 2
@@ -48,6 +50,9 @@ func _run() -> void:
 	stat_select.select(_option_index_for(stat_select, "damage_pct"))
 	stat_value.value = 12.5
 	add_stat.pressed.emit()
+	stat_select.select(_option_index_for(stat_select, "max_hp"))
+	stat_value.value = 10.0
+	add_stat.pressed.emit()
 	equipment_slot.select(_option_index_for(equipment_slot, "boots"))
 	equipment_stat.select(_option_index_for(equipment_stat, "move_speed_pct"))
 	equipment_value.value = 7.5
@@ -57,7 +62,8 @@ func _run() -> void:
 			visual_build["relics"].size() != 2 or visual_build["stats"]["damage_pct"] != 12.5 or \
 			visual_build["equipment"].size() != 1 or \
 			visual_build["equipment"][0]["slot"] != "boots" or \
-			visual_build["equipment"][0]["stats"]["move_speed_pct"] != 7.5:
+			visual_build["equipment"][0]["stats"]["move_speed_pct"] != 7.5 or \
+			visual_build["stats"]["max_hp"] != 10.0:
 		_fail("Visual build controls should update the JSON model without duplicating an item")
 		return
 	await lab._apply_visual_build()
@@ -65,6 +71,9 @@ func _run() -> void:
 			lab.context.session.loadout.relic_level("magnet_heart") != 2 or \
 			lab.context.session._equipment_bonus("damage_pct") != 12.5 or \
 			lab.context.session._equipment_bonus("move_speed_pct") != 7.5 or \
+			lab.context.session.player_max_hp != 110.0 or \
+			not is_equal_approx(lab.context.session.player.move_speed,
+				lab.context.session._base_player_move_speed * 1.075) or \
 			not bool(lab.context.simulation.snapshot()["paused"]):
 		_fail("Apply Build should atomically rebuild the paused isolated combat session from visual controls")
 		return
@@ -72,12 +81,40 @@ func _run() -> void:
 			not is_equal_approx(lab.context.session._persistent_damage_multiplier(), 1.18125):
 		_fail("Sandbox build damage must affect the same effective multiplier used by combat")
 		return
-	live_damage.value = 10.0
-	apply_live_damage.pressed.emit()
+	live_stat.select(_option_index_for(live_stat, "damage_pct"))
+	live_value.value = 10.0
+	apply_live_stat.pressed.emit()
 	if not is_equal_approx(float(lab.context.session._cached_equipment_bonuses["damage_pct"]), 22.5) or \
 			not is_equal_approx(lab.context.session._persistent_damage_multiplier(), 1.28625) or \
 			lab.context.active_preset["initial_build"]["equipment"].size() != 1:
 		_fail("Live damage override should update combat immediately without changing the active preset build")
+		return
+	live_stat.select(_option_index_for(live_stat, "critical_chance_pct"))
+	live_value.value = 7.5
+	apply_live_stat.pressed.emit()
+	if not is_equal_approx(lab.context.session._critical_chance(), 7.5) or \
+			lab.context.active_preset["initial_build"]["stats"].has("critical_chance_pct"):
+		_fail("Live critical chance should affect combat independently of the preset build")
+		return
+	live_stat.select(_option_index_for(live_stat, "move_speed_pct"))
+	live_value.value = 20.0
+	apply_live_stat.pressed.emit()
+	if not is_equal_approx(lab.context.session.player.move_speed,
+			lab.context.session._base_player_move_speed * 1.275):
+		_fail("Live move speed should refresh the player controller immediately")
+		return
+	live_stat.select(_option_index_for(live_stat, "max_hp"))
+	live_value.value = 7.5
+	apply_live_stat.pressed.emit()
+	if not is_equal_approx(lab.context.session.player_max_hp, 117.5):
+		_fail("Live max HP should update the player's health ceiling immediately")
+		return
+	await lab._apply_visual_build()
+	if not lab._live_stat_overrides.is_empty() or \
+			not is_equal_approx(lab.context.session._critical_chance(), 0.0) or \
+			not is_equal_approx(lab.context.session._persistent_damage_multiplier(), 1.18125) or \
+			lab.context.session.player_max_hp != 110.0:
+		_fail("Rebuilding the Lab should clear all transient live stat overrides")
 		return
 	var diagnostics: Label = lab.get_node_or_null("Root/Body/Side/Sections/Diagnostics/RngLog")
 	var dps_summary: Label = lab.get_node_or_null("Root/Body/Side/Sections/Diagnostics/DpsSummary")

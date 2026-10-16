@@ -323,22 +323,28 @@ theme_override_constants/separation = 2
 layout_mode = 2
 theme_type_variation = "PixelHeading"
 theme_override_font_sizes/font_size = 8
-text = "LIVE OVERRIDE · DAMAGE"
+text = "LIVE STAT OVERRIDE"
 
-[node name="DamageValue" type="SpinBox" parent="Root/Body/Side/Sections/LiveOverride"]
+[node name="StatSelect" type="OptionButton" parent="Root/Body/Side/Sections/LiveOverride"]
 custom_minimum_size = Vector2(0, 20)
 layout_mode = 2
 focus_mode = 2
-min_value = -10000.0
+item_count = 0
+
+[node name="StatValue" type="SpinBox" parent="Root/Body/Side/Sections/LiveOverride"]
+custom_minimum_size = Vector2(0, 20)
+layout_mode = 2
+focus_mode = 2
+min_value = -99.0
 max_value = 10000.0
 value = 0.0
 step = 0.5
 
-[node name="ApplyDamage" type="Button" parent="Root/Body/Side/Sections/LiveOverride"]
+[node name="ApplyStat" type="Button" parent="Root/Body/Side/Sections/LiveOverride"]
 custom_minimum_size = Vector2(0, 20)
 layout_mode = 2
 focus_mode = 2
-text = "APPLY LIVE DAMAGE %"
+text = "APPLY LIVE STAT"
 
 [node name="PresetActions" type="HBoxContainer" parent="Root/Body/Side/Sections"]
 layout_mode = 2
