@@ -351,7 +351,7 @@ Travail requis :
 - [ ] **P5.2.3 — Réactions proposées**
   - [x] Implémenter un prototype Thermal Shock : déclenchement par impact direct Burn↔Chill, bonus à 50 % du coup initial et cooldown local de 1 s **[PROPOSÉS]**; le DoT et l’impact de réaction ne chaînent pas.
   - [ ] Valider et équilibrer Thermal Shock sur des runs; son implémentation ne change pas son statut **[PROPOSÉ]**.
-  - [ ] Faire arbitrer Toxic Ignition, Shatter, Electroplague, Gravity Collapse et Hemorrhage avant leur implémentation.
+  - [ ] Toxic Ignition : décision utilisateur **[VALIDÉE, 2026-10-16]** pour une explosion immédiate sur une cible Poison + Burn; déclencheur exact, dégâts, rayon, consommation des statuts et chaînage restent **[OUVERTS]** avant implémentation. Arbitrer Shatter, Electroplague, Gravity Collapse et Hemorrhage avant leur implémentation.
   - [x] Garder Overcharge bloquée par son statut **[OUVERT]**.
 - [ ] **P5.2.4 — Causalité et dégâts**
   - [ ] Ajouter un ID de chaîne et un budget aux réactions seulement après validation du contrat.
