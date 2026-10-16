@@ -144,9 +144,9 @@ func _run() -> void:
 			_equipment_rows(items).size() != 0:
 		_fail("Confirmed sale should remove the item, credit Essence once and refresh the empty state")
 		return
-	sold_profile["resources"]["essence"] = 500
+	sold_profile["resources"]["essence"] = 850
 	if not save_service.save_slot("0", sold_profile):
-		_fail("The skill tree fixture should save enough Essence for its proposed four-node branch")
+		_fail("The skill tree fixture should save enough Essence for its proposed stat and unlock branches")
 		return
 	panel.get_node("Panel/Content/CloseButton").pressed.emit()
 	if panel.visible or root.gui_get_focus_owner() != equipment_button:
@@ -155,14 +155,14 @@ func _run() -> void:
 	var skill_button: Button = hub.get_node("Content/Main/PreparationCard/Body/SkillTreeButton")
 	skill_button.pressed.emit()
 	var skill_panel: Control = hub.get_node("SkillTreePanel")
-	if not skill_panel.visible or skill_panel.get_node("Panel/Content/NodeBranch/FoundationCard/Content/VitalityButton").disabled:
+	if not skill_panel.visible or skill_panel.get_node("Panel/Content/NodeScroll/Rows/NodeBranch/FoundationCard/Content/VitalityButton").disabled:
 		_fail("The hub skill tree should show the proposed node when funded")
 		return
-	skill_panel.get_node("Panel/Content/NodeBranch/FoundationCard/Content/VitalityButton").pressed.emit()
+	skill_panel.get_node("Panel/Content/NodeScroll/Rows/NodeBranch/FoundationCard/Content/VitalityButton").pressed.emit()
 	if not is_equal_approx(progression.skill_bonus("max_hp_pct"), 0.05):
 		_fail("Unlocking Vitality should persist its proposed maximum HP bonus")
 		return
-	var focus_button: Button = skill_panel.get_node("Panel/Content/NodeBranch/FollowupCard/Content/FocusButton")
+	var focus_button: Button = skill_panel.get_node("Panel/Content/NodeScroll/Rows/NodeBranch/FollowupCard/Content/FocusButton")
 	if focus_button.disabled:
 		_fail("The dependent prototype skill node should become available")
 		return
@@ -170,7 +170,7 @@ func _run() -> void:
 	if not is_equal_approx(progression.skill_bonus("damage_pct"), 0.03):
 		_fail("Unlocking Focused Training should persist its proposed damage bonus")
 		return
-	var mastery_button: Button = skill_panel.get_node("Panel/Content/NodeBranch/FollowupCard/Content/MasteryButton")
+	var mastery_button: Button = skill_panel.get_node("Panel/Content/NodeScroll/Rows/NodeBranch/FollowupCard/Content/MasteryButton")
 	if mastery_button.disabled:
 		_fail("The skill mastery node should become available after its branch prerequisite")
 		return
@@ -178,13 +178,29 @@ func _run() -> void:
 	if not is_equal_approx(progression.skill_bonus("move_speed_pct"), 0.02):
 		_fail("Unlocking Fleet Footed should persist its proposed move speed bonus")
 		return
-	var precision_button: Button = skill_panel.get_node("Panel/Content/NodeBranch/FollowupCard/Content/PrecisionButton")
+	var precision_button: Button = skill_panel.get_node("Panel/Content/NodeScroll/Rows/NodeBranch/FollowupCard/Content/PrecisionButton")
 	if precision_button.disabled:
 		_fail("The advanced critical node should become available after its mastery prerequisite")
 		return
 	precision_button.pressed.emit()
 	if not is_equal_approx(progression.skill_bonus("critical_chance_pct"), 1.0):
 		_fail("Unlocking Steady Aim should persist its proposed critical chance bonus")
+		return
+	var weapon_unlock_button: Button = skill_panel.get_node("Panel/Content/NodeScroll/Rows/UnlockBranch/UnlockWeaponCard/Content/WeaponUnlockButton")
+	if weapon_unlock_button.disabled:
+		_fail("The proposed weapon unlock should become available after Vitality")
+		return
+	weapon_unlock_button.pressed.emit()
+	if not progression.unlocked_weapon_ids().has("crimson_daggers") or progression.unlocked_relic_ids().has("blood_chalice"):
+		_fail("Unlocking Crimson Daggers should add that weapon without unlocking its relic")
+		return
+	var relic_unlock_button: Button = skill_panel.get_node("Panel/Content/NodeScroll/Rows/UnlockBranch/UnlockRelicCard/Content/RelicUnlockButton")
+	if relic_unlock_button.disabled:
+		_fail("The Blood Chalice unlock should become available after its weapon node")
+		return
+	relic_unlock_button.pressed.emit()
+	if not progression.unlocked_relic_ids().has("blood_chalice"):
+		_fail("Unlocking Blood Chalice should add the relic to future run drafts")
 		return
 	var skill_session: Node2D = load("res://scenes/survival_session.tscn").instantiate()
 	skill_session.progression_service = progression
@@ -194,8 +210,9 @@ func _run() -> void:
 	root.add_child(skill_session)
 	await process_frame
 	if not is_equal_approx(skill_session.player.move_speed, 240.0 * 1.02) or \
-		not is_equal_approx(skill_session._critical_chance(), 1.0):
-		_fail("The unlocked proposed movement and critical nodes should affect a real Survival session")
+		not is_equal_approx(skill_session._critical_chance(), 1.0) or \
+		skill_session.loadout._weapons.size() != 3 or skill_session.loadout._relics.size() != 3:
+		_fail("The unlocked proposed stats and equipment should affect a real Survival session")
 		return
 	skill_session.queue_free()
 	await process_frame
@@ -204,7 +221,8 @@ func _run() -> void:
 		not is_zero_approx(progression.skill_bonus("damage_pct")) or \
 		not is_zero_approx(progression.skill_bonus("move_speed_pct")) or \
 		not is_zero_approx(progression.skill_bonus("critical_chance_pct")) or \
-		progression.load_profile()["profile"]["resources"]["essence"] != 500:
+		progression.load_profile()["profile"]["resources"]["essence"] != 850 or \
+		progression.unlocked_weapon_ids().size() != 2 or progression.unlocked_relic_ids().size() != 2:
 		_fail("Free skill respec should restore Essence and remove prototype bonuses")
 		return
 	skill_panel.get_node("Panel/Content/CloseButton").pressed.emit()

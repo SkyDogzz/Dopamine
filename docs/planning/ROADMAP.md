@@ -476,6 +476,9 @@ Travail requis :
 - [ ] **P6.6 — Skill tree**
   - [ ] Établir le schéma node/prérequis/coût/effet.
   - [x] Étendre la branche Core Stats à quatre nodes avec Fleet Footed (+2 % vitesse, 110 Essence) et Steady Aim (+1 point de critique, 140 Essence); prérequis, bonus et coûts **[PROPOSÉS]**, vérifiés jusqu'à leur application en Survival/Armorless et au respec.
+  - [x] Ajouter une branche prototype d’équipement : Crimson Daggers (130 Essence, après Vitality) puis Blood Chalice (160 Essence, après Crimson Daggers). Les coûts et l’ordre sont **[PROPOSÉS]**; seules ces deux entrées sont débloquées dans cette tranche.
+  - [x] Les profils normaux commencent avec Lightning Conductor, Inferno Sprayer, Storm Core et Infernal Heart; le skill tree ouvre Crimson Daggers et Blood Chalice dans les offres et le choix d’arme initial. Le Sandbox conserve le catalogue complet puisqu’il n’injecte aucun service de progression.
+  - [ ] Continuer les branches et élargir les nœuds au-delà de cette tranche; la cible GDD 100–150 reste **[PROPOSÉE]**.
   - [ ] Ajouter et tester une tranche de branche à la fois jusqu’à la cible décidée (100–150).
   - [ ] Vérifier coût, déblocages, bonus appliqué et respec gratuit.
   - [ ] Mesurer le bonus cumulatif avant de fermer l’arbre.

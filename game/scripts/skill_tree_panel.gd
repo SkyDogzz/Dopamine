@@ -5,17 +5,23 @@ signal unlock_requested(node_id: String)
 signal respec_requested
 
 @onready var _essence: Label = $Panel/Content/EssenceRow/Essence
-@onready var _node_button: Button = $Panel/Content/NodeBranch/FoundationCard/Content/VitalityButton
-@onready var _focus_button: Button = $Panel/Content/NodeBranch/FollowupCard/Content/FocusButton
-@onready var _node_effect: Label = $Panel/Content/NodeBranch/FoundationCard/Content/Effect
-@onready var _focus_effect: Label = $Panel/Content/NodeBranch/FollowupCard/Content/Effect
-@onready var _focus_kicker: Label = $Panel/Content/NodeBranch/FollowupCard/Content/Kicker
-@onready var _mastery_button: Button = $Panel/Content/NodeBranch/FollowupCard/Content/MasteryButton
-@onready var _mastery_effect: Label = $Panel/Content/NodeBranch/FollowupCard/Content/MasteryEffect
-@onready var _mastery_kicker: Label = $Panel/Content/NodeBranch/FollowupCard/Content/MasteryKicker
-@onready var _precision_button: Button = $Panel/Content/NodeBranch/FollowupCard/Content/PrecisionButton
-@onready var _precision_effect: Label = $Panel/Content/NodeBranch/FollowupCard/Content/PrecisionEffect
-@onready var _precision_kicker: Label = $Panel/Content/NodeBranch/FollowupCard/Content/PrecisionKicker
+@onready var _node_button: Button = $Panel/Content/NodeScroll/Rows/NodeBranch/FoundationCard/Content/VitalityButton
+@onready var _focus_button: Button = $Panel/Content/NodeScroll/Rows/NodeBranch/FollowupCard/Content/FocusButton
+@onready var _node_effect: Label = $Panel/Content/NodeScroll/Rows/NodeBranch/FoundationCard/Content/Effect
+@onready var _focus_effect: Label = $Panel/Content/NodeScroll/Rows/NodeBranch/FollowupCard/Content/Effect
+@onready var _focus_kicker: Label = $Panel/Content/NodeScroll/Rows/NodeBranch/FollowupCard/Content/Kicker
+@onready var _mastery_button: Button = $Panel/Content/NodeScroll/Rows/NodeBranch/FollowupCard/Content/MasteryButton
+@onready var _mastery_effect: Label = $Panel/Content/NodeScroll/Rows/NodeBranch/FollowupCard/Content/MasteryEffect
+@onready var _mastery_kicker: Label = $Panel/Content/NodeScroll/Rows/NodeBranch/FollowupCard/Content/MasteryKicker
+@onready var _precision_button: Button = $Panel/Content/NodeScroll/Rows/NodeBranch/FollowupCard/Content/PrecisionButton
+@onready var _precision_effect: Label = $Panel/Content/NodeScroll/Rows/NodeBranch/FollowupCard/Content/PrecisionEffect
+@onready var _precision_kicker: Label = $Panel/Content/NodeScroll/Rows/NodeBranch/FollowupCard/Content/PrecisionKicker
+@onready var _weapon_unlock_button: Button = $Panel/Content/NodeScroll/Rows/UnlockBranch/UnlockWeaponCard/Content/WeaponUnlockButton
+@onready var _weapon_unlock_effect: Label = $Panel/Content/NodeScroll/Rows/UnlockBranch/UnlockWeaponCard/Content/Effect
+@onready var _weapon_unlock_status: Label = $Panel/Content/NodeScroll/Rows/UnlockBranch/UnlockWeaponCard/Content/Prerequisite
+@onready var _relic_unlock_button: Button = $Panel/Content/NodeScroll/Rows/UnlockBranch/UnlockRelicCard/Content/RelicUnlockButton
+@onready var _relic_unlock_effect: Label = $Panel/Content/NodeScroll/Rows/UnlockBranch/UnlockRelicCard/Content/Effect
+@onready var _relic_unlock_status: Label = $Panel/Content/NodeScroll/Rows/UnlockBranch/UnlockRelicCard/Content/Prerequisite
 @onready var _respec_button: Button = $Panel/Content/RespecButton
 @onready var _close_button: Button = $Panel/Content/CloseButton
 
@@ -29,6 +35,8 @@ func _ready() -> void:
 	_focus_button.pressed.connect(func() -> void: unlock_requested.emit("focused_training"))
 	_mastery_button.pressed.connect(func() -> void: unlock_requested.emit("fleet_footed"))
 	_precision_button.pressed.connect(func() -> void: unlock_requested.emit("steady_aim"))
+	_weapon_unlock_button.pressed.connect(func() -> void: unlock_requested.emit("unlock_crimson_daggers"))
+	_relic_unlock_button.pressed.connect(func() -> void: unlock_requested.emit("unlock_blood_chalice"))
 	_respec_button.pressed.connect(func() -> void: respec_requested.emit())
 
 func present(profile: Dictionary) -> void:
@@ -39,10 +47,14 @@ func present(profile: Dictionary) -> void:
 	var focus_cost: int = progression_service.skill_node_cost("focused_training") if progression_service != null else 80
 	var mastery_cost: int = progression_service.skill_node_cost("fleet_footed") if progression_service != null else 110
 	var precision_cost: int = progression_service.skill_node_cost("steady_aim") if progression_service != null else 140
+	var weapon_unlock_cost: int = progression_service.skill_node_cost("unlock_crimson_daggers") if progression_service != null else 130
+	var relic_unlock_cost: int = progression_service.skill_node_cost("unlock_blood_chalice") if progression_service != null else 160
 	var has_node := NODE_ID in unlocked
 	var has_focus := "focused_training" in unlocked
 	var has_mastery := "fleet_footed" in unlocked
 	var has_precision := "steady_aim" in unlocked
+	var has_weapon_unlock := "unlock_crimson_daggers" in unlocked
+	var has_relic_unlock := "unlock_blood_chalice" in unlocked
 	_essence.text = "ESSENCE %d" % essence
 	_node_button.text = "UNLOCKED" if has_node else "UNLOCK NODE"
 	_node_effect.text = "+5%% MAX HP  •  %d ESSENCE  •  PROPOSED" % vitality_cost
@@ -62,9 +74,22 @@ func present(profile: Dictionary) -> void:
 	_precision_kicker.text = "ADVANCED · UNLOCKED" if has_precision else \
 		"ADVANCED · AVAILABLE" if has_mastery and essence >= precision_cost else "ADVANCED · LOCKED"
 	_precision_button.disabled = has_precision or not has_mastery or essence < precision_cost
+	_weapon_unlock_effect.text = "CRIMSON DAGGERS  •  %d ESSENCE  •  PROPOSED" % weapon_unlock_cost
+	_weapon_unlock_status.text = "WEAPON · UNLOCKED" if has_weapon_unlock else \
+		"WEAPON · AVAILABLE" if has_node and essence >= weapon_unlock_cost else "WEAPON · REQUIRES VITALITY"
+	_weapon_unlock_button.text = "UNLOCKED" if has_weapon_unlock else "UNLOCK NODE"
+	_weapon_unlock_button.disabled = has_weapon_unlock or not has_node or essence < weapon_unlock_cost
+	_relic_unlock_effect.text = "BLOOD CHALICE  •  %d ESSENCE  •  PROPOSED" % relic_unlock_cost
+	_relic_unlock_status.text = "RELIC · UNLOCKED" if has_relic_unlock else \
+		"RELIC · AVAILABLE" if has_weapon_unlock and essence >= relic_unlock_cost else "RELIC · REQUIRES DAGGERS"
+	_relic_unlock_button.text = "UNLOCKED" if has_relic_unlock else "UNLOCK NODE"
+	_relic_unlock_button.disabled = has_relic_unlock or not has_weapon_unlock or essence < relic_unlock_cost
 	_respec_button.disabled = unlocked.is_empty()
 	visible = true
-	_node_button.grab_focus()
+	for button in [_node_button, _focus_button, _mastery_button, _precision_button, _weapon_unlock_button, _relic_unlock_button]:
+		if not button.disabled:
+			button.grab_focus()
+			break
 
 func present_error() -> void:
 	_essence.text = "PROFILE UNAVAILABLE"
@@ -72,18 +97,26 @@ func present_error() -> void:
 	_focus_effect.text = "PROFILE COULD NOT BE READ"
 	_mastery_effect.text = "PROFILE COULD NOT BE READ"
 	_precision_effect.text = "PROFILE COULD NOT BE READ"
+	_weapon_unlock_effect.text = "PROFILE COULD NOT BE READ"
+	_relic_unlock_effect.text = "PROFILE COULD NOT BE READ"
 	_node_button.disabled = true
 	_focus_button.disabled = true
 	_mastery_button.disabled = true
 	_precision_button.disabled = true
+	_weapon_unlock_button.disabled = true
+	_relic_unlock_button.disabled = true
 	_respec_button.disabled = true
 	_node_button.text = "UNAVAILABLE"
 	_focus_button.text = "UNAVAILABLE"
 	_mastery_button.text = "UNAVAILABLE"
 	_precision_button.text = "UNAVAILABLE"
+	_weapon_unlock_button.text = "UNAVAILABLE"
+	_relic_unlock_button.text = "UNAVAILABLE"
 	_focus_kicker.text = "FOLLOW-UP · LOCKED"
 	_mastery_kicker.text = "MASTERY · LOCKED"
 	_precision_kicker.text = "ADVANCED · LOCKED"
+	_weapon_unlock_status.text = "WEAPON · LOCKED"
+	_relic_unlock_status.text = "RELIC · LOCKED"
 	visible = true
 	_close_button.grab_focus()
 

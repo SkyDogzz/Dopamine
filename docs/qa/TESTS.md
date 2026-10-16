@@ -668,6 +668,13 @@ Note de clôture : le blocage historique du smoke `sandbox_ui_smoke.gd` décrit 
 
 ## Repère XP du HUD (2026-10-16)
 
+## Déblocages d’armes et de reliques (2026-10-16)
+
+- [x] `progression_service_smoke.gd` vérifie les starters, les prérequis de Crimson Daggers puis Blood Chalice, les coûts **[PROPOSÉS]**, et le remboursement/réinitialisation au respec.
+- [x] `survival_loadout_smoke.gd` vérifie le filtrage des offres et des choix de départ selon les déblocages; `survival_hub_smoke.gd` confirme les deux choix d’arme et les deux reliques de départ d’un profil neuf.
+- [x] `survival_entry_smoke.gd` vérifie que le Sandbox n’injecte pas de ProgressionService; il conserve donc son catalogue complet.
+- [x] `skill_tree_panel_visual_smoke.gd` couvre le défilement, les deux cartes d’équipement, leurs coûts proposés et leur état de prérequis.
+
 - [x] Le HUD reprend l’orbe XP 16×16 à sa taille native et en nearest, sans changer les valeurs ni le calcul de progression.
 - [x] `survival_hud_smoke.gd` vérifie l’asset, sa taille, son filtrage et les bounds des lignes; exécuté avec Godot 4.7.2, passe.
 

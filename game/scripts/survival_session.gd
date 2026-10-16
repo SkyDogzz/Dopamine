@@ -419,6 +419,17 @@ func _ready() -> void:
 	add_child(player)
 	player.controls_enabled = false
 	loadout = LOADOUT_SCRIPT.new()
+	if progression_service != null and progression_service.has_method("unlocked_weapon_ids") and \
+			progression_service.has_method("unlocked_relic_ids"):
+		var unlocked_weapons: Array[String] = progression_service.unlocked_weapon_ids()
+		var unlocked_relics: Array[String] = progression_service.unlocked_relic_ids()
+		if unlocked_weapons.size() >= 2 and unlocked_relics.size() >= 2:
+			loadout.set_unlocked_content(unlocked_weapons, unlocked_relics)
+		else:
+			push_error("Progression profile has no valid unlocked weapon/relic choices")
+			set_process(false)
+			set_physics_process(false)
+			return
 	loadout.offer_weights = {
 		"owned_upgrade": owned_upgrade_offer_weight,
 		"matching_relic": matching_relic_offer_weight,

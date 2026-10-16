@@ -155,6 +155,9 @@ func _run() -> void:
 		current_scene.difficulty_id != "easy" or current_scene.progression_service != progression:
 		_fail("Launching from the hub should pass the selected difficulty and normal profile service into the run")
 		return
+	if current_scene.loadout._weapons.size() != 2 or current_scene.loadout._relics.size() != 2:
+		_fail("A normal profile should limit run draws to its two initially unlocked weapons and relics")
+		return
 	if not current_scene.get_node("HUD/ChestOverlay/ChestChoice").visible:
 		_fail("The starting weapon choice should remain the first run choice")
 		return

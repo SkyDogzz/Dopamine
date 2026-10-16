@@ -1,6 +1,8 @@
 extends RefCounted
 
 const PROFILE_VERSION := 6
+const STARTER_WEAPONS := ["lightning_conductor", "inferno_sprayer"]
+const STARTER_RELICS := ["storm_core", "infernal_heart"]
 const POWDER_TIERS := ["basic", "refined", "pure", "prismatic"]
 const ENHANCEMENT_BASE_COSTS := [10, 15, 22, 32, 46, 65, 90, 125, 175, 250]
 const RARITY_COST_MULTIPLIERS := {"normal": 1.0, "magic": 1.5, "mystic": 2.0, "legendary": 3.0, "mythic": 4.0}
@@ -28,6 +30,8 @@ const PROTOTYPE_SKILL_NODES := {
 	"focused_training": {"category": "core_stats", "depth": 6, "damage_pct": 0.03, "prerequisites": ["vitality_starter"], "status": "PROPOSED"},
 	"fleet_footed": {"category": "core_stats", "depth": 9, "move_speed_pct": 0.02, "prerequisites": ["focused_training"], "status": "PROPOSED"},
 	"steady_aim": {"category": "core_stats", "depth": 12, "critical_chance_pct": 1.0, "prerequisites": ["fleet_footed"], "status": "PROPOSED"},
+	"unlock_crimson_daggers": {"category": "weapon_unlocks", "depth": 3, "unlocks_weapon": "crimson_daggers", "prerequisites": ["vitality_starter"], "status": "PROPOSED"},
+	"unlock_blood_chalice": {"category": "relic_unlocks", "depth": 6, "unlocks_relic": "blood_chalice", "prerequisites": ["unlock_crimson_daggers"], "status": "PROPOSED"},
 }
 const RUN_ID_PATTERN := "^[A-Za-z0-9_-]{1,128}$"
 const EQUIPMENT_GENERATOR_SCRIPT := preload("res://scripts/equipment_generator.gd")
@@ -344,6 +348,32 @@ func skill_bonus(stat_id: String) -> float:
 		if PROTOTYPE_SKILL_NODES.has(node_id):
 			bonus += float(PROTOTYPE_SKILL_NODES[node_id].get(stat_id, 0.0))
 	return bonus
+
+func unlocked_weapon_ids() -> Array[String]:
+	var result: Array[String] = []
+	for weapon_id in STARTER_WEAPONS:
+		result.append(str(weapon_id))
+	var profile_result := load_profile()
+	if not profile_result.get("ok", false):
+		return []
+	for node_id in profile_result["profile"]["unlocked_skill_nodes"]:
+		var weapon_id := str(PROTOTYPE_SKILL_NODES.get(str(node_id), {}).get("unlocks_weapon", ""))
+		if not weapon_id.is_empty() and weapon_id not in result:
+			result.append(weapon_id)
+	return result
+
+func unlocked_relic_ids() -> Array[String]:
+	var result: Array[String] = []
+	for relic_id in STARTER_RELICS:
+		result.append(str(relic_id))
+	var profile_result := load_profile()
+	if not profile_result.get("ok", false):
+		return []
+	for node_id in profile_result["profile"]["unlocked_skill_nodes"]:
+		var relic_id := str(PROTOTYPE_SKILL_NODES.get(str(node_id), {}).get("unlocks_relic", ""))
+		if not relic_id.is_empty() and relic_id not in result:
+			result.append(relic_id)
+	return result
 
 func equipment_bonus(stat_id: String) -> float:
 	return equipment_bonuses().get(stat_id, 0.0)

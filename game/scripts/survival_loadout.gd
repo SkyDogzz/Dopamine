@@ -37,6 +37,7 @@ const EVOLUTION_ICONS := {
 	"frost_nova": "res://assets/sprites/catalog/evolution_frost_nova.png",
 }
 const STARTING_WEAPONS := ["lightning_conductor", "inferno_sprayer"]
+const STARTING_WEAPON_CHOICES := 2
 const MAX_SLOTS := 5
 const MAX_EXPANDED_SLOTS := 6
 const MAX_LEVEL := 5
@@ -52,6 +53,7 @@ var _weapon_descriptions := {}
 var _relic_descriptions := {}
 var _weapon_definitions := {}
 var _relic_definitions := {}
+var _starting_weapon_pool: Array[String] = ["lightning_conductor", "inferno_sprayer"]
 var _rng := RandomNumberGenerator.new()
 var offer_weights := {
 	"owned_upgrade": 1.5,
@@ -79,6 +81,22 @@ func _init(seed_value: int = 0) -> void:
 		_rng.randomize()
 	else:
 		_rng.seed = seed_value
+
+func set_unlocked_content(weapon_ids: Array[String], relic_ids: Array[String]) -> void:
+	_starting_weapon_pool.clear()
+	for weapon_id in weapon_ids:
+		if _weapons.has(weapon_id) and weapon_id not in _starting_weapon_pool:
+			_starting_weapon_pool.append(weapon_id)
+	for weapon_id in _weapons.keys():
+		if weapon_id not in weapon_ids:
+			_weapons.erase(weapon_id)
+			_weapon_descriptions.erase(weapon_id)
+			_weapon_definitions.erase(weapon_id)
+	for relic_id in _relics.keys():
+		if relic_id not in relic_ids:
+			_relics.erase(relic_id)
+			_relic_descriptions.erase(relic_id)
+			_relic_definitions.erase(str(relic_id))
 
 func offers(family: String, excluded_ids: Array[String] = [], required_count: int = 0) -> Array[Dictionary]:
 	var catalog: Dictionary
@@ -247,7 +265,9 @@ func _relic_level_description(item_id: String, level: int) -> String:
 
 func starting_weapon_options() -> Array[Dictionary]:
 	var options: Array[Dictionary] = []
-	for weapon_id in STARTING_WEAPONS:
+	var choices := _starting_weapon_pool.duplicate()
+	choices.shuffle()
+	for weapon_id in choices.slice(0, mini(STARTING_WEAPON_CHOICES, choices.size())):
 		options.append({
 			"id": "start:%s" % weapon_id,
 			"title": _weapons[weapon_id],
@@ -257,7 +277,7 @@ func starting_weapon_options() -> Array[Dictionary]:
 	return options
 
 func choose_starting_weapon(weapon_id: String) -> bool:
-	if not _weapon_levels.is_empty() or not STARTING_WEAPONS.has(weapon_id):
+	if not _weapon_levels.is_empty() or not _starting_weapon_pool.has(weapon_id):
 		return false
 	_weapon_levels[weapon_id] = 1
 	return true

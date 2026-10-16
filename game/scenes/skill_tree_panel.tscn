@@ -64,29 +64,39 @@ layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.831373, 0.278431, 1)
 text = "ESSENCE 0"
 
-[node name="NodeBranch" type="HBoxContainer" parent="Panel/Content"]
+[node name="NodeScroll" type="ScrollContainer" parent="Panel/Content"]
+custom_minimum_size = Vector2(0, 188)
+layout_mode = 2
+size_flags_vertical = 3
+horizontal_scroll_mode = 0
+
+[node name="Rows" type="VBoxContainer" parent="Panel/Content/NodeScroll"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="NodeBranch" type="HBoxContainer" parent="Panel/Content/NodeScroll/Rows"]
 custom_minimum_size = Vector2(0, 188)
 layout_mode = 2
 theme_override_constants/separation = 6
 
-[node name="FoundationCard" type="PanelContainer" parent="Panel/Content/NodeBranch"]
+[node name="FoundationCard" type="PanelContainer" parent="Panel/Content/NodeScroll/Rows/NodeBranch"]
 custom_minimum_size = Vector2(164, 188)
 layout_mode = 2
 size_flags_horizontal = 3
 theme_type_variation = "InsetPanel"
 
-[node name="Content" type="VBoxContainer" parent="Panel/Content/NodeBranch/FoundationCard"]
+[node name="Content" type="VBoxContainer" parent="Panel/Content/NodeScroll/Rows/NodeBranch/FoundationCard"]
 layout_mode = 2
 theme_override_constants/separation = 3
 
-[node name="Kicker" type="Label" parent="Panel/Content/NodeBranch/FoundationCard/Content"]
+[node name="Kicker" type="Label" parent="Panel/Content/NodeScroll/Rows/NodeBranch/FoundationCard/Content"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.215686, 0.909804, 0.960784, 1)
 theme_override_font_sizes/font_size = 8
 text = "FOUNDATION"
 horizontal_alignment = 1
 
-[node name="VitalityButton" type="Button" parent="Panel/Content/NodeBranch/FoundationCard/Content"]
+[node name="VitalityButton" type="Button" parent="Panel/Content/NodeScroll/Rows/NodeBranch/FoundationCard/Content"]
 custom_minimum_size = Vector2(0, 25)
 layout_mode = 2
 text = "UNLOCK NODE"
@@ -94,7 +104,7 @@ icon = ExtResource("3_skill_node")
 theme_override_constants/icon_max_width = 12
 texture_filter = 1
 
-[node name="Effect" type="Label" parent="Panel/Content/NodeBranch/FoundationCard/Content"]
+[node name="Effect" type="Label" parent="Panel/Content/NodeScroll/Rows/NodeBranch/FoundationCard/Content"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.647059, 0.682353, 0.764706, 1)
 theme_override_font_sizes/font_size = 8
@@ -102,7 +112,7 @@ text = "+5% MAX HP  •  50 ESSENCE  •  PROPOSED"
 horizontal_alignment = 1
 autowrap_mode = 2
 
-[node name="BranchConnector" type="Label" parent="Panel/Content/NodeBranch"]
+[node name="BranchConnector" type="Label" parent="Panel/Content/NodeScroll/Rows/NodeBranch"]
 custom_minimum_size = Vector2(20, 0)
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.831373, 0.278431, 1)
@@ -111,24 +121,24 @@ text = "◆›"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="FollowupCard" type="PanelContainer" parent="Panel/Content/NodeBranch"]
+[node name="FollowupCard" type="PanelContainer" parent="Panel/Content/NodeScroll/Rows/NodeBranch"]
 custom_minimum_size = Vector2(164, 188)
 layout_mode = 2
 size_flags_horizontal = 3
 theme_type_variation = "InsetPanel"
 
-[node name="Content" type="VBoxContainer" parent="Panel/Content/NodeBranch/FollowupCard"]
+[node name="Content" type="VBoxContainer" parent="Panel/Content/NodeScroll/Rows/NodeBranch/FollowupCard"]
 layout_mode = 2
 theme_override_constants/separation = 3
 
-[node name="Kicker" type="Label" parent="Panel/Content/NodeBranch/FollowupCard/Content"]
+[node name="Kicker" type="Label" parent="Panel/Content/NodeScroll/Rows/NodeBranch/FollowupCard/Content"]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.831373, 0.278431, 1)
 theme_override_font_sizes/font_size = 8
 text = "FOLLOW-UP · LOCKED"
 horizontal_alignment = 1
 
-[node name="FocusButton" type="Button" parent="Panel/Content/NodeBranch/FollowupCard/Content"]
+[node name="FocusButton" type="Button" parent="Panel/Content/NodeScroll/Rows/NodeBranch/FollowupCard/Content"]
 custom_minimum_size = Vector2(0, 25)
 layout_mode = 2
 text = "UNLOCK NODE"
@@ -136,7 +146,7 @@ icon = ExtResource("3_skill_node")
 theme_override_constants/icon_max_width = 12
 texture_filter = 1
 
-[node name="Effect" type="Label" parent="Panel/Content/NodeBranch/FollowupCard/Content"]
+[node name="Effect" type="Label" parent="Panel/Content/NodeScroll/Rows/NodeBranch/FollowupCard/Content"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.647059, 0.682353, 0.764706, 1)
 theme_override_font_sizes/font_size = 8
@@ -144,14 +154,14 @@ text = "+3% DAMAGE  •  80 ESSENCE  •  PROPOSED"
 horizontal_alignment = 1
 autowrap_mode = 2
 
-[node name="MasteryKicker" type="Label" parent="Panel/Content/NodeBranch/FollowupCard/Content"]
+[node name="MasteryKicker" type="Label" parent="Panel/Content/NodeScroll/Rows/NodeBranch/FollowupCard/Content"]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.831373, 0.278431, 1)
 theme_override_font_sizes/font_size = 8
 text = "MASTERY · LOCKED"
 horizontal_alignment = 1
 
-[node name="MasteryButton" type="Button" parent="Panel/Content/NodeBranch/FollowupCard/Content"]
+[node name="MasteryButton" type="Button" parent="Panel/Content/NodeScroll/Rows/NodeBranch/FollowupCard/Content"]
 custom_minimum_size = Vector2(0, 25)
 layout_mode = 2
 text = "UNLOCK NODE"
@@ -159,7 +169,7 @@ icon = ExtResource("3_skill_node")
 theme_override_constants/icon_max_width = 12
 texture_filter = 1
 
-[node name="MasteryEffect" type="Label" parent="Panel/Content/NodeBranch/FollowupCard/Content"]
+[node name="MasteryEffect" type="Label" parent="Panel/Content/NodeScroll/Rows/NodeBranch/FollowupCard/Content"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.647059, 0.682353, 0.764706, 1)
 theme_override_font_sizes/font_size = 8
@@ -167,14 +177,14 @@ text = "+2% MOVE SPEED  •  110 ESSENCE  •  PROPOSED"
 horizontal_alignment = 1
 autowrap_mode = 2
 
-[node name="PrecisionKicker" type="Label" parent="Panel/Content/NodeBranch/FollowupCard/Content"]
+[node name="PrecisionKicker" type="Label" parent="Panel/Content/NodeScroll/Rows/NodeBranch/FollowupCard/Content"]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.831373, 0.278431, 1)
 theme_override_font_sizes/font_size = 8
 text = "ADVANCED · LOCKED"
 horizontal_alignment = 1
 
-[node name="PrecisionButton" type="Button" parent="Panel/Content/NodeBranch/FollowupCard/Content"]
+[node name="PrecisionButton" type="Button" parent="Panel/Content/NodeScroll/Rows/NodeBranch/FollowupCard/Content"]
 custom_minimum_size = Vector2(0, 25)
 layout_mode = 2
 text = "UNLOCK NODE"
@@ -182,13 +192,107 @@ icon = ExtResource("3_skill_node")
 theme_override_constants/icon_max_width = 12
 texture_filter = 1
 
-[node name="PrecisionEffect" type="Label" parent="Panel/Content/NodeBranch/FollowupCard/Content"]
+[node name="PrecisionEffect" type="Label" parent="Panel/Content/NodeScroll/Rows/NodeBranch/FollowupCard/Content"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.647059, 0.682353, 0.764706, 1)
 theme_override_font_sizes/font_size = 8
 text = "+1% CRIT CHANCE  •  140 ESSENCE  •  PROPOSED"
 horizontal_alignment = 1
 autowrap_mode = 2
+
+[node name="UnlockBranch" type="HBoxContainer" parent="Panel/Content/NodeScroll/Rows"]
+custom_minimum_size = Vector2(0, 128)
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="UnlockWeaponCard" type="PanelContainer" parent="Panel/Content/NodeScroll/Rows/UnlockBranch"]
+custom_minimum_size = Vector2(164, 128)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = "InsetPanel"
+
+[node name="Content" type="VBoxContainer" parent="Panel/Content/NodeScroll/Rows/UnlockBranch/UnlockWeaponCard"]
+layout_mode = 2
+theme_override_constants/separation = 3
+
+[node name="Kicker" type="Label" parent="Panel/Content/NodeScroll/Rows/UnlockBranch/UnlockWeaponCard/Content"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.215686, 0.909804, 0.960784, 1)
+theme_override_font_sizes/font_size = 8
+text = "WEAPON UNLOCK"
+horizontal_alignment = 1
+
+[node name="WeaponUnlockButton" type="Button" parent="Panel/Content/NodeScroll/Rows/UnlockBranch/UnlockWeaponCard/Content"]
+custom_minimum_size = Vector2(0, 25)
+layout_mode = 2
+text = "UNLOCK NODE"
+icon = ExtResource("3_skill_node")
+theme_override_constants/icon_max_width = 12
+texture_filter = 1
+
+[node name="Effect" type="Label" parent="Panel/Content/NodeScroll/Rows/UnlockBranch/UnlockWeaponCard/Content"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.647059, 0.682353, 0.764706, 1)
+theme_override_font_sizes/font_size = 8
+text = "CRIMSON DAGGERS  •  130 ESSENCE  •  PROPOSED"
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="Prerequisite" type="Label" parent="Panel/Content/NodeScroll/Rows/UnlockBranch/UnlockWeaponCard/Content"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.831373, 0.278431, 1)
+theme_override_font_sizes/font_size = 8
+text = "WEAPON · LOCKED"
+horizontal_alignment = 1
+
+[node name="UnlockConnector" type="Label" parent="Panel/Content/NodeScroll/Rows/UnlockBranch"]
+custom_minimum_size = Vector2(20, 0)
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.831373, 0.278431, 1)
+theme_override_font_sizes/font_size = 11
+text = "◆›"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="UnlockRelicCard" type="PanelContainer" parent="Panel/Content/NodeScroll/Rows/UnlockBranch"]
+custom_minimum_size = Vector2(164, 128)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = "InsetPanel"
+
+[node name="Content" type="VBoxContainer" parent="Panel/Content/NodeScroll/Rows/UnlockBranch/UnlockRelicCard"]
+layout_mode = 2
+theme_override_constants/separation = 3
+
+[node name="Kicker" type="Label" parent="Panel/Content/NodeScroll/Rows/UnlockBranch/UnlockRelicCard/Content"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.831373, 0.278431, 1)
+theme_override_font_sizes/font_size = 8
+text = "RELIC UNLOCK"
+horizontal_alignment = 1
+
+[node name="RelicUnlockButton" type="Button" parent="Panel/Content/NodeScroll/Rows/UnlockBranch/UnlockRelicCard/Content"]
+custom_minimum_size = Vector2(0, 25)
+layout_mode = 2
+text = "UNLOCK NODE"
+icon = ExtResource("3_skill_node")
+theme_override_constants/icon_max_width = 12
+texture_filter = 1
+
+[node name="Effect" type="Label" parent="Panel/Content/NodeScroll/Rows/UnlockBranch/UnlockRelicCard/Content"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.647059, 0.682353, 0.764706, 1)
+theme_override_font_sizes/font_size = 8
+text = "BLOOD CHALICE  •  160 ESSENCE  •  PROPOSED"
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="Prerequisite" type="Label" parent="Panel/Content/NodeScroll/Rows/UnlockBranch/UnlockRelicCard/Content"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.831373, 0.278431, 1)
+theme_override_font_sizes/font_size = 8
+text = "RELIC · LOCKED"
+horizontal_alignment = 1
 
 [node name="RespecButton" type="Button" parent="Panel/Content"]
 custom_minimum_size = Vector2(0, 20)

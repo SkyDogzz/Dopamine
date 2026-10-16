@@ -9,6 +9,19 @@ func _initialize() -> void:
 	if loadout.owned_weapons().size() != 0 or loadout.starting_weapon_options().size() != 2:
 		_fail("A new run should offer two proposed starting weapons")
 		return
+	var progression_fixture = loadout_script.new(19)
+	var unlocked_weapons: Array[String] = ["lightning_conductor", "inferno_sprayer", "crimson_daggers"]
+	var unlocked_relics: Array[String] = ["storm_core", "infernal_heart", "blood_chalice"]
+	progression_fixture.set_unlocked_content(unlocked_weapons, unlocked_relics)
+	if progression_fixture._weapons.size() != 3 or progression_fixture._relics.size() != 3 or \
+		progression_fixture.starting_weapon_options().size() != 2 or \
+		progression_fixture.choose_starting_weapon("frost_nova") or \
+		progression_fixture.choose_starting_weapon("crimson_daggers") == false or \
+		progression_fixture.apply_offer("weapon:frost_nova") or \
+		progression_fixture.apply_offer("relic:frozen_crown") or \
+		progression_fixture.apply_offer("relic:blood_chalice") == false:
+		_fail("A run should draw only the profile's unlocked weapons and relics while accepting newly unlocked content")
+		return
 	for relic_id in loadout._relics:
 		var icon_path: String = loadout.ICONS.get(relic_id, "")
 		if icon_path.is_empty() or not ResourceLoader.exists(icon_path):
