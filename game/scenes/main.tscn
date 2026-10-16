@@ -200,6 +200,7 @@ theme_override_constants/separation = 5
 
 [node name="SpawnPanel" type="PanelContainer" parent="Shell/Content/SidePanel/Sections"]
 layout_mode = 2
+theme_type_variation = "InsetPanel"
 
 [node name="SpawnForm" type="VBoxContainer" parent="Shell/Content/SidePanel/Sections/SpawnPanel"]
 layout_mode = 2
@@ -318,6 +319,7 @@ tooltip_text = "Remove every entity from the simulation."
 
 [node name="TuningPanel" type="PanelContainer" parent="Shell/Content/SidePanel/Sections"]
 layout_mode = 2
+theme_type_variation = "InsetPanel"
 
 [node name="TuningForm" type="VBoxContainer" parent="Shell/Content/SidePanel/Sections/TuningPanel"]
 layout_mode = 2
@@ -387,6 +389,7 @@ theme_override_colors/font_color = Color(0.556863, 0.639216, 0.678431, 1)
 
 [node name="InspectorPanel" type="PanelContainer" parent="Shell/Content/SidePanel/Sections"]
 layout_mode = 2
+theme_type_variation = "InsetPanel"
 
 [node name="InspectorForm" type="VBoxContainer" parent="Shell/Content/SidePanel/Sections/InspectorPanel"]
 layout_mode = 2
@@ -453,6 +456,7 @@ tooltip_text = "Apply this damage-over-time configuration to the selected entity
 
 [node name="LogPanel" type="PanelContainer" parent="Shell/Content/SidePanel/Sections"]
 layout_mode = 2
+theme_type_variation = "InsetPanel"
 
 [node name="LogForm" type="VBoxContainer" parent="Shell/Content/SidePanel/Sections/LogPanel"]
 layout_mode = 2

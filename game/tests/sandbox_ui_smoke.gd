@@ -35,6 +35,17 @@ func _run() -> void:
 	assert(action_reset.get_theme_color("font_color").to_html(false) == "ff7181", "Reset should use the danger accent")
 	var side_panel: ScrollContainer = sandbox.get_node("Shell/Content/SidePanel")
 	var spawn_actions: HBoxContainer = sandbox.get_node("Shell/Content/SidePanel/Sections/SpawnPanel/SpawnForm/SpawnActions")
+	for panel_path in [
+		"Shell/Content/SidePanel/Sections/SpawnPanel",
+		"Shell/Content/SidePanel/Sections/TuningPanel",
+		"Shell/Content/SidePanel/Sections/InspectorPanel",
+		"Shell/Content/SidePanel/Sections/LogPanel",
+	]:
+		var section := sandbox.get_node(panel_path) as PanelContainer
+		var section_style := section.get_theme_stylebox("panel") as StyleBoxFlat
+		assert(section.theme_type_variation == "InsetPanel" and section_style != null and \
+			section_style.border_color.to_html(false) == "3d4868" and section_style.content_margin_left == 5.0,
+			"Sandbox side sections should use the compact inset panel surface")
 	for viewport_size in [Vector2i(640, 360), Vector2i(1280, 720), Vector2i(1920, 1080)]:
 		root.size = viewport_size
 		await process_frame
