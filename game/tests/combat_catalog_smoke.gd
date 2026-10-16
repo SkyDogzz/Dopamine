@@ -5,6 +5,33 @@ func _initialize() -> void:
 	if not catalog.error.is_empty():
 		_fail(catalog.error)
 		return
+	var raw_file := FileAccess.open("res://data/combat_catalog.json", FileAccess.READ)
+	var source: Dictionary = JSON.parse_string(raw_file.get_as_text())
+	var string_version: Dictionary = source.duplicate(true)
+	string_version["schema_version"] = "1"
+	if not _catalog_rejects(string_version):
+		_fail("Combat catalog schema_version must be an integer")
+		return
+	var invalid_behavior: Dictionary = source.duplicate(true)
+	invalid_behavior["weapons"][0]["behavior"] = 7
+	if not _catalog_rejects(invalid_behavior):
+		_fail("Combat catalog behavior fields must be strings")
+		return
+	var invalid_availability: Dictionary = source.duplicate(true)
+	invalid_availability["weapons"][0]["available_in_survival"] = "true"
+	if not _catalog_rejects(invalid_availability):
+		_fail("Combat catalog availability fields must be booleans")
+		return
+	var duplicate_evolution: Dictionary = source.duplicate(true)
+	duplicate_evolution["weapons"][1]["evolution_id"] = duplicate_evolution["weapons"][0]["evolution_id"]
+	if not _catalog_rejects(duplicate_evolution):
+		_fail("Combat catalog evolution IDs must be unique")
+		return
+	var unexpected_field: Dictionary = source.duplicate(true)
+	unexpected_field["weapons"][0]["experimental"] = true
+	if not _catalog_rejects(unexpected_field):
+		_fail("Combat catalog entries must reject fields outside their schema")
+		return
 	if catalog.weapons.size() != 10 or catalog.relics.size() != 11:
 		_fail("Combat catalog should contain ten weapons and eleven relics")
 		return
@@ -39,3 +66,10 @@ func _initialize() -> void:
 func _fail(message: String) -> void:
 	push_error(message)
 	quit(1)
+
+func _catalog_rejects(data: Dictionary) -> bool:
+	var catalog = load("res://scripts/combat_catalog.gd").new()
+	catalog.weapons.clear()
+	catalog.relics.clear()
+	catalog.error = ""
+	return not catalog._load_definitions(data)

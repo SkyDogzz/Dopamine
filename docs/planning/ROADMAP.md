@@ -280,7 +280,7 @@ Catalogue d’évolution défini dans le GDD :
 Travail requis :
 
 - [x] **P5.1.1 — Définitions catalogue** — les dix armes et leurs dix reliques associées, plus Magnet Heart sans paire, sont définies et les relations sont vérifiées au chargement.
-- [ ] **P5.1.2 — Schéma et activation** — brancher JSON Schema ; n’activer en Survival que les armes dont le prototype gameplay existe.
+- [x] **P5.1.2 — Schéma et activation** — JSON Schema draft 2020-12 formalisé dans `game/data/combat_catalog.schema.json`; le chargeur runtime rejette types, champs et références d’évolution invalides, vérifie les associations arme/relique et n’expose que les entrées marquées disponibles. Les dix prototypes actuels et Magnet Heart sont exposés ; chaque nouveau prototype doit être activé explicitement.
 - [x] **P5.1.3 — Minigun + Overdrive Engine → Redline (prototype)** — tir automatique, bonus de cadence Overdrive linéaire et cadence Redline croissante en tir continu ; chiffres de départ configurables et **[PROPOSÉS]**.
 - [x] **P5.1.4 — Toxic Cloud + Plague Mask → Pandemic (prototype)** — l’impact applique le DoT partagé et transforme le projectile en champ persistant qui empoisonne une fois chaque cible entrante ; le champ est visible et sa capture/restauration est couverte. Pandemic transmet toujours le poison à la mort (3 cibles maximum). Rayon, durée totale du projectile et application unique par cible **[PROPOSÉS]** ; statuts simultanés **[OUVERTS]**.
 - [x] **P5.1.5 — Sawblades + Magnetic Coil → Razorstorm (prototype)** — projectile natif ricoche vers des ennemis vivants non encore touchés ; Magnetic Coil augmente la vitesse des projectiles et l’évolution ajoute un rebond. Valeurs **[PROPOSÉES]**.

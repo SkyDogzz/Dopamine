@@ -1,0 +1,60 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://dopamine.invalid/schemas/combat_catalog.schema.json",
+  "title": "Dopamine Survivor combat catalog",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "weapons", "relics"],
+  "properties": {
+    "schema_version": { "type": "integer", "const": 1 },
+    "weapons": {
+      "type": "array",
+      "minItems": 10,
+      "maxItems": 10,
+      "items": { "$ref": "#/$defs/weapon" }
+    },
+    "relics": {
+      "type": "array",
+      "minItems": 11,
+      "maxItems": 11,
+      "items": { "$ref": "#/$defs/relic" }
+    }
+  },
+  "$defs": {
+    "id": { "type": "string", "minLength": 1 },
+    "weapon": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "name", "behavior", "relic_id", "evolution_id", "available_in_survival"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "name": { "type": "string", "minLength": 1 },
+        "behavior": { "type": "string", "minLength": 1 },
+        "relic_id": { "$ref": "#/$defs/id" },
+        "evolution_id": { "$ref": "#/$defs/id" },
+        "available_in_survival": { "type": "boolean" }
+      }
+    },
+    "relic": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "name", "behavior", "global_stat", "global_bonus_per_level", "available_in_survival"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "name": { "type": "string", "minLength": 1 },
+        "behavior": { "type": "string", "minLength": 1 },
+        "global_stat": { "type": "string", "minLength": 1 },
+        "global_bonus_per_level": { "type": "number", "exclusiveMinimum": 0 },
+        "weapon_id": { "$ref": "#/$defs/id" },
+        "available_in_survival": { "type": "boolean" }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "id": { "const": "magnet_heart" } }, "required": ["id"] },
+          "then": { "not": { "required": ["weapon_id"] } },
+          "else": { "required": ["weapon_id"] }
+        }
+      ]
+    }
+  }
+}
