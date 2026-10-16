@@ -110,6 +110,8 @@ Paires de contenu validées :
 
 [PROPOSÉ] Les valeurs chiffrées de progression des dix armes (niveaux 2–5) figurent dans l’annexe v1.6 ci-dessous et restent des hypothèses de balancing. Les nombres précis des reliques et le calibrage des armes restent à confirmer.
 
+[PROPOSÉ] Réglages initiaux du prototype Crimson Daggers/Bloodstorm : rayon orbital de 30 unités et vitesse angulaire de 5 rad/s ; durée de base 0,8 s, portée à 2,4 s pour Bloodstorm. Ils rendent le comportement testable et restent à équilibrer ; seule l’orbitation des dagues est [VALIDÉE].
+
 [VALIDÉ] Chaque arme a le comportement distinct décrit dans le tableau récapitulatif de l’annexe A.
 
 [VALIDÉ] Les armes/reliques débloquées deviennent disponibles pour les tirages et ne sont pas automatiquement équipées dans chaque run. Le total cible est de 10 armes et 11 reliques (10 reliques associées et Magnet Heart), avec cinq slots normaux de relique ; les exceptions de capacité Legendary/Mythic de la règle v1.5 restent applicables si leurs effets sont retenus.

@@ -137,6 +137,7 @@ const WAVE_HP_CAP := 12.0
 @export var daggers_projectile_speed: float = 900.0
 @export var daggers_projectile_radius: float = 2.5
 @export var daggers_projectile_lifetime: float = 0.8
+@export var bloodstorm_orbit_lifetime_seconds: float = 2.4
 @export_group("Prototype Minigun — proposed tuning")
 @export var minigun_cooldown: float = 0.18
 @export var minigun_damage: float = 4.0
@@ -1552,18 +1553,20 @@ func _fire_crimson_daggers(active_time: float, paused: bool) -> void:
 	var status_damage := 2.0
 	var status_interval := 0.5
 	var status_duration := 2.0
+	var projectile_lifetime := daggers_projectile_lifetime
 	damage *= _weapon_combo_damage_multiplier("crimson_daggers")
 	if loadout.is_evolved("crimson_daggers"):
 		projectile_type = "bloodstorm_dagger"
 		status_damage = bloodstorm_bleed_damage_per_tick
 		status_interval = bloodstorm_bleed_interval_seconds
 		status_duration = bloodstorm_bleed_duration_seconds
+		projectile_lifetime = maxf(projectile_lifetime, bloodstorm_orbit_lifetime_seconds)
 	var fired := 0
 	for spread in [-0.06, 0.06]:
 		var shot_direction: Vector2 = direction.rotated(spread)
 		if simulation.spawn_status_projectile(projectile_type, player.global_position + shot_direction * 14.0,
 				shot_direction * _equipment_projectile_speed(daggers_projectile_speed), damage, _equipment_area(daggers_projectile_radius),
-				daggers_projectile_lifetime, status_damage * _persistent_damage_multiplier() * _weapon_combo_damage_multiplier("crimson_daggers"),
+				projectile_lifetime, status_damage * _persistent_damage_multiplier() * _weapon_combo_damage_multiplier("crimson_daggers"),
 				status_interval, status_duration) > 0:
 			fired += 1
 	if fired > 0:

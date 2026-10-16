@@ -3,7 +3,7 @@
   "weapons": [
     {"id": "lightning_conductor", "name": "Lightning Conductor", "behavior": "Shoots one bolt at the nearest enemy, then arcs to nearby enemies with reduced damage.", "relic_id": "storm_core", "evolution_id": "infinite_circuit", "available_in_survival": true},
     {"id": "inferno_sprayer", "name": "Inferno Sprayer", "behavior": "Shoots a fire projectile that burns its target; Infernal Heart unlocks an explosive evolution.", "relic_id": "infernal_heart", "evolution_id": "wildfire", "available_in_survival": true},
-    {"id": "crimson_daggers", "name": "Crimson Daggers", "behavior": "Fires two daggers in a spread; Blood Chalice unlocks bleeding at weapon level 5.", "relic_id": "blood_chalice", "evolution_id": "bloodstorm", "available_in_survival": true},
+    {"id": "crimson_daggers", "name": "Crimson Daggers", "behavior": "Dagues en orbite autour du joueur, non lancées ; Blood Chalice débloque Bleed avec Bloodstorm.", "relic_id": "blood_chalice", "evolution_id": "bloodstorm", "available_in_survival": true},
     {"id": "void_orb", "name": "Void Orb", "behavior": "A slow orb pierces enemies and pulls nearby foes toward its path.", "relic_id": "singularity", "evolution_id": "event_horizon", "available_in_survival": true},
     {"id": "frost_nova", "name": "Frost Nova", "behavior": "Damages and chills enemies around you; Frozen Crown unlocks its level 5 evolution.", "relic_id": "frozen_crown", "evolution_id": "absolute_zero", "available_in_survival": true},
     {"id": "minigun", "name": "Minigun", "behavior": "Rapidly fires at the nearest enemy; Overdrive Engine increases its fire rate.", "relic_id": "overdrive_engine", "evolution_id": "redline", "available_in_survival": true},

@@ -35,7 +35,7 @@ L’audit initial était statique. Les tranches Minigun, Toxic Cloud, Sawblades 
 
 **Intégré en prototype, à ne pas confondre avec une feature finie :** boss (apparition/HP/transition, mais pas leurs patterns), XP auto-bonus, loot/probabilités, dix évolutions, Void Orb à attraction/percée, Frost Nova avec Chill/Absolute Zero, Sawblades à ricochets/Razorstorm, Meteor Staff en zone/Starfall fragmenté, Toxic Cloud à impact plutôt qu'en champ persistant, équipement et enhancement, deux nodes de skill tree, famille Exterminator, effets uniques, récompenses de run. Les paramètres restent souvent **[PROPOSÉS]**.
 
-**Survolé ou absent par rapport au GDD :** 3 armes et 3 reliques associées restantes ; Minigun, Toxic Cloud, Sawblades et Meteor Staff n’ont pas encore de feedback visuel par niveau ; Toxic Cloud n'a pas encore de champ visuel persistant ; Magnet Heart n'agit que sur XP (autres pickups et impulsion de niveau 5 absents) ; animation/identité spécifique à chaque niveau ; dagues réellement orbitantes dans Bloodstorm (le code actuel tire des projectiles en éventail) ; 8–12 familles ennemies et leurs rôles ; élites à affixes ; boss à phases ; difficultés ; réactions élémentaires nommées ; tree ~120 nodes ; achievements ~120 familles ; modes Endless ; Sandbox Lab joueur ; performance iGPU et build Windows.
+**Survolé ou absent par rapport au GDD :** 3 armes et 3 reliques associées restantes ; Minigun, Toxic Cloud, Sawblades et Meteor Staff n’ont pas encore de feedback visuel par niveau ; Toxic Cloud n'a pas encore de champ visuel persistant ; Magnet Heart n'agit que sur XP (autres pickups et impulsion de niveau 5 absents) ; animation/identité spécifique à chaque niveau ; la mécanique orbitale Crimson Daggers/Bloodstorm est maintenant prototypée, avec équilibrage et feedback visuel encore à revoir ; 8–12 familles ennemies et leurs rôles ; élites à affixes ; boss à phases ; difficultés ; réactions élémentaires nommées ; tree ~120 nodes ; achievements ~120 familles ; modes Endless ; Sandbox Lab joueur ; performance iGPU et build Windows.
 
 ## Dépendances principales
 
@@ -171,7 +171,7 @@ P6 a déjà du code anticipé, mais le chemin nominal reste P5 puis P6. P7 stand
 ### État constaté
 
 - `survival_loadout.gd` expose dix paires implémentées dans le catalogue, niveau maximal 5, cinq slots et deux armes de départ codées.
-- Huit paires ont maintenant un prototype de combat : Lightning Conductor/Storm Core, Inferno Sprayer/Infernal Heart, Crimson Daggers/Blood Chalice, Minigun/Overdrive Engine, Toxic Cloud/Plague Mask, Sawblades/Magnetic Coil, Meteor Staff/Celestial Eye et Prism Laser/Prism Crystal. Les réglages restent **[PROPOSÉS]** et Bloodstorm ne respecte pas encore l’orbite validée.
+- Huit paires ont maintenant un prototype de combat : Lightning Conductor/Storm Core, Inferno Sprayer/Infernal Heart, Crimson Daggers/Blood Chalice, Minigun/Overdrive Engine, Toxic Cloud/Plague Mask, Sawblades/Magnetic Coil, Meteor Staff/Celestial Eye et Prism Laser/Prism Crystal. Les réglages restent **[PROPOSÉS]** ; l’orbite Crimson Daggers/Bloodstorm est implémentée et couverte par des smokes ciblés.
 - Les QA historiques couvrent impacts, dégâts, lifesteal, brûlure, saignement, explosion Wildfire et branches Infinite Circuit.
 - Le DPS Sandbox documenté additionne les événements de dégâts sur le temps simulé, mais n’est pas un panneau complet par arme, statut, critique et fenêtre.
 - La définition de contenu reste principalement dans des constantes/scripts ; catalogue data-driven complet non établi.
@@ -192,8 +192,8 @@ P6 a déjà du code anticipé, mais le chemin nominal reste P5 puis P6. P7 stand
   - [ ] Vérifier l’acquisition de la relique après niveau 5 : évolution immédiate, niveau conservé.
   - [ ] Vérifier qu’une évolution ne se déclenche qu’une fois et ne consomme pas la relique.
 - [ ] **P3.4 — Bloodstorm conforme**
-  - [ ] Remplacer les projectiles en éventail par une attaque orbitante contrôlable.
-  - [ ] Vérifier les collisions, saignements et lifesteal sur cibles proches et multiples.
+  - [x] Remplacer les projectiles en éventail par des dagues orbitantes autour du joueur.
+  - [x] Vérifier l’orbite, les collisions sur deux cibles distinctes, le saignement et le lifesteal sur les événements de dégâts.
   - [ ] Conserver les nombres de dégâts au statut **[PROPOSÉ]**.
 - [ ] **P3.5 — Règles du draft normal/Sandbox**
   - [ ] Refuser le doublon en Survival normal.
@@ -267,7 +267,7 @@ Catalogue d’évolution défini dans le GDD :
 |---|---|---|---|
 | Lightning Conductor | Storm Core | Infinite Circuit | Prototype présent ; QA historique ciblée. |
 | Inferno Sprayer | Infernal Heart | Wildfire | Prototype présent ; QA historique ciblée. |
-| Crimson Daggers | Blood Chalice | Bloodstorm | Prototype présent ; dagues en éventail, alors que le GDD exige une tempête orbitale. |
+| Crimson Daggers | Blood Chalice | Bloodstorm | Dagues orbitantes natives autour du joueur, percent chaque cible au plus une fois ; Bloodstorm ajoute Bleed et une durée plus longue. Rayon, vitesse angulaire et durées **[PROPOSÉS]**. |
 | Void Orb | Singularity | Event Horizon | Prototype d’orbe lente perçante; champ d’attraction natif. Les valeurs d’attaque, durée, rayon et force sont **[PROPOSÉES]**. |
 | Frost Nova | Frozen Crown | Absolute Zero | Prototype présent : onde circulaire de dégâts et Chill natif ralentissant les ennemis ; Absolute Zero améliore les dégâts reçus sur cibles gelées et produit un shatter de zone à leur mort. Valeurs **[PROPOSÉES]** configurables. |
 | Minigun | Overdrive Engine | Redline | Prototype ajouté : tirs mono-cible, progression de cadence proposée, Redline accélère en continu ; valeurs configurables et **[PROPOSÉES]**. QA smoke ciblée. |
@@ -287,6 +287,7 @@ Travail requis :
 - [x] **P5.1.6 — Meteor Staff + Celestial Eye → Starfall (prototype)** — l'attaque vise un groupe et inflige des dégâts d'explosion ; Starfall lance deux fragments par défaut, avec maximum configurable de huit, vers les cibles proches. Bonus de zone, chance de double impact et valeurs de dégâts **[PROPOSÉS]**.
 - [x] **P5.1.7 — Prism Laser + Prism Crystal → Spectrum Collapse (prototype)** — rayon visuel suit la cible prioritaire et dégâts répétés passent par les projectiles natifs ; l'évolution ajoute jusqu'à deux cibles secondaires configurables. Bonus de critique et valeurs d'attaque/progression **[PROPOSÉS]**.
 - [x] **P5.1.8 — Void Orb + Singularity → Event Horizon (prototype)** — projectiles lents persistants traversent des cibles distinctes et les attirent dans un champ natif borné ; Event Horizon augmente le rayon et la force. Réglages **[PROPOSÉS]**.
+- [x] **P5.1.8 — Crimson Daggers + Blood Chalice → Bloodstorm (prototype)** — dagues natives orbitantes centrées sur le joueur et perçantes ; Bloodstorm ajoute Bleed et prolonge leur présence. Rayon 30, vitesse angulaire 5 rad/s, durées 0,8/2,4 s **[PROPOSÉS]** ; mouvement et capture/restauration couverts par `simulation_core`, contact et Bleed par `survival_weapon_catalog_smoke`.
 - [x] **P5.1.9 — Frost Nova + Frozen Crown → Absolute Zero (prototype)** — pulsation de zone avec Chill natif (durée, ralentissement et vulnérabilité) ; Absolute Zero produit un shatter borné quand une cible gelée meurt. Le statut est inclus dans les snapshots et le drapeau d'événement ; aucune réaction élémentaire n'est activée. Tous les chiffres sont **[PROPOSÉS]** et configurables.
 - [ ] **P5.1.9 — Feedback Minigun/Toxic Cloud/Sawblades/Meteor Staff/Prism/Void Orb** — projectiles distincts présents ; retour visuel par niveau, animation du nuage persistant et feedback d’évolution restent à faire.
 - [ ] **P5.1.10 — Ciblage des armes**

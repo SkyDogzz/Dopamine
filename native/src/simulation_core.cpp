@@ -11,6 +11,8 @@ namespace dopamine::sim {
 namespace {
 
 constexpr float enemy_collision_radius = 12.0F; // Provisional until hitboxes are specified.
+constexpr float proposed_bloodstorm_orbit_radius = 30.0F;
+constexpr float proposed_bloodstorm_orbit_angular_speed = 5.0F;
 
 } // namespace
 
@@ -163,6 +165,12 @@ EntityId SimulationCore::spawn_projectile(std::string type, float x, float y, fl
 	projectile.attraction_radius = attraction_radius;
 	projectile.attraction_speed = attraction_speed;
 	projectile.pierces_targets = pierces_targets;
+	if (type == "crimson_dagger" || type == "bloodstorm_dagger") {
+		projectile.pierces_targets = true;
+		projectile.orbits_target = true;
+		projectile.orbit_radius = proposed_bloodstorm_orbit_radius;
+		projectile.orbit_angular_speed = proposed_bloodstorm_orbit_angular_speed;
+	}
 	projectile.chill_duration_seconds = chill_duration_seconds;
 	projectile.chill_speed_multiplier = chill_speed_multiplier;
 	projectile.chill_damage_multiplier = chill_damage_multiplier;
@@ -397,6 +405,14 @@ void SimulationCore::restore_state(const SimulationCoreState &state) {
 					projectile.chill_speed_multiplier > 1.0F ||
 					((projectile.chill_duration_seconds > 0.0) != (projectile.chill_speed_multiplier < 1.0F)) ||
 					!std::isfinite(projectile.chill_damage_multiplier) || projectile.chill_damage_multiplier < 1.0F ||
+					!std::isfinite(projectile.orbit_center_x) || !std::isfinite(projectile.orbit_center_y) ||
+					!std::isfinite(projectile.orbit_radius) || projectile.orbit_radius < 0.0F ||
+					!std::isfinite(projectile.orbit_angular_speed) || projectile.orbit_angular_speed < 0.0F ||
+					!std::isfinite(projectile.orbit_angle) ||
+					(projectile.orbits_target && ((entity.type.id != "bloodstorm_dagger" &&
+						entity.type.id != "crimson_dagger") ||
+						projectile.orbit_radius <= 0.0F ||
+						projectile.orbit_angular_speed <= 0.0F || !projectile.pierces_targets)) ||
 					!valid_hit_targets ||
 					(projectile.applies_damage_over_time && (!std::isfinite(projectile.status_damage_per_tick) ||
 							!std::isfinite(projectile.status_interval_seconds) ||
@@ -622,10 +638,24 @@ std::vector<CombatEvent> SimulationCore::advance(double delta_seconds) {
 			ProjectileData &projectile = projectiles_[projectile_index];
 			const Transform2D projectile_start = start_positions[projectile_index];
 			const double travel_seconds = std::min(delta_seconds, projectile.remaining_seconds);
-			const Transform2D projectile_end = transforms_[projectile_index] = {
-				projectile_start.x + velocities_[projectile_index].x * static_cast<float>(travel_seconds),
-				projectile_start.y + velocities_[projectile_index].y * static_cast<float>(travel_seconds),
-			};
+			Transform2D projectile_end;
+			if (projectile.orbits_target && projectile.orbit_center_initialized) {
+				projectile.orbit_angle += projectile.orbit_angular_speed * travel_seconds;
+				projectile_end = {
+					projectile.orbit_center_x + projectile.orbit_radius * static_cast<float>(std::cos(projectile.orbit_angle)),
+					projectile.orbit_center_y + projectile.orbit_radius * static_cast<float>(std::sin(projectile.orbit_angle)),
+				};
+				velocities_[projectile_index] = {
+					-static_cast<float>(std::sin(projectile.orbit_angle)) * projectile.orbit_radius * projectile.orbit_angular_speed,
+					static_cast<float>(std::cos(projectile.orbit_angle)) * projectile.orbit_radius * projectile.orbit_angular_speed,
+				};
+			} else {
+				projectile_end = {
+					projectile_start.x + velocities_[projectile_index].x * static_cast<float>(travel_seconds),
+					projectile_start.y + velocities_[projectile_index].y * static_cast<float>(travel_seconds),
+				};
+			}
+			transforms_[projectile_index] = projectile_end;
 			const float segment_x = projectile_end.x - projectile_start.x;
 			const float segment_y = projectile_end.y - projectile_start.y;
 			const float half_segment_length = std::hypot(segment_x, segment_y) * 0.5F;
@@ -774,6 +804,23 @@ void SimulationCore::steer_enemies_towards(float target_x, float target_y, Steer
 			config.separation_weight < 0.0F || config.separation_weight > 1.0F ||
 			!std::isfinite(config.spatial_hash.cell_size) || config.spatial_hash.cell_size <= 0.0F) {
 		throw std::invalid_argument("invalid steering configuration");
+	}
+	for (uint32_t index = 0; index < slots_.size(); ++index) {
+		if (!slots_[index].active || !projectile_flags_[index] || !projectiles_[index].orbits_target) {
+			continue;
+		}
+		ProjectileData &projectile = projectiles_[index];
+		if (!projectile.orbit_center_initialized) {
+			projectile.orbit_angle = std::atan2(transforms_[index].y - target_y,
+					transforms_[index].x - target_x);
+			projectile.orbit_center_initialized = true;
+		}
+		projectile.orbit_center_x = target_x;
+		projectile.orbit_center_y = target_y;
+		transforms_[index] = {
+			target_x + projectile.orbit_radius * static_cast<float>(std::cos(projectile.orbit_angle)),
+			target_y + projectile.orbit_radius * static_cast<float>(std::sin(projectile.orbit_angle)),
+		};
 	}
 
 	std::vector<Velocity2D> next_velocities = velocities_;

@@ -216,6 +216,47 @@ int main() {
 			piercing_events[1].target == second_orb_target && piercing_orb_state.has_value(),
 			"a piercing Void Orb should damage each target once and remain active after impacts");
 
+	SimulationCore crimson_daggers;
+	const auto crimson_dagger_id = crimson_daggers.spawn_projectile("crimson_dagger", 14.0F, 0.0F,
+			5.0F, 2.5F, 0.8, 0.0F, 0.0F);
+	crimson_daggers.steer_enemies_towards(0.0F, 0.0F);
+	crimson_daggers.advance(0.1);
+	const auto orbiting_crimson_dagger = crimson_daggers.entity(crimson_dagger_id);
+	require(orbiting_crimson_dagger && orbiting_crimson_dagger->is_projectile &&
+			std::abs(std::hypot(orbiting_crimson_dagger->transform.x, orbiting_crimson_dagger->transform.y) - 30.0F) < 0.01F &&
+			std::abs(orbiting_crimson_dagger->transform.y) > 1.0F,
+			"Crimson Daggers should orbit the player instead of travelling in a straight line");
+
+	SimulationCore bloodstorm;
+	const auto bloodstorm_first_target = bloodstorm.spawn("test_target", 30.0F, 0.0F, 100.0F, 0.0F, 0.0F);
+	const auto bloodstorm_second_target = bloodstorm.spawn("test_target", 0.0F, 30.0F, 100.0F, 0.0F, 0.0F);
+	const auto bloodstorm_id = bloodstorm.spawn_projectile("bloodstorm_dagger", 14.0F, 0.0F,
+			5.0F, 2.5F, 2.4, 0.0F, 0.0F, 1.0F, 0.5, 2.0,
+			0.0F, 0.0F, 0, 0.0F, 0.0F, true);
+	bloodstorm.steer_enemies_towards(0.0F, 0.0F);
+	for (int step = 0; step < 16; ++step) {
+		bloodstorm.advance(0.1);
+	}
+	const auto orbiting_dagger = bloodstorm.entity(bloodstorm_id);
+	require(orbiting_dagger && orbiting_dagger->is_projectile &&
+			std::abs(std::hypot(orbiting_dagger->transform.x, orbiting_dagger->transform.y) - 30.0F) < 0.01F &&
+			std::abs(orbiting_dagger->transform.y) > 1.0F &&
+			orbiting_dagger->projectile.hit_targets.size() == 2 &&
+			std::find(orbiting_dagger->projectile.hit_targets.begin(), orbiting_dagger->projectile.hit_targets.end(),
+					bloodstorm_first_target) != orbiting_dagger->projectile.hit_targets.end() &&
+			std::find(orbiting_dagger->projectile.hit_targets.begin(), orbiting_dagger->projectile.hit_targets.end(),
+					bloodstorm_second_target) != orbiting_dagger->projectile.hit_targets.end(),
+			"Bloodstorm should orbit the player and hit each of two distinct targets once");
+	const auto bloodstorm_snapshot = bloodstorm.capture_state();
+	SimulationCore restored_bloodstorm;
+	restored_bloodstorm.restore_state(bloodstorm_snapshot);
+	restored_bloodstorm.steer_enemies_towards(0.0F, 0.0F);
+	restored_bloodstorm.advance(0.1);
+	const auto restored_dagger = restored_bloodstorm.entity(bloodstorm_id);
+	require(restored_dagger && restored_dagger->is_projectile &&
+			std::abs(std::hypot(restored_dagger->transform.x, restored_dagger->transform.y) - 30.0F) < 0.01F,
+			"Bloodstorm orbit state should survive a native simulation snapshot restore");
+
 	SimulationCore frost_nova;
 	const auto chilled_target = frost_nova.spawn("chaser", 50.0F, 0.0F, 100.0F, 0.0F, 0.0F, 1.0F, 75.0F);
 	const auto outside_target = frost_nova.spawn("chaser", 90.0F, 0.0F, 100.0F, 0.0F, 0.0F, 1.0F, 75.0F);

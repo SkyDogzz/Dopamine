@@ -11,7 +11,7 @@ func _initialize() -> void:
 	if catalog.available_ids("weapon").size() != 10 or catalog.available_ids("relic").size() != 11:
 		_fail("Survival should expose ten available weapon pairs and Magnet Heart")
 		return
-	if catalog.weapons["crimson_daggers"]["behavior"] != "Dagues en orbite autour du joueur, non lancées":
+	if not str(catalog.weapons["crimson_daggers"]["behavior"]).begins_with("Dagues en orbite autour du joueur, non lancées"):
 		_fail("Catalog should preserve the validated orbiting dagger behavior")
 		return
 	if catalog.relics["magnet_heart"].has("weapon_id") or catalog.relics["magnet_heart"].has("evolution_id"):

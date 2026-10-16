@@ -10,14 +10,14 @@ func _run() -> void:
 	if not await _weapon_kills_target("inferno_sprayer", "infernal_heart", 8.2):
 		_fail("Infernal Heart should boost Inferno Sprayer enough to defeat the test target")
 		return
-	if not await _weapon_kills_target("crimson_daggers", "blood_chalice", 13.0):
+	if not await _weapon_kills_target("crimson_daggers", "blood_chalice", 13.0, 30.0):
 		_fail("Crimson Daggers should hit with both prototype projectiles")
 		return
 	if not await _blood_chalice_boosts_kill_heal():
 		_fail("Blood Chalice should increase the proposed kill healing")
 		return
 	if not await _bloodstorm_requires_level_five_and_bleeds():
-		_fail("Bloodstorm should require a level-5 Crimson Daggers and Blood Chalice and apply bleed")
+		_fail("Bloodstorm should require level 5, orbit, apply bleed and lifesteal")
 		return
 	if not await _infinite_circuit_branches():
 		_fail("Infinite Circuit should branch from its two initial lightning targets")
@@ -609,7 +609,7 @@ func _bloodstorm_requires_level_five_and_bleeds() -> bool:
 		return false
 	session.weapon_enabled = true
 	session.simulation.set_speed(4.0)
-	var normal_target := await _spawn_crimson_target(session)
+	var normal_target := await _spawn_crimson_target(session, 0, false, 30.0)
 	if normal_target.is_empty() or normal_target["components"].has("DamageOverTime"):
 		session.queue_free()
 		return false
@@ -623,7 +623,7 @@ func _bloodstorm_requires_level_five_and_bleeds() -> bool:
 			session.queue_free()
 			return false
 	session._next_daggers_time = session.player_active_time
-	var unpaired_target := await _spawn_crimson_target(session, previous_collisions)
+	var unpaired_target := await _spawn_crimson_target(session, previous_collisions, false, 30.0)
 	if unpaired_target.is_empty() or unpaired_target["components"].has("DamageOverTime"):
 		session.queue_free()
 		return false
@@ -639,7 +639,7 @@ func _bloodstorm_requires_level_five_and_bleeds() -> bool:
 		return false
 	session.player_hp = 50.0
 	session._next_daggers_time = session.player_active_time
-	var evolved_target := await _spawn_crimson_target(session, previous_collisions + 1, true)
+	var evolved_target := await _spawn_crimson_target(session, previous_collisions + 1, true, 30.0)
 	if evolved_target.is_empty():
 		session.queue_free()
 		return false
@@ -647,16 +647,17 @@ func _bloodstorm_requires_level_five_and_bleeds() -> bool:
 	var target_id: Dictionary = evolved_target["id"]
 	var health_before_bleed := float(evolved_target["components"]["Health"]["current"])
 	var bleed_applied := await _wait_for_bleed_tick(session, target_id, health_before_bleed)
+	var lifesteal_applied: bool = session.player_hp > 50.0
 	session.queue_free()
-	return bleed_applied
+	return bleed_applied and lifesteal_applied
 
-func _spawn_crimson_target(session: Node2D, collision_baseline: int = 0, expect_bleed: bool = false) -> Dictionary:
-	session.simulation.spawn("test_target", 1, Vector2(180.0, 0.0), 100.0, Vector2.ZERO)
+func _spawn_crimson_target(session: Node2D, collision_baseline: int = 0, expect_bleed: bool = false, distance: float = 180.0) -> Dictionary:
+	session.simulation.spawn("test_target", 1, Vector2(distance, 0.0), 100.0, Vector2.ZERO)
 	var deadline := Time.get_ticks_msec() + 2000
 	while Time.get_ticks_msec() < deadline:
 		await process_frame
 		var state: Dictionary = session.simulation.snapshot()
-		if int(state["metrics"]["collision_count"]) <= collision_baseline or int(state["metrics"]["projectile_count"]) > 0:
+		if int(state["metrics"]["collision_count"]) <= collision_baseline:
 			continue
 		for entity in state["entities"]:
 			if entity["components"].get("EnemyType", "") != "test_target":
@@ -686,7 +687,7 @@ func _wait_for_bleed_tick(session: Node2D, target_id: Dictionary, health_before:
 				return true
 	return false
 
-func _weapon_kills_target(weapon_id: String, relic_id: String, target_hp: float) -> bool:
+func _weapon_kills_target(weapon_id: String, relic_id: String, target_hp: float, target_distance: float = 180.0) -> bool:
 	var session: Node2D = load("res://scenes/survival_session.tscn").instantiate()
 	if not session.has_method("open_chest_family"):
 		return false
@@ -707,7 +708,7 @@ func _weapon_kills_target(weapon_id: String, relic_id: String, target_hp: float)
 	session.ordinary_chest_drop_chance = 0.0
 	session.xp_collection_radius = 0.0
 	session.simulation.set_speed(4.0)
-	session.simulation.spawn("test_target", 1, Vector2(180.0, 0.0), target_hp, Vector2.ZERO)
+	session.simulation.spawn("test_target", 1, Vector2(target_distance, 0.0), target_hp, Vector2.ZERO)
 	var spawned := false
 	var deadline := Time.get_ticks_msec() + 2000
 	while Time.get_ticks_msec() < deadline:

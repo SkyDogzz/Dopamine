@@ -109,6 +109,13 @@ struct ProjectileData {
 	float chill_damage_multiplier = 1.0F;
 	bool ignores_source_entity = false;
 	EntityId source_entity;
+	bool orbits_target = false;
+	bool orbit_center_initialized = false;
+	float orbit_center_x = 0.0F;
+	float orbit_center_y = 0.0F;
+	float orbit_radius = 0.0F;
+	float orbit_angular_speed = 0.0F;
+	double orbit_angle = 0.0;
 };
 
 struct DamageOverTime {
