@@ -442,16 +442,16 @@ func _prism_laser_prioritizes_dense_groups() -> bool:
 	await process_frame
 	var origin: Vector2 = session.player.global_position
 	session._entities = [
-		{"id": {"index": 61, "generation": 1}, "components": {"Health": {"current": 100.0}, "Transform2D": {"x": origin.x + 60.0, "y": origin.y}}},
+		{"id": {"index": 61, "generation": 1}, "components": {"Health": {"current": 100.0}, "Transform2D": {"x": origin.x + 20.0, "y": origin.y}}},
 		{"id": {"index": 62, "generation": 1}, "components": {"Health": {"current": 100.0}, "Transform2D": {"x": origin.x + 220.0, "y": origin.y}}},
-		{"id": {"index": 63, "generation": 1}, "components": {"Health": {"current": 100.0}, "Transform2D": {"x": origin.x + 250.0, "y": origin.y + 20.0}}},
-		{"id": {"index": 64, "generation": 1}, "components": {"Health": {"current": 100.0}, "Transform2D": {"x": origin.x + 280.0, "y": origin.y}}},
+		{"id": {"index": 63, "generation": 1}, "components": {"Health": {"current": 300.0}, "Transform2D": {"x": origin.x + 250.0, "y": origin.y + 20.0}}},
+		{"id": {"index": 64, "generation": 1}, "components": {"Health": {"current": 50.0}, "Transform2D": {"x": origin.x + 280.0, "y": origin.y}}},
 	]
 	var primary: Dictionary = session._prism_cluster_target(session.prism_laser_range)
 	var excluded: Array[Vector2i] = [primary.get("id", Vector2i(-1, -1))]
 	var secondary: Dictionary = session._nearest_enemy_excluding(primary.get("position", origin), session.spectrum_collapse_cluster_radius, excluded)
 	session.queue_free()
-	return primary.get("id", Vector2i(-1, -1)) == Vector2i(62, 1) and secondary.get("id", Vector2i(-1, -1)) == Vector2i(63, 1)
+	return primary.get("id", Vector2i(-1, -1)) == Vector2i(63, 1) and secondary.get("id", Vector2i(-1, -1)) == Vector2i(62, 1)
 
 func _void_orb_pulls_and_pierces() -> bool:
 	var session: Node2D = load("res://scenes/survival_session.tscn").instantiate()

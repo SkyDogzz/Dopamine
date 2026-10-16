@@ -2089,7 +2089,7 @@ func _nearest_enemy_excluding(origin: Vector2, max_range: float, excluded: Array
 
 func _prism_cluster_target(max_range: float) -> Dictionary:
 	return SURVIVAL_TARGETING.select_dense_cluster_target(
-		_entities, player.global_position, max_range, spectrum_collapse_cluster_radius)
+		_entities, player.global_position, max_range, spectrum_collapse_cluster_radius, false, "highest_health")
 
 func _meteor_cluster_target() -> Dictionary:
 	return SURVIVAL_TARGETING.select_cluster_centroid(

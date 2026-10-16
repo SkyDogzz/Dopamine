@@ -4,7 +4,7 @@ const SURVIVAL_TARGETING := preload("res://scripts/survival_targeting.gd")
 const TARGETING_POLICIES := ["nearest", "highest_threat", "highest_health", "lowest_health", "farthest",
 		"lightning_cluster", "sawblades_cluster", "meteor_centroid", "prism_cluster"]
 const TARGETING_LABELS := ["NEAREST", "HIGHEST THREAT", "HIGHEST HP", "LOWEST HP", "FARTHEST",
-		"LIGHTNING CLUSTER", "SAWBLADE CLUSTER", "METEOR CENTROID", "PRISM CLUSTER"]
+		"LIGHTNING CLUSTER", "SAWBLADE CLUSTER", "METEOR CENTROID", "PRISM HIGH HP"]
 const CLUSTER_POLICIES := ["lightning_cluster", "sawblades_cluster", "meteor_centroid", "prism_cluster"]
 
 const COLOR_MUTED := Color("#8ea3ad")

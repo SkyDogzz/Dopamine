@@ -39,8 +39,10 @@ static func preview_defaults(policy: String) -> Dictionary:
 static func preview_target(entities: Array, origin: Vector2, max_range: float,
 		cluster_radius: float, policy: String) -> Dictionary:
 	match policy:
-		"lightning_cluster", "prism_cluster":
+		"lightning_cluster":
 			return select_dense_cluster_target(entities, origin, max_range, cluster_radius)
+		"prism_cluster":
+			return select_dense_cluster_target(entities, origin, max_range, cluster_radius, false, "highest_health")
 		"sawblades_cluster":
 			return select_dense_cluster_target(entities, origin, max_range, cluster_radius, true)
 		"meteor_centroid":
@@ -101,13 +103,16 @@ static func select_enemy(entities: Array, origin: Vector2, max_range: float, pol
 	return nearest
 
 static func select_dense_cluster_target(entities: Array, origin: Vector2, max_range: float,
-		cluster_radius: float, include_out_of_range_neighbors := false) -> Dictionary:
+		cluster_radius: float, include_out_of_range_neighbors := false,
+		priority := "nearest") -> Dictionary:
 	var candidates: Array[Dictionary] = []
 	var all_targets: Array[Dictionary] = []
 	for entity in entities:
 		var target := _target_for(entity)
 		if target.is_empty():
 			continue
+		var health: Variant = entity["components"].get("Health", {})
+		target["health"] = float(health.get("current", 0.0)) if health is Dictionary else 0.0
 		all_targets.append(target)
 		if origin.distance_squared_to(target["position"]) < max_range * max_range:
 			candidates.append(target)
@@ -117,6 +122,7 @@ static func select_dense_cluster_target(entities: Array, origin: Vector2, max_ra
 	var best_target: Dictionary = candidates[0]
 	var best_neighbor_count := 0
 	var best_distance_squared := origin.distance_squared_to(best_target["position"])
+	var best_priority_value := -INF
 	var cluster_radius_squared := cluster_radius * cluster_radius
 	for candidate in candidates:
 		var neighbor_count := 0
@@ -124,11 +130,20 @@ static func select_dense_cluster_target(entities: Array, origin: Vector2, max_ra
 			if candidate["position"].distance_squared_to(other["position"]) <= cluster_radius_squared:
 				neighbor_count += 1
 		var distance_squared: float = origin.distance_squared_to(candidate["position"])
-		if neighbor_count > best_neighbor_count or (neighbor_count == best_neighbor_count and distance_squared < best_distance_squared):
+		var priority_value := 0.0
+		if priority == "highest_health":
+			priority_value = float(candidate["health"])
+		var selected := neighbor_count > best_neighbor_count
+		if neighbor_count == best_neighbor_count:
+			selected = priority_value > best_priority_value or (
+				is_equal_approx(priority_value, best_priority_value) and distance_squared < best_distance_squared
+			) if priority == "highest_health" else distance_squared < best_distance_squared
+		if selected:
 			best_target = candidate
 			best_neighbor_count = neighbor_count
 			best_distance_squared = distance_squared
-	return best_target
+			best_priority_value = priority_value
+	return {"position": best_target["position"], "id": best_target["id"]}
 
 static func select_cluster_centroid(entities: Array, origin: Vector2, max_range: float,
 		cluster_radius: float) -> Dictionary:

@@ -38,6 +38,16 @@ func _initialize() -> void:
 	var meteor_target: Dictionary = TARGETING.select_cluster_centroid(cluster_entities, Vector2.ZERO, 400.0, 110.0)
 	assert(meteor_target["id"].x == 11 and is_equal_approx(meteor_target["position"].x, 340.0),
 		"Meteor selector should aim at the densest cluster centroid while retaining its primary target ID")
+	var prism_entities := [
+		_enemy(20, Vector2(50.0, 0.0), 100.0, 1.0),
+		_enemy(21, Vector2(300.0, 0.0), 20.0, 1.0),
+		_enemy(22, Vector2(350.0, 0.0), 200.0, 1.0),
+		_enemy(23, Vector2(370.0, 0.0), 40.0, 1.0),
+	]
+	var lightning_primary: Dictionary = TARGETING.preview_target(prism_entities, Vector2.ZERO, 400.0, 100.0, "lightning_cluster")
+	var prism_primary: Dictionary = TARGETING.preview_target(prism_entities, Vector2.ZERO, 400.0, 100.0, "prism_cluster")
+	assert(lightning_primary["id"].x == 21 and prism_primary["id"].x == 22,
+		"Lightning should start at the nearest member of a dense cluster while Prism should focus its highest-health member")
 	print("Survival targeting policy smoke passed")
 	quit()
 
