@@ -67,6 +67,13 @@
 - [x] `signal_prism_asset_smoke.gd` vérifie le PNG 32×32 transparent, sa palette maîtresse de 16 couleurs maximum, l’en-tête Aseprite et son intégration nearest dans le menu.
 - [x] `process_signal_prism.gd` reproduit l’export depuis la référence générée vers le PNG utilisé et la source Aseprite éditable.
 - [x] Import Godot 4.7.2, `ui_foundation_smoke.gd` et `ui_viewport_layout_smoke.gd` passent; capture de l’accueil relue à 640×360 logique dans une fenêtre 1280×720.
+
+## Accueil — composition menu gauche de l’Art Bible — 2026-10-16
+
+- [x] `launch_navigation_smoke.gd` vérifie que la colonne verticale de commandes reste à gauche de l’identité, avec focus initial sur Jouer; Options, Quitter et l’accès discret Sandbox restent accessibles.
+- [x] Le smoke de navigation passe, y compris le trajet accueil → Sandbox → accueil; `ui_foundation_smoke.gd`, `signal_prism_asset_smoke.gd` et `ui_viewport_layout_smoke.gd` passent sous Godot 4.7.2.
+- [x] Capture fenêtrée Xvfb relue au viewport logique 640×360; les bornes de layout sont vérifiées à 640×360, 1280×720 et 1920×1080.
+- [ ] Essais avec souris et manette physiques non effectués; les contrôles restent natifs, focusables et l’ordre clavier/manette est couvert par les smokes.
 - [x] `launch_navigation_smoke.gd` passe en headless après ajout de l’emblème; retour du Sandbox vers l’accueil fonctionne toujours.
 
 ## Inventaire de run — densité au viewport logique — 2026-10-16

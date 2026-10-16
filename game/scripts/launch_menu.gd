@@ -2,10 +2,10 @@ extends Control
 
 signal play_requested
 
-@onready var _play_button: Button = $Content/Card/Columns/Menu/PlayButton
-@onready var _options_button: Button = $Content/Card/Columns/Menu/OptionsButton
-@onready var _quit_button: Button = $Content/Card/Columns/Menu/QuitButton
-@onready var _sandbox_button: Button = $Content/Card/Columns/Menu/SandboxButton
+@onready var _play_button: Button = $Content/Columns/MenuPanel/Menu/PlayButton
+@onready var _options_button: Button = $Content/Columns/MenuPanel/Menu/OptionsButton
+@onready var _quit_button: Button = $Content/Columns/MenuPanel/Menu/QuitButton
+@onready var _sandbox_button: Button = $Content/Columns/MenuPanel/Menu/SandboxButton
 
 var _options_panel: Control
 

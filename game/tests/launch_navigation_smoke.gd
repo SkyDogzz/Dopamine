@@ -1,6 +1,7 @@
 extends SceneTree
 
 const LAUNCH_SCENE_PATH := "res://scenes/launch_menu.tscn"
+const MENU_PATH := "Content/Columns/MenuPanel/Menu"
 
 func _initialize() -> void:
 	call_deferred("_run")
@@ -15,6 +16,10 @@ func _run() -> void:
 	var launch_menu := load(LAUNCH_SCENE_PATH).instantiate() as Control
 	if launch_menu == null:
 		_fail("Launch menu should instantiate as a Control")
+		return
+	if launch_menu.get_node_or_null("Content/Columns/MenuPanel") == null or \
+		launch_menu.get_node_or_null("Content/Columns/Identity") == null:
+		_fail("The title screen should place its vertical menu column beside the game identity")
 		return
 	if launch_menu.get_node_or_null("SkylineLights") == null:
 		_fail("The title skyline should include its neon signage layer")
@@ -31,11 +36,11 @@ func _run() -> void:
 		_fail("Neon skyline signage should animate while the launch menu is open")
 		return
 	for control_name in ["PlayButton", "OptionsButton", "QuitButton", "SandboxButton"]:
-		var button := launch_menu.get_node_or_null("Content/Card/Columns/Menu/%s" % control_name) as Button
+		var button := launch_menu.get_node_or_null("%s/%s" % [MENU_PATH, control_name]) as Button
 		if button == null or button.focus_mode == Control.FOCUS_NONE:
 			_fail("Launch menu should expose a focusable %s" % control_name)
 			return
-	var play_button := launch_menu.get_node("Content/Card/Columns/Menu/PlayButton") as Button
+	var play_button := launch_menu.get_node("%s/PlayButton" % MENU_PATH) as Button
 	if root.gui_get_focus_owner() != play_button:
 		_fail("Play should receive the initial menu focus")
 		return
@@ -45,7 +50,7 @@ func _run() -> void:
 	if play_requests[0] != 1:
 		_fail("Play should emit the hub navigation request")
 		return
-	var options_button := launch_menu.get_node("Content/Card/Columns/Menu/OptionsButton") as Button
+	var options_button := launch_menu.get_node("%s/OptionsButton" % MENU_PATH) as Button
 	options_button.pressed.emit()
 	await process_frame
 	var options_panel := launch_menu.get_node_or_null("OptionsPanel")
@@ -65,12 +70,12 @@ func _run() -> void:
 	if root.gui_get_focus_owner() != options_button:
 		_fail("Closing Options should restore focus to its launch button")
 		return
-	var quit_button := launch_menu.get_node("Content/Card/Columns/Menu/QuitButton") as Button
+	var quit_button := launch_menu.get_node("%s/QuitButton" % MENU_PATH) as Button
 	var quit_connections := quit_button.pressed.get_connections()
 	if quit_connections.size() != 1 or quit_connections[0]["callable"].get_method() != "_on_quit_pressed":
 		_fail("Quit should be connected to the native application close action")
 		return
-	var sandbox_button := launch_menu.get_node("Content/Card/Columns/Menu/SandboxButton") as Button
+	var sandbox_button := launch_menu.get_node("%s/SandboxButton" % MENU_PATH) as Button
 	sandbox_button.pressed.emit()
 	await process_frame
 	await process_frame
@@ -90,13 +95,20 @@ func _run() -> void:
 	if current_scene == null or current_scene.scene_file_path != LAUNCH_SCENE_PATH:
 		_fail("The Sandbox home action should return to the launch menu")
 		return
-	var card := current_scene.get_node("Content/Card") as Control
+	var menu_panel := current_scene.get_node("Content/Columns/MenuPanel") as Control
+	var identity := current_scene.get_node("Content/Columns/Identity") as Control
 	var logical_viewport: Rect2 = current_scene.get_viewport_rect()
-	var card_rect := card.get_global_rect()
-	if card_rect.position.x < logical_viewport.position.x or card_rect.position.y < logical_viewport.position.y or \
-		card_rect.end.x > logical_viewport.end.x or card_rect.end.y > logical_viewport.end.y:
-		_fail("Launch menu card %s should fit inside logical viewport %s" % [card_rect, logical_viewport])
+	var menu_rect := menu_panel.get_global_rect()
+	var identity_rect := identity.get_global_rect()
+	if menu_rect.position.x >= logical_viewport.size.x * 0.1 or identity_rect.position.x <= menu_rect.end.x or \
+		not logical_viewport.encloses(menu_rect) or not logical_viewport.encloses(identity_rect):
+		_fail("Launch menu should place its vertical menu at the left of the identity area: %s / %s" % [menu_rect, identity_rect])
 		return
+	if "--capture" in OS.get_cmdline_user_args():
+		await RenderingServer.frame_post_draw
+		if root.get_texture().get_image().save_png("/tmp/dopamine-launch-menu.png") != OK:
+			_fail("Could not capture the launch menu render")
+			return
 	print("Launch menu controls, initial focus and hub navigation contract passed")
 	quit()
 

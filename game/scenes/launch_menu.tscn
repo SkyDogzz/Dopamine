@@ -48,7 +48,7 @@ grow_vertical = 2
 texture_filter = 1
 script = ExtResource("4_signs")
 
-[node name="Content" type="CenterContainer" parent="."]
+[node name="Content" type="MarginContainer" parent="."]
 layout_mode = 1
 anchors_preset = 15
 anchor_left = 0.025
@@ -58,34 +58,81 @@ anchor_bottom = 0.965
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Card" type="PanelContainer" parent="Content"]
-custom_minimum_size = Vector2(450, 240)
+[node name="Columns" type="HBoxContainer" parent="Content"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 18
+
+[node name="MenuPanel" type="PanelContainer" parent="Content/Columns"]
+custom_minimum_size = Vector2(178, 250)
+layout_mode = 2
+size_flags_vertical = 4
+
+[node name="Menu" type="VBoxContainer" parent="Content/Columns/MenuPanel"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+alignment = 1
+theme_override_constants/separation = 5
+
+[node name="MenuLabel" type="Label" parent="Content/Columns/MenuPanel/Menu"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.647059, 0.682353, 0.764706, 1)
+text = "MENU PRINCIPAL"
+
+[node name="PlayButton" type="Button" parent="Content/Columns/MenuPanel/Menu"]
+custom_minimum_size = Vector2(0, 28)
+layout_mode = 2
+focus_mode = 2
+theme_override_colors/font_color = Color(0.215686, 0.909804, 0.960784, 1)
+theme_override_font_sizes/font_size = 10
+text = "JOUER"
+
+[node name="OptionsButton" type="Button" parent="Content/Columns/MenuPanel/Menu"]
+custom_minimum_size = Vector2(0, 24)
+layout_mode = 2
+focus_mode = 2
+text = "OPTIONS"
+
+[node name="QuitButton" type="Button" parent="Content/Columns/MenuPanel/Menu"]
+custom_minimum_size = Vector2(0, 24)
+layout_mode = 2
+focus_mode = 2
+text = "QUITTER"
+
+[node name="MenuSpacer" type="Control" parent="Content/Columns/MenuPanel/Menu"]
+custom_minimum_size = Vector2(0, 9)
 layout_mode = 2
 
-[node name="Columns" type="HBoxContainer" parent="Content/Card"]
+[node name="SandboxButton" type="Button" parent="Content/Columns/MenuPanel/Menu"]
+custom_minimum_size = Vector2(0, 19)
 layout_mode = 2
-theme_override_constants/separation = 16
+focus_mode = 2
+theme_override_colors/font_color = Color(0.647059, 0.682353, 0.764706, 1)
+theme_override_font_sizes/font_size = 8
+text = "SANDBOX DEV"
 
-[node name="Identity" type="VBoxContainer" parent="Content/Card/Columns"]
+[node name="Identity" type="VBoxContainer" parent="Content/Columns"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 alignment = 1
 theme_override_constants/separation = 6
 
-[node name="Edition" type="Label" parent="Content/Card/Columns/Identity"]
+[node name="Edition" type="Label" parent="Content/Columns/Identity"]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.458824, 0.890196, 1)
 theme_override_font_sizes/font_size = 8
 text = "SURVIVAL  /  NEON ARCADE"
 
-[node name="TitleRow" type="HBoxContainer" parent="Content/Card/Columns/Identity"]
+[node name="TitleRow" type="HBoxContainer" parent="Content/Columns/Identity"]
 layout_mode = 2
 size_flags_horizontal = 3
 alignment = 1
 theme_override_constants/separation = 4
 
-[node name="Logo" type="TextureRect" parent="Content/Card/Columns/Identity/TitleRow"]
+[node name="Logo" type="TextureRect" parent="Content/Columns/Identity/TitleRow"]
 custom_minimum_size = Vector2(32, 32)
 layout_mode = 2
 texture_filter = 1
@@ -93,7 +140,7 @@ texture = ExtResource("5_prism")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="Title" type="Label" parent="Content/Card/Columns/Identity/TitleRow"]
+[node name="Title" type="Label" parent="Content/Columns/Identity/TitleRow"]
 custom_minimum_size = Vector2(0, 48)
 layout_mode = 2
 size_flags_horizontal = 3
@@ -103,7 +150,7 @@ theme_override_font_sizes/font_size = 26
 text = "DOPAMINE"
 vertical_alignment = 1
 
-[node name="Tagline" type="Label" parent="Content/Card/Columns/Identity"]
+[node name="Tagline" type="Label" parent="Content/Columns/Identity"]
 custom_minimum_size = Vector2(0, 30)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.647059, 0.682353, 0.764706, 1)
@@ -111,61 +158,17 @@ theme_override_font_sizes/font_size = 9
 text = "SURVIVE THE SIGNAL."
 vertical_alignment = 1
 
-[node name="Accent" type="ColorRect" parent="Content/Card/Columns/Identity"]
+[node name="Accent" type="ColorRect" parent="Content/Columns/Identity"]
 custom_minimum_size = Vector2(28, 1.5)
 layout_mode = 2
 color = Color(1, 0.458824, 0.890196, 1)
 
-[node name="Spacer" type="Control" parent="Content/Card/Columns/Identity"]
+[node name="Spacer" type="Control" parent="Content/Columns/Identity"]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="BuildLabel" type="Label" parent="Content/Card/Columns/Identity"]
+[node name="BuildLabel" type="Label" parent="Content/Columns/Identity"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.345098, 0.388235, 0.509804, 1)
 theme_override_font_sizes/font_size = 8
 text = "A NEON SURVIVAL GAME"
-
-[node name="Menu" type="VBoxContainer" parent="Content/Card/Columns"]
-custom_minimum_size = Vector2(140, 0)
-layout_mode = 2
-size_flags_vertical = 3
-alignment = 1
-theme_override_constants/separation = 5
-
-[node name="MenuLabel" type="Label" parent="Content/Card/Columns/Menu"]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.647059, 0.682353, 0.764706, 1)
-text = "MENU PRINCIPAL"
-
-[node name="PlayButton" type="Button" parent="Content/Card/Columns/Menu"]
-custom_minimum_size = Vector2(0, 28)
-layout_mode = 2
-focus_mode = 2
-theme_override_colors/font_color = Color(0.215686, 0.909804, 0.960784, 1)
-theme_override_font_sizes/font_size = 10
-text = "JOUER"
-
-[node name="OptionsButton" type="Button" parent="Content/Card/Columns/Menu"]
-custom_minimum_size = Vector2(0, 24)
-layout_mode = 2
-focus_mode = 2
-text = "OPTIONS"
-
-[node name="QuitButton" type="Button" parent="Content/Card/Columns/Menu"]
-custom_minimum_size = Vector2(0, 24)
-layout_mode = 2
-focus_mode = 2
-text = "QUITTER"
-
-[node name="MenuSpacer" type="Control" parent="Content/Card/Columns/Menu"]
-custom_minimum_size = Vector2(0, 9)
-layout_mode = 2
-
-[node name="SandboxButton" type="Button" parent="Content/Card/Columns/Menu"]
-custom_minimum_size = Vector2(0, 19)
-layout_mode = 2
-focus_mode = 2
-theme_override_colors/font_color = Color(0.647059, 0.682353, 0.764706, 1)
-theme_override_font_sizes/font_size = 8
-text = "SANDBOX DEV"

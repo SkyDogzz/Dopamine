@@ -48,7 +48,7 @@ func _run() -> void:
 		_fail("Aseprite source should be one 32x32 RGBA frame")
 		return
 	var launch: Control = load("res://scenes/launch_menu.tscn").instantiate()
-	var logo := launch.get_node("Content/Card/Columns/Identity/TitleRow/Logo") as TextureRect
+	var logo := launch.get_node("Content/Columns/Identity/TitleRow/Logo") as TextureRect
 	if logo.texture == null or logo.texture.resource_path != PNG_PATH or logo.texture_filter != CanvasItem.TEXTURE_FILTER_NEAREST:
 		_fail("The title menu should use the Signal Prism with nearest-neighbor filtering")
 		return
