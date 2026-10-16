@@ -1,6 +1,6 @@
 # Plan d’implémentation : `survival-hud`
 
-**Statut : proposé pour validation utilisateur.** La spec est validée; la liste de tâches et toute implémentation attendent la validation de ce plan.
+**Statut : plan validé par l’utilisateur.** La checklist détaillée et toute implémentation attendent encore validation.
 
 ## Objectif et limites
 
