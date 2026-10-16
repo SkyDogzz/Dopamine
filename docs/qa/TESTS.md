@@ -874,3 +874,9 @@ Note de clôture : le blocage historique du smoke `sandbox_ui_smoke.gd` décrit 
 - [x] Les sept tests ciblés progression/migration/Sandbox/Armorless passent sous CTest.
 - [ ] Suite complète au 2026-10-16 : 69/84 passent. Dix scénarios d’armes Sandbox échouent à compiler la session car `Sfx` est absent de leur contexte de script; les autres échecs observés sont `combat_catalog_smoke`, `survival_starting_weapon_smoke`, `survival_unique_effects_smoke`, `free_chest_reroll_smoke` et `sandbox_steering_scenario`.
 - [ ] Une interface dédiée de classement et la validation d’une session Armorless complète restent à faire.
+
+## P5 — Régression intégration combat — 2026-10-16
+
+- [x] Douze smokes ciblés passent sous Godot 4.7.2 via `tools/run_godot_test.sh` : catalogue d’armes, coffres, directeur de drops, élites, Buffer, Shielder, Summoner, Exploder, attaques de boss, loot du boss final, causalité des dégâts et difficulté de session.
+- [x] Certains smokes de session terminent avec des avertissements ObjectDB/ressources encore référencées; leurs assertions passent. Ces sorties ne prouvent pas l’absence de fuite mémoire en session longue.
+- [ ] Cette validation automatisée ne remplace pas P5.V3 : une victoire en interface réelle, sans HP forcés, sélection automatique ni boss tué par script, reste à réaliser.
