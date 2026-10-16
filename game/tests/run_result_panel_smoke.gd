@@ -58,16 +58,20 @@ func _run() -> void:
 	panel.show_result(false, 8, 120.0, 30, {"ok": true, "duplicate": true})
 	if rewards.text != "ALREADY REWARDED" or not equipment.text.is_empty() or \
 		panel.get_node("Content").get_node_or_null("RewardIcons") != null or \
-		panel.get_node("Content").get_node_or_null("EquipmentIcon") != null:
+		panel.get_node("Content").get_node_or_null("EquipmentIcon") != null or \
+		rewards.get_theme_color("font_color").to_html(false) != "37e8f5":
 		_fail("A duplicate reward should be identified without repeating equipment rewards")
 		return
 	panel.show_result(false, 8, 120.0, 30, {"ok": false, "error": "save_failed"})
-	if rewards.text != "PROGRESSION SAVE FAILED":
+	if rewards.text != "PROGRESSION SAVE FAILED" or rewards.get_theme_color("font_color").to_html(false) != "ff7181":
 		_fail("A progression save error should stay distinct from an empty profile")
 		return
 	var long_reward := success_reward.duplicate(true)
 	long_reward["equipment"]["unique_effect_id"] = "pending_choice"
 	panel.show_result(true, 24, 605.0, 90, long_reward)
+	if rewards.get_theme_color("font_color").to_html(false) != "37e8f5":
+		_fail("A later reward result should restore the normal rewards color after a save error")
+		return
 	var original_size: Vector2i = root.size
 	for size in [Vector2i(640, 360), Vector2i(960, 600), Vector2i(1280, 720), Vector2i(1600, 900), Vector2i(1920, 1080)]:
 		root.size = size

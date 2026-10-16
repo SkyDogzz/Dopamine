@@ -27,6 +27,7 @@ func show_result(victory: bool, wave_number: int, active_seconds: float, kills: 
 			$Content.remove_child(row)
 			row.queue_free()
 	_rewards.text = ""
+	_rewards.add_theme_color_override("font_color", Color("#37E8F5"))
 	_equipment.text = ""
 	_achievement.text = ""
 	_title.text = "VICTORY" if victory else "RUN OVER"
@@ -56,6 +57,7 @@ func show_result(victory: bool, wave_number: int, active_seconds: float, kills: 
 				_equipment.text += "  •  UNIQUE EFFECT CHOICE PENDING"
 	else:
 		_rewards.text = "PROGRESSION SAVE FAILED"
+		_rewards.add_theme_color_override("font_color", Color("#FF7181"))
 	visible = true
 	_restart_button.grab_focus()
 
