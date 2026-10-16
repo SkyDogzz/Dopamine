@@ -757,3 +757,8 @@ Note de clôture : le blocage historique du smoke `sandbox_ui_smoke.gd` décrit 
 - [x] Les 26 smokes UI/flux passent sous Godot 4.7.2 avec un `XDG_DATA_HOME` distinct par smoke : fondation, Options, navigation, hub, HUD, choix de départ/coffre, pause, inventaire, résultat, Sandbox et layouts.
 - [x] `sandbox_ui_smoke.gd` passe huit fois d’affilée après que le test a suspendu son polling UI pendant la lecture des événements d’un pas déterministe; le fonctionnement du Sandbox n’a pas changé.
 - [x] Le smoke d’entrée contrôle les TextureRect des cartes d’arme; le smoke loadout vérifie le niveau suivant et retrouve l’offre ciblée dans les tirages randomisés sans supposer qu’elle figure dans un tirage particulier.
+
+## P8.5 — Reset cooldowns Sandbox Lab (2026-10-16)
+
+- [x] `sandbox_lab_smoke.gd` échoue avant l’implémentation si la commande est absente, puis vérifie que `RESET COOLDOWNS` remet à zéro les dix horloges d’attaque de la session Lab.
+- [x] Smoke passé sous Godot 4.7.2 avec un `XDG_DATA_HOME` neuf; le contexte n’a ni `ProgressionService` ni `SaveService` normal. Les avertissements ObjectDB/resource à la fermeture restent présents dans ce smoke.

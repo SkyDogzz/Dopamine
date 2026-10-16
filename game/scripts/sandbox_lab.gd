@@ -30,6 +30,7 @@ func _ready() -> void:
 	$Root/Body/Left/Controls/KillButton.pressed.connect(_kill_all)
 	$Root/Body/Left/Controls/ResetButton.pressed.connect(_reset)
 	$Root/Body/Left/ProjectileControls/ClearProjectilesButton.pressed.connect(_clear_projectiles)
+	$Root/Body/Left/ProjectileControls/ResetCooldownsButton.pressed.connect(_reset_cooldowns)
 	_speed_select.item_selected.connect(_set_speed)
 	$Root/Body/Side/Sections/PresetActions/SavePreset.pressed.connect(_save_preset)
 	$Root/Body/Side/Sections/PresetActions/LoadPreset.pressed.connect(_load_preset)
@@ -102,6 +103,13 @@ func _clear_projectiles() -> void:
 		if context.simulation.despawn(int(id["index"]), int(id["generation"])) > 0:
 			queued += 1
 	_set_status("CLEAR %d PROJECTILES QUEUED" % queued if queued > 0 else "NO PROJECTILES", false)
+
+func _reset_cooldowns() -> void:
+	for field in ["_next_weapon_time", "_next_inferno_time", "_next_daggers_time", "_next_minigun_time",
+			"_next_toxic_time", "_next_sawblades_time", "_next_meteor_time", "_next_prism_time",
+			"_next_void_orb_time", "_next_frost_nova_time"]:
+		context.session.set(field, 0.0)
+	_set_status("WEAPON COOLDOWNS RESET", false)
 
 func _reset() -> void:
 	var active_preset: Dictionary = context.active_preset.duplicate(true)

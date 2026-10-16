@@ -15,6 +15,24 @@ func _run() -> void:
 			lab.context.session.loadout.relic_level("storm_core") != 1:
 		_fail("The default Lab preset build should be applied to the real combat loadout")
 		return
+	var reset_cooldowns: Button = lab.get_node_or_null("Root/Body/Left/ProjectileControls/ResetCooldownsButton")
+	if reset_cooldowns == null:
+		_fail("Sandbox Lab should expose a reset-cooldowns command")
+		return
+	for field in ["_next_weapon_time", "_next_inferno_time", "_next_daggers_time", "_next_minigun_time",
+			"_next_toxic_time", "_next_sawblades_time", "_next_meteor_time", "_next_prism_time",
+			"_next_void_orb_time", "_next_frost_nova_time"]:
+		lab.context.session.set(field, 999.0)
+	reset_cooldowns.pressed.emit()
+	for field in ["_next_weapon_time", "_next_inferno_time", "_next_daggers_time", "_next_minigun_time",
+			"_next_toxic_time", "_next_sawblades_time", "_next_meteor_time", "_next_prism_time",
+			"_next_void_orb_time", "_next_frost_nova_time"]:
+		if not is_zero_approx(float(lab.context.session.get(field))):
+			_fail("Reset cooldowns should reset every weapon timer, including %s" % field)
+			return
+	if lab.context.progression_service != null or lab.context.normal_save_service != null:
+		_fail("Sandbox commands must not initialize progression or normal save services")
+		return
 	var god_mode: CheckButton = lab.get_node("Root/Body/Side/Sections/GodModeToggle")
 	if not lab.context.session._health_locked:
 		_fail("Sandbox Lab should begin with its isolated god mode enabled")

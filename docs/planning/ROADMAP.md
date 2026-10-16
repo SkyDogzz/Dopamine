@@ -595,7 +595,8 @@ P1 livre le Sandbox développeur et ne remplace pas cette feature produit.
 - [ ] **P8.5 — Outils de simulation**
   - [x] Ajouter God Mode commutable qui ne verrouille que le HP de la session Lab isolée; Survival normal n’est pas modifié.
   - [x] Première tranche UI ajoute pause, vitesse, spawn d’ennemis, kill all, clear projectiles et reset à la session de combat isolée.
-  - [ ] Ajouter reset cooldowns, commandes de vague et God Mode persistant à travers les imports de preset.
+  - [x] Ajouter `RESET COOLDOWNS` au Sandbox Lab; la commande réinitialise les dix horloges d’attaque de la session isolée et ne touche ni la progression ni les sauvegardes normales.
+  - [ ] Ajouter les commandes de vague et préserver l’état God Mode à travers les imports de preset.
   - [ ] Ajouter logs RNG et DPS par fenêtre/source.
 - [ ] **P8.6 — Snapshots**
   - [ ] Lister l’état minimal à capturer, y compris RNG, clocks, queues et build.
