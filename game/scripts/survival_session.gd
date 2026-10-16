@@ -311,8 +311,10 @@ var _pending_summon_sequences: Dictionary = {}
 @onready var _pause_overlay: Control = $HUD/PauseOverlay
 @onready var _pause_resume_button: Button = $HUD/PauseOverlay/Center/Panel/Content/ResumeButton
 @onready var _pause_options_button: Button = $HUD/PauseOverlay/Center/Panel/Content/OptionsButton
+@onready var _pause_inventory_button: Button = $HUD/PauseOverlay/Center/Panel/Content/InventoryButton
 
 var _options_overlay: Control
+var _inventory_overlay: Control
 
 func _ready() -> void:
 	texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
@@ -337,6 +339,7 @@ func _ready() -> void:
 	_run_result.restart_requested.connect(_restart_run)
 	_pause_resume_button.pressed.connect(_resume_manually_paused_run)
 	_pause_options_button.pressed.connect(_open_pause_options)
+	_pause_inventory_button.pressed.connect(_open_run_inventory)
 	player_max_hp = simulation.initial_player_hp()
 	_base_player_move_speed = player.move_speed
 	if progression_service != null:
@@ -404,6 +407,27 @@ func _close_pause_options() -> void:
 func _restore_pause_options_focus() -> void:
 	if _manually_paused and is_instance_valid(_pause_options_button):
 		_pause_options_button.grab_focus()
+
+func _open_run_inventory() -> void:
+	if not _manually_paused or _inventory_overlay != null:
+		return
+	var inventory_scene: PackedScene = load("res://scenes/run_inventory_panel.tscn")
+	_inventory_overlay = inventory_scene.instantiate() as Control
+	_inventory_overlay.name = "RunInventoryPanel"
+	_inventory_overlay.close_requested.connect(_close_run_inventory)
+	$HUD.add_child(_inventory_overlay)
+	_inventory_overlay.show_items(loadout.owned_item_details("weapon"), loadout.owned_item_details("relic"))
+
+func _close_run_inventory() -> void:
+	if _inventory_overlay == null:
+		return
+	_inventory_overlay.queue_free()
+	_inventory_overlay = null
+	call_deferred("_restore_run_inventory_focus")
+
+func _restore_run_inventory_focus() -> void:
+	if _manually_paused and is_instance_valid(_pause_inventory_button):
+		_pause_inventory_button.grab_focus()
 
 func _process(_delta: float) -> void:
 	if simulation == null:

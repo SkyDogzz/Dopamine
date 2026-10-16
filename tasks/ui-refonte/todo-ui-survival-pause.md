@@ -2,7 +2,7 @@
 
 Plan : [`plan-ui-survival-pause.md`](plan-ui-survival-pause.md) · Spec : [`SPEC-survival-pause.md`](SPEC-survival-pause.md)
 
-**Statut : validé par l’utilisateur.** Tâches 1 et 2 terminées; tâches 3 à 5 restent à faire. Le plan principal reste en pause et inchangé.
+**Statut : validé par l’utilisateur.** Tâches 1 à 3 terminées; tâches 4 et 5 restent à faire. Le plan principal reste en pause et inchangé.
 
 ## Tâche 1 — Pause manuelle et invariance temporelle
 
@@ -46,13 +46,13 @@ Plan : [`plan-ui-survival-pause.md`](plan-ui-survival-pause.md) · Spec : [`SPEC
 **Description :** Présenter uniquement le contenu runtime détenu par le loadout, ses définitions catalogue et son statut canonique d’évolution.
 
 **Critères d’acceptation :**
-- [ ] Inventaire liste exactement les armes et reliques possédées, avec familles séparées et états vides si besoin.
-- [ ] Chaque item montre icône, nom, niveau et description issus des ressources/définitions canoniques.
-- [ ] Statut d’évolution affiché uniquement si les règles runtime/catalogue en vigueur le déclarent actif.
-- [ ] Fermer l’inventaire revient à Pause et restaure son contrôle d’ouverture comme focus.
-- [ ] La vue ne propose aucune action qui modifie loadout, équipement permanent, compétences, save ou progression.
+- [x] Inventaire liste exactement les armes et reliques possédées, avec familles séparées et états vides si besoin.
+- [x] Chaque item montre icône, nom, niveau et description issus des ressources/définitions canoniques.
+- [x] Statut d’évolution affiché uniquement si l’arme est niveau 5 et sa relique associée est possédée, règle utilisée par les armes de la session.
+- [x] Fermer l’inventaire revient à Pause et restaure son contrôle d’ouverture comme focus.
+- [x] La vue ne propose aucune action qui modifie loadout, équipement permanent, compétences, save ou progression.
 
-**Vérification :** smoke avec loadout déterministe comprenant arme seule, relique seule, paire non évoluée et paire évoluée; vérifier aussi l’absence de mutation après navigation.
+**Vérification :** `survival_pause_inventory_smoke.gd` vérifie l’affichage de deux armes et deux reliques déterministes, icônes, noms, descriptions, évolution active, fermeture et retour du focus. `survival_pause_smoke.gd`, `survival_loadout_smoke.gd`, `survival_starting_weapon_smoke.gd`, `survival_hud_smoke.gd`, l’import headless Godot 4.7.2 et `git diff --check` passent. La vue n’expose que des labels et icônes avec un bouton Retour, aucune mutation.
 
 **Dépendances :** Tâche 1; le contrat de lecture canonique doit être choisi au plan de tâches sans copier de logique gameplay dans l’UI.
 

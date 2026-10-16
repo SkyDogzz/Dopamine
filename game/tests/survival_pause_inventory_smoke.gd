@@ -1,0 +1,90 @@
+extends SceneTree
+
+func _initialize() -> void:
+	call_deferred("_run")
+
+func _run() -> void:
+	var session: Node2D = load("res://scenes/survival_session.tscn").instantiate()
+	session.skip_starting_weapon_choice = true
+	session.spawn_initial_enemy = false
+	session.wave_spawning_enabled = false
+	root.add_child(session)
+	await process_frame
+	for _level in range(4):
+		if not session.loadout.apply_offer("weapon:lightning_conductor"):
+			_fail("The lightning weapon fixture should upgrade to level five")
+			return
+	if not session.loadout.apply_offer("relic:storm_core") or \
+		not session.loadout.apply_offer("weapon:minigun") or \
+		not session.loadout.apply_offer("relic:magnet_heart"):
+		_fail("The inventory fixture should equip an evolved weapon, a base weapon and relics")
+		return
+
+	session._unhandled_key_input(_escape_event())
+	await process_frame
+	var inventory_button: Button = session.get_node_or_null("HUD/PauseOverlay/Center/Panel/Content/InventoryButton")
+	if inventory_button == null:
+		_fail("Pause should provide access to the run inventory")
+		return
+	inventory_button.pressed.emit()
+	await process_frame
+	var inventory: Control = session.get_node_or_null("HUD/RunInventoryPanel")
+	if inventory == null or not inventory.visible:
+		_fail("The run inventory should open over the paused run")
+		return
+	var items: VBoxContainer = inventory.get_node("Center/Panel/Content/Scroll/Items")
+	var row_count := 0
+	var icon_count := 0
+	for child in items.get_children():
+		if child.name.begins_with("ItemRow_"):
+			row_count += 1
+			var icon: TextureRect = child.get_child(0).get_child(0)
+			if icon.texture != null:
+				icon_count += 1
+	if row_count != 4:
+		_fail("Inventory should list exactly two weapons and two relics")
+		return
+	if icon_count != 4:
+		_fail("Every equipped weapon and relic should show its catalog icon")
+		return
+	var text := _all_label_text(inventory)
+	for expected in ["Lightning Conductor", "Minigun", "Storm Core", "Magnet Heart", "EVOLVED", "Shoots one bolt"]:
+		if not text.contains(expected):
+			_fail("Run inventory is missing canonical item data: %s" % expected)
+			return
+	if not bool(session.simulation.snapshot()["paused"]):
+		_fail("Opening run inventory must keep the simulation paused")
+		return
+	var close_button: Button = inventory.get_node("Center/Panel/Content/CloseButton")
+	close_button.pressed.emit()
+	await process_frame
+	await process_frame
+	if session.get_node_or_null("HUD/RunInventoryPanel") != null or \
+		root.gui_get_focus_owner() != inventory_button or not bool(session.simulation.snapshot()["paused"]):
+		_fail("Closing inventory should return focus to Pause without resuming the run")
+		return
+	if session.loadout.weapon_level("lightning_conductor") != 5 or \
+		session.loadout.weapon_level("minigun") != 1 or session.loadout.relic_level("storm_core") != 1 or \
+		session.loadout.relic_level("magnet_heart") != 1:
+		_fail("Viewing and closing the inventory must not mutate the run loadout")
+		return
+	print("Survival pause inventory smoke passed")
+	quit()
+
+func _escape_event() -> InputEventKey:
+	var event := InputEventKey.new()
+	event.keycode = KEY_ESCAPE
+	event.pressed = true
+	return event
+
+func _all_label_text(node: Node) -> String:
+	var result := ""
+	if node is Label:
+		result += (node as Label).text + "\n"
+	for child in node.get_children():
+		result += _all_label_text(child)
+	return result
+
+func _fail(message: String) -> void:
+	push_error(message)
+	quit(1)

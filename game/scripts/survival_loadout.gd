@@ -34,6 +34,8 @@ var _weapons := {}
 var _relics := {}
 var _weapon_descriptions := {}
 var _relic_descriptions := {}
+var _weapon_definitions := {}
+var _relic_definitions := {}
 var _rng := RandomNumberGenerator.new()
 
 func _init(seed_value: int = 0) -> void:
@@ -42,10 +44,12 @@ func _init(seed_value: int = 0) -> void:
 		push_error(catalog.error)
 	for item_id in catalog.available_ids("weapon"):
 		var weapon_definition: Dictionary = catalog.weapons[item_id]
+		_weapon_definitions[item_id] = weapon_definition
 		_weapons[item_id] = weapon_definition["name"]
 		_weapon_descriptions[item_id] = weapon_definition["behavior"]
 	for item_id in catalog.available_ids("relic"):
 		var relic_definition: Dictionary = catalog.relics[item_id]
+		_relic_definitions[item_id] = relic_definition
 		_relics[item_id] = relic_definition["name"]
 		_relic_descriptions[item_id] = relic_definition["behavior"]
 	if seed_value == 0:
@@ -155,4 +159,29 @@ func owned_relics() -> Array[String]:
 	var result: Array[String] = []
 	for item_id in _relic_levels:
 		result.append(item_id)
+	return result
+
+func owned_item_details(family: String) -> Array[Dictionary]:
+	var item_ids := owned_weapons() if family == "weapon" else owned_relics() if family == "relic" else []
+	var definitions: Dictionary = _weapon_definitions if family == "weapon" else _relic_definitions
+	var names: Dictionary = _weapons if family == "weapon" else _relics
+	var descriptions: Dictionary = _weapon_descriptions if family == "weapon" else _relic_descriptions
+	var levels: Dictionary = _weapon_levels if family == "weapon" else _relic_levels
+	var result: Array[Dictionary] = []
+	for item_id in item_ids:
+		var definition: Dictionary = definitions[item_id]
+		var item := {
+			"id": item_id,
+			"family": family,
+			"name": names[item_id],
+			"description": descriptions[item_id],
+			"icon": ICONS.get(item_id, ""),
+			"level": int(levels[item_id]),
+		}
+		if family == "weapon":
+			var relic_id: String = definition["relic_id"]
+			item["evolution_id"] = definition["evolution_id"]
+			item["evolved"] = int(levels[item_id]) >= MAX_LEVEL and relic_level(relic_id) > 0
+			item["required_relic_name"] = _relics.get(relic_id, relic_id)
+		result.append(item)
 	return result
