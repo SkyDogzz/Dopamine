@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "skills": {
+    "procedural-sfx": {
+      "source": "bianbianzhu/procedural-sfx",
+      "sourceType": "github",
+      "skillPath": "skills/procedural-sfx/SKILL.md",
+      "computedHash": "7d80225ce691130aed5aa5dfdf9fcfca73b2d262198f6b278c3843ef00a28d29"
+    }
+  }
+}
