@@ -15,6 +15,12 @@ func _run() -> void:
 	var sandbox: Control = load("res://scenes/main.tscn").instantiate()
 	root.add_child(sandbox)
 	await process_frame
+	assert(sandbox.theme == load("res://themes/dopamine_ui.tres"), "Sandbox should use the shared UI theme")
+	var metrics: GridContainer = sandbox.get_node("Shell/Content/MainColumn/Metrics/MetricRow")
+	assert(metrics.columns == 4, "Sandbox metrics should wrap into a readable compact grid")
+	assert(sandbox.get_node("Shell/Content/MainColumn/SimulationView").clip_contents,
+		"Simulation entities should stay clipped to the playfield")
+	assert(sandbox.get_node("Shell/Header/HomeButton").has_focus(), "Sandbox should start with a visible keyboard focus")
 	assert(sandbox.get_node("Shell/Header/SurvivalButton").text == "PLAY SURVIVAL", "Sandbox should expose the Survival prototype entry")
 	assert(sandbox.simulation != null, "Sandbox UI should create its simulation without a save")
 	for node_path in [

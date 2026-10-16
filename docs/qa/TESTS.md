@@ -170,3 +170,14 @@ Le runner est fourni par `game/scripts/scenario_runner.gd` et consomme un fichie
 - [ ] `combat_catalog_smoke.gd` garde une assertion historique « Dagues en orbite autour du joueur, non lancées » qui échoue avec le catalogue actuel, lequel décrit Crimson Daggers comme deux dagues tirées en éventail. Le smoke d’inventaire pause consomme les données courantes et passe; aucune donnée ou règle de combat n’a été modifiée ici.
 - [ ] Parcours matériel complet souris/clavier/manette non réalisé; le focus, les actions A/B et les contrats bouton/Échap sont testés sous headless, mais aucun périphérique ni entrée fenêtrée interactive n’était disponible.
 - [ ] CTest/build natif non exécutés : `ctest` et `cmake` sont absents du PATH. `git diff --check` passe.
+
+
+## UI refonte — sandbox-ui (2026-10-16)
+
+- [x] `render_visual_smoke.gd` sous Xvfb/Mesa : rendu à 1280×800 vérifié visuellement; les entités restent maintenant découpées dans la zone de simulation, sans recouvrir l’accueil. llvmpipe passe le smoke de rendu; audio et V-Sync indisponibles dans le conteneur.
+- [x] `sandbox_ui_smoke.gd` : Theme partagé, grille métriques, focus initial, spawn/inspection/DoT, pause/reprise, step/vitesse, tuning/reset et sauvegarde sentinelle inchangée. Godot 4.7.2 headless passe avec `XDG_DATA_HOME` temporaire isolé.
+- [x] `sandbox_smoke.gd` : vérification de base Sandbox.
+- [x] Vérification statique : `main.gd` et la scène Sandbox ne référencent pas `SaveService` ni les services de progression. Le Sandbox conserve son chemin isolé vers le prototype Survival.
+- [x] Import éditeur Godot 4.7.2 headless et `git diff --check`.
+- [ ] Interaction physique souris/clavier/manette non parcourue; focus initial et styles natifs de focus vérifiés dans le smoke, matériel absent.
+- [ ] Build natif/CTest non exécutés : `cmake` et `ctest` absents du PATH.

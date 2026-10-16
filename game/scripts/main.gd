@@ -1,10 +1,6 @@
 extends Control
 
-const COLOR_TEXT := Color("#e5f2f5")
 const COLOR_MUTED := Color("#8ea3ad")
-const COLOR_PANEL := Color("#101923")
-const COLOR_FIELD := Color("#0a111a")
-const COLOR_BORDER := Color("#263746")
 const COLOR_CYAN := Color("#45e5ed")
 const COLOR_PINK := Color("#ff5ca8")
 const COLOR_AMBER := Color("#ffd166")
@@ -32,7 +28,6 @@ var _pending_reset_sequence := 0
 @onready var _log_text: RichTextLabel = $Shell/Content/SidePanel/Sections/LogPanel/LogForm/LogText
 
 func _ready() -> void:
-	_apply_theme()
 	_survival_button.pressed.connect(_on_survival_pressed)
 	_home_button.pressed.connect(_on_home_pressed)
 	_home_button.grab_focus()
@@ -103,38 +98,6 @@ func _process(delta: float) -> void:
 	if _refresh_elapsed >= 0.1:
 		_refresh_elapsed = 0.0
 		_refresh()
-
-func _apply_theme() -> void:
-	var ui_theme := Theme.new()
-	ui_theme.default_font_size = 14
-	ui_theme.set_color("font_color", "Label", COLOR_TEXT)
-	ui_theme.set_color("font_color", "Button", COLOR_TEXT)
-	ui_theme.set_color("font_hover_color", "Button", COLOR_TEXT)
-	ui_theme.set_color("font_pressed_color", "Button", Color("#071015"))
-	ui_theme.set_color("font_disabled_color", "Button", COLOR_MUTED)
-	ui_theme.set_color("font_color", "LineEdit", COLOR_TEXT)
-	ui_theme.set_color("font_placeholder_color", "LineEdit", COLOR_MUTED)
-	ui_theme.set_color("font_color", "RichTextLabel", COLOR_TEXT)
-	ui_theme.set_stylebox("panel", "PanelContainer", _flat(COLOR_PANEL, COLOR_BORDER, 1))
-	ui_theme.set_stylebox("normal", "Button", _flat(COLOR_FIELD, COLOR_BORDER, 1))
-	ui_theme.set_stylebox("hover", "Button", _flat(Color("#142330"), COLOR_CYAN, 1))
-	ui_theme.set_stylebox("pressed", "Button", _flat(COLOR_CYAN, COLOR_CYAN, 1))
-	ui_theme.set_stylebox("focus", "Button", _flat(COLOR_FIELD, COLOR_CYAN, 2))
-	ui_theme.set_stylebox("normal", "LineEdit", _flat(COLOR_FIELD, COLOR_BORDER, 1))
-	ui_theme.set_stylebox("focus", "LineEdit", _flat(COLOR_FIELD, COLOR_CYAN, 1))
-	theme = ui_theme
-
-func _flat(background: Color, border: Color, border_width: int) -> StyleBoxFlat:
-	var style := StyleBoxFlat.new()
-	style.bg_color = background
-	style.border_color = border
-	style.set_border_width_all(border_width)
-	style.set_corner_radius_all(3)
-	style.content_margin_left = 10.0
-	style.content_margin_top = 6.0
-	style.content_margin_right = 10.0
-	style.content_margin_bottom = 6.0
-	return style
 
 func _refresh() -> void:
 	var state: Dictionary = simulation.snapshot()

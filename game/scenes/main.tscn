@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=3]
+[gd_scene load_steps=4 format=3]
 
 [ext_resource type="Script" path="res://scripts/main.gd" id="1_main"]
 [ext_resource type="Script" path="res://scripts/simulation_view.gd" id="2_view"]
+[ext_resource type="Theme" path="res://themes/dopamine_ui.tres" id="3_theme"]
 
 [node name="Main" type="Control"]
 layout_mode = 3
@@ -11,6 +12,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_main")
+theme = ExtResource("3_theme")
 
 [node name="Background" type="ColorRect" parent="."]
 layout_mode = 1
@@ -79,6 +81,7 @@ custom_minimum_size = Vector2(640, 460)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
+clip_contents = true
 script = ExtResource("2_view")
 
 [node name="Toolbar" type="PanelContainer" parent="Shell/Content/MainColumn"]
@@ -92,11 +95,13 @@ theme_override_constants/separation = 8
 custom_minimum_size = Vector2(116, 40)
 layout_mode = 2
 text = "RESUME"
+tooltip_text = "Pause or resume the developer simulation."
 
 [node name="StepButton" type="Button" parent="Shell/Content/MainColumn/Toolbar/Row"]
 custom_minimum_size = Vector2(100, 40)
 layout_mode = 2
 text = "STEP"
+tooltip_text = "Advance the paused simulation by the chosen duration."
 
 [node name="StepDuration" type="SpinBox" parent="Shell/Content/MainColumn/Toolbar/Row"]
 custom_minimum_size = Vector2(116, 40)
@@ -115,18 +120,23 @@ size_flags_horizontal = 3
 custom_minimum_size = Vector2(116, 40)
 layout_mode = 2
 item_count = 0
+tooltip_text = "Simulation speed multiplier."
 
 [node name="ResetButton" type="Button" parent="Shell/Content/MainColumn/Toolbar/Row"]
 custom_minimum_size = Vector2(100, 40)
 layout_mode = 2
 text = "RESET"
+tooltip_text = "Clear entities, events, metrics and live overrides."
 
 [node name="Metrics" type="PanelContainer" parent="Shell/Content/MainColumn"]
 layout_mode = 2
 
-[node name="MetricRow" type="HBoxContainer" parent="Shell/Content/MainColumn/Metrics"]
+[node name="MetricRow" type="GridContainer" parent="Shell/Content/MainColumn/Metrics"]
 layout_mode = 2
+columns = 4
 theme_override_constants/separation = 16
+theme_override_constants/h_separation = 16
+theme_override_constants/v_separation = 8
 
 [node name="MetricFPS" type="Label" parent="Shell/Content/MainColumn/Metrics/MetricRow"]
 layout_mode = 2
