@@ -36,6 +36,14 @@ func _initialize() -> void:
 		int(enhanced_item["stat_lines"][0]["enhancement_level"]) != 1 or state.flux() != 12:
 		_fail("A temporary enhancement should consume proposed Flux cost and raise the line by one level")
 		return
+	if not state.set_draft([
+		_equipment("helmet", "replacement_helmet", false),
+		_equipment("ring", "replacement_ring", false),
+		_equipment("boots", "replacement_boots", false),
+	]) or not state.select_draft_option(0) or state.temporary_equipment().size() != 1 or \
+		state.temporary_equipment()[0]["instance_id"] != "replacement_helmet":
+		_fail("Selecting equipment for an occupied slot should replace its previous temporary item")
+		return
 	state.end_run()
 	if state.is_active() or not state.temporary_equipment().is_empty() or state.flux() != 0:
 		_fail("Ending an Armorless run should discard its equipment and Flux")

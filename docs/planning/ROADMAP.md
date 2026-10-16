@@ -501,12 +501,13 @@ Travail requis :
 - [ ] **P7A.1 — Règles du mode**
   - [x] Ajouter le choix Armorless au hub et transmettre le mode à la session; le profil reste disponible pour les systèmes autorisés.
   - [x] Désactiver les bonus d'équipement et effets uniques permanents pendant le mode; conserver les bonus déjà acquis du skill tree et des achievements.
-  - [ ] Vérifier skill tree et achievements toujours actifs.
+  - [x] Vérifier dans `survival_armorless_mode_smoke.gd` que skill tree et achievement mastery gardent leurs bonus actifs.
   - [x] Ajouter au directeur un profil Armorless optionnel : cycle de boss toutes les 12 vagues sans victoire forcée après la vague 24; profil Survival inchangé. La cadence de boss reste une valeur **[PROPOSÉE]** du GDD.
 - [ ] **P7A.2 — Draft temporaire**
   - [x] Générer trois propositions indépendantes depuis le pool d'équipement Armorless. Le tableau de rareté et les multiplicateurs de difficulté utilisent les valeurs GDD **[PROPOSÉES]** et restent identifiés comme tels dans le code.
-  - [x] Ajouter l’état temporaire de run : accepte trois propositions à slots indépendants (doublons permis), consomme le draft au choix et conserve un seul objet sélectionné.
-  - [x] Effacer les objets temporaires en fin de run; vérification automatisée dans `armorless_run_state_smoke.gd`.
+  - [x] Ajouter l’état temporaire de run : accepte trois propositions à slots indépendants (doublons permis), consomme le draft au choix, remplace l'objet temporaire si son slot est déjà occupé et conserve un objet par slot.
+  - [x] Ouvrir le draft à chaque transition de vague, suspendre la simulation, appliquer le choix et les stat lines; smoke end-to-end dans `survival_armorless_mode_smoke.gd`.
+  - [x] Effacer les objets temporaires en fin de run; vérification automatisée dans `armorless_run_state_smoke.gd` et le smoke end-to-end.
 - [ ] **P7A.3 — Flux**
   - [x] Ajouter un solde Flux en mémoire de run et le gain après chaque vague, avec validation et anti-double-crédit. Formule GDD **[PROPOSÉE]**.
   - [x] Améliorer une ligne temporaire avec consommation du coût, progression +8 % par niveau et plafond +10. Coûts et chances restent **[PROPOSÉS]**.

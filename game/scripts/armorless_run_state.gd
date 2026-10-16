@@ -50,7 +50,13 @@ func current_draft() -> Array[Dictionary]:
 func select_draft_option(index: int) -> bool:
 	if not _active or index < 0 or index >= _draft.size() or _draft.size() != DRAFT_SIZE:
 		return false
-	_equipment.append(_draft[index].duplicate(true))
+	var selected: Dictionary = _draft[index].duplicate(true)
+	for equipment_index in range(_equipment.size()):
+		if str(_equipment[equipment_index].get("slot", "")) == str(selected.get("slot", "")):
+			_equipment[equipment_index] = selected
+			_draft.clear()
+			return true
+	_equipment.append(selected)
 	_draft.clear()
 	return true
 

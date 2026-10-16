@@ -64,6 +64,7 @@ const WEAPON_ICONS := {
 }
 const WAVE_DIRECTOR_SCRIPT := preload("res://scripts/survival_wave_director.gd")
 const ARMORLESS_RUN_STATE_SCRIPT := preload("res://scripts/armorless_run_state.gd")
+const EQUIPMENT_GENERATOR_SCRIPT := preload("res://scripts/equipment_generator.gd")
 const LOADOUT_SCRIPT := preload("res://scripts/survival_loadout.gd")
 const WEAPON_PROGRESSION_IDS := ["lightning_conductor", "inferno_sprayer", "crimson_daggers", "void_orb",
 		"frost_nova", "minigun", "meteor_staff", "sawblades", "toxic_cloud", "prism_laser"]
@@ -358,6 +359,8 @@ var _pending_summon_sequences: Dictionary = {}
 var _item_level_feedback_expires_at := 0.0
 var _weapon_progression: Dictionary = {}
 var _weapon_progression_valid := false
+var _armorless_equipment_generator: RefCounted
+var _pending_armorless_draft_waves: Array[int] = []
 
 @onready var _hp_value: Label = $HUD/RunPanel/RunInfo/StatusRow/HPRow/HPValue
 @onready var _hp_bar: ProgressBar = $HUD/RunPanel/RunInfo/StatusRow/HPRow/HPBar
@@ -408,6 +411,7 @@ func _ready() -> void:
 	if mode_id == "armorless":
 		armorless_run_state = ARMORLESS_RUN_STATE_SCRIPT.new(hash(_run_id))
 		armorless_run_state.begin_run()
+		_armorless_equipment_generator = EQUIPMENT_GENERATOR_SCRIPT.new(hash(_run_id) ^ 0xA24B)
 	player = PLAYER_SCENE.instantiate()
 	player.name = "Player"
 	add_child(player)
@@ -636,6 +640,9 @@ func _confirm_abandon_run() -> void:
 	if not _manually_paused or simulation == null:
 		return
 	simulation.pause()
+	if mode_id == "armorless" and armorless_run_state != null:
+		armorless_run_state.end_run()
+		_pending_armorless_draft_waves.clear()
 	_manually_paused = false
 	run_over = true
 	var error := get_tree().change_scene_to_file("res://scenes/launch_menu.tscn")
@@ -646,6 +653,10 @@ func _confirm_abandon_run() -> void:
 
 func _process(_delta: float) -> void:
 	if simulation == null:
+		return
+	if mode_id == "armorless" and not run_over and not _manually_paused and \
+			not _chest_open and not _pending_armorless_draft_waves.is_empty():
+		_open_next_armorless_draft()
 		return
 	var state: Dictionary = simulation.snapshot()
 	var current_simulation_time: float = float(state["simulation_time"])
@@ -790,6 +801,9 @@ func _process(_delta: float) -> void:
 	_fire_frost_nova(current_simulation_time, state["paused"])
 	if player_hp <= 0.0 and not run_over:
 		_finish_run(false)
+	if mode_id == "armorless" and not run_over and not _manually_paused and \
+			not _pending_armorless_draft_waves.is_empty():
+		_open_next_armorless_draft()
 	player.controls_enabled = not state["paused"] and not run_over and not _chest_open and not _starting_weapon_choice_open
 	_refresh_hud(state)
 	queue_redraw()
@@ -1418,6 +1432,9 @@ func _on_chest_option_selected(option_id: String) -> void:
 			Sfx.play("ui_error")
 			_chest_choice.present(loadout.starting_weapon_options(), 2, "CHOOSE YOUR STARTING WEAPON")
 		return
+	if _chest_open and _active_chest_heading.begins_with("ARMORLESS DRAFT"):
+		_choose_armorless_draft_option(option_id)
+		return
 	if _chest_open and not _is_active_chest_option(option_id):
 		Sfx.play("ui_error")
 		_chest_choice.present(_active_chest_options, _active_chest_options.size(), _active_chest_heading,
@@ -1454,6 +1471,71 @@ func _is_active_chest_option(option_id: String) -> bool:
 		if str(option.get("id", "")) == option_id:
 			return true
 	return false
+
+func _choose_armorless_draft_option(option_id: String) -> void:
+	if not _is_active_chest_option(option_id) or armorless_run_state == null:
+		_chest_choice.present(_active_chest_options, _active_chest_options.size(), _active_chest_heading)
+		return
+	var previous_max_hp_bonus := _equipment_bonus("max_hp")
+	var selected_index := -1
+	for index in range(_active_chest_options.size()):
+		if str(_active_chest_options[index]["id"]) == option_id:
+			selected_index = index
+			break
+	if not armorless_run_state.select_draft_option(selected_index):
+		_chest_choice.present(_active_chest_options, _active_chest_options.size(), _active_chest_heading)
+		return
+	player_max_hp += _equipment_bonus("max_hp") - previous_max_hp_bonus
+	player_hp = minf(player_hp, player_max_hp)
+	_refresh_persistent_bonuses()
+	_chest_open = false
+	_active_chest_options.clear()
+	_active_chest_heading = "CHEST — CHOOSE ONE"
+	chest_option_chosen.emit(option_id)
+	simulation.resume()
+
+func _open_next_armorless_draft() -> void:
+	if _pending_armorless_draft_waves.is_empty() or armorless_run_state == null or run_over:
+		return
+	var completed_wave: int = _pending_armorless_draft_waves.pop_front()
+	if armorless_run_state.award_wave_flux(completed_wave) <= 0:
+		push_error("Armorless Flux reward was rejected for completed wave %d" % completed_wave)
+		return
+	var equipment: Array[Dictionary] = _armorless_equipment_generator.generate_armorless_draft(
+		_run_id, difficulty_id, completed_wave
+	)
+	if not armorless_run_state.set_draft(equipment):
+		push_error("Armorless equipment draft was rejected for completed wave %d" % completed_wave)
+		return
+	var options: Array[Dictionary] = []
+	for item in equipment:
+		options.append(_armorless_equipment_offer(item))
+	var heading := "ARMORLESS DRAFT  ·  WAVE %d  ·  %d FLUX" % [completed_wave, armorless_run_state.flux()]
+	if not _chest_choice.present(options, options.size(), heading):
+		push_error("Armorless equipment draft could not be displayed")
+		return
+	_chest_open = true
+	_active_chest_options = options
+	_active_chest_heading = heading
+	simulation.pause()
+	if _auto_select_first_chest:
+		_chest_choice.call_deferred("choose_first_option")
+
+func _armorless_equipment_offer(item: Dictionary) -> Dictionary:
+	var title := "%s · %s" % [str(item["rarity"]).to_upper(), str(item["slot"]).to_upper()]
+	var description := "TEMPORARY EQUIPMENT\n"
+	for line in item["stat_lines"]:
+		var stat_id := str(line["stat_id"])
+		var value := EQUIPMENT_GENERATOR_SCRIPT.stat_value(
+			stat_id, float(line["roll_percentile"]), int(line["enhancement_level"])
+		)
+		description += "%s\n" % EQUIPMENT_GENERATOR_SCRIPT.stat_label(stat_id, value)
+	return {
+		"id": "armorless:%s" % str(item["instance_id"]),
+		"title": title,
+		"description": description.strip_edges(),
+		"icon": "res://assets/icons/catalog/equipment_%s.png" % str(item["slot"]),
+	}
 
 func _reroll_first_chest() -> void:
 	if not _chest_open or not _free_first_chest_reroll_available or _free_first_chest_reroll_used:
@@ -1515,6 +1597,7 @@ func _finish_run(victory: bool) -> void:
 	var reward := {}
 	if mode_id == "armorless" and armorless_run_state != null:
 		armorless_run_state.end_run()
+		_pending_armorless_draft_waves.clear()
 	elif progression_service != null and progression_service.can_save_profile():
 		reward = progression_service.award_survival_run(
 			_run_id, wave_director.wave, victory, kill_count, difficulty_id
@@ -1631,7 +1714,17 @@ func _advance_wave_director(delta_seconds: float, paused: bool) -> void:
 	if paused or run_over or wave_director == null or not wave_spawning_enabled:
 		return
 	if wave_director.state == WAVE_DIRECTOR_SCRIPT.State.WAVE:
+		var previous_wave: int = wave_director.wave
+		var previous_state: int = wave_director.state
 		wave_director.advance(delta_seconds)
+		if mode_id == "armorless":
+			for completed_wave in range(previous_wave, wave_director.wave):
+				_pending_armorless_draft_waves.append(completed_wave)
+			if previous_state == WAVE_DIRECTOR_SCRIPT.State.WAVE and \
+				wave_director.state == WAVE_DIRECTOR_SCRIPT.State.MID_BOSS:
+				_pending_armorless_draft_waves.append(wave_director.wave)
+			if not _pending_armorless_draft_waves.is_empty():
+				return
 		if spawn_initial_enemy and player_active_time >= _next_enemy_spawn_time:
 			_spawn_wave_enemy()
 			_next_enemy_spawn_time = player_active_time + _wave_enemy_spawn_interval()
@@ -2383,7 +2476,16 @@ func _refresh_persistent_bonuses() -> void:
 	_refresh_player_move_speed()
 
 func _equipment_bonus(stat_id: String) -> float:
-	return float(_cached_equipment_bonuses.get(stat_id, 0.0))
+	var bonus := float(_cached_equipment_bonuses.get(stat_id, 0.0))
+	if mode_id != "armorless" or armorless_run_state == null:
+		return bonus
+	for equipment in armorless_run_state.temporary_equipment():
+		for line in equipment.get("stat_lines", []):
+			if str(line.get("stat_id", "")) == stat_id:
+				bonus += EQUIPMENT_GENERATOR_SCRIPT.stat_value(
+					stat_id, float(line.get("roll_percentile", 0.0)), int(line.get("enhancement_level", 0))
+				)
+	return bonus
 
 func _equipment_kill_healing(base_healing: float) -> float:
 	return base_healing * (1.0 + _equipment_bonus("kill_healing_pct") / 100.0)
