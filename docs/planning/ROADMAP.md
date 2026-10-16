@@ -476,8 +476,10 @@ Travail requis :
 - [ ] **P6.6 — Skill tree**
   - [ ] Établir le schéma node/prérequis/coût/effet.
   - [x] Étendre la branche Core Stats à quatre nodes avec Fleet Footed (+2 % vitesse, 110 Essence) et Steady Aim (+1 point de critique, 140 Essence); prérequis, bonus et coûts **[PROPOSÉS]**, vérifiés jusqu'à leur application en Survival/Armorless et au respec.
-  - [x] Ajouter une branche prototype d’équipement : Crimson Daggers (130 Essence, après Vitality) puis Blood Chalice (160 Essence, après Crimson Daggers). Les coûts et l’ordre sont **[PROPOSÉS]**; seules ces deux entrées sont débloquées dans cette tranche.
-  - [x] Les profils normaux commencent avec Lightning Conductor, Inferno Sprayer, Storm Core et Infernal Heart; le skill tree ouvre Crimson Daggers et Blood Chalice dans les offres et le choix d’arme initial. Le Sandbox conserve le catalogue complet puisqu’il n’injecte aucun service de progression.
+  - [x] Ajouter des branches prototypes de déblocage d’équipement, en commençant par Crimson Daggers (130 Essence après Vitality) et Blood Chalice (160 Essence après Crimson Daggers), puis étendre les branches séquentielles aux autres entrées du catalogue. L’ordre et les coûts sont **[PROPOSÉS]**.
+  - [x] Les profils normaux commencent avec Lightning Conductor, Inferno Sprayer, Storm Core et Infernal Heart; les autres armes et reliques se débloquent par le skill tree et rejoignent les offres/choix initiaux. Le Sandbox conserve le catalogue complet puisqu’il n’injecte aucun service de progression.
+  - [x] Étendre les branches de déblocage aux 10 armes et 11 reliques Survival : chaque entrée non starter a un nœud, un prérequis séquentiel dans sa branche et un remboursement au respec. Les coûts augmentent avec la profondeur; cet ordre et ces valeurs sont **[PROPOSÉS]** et restent à calibrer.
+  - [x] Générer les boutons d’équipement depuis les métadonnées de nœuds; `progression_service_smoke.gd`, `survival_loadout_smoke.gd` et `skill_tree_panel_visual_smoke.gd` couvrent le catalogue complet, le filtrage des tirages et les IDs émis par les boutons.
   - [ ] Continuer les branches et élargir les nœuds au-delà de cette tranche; la cible GDD 100–150 reste **[PROPOSÉE]**.
   - [ ] Ajouter et tester une tranche de branche à la fois jusqu’à la cible décidée (100–150).
   - [ ] Vérifier coût, déblocages, bonus appliqué et respec gratuit.

@@ -190,13 +190,16 @@ func _run() -> void:
 		_fail("The same unique effect on multiple equipped items should activate once, not stack: %s" % [service.equipped_unique_effects()])
 		return
 	profile = service.load_profile()["profile"]
-	profile["resources"]["essence"] = 850
+	profile["resources"]["essence"] = 10000
 	if not save_service.save_slot("0", profile):
 		_fail("The skill tree fixture should save")
 		return
+	if service.unlocked_weapon_ids().size() != 2 or service.unlocked_relic_ids().size() != 2:
+		_fail("A new profile should start with exactly two weapons and two relics")
+		return
 	if service.unlocked_weapon_ids() != ["lightning_conductor", "inferno_sprayer"] or \
 		service.unlocked_relic_ids() != ["storm_core", "infernal_heart"]:
-		_fail("A new profile should start with its two validated starter weapon/relic pairs")
+		_fail("A new profile should start with the prototype starter weapon/relic pairs")
 		return
 	if service.unlock_skill_node("focused_training").get("error") != "skill_prerequisite_locked":
 		_fail("A skill node should reject purchase until its prerequisite is unlocked")
@@ -225,16 +228,28 @@ func _run() -> void:
 			service.skill_bonus("max_hp_pct") != 0.05 or service.skill_bonus("damage_pct") != 0.03 or \
 			service.skill_bonus("move_speed_pct") != 0.02 or \
 			service.skill_bonus("critical_chance_pct") != 1.0 or \
-			steady_aim["profile"]["resources"]["essence"] != 470 or \
+			steady_aim["profile"]["resources"]["essence"] != 9620 or \
 			service.unlocked_weapon_ids().size() != 3 or not service.unlocked_weapon_ids().has("crimson_daggers") or \
 			service.unlocked_relic_ids().size() != 3 or not service.unlocked_relic_ids().has("blood_chalice") or \
 			service.unlock_skill_node("vitality_starter").get("ok", false):
 		_fail("The proposed skill branch should enforce prerequisites, spend Essence once and expose its passive bonuses")
 		return
+	for node_id in service.skill_node_ids("weapon_unlocks") + service.skill_node_ids("relic_unlocks"):
+		if node_id in ["unlock_crimson_daggers", "unlock_blood_chalice"]:
+			continue
+		var unlock_result: Dictionary = service.unlock_skill_node(node_id)
+		if not unlock_result.get("ok", false):
+			_fail("Every catalog weapon/relic should have a purchasable permanent unlock node: %s" % node_id)
+			return
+	var catalog = load("res://scripts/combat_catalog.gd").new()
+	if service.unlocked_weapon_ids().size() != catalog.available_ids("weapon").size() or \
+		service.unlocked_relic_ids().size() != catalog.available_ids("relic").size():
+		_fail("Purchasing every equipment node should expose all playable catalog entries")
+		return
 	var respecced: Dictionary = service.respec_skill_tree()
 	if not respecced.get("ok", false) or service.skill_bonus("max_hp_pct") != 0.0 or \
 			service.skill_bonus("damage_pct") != 0.0 or service.skill_bonus("move_speed_pct") != 0.0 or \
-			service.skill_bonus("critical_chance_pct") != 0.0 or respecced["profile"]["resources"]["essence"] != 850 or \
+		service.skill_bonus("critical_chance_pct") != 0.0 or respecced["profile"]["resources"]["essence"] != 10000 or \
 			service.unlocked_weapon_ids().size() != 2 or service.unlocked_relic_ids().size() != 2:
 		_fail("Skill respec should be free and refund the spent Essence")
 		return

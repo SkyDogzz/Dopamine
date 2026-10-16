@@ -5,6 +5,9 @@ func _initialize() -> void:
 
 func _run() -> void:
 	var panel: Control = load("res://scenes/skill_tree_panel.tscn").instantiate()
+	var save_service = load("res://scripts/save_service.gd").new("user://skill_tree_panel_visual_smoke")
+	var progression = load("res://scripts/progression_service.gd").new(save_service, "0")
+	panel.progression_service = progression
 	root.add_child(panel)
 	panel.present({"resources": {"essence": 300}, "unlocked_skill_nodes": []})
 	await process_frame
@@ -19,6 +22,7 @@ func _run() -> void:
 	var followup_card: PanelContainer = panel.get_node("Panel/Content/NodeScroll/Rows/NodeBranch/FollowupCard")
 	var weapon_unlock: Button = panel.get_node("Panel/Content/NodeScroll/Rows/UnlockBranch/UnlockWeaponCard/Content/WeaponUnlockButton")
 	var relic_unlock: Button = panel.get_node("Panel/Content/NodeScroll/Rows/UnlockBranch/UnlockRelicCard/Content/RelicUnlockButton")
+	var additional_unlocks: VBoxContainer = panel.get_node("Panel/Content/NodeScroll/Rows/AdditionalUnlocks")
 	var frame_style := frame.get_theme_stylebox("panel") as StyleBoxFlat
 	var foundation_style := foundation_card.get_theme_stylebox("panel") as StyleBoxFlat
 	if frame_style == null or frame_style.border_color.to_html(false) != "37e8f5" or \
@@ -47,6 +51,9 @@ func _run() -> void:
 		return
 	if not weapon_unlock.disabled or not relic_unlock.disabled:
 		_fail("Equipment unlock nodes should remain locked until their prerequisites are met (weapon=%s relic=%s)" % [str(weapon_unlock.disabled), str(relic_unlock.disabled)])
+		return
+	if additional_unlocks.get_child_count() != 15:
+		_fail("The tree should show every remaining playable weapon and relic unlock")
 		return
 	if panel.get_node("Panel/Content/NodeScroll/Rows/UnlockBranch/UnlockWeaponCard/Content/Effect").text != "CRIMSON DAGGERS  •  130 ESSENCE  •  PROPOSED" or \
 		panel.get_node("Panel/Content/NodeScroll/Rows/UnlockBranch/UnlockRelicCard/Content/Effect").text != "BLOOD CHALICE  •  160 ESSENCE  •  PROPOSED":
@@ -77,6 +84,20 @@ func _run() -> void:
 		_fail("Weapon unlock should follow Vitality and relic unlock should still require Crimson Daggers")
 		return
 	panel.present({"resources": {"essence": 300}, "unlocked_skill_nodes": ["vitality_starter", "unlock_crimson_daggers"]})
+	var weapon_node_ids: Array[String] = progression.skill_node_ids("weapon_unlocks")
+	var first_additional_weapon: String = weapon_node_ids[1]
+	var additional_weapon_button := _button_for_node(additional_unlocks, first_additional_weapon)
+	if additional_weapon_button == null or additional_weapon_button.disabled:
+		_fail("The first additional weapon should become available after Crimson Daggers")
+		return
+	var requested_nodes: Array[String] = []
+	panel.unlock_requested.connect(func(node_id: String) -> void: requested_nodes.append(node_id))
+	additional_weapon_button.emit_signal("pressed")
+	await process_frame
+	if requested_nodes != [first_additional_weapon]:
+		_fail("Generated unlock controls should emit their own stable node IDs")
+		return
+	panel.present({"resources": {"essence": 300}, "unlocked_skill_nodes": ["vitality_starter", "unlock_crimson_daggers"]})
 	if not weapon_unlock.disabled or relic_unlock.disabled or \
 		panel.get_node("Panel/Content/NodeScroll/Rows/UnlockBranch/UnlockRelicCard/Content/Prerequisite").text != "RELIC · AVAILABLE":
 		_fail("Relic unlock should become available only after Crimson Daggers")
@@ -92,6 +113,16 @@ func _run() -> void:
 	if not precision.disabled or panel.get_node("Panel/Content/NodeScroll/Rows/NodeBranch/FollowupCard/Content/PrecisionKicker").text != "ADVANCED · LOCKED":
 		_fail("The advanced critical node should remain locked until Fleet Footed is unlocked")
 		return
+	var all_node_ids: Array[String] = progression.skill_node_ids()
+	var final_node_id: String = all_node_ids.back()
+	all_node_ids.pop_back()
+	panel.present({"resources": {"essence": 10000}, "unlocked_skill_nodes": all_node_ids})
+	var final_unlock_button := _button_for_node(additional_unlocks, final_node_id)
+	final_unlock_button.grab_focus()
+	await process_frame
+	if not scroll.get_global_rect().encloses(final_unlock_button.get_global_rect()):
+		_fail("Keyboard focus should scroll the final equipment unlock into the visible panel: %s / %s / %s" % [str(scroll.get_global_rect()), str(final_unlock_button.get_global_rect()), str(scroll.scroll_vertical)])
+		return
 	if "--capture" in OS.get_cmdline_user_args():
 		await RenderingServer.frame_post_draw
 		if root.get_texture().get_image().save_png("/tmp/dopamine-skill-tree.png") != OK:
@@ -103,3 +134,9 @@ func _run() -> void:
 func _fail(message: String) -> void:
 	push_error(message)
 	quit(1)
+
+func _button_for_node(container: VBoxContainer, node_id: String) -> Button:
+	for button in container.get_children():
+		if (button as Button).name == node_id:
+			return button as Button
+	return null

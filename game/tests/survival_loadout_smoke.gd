@@ -22,6 +22,13 @@ func _initialize() -> void:
 		progression_fixture.apply_offer("relic:blood_chalice") == false:
 		_fail("A run should draw only the profile's unlocked weapons and relics while accepting newly unlocked content")
 		return
+	var combat_catalog = load("res://scripts/combat_catalog.gd").new()
+	var full_catalog_fixture = loadout_script.new(21)
+	full_catalog_fixture.set_unlocked_content(combat_catalog.available_ids("weapon"), combat_catalog.available_ids("relic"))
+	if full_catalog_fixture._weapons.size() != 10 or full_catalog_fixture._relics.size() != 11 or \
+		full_catalog_fixture.starting_weapon_options().size() != 2:
+		_fail("Unlocking every progression node should make all ten weapons and eleven relics available")
+		return
 	for relic_id in loadout._relics:
 		var icon_path: String = loadout.ICONS.get(relic_id, "")
 		if icon_path.is_empty() or not ResourceLoader.exists(icon_path):

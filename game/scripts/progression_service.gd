@@ -30,8 +30,31 @@ const PROTOTYPE_SKILL_NODES := {
 	"focused_training": {"category": "core_stats", "depth": 6, "damage_pct": 0.03, "prerequisites": ["vitality_starter"], "status": "PROPOSED"},
 	"fleet_footed": {"category": "core_stats", "depth": 9, "move_speed_pct": 0.02, "prerequisites": ["focused_training"], "status": "PROPOSED"},
 	"steady_aim": {"category": "core_stats", "depth": 12, "critical_chance_pct": 1.0, "prerequisites": ["fleet_footed"], "status": "PROPOSED"},
-	"unlock_crimson_daggers": {"category": "weapon_unlocks", "depth": 3, "unlocks_weapon": "crimson_daggers", "prerequisites": ["vitality_starter"], "status": "PROPOSED"},
-	"unlock_blood_chalice": {"category": "relic_unlocks", "depth": 6, "unlocks_relic": "blood_chalice", "prerequisites": ["unlock_crimson_daggers"], "status": "PROPOSED"},
+	"unlock_crimson_daggers": {"category": "weapon_unlocks", "depth": 3, "unlocks_weapon": "crimson_daggers", "unlock_name": "Crimson Daggers", "prerequisites": ["vitality_starter"], "status": "PROPOSED"},
+	"unlock_blood_chalice": {"category": "relic_unlocks", "depth": 6, "unlocks_relic": "blood_chalice", "unlock_name": "Blood Chalice", "prerequisites": ["unlock_crimson_daggers"], "status": "PROPOSED"},
+}
+const EQUIPMENT_UNLOCKS := {
+	"weapon_unlocks": [
+		{"id": "crimson_daggers", "name": "Crimson Daggers"},
+		{"id": "void_orb", "name": "Void Orb"},
+		{"id": "frost_nova", "name": "Frost Nova"},
+		{"id": "minigun", "name": "Minigun"},
+		{"id": "meteor_staff", "name": "Meteor Staff"},
+		{"id": "sawblades", "name": "Sawblades"},
+		{"id": "toxic_cloud", "name": "Toxic Cloud"},
+		{"id": "prism_laser", "name": "Prism Laser"},
+	],
+	"relic_unlocks": [
+		{"id": "blood_chalice", "name": "Blood Chalice"},
+		{"id": "singularity", "name": "Singularity"},
+		{"id": "frozen_crown", "name": "Frozen Crown"},
+		{"id": "overdrive_engine", "name": "Overdrive Engine"},
+		{"id": "celestial_eye", "name": "Celestial Eye"},
+		{"id": "magnetic_coil", "name": "Magnetic Coil"},
+		{"id": "plague_mask", "name": "Plague Mask"},
+		{"id": "prism_crystal", "name": "Prism Crystal"},
+		{"id": "magnet_heart", "name": "Magnet Heart"},
+	],
 }
 const RUN_ID_PATTERN := "^[A-Za-z0-9_-]{1,128}$"
 const EQUIPMENT_GENERATOR_SCRIPT := preload("res://scripts/equipment_generator.gd")
@@ -42,12 +65,29 @@ var _slot_id: String
 var _equipment_generator: RefCounted
 var _achievement_definitions: Dictionary
 var _rng := RandomNumberGenerator.new()
+var _skill_nodes: Dictionary = {}
 
 func _init(save_service: RefCounted, slot_id: String = "0") -> void:
 	_save_service = save_service
 	_slot_id = slot_id
 	_equipment_generator = EQUIPMENT_GENERATOR_SCRIPT.new()
 	_achievement_definitions = _load_achievement_catalog()
+	_skill_nodes = PROTOTYPE_SKILL_NODES.duplicate(true)
+	for category in EQUIPMENT_UNLOCKS:
+		var previous_node := "unlock_crimson_daggers" if category == "weapon_unlocks" else "unlock_blood_chalice"
+		var entries: Array = EQUIPMENT_UNLOCKS[category]
+		for index in range(1, entries.size()):
+			var entry: Dictionary = entries[index]
+			var node_id := "unlock_%s" % str(entry["id"])
+			_skill_nodes[node_id] = {
+				"category": category,
+				"depth": 3 * (index + 1),
+				"unlocks_weapon" if category == "weapon_unlocks" else "unlocks_relic": entry["id"],
+				"unlock_name": entry["name"],
+				"prerequisites": [previous_node],
+				"status": "PROPOSED",
+			}
+			previous_node = node_id
 	_rng.randomize()
 
 func award_survival_run(
@@ -299,7 +339,7 @@ func sell_equipment(instance_id: String) -> Dictionary:
 	return {"ok": false, "error": "equipment_not_found"}
 
 func unlock_skill_node(node_id: String) -> Dictionary:
-	if not PROTOTYPE_SKILL_NODES.has(node_id):
+	if not _skill_nodes.has(node_id):
 		return {"ok": false, "error": "unknown_skill_node"}
 	var result := load_profile()
 	if not result.get("ok", false):
@@ -307,7 +347,7 @@ func unlock_skill_node(node_id: String) -> Dictionary:
 	var profile: Dictionary = result["profile"]
 	if node_id in profile["unlocked_skill_nodes"]:
 		return {"ok": false, "error": "skill_node_already_unlocked"}
-	for prerequisite in PROTOTYPE_SKILL_NODES[node_id]["prerequisites"]:
+	for prerequisite in _skill_nodes[node_id]["prerequisites"]:
 		if prerequisite not in profile["unlocked_skill_nodes"]:
 			return {"ok": false, "error": "skill_prerequisite_locked"}
 	var cost := skill_node_cost(node_id)
@@ -320,9 +360,9 @@ func unlock_skill_node(node_id: String) -> Dictionary:
 	return {"ok": true, "profile": profile.duplicate(true)}
 
 func skill_node_cost(node_id: String) -> int:
-	if not PROTOTYPE_SKILL_NODES.has(node_id):
+	if not _skill_nodes.has(node_id):
 		return 0
-	var node: Dictionary = PROTOTYPE_SKILL_NODES[node_id]
+	var node: Dictionary = _skill_nodes[node_id]
 	var unlock_surcharge := 80 if node["category"] in ["weapon_unlocks", "relic_unlocks"] else 0
 	return 20 + 10 * int(node["depth"]) + unlock_surcharge
 
@@ -332,7 +372,7 @@ func respec_skill_tree() -> Dictionary:
 		return {"ok": false, "error": str(result.get("error", "load_failed"))}
 	var profile: Dictionary = result["profile"]
 	for node_id in profile["unlocked_skill_nodes"]:
-		if PROTOTYPE_SKILL_NODES.has(node_id):
+		if _skill_nodes.has(node_id):
 			profile["resources"]["essence"] += skill_node_cost(node_id)
 	profile["unlocked_skill_nodes"] = []
 	if not _save_service.save_slot(_slot_id, profile):
@@ -345,8 +385,8 @@ func skill_bonus(stat_id: String) -> float:
 		return 0.0
 	var bonus := 0.0
 	for node_id in result["profile"]["unlocked_skill_nodes"]:
-		if PROTOTYPE_SKILL_NODES.has(node_id):
-			bonus += float(PROTOTYPE_SKILL_NODES[node_id].get(stat_id, 0.0))
+		if _skill_nodes.has(node_id):
+			bonus += float(_skill_nodes[node_id].get(stat_id, 0.0))
 	return bonus
 
 func unlocked_weapon_ids() -> Array[String]:
@@ -357,7 +397,7 @@ func unlocked_weapon_ids() -> Array[String]:
 	if not profile_result.get("ok", false):
 		return []
 	for node_id in profile_result["profile"]["unlocked_skill_nodes"]:
-		var weapon_id := str(PROTOTYPE_SKILL_NODES.get(str(node_id), {}).get("unlocks_weapon", ""))
+		var weapon_id := str(_skill_nodes.get(str(node_id), {}).get("unlocks_weapon", ""))
 		if not weapon_id.is_empty() and weapon_id not in result:
 			result.append(weapon_id)
 	return result
@@ -370,10 +410,20 @@ func unlocked_relic_ids() -> Array[String]:
 	if not profile_result.get("ok", false):
 		return []
 	for node_id in profile_result["profile"]["unlocked_skill_nodes"]:
-		var relic_id := str(PROTOTYPE_SKILL_NODES.get(str(node_id), {}).get("unlocks_relic", ""))
+		var relic_id := str(_skill_nodes.get(str(node_id), {}).get("unlocks_relic", ""))
 		if not relic_id.is_empty() and relic_id not in result:
 			result.append(relic_id)
 	return result
+
+func skill_node_ids(category: String = "") -> Array[String]:
+	var result: Array[String] = []
+	for node_id in _skill_nodes:
+		if category.is_empty() or str(_skill_nodes[node_id].get("category", "")) == category:
+			result.append(str(node_id))
+	return result
+
+func skill_node_definition(node_id: String) -> Dictionary:
+	return _skill_nodes.get(node_id, {}).duplicate(true)
 
 func equipment_bonus(stat_id: String) -> float:
 	return equipment_bonuses().get(stat_id, 0.0)
@@ -509,7 +559,7 @@ func _valid_profile(profile: Dictionary) -> bool:
 		return false
 	var seen_skill_nodes: Dictionary = {}
 	for node_id in profile["unlocked_skill_nodes"]:
-		if typeof(node_id) != TYPE_STRING or not PROTOTYPE_SKILL_NODES.has(node_id) or seen_skill_nodes.has(node_id):
+		if typeof(node_id) != TYPE_STRING or not _skill_nodes.has(node_id) or seen_skill_nodes.has(node_id):
 			return false
 		seen_skill_nodes[node_id] = true
 	var equipped_slots: Dictionary = {}

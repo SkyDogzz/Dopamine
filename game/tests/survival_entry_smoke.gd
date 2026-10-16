@@ -30,15 +30,23 @@ func _run() -> void:
 		_fail("The 32x32 Art Bible player sprite should render at native logical size")
 		return
 	var choice_buttons: VBoxContainer = current_scene.get_node("HUD/ChestOverlay/ChestChoice/Content/Options")
-	var starting_options: Array[Dictionary] = current_scene.loadout.starting_weapon_options()
+	var expected_starting_icons := [
+		"res://assets/sprites/catalog/weapon_lightning_conductor.png",
+		"res://assets/sprites/catalog/weapon_inferno_sprayer.png",
+	]
+	var displayed_icons: Array[String] = []
 	for index in range(choice_buttons.get_child_count()):
 		var button := choice_buttons.get_child(index) as Button
 		var offer_icon := button.get_node_or_null("ContentMargin/OfferRow/OfferIcon") as TextureRect
 		if offer_icon == null or offer_icon.texture == null or \
-			offer_icon.texture.resource_path != str(starting_options[index].get("icon", "")) or \
 			offer_icon.texture_filter != CanvasItem.TEXTURE_FILTER_NEAREST or offer_icon.custom_minimum_size != Vector2(32, 32):
 			_fail("Starting weapon choices should display their weapon sprites")
 			return
+		displayed_icons.append(offer_icon.texture.resource_path)
+	if displayed_icons.size() != 2 or displayed_icons[0] == displayed_icons[1] or \
+		displayed_icons.any(func(icon: String) -> bool: return icon not in expected_starting_icons):
+		_fail("Sandbox should show its two starter choices, independent of normal progression")
+		return
 	if current_scene.progression_service != null:
 		_fail("The Sandbox Survival route must not receive normal progression save capability")
 		return
@@ -47,6 +55,9 @@ func _run() -> void:
 		return
 	if current_scene.mode_id != "survival":
 		_fail("Sandbox Survival should keep the normal Survival mode by default")
+		return
+	if current_scene.loadout._weapons.size() != 10 or current_scene.loadout._relics.size() != 11:
+		_fail("Sandbox Survival should retain the full playable weapon and relic catalog")
 		return
 	current_scene.queue_free()
 	await process_frame

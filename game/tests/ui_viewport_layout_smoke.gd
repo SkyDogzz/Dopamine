@@ -64,6 +64,8 @@ func _visible_controls(root_control: Node) -> Array[Control]:
 	var found: Array[Control] = []
 	if root_control is Control and root_control.is_visible_in_tree():
 		found.append(root_control)
+	if root_control is ScrollContainer:
+		return found
 	for child in root_control.get_children():
 		found.append_array(_visible_controls(child))
 	return found
