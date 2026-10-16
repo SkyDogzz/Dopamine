@@ -86,7 +86,7 @@ L’UI actuelle se partage entre le Theme `game/themes/dopamine_ui.tres`, des sc
 | Résultat — `run_result_panel.tscn` | Carte victoire/défaite, résumé et récompenses | Refaire hiérarchie du résultat, récompenses/rareté et action de retour/reprise, sans créer de système de succès. |
 | Sandbox développeur — `main.tscn` + `main.gd` | Poste de test dense : simulation, métriques, spawn, tuning, inspecteur, événements | Refaire panneaux et contrôles pour lisibilité; conserver spawn, pause/step/vitesse, sélection, tuning et métriques. Aucune référence à SaveService/progression. |
 
-Composants globaux : fond, cartes opaques à bordure, boutons rectangulaires, champs/toggles/sliders, barres HP/XP/boss, badges d’état, focus visible et transitions pixel rapides. Le theme commun est à refaire avec la palette exacte. Le glow doit rester rendu dynamiquement dans les VFX/états UI, jamais précuit dans les sprites.
+Composants globaux : fond, cartes opaques à bordure, boutons rectangulaires, champs/toggles/sliders, barres HP/XP/boss et de défilement, badges d’état, focus visible et transitions pixel rapides. Les scrollbars du Theme partagé reprennent la piste bleu nuit, la poignée bleu ardoise bordée cyan, le survol cyan, l’appui et le focus jaunes; ces états précis restent **[PROPOSÉS]**. Le glow doit rester rendu dynamiquement dans les VFX/états UI, jamais précuit dans les sprites.
 
 ## Cible de production ordonnée
 

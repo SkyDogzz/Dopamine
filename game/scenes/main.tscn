@@ -346,7 +346,7 @@ layout_mode = 2
 max_value = 1.0
 step = 0.05
 value = 0.5
-prefix = "WEIGHT "
+prefix = "WGT "
 tooltip_text = "Strength of local separation, from 0 to 1."
 
 [node name="CellSizeSpin" type="SpinBox" parent="Shell/Content/SidePanel/Sections/TuningPanel/TuningForm/TuningGrid"]

@@ -69,6 +69,10 @@ func _run() -> void:
 		if sandbox.get_node(node_path).tooltip_text.is_empty():
 			_fail("%s should explain itself on hover" % node_path)
 			return
+	var separation_weight: SpinBox = sandbox.get_node("Shell/Content/SidePanel/Sections/TuningPanel/TuningForm/TuningGrid/SeparationWeightSpin")
+	if separation_weight.prefix != "WGT " or not separation_weight.tooltip_text.contains("separation"):
+		_fail("Sandbox tuning prefixes should fit their compact fields and retain the full tooltip")
+		return
 
 	var count_spin: SpinBox = sandbox.get_node("Shell/Content/SidePanel/Sections/SpawnPanel/SpawnForm/TypeRow/CountSpin")
 	count_spin.value = 2

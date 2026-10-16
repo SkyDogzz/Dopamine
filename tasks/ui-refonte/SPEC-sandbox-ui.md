@@ -16,6 +16,8 @@ Clarifier l’interface du Sandbox développeur sans changer le cœur de simulat
 
 La scène adopte le Theme partagé avec ses styles de focus, les métriques s’organisent en grille et les commandes de simulation exposent leur rôle au survol. Les entrées et données demeurent celles des systèmes existants.
 
+Les barres de défilement du Theme suivent la palette pixel néon; le réglage d’espacement emploie le préfixe visuel court `WGT` et conserve son tooltip détaillé. Ces ajustements ne changent aucun paramètre de simulation.
+
 ## Contraintes
 
 - Ne pas ajouter de référence à `SaveService`, `ProgressionService` ou à l’équipement permanent.

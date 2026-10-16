@@ -69,6 +69,19 @@ func _run() -> void:
 	if not shared_theme.has_stylebox("panel", "PanelContainer"):
 		_fail("Shared Theme is missing PanelContainer surface style")
 		return
+	for scrollbar_type in ["VScrollBar", "HScrollBar"]:
+		for style_name in ["scroll", "grabber", "grabber_highlight", "grabber_pressed"]:
+			if not shared_theme.has_stylebox(style_name, scrollbar_type):
+				_fail("Shared Theme is missing %s style: %s" % [scrollbar_type, style_name])
+				return
+	var scrollbar_grabber := shared_theme.get_stylebox("grabber", "VScrollBar") as StyleBoxFlat
+	if scrollbar_grabber.bg_color.to_html(false) != "293354":
+		_fail("Scrollbar grabbers should use the shared dark neon palette")
+		return
+	var scrollbar_focus := shared_theme.get_stylebox("scroll_focus", "VScrollBar") as StyleBoxFlat
+	if scrollbar_focus.border_color.to_html(false) != "ffd447":
+		_fail("Scrollbars should keep a visible gold keyboard/gamepad focus state")
+		return
 
 	for node_name in [
 		"Content/PreviewCenter/SamplePanel/SampleContent/Actions/PrimaryButton",
