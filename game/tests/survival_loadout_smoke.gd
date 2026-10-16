@@ -96,6 +96,12 @@ func _initialize() -> void:
 		not loadout._weapon_level_description("crimson_daggers", 5).contains("+25% damage"):
 		_fail("Crimson level descriptions should match the proposed level 2–5 progression")
 		return
+	if loadout._weapon_level_description("lightning_conductor", 2) != "+20% damage" or \
+		loadout._weapon_level_description("lightning_conductor", 3) != "+1 chain bounce" or \
+		loadout._weapon_level_description("lightning_conductor", 4) != "-15% cooldown" or \
+		not loadout._weapon_level_description("lightning_conductor", 5).contains("+25% damage"):
+		_fail("Lightning level descriptions should match the proposed level 2–5 progression")
+		return
 	if not loadout.apply_offer("relic:storm_core") or loadout.relic_level("storm_core") != 1:
 		_fail("Selecting a new relic should add it at level 1")
 		return

@@ -25,6 +25,9 @@ func _run() -> void:
 	if not await _crimson_dagger_level_progression():
 		_fail("Crimson Daggers levels 2–5 should apply their proposed damage, count and orbit-speed upgrades")
 		return
+	if not await _lightning_level_progression():
+		_fail("Lightning Conductor levels 2–5 should apply their proposed damage, chain and cooldown upgrades")
+		return
 	if not await _toxic_cloud_prioritizes_durable_targets():
 		_fail("Toxic Cloud should prioritize the highest-health living enemy in range, breaking ties by distance")
 		return
@@ -439,6 +442,56 @@ func _crimson_dagger_level_progression() -> bool:
 	session.queue_free()
 	return true
 
+func _lightning_level_progression() -> bool:
+	var session: Node2D = load("res://scenes/survival_session.tscn").instantiate()
+	session.spawn_initial_enemy = false
+	session.wave_spawning_enabled = false
+	session.skip_starting_weapon_choice = true
+	session.weapon_enabled = false
+	session.lightning_projectile_speed = 0.0
+	root.add_child(session)
+	await process_frame
+	session.simulation.set_speed(1.0)
+	if not await _wait_for_simulation_speed(session, 1.0):
+		session.queue_free()
+		return false
+	session.loadout._weapon_levels.erase("lightning_conductor")
+	var base_damage := 0.0
+	for level in range(1, session.loadout.MAX_LEVEL + 1):
+		if not session.loadout.apply_offer("weapon:lightning_conductor"):
+			session.queue_free()
+			return false
+		var origin: Vector2 = session.player.global_position
+		session._entities = [{"id": {"index": 102, "generation": 1}, "components": {
+			"Health": {"current": 100.0}, "Transform2D": {"x": origin.x + 40.0, "y": origin.y},
+		}}]
+		session._lightning_chain_states.clear()
+		session._next_weapon_time = 0.0
+		session.weapon_enabled = true
+		session._fire_lightning_conductor(float(level), false)
+		session.weapon_enabled = false
+		var projectile: Dictionary = await _wait_for_projectile_prefix(session, "lightning_primary:")
+		if projectile.is_empty():
+			session.queue_free()
+			return false
+		if level == 1:
+			base_damage = float(projectile["components"]["Projectile"]["damage"])
+		var expected_damage: float = base_damage * (1.2 if level >= 2 else 1.0) * (1.25 if level >= 5 else 1.0)
+		var expected_chain_count: int = session.lightning_chain_count + (1 if level >= 3 else 0)
+		var chain_ids: Array = session._lightning_chain_states.keys()
+		var expected_cooldown: float = session.lightning_cooldown * (0.85 if level >= 4 else 1.0)
+		if not is_equal_approx(float(projectile["components"]["Projectile"]["damage"]), expected_damage) or \
+			chain_ids.size() != 1 or int(session._lightning_chain_states[chain_ids[0]]["remaining"]) != expected_chain_count - 1 or \
+			not is_equal_approx(float(session._next_weapon_time) - float(level), expected_cooldown):
+			session.queue_free()
+			return false
+		session.simulation.kill_all()
+		if not await _wait_for_no_entities(session):
+			session.queue_free()
+			return false
+	session.queue_free()
+	return true
+
 func _wait_for_projectile_count(session: Node2D, expected_count: int, projectile_type: String = "inferno_sprayer") -> Array[Dictionary]:
 	return await _wait_for_projectile_count_of_type(session, expected_count, projectile_type)
 
@@ -453,6 +506,15 @@ func _wait_for_projectile_count_of_type(session: Node2D, expected_count: int, pr
 		if projectiles.size() >= expected_count:
 			return projectiles
 	return []
+
+func _wait_for_projectile_prefix(session: Node2D, prefix: String) -> Dictionary:
+	var deadline := Time.get_ticks_msec() + 1000
+	while Time.get_ticks_msec() < deadline:
+		await process_frame
+		for entity in session.simulation.snapshot()["entities"]:
+			if str(entity["components"].get("EnemyType", "")).begins_with(prefix):
+				return entity
+	return {}
 
 func _projectile_position(entity: Dictionary) -> Vector2:
 	var transform: Dictionary = entity["components"]["Transform2D"]
@@ -1080,14 +1142,14 @@ func _infinite_circuit_branches() -> bool:
 		session.queue_free()
 		return false
 	var baseline := int(session.simulation.snapshot()["metrics"]["collision_count"])
-	# At level 4, one primary projectile can arc through at most five nearby targets.
+	# The proposed level 3 adds one bounce; level 4 keeps the three-target chain.
 	session.weapon_enabled = true
 	session._next_weapon_time = session.player_active_time
-	if not await _wait_for_projectiles_to_clear(session, baseline + 5):
+	if not await _wait_for_projectiles_to_clear(session, baseline + 3):
 		session.queue_free()
 		return false
 	var normal_hits := _target_count_below_health(session, 100.0)
-	if normal_hits != 5:
+	if normal_hits != 3:
 		session.queue_free()
 		return false
 	# Evolve the weapon and keep the same two-root target layout.
@@ -1109,7 +1171,7 @@ func _infinite_circuit_branches() -> bool:
 	baseline = int(session.simulation.snapshot()["metrics"]["collision_count"])
 	session.weapon_enabled = true
 	session._next_weapon_time = session.player_active_time
-	var branched := await _wait_for_projectiles_to_clear(session, baseline + 4)
+	var branched := await _wait_for_projectiles_to_clear(session, baseline + 3)
 	var final_state: Dictionary = session.simulation.snapshot()
 	var branch_hits := int(final_state["metrics"]["collision_count"]) - baseline
 	session.queue_free()

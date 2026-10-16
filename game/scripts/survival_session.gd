@@ -1608,15 +1608,13 @@ func _fire_lightning_conductor(active_time: float, paused: bool) -> void:
 	if not weapon_enabled or loadout.weapon_level("lightning_conductor") == 0 or paused or _chest_open or run_over or lightning_cooldown <= 0.0 or active_time < _next_weapon_time:
 		return
 	var level: int = loadout.weapon_level("lightning_conductor")
-	var chain_count := lightning_chain_count
-	if level >= 2:
-		chain_count = 3
-	if level >= 4:
-		chain_count = 5
-	var damage_multiplier := (1.25 if level >= 3 else 1.0) * _weapon_combo_damage_multiplier("lightning_conductor") * _persistent_damage_multiplier()
+	var chain_count := lightning_chain_count + (1 if level >= 3 else 0)
+	var damage_multiplier := (1.2 if level >= 2 else 1.0) * (1.25 if level >= 5 else 1.0)
+	damage_multiplier *= _weapon_combo_damage_multiplier("lightning_conductor") * _persistent_damage_multiplier()
 	damage_multiplier *= _roll_equipment_critical_multiplier()
+	var cooldown := lightning_cooldown * (0.85 if level >= 4 else 1.0)
 	if loadout.is_evolved("lightning_conductor"):
-		_fire_infinite_circuit(active_time, chain_count, damage_multiplier)
+		_fire_infinite_circuit(active_time, chain_count, damage_multiplier, cooldown)
 		_try_evolution_shockwave(lightning_damage * damage_multiplier)
 		return
 	var targets := _lightning_initial_targets(1)
@@ -1645,7 +1643,7 @@ func _fire_lightning_conductor(active_time: float, paused: bool) -> void:
 		return
 	_try_unique_lightning_burst(lightning_damage * damage_multiplier)
 	_try_evolution_shockwave(lightning_damage * damage_multiplier)
-	_next_weapon_time = active_time + _effective_weapon_cooldown(lightning_cooldown)
+	_next_weapon_time = active_time + _effective_weapon_cooldown(cooldown)
 
 func _advance_lightning_chain(event: Dictionary, entities: Array, active_time: float) -> void:
 	var source_parts := str(event.get("source_type", "")).split(":", false, 1)
@@ -1705,7 +1703,7 @@ func _add_lightning_arc(from: Vector2, to: Vector2) -> void:
 	points.append(to)
 	_lightning_arcs.append({"points": points, "remaining": LIGHTNING_ARC_LIFETIME})
 
-func _fire_infinite_circuit(active_time: float, target_budget: int, damage_multiplier: float) -> void:
+func _fire_infinite_circuit(active_time: float, target_budget: int, damage_multiplier: float, cooldown: float) -> void:
 	var roots := _lightning_initial_targets(2)
 	var used_ids: Array[Vector2i] = []
 	var fired := false
@@ -1753,7 +1751,7 @@ func _fire_infinite_circuit(active_time: float, target_budget: int, damage_multi
 			frontier = next_frontier
 	if fired:
 		_try_unique_lightning_burst(lightning_damage * damage_multiplier)
-		_next_weapon_time = active_time + _effective_weapon_cooldown(lightning_cooldown)
+		_next_weapon_time = active_time + _effective_weapon_cooldown(cooldown)
 
 func _nearest_lightning_targets(origin: Vector2, excluded_ids: Array[Vector2i], limit: int,
 		max_range: float = -1.0, entities: Variant = null) -> Array[Dictionary]:

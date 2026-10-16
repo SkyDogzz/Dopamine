@@ -195,7 +195,7 @@ func _next_level_description(family: String, item_id: String, level: int) -> Str
 func _weapon_level_description(item_id: String, level: int) -> String:
 	match item_id:
 		"lightning_conductor":
-			return "+1 chain bounce" if level in [2, 4] else "+25% damage" if level == 3 else "Max level; collect combo when Storm Core is also level 5" if level == 5 else "Improves lightning damage"
+			return "+20% damage" if level == 2 else "+1 chain bounce" if level == 3 else "-15% cooldown" if level == 4 else "Max level; +25% damage; collect Infinite Circuit when Storm Core is level 5" if level == 5 else "Improves lightning damage"
 		"inferno_sprayer":
 			return "+20% direct damage" if level == 2 else "+15% range" if level == 3 else "+20% jet width" if level == 4 else "Max level; +25% Burn, collect combo when Infernal Heart is also level 5" if level == 5 else "Improves the fire jet"
 		"crimson_daggers":
