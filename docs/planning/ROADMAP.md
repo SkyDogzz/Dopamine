@@ -311,9 +311,9 @@ Travail requis :
   - [x] Au niveau 5, déclencher une impulsion **[PROPOSÉE]** de 20 s à 300 % du rayon XP, visualisée par un anneau; la durée suit l'horloge de simulation et gèle en pause, sans déplacer/téléporter les objets.
   - [ ] Étendre l'attraction aux soins, ressources, monnaies et bonus temporaires lorsqu'ils existent.
 - [ ] **P5.1.14 — Slots et effets de capacité**
-  - [ ] Vérifier cinq slots de reliques en run normale.
-  - [ ] Tester une extension Legendary/Mythic seulement avec effet unique actif.
-  - [ ] Vérifier absence de cumul automatique d’un même effet unique.
+  - [x] Vérifier cinq slots de reliques en run normale ; `survival_loadout_smoke.gd` couvre cinq reliques distinctes, refuse une sixième et ne propose plus de nouvel item quand les slots sont pleins.
+  - [ ] Tester une extension Legendary/Mythic seulement avec effet unique actif. Le GDD valide la capacité à six, mais aucun effet unique actuellement défini n’accorde cette extension ; l’effet et son application à l’armement de run restent **[OUVERTS]** et ne sont pas inventés ici.
+  - [x] Vérifier l’absence de cumul automatique d’un même effet unique actif ; `progression_service_smoke.gd` équipe deux items Legendary avec `overflow_shield` et vérifie que l’effet n’est exposé qu’une fois.
 - [ ] **P5.1.15 — Statut du balancing**
   - [ ] Charger les valeurs chiffrées proposées depuis une configuration modifiable.
   - [ ] Garder les valeurs marquées **[PROPOSÉES]** jusqu’à leur décision formelle.

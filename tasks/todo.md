@@ -35,7 +35,7 @@ Roadmap détaillée et audit GDD/code : [`docs/planning/ROADMAP.md`](../docs/pla
   - [ ] Étendre Magnet Heart aux autres collectibles et à l'impulsion **[PROPOSÉE]** de niveau 5.
   - [ ] Vérifier les niveaux 1–5, feedback visuel et règles d’évolution sur une paire à la fois.
   - [ ] Corriger Bloodstorm : dagues orbitantes, puis smoke collisions/saignement/lifesteal.
-  - [ ] Vérifier les cinq slots normaux et les exceptions de capacité par effet unique actif.
+  - [x] Vérifier les cinq slots normaux et le non-cumul d’un même effet unique actif ; l’extension à six reste à implémenter avec un effet défini, car aucun des IDs uniques actuels ne porte cette capacité (**[OUVERT]**).
   - **Vérifier :** smoke Sandbox pour chaque paire, niveaux max, évolution avant/après acquisition de relique.
 
 - [ ] **P5.2 — Statuts et synergies**

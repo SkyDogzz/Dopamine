@@ -146,6 +146,20 @@ func _initialize() -> void:
 	if loadout.offers("relic").size() != 3:
 		_fail("A max-level weapon without its matching relic should not block relic choices")
 		return
+	var full_relic_fixture = loadout_script.new(31)
+	var relic_ids: Array = full_relic_fixture._relics.keys()
+	for index in range(full_relic_fixture.MAX_SLOTS):
+		if not full_relic_fixture.apply_offer("relic:%s" % relic_ids[index]):
+			_fail("Each of the five normal relic slots should accept a distinct relic")
+			return
+	if full_relic_fixture.owned_relics().size() != 5 or \
+		full_relic_fixture.apply_offer("relic:%s" % relic_ids[5]):
+		_fail("A normal run should reject a sixth relic without an active capacity effect")
+		return
+	for offer in full_relic_fixture.offers("relic"):
+		if not full_relic_fixture.owned_relics().has(str(offer["id"]).trim_prefix("relic:")):
+			_fail("A full relic loadout should offer upgrades only, not another new relic")
+			return
 	print("Survival loadout smoke passed")
 	quit()
 

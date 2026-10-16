@@ -127,6 +127,27 @@ func _run() -> void:
 		_fail("A permanent item should be unequippable")
 		return
 	profile = service.load_profile()["profile"]
+	inventory = profile["equipment_inventory"]
+	inventory[0]["slot"] = "helmet"
+	inventory[1]["slot"] = "armor"
+	for item in inventory:
+		item["rarity"] = "legendary"
+		item["stat_lines"] = []
+		for stat_id in unique_stat_ids:
+			item["stat_lines"].append({
+				"stat_id": stat_id, "roll_percentile": 0.5,
+				"enhancement_level": 0, "fail_streak": 0,
+			})
+		item["equipped"] = true
+		item["unique_effect_id"] = "overflow_shield"
+	profile["equipment_inventory"] = inventory
+	if not save_service.save_slot("0", profile):
+		_fail("The duplicate unique effect fixture should save")
+		return
+	if service.equipped_unique_effects() != ["overflow_shield"]:
+		_fail("The same unique effect on multiple equipped items should activate once, not stack: %s" % [service.equipped_unique_effects()])
+		return
+	profile = service.load_profile()["profile"]
 	profile["resources"]["essence"] = 200
 	if not save_service.save_slot("0", profile):
 		_fail("The skill tree fixture should save")
