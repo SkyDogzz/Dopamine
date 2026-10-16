@@ -26,6 +26,10 @@
 
 Prérequis : Godot 4.7.2, CMake 3.21 ou supérieur, Git et un compilateur C++23. CMake récupère le commit verrouillé de `godot-cpp` lors de la configuration.
 
+Le commit `godot-cpp` est épinglé par SHA. La récupération CMake n’utilise pas de clone superficiel, car [`GIT_SHALLOW` ne prend en charge que des noms de branches ou de tags](https://cmake.org/cmake/help/v3.21/module/ExternalProject.html#git-tag) avec `GIT_TAG`.
+
+Si une récupération FetchContent échoue, supprimez le dossier `build` incomplet avant de reconfigurer pour éliminer son clone partiel : `rm -rf build`, puis reprenez les commandes ci-dessous.
+
 ```bash
 cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug
 cmake --build build --parallel 4

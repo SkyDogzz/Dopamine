@@ -11,8 +11,8 @@ set(GODOTCPP_TARGET "template_debug" CACHE STRING "godot-cpp target" FORCE)
 FetchContent_Declare(
     godot-cpp
     GIT_REPOSITORY https://github.com/godotengine/godot-cpp.git
+    # CMake only supports GIT_SHALLOW with branch and tag names, not commit hashes.
     GIT_TAG b8530af7546a3fcae80cef2477526569fd42ffc2
-    GIT_SHALLOW TRUE
 )
 FetchContent_MakeAvailable(godot-cpp)
 

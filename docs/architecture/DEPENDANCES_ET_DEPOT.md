@@ -19,6 +19,8 @@
 
 Ne pas inventer une compatibilité GDExtension sans compilation/test réel. Verrouiller les commits et licences des dépendances.
 
+La dépendance `godot-cpp` est récupérée par CMake via le commit SHA ci-dessus. Ne pas activer `GIT_SHALLOW` avec ce hash : CMake ne prend en charge cette option qu’avec des branches ou tags nommés ([documentation CMake 3.21](https://cmake.org/cmake/help/v3.21/module/ExternalProject.html#git-tag)). Après un échec FetchContent, supprimer le dossier de build incomplet avant de reconfigurer afin d’écarter le clone partiel.
+
 ## Arborescence cible
 
 ```text
