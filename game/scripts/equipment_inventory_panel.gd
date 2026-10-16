@@ -30,6 +30,13 @@ const RARITY_ICONS := {
 	"legendary": "res://assets/icons/catalog/rarity_legendary.png",
 	"mythic": "res://assets/icons/catalog/rarity_mythic.png",
 }
+const RARITY_COLORS := {
+	"normal": Color("#A6AEC4"),
+	"magic": Color("#57DDF5"),
+	"mystic": Color("#C67BFF"),
+	"legendary": Color("#FFD447"),
+	"mythic": Color("#FF75E3"),
+}
 const POWDER_TIERS := ["basic", "refined", "pure", "prismatic"]
 const EQUIPMENT_GENERATOR_SCRIPT := preload("res://scripts/equipment_generator.gd")
 const UNIQUE_EFFECTS := [
@@ -82,6 +89,19 @@ func _create_item_row(equipment: Dictionary, resources: Dictionary) -> Control:
 	var row := PanelContainer.new()
 	row.name = "Equipment_%s" % str(equipment.get("instance_id", "item"))
 	row.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	var row_style := StyleBoxFlat.new()
+	row_style.bg_color = Color("#10172B")
+	row_style.border_color = Color("#39486B")
+	row_style.border_width_top = 1
+	row_style.border_width_right = 1
+	row_style.border_width_bottom = 1
+	row_style.border_width_left = 3
+	row_style.border_color = RARITY_COLORS.get(str(equipment.get("rarity", "normal")), Color("#A6AEC4"))
+	row_style.content_margin_left = 6.0
+	row_style.content_margin_top = 5.0
+	row_style.content_margin_right = 6.0
+	row_style.content_margin_bottom = 5.0
+	row.add_theme_stylebox_override("panel", row_style)
 	var layout := HBoxContainer.new()
 	layout.add_theme_constant_override("separation", 5)
 	row.add_child(layout)
