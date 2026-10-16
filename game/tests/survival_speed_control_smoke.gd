@@ -11,8 +11,7 @@ func _run() -> void:
 	session.wave_spawning_enabled = false
 	root.add_child(session)
 	await process_frame
-	session._unhandled_key_input(_escape_event())
-	await process_frame
+	await _send_escape()
 	var speed_select: OptionButton = session.get_node_or_null("HUD/PauseOverlay/Center/Panel/Content/SpeedSelect")
 	if speed_select == null:
 		_fail("Pause menu should expose simulation speed choices")
@@ -38,6 +37,14 @@ func _escape_event() -> InputEventKey:
 	event.keycode = KEY_ESCAPE
 	event.pressed = true
 	return event
+
+func _send_escape() -> void:
+	var event := _escape_event()
+	Input.parse_input_event(event)
+	await process_frame
+	event.pressed = false
+	Input.parse_input_event(event)
+	await process_frame
 
 func _fail(message: String) -> void:
 	Engine.time_scale = 1.0

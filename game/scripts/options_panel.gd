@@ -18,7 +18,7 @@ func _ready() -> void:
 	_sync_from_settings()
 	_fullscreen_toggle.grab_focus()
 
-func _unhandled_key_input(event: InputEvent) -> void:
+func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed("ui_cancel"):
 		close_requested.emit()
 		get_viewport().set_input_as_handled()

@@ -104,7 +104,7 @@ func _show_item_focus(row: PanelContainer) -> void:
 func _clear_item_focus(row: PanelContainer) -> void:
 	row.remove_theme_stylebox_override("panel")
 
-func _unhandled_key_input(event: InputEvent) -> void:
+func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed("ui_cancel"):
 		_on_close_pressed()
 		get_viewport().set_input_as_handled()

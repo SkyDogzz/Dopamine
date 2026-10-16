@@ -11,13 +11,19 @@ Avant la correction viewport, 21 smokes UI et d’intégration passaient avec un
 ## Avancée visuelle après la tranche initiale
 
 - Le Sandbox développeur reste isolé; ses contrôles latéraux sont testés à 640×360, 1280×720 et 1920×1080.
-- Le sol actif de Survival est désormais un pixel art 256×256 répétable, sa palette est limitée à six couleurs de l’Art Bible et son fichier Aseprite reste éditable. Le SVG et l’ancien motif chargé sont conservés comme références inactives.
+- Le sol actif de Survival est désormais une tuile pixel art 16×16 répétable, limitée à trois teintes sombres de la palette Art Bible et accompagnée de sa source Aseprite. Les anciennes textures de 256×256, le SVG et le motif chargé sont inactifs.
 - Le joueur utilise maintenant des feuilles idle et marche 4×4, exportées en frames 32×32 et reliées aux directions de mouvement. L’ordre des lignes et les cadences restent **[PROPOSÉS]** dans l’inventaire d’assets.
 - Les morts d’ennemis produisent une courte explosion de pixels dessinée en code; elle suit le temps de simulation et ne crée aucune entité de combat. Ses paramètres restent **[PROPOSÉS]**.
 - Les projectiles mobiles ont une traînée discrète bleu nuit/cyan, dessinée sous le sprite en Survival et dans le Sandbox. Son budget de 256 simultanés reste **[PROPOSÉ]**; les couleurs par élément restent **[OUVERTES]**.
 - L’accueil anime trois enseignes visibles du skyline avec un VFX code-drawn; l’Art Bible demande ce clignotement, tandis que ses périodes détaillées restent **[PROPOSÉES]**.
 - Les titres d’écran et d’interfaces utilisent maintenant la variante pixel `PixelHeading`; descriptions et textes d’aide gardent DejaVu Sans. Press Start 2P reste **[PROPOSÉE]** comme fonte de titre.
 - L’objectif de refonte de toutes les interfaces et de tous les assets visuels actifs reste **en cours**; cet état partiel ne vaut pas clôture.
+
+## Navigation manette — fermeture et pause — 2026-10-16
+
+- `OptionsPanel`, `RunInventoryPanel` et la session Survival traitent maintenant `ui_cancel` dans `_unhandled_input`, ce qui permet au bouton B de fermer Options/l’inventaire, ouvrir ou reprendre la pause; Échap garde le même parcours.
+- `launch_navigation_smoke.gd` vérifie le déplacement du focus par croix, Entrée sur l’action focalisée et B pour fermer Options. Les smokes Options, pause, inventaire et confirmation d’abandon envoient des événements Joypad B synthétiques; horloges et simulation restent gelées dans les panneaux.
+- Aucun contrôleur physique n’étant disponible, ces événements synthétiques valident le routage UI, pas les différences de pilotes ou le comportement matériel.
 
 ## État des modules
 

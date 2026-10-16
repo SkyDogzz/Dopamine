@@ -20,8 +20,7 @@ func _run() -> void:
 		_fail("The inventory fixture should equip an evolved weapon, a base weapon and relics")
 		return
 
-	session._unhandled_key_input(_escape_event())
-	await process_frame
+	await _send_escape()
 	var inventory_button: Button = session.get_node_or_null("HUD/PauseOverlay/Center/Panel/Content/InventoryButton")
 	if inventory_button == null:
 		_fail("Pause should provide access to the run inventory")
@@ -117,13 +116,10 @@ func _run() -> void:
 			_fail("Run inventory should fit viewport %s; card=%s viewport=%s" % [size, inventory_card.get_global_rect(), root.size])
 			return
 	root.size = original_size
-	var close_button: Button = inventory.get_node("Center/Panel/Content/CloseButton")
-	close_button.pressed.emit()
-	await process_frame
-	await process_frame
+	await _send_gamepad_cancel()
 	if session.get_node_or_null("HUD/RunInventoryPanel") != null or \
 		root.gui_get_focus_owner() != inventory_button or not bool(session.simulation.snapshot()["paused"]):
-		_fail("Closing inventory should return focus to Pause without resuming the run")
+		_fail("Gamepad cancel should close inventory, restore Pause focus and keep the run paused")
 		return
 	if session.loadout.weapon_level("lightning_conductor") != 5 or \
 		session.loadout.weapon_level("minigun") != 1 or session.loadout.relic_level("storm_core") != 1 or \
@@ -138,6 +134,25 @@ func _escape_event() -> InputEventKey:
 	event.keycode = KEY_ESCAPE
 	event.pressed = true
 	return event
+
+func _send_escape() -> void:
+	var event := _escape_event()
+	Input.parse_input_event(event)
+	await process_frame
+	event.pressed = false
+	Input.parse_input_event(event)
+	await process_frame
+
+func _send_gamepad_cancel() -> void:
+	var event := InputEventJoypadButton.new()
+	event.device = 0
+	event.button_index = JOY_BUTTON_B
+	event.pressed = true
+	Input.parse_input_event(event)
+	await process_frame
+	event.pressed = false
+	Input.parse_input_event(event)
+	await process_frame
 
 func _all_label_text(node: Node) -> String:
 	var result := ""

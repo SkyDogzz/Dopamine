@@ -21,8 +21,7 @@ func _run() -> void:
 	current_scene = session
 	await process_frame
 	var before: Dictionary = progression.load_profile()["profile"]
-	session._unhandled_key_input(_escape_event())
-	await process_frame
+	await _send_escape()
 	var abandon_button: Button = session.get_node_or_null("HUD/PauseOverlay/Center/Panel/Content/AbandonButton")
 	if abandon_button == null:
 		_fail("Pause should expose an abandon action")
@@ -55,11 +54,17 @@ func _run() -> void:
 	abandon_button.pressed.emit()
 	await process_frame
 	confirmation = session.get_node("HUD/PauseOverlay/ConfirmationOverlay")
-	session._unhandled_key_input(_escape_event())
-	await process_frame
+	await _send_escape()
 	if confirmation.visible or root.gui_get_focus_owner() != abandon_button or \
 		not bool(session.simulation.snapshot()["paused"]):
 		_fail("Escape should cancel abandonment and keep the run paused")
+		return
+	abandon_button.pressed.emit()
+	await process_frame
+	await _send_gamepad_cancel()
+	if confirmation.visible or root.gui_get_focus_owner() != abandon_button or \
+		not bool(session.simulation.snapshot()["paused"]):
+		_fail("Gamepad B should cancel abandonment and keep the run paused")
 		return
 	abandon_button.pressed.emit()
 	await process_frame
@@ -90,6 +95,25 @@ func _escape_event() -> InputEventKey:
 	event.keycode = KEY_ESCAPE
 	event.pressed = true
 	return event
+
+func _send_escape() -> void:
+	var event := _escape_event()
+	Input.parse_input_event(event)
+	await process_frame
+
+func _send_gamepad_cancel() -> void:
+	var event := InputEventJoypadButton.new()
+	event.device = 0
+	event.button_index = JOY_BUTTON_B
+	event.pressed = true
+	Input.parse_input_event(event)
+	await process_frame
+	event.pressed = false
+	Input.parse_input_event(event)
+	await process_frame
+	event.pressed = false
+	Input.parse_input_event(event)
+	await process_frame
 
 func _fail(message: String) -> void:
 	push_error(message)

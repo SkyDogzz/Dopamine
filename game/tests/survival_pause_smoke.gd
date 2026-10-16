@@ -21,8 +21,7 @@ func _run() -> void:
 		_fail("The pause smoke requires an active run with an enemy fixture")
 		return
 
-	session._unhandled_key_input(_escape_event())
-	await process_frame
+	await _send_input(_escape_event())
 	state = session.simulation.snapshot()
 	var pause_menu: Control = session.get_node_or_null("HUD/PauseOverlay")
 	if pause_menu == null or not pause_menu.visible or not bool(state["paused"]):
@@ -75,8 +74,7 @@ func _run() -> void:
 	options_button.pressed.emit()
 	await process_frame
 	options_panel = session.get_node("HUD/OptionsPanel")
-	options_panel._unhandled_key_input(_escape_event())
-	await process_frame
+	await _send_gamepad_button(JOY_BUTTON_B)
 	await process_frame
 	if session.get_node_or_null("HUD/OptionsPanel") != null or not pause_menu.visible or \
 		root.gui_get_focus_owner() != options_button or not bool(session.simulation.snapshot()["paused"]):
@@ -91,7 +89,7 @@ func _run() -> void:
 		_fail("Simulation, run clocks, wave clock and actor positions should stay frozen during pause")
 		return
 
-	session._unhandled_key_input(_escape_event())
+	await _send_gamepad_button(JOY_BUTTON_B)
 	var resumed_deadline := Time.get_ticks_msec() + 1000
 	while Time.get_ticks_msec() < resumed_deadline:
 		state = session.simulation.snapshot()
@@ -104,6 +102,16 @@ func _run() -> void:
 	if float(state["simulation_time"]) <= paused_simulation_time:
 		_fail("The simulation should advance again after resuming")
 		return
+	await _send_gamepad_button(JOY_BUTTON_B)
+	state = session.simulation.snapshot()
+	if not bool(state["paused"]) or not pause_menu.visible:
+		_fail("Gamepad B should pause the active run")
+		return
+	await _send_input(_escape_event())
+	state = session.simulation.snapshot()
+	if bool(state["paused"]) or pause_menu.visible:
+		_fail("Escape should resume the same run after a gamepad pause")
+		return
 
 	print("Survival pause smoke passed")
 	quit()
@@ -113,6 +121,24 @@ func _escape_event() -> InputEventKey:
 	event.keycode = KEY_ESCAPE
 	event.pressed = true
 	return event
+
+func _send_input(event: InputEventKey) -> void:
+	Input.parse_input_event(event)
+	await process_frame
+	event.pressed = false
+	Input.parse_input_event(event)
+	await process_frame
+
+func _send_gamepad_button(button_index: JoyButton) -> void:
+	var event := InputEventJoypadButton.new()
+	event.device = 0
+	event.button_index = button_index
+	event.pressed = true
+	Input.parse_input_event(event)
+	await process_frame
+	event.pressed = false
+	Input.parse_input_event(event)
+	await process_frame
 
 func _enemy_position(state: Dictionary) -> Vector2:
 	var transform: Dictionary = state["entities"][0]["components"]["Transform2D"]

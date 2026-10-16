@@ -51,6 +51,7 @@
 - [x] `pause_panel_visual_smoke.gd` vérifie l’accent cyan de reprise et l’accent rouge d’abandon/confirmation; `survival_pause_smoke.gd` passe sans changement du parcours.
 - [x] `survival_pause_smoke.gd` passe, y compris Options au-dessus de Pause et invariance des horloges/positions.
 - [x] `ui_viewport_layout_smoke.gd` passe aux viewports 640×360, 1280×720 et 1920×1080; captures de Pause et de confirmation revues à 640×360 logique.
+- [x] Entrées synthétiques : `launch_navigation_smoke.gd` parcourt le focus avec la croix, active Options avec Entrée et la ferme avec B; `survival_pause_smoke.gd` vérifie que B ouvre/reprend Pause et ferme Options sans faire avancer la run.
 
 ## HUD Survival — visibilité de la rangée d’armes — 2026-10-16
 
@@ -258,22 +259,23 @@ Le runner est fourni par `game/scripts/scenario_runner.gd` et consomme un fichie
 
 - [x] Godot 4.7.2 Linux : import headless du projet et smokes `settings_service_smoke.gd`, `ui_settings_smoke.gd` passés avec `XDG_DATA_HOME` temporaire.
 - [x] Service : valeurs par défaut, clamp `[0,100]`, valeur non finie, persistance/relecture, fichier invalide, retour sûr et bus Master fini à −80 dB pour 0 % vérifiés.
-- [x] Panneau : Theme, deux réglages, focus initial, synchro/affichage du volume, demande de fermeture par bouton et `ui_cancel`, présence des actions A/B et limites géométriques à 1280×800, 960×600, 1600×900 vérifiés.
+- [x] Panneau : Theme, deux réglages, focus initial, synchro/affichage du volume, demande de fermeture par bouton et entrée B synthétique, présence des actions A/B et limites géométriques à 1280×800, 960×600, 1600×900 vérifiés.
 - [x] `ui_settings_smoke.gd` vérifie l’ordre DISPLAY → plein écran → séparateur → volume et le style PixelHeading; exécuté sous Godot 4.7.2, passe.
 - [x] Slider et CheckButton du Theme utilisent les couleurs de la palette néon; la poignée de volume est un rond pixel 12×12 filtré nearest. `ui_settings_smoke.gd` vérifie aussi que le focus du slider reprend le cadre doré partagé. Smokes `ui_foundation_smoke.gd`, `ui_settings_smoke.gd` et `settings_service_smoke.gd` passent; la capture Options à 640×360 logique en fenêtre 1280×720 a été inspectée.
 - [x] Régression : `sandbox_smoke.gd`, `sandbox_ui_smoke.gd` et `survival_entry_smoke.gd` passés avec des profils `XDG_DATA_HOME` isolés. Le service ne dépend pas de `SaveService` et écrit seulement ses préférences dans `user://settings.cfg`.
 - [x] Prévisualisation fenêtrée sous Xvfb aux trois tailles sans erreur de script; rendu examiné à 1280×800.
-- [ ] Interaction physique souris/clavier/manette non parcourue de bout en bout; aucun contrôleur n’est présent et aucun outil de souris interactive n’est disponible dans cet environnement. Le smoke headless vérifie le focus initial, le contrat de fermeture et les mappings A/B, pas leur activation matérielle.
+- [ ] Interaction physique souris/clavier/manette non parcourue de bout en bout; aucun contrôleur n’est présent et aucun outil de souris interactive n’est disponible dans cet environnement. Les smokes ajoutent maintenant des événements synthétiques de croix et B, mais ne remplacent pas le contrôle sur matériel.
 - [ ] Plein écran sur écran réel et sortie audio sur haut-parleurs/casque non vérifiés; seules les API DisplayServer/AudioServer et leurs valeurs sous headless ont été exercées.
-- [x] Test d’intégration de l’écran Options depuis la pause couvert par `survival_pause_smoke.gd` : Retour et Échap ramènent à Pause, restaurent le focus et ne font avancer ni temps Simulation, ni temps actif, ni position joueur.
+- [x] Test d’intégration de l’écran Options depuis la pause couvert par `survival_pause_smoke.gd` : Retour, Échap et B ramènent à Pause, restaurent le focus et ne font avancer ni temps Simulation, ni temps actif, ni position joueur.
 - [ ] Build natif et CTest non exécutés : `cmake` et `ctest` sont absents de l’environnement.
 
 ## UI refonte — survival-pause (2026-10-16)
 
 - [x] Godot 4.7.2 Linux : import headless réussi; `survival_pause_smoke.gd` vérifie ouverture/reprise, focus, temps Simulation/actif/vague et positions joueur/ennemi figés, retour d’Options par bouton/Échap et bornes Pause aux viewports 960×600, 1280×800 et 1600×900.
 - [x] `survival_pause_inventory_smoke.gd` vérifie la projection en lecture seule de deux armes/deux reliques, noms, niveaux, descriptions, icônes et évolution active; l’ouverture place le focus sur le premier objet, les flèches déplacent le focus et le défilement, le contour doré est visible et les icônes 24×24 utilisent le filtrage nearest.
+- [x] Le même smoke ferme l’inventaire par B synthétique et vérifie le retour du focus à Pause en maintenant la run gelée.
 - [x] `survival_pause_inventory_smoke.gd` et `ui_viewport_layout_smoke.gd` passent; bounds de l’inventaire testés à 640×360, 1280×720 et 1920×1080.
-- [x] `survival_abandon_smoke.gd` vérifie focus sûr, annulation souris/Échap, bounds de la confirmation, retour à l’accueil, suppression de session et absence de changement aux ressources, objets ou runs récompensées du profil.
+- [x] `survival_abandon_smoke.gd` vérifie focus sûr, annulation souris/Échap/B, bounds de la confirmation, retour à l’accueil, suppression de session et absence de changement aux ressources, objets ou runs récompensées du profil.
 - [x] Régressions passées : `survival_starting_weapon_smoke`, `survival_chest_choice_smoke`, `survival_chest_smoke`, `survival_hud_smoke`, `run_result_panel_smoke`, `survival_run_result_smoke`, `survival_loadout_smoke`, `survival_inventory_smoke`, `survival_wave_director_smoke`, `survival_wave_duration_smoke`, `survival_entry_smoke`, `survival_hub_smoke`, `survival_hub_layout_smoke`, `launch_navigation_smoke`, `ui_settings_smoke`, `settings_service_smoke`, `sandbox_smoke` et `sandbox_ui_smoke`.
 - [ ] `combat_catalog_smoke.gd` garde une assertion historique « Dagues en orbite autour du joueur, non lancées » qui échoue avec le catalogue actuel, lequel décrit Crimson Daggers comme deux dagues tirées en éventail. Le smoke d’inventaire pause consomme les données courantes et passe; aucune donnée ou règle de combat n’a été modifiée ici.
 - [ ] Parcours matériel complet souris/clavier/manette non réalisé; le focus, les actions A/B et les contrats bouton/Échap sont testés sous headless, mais aucun périphérique ni entrée fenêtrée interactive n’était disponible.

@@ -114,12 +114,16 @@ func _run() -> void:
 	if close_requests[0] != 1:
 		_fail("Back button should request closure from its owner")
 		return
-	var cancel_event := InputEventAction.new()
-	cancel_event.action = "ui_cancel"
+	var cancel_event := InputEventJoypadButton.new()
+	cancel_event.device = 0
+	cancel_event.button_index = JOY_BUTTON_B
 	cancel_event.pressed = true
-	panel._unhandled_key_input(cancel_event)
+	Input.parse_input_event(cancel_event)
+	await process_frame
+	cancel_event.pressed = false
+	Input.parse_input_event(cancel_event)
 	if close_requests[0] != 2:
-		_fail("ui_cancel should request closure from its owner")
+		_fail("Gamepad B should request closure from its owner")
 		return
 	var reopened_panel := packed_scene.instantiate() as Control
 	root.add_child(reopened_panel)

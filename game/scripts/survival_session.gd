@@ -400,8 +400,8 @@ func _on_pause_speed_selected(index: int) -> void:
 func _physics_process(_delta: float) -> void:
 	_publish_player_target()
 
-func _unhandled_key_input(event: InputEvent) -> void:
-	if not event is InputEventKey or not event.pressed or event.echo or event.keycode != KEY_ESCAPE:
+func _unhandled_input(event: InputEvent) -> void:
+	if not event.is_action_pressed("ui_cancel"):
 		return
 	if simulation == null or run_over or _chest_open or _starting_weapon_choice_open:
 		return

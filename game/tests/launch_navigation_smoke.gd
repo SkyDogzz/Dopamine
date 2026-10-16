@@ -44,28 +44,51 @@ func _run() -> void:
 	if root.gui_get_focus_owner() != play_button:
 		_fail("Play should receive the initial menu focus")
 		return
+	var dpad_down := InputEventJoypadButton.new()
+	dpad_down.device = 0
+	dpad_down.button_index = JOY_BUTTON_DPAD_DOWN
+	dpad_down.pressed = true
+	Input.parse_input_event(dpad_down)
+	await process_frame
+	dpad_down.pressed = false
+	Input.parse_input_event(dpad_down)
+	var options_button := launch_menu.get_node("%s/OptionsButton" % MENU_PATH) as Button
+	if root.gui_get_focus_owner() != options_button:
+		_fail("A gamepad D-pad press should move focus from Play to Options")
+		return
 	var play_requests := [0]
 	launch_menu.play_requested.connect(func(): play_requests[0] += 1)
 	play_button.pressed.emit()
 	if play_requests[0] != 1:
 		_fail("Play should emit the hub navigation request")
 		return
-	var options_button := launch_menu.get_node("%s/OptionsButton" % MENU_PATH) as Button
-	options_button.pressed.emit()
+	var enter_key := InputEventKey.new()
+	enter_key.keycode = KEY_ENTER
+	enter_key.pressed = true
+	Input.parse_input_event(enter_key)
+	await process_frame
+	enter_key.pressed = false
+	Input.parse_input_event(enter_key)
 	await process_frame
 	var options_panel := launch_menu.get_node_or_null("OptionsPanel")
 	if options_panel == null:
-		_fail("Options should open from the launch menu")
+		_fail("Enter should activate the focused Options button")
 		return
 	var back_button := options_panel.get_node_or_null("Content/Center/OptionsCard/OptionsContent/BackButton") as Button
 	if back_button == null:
 		_fail("Options panel should expose its Back action")
 		return
-	back_button.pressed.emit()
+	var cancel_b := InputEventJoypadButton.new()
+	cancel_b.device = 0
+	cancel_b.button_index = JOY_BUTTON_B
+	cancel_b.pressed = true
+	Input.parse_input_event(cancel_b)
 	await process_frame
+	cancel_b.pressed = false
+	Input.parse_input_event(cancel_b)
 	await process_frame
 	if launch_menu.get_node_or_null("OptionsPanel") != null:
-		_fail("Back should close Options")
+		_fail("A gamepad B press should close Options")
 		return
 	if root.gui_get_focus_owner() != options_button:
 		_fail("Closing Options should restore focus to its launch button")
