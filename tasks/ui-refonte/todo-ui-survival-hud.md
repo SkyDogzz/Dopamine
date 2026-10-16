@@ -2,7 +2,7 @@
 
 Plan associé : [`plan-ui-survival-hud.md`](plan-ui-survival-hud.md) · Spec : [`SPEC-survival-hud.md`](SPEC-survival-hud.md)
 
-**Statut : validé par l’utilisateur.** Implémentation incrémentale en cours; tâches 1 et 2 terminées.
+**Statut : validé par l’utilisateur.** Implémentation incrémentale en cours; tâches 1 à 3 terminées.
 
 ## Tâche 1 — Contrat et refonte du HUD
 
@@ -45,12 +45,12 @@ Plan associé : [`plan-ui-survival-hud.md`](plan-ui-survival-hud.md) · Spec : [
 **Description :** Hiérarchiser victoire/défaite, résumé et récompenses réelles, sans déplacer la propriété des données ni changer les actions existantes.
 
 **Critères d’acceptation :**
-- [ ] Le résultat distingue victoire et défaite, et présente vague, durée active et éliminations retournées par la session.
-- [ ] Les états profil absent, récompense déjà accordée, succès de récompense et échec de sauvegarde restent distincts.
-- [ ] Les récompenses et objets affichés proviennent uniquement du dictionnaire reçu; aucun montant n’est recalculé ou inventé.
-- [ ] La session reste arrêtée; l’action existante de nouvelle run reste navigable avec focus visible.
+- [x] Le résultat distingue victoire et défaite, et présente vague, durée active et éliminations retournées par la session.
+- [x] Les états profil absent, récompense déjà accordée, succès de récompense et échec de sauvegarde restent distincts.
+- [x] Les récompenses et objets affichés proviennent uniquement du dictionnaire reçu; aucun montant n’est recalculé ou inventé.
+- [x] La session reste arrêtée; l’action existante de nouvelle run reste navigable avec focus visible.
 
-**Vérification :** étendre `survival_run_result_smoke.gd` et tester directement les branches du panneau résultat qui ne sont pas atteignables dans un run complet sans fixture de service.
+**Vérification :** `run_result_panel_smoke.gd` passe sur les états sans profil, victoire/récompense, doublon et sauvegarde en erreur; vérifie le focus et les bounds à 960×600, 1280×800 et 1600×900. `survival_run_result_smoke.gd`, `survival_wave_director_smoke.gd`, l’import headless Godot 4.7.2 et `git diff --check` passent.
 
 **Dépendances :** Tâche 1 pour conventions visuelles; indépendante fonctionnellement de la Tâche 2.
 

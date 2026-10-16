@@ -1,13 +1,20 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene load_steps=3 format=3]
 
-[ext_resource type="Script" path="res://scripts/run_result_panel.gd" id="1_script"]
+[ext_resource type="Theme" path="res://themes/dopamine_ui.tres" id="1_theme"]
+[ext_resource type="Script" path="res://scripts/run_result_panel.gd" id="2_script"]
 
 [node name="RunResultPanel" type="PanelContainer"]
-custom_minimum_size = Vector2(440, 280)
-script = ExtResource("1_script")
+custom_minimum_size = Vector2(560, 400)
+theme = ExtResource("1_theme")
+theme_override_constants/margin_left = 24
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 24
+theme_override_constants/margin_bottom = 20
+script = ExtResource("2_script")
 
 [node name="Content" type="VBoxContainer" parent="."]
-theme_override_constants/separation = 18
+layout_mode = 2
+theme_override_constants/separation = 12
 alignment = 1
 
 [node name="Title" type="Label" parent="Content"]
@@ -18,26 +25,37 @@ horizontal_alignment = 1
 
 [node name="Summary" type="Label" parent="Content"]
 layout_mode = 2
+theme_override_colors/font_color = Color(0.64, 0.79, 0.84, 1)
+theme_override_font_sizes/font_size = 14
 text = "WAVE 01  •  00:00  •  0 KILLS"
 horizontal_alignment = 1
 
+[node name="Divider" type="HSeparator" parent="Content"]
+layout_mode = 2
+
 [node name="Rewards" type="Label" parent="Content"]
 layout_mode = 2
+theme_override_colors/font_color = Color(0.270588, 0.898039, 0.929412, 1)
+theme_override_font_sizes/font_size = 16
 text = "NO PROFILE ATTACHED"
 horizontal_alignment = 1
 
 [node name="Achievement" type="Label" parent="Content"]
 layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.819608, 0.4, 1)
+theme_override_font_sizes/font_size = 12
 text = ""
 horizontal_alignment = 1
 
 [node name="Equipment" type="Label" parent="Content"]
 layout_mode = 2
+theme_override_colors/font_color = Color(0.64, 0.79, 0.84, 1)
+theme_override_font_sizes/font_size = 13
 text = ""
 autowrap_mode = 3
 horizontal_alignment = 1
 
 [node name="RestartButton" type="Button" parent="Content"]
-custom_minimum_size = Vector2(0, 48)
+custom_minimum_size = Vector2(0, 54)
 layout_mode = 2
-text = "NEW RUN"
+text = "RUN AGAIN  →"

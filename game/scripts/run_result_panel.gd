@@ -7,6 +7,7 @@ signal restart_requested
 @onready var _rewards: Label = $Content/Rewards
 @onready var _equipment: Label = $Content/Equipment
 @onready var _achievement: Label = $Content/Achievement
+@onready var _restart_button: Button = $Content/RestartButton
 
 const RESOURCE_ICONS := [
 	"res://assets/icons/resource_essence.png",
@@ -18,6 +19,14 @@ func _ready() -> void:
 	visible = false
 
 func show_result(victory: bool, wave_number: int, active_seconds: float, kills: int, reward: Dictionary = {}) -> void:
+	for row_name in ["RewardIcons", "EquipmentIcon"]:
+		var row := $Content.get_node_or_null(row_name)
+		if row != null:
+			$Content.remove_child(row)
+			row.queue_free()
+	_rewards.text = ""
+	_equipment.text = ""
+	_achievement.text = ""
 	_title.text = "VICTORY" if victory else "RUN OVER"
 	_title.add_theme_color_override("font_color", Color("#66f2bd") if victory else Color("#ff658a"))
 	var total_seconds := int(floor(active_seconds))
@@ -45,9 +54,8 @@ func show_result(victory: bool, wave_number: int, active_seconds: float, kills: 
 				_equipment.text += "  •  UNIQUE EFFECT CHOICE PENDING"
 	else:
 		_rewards.text = "PROGRESSION SAVE FAILED"
-		_equipment.text = ""
-		_achievement.text = ""
 	visible = true
+	_restart_button.grab_focus()
 
 func _add_icon_row(row_name: String, anchor: Control, paths: Array) -> void:
 	var content: VBoxContainer = $Content
