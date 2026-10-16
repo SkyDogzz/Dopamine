@@ -62,6 +62,10 @@ func _run() -> void:
 	if panel.custom_minimum_size.x < 340 or reward_icon.custom_minimum_size != Vector2(24, 24):
 		_fail("Run results should give the reward summary and icons enough visual weight")
 		return
+	var victory_surface := panel.get_theme_stylebox("panel") as StyleBoxFlat
+	if victory_surface == null or victory_surface.border_color.to_html(false) != "48e69b":
+		_fail("Victory should use the shared compact frame with a matching green status edge")
+		return
 	panel.show_result(false, 8, 120.0, 30, {"ok": true, "duplicate": true})
 	if rewards.text != "ALREADY REWARDED" or not equipment.text.is_empty() or \
 		panel.get_node("Content").get_node_or_null("RewardIcons") != null or \
@@ -73,6 +77,10 @@ func _run() -> void:
 	panel.show_result(false, 8, 120.0, 30, {"ok": false, "error": "save_failed"})
 	if rewards.text != "PROGRESSION SAVE FAILED" or rewards.get_theme_color("font_color").to_html(false) != "ff7181":
 		_fail("A progression save error should stay distinct from an empty profile")
+		return
+	var defeat_surface := panel.get_theme_stylebox("panel") as StyleBoxFlat
+	if defeat_surface == null or defeat_surface.border_color.to_html(false) != "ff7181":
+		_fail("Defeat should use a matching danger edge on the compact result frame")
 		return
 	var long_reward := success_reward.duplicate(true)
 	long_reward["equipment"]["unique_effect_id"] = "pending_choice"
@@ -92,6 +100,11 @@ func _run() -> void:
 		for child in panel.get_node("Content").get_children():
 			if child is Control and child.visible and not panel_bounds.encloses((child as Control).get_global_rect()):
 				_fail("Run result content '%s' should stay inside the panel at viewport %s" % [child.name, size])
+				return
+		if size == Vector2i(640, 360) and "--capture" in OS.get_cmdline_user_args():
+			await RenderingServer.frame_post_draw
+			if root.get_texture().get_image().save_png("/tmp/dopamine-run-result.png") != OK:
+				_fail("Could not capture the 640x360 run result render")
 				return
 	root.size = original_size
 	quit_requested[0] = false

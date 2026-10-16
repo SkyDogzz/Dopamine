@@ -38,7 +38,11 @@ func show_result(victory: bool, wave_number: int, active_seconds: float, kills: 
 	_equipment.text = ""
 	_achievement.text = ""
 	_title.text = "VICTORY" if victory else "RUN OVER"
-	_title.add_theme_color_override("font_color", Color("#48E69B") if victory else Color("#FF7181"))
+	var result_color := Color("#48E69B") if victory else Color("#FF7181")
+	_title.add_theme_color_override("font_color", result_color)
+	var result_surface := get_theme_stylebox("panel").duplicate() as StyleBoxFlat
+	result_surface.border_color = result_color
+	add_theme_stylebox_override("panel", result_surface)
 	var total_seconds := int(floor(active_seconds))
 	_summary.text = "WAVE %02d  •  %02d:%02d  •  %d KILLS" % [wave_number, total_seconds / 60, total_seconds % 60, kills]
 	if reward.is_empty():

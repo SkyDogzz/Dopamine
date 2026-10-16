@@ -31,6 +31,11 @@ func _run() -> void:
 	if resume_button == null or root.gui_get_focus_owner() != resume_button:
 		_fail("The pause menu should focus Resume when it opens: button=%s owner=%s visible=%s" % [resume_button, root.gui_get_focus_owner(), pause_menu.visible])
 		return
+	if "--capture" in OS.get_cmdline_user_args():
+		await RenderingServer.frame_post_draw
+		if root.get_texture().get_image().save_png("/tmp/dopamine-pause.png") != OK:
+			_fail("Could not capture the paused Survival HUD")
+			return
 
 	var paused_simulation_time := float(state["simulation_time"])
 	var paused_active_time := float(session.player_active_time)
