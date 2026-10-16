@@ -398,7 +398,7 @@ Travail requis :
   - [x] Définir et implémenter trois phases selon les PV : rayon puis zone esquivable, spirale tirée en salves successives avec invocation en phase 2, puis rayon/zone combinés avec spirale ; télégraphes et HUD de phase vérifiés. Motifs, seuils, dégâts et cadence **[PROPOSÉS]**.
   - [x] Smoke boss : les phases 2 et 3 saturent le plafond global d’invocations proposé à trois, rejettent les suivantes et réutilisent une place après la mort d’un add.
   - [x] Remplacer l’apparence placeholder du Core par le sprite dédié `boss_dopamine_core` et vérifier sa route dans le renderer ainsi que PNG/source Aseprite, dimensions et palette.
-  - [ ] Vérifier victoire, loot garanti proposé/configurable et écran final en run réelle.
+  - [x] Vérifier par `survival_final_boss_loot_smoke.gd` la défaite du Core, les deux coffres garantis configurables consommés l’un après l’autre, puis l’écran de victoire; la validation en run sans harness reste dans P5.V3.
   - Prototype en cours : le Dopamine Core dispose de trois phases, de rayons/zones télégraphiés et esquivables, d’une spirale en tirs successifs et d’invocations en phases 2–3. Le smoke confirme le plafond d’invocations partagé en phases 2–3 ; son identité visuelle est un prototype dédié, sans validation de canon. Tous ces patterns et nombres restent **[PROPOSÉS]**.
 - [ ] **P5.4.6 — Difficultés**
   - [x] Persister la difficulté maximale débloquée (Easy initialement) et transmettre la difficulté choisie du hub à la run.

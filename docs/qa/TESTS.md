@@ -21,6 +21,11 @@
 
 - [x] `survival_idle_combat_smoke.gd` vérifie 20 secondes simulées de la première vague en Normal, joueur immobile, arme de départ active et rayon XP/coffre à zéro : 23 ennemis éliminés, 83,3/100 PV restants, aucun XP ni choix collecté. Le défaut historique « aucun dégât jusqu’aux vagues 8–9 » ne se reproduit pas sur ce parcours ciblé; ce n’est pas une validation d’équilibrage complet.
 
+## Boss final — loot et résultat — 2026-10-16
+
+- [x] `survival_final_boss_loot_smoke.gd` vérifie que le boss final déclenche les deux familles de coffres garanties et configurables, que chaque choix laisse la simulation en pause, puis que l’écran de victoire apparaît après le dernier coffre.
+- [x] `survival_boss_attack_smoke.gd` et `survival_wave_director_smoke.gd` passent avec le smoke de loot; cela valide transitions, attaques, victoire et séquence de coffres sous harness, pas une run sans assistance (P5.V3).
+
 ## Ciblage du Minigun — 2026-10-16
 
 - [x] `survival_weapon_catalog_smoke.gd` vérifie le contrat catalogue **[PROPOSÉ]** : acquisition de la cible vivante la plus proche plutôt que d’une cible plus menaçante, conservation de la cible verrouillée quand une autre s’approche, puis reciblage après mort ou sortie de portée. Le changement remet à zéro la montée de cadence de Redline.
