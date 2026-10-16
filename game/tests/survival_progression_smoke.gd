@@ -60,6 +60,8 @@ func _run() -> void:
 	session._record_weapon_kill("lightning_primary:1")
 	session._record_weapon_kill("lightning_arc:1")
 	session._record_weapon_kill("enemy_projectile")
+	session.loadout._relic_levels["storm_core"] = 5
+	session.loadout._evolved_weapons["lightning_conductor"] = true
 	session._finish_run(false)
 	var reward_label: Label = session.get_node("HUD/RunResultOverlay/RunResultPanel/Content/Rewards")
 	var equipment_label: Label = session.get_node("HUD/RunResultOverlay/RunResultPanel/Content/Equipment")
@@ -76,6 +78,8 @@ func _run() -> void:
 			profile["achievement_progress"]["metrics"]["enemy_kills_tank"] != 2 or \
 			profile["achievement_progress"]["metrics"]["weapon_damage_lightning_conductor"] != 1500.0 or \
 			profile["achievement_progress"]["metrics"]["weapon_kills_lightning_conductor"] != 2 or \
+			profile["achievement_progress"]["metrics"]["max_relic_level_storm_core"] != 5 or \
+			profile["achievement_progress"]["metrics"]["evolutions_lightning_conductor"] != 1 or \
 			profile["achievement_progress"]["metrics"]["weapon_damage_minigun"] != 0.0:
 		_fail("Survival results should persist Exterminator, per-enemy kills and mapped weapon damage metrics")
 		return
@@ -91,7 +95,9 @@ func _run() -> void:
 			profile["achievement_progress"]["metrics"]["total_kills"] != 100 or \
 			profile["achievement_progress"]["metrics"]["enemy_kills_tank"] != 2 or \
 			profile["achievement_progress"]["metrics"]["weapon_damage_lightning_conductor"] != 1500.0 or \
-			profile["achievement_progress"]["metrics"]["weapon_kills_lightning_conductor"] != 2:
+			profile["achievement_progress"]["metrics"]["weapon_kills_lightning_conductor"] != 2 or \
+			profile["achievement_progress"]["metrics"]["max_relic_level_storm_core"] != 5 or \
+			profile["achievement_progress"]["metrics"]["evolutions_lightning_conductor"] != 1:
 		_fail("Finishing the same run twice must not duplicate its persistent reward")
 		return
 	var temporary_session: Node2D = load("res://scenes/survival_session.tscn").instantiate()

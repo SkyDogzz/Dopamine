@@ -50,6 +50,7 @@ const ENEMY_DEATH_PIXEL_COUNT := 8
 const MAX_ENEMY_DEATH_PIXELS := 256
 const ENEMY_DEATH_TYPES := ["chaser", "sprinter", "tank", "shooter", "buffer", "exploder", "shielder", "summoner", "summoned", "elite", "mid_boss", "final_boss"]
 const WEAPON_DAMAGE_IDS := ["lightning_conductor", "inferno_sprayer", "crimson_daggers", "minigun", "toxic_cloud", "sawblades", "meteor_staff", "prism_laser", "void_orb", "frost_nova"]
+const RELIC_ACHIEVEMENT_IDS := ["storm_core", "infernal_heart", "blood_chalice", "overdrive_engine", "plague_mask", "magnetic_coil", "celestial_eye", "prism_crystal", "singularity", "frozen_crown", "magnet_heart"]
 const ENEMY_DEATH_PALETTE := [Color("#D4D9E8"), Color("#37E8F5"), Color("#087FB2"), Color("#F6F7FF")]
 const WEAPON_ICONS := {
 	"lightning_conductor": preload("res://assets/sprites/catalog/weapon_lightning_conductor.png"),
@@ -1667,6 +1668,9 @@ func _finish_run(victory: bool) -> void:
 		for weapon_id in WEAPON_DAMAGE_IDS:
 			run_metrics["weapon_damage_%s" % weapon_id] = float(_weapon_damage_by_id.get(weapon_id, 0.0))
 			run_metrics["weapon_kills_%s" % weapon_id] = int(_weapon_kills_by_id.get(weapon_id, 0))
+			run_metrics["evolutions_%s" % weapon_id] = 1 if loadout.is_evolved(weapon_id) else 0
+		for relic_id in RELIC_ACHIEVEMENT_IDS:
+			run_metrics["max_relic_level_%s" % relic_id] = loadout.relic_level(relic_id)
 		reward = progression_service.award_survival_run(
 			_run_id, wave_director.wave, victory, kill_count, difficulty_id, run_metrics
 		)

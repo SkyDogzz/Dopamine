@@ -400,7 +400,7 @@ func _run() -> void:
 		_fail("Dismantling should remove the item once and persist its proposed rarity powder reward")
 		return
 	var achievement_service = load("res://scripts/progression_service.gd").new(save_service, "achievement")
-	if achievement_service._achievement_definitions.size() != 41 or \
+	if achievement_service._achievement_definitions.size() != 62 or \
 		not achievement_service._achievement_definitions.has("survivor_depth") or \
 		not achievement_service._achievement_definitions.has("veteran_runner") or \
 		not achievement_service._achievement_definitions.has("boss_slayer") or \
@@ -428,22 +428,28 @@ func _run() -> void:
 		"enemy_kills_chaser": 100,
 		"weapon_damage_lightning_conductor": 1250.0,
 		"weapon_kills_lightning_conductor": 10,
+		"max_relic_level_storm_core": 5,
+		"evolutions_lightning_conductor": 1,
 	})
 	var run_metrics_profile: Dictionary = run_metrics_service.load_profile()["profile"]
-	if not run_metrics_award.get("ok", false) or run_metrics_award.get("new_achievement_tier_count") != 11 or \
+	if not run_metrics_award.get("ok", false) or run_metrics_award.get("new_achievement_tier_count") != 16 or \
 		run_metrics_profile["achievement_progress"]["metrics"].get("max_weapon_loadout") != 3 or \
 		run_metrics_profile["achievement_progress"]["metrics"].get("max_relic_loadout") != 4 or \
 		run_metrics_profile["achievement_progress"]["metrics"].get("evolutions_in_run") != 2 or \
 		run_metrics_profile["achievement_progress"]["metrics"].get("enemy_kills_chaser") != 100 or \
 		run_metrics_profile["achievement_progress"]["metrics"].get("weapon_damage_lightning_conductor") != 1250.0 or \
 		run_metrics_profile["achievement_progress"]["metrics"].get("weapon_kills_lightning_conductor") != 10 or \
+		run_metrics_profile["achievement_progress"]["metrics"].get("max_relic_level_storm_core") != 5 or \
+		run_metrics_profile["achievement_progress"]["metrics"].get("evolutions_lightning_conductor") != 1 or \
 		run_metrics_profile["achievement_progress"]["metrics"].get("equipment_items_collected") != 1 or \
 		run_metrics_profile["achievement_progress"]["tiers"].get("arsenal_builder") != 2 or \
 		run_metrics_profile["achievement_progress"]["tiers"].get("relic_collector") != 3 or \
 		run_metrics_profile["achievement_progress"]["tiers"].get("evolutionist") != 1 or \
 		run_metrics_profile["achievement_progress"]["tiers"].get("enemy_hunter_chaser") != 1 or \
 		run_metrics_profile["achievement_progress"]["tiers"].get("weapon_mastery_lightning_conductor") != 1 or \
-		run_metrics_profile["achievement_progress"]["tiers"].get("weapon_killer_lightning_conductor") != 1:
+		run_metrics_profile["achievement_progress"]["tiers"].get("weapon_killer_lightning_conductor") != 1 or \
+		run_metrics_profile["achievement_progress"]["tiers"].get("relic_mastery_storm_core") != 4 or \
+		run_metrics_profile["achievement_progress"]["tiers"].get("evolution_mastery_lightning_conductor") != 1:
 		_fail("Run build metrics should advance weapon, relic, evolution and survival achievements: %s / %s" % [str(run_metrics_award), str(run_metrics_profile["achievement_progress"])])
 		return
 	if run_metrics_service.award_survival_run("invalid-metrics", 12, false, 0, "easy", {"unknown_metric": 1}).get("error") != "invalid_achievement_metrics" or \
@@ -461,6 +467,11 @@ func _run() -> void:
 		previous_v7_profile["achievement_progress"]["metrics"].erase("weapon_kills_%s" % weapon_id)
 		previous_v7_profile["achievement_progress"]["tiers"].erase("weapon_mastery_%s" % weapon_id)
 		previous_v7_profile["achievement_progress"]["tiers"].erase("weapon_killer_%s" % weapon_id)
+		previous_v7_profile["achievement_progress"]["metrics"].erase("evolutions_%s" % weapon_id)
+		previous_v7_profile["achievement_progress"]["tiers"].erase("evolution_mastery_%s" % weapon_id)
+	for relic_id in ["storm_core", "infernal_heart", "blood_chalice", "overdrive_engine", "plague_mask", "magnetic_coil", "celestial_eye", "prism_crystal", "singularity", "frozen_crown", "magnet_heart"]:
+		previous_v7_profile["achievement_progress"]["metrics"].erase("max_relic_level_%s" % relic_id)
+		previous_v7_profile["achievement_progress"]["tiers"].erase("relic_mastery_%s" % relic_id)
 	if not run_metrics_save.save_slot("0", previous_v7_profile):
 		_fail("Could not seed the previous v7 achievement schema")
 		return
@@ -473,6 +484,10 @@ func _run() -> void:
 		migrated_v7_profile["achievement_progress"]["tiers"].get("weapon_mastery_lightning_conductor") != 0 or \
 		migrated_v7_profile["achievement_progress"]["metrics"].get("weapon_kills_lightning_conductor") != 0 or \
 		migrated_v7_profile["achievement_progress"]["tiers"].get("weapon_killer_lightning_conductor") != 0 or \
+		migrated_v7_profile["achievement_progress"]["metrics"].get("max_relic_level_storm_core") != 0 or \
+		migrated_v7_profile["achievement_progress"]["tiers"].get("relic_mastery_storm_core") != 0 or \
+		migrated_v7_profile["achievement_progress"]["metrics"].get("evolutions_lightning_conductor") != 0 or \
+		migrated_v7_profile["achievement_progress"]["tiers"].get("evolution_mastery_lightning_conductor") != 0 or \
 		migrated_v7_profile["achievement_progress"]["tiers"].get("exterminator") != 1:
 		_fail("Profiles from the previous v7 achievement schema should retain progress and gain zeroed new metrics")
 		return

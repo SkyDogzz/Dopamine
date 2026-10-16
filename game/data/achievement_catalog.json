@@ -533,6 +533,279 @@
         { "id": "gold", "threshold": 250, "rewards": {"damage_pct": 0.000075} },
         { "id": "diamond", "threshold": 1000, "rewards": {"damage_pct": 0.0001} }
       ]
+    },
+    {
+      "id": "relic_mastery_storm_core",
+      "category": "relics_evolutions",
+      "secret": false,
+      "metric": "max_relic_level_storm_core",
+      "aggregation": "max",
+      "tiers": [
+        { "id": "bronze", "threshold": 2, "rewards": {"damage_pct": 0.000025} },
+        { "id": "silver", "threshold": 3, "rewards": {"damage_pct": 0.00005} },
+        { "id": "gold", "threshold": 4, "rewards": {"damage_pct": 0.000075} },
+        { "id": "diamond", "threshold": 5, "rewards": {"damage_pct": 0.0001} }
+      ]
+    },
+    {
+      "id": "relic_mastery_infernal_heart",
+      "category": "relics_evolutions",
+      "secret": false,
+      "metric": "max_relic_level_infernal_heart",
+      "aggregation": "max",
+      "tiers": [
+        { "id": "bronze", "threshold": 2, "rewards": {"damage_pct": 0.000025} },
+        { "id": "silver", "threshold": 3, "rewards": {"damage_pct": 0.00005} },
+        { "id": "gold", "threshold": 4, "rewards": {"damage_pct": 0.000075} },
+        { "id": "diamond", "threshold": 5, "rewards": {"damage_pct": 0.0001} }
+      ]
+    },
+    {
+      "id": "relic_mastery_blood_chalice",
+      "category": "relics_evolutions",
+      "secret": false,
+      "metric": "max_relic_level_blood_chalice",
+      "aggregation": "max",
+      "tiers": [
+        { "id": "bronze", "threshold": 2, "rewards": {"damage_pct": 0.000025} },
+        { "id": "silver", "threshold": 3, "rewards": {"damage_pct": 0.00005} },
+        { "id": "gold", "threshold": 4, "rewards": {"damage_pct": 0.000075} },
+        { "id": "diamond", "threshold": 5, "rewards": {"damage_pct": 0.0001} }
+      ]
+    },
+    {
+      "id": "relic_mastery_overdrive_engine",
+      "category": "relics_evolutions",
+      "secret": false,
+      "metric": "max_relic_level_overdrive_engine",
+      "aggregation": "max",
+      "tiers": [
+        { "id": "bronze", "threshold": 2, "rewards": {"damage_pct": 0.000025} },
+        { "id": "silver", "threshold": 3, "rewards": {"damage_pct": 0.00005} },
+        { "id": "gold", "threshold": 4, "rewards": {"damage_pct": 0.000075} },
+        { "id": "diamond", "threshold": 5, "rewards": {"damage_pct": 0.0001} }
+      ]
+    },
+    {
+      "id": "relic_mastery_plague_mask",
+      "category": "relics_evolutions",
+      "secret": false,
+      "metric": "max_relic_level_plague_mask",
+      "aggregation": "max",
+      "tiers": [
+        { "id": "bronze", "threshold": 2, "rewards": {"damage_pct": 0.000025} },
+        { "id": "silver", "threshold": 3, "rewards": {"damage_pct": 0.00005} },
+        { "id": "gold", "threshold": 4, "rewards": {"damage_pct": 0.000075} },
+        { "id": "diamond", "threshold": 5, "rewards": {"damage_pct": 0.0001} }
+      ]
+    },
+    {
+      "id": "relic_mastery_magnetic_coil",
+      "category": "relics_evolutions",
+      "secret": false,
+      "metric": "max_relic_level_magnetic_coil",
+      "aggregation": "max",
+      "tiers": [
+        { "id": "bronze", "threshold": 2, "rewards": {"damage_pct": 0.000025} },
+        { "id": "silver", "threshold": 3, "rewards": {"damage_pct": 0.00005} },
+        { "id": "gold", "threshold": 4, "rewards": {"damage_pct": 0.000075} },
+        { "id": "diamond", "threshold": 5, "rewards": {"damage_pct": 0.0001} }
+      ]
+    },
+    {
+      "id": "relic_mastery_celestial_eye",
+      "category": "relics_evolutions",
+      "secret": false,
+      "metric": "max_relic_level_celestial_eye",
+      "aggregation": "max",
+      "tiers": [
+        { "id": "bronze", "threshold": 2, "rewards": {"damage_pct": 0.000025} },
+        { "id": "silver", "threshold": 3, "rewards": {"damage_pct": 0.00005} },
+        { "id": "gold", "threshold": 4, "rewards": {"damage_pct": 0.000075} },
+        { "id": "diamond", "threshold": 5, "rewards": {"damage_pct": 0.0001} }
+      ]
+    },
+    {
+      "id": "relic_mastery_prism_crystal",
+      "category": "relics_evolutions",
+      "secret": false,
+      "metric": "max_relic_level_prism_crystal",
+      "aggregation": "max",
+      "tiers": [
+        { "id": "bronze", "threshold": 2, "rewards": {"damage_pct": 0.000025} },
+        { "id": "silver", "threshold": 3, "rewards": {"damage_pct": 0.00005} },
+        { "id": "gold", "threshold": 4, "rewards": {"damage_pct": 0.000075} },
+        { "id": "diamond", "threshold": 5, "rewards": {"damage_pct": 0.0001} }
+      ]
+    },
+    {
+      "id": "relic_mastery_singularity",
+      "category": "relics_evolutions",
+      "secret": false,
+      "metric": "max_relic_level_singularity",
+      "aggregation": "max",
+      "tiers": [
+        { "id": "bronze", "threshold": 2, "rewards": {"damage_pct": 0.000025} },
+        { "id": "silver", "threshold": 3, "rewards": {"damage_pct": 0.00005} },
+        { "id": "gold", "threshold": 4, "rewards": {"damage_pct": 0.000075} },
+        { "id": "diamond", "threshold": 5, "rewards": {"damage_pct": 0.0001} }
+      ]
+    },
+    {
+      "id": "relic_mastery_frozen_crown",
+      "category": "relics_evolutions",
+      "secret": false,
+      "metric": "max_relic_level_frozen_crown",
+      "aggregation": "max",
+      "tiers": [
+        { "id": "bronze", "threshold": 2, "rewards": {"damage_pct": 0.000025} },
+        { "id": "silver", "threshold": 3, "rewards": {"damage_pct": 0.00005} },
+        { "id": "gold", "threshold": 4, "rewards": {"damage_pct": 0.000075} },
+        { "id": "diamond", "threshold": 5, "rewards": {"damage_pct": 0.0001} }
+      ]
+    },
+    {
+      "id": "relic_mastery_magnet_heart",
+      "category": "relics_evolutions",
+      "secret": false,
+      "metric": "max_relic_level_magnet_heart",
+      "aggregation": "max",
+      "tiers": [
+        { "id": "bronze", "threshold": 2, "rewards": {"damage_pct": 0.000025} },
+        { "id": "silver", "threshold": 3, "rewards": {"damage_pct": 0.00005} },
+        { "id": "gold", "threshold": 4, "rewards": {"damage_pct": 0.000075} },
+        { "id": "diamond", "threshold": 5, "rewards": {"damage_pct": 0.0001} }
+      ]
+    },
+    {
+      "id": "evolution_mastery_lightning_conductor",
+      "category": "relics_evolutions",
+      "secret": false,
+      "metric": "evolutions_lightning_conductor",
+      "aggregation": "sum",
+      "tiers": [
+        { "id": "bronze", "threshold": 1, "rewards": {"damage_pct": 0.000025} },
+        { "id": "silver", "threshold": 5, "rewards": {"damage_pct": 0.00005} },
+        { "id": "gold", "threshold": 15, "rewards": {"damage_pct": 0.000075} },
+        { "id": "diamond", "threshold": 50, "rewards": {"damage_pct": 0.0001} }
+      ]
+    },
+    {
+      "id": "evolution_mastery_inferno_sprayer",
+      "category": "relics_evolutions",
+      "secret": false,
+      "metric": "evolutions_inferno_sprayer",
+      "aggregation": "sum",
+      "tiers": [
+        { "id": "bronze", "threshold": 1, "rewards": {"damage_pct": 0.000025} },
+        { "id": "silver", "threshold": 5, "rewards": {"damage_pct": 0.00005} },
+        { "id": "gold", "threshold": 15, "rewards": {"damage_pct": 0.000075} },
+        { "id": "diamond", "threshold": 50, "rewards": {"damage_pct": 0.0001} }
+      ]
+    },
+    {
+      "id": "evolution_mastery_crimson_daggers",
+      "category": "relics_evolutions",
+      "secret": false,
+      "metric": "evolutions_crimson_daggers",
+      "aggregation": "sum",
+      "tiers": [
+        { "id": "bronze", "threshold": 1, "rewards": {"damage_pct": 0.000025} },
+        { "id": "silver", "threshold": 5, "rewards": {"damage_pct": 0.00005} },
+        { "id": "gold", "threshold": 15, "rewards": {"damage_pct": 0.000075} },
+        { "id": "diamond", "threshold": 50, "rewards": {"damage_pct": 0.0001} }
+      ]
+    },
+    {
+      "id": "evolution_mastery_minigun",
+      "category": "relics_evolutions",
+      "secret": false,
+      "metric": "evolutions_minigun",
+      "aggregation": "sum",
+      "tiers": [
+        { "id": "bronze", "threshold": 1, "rewards": {"damage_pct": 0.000025} },
+        { "id": "silver", "threshold": 5, "rewards": {"damage_pct": 0.00005} },
+        { "id": "gold", "threshold": 15, "rewards": {"damage_pct": 0.000075} },
+        { "id": "diamond", "threshold": 50, "rewards": {"damage_pct": 0.0001} }
+      ]
+    },
+    {
+      "id": "evolution_mastery_toxic_cloud",
+      "category": "relics_evolutions",
+      "secret": false,
+      "metric": "evolutions_toxic_cloud",
+      "aggregation": "sum",
+      "tiers": [
+        { "id": "bronze", "threshold": 1, "rewards": {"damage_pct": 0.000025} },
+        { "id": "silver", "threshold": 5, "rewards": {"damage_pct": 0.00005} },
+        { "id": "gold", "threshold": 15, "rewards": {"damage_pct": 0.000075} },
+        { "id": "diamond", "threshold": 50, "rewards": {"damage_pct": 0.0001} }
+      ]
+    },
+    {
+      "id": "evolution_mastery_sawblades",
+      "category": "relics_evolutions",
+      "secret": false,
+      "metric": "evolutions_sawblades",
+      "aggregation": "sum",
+      "tiers": [
+        { "id": "bronze", "threshold": 1, "rewards": {"damage_pct": 0.000025} },
+        { "id": "silver", "threshold": 5, "rewards": {"damage_pct": 0.00005} },
+        { "id": "gold", "threshold": 15, "rewards": {"damage_pct": 0.000075} },
+        { "id": "diamond", "threshold": 50, "rewards": {"damage_pct": 0.0001} }
+      ]
+    },
+    {
+      "id": "evolution_mastery_meteor_staff",
+      "category": "relics_evolutions",
+      "secret": false,
+      "metric": "evolutions_meteor_staff",
+      "aggregation": "sum",
+      "tiers": [
+        { "id": "bronze", "threshold": 1, "rewards": {"damage_pct": 0.000025} },
+        { "id": "silver", "threshold": 5, "rewards": {"damage_pct": 0.00005} },
+        { "id": "gold", "threshold": 15, "rewards": {"damage_pct": 0.000075} },
+        { "id": "diamond", "threshold": 50, "rewards": {"damage_pct": 0.0001} }
+      ]
+    },
+    {
+      "id": "evolution_mastery_prism_laser",
+      "category": "relics_evolutions",
+      "secret": false,
+      "metric": "evolutions_prism_laser",
+      "aggregation": "sum",
+      "tiers": [
+        { "id": "bronze", "threshold": 1, "rewards": {"damage_pct": 0.000025} },
+        { "id": "silver", "threshold": 5, "rewards": {"damage_pct": 0.00005} },
+        { "id": "gold", "threshold": 15, "rewards": {"damage_pct": 0.000075} },
+        { "id": "diamond", "threshold": 50, "rewards": {"damage_pct": 0.0001} }
+      ]
+    },
+    {
+      "id": "evolution_mastery_void_orb",
+      "category": "relics_evolutions",
+      "secret": false,
+      "metric": "evolutions_void_orb",
+      "aggregation": "sum",
+      "tiers": [
+        { "id": "bronze", "threshold": 1, "rewards": {"damage_pct": 0.000025} },
+        { "id": "silver", "threshold": 5, "rewards": {"damage_pct": 0.00005} },
+        { "id": "gold", "threshold": 15, "rewards": {"damage_pct": 0.000075} },
+        { "id": "diamond", "threshold": 50, "rewards": {"damage_pct": 0.0001} }
+      ]
+    },
+    {
+      "id": "evolution_mastery_frost_nova",
+      "category": "relics_evolutions",
+      "secret": false,
+      "metric": "evolutions_frost_nova",
+      "aggregation": "sum",
+      "tiers": [
+        { "id": "bronze", "threshold": 1, "rewards": {"damage_pct": 0.000025} },
+        { "id": "silver", "threshold": 5, "rewards": {"damage_pct": 0.00005} },
+        { "id": "gold", "threshold": 15, "rewards": {"damage_pct": 0.000075} },
+        { "id": "diamond", "threshold": 50, "rewards": {"damage_pct": 0.0001} }
+      ]
     }
   ]
 }
