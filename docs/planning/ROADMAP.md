@@ -231,6 +231,7 @@ P6 a déjà du code anticipé, mais le chemin nominal reste P5 puis P6. P7 stand
 - [ ] **P4.2 — Boucle d’une vague**
   - [ ] Jouer une vague sans harness et vérifier le timer de 30 secondes simulées.
   - [ ] Vérifier spawn, déplacement ennemi, dégâts, XP, soins et mort du joueur.
+  - [x] Smoke ciblé sous Godot : 20 secondes de simulation en Normal, immobile avec l’arme de départ, XP/coffres hors de portée; le joueur combat et subit des dégâts avant toute amélioration. Cela ne remplace pas le parcours sans harness ni l’équilibrage complet.
   - [ ] Vérifier les pauses de menu/chest et la reprise de l’horloge attendue.
 - [ ] **P4.3 — Coffres**
   - [ ] Vérifier drop, rayon de collecte, modal à trois choix et reprise.
