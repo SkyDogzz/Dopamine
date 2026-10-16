@@ -74,7 +74,7 @@ stretch_mode = 5
 
 [node name="LoadoutLabel" type="Label" parent="HUD/RunPanel/RunInfo/LoadoutRow"]
 custom_minimum_size = Vector2(0, 13)
-custom_maximum_size = Vector2(210, 0)
+custom_maximum_size = Vector2(210, 13)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.964706, 0.968627, 1, 1)
 theme_override_font_sizes/font_size = 8

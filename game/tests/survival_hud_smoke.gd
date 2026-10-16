@@ -38,6 +38,10 @@ func _run() -> void:
 		_fail("The run HUD should display current health, XP, time, wave and weapon state")
 		return
 	var boss_panel: Control = session.get_node("HUD/BossPanel")
+	var weapon_label: Label = session.get_node("HUD/RunPanel/RunInfo/LoadoutRow/LoadoutLabel")
+	if weapon_label.text.is_empty() or weapon_label.size.y <= 0.0:
+		_fail("The weapon names in the loadout row should be visible, not clipped to zero height")
+		return
 	if boss_panel.visible:
 		_fail("The boss HUD should stay hidden without a boss")
 		return

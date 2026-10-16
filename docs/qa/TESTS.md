@@ -34,6 +34,12 @@
 - [x] `survival_pause_smoke.gd` passe, y compris Options au-dessus de Pause et invariance des horloges/positions.
 - [x] `ui_viewport_layout_smoke.gd` passe aux viewports 640×360, 1280×720 et 1920×1080; captures de Pause et de confirmation revues à 640×360 logique.
 
+## HUD Survival — visibilité de la rangée d’armes — 2026-10-16
+
+- [x] `survival_hud_smoke.gd` vérifie que le texte du loadout a une hauteur visible; ce contrôle détectait une hauteur maximale de zéro.
+- [x] Capture 640×360 logique revue avec plusieurs armes; les noms ne sont plus coupés verticalement et les deux cartes restent dans leurs zones.
+- [x] `ui_viewport_layout_smoke.gd` passe à 640×360, 1280×720 et 1920×1080.
+
 ## Build et intégration
 
 - [x] Linux P0 : Godot 4.7.2 charge la GDExtension C++23 après import headless du projet.
