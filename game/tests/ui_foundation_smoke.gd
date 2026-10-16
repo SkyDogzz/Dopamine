@@ -3,7 +3,7 @@ extends SceneTree
 const PREVIEW_SCENE_PATH := "res://scenes/ui_foundation_preview.tscn"
 const THEME_PATH := "res://themes/dopamine_ui.tres"
 const PIXEL_HEADING_PATHS := {
-	"res://scenes/launch_menu.tscn": ["Content/Card/Columns/Identity/Title"],
+	"res://scenes/launch_menu.tscn": ["Content/Card/Columns/Identity/TitleRow/Title"],
 	"res://scenes/options_panel.tscn": ["Content/Center/OptionsCard/OptionsContent/Title"],
 	"res://scenes/survival_hub.tscn": ["Content/Header/Identity/Title", "Content/Main/DifficultyCard/Body/SectionTitle", "Content/Main/PreparationCard/Body/ModeTitle", "Content/Main/PreparationCard/Body/PreparationTitle"],
 	"res://scenes/chest_choice.tscn": ["Content/Title"],
