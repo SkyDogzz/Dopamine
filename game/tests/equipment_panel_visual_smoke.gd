@@ -11,7 +11,10 @@ func _run() -> void:
 			"instance_id": "visual-fixture",
 			"slot": "boots",
 			"rarity": "legendary",
-			"stat_lines": [],
+			"stat_lines": [
+				{"stat_id": "move_speed_pct", "roll_percentile": 0.8, "enhancement_level": 4},
+				{"stat_id": "attack_speed_pct", "roll_percentile": 0.6, "enhancement_level": 2},
+			],
 			"equipped": true,
 			"unique_effect_id": "lightning_burst",
 		}],
@@ -24,8 +27,29 @@ func _run() -> void:
 	var item_layout: HBoxContainer = row.get_child(0)
 	var badges: HBoxContainer = item_layout.get_child(0)
 	var item_content: VBoxContainer = item_layout.get_child(1)
-	var status: Label = item_content.get_child(1)
-	var actions: HBoxContainer = item_content.get_child(2)
+	var status: Label
+	var actions: HBoxContainer
+	var stat_row_count := 0
+	for child in item_content.get_children():
+		if child is Label and (child as Label).text.contains("EQUIPPED"):
+			status = child as Label
+		elif child is HBoxContainer:
+			if child.get_child_count() == 3:
+				stat_row_count += 1
+			elif child.get_child_count() == 2 and child.get_child(0) is Button:
+				actions = child as HBoxContainer
+	if stat_row_count != 2 or status == null or actions == null:
+		_fail("Equipment cards should show both stat rolls, equipped state and item actions")
+		return
+	var move_speed_row: HBoxContainer
+	for child in item_content.get_children():
+		if child is HBoxContainer and child.get_child_count() == 3 and \
+			(child.get_child(0) as Label).text.contains("MOVE SPEED"):
+			move_speed_row = child as HBoxContainer
+	if move_speed_row == null or (move_speed_row.get_child(1) as OptionButton).item_count != 4 or \
+		(move_speed_row.get_child(2) as Button).text != "ENHANCE":
+		_fail("Each equipment stat should show its value, powder choice and enhancement action")
+		return
 	var dismantle_button: Button = actions.get_child(1)
 	if panel_frame.custom_minimum_size.x < 400:
 		_fail("Equipment panel should reserve enough width for item stats and actions")
@@ -64,6 +88,15 @@ func _run() -> void:
 			dismantle_button.size.x < dismantle_button.get_combined_minimum_size().x:
 			_fail("Equipment details and the dismantle action should fit viewport %s" % viewport_size)
 			return
+		for stat_child in move_speed_row.get_children():
+			if not move_speed_row.get_global_rect().encloses((stat_child as Control).get_global_rect()):
+				_fail("Equipment stat controls should remain inside their row at %s" % viewport_size)
+				return
+		if viewport_size == Vector2i(640, 360) and "--capture" in OS.get_cmdline_user_args():
+			await RenderingServer.frame_post_draw
+			if root.get_texture().get_image().save_png("/tmp/dopamine-equipment.png") != OK:
+				_fail("Could not capture the 640x360 equipment inventory render")
+				return
 	root.size = original_size
 	if not panel_frame.get_global_rect().size.x <= 640:
 		_fail("Equipment panel should stay within the logical 640px viewport")
