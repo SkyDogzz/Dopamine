@@ -377,6 +377,7 @@ Travail requis :
   - [x] Préserver le rayon séparé `chest_collection_radius`.
   - [x] Vérifier par régression qu'un pickup très élevé n'attire pas un chest éloigné.
   - [x] Vérifier la collecte à proximité et l'ouverture du choix ; l'interaction manuelle reste facultative selon le GDD.
+  - [x] Autoriser les drops d'armes/reliques dès qu'au moins une offre reste éligible, même si un profil débutant n'a pas encore trois options; vérifier la récompense élite avec ses deux armes et deux reliques de départ.
 
 ### P5.4 — Ennemis, élites et boss
 

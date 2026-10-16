@@ -1872,9 +1872,9 @@ func _quit_after_run() -> void:
 
 func _roll_enemy_chests(enemy_type: String, position: Vector2) -> void:
 	var eligible_families: Array[String] = []
-	if loadout.offers("weapon").size() == 3:
+	if not loadout.offers("weapon").is_empty():
 		eligible_families.append("weapon")
-	if loadout.offers("relic").size() == 3:
+	if not loadout.offers("relic").is_empty():
 		eligible_families.append("relic")
 	var is_boss := enemy_type == "mid_boss" or enemy_type == "final_boss"
 	var is_elite := enemy_type == "elite"

@@ -88,6 +88,7 @@
 ## P5 — Configuration des coffres — 2026-10-16
 
 - [x] `survival_chest_director_smoke.gd` vérifie les chances configurables Ordinary/Elite, le filet anti-malchance configurable et les coffres boss garantis; `survival_loadout_smoke.gd` couvre les poids des offres.
+- [x] Revalidation Godot 4.7.2 : `survival_weapon_catalog_smoke.gd`, `survival_boss_attack_smoke.gd` et `survival_chest_smoke.gd` passent. `survival_elite_smoke.gd` a d'abord révélé que les profils avec deux armes/reliques débloquées ne pouvaient recevoir de coffre, car le drop exigeait exactement trois options; le filtre accepte maintenant tout pool non vide et le smoke élite passe avec cette configuration de débutant. Les smokes arme/coffre signalent encore des objets/resources en usage à leur fermeture, sans échec fonctionnel.
 - [ ] Les rerolls d’offres ne sont pas exposés pendant les runs et restent différés jusqu’à l’intégration des effets uniques de progression P6.5.
 
 ## Run réelle et redémarrage Survival — 2026-10-16
