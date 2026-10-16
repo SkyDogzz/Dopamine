@@ -4,6 +4,9 @@ func _initialize() -> void:
 	call_deferred("_run")
 
 func _run() -> void:
+	if not await _relic_bonuses_and_evolution_are_scoped():
+		_fail("Relic global bonuses should scale per level and evolution damage should require and affect only its weapon")
+		return
 	if not await _nearest_weapon_targets_skip_dead_enemies():
 		_fail("Automatic weapons should ignore dead enemies that remain in a simulation snapshot")
 		return
@@ -78,6 +81,79 @@ func _run() -> void:
 		return
 	print("Survival weapon catalog smoke passed")
 	quit()
+
+func _relic_bonuses_and_evolution_are_scoped() -> bool:
+	var loadout_script = load("res://scripts/survival_loadout.gd")
+	var catalog_loadout = loadout_script.new(1)
+	for relic_id in catalog_loadout._relic_definitions:
+		var definition: Dictionary = catalog_loadout._relic_definitions[relic_id]
+		var relic_loadout = loadout_script.new(1)
+		for level in range(1, relic_loadout.MAX_LEVEL + 1):
+			if not relic_loadout.apply_offer("relic:" + relic_id):
+				return false
+			var expected_bonus := float(definition["global_bonus_per_level"]) * level
+			if not is_equal_approx(relic_loadout.global_relic_bonus(str(definition["global_stat"])), expected_bonus):
+				return false
+
+	var session: Node2D = load("res://scenes/survival_session.tscn").instantiate()
+	session.spawn_initial_enemy = false
+	session.wave_spawning_enabled = false
+	root.add_child(session)
+	await process_frame
+	for weapon_id in catalog_loadout._weapon_definitions:
+		var weapon_definition: Dictionary = catalog_loadout._weapon_definitions[weapon_id]
+		var relic_id := str(weapon_definition["relic_id"])
+		var pair_loadout = loadout_script.new(1)
+		for _level in range(pair_loadout.MAX_LEVEL):
+			if not pair_loadout.apply_offer("weapon:" + weapon_id):
+				session.queue_free()
+				return false
+		for _level in range(pair_loadout.MAX_LEVEL - 1):
+			if not pair_loadout.apply_offer("relic:" + relic_id):
+				session.queue_free()
+				return false
+		if pair_loadout.is_evolution_ready(weapon_id):
+			session.queue_free()
+			return false
+		if not pair_loadout.apply_offer("relic:" + relic_id) or not pair_loadout.is_evolution_ready(weapon_id):
+			session.queue_free()
+			return false
+		session.loadout = pair_loadout
+		if not is_equal_approx(session._weapon_combo_damage_multiplier(weapon_id), 1.0):
+			session.queue_free()
+			return false
+		if not pair_loadout.apply_offer("evolution:" + weapon_id) or \
+				not is_equal_approx(session._weapon_combo_damage_multiplier(weapon_id), 1.25):
+			session.queue_free()
+			return false
+		if pair_loadout.weapon_level(weapon_id) != pair_loadout.MAX_LEVEL or \
+				pair_loadout.relic_level(relic_id) != pair_loadout.MAX_LEVEL or \
+				pair_loadout.apply_offer("evolution:" + weapon_id):
+			session.queue_free()
+			return false
+		for other_weapon_id in catalog_loadout._weapon_definitions:
+			if other_weapon_id != weapon_id and not is_equal_approx(session._weapon_combo_damage_multiplier(other_weapon_id), 1.0):
+				session.queue_free()
+				return false
+		for offer in pair_loadout.offers("weapon"):
+			if str(offer.get("id", "")) == "weapon:" + weapon_id or str(offer.get("id", "")) == "evolution:" + weapon_id:
+				session.queue_free()
+				return false
+		var reverse_loadout = loadout_script.new(1)
+		for _level in range(reverse_loadout.MAX_LEVEL):
+			if not reverse_loadout.apply_offer("relic:" + relic_id):
+				session.queue_free()
+				return false
+		for _level in range(reverse_loadout.MAX_LEVEL - 1):
+			if not reverse_loadout.apply_offer("weapon:" + weapon_id):
+				session.queue_free()
+				return false
+		if reverse_loadout.is_evolution_ready(weapon_id) or not reverse_loadout.apply_offer("weapon:" + weapon_id) or \
+				not reverse_loadout.is_evolution_ready(weapon_id):
+			session.queue_free()
+			return false
+	session.queue_free()
+	return true
 
 func _nearest_weapon_targets_skip_dead_enemies() -> bool:
 	var session: Node2D = load("res://scenes/survival_session.tscn").instantiate()

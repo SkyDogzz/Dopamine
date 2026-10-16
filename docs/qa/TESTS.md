@@ -13,6 +13,13 @@
 
 - [x] `survival_level_feedback_smoke.gd` vérifie les notifications d’acquisition et de niveaux 1–5 pour armes et reliques; le toast reste visible à temps de simulation figé, disparaît après expiration simulée et reste dans les viewports 640×360, 1280×800 et 1920×1080. Il vérifie aussi les impacts des dix armes pour les cinq niveaux : chaque impact conserve le niveau de sa source et son échelle augmente avec ce niveau (**[PROPOSÉ]**).
 
+## Bonus globaux et évolutions des reliques — 2026-10-16
+
+- [x] `survival_weapon_catalog_smoke.gd` vérifie les bonus globaux des onze reliques aux cinq niveaux; les chiffres sont exercés comme valeurs **[PROPOSÉES]**, sans valider leur équilibre.
+- [x] Le même smoke vérifie les dix paires d’évolution : l’offre reste verrouillée jusqu’au niveau 5 de l’arme et de la relique, quel que soit leur ordre d’acquisition; le niveau 5 et la relique sont conservés, l’offre est unique, et seul le dégât de l’arme évoluée gagne le multiplicateur proposé de 25 % après collecte.
+- [x] Vérifie aussi que les armes/évolutions déjà maximisées ne réapparaissent pas dans les offres.
+- [x] `survival_contact_damage_smoke.gd` couvre séparément le délai de contact corporel par ennemi et confirme que les projectiles ennemis ne partagent pas ce délai.
+
 ## Hub Survival — état visuel des destinations inactives — 2026-10-16
 
 - [x] `survival_hub_smoke.gd` vérifie que Succès et Bestiaire utilisent le style atténué, restent activables au focus et gardent le cadre de focus partagé; ils ne sont pas désactivés.
