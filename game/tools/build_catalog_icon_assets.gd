@@ -5,6 +5,7 @@ const SOURCE_DIR := "res://assets/source/catalog_weapons"
 const OUTPUT_DIR := "res://assets/sprites/catalog"
 const DEDICATED_ICON_REFERENCES := {
 	"weapon_lightning_conductor": "res://assets/source/catalog_weapons/weapon_lightning_conductor_reference.png",
+	"relic_storm_core": "res://assets/source/catalog_relics/relic_storm_core_reference.png",
 }
 const RELIC_REFERENCE := "res://assets/source/catalog_relics/generated_reference.png"
 const RELIC_SOURCE_DIR := "res://assets/source/catalog_relics"
@@ -54,15 +55,6 @@ func _initialize() -> void:
 			if not _export_cell(source, rect, name):
 				quit(1)
 				return
-	for icon_name in DEDICATED_ICON_REFERENCES:
-		var reference_texture := load(DEDICATED_ICON_REFERENCES[icon_name]) as Texture2D
-		var source_dir := RELIC_SOURCE_DIR if icon_name.begins_with("relic_") else SOURCE_DIR
-		if reference_texture == null or not _export_transparent(
-			reference_texture.get_image(), icon_name, OUTPUT_SIZE, PALETTE, OUTPUT_DIR, source_dir
-		):
-			push_error("Could not export catalog icon %s from its dedicated reference" % icon_name)
-			quit(1)
-			return
 	var relic_texture := load(RELIC_REFERENCE) as Texture2D
 	if relic_texture == null:
 		push_error("Missing generated relic reference: %s" % RELIC_REFERENCE)
@@ -74,6 +66,15 @@ func _initialize() -> void:
 	for index in range(RELICS.size()):
 		var rect := Rect2i((index % 4) * relic_cell_width, floori(float(index) / 4.0) * relic_cell_height, relic_cell_width, relic_cell_height)
 		if not _export_relic_cell(relic_source, rect, RELICS[index]):
+			quit(1)
+			return
+	for icon_name in DEDICATED_ICON_REFERENCES:
+		var reference_texture := load(DEDICATED_ICON_REFERENCES[icon_name]) as Texture2D
+		var source_dir := RELIC_SOURCE_DIR if icon_name.begins_with("relic_") else SOURCE_DIR
+		if reference_texture == null or not _export_transparent(
+			reference_texture.get_image(), icon_name, OUTPUT_SIZE, PALETTE, OUTPUT_DIR, source_dir
+		):
+			push_error("Could not export catalog icon %s from its dedicated reference" % icon_name)
 			quit(1)
 			return
 	var ui_texture := load(UI_REFERENCE) as Texture2D
