@@ -17,7 +17,21 @@ func _run() -> void:
 	await process_frame
 	assert(sandbox.theme == load("res://themes/dopamine_ui.tres"), "Sandbox should use the shared UI theme")
 	var metrics: GridContainer = sandbox.get_node("Shell/Content/MainColumn/Metrics/MetricRow")
-	assert(metrics.columns == 4, "Sandbox metrics should use four columns at 1280x800")
+	assert(metrics.columns == 4, "Sandbox metrics should use four columns")
+	var side_panel: ScrollContainer = sandbox.get_node("Shell/Content/SidePanel")
+	var spawn_actions: HBoxContainer = sandbox.get_node("Shell/Content/SidePanel/Sections/SpawnPanel/SpawnForm/SpawnActions")
+	for viewport_size in [Vector2i(640, 360), Vector2i(1280, 720), Vector2i(1920, 1080)]:
+		root.size = viewport_size
+		await process_frame
+		await process_frame
+		var panel_rect := side_panel.get_global_rect()
+		for button in spawn_actions.get_children():
+			var button_rect := (button as Control).get_global_rect()
+			assert(button_rect.position.x >= panel_rect.position.x, "Sandbox spawn actions should stay inside the side panel at %s" % viewport_size)
+			assert(button_rect.end.x <= panel_rect.end.x, "Sandbox spawn actions should not overflow at %s" % viewport_size)
+		assert(not side_panel.get_h_scroll_bar().visible, "Sandbox side panel should not show a horizontal scrollbar at %s" % viewport_size)
+	root.size = Vector2i(1280, 720)
+	await process_frame
 	assert(sandbox.get_node("Shell/Content/MainColumn/SimulationView").clip_contents,
 		"Simulation entities should stay clipped to the playfield")
 	assert(sandbox.get_node("Shell/Header/HomeButton").has_focus(), "Sandbox should start with a visible keyboard focus")
@@ -46,8 +60,8 @@ func _run() -> void:
 		"Shell/Content/SidePanel/Sections/SpawnPanel/SpawnForm/PositionRow/XSpin",
 		"Shell/Content/SidePanel/Sections/SpawnPanel/SpawnForm/PositionRow/YSpin",
 		"Shell/Content/SidePanel/Sections/SpawnPanel/SpawnForm/HealthRow/HealthSpin",
-		"Shell/Content/SidePanel/Sections/SpawnPanel/SpawnForm/HealthRow/VelocityXSpin",
-		"Shell/Content/SidePanel/Sections/SpawnPanel/SpawnForm/HealthRow/VelocityYSpin",
+		"Shell/Content/SidePanel/Sections/SpawnPanel/SpawnForm/HealthRow/VelocityRow/VelocityXSpin",
+		"Shell/Content/SidePanel/Sections/SpawnPanel/SpawnForm/HealthRow/VelocityRow/VelocityYSpin",
 		"Shell/Content/SidePanel/Sections/SpawnPanel/SpawnForm/SpawnActions/SpawnButton",
 		"Shell/Content/SidePanel/Sections/SpawnPanel/SpawnForm/SpawnActions/DespawnButton",
 		"Shell/Content/SidePanel/Sections/SpawnPanel/SpawnForm/SpawnActions/KillButton",

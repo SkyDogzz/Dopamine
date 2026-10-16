@@ -225,8 +225,8 @@ func _on_spawn_pressed() -> void:
 		$Shell/Content/SidePanel/Sections/SpawnPanel/SpawnForm/PositionRow/YSpin.value
 	)
 	var velocity := Vector2(
-		$Shell/Content/SidePanel/Sections/SpawnPanel/SpawnForm/HealthRow/VelocityXSpin.value,
-		$Shell/Content/SidePanel/Sections/SpawnPanel/SpawnForm/HealthRow/VelocityYSpin.value
+		$Shell/Content/SidePanel/Sections/SpawnPanel/SpawnForm/HealthRow/VelocityRow/VelocityXSpin.value,
+		$Shell/Content/SidePanel/Sections/SpawnPanel/SpawnForm/HealthRow/VelocityRow/VelocityYSpin.value
 	)
 	var hp: float = $Shell/Content/SidePanel/Sections/SpawnPanel/SpawnForm/HealthRow/HealthSpin.value
 	if simulation.spawn(entity_type, int(_count.value), position, hp, velocity) == 0:
