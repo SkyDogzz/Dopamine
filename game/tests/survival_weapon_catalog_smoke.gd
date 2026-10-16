@@ -13,6 +13,9 @@ func _run() -> void:
 	if not await _toxic_cloud_prioritizes_durable_targets():
 		_fail("Toxic Cloud should prioritize the highest-health living enemy in range, breaking ties by distance")
 		return
+	if not await _sawblades_prioritizes_ricochet_clusters():
+		_fail("Sawblades should aim at the nearest target in the densest reachable ricochet cluster")
+		return
 	if not await _minigun_holds_target_until_invalid():
 		_fail("Minigun should keep its target until it dies or leaves range, then select another target")
 		return
@@ -225,6 +228,27 @@ func _prism_laser_tracks_and_splits() -> bool:
 			return true
 	session.queue_free()
 	return false
+
+func _sawblades_prioritizes_ricochet_clusters() -> bool:
+	var session: Node2D = load("res://scenes/survival_session.tscn").instantiate()
+	session.spawn_initial_enemy = false
+	session.wave_spawning_enabled = false
+	root.add_child(session)
+	await process_frame
+	var origin: Vector2 = session.player.global_position
+	session._entities = [
+		{"id": {"index": 31, "generation": 1}, "components": {"Health": {"current": 100.0}, "Transform2D": {"x": origin.x + 60.0, "y": origin.y}}},
+		{"id": {"index": 32, "generation": 1}, "components": {"Health": {"current": 100.0}, "Transform2D": {"x": origin.x + 220.0, "y": origin.y}}},
+		{"id": {"index": 33, "generation": 1}, "components": {"Health": {"current": 100.0}, "Transform2D": {"x": origin.x + 250.0, "y": origin.y + 20.0}}},
+		{"id": {"index": 34, "generation": 1}, "components": {"Health": {"current": 100.0}, "Transform2D": {"x": origin.x + 280.0, "y": origin.y}}},
+	]
+	var clustered: Dictionary = session._sawblades_cluster_target()
+	var cluster_selected: bool = clustered.get("id", Vector2i(-1, -1)) == Vector2i(32, 1)
+	session._entities = [session._entities[0], session._entities[3]]
+	var fallback: Dictionary = session._sawblades_cluster_target()
+	var nearest_fallback: bool = fallback.get("id", Vector2i(-1, -1)) == Vector2i(31, 1)
+	session.queue_free()
+	return cluster_selected and nearest_fallback
 
 func _void_orb_pulls_and_pierces() -> bool:
 	var session: Node2D = load("res://scenes/survival_session.tscn").instantiate()

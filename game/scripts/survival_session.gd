@@ -184,6 +184,7 @@ const WAVE_HP_CAP := 12.0
 @export var sawblades_cooldown: float = 1.8
 @export var sawblades_damage: float = 8.0
 @export var sawblades_range: float = 520.0
+@export var sawblades_cluster_radius: float = 160.0 # [PROPOSED] helps initial ricochet reach a group.
 @export var sawblades_projectile_speed: float = 360.0
 @export var sawblades_projectile_radius: float = 7.0
 @export var sawblades_projectile_lifetime: float = 2.5
@@ -1790,7 +1791,7 @@ func _fire_toxic_cloud(active_time: float, paused: bool) -> void:
 func _fire_sawblades(active_time: float, paused: bool) -> void:
 	if not weapon_enabled or loadout.weapon_level("sawblades") == 0 or paused or _chest_open or run_over or sawblades_cooldown <= 0.0 or active_time < _next_sawblades_time:
 		return
-	var target := _nearest_enemy(sawblades_range)
+	var target := _sawblades_cluster_target()
 	if target.is_empty():
 		return
 	var direction: Vector2 = (target["position"] - player.global_position).normalized()
@@ -1968,6 +1969,45 @@ func _meteor_cluster_target() -> Dictionary:
 			center += position
 			target_count += 1
 	return {"id": anchor["id"], "position": center / float(target_count)}
+
+func _sawblades_cluster_target() -> Dictionary:
+	var targets: Array[Dictionary] = []
+	var launch_targets: Array[Dictionary] = []
+	var nearest: Dictionary = {}
+	var max_distance_squared := sawblades_range * sawblades_range
+	var best_nearest_distance_squared := max_distance_squared
+	for entity in _entities:
+		var components: Dictionary = entity["components"]
+		if not _is_targetable_enemy(components):
+			continue
+		var transform: Dictionary = components["Transform2D"]
+		var position := Vector2(float(transform["x"]), float(transform["y"]))
+		var distance_squared := player.global_position.distance_squared_to(position)
+		var id_data: Dictionary = entity["id"]
+		var target := {"position": position, "id": Vector2i(int(id_data["index"]), int(id_data["generation"]))}
+		targets.append(target)
+		if distance_squared < max_distance_squared:
+			launch_targets.append(target)
+		if distance_squared < best_nearest_distance_squared and distance_squared < max_distance_squared:
+			best_nearest_distance_squared = distance_squared
+			nearest = target
+	if launch_targets.is_empty() or targets.size() < 2 or sawblades_cluster_radius <= 0.0:
+		return nearest
+	var best_target: Dictionary = {}
+	var best_cluster_size := 1
+	var best_distance_squared := max_distance_squared
+	var cluster_radius_squared := sawblades_cluster_radius * sawblades_cluster_radius
+	for candidate in launch_targets:
+		var cluster_size := 0
+		for other in targets:
+			if candidate["position"].distance_squared_to(other["position"]) <= cluster_radius_squared:
+				cluster_size += 1
+		var distance_squared: float = player.global_position.distance_squared_to(candidate["position"])
+		if cluster_size > best_cluster_size or (cluster_size == best_cluster_size and cluster_size > 1 and distance_squared < best_distance_squared):
+			best_cluster_size = cluster_size
+			best_distance_squared = distance_squared
+			best_target = candidate
+	return best_target if not best_target.is_empty() else nearest
 
 func _spawn_starfall_fragments(origin: Vector2, primary_target: Dictionary, entities: Array) -> void:
 	var candidates: Array[Dictionary] = []
