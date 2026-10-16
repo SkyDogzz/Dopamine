@@ -1503,7 +1503,9 @@ func _try_spawn_elite() -> void:
 	simulation.spawn_enemy("elite", 1, spawn_position, Vector2.ZERO, hp_multiplier, affix)
 
 func _elite_affix_for_roll(roll: float) -> String:
-	return "Hasted" if roll < 0.5 else "Armored"
+	if roll < 1.0 / 3.0:
+		return "Hasted"
+	return "Armored" if roll < 2.0 / 3.0 else "Regenerating"
 
 func _spawn_boss_placeholder(boss_type: String) -> void:
 	if not spawn_initial_enemy or _boss_spawn_pending:

@@ -78,11 +78,12 @@ double kill_heal_amount(double threat_level, KillHealConfig config) {
 
 EntityId SimulationCore::spawn(std::string type, float x, float y, float hp, float velocity_x,
 		float velocity_y, float threat_level, float move_speed, std::string affix,
-		float damage_taken_multiplier) {
+		float damage_taken_multiplier, float health_regen_per_second) {
 	if (type.empty() || !std::isfinite(x) || !std::isfinite(y) || !std::isfinite(hp) || hp <= 0.0F ||
 			!std::isfinite(velocity_x) || !std::isfinite(velocity_y) || !std::isfinite(threat_level) ||
 			threat_level <= 0.0F || !std::isfinite(move_speed) || move_speed < 0.0F ||
-			!std::isfinite(damage_taken_multiplier) || damage_taken_multiplier <= 0.0F || damage_taken_multiplier > 1.0F) {
+			!std::isfinite(damage_taken_multiplier) || damage_taken_multiplier <= 0.0F || damage_taken_multiplier > 1.0F ||
+			!std::isfinite(health_regen_per_second) || health_regen_per_second < 0.0F) {
 		throw std::invalid_argument("invalid simulation entity");
 	}
 
@@ -117,6 +118,7 @@ EntityId SimulationCore::spawn(std::string type, float x, float y, float hp, flo
 	health_[index] = {hp, hp};
 	const auto profile = enemy_profile(type);
 	enemy_types_[index] = {std::move(type), std::move(affix), threat_level, move_speed, damage_taken_multiplier,
+			health_regen_per_second,
 			profile ? profile->support_radius : 0.0F,
 			profile ? profile->support_speed_multiplier : 1.0F,
 			false,
@@ -404,7 +406,10 @@ void SimulationCore::restore_state(const SimulationCoreState &state) {
 				entity.health.maximum > 0.0F && entity.health.current > 0.0F &&
 				entity.health.current <= entity.health.maximum;
 		const bool valid_type = !entity.type.id.empty() && std::isfinite(entity.type.threat_level) &&
-				entity.type.threat_level > 0.0F && std::isfinite(entity.type.move_speed) && entity.type.move_speed >= 0.0F;
+				entity.type.threat_level > 0.0F && std::isfinite(entity.type.move_speed) && entity.type.move_speed >= 0.0F &&
+				std::isfinite(entity.type.damage_taken_multiplier) && entity.type.damage_taken_multiplier > 0.0F &&
+				entity.type.damage_taken_multiplier <= 1.0F && std::isfinite(entity.type.health_regen_per_second) &&
+				entity.type.health_regen_per_second >= 0.0F;
 		const bool valid_support = std::isfinite(entity.type.support_radius) && entity.type.support_radius >= 0.0F &&
 				std::isfinite(entity.type.support_speed_multiplier) && entity.type.support_speed_multiplier >= 1.0F &&
 				(!entity.type.supported || entity.type.support_radius == 0.0F);
@@ -639,6 +644,11 @@ std::vector<CombatEvent> SimulationCore::advance(double delta_seconds) {
 			: std::vector<Transform2D>{};
 	for (std::size_t index = 0; index < slots_.size(); ++index) {
 		if (slots_[index].active && !projectile_flags_[index] && !xp_orb_flags_[index]) {
+			if (delta_seconds > 0.0 && health_[index].current < health_[index].maximum &&
+					enemy_types_[index].health_regen_per_second > 0.0F) {
+				health_[index].current = std::min(health_[index].maximum, health_[index].current +
+						enemy_types_[index].health_regen_per_second * static_cast<float>(delta_seconds));
+			}
 			if (movement_overrides_[index].has_value()) {
 				MovementOverride &movement = *movement_overrides_[index];
 				const double movement_seconds = std::min(delta_seconds, movement.remaining_seconds);

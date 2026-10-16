@@ -55,6 +55,18 @@ int main() {
 			armored_elite.entity(armored_id)->type.affix == "Armored" &&
 			armored_elite.entity(armored_id)->type.damage_taken_multiplier == 0.65F,
 			"proposed Armored elite affix should reduce incoming damage and persist in snapshots");
+	SimulationCore regenerating_elite;
+	const auto regenerating_id = regenerating_elite.spawn("elite", 0.0F, 0.0F, 50.0F, 0.0F, 0.0F,
+			3.0F, 75.0F, "Regenerating", 1.0F, 0.5F);
+	std::vector<dopamine::sim::CombatEvent> regeneration_events;
+	regenerating_elite.apply_direct_damage({}, regenerating_id, 10.0F, regeneration_events);
+	regenerating_elite.advance(4.0);
+	require(regenerating_elite.entity(regenerating_id)->health.current == 42.0F &&
+			regenerating_elite.entity(regenerating_id)->type.health_regen_per_second == 0.5F,
+			"proposed Regenerating elite affix should restore health over simulation time");
+	regenerating_elite.advance(100.0);
+	require(regenerating_elite.entity(regenerating_id)->health.current == 50.0F,
+			"proposed Regenerating elite affix should not exceed maximum health");
 	require(exploder_profile && exploder_profile->health == 30.0F && exploder_profile->speed == 60.0F &&
 			exploder_profile->threat_level == 2.0F,
 			"proposed Exploder profile should be available to Survival");
