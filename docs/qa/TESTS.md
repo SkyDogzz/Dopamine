@@ -915,6 +915,12 @@ Note de clôture : le blocage historique du smoke `sandbox_ui_smoke.gd` décrit 
 - [ ] Les deux smokes émettent encore des avertissements ObjectDB/ressources à la fermeture; la sortie détaillée du smoke boss identifie `boss_telegraph.wav` et ses `AudioStreamPlaybackWAV` encore référencés. La gestion SFX est suivie séparément; cette vérification ne démontre pas une fuite en session de production.
 - [ ] Ces smokes ciblés ne ferment pas l’équilibrage du combat ni P5.V3.
 
+## P5 — Coexistence Burn/Poison et Toxic Ignition — 2026-10-16
+
+- [x] `native/tests/simulation_core_test.cpp` couvre Burn et Poison actifs simultanément sur une cible, leurs ticks sur horloges indépendantes, leur conservation lors de la capture/restauration, et l’observation du Poison préexistant par un impact direct Inferno qui ajoute Burn.
+- [x] `survival_weapon_catalog_smoke.gd` passe sous Godot 4.7.2 : Toxic Ignition part d’un impact direct appliquant le second statut, inflige 50 % du coup dans le rayon configuré, respecte le cooldown par cible et ignore les ticks DoT.
+- [ ] La victoire P5.V3 sans assistance et l’équilibrage de Toxic Ignition restent à vérifier en run réelle; les tests automatisés ne les remplacent pas.
+
 ## P4 — Choix de l’arme de départ — 2026-10-16
 
 - [x] `survival_starting_weapon_smoke.gd` cherchait Inferno Sprayer par index fixe alors que les deux offres de départ sont mélangées. Le test sélectionne maintenant l’offre par son titre affiché.
