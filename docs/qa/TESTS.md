@@ -903,8 +903,9 @@ Note de clôture : le blocage historique du smoke `sandbox_ui_smoke.gd` décrit 
 - [x] Après correction du test d'ordre aléatoire et des fixtures de coffre/capacité, les 19 smokes P5 sélectionnés plus l'import Godot passent ensemble (20/20).
 - [x] Revalidation de tous les tests CTest hors scénarios `sandbox_*` : 64/64 passent en séquentiel sous Godot 4.7.2, incluant combat natif, Survival, contenu P5, progression, Armorless et interfaces.
 - [x] `sandbox_steering_scenario` passe après mise à jour de sa position attendue : la hitbox ennemie est maintenant alignée à 12 unités de rayon et la séparation des corps écarte les deux chasers de 24 unités au total.
-- [x] CTest séquentiel passe 75/75 en excluant les tests nommés `sandbox_weapon_*`; cela comprend les scénarios Sandbox de simulation, steering, projectiles, profils ennemis et DoT.
-- [ ] Le dernier lancement complet, avant ces corrections ciblées, était rouge (72/86). La suite complète reste à relancer après intégration du travail SFX; les scénarios Sandbox d'armes échouaient sur `Sfx` dans les modifications non commitées de `survival_session.gd`.
+- [x] Le runner d'armes charge désormais la scène Survival après l'initialisation du projet au lieu de la précharger depuis son script SceneTree; les dix scénarios Sandbox d'armes passent.
+- [x] `survival_weapon_smoke.gd` verrouille les PV de son fixture pour mesurer le soin sur élimination sans le confondre avec le HP decay accéléré; vingt répétitions directes passent.
+- [x] Suite CTest complète : 86/86 passent en séquentiel sous Godot 4.7.2 après ces corrections. Le run précédent (72/86 avant corrections) reste l'historique de la régression trouvée.
 - [ ] La victoire P5.V3 en run réelle, sans assistance, reste à réaliser.
 
 ## P5 — Revalidation ciblée native et boss — 2026-10-16

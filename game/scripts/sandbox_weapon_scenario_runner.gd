@@ -1,6 +1,5 @@
 extends SceneTree
 
-const SESSION_SCENE := preload("res://scenes/survival_session.tscn")
 const LOADOUT_SCRIPT := preload("res://scripts/survival_loadout.gd")
 const DEFAULT_OUTPUT := "user://sandbox/logs/latest_weapon_scenario.json"
 const MAX_SCENARIO_BYTES := 65_536
@@ -46,7 +45,11 @@ func _run() -> void:
 		_fail(validation_error)
 		return
 
-	var session: Node2D = SESSION_SCENE.instantiate()
+	var session_scene: PackedScene = load("res://scenes/survival_session.tscn")
+	if session_scene == null:
+		_fail("Sandbox weapon scenario could not load the Survival session")
+		return
+	var session: Node2D = session_scene.instantiate()
 	session.spawn_initial_enemy = false
 	session.wave_spawning_enabled = false
 	session.skip_starting_weapon_choice = true

@@ -59,6 +59,7 @@ func _run() -> void:
 		_fail("Choosing a relic should resume the run")
 		return
 	session.simulation.set_speed(4.0)
+	session._health_locked = true
 	session.player_hp = 80.0
 	for position in [Vector2(140.0, -30.0), Vector2(140.0, 30.0)]:
 		var sequence: int = session.simulation.spawn_enemy("chaser", 1, position, Vector2.ZERO)
