@@ -515,9 +515,9 @@ Travail requis :
   - [x] Rendre les améliorations temporaires accessibles depuis l'inventaire de pause Armorless; afficher coût/solde, résultat, focus restauré et simulation toujours suspendue.
 - [ ] **P7A.4 — Longue durée**
   - [x] Vérifier que le directeur Armorless enchaîne cinq cycles de boss aux vagues 12, 24, 36, 48 et 60 sans terminer la run : `armorless_wave_director_smoke.gd`.
-  - [x] Vérifier que le budget de population ne bloque pas les spawns et que la densité suit la difficulté : `survival_wave_spawn_smoke.gd` et `survival_difficulty_session_smoke.gd`.
-  - [ ] Vérifier HP decay sans reset, pauses boss et budgets de densité.
-  - [ ] Tester plusieurs cycles de boss et scaling proposé.
+  - [x] Vérifier dans une session Armorless que le temps actif et le HP decay continuent en état boss pendant que l'horloge de vague reste gelée, puis continuent après la transition sans reset.
+  - [x] Vérifier que la population proposée continue de croître après la vague 24 et que les PV ennemis restent au plafond proposé ×12; les smokes Survival vérifient aussi que le budget ne bloque pas les spawns et que la densité suit la difficulté.
+  - [ ] Parcourir une session Armorless complète en durée de production avec ses drafts, ses boss et ses pauses de choix.
 - [ ] **P7A.5 — Récompenses ouvertes**
   - [ ] Décider quels gains permanents sont attribués à Armorless.
   - [ ] Vérifier qu’aucun équipement permanent n’est accordé avant validation explicite.

@@ -3,6 +3,9 @@ extends SceneTree
 const DIRECTOR_SCRIPT := preload("res://scripts/survival_wave_director.gd")
 
 func _initialize() -> void:
+	call_deferred("_run")
+
+func _run() -> void:
 	var survival = DIRECTOR_SCRIPT.new()
 	for _wave in range(12):
 		survival.advance(30.0)
@@ -21,7 +24,46 @@ func _initialize() -> void:
 			armorless.state != DIRECTOR_SCRIPT.State.WAVE:
 			_fail("Armorless should continue after each boss every 12 completed waves")
 			return
-	print("armorless_wave_director_smoke: passed five boss cycles through wave 60")
+	var session: Node2D = load("res://scenes/survival_session.tscn").instantiate()
+	session.mode_id = "armorless"
+	session.spawn_initial_enemy = false
+	session.skip_starting_weapon_choice = true
+	session.player_hp = 10000.0
+	session.player_max_hp = 10000.0
+	root.add_child(session)
+	await process_frame
+	if session.simulation == null:
+		_fail("Armorless long-run session should initialize its simulation")
+		return
+	if session._wave_population(60) <= session._wave_population(24) or \
+		not is_equal_approx(session._enemy_hp_multiplier(60), session._enemy_hp_multiplier(24)):
+		_fail("Armorless population should keep growing while proposed enemy HP scaling remains at its cap")
+		return
+	session.wave_director.wave = 12
+	session.wave_director.state = DIRECTOR_SCRIPT.State.MID_BOSS
+	var boss_wave_time: float = session.wave_director.elapsed_in_wave
+	var initial_active_time: float = session.player_active_time
+	var initial_hp: float = session.player_hp
+	session.simulation.step(1.0)
+	var deadline := Time.get_ticks_msec() + 2000
+	while session.player_active_time <= initial_active_time and Time.get_ticks_msec() < deadline:
+		await process_frame
+	if session.player_active_time <= initial_active_time or session.player_hp >= initial_hp or \
+		not is_equal_approx(session.wave_director.elapsed_in_wave, boss_wave_time):
+		_fail("Armorless boss time should decay HP and advance active time while the wave clock stays frozen")
+		return
+	var active_time_before_next_wave: float = session.player_active_time
+	session.wave_director.boss_defeated()
+	session.simulation.step(1.0)
+	deadline = Time.get_ticks_msec() + 2000
+	while session.player_active_time <= active_time_before_next_wave and Time.get_ticks_msec() < deadline:
+		await process_frame
+	if session.player_active_time <= active_time_before_next_wave or session.player_hp >= initial_hp:
+		_fail("Armorless active time and HP decay should continue after a boss without resetting")
+		return
+	session.queue_free()
+	await process_frame
+	print("armorless_wave_director_smoke: passed five boss cycles through wave 60 and active-time decay")
 	quit(0)
 
 func _fail(message: String) -> void:
