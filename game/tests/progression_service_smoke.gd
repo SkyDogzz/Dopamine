@@ -6,6 +6,29 @@ func _initialize() -> void:
 	call_deferred("_run")
 
 func _run() -> void:
+	var equipment_generator = load("res://scripts/equipment_generator.gd")
+	var easy_start: Array = equipment_generator.rarity_weights_for("easy", 1)
+	var easy_final: Array = equipment_generator.rarity_weights_for("easy", 24)
+	var chaos_final: Array = equipment_generator.rarity_weights_for("chaos", 24)
+	if easy_start != [60.0, 30.0, 9.0, 0.9, 0.1] or \
+		not is_equal_approx(easy_final[0], 56.0) or \
+		not is_equal_approx(easy_final[1], 33.0) or \
+		not is_equal_approx(chaos_final[0], 0.0) or \
+		not is_equal_approx(easy_final.reduce(func(sum: float, weight: float) -> float: return sum + weight, 0.0), 100.0):
+		_fail("Equipment rarity weights should follow difficulty and the proposed wave progression rule")
+		return
+	var context_changes_roll := false
+	for seed_value in range(1, 10001):
+		var early_generator = equipment_generator.new(seed_value)
+		var late_generator = equipment_generator.new(seed_value)
+		var early_item: Dictionary = early_generator.generate_survival_item("early", "easy", 1)
+		var late_item: Dictionary = late_generator.generate_survival_item("late", "easy", 24)
+		if early_item["rarity"] != late_item["rarity"]:
+			context_changes_roll = true
+			break
+	if not context_changes_roll:
+		_fail("Seeded run equipment generation should consume difficulty and reached wave context")
+		return
 	var directory := ProjectSettings.globalize_path(TEST_DIRECTORY)
 	DirAccess.make_dir_recursive_absolute(directory)
 	for file_name in DirAccess.get_files_at(directory):
@@ -41,7 +64,6 @@ func _run() -> void:
 			inventory[0].get("instance_id") != "survival_run-win_equipment":
 		_fail("Every completed Survival run should add one permanent equipment instance")
 		return
-	var equipment_generator = load("res://scripts/equipment_generator.gd")
 	if not equipment_generator.PROPOSED_STAT_RANGES.has("damage_pct") or \
 				not is_equal_approx(equipment_generator.stat_value("damage_pct", 0.5, 2), 3.48) or \
 			equipment_generator.stat_value("damage_pct", 1.0, 0) != 5.0:

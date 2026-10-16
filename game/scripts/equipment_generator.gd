@@ -2,7 +2,16 @@ extends RefCounted
 
 const SLOTS := ["helmet", "armor", "gloves", "boots", "amulet", "ring"]
 const RARITIES := ["normal", "magic", "mystic", "legendary", "mythic"]
-const NORMAL_RARITY_WEIGHTS := [35.0, 40.0, 20.0, 4.5, 0.5]
+const PROPOSED_RARITY_WEIGHTS_BY_DIFFICULTY := {
+	"easy": [60.0, 30.0, 9.0, 0.9, 0.1],
+	"normal": [35.0, 40.0, 20.0, 4.5, 0.5],
+	"hard": [15.0, 30.0, 40.0, 13.0, 2.0],
+	"nightmare": [5.0, 15.0, 45.0, 28.0, 7.0],
+	"chaos": [0.0, 5.0, 35.0, 40.0, 20.0],
+}
+# A run reaching each six-wave milestone shifts one percentage point from Normal
+# into the existing non-Normal distribution. This remains a proposed tuning rule.
+const PROPOSED_WAVE_RARITY_SHIFT_PER_SIX_WAVES := 1.0
 const STAT_IDS := [
 	"damage_pct", "attack_speed_pct", "critical_chance_pct", "critical_damage_pct",
 	"max_hp", "move_speed_pct", "kill_healing_pct", "area_pct", "cooldown_reduction_pct",
@@ -26,8 +35,8 @@ func _init(seed_value: int = 0) -> void:
 	else:
 		_rng.seed = seed_value
 
-func generate_survival_item(run_id: String) -> Dictionary:
-	var rarity := _roll_normal_rarity()
+func generate_survival_item(run_id: String, difficulty_id: String = "normal", wave_reached: int = 1) -> Dictionary:
+	var rarity := _roll_rarity(rarity_weights_for(difficulty_id, wave_reached))
 	var available_stats: Array = STAT_IDS.duplicate()
 	var stat_lines: Array[Dictionary] = []
 	for index in range(STAT_LINE_COUNTS[rarity]):
@@ -62,11 +71,29 @@ static func stat_label(stat_id: String, value: float) -> String:
 		return "+%.1f HP" % value
 	return "+%.1f%%" % value
 
-func _roll_normal_rarity() -> String:
+static func rarity_weights_for(difficulty_id: String, wave_reached: int) -> Array[float]:
+	var weights: Array = PROPOSED_RARITY_WEIGHTS_BY_DIFFICULTY.get(
+		difficulty_id, PROPOSED_RARITY_WEIGHTS_BY_DIFFICULTY["normal"]
+	).duplicate()
+	var normal_weight: float = weights[0]
+	var non_normal_weight := 100.0 - normal_weight
+	if non_normal_weight <= 0.0:
+		return weights
+	var milestones := maxi(0, clampi(wave_reached, 1, 24) / 6)
+	var shift := minf(normal_weight, PROPOSED_WAVE_RARITY_SHIFT_PER_SIX_WAVES * milestones)
+	weights[0] = normal_weight - shift
+	for index in range(1, weights.size()):
+		weights[index] += shift * weights[index] / non_normal_weight
+	var typed_weights: Array[float] = []
+	for weight in weights:
+		typed_weights.append(float(weight))
+	return typed_weights
+
+func _roll_rarity(weights: Array[float]) -> String:
 	var roll := _rng.randf_range(0.0, 100.0)
 	var cumulative := 0.0
 	for index in range(RARITIES.size()):
-		cumulative += NORMAL_RARITY_WEIGHTS[index]
+		cumulative += weights[index]
 		if roll < cumulative:
 			return RARITIES[index]
 	return RARITIES.back()

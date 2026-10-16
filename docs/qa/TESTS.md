@@ -12,6 +12,12 @@
 - [x] `progression_service_smoke.gd` vérifie qu’une victoire et une défaite distinctes ajoutent chacune une seule pièce et que le retraitement du même `run_id` n’en ajoute pas une seconde.
 - [x] Les quatre smokes ciblés passent. La suite séquentielle passe 67/67 sous Godot 4.7.2; `survival_weapon_catalog_smoke` a échoué une première fois de façon intermittente, puis a passé seul et dans le rerun complet.
 
+## P6 — Tirage de rareté équipement — 2026-10-16
+
+- [x] `equipment_rarity_smoke.gd` compare 20 000 tirages seedés à la table attendue pour Easy, Normal, Hard, Nightmare et Chaos, aux vagues 1 et 24; les observations restent dans une tolérance de cinq écarts-types.
+- [x] `progression_service_smoke.gd` vérifie les poids, la somme de 100 %, le transfert proposé par paliers de vagues et que le contexte affecte effectivement le résultat généré.
+- [ ] Pénalité de mort précoce et calibration des taux restent à définir/mesurer; cette implémentation ne les déclare pas validés.
+
 ## P5 — Chaînes Lightning — 2026-10-16
 
 - [x] Un arc Lightning ignore désormais sa cible source afin que le saut touche l’ennemi suivant, y compris lorsque les cibles sont très proches; sa position de départ est bornée par l’écart au prochain ennemi.

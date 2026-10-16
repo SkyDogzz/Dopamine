@@ -65,7 +65,7 @@ func award_survival_run(
 	var powder_reward := roundi((20.0 + 3.0 * wave + (30.0 if final_boss_vanquished else 0.0)) * difficulty_factors["powder"])
 	profile["resources"]["essence"] = int(profile["resources"]["essence"]) + essence_reward
 	profile["resources"]["powder_basic"] = int(profile["resources"]["powder_basic"]) + powder_reward
-	var equipment: Dictionary = _equipment_generator.generate_survival_item(run_id)
+	var equipment: Dictionary = _equipment_generator.generate_survival_item(run_id, difficulty_id, wave)
 	profile["equipment_inventory"].append(equipment)
 	var achievements: Dictionary = profile["achievement_progress"]
 	var previous_tier := int(achievements["exterminator_tier"])

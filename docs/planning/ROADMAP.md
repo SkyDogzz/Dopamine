@@ -439,7 +439,7 @@ Travail requis :
 
 - `SaveService` possède format versionné/checksum/backup et QA historique de migration/altération.
 - `ProgressionService` possède des profils v6 avec difficulté maximale débloquée (Easy par défaut), récompenses de run, idempotence par `run_id`, inventaire, six slots, cinq raretés, stat lines, enhancement, conversion Powder, deux nodes de prototype et Exterminator. La règle [VALIDÉE] de déblocage séquentiel après victoire sur le boss de vague 24 est codée; les récompenses d’une difficulté verrouillée sont refusées. Les facteurs de difficulté [PROPOSÉS] sont centralisés et appliqués à la simulation ainsi qu’aux récompenses. Le hub injecte profil et difficulté dans la run; le raccourci Sandbox fonctionne sans service de progression.
-- Le générateur choisit pour l’instant une distribution de rareté Normal fixe et propose les plages de rolls ; les changements de difficulté et pénalité de mort précoce manquent.
+- Le générateur choisit les poids de rareté par difficulté et vague, selon une règle **[PROPOSÉE]**; la pénalité de mort précoce et la calibration statistique/équilibrage des plages restent à faire.
 - Les achievements ne couvrent qu’un compteur de kills avec quatre paliers ; ce n’est pas le catalogue cible de 100–150 familles.
 - Les nodes sont deux prototypes, pas le graphe interconnecté de 100–150.
 - Quatre effets uniques ont un chemin gameplay prototype selon QA ; `free_first_chest_reroll` et `revive_knockback` sont stockables mais sans effet. `elite_haste` ne constitue pas un comportement vérifié tant que le système d’élites ne le déclenche pas.
@@ -452,9 +452,10 @@ Travail requis :
   - [x] Vérifier qu’une run finie (victoire ou défaite) donne une seule pièce.
   - [x] Vérifier que les lignes d’un objet n’ont pas de statistique dupliquée.
 - [ ] **P6.2 — Rareté et rolls**
-  - [ ] Ajouter difficulté et vague aux entrées du générateur.
+  - [x] Ajouter difficulté et vague aux entrées du générateur; les poids **[PROPOSÉS]** du GDD sont sélectionnés par difficulté et déplacent 1 point de Normal vers les autres raretés à chaque tranche de six vagues atteintes (jusqu’à quatre points en vague 24).
   - [ ] Implémenter la pénalité de mort précoce après validation des règles.
-  - [ ] Vérifier distribution par seed et consigner les valeurs encore proposées.
+  - [x] Smoke ciblé vérifie les poids Easy/Chaos, la conservation de la somme à 100 %, l’effet de vague sur le tirage seedé et les poids proposés par difficulté; cela ne constitue pas un calibrage statistique.
+  - [x] `equipment_rarity_smoke.gd` vérifie par seed 20 000 tirages sur les cinq difficultés aux vagues 1 et 24 dans une tolérance statistique; les probabilités et la règle de progression restent **[PROPOSÉES]**, non calibrées.
 - [ ] **P6.3 — Application des statistiques**
   - [ ] Vérifier une stat à la fois dans une session Survival.
   - [ ] Couvrir HP, mobilité, dégât, cadence, critique, soin, aire, cooldown, XP et vitesse projectile.
