@@ -118,6 +118,12 @@
 - [x] `equipment_stats_smoke.gd` charge un seul bonus d’équipement par profil et lance une session Survival séparée par stat; vérifie HP, mobilité, dégâts, cadence, chance et dégâts critiques, soin par élimination, aire, cooldown, XP, portée de collecte et vitesse projectile.
 - [x] `survival_chest_smoke.gd` passe sous Godot 4.7.2; le rayon bonus et l’impulsion Magnet Heart collectent les orbes XP, tandis qu’un coffre placé au-delà de `chest_collection_radius` reste intact.
 
+## P6 — Bonus automatiques des niveaux XP — 2026-10-16
+
+- [x] `survival_xp_run_bonuses_smoke.gd` vérifie les douze stats dans l’ordre validé, le redémarrage du cycle après douze gains, un point de pourcentage par stat, la hausse de PV max/current de 1 % au tour correspondant en conservant le ratio, les valeurs de contribution du hub, et la remise à zéro à la création d’une nouvelle run.
+- [x] Exécuté avec Godot 4.7.2 headless; aucune sauvegarde n’est chargée ou modifiée par ce scénario.
+- [ ] Le tuning de combat et l’effet de la rotation sur la durée/équilibre des runs restent à mesurer dans les parcours représentatifs P6.9.
+
 ## P6.4 — Enhancement — 2026-10-16
 
 - [x] `equipment_enhancement_smoke.gd` vérifie les niveaux +0..+10 avec chaque tier Powder, réussite garantie au dixième essai, échec normal, échec critique avec protection au niveau 0, coûts proposés par niveau/rareté et conversions 10:1 à sens unique. Coûts et probabilités restent **[PROPOSÉS]** et non calibrés.

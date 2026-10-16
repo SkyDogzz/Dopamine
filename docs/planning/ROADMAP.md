@@ -33,7 +33,7 @@ L’audit initial était statique. Les tranches Minigun, Toxic Cloud, Sawblades 
 
 **Bien intégré comme fondation :** simulation native découplée de Godot, worker, commandes/snapshots, limites de charge, outils Sandbox, loop de run Survival, pause/chest/XP, dix armes et leurs paires de reliques/évolutions en prototypes de combat, sauvegarde versionnée, premiers écrans d’équipement.
 
-**Intégré en prototype, à ne pas confondre avec une feature finie :** boss (patterns en phases, combat et équilibrage complets à valider), XP auto-bonus, loot/probabilités, dix évolutions, Void Orb à attraction/percée, Frost Nova avec Chill/Absolute Zero, Sawblades à ricochets/Razorstorm, Meteor Staff en zone/Starfall fragmenté, Toxic Cloud en champ persistant, équipement et enhancement, trois nodes Core Stats, famille Exterminator, effets uniques, récompenses de run et mode Armorless en cours. Les paramètres restent souvent **[PROPOSÉS]**.
+**Intégré en prototype, à ne pas confondre avec une feature finie :** boss (patterns en phases, combat et équilibrage complets à valider), loot/probabilités, dix évolutions, Void Orb à attraction/percée, Frost Nova avec Chill/Absolute Zero, Sawblades à ricochets/Razorstorm, Meteor Staff en zone/Starfall fragmenté, Toxic Cloud en champ persistant, équipement et enhancement, trois nodes Core Stats, famille Exterminator, effets uniques, récompenses de run et mode Armorless en cours. Les paramètres restent souvent **[PROPOSÉS]**.
 
 **Survolé ou absent par rapport au GDD :** autres pickups attirables par Magnet Heart (seules les orbes XP existent actuellement) ; validation et équilibrage du combat complet des armes et boss ; victoire P5.V3 en run réelle sans assistance ; arbitrage des réactions élémentaires proposées, avec Overcharge **[OUVERT]** ; tree interconnecté d’environ 120 nodes ; catalogue d’achievements au plancher de 100 familles; l’extension vers la cible éditoriale proposée de 120 reste à faire ; Armorless complet et Endless standard après arbitrages ; Sandbox Lab joueur complet ; performance sur iGPU et build Windows.
 
@@ -57,14 +57,14 @@ P9 vérifie et calibre les tranches livrables, puis la version complète.
 **Priorité :** tranche UI à prendre avant de reprendre le travail nominal P5/P6. Ce module ne remplace pas ces jalons et ne prétend pas les clore. Sa spec d'implémentation est [`tasks/ui-refonte/SPEC-run-stat-hub.md`](../../tasks/ui-refonte/SPEC-run-stat-hub.md), liée depuis la [carte des capacités UI](../../UI_CAPABILITY_MAP.md).
 
 - [x] Afficher à gauche un hub compact des statistiques effectives de la run.
-- [x] Ouvrir avec Tab un panneau en lecture seule indiquant les totaux et les contributions de la progression de run (XP incluse), l'équipement, les achievements et le skill tree. Le niveau XP et l'absence de bonus par niveau configuré sont indiqués explicitement.
+- [x] Ouvrir avec Tab un panneau en lecture seule indiquant les totaux et les contributions de la progression de run (XP incluse), l'équipement, les achievements et le skill tree. Le niveau XP et le nombre de bonus automatiques appliqués sont indiqués explicitement.
 - [x] Garder le gameplay actif et les horloges en marche pendant l'affichage du panneau.
 - [x] Vérifier navigation clavier/manette, lisibilité à 640×360 et agrandissement, et isolation stricte du Sandbox.
-- [ ] Implémenter les bonus automatiques d'XP lorsque l'ordre et les valeurs de la rotation seront définis; d'ici là ne pas inventer de balance.
+- [x] Implémenter les bonus automatiques d'XP selon la rotation fixe validée; `survival_xp_run_bonuses_smoke.gd` couvre les douze statistiques, la répétition du cycle, les PV proportionnels, le hub et la remise à zéro entre deux runs.
 
-La rotation automatique fixe des bonus XP est **[VALIDÉE]** comme règle d'expérience; son ordre, ses valeurs et ses caps restent **[À DÉFINIR]** dans le GDD. Le panneau de stats peut être implémenté avec les sources existantes sans attendre cet arbitrage.
+La rotation et les incréments automatiques sont **[VALIDÉS]** par l’extension GDD du 2026-10-16. Leur balance reste à surveiller lors des runs représentatives P6.9; cela ne change pas le statut des paramètres de combat **[PROPOSÉS]**.
 
-P6 a déjà du code anticipé, mais le chemin nominal reste P5 puis P6. P7 standard ne doit pas commencer avant résolution des sujets **[OUVERTS]**. Les travaux P8 peuvent avancer sur l’architecture après les contrats partagés, sans donner au Sandbox de droit d’écrire les sauvegardes normales.
+P6 a déjà du code anticipé, dont la rotation automatique des bonus XP **[VALIDÉE]**, mais le chemin nominal reste P5 puis P6. P7 standard ne doit pas commencer avant résolution des sujets **[OUVERTS]**. Les travaux P8 peuvent avancer sur l’architecture après les contrats partagés, sans donner au Sandbox de droit d’écrire les sauvegardes normales.
 
 ## P0 — Fondations techniques et dépôt
 
