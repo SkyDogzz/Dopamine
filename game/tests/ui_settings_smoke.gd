@@ -45,6 +45,10 @@ func _run() -> void:
 	var volume_value := panel.get_node("Content/Center/OptionsCard/OptionsContent/VolumeRow/VolumeValue") as Label
 	var back_button := panel.get_node("Content/Center/OptionsCard/OptionsContent/BackButton") as Button
 	var options_card := panel.get_node("Content/Center/OptionsCard") as Control
+	var options_surface := options_card.get_theme_stylebox("panel") as StyleBoxFlat
+	if options_surface == null or options_surface.border_color.to_html(false) != "37e8f5":
+		_fail("Options should use the shared compact cyan frame")
+		return
 	var display_title := panel.get_node("Content/Center/OptionsCard/OptionsContent/DisplayTitle") as Label
 	var display_divider := panel.get_node("Content/Center/OptionsCard/OptionsContent/DisplayDivider") as HSeparator
 	var options_content := panel.get_node("Content/Center/OptionsCard/OptionsContent") as VBoxContainer
@@ -94,7 +98,7 @@ func _run() -> void:
 	if not accept_a_found or not cancel_b_found:
 		_fail("Standard UI accept/cancel actions should map to gamepad A/B")
 		return
-	for viewport_size in [Vector2i(1280, 800), Vector2i(960, 600), Vector2i(1600, 900)]:
+	for viewport_size in [Vector2i(640, 360), Vector2i(1280, 720), Vector2i(1920, 1080)]:
 		root.size = viewport_size
 		await process_frame
 		var card_rect := options_card.get_global_rect()

@@ -60,6 +60,7 @@ size_flags_vertical = 3
 [node name="OptionsCard" type="PanelContainer" parent="Content/Center"]
 custom_minimum_size = Vector2(280, 0)
 layout_mode = 2
+theme_type_variation = "CompactPanel"
 
 [node name="OptionsContent" type="VBoxContainer" parent="Content/Center/OptionsCard"]
 layout_mode = 2
