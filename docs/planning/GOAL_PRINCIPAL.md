@@ -1,6 +1,6 @@
 # Goal principal — livraison complète du jeu
 
-**État dans Codex : en pause.** Ce document conserve l’objectif afin qu’il reste consultable indépendamment de l’état de la session.
+**État dans Codex : actif.** Le goal principal a été repris; ce document conserve son objectif de référence.
 
 ## Objectif
 
@@ -10,4 +10,4 @@ Préserver Sandbox-first et l’isolation stricte des sauvegardes; garder sépar
 
 ## Reprise
 
-Le goal Codex associé est actuellement en pause. Ne le reprendre que sur demande explicite. À la reprise, consulter le GDD, les ADR, l’architecture, la roadmap, les risques et les tests d’acceptation référencés dans [`README.md`](../../README.md), puis reprendre à partir de P5 sans remplacer ni réécrire les plans existants.
+Le goal Codex associé est actif. Poursuivre à partir de P5 en consultant le GDD, les ADR, l’architecture, la roadmap, les risques et les tests d’acceptation référencés dans [`README.md`](../../README.md), sans remplacer ni réécrire les plans existants.
