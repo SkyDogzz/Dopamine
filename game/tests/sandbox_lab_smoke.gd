@@ -67,6 +67,11 @@ func _run() -> void:
 	if not await _wait_for_projectiles(lab.context.simulation):
 		_fail("The applied weapon build should fire through the Survival combat implementation")
 		return
+	lab.get_node("Root/Body/Left/ProjectileControls/ClearProjectilesButton").pressed.emit()
+	if not await _wait_for_projectile_count(lab.context.simulation, 0) or \
+			int(lab.context.simulation.snapshot()["metrics"]["entity_count"]) == 0:
+		_fail("Clear Projectiles should remove shots while preserving the spawned enemies")
+		return
 	lab.get_node("Root/Body/Left/Controls/ResetButton").pressed.emit()
 	if not await _wait_for_empty_simulation(lab.context) or \
 			lab.context.session.loadout.weapon_level("lightning_conductor") != 1 or \
@@ -101,6 +106,14 @@ func _wait_for_projectiles(simulation: Object) -> bool:
 	while Time.get_ticks_msec() < deadline:
 		await process_frame
 		if int(simulation.snapshot()["metrics"]["projectile_count"]) > 0:
+			return true
+	return false
+
+func _wait_for_projectile_count(simulation: Object, expected_count: int) -> bool:
+	var deadline := Time.get_ticks_msec() + 1500
+	while Time.get_ticks_msec() < deadline:
+		await process_frame
+		if int(simulation.snapshot()["metrics"]["projectile_count"]) == expected_count:
 			return true
 	return false
 

@@ -107,6 +107,15 @@ layout_mode = 2
 focus_mode = 2
 item_count = 0
 
+[node name="ProjectileControls" type="HBoxContainer" parent="Root/Body/Left"]
+layout_mode = 2
+
+[node name="ClearProjectilesButton" type="Button" parent="Root/Body/Left/ProjectileControls"]
+custom_minimum_size = Vector2(100, 20)
+layout_mode = 2
+focus_mode = 2
+text = "CLEAR PROJECTILES"
+
 [node name="Side" type="ScrollContainer" parent="Root/Body"]
 custom_minimum_size = Vector2(235, 0)
 layout_mode = 2

@@ -29,6 +29,7 @@ func _ready() -> void:
 	$Root/Body/Left/Controls/SpawnButton.pressed.connect(_spawn_enemies)
 	$Root/Body/Left/Controls/KillButton.pressed.connect(_kill_all)
 	$Root/Body/Left/Controls/ResetButton.pressed.connect(_reset)
+	$Root/Body/Left/ProjectileControls/ClearProjectilesButton.pressed.connect(_clear_projectiles)
 	_speed_select.item_selected.connect(_set_speed)
 	$Root/Body/Side/Sections/PresetActions/SavePreset.pressed.connect(_save_preset)
 	$Root/Body/Side/Sections/PresetActions/LoadPreset.pressed.connect(_load_preset)
@@ -89,6 +90,18 @@ func _spawn_enemies() -> void:
 func _kill_all() -> void:
 	var sequence: int = context.simulation.kill_all()
 	_set_status("KILL ALL QUEUED" if sequence > 0 else "COMMAND REJECTED", sequence <= 0)
+
+func _clear_projectiles() -> void:
+	var state: Dictionary = context.simulation.snapshot()
+	var queued := 0
+	for entity in state["entities"]:
+		var components: Dictionary = entity["components"]
+		if not bool(components.get("IsProjectile", false)):
+			continue
+		var id: Dictionary = entity["id"]
+		if context.simulation.despawn(int(id["index"]), int(id["generation"])) > 0:
+			queued += 1
+	_set_status("CLEAR %d PROJECTILES QUEUED" % queued if queued > 0 else "NO PROJECTILES", false)
 
 func _reset() -> void:
 	var active_preset: Dictionary = context.active_preset.duplicate(true)
