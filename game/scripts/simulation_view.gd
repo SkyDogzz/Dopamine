@@ -54,6 +54,7 @@ func _draw() -> void:
 		draw_line(Vector2(x, 0), Vector2(x, size.y), COLOR_GRID, 1.0)
 	for y in range(0, int(size.y), GRID_SIZE):
 		draw_line(Vector2(0, y), Vector2(size.x, y), COLOR_GRID, 1.0)
+	_sprite_renderer.draw_projectile_trails(self)
 	_sprite_renderer.draw_batches(self)
 
 	var center := size * 0.5

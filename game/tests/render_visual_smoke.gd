@@ -24,7 +24,7 @@ func _run() -> void:
 		for local_index in range(first_enemy, last_enemy):
 			var column := local_index % 25
 			var row := local_index / 25
-			var position := Vector2(-350.0 + float(column) * 14.0, -260.0 + float(row) * 26.0)
+			var position := Vector2(-168.0 + float(column) * 14.0, -96.0 + float(row) * 10.0)
 			last_sequence = simulation.spawn_enemy("chaser", 1, position, Vector2.ZERO)
 			if last_sequence == 0:
 				_fail("Enemy render load exceeded the simulation command capacity")
@@ -35,9 +35,9 @@ func _run() -> void:
 	for chunk in range(10):
 		var last_sequence := 0
 		for index in range(chunk * 200, (chunk + 1) * 200):
-			var column := index % 25
-			var row := index / 25
-			var position := Vector2(3.0 + float(column) * 17.0, -296.0 + float(row) * 7.4)
+			var column := index % 50
+			var row := index / 50
+			var position := Vector2(-154.0 + float(column) * 6.2, -112.0 + float(row) * 5.6)
 			last_sequence = simulation.spawn_projectile("lightning_conductor", position, Vector2.ZERO, 1.0, 2.0, 60.0)
 			if last_sequence == 0:
 				_fail("Projectile render load exceeded the simulation command capacity")
@@ -45,7 +45,7 @@ func _run() -> void:
 		if not await _wait_for_sequence(simulation, last_sequence):
 			_fail("Could not spawn the projectile render batch")
 			return
-	var elite_sequence: int = simulation.spawn_enemy("elite", 1, Vector2(300.0, 160.0), Vector2.ZERO)
+	var elite_sequence: int = simulation.spawn_enemy("elite", 1, Vector2(150.0, 100.0), Vector2.ZERO)
 	if elite_sequence <= 0:
 		_fail("Could not spawn the Hasted elite render probe")
 		return
@@ -73,10 +73,10 @@ func _run() -> void:
 	await process_frame
 	await RenderingServer.frame_post_draw
 	var image: Image = get_root().get_texture().get_image()
-	if image.is_empty() or image.get_width() < 1280 or image.get_height() < 800:
-		_fail("Godot did not produce a full-size rendered frame")
+	if image.is_empty() or image.get_width() != 640 or image.get_height() != 360:
+		_fail("Godot did not produce the logical 640x360 frame")
 		return
-	var enemy_pixel: Vector2 = view.get_global_transform_with_canvas() * (view.size * 0.5 + Vector2(-350.0, -260.0))
+	var enemy_pixel: Vector2 = view.get_global_transform_with_canvas() * (view.size * 0.5 + Vector2(-168.0, -96.0))
 	var cyan_highlight_visible := false
 	var sampled_color := Color.TRANSPARENT
 	for y in range(int(enemy_pixel.y) - 12, int(enemy_pixel.y) + 13):
@@ -91,7 +91,7 @@ func _run() -> void:
 	if not cyan_highlight_visible:
 		_fail("The cyan highlight on the known enemy sprite was not visible in the rendered frame: %s" % sampled_color)
 		return
-	var elite_center: Vector2 = view.get_global_transform_with_canvas() * (view.size * 0.5 + Vector2(300.0, 160.0))
+	var elite_center: Vector2 = view.get_global_transform_with_canvas() * (view.size * 0.5 + Vector2(150.0, 100.0))
 	var haste_ring_visible := false
 	for y in range(int(elite_center.y) - 22, int(elite_center.y) + 23):
 		for x in range(int(elite_center.x) - 22, int(elite_center.x) + 23):

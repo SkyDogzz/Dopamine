@@ -188,7 +188,7 @@ Le runner est fourni par `game/scripts/scenario_runner.gd` et consomme un fichie
 
 ## UI refonte — sandbox-ui (2026-10-16)
 
-- [x] `render_visual_smoke.gd` sous Xvfb/Mesa : rendu à 1280×800 vérifié visuellement; les entités restent maintenant découpées dans la zone de simulation, sans recouvrir l’accueil. llvmpipe passe le smoke de rendu; audio et V-Sync indisponibles dans le conteneur.
+- [x] `render_visual_smoke.gd` sous Xvfb/Mesa : scène Sandbox vérifiée à 640×360 logiques dans la fenêtre par défaut 1280×720; les entités restent découpées dans la zone de simulation, sans recouvrir l’accueil. llvmpipe passe le smoke; audio et V-Sync indisponibles dans le conteneur.
 - [x] `sandbox_ui_smoke.gd` : Theme partagé, grille métriques, focus initial, spawn/inspection/DoT, pause/reprise, step/vitesse, tuning/reset et sauvegarde sentinelle inchangée. Godot 4.7.2 headless passe avec `XDG_DATA_HOME` temporaire isolé.
 - [x] `sandbox_smoke.gd` : vérification de base Sandbox.
 - [x] Vérification statique : `main.gd` et la scène Sandbox ne référencent pas `SaveService` ni les services de progression. Le Sandbox conserve son chemin isolé vers le prototype Survival.
@@ -200,7 +200,7 @@ Le runner est fourni par `game/scripts/scenario_runner.gd` et consomme un fichie
 ## Clôture UI intégrée (2026-10-16)
 
 - [x] Suite ciblée de 21 smokes UI/intégration passés sous Godot 4.7.2 Linux avec profils `XDG_DATA_HOME` temporaires isolés : foundation, settings, navigation, hub/layout, HUD, départ, coffres, résultats, pause/inventaire/abandon, loadout, durée de vague, entrée et Sandbox. La liste exacte est dans [`INTEGRATION-ui-refonte.md`](../../tasks/ui-refonte/INTEGRATION-ui-refonte.md).
-- [x] Import éditeur headless et rendu `render_visual_smoke.gd` sous Xvfb/Mesa passés; inspection du Sandbox à 1280×800 confirme le clipping du playfield.
+- [x] Import éditeur headless et rendu `render_visual_smoke.gd` sous Xvfb/Mesa passés; inspection du Sandbox à 640×360 logiques confirme le clipping du playfield.
 - [x] Clôture documentaire des sept modules dans `tasks/ui-refonte/` et mise à jour de la carte de capacités.
 - [ ] Interaction physique manette/souris, plein écran sur écran réel et sortie audio matérielle non vérifiés.
 - [ ] Build natif et CTest non exécutés : `cmake` et `ctest` ne sont pas dans le PATH.
@@ -289,5 +289,12 @@ Note de clôture : le blocage historique du smoke `sandbox_ui_smoke.gd` décrit 
 ## Explosion de pixels à la mort d’un ennemi (2026-10-16)
 
 - [x] L’événement de mort d’un ennemi dessine huit fragments carrés de la palette maître; le burst suit le temps de simulation, se fige en pause et ne crée aucune entité de combat.
-- [x] `survival_weapon_smoke.gd` vérifie le VFX des ennemis tués, huit fragments par burst et l’absence de burst pour les projectiles ennemis.
+- [x] `survival_weapon_smoke.gd` vérifie huit fragments par burst et l’absence de burst pour les projectiles ennemis; la capture en jeu confirme le rendu du burst.
 - [x] Durée 0,32 s et nombre de pixels sont **[PROPOSÉS]**; dégâts, cibles, collisions et récompenses inchangés.
+
+## Traînées visuelles des projectiles (2026-10-16)
+
+- [x] `render_batching_smoke.gd` vérifie que les trajectoires orientent les traits derrière les projectiles, que leur plafond visuel tient sous forte charge et qu’ils sont effacés avec les entités.
+- [x] Le renderer Survival et le Sandbox dessinent ces traits sous les sprites; inspection d’une capture Survival logique 640×360.
+- [x] Longueur, cyan neutre et budget maximal de 256 sont **[PROPOSÉS]**; le mapping couleur par élément reste **[OUVERT]**.
+- [x] `render_visual_smoke.gd` passe après alignement de ses positions de stress sur la zone Sandbox visible et sur le viewport logique 640×360; rendu dense revu visuellement.

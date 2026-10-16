@@ -29,6 +29,9 @@ func _run() -> void:
 	view.set_entities(entities)
 	assert(view._enemy_multimesh.instance_count == 500, "500 enemies should fit one MultiMesh batch")
 	assert(view._projectile_multimesh.instance_count == 2000, "2,000 projectiles should fit one MultiMesh batch")
+	assert(view._sprite_renderer._projectile_trails.size() == view._sprite_renderer.MAX_PROJECTILE_TRAILS, "Projectile trails should use a fixed visual budget under load")
+	assert(view._sprite_renderer._projectile_trails[0]["start"].x < view._sprite_renderer._projectile_trails[0]["end"].x, "A right-moving projectile should trail behind its current position")
+	assert(is_equal_approx(view._sprite_renderer._projectile_trails[0]["start"].distance_to(view._sprite_renderer._projectile_trails[0]["end"]), 12.0), "Projectile trails should keep the proposed 12-pixel length")
 	assert(view._xp_multimesh.instance_count == 1, "XP orbs should use a separate MultiMesh batch")
 	assert(view._sprite_renderer._batches["xp_orb"]["texture"].resource_path.ends_with("rewards/xp_orb.png"), "XP should load its dedicated pixel-art reward sprite")
 	assert(view._sprite_renderer.multimesh_for("enemy_tank").instance_count == 1, "Enemy profiles should use their sprite batches")
@@ -57,6 +60,7 @@ func _run() -> void:
 	view.set_entities([])
 	assert(view._enemy_multimesh.instance_count == 0, "Removing entities should clear stale render instances")
 	assert(view._projectile_multimesh.instance_count == 0, "Removing entities should clear stale projectile instances")
+	assert(view._sprite_renderer._projectile_trails.is_empty(), "Removing entities should clear projectile trails")
 	assert(view._xp_multimesh.instance_count == 0, "Removing entities should clear stale XP instances")
 	assert(not view._selected_entity_found, "Removing the selected entity should clear its overlay")
 	print("Simulation view batches enemies, projectiles and XP with MultiMesh")
@@ -66,6 +70,7 @@ func _entity(index: int, entity_type: String, x: float, y: float) -> Dictionary:
 	var components := {"Transform2D": {"x": x, "y": y}}
 	if entity_type == "projectile" or entity_type.begins_with("projectile_"):
 		components["IsProjectile"] = true
+		components["Velocity2D"] = {"x": 80.0, "y": 0.0}
 		if entity_type == "projectile_inferno":
 			components["EnemyType"] = "inferno_sprayer"
 		elif entity_type == "projectile_minigun":

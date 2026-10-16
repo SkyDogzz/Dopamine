@@ -1,5 +1,9 @@
 extends RefCounted
 
+const MAX_PROJECTILE_TRAILS := 256
+const PROJECTILE_TRAIL_LENGTH := 12.0
+const PROJECTILE_TRAIL_SHADOW := Color("#075A80", 0.8)
+const PROJECTILE_TRAIL_COLOR := Color("#37E8F5", 0.72)
 const SPRITE_FILES := {
 	"enemy_chaser": "roster/enemy_chaser",
 	"enemy_sprinter": "roster/enemy_sprinter",
@@ -40,6 +44,7 @@ const SPRITE_FILES := {
 }
 
 var _batches: Dictionary = {}
+var _projectile_trails: Array[Dictionary] = []
 var _selected_index := -1
 var _selected_generation := -1
 var selected_point := Vector2.ZERO
@@ -63,6 +68,7 @@ func _init() -> void:
 
 func set_entities(entities: Array, origin: Vector2 = Vector2.ZERO) -> void:
 	var instances_by_sprite: Dictionary = {}
+	_projectile_trails.clear()
 	for sprite_id in _batches:
 		instances_by_sprite[sprite_id] = []
 	selected_entity_found = false
@@ -80,6 +86,12 @@ func set_entities(entities: Array, origin: Vector2 = Vector2.ZERO) -> void:
 			var direction := Vector2(float(velocity.get("x", 0.0)), float(velocity.get("y", 0.0)))
 			if direction.length_squared() > 0.001:
 				rotation = direction.angle() + PI * 0.5
+				if _projectile_trails.size() < MAX_PROJECTILE_TRAILS:
+					var trail_end := point.round()
+					_projectile_trails.append({
+						"start": (point - direction.normalized() * PROJECTILE_TRAIL_LENGTH).round(),
+						"end": trail_end,
+					})
 		instances_by_sprite[sprite_id].append({"point": point, "size": size, "rotation": rotation})
 		var id: Dictionary = entity["id"]
 		if int(id["index"]) == _selected_index and int(id["generation"]) == _selected_generation:
@@ -99,6 +111,11 @@ func draw_batches(canvas: CanvasItem) -> void:
 		var multimesh: MultiMesh = batch["multimesh"]
 		if multimesh.instance_count > 0:
 			canvas.draw_multimesh(multimesh, batch["texture"])
+
+func draw_projectile_trails(canvas: CanvasItem) -> void:
+	for trail in _projectile_trails:
+		canvas.draw_line(trail["start"], trail["end"], PROJECTILE_TRAIL_SHADOW, 3.0, false)
+		canvas.draw_line(trail["start"], trail["end"], PROJECTILE_TRAIL_COLOR, 1.0, false)
 
 func draw_enemy_feedback(canvas: CanvasItem, entities: Array, origin: Vector2 = Vector2.ZERO) -> void:
 	for entity in entities:

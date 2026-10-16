@@ -19,6 +19,7 @@ The current generated pixel art is a visual prototype for the first playable. Th
 - `sprites/`: player, enemy archetypes and bosses, XP, chest, and legacy relic artwork. The catalog icons above are the active presentation icons for equipment and choices.
 - `sprites/survival_ground.svg` remains a non-active visual reference. The previous SVG ruins overlay is also non-active.
 - `sprites/weapon_impacts_pixel.png` is a ten-cell, neutral-palette pixel impact atlas used for brief direct-hit flashes across every catalog weapon family; ten individual PNG/Aseprite sources and the generated reference sheet are in `source/vfx/`. Enemy deaths emit a restrained, code-drawn pixel burst from the Art Bible palette. Damage-over-time ticks do not spawn extra flashes. The older color-coded SVG remains as a non-active reference while element/color mapping stays open.
+- Moving projectiles receive a short cyan/deep-blue code-drawn trail beneath their sprite in both Survival and the developer Sandbox. The 256 simultaneous-trail cap remains proposed; per-element colors remain open.
 - `icons/`: equipment slots, resource rewards, rarity markers, plus skill/achievement/run-record placeholders for future UI.
 
 Gameplay visuals use separate textures where the renderer batches by visual type. These assets do not establish or change gameplay rules, balance, or the still-proposed progression contracts.

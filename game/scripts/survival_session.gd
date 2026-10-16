@@ -1960,6 +1960,7 @@ func _publish_player_target() -> void:
 func _draw() -> void:
 	draw_texture_rect(GROUND_TEXTURE, Rect2(-8192.0, -8192.0, 16384.0, 16384.0), true)
 	draw_texture_rect(RUINS_TEXTURE, Rect2(-768.0, -768.0, 1536.0, 1536.0), false, Color(1.0, 1.0, 1.0, 0.88))
+	_sprite_renderer.draw_projectile_trails(self)
 	_sprite_renderer.draw_batches(self)
 	_sprite_renderer.draw_enemy_feedback(self, _entities)
 	for attack in _shooter_attacks.values():

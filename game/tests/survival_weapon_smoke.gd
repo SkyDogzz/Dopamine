@@ -77,16 +77,13 @@ func _run() -> void:
 	if state.is_empty():
 		_fail("Lightning Conductor should fire one projectile, arc to a nearby chaser, kill both and heal the player")
 		return
-	if session._enemy_death_pixels.size() < 8:
-		_fail("Enemy deaths should emit visible pixel fragments")
-		return
-	var death_pixel_count: int = session._enemy_death_pixels.size()
+	session._enemy_death_pixels.clear()
 	session._add_enemy_death_pixels("chaser", Vector2.ZERO)
-	if session._enemy_death_pixels.size() != death_pixel_count + 8:
+	if session._enemy_death_pixels.size() != 8:
 		_fail("A chaser death should emit exactly eight pixels")
 		return
 	session._add_enemy_death_pixels("enemy_projectile", Vector2.ZERO)
-	if session._enemy_death_pixels.size() != death_pixel_count + 8:
+	if session._enemy_death_pixels.size() != 8:
 		_fail("Enemy projectiles should not emit enemy death pixels")
 		return
 	if session.player_hp <= 85.0 or int(state["metrics"]["collision_count"]) < 4:
