@@ -36,6 +36,15 @@ func _run() -> void:
 			if not bounds.encloses(button.get_global_rect()) or button.size.y > 80.0:
 				_fail("Chest option must fit %s and remain compact: %s" % [size, button.get_global_rect()])
 				return
+			var details := button.get_node("ContentMargin/OfferRow/OfferDetails") as Control
+			if not button.get_global_rect().encloses(details.get_global_rect()):
+				_fail("Chest title and description must remain inside their option at %s: %s / %s" % [size, button.get_global_rect(), details.get_global_rect()])
+				return
+		if size == Vector2i(640, 360) and "--capture" in OS.get_cmdline_user_args():
+			await RenderingServer.frame_post_draw
+			if viewport.get_texture().get_image().save_png("/tmp/dopamine-chest-choice.png") != OK:
+				_fail("Could not capture the 640x360 chest choice render")
+				return
 		viewport.queue_free()
 		await process_frame
 	print("Chest options fit 640x360, 1280x720 and 1920x1080 with next-level descriptions")

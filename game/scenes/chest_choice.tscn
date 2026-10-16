@@ -6,10 +6,11 @@
 [node name="ChestChoice" type="PanelContainer"]
 custom_minimum_size = Vector2(310, 215)
 theme = ExtResource("1_theme")
-theme_override_constants/margin_left = 10
-theme_override_constants/margin_top = 8
-theme_override_constants/margin_right = 10
-theme_override_constants/margin_bottom = 8
+theme_type_variation = "CompactPanel"
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 3
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 3
 script = ExtResource("2_script")
 
 [node name="Content" type="VBoxContainer" parent="."]

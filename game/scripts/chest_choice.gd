@@ -52,7 +52,7 @@ func present(options: Array, required_count: int = 3, heading: String = "CHEST â
 		for state in ["font_color", "font_hover_color", "font_pressed_color", "font_focus_color", "font_disabled_color"]:
 			button.add_theme_color_override(state, Color(1.0, 1.0, 1.0, 0.0))
 		button.add_theme_font_size_override("font_size", 8)
-		button.custom_minimum_size.y = 51.0
+		button.custom_minimum_size.y = 60.0
 		button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		button.focus_mode = Control.FOCUS_ALL
 		button.icon = null
