@@ -34,6 +34,9 @@ func _run() -> void:
 		return
 	var items: VBoxContainer = inventory.get_node("Center/Panel/Content/Scroll/Items")
 	var scroll: ScrollContainer = inventory.get_node("Center/Panel/Content/Scroll")
+	if inventory.get_node("Center/Panel").custom_minimum_size.x < 400 or scroll.custom_minimum_size.y < 180:
+		_fail("Run inventory should reserve enough width and scroll height to show more than one short item")
+		return
 	if root.gui_get_focus_owner() != items.get_child(1) or not scroll.draw_focus_border or not scroll.follow_focus:
 		_fail("Run inventory should focus its first read-only item when opened")
 		return
@@ -46,12 +49,17 @@ func _run() -> void:
 	down_event.pressed = false
 	Input.parse_input_event(down_event)
 	await process_frame
-	if root.gui_get_focus_owner() != items.get_child(2) or scroll.scroll_vertical <= 0:
-		_fail("Keyboard navigation should focus the next item and scroll it into view")
+	if root.gui_get_focus_owner() != items.get_child(2):
+		_fail("Keyboard navigation should focus the next item")
 		return
 	var focused_item_style := (items.get_child(2) as PanelContainer).get_theme_stylebox("panel") as StyleBoxFlat
 	if focused_item_style.border_color != Color("#FFD447"):
 		_fail("Focused read-only items should show the visible gold focus outline")
+		return
+	(items.get_child(items.get_child_count() - 1) as Control).grab_focus()
+	await process_frame
+	if scroll.scroll_vertical <= 0:
+		_fail("Focusing an offscreen item should scroll it into view")
 		return
 	(items.get_child(1) as Control).grab_focus()
 	if (items.get_child(0) as Label).theme_type_variation != "PixelHeading" or \
@@ -91,7 +99,7 @@ func _run() -> void:
 		return
 	var original_size: Vector2i = root.size
 	var inventory_card: Control = inventory.get_node("Center/Panel")
-	for size in [Vector2i(960, 600), Vector2i(1280, 800), Vector2i(1600, 900)]:
+	for size in [Vector2i(640, 360), Vector2i(960, 600), Vector2i(1280, 800), Vector2i(1600, 900)]:
 		root.size = size
 		await process_frame
 		if not Rect2(Vector2.ZERO, Vector2(size)).encloses(inventory_card.get_global_rect()):
