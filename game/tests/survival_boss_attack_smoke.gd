@@ -125,6 +125,7 @@ func _verify_dopamine_core_patterns_and_phases() -> bool:
 	core_session.final_boss_attack_interval_seconds = 1.0
 	core_session.final_boss_telegraph_seconds = 0.25
 	core_session.final_boss_zone_radius = 70.0
+	core_session.summoner_max_active_summons = 3
 	root.add_child(core_session)
 	await process_frame
 	core_session.simulation.spawn("final_boss", 1, Vector2(0.0, -300.0), 1000.0, Vector2.ZERO, 25.0)
@@ -191,10 +192,18 @@ func _verify_dopamine_core_patterns_and_phases() -> bool:
 		_fail("Phase two should telegraph the proposed spiral pattern")
 		return false
 	core_session._update_dopamine_core_attacks(float(attack["fire_at"]), false)
-	if not await _wait_for_entity_type(core_session, "summoned") or \
+	for _index in range(8):
+		core_session._spawn_boss_summon(attack["origin"])
+	if not await _wait_for_enemy_count(core_session, "summoned", core_session.summoner_max_active_summons) or \
 			not await _wait_for_projectiles(core_session, core_session.final_boss_spiral_projectile_count):
 		core_session.queue_free()
-		_fail("Phase two should emit its rotating spiral shots and invoke adds within the existing cap")
+		_fail("Phase two should emit its spiral shots and cap adds at the configured global limit")
+		return false
+	for _index in range(4):
+		core_session._spawn_boss_summon(attack["origin"])
+	if not await _wait_for_enemy_count(core_session, "summoned", core_session.summoner_max_active_summons):
+		core_session.queue_free()
+		_fail("Additional phase two requests should not exceed the active summon cap")
 		return false
 	damage_sequence = core_session.simulation.apply_damage_over_time(
 			int(boss_id["index"]), int(boss_id["generation"]), 300.0, 0.05, 0.05)
@@ -220,9 +229,27 @@ func _verify_dopamine_core_patterns_and_phases() -> bool:
 	var combined_hp_before: float = core_session.player_hp
 	core_session._update_dopamine_core_attacks(float(attack["fire_at"]), false)
 	if not is_equal_approx(core_session.player_hp, combined_hp_before) or \
-			not await _wait_for_projectiles(core_session, core_session.final_boss_spiral_projectile_count * 2):
+			not await _wait_for_projectiles(core_session, core_session.final_boss_spiral_projectile_count * 2) or \
+			not await _wait_for_enemy_count(core_session, "summoned", core_session.summoner_max_active_summons):
 		core_session.queue_free()
-		_fail("Phase three should combine dodgeable danger signals with a spiral volley")
+		_fail("Phase three should combine dodgeable signals with a spiral volley without exceeding the summon cap")
+		return false
+	var removed_summon := _find_entity(core_session, "summoned")
+	if removed_summon.is_empty():
+		core_session.queue_free()
+		_fail("A capped boss phase should have active summons to release")
+		return false
+	var removed_id: Dictionary = removed_summon["id"]
+	core_session.simulation.despawn(int(removed_id["index"]), int(removed_id["generation"]))
+	if not await _wait_for_enemy_count(core_session, "summoned", core_session.summoner_max_active_summons - 1):
+		core_session.queue_free()
+		_fail("Defeating an add should release a slot during the final boss")
+		return false
+	core_session._entities = core_session.simulation.snapshot()["entities"]
+	core_session._spawn_boss_summon(attack["origin"])
+	if not await _wait_for_enemy_count(core_session, "summoned", core_session.summoner_max_active_summons):
+		core_session.queue_free()
+		_fail("The final boss should use a slot freed by a defeated add")
 		return false
 	var core_hud: String = core_session.get_node("HUD/BossPanel/BossInfo/BossValue").text
 	core_session.queue_free()
@@ -246,4 +273,17 @@ func _wait_for_boss_health_ratio(session: Node2D, maximum_ratio: float) -> bool:
 			var health: Dictionary = boss["components"]["Health"]
 			if float(health["current"]) / float(health["maximum"]) <= maximum_ratio:
 				return true
+	return false
+
+func _wait_for_enemy_count(session: Node2D, enemy_type: String, expected: int) -> bool:
+	var deadline := Time.get_ticks_msec() + 3000
+	while Time.get_ticks_msec() < deadline:
+		await process_frame
+		var count := 0
+		for entity in session.simulation.snapshot()["entities"]:
+			var components: Dictionary = entity["components"]
+			if not components.get("IsProjectile", false) and components.get("EnemyType", "") == enemy_type:
+				count += 1
+		if count == expected:
+			return true
 	return false

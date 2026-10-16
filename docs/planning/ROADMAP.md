@@ -387,9 +387,9 @@ Travail requis :
   - Prototype Pulse Warden : phases affichées selon les PV (seuils 66 % / 33 % **[PROPOSÉS]**), salve radiale annoncée en phase 1, tir ciblé et invocation bornée en phase 2, alternance radiale/ciblée en phase 3. Le smoke vérifie la télégraphie, le gel en pause, la transition vers phase 2 et l’invocation. Les charges mobiles prévues restent absentes ; patterns et valeurs demeurent **[PROPOSÉS]**.
 - [ ] **P5.4.5 — Boss final**
   - [x] Définir et implémenter trois phases selon les PV : rayon puis zone esquivable, spirale tirée en salves successives avec invocation en phase 2, puis rayon/zone combinés avec spirale ; télégraphes et HUD de phase vérifiés. Motifs, seuils, dégâts et cadence **[PROPOSÉS]**.
-  - [ ] Vérifier le plafond global d’invocations pendant les phases 2 et 3.
+  - [x] Smoke boss : les phases 2 et 3 saturent le plafond global d’invocations proposé à trois, rejettent les suivantes et réutilisent une place après la mort d’un add.
   - [ ] Remplacer l’apparence placeholder et vérifier victoire, loot garanti proposé/configurable et écran final.
-  - Prototype en cours : le Dopamine Core dispose de trois phases, de rayons/zones télégraphiés et esquivables, d’une spirale en tirs successifs et d’invocations en phases 2–3. Le plafond d’invocations partagé reste à couvrir spécifiquement avec ce boss ; son apparence est encore un placeholder. Tous ces patterns et nombres restent **[PROPOSÉS]**.
+  - Prototype en cours : le Dopamine Core dispose de trois phases, de rayons/zones télégraphiés et esquivables, d’une spirale en tirs successifs et d’invocations en phases 2–3. Le smoke confirme le plafond d’invocations partagé en phases 2–3 ; son apparence est encore un placeholder. Tous ces patterns et nombres restent **[PROPOSÉS]**.
 - [ ] **P5.4.6 — Difficultés**
   - [ ] Ajouter état de difficulté choisi/débloqué.
   - [ ] Débloquer la suivante après victoire de la précédente.
