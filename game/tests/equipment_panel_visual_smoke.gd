@@ -51,6 +51,10 @@ func _run() -> void:
 		_fail("Each equipment stat should show its value, powder choice and enhancement action")
 		return
 	var dismantle_button: Button = actions.get_child(1)
+	var sell_button: Button
+	for child in item_content.get_children():
+		if child is Button and (child as Button).text.begins_with("SELL  •"):
+			sell_button = child as Button
 	if panel_frame.custom_minimum_size.x < 400:
 		_fail("Equipment panel should reserve enough width for item stats and actions")
 		return
@@ -78,6 +82,10 @@ func _run() -> void:
 	if dismantle_button.text != "DISMANTLE  •  3 REFINED" or not dismantle_button.tooltip_text.contains("3 REFINED POWDER"):
 		_fail("The dismantle action should fit on its button and keep its full proposed yield in the tooltip")
 		return
+	if sell_button == null or sell_button.text != "SELL  •  40 ESSENCE" or \
+			sell_button.get_theme_color("font_color").to_html(false) != "ffd447":
+		_fail("The sale action should show its proposed Essence value with a distinct visual treatment")
+		return
 	var original_size: Vector2i = root.size
 	for viewport_size in [Vector2i(640, 360), Vector2i(1280, 720), Vector2i(1920, 1080)]:
 		root.size = viewport_size
@@ -85,7 +93,8 @@ func _run() -> void:
 		var bounds := Rect2(Vector2.ZERO, root.get_visible_rect().size)
 		var frame_bounds := panel_frame.get_global_rect()
 		if not bounds.encloses(frame_bounds) or not frame_bounds.encloses(row.get_global_rect()) or \
-			dismantle_button.size.x < dismantle_button.get_combined_minimum_size().x:
+			dismantle_button.size.x < dismantle_button.get_combined_minimum_size().x or \
+			sell_button.size.x < sell_button.get_combined_minimum_size().x:
 			_fail("Equipment details and the dismantle action should fit viewport %s" % viewport_size)
 			return
 		for stat_child in move_speed_row.get_children():

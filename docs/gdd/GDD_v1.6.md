@@ -138,6 +138,8 @@ Paires de contenu validées :
 
 Raretés : Normal (1 ligne aléatoire), Magic (2), Mystic (3), Legendary (3 aléatoires + 1 effet unique choisi librement), Mythic (4 aléatoires + 1 effet unique choisi librement). Les rolls de statistiques sont continus dans des plages dépendantes de la rareté. Rareté dépend de la difficulté, de la vague atteinte et de la RNG.
 
+[PROPOSÉ] Prototype de vente : vendre un équipement crédite uniquement de l'Essence, sans Powder ni remboursement des enhancements : Normal 5, Magic 10, Mystic 20, Legendary 40, Mythic 80. Le panneau demande confirmation avant la suppression définitive. Ces montants servent de départ et restent à calibrer avec l'économie de progression.
+
 Douze statistiques candidates : dégâts %, vitesse d'attaque %, chance critique %, dégâts critiques %, HP max, vitesse déplacement %, soin par kill %, zone %, réduction de cooldown %, XP %, rayon de collecte %, vitesse projectile %.
 
 [PROPOSÉ] Chances de rareté Normal/Magic/Mystic/Legendary/Mythic : Easy 60/30/9/0,9/0,1 ; Normal 35/40/20/4,5/0,5 ; Hard 15/30/40/13/2 ; Nightmare 5/15/45/28/7 ; Chaos 0/5/35/40/20 (%). Le prototype déplace aussi 1 point de pourcentage depuis Normal vers les raretés non-Normal proportionnellement à leurs poids initiaux par tranche de six vagues atteintes (plafond de la vague 24), sans dépasser la probabilité Normal disponible. Une mort précoce qui diminue les chances des raretés supérieures reste à implémenter. Cette progression par vague est une règle de prototype **[PROPOSÉE]**, à calibrer avec les plages de rolls.

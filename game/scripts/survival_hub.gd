@@ -55,6 +55,7 @@ func _create_panels() -> void:
 	_equipment_panel.enhancement_requested.connect(_enhance_equipment)
 	_equipment_panel.unique_effect_requested.connect(_choose_unique_effect)
 	_equipment_panel.dismantle_requested.connect(_dismantle_equipment)
+	_equipment_panel.sell_requested.connect(_sell_equipment)
 	add_child(_equipment_panel)
 	_skill_tree_panel = SKILL_TREE_PANEL_SCENE.instantiate()
 	_skill_tree_panel.progression_service = progression_service
@@ -174,6 +175,12 @@ func _choose_unique_effect(instance_id: String, effect_id: String) -> void:
 func _dismantle_equipment(instance_id: String) -> void:
 	var result: Dictionary = progression_service.dismantle_equipment(instance_id)
 	_refresh_equipment(result)
+
+func _sell_equipment(instance_id: String) -> void:
+	var result: Dictionary = progression_service.sell_equipment(instance_id)
+	_refresh_equipment(result)
+	if result.get("ok", false):
+		_equipment_panel.show_feedback("SOLD  •  +%d ESSENCE" % int(result["essence_reward"]))
 
 func _refresh_equipment(result: Dictionary) -> void:
 	if result.get("ok", false):

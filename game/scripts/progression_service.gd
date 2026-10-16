@@ -19,6 +19,9 @@ const PROPOSED_DISMANTLE_REWARDS := {
 	"mystic": {"powder_refined": 1}, "legendary": {"powder_refined": 3},
 	"mythic": {"powder_pure": 1},
 }
+const PROPOSED_SELL_ESSENCE := {
+	"normal": 5, "magic": 10, "mystic": 20, "legendary": 40, "mythic": 80,
+}
 const PROTOTYPE_SKILL_NODES := {
 	"vitality_starter": {"category": "core_stats", "depth": 3, "max_hp_pct": 0.05, "prerequisites": [], "status": "PROPOSED"},
 	"focused_training": {"category": "core_stats", "depth": 6, "damage_pct": 0.03, "prerequisites": ["vitality_starter"], "status": "PROPOSED"},
@@ -268,6 +271,26 @@ func dismantle_equipment(instance_id: String) -> Dictionary:
 		return {"ok": true, "powder_rewards": reward.duplicate(true), "profile": profile.duplicate(true)}
 	return {"ok": false, "error": "equipment_not_found"}
 
+func sell_equipment(instance_id: String) -> Dictionary:
+	var profile_result := load_profile()
+	if not profile_result.get("ok", false):
+		return {"ok": false, "error": str(profile_result.get("error", "load_failed"))}
+	var profile: Dictionary = profile_result["profile"]
+	for index in range(profile["equipment_inventory"].size()):
+		var equipment: Dictionary = profile["equipment_inventory"][index]
+		if equipment["instance_id"] != instance_id:
+			continue
+		var essence_reward: int = PROPOSED_SELL_ESSENCE[equipment["rarity"]]
+		profile["equipment_inventory"].remove_at(index)
+		profile["resources"]["essence"] += essence_reward
+		if not _save_service.save_slot(_slot_id, profile):
+			return {"ok": false, "error": "save_failed"}
+		return {
+			"ok": true, "essence_reward": essence_reward,
+			"profile": profile.duplicate(true),
+		}
+	return {"ok": false, "error": "equipment_not_found"}
+
 func unlock_skill_node(node_id: String) -> Dictionary:
 	if not PROTOTYPE_SKILL_NODES.has(node_id):
 		return {"ok": false, "error": "unknown_skill_node"}
@@ -444,7 +467,8 @@ func _valid_equipment(equipment: Variant) -> bool:
 		var fail_streak = stat_line.get("fail_streak")
 		if typeof(enhancement_level) not in [TYPE_INT, TYPE_FLOAT] or \
 				int(enhancement_level) != enhancement_level or enhancement_level < 0 or enhancement_level > 10 or \
-				typeof(fail_streak) not in [TYPE_INT, TYPE_FLOAT] or int(fail_streak) != fail_streak or fail_streak < 0:
+				typeof(fail_streak) not in [TYPE_INT, TYPE_FLOAT] or int(fail_streak) != fail_streak or \
+				fail_streak < 0 or fail_streak > 9:
 			return false
 		used_stats[stat_line["stat_id"]] = true
 	return true

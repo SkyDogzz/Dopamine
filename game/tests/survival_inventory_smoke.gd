@@ -128,6 +128,22 @@ func _run() -> void:
 		if root.get_texture().get_image().save_png("/tmp/dopamine-equipment-inventory.png") != OK:
 			_fail("Could not capture the equipment inventory render")
 			return
+	var remaining_content: VBoxContainer = _equipment_row(items, 0).get_child(0).get_child(1)
+	var sell_button := _find_button_with_prefix(remaining_content, "SELL  •  40 ESSENCE")
+	if sell_button == null:
+		_fail("Equipment should expose a rarity-priced sell action")
+		return
+	sell_button.pressed.emit()
+	var sell_confirmation: ConfirmationDialog = panel.get_node("SellConfirmation")
+	if not sell_confirmation.visible or not sell_confirmation.dialog_text.contains("40 Essence"):
+		_fail("Selling an item should show its irreversible Essence value for confirmation")
+		return
+	sell_confirmation.confirmed.emit()
+	var sold_profile: Dictionary = progression.load_profile()["profile"]
+	if not sold_profile["equipment_inventory"].is_empty() or sold_profile["resources"]["essence"] != 240 or \
+			_equipment_rows(items).size() != 0:
+		_fail("Confirmed sale should remove the item, credit Essence once and refresh the empty state")
+		return
 	panel.get_node("Panel/Content/CloseButton").pressed.emit()
 	if panel.visible or root.gui_get_focus_owner() != equipment_button:
 		_fail("Closing the hub inventory should restore focus to its opener")
@@ -153,7 +169,7 @@ func _run() -> void:
 	skill_panel.get_node("Panel/Content/RespecButton").pressed.emit()
 	if not is_zero_approx(progression.skill_bonus("max_hp_pct")) or \
 		not is_zero_approx(progression.skill_bonus("damage_pct")) or \
-		progression.load_profile()["profile"]["resources"]["essence"] != 200:
+		progression.load_profile()["profile"]["resources"]["essence"] != 240:
 		_fail("Free skill respec should restore Essence and remove prototype bonuses")
 		return
 	skill_panel.get_node("Panel/Content/CloseButton").pressed.emit()

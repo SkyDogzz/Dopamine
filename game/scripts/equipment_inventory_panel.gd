@@ -5,6 +5,7 @@ signal equipment_state_requested(instance_id: String, equipped: bool)
 signal enhancement_requested(instance_id: String, stat_id: String, powder_tier: String)
 signal unique_effect_requested(instance_id: String, effect_id: String)
 signal dismantle_requested(instance_id: String)
+signal sell_requested(instance_id: String)
 
 @onready var _items: VBoxContainer = $Panel/Content/Scroll/Items
 @onready var _empty_state: Label = $Panel/Content/Scroll/Items/EmptyState
@@ -38,6 +39,7 @@ const RARITY_COLORS := {
 	"mythic": Color("#FF75E3"),
 }
 const POWDER_TIERS := ["basic", "refined", "pure", "prismatic"]
+const PROGRESSION_SERVICE_SCRIPT := preload("res://scripts/progression_service.gd")
 const EQUIPMENT_GENERATOR_SCRIPT := preload("res://scripts/equipment_generator.gd")
 const UNIQUE_EFFECTS := [
 	"lightning_burst", "overflow_shield", "evolution_shockwave",
@@ -47,10 +49,23 @@ const DISMANTLE_POWDER := {
 	"normal": "1 BASIC", "magic": "3 BASIC", "mystic": "1 REFINED",
 	"legendary": "3 REFINED", "mythic": "1 PURE",
 }
+const SELL_ESSENCE: Dictionary = PROGRESSION_SERVICE_SCRIPT.PROPOSED_SELL_ESSENCE
+
+var _sell_confirmation: ConfirmationDialog
+var _pending_sell_instance_id := ""
 
 func _ready() -> void:
 	visible = false
 	_close_button.pressed.connect(_close)
+	_sell_confirmation = ConfirmationDialog.new()
+	_sell_confirmation.name = "SellConfirmation"
+	_sell_confirmation.title = "SELL EQUIPMENT?"
+	_sell_confirmation.ok_button_text = "SELL"
+	_sell_confirmation.confirmed.connect(func() -> void:
+		sell_requested.emit(_pending_sell_instance_id)
+		_pending_sell_instance_id = ""
+	)
+	add_child(_sell_confirmation)
 
 func _unhandled_input(event: InputEvent) -> void:
 	if visible and event.is_action_pressed("ui_cancel"):
@@ -224,6 +239,19 @@ func _create_item_row(equipment: Dictionary, resources: Dictionary) -> Control:
 		dismantle_requested.emit(str(equipment.get("instance_id", "")))
 	)
 	actions.add_child(dismantle_button)
+	var sell_value: int = SELL_ESSENCE[rarity]
+	var sell_button := Button.new()
+	sell_button.text = "SELL  •  %d ESSENCE" % sell_value
+	sell_button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	sell_button.add_theme_color_override("font_color", Color("#FFD447"))
+	sell_button.add_theme_color_override("font_hover_color", Color("#FFD447"))
+	sell_button.tooltip_text = "Proposed sale value; selling removes this equipment and does not refund its enhancements."
+	sell_button.pressed.connect(func() -> void:
+		_pending_sell_instance_id = str(equipment.get("instance_id", ""))
+		_sell_confirmation.dialog_text = "Sell this %s item for %d Essence? This cannot be undone." % [rarity, sell_value]
+		_sell_confirmation.popup_centered()
+	)
+	content.add_child(sell_button)
 	return row
 
 func _close() -> void:

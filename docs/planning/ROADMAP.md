@@ -463,7 +463,8 @@ Travail requis :
   - [x] `equipment_enhancement_smoke.gd` vérifie une ligne +0..+10 avec Basic, Refined, Pure et Prismatic, y compris le +8 % par niveau.
   - [x] Le smoke vérifie réussite, échec normal, échec critique avec protection au niveau 0, et réussite garantie après neuf échecs.
   - [x] Le smoke vérifie la table proposée de coûts pour chaque rareté/niveau, les conversions 10:1 vers le tier suivant et le refus de conversion depuis Prismatic.
-  - [ ] Faire arbitrer économie de démantèlement, vente et protections anti-exploit ouvertes.
+  - [x] Prototype d’économie choisi : vente contre Essence seule (5/10/20/40/80 selon rareté), démantèlement contre Powder seule selon `PROPOSITION_P5.md`; la vente demande confirmation et ne rembourse pas les enhancements. Rendements et chances restent **[PROPOSÉS]**, à calibrer.
+  - [x] `equipment_economy_smoke.gd` vérifie les ventes par rareté, l’impossibilité de repayer une pièce supprimée et le rejet d’un `fail_streak` supérieur à 9, garde-fou de la tentative garantie.
 - [ ] **P6.5 — Effets uniques**
   - [ ] Lister effet, déclencheur, prérequis, portée et feedback de chaque ID disponible.
   - [ ] Relier un effet à son événement de jeu et écrire un scénario ciblé.

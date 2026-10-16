@@ -25,7 +25,8 @@
 
 ## P6.4 — Enhancement — 2026-10-16
 
-- [x] `equipment_enhancement_smoke.gd` vérifie les niveaux +0..+10 avec chaque tier Powder, réussite garantie au dixième essai, échec normal, échec critique avec protection au niveau 0, coûts proposés par niveau/rareté et conversions 10:1 à sens unique. Coûts et probabilités restent **[PROPOSÉS]**; vente, démantèlement et protections anti-exploit restent **[OUVERTS]**.
+- [x] `equipment_enhancement_smoke.gd` vérifie les niveaux +0..+10 avec chaque tier Powder, réussite garantie au dixième essai, échec normal, échec critique avec protection au niveau 0, coûts proposés par niveau/rareté et conversions 10:1 à sens unique. Coûts et probabilités restent **[PROPOSÉS]** et non calibrés.
+- [x] `equipment_economy_smoke.gd` vérifie les ventes uniques des cinq raretés, le crédit Essence sans Powder, et le rejet d'un fail streak hors plage 0..9. `survival_inventory_smoke.gd` vérifie la confirmation avant vente et le rafraîchissement de l'inventaire; les valeurs de vente restent **[PROPOSÉES]** et non calibrées.
 
 ## P6.5 — Effet Elite Haste — 2026-10-16
 
