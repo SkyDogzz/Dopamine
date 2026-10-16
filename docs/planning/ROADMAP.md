@@ -421,7 +421,7 @@ Travail requis :
 ### État actuel et écarts
 
 - `SaveService` possède format versionné/checksum/backup et QA historique de migration/altération.
-- `ProgressionService` possède profils v5, récompenses de run, idempotence par `run_id`, inventaire, six slots, cinq raretés, stat lines, enhancement, conversion Powder, deux nodes de prototype et Exterminator.
+- `ProgressionService` possède des profils v6 avec difficulté maximale débloquée (Easy par défaut), récompenses de run, idempotence par `run_id`, inventaire, six slots, cinq raretés, stat lines, enhancement, conversion Powder, deux nodes de prototype et Exterminator. Les facteurs de difficulté sont centralisés comme réglages [PROPOSÉS] et restent à transmettre à la simulation et aux récompenses.
 - Le générateur choisit pour l’instant une distribution de rareté Normal fixe et propose les plages de rolls ; les changements de difficulté et pénalité de mort précoce manquent.
 - Les achievements ne couvrent qu’un compteur de kills avec quatre paliers ; ce n’est pas le catalogue cible de 100–150 familles.
 - Les nodes sont deux prototypes, pas le graphe interconnecté de 100–150.

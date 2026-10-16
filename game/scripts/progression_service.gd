@@ -1,6 +1,6 @@
 extends RefCounted
 
-const PROFILE_VERSION := 5
+const PROFILE_VERSION := 6
 const POWDER_TIERS := ["basic", "refined", "pure", "prismatic"]
 const ENHANCEMENT_BASE_COSTS := [10, 15, 22, 32, 46, 65, 90, 125, 175, 250]
 const RARITY_COST_MULTIPLIERS := {"normal": 1.0, "magic": 1.5, "mystic": 2.0, "legendary": 3.0, "mythic": 4.0}
@@ -23,6 +23,7 @@ const PROPOSED_EXTERMINATOR_THRESHOLDS := [100, 1000, 10000, 100000]
 const PROPOSED_EXTERMINATOR_DAMAGE_BONUSES := [0.0005, 0.001, 0.0015, 0.002]
 const RUN_ID_PATTERN := "^[A-Za-z0-9_-]{1,128}$"
 const EQUIPMENT_GENERATOR_SCRIPT := preload("res://scripts/equipment_generator.gd")
+const SURVIVAL_DIFFICULTY_SCRIPT := preload("res://scripts/survival_difficulty.gd")
 
 var _save_service: RefCounted
 var _slot_id: String
@@ -106,6 +107,10 @@ func load_profile() -> Dictionary:
 	elif version == 4:
 		profile["profile_version"] = PROFILE_VERSION
 		migrated = true
+	elif version == 5:
+		profile["profile_version"] = PROFILE_VERSION
+		migrated = true
+	profile["highest_unlocked_difficulty"] = profile.get("highest_unlocked_difficulty", "easy")
 	profile["unlocked_skill_nodes"] = profile.get("unlocked_skill_nodes", [])
 	profile["achievement_progress"] = profile.get("achievement_progress", {
 		"total_kills": 0, "exterminator_tier": 0,
@@ -345,13 +350,17 @@ func _empty_profile() -> Dictionary:
 		"equipment_inventory": [],
 		"rewarded_survival_runs": [],
 		"unlocked_skill_nodes": [],
+		"highest_unlocked_difficulty": "easy",
 		"achievement_progress": {"total_kills": 0, "exterminator_tier": 0},
 	}
 
 func _valid_profile(profile: Dictionary) -> bool:
 	if profile.get("profile_version") != PROFILE_VERSION or not profile.get("resources") is Dictionary or \
 			not profile.get("equipment_inventory") is Array or not profile.get("rewarded_survival_runs") is Array or \
-				not profile.get("unlocked_skill_nodes") is Array or not profile.get("achievement_progress") is Dictionary:
+				not profile.get("unlocked_skill_nodes") is Array or \
+				typeof(profile.get("highest_unlocked_difficulty")) != TYPE_STRING or \
+				profile["highest_unlocked_difficulty"] not in SURVIVAL_DIFFICULTY_SCRIPT.ORDER or \
+				not profile.get("achievement_progress") is Dictionary:
 		return false
 	var resources: Dictionary = profile["resources"]
 	for resource in ["essence", "powder_basic", "powder_refined", "powder_pure", "powder_prismatic"]:

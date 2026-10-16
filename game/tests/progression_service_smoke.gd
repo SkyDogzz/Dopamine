@@ -17,9 +17,16 @@ func _run() -> void:
 		_fail("A Normal wave 24 victory should grant the GDD proposed 88 Essence and 122 Basic Powder")
 		return
 	var profile: Dictionary = save_service.load_slot("0")["payload"]
-	if profile.get("profile_version") != 5 or profile["resources"].get("powder_refined") != 0 or \
+	if profile.get("profile_version") != 6 or profile.get("highest_unlocked_difficulty") != "easy" or \
+			profile["resources"].get("powder_refined") != 0 or \
 			profile["resources"].get("powder_pure") != 0 or profile["resources"].get("powder_prismatic") != 0:
-		_fail("New progression profiles should initialize all four powder tiers")
+		_fail("New progression profiles should initialize all powder tiers and unlock Easy")
+		return
+	var difficulties = load("res://scripts/survival_difficulty.gd")
+	if difficulties.ORDER != ["easy", "normal", "hard", "nightmare", "chaos"] or \
+		difficulties.DATA["normal"]["enemy_hp"] != 1.0 or \
+		difficulties.DATA["chaos"]["powder"] != 3.5:
+		_fail("Survival difficulties should expose the GDD tuning table in one place")
 		return
 	var inventory: Array = profile["equipment_inventory"]
 	if inventory.size() != 1 or inventory[0].get("source_mode") != "survival" or \
@@ -152,7 +159,9 @@ func _run() -> void:
 	var migrated_duplicate: Dictionary = legacy_service.award_survival_run("already-awarded", 24, true)
 	var migrated_profile: Dictionary = save_service.load_slot("legacy")["payload"]
 	if not migrated_duplicate.get("ok", false) or not migrated_duplicate.get("duplicate", false) or \
-			migrated_profile.get("profile_version") != 5 or migrated_profile["resources"].get("essence") != 7 or \
+			migrated_profile.get("profile_version") != 6 or \
+			migrated_profile.get("highest_unlocked_difficulty") != "easy" or \
+			migrated_profile["resources"].get("essence") != 7 or \
 			migrated_profile["equipment_inventory"].size() != 0:
 		_fail("A previous progression profile should migrate without losing resources or replaying a reward")
 		return
@@ -166,7 +175,7 @@ func _run() -> void:
 	var version_two_service = load("res://scripts/progression_service.gd").new(save_service, "version-two")
 	var migrated_profile_result: Dictionary = version_two_service.load_profile()
 	var migrated_inventory: Array = migrated_profile_result.get("profile", {}).get("equipment_inventory", [])
-	if not migrated_profile_result.get("ok", false) or migrated_profile_result["profile"].get("profile_version") != 5 or \
+	if not migrated_profile_result.get("ok", false) or migrated_profile_result["profile"].get("profile_version") != 6 or \
 			migrated_inventory.size() != 2 or migrated_inventory[0].get("equipped", true) or migrated_inventory[1].get("equipped", true):
 		_fail("Version 2 equipment should migrate as unequipped without losing items")
 		return

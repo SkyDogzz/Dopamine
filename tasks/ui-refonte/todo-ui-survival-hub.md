@@ -1,18 +1,18 @@
 # Tâches : `survival-hub`
 
-**Statut : proposé pour validation utilisateur.** Les tâches ne sont pas autorisées à démarrer avant validation du plan et de cette liste.
+**Statut : validé par l’utilisateur.** Implémentation en cours; tâche 1 terminée.
 
 ## Tâche 1 — Données de difficulté et contrat de profil
 
 **Description :** Centraliser les données des cinq difficultés et étendre le profil normal pour mémoriser les déblocages séquentiels, avec migration additive.
 
 **Critères d’acceptation :**
-- [ ] Easy est débloquée dans un profil neuf; les difficultés suivantes sont verrouillées dans l’ordre convenu.
-- [ ] La migration conserve toutes les données existantes et initialise correctement les nouveaux champs.
-- [ ] Les multiplicateurs numériques sont centralisés, utilisés comme valeurs provisoires [PROPOSÉ] et non dupliqués dans l’interface.
-- [ ] Les données du Sandbox ne sont ni lues ni modifiées.
+- [x] Easy est débloquée dans un profil neuf; les difficultés suivantes sont verrouillées dans l’ordre convenu.
+- [x] La migration conserve toutes les données existantes et initialise correctement les nouveaux champs.
+- [x] Les multiplicateurs numériques sont centralisés, marqués [PROPOSÉ] et non dupliqués dans l’interface.
+- [x] Les données du Sandbox ne sont ni lues ni modifiées.
 
-**Vérification :** Tests ciblés du profil neuf et des versions migrées, avec fichiers temporaires isolés; test de cohérence de la table de facteurs; inspection des dépendances Sandbox/progression.
+**Vérification :** `survival_difficulty_profile_smoke.gd` passe sous Godot 4.7.2 (profil neuf, migration v2/v5 et conservation de données); import headless de l’éditeur passe. `progression_service_smoke.gd` franchit les nouvelles assertions de profil, puis s’arrête sur une assertion antérieure au changement qui attend 3,24 alors que `equipment_generator.gd` calcule 3,48 pour le percentile 0,5 et le niveau 2. L’isolation Sandbox est inchangée et aucun script Sandbox n’a été touché.
 
 **Dépendances :** aucune.
 
