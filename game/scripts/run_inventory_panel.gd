@@ -67,25 +67,25 @@ func _add_items(items: Array[Dictionary]) -> void:
 		var details := VBoxContainer.new()
 		details.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		layout.add_child(details)
-	var title := Label.new()
-	title.text = "%s  ·  LV %d" % [str(item["name"]), int(item["level"])]
-	title.add_theme_color_override("font_color", Color("#F6F7FF"))
-	title.add_theme_font_size_override("font_size", 9)
-	details.add_child(title)
+		var title := Label.new()
+		title.text = "%s  ·  LV %d" % [str(item["name"]), int(item["level"])]
+		title.add_theme_color_override("font_color", Color("#F6F7FF"))
+		title.add_theme_font_size_override("font_size", 9)
+		details.add_child(title)
 		if str(item["family"]) == "weapon":
-		var evolution := Label.new()
-		evolution.text = _evolution_status(item)
-		evolution.add_theme_color_override(
-			"font_color", Color("#FF75E3") if bool(item.get("evolved", false)) else Color("#A6AEC4")
-		)
-		evolution.add_theme_font_size_override("font_size", 8)
-		details.add_child(evolution)
-	var description := Label.new()
-	description.text = str(item["description"])
-	description.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	description.add_theme_color_override("font_color", Color("#A6AEC4"))
-	description.add_theme_font_size_override("font_size", 8)
-	details.add_child(description)
+			var evolution := Label.new()
+			evolution.text = _evolution_status(item)
+			evolution.add_theme_color_override(
+				"font_color", Color("#FF75E3") if bool(item.get("evolved", false)) else Color("#A6AEC4")
+			)
+			evolution.add_theme_font_size_override("font_size", 8)
+			details.add_child(evolution)
+		var description := Label.new()
+		description.text = str(item["description"])
+		description.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		description.add_theme_color_override("font_color", Color("#A6AEC4"))
+		description.add_theme_font_size_override("font_size", 8)
+		details.add_child(description)
 
 func _evolution_status(item: Dictionary) -> String:
 	if bool(item.get("evolved", false)):
