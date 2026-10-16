@@ -374,6 +374,7 @@ var _weapon_progression_valid := false
 @onready var _run_result: PanelContainer = $HUD/RunResultOverlay/RunResultPanel
 @onready var _pause_overlay: Control = $HUD/PauseOverlay
 @onready var _pause_speed_select: OptionButton = $HUD/PauseOverlay/Center/Panel/Content/SpeedSelect
+@onready var _pause_health_lock_button: CheckButton = $HUD/PauseOverlay/Center/Panel/Content/HealthLockButton
 @onready var _pause_resume_button: Button = $HUD/PauseOverlay/Center/Panel/Content/ResumeButton
 @onready var _pause_options_button: Button = $HUD/PauseOverlay/Center/Panel/Content/OptionsButton
 @onready var _pause_inventory_button: Button = $HUD/PauseOverlay/Center/Panel/Content/InventoryButton
@@ -384,6 +385,7 @@ var _weapon_progression_valid := false
 
 var _options_overlay: Control
 var _inventory_overlay: Control
+var _health_locked := false
 
 func _ready() -> void:
 	Engine.time_scale = 1.0
@@ -422,6 +424,7 @@ func _ready() -> void:
 	_run_result.quit_requested.connect(_quit_after_run)
 	_pause_resume_button.pressed.connect(_resume_manually_paused_run)
 	_pause_speed_select.item_selected.connect(_on_pause_speed_selected)
+	_pause_health_lock_button.toggled.connect(_on_pause_health_lock_toggled)
 	_pause_options_button.pressed.connect(_open_pause_options)
 	_pause_inventory_button.pressed.connect(_open_run_inventory)
 	_pause_abandon_button.pressed.connect(_open_abandon_confirmation)
@@ -522,6 +525,12 @@ func _on_pause_speed_selected(index: int) -> void:
 	var multiplier: float = [0.25, 0.5, 1.0, 2.0, 4.0][index]
 	Engine.time_scale = multiplier
 	simulation.set_speed(multiplier)
+
+func _on_pause_health_lock_toggled(enabled: bool) -> void:
+	if not _manually_paused:
+		_pause_health_lock_button.set_pressed_no_signal(_health_locked)
+		return
+	_health_locked = enabled
 
 func _physics_process(_delta: float) -> void:
 	_publish_player_target()
@@ -1163,6 +1172,8 @@ func _apply_pending_lifesteal(elapsed_active_time: float) -> void:
 		_shield_expires_at = player_active_time + 5.0
 
 func _take_player_damage(amount: float) -> void:
+	if _health_locked:
+		return
 	var absorbed := minf(player_shield, amount)
 	player_shield -= absorbed
 	player_hp = maxf(0.0, player_hp - (amount - absorbed))

@@ -31,6 +31,25 @@ func _run() -> void:
 	if resume_button == null or root.gui_get_focus_owner() != resume_button:
 		_fail("The pause menu should focus Resume when it opens: button=%s owner=%s visible=%s" % [resume_button, root.gui_get_focus_owner(), pause_menu.visible])
 		return
+	var speed_select: OptionButton = pause_menu.get_node("Center/Panel/Content/SpeedSelect")
+	var health_lock: CheckButton = pause_menu.get_node_or_null("Center/Panel/Content/HealthLockButton")
+	if health_lock == null or health_lock.get_global_rect().position.y <= speed_select.get_global_rect().end.y:
+		_fail("The health lock toggle should appear below simulation speed")
+		return
+	session.player_hp = 50.0
+	session.player_shield = 5.0
+	health_lock.set_pressed_no_signal(true)
+	health_lock.toggled.emit(true)
+	session._take_player_damage(7.0)
+	if not is_equal_approx(session.player_hp, 50.0) or not is_equal_approx(session.player_shield, 5.0):
+		_fail("Health lock should block damage without consuming shield")
+		return
+	health_lock.set_pressed_no_signal(false)
+	health_lock.toggled.emit(false)
+	session._take_player_damage(7.0)
+	if not is_equal_approx(session.player_hp, 48.0) or not is_zero_approx(session.player_shield):
+		_fail("Disabling health lock should restore normal shield and HP damage")
+		return
 	if "--capture" in OS.get_cmdline_user_args():
 		await RenderingServer.frame_post_draw
 		if root.get_texture().get_image().save_png("/tmp/dopamine-pause.png") != OK:

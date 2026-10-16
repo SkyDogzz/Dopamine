@@ -77,6 +77,12 @@ popup/item_3/id = 3
 popup/item_4/text = "GAME SPEED  ×4"
 popup/item_4/id = 4
 
+[node name="HealthLockButton" type="CheckButton" parent="Center/Panel/Content"]
+custom_minimum_size = Vector2(0, 22)
+layout_mode = 2
+focus_mode = 2
+text = "LOCK HEALTH"
+
 [node name="ResumeButton" type="Button" parent="Center/Panel/Content"]
 custom_minimum_size = Vector2(0, 24)
 layout_mode = 2
