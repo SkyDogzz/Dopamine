@@ -1,9 +1,10 @@
-[gd_scene load_steps=5 format=3]
+[gd_scene load_steps=6 format=3]
 
 [ext_resource type="Script" path="res://scripts/survival_session.gd" id="1_session"]
 [ext_resource type="PackedScene" path="res://scenes/chest_choice.tscn" id="2_chest_choice"]
 [ext_resource type="PackedScene" path="res://scenes/run_result_panel.tscn" id="3_run_result"]
 [ext_resource type="PackedScene" path="res://scenes/pause_menu.tscn" id="4_pause_menu"]
+[ext_resource type="Texture2D" path="res://assets/sprites/rewards/xp_orb.png" id="5_xp_orb"]
 
 [node name="SurvivalSession" type="Node2D"]
 script = ExtResource("1_session")
@@ -56,6 +57,13 @@ value = 100.0
 layout_mode = 2
 theme_override_constants/separation = 4
 mouse_filter = 2
+
+[node name="XPOrb" type="TextureRect" parent="HUD/RunPanel/RunInfo/StatusRow/XPRow"]
+custom_minimum_size = Vector2(16, 16)
+layout_mode = 2
+texture = ExtResource("5_xp_orb")
+texture_filter = 1
+stretch_mode = 5
 
 [node name="XPValue" type="Label" parent="HUD/RunPanel/RunInfo/StatusRow/XPRow"]
 custom_minimum_size = Vector2(61, 0)

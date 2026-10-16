@@ -396,3 +396,8 @@ Note de clôture : le blocage historique du smoke `sandbox_ui_smoke.gd` décrit 
 
 - [x] Le solde d’essence reprend l’icône dédiée de la Bible d’assets, en nearest, sans changer son calcul ni les prérequis des nœuds.
 - [ ] `skill_tree_panel_visual_smoke.gd` vérifie l’icône, le filtrage et la valeur affichée; il reste à exécuter avec Godot.
+
+## Repère XP du HUD (2026-10-16)
+
+- [x] Le HUD reprend l’orbe XP 16×16 à sa taille native et en nearest, sans changer les valeurs ni le calcul de progression.
+- [ ] `survival_hud_smoke.gd` vérifie l’asset, sa taille, son filtrage et les bounds des lignes; il reste à exécuter avec Godot.

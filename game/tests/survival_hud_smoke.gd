@@ -44,6 +44,11 @@ func _run() -> void:
 	if hp_row == null or xp_row == null or hp_row == xp_row:
 		_fail("Health and XP should have separate, readable HUD rows")
 		return
+	var xp_icon: TextureRect = session.get_node("HUD/RunPanel/RunInfo/StatusRow/XPRow/XPOrb")
+	if xp_icon.texture == null or xp_icon.texture.resource_path != "res://assets/sprites/rewards/xp_orb.png" or \
+		xp_icon.custom_minimum_size != Vector2(16, 16) or xp_icon.texture_filter != CanvasItem.TEXTURE_FILTER_NEAREST:
+		_fail("The XP HUD row should use the native-size pixel orb as its visual marker")
+		return
 	if weapon_label.text.is_empty() or weapon_label.size.y <= 0.0:
 		_fail("The weapon names in the loadout row should be visible, not clipped to zero height")
 		return
