@@ -419,8 +419,9 @@ Travail requis :
   - [x] Parcourir sous smoke les phases du Pulse Warden et du Dopamine Core.
   - [x] Exécuter `survival_elite_smoke.gd` sous Godot 4.7.2 : l’affixe Split-on-Death génère deux adds sous le plafond global.
 - [ ] **P5.V3 — Run de bout en bout**
-  - [ ] Jouer Survival sans harness, HP forcés, choix automatiques ou boss tués par script.
-  - [ ] Vérifier mort, victoire, coffre et récompense/idempotence.
+  - [x] Défaite en interface réelle, Easy avec Lightning Conductor, profil `XDG_DATA_HOME` isolé, verrouillage de vie et choix auto désactivés : écran RUN OVER à la vague 2 après 00:45 et 14 éliminations; le panneau a affiché +13 Essence et +18 Basic Powder.
+  - [ ] Jouer jusqu’à la victoire en interface réelle, sans harness, HP forcés, choix automatiques ou boss tué par script.
+  - [ ] Vérifier en interface réelle le choix d’un coffre, la remise des récompenses et leur idempotence.
 - [ ] **P5.V4 — Revue et checkpoint**
   - [x] Consigner les validations et les limites sans changer les statuts de décision du GDD.
   - [x] Relancer la suite CTest complète : 66/66 passent en séquentiel le 2026-10-16 après correction du redémarrage de run. Le benchmark natif sur 500 ennemis/2 000 projectiles mesure la rafale d’impacts avant/après optimisation; résultats et limites consignés dans `docs/qa/TESTS.md`.
