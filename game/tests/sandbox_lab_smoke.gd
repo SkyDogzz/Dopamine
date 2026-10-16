@@ -15,6 +15,15 @@ func _run() -> void:
 			lab.context.session.loadout.relic_level("storm_core") != 1:
 		_fail("The default Lab preset build should be applied to the real combat loadout")
 		return
+	var diagnostics: Label = lab.get_node_or_null("Root/Body/Side/Sections/Diagnostics/RngLog")
+	var dps_summary: Label = lab.get_node_or_null("Root/Body/Side/Sections/Diagnostics/DpsSummary")
+	var dps_sources: Label = lab.get_node_or_null("Root/Body/Side/Sections/Diagnostics/DpsSources")
+	if diagnostics == null or dps_summary == null or dps_sources == null:
+		_fail("Sandbox Lab should expose RNG and source DPS diagnostics")
+		return
+	if lab.context.session.sandbox_rng_seed != 1 or not lab.context.session.sandbox_diagnostics_enabled:
+		_fail("Sandbox diagnostics should use the active preset seed and remain disabled outside Lab")
+		return
 	var reset_cooldowns: Button = lab.get_node_or_null("Root/Body/Left/ProjectileControls/ResetCooldownsButton")
 	if reset_cooldowns == null:
 		_fail("Sandbox Lab should expose a reset-cooldowns command")
@@ -45,6 +54,26 @@ func _run() -> void:
 			lab.context.session.wave_director.state != lab.context.session.WAVE_DIRECTOR_SCRIPT.State.WAVE or \
 			lab.context.session.wave_spawning_enabled:
 		_fail("Jump Wave should set the selected wave without enabling regular Sandbox spawns")
+		return
+	lab.context.session._spawn_wave_enemy()
+	if lab.context.session._sandbox_rng_log.is_empty() or \
+			not str(lab.context.session._sandbox_rng_log[0]["purpose"]).begins_with("wave_enemy"):
+		_fail("Sandbox wave decisions should record their seeded RNG draws with a purpose")
+		return
+	var expected_rng := RandomNumberGenerator.new()
+	expected_rng.seed = 1
+	if not is_equal_approx(float(lab.context.session._sandbox_rng_log[0]["value"]), expected_rng.randf()):
+		_fail("Sandbox RNG draws should be reproducible from the active preset seed")
+		return
+	lab._refresh()
+	if not diagnostics.text.contains("SEED 1") or not diagnostics.text.contains("wave_enemy_"):
+		_fail("The Lab RNG panel should show the preset seed and contextual draw log")
+		return
+	for _index in range(300):
+		lab.context.session._random_float("buffer_limit_probe")
+	if lab.context.session._sandbox_rng_log.size() != 256 or \
+			lab.context.session._sandbox_rng_log[0]["purpose"] != "buffer_limit_probe":
+		_fail("The Sandbox RNG log should remain bounded to its most recent 256 draws")
 		return
 	if wave_spin.min_value != 1.0 or wave_spin.max_value != 999.0:
 		_fail("Jump Wave UI should bound its target to the supported range")
@@ -108,6 +137,14 @@ func _run() -> void:
 	if not await _wait_for_projectiles(lab.context.simulation):
 		_fail("The applied weapon build should fire through the Survival combat implementation")
 		return
+	if not await _wait_for_lab_damage(lab):
+		_fail("The Lab diagnostics should capture real weapon damage events")
+		return
+	lab._refresh()
+	if not dps_summary.text.contains("1S") or not dps_summary.text.contains("10S") or \
+			not dps_summary.text.contains("RUN") or not dps_sources.text.contains("LIGHTNING"):
+		_fail("The Lab should report rolling DPS windows and damage by weapon source")
+		return
 	lab.get_node("Root/Body/Left/ProjectileControls/ClearProjectilesButton").pressed.emit()
 	if not await _wait_for_projectile_count(lab.context.simulation, 0) or \
 			int(lab.context.simulation.snapshot()["metrics"]["entity_count"]) == 0:
@@ -155,6 +192,14 @@ func _wait_for_projectile_count(simulation: Object, expected_count: int) -> bool
 	while Time.get_ticks_msec() < deadline:
 		await process_frame
 		if int(simulation.snapshot()["metrics"]["projectile_count"]) == expected_count:
+			return true
+	return false
+
+func _wait_for_lab_damage(lab: Control) -> bool:
+	var deadline := Time.get_ticks_msec() + 2000
+	while Time.get_ticks_msec() < deadline:
+		await process_frame
+		if float(lab.context.session._weapon_damage_by_id.get("lightning_conductor", 0.0)) > 0.0:
 			return true
 	return false
 

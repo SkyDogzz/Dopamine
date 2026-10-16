@@ -84,10 +84,13 @@ const CHEST_DIRECTOR_SCRIPT := preload("res://scripts/survival_chest_director.gd
 const DIFFICULTY_SCRIPT := preload("res://scripts/survival_difficulty.gd")
 const WAVE_HP_GROWTH := 1.12
 const WAVE_HP_CAP := 12.0
+const MAX_SANDBOX_RNG_LOG_ENTRIES := 256
 
 @export var spawn_initial_enemy: bool = true
 @export var wave_spawning_enabled: bool = true
 @export var skip_starting_weapon_choice: bool = false
+var sandbox_diagnostics_enabled := false
+var sandbox_rng_seed := 0
 @export_group("Prototype wave director — proposed tuning")
 @export var wave_duration_seconds: float = 30.0
 @export var wave_population_scale: float = 1.0
@@ -319,6 +322,9 @@ var _enemy_kills_by_type: Dictionary = {}
 var _elite_affix_kills: Dictionary = {}
 var _weapon_damage_by_id: Dictionary = {}
 var _weapon_kills_by_id: Dictionary = {}
+var _sandbox_damage_by_source: Dictionary = {}
+var _sandbox_rng := RandomNumberGenerator.new()
+var _sandbox_rng_log: Array[Dictionary] = []
 var _last_target := Vector2(INF, INF)
 var _last_simulation_time := 0.0
 var _last_combat_event_sequence := 0
@@ -422,6 +428,8 @@ var _health_locked := false
 var _auto_select_first_chest := false
 
 func _ready() -> void:
+	if sandbox_diagnostics_enabled:
+		_sandbox_rng.seed = sandbox_rng_seed
 	Engine.time_scale = 1.0
 	_weapon_progression = _load_weapon_progression()
 	if not _weapon_progression_valid:
@@ -1044,7 +1052,7 @@ func _update_summoner_attacks(current_simulation_time: float, paused: bool) -> v
 		var transform: Dictionary = components["Transform2D"]
 		var origin := Vector2(float(transform["x"]), float(transform["y"]))
 		if not _summoner_attacks.has(key):
-			var spawn_position := origin + Vector2.from_angle(randf() * TAU) * summoner_spawn_radius
+			var spawn_position := origin + Vector2.from_angle(_random_float("summoner_spawn_angle") * TAU) * summoner_spawn_radius
 			_summoner_attacks[key] = {
 				"origin": origin,
 				"spawn_position": spawn_position,
@@ -1062,7 +1070,7 @@ func _update_summoner_attacks(current_simulation_time: float, paused: bool) -> v
 		_pending_summon_sequences[sequence] = true
 		free_summon_slots -= 1
 		attack["summon_at"] = current_simulation_time + maxf(0.05, summoner_cooldown_seconds)
-		attack["spawn_position"] = origin + Vector2.from_angle(randf() * TAU) * summoner_spawn_radius
+		attack["spawn_position"] = origin + Vector2.from_angle(_random_float("summoner_next_spawn_angle") * TAU) * summoner_spawn_radius
 	for summoner_key in _summoner_attacks.keys():
 		if not active_summoners.has(summoner_key):
 			_summoner_attacks.erase(summoner_key)
@@ -1261,7 +1269,7 @@ func _spawn_boss_summon(origin: Vector2) -> void:
 			active_summons += 1
 	if active_summons >= summoner_max_active_summons:
 		return
-	var spawn_position := origin + Vector2.from_angle(randf() * TAU) * summoner_spawn_radius
+	var spawn_position := origin + Vector2.from_angle(_random_float("boss_summon_angle") * TAU) * summoner_spawn_radius
 	var sequence: int = simulation.spawn_enemy(
 		"summoned", 1, spawn_position, Vector2.ZERO, _enemy_hp_multiplier(wave_director.wave)
 	)
@@ -1852,6 +1860,9 @@ func _record_weapon_damage(source_type: String, amount: float) -> void:
 	var weapon_id := _weapon_id_for_source_type(source_type)
 	if weapon_id in WEAPON_DAMAGE_IDS:
 		_weapon_damage_by_id[weapon_id] = float(_weapon_damage_by_id.get(weapon_id, 0.0)) + amount
+		if sandbox_diagnostics_enabled:
+			var source_id := source_type.get_slice(":", 0)
+			_sandbox_damage_by_source[source_id] = float(_sandbox_damage_by_source.get(source_id, 0.0)) + amount
 
 func _record_weapon_kill(source_type: String) -> void:
 	var weapon_id := _weapon_id_for_source_type(source_type)
@@ -1996,22 +2007,22 @@ func _advance_wave_director(delta_seconds: float, paused: bool) -> void:
 		_spawn_boss_placeholder("final_boss")
 
 func _spawn_wave_enemy() -> void:
-	var angle := randf() * TAU
+	var angle := _random_float("wave_enemy_spawn_angle") * TAU
 	var spawn_position := player.global_position + Vector2.from_angle(angle) * enemy_spawn_radius
 	var enemy_type := "chaser"
-	if wave_director.wave >= 4 and randf() < 0.25:
+	if wave_director.wave >= 4 and _random_float("wave_enemy_sprinter_roll") < 0.25:
 		enemy_type = "sprinter"
-	if wave_director.wave >= 8 and randf() < 0.12:
+	if wave_director.wave >= 8 and _random_float("wave_enemy_tank_roll") < 0.12:
 		enemy_type = "tank"
-	if wave_director.wave >= 10 and randf() < 0.15:
+	if wave_director.wave >= 10 and _random_float("wave_enemy_shooter_roll") < 0.15:
 		enemy_type = "shooter"
-	if wave_director.wave >= 6 and randf() < 0.10:
+	if wave_director.wave >= 6 and _random_float("wave_enemy_buffer_roll") < 0.10:
 		enemy_type = "buffer"
-	if wave_director.wave >= 8 and randf() < 0.12:
+	if wave_director.wave >= 8 and _random_float("wave_enemy_exploder_roll") < 0.12:
 		enemy_type = "exploder"
-	if wave_director.wave >= 10 and randf() < 0.10:
+	if wave_director.wave >= 10 and _random_float("wave_enemy_shielder_roll") < 0.10:
 		enemy_type = "shielder"
-	if wave_director.wave >= 12 and randf() < 0.08:
+	if wave_director.wave >= 12 and _random_float("wave_enemy_summoner_roll") < 0.08:
 		enemy_type = "summoner"
 	var hp_multiplier := _enemy_hp_multiplier(wave_director.wave)
 	simulation.spawn_enemy(enemy_type, 1, spawn_position, Vector2.ZERO, hp_multiplier)
@@ -2037,11 +2048,11 @@ func _try_spawn_elite() -> void:
 	if active_threat + 3.0 > wave_threat_budget:
 		return
 	_next_elite_spawn_time = player_active_time + maxf(0.05, elite_spawn_interval_seconds)
-	if randf() > clampf(elite_spawn_chance, 0.0, 1.0):
+	if _random_float("elite_spawn_roll") > clampf(elite_spawn_chance, 0.0, 1.0):
 		return
-	var spawn_position := player.global_position + Vector2.from_angle(randf() * TAU) * enemy_spawn_radius
+	var spawn_position := player.global_position + Vector2.from_angle(_random_float("elite_spawn_angle") * TAU) * enemy_spawn_radius
 	var hp_multiplier := _enemy_hp_multiplier(wave_director.wave)
-	var affix := _elite_affix_for_roll(randf())
+	var affix := _elite_affix_for_roll(_random_float("elite_affix_roll"))
 	simulation.spawn_enemy("elite", 1, spawn_position, Vector2.ZERO, hp_multiplier, affix)
 
 func _elite_affix_for_roll(roll: float) -> String:
@@ -2064,7 +2075,7 @@ func _spawn_boss_placeholder(boss_type: String) -> void:
 		var components: Dictionary = entity["components"]
 		if components.get("EnemyType", "") == boss_type:
 			return
-	var spawn_position := player.global_position + Vector2.RIGHT.rotated(randf() * TAU) * enemy_spawn_radius
+	var spawn_position := player.global_position + Vector2.RIGHT.rotated(_random_float("boss_spawn_angle") * TAU) * enemy_spawn_radius
 	var enemy_hp_factor: float = DIFFICULTY_SCRIPT.DATA.get(difficulty_id, DIFFICULTY_SCRIPT.DATA["normal"])["enemy_hp"]
 	simulation.spawn(boss_type, 1, spawn_position, boss_placeholder_hp * enemy_hp_factor, Vector2.ZERO, 25.0)
 	_boss_spawn_pending = true
@@ -2224,8 +2235,8 @@ func _add_lightning_arc(from: Vector2, to: Vector2) -> void:
 	var perpendicular := (to - from).orthogonal().normalized()
 	var points := PackedVector2Array()
 	points.append(from)
-	points.append(from.lerp(to, 0.34) + perpendicular * randf_range(-10.0, 10.0))
-	points.append(from.lerp(to, 0.68) + perpendicular * randf_range(-10.0, 10.0))
+	points.append(from.lerp(to, 0.34) + perpendicular * _random_float_range(-10.0, 10.0, "lightning_arc_jitter"))
+	points.append(from.lerp(to, 0.68) + perpendicular * _random_float_range(-10.0, 10.0, "lightning_arc_jitter"))
 	points.append(to)
 	_lightning_arcs.append({"points": points, "remaining": LIGHTNING_ARC_LIFETIME})
 
@@ -2426,7 +2437,7 @@ func _fire_minigun(active_time: float, paused: bool) -> void:
 	if direction == Vector2.ZERO:
 		direction = Vector2.RIGHT
 	var spread := minigun_spread_radians * _weapon_level_multiplier("minigun", "spread_multiplier", level)
-	direction = direction.rotated(randf_range(-spread, spread))
+	direction = direction.rotated(_random_float_range(-spread, spread, "minigun_spread"))
 	var projectile_type := "redline" if loadout.is_evolved("minigun") else "minigun"
 	if simulation.spawn_projectile(projectile_type, player.global_position + direction * 14.0,
 			direction * _equipment_projectile_speed(minigun_projectile_speed), damage,
@@ -2504,7 +2515,7 @@ func _fire_meteor_staff(active_time: float, paused: bool) -> void:
 	var direction: Vector2 = (target["position"] - player.global_position).normalized()
 	if direction == Vector2.ZERO:
 		direction = Vector2.RIGHT
-	var shot_count := 2 if evolved and randf() < celestial_eye_double_impact_chance else 1
+	var shot_count := 2 if evolved and _random_float("meteor_double_impact_roll") < celestial_eye_double_impact_chance else 1
 	var fired := false
 	for _shot in range(shot_count):
 		if simulation.spawn_projectile(projectile_type, player.global_position + direction * 14.0,
@@ -2785,9 +2796,20 @@ func _effective_weapon_cooldown(base_cooldown: float) -> float:
 	var cooldown_multiplier: float = maxf(0.1, 1.0 - (_equipment_bonus("cooldown_reduction_pct") + loadout.global_relic_bonus("cooldown_reduction_pct") + _xp_run_stat_bonus("cooldown_reduction_pct")) / 100.0)
 	return base_cooldown * cooldown_multiplier / speed_multiplier
 
+func _random_float(purpose: String) -> float:
+	var value: float = _sandbox_rng.randf() if sandbox_diagnostics_enabled else randf()
+	if sandbox_diagnostics_enabled:
+		_sandbox_rng_log.append({"time": _last_simulation_time, "purpose": purpose, "value": value})
+		if _sandbox_rng_log.size() > MAX_SANDBOX_RNG_LOG_ENTRIES:
+			_sandbox_rng_log.pop_front()
+	return value
+
+func _random_float_range(from: float, to: float, purpose: String) -> float:
+	return lerpf(from, to, _random_float(purpose))
+
 func _roll_equipment_critical_multiplier() -> float:
 	var chance := _critical_chance()
-	if randf() * 100.0 < chance:
+	if _random_float("critical_hit_roll") * 100.0 < chance:
 		return 1.5 + (_equipment_bonus("critical_damage_pct") + loadout.global_relic_bonus("critical_damage_pct") + _xp_run_stat_bonus("critical_damage_pct")) / 100.0
 	return 1.0
 
@@ -2804,7 +2826,7 @@ func _has_unique_effect(effect_id: String) -> bool:
 	return _cached_unique_effects.has(effect_id)
 
 func _try_unique_lightning_burst(base_damage: float) -> void:
-	if not _has_unique_effect("lightning_burst") or player_active_time < _next_unique_lightning_time or randf() >= 0.1:
+	if not _has_unique_effect("lightning_burst") or player_active_time < _next_unique_lightning_time or _random_float("unique_lightning_burst_roll") >= 0.1:
 		return
 	var target := _nearest_enemy(SURVIVAL_TARGETING.visible_range(lightning_range))
 	if target.is_empty():
@@ -3042,7 +3064,7 @@ func _add_weapon_impact(source_type: String, position: Vector2, is_damage_over_t
 	_weapon_impacts.append({
 		"type": int(WEAPON_IMPACT_TYPES[impact_type]),
 		"position": position,
-		"rotation": randf_range(-0.25, 0.25),
+		"rotation": _random_float_range(-0.25, 0.25, "enemy_death_particle_rotation"),
 		"level": level,
 		"remaining": WEAPON_IMPACT_LIFETIME,
 	})

@@ -26,6 +26,8 @@ func start(preset: Variant) -> Dictionary:
 	# Keep the candidate inert until its complete build has been applied.
 	candidate_session.process_mode = Node.PROCESS_MODE_DISABLED
 	candidate_session.progression_service = null
+	candidate_session.sandbox_diagnostics_enabled = true
+	candidate_session.sandbox_rng_seed = int(checked["preset"]["seed"])
 	candidate_session.difficulty_id = "normal"
 	candidate_session.skip_starting_weapon_choice = true
 	candidate_session.spawn_initial_enemy = false

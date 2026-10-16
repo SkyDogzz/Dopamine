@@ -244,6 +244,8 @@ Architecture : BaseBalanceConfig → SandboxOverrideLayer → RuntimeConfigResol
 
 [PROPOSÉ] DPS : fenêtre 1 s, 10 s et run ; dégâts par arme/évolution/effet, critiques, coups, cibles, overkill. Logs événements et RNG. Commandes : spawn, kill all avec ou sans loot, reset cooldowns, restore HP, freeze AI, clear projectiles, jump wave, give item.
 
+[PROPOSÉ — prototype actuel] Le panneau Sandbox Lab affiche les fenêtres DPS 1 s, 10 s et run par type de source arme/évolution/effet. Les échantillons récents couvrent au plus 10 s et sont bornés à 4 096 entrées. Le seed du preset initialise un RNG local aux tirages de `survival_session.gd`; chaque tirage journalise son motif, son temps et sa valeur dans un tampon de 256 entrées, dont les six dernières sont visibles. Ces données sont volatiles, ne sont pas exportées, et ne couvrent pas les générateurs de loot désactivés du Lab.
+
 [PROPOSÉ] Seuils indicatifs normal / avertissement / hard cap : armes 5–6 / 15+ / 64 ; reliques 5–6 / 20+ / 128 ; ennemis 200–500 / 750+ / 2 000 ; projectiles variable / 5 000+ / 20 000 ; vitesse ×1 / ×4+ / ×16 ; XP ×1 / ×100+ / ×10 000. Hard caps à profiler, pas des garanties de performance.
 
 <a id="15"></a>

@@ -3,6 +3,7 @@ extends Control
 const PRESET_SERVICE_SCRIPT := preload("res://scripts/sandbox_preset_service.gd")
 const PRESET_STORE_SCRIPT := preload("res://scripts/sandbox_preset_store.gd")
 const LAB_CONTEXT_SCRIPT := preload("res://scripts/sandbox_lab_context.gd")
+const MAX_DPS_SAMPLES := 4096
 
 @onready var _view: Control = $Root/Body/Left/SimulationView
 @onready var _status: Label = $Root/Body/Side/Sections/Status
@@ -14,11 +15,17 @@ const LAB_CONTEXT_SCRIPT := preload("res://scripts/sandbox_lab_context.gd")
 @onready var _pause_button: Button = $Root/Body/Left/Controls/PauseButton
 @onready var _speed_select: OptionButton = $Root/Body/Left/Controls/SpeedSelect
 @onready var _wave_spin: SpinBox = $Root/Body/Left/WaveControls/WaveSpin
+@onready var _dps_summary: Label = $Root/Body/Side/Sections/Diagnostics/DpsSummary
+@onready var _dps_sources: Label = $Root/Body/Side/Sections/Diagnostics/DpsSources
+@onready var _rng_log_label: Label = $Root/Body/Side/Sections/Diagnostics/RngLog
 
 var preset_service: RefCounted
 var preset_store: RefCounted
 var context: Node
 var _elapsed := 0.0
+var _diagnostic_session_id := 0
+var _damage_totals: Dictionary = {}
+var _dps_samples: Array[Dictionary] = []
 
 func _ready() -> void:
 	preset_service = PRESET_SERVICE_SCRIPT.new()
@@ -288,6 +295,67 @@ func _refresh() -> void:
 		int(metrics["entity_count"]), int(metrics["projectile_count"]),
 		float(state["simulation_time"]), Engine.get_frames_per_second(),
 	]
+	_refresh_diagnostics(float(state["simulation_time"]))
+
+func _refresh_diagnostics(simulation_time: float) -> void:
+	var session_id: int = context.session.get_instance_id()
+	if session_id != _diagnostic_session_id:
+		_diagnostic_session_id = session_id
+		_damage_totals.clear()
+		_dps_samples.clear()
+	for source_id in context.session._sandbox_damage_by_source:
+		var total := float(context.session._sandbox_damage_by_source[source_id])
+		var delta := total - float(_damage_totals.get(source_id, 0.0))
+		if delta > 0.0:
+			_dps_samples.append({"time": simulation_time, "source": str(source_id), "damage": delta})
+			if _dps_samples.size() > MAX_DPS_SAMPLES:
+				_dps_samples.pop_front()
+	_damage_totals = context.session._sandbox_damage_by_source.duplicate(true)
+	var window_cutoff := simulation_time - 10.0
+	while not _dps_samples.is_empty() and float(_dps_samples[0]["time"]) < window_cutoff:
+		_dps_samples.pop_front()
+	var one_second_total := _damage_in_window(simulation_time - 1.0, "")
+	var ten_second_total := _damage_in_window(window_cutoff, "")
+	var run_total := 0.0
+	for total in context.session._sandbox_damage_by_source.values():
+		run_total += float(total)
+	var one_second_duration := maxf(0.1, minf(1.0, simulation_time))
+	var ten_second_duration := maxf(0.1, minf(10.0, simulation_time))
+	var run_duration := maxf(0.1, simulation_time)
+	_dps_summary.text = "DPS 1S %.1f  ·  10S %.1f  ·  RUN %.1f" % [
+		one_second_total / one_second_duration,
+		ten_second_total / ten_second_duration,
+		run_total / run_duration,
+	]
+	var sources: Array = context.session._sandbox_damage_by_source.keys()
+	sources.sort()
+	var source_lines: PackedStringArray = []
+	for source in sources:
+		var source_id := str(source)
+		var one_second := _damage_in_window(simulation_time - 1.0, source_id)
+		var ten_seconds := _damage_in_window(window_cutoff, source_id)
+		var source_run := float(context.session._sandbox_damage_by_source[source])
+		source_lines.append("%s  ·  1S %.1f / 10S %.1f / RUN %.1f" % [
+			source_id.replace("_", " ").to_upper(),
+			one_second / one_second_duration,
+			ten_seconds / ten_second_duration,
+			source_run / run_duration,
+		])
+	_dps_sources.text = "NO WEAPON DAMAGE YET" if source_lines.is_empty() else "\n".join(source_lines)
+	var rng_entries: Array[Dictionary] = context.session._sandbox_rng_log
+	var rng_lines := PackedStringArray(["SEED %d" % context.session.sandbox_rng_seed])
+	for index in range(maxi(0, rng_entries.size() - 6), rng_entries.size()):
+		var entry: Dictionary = rng_entries[index]
+		rng_lines.append("%.2fs  %s  %.3f" % [float(entry["time"]), str(entry["purpose"]), float(entry["value"])])
+	_rng_log_label.text = "\n".join(rng_lines)
+
+func _damage_in_window(cutoff: float, source_id: String) -> float:
+	var total := 0.0
+	for sample in _dps_samples:
+		if float(sample["time"]) < cutoff or (not source_id.is_empty() and str(sample["source"]) != source_id):
+			continue
+		total += float(sample["damage"])
+	return total
 
 func _set_status(message: String, error: bool) -> void:
 	_status.text = message

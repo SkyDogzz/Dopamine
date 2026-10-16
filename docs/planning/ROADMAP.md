@@ -598,7 +598,7 @@ P1 livre le Sandbox développeur et ne remplace pas cette feature produit.
   - [x] Ajouter `RESET COOLDOWNS` au Sandbox Lab; la commande réinitialise les dix horloges d’attaque de la session isolée et ne touche ni la progression ni les sauvegardes normales.
   - [x] Ajouter `JUMP WAVE` dans le Lab, avec cible 1–999, remise à zéro du timer et retour à l’état vague; les spawns automatiques restent désactivés. Le smoke couvre aussi le rejet des cibles hors plage.
   - [x] Préserver le réglage God Mode lors d’un import de preset qui reconstruit la session; la régression vérifie le cas désactivé.
-  - [ ] Ajouter logs RNG et DPS par fenêtre/source.
+  - [x] Afficher les DPS 1 s, 10 s et cumulés, ventilés par type de source arme/évolution/effet; afficher un journal RNG contextualisé à seed fixe. Les échantillons DPS sont limités aux dix dernières secondes (4096 maximum) et le journal conserve 256 tirages, dont les six plus récents sont visibles.
 - [ ] **P8.6 — Snapshots**
   - [ ] Lister l’état minimal à capturer, y compris RNG, clocks, queues et build.
   - [ ] Capturer puis restaurer sans perte sur une scène simple.

@@ -767,3 +767,10 @@ Note de clôture : le blocage historique du smoke `sandbox_ui_smoke.gd` décrit 
 
 - [x] `sandbox_lab_smoke.gd` vérifie le saut à la vague 17, la remise du timer à zéro, le maintien des spawns automatiques désactivés et le rejet d’une vague 0; God Mode désactivé reste désactivé après l’import JSON qui remplace la session.
 - [x] Smoke passé sous Godot 4.7.2 avec `XDG_DATA_HOME` neuf. Ces commandes restent propres au contexte Sandbox et ne touchent pas la progression normale.
+
+## P8.5 — Diagnostics RNG et DPS Sandbox Lab (2026-10-16)
+
+- [x] `sandbox_lab_smoke.gd` vérifie que le seed du preset active un RNG local à la session Lab, que le spawn d’ennemi journalise des tirages avec leur motif, que le tampon RNG reste borné à 256, et que l’arme de départ produit des dégâts réels ventilés par source dans les trois fenêtres DPS.
+- [x] `ui_viewport_layout_smoke.gd` passe pour 640×360, 1280×720 et 1920×1080 après l’ajout du panneau; les smokes `survival_weapon_catalog_smoke.gd` et `survival_boss_attack_smoke.gd` passent avec le RNG Sandbox désactivé.
+- [x] Le smoke Sandbox retourne 0; Godot signale encore 2 instances ObjectDB et 1 ressource en usage à la fermeture, sans échec fonctionnel.
+- [ ] Les valeurs de tuning restent **[PROPOSÉES]**; ces diagnostics n’effectuent ni calibration représentative, ni enregistrement persistant.
