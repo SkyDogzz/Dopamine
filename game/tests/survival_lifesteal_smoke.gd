@@ -17,6 +17,15 @@ func _run() -> void:
 	if not session.loadout.apply_offer("relic:blood_chalice"):
 		_fail("Blood Chalice should be equipable")
 		return
+	var base_kill_healing: float = session.simulation.kill_heal_amount(1.0)
+	for level in range(1, session.loadout.MAX_LEVEL + 1):
+		if level > 1 and not session.loadout.apply_offer("relic:blood_chalice"):
+			_fail("Blood Chalice should level up through its maximum level")
+			return
+		var expected_kill_healing: float = base_kill_healing * (1.0 + level * session.blood_chalice_heal_per_level)
+		if not is_equal_approx(session._equipment_kill_healing(base_kill_healing), expected_kill_healing):
+			_fail("Blood Chalice level %d should apply its configured global kill-healing bonus" % level)
+			return
 	session.player_hp = 50.0
 	session.simulation.set_speed(0.25)
 	session.simulation.spawn("test_target", 1, Vector2(60.0, 0.0), 100.0, Vector2.ZERO, 1.0)

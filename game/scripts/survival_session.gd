@@ -2955,7 +2955,8 @@ func _equipment_bonus(stat_id: String) -> float:
 	return bonus
 
 func _equipment_kill_healing(base_healing: float) -> float:
-	return base_healing * (1.0 + (_equipment_bonus("kill_healing_pct") + _xp_run_stat_bonus("kill_healing_pct")) / 100.0)
+	var blood_chalice_bonus: float = loadout.relic_level("blood_chalice") * blood_chalice_heal_per_level * 100.0
+	return base_healing * (1.0 + (_equipment_bonus("kill_healing_pct") + blood_chalice_bonus + _xp_run_stat_bonus("kill_healing_pct")) / 100.0)
 
 func _equipment_xp_value(base_xp: float) -> float:
 	return base_xp * (1.0 + (_equipment_bonus("xp_pct") + _xp_run_stat_bonus("xp_pct")) / 100.0)

@@ -928,6 +928,11 @@ Note de clôture : le blocage historique du smoke `sandbox_ui_smoke.gd` décrit 
 - [x] `survival_weapon_catalog_smoke.gd` passe quatre exécutions consécutives avec un `XDG_DATA_HOME` isolé; `survival_loadout_smoke.gd` passe aussi sous Godot 4.7.2.
 - [x] Suite CTest complète : `LastTest.log` enregistre 86/86 tests réussis en séquentiel sous Godot 4.7.2, après les modifications présentes dans le worktree. Le fichier `LastTestsFailed.log` était ancien et ne correspondait pas à cette exécution.
 
+## P5 — Bonus de soin par élimination de Blood Chalice — 2026-10-16
+
+- [x] Le bonus de kill healing par niveau de Blood Chalice était affiché dans le hub des statistiques mais absent de `_equipment_kill_healing`, donc n’affectait pas les soins appliqués en jeu. La formule inclut maintenant ce bonus configurable par niveau.
+- [x] `survival_lifesteal_smoke.gd` vérifie les niveaux 1 à 5 et passe après avoir d’abord échoué au niveau 1 sur l’implémentation précédente. Les smokes `survival_run_stat_hub_smoke.gd` et `survival_weapon_catalog_smoke.gd` passent aussi sous Godot 4.7.2.
+
 ## P4 — Choix de l’arme de départ — 2026-10-16
 
 - [x] `survival_starting_weapon_smoke.gd` cherchait Inferno Sprayer par index fixe alors que les deux offres de départ sont mélangées. Le test sélectionne maintenant l’offre par son titre affiché.
