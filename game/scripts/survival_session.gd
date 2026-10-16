@@ -918,20 +918,24 @@ func _style_run_hud() -> void:
 	panel_style.set_border_width_all(1)
 	panel_style.border_width_left = 3
 	panel_style.border_color = Color("#45e5ed")
-	panel_style.set_corner_radius_all(4)
+	panel_style.set_corner_radius_all(0)
+	panel_style.content_margin_left = 12.0
+	panel_style.content_margin_top = 6.0
+	panel_style.content_margin_right = 12.0
+	panel_style.content_margin_bottom = 6.0
 	$HUD/RunPanel.add_theme_stylebox_override("panel", panel_style)
 	var bar_background := StyleBoxFlat.new()
 	bar_background.bg_color = Color("#172633")
-	bar_background.set_corner_radius_all(3)
+	bar_background.set_corner_radius_all(0)
 	_hp_bar.add_theme_stylebox_override("background", bar_background)
 	_xp_bar.add_theme_stylebox_override("background", bar_background)
 	_hp_fill_style = StyleBoxFlat.new()
 	_hp_fill_style.bg_color = Color("#54e0c1")
-	_hp_fill_style.set_corner_radius_all(3)
+	_hp_fill_style.set_corner_radius_all(0)
 	_hp_bar.add_theme_stylebox_override("fill", _hp_fill_style)
 	var xp_fill := StyleBoxFlat.new()
 	xp_fill.bg_color = Color("#45e5ed")
-	xp_fill.set_corner_radius_all(3)
+	xp_fill.set_corner_radius_all(0)
 	_xp_bar.add_theme_stylebox_override("fill", xp_fill)
 
 func _refresh_boss_hud() -> void:
