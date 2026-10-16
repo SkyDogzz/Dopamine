@@ -77,7 +77,9 @@ Boucle Survival : choisir difficulté et arme initiale → survivre à une vague
 
 [VALIDÉ] Cinq difficultés progressives : Easy, Normal, Hard, Nightmare, Chaos. Chaque difficulté se débloque en battant la précédente. Les statistiques et la densité des ennemis augmentent avec la difficulté ; Chaos ajoute des comportements particuliers. Élites aléatoires pilotées par un budget de menace et cooldown. Mid-boss à la vague 12, boss final à la vague 24. Pas de limite de temps pour battre un boss.
 
-[PROPOSÉ] Archétypes initiaux : Chaser (20 HP, 75 px/s), Sprinter (12 HP, 125 px/s), Tank (80 HP, 45 px/s), Shooter (25 HP, 65 px/s). Multiplicateur HP de vague en Survival : min(1,12^(vague−1), 12). Population cible : round(10+390*((vague−1)/23)^1,5), de ~10 à ~400.
+[VALIDÉ] Pendant une vague, les ennemis ordinaires continuent d’apparaître à la cadence de spawn sans plafond sur leur nombre vivant. Une élimination trop lente peut ainsi accumuler les ennemis et submerger le joueur. La densité de difficulté agit sur cette cadence ; ses multiplicateurs numériques restent **[PROPOSÉS]**.
+
+[PROPOSÉ] Archétypes initiaux : Chaser (20 HP, 75 px/s), Sprinter (12 HP, 125 px/s), Tank (80 HP, 45 px/s), Shooter (25 HP, 65 px/s). Multiplicateur HP de vague en Survival : min(1,12^(vague−1), 12). Budget de menace élite : round(10+390*((vague−1)/23)^1,5), de ~10 à ~400; il ne limite pas le nombre d’ennemis ordinaires vivants.
 
 [PROPOSÉ] Multiplicateurs par difficulté (HP / dégâts / densité / Essence / Powder) : Easy 0,75 / 0,70 / 0,80 / 0,70 / 0,70 ; Normal 1 / 1 / 1 / 1 / 1 ; Hard 1,5 / 1,3 / 1,2 / 1,6 / 1,5 ; Nightmare 2,2 / 1,7 / 1,5 / 2,5 / 2,3 ; Chaos 3,2 / 2,3 / 1,8 / 4 / 3,5.
 

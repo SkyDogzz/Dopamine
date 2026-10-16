@@ -296,7 +296,6 @@ func _verify_wave_enemy_composition() -> bool:
 	session.spawn_initial_enemy = false
 	session.weapon_enabled = false
 	session.skip_starting_weapon_choice = true
-	session.wave_population_cap = 400
 	root.add_child(session)
 	await process_frame
 	session.wave_director.wave = 20

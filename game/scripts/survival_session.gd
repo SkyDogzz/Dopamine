@@ -76,7 +76,6 @@ const WAVE_HP_CAP := 12.0
 @export var skip_starting_weapon_choice: bool = false
 @export_group("Prototype wave director — proposed tuning")
 @export var wave_duration_seconds: float = 30.0
-@export_range(1, 400) var wave_population_cap: int = 80
 @export var wave_population_scale: float = 1.0
 @export var enemy_spawn_interval: float = 0.5
 @export var enemy_spawn_radius: float = 520.0
@@ -1560,7 +1559,7 @@ func _advance_wave_director(delta_seconds: float, paused: bool) -> void:
 		wave_director.advance(delta_seconds)
 		if spawn_initial_enemy and player_active_time >= _next_enemy_spawn_time:
 			_spawn_wave_enemy()
-			_next_enemy_spawn_time = player_active_time + maxf(0.05, enemy_spawn_interval)
+			_next_enemy_spawn_time = player_active_time + _wave_enemy_spawn_interval()
 		_try_spawn_elite()
 	elif wave_director.state == WAVE_DIRECTOR_SCRIPT.State.MID_BOSS:
 		_spawn_boss_placeholder("mid_boss")
@@ -1568,14 +1567,6 @@ func _advance_wave_director(delta_seconds: float, paused: bool) -> void:
 		_spawn_boss_placeholder("final_boss")
 
 func _spawn_wave_enemy() -> void:
-	var target_population := _wave_population(wave_director.wave)
-	var active_enemies := 0
-	for entity in _entities:
-		var components: Dictionary = entity["components"]
-		if not components.get("IsProjectile", false) and not components.get("IsXpOrb", false):
-			active_enemies += 1
-	if active_enemies >= target_population:
-		return
 	var angle := randf() * TAU
 	var spawn_position := player.global_position + Vector2.from_angle(angle) * enemy_spawn_radius
 	var enemy_type := "chaser"
@@ -1680,7 +1671,15 @@ func _wave_population(wave_number: int) -> int:
 	var progress := float(wave_number - 1) / 23.0
 	var proposed_population := roundi(10.0 + 390.0 * pow(progress, 1.5))
 	var density_factor: float = DIFFICULTY_SCRIPT.DATA.get(difficulty_id, DIFFICULTY_SCRIPT.DATA["normal"])["density"]
-	return clampi(roundi(float(proposed_population) * wave_population_scale * density_factor), 1, wave_population_cap)
+	return maxi(1, roundi(float(proposed_population) * wave_population_scale * density_factor))
+
+func _wave_enemy_spawn_interval() -> float:
+	var base_interval := maxf(0.05, enemy_spawn_interval)
+	var density_factor: float = DIFFICULTY_SCRIPT.DATA.get(difficulty_id, DIFFICULTY_SCRIPT.DATA["normal"])["density"]
+	var spawn_scale := wave_population_scale * density_factor
+	if not is_finite(spawn_scale) or spawn_scale <= 0.0:
+		return base_interval
+	return maxf(0.05, base_interval / spawn_scale)
 
 func _enemy_hp_multiplier(wave_number: int) -> float:
 	var wave_factor := minf(pow(WAVE_HP_GROWTH, float(wave_number - 1)), WAVE_HP_CAP)

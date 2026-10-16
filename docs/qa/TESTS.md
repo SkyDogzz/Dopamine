@@ -1,5 +1,11 @@
 # Tests d'acceptation et validation
 
+## Population ennemie sans plafond — 2026-10-16
+
+- [x] `survival_wave_spawn_smoke.gd` crée des fixtures actives jusqu’au seuil de l’ancienne première vague et confirme qu’un spawn ordinaire supplémentaire est quand même accepté.
+- [x] Le smoke vérifie la courbe de population sans plafond fixe et la cadence configurable : facteur Normal 1×, Chaos 1,8×. Les coefficients de densité restent **[PROPOSÉS]**.
+- [x] Les tests de spawn, de difficulté et du directeur de vagues passent; toute la suite CTest passe 65/65 en séquentiel sous Godot 4.7.2. Une run de joueur sans assistance reste à valider en P5.V3.
+
 ## Scénarios de validation des dix armes — 2026-10-16
 
 - [x] `sandbox_weapon_scenario_runner.gd` lance chaque attaque de production contre des cibles déterministes avec une loadout temporaire en mémoire; `progression_service` est nul et aucun `SaveService` n’est chargé.

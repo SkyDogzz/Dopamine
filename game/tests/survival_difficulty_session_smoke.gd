@@ -6,7 +6,6 @@ func _initialize() -> void:
 func _run() -> void:
 	var session: Node2D = load("res://scenes/survival_session.tscn").instantiate()
 	session.difficulty_id = "easy"
-	session.wave_population_cap = 500
 	session.spawn_initial_enemy = false
 	session.wave_spawning_enabled = false
 	session.skip_starting_weapon_choice = true

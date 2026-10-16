@@ -422,7 +422,7 @@ Travail requis :
   - [ ] Vérifier mort, victoire, coffre et récompense/idempotence.
 - [ ] **P5.V4 — Revue et checkpoint**
   - [x] Consigner les validations et les limites sans changer les statuts de décision du GDD.
-  - [x] Relancer la suite CTest complète : 64/64 passent en séquentiel le 2026-10-16 après ajout des scénarios d’armes. Le benchmark natif sur 500 ennemis/2 000 projectiles mesure la rafale d’impacts avant/après optimisation; résultats et limites consignés dans `docs/qa/TESTS.md`.
+  - [x] Relancer la suite CTest complète : 65/65 passent en séquentiel le 2026-10-16 après suppression du plafond de population ennemie. Le benchmark natif sur 500 ennemis/2 000 projectiles mesure la rafale d’impacts avant/après optimisation; résultats et limites consignés dans `docs/qa/TESTS.md`.
   - [x] Corriger le travail de zone devenu inutile après saturation du budget d’explosions et committer ce checkpoint documenté.
   - [ ] Faire le parcours sans assistance de P5.V3 et réaliser les scénarios d’armes dans le Sandbox avant de clore le jalon.
 
