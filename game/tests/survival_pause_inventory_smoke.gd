@@ -94,6 +94,17 @@ func _run() -> void:
 		if not text.contains(expected):
 			_fail("Run inventory is missing canonical item data: %s" % expected)
 			return
+	var first_details: VBoxContainer = (items.get_child(1) as PanelContainer).get_child(0).get_child(1)
+	var item_title := first_details.get_child(0) as Label
+	var evolution := first_details.get_child(1) as Label
+	var description := first_details.get_child(2) as Label
+	if item_title.get_theme_color("font_color").to_html(false) != "f6f7ff" or \
+		item_title.get_theme_font_size("font_size") != 9 or \
+		evolution.get_theme_color("font_color").to_html(false) != "ff75e3" or \
+		description.get_theme_color("font_color").to_html(false) != "a6aec4" or \
+		description.autowrap_mode != TextServer.AUTOWRAP_WORD_SMART:
+		_fail("Run inventory should distinguish item name, evolved state and wrapping description")
+		return
 	if not bool(session.simulation.snapshot()["paused"]):
 		_fail("Opening run inventory must keep the simulation paused")
 		return

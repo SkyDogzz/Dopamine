@@ -68,6 +68,7 @@
 - [x] `survival_pause_inventory_smoke.gd` vérifie le cadre élargi, le focus visible, la navigation clavier, le défilement jusqu’au dernier item et l’absence de mutation du loadout.
 - [x] Le panneau reste dans les viewports 640×360, 960×600, 1280×800 et 1600×900; `ui_viewport_layout_smoke.gd` passe aussi aux tailles 640×360, 1280×720 et 1920×1080.
 - [x] Capture 640×360 logique relue avec quatre armes et quatre reliques : deux cartes complètes restent visibles avant défilement.
+- [ ] Le smoke vérifie maintenant la hiérarchie nom/évolution/description; ces nouvelles assertions attendent une exécution avec Godot.
 
 ## Résultat de run — poids des récompenses — 2026-10-16
 
