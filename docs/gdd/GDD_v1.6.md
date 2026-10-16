@@ -57,6 +57,10 @@ Boucle Survival : choisir difficulté et arme initiale → survivre à une vague
 
 [PROPOSÉ] Chaque niveau d'XP donne un petit bonus automatique de stats, sans écran de sélection. La courbe d'XP et les bonus par niveau restent à spécifier.
 
+[VALIDÉ — EXTENSION DU 2026-10-16] À chaque niveau, la progression automatique d'XP améliore une statistique selon une rotation fixe, commune à toutes les runs. La rotation couvre les statistiques de combat et utilitaires qui influencent directement la run. Aucun choix, toast, animation ou autre retour ponctuel n'est affiché lors du gain ; le bonus reste consultable dans les statistiques de run.
+
+[À DÉFINIR AVANT CALIBRAGE] Liste et ordre exacts des statistiques de la rotation, valeur de chaque bonus, caps éventuels et interaction chiffrée avec les autres sources. Tant que ces paramètres ne sont pas décidés, le code ne doit pas présenter de valeurs comme validées.
+
 <a id="3"></a>
 
 ## 03 — Combat, HP decay et guérison
@@ -253,6 +257,10 @@ Architecture : BaseBalanceConfig → SandboxOverrideLayer → RuntimeConfigResol
 [PROPOSÉ] HUD : HP et decay actuel, vague/timer, difficulté, XP/niveau, armes/reliques, évolutions, boss HP, dégâts agrégés. Armorless : comparer trois équipements à chaque vague, stats positives/négatives et comparaison avec l'objet équipé, choix d'effet unique sur Legendary/Mythic, solde de Flux, enhancements accessibles pendant pause. Sandbox : onglets de paramètres, éditeur de build, contrôles de simulation, panneau DPS/logs, recherche de paramètres, export/import.
 
 [À DÉFINIR] Wireframes de chaque écran, navigation manette, accessibilité, réglages VFX et affichage du nombre d'ennemis, détails audio.
+
+[VALIDÉ — EXTENSION DU 2026-10-16] Pendant une run, un hub compact à gauche affiche les statistiques courantes de la run. Tab ouvre un panneau détaillé en lecture seule qui présente les totaux et leur contribution par source : progression acquise pendant la run (dont bonus automatiques d'XP), équipement, achievements et skill tree. L'ouverture de ce panneau ne met pas la run en pause. Aucun retour visuel ponctuel n'accompagne le gain de niveau XP.
+
+[À DÉFINIR] Statistiques exactes et format compact du hub, disposition détaillée du panneau Tab, regroupement des sources et navigation de fermeture. Le hub doit refléter les valeurs effectives en run ; le panneau Tab doit permettre d'en comprendre les contributions sans interrompre le gameplay.
 
 <a id="16"></a>
 
