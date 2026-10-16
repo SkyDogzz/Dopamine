@@ -18,6 +18,12 @@
 - [x] `survival_inventory_smoke.gd` utilise désormais deux équipements de fixture valides et déterministes au lieu de dépendre de récompenses aléatoires; équipement, enhancement, effet unique, compétences et démantèlement passent dans la suite intégrée.
 - [x] `survival_elite_smoke.gd` vérifie le Split-on-Death plafonné sous Godot 4.7.2; les smokes voisins Summoner, boss, vagues et durée passent également.
 
+## Profil natif des impacts — 2026-10-16
+
+- [x] `build/simulation_benchmark` (Debug, GCC 14.2, Linux x86-64, AMD EPYC-Milan) exécute deux fois le même workload de 500 ennemis et 2 000 projectiles sur 300 frames à 60 Hz. Sans impacts : moyenne 1,27–1,30 ms avant et 1,08–1,13 ms après.
+- [x] La rafale dense `wildfire_impact_burst` mesurait 141,1–143,1 ms/frame en moyenne et 154,4–158,0 ms p95 avant; après avoir évité les requêtes de zone quand le budget de cibles était épuisé, elle mesure 72,6–74,4 ms moyenne et 77,6–82,4 ms p95 (environ 48 % de baisse sur les médianes des deux exécutions).
+- [x] `simulation_core` et `simulation_worker` passent après la modification, puis toute la suite CTest passe 47/47. Le stress test extrême reste au-dessus de 16,7 ms; cette charge concentre toutes les cibles et projectiles au même point et ne constitue pas un profil représentatif de Survival. Aucun budget de performance n’est actuellement défini dans les documents.
+
 ## Pression de combat sans amélioration — 2026-10-16
 
 - [x] `survival_idle_combat_smoke.gd` vérifie 20 secondes simulées de la première vague en Normal, joueur immobile, arme de départ active et rayon XP/coffre à zéro : 23 ennemis éliminés, 83,3/100 PV restants, aucun XP ni choix collecté. Le défaut historique « aucun dégât jusqu’aux vagues 8–9 » ne se reproduit pas sur ce parcours ciblé; ce n’est pas une validation d’équilibrage complet.

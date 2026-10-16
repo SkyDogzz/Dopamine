@@ -828,7 +828,8 @@ std::vector<CombatEvent> SimulationCore::advance(double delta_seconds) {
 						projectile.hit_targets.push_back(target_id);
 					}
 				}
-				if (projectile.explosion_radius > 0.0F && projectile.explosion_damage_multiplier > 0.0F) {
+				if (projectile.explosion_radius > 0.0F && projectile.explosion_damage_multiplier > 0.0F &&
+					explosion_targets_processed < max_explosion_targets_per_advance) {
 					const auto splash_targets = query_spatial_index(spatial_index, transforms_[target_index].x,
 							transforms_[target_index].y, projectile.explosion_radius, {});
 					for (uint32_t splash_index : splash_targets) {
