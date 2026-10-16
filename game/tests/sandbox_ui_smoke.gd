@@ -18,6 +18,12 @@ func _run() -> void:
 	assert(sandbox.theme == load("res://themes/dopamine_ui.tres"), "Sandbox should use the shared UI theme")
 	var metrics: GridContainer = sandbox.get_node("Shell/Content/MainColumn/Metrics/MetricRow")
 	assert(metrics.columns == 4, "Sandbox metrics should use four columns")
+	var action_pause: Button = sandbox.get_node("Shell/Content/MainColumn/Toolbar/Row/PauseButton")
+	var action_step: Button = sandbox.get_node("Shell/Content/MainColumn/Toolbar/Row/StepButton")
+	var action_reset: Button = sandbox.get_node("Shell/Content/MainColumn/Toolbar/Row/ResetButton")
+	assert(action_pause.get_theme_color("font_color").to_html(false) == "37e8f5", "Pause/resume should use the cyan action accent")
+	assert(action_step.get_theme_color("font_color").to_html(false) == "ffd447", "Single-step should use the yellow action accent")
+	assert(action_reset.get_theme_color("font_color").to_html(false) == "ff7181", "Reset should use the danger accent")
 	var side_panel: ScrollContainer = sandbox.get_node("Shell/Content/SidePanel")
 	var spawn_actions: HBoxContainer = sandbox.get_node("Shell/Content/SidePanel/Sections/SpawnPanel/SpawnForm/SpawnActions")
 	for viewport_size in [Vector2i(640, 360), Vector2i(1280, 720), Vector2i(1920, 1080)]:

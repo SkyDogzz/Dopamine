@@ -96,12 +96,16 @@ theme_override_constants/separation = 4
 [node name="PauseButton" type="Button" parent="Shell/Content/MainColumn/Toolbar/Row"]
 custom_minimum_size = Vector2(58, 20)
 layout_mode = 2
+theme_override_colors/font_color = Color(0.215686, 0.909804, 0.960784, 1)
+theme_override_colors/font_hover_color = Color(0.215686, 0.909804, 0.960784, 1)
 text = "RESUME"
 tooltip_text = "Pause or resume the developer simulation."
 
 [node name="StepButton" type="Button" parent="Shell/Content/MainColumn/Toolbar/Row"]
 custom_minimum_size = Vector2(50, 20)
 layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.831373, 0.278431, 1)
+theme_override_colors/font_hover_color = Color(1, 0.831373, 0.278431, 1)
 text = "STEP"
 tooltip_text = "Advance the paused simulation by the chosen duration."
 
@@ -127,6 +131,8 @@ tooltip_text = "Simulation speed multiplier."
 [node name="ResetButton" type="Button" parent="Shell/Content/MainColumn/Toolbar/Row"]
 custom_minimum_size = Vector2(50, 20)
 layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.443137, 0.505882, 1)
+theme_override_colors/font_hover_color = Color(1, 0.443137, 0.505882, 1)
 text = "RESET"
 tooltip_text = "Clear entities, events, metrics and live overrides."
 
