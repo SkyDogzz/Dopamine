@@ -50,6 +50,13 @@ func _run() -> void:
 		panel.get_node("Content/Achievement").text.is_empty():
 		_fail("Victory should display only the provided rewards, item and achievement summary")
 		return
+	var achievement_icon_row: HBoxContainer = panel.get_node("Content/AchievementIcon")
+	var achievement_icon: TextureRect = achievement_icon_row.get_child(0)
+	if achievement_icon.texture == null or achievement_icon.texture.resource_path != "res://assets/icons/catalog/achievement_medal.png" or \
+		achievement_icon.texture_filter != CanvasItem.TEXTURE_FILTER_NEAREST or \
+		achievement_icon.custom_minimum_size != Vector2(24, 24):
+		_fail("An achievement tier summary should use its existing compact pixel medal icon")
+		return
 	var reward_icons: HBoxContainer = panel.get_node("Content/RewardIcons")
 	var reward_icon: TextureRect = reward_icons.get_child(0)
 	if panel.custom_minimum_size.x < 340 or reward_icon.custom_minimum_size != Vector2(24, 24):
@@ -58,6 +65,7 @@ func _run() -> void:
 	panel.show_result(false, 8, 120.0, 30, {"ok": true, "duplicate": true})
 	if rewards.text != "ALREADY REWARDED" or not equipment.text.is_empty() or \
 		panel.get_node("Content").get_node_or_null("RewardIcons") != null or \
+		panel.get_node("Content").get_node_or_null("AchievementIcon") != null or \
 		panel.get_node("Content").get_node_or_null("EquipmentIcon") != null or \
 		rewards.get_theme_color("font_color").to_html(false) != "37e8f5":
 		_fail("A duplicate reward should be identified without repeating equipment rewards")

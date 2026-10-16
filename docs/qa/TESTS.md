@@ -74,6 +74,7 @@
 ## Résultat de run — poids des récompenses — 2026-10-16
 
 - [x] `run_result_panel_smoke.gd` vérifie carte 360 px, icône 24×24, focus initial, ordre des actions, victoire/défaite, doublon et échec de sauvegarde.
+- [ ] Le smoke vérifie maintenant que le résumé de palier reprend la médaille existante, et que l’icône disparaît lors d’un résultat sans nouveau palier; nouvelles assertions à exécuter avec Godot.
 - [x] Le même smoke vérifie que l’échec de sauvegarde prend l’accent rouge et que l’accent cyan des récompenses est rétabli au prochain résultat.
 - [x] `survival_run_result_smoke.gd` confirme que le parcours victoire/défaite et la navigation restent inchangés.
 - [x] Capture fenêtrée de l’état d’échec de sauvegarde relue à 640×360 logique; le message est distinguable des récompenses et actions.

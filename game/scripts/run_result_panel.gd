@@ -14,6 +14,7 @@ const RESOURCE_ICONS := [
 	"res://assets/icons/catalog/resource_essence.png",
 	"res://assets/icons/catalog/resource_powder.png",
 ]
+const ACHIEVEMENT_ICON := "res://assets/icons/catalog/achievement_medal.png"
 
 func _ready() -> void:
 	$Content/RestartButton.pressed.connect(_on_restart_pressed)
@@ -21,7 +22,7 @@ func _ready() -> void:
 	visible = false
 
 func show_result(victory: bool, wave_number: int, active_seconds: float, kills: int, reward: Dictionary = {}) -> void:
-	for row_name in ["RewardIcons", "EquipmentIcon"]:
+	for row_name in ["RewardIcons", "AchievementIcon", "EquipmentIcon"]:
 		var row := $Content.get_node_or_null(row_name)
 		if row != null:
 			$Content.remove_child(row)
@@ -40,6 +41,8 @@ func show_result(victory: bool, wave_number: int, active_seconds: float, kills: 
 		_achievement.text = ""
 	elif reward.get("ok", false):
 		_achievement.text = "EXTERMINATOR TIER +%d  •  PROPOSED THRESHOLDS" % int(reward.get("new_achievement_tiers", 0)) if int(reward.get("new_achievement_tiers", 0)) > 0 else ""
+		if not _achievement.text.is_empty():
+			_add_icon_row("AchievementIcon", _achievement, [ACHIEVEMENT_ICON])
 		if reward.get("duplicate", false):
 			_rewards.text = "ALREADY REWARDED"
 			_equipment.text = ""
