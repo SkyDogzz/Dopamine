@@ -413,6 +413,8 @@ Dictionary CombatSimulation::snapshot() const {
 			projectile["damage"] = entity.projectile.damage;
 			projectile["radius"] = entity.projectile.radius;
 			projectile["remaining_seconds"] = entity.projectile.remaining_seconds;
+			projectile["persistent_area"] = entity.projectile.persistent_area;
+			projectile["area_radius"] = entity.projectile.explosion_radius;
 			projectile["attraction_radius"] = entity.projectile.attraction_radius;
 			projectile["attraction_speed"] = entity.projectile.attraction_speed;
 			projectile["pierces_targets"] = entity.projectile.pierces_targets;

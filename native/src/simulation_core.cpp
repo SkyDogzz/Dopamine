@@ -409,6 +409,9 @@ void SimulationCore::restore_state(const SimulationCoreState &state) {
 					!std::isfinite(projectile.orbit_radius) || projectile.orbit_radius < 0.0F ||
 					!std::isfinite(projectile.orbit_angular_speed) || projectile.orbit_angular_speed < 0.0F ||
 					!std::isfinite(projectile.orbit_angle) ||
+					!std::isfinite(projectile.area_time_to_tick) ||
+					(projectile.persistent_area && ((entity.type.id != "toxic_cloud" && entity.type.id != "pandemic_cloud") ||
+						projectile.explosion_radius <= 0.0F || !projectile.applies_damage_over_time)) ||
 					(projectile.orbits_target && ((entity.type.id != "bloodstorm_dagger" &&
 						entity.type.id != "crimson_dagger") ||
 						projectile.orbit_radius <= 0.0F ||
@@ -636,6 +639,33 @@ std::vector<CombatEvent> SimulationCore::advance(double delta_seconds) {
 				continue;
 			}
 			ProjectileData &projectile = projectiles_[projectile_index];
+			if (projectile.persistent_area) {
+				projectile.area_time_to_tick -= delta_seconds;
+				while (projectile.area_time_to_tick <= 1e-12) {
+					for (uint32_t target_index : query_spatial_index(spatial_index,
+							transforms_[projectile_index].x, transforms_[projectile_index].y,
+							projectile.explosion_radius, {})) {
+						if (projectile.hit_targets.size() >= slots_.size()) {
+							break;
+						}
+						const EntityId target{target_index, slots_[target_index].generation};
+						if (projectile_flags_[target_index] || xp_orb_flags_[target_index] ||
+								health_[target_index].current <= 0.0F ||
+								std::find(projectile.hit_targets.begin(), projectile.hit_targets.end(), target) != projectile.hit_targets.end()) {
+							continue;
+						}
+						apply_damage_over_time(target, projectile.status_damage_per_tick,
+								projectile.status_interval_seconds, projectile.status_duration_seconds);
+						projectile.hit_targets.push_back(target);
+					}
+					projectile.area_time_to_tick += projectile.status_interval_seconds;
+				}
+				projectile.remaining_seconds -= delta_seconds;
+				if (projectile.remaining_seconds <= 0.0) {
+					to_despawn.push_back({projectile_index, slots_[projectile_index].generation});
+				}
+				continue;
+			}
 			const Transform2D projectile_start = start_positions[projectile_index];
 			const double travel_seconds = std::min(delta_seconds, projectile.remaining_seconds);
 			Transform2D projectile_end;
@@ -706,6 +736,9 @@ std::vector<CombatEvent> SimulationCore::advance(double delta_seconds) {
 				if (projectile.applies_damage_over_time && health_[target_index].current > 0.0F) {
 					apply_damage_over_time(target_id, projectile.status_damage_per_tick,
 							projectile.status_interval_seconds, projectile.status_duration_seconds);
+					if (enemy_types_[projectile_index].id == "toxic_cloud" || enemy_types_[projectile_index].id == "pandemic_cloud") {
+						projectile.hit_targets.push_back(target_id);
+					}
 				}
 				if (projectile.explosion_radius > 0.0F && projectile.explosion_damage_multiplier > 0.0F) {
 					const auto splash_targets = query_spatial_index(spatial_index, transforms_[target_index].x,
@@ -729,8 +762,18 @@ std::vector<CombatEvent> SimulationCore::advance(double delta_seconds) {
 						if (projectile.applies_damage_over_time && health_[splash_index].current > 0.0F) {
 							apply_damage_over_time(splash_id, projectile.status_damage_per_tick,
 									projectile.status_interval_seconds, projectile.status_duration_seconds);
+							if (enemy_types_[projectile_index].id == "toxic_cloud" || enemy_types_[projectile_index].id == "pandemic_cloud") {
+								projectile.hit_targets.push_back(splash_id);
+							}
 						}
 					}
+				}
+				if (enemy_types_[projectile_index].id == "toxic_cloud" || enemy_types_[projectile_index].id == "pandemic_cloud") {
+					projectile.persistent_area = true;
+					projectile.area_time_to_tick = projectile.status_interval_seconds;
+					transforms_[projectile_index] = transforms_[target_index];
+					velocities_[projectile_index] = {};
+					break;
 				}
 				if (projectile.pierces_targets) {
 					projectile.hit_targets.push_back(target_id);

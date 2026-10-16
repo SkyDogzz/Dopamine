@@ -440,6 +440,18 @@ int main() {
 	const auto poison_ticks = toxic_cloud.advance(0.5);
 	require(poison_ticks.size() == 2 && poison_ticks[0].is_damage_over_time && poison_ticks[1].is_damage_over_time,
 			"Toxic Cloud poison should use the shared bounded DoT event path");
+	const auto poison_late = toxic_cloud.spawn("chaser", 90.0F, 0.0F, 20.0F, 0.0F, 0.0F);
+	const auto persistent_cloud_state = toxic_cloud.capture_state();
+	SimulationCore restored_cloud;
+	restored_cloud.restore_state(persistent_cloud_state);
+	restored_cloud.advance(0.5);
+	const auto late_poisoned = restored_cloud.entity(poison_late);
+	const auto cloud_projectiles = restored_cloud.snapshot();
+	require(late_poisoned && late_poisoned->damage_over_time &&
+			std::any_of(cloud_projectiles.begin(), cloud_projectiles.end(), [](const dopamine::sim::Entity &entity) {
+				return entity.is_projectile && entity.type.id == "toxic_cloud";
+			}),
+			"Toxic Cloud should persist after impact, poison later arrivals, and survive snapshot restoration");
 	for (double step_seconds : {1.0 / 120.0, 1.0 / 60.0, 1.0 / 30.0, 0.1}) {
 		SimulationCore timed_status;
 		const auto timed_target = timed_status.spawn("chaser", 0.0F, 0.0F, 100.0F, 0.0F, 0.0F);

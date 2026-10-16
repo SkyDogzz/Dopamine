@@ -121,6 +121,14 @@ func draw_enemy_feedback(canvas: CanvasItem, entities: Array, origin: Vector2 = 
 	for entity in entities:
 		var components: Dictionary = entity["components"]
 		if components.get("IsProjectile", false):
+			var projectile: Dictionary = components.get("Projectile", {})
+			if projectile.get("persistent_area", false):
+				var field_center := origin + Vector2(
+						float(components["Transform2D"]["x"]), float(components["Transform2D"]["y"]))
+				var field_radius := float(projectile.get("area_radius", 0.0))
+				canvas.draw_circle(field_center, field_radius, Color(0.25, 1.0, 0.58, 0.075))
+				canvas.draw_arc(field_center, field_radius, 0.0, TAU, 64,
+						Color(0.35, 1.0, 0.62, 0.72), 2.0, true)
 			continue
 		var transform: Dictionary = components["Transform2D"]
 		var center := origin + Vector2(float(transform["x"]), float(transform["y"]))

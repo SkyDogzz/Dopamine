@@ -314,7 +314,23 @@ func _toxic_cloud_poison_and_pandemic() -> bool:
 	session._fire_toxic_cloud(active_time, false)
 	var close_poisoned := await _wait_for_toxic_targets(session, 2)
 	var far_unpoisoned := not _target_has_poison(session, Vector2(320.0, 0.0))
-	if not close_poisoned or not far_unpoisoned:
+	var field_center := Vector2.ZERO
+	var field_radius := 0.0
+	for entity in session.simulation.snapshot()["entities"]:
+		var components: Dictionary = entity["components"]
+		var projectile: Dictionary = components.get("Projectile", {})
+		if projectile.get("persistent_area", false):
+			var transform: Dictionary = components["Transform2D"]
+			field_center = Vector2(float(transform["x"]), float(transform["y"]))
+			field_radius = float(projectile.get("area_radius", 0.0))
+			break
+	if not close_poisoned or not far_unpoisoned or field_radius <= 0.0:
+		session.queue_free()
+		return false
+	var late_target_position := field_center + Vector2(field_radius * 0.6, 0.0)
+	session.simulation.spawn("test_target", 1, late_target_position, 100.0, Vector2.ZERO)
+	var late_target_id := _find_target_id_at(session, late_target_position)
+	if late_target_id.is_empty() or not await _wait_for_toxic_id(session, late_target_id):
 		session.queue_free()
 		return false
 	session.simulation.kill_all()

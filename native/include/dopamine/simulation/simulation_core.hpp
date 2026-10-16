@@ -110,6 +110,8 @@ struct ProjectileData {
 	bool ignores_source_entity = false;
 	EntityId source_entity;
 	bool orbits_target = false;
+	bool persistent_area = false;
+	double area_time_to_tick = 0.0;
 	bool orbit_center_initialized = false;
 	float orbit_center_x = 0.0F;
 	float orbit_center_y = 0.0F;
