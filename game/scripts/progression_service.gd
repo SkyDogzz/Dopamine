@@ -36,9 +36,14 @@ func _init(save_service: RefCounted, slot_id: String = "0") -> void:
 	_equipment_generator = EQUIPMENT_GENERATOR_SCRIPT.new()
 	_rng.randomize()
 
-func award_survival_run(run_id: String, wave_reached: int, victory: bool, kills: int = 0) -> Dictionary:
+func award_survival_run(
+	run_id: String, wave_reached: int, victory: bool, kills: int = 0, difficulty_id: String = "normal"
+) -> Dictionary:
 	if _save_service == null or not _valid_run_id(run_id):
 		return _award_error("invalid_run")
+	var difficulty_index := SURVIVAL_DIFFICULTY_SCRIPT.ORDER.find(difficulty_id)
+	if difficulty_index < 0:
+		return _award_error("invalid_difficulty")
 	var profile_result := load_profile()
 	if not profile_result.get("ok", false):
 		return _award_error(str(profile_result.get("error", "load_failed")))
@@ -48,6 +53,11 @@ func award_survival_run(run_id: String, wave_reached: int, victory: bool, kills:
 		return {"ok": true, "duplicate": true, "essence": 0, "powder_basic": 0}
 	var wave := clampi(wave_reached, 1, 24)
 	var final_boss_vanquished := victory and wave >= 24
+	var newly_unlocked_difficulty := ""
+	var unlocked_index: int = SURVIVAL_DIFFICULTY_SCRIPT.ORDER.find(profile["highest_unlocked_difficulty"])
+	if final_boss_vanquished and difficulty_index == unlocked_index and unlocked_index < SURVIVAL_DIFFICULTY_SCRIPT.ORDER.size() - 1:
+		newly_unlocked_difficulty = SURVIVAL_DIFFICULTY_SCRIPT.ORDER[unlocked_index + 1]
+		profile["highest_unlocked_difficulty"] = newly_unlocked_difficulty
 	# Normal difficulty uses the GDD's proposed base multipliers of 1.0.
 	var essence_reward := roundi(15.0 + 2.0 * wave + (25.0 if final_boss_vanquished else 0.0))
 	var powder_reward := roundi(20.0 + 3.0 * wave + (30.0 if final_boss_vanquished else 0.0))
@@ -68,7 +78,7 @@ func award_survival_run(run_id: String, wave_reached: int, victory: bool, kills:
 	profile["rewarded_survival_runs"] = rewarded_runs
 	if not _save_service.save_slot(_slot_id, profile):
 		return _award_error("save_failed")
-	return {
+	var result := {
 		"ok": true,
 		"duplicate": false,
 		"essence": essence_reward,
@@ -76,6 +86,9 @@ func award_survival_run(run_id: String, wave_reached: int, victory: bool, kills:
 		"equipment": equipment,
 		"new_achievement_tiers": current_tier - previous_tier,
 	}
+	if not newly_unlocked_difficulty.is_empty():
+		result["newly_unlocked_difficulty"] = newly_unlocked_difficulty
+	return result
 
 func load_profile() -> Dictionary:
 	if _save_service == null:

@@ -25,12 +25,12 @@
 **Description :** Associer la difficulté au résultat de run et débloquer uniquement la difficulté suivante après victoire, en conservant l’idempotence des récompenses.
 
 **Critères d’acceptation :**
-- [ ] La victoire sur une difficulté débloque la suivante, sans sauter de niveau.
-- [ ] Défaite et abandon ne changent pas les déblocages.
-- [ ] Une récompense répétée pour le même run n’accorde pas de nouveau déblocage.
-- [ ] Le comportement Chaos spécial reste [OUVERT] et n’est pas inventé.
+- [x] Une victoire vague 24 sur la difficulté maximale débloquée ouvre uniquement la suivante; la condition vague 24 demeure [PROPOSÉE] par la spec.
+- [x] Défaite et abandon ne changent pas les déblocages.
+- [x] Une récompense répétée pour le même run n’accorde pas de nouveau déblocage.
+- [x] Le comportement Chaos spécial reste [OUVERT] et n’est pas inventé.
 
-**Vérification :** Tests ciblés victoire/défaite/abandon/doublon pour chaque frontière utile de progression.
+**Vérification :** `survival_difficulty_unlock_smoke.gd` passe sous Godot 4.7.2 : défaite, victoire avant vague 24, victoire Easy→Normal, impossibilité de sauter à Hard, victoire Normal→Hard, doublon sans progression et ID invalide.
 
 **Dépendances :** Tâche 1.
 
