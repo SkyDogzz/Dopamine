@@ -1287,7 +1287,8 @@ func _infinite_circuit_branches() -> bool:
 	# The proposed level 3 adds one bounce; level 4 keeps the three-target chain.
 	session.weapon_enabled = true
 	session._next_weapon_time = session.player_active_time
-	if not await _wait_for_projectiles_to_clear(session, baseline + 3):
+	var normal_cleared := await _wait_for_projectiles_to_clear(session, baseline + 3)
+	if not normal_cleared:
 		session.queue_free()
 		return false
 	var normal_hits := _target_count_below_health(session, 100.0)

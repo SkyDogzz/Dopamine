@@ -1781,7 +1781,8 @@ func _advance_lightning_chain(event: Dictionary, entities: Array, active_time: f
 	var direction: Vector2 = (next_target["position"] - origin).normalized()
 	if direction == Vector2.ZERO:
 		direction = Vector2.RIGHT
-	var arc_origin := origin + direction * 24.0
+	var arc_offset := minf(4.0, origin.distance_to(next_target["position"]) * 0.25)
+	var arc_origin := origin + direction * arc_offset
 	var damage := float(chain["next_damage"])
 	var sequence: int = simulation.spawn_projectile("lightning_arc:%s" % chain_id, arc_origin,
 		direction * _equipment_projectile_speed(lightning_projectile_speed), damage,
@@ -1837,7 +1838,8 @@ func _fire_infinite_circuit(active_time: float, target_budget: int, damage_multi
 					var direction: Vector2 = (child["position"] - parent_position).normalized()
 					if direction == Vector2.ZERO:
 						direction = Vector2.RIGHT
-					if simulation.spawn_projectile("infinite_circuit_branch", parent_position + direction * 14.0,
+					var branch_offset := minf(4.0, parent_position.distance_to(child["position"]) * 0.25)
+					if simulation.spawn_projectile("infinite_circuit_branch", parent_position + direction * branch_offset,
 							direction * _equipment_projectile_speed(lightning_projectile_speed), lightning_damage * damage_multiplier,
 							_equipment_area(lightning_projectile_radius), lightning_projectile_lifetime) <= 0:
 						continue

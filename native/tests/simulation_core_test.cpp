@@ -642,6 +642,14 @@ int main() {
 			"lethal hit should remove the enemy and consumed projectile");
 	require(std::abs(combat.simulation_time() - 0.2) < 0.001,
 			"combat step should retain its explicit duration");
+	SimulationCore lightning_chain;
+	const auto lightning_source = lightning_chain.spawn("chaser", 0.0F, 0.0F, 100.0F, 0.0F, 0.0F);
+	const auto lightning_target = lightning_chain.spawn("chaser", 40.0F, 0.0F, 100.0F, 0.0F, 0.0F);
+	lightning_chain.spawn_projectile("lightning_arc:1", 2.0F, 0.0F, 10.0F, 2.0F, 1.0, 500.0F, 0.0F);
+	lightning_chain.advance(0.1);
+	require(lightning_chain.entity(lightning_source)->health.current == 100.0F &&
+			lightning_chain.entity(lightning_target)->health.current < 100.0F,
+			"a chain lightning arc should skip the enemy it branched from and hit its next target");
 
 	SimulationCore sawblades;
 	const auto first_blade_target = sawblades.spawn("chaser", 30.0F, 0.0F, 100.0F, 0.0F, 0.0F);

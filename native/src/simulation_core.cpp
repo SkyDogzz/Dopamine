@@ -198,7 +198,7 @@ EntityId SimulationCore::spawn_projectile(std::string type, float x, float y, fl
 	projectile.chill_duration_seconds = chill_duration_seconds;
 	projectile.chill_speed_multiplier = chill_speed_multiplier;
 	projectile.chill_damage_multiplier = chill_damage_multiplier;
-	if (type == "infinite_circuit_branch") {
+	if (type.starts_with("lightning_arc:") || type == "infinite_circuit_branch") {
 		float nearest_distance_squared = enemy_collision_radius * enemy_collision_radius;
 		for (uint32_t index = 0; index < slots_.size(); ++index) {
 			if (!slots_[index].active || projectile_flags_[index] || xp_orb_flags_[index] || health_[index].current <= 0.0F) {
