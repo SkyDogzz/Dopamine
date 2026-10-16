@@ -3,7 +3,7 @@
 The current generated pixel art is a visual prototype for the first playable. The source atlases are kept beside the individual PNGs; `tools/slice_sprite_atlas.gd` trims transparent margins, preserves nearest-neighbor pixel edges, and writes 64×64 sprites/icons.
 
 - The first visual pilot introduced `sprites/player_cyan.png` (32×32) and `sprites/enemy_chaser.png` (24×24). The static hero remains a reference; active player rendering now uses `sprites/player_idle.png` and `sprites/player_walk.png` (4×4 sheets of 32×32 frames) with Aseprite sources in `source/pilot/`. Its original Lightning projectile export remains a visual reference; the active renderer uses the dedicated projectile set below.
-- The earlier moss-and-stone ground candidate was excluded after visual review; the active floor is now the quieter pixel-art texture `sprites/environment/survival_ground_pixel.png`.
+- The earlier moss-and-stone ground candidate and 256×256 floor were excluded after visual review; the active floor is the quieter 16×16 tile `sprites/environment/survival_ground_tile.png` described below.
 
 - `backgrounds/title_skyline.png` is the title-screen city background. It is 640×360 and uses only 30 colors from the validated 32-color Art Bible palette. The generated reference is retained at `docs/art/source/title_skyline_generated.png`; the editable source is `source/backgrounds/title_skyline.aseprite`, and `tools/process_title_skyline.gd` rebuilds the reference export reproducibly.
 

@@ -8,9 +8,9 @@ func _run() -> void:
 	root.add_child(choice)
 	await process_frame
 	var options := [
-		{"id": "weapon:lightning_conductor", "title": "Lightning Conductor", "description": "Fires a bolt at the nearest enemy.", "icon": "res://assets/sprites/projectile_lightning.png"},
-		{"id": "weapon:inferno_sprayer", "title": "Inferno Sprayer", "description": "Launches a flame projectile.", "icon": "res://assets/sprites/projectile_inferno.png"},
-		{"id": "weapon:crimson_daggers", "title": "Crimson Daggers", "description": "Throws daggers at nearby enemies.", "icon": "res://assets/sprites/projectile_crimson.png"},
+		{"id": "weapon:lightning_conductor", "title": "Lightning Conductor", "description": "Fires a bolt at the nearest enemy.", "icon": "res://assets/sprites/catalog/weapon_lightning_conductor.png"},
+		{"id": "weapon:inferno_sprayer", "title": "Inferno Sprayer", "description": "Launches a flame projectile.", "icon": "res://assets/sprites/catalog/weapon_inferno_sprayer.png"},
+		{"id": "weapon:crimson_daggers", "title": "Crimson Daggers", "description": "Throws daggers at nearby enemies.", "icon": "res://assets/sprites/catalog/weapon_crimson_daggers.png"},
 	]
 	if not choice.present(options, 3, "WEAPON CHEST — CHOOSE ONE"):
 		_fail("Chest choice should accept three described offers")
@@ -65,9 +65,9 @@ func _run() -> void:
 		_fail("A chest with an incomplete offer set should not open")
 		return
 	var relic_options := [
-		{"id": "relic:storm_core", "title": "Storm Core", "description": "Improves lightning damage.", "icon": "res://assets/sprites/relic_storm_core.png"},
-		{"id": "relic:infernal_heart", "title": "Infernal Heart", "description": "Improves fire damage.", "icon": "res://assets/sprites/relic_infernal_heart.png"},
-		{"id": "relic:blood_chalice", "title": "Blood Chalice", "description": "Restores health on kills.", "icon": "res://assets/sprites/relic_blood_chalice.png"},
+		{"id": "relic:storm_core", "title": "Storm Core", "description": "Improves lightning damage.", "icon": "res://assets/sprites/catalog/relic_storm_core.png"},
+		{"id": "relic:infernal_heart", "title": "Infernal Heart", "description": "Improves fire damage.", "icon": "res://assets/sprites/catalog/relic_infernal_heart.png"},
+		{"id": "relic:blood_chalice", "title": "Blood Chalice", "description": "Restores health on kills.", "icon": "res://assets/sprites/catalog/relic_blood_chalice.png"},
 	]
 	if not choice.present(relic_options, 3, "RELIC CHEST — CHOOSE ONE") or \
 		not title.text.contains("RELIC CHEST") or not (buttons.get_child(0) as Button).text.contains("Storm Core"):
