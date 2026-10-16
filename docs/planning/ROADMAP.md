@@ -393,10 +393,10 @@ Travail requis :
   - [ ] Vérifier victoire, loot garanti proposé/configurable et écran final en run réelle.
   - Prototype en cours : le Dopamine Core dispose de trois phases, de rayons/zones télégraphiés et esquivables, d’une spirale en tirs successifs et d’invocations en phases 2–3. Le smoke confirme le plafond d’invocations partagé en phases 2–3 ; son identité visuelle est un prototype dédié, sans validation de canon. Tous ces patterns et nombres restent **[PROPOSÉS]**.
 - [ ] **P5.4.6 — Difficultés**
-  - [ ] Ajouter état de difficulté choisi/débloqué.
-  - [ ] Débloquer la suivante après victoire de la précédente.
-  - [ ] Vérifier séparation des multiplicateurs HP/dégâts/densité/récompense.
-  - [ ] Garder les multiplicateurs du GDD **[PROPOSÉS]**.
+  - [x] Persister la difficulté maximale débloquée (Easy initialement) et transmettre la difficulté choisie du hub à la run.
+  - [x] Après une victoire contre le boss de vague 24, débloquer uniquement la difficulté suivante; refuser les récompenses d’une difficulté verrouillée avec `difficulty_locked`. Une défaite ne débloque rien.
+  - [x] Vérifier que HP, dégâts ennemis, densité et récompenses utilisent leurs multiplicateurs séparés; les résultats Easy, Normal et Chaos ont un test dédié.
+  - Les règles de déblocage sont **[VALIDÉES]**; les multiplicateurs du GDD restent **[PROPOSÉS]**.
 
 ### Vérification et sortie P5
 
@@ -425,7 +425,7 @@ Travail requis :
 ### État actuel et écarts
 
 - `SaveService` possède format versionné/checksum/backup et QA historique de migration/altération.
-- `ProgressionService` possède des profils v6 avec difficulté maximale débloquée (Easy par défaut), récompenses de run, idempotence par `run_id`, inventaire, six slots, cinq raretés, stat lines, enhancement, conversion Powder, deux nodes de prototype et Exterminator. La règle [PROPOSÉE] de déblocage séquentiel après victoire sur le boss de vague 24 est codée. Les facteurs de difficulté [PROPOSÉS] sont centralisés et appliqués à la simulation ainsi qu’aux récompenses. Le hub injecte profil et difficulté dans la run; le raccourci Sandbox fonctionne sans service de progression.
+- `ProgressionService` possède des profils v6 avec difficulté maximale débloquée (Easy par défaut), récompenses de run, idempotence par `run_id`, inventaire, six slots, cinq raretés, stat lines, enhancement, conversion Powder, deux nodes de prototype et Exterminator. La règle [VALIDÉE] de déblocage séquentiel après victoire sur le boss de vague 24 est codée; les récompenses d’une difficulté verrouillée sont refusées. Les facteurs de difficulté [PROPOSÉS] sont centralisés et appliqués à la simulation ainsi qu’aux récompenses. Le hub injecte profil et difficulté dans la run; le raccourci Sandbox fonctionne sans service de progression.
 - Le générateur choisit pour l’instant une distribution de rareté Normal fixe et propose les plages de rolls ; les changements de difficulté et pénalité de mort précoce manquent.
 - Les achievements ne couvrent qu’un compteur de kills avec quatre paliers ; ce n’est pas le catalogue cible de 100–150 familles.
 - Les nodes sont deux prototypes, pas le graphe interconnecté de 100–150.

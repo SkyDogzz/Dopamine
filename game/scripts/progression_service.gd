@@ -51,11 +51,13 @@ func award_survival_run(
 	var rewarded_runs: Array = profile["rewarded_survival_runs"]
 	if rewarded_runs.has(run_id):
 		return {"ok": true, "duplicate": true, "essence": 0, "powder_basic": 0}
+	var unlocked_index: int = SURVIVAL_DIFFICULTY_SCRIPT.ORDER.find(profile["highest_unlocked_difficulty"])
+	if difficulty_index > unlocked_index:
+		return _award_error("difficulty_locked")
 	var wave := clampi(wave_reached, 1, 24)
 	var final_boss_vanquished := victory and wave >= 24
 	var difficulty_factors: Dictionary = SURVIVAL_DIFFICULTY_SCRIPT.DATA[difficulty_id]
 	var newly_unlocked_difficulty := ""
-	var unlocked_index: int = SURVIVAL_DIFFICULTY_SCRIPT.ORDER.find(profile["highest_unlocked_difficulty"])
 	if final_boss_vanquished and difficulty_index == unlocked_index and unlocked_index < SURVIVAL_DIFFICULTY_SCRIPT.ORDER.size() - 1:
 		newly_unlocked_difficulty = SURVIVAL_DIFFICULTY_SCRIPT.ORDER[unlocked_index + 1]
 		profile["highest_unlocked_difficulty"] = newly_unlocked_difficulty

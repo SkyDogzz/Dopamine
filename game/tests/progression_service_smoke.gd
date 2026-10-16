@@ -12,15 +12,23 @@ func _run() -> void:
 		DirAccess.remove_absolute(directory.path_join(file_name))
 	var save_service = load("res://scripts/save_service.gd").new(directory)
 	var service = load("res://scripts/progression_service.gd").new(save_service, "0")
+	var initial_profile: Dictionary = service.load_profile()["profile"]
+	if initial_profile.get("highest_unlocked_difficulty") != "easy":
+		_fail("A new profile should begin with Easy as its only unlocked difficulty")
+		return
+	initial_profile["highest_unlocked_difficulty"] = "normal"
+	if not save_service.save_slot("0", initial_profile):
+		_fail("Could not seed the Normal reward fixture")
+		return
 	var victory: Dictionary = service.award_survival_run("run-win", 24, true)
 	if not victory.get("ok", false) or victory.get("essence") != 88 or victory.get("powder_basic") != 122:
 		_fail("A Normal wave 24 victory should grant the GDD proposed 88 Essence and 122 Basic Powder")
 		return
 	var profile: Dictionary = save_service.load_slot("0")["payload"]
-	if profile.get("profile_version") != 6 or profile.get("highest_unlocked_difficulty") != "easy" or \
+	if profile.get("profile_version") != 6 or profile.get("highest_unlocked_difficulty") != "hard" or \
 			profile["resources"].get("powder_refined") != 0 or \
 			profile["resources"].get("powder_pure") != 0 or profile["resources"].get("powder_prismatic") != 0:
-		_fail("New progression profiles should initialize all powder tiers and unlock Easy")
+		_fail("Progression should initialize all powder tiers and unlock the next difficulty after the Normal victory fixture")
 		return
 	var difficulties = load("res://scripts/survival_difficulty.gd")
 	if difficulties.ORDER != ["easy", "normal", "hard", "nightmare", "chaos"] or \
@@ -207,26 +215,61 @@ func _run() -> void:
 		_fail("Dismantling should remove the item once and persist its proposed rarity powder reward")
 		return
 	var achievement_service = load("res://scripts/progression_service.gd").new(save_service, "achievement")
-	var achievement_run: Dictionary = achievement_service.award_survival_run("kill-run", 24, true, 100)
+	var achievement_run: Dictionary = achievement_service.award_survival_run("kill-run", 24, true, 100, "easy")
 	var achievement_profile: Dictionary = achievement_service.load_profile()["profile"]
 	if achievement_run.get("new_achievement_tiers") != 1 or \
 			achievement_profile["achievement_progress"]["total_kills"] != 100 or \
 			achievement_service.achievement_bonus("damage_pct") != 0.0005:
 		_fail("The first Exterminator tier should grant only its proposed cumulative damage bonus")
 		return
-	var second_achievement_run: Dictionary = achievement_service.award_survival_run("kill-run-two", 24, true, 900)
+	var second_achievement_run: Dictionary = achievement_service.award_survival_run("kill-run-two", 24, true, 900, "easy")
 	if second_achievement_run.get("new_achievement_tiers") != 1 or \
 			achievement_service.achievement_bonus("damage_pct") != 0.0015 or \
-			achievement_service.award_survival_run("kill-run-two", 24, true, 1000).get("duplicate") != true or \
+			achievement_service.award_survival_run("kill-run-two", 24, true, 1000, "easy").get("duplicate") != true or \
 			achievement_service.load_profile()["profile"]["achievement_progress"]["total_kills"] != 1000:
 		_fail("The proposed Exterminator tier should unlock once and run rewards should stay idempotent")
 		return
-	achievement_service.award_survival_run("kill-run-three", 24, true, 9000)
-	achievement_service.award_survival_run("kill-run-four", 24, true, 90000)
+	achievement_service.award_survival_run("kill-run-three", 24, true, 9000, "easy")
+	achievement_service.award_survival_run("kill-run-four", 24, true, 90000, "easy")
 	if achievement_service.achievement_bonus("damage_pct") != 0.005 or \
 			achievement_service.load_profile()["profile"]["achievement_progress"]["exterminator_tier"] != 4:
 		_fail("All four proposed Exterminator tiers should accumulate the example total bonus")
 		return
+	var unlock_directory := directory.path_join("difficulty_unlock")
+	DirAccess.make_dir_recursive_absolute(unlock_directory)
+	for file_name in DirAccess.get_files_at(unlock_directory):
+		DirAccess.remove_absolute(unlock_directory.path_join(file_name))
+	var unlock_save_service = load("res://scripts/save_service.gd").new(unlock_directory)
+	var unlock_service = load("res://scripts/progression_service.gd").new(unlock_save_service, "0")
+	var locked_normal: Dictionary = unlock_service.award_survival_run("locked-normal", 24, true, 0, "normal")
+	if locked_normal.get("ok", false) or locked_normal.get("error") != "difficulty_locked":
+		_fail("Progression should reject rewards from a difficulty that has not been unlocked")
+		return
+	var easy_defeat: Dictionary = unlock_service.award_survival_run("easy-defeat", 24, false, 0, "easy")
+	if not easy_defeat.get("ok", false) or \
+		unlock_service.load_profile()["profile"].get("highest_unlocked_difficulty") != "easy":
+		_fail("A defeat should not unlock the next difficulty")
+		return
+	var easy_victory: Dictionary = unlock_service.award_survival_run("easy-victory", 24, true, 0, "easy")
+	if not easy_victory.get("ok", false) or easy_victory.get("essence") != 62 or easy_victory.get("powder_basic") != 85 or \
+		unlock_service.load_profile()["profile"].get("highest_unlocked_difficulty") != "normal":
+		_fail("An Easy victory should unlock Normal and apply Easy reward multipliers")
+		return
+	var skipped_hard: Dictionary = unlock_service.award_survival_run("skipped-hard", 24, true, 0, "hard")
+	if skipped_hard.get("ok", false) or skipped_hard.get("error") != "difficulty_locked":
+		_fail("The profile should not skip Normal and enter Hard")
+		return
+	for index in range(1, difficulties.ORDER.size()):
+		var difficulty_id: String = difficulties.ORDER[index]
+		var result: Dictionary = unlock_service.award_survival_run("difficulty-win-%s" % difficulty_id, 24, true, 0, difficulty_id)
+		var expected_unlocked: String = difficulties.ORDER[mini(index + 1, difficulties.ORDER.size() - 1)]
+		if not result.get("ok", false) or \
+				unlock_service.load_profile()["profile"].get("highest_unlocked_difficulty") != expected_unlocked:
+			_fail("A victory on %s should unlock only its next difficulty" % difficulty_id)
+			return
+		if difficulty_id == "chaos" and (result.get("essence") != 352 or result.get("powder_basic") != 427):
+			_fail("Chaos victory rewards should use their separate proposed multipliers")
+			return
 	print("Progression service smoke passed")
 	quit()
 
