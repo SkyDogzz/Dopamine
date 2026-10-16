@@ -1,5 +1,12 @@
 # Tests d'acceptation et validation
 
+## Ciblage Minigun exposé dans le Sandbox — 2026-10-16
+
+- [x] Le helper nearest-enemy partagé filtre les projectiles, les orbes XP et les ennemis morts; Survival l’utilise pour l’acquisition Minigun et le Sandbox trace la cible retenue depuis l’origine de simulation (**[PROPOSÉ]**).
+- [x] `sandbox_ui_smoke.gd` vérifie l’ID de cible exposé après spawn, l’effacement après kill-all et la préservation du fixture de sauvegarde normale.
+- [x] `survival_weapon_smoke.gd`, `survival_weapon_catalog_smoke.gd` et la suite CTest passent sous Godot 4.7.2 : 46/46 tests.
+- [ ] Le preview visuel des autres politiques et les essais de placement pour armes de contact/orbitantes et longue portée restent à faire.
+
 > Les cases cochées sont des exécutions documentées. Le binaire Godot local est `tools/local/godot-4.7.2/Godot_v4.7.2-stable_linux.x86_64`; il peut être invoqué directement même s’il n’est pas présent dans le `PATH`.
 
 ## Revalidation intégrée P5 — 2026-10-16

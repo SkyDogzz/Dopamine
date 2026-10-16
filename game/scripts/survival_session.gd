@@ -3,6 +3,7 @@ extends Node2D
 signal chest_option_chosen(option_id: String)
 
 const PLAYER_SCENE := preload("res://scenes/player.tscn")
+const SURVIVAL_TARGETING := preload("res://scripts/survival_targeting.gd")
 const SPRITE_RENDERER_SCRIPT := preload("res://scripts/sprite_batch_renderer.gd")
 const CHEST_TEXTURE: Texture2D = preload("res://assets/sprites/rewards/chest_closed.png")
 const CHEST_SPRITE_SIZE := 32.0
@@ -180,7 +181,7 @@ const WAVE_HP_CAP := 12.0
 @export_group("Prototype Minigun — proposed tuning")
 @export var minigun_cooldown: float = 0.18
 @export var minigun_damage: float = 4.0
-@export var minigun_range: float = 620.0
+@export var minigun_range: float = SURVIVAL_TARGETING.MINIGUN_RANGE
 @export_range(0.0, 0.5) var minigun_spread_radians: float = 0.03
 @export var minigun_projectile_speed: float = 1100.0
 @export var minigun_projectile_radius: float = 3.0
@@ -2333,19 +2334,7 @@ func _try_evolution_shockwave(base_damage: float) -> void:
 			direction * 400.0, base_damage, 6.0, 0.3)
 
 func _nearest_enemy(max_range: float) -> Dictionary:
-	var nearest: Dictionary = {}
-	var best_distance_squared := max_range * max_range
-	for entity in _entities:
-		var components: Dictionary = entity["components"]
-		if not _is_targetable_enemy(components):
-			continue
-		var transform: Dictionary = components["Transform2D"]
-		var position := Vector2(float(transform["x"]), float(transform["y"]))
-		var distance_squared := player.global_position.distance_squared_to(position)
-		if distance_squared < best_distance_squared:
-			best_distance_squared = distance_squared
-			nearest = {"position": position, "id": Vector2i(int(entity["id"]["index"]), int(entity["id"]["generation"]))}
-	return nearest
+	return SURVIVAL_TARGETING.nearest_enemy(_entities, player.global_position, max_range)
 
 func _farthest_enemy(max_range: float) -> Dictionary:
 	var farthest: Dictionary = {}

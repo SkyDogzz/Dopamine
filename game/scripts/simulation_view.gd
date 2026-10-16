@@ -8,6 +8,7 @@ const COLOR_BACKGROUND := Color("#09111a")
 const COLOR_GRID := Color("#162633")
 const COLOR_TEXT := Color("#e5f2f5")
 const COLOR_CYAN := Color("#45e5ed")
+const COLOR_TARGET := Color("#ffd166")
 
 var _entities: Array = []
 var _selected_index := -1
@@ -18,6 +19,7 @@ var _projectile_multimesh: MultiMesh
 var _xp_multimesh: MultiMesh
 var _selected_point := Vector2.ZERO
 var _selected_entity_found := false
+var _target_preview: Dictionary = {}
 
 func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_STOP
@@ -48,6 +50,10 @@ func set_selected_entity(index: int, generation: int) -> void:
 	_sprite_renderer.set_selected_entity(index, generation)
 	set_entities(_entities)
 
+func set_target_preview(target: Dictionary) -> void:
+	_target_preview = target
+	queue_redraw()
+
 func _draw() -> void:
 	draw_rect(Rect2(Vector2.ZERO, size), COLOR_BACKGROUND)
 	for x in range(0, int(size.x), GRID_SIZE):
@@ -66,6 +72,12 @@ func _draw() -> void:
 	if _selected_entity_found:
 		draw_arc(_selected_point, 16.0, 0.0, TAU, 24, COLOR_TEXT, 2.0)
 		draw_string(ThemeDB.fallback_font, _selected_point + Vector2(14, -10), "%d / G%d" % [_selected_index, _selected_generation], HORIZONTAL_ALIGNMENT_LEFT, -1.0, 12, COLOR_TEXT)
+	if not _target_preview.is_empty():
+		var target_id: Vector2i = _target_preview["id"]
+		var target_point: Vector2 = center + _target_preview["position"]
+		draw_line(center, target_point, COLOR_TARGET, 1.0)
+		draw_arc(target_point, 16.0, 0.0, TAU, 24, COLOR_TARGET, 2.0)
+		draw_string(ThemeDB.fallback_font, target_point + Vector2(14, 12), "MINIGUN %d / G%d" % [target_id.x, target_id.y], HORIZONTAL_ALIGNMENT_LEFT, -1.0, 12, COLOR_TARGET)
 
 func _gui_input(event: InputEvent) -> void:
 	if not event is InputEventMouseButton:

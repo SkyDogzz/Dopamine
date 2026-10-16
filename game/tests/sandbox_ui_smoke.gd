@@ -109,6 +109,10 @@ func _run() -> void:
 	sandbox.get_node("Shell/Content/SidePanel/Sections/SpawnPanel/SpawnForm/SpawnActions/SpawnButton").pressed.emit()
 	var state: Dictionary = await _wait_for_entity_count(sandbox.simulation, 2)
 	var id: Dictionary = state["entities"][0]["id"]
+	sandbox._refresh()
+	var target_preview: Dictionary = sandbox.get_node("Shell/Content/MainColumn/SimulationView")._target_preview
+	assert(not target_preview.is_empty() and target_preview["id"] == Vector2i(id["index"], id["generation"]),
+		"Sandbox target preview should expose the nearest live Minigun target")
 
 	sandbox.get_node("Shell/Content/MainColumn/SimulationView").entity_selected.emit(id["index"], id["generation"])
 	if "--capture" in OS.get_cmdline_user_args():
@@ -192,6 +196,9 @@ func _run() -> void:
 
 	sandbox.get_node("Shell/Content/SidePanel/Sections/SpawnPanel/SpawnForm/SpawnActions/KillButton").pressed.emit()
 	state = await _wait_for_entity_count(sandbox.simulation, 0)
+	sandbox._refresh()
+	assert(sandbox.get_node("Shell/Content/MainColumn/SimulationView")._target_preview.is_empty(),
+		"Sandbox target preview should clear when no targetable enemies remain")
 	assert(state["entities"].is_empty())
 	sandbox.get_node("Shell/Content/MainColumn/Toolbar/Row/ResetButton").pressed.emit()
 	var reset_deadline := Time.get_ticks_msec() + 1000

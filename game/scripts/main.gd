@@ -1,5 +1,7 @@
 extends Control
 
+const SURVIVAL_TARGETING := preload("res://scripts/survival_targeting.gd")
+
 const COLOR_MUTED := Color("#8ea3ad")
 const COLOR_CYAN := Color("#45e5ed")
 const COLOR_PINK := Color("#ff5ca8")
@@ -143,6 +145,7 @@ func _refresh() -> void:
 	_select_speed(float(state["speed_multiplier"]))
 	_view.set_entities(state["entities"])
 	_view.set_selected_entity(_selected_index, _selected_generation)
+	_view.set_target_preview(SURVIVAL_TARGETING.nearest_enemy(state["entities"], Vector2.ZERO, SURVIVAL_TARGETING.MINIGUN_RANGE))
 
 	var metrics: Dictionary = state["metrics"]
 	$Shell/Content/MainColumn/Metrics/MetricRow/MetricFPS.text = "FPS  %d" % Engine.get_frames_per_second()
