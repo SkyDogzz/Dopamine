@@ -444,10 +444,10 @@ Travail requis :
 
 ### Travaux
 
-- [ ] **P6.1 — Équipement de run classique**
-  - [ ] Tester chacun des six slots et le remplacement d’une pièce du même slot.
-  - [ ] Vérifier qu’une run finie (victoire ou défaite) donne une seule pièce.
-  - [ ] Vérifier que les lignes d’un objet n’ont pas de statistique dupliquée.
+- [x] **P6.1 — Équipement de run classique**
+  - [x] Tester chacun des six slots et le remplacement d’une pièce du même slot.
+  - [x] Vérifier qu’une run finie (victoire ou défaite) donne une seule pièce.
+  - [x] Vérifier que les lignes d’un objet n’ont pas de statistique dupliquée.
 - [ ] **P6.2 — Rareté et rolls**
   - [ ] Ajouter difficulté et vague aux entrées du générateur.
   - [ ] Implémenter la pénalité de mort précoce après validation des règles.

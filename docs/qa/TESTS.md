@@ -1,5 +1,11 @@
 # Tests d'acceptation et validation
 
+## Progression permanente — équipement classique — 2026-10-16
+
+- [x] `equipment_slots_smoke.gd` couvre les six slots, l’unicité des statistiques dans chaque pièce, et le remplacement d’un objet équipé du même slot sans déséquiper les cinq autres.
+- [x] `progression_service_smoke.gd` vérifie qu’une victoire et une défaite distinctes ajoutent chacune une seule pièce et que le retraitement du même `run_id` n’en ajoute pas une seconde.
+- [x] Les quatre smokes ciblés passent. La suite séquentielle passe 67/67 sous Godot 4.7.2; `survival_weapon_catalog_smoke` a échoué une première fois de façon intermittente, puis a passé seul et dans le rerun complet.
+
 ## Run réelle et redémarrage Survival — 2026-10-16
 
 - [x] Lancé depuis l’accueil en Easy avec un profil `XDG_DATA_HOME` temporaire, choix initial manuel, `LOCK HEALTH` et auto-choix des coffres désactivés, aucun HP forcé ni harness de simulation. À vitesse de jeu ×4 choisie dans la pause, la partie s’est terminée en défaite à la vague 1 après 13 s actives et 10 kills.
