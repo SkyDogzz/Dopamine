@@ -117,6 +117,6 @@ La séquence est une proposition d’exécution (**[PROPOSÉ]**), pas une modifi
 - Chaque sprite a sa source éditable et son PNG exporté; vérifier dimensions, transparence, nombre et appartenance des couleurs, contour net et absence de glow précuit.
 - Les sprites 32×32 restent à 16 couleurs distinctes maximum. Les exceptions de palette sont documentées.
 - Les tiles respectent 16×16; le joueur respecte 32×32; les boss suivent le standard 96×96.
-- Chaque scène UI est parcourue à la souris, au clavier et à la manette avec focus visible; bounds et lisibilité vérifiés à 640×360 et à l’upscale cible. Le smoke actuel contrôle les bornes, pas tous les états visuels ni le matériel physique.
+- Les smokes propres aux écrans vérifient leurs parcours et leur focus; la fondation UI vérifie aussi un clic souris synthétique sur un bouton partagé, Tab, D-pad et mappings A/B. Les bounds sont vérifiés à 640×360, 1280×720 et 1920×1080. Cela ne remplace ni une revue de chaque état visuel ni un essai sur matériel physique.
 - Revoir les assets en situation de combat dense et confirmer que dangers, projectiles, ennemis et objets restent séparables.
 - Les smokes visuels ne valident ni une manette physique ni la direction artistique; conserver une revue visuelle explicite.

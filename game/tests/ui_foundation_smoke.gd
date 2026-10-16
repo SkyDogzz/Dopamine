@@ -139,6 +139,19 @@ func _run() -> void:
 	primary_button.emit_signal("mouse_exited")
 	await process_frame
 	await process_frame
+	var mouse_click := InputEventMouseButton.new()
+	mouse_click.button_index = MOUSE_BUTTON_LEFT
+	mouse_click.position = primary_button.get_global_rect().get_center()
+	mouse_click.pressed = true
+	root.push_input(mouse_click, true)
+	await process_frame
+	mouse_click.pressed = false
+	root.push_input(mouse_click, true)
+	await process_frame
+	var status_label := preview.get_node("Content/PreviewCenter/SamplePanel/SampleContent/Status") as Label
+	if status_label.text != "PRIMARY ACTION ACTIVATED  •  LEVEL 3":
+		_fail("Mouse click failed at local viewport coordinates %s" % mouse_click.position)
+		return
 
 	var preview_panel := preview.get_node("Content/PreviewCenter/SamplePanel") as Control
 	for viewport_size in [Vector2i(1280, 800), Vector2i(1600, 900), Vector2i(1920, 1080)]:
