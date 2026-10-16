@@ -89,10 +89,11 @@ func offers(family: String) -> Array[Dictionary]:
 		if owned.has(item_id):
 			if int(owned[item_id]) >= MAX_LEVEL:
 				continue
+			var next_level := int(owned[item_id]) + 1
 			candidates.append({
 				"id": "%s:%s" % [family, item_id],
-				"title": "%s — niveau %d" % [catalog[item_id], int(owned[item_id]) + 1],
-				"description": description,
+				"title": "%s — Lv %d → %d" % [catalog[item_id], int(owned[item_id]), next_level],
+				"description": "%s\nNEXT LEVEL: %s" % [description, _next_level_description(family, item_id, next_level)],
 				"icon": ICONS.get(item_id, ""),
 			})
 		elif owned.size() < MAX_SLOTS:
@@ -110,6 +111,57 @@ func offers(family: String) -> Array[Dictionary]:
 		candidates[index] = candidates[other]
 		candidates[other] = temporary
 	return candidates.slice(0, 3)
+
+func _next_level_description(family: String, item_id: String, level: int) -> String:
+	if family == "relic":
+		return _relic_level_description(item_id, level)
+	return _weapon_level_description(item_id, level)
+
+func _weapon_level_description(item_id: String, level: int) -> String:
+	match item_id:
+		"lightning_conductor":
+			return "+1 chain bounce" if level in [2, 4] else "+25% damage" if level == 3 else "Unlocks Infinite Circuit with Storm Core" if level == 5 else "Improves lightning damage"
+		"inferno_sprayer", "crimson_daggers":
+			return "Unlocks evolution with its matching relic" if level == 5 else "+15% damage"
+		"minigun":
+			return "+20% damage" if level == 2 else "+25% fire rate" if level in [3, 5] else "15% tighter spread" if level == 4 else "Improves shots"
+		"toxic_cloud":
+			return "+25% poison damage" if level == 5 else "+20% cloud radius" if level == 3 else "+20% poison duration" if level == 4 else "+20% poison damage" if level == 2 else "Improves poison"
+		"sawblades":
+			return "+20% damage" if level == 2 else "+1 ricochet" if level == 3 else "+20% projectile speed" if level == 4 else "+25% damage; unlocks evolution with Magnetic Coil" if level == 5 else "Improves ricochets"
+		"meteor_staff":
+			return "+20% damage" if level == 2 else "+20% explosion radius" if level == 3 else "15% shorter cooldown" if level == 4 else "+30% damage; unlocks evolution with Celestial Eye" if level == 5 else "Improves impact"
+		"prism_laser":
+			return "+20% damage" if level == 2 else "+20% range" if level == 3 else "+15% range" if level == 4 else "+25% damage; unlocks evolution with Prism Crystal" if level == 5 else "Improves beam"
+		"void_orb":
+			return "+20% damage" if level == 2 else "+20% attraction radius" if level == 3 else "+15% projectile lifetime" if level == 4 else "+25% damage; unlocks evolution with Singularity" if level == 5 else "Improves orb"
+		"frost_nova":
+			return "+20% damage" if level == 2 else "+20% area" if level == 3 else "+20% chill duration" if level == 4 else "20% shorter cooldown; unlocks evolution with Frozen Crown" if level == 5 else "Improves Nova"
+	return "Improves the weapon"
+
+func _relic_level_description(item_id: String, level: int) -> String:
+	match item_id:
+		"storm_core", "infernal_heart":
+			return "+5% damage for its weapon"
+		"blood_chalice":
+			return "+10% kill healing and +5% lifesteal"
+		"overdrive_engine":
+			return "+4% Minigun fire rate"
+		"plague_mask":
+			return "+5% poison damage"
+		"magnetic_coil":
+			return "+4% projectile speed"
+		"celestial_eye":
+			return "+3% area size"
+		"prism_crystal":
+			return "+3% critical damage"
+		"singularity":
+			return "+5% Void control"
+		"frozen_crown":
+			return "+5% chill duration"
+		"magnet_heart":
+			return "+25% pickup radius"
+	return "Improves the relic bonus"
 
 func starting_weapon_options() -> Array[Dictionary]:
 	var options: Array[Dictionary] = []
