@@ -336,9 +336,9 @@ Travail requis :
   - [x] Les chemins existants consomment les événements standards : lifesteal sur damage, contagion Pandemic sur dégâts/statut et mort, Absolute Zero sur mort d’une cible Chill, fragments Starfall sur impact et chaînes Lightning sur dégâts. Les événements DoT portent maintenant leur identité jusqu’au damage/death.
   - [x] Vérifier que ces comportements utilisent les contrats d’évolution/statut existants; aucune réaction élémentaire proposée n’est activée. Les évolutions et paramètres de prototype gardent leur statut **[PROPOSÉ]** là où le GDD ne les valide pas.
 - [ ] **P5.2.3 — Réactions proposées**
-  - [ ] Garder Thermal Shock, Toxic Ignition, Shatter, Electroplague, Gravity Collapse et Hemorrhage désactivées tant que non validées.
+  - [x] Garder Thermal Shock, Toxic Ignition, Shatter, Electroplague, Gravity Collapse et Hemorrhage désactivées tant que non validées.
   - [ ] Faire arbitrer chaque réaction avant son implémentation.
-  - [ ] Garder Overcharge bloquée par son statut **[OUVERT]**.
+  - [x] Garder Overcharge bloquée par son statut **[OUVERT]**.
 - [ ] **P5.2.4 — Causalité et dégâts**
   - [ ] Ajouter un ID de chaîne et un budget aux réactions seulement après validation du contrat.
   - [ ] Vérifier événements directs, DoT, lifesteal et mort sans double crédit.
@@ -358,7 +358,8 @@ Travail requis :
   - [x] Vérifier l’offre après chaque chemin de niveaux de l’arme, et après acquisition/amélioration de la relique jusqu’au niveau 5.
   - [x] Ouvrir un vrai coffre d’arme, afficher l’unique évolution devenue éligible et la collecter; `survival_weapon_catalog_smoke.gd` vérifie que le combo s’active après cette collecte.
 - [ ] **P5.3.4 — Probabilités**
-  - [ ] Garder taux, poids, pity et rerolls accessibles en configuration. Les taux de drop, le filet anti-malchance et les poids sont déjà modifiables dans Survival; le reroll doit attendre son intégration avec la progression.
+  - [x] Garder les taux de drop, le filet anti-malchance et les poids d’offres accessibles en configuration; `survival_chest_director_smoke.gd` et `survival_loadout_smoke.gd` couvrent ces paramètres.
+  - [ ] Intégrer le reroll avec les effets uniques de progression permanente (P6.5); aucune commande de reroll n’est exposée en run à ce stade.
   - [ ] Faire arbitrer les valeurs nécessaires avant leur verrouillage; les coefficients restent **[PROPOSÉS]**.
 - [ ] **P5.3.5 — Collecte**
   - [x] Préserver le rayon séparé `chest_collection_radius`.
