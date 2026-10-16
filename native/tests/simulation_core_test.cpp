@@ -113,6 +113,21 @@ int main() {
 	profile_steering.steer_enemies_towards(0.0F, 0.0F, {.max_speed = 10.0F});
 	require(std::abs(profile_steering.entity(profile_entity)->velocity.x - tank_profile->speed) < 0.001F,
 			"enemy steering should preserve the profile-specific proposed movement speed");
+	for (const auto &profile : {*chaser_profile, *sprinter_profile, *tank_profile}) {
+		SimulationCore family;
+		const auto enemy = family.spawn(std::string(profile.id), -100.0F, 0.0F, profile.health,
+				0.0F, 0.0F, profile.threat_level, profile.speed);
+		family.steer_enemies_towards(0.0F, 0.0F, {.max_speed = 10.0F});
+		const auto moving = family.entity(enemy);
+		require(moving && std::abs(std::hypot(moving->velocity.x, moving->velocity.y) - profile.speed) < 0.001F,
+				"melee, fast and tank families should retain their proposed speed while steering");
+		std::vector<dopamine::sim::CombatEvent> family_death_events;
+		family.apply_direct_damage({}, enemy, profile.health, family_death_events);
+		require(!family.entity(enemy) && family_death_events.size() == 2 &&
+				family_death_events.back().type == dopamine::sim::CombatEventType::Death &&
+				family_death_events.back().target_type == profile.id,
+				"melee, fast and tank families should emit a typed death when defeated");
+	}
 	SimulationCore supported_group;
 	const auto supported_ally = supported_group.spawn("chaser", 80.0F, 0.0F, 20.0F, 0.0F, 0.0F, 1.0F, 75.0F);
 	const auto distant_ally = supported_group.spawn("chaser", 180.0F, 0.0F, 20.0F, 0.0F, 0.0F, 1.0F, 75.0F);

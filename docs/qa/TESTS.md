@@ -5,7 +5,7 @@
 - [x] `survival_targeting_smoke.gd` vérifie nearest, farthest, highest threat, highest HP, lowest HP, la priorité PV max de Prism dans une grappe dense, les cibles de grappes, le centroïde Meteor, la réduction commune des portées (−71 %, plafond visible de 180 unités), le plafond après bonus de niveau/zone et l’exclusion des ennemis morts, des projectiles et des orbes XP. Ces règles restent **[PROPOSÉES]**.
 - [x] `sandbox_ui_smoke.gd` vérifie le sélecteur à neuf politiques, l’ID ou centroïde affiché, les portées et rayons de grappe par défaut, l’effet du choix de politique et de portée, l’effacement après kill-all et la préservation du fixture de sauvegarde normale. Capture Xvfb relue à 640×360; cible, marqueur et réglages restent dans leurs cadres.
 - [x] `survival_weapon_catalog_smoke.gd` vérifie le regroupement Lightning/Sawblades/Meteor/Prism, les choix par menace/PV/distance, le ciblage faible PV des Crimson Daggers, le focus PV max de Prism, le maintien/reciblage du Minigun, et les bonus Inferno des niveaux 2–5.
-- [x] La suite complète est à 51/51. `survival_run_result_smoke` attend maintenant que le worker ait acquitté la pause après `run_over`; le test passe dix exécutions consécutives puis dans la suite complète. Les smokes profil, unlock et session de difficulté sont désormais enregistrés dans CTest.
+- [x] La suite complète est à 53/53 sous Godot 4.7.2. `survival_run_result_smoke` attend que le worker ait acquitté la pause après `run_over`; ce test passe dix exécutions consécutives. Les smokes profil, unlock, session de difficulté, pause et rendu des profils communs sont enregistrés dans CTest.
 - [x] Les dix armes ont des règles de ciblage distinctes couvertes par les fixtures de comportement et les profils Sandbox.
 - [ ] Leur équilibrage comparatif reste **[OUVERT]**; les sélecteurs numériques sont **[PROPOSÉS]** et la couverture ne prouve pas leur qualité finale.
 
@@ -28,6 +28,12 @@
 
 - [x] `enemy_profiles_smoke.json` fait apparaître de façon déterministe Hasted, Armored, Regenerating, Volatile, Shielded et Split-on-Death dans le Sandbox; les attentes vérifient leur identité, leur vitesse et les attributs d’affixe publiés.
 - [x] `scenario_runner.gd` valide `affix` uniquement sur un profil elite et autorise les six IDs supportés; `scenario_runner_validation_smoke.gd` couvre les cas acceptés/refusés. Le snapshot valide les attributs; le scénario passe avec Godot 4.7.2 sans accéder à la sauvegarde normale.
+
+## Profils communs de P5 — 2026-10-16
+
+- [x] `enemy_profiles_smoke.json` vérifie le spawn Sandbox et les PV/vitesses de Chaser, Sprinter et Tank; `simulation_core_test` vérifie pour les trois le steering conservant la vitesse propre et l’événement de mort typé.
+- [x] `survival_combat_visual_smoke.gd` vérifie leurs routes de sprites distinctes et produit une capture Xvfb du combat; test ajouté à CTest sur Linux quand `xvfb-run` est disponible.
+- [ ] Profil rapide, HP, menace et contre-jeu final restent **[PROPOSÉS]** jusqu’à validation d’équilibrage; le test confirme leur implémentation, pas leur qualité de tuning.
 
 ## Pression de combat sans amélioration — 2026-10-16
 
@@ -358,7 +364,7 @@ Le runner est fourni par `game/scripts/scenario_runner.gd` et consomme un fichie
 ## UI refonte — survival-pause (2026-10-16)
 
 - [x] `survival_pause_smoke.gd` est enregistré dans CTest et vérifie que `LOCK HEALTH` apparaît sous la vitesse, bloque dégâts PV/bouclier lorsqu'il est actif puis restaure le calcul normal à sa désactivation.
-- [x] Validation de la tranche : le smoke Pause passe seul et dans CTest. Une suite complète séquentielle passe 51/52 sur un échec Infinite Circuit; `survival_weapon_catalog_smoke` a ensuite passé directement et sur trois répétitions CTest consécutives, ce qui confirme un échec intermittent plutôt qu'une régression systématique.
+- [x] Validation intégrée : `simulation_core`, scénario Sandbox des profils, smoke Pause, smoke visuel sous Xvfb et `survival_weapon_catalog_smoke` passent; la suite CTest complète passe 53/53. Après un échec isolé précédent sur Infinite Circuit, le catalogue a passé directement, trois répétitions consécutives puis cette suite complète.
 - [x] Godot 4.7.2 Linux : import headless réussi; `survival_pause_smoke.gd` vérifie ouverture/reprise, focus, temps Simulation/actif/vague et positions joueur/ennemi figés, retour d’Options par bouton/Échap et bornes Pause aux viewports 960×600, 1280×800 et 1600×900.
 - [x] `survival_pause_inventory_smoke.gd` vérifie la projection en lecture seule de deux armes/deux reliques, noms, niveaux, descriptions, icônes et évolution active; l’ouverture place le focus sur le premier objet, les flèches déplacent le focus et le défilement, le contour doré est visible et les icônes 24×24 utilisent le filtrage nearest.
 - [x] Le même smoke ferme l’inventaire par B synthétique et vérifie le retour du focus à Pause en maintenant la run gelée.

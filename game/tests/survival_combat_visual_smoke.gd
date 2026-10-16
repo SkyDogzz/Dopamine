@@ -36,6 +36,11 @@ func _run() -> void:
 	if first_target.is_empty():
 		_fail("Combat visual target missing from snapshot")
 		return
+	for enemy_type in ["chaser", "sprinter", "tank"]:
+		var expected_sprite := "enemy_%s" % enemy_type
+		if session._sprite_renderer._sprite_for_entity({"EnemyType": enemy_type}) != expected_sprite:
+			_fail("The %s profile should use its own readable combat sprite" % enemy_type)
+			return
 	session._fire_lightning_conductor(float(session.simulation.snapshot()["simulation_time"]), false)
 	var projectile_types := ["lightning_conductor", "inferno_sprayer", "crimson_dagger", "minigun",
 		"toxic_cloud", "sawblades", "meteor_staff", "prism_laser", "void_orb", "frost_nova",
