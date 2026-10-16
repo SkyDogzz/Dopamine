@@ -29,6 +29,11 @@ const WEAPON_IMPACT_TYPES := {
 const WEAPON_IMPACT_LIFETIME := 0.22
 const MAX_VISIBLE_WEAPON_IMPACTS := 32
 const LIGHTNING_ARC_LIFETIME := 0.12
+const ENEMY_DEATH_PIXEL_LIFETIME := 0.32
+const ENEMY_DEATH_PIXEL_COUNT := 8
+const MAX_ENEMY_DEATH_PIXELS := 256
+const ENEMY_DEATH_TYPES := ["chaser", "sprinter", "tank", "shooter", "buffer", "exploder", "shielder", "summoner", "summoned", "elite", "mid_boss", "final_boss"]
+const ENEMY_DEATH_PALETTE := [Color("#D4D9E8"), Color("#37E8F5"), Color("#087FB2"), Color("#F6F7FF")]
 const WEAPON_ICONS := {
 	"lightning_conductor": preload("res://assets/sprites/catalog/weapon_lightning_conductor.png"),
 	"inferno_sprayer": preload("res://assets/sprites/catalog/weapon_inferno_sprayer.png"),
@@ -276,6 +281,7 @@ var _pandemic_poisoned_targets: Dictionary = {}
 var _pandemic_spread_targets: Dictionary = {}
 var _pandemic_bursts: Array[Dictionary] = []
 var _weapon_impacts: Array[Dictionary] = []
+var _enemy_death_pixels: Array[Dictionary] = []
 var _starfall_fragments_spawned: Dictionary = {}
 var _entities: Array = []
 var _pending_xp_orbs: Dictionary = {}
@@ -499,6 +505,11 @@ func _process(_delta: float) -> void:
 		_weapon_impacts[index]["remaining"] = float(_weapon_impacts[index]["remaining"]) - elapsed_active_time
 		if float(_weapon_impacts[index]["remaining"]) <= 0.0:
 			_weapon_impacts.remove_at(index)
+	for index in range(_enemy_death_pixels.size() - 1, -1, -1):
+		_enemy_death_pixels[index]["remaining"] = float(_enemy_death_pixels[index]["remaining"]) - elapsed_active_time
+		_enemy_death_pixels[index]["position"] += _enemy_death_pixels[index]["velocity"] * elapsed_active_time
+		if float(_enemy_death_pixels[index]["remaining"]) <= 0.0:
+			_enemy_death_pixels.remove_at(index)
 	for index in range(_lightning_arcs.size() - 1, -1, -1):
 		_lightning_arcs[index]["remaining"] = float(_lightning_arcs[index]["remaining"]) - elapsed_active_time
 		if float(_lightning_arcs[index]["remaining"]) <= 0.0:
@@ -540,18 +551,19 @@ func _process(_delta: float) -> void:
 			"death":
 				kill_count += 1
 				var dead_target: Dictionary = event["target"]
+				var dead_enemy_type: String = str(event.get("target_type", ""))
+				var death_position := Vector2(float(event["position"]["x"]), float(event["position"]["y"]))
+				_add_enemy_death_pixels(dead_enemy_type, death_position)
 				if bool(event.get("target_was_chilled", false)) and loadout.weapon_level("frost_nova") >= 5 and loadout.relic_level("frozen_crown") > 0 and str(event.get("source_type", "")) != "absolute_zero":
-					var shatter_position := Vector2(float(event["position"]["x"]), float(event["position"]["y"]))
-					simulation.spawn_projectile("absolute_zero", shatter_position, Vector2.ZERO,
+					simulation.spawn_projectile("absolute_zero", death_position, Vector2.ZERO,
 							frost_nova_damage * absolute_zero_shatter_damage_multiplier,
 							_equipment_area(absolute_zero_shatter_radius), frost_nova_duration_seconds,
 							2.0, 0.5, 2.0, 0.0, 0.0, 0, 0.0, 0.0, true)
 				var dead_key := _entity_key(int(dead_target["index"]), int(dead_target["generation"]))
 				if _pandemic_poisoned_targets.has(dead_key) and not _pandemic_spread_targets.has(dead_key):
 					_pandemic_spread_targets[dead_key] = true
-					_spread_pandemic(Vector2(float(event["position"]["x"]), float(event["position"]["y"])), state["entities"])
+					_spread_pandemic(death_position, state["entities"])
 				_pandemic_poisoned_targets.erase(dead_key)
-				var dead_enemy_type: String = str(event.get("target_type", ""))
 				if dead_enemy_type == "elite" and _has_unique_effect("elite_haste"):
 					_elite_haste_expires_at = player_active_time + 3.0
 					_refresh_player_move_speed()
@@ -562,16 +574,14 @@ func _process(_delta: float) -> void:
 					_boss_spawn_pending = false
 					wave_director.boss_defeated()
 					_victory_pending = true
-				_roll_enemy_chests(dead_enemy_type, Vector2(
-					float(event["position"]["x"]), float(event["position"]["y"])
-				))
+				_roll_enemy_chests(dead_enemy_type, death_position)
 				if not run_over:
 					var healing: float = float(simulation.kill_heal_amount(float(event["threat_level"])))
 					healing *= 1.0 + float(loadout.relic_level("blood_chalice")) * blood_chalice_heal_per_level
 					healing *= 1.0 + _equipment_bonus("kill_healing_pct") / 100.0
 					player_hp = minf(player_max_hp, player_hp + healing)
 					_spawn_xp_drop(
-						Vector2(float(event["position"]["x"]), float(event["position"]["y"])),
+						death_position,
 						xp_per_enemy * (1.0 + _equipment_bonus("xp_pct") / 100.0)
 					)
 			"xp_collected":
@@ -2040,6 +2050,27 @@ func _draw() -> void:
 		draw_texture_rect_region(WEAPON_IMPACTS_TEXTURE, Rect2(-32.0, -32.0, 64.0, 64.0),
 			Rect2(float(impact["type"]) * 64.0, 0.0, 64.0, 64.0), Color(1.0, 1.0, 1.0, fade))
 		draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
+	for pixel in _enemy_death_pixels:
+		var fade := clampf(float(pixel["remaining"]) / ENEMY_DEATH_PIXEL_LIFETIME, 0.0, 1.0)
+		var pixel_size := float(pixel["size"])
+		var particle_color: Color = pixel["color"]
+		particle_color.a *= fade
+		draw_rect(Rect2(pixel["position"] - Vector2.ONE * pixel_size * 0.5, Vector2.ONE * pixel_size), particle_color)
+
+func _add_enemy_death_pixels(enemy_type: String, position: Vector2) -> void:
+	if not ENEMY_DEATH_TYPES.has(enemy_type):
+		return
+	for index in range(ENEMY_DEATH_PIXEL_COUNT):
+		var speed := 24.0 + float(index % 3) * 12.0
+		_enemy_death_pixels.append({
+			"position": position,
+			"velocity": Vector2.RIGHT.rotated(TAU * float(index) / ENEMY_DEATH_PIXEL_COUNT) * speed,
+			"size": 2.0 if index % 2 == 0 else 3.0,
+			"color": ENEMY_DEATH_PALETTE[index % ENEMY_DEATH_PALETTE.size()],
+			"remaining": ENEMY_DEATH_PIXEL_LIFETIME,
+		})
+	while _enemy_death_pixels.size() > MAX_ENEMY_DEATH_PIXELS:
+		_enemy_death_pixels.pop_front()
 
 func _add_weapon_impact(source_type: String, position: Vector2, is_damage_over_time: bool) -> void:
 	var impact_type := source_type.get_slice(":", 0)
