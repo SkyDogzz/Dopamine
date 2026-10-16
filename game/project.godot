@@ -1,11 +1,11 @@
-; Dopamine Survivor — developer sandbox
+; Dopamine Survivor
 
 config_version=5
 
 [application]
 
 config/name="Dopamine Survivor"
-run/main_scene="res://scenes/main.tscn"
+run/main_scene="res://scenes/launch_menu.tscn"
 
 [autoload]
 

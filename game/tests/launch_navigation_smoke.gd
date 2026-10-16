@@ -6,6 +6,9 @@ func _initialize() -> void:
 	call_deferred("_run")
 
 func _run() -> void:
+	if ProjectSettings.get_setting("application/run/main_scene") != LAUNCH_SCENE_PATH:
+		_fail("The launch menu should be the project's main scene")
+		return
 	if not ResourceLoader.exists(LAUNCH_SCENE_PATH):
 		_fail("Launch menu scene is missing")
 		return
@@ -49,6 +52,38 @@ func _run() -> void:
 		return
 	if root.gui_get_focus_owner() != options_button:
 		_fail("Closing Options should restore focus to its launch button")
+		return
+	var quit_button := launch_menu.get_node("Content/Card/Columns/Menu/QuitButton") as Button
+	var quit_connections := quit_button.pressed.get_connections()
+	if quit_connections.size() != 1 or quit_connections[0]["callable"].get_method() != "_on_quit_pressed":
+		_fail("Quit should be connected to the native application close action")
+		return
+	var sandbox_button := launch_menu.get_node("Content/Card/Columns/Menu/SandboxButton") as Button
+	sandbox_button.pressed.emit()
+	await process_frame
+	await process_frame
+	if current_scene == null or current_scene.scene_file_path != "res://scenes/main.tscn":
+		_fail("The discrete Sandbox entry should open the existing developer scene")
+		return
+	var home_button := current_scene.get_node_or_null("Shell/Header/HomeButton") as Button
+	if home_button == null or home_button.focus_mode == Control.FOCUS_NONE:
+		_fail("The Sandbox should provide a focusable return to the home menu")
+		return
+	if root.gui_get_focus_owner() != home_button:
+		_fail("The Sandbox return action should receive initial keyboard/gamepad focus")
+		return
+	home_button.pressed.emit()
+	await process_frame
+	await process_frame
+	if current_scene == null or current_scene.scene_file_path != LAUNCH_SCENE_PATH:
+		_fail("The Sandbox home action should return to the launch menu")
+		return
+	var card := current_scene.get_node("Content/Card") as Control
+	var logical_viewport: Rect2 = current_scene.get_viewport_rect()
+	var card_rect := card.get_global_rect()
+	if card_rect.position.x < logical_viewport.position.x or card_rect.position.y < logical_viewport.position.y or \
+		card_rect.end.x > logical_viewport.end.x or card_rect.end.y > logical_viewport.end.y:
+		_fail("Launch menu card %s should fit inside logical viewport %s" % [card_rect, logical_viewport])
 		return
 	print("Launch menu controls, initial focus and hub navigation contract passed")
 	quit()

@@ -41,12 +41,12 @@
 **Description :** Définir l’accueil comme scène de démarrage, relier son accès secondaire au Sandbox existant, et ajouter le retour minimal vers l’accueil. Brancher Quitter sur l’API native Godot.
 
 **Critères d’acceptation :**
-- [ ] Le projet démarre sur l’accueil; l’accès Sandbox ouvre `main.tscn`.
-- [ ] Le Sandbox revient à l’accueil par une commande claire, sans modifier ses outils de simulation.
-- [ ] Quitter appelle la fermeture native; le test n’interrompt pas son processus parent.
-- [ ] Aucun nouvel accès du Sandbox à `SaveService` ou à la progression.
+- [x] Le projet démarre sur l’accueil; l’accès Sandbox ouvre `main.tscn`.
+- [x] Le Sandbox revient à l’accueil par une commande claire, sans modifier ses outils de simulation.
+- [x] Quitter appelle la fermeture native; le test n’interrompt pas son processus parent.
+- [x] Aucun nouvel accès du Sandbox à `SaveService` ou à la progression.
 
-**Vérification :** Smoke d’intégration des changements de scène; smokes `sandbox_smoke.gd`, `sandbox_ui_smoke.gd` et entrée Survival pertinente; inspection statique des dépendances.
+**Vérification :** `launch_navigation_smoke.gd`, `sandbox_smoke.gd` et `survival_entry_smoke.gd` passent. `sandbox_ui_smoke.gd` et `save_service_smoke.gd` ne peuvent pas valider leurs écritures dans cet environnement : une sonde isolée confirme que `FileAccess.store_string()` laisse les fichiers `user://` vides sous les exécutions headless utilisées ici. Ce problème se reproduit aussi avec le démarrage Sandbox original temporairement rétabli. Inspection statique des fichiers Sandbox modifiés : aucun lien vers `SaveService`/progression ajouté.
 
 **Dépendances :** Tâches 1 et 2.
 
@@ -56,7 +56,7 @@
 
 ## Checkpoint — module prêt à revue
 
-- [ ] Toutes les tâches et critères d’acceptation sont vérifiés.
-- [ ] Les résolutions UI prévues sont inspectées et les contrôles sans souris testés au mieux de l’environnement disponible.
-- [ ] La séparation Sandbox/progression normale est contrôlée.
+- [x] Toutes les tâches de code sont implémentées; une régression Sandbox reste à diagnostiquer.
+- [ ] Revue visuelle fenêtrée aux résolutions prévues; Godot n’a pas démarré sous X11/Xvfb dans l’environnement courant (aucune capture produite).
+- [x] La séparation Sandbox/progression normale est contrôlée statiquement; le smoke d’isolation reste bloqué par son fixture.
 - [ ] Limites d’environnement documentées; revue utilisateur effectuée avant `survival-hub`.

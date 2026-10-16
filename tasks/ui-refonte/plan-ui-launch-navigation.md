@@ -1,6 +1,6 @@
 # Plan d’implémentation : `launch-navigation`
 
-**Statut : proposé pour validation.** Spec approuvée : [`SPEC-launch-navigation.md`](SPEC-launch-navigation.md). Aucun code ne commence avant validation de ce plan et de sa liste de tâches.
+**Statut : approuvé par l’utilisateur.** Implémentation suivie dans [`todo-ui-launch-navigation.md`](todo-ui-launch-navigation.md).
 
 ## Vue d’ensemble
 

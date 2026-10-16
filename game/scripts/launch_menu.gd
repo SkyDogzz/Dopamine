@@ -4,16 +4,28 @@ signal play_requested
 
 @onready var _play_button: Button = $Content/Card/Columns/Menu/PlayButton
 @onready var _options_button: Button = $Content/Card/Columns/Menu/OptionsButton
+@onready var _quit_button: Button = $Content/Card/Columns/Menu/QuitButton
+@onready var _sandbox_button: Button = $Content/Card/Columns/Menu/SandboxButton
 
 var _options_panel: Control
 
 func _ready() -> void:
 	_play_button.pressed.connect(_on_play_pressed)
 	_options_button.pressed.connect(_on_options_pressed)
+	_quit_button.pressed.connect(_on_quit_pressed)
+	_sandbox_button.pressed.connect(_on_sandbox_pressed)
 	_play_button.grab_focus()
 
 func _on_play_pressed() -> void:
 	play_requested.emit()
+
+func _on_quit_pressed() -> void:
+	get_tree().quit()
+
+func _on_sandbox_pressed() -> void:
+	var error := get_tree().change_scene_to_file("res://scenes/main.tscn")
+	if error != OK:
+		push_error("Could not open developer Sandbox: %s" % error_string(error))
 
 func _on_options_pressed() -> void:
 	if _options_panel != null:

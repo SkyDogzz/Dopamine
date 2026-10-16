@@ -1,6 +1,6 @@
 # Spec : `launch-navigation`
 
-**Statut : proposée pour validation utilisateur.** Aucune implémentation ni plan détaillé ne commence avant validation de cette spec.
+**Statut : approuvée par l’utilisateur.** Le plan et la liste de tâches ont aussi été approuvés avant le début du code.
 
 ## Statuts de référence
 

@@ -12,7 +12,7 @@
 6. [Registre ADR](docs/adr/README.md) — décisions techniques acceptées, y compris Sandbox-first.
 7. [Roadmap GDD v1.6](docs/planning/ROADMAP.md).
 8. [Risques](docs/planning/RISQUES.md) et [tests d'acceptation](docs/qa/TESTS.md).
-9. [Intention de refonte UI](docs/planning/INTENTION_REFONTE_UI.md) et [carte des capacités UI](UI_CAPABILITY_MAP.md) — périmètre confirmé par interview; specs détaillées à rédiger après validation de la carte.
+9. [Intention de refonte UI](docs/planning/INTENTION_REFONTE_UI.md) et [carte des capacités UI](UI_CAPABILITY_MAP.md) — périmètre confirmé par interview; specs et avancement par module dans `tasks/ui-refonte/`.
 
 ## Statuts
 
@@ -33,8 +33,8 @@ godot --headless --editor --path game --quit
 godot --path game
 ```
 
-Le premier lancement de l’éditeur importe le projet et vérifie la GDExtension. Le dernier lancement ouvre le Sandbox développeur, sans sauvegarde.
-Le bouton `PLAY SURVIVAL` du Sandbox ouvre la session Survival prototype et son choix d’arme initial.
+Le premier lancement de l’éditeur importe le projet et vérifie la GDExtension. Le dernier lancement ouvre l’accueil. Le Sandbox développeur reste accessible par son entrée secondaire et fonctionne sans sauvegarde.
+Le bouton `PLAY SURVIVAL` du Sandbox ouvre la session Survival prototype et son choix d’arme initial; le bouton `ACCUEIL` revient au menu.
 
 Vérifications ciblées :
 
