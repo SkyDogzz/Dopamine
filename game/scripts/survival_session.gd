@@ -302,6 +302,7 @@ var player_xp_to_next := 10.0
 var run_over := false
 var _victory_pending := false
 var kill_count := 0
+var _enemy_kills_by_type: Dictionary = {}
 var _last_target := Vector2(INF, INF)
 var _last_simulation_time := 0.0
 var _last_combat_event_sequence := 0
@@ -768,6 +769,7 @@ func _process(_delta: float) -> void:
 				kill_count += 1
 				var dead_target: Dictionary = event["target"]
 				var dead_enemy_type: String = str(event.get("target_type", ""))
+				_record_enemy_kill(dead_enemy_type)
 				var dead_enemy_affix: String = str(event.get("target_affix", ""))
 				var death_position := Vector2(float(event["position"]["x"]), float(event["position"]["y"]))
 				Sfx.play("boss_defeat" if dead_enemy_type in ["mid_boss", "final_boss"] else "enemy_kill")
@@ -966,6 +968,7 @@ func _update_exploder_attacks(current_simulation_time: float, paused: bool) -> v
 		simulation.despawn(int(id["index"]), int(id["generation"]))
 		attack["phase"] = "detonated"
 		kill_count += 1
+		_record_enemy_kill("exploder")
 		_roll_enemy_chests("exploder", blast_origin)
 		if not run_over:
 			var healing: float = _equipment_kill_healing(float(simulation.kill_heal_amount(float(components.get("ThreatLevel", 2.0)))))
@@ -1654,10 +1657,16 @@ func _finish_run(victory: bool) -> void:
 			"max_relic_loadout": loadout.owned_relics().size(),
 			"evolutions_in_run": evolved_weapons,
 		}
+		for enemy_type in ENEMY_DEATH_TYPES:
+			run_metrics["enemy_kills_%s" % enemy_type] = int(_enemy_kills_by_type.get(enemy_type, 0))
 		reward = progression_service.award_survival_run(
 			_run_id, wave_director.wave, victory, kill_count, difficulty_id, run_metrics
 		)
 	_run_result.show_result(victory, wave_director.wave, player_active_time, kill_count, reward)
+
+func _record_enemy_kill(enemy_type: String) -> void:
+	if enemy_type in ENEMY_DEATH_TYPES:
+		_enemy_kills_by_type[enemy_type] = int(_enemy_kills_by_type.get(enemy_type, 0)) + 1
 
 func _restart_run() -> void:
 	var replacement: Node2D = load("res://scenes/survival_session.tscn").instantiate()

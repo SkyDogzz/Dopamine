@@ -441,7 +441,7 @@ Travail requis :
 - `SaveService` possède format versionné/checksum/backup et QA historique de migration/altération.
 - `ProgressionService` possède des profils v7 avec difficulté maximale débloquée (Easy par défaut), récompenses de run, idempotence par `run_id`, inventaire, six slots, cinq raretés, stat lines, enhancement, conversion Powder, arbre de 100 nodes et achievements génériques de huit catégories. La règle [VALIDÉE] de déblocage séquentiel après victoire sur le boss de vague 24 est codée; les récompenses d’une difficulté verrouillée sont refusées. Les facteurs de difficulté [PROPOSÉS] sont centralisés et appliqués à la simulation ainsi qu’aux récompenses. Le hub injecte profil et difficulté dans la run; le raccourci Sandbox fonctionne sans service de progression.
 - Le générateur choisit les poids de rareté par difficulté et vague, selon une règle **[PROPOSÉE]**; la pénalité de mort précoce et la calibration statistique/équilibrage des plages restent à faire.
-- Les achievements ont un évaluateur générique, des métriques de combat/profondeur/progression/difficulté et un premier suivi du build d’armes/reliques/évolutions/équipement. Le catalogue contient neuf familles, loin de la cible [VALIDÉE] de 100–150.
+- Les achievements ont un évaluateur générique, des métriques de combat/profondeur/progression/difficulté et un premier suivi du build d’armes/reliques/évolutions/équipement. Le catalogue contient 21 familles, loin de la cible [VALIDÉE] de 100–150.
 - L’arbre contient maintenant une tranche de quatre nodes Core Stats en chaîne, mais pas encore le graphe interconnecté de 100–150 ni son budget cumulatif calibré.
 - Cinq effets uniques ont un chemin gameplay prototype vérifié; `revive_knockback` reste stockable pour préserver les profils existants, mais n’est plus sélectionnable tant que son comportement n’est pas défini. Les chiffres de ces prototypes restent **[PROPOSÉS]**.
 - Des bonus de stat sont consommés dans Survival ; `pickup_radius_pct` augmente actuellement le rayon des orbes XP seulement et le chest a son propre rayon.
@@ -490,10 +490,10 @@ Travail requis :
 - [ ] **P6.7 — Achievements**
   - [x] Établir le schéma JSON métrique/catégorie/secret/agrégation/paliers/récompenses, aligné sur `AchievementDefinition` du GDD.
   - [x] Remplacer le suivi isolé d’Exterminator par des métriques et paliers génériques; profils version 7 et migration additive v1–v6, vérifiés par fixtures dédiées.
-  - [x] Ajouter des familles reliées aux métriques actuelles : Combat, Survival, Progression, Difficulty & Bosses et Secrets. Catégories, seuils et bonus restent **[PROPOSÉS]**.
+  - [x] Ajouter 21 familles prototypes dans les huit catégories du découpage **[PROPOSÉ]** du GDD, dont douze compteurs de kills par type d’ennemi. Seuils et bonus restent **[PROPOSÉS]**.
   - [x] Reconstituer les bonus de tous les tiers au chargement, compter les paliers débloqués une fois par run idempotente et les résumer à l’écran de résultat.
   - [x] Ajouter les métriques de build d’armes, reliques et évolutions au bilan de run, ainsi que le suivi de la pièce d’équipement garantie; les entrées métriques inconnues ou invalides sont refusées avant toute sauvegarde.
-  - [ ] Étendre le prototype de neuf familles vers la cible validée de 100–150 familles; les métriques, seuils et récompenses actuels restent **[PROPOSÉS]**.
+  - [ ] Étendre le prototype de 21 familles vers la cible validée de 100–150 familles; les métriques, seuils et récompenses actuels restent **[PROPOSÉS]**.
 - [ ] **P6.8 — Sauvegarde et migrations**
 - [x] `progression_service_smoke.gd` couvre une fixture pour chaque profil supporté v1–v6 et vérifie migration vers v7, données conservées et champs ajoutés.
   - [x] Vérifier migration, sauvegarde, backup et restauration après corruption : `save_service_smoke.gd` couvre l’enveloppe générique; `progression_service_smoke.gd` récupère maintenant un profil complet via un nouveau SaveService/ProgressionService et valide ses ressources, runs récompensées et équipements.

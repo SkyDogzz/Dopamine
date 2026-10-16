@@ -117,6 +117,162 @@
         { "id": "gold", "threshold": 50, "rewards": { "damage_pct": 0.00015 } },
         { "id": "diamond", "threshold": 100, "rewards": { "damage_pct": 0.0002 } }
       ]
+    },
+    {
+      "id": "enemy_hunter_chaser",
+      "category": "combat",
+      "secret": false,
+      "metric": "enemy_kills_chaser",
+      "aggregation": "sum",
+      "tiers": [
+        { "id": "bronze", "threshold": 100, "rewards": {"damage_pct": 0.000025} },
+        { "id": "silver", "threshold": 500, "rewards": {"damage_pct": 0.00005} },
+        { "id": "gold", "threshold": 2500, "rewards": {"damage_pct": 0.000075} },
+        { "id": "diamond", "threshold": 10000, "rewards": {"damage_pct": 0.0001} }
+      ]
+    },
+    {
+      "id": "enemy_hunter_sprinter",
+      "category": "combat",
+      "secret": false,
+      "metric": "enemy_kills_sprinter",
+      "aggregation": "sum",
+      "tiers": [
+        { "id": "bronze", "threshold": 50, "rewards": {"damage_pct": 0.000025} },
+        { "id": "silver", "threshold": 250, "rewards": {"damage_pct": 0.00005} },
+        { "id": "gold", "threshold": 1000, "rewards": {"damage_pct": 0.000075} },
+        { "id": "diamond", "threshold": 5000, "rewards": {"damage_pct": 0.0001} }
+      ]
+    },
+    {
+      "id": "enemy_hunter_tank",
+      "category": "combat",
+      "secret": false,
+      "metric": "enemy_kills_tank",
+      "aggregation": "sum",
+      "tiers": [
+        { "id": "bronze", "threshold": 25, "rewards": {"damage_pct": 0.000025} },
+        { "id": "silver", "threshold": 100, "rewards": {"damage_pct": 0.00005} },
+        { "id": "gold", "threshold": 500, "rewards": {"damage_pct": 0.000075} },
+        { "id": "diamond", "threshold": 2000, "rewards": {"damage_pct": 0.0001} }
+      ]
+    },
+    {
+      "id": "enemy_hunter_shooter",
+      "category": "combat",
+      "secret": false,
+      "metric": "enemy_kills_shooter",
+      "aggregation": "sum",
+      "tiers": [
+        { "id": "bronze", "threshold": 50, "rewards": {"damage_pct": 0.000025} },
+        { "id": "silver", "threshold": 250, "rewards": {"damage_pct": 0.00005} },
+        { "id": "gold", "threshold": 1000, "rewards": {"damage_pct": 0.000075} },
+        { "id": "diamond", "threshold": 5000, "rewards": {"damage_pct": 0.0001} }
+      ]
+    },
+    {
+      "id": "enemy_hunter_buffer",
+      "category": "combat",
+      "secret": false,
+      "metric": "enemy_kills_buffer",
+      "aggregation": "sum",
+      "tiers": [
+        { "id": "bronze", "threshold": 25, "rewards": {"damage_pct": 0.000025} },
+        { "id": "silver", "threshold": 100, "rewards": {"damage_pct": 0.00005} },
+        { "id": "gold", "threshold": 500, "rewards": {"damage_pct": 0.000075} },
+        { "id": "diamond", "threshold": 2000, "rewards": {"damage_pct": 0.0001} }
+      ]
+    },
+    {
+      "id": "enemy_hunter_exploder",
+      "category": "combat",
+      "secret": false,
+      "metric": "enemy_kills_exploder",
+      "aggregation": "sum",
+      "tiers": [
+        { "id": "bronze", "threshold": 25, "rewards": {"damage_pct": 0.000025} },
+        { "id": "silver", "threshold": 100, "rewards": {"damage_pct": 0.00005} },
+        { "id": "gold", "threshold": 500, "rewards": {"damage_pct": 0.000075} },
+        { "id": "diamond", "threshold": 2000, "rewards": {"damage_pct": 0.0001} }
+      ]
+    },
+    {
+      "id": "enemy_hunter_shielder",
+      "category": "combat",
+      "secret": false,
+      "metric": "enemy_kills_shielder",
+      "aggregation": "sum",
+      "tiers": [
+        { "id": "bronze", "threshold": 25, "rewards": {"damage_pct": 0.000025} },
+        { "id": "silver", "threshold": 100, "rewards": {"damage_pct": 0.00005} },
+        { "id": "gold", "threshold": 500, "rewards": {"damage_pct": 0.000075} },
+        { "id": "diamond", "threshold": 2000, "rewards": {"damage_pct": 0.0001} }
+      ]
+    },
+    {
+      "id": "enemy_hunter_summoner",
+      "category": "combat",
+      "secret": false,
+      "metric": "enemy_kills_summoner",
+      "aggregation": "sum",
+      "tiers": [
+        { "id": "bronze", "threshold": 10, "rewards": {"damage_pct": 0.000025} },
+        { "id": "silver", "threshold": 50, "rewards": {"damage_pct": 0.00005} },
+        { "id": "gold", "threshold": 250, "rewards": {"damage_pct": 0.000075} },
+        { "id": "diamond", "threshold": 1000, "rewards": {"damage_pct": 0.0001} }
+      ]
+    },
+    {
+      "id": "enemy_hunter_summoned",
+      "category": "combat",
+      "secret": false,
+      "metric": "enemy_kills_summoned",
+      "aggregation": "sum",
+      "tiers": [
+        { "id": "bronze", "threshold": 50, "rewards": {"damage_pct": 0.000025} },
+        { "id": "silver", "threshold": 250, "rewards": {"damage_pct": 0.00005} },
+        { "id": "gold", "threshold": 1000, "rewards": {"damage_pct": 0.000075} },
+        { "id": "diamond", "threshold": 5000, "rewards": {"damage_pct": 0.0001} }
+      ]
+    },
+    {
+      "id": "enemy_hunter_elite",
+      "category": "combat",
+      "secret": false,
+      "metric": "enemy_kills_elite",
+      "aggregation": "sum",
+      "tiers": [
+        { "id": "bronze", "threshold": 1, "rewards": {"damage_pct": 0.000025} },
+        { "id": "silver", "threshold": 10, "rewards": {"damage_pct": 0.00005} },
+        { "id": "gold", "threshold": 50, "rewards": {"damage_pct": 0.000075} },
+        { "id": "diamond", "threshold": 200, "rewards": {"damage_pct": 0.0001} }
+      ]
+    },
+    {
+      "id": "enemy_hunter_mid_boss",
+      "category": "combat",
+      "secret": false,
+      "metric": "enemy_kills_mid_boss",
+      "aggregation": "sum",
+      "tiers": [
+        { "id": "bronze", "threshold": 1, "rewards": {"damage_pct": 0.000025} },
+        { "id": "silver", "threshold": 5, "rewards": {"damage_pct": 0.00005} },
+        { "id": "gold", "threshold": 20, "rewards": {"damage_pct": 0.000075} },
+        { "id": "diamond", "threshold": 50, "rewards": {"damage_pct": 0.0001} }
+      ]
+    },
+    {
+      "id": "enemy_hunter_final_boss",
+      "category": "combat",
+      "secret": false,
+      "metric": "enemy_kills_final_boss",
+      "aggregation": "sum",
+      "tiers": [
+        { "id": "bronze", "threshold": 1, "rewards": {"damage_pct": 0.000025} },
+        { "id": "silver", "threshold": 3, "rewards": {"damage_pct": 0.00005} },
+        { "id": "gold", "threshold": 10, "rewards": {"damage_pct": 0.000075} },
+        { "id": "diamond", "threshold": 25, "rewards": {"damage_pct": 0.0001} }
+      ]
     }
   ]
 }
