@@ -8,6 +8,7 @@ const TIERS := ["fresh", "mid", "full"]
 const SURVEY_ROOT := "user://progression_balance_survey"
 const MAX_ACTIVE_SECONDS := 720.0
 const MAX_WALL_SECONDS := 180.0
+const MOVEMENT_ACTIONS := ["move_right", "move_down", "move_left", "move_up"]
 
 class SurveyProgression:
 	extends RefCounted
@@ -38,6 +39,7 @@ class DamageMonitor:
 				total_damage += float(event.get("amount", 0.0))
 
 var _case_failed := false
+var _pressed_movement_action := ""
 
 func _initialize() -> void:
 	call_deferred("_run")
@@ -46,6 +48,7 @@ func _run() -> void:
 	var args := _arguments()
 	var selected_tier := str(args.get("tier", "all"))
 	var selected_difficulty := str(args.get("difficulty", "all"))
+	var movement_pattern := str(args.get("movement", "still"))
 	var replicate_count: int = clampi(int(args.get("replicates", 3)), 1, 10)
 	if selected_tier != "all" and selected_tier not in TIERS:
 		_fail("Unknown tier: %s" % selected_tier)
@@ -53,8 +56,11 @@ func _run() -> void:
 	if selected_difficulty != "all" and selected_difficulty not in DIFFICULTY.ORDER:
 		_fail("Unknown difficulty: %s" % selected_difficulty)
 		return
+	if movement_pattern not in ["still", "square"]:
+		_fail("Unknown movement pattern: %s" % movement_pattern)
+		return
 
-	print("tier,difficulty,replicate,unlocked_nodes,hp_bonus_pct,damage_bonus_pct,speed_bonus_pct,crit_bonus_pct,active_seconds,wall_seconds,wave,kills,level,outgoing_damage,outgoing_dps,net_hp_loss,result")
+	print("tier,difficulty,movement,replicate,unlocked_nodes,hp_bonus_pct,damage_bonus_pct,speed_bonus_pct,crit_bonus_pct,active_seconds,wall_seconds,path_distance,wave,kills,level,outgoing_damage,outgoing_dps,net_hp_loss,result")
 	for tier in TIERS:
 		if selected_tier != "all" and tier != selected_tier:
 			continue
@@ -66,7 +72,7 @@ func _run() -> void:
 			if selected_difficulty != "all" and difficulty_id != selected_difficulty:
 				continue
 			for replicate in range(replicate_count):
-				await _run_case(tier, difficulty_id, replicate, progression)
+				await _run_case(tier, difficulty_id, replicate, progression, movement_pattern)
 				if _case_failed:
 					return
 	Engine.time_scale = 1.0
@@ -118,7 +124,7 @@ func _build_profile(tier: String) -> RefCounted:
 			return null
 	return SurveyProgression.new(service)
 
-func _run_case(tier: String, difficulty_id: String, replicate: int, progression: RefCounted) -> void:
+func _run_case(tier: String, difficulty_id: String, replicate: int, progression: RefCounted, movement_pattern: String) -> void:
 	seed(20261016 + DIFFICULTY.ORDER.find(difficulty_id) * 100 + replicate)
 	var monitor := DamageMonitor.new()
 	monitor.process_priority = -1
@@ -141,9 +147,17 @@ func _run_case(tier: String, difficulty_id: String, replicate: int, progression:
 	Engine.time_scale = 4.0
 	var initial_hp: float = session.player_max_hp
 	var started_at := Time.get_ticks_msec()
+	var previous_position: Vector2 = session.player.global_position
+	var path_distance := 0.0
 	while not session.run_over and session.player_active_time < MAX_ACTIVE_SECONDS and \
 		Time.get_ticks_msec() - started_at < MAX_WALL_SECONDS * 1000.0:
+		if movement_pattern == "square":
+			_set_movement_action(posmod(floori(session.player_active_time / 3.0), MOVEMENT_ACTIONS.size()))
 		await process_frame
+		var current_position: Vector2 = session.player.global_position
+		path_distance += previous_position.distance_to(current_position)
+		previous_position = current_position
+	_clear_movement_actions()
 	var elapsed_wall := float(Time.get_ticks_msec() - started_at) / 1000.0
 	var active_seconds := float(session.player_active_time)
 	var result := "victory" if session.run_over and session._run_result_overlay.visible else "timeout"
@@ -158,21 +172,26 @@ func _run_case(tier: String, difficulty_id: String, replicate: int, progression:
 	var outgoing_damage := monitor.total_damage
 	var outgoing_dps := outgoing_damage / active_seconds if active_seconds > 0.0 else 0.0
 	var net_hp_loss: float = initial_hp - session.player_hp
-	print("%s,%s,%d,%d,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f,%d,%d,%d,%.2f,%.2f,%.2f,%s" % [
-		tier, difficulty_id, replicate + 1, unlocked_count, hp_bonus, damage_bonus, speed_bonus, crit_bonus,
-		active_seconds, elapsed_wall, session.wave_director.wave, session.kill_count,
+	print("%s,%s,%s,%d,%d,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f,%d,%d,%d,%.2f,%.2f,%.2f,%s" % [
+		tier, difficulty_id, movement_pattern, replicate + 1, unlocked_count, hp_bonus, damage_bonus, speed_bonus, crit_bonus,
+		active_seconds, elapsed_wall, path_distance, session.wave_director.wave, session.kill_count,
 		session.player_level, outgoing_damage, outgoing_dps, net_hp_loss, result,
 	])
 	if active_seconds <= 0.0 or monitor.last_sequence <= 0:
 		_case_failed = true
 		_fail("Survey produced no simulation time or combat events for %s/%s" % [tier, difficulty_id])
+		return
+	if movement_pattern == "square" and path_distance < 100.0:
+		_case_failed = true
+		_fail("Square movement produced only %.1f units of travel for %s/%s" % [path_distance, tier, difficulty_id])
+		return
 	Engine.time_scale = 1.0
 	session.queue_free()
 	monitor.queue_free()
 	await process_frame
 
 func _arguments() -> Dictionary:
-	var result := {"tier": "all", "difficulty": "all"}
+	var result := {"tier": "all", "difficulty": "all", "movement": "still"}
 	for argument in OS.get_cmdline_user_args():
 		if argument.begins_with("--tier="):
 			result["tier"] = argument.trim_prefix("--tier=")
@@ -180,7 +199,22 @@ func _arguments() -> Dictionary:
 			result["difficulty"] = argument.trim_prefix("--difficulty=")
 		elif argument.begins_with("--replicates="):
 			result["replicates"] = argument.trim_prefix("--replicates=")
+		elif argument.begins_with("--movement="):
+			result["movement"] = argument.trim_prefix("--movement=")
 	return result
+
+func _set_movement_action(action_index: int) -> void:
+	var action: String = MOVEMENT_ACTIONS[action_index]
+	if action == _pressed_movement_action:
+		return
+	_clear_movement_actions()
+	_pressed_movement_action = action
+	Input.action_press(action)
+
+func _clear_movement_actions() -> void:
+	if not _pressed_movement_action.is_empty():
+		Input.action_release(_pressed_movement_action)
+		_pressed_movement_action = ""
 
 func _fail(message: String) -> void:
 	_case_failed = true

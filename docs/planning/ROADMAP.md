@@ -501,7 +501,8 @@ Travail requis :
 - [ ] **P6.9 — Calibration**
   - [x] Ajouter `game/tests/progression_balance_survey.gd`, un relevé reproductible en sandbox de profil : nouveau profil, profil intermédiaire (44 nodes Core Stats, 8 % PV / 6 % dégâts / 4 % vitesse / 2,5 points de critique) et arbre complet (100 nodes, 10,7 % PV / 9 % dégâts / 6 % vitesse / 4 points de critique). Il utilise les vrais bonus du service de progression, des sauvegardes temporaires dédiées et ne persiste aucune récompense de run.
   - [x] Comparer une baseline immobile sur les cinq difficultés, trois seeds appariés entre profils. Les résultats détaillés et leurs limites sont consignés dans `docs/qa/TESTS.md`.
-  - [ ] Collecter des parcours représentatifs avec déplacement joueur; la baseline immobile meurt en vague 1 et ne mesure donc pas la durée d’une run complète ni son équilibre en jeu.
+  - [x] Ajouter un parcours scripté de déplacement carré, piloté par les actions clavier en jeu, et collecter un premier relevé exploratoire sur les trois profils et cinq difficultés. Cette mesure ne constitue pas une simulation de joueur humain.
+  - [ ] Collecter des parcours représentatifs avec déplacement joueur et plusieurs seeds; le parcours carré n’est pas un modèle de navigation/évitement humain et le baseline immobile ne mesure pas la durée d’une run complète.
   - [ ] Ajuster uniquement les paramètres dont le statut autorise l’équilibrage.
 
 **Critère de sortie :** boucle permanente complète, compréhensible, migrable, idempotente et calibrée sans fuite vers Sandbox.

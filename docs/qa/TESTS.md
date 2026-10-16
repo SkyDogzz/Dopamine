@@ -44,6 +44,19 @@
 - [x] Le script s’exécute avec `-- --tier=fresh --difficulty=easy --replicates=1` pour un cas ciblé; `--replicates=N` accepte 1 à 10.
 - [x] Godot retourne le code 0, avec un avertissement ObjectDB de ressources encore référencées à la fermeture, également visible sur les parcours du harness; il n’affecte pas les résultats imprimés.
 
+### Parcours carré scripté — 2026-10-16
+
+- [x] Option `--movement=square` pilote le contrôleur réel avec les actions droite, bas, gauche, haut, en changeant de direction toutes les trois secondes simulées; la distance cumulée parcourue est ajoutée au CSV. `--movement=still` conserve le protocole précédent par défaut.
+- [x] Smoke exploratoire exécuté avec `--movement=square --replicates=1` : 3 profils × 5 difficultés, même seed initial par difficulté entre profils. Chaque run utilise la session réelle, XP/coffres artificiellement à portée, auto-choix et vitesse ×4. La distance minimale mesurée était >3 200 unités; aucun cas n’a échoué au contrôle de déplacement.
+
+| Profil | Easy (s / vague / kills) | Normal | Hard | Nightmare | Chaos |
+|---|---:|---:|---:|---:|---:|
+| Neuf | 84,0 / 3 / 15 | 61,7 / 3 / 10 | 38,7 / 2 / 0 | 32,5 / 2 / 0 | 34,5 / 2 / 0 |
+| Intermédiaire | 84,5 / 3 / 8 | 96,0 / 4 / 22 | 43,5 / 2 / 0 | 37,3 / 2 / 0 | 12,9 / 1 / 0 |
+| Arbre complet | 401,2 / 12 / 292 | 64,9 / 3 / 7 | 29,3 / 1 / 0 | 30,4 / 2 / 0 | 40,9 / 2 / 0 |
+
+- [ ] Ce parcours est scripté et synthétique, sans décision d’évitement, avec un seul seed par combinaison. Des reruns identiques varient (fresh/Easy : 71–85 s et 8–15 kills observés), donc les chiffres du tableau sont un relevé exploratoire et non un résultat statistique. Il ne permet pas de représenter un joueur, comparer statistiquement les builds ou ajuster des paramètres **[PROPOSÉS]**; aucun tuning n’a été modifié. Les parcours humains et plusieurs seeds restent requis pour fermer P6.9.
+
 ## P6.3 — Portée de ramassage équipement et XP — 2026-10-16
 
 - [x] `equipment_stats_smoke.gd` charge un seul bonus d’équipement par profil et lance une session Survival séparée par stat; vérifie HP, mobilité, dégâts, cadence, chance et dégâts critiques, soin par élimination, aire, cooldown, XP, portée de collecte et vitesse projectile.
