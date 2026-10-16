@@ -1,0 +1,202 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="Theme" path="res://themes/dopamine_ui.tres" id="1_theme"]
+[ext_resource type="Script" path="res://scripts/sandbox_lab.gd" id="2_script"]
+[ext_resource type="Script" path="res://scripts/simulation_view.gd" id="3_view"]
+
+[node name="SandboxLab" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_theme")
+script = ExtResource("2_script")
+
+[node name="Root" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 10.0
+offset_top = 8.0
+offset_right = -10.0
+offset_bottom = -8.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 5
+
+[node name="Header" type="HBoxContainer" parent="Root"]
+layout_mode = 2
+
+[node name="Title" type="Label" parent="Root/Header"]
+layout_mode = 2
+theme_type_variation = "PixelHeading"
+theme_override_colors/font_color = Color(0.215686, 0.909804, 0.960784, 1)
+theme_override_font_sizes/font_size = 10
+text = "SANDBOX LAB  /  NO PROGRESSION"
+
+[node name="Spacer" type="Control" parent="Root/Header"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="HomeButton" type="Button" parent="Root/Header"]
+custom_minimum_size = Vector2(58, 20)
+layout_mode = 2
+focus_mode = 2
+text = "ACCUEIL"
+
+[node name="Body" type="HSplitContainer" parent="Root"]
+layout_mode = 2
+size_flags_vertical = 3
+split_offset = 375
+
+[node name="Left" type="VBoxContainer" parent="Root/Body"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="SimulationView" type="Control" parent="Root/Body/Left"]
+custom_minimum_size = Vector2(320, 235)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+clip_contents = true
+script = ExtResource("3_view")
+
+[node name="Controls" type="HBoxContainer" parent="Root/Body/Left"]
+layout_mode = 2
+theme_override_constants/separation = 3
+
+[node name="PauseButton" type="Button" parent="Root/Body/Left/Controls"]
+custom_minimum_size = Vector2(54, 20)
+layout_mode = 2
+focus_mode = 2
+text = "PAUSE"
+
+[node name="SpawnButton" type="Button" parent="Root/Body/Left/Controls"]
+custom_minimum_size = Vector2(58, 20)
+layout_mode = 2
+focus_mode = 2
+text = "SPAWN x10"
+
+[node name="KillButton" type="Button" parent="Root/Body/Left/Controls"]
+custom_minimum_size = Vector2(50, 20)
+layout_mode = 2
+focus_mode = 2
+text = "KILL ALL"
+
+[node name="ResetButton" type="Button" parent="Root/Body/Left/Controls"]
+custom_minimum_size = Vector2(48, 20)
+layout_mode = 2
+focus_mode = 2
+text = "RESET"
+
+[node name="SpeedSelect" type="OptionButton" parent="Root/Body/Left/Controls"]
+custom_minimum_size = Vector2(56, 20)
+layout_mode = 2
+focus_mode = 2
+item_count = 0
+
+[node name="Side" type="ScrollContainer" parent="Root/Body"]
+custom_minimum_size = Vector2(235, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+horizontal_scroll_mode = 0
+
+[node name="Sections" type="VBoxContainer" parent="Root/Body/Side"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Status" type="Label" parent="Root/Body/Side/Sections"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.831373, 0.278431, 1)
+theme_override_font_sizes/font_size = 8
+text = "SIMULATION READY"
+autowrap_mode = 2
+
+[node name="PresetTitle" type="Label" parent="Root/Body/Side/Sections"]
+layout_mode = 2
+theme_type_variation = "PixelHeading"
+theme_override_font_sizes/font_size = 8
+text = "PRESET / BUILD"
+
+[node name="PresetId" type="LineEdit" parent="Root/Body/Side/Sections"]
+custom_minimum_size = Vector2(0, 20)
+layout_mode = 2
+focus_mode = 2
+placeholder_text = "preset id"
+text = "lab_default"
+
+[node name="BuildJson" type="TextEdit" parent="Root/Body/Side/Sections"]
+custom_minimum_size = Vector2(0, 64)
+layout_mode = 2
+focus_mode = 2
+placeholder_text = "Initial build JSON (weapons/relics/equipment/stats)"
+
+[node name="BuildNote" type="Label" parent="Root/Body/Side/Sections"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.831373, 0.278431, 1)
+theme_override_font_sizes/font_size = 7
+text = "BUILD VALIDATED AND STORED; WEAPON COMBAT ROUTING NOT CONNECTED YET."
+autowrap_mode = 2
+
+[node name="PresetActions" type="HBoxContainer" parent="Root/Body/Side/Sections"]
+layout_mode = 2
+theme_override_constants/separation = 3
+
+[node name="SavePreset" type="Button" parent="Root/Body/Side/Sections/PresetActions"]
+custom_minimum_size = Vector2(58, 21)
+layout_mode = 2
+focus_mode = 2
+text = "SAVE"
+
+[node name="LoadPreset" type="Button" parent="Root/Body/Side/Sections/PresetActions"]
+custom_minimum_size = Vector2(58, 21)
+layout_mode = 2
+focus_mode = 2
+text = "LOAD"
+
+[node name="ExportCode" type="Button" parent="Root/Body/Side/Sections/PresetActions"]
+custom_minimum_size = Vector2(58, 21)
+layout_mode = 2
+focus_mode = 2
+text = "COPY CODE"
+
+[node name="ImportCode" type="Button" parent="Root/Body/Side/Sections/PresetActions"]
+custom_minimum_size = Vector2(58, 21)
+layout_mode = 2
+focus_mode = 2
+text = "IMPORT"
+
+[node name="ShareCode" type="LineEdit" parent="Root/Body/Side/Sections"]
+custom_minimum_size = Vector2(0, 20)
+layout_mode = 2
+focus_mode = 2
+placeholder_text = "DSLAB1: share code"
+
+[node name="EnemyTitle" type="Label" parent="Root/Body/Side/Sections"]
+layout_mode = 2
+theme_type_variation = "PixelHeading"
+theme_override_font_sizes/font_size = 8
+text = "ENEMY SPAWN"
+
+[node name="EnemySelect" type="OptionButton" parent="Root/Body/Side/Sections"]
+custom_minimum_size = Vector2(0, 21)
+layout_mode = 2
+focus_mode = 2
+item_count = 0
+
+[node name="PlayerModeNote" type="Label" parent="Root/Body/Side/Sections"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.831373, 0.278431, 1)
+theme_override_font_sizes/font_size = 7
+text = "NO PLAYER ENTITY IN THIS SIMULATION CONTEXT"
+autowrap_mode = 2
+
+[node name="Metrics" type="Label" parent="Root/Body/Side/Sections"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 8
+text = "ENTITIES 0\nSIM 0.00 s"

@@ -113,6 +113,14 @@ theme_override_colors/font_color = Color(0.647059, 0.682353, 0.764706, 1)
 theme_override_font_sizes/font_size = 8
 text = "SANDBOX DEV"
 
+[node name="SandboxLabButton" type="Button" parent="Content/Columns/MenuPanel/Menu"]
+custom_minimum_size = Vector2(0, 19)
+layout_mode = 2
+focus_mode = 2
+theme_override_colors/font_color = Color(0.215686, 0.909804, 0.960784, 1)
+theme_override_font_sizes/font_size = 8
+text = "SANDBOX LAB"
+
 [node name="Identity" type="VBoxContainer" parent="Content/Columns"]
 layout_mode = 2
 size_flags_horizontal = 3

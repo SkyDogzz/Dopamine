@@ -377,6 +377,7 @@ Pour le catalogue, la validation JSON et des références a aussi été vérifi�
 
 ## Progression et modes
 
+- [x] (2026-10-16) `sandbox_lab_smoke.gd` vérifie la scène Lab, l’absence de services de progression/save, un spawn de dix ennemis dans `CombatSimulation` et le CRUD d’un preset dans un `XDG_DATA_HOME` isolé. `launch_navigation_smoke.gd` vérifie l’entrée Lab séparée de `SANDBOX DEV`. Les armes du build et le God Mode ne sont pas encore reliés au combat.
 - [x] (2026-10-16) `sandbox_preset_smoke.gd` vérifie le round-trip du share code `DSLAB1:`, le schéma fermé, le rejet des champs de chemin, la détection d’une corruption, la limite JSON de 1 Mio, profondeur 16, collections de 256 éléments, et CRUD du magasin sous un répertoire de test isolé avec rejet d’un chemin `../`.
 - [x] (2026-10-16) Le même smoke démarre `SandboxLabContext` sans service de progression/save, refuse transactionnellement un preset invalide et applique un reset uniquement en pause; l’entrée menu et le contrôle par sentinelle restent à faire.
 - [x] (2026-10-16) Le smoke vérifie que le build de preset hydrate le modèle Sandbox, accepte une arme catalogue et refuse ID inconnu/niveau au-dessus du cap sans remplacer l’état actif. Les caps 64 armes, 128 reliques et niveau 100 restent **[PROPOSÉS]**.

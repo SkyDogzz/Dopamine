@@ -6,6 +6,7 @@ signal play_requested
 @onready var _options_button: Button = $Content/Columns/MenuPanel/Menu/OptionsButton
 @onready var _quit_button: Button = $Content/Columns/MenuPanel/Menu/QuitButton
 @onready var _sandbox_button: Button = $Content/Columns/MenuPanel/Menu/SandboxButton
+@onready var _sandbox_lab_button: Button = $Content/Columns/MenuPanel/Menu/SandboxLabButton
 
 var _options_panel: Control
 
@@ -15,6 +16,7 @@ func _ready() -> void:
 	_options_button.pressed.connect(_on_options_pressed)
 	_quit_button.pressed.connect(_on_quit_pressed)
 	_sandbox_button.pressed.connect(_on_sandbox_pressed)
+	_sandbox_lab_button.pressed.connect(_on_sandbox_lab_pressed)
 	_play_button.grab_focus()
 
 func _on_play_pressed() -> void:
@@ -32,6 +34,11 @@ func _on_sandbox_pressed() -> void:
 	var error := get_tree().change_scene_to_file("res://scenes/main.tscn")
 	if error != OK:
 		push_error("Could not open developer Sandbox: %s" % error_string(error))
+
+func _on_sandbox_lab_pressed() -> void:
+	var error := get_tree().change_scene_to_file("res://scenes/sandbox_lab.tscn")
+	if error != OK:
+		push_error("Could not open Sandbox Lab: %s" % error_string(error))
 
 func _on_options_pressed() -> void:
 	if _options_panel != null:

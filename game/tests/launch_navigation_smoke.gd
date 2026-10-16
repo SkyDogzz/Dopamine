@@ -35,7 +35,7 @@ func _run() -> void:
 	if int(skyline_lights.get("_last_blink_step")) <= initial_blink_step:
 		_fail("Neon skyline signage should animate while the launch menu is open")
 		return
-	for control_name in ["PlayButton", "OptionsButton", "QuitButton", "SandboxButton"]:
+	for control_name in ["PlayButton", "OptionsButton", "QuitButton", "SandboxButton", "SandboxLabButton"]:
 		var button := launch_menu.get_node_or_null("%s/%s" % [MENU_PATH, control_name]) as Button
 		if button == null or button.focus_mode == Control.FOCUS_NONE:
 			_fail("Launch menu should expose a focusable %s" % control_name)
@@ -126,6 +126,13 @@ func _run() -> void:
 	if menu_rect.position.x >= logical_viewport.size.x * 0.1 or identity_rect.position.x <= menu_rect.end.x or \
 		not logical_viewport.encloses(menu_rect) or not logical_viewport.encloses(identity_rect):
 		_fail("Launch menu should place its vertical menu at the left of the identity area: %s / %s" % [menu_rect, identity_rect])
+		return
+	var sandbox_lab_button := current_scene.get_node("%s/SandboxLabButton" % MENU_PATH) as Button
+	sandbox_lab_button.pressed.emit()
+	await process_frame
+	await process_frame
+	if current_scene == null or current_scene.scene_file_path != "res://scenes/sandbox_lab.tscn":
+		_fail("The separate Sandbox Lab button should open the player Lab scene")
 		return
 	if "--capture" in OS.get_cmdline_user_args():
 		await RenderingServer.frame_post_draw

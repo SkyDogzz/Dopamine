@@ -538,9 +538,9 @@ Travail requis :
 P1 livre le Sandbox développeur et ne remplace pas cette feature produit.
 
 - [ ] **P8.1 — Entrée et contexte isolé**
-  - [ ] Ajouter l’accès Sandbox Lab au menu avant sélection/création de save; l’entrée actuelle reste le Sandbox développeur P1.
+  - [x] Ajouter l’accès distinct Sandbox Lab au menu avant sélection/création de save; l’entrée `SANDBOX DEV` reste le Sandbox développeur P1.
   - [x] Ajouter `SandboxLabContext` mémoire : il valide le preset, instancie uniquement `CombatSimulation`, n’injecte aucun service de progression/save et réinitialise transactionnellement seulement lorsque la simulation est en pause.
-  - [ ] Vérifier sentinelle et chemins de sauvegarde séparés.
+  - [x] Smoke dédié utilise un `XDG_DATA_HOME` isolé, vérifie le spawn et le stockage local du preset; aucune donnée n’est écrite sous `user://saves`.
 - [ ] **P8.2 — Build et configuration**
   - [x] Ajouter `SandboxBuild` comme modèle isolé : 10 armes, 11 reliques, évolutions appariées, stats personnalisées finies et équipements de test libres. Validation atomique avant remplacement du build.
   - [ ] Créer l’éditeur de build initial et relier ses valeurs au combat; les plafonds proposés restent configurables/arbitrables.
@@ -559,8 +559,9 @@ P1 livre le Sandbox développeur et ne remplace pas cette feature produit.
   - [ ] Construire une copie Sandbox modifiable.
   - [ ] Comparer la sauvegarde source avant/après et tester import invalide.
 - [ ] **P8.5 — Outils de simulation**
-  - [ ] Ajouter God mode et confirmer qu’il ne traverse pas vers Survival.
-  - [ ] Ajouter commandes kill/spawn/clear/reset/wave progressivement.
+  - [ ] Ajouter God mode et confirmer qu’il ne traverse pas vers Survival; le contexte actuel n’a pas d’entité joueur.
+  - [x] Première tranche UI ajoute pause, vitesse, spawn d’ennemis, kill all et reset à `CombatSimulation`.
+  - [ ] Ajouter clear/reset cooldowns/wave et autres commandes Lab.
   - [ ] Ajouter logs RNG et DPS par fenêtre/source.
 - [ ] **P8.6 — Snapshots**
   - [ ] Lister l’état minimal à capturer, y compris RNG, clocks, queues et build.
