@@ -8,6 +8,12 @@ const IMPACTS := ["impact_spark", "impact_star", "impact_slash", "impact_pop", "
 const PROJECTILES := ["projectile_lightning", "projectile_inferno", "projectile_crimson", "projectile_enemy", "projectile_minigun", "projectile_toxic_cloud", "projectile_sawblades", "projectile_meteor", "projectile_starfall_fragment", "projectile_prism_laser", "projectile_prism_secondary", "projectile_void_orb", "projectile_frost_nova", "projectile_infinite_circuit", "projectile_wildfire", "projectile_bloodstorm", "projectile_event_horizon", "projectile_absolute_zero", "projectile_pandemic", "projectile_razorstorm", "projectile_starfall", "projectile_spectrum_collapse", "projectile_unique_lightning_burst", "projectile_evolution_shockwave"]
 
 func _initialize() -> void:
+	var icon_builder := FileAccess.get_file_as_string("res://tools/build_catalog_icon_assets.gd")
+	if not FileAccess.file_exists("res://assets/source/catalog_weapons/weapon_lightning_conductor_reference.png") or \
+		not icon_builder.contains("weapon_lightning_conductor_reference.png"):
+		push_error("The Lightning Conductor icon should retain its dedicated rebuildable visual reference")
+		quit(1)
+		return
 	for weapon_id in WEAPONS:
 		if not _check_icon("weapon_" + weapon_id) or not _check_icon("evolution_" + weapon_id):
 			quit(1)

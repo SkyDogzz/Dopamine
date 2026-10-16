@@ -24,6 +24,11 @@ func _run() -> void:
 	if title.get_theme_color("font_color") != Color("#37E8F5"):
 		_fail("Weapon chests should use the weapon-family cyan accent")
 		return
+	if "--capture" in OS.get_cmdline_user_args():
+		await RenderingServer.frame_post_draw
+		if root.get_texture().get_image().save_png("/tmp/dopamine-lightning-chest-icon.png") != OK:
+			_fail("Could not capture the current Lightning Conductor chest icon")
+			return
 	var original_size: Vector2i = root.size
 	for size in [Vector2i(960, 600), Vector2i(1280, 800), Vector2i(1600, 900)]:
 		root.size = size

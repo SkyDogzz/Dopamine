@@ -345,6 +345,12 @@ Le runner est fourni par `game/scripts/scenario_runner.gd` et consomme un fichie
 - [x] Le smoke Sandbox conserve son profil sentinelle inchangé; le smoke d’assets contrôle dimensions, palettes, sources Aseprite et la densité réduite de la tuile active.
 - [ ] Manette physique, plein écran sur écran réel et sortie audio matérielle restent à vérifier; la simulation de manette est synthétique et l’audio utilise le driver dummy en environnement Xvfb.
 
+## Icône catalogue — Lightning Conductor (2026-10-16)
+
+- [x] Référence générée dédiée conservée dans `game/assets/source/catalog_weapons/`; le builder remplace l’ancienne cellule aplatie et régénère le PNG 32×32 ainsi que sa source Aseprite depuis `DEDICATED_ICON_REFERENCES`.
+- [x] `catalog_icon_assets_smoke.gd` vérifie la référence de reconstruction et les contraintes existantes de dimensions, palette et source éditable.
+- [x] `catalog_icon_assets_smoke.gd`, coffre avec capture, `survival_hud_smoke.gd` et `survival_pause_inventory_smoke.gd` passent sous Godot 4.7.2; l’icône a été inspectée dans la carte du coffre.
+
 ## Art combat — roster statique (2026-10-16)
 
 - [x] Import Godot 4.7.2, `catalog_icon_assets_smoke.gd` (9 ennemis, élite, 2 boss; dimensions 24×24/96×96, impacts 64×64, palette et sources), `render_batching_smoke.gd`, `sandbox_ui_smoke.gd` avec profil isolé et `survival_entry_smoke.gd` passent.
