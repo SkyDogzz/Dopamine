@@ -31,6 +31,9 @@ func _run() -> void:
 	if not await _void_orb_level_progression():
 		_fail("Void Orb levels 2–5 should apply their proposed damage, radius, duration and pull-force upgrades")
 		return
+	if not await _prism_laser_level_progression():
+		_fail("Prism Laser levels 2–5 should apply their proposed damage, range, tracking and damage upgrades")
+		return
 	if not await _toxic_cloud_prioritizes_durable_targets():
 		_fail("Toxic Cloud should prioritize the highest-health living enemy in range, breaking ties by distance")
 		return
@@ -537,6 +540,69 @@ func _void_orb_level_progression() -> bool:
 			not is_equal_approx(float(projectile["attraction_radius"]), expected_radius) or \
 			absf(float(projectile["remaining_seconds"]) - expected_lifetime) > 0.1 or \
 			not is_equal_approx(float(projectile["attraction_speed"]), expected_force):
+			session.queue_free()
+			return false
+		session.simulation.kill_all()
+		if not await _wait_for_no_entities(session):
+			session.queue_free()
+			return false
+	session.queue_free()
+	return true
+
+func _prism_laser_level_progression() -> bool:
+	var session: Node2D = load("res://scenes/survival_session.tscn").instantiate()
+	session.spawn_initial_enemy = false
+	session.wave_spawning_enabled = false
+	session.skip_starting_weapon_choice = true
+	session.weapon_enabled = false
+	session.prism_laser_projectile_speed = 100.0
+	session.prism_laser_range = 200.0
+	root.add_child(session)
+	await process_frame
+	session.simulation.set_speed(1.0)
+	if not await _wait_for_simulation_speed(session, 1.0):
+		session.queue_free()
+		return false
+	session.loadout._weapon_levels.erase("prism_laser")
+	var base_damage := 0.0
+	for level in range(1, session.loadout.MAX_LEVEL + 1):
+		if not session.loadout.apply_offer("weapon:prism_laser"):
+			session.queue_free()
+			return false
+		var origin: Vector2 = session.player.global_position
+		session._entities = [{"id": {"index": 104, "generation": 1}, "components": {
+			"Health": {"current": 100.0}, "Transform2D": {"x": origin.x + 20.0, "y": origin.y},
+		}}]
+		session._next_prism_time = 0.0
+		session.weapon_enabled = true
+		session._fire_prism_laser(float(level), false)
+		session.weapon_enabled = false
+		var shots := await _wait_for_projectile_count(session, 1, "prism_laser")
+		if shots.is_empty():
+			session.queue_free()
+			return false
+		var shot: Dictionary = shots[0]["components"]
+		var velocity: Dictionary = shot["Velocity2D"]
+		var speed := Vector2(float(velocity["x"]), float(velocity["y"])).length()
+		var projectile: Dictionary = shot["Projectile"]
+		if level == 1:
+			base_damage = float(projectile["damage"])
+		var expected_damage: float = base_damage * (1.2 if level >= 2 else 1.0) * (1.25 if level >= 5 else 1.0)
+		var expected_speed: float = session.prism_laser_projectile_speed
+		var range_multiplier: float = 1.2 if level >= 3 else 1.0
+		var expected_lifetime: float = session.prism_laser_range * (180.0 / 620.0) * range_multiplier / expected_speed
+		if not is_equal_approx(float(projectile["damage"]), expected_damage) or \
+			absf(speed - expected_speed) > 0.1 or absf(float(projectile["remaining_seconds"]) - expected_lifetime) > 0.1:
+			session.queue_free()
+			return false
+		session._entities = [{"id": {"index": 104, "generation": 1}, "components": {
+			"Health": {"current": 100.0}, "Transform2D": {"x": origin.x + 40.0, "y": origin.y},
+		}}]
+		session.weapon_enabled = true
+		session._fire_prism_laser(float(level) + 0.1, false)
+		session.weapon_enabled = false
+		var expected_follow_distance: float = session.prism_laser_projectile_speed * (1.15 if level >= 4 else 1.0) * 0.1
+		if absf(float(session._prism_beams[0]["to"].x) - (origin.x + 20.0 + expected_follow_distance)) > 0.1:
 			session.queue_free()
 			return false
 		session.simulation.kill_all()

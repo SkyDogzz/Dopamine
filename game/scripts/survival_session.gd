@@ -311,6 +311,8 @@ var _next_prism_time := 0.0
 var _next_void_orb_time := 0.0
 var _next_frost_nova_time := 0.0
 var _prism_beams: Array[Dictionary] = []
+var _prism_beam_endpoints: Array[Vector2] = []
+var _last_prism_active_time := 0.0
 var _lightning_chain_states: Dictionary = {}
 var _lightning_arcs: Array[Dictionary] = []
 var _next_lightning_chain_id := 0
@@ -1986,11 +1988,13 @@ func _fire_prism_laser(active_time: float, paused: bool) -> void:
 	if not weapon_enabled or loadout.weapon_level("prism_laser") == 0 or paused or _chest_open or run_over or prism_laser_cooldown <= 0.0:
 		return
 	var level: int = loadout.weapon_level("prism_laser")
-	var range_multiplier := (1.2 if level >= 3 else 1.0) * (1.15 if level >= 4 else 1.0)
+	var range_multiplier := 1.2 if level >= 3 else 1.0
 	var area_multiplier: float = 1.0 + (_equipment_bonus("area_pct") + loadout.global_relic_bonus("area_pct")) / 100.0
 	var laser_range := SURVIVAL_TARGETING.weapon_range(prism_laser_range, range_multiplier, area_multiplier)
 	var target := _prism_cluster_target(laser_range)
 	if target.is_empty():
+		_prism_beam_endpoints.clear()
+		_last_prism_active_time = active_time
 		return
 	var evolved: bool = loadout.is_evolved("prism_laser")
 	var damage_multiplier := (1.2 if level >= 2 else 1.0) * (1.25 if level >= 5 else 1.0)
@@ -2005,8 +2009,17 @@ func _fire_prism_laser(active_time: float, paused: bool) -> void:
 				break
 			targets.append(secondary)
 			excluded.append(secondary["id"])
+	var tracking_delta := maxf(active_time - _last_prism_active_time, 0.0)
+	_last_prism_active_time = active_time
 	for index in range(targets.size()):
-		_prism_beams.append({"from": player.global_position, "to": targets[index]["position"], "secondary": index > 0})
+		var target_position: Vector2 = targets[index]["position"]
+		if index >= _prism_beam_endpoints.size():
+			_prism_beam_endpoints.append(target_position)
+		else:
+			_prism_beam_endpoints[index] = _prism_beam_endpoints[index].move_toward(
+				target_position, prism_laser_projectile_speed * (1.15 if level >= 4 else 1.0) * tracking_delta)
+		_prism_beams.append({"from": player.global_position, "to": _prism_beam_endpoints[index], "secondary": index > 0})
+	_prism_beam_endpoints.resize(targets.size())
 	if active_time < _next_prism_time:
 		return
 	var critical: float = _roll_equipment_critical_multiplier()
@@ -2016,10 +2029,11 @@ func _fire_prism_laser(active_time: float, paused: bool) -> void:
 		var direction: Vector2 = (beam_target["position"] - player.global_position).normalized()
 		var secondary_beam: bool = index > 0
 		var projectile_type := "spectrum_collapse" if evolved and secondary_beam else "prism_laser"
-		if simulation.spawn_projectile(projectile_type, player.global_position + direction * 14.0,
+		var prism_sequence: int = simulation.spawn_projectile(projectile_type, player.global_position + direction * 14.0,
 				direction * prism_laser_projectile_speed,
 				prism_laser_damage * damage_multiplier * _persistent_damage_multiplier() * critical * (0.65 if secondary_beam else 1.0),
-				prism_laser_projectile_radius, laser_range / prism_laser_projectile_speed) > 0:
+				prism_laser_projectile_radius, laser_range / prism_laser_projectile_speed)
+		if prism_sequence > 0:
 			fired = true
 	if fired:
 		_next_prism_time = active_time + _effective_weapon_cooldown(prism_laser_cooldown)
