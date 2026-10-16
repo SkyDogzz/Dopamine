@@ -384,6 +384,14 @@ void SimulationWorker::apply(const SimulationCommand &command,
 				log(std::string("entity movement override rejected: ") + error.what());
 			}
 			break;
+		case CommandType::AttractXpOrbs:
+			simulation_.attract_xp_orbs(command.x, command.y, command.projectile_attraction_radius,
+					command.projectile_attraction_speed, static_cast<float>(command.movement_duration_seconds),
+					command.attraction_delta_seconds);
+			break;
+		case CommandType::StopXpOrbAttraction:
+			simulation_.stop_xp_orb_attraction();
+			break;
 		case CommandType::SpawnProjectile:
 			if (simulation_.entity_count() >= max_entities_) {
 				log("projectile rejected: entity count outside limits");

@@ -116,7 +116,7 @@
 ## P6.3 — Portée de ramassage équipement et XP — 2026-10-16
 
 - [x] `equipment_stats_smoke.gd` charge un seul bonus d’équipement par profil et lance une session Survival séparée par stat; vérifie HP, mobilité, dégâts, cadence, chance et dégâts critiques, soin par élimination, aire, cooldown, XP, portée de collecte et vitesse projectile.
-- [x] `survival_chest_smoke.gd` passe sous Godot 4.7.2; le rayon bonus et l’impulsion Magnet Heart collectent les orbes XP, tandis qu’un coffre placé au-delà de `chest_collection_radius` reste intact.
+- [x] `survival_chest_smoke.gd` passe sous Godot 4.7.2; le rayon bonus et Magnetic Pulse Magnet Heart attirent progressivement les orbes XP, tandis qu’un coffre placé au-delà de `chest_collection_radius` reste intact.
 
 ## P6 — Bonus automatiques des niveaux XP — 2026-10-16
 
@@ -152,6 +152,14 @@
 - [x] `survival_chest_director_smoke.gd` vérifie les chances configurables Ordinary/Elite, le filet anti-malchance configurable et les coffres boss garantis; `survival_loadout_smoke.gd` couvre les poids des offres.
 - [x] Revalidation Godot 4.7.2 : `survival_weapon_catalog_smoke.gd`, `survival_boss_attack_smoke.gd` et `survival_chest_smoke.gd` passent. `survival_elite_smoke.gd` a d'abord révélé que les profils avec deux armes/reliques débloquées ne pouvaient recevoir de coffre, car le drop exigeait exactement trois options; le filtre accepte maintenant tout pool non vide et le smoke élite passe avec cette configuration de débutant. Les smokes arme/coffre signalent encore des objets/resources en usage à leur fermeture, sans échec fonctionnel.
 - [ ] Les rerolls d’offres ne sont pas exposés pendant les runs et restent différés jusqu’à l’intégration des effets uniques de progression P6.5.
+
+## P5.1.13 — Magnetic Pulse — 2026-10-16
+
+- [x] `simulation_core_tests` vérifie l’accélération progressive des seules orbes XP dans le rayon, la vitesse maximale, le déplacement non instantané et l’arrêt du mouvement à la fin de l’impulsion.
+- [x] `survival_chest_smoke.gd` vérifie l’impulsion périodique, le mouvement visible d’une orbe sans téléportation, sa collecte seulement dans le rayon XP normal, l’arrêt complet pendant la pause, et l’exclusion des coffres.
+- [x] La GDExtension Linux et le cœur natif compilent; `simulation_core_tests`, `simulation_worker_tests`, `survival_chest_smoke.gd` et `survival_pause_smoke.gd` passent sous Godot 4.7.2.
+- [ ] Autres pickups (soins, ressources, monnaies et bonus temporaires) absents; leurs règles de création/collecte restent à réaliser avant la couverture complète du bonus global validé.
+- [ ] Intervalle 20 s, durée 1,5 s, accélération 600 et vitesse max 240 sont **[PROPOSÉS]**, à calibrer; aucune validation de balance n’est revendiquée.
 
 ## Run réelle et redémarrage Survival — 2026-10-16
 
@@ -748,7 +756,7 @@ Note de clôture : le blocage historique du smoke `sandbox_ui_smoke.gd` décrit 
 - [x] Le smoke Infinite Circuit a mis au jour une origine de tir erronée des branches (créées au-delà de leur cible, vers l’extérieur) ; elles partent maintenant du parent vers la cible suivante. Le test couvre le comportement de chaîne et d’évolution.
 - [x] `survival_wave_director_smoke.gd` vérifie que le timer de vague reste suspendu pendant les deux boss, que le decay joueur continue et que les spawns réguliers reprennent après le mid-boss de vague 12. Le smoke garde un intervalle de spawn court en mode accéléré pour tester cette reprise dans la fenêtre de run.
 - [x] `survival_wave_duration_smoke.gd` compare la durée de vague au temps de simulation déjà traité par `SurvivalSession`, en tenant compte du temps écoulé avant le début de la mesure; le contrôle a passé trois exécutions de suite.
-- [x] `survival_chest_smoke.gd` vérifie que l’offre Magnet Heart niveau 5 déclenche le rayon XP **[PROPOSÉ]** à 300 % pendant 20 secondes de simulation, que son rayon retourne au bonus normal à expiration, que ce délai reste gelé en pause et qu’un chest reste hors attraction.
+- [x] `survival_chest_smoke.gd` vérifie Magnetic Pulse niveau 5 : l’orbe accélère progressivement dans 300 % du rayon, ne se téléporte pas et n’est collectée qu’à la portée normale; le rayon de coffre reste indépendant. Le smoke contrôle aussi le gel du timer et du mouvement en pause. Intervalle, durée, accélération et vitesse max restent **[PROPOSÉS]**.
 - [x] Après ces changements, build natif Debug et suite CTest complète sous Godot 4.7.2 avec `XDG_DATA_HOME` isolé : 44/44 passent. Les smokes `survival_weapon_catalog_smoke`, `survival_run_result_smoke` et `survival_wave_director_smoke` ont également passé plusieurs exécutions ciblées.
 - [x] `pilot_asset_batch_smoke.gd` passe pour les exports animés du joueur et leurs sources; `signal_prism_asset_smoke.gd` passe pour l’emblème et son intégration à l’accueil.
 - [x] L’audit de références runtime ne trouve plus d’asset SVG parmi les visuels chargés par les scènes/scripts; les anciens SVG restants sont des références inactives, sauf une référence historique dans `combat_catalog_smoke.gd`.

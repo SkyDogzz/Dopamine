@@ -205,6 +205,24 @@ int main() {
 			"XP collection should emit its value once through a sequenced gameplay event");
 	require(!xp_simulation.entity(xp_orb).has_value() && !xp_simulation.collect_xp_orb(xp_orb, xp_events),
 			"collected XP orb should be removed and reject duplicate collection");
+	SimulationCore attracted_xp;
+	const auto attracted_orb = attracted_xp.spawn_xp_orb(100.0F, 0.0F, 1.0F);
+	const auto distant_orb = attracted_xp.spawn_xp_orb(140.0F, 0.0F, 1.0F);
+	attracted_xp.attract_xp_orbs(0.0F, 0.0F, 120.0F, 100.0F, 200.0F, 0.5);
+	const auto accelerated_orb = attracted_xp.entity(attracted_orb);
+	const auto untouched_orb = attracted_xp.entity(distant_orb);
+	require(accelerated_orb && std::abs(accelerated_orb->velocity.x + 50.0F) < 0.001F &&
+			untouched_orb && std::abs(untouched_orb->velocity.x) < 0.001F,
+			"Magnetic Pulse should accelerate only XP orbs inside its radius toward the player");
+	attracted_xp.advance(0.5);
+	require(std::abs(attracted_xp.entity(attracted_orb)->transform.x - 75.0F) < 0.001F,
+			"attracted XP orbs should move continuously instead of teleporting");
+	attracted_xp.attract_xp_orbs(0.0F, 0.0F, 120.0F, 100.0F, 200.0F, 0.5);
+	require(std::abs(attracted_xp.entity(attracted_orb)->velocity.x + 100.0F) < 0.001F,
+			"Magnetic Pulse should accelerate orbs over successive simulation steps");
+	attracted_xp.stop_xp_orb_attraction();
+	require(std::abs(attracted_xp.entity(attracted_orb)->velocity.x) < 0.001F,
+			"ending Magnetic Pulse should stop the movement it applied");
 	require(dopamine::sim::gdd_validated_player_initial_hp == 100.0F,
 			"validated initial player HP should remain 100");
 	require(std::abs(health_decay_amount(0.0, 60.0) - 97.2) < 0.000001,

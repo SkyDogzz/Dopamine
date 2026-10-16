@@ -39,6 +39,9 @@ public:
 			float chill_speed_multiplier = 1.0F, float chill_damage_multiplier = 1.0F,
 			float orbit_angular_speed = 0.0F);
 	int64_t spawn_xp_orb(Vector2 position, float xp_value);
+	int64_t attract_xp_orbs(Vector2 target, float radius, float acceleration, float max_speed,
+		double delta_seconds);
+	int64_t stop_xp_orb_attraction();
 	int64_t collect_xp_orb(int64_t index, int64_t generation);
 	int64_t apply_damage_over_time(int64_t index, int64_t generation, float damage_per_tick,
 			double interval_seconds, double duration_seconds);

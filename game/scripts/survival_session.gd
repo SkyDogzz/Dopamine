@@ -283,8 +283,11 @@ var sandbox_rng_seed := 0
 @export var bloodstorm_bleed_duration_seconds: float = 2.0
 @export_group("Prototype relic bonuses — proposed tuning")
 @export_range(0.0, 1.0) var blood_chalice_heal_per_level: float = 0.10
-@export_range(0.0, 120.0, 0.1) var magnet_heart_level_five_impulse_seconds: float = 20.0
+@export_range(0.1, 120.0, 0.1) var magnet_heart_level_five_pulse_interval_seconds: float = 20.0
+@export_range(0.1, 10.0, 0.1) var magnet_heart_level_five_pulse_duration_seconds: float = 1.5
 @export_range(1.0, 10.0, 0.1) var magnet_heart_level_five_radius_multiplier: float = 3.0
+@export_range(1.0, 2000.0, 1.0) var magnet_heart_level_five_acceleration: float = 600.0
+@export_range(1.0, 1000.0, 1.0) var magnet_heart_level_five_max_speed: float = 240.0
 @export_group("Prototype XP — proposed tuning")
 @export var xp_per_enemy: float = 5.0
 @export var xp_collection_radius: float = 36.0
@@ -360,6 +363,7 @@ var _starfall_fragments_spawned: Dictionary = {}
 var _entities: Array = []
 var _pending_xp_orbs: Dictionary = {}
 var _magnet_heart_impulse_expires_at := 0.0
+var _magnet_heart_next_pulse_at := -1.0
 var _reserved_xp_drop_positions: Array[Vector2] = []
 var _chest_director: RefCounted
 var _world_chests: Array[Dictionary] = []
@@ -783,6 +787,7 @@ func _process(_delta: float) -> void:
 			player_shield = 0.0
 		_take_player_damage(simulation.health_decay_amount(player_active_time, elapsed_active_time))
 		player_active_time += elapsed_active_time
+	_update_magnet_heart_pulse(state, elapsed_active_time)
 	_refresh_player_move_speed()
 	_last_simulation_time = current_simulation_time
 	var latest_event_sequence := _last_combat_event_sequence
@@ -1612,11 +1617,40 @@ func _collect_nearby_xp_orbs(state: Dictionary) -> void:
 
 func _xp_pickup_radius(current_simulation_time: float) -> float:
 	var pickup_radius_bonus_pct: float = _equipment_bonus("pickup_radius_pct") + loadout.global_relic_bonus("pickup_radius_pct") + _xp_run_stat_bonus("pickup_radius_pct")
-	var pickup_radius := xp_collection_radius * (1.0 + pickup_radius_bonus_pct / 100.0)
-	if loadout.relic_level("magnet_heart") >= loadout.MAX_LEVEL and \
-			current_simulation_time < _magnet_heart_impulse_expires_at:
-		pickup_radius = maxf(pickup_radius, xp_collection_radius * maxf(1.0, magnet_heart_level_five_radius_multiplier))
-	return pickup_radius
+	return xp_collection_radius * (1.0 + pickup_radius_bonus_pct / 100.0)
+
+func _update_magnet_heart_pulse(state: Dictionary, elapsed_active_time: float) -> void:
+	if loadout.relic_level("magnet_heart") < loadout.MAX_LEVEL or run_over:
+		if _magnet_heart_impulse_expires_at > 0.0:
+			simulation.stop_xp_orb_attraction()
+		_magnet_heart_impulse_expires_at = 0.0
+		_magnet_heart_next_pulse_at = -1.0
+		return
+	if not is_finite(magnet_heart_level_five_pulse_interval_seconds) or \
+			magnet_heart_level_five_pulse_interval_seconds <= 0.0 or \
+			not is_finite(magnet_heart_level_five_pulse_duration_seconds) or \
+			magnet_heart_level_five_pulse_duration_seconds <= 0.0:
+		if _magnet_heart_impulse_expires_at > 0.0:
+			simulation.stop_xp_orb_attraction()
+		_magnet_heart_impulse_expires_at = 0.0
+		_magnet_heart_next_pulse_at = -1.0
+		return
+	if bool(state["paused"]):
+		return
+	var simulation_time := float(state["simulation_time"])
+	if _magnet_heart_next_pulse_at < 0.0:
+		_magnet_heart_next_pulse_at = simulation_time + magnet_heart_level_five_pulse_interval_seconds
+	if _magnet_heart_impulse_expires_at > 0.0 and simulation_time >= _magnet_heart_impulse_expires_at:
+		simulation.stop_xp_orb_attraction()
+		_magnet_heart_impulse_expires_at = 0.0
+	while simulation_time >= _magnet_heart_next_pulse_at:
+		_magnet_heart_next_pulse_at += magnet_heart_level_five_pulse_interval_seconds
+		if _magnet_heart_impulse_expires_at <= 0.0:
+			_magnet_heart_impulse_expires_at = simulation_time + magnet_heart_level_five_pulse_duration_seconds
+	if _magnet_heart_impulse_expires_at > simulation_time and elapsed_active_time > 0.0:
+		simulation.attract_xp_orbs(player.global_position,
+			xp_collection_radius * maxf(1.0, magnet_heart_level_five_radius_multiplier),
+			magnet_heart_level_five_acceleration, magnet_heart_level_five_max_speed, elapsed_active_time)
 
 func _add_xp(amount: float) -> void:
 	player_xp += amount
@@ -1732,8 +1766,8 @@ func _on_chest_option_selected(option_id: String) -> void:
 		_show_item_level_feedback(item_family, item_id, previous_item_level)
 	if option_id == "relic:magnet_heart" and previous_magnet_heart_level < loadout.MAX_LEVEL and \
 			loadout.relic_level("magnet_heart") >= loadout.MAX_LEVEL and \
-			is_finite(magnet_heart_level_five_impulse_seconds) and magnet_heart_level_five_impulse_seconds > 0.0:
-		_magnet_heart_impulse_expires_at = float(simulation.snapshot()["simulation_time"]) + magnet_heart_level_five_impulse_seconds
+			is_finite(magnet_heart_level_five_pulse_interval_seconds) and magnet_heart_level_five_pulse_interval_seconds > 0.0:
+		_magnet_heart_next_pulse_at = float(simulation.snapshot()["simulation_time"]) + magnet_heart_level_five_pulse_interval_seconds
 	chest_option_chosen.emit(option_id)
 	simulation.resume()
 	_complete_pending_victory()
@@ -2993,7 +3027,7 @@ func _draw() -> void:
 	draw_texture_rect(GROUND_TEXTURE, Rect2(-8192.0, -8192.0, 16384.0, 16384.0), true)
 	draw_texture_rect(RUINS_TEXTURE, Rect2(-768.0, -768.0, 1536.0, 1536.0), false, Color(1.0, 1.0, 1.0, 0.88))
 	if _last_simulation_time < _magnet_heart_impulse_expires_at:
-		var impulse_radius := _xp_pickup_radius(_last_simulation_time)
+		var impulse_radius := xp_collection_radius * maxf(1.0, magnet_heart_level_five_radius_multiplier)
 		draw_arc(player.global_position, impulse_radius, 0.0, TAU, 64, Color(0.22, 0.9, 1.0, 0.42), 1.5, true)
 	_sprite_renderer.draw_projectile_trails(self)
 	_sprite_renderer.draw_batches(self)

@@ -289,7 +289,7 @@ Catalogue d’évolution défini dans le GDD :
 | Sawblades | Magnetic Coil | Razorstorm | Prototype présent : lames natives ricochets sur cibles vivantes non déjà touchées ; dégâts, cadence, vitesse et nombre de rebonds **[PROPOSÉS]**. Magnetic Coil augmente la vitesse des projectiles, bonus linéaire **[PROPOSÉ]** ; Razorstorm ajoute un rebond. Effets d'homing et feedback par niveau restent à faire. |
 | Toxic Cloud | Plague Mask | Pandemic | Le projectile devient un champ visuel persistant après impact et empoisonne les nouvelles cibles ; Pandemic transmet le DoT à la mort vers 3 cibles au plus. La durée/rayon restent **[PROPOSÉS]** et les statuts multiples **[OUVERTS]**. |
 | Prism Laser | Prism Crystal | Spectrum Collapse | Prototype de rayon continu sur cible prioritaire ; l’évolution ajoute des faisceaux secondaires distincts. Cadence, dégâts, progression et bonus **[PROPOSÉS]**. |
-| — | Magnet Heart (relique utilitaire) | Aucune | Disponible ; rayon XP augmenté avec valeur **[PROPOSÉE]** configurable ; autres pickups et impulsion absents. |
+| — | Magnet Heart (relique utilitaire) | Aucune | Disponible ; rayon XP augmenté avec valeur **[PROPOSÉE]** configurable ; Magnetic Pulse périodique prototype attire progressivement les orbes XP, autres catégories de pickups absentes. |
 
 Travail requis :
 
@@ -329,7 +329,7 @@ Travail requis :
   - [x] Ajouter Magnet Heart comme relique utilitaire sans évolution et l'inclure dans les offres Survival.
   - [x] Appliquer le bonus de rayon **[PROPOSÉ]** configurable de 25 % par niveau aux orbes XP.
   - [x] Vérifier orbe XP et chest séparément : le bonus n'élargit jamais le rayon du chest.
-  - [x] Au niveau 5, déclencher une impulsion **[PROPOSÉE]** de 20 s à 300 % du rayon XP, visualisée par un anneau; la durée suit l'horloge de simulation et gèle en pause, sans déplacer/téléporter les objets.
+  - [x] Au niveau 5, déclencher périodiquement Magnetic Pulse **[PROPOSÉE]** dans 300 % du rayon XP; le cœur natif accélère progressivement les orbes XP vers le joueur, les collecte seulement dans le rayon XP normal, puis arrête leur mouvement à la fin de l'impulsion. L'anneau, le cycle, le mouvement et la collecte gèlent en pause; aucun chest n'est affecté. Intervalle 20 s, durée 1,5 s, accélération 600 et vitesse max 240 **[PROPOSÉS]** et configurables.
   - [ ] Étendre l'attraction aux soins, ressources, monnaies et bonus temporaires lorsqu'ils existent.
 - [ ] **P5.1.14 — Slots et effets de capacité**
   - [x] Vérifier cinq slots de reliques en run normale ; `survival_loadout_smoke.gd` couvre cinq reliques distinctes, refuse une sixième et ne propose plus de nouvel item quand les slots sont pleins.

@@ -21,6 +21,9 @@ void CombatSimulation::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("spawn_status_projectile", "projectile_type", "position", "velocity", "damage", "radius", "lifetime_seconds", "status_damage_per_tick", "status_interval_seconds", "status_duration_seconds", "explosion_radius", "explosion_damage_multiplier", "ricochets", "attraction_radius", "attraction_speed", "pierces_targets", "chill_duration_seconds", "chill_speed_multiplier", "chill_damage_multiplier", "orbit_angular_speed"),
 			&CombatSimulation::spawn_status_projectile, DEFVAL(2.0), DEFVAL(0.5), DEFVAL(2.0), DEFVAL(0.0), DEFVAL(0.0), DEFVAL(0), DEFVAL(0.0), DEFVAL(0.0), DEFVAL(false), DEFVAL(0.0), DEFVAL(1.0), DEFVAL(1.0), DEFVAL(0.0));
 	ClassDB::bind_method(D_METHOD("spawn_xp_orb", "position", "xp_value"), &CombatSimulation::spawn_xp_orb);
+	ClassDB::bind_method(D_METHOD("attract_xp_orbs", "target", "radius", "acceleration", "max_speed", "delta_seconds"),
+			&CombatSimulation::attract_xp_orbs);
+	ClassDB::bind_method(D_METHOD("stop_xp_orb_attraction"), &CombatSimulation::stop_xp_orb_attraction);
 	ClassDB::bind_method(D_METHOD("collect_xp_orb", "index", "generation"), &CombatSimulation::collect_xp_orb);
 	ClassDB::bind_method(D_METHOD("apply_damage_over_time", "index", "generation", "damage_per_tick", "interval_seconds", "duration_seconds"),
 			&CombatSimulation::apply_damage_over_time);
@@ -205,6 +208,30 @@ int64_t CombatSimulation::spawn_xp_orb(Vector2 position, float xp_value) {
 	command.x = static_cast<float>(position.x);
 	command.y = static_cast<float>(position.y);
 	command.xp_value = xp_value;
+	return submit(std::move(command));
+}
+
+int64_t CombatSimulation::attract_xp_orbs(Vector2 target, float radius, float acceleration, float max_speed,
+		double delta_seconds) {
+	if (!std::isfinite(target.x) || !std::isfinite(target.y) || !std::isfinite(radius) || radius <= 0.0F ||
+			!std::isfinite(acceleration) || acceleration < 0.0F || !std::isfinite(max_speed) || max_speed <= 0.0F ||
+			!std::isfinite(delta_seconds) || delta_seconds < 0.0) {
+		return 0;
+	}
+	SimulationCommand command;
+	command.type = CommandType::AttractXpOrbs;
+	command.x = static_cast<float>(target.x);
+	command.y = static_cast<float>(target.y);
+	command.projectile_attraction_radius = radius;
+	command.projectile_attraction_speed = acceleration;
+	command.movement_duration_seconds = max_speed;
+	command.attraction_delta_seconds = delta_seconds;
+	return submit(std::move(command));
+}
+
+int64_t CombatSimulation::stop_xp_orb_attraction() {
+	SimulationCommand command;
+	command.type = CommandType::StopXpOrbAttraction;
 	return submit(std::move(command));
 }
 

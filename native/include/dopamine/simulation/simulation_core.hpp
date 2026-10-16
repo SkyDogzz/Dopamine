@@ -212,6 +212,9 @@ public:
 			float chill_speed_multiplier = 1.0F, float chill_damage_multiplier = 1.0F,
 			float orbit_angular_speed = 0.0F);
 	EntityId spawn_xp_orb(float x, float y, float xp_value);
+	void attract_xp_orbs(float target_x, float target_y, float radius, float acceleration,
+			float max_speed, double delta_seconds);
+	void stop_xp_orb_attraction();
 	bool apply_damage_over_time(EntityId target, float damage_per_tick, double interval_seconds,
 			double duration_seconds, std::string status_type = "generic");
 	bool apply_chill(EntityId target, double duration_seconds, float speed_multiplier,

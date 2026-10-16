@@ -93,6 +93,10 @@ func _run() -> void:
 		if not session.loadout.apply_offer("relic:magnet_heart"):
 			_fail("Magnet Heart should upgrade through level 5")
 			return
+	session.magnet_heart_level_five_pulse_interval_seconds = 1.0
+	session.magnet_heart_level_five_pulse_duration_seconds = 1.5
+	session.magnet_heart_level_five_acceleration = 300.0
+	session.magnet_heart_level_five_max_speed = 160.0
 	session._on_chest_option_selected("relic:magnet_heart")
 	if session.loadout.relic_level("magnet_heart") != 5 or session.loadout.apply_offer("relic:magnet_heart"):
 		_fail("Magnet Heart should stop at the proposed level cap of 5")
@@ -104,9 +108,58 @@ func _run() -> void:
 		return
 	session._world_chests.clear()
 	xp_before = session.player_xp
-	if session.simulation.spawn_xp_orb(session.player.global_position + Vector2(115.0, 0.0), 1.0) <= 0:
+	var pulse_orb_start: Vector2 = session.player.global_position + Vector2(115.0, 0.0)
+	if session.simulation.spawn_xp_orb(pulse_orb_start, 1.0) <= 0:
 		_fail("Survival should spawn the level-5 Magnet Heart XP fixture")
 		return
+	var pulse_orb_state: Dictionary = await _wait_until(session, func(snapshot: Dictionary) -> bool:
+		for entity in snapshot["entities"]:
+			var components: Dictionary = entity["components"]
+			if components.get("IsXpOrb", false) and is_equal_approx(float(components.get("XpValue", 0.0)), 1.0):
+				return true
+		return false
+	)
+	var pulse_orb_id := -1
+	for entity in pulse_orb_state.get("entities", []):
+		var components: Dictionary = entity["components"]
+		if components.get("IsXpOrb", false) and is_equal_approx(float(components.get("XpValue", 0.0)), 1.0):
+			pulse_orb_id = int(entity["id"]["index"])
+			break
+	if pulse_orb_id < 0:
+		_fail("Magnetic Pulse test should identify its XP orb in the native snapshot")
+		return
+	var moved_without_teleport := await _wait_until(session, func(snapshot: Dictionary) -> bool:
+		for entity in snapshot["entities"]:
+			if int(entity["id"]["index"]) != pulse_orb_id:
+				continue
+			var transform: Dictionary = entity["components"]["Transform2D"]
+			var orb_position := Vector2(float(transform["x"]), float(transform["y"]))
+			return orb_position.distance_to(session.player.global_position) < 115.0 and \
+				orb_position.distance_to(session.player.global_position) > session._xp_pickup_radius(float(snapshot["simulation_time"]))
+		return false
+	)
+	if moved_without_teleport.is_empty():
+		_fail("Magnetic Pulse should accelerate the XP orb toward the player without teleporting or collecting it outside normal range")
+		return
+	session.simulation.pause()
+	var paused_pulse: Dictionary = await _wait_until(session, func(snapshot: Dictionary) -> bool: return bool(snapshot["paused"]))
+	if paused_pulse.is_empty():
+		_fail("Survival should pause during Magnetic Pulse")
+		return
+	var frozen_position := Vector2.ZERO
+	for entity in paused_pulse["entities"]:
+		if int(entity["id"]["index"]) == pulse_orb_id:
+			var transform: Dictionary = entity["components"]["Transform2D"]
+			frozen_position = Vector2(float(transform["x"]), float(transform["y"]))
+			break
+	var paused_time := float(paused_pulse["simulation_time"])
+	await create_timer(0.1).timeout
+	var frozen_after_pause := _find_entity_position(session.simulation.snapshot()["entities"], pulse_orb_id)
+	if not is_equal_approx(float(session.simulation.snapshot()["simulation_time"]), paused_time) or \
+			frozen_after_pause.distance_to(frozen_position) > 0.001 or session.player_xp != xp_before:
+		_fail("Magnetic Pulse movement, collection and simulation time should freeze while paused")
+		return
+	session.simulation.resume()
 	collected_xp = await _wait_until(session, func(_snapshot: Dictionary) -> bool:
 		return session.player_xp > xp_before
 	)
@@ -116,8 +169,11 @@ func _run() -> void:
 	var impulse_expires_at: float = session._magnet_heart_impulse_expires_at
 	var impulse_radius: float = session._xp_pickup_radius(impulse_expires_at - 0.001)
 	var expired_radius: float = session._xp_pickup_radius(impulse_expires_at)
-	if not is_equal_approx(impulse_radius, 120.0) or not is_equal_approx(expired_radius, 90.0):
-		_fail("Magnet Heart impulse should use a 300% pickup radius for 20 simulation seconds")
+	var pulse_radius: float = session.xp_collection_radius * session.magnet_heart_level_five_radius_multiplier
+	var current_simulation_time: float = float(session.simulation.snapshot()["simulation_time"])
+	if not is_equal_approx(impulse_radius, 90.0) or not is_equal_approx(expired_radius, 90.0) or \
+			not is_equal_approx(pulse_radius, 120.0) or session._magnet_heart_next_pulse_at <= current_simulation_time:
+		_fail("Magnet Heart pulse should attract inside 300%% radius, preserve the 90-unit collection radius and keep its next pulse scheduled")
 		return
 	session.simulation.pause()
 	var paused_snapshot: Dictionary = await _wait_until(session, func(snapshot: Dictionary) -> bool:
@@ -200,6 +256,14 @@ func _wait_until(session: Node2D, predicate: Callable) -> Dictionary:
 		if predicate.call(snapshot):
 			return snapshot
 	return {}
+
+func _find_entity_position(entities: Array, entity_index: int) -> Vector2:
+	for entity in entities:
+		if int(entity["id"]["index"]) != entity_index:
+			continue
+		var transform: Dictionary = entity["components"]["Transform2D"]
+		return Vector2(float(transform["x"]), float(transform["y"]))
+	return Vector2.INF
 
 func _fail(message: String) -> void:
 	push_error(message)

@@ -232,6 +232,41 @@ EntityId SimulationCore::spawn_xp_orb(float x, float y, float xp_value) {
 	return id;
 }
 
+void SimulationCore::attract_xp_orbs(float target_x, float target_y, float radius, float acceleration,
+		float max_speed, double delta_seconds) {
+	if (!std::isfinite(target_x) || !std::isfinite(target_y) || !std::isfinite(radius) || radius <= 0.0F ||
+			!std::isfinite(acceleration) || acceleration < 0.0F || !std::isfinite(max_speed) || max_speed <= 0.0F ||
+			!std::isfinite(delta_seconds) || delta_seconds < 0.0) {
+		return;
+	}
+	const double radius_squared = static_cast<double>(radius) * radius;
+	for (uint32_t index = 0; index < slots_.size(); ++index) {
+		if (!slots_[index].active || !xp_orb_flags_[index]) {
+			continue;
+		}
+		const double dx = static_cast<double>(target_x) - transforms_[index].x;
+		const double dy = static_cast<double>(target_y) - transforms_[index].y;
+		const double distance_squared = dx * dx + dy * dy;
+		if (distance_squared <= 1e-12 || distance_squared > radius_squared) {
+			continue;
+		}
+		const double distance = std::sqrt(distance_squared);
+		const double velocity_x = velocities_[index].x + dx / distance * acceleration * delta_seconds;
+		const double velocity_y = velocities_[index].y + dy / distance * acceleration * delta_seconds;
+		const double speed = std::hypot(velocity_x, velocity_y);
+		const double scale = speed > max_speed ? max_speed / speed : 1.0;
+		velocities_[index] = {static_cast<float>(velocity_x * scale), static_cast<float>(velocity_y * scale)};
+	}
+}
+
+void SimulationCore::stop_xp_orb_attraction() {
+	for (uint32_t index = 0; index < slots_.size(); ++index) {
+		if (slots_[index].active && xp_orb_flags_[index]) {
+			velocities_[index] = {};
+		}
+	}
+}
+
 bool SimulationCore::apply_damage_over_time(EntityId target, float damage_per_tick, double interval_seconds,
 		double duration_seconds, std::string status_type) {
 	if (!std::isfinite(damage_per_tick) || damage_per_tick <= 0.0F || !std::isfinite(interval_seconds) ||
@@ -664,7 +699,7 @@ std::vector<CombatEvent> SimulationCore::advance(double delta_seconds) {
 			: std::vector<Transform2D>{};
 	const std::vector<Transform2D> positions_before_movement = transforms_;
 	for (std::size_t index = 0; index < slots_.size(); ++index) {
-		if (slots_[index].active && !projectile_flags_[index] && !xp_orb_flags_[index]) {
+		if (slots_[index].active && !projectile_flags_[index]) {
 			if (delta_seconds > 0.0 && health_[index].current < health_[index].maximum &&
 					enemy_types_[index].health_regen_per_second > 0.0F) {
 				health_[index].current = std::min(health_[index].maximum, health_[index].current +

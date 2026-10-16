@@ -28,6 +28,8 @@ enum class CommandType {
 	ApplySandboxOverrides,
 	SetSteeringTarget,
 	DashEntity,
+	AttractXpOrbs,
+	StopXpOrbAttraction,
 	SpawnProjectile,
 	SpawnXpOrb,
 	CollectXpOrb,
@@ -59,6 +61,7 @@ struct SimulationCommand {
 	float velocity_y = 0.0F;
 	double delta_seconds = 0.0;
 	double movement_duration_seconds = 0.0;
+	double attraction_delta_seconds = 0.0;
 	double speed_multiplier = 1.0;
 	float projectile_damage = 1.0F;
 	float projectile_radius = 3.0F;
