@@ -41,7 +41,7 @@ func _run() -> void:
 		return
 	var item_content: VBoxContainer = items.get_child(0).get_child(0).get_child(1)
 	var rarity_icon: TextureRect = items.get_child(0).get_child(0).get_child(0)
-	if rarity_icon.texture == null or rarity_icon.texture.resource_path != "res://assets/icons/rarity_legendary.png":
+	if rarity_icon.texture == null or rarity_icon.texture.resource_path != "res://assets/icons/catalog/rarity_legendary.png":
 		_fail("Inventory rows should display their equipment rarity icon")
 		return
 	var choose_effect_button := _find_button(item_content, "CHOOSE EFFECT")

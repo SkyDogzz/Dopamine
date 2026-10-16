@@ -60,9 +60,9 @@ Le catalogue actif est défini dans `game/data/combat_catalog.json` :
 
 | Fichiers actuels | Cible de l’inventaire |
 |---|---|
-| `equipment_helmet.png`, `equipment_armor.png`, `equipment_gloves.png`, `equipment_boots.png`, `equipment_amulet.png`, `equipment_ring.png` | Refaire le set homogène des 6 emplacements d’équipement. |
-| `rarity_normal.png`, `rarity_magic.png`, `rarity_mystic.png`, `rarity_legendary.png`, `rarity_mythic.png` | Refaire les 5 marqueurs de rareté en conservant une lecture distincte par forme et valeur, pas seulement par teinte. |
-| `resource_essence.png`, `resource_powder.png`, `achievement_medal.png`, `run_record.png`, `skill_node.png` | Refaire les 5 icônes d’état existantes. Le nœud générique ne préjuge pas du graphe final des compétences. |
+| `icons/catalog/equipment_*.png` (6), sources dans `source/catalog_ui/` | Set homogène des 6 emplacements d’équipement livré et utilisé dans l’inventaire permanent. |
+| `icons/catalog/rarity_*.png` (5), sources dans `source/catalog_ui/` | Marqueurs distincts des 5 raretés livrés et utilisés dans les écrans équipement/récompense. |
+| `icons/catalog/resource_*.png`, `skill_node.png`, `achievement_medal.png`, `run_record.png` (5) | Icônes livrées. Les deux ressources sont utilisées; les marqueurs de compétence, médaille et record n’ajoutent aucun comportement/fonctionnalité. |
 | `PressStart2P-Regular.ttf`, `DejaVuSans.ttf` et licences associées | Revue de la hiérarchie titre pixel / texte moderne et de la lisibilité. Le choix exact des fontes reste **[OUVERT]** dans l’Art Bible, même si ces fontes sont déjà utilisées dans le projet. |
 | `backgrounds/title_skyline.png`; source aplatie `docs/art/source/title_skyline_generated.png` | Le décor courant est 640×360 et limité à 30 couleurs de la palette, mais n’a pas de source Aseprite. Le recréer/authorer dans le format source exigé et le revoir dans la nouvelle composition d’accueil. |
 

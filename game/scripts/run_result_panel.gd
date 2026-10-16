@@ -10,8 +10,8 @@ signal restart_requested
 @onready var _restart_button: Button = $Content/RestartButton
 
 const RESOURCE_ICONS := [
-	"res://assets/icons/resource_essence.png",
-	"res://assets/icons/resource_powder.png",
+	"res://assets/icons/catalog/resource_essence.png",
+	"res://assets/icons/catalog/resource_powder.png",
 ]
 
 func _ready() -> void:
@@ -46,9 +46,9 @@ func show_result(victory: bool, wave_number: int, active_seconds: float, kills: 
 			var equipment: Dictionary = reward.get("equipment", {})
 			_equipment.text = "EQUIPMENT: %s %s" % [str(equipment.get("rarity", "")).to_upper(), str(equipment.get("slot", "")).to_upper()]
 			var rarity := str(equipment.get("rarity", "normal"))
-			var icon_path := "res://assets/icons/rarity_%s.png" % rarity
+			var icon_path := "res://assets/icons/catalog/rarity_%s.png" % rarity
 			if not ResourceLoader.exists(icon_path):
-				icon_path = "res://assets/icons/equipment_%s.png" % str(equipment.get("slot", ""))
+				icon_path = "res://assets/icons/catalog/equipment_%s.png" % str(equipment.get("slot", ""))
 			_add_icon_row("EquipmentIcon", _equipment, [icon_path])
 			if equipment.get("unique_effect_id") == "pending_choice":
 				_equipment.text += "  •  UNIQUE EFFECT CHOICE PENDING"

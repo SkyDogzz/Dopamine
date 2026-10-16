@@ -16,19 +16,19 @@ signal dismantle_requested(instance_id: String)
 var progression_service: RefCounted
 
 const SLOT_ICONS := {
-	"helmet": "res://assets/icons/equipment_helmet.png",
-	"armor": "res://assets/icons/equipment_armor.png",
-	"gloves": "res://assets/icons/equipment_gloves.png",
-	"boots": "res://assets/icons/equipment_boots.png",
-	"amulet": "res://assets/icons/equipment_amulet.png",
-	"ring": "res://assets/icons/equipment_ring.png",
+	"helmet": "res://assets/icons/catalog/equipment_helmet.png",
+	"armor": "res://assets/icons/catalog/equipment_armor.png",
+	"gloves": "res://assets/icons/catalog/equipment_gloves.png",
+	"boots": "res://assets/icons/catalog/equipment_boots.png",
+	"amulet": "res://assets/icons/catalog/equipment_amulet.png",
+	"ring": "res://assets/icons/catalog/equipment_ring.png",
 }
 const RARITY_ICONS := {
-	"normal": "res://assets/icons/rarity_normal.png",
-	"magic": "res://assets/icons/rarity_magic.png",
-	"mystic": "res://assets/icons/rarity_mystic.png",
-	"legendary": "res://assets/icons/rarity_legendary.png",
-	"mythic": "res://assets/icons/rarity_mythic.png",
+	"normal": "res://assets/icons/catalog/rarity_normal.png",
+	"magic": "res://assets/icons/catalog/rarity_magic.png",
+	"mystic": "res://assets/icons/catalog/rarity_mystic.png",
+	"legendary": "res://assets/icons/catalog/rarity_legendary.png",
+	"mythic": "res://assets/icons/catalog/rarity_mythic.png",
 }
 const POWDER_TIERS := ["basic", "refined", "pure", "prismatic"]
 const EQUIPMENT_GENERATOR_SCRIPT := preload("res://scripts/equipment_generator.gd")

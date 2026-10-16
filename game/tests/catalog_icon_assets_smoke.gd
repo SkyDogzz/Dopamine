@@ -2,6 +2,7 @@ extends SceneTree
 
 const WEAPONS := ["lightning_conductor", "inferno_sprayer", "crimson_daggers", "minigun", "toxic_cloud", "sawblades", "meteor_staff", "prism_laser", "void_orb", "frost_nova"]
 const RELICS := ["storm_core", "infernal_heart", "blood_chalice", "celestial_eye", "frozen_crown", "magnet_heart", "magnetic_coil", "overdrive_engine", "plague_mask", "prism_crystal", "singularity"]
+const UI_ICONS := ["equipment_helmet", "equipment_armor", "equipment_gloves", "equipment_boots", "equipment_amulet", "equipment_ring", "rarity_normal", "rarity_magic", "rarity_mystic", "rarity_legendary", "rarity_mythic", "resource_essence", "resource_powder", "skill_node", "achievement_medal", "run_record"]
 
 func _initialize() -> void:
 	for weapon_id in WEAPONS:
@@ -12,12 +13,18 @@ func _initialize() -> void:
 		if not _check_icon("relic_" + relic_id):
 			quit(1)
 			return
-	print("Catalog icon assets smoke passed: ten weapons, ten evolutions, eleven relics")
+	for icon_name in UI_ICONS:
+		if not _check_icon(icon_name):
+			quit(1)
+			return
+	print("Catalog icon assets smoke passed: ten weapons, ten evolutions, eleven relics, sixteen UI icons")
 	quit()
 
 func _check_icon(asset_name: String) -> bool:
-	var png_path := "res://assets/sprites/catalog/%s.png" % asset_name
-	var ase_path := "res://assets/source/catalog_%s/%s.aseprite" % ["relics" if asset_name.begins_with("relic_") else "weapons", asset_name]
+	var is_ui_icon := not asset_name.begins_with("weapon_") and not asset_name.begins_with("evolution_") and not asset_name.begins_with("relic_")
+	var png_path := "res://assets/icons/catalog/%s.png" % asset_name if is_ui_icon else "res://assets/sprites/catalog/%s.png" % asset_name
+	var source_family := "ui" if is_ui_icon else "relics" if asset_name.begins_with("relic_") else "weapons"
+	var ase_path := "res://assets/source/catalog_%s/%s.aseprite" % [source_family, asset_name]
 	if not FileAccess.file_exists(png_path) or not FileAccess.file_exists(ase_path):
 		push_error("Missing PNG or Aseprite source for %s" % asset_name)
 		return false
