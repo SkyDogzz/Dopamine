@@ -43,6 +43,9 @@ func _run() -> void:
 	if active_session.is_empty():
 		_fail("Survival should resume before pickup range checks")
 		return
+	if session.open_chest([]) or session._chest_open or bool(session.simulation.snapshot()["paused"]):
+		_fail("An invalid chest should not pause Survival or leave a stale chest state")
+		return
 	session.player_hp = 1000.0
 	session.simulation.set_speed(4.0)
 	session._cached_equipment_bonuses["pickup_radius_pct"] = 900.0
@@ -161,6 +164,12 @@ func _run() -> void:
 		return
 	if session.get_node("HUD/ChestOverlay/ChestChoice/Content/Title").text != "WEAPON CHEST — CHOOSE ONE":
 		_fail("Collected weapon chests should identify their item type in the heading")
+		return
+	session._on_chest_option_selected("weapon:not_an_active_offer")
+	await process_frame
+	if not session._chest_open or not bool(session.simulation.snapshot()["paused"]) or \
+			not session.get_node("HUD/ChestOverlay/ChestChoice").visible:
+		_fail("An invalid selection should leave the chest open and the simulation paused")
 		return
 	# Isolate the resume assertion from a second random chest opening immediately.
 	session._world_chests.clear()

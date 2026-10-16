@@ -327,6 +327,8 @@ var _reserved_xp_drop_positions: Array[Vector2] = []
 var _chest_director: RefCounted
 var _world_chests: Array[Dictionary] = []
 var _chest_open := false
+var _active_chest_options: Array = []
+var _active_chest_heading := "CHEST — CHOOSE ONE"
 var _starting_weapon_choice_open := false
 var _manually_paused := false
 var _contact_damage_until: Dictionary = {}
@@ -1244,23 +1246,35 @@ func _open_chest(options: Array, heading: String) -> bool:
 	if simulation == null or run_over or _chest_open or not _chest_choice.present(options, options.size(), heading):
 		return false
 	_chest_open = true
+	_active_chest_options = options.duplicate(true)
+	_active_chest_heading = heading
 	simulation.pause()
 	return true
 
 func _on_chest_option_selected(option_id: String) -> void:
 	if _starting_weapon_choice_open:
-		_starting_weapon_choice_open = false
 		if loadout.choose_starting_weapon(option_id.trim_prefix("start:")):
+			_starting_weapon_choice_open = false
 			simulation.resume()
+		else:
+			_chest_choice.present(loadout.starting_weapon_options(), 2, "CHOOSE YOUR STARTING WEAPON")
 		return
-	_chest_open = false
+	if _chest_open and not _is_active_chest_option(option_id):
+		_chest_choice.present(_active_chest_options, _active_chest_options.size(), _active_chest_heading)
+		return
 	var offer_parts := option_id.split(":", false, 1)
 	var item_family := str(offer_parts[0]) if offer_parts.size() == 2 else ""
 	var item_id := str(offer_parts[1]) if offer_parts.size() == 2 else ""
 	var previous_item_level := _loadout_item_level(item_family, item_id)
 	var previous_magnet_heart_level: int = loadout.relic_level("magnet_heart")
 	var applied: bool = loadout.apply_offer(option_id)
-	if applied and previous_item_level >= 0:
+	if not applied:
+		if _chest_open:
+			_chest_choice.present(_active_chest_options, _active_chest_options.size(), _active_chest_heading)
+		return
+	_chest_open = false
+	_active_chest_options.clear()
+	if previous_item_level >= 0:
 		_show_item_level_feedback(item_family, item_id, previous_item_level)
 	if option_id == "relic:magnet_heart" and previous_magnet_heart_level < loadout.MAX_LEVEL and \
 			loadout.relic_level("magnet_heart") >= loadout.MAX_LEVEL and \
@@ -1269,6 +1283,12 @@ func _on_chest_option_selected(option_id: String) -> void:
 	chest_option_chosen.emit(option_id)
 	simulation.resume()
 	_complete_pending_victory()
+
+func _is_active_chest_option(option_id: String) -> bool:
+	for option in _active_chest_options:
+		if str(option.get("id", "")) == option_id:
+			return true
+	return false
 
 func _loadout_item_level(family: String, item_id: String) -> int:
 	if family == "weapon":

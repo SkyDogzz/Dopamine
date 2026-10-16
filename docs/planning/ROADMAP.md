@@ -345,7 +345,7 @@ Travail requis :
   - Les poids par défaut du GDD (**[PROPOSÉS]**) sont configurables dans Survival : amélioration possédée ×1,5, relique liée à une arme possédée ×2, arme liée à une relique possédée ×1,5, évolution prête/proche ×1,25, plafond combiné ×3. « Proche » signifie ici que le choix amène les deux membres d’une paire non évoluée au niveau 4 ou plus; cette interprétation reste **[PROPOSÉE]**.
 - [ ] **P5.3.2 — Pause et reprise**
   - [x] Suspendre la simulation et vérifier que ses horloges ne progressent pas pendant le modal; `survival_chest_smoke.gd` contrôle aussi l’horloge active affichée.
-  - [x] Vérifier la reprise après sélection dans `survival_chest_smoke.gd`; fermeture invalide et retour d’inventaire restent à couvrir.
+  - [x] Vérifier la reprise après sélection et le rejet d’une liste/sélection invalide dans `survival_chest_smoke.gd`; un choix invalide conserve le modal et la pause. `survival_pause_inventory_smoke.gd` confirme le retour vers le menu Pause, le focus et la simulation toujours figée.
 - [ ] **P5.3.3 — Évolution post-choix**
   - [x] Pour les dix paires, vérifier qu’une arme nouvellement acquise au niveau 1 n’offre pas l’évolution même si sa relique est déjà niveau 5; l’offre apparaît au niveau 5 de l’arme.
   - [x] Vérifier l’offre après chaque chemin de niveaux de l’arme, et après acquisition/amélioration de la relique jusqu’au niveau 5.
