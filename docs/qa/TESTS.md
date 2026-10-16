@@ -18,6 +18,10 @@
 - [x] `progression_service_smoke.gd` vérifie les poids, la somme de 100 %, le transfert proposé par paliers de vagues et que le contexte affecte effectivement le résultat généré.
 - [ ] Pénalité de mort précoce et calibration des taux restent à définir/mesurer; cette implémentation ne les déclare pas validés.
 
+## P6.3 — Portée de ramassage équipement et XP — 2026-10-16
+
+- [x] `survival_chest_smoke.gd` passe sous Godot 4.7.2; le rayon bonus et l’impulsion Magnet Heart collectent les orbes XP, tandis qu’un coffre placé au-delà de `chest_collection_radius` reste intact.
+
 ## P5 — Chaînes Lightning — 2026-10-16
 
 - [x] Un arc Lightning ignore désormais sa cible source afin que le saut touche l’ennemi suivant, y compris lorsque les cibles sont très proches; sa position de départ est bornée par l’écart au prochain ennemi.

@@ -459,7 +459,7 @@ Travail requis :
 - [ ] **P6.3 — Application des statistiques**
   - [ ] Vérifier une stat à la fois dans une session Survival.
   - [ ] Couvrir HP, mobilité, dégât, cadence, critique, soin, aire, cooldown, XP et vitesse projectile.
-  - [ ] Vérifier pickup sur XP puis régression chest à grand rayon.
+  - [x] `survival_chest_smoke.gd` vérifie l’application du rayon de ramassage aux XP, dont l’impulsion Magnet Heart, puis confirme qu’un grand rayon ne collecte jamais un coffre hors de sa portée dédiée.
 - [ ] **P6.4 — Enhancement**
   - [ ] Tester une ligne de stat de +0 à +10 avec chacun des quatre tiers Powder.
   - [ ] Vérifier réussite, échec normal, échec critique et dixième tentative garantie.
