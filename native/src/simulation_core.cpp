@@ -77,10 +77,12 @@ double kill_heal_amount(double threat_level, KillHealConfig config) {
 }
 
 EntityId SimulationCore::spawn(std::string type, float x, float y, float hp, float velocity_x,
-		float velocity_y, float threat_level, float move_speed) {
+		float velocity_y, float threat_level, float move_speed, std::string affix,
+		float damage_taken_multiplier) {
 	if (type.empty() || !std::isfinite(x) || !std::isfinite(y) || !std::isfinite(hp) || hp <= 0.0F ||
 			!std::isfinite(velocity_x) || !std::isfinite(velocity_y) || !std::isfinite(threat_level) ||
-			threat_level <= 0.0F || !std::isfinite(move_speed) || move_speed < 0.0F) {
+			threat_level <= 0.0F || !std::isfinite(move_speed) || move_speed < 0.0F ||
+			!std::isfinite(damage_taken_multiplier) || damage_taken_multiplier <= 0.0F || damage_taken_multiplier > 1.0F) {
 		throw std::invalid_argument("invalid simulation entity");
 	}
 
@@ -114,7 +116,7 @@ EntityId SimulationCore::spawn(std::string type, float x, float y, float hp, flo
 	velocities_[index] = {velocity_x, velocity_y};
 	health_[index] = {hp, hp};
 	const auto profile = enemy_profile(type);
-	enemy_types_[index] = {std::move(type), threat_level, move_speed,
+	enemy_types_[index] = {std::move(type), std::move(affix), threat_level, move_speed, damage_taken_multiplier,
 			profile ? profile->support_radius : 0.0F,
 			profile ? profile->support_speed_multiplier : 1.0F,
 			false,
@@ -1130,6 +1132,7 @@ void SimulationCore::apply_damage(EntityId source, EntityId target, float amount
 	Health &target_health = health_[target.index];
 	const bool target_was_chilled = chill_effects_[target.index].has_value();
 	EnemyType &target_type = enemy_types_[target.index];
+	amount *= target_type.damage_taken_multiplier;
 	if (target_type.shielded) {
 		const EntityId source_id = target_type.shield_source;
 		const bool source_active = source_id.index < slots_.size() && slots_[source_id.index].active &&

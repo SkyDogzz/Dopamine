@@ -378,6 +378,7 @@ Travail requis :
   - [x] Tester destruction du soutien et fin de son effet.
 - [ ] **P5.4.3 — Élites**
   - [ ] Définir les affixes éligibles à chaque famille.
+  - [x] Implémenter la sélection aléatoire entre Hasted et Armored sur l’unique famille élite; Hasted passe à 100 px/s et Armored se déplace à 75 px/s et reçoit 65 % des dégâts **[PROPOSÉS]**.
   - [x] Générer le prototype Hasted avec plafond actif et cooldown **[PROPOSÉS]**.
   - [x] Appliquer le budget proposé : somme des menaces actives + coût élite ≤ population cible de la vague.
   - [x] Vérifier affixe visible, profil de vitesse, mort et récompense élite.

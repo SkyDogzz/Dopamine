@@ -46,6 +46,15 @@ int main() {
 	require(elite_profile && elite_profile->health == 50.0F && elite_profile->speed == 100.0F &&
 			elite_profile->threat_level == 3.0F,
 			"proposed Hasted elite profile should have a distinct combat profile");
+	SimulationCore armored_elite;
+	const auto armored_id = armored_elite.spawn("elite", 0.0F, 0.0F, 50.0F, 0.0F, 0.0F,
+			3.0F, 75.0F, "Armored", 0.65F);
+	std::vector<dopamine::sim::CombatEvent> armored_events;
+	armored_elite.apply_direct_damage({}, armored_id, 10.0F, armored_events);
+	require(armored_elite.entity(armored_id)->health.current == 43.5F &&
+			armored_elite.entity(armored_id)->type.affix == "Armored" &&
+			armored_elite.entity(armored_id)->type.damage_taken_multiplier == 0.65F,
+			"proposed Armored elite affix should reduce incoming damage and persist in snapshots");
 	require(exploder_profile && exploder_profile->health == 30.0F && exploder_profile->speed == 60.0F &&
 			exploder_profile->threat_level == 2.0F,
 			"proposed Exploder profile should be available to Survival");

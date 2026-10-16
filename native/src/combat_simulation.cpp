@@ -14,8 +14,8 @@ using dopamine::sim::SimulationCommand;
 void CombatSimulation::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("spawn", "entity_type", "count", "position", "hp", "velocity", "threat_level"),
 			&CombatSimulation::spawn, DEFVAL(1.0));
-	ClassDB::bind_method(D_METHOD("spawn_enemy", "enemy_type", "count", "position", "velocity", "hp_multiplier"),
-			&CombatSimulation::spawn_enemy, DEFVAL(1.0));
+	ClassDB::bind_method(D_METHOD("spawn_enemy", "enemy_type", "count", "position", "velocity", "hp_multiplier", "affix"),
+			&CombatSimulation::spawn_enemy, DEFVAL(1.0), DEFVAL(String()));
 	ClassDB::bind_method(D_METHOD("spawn_projectile", "projectile_type", "position", "velocity", "damage", "radius", "lifetime_seconds", "burn_damage_per_tick", "burn_interval_seconds", "burn_duration_seconds", "explosion_radius", "explosion_damage_multiplier", "ricochets", "attraction_radius", "attraction_speed", "pierces_targets", "chill_duration_seconds", "chill_speed_multiplier", "chill_damage_multiplier"),
 			&CombatSimulation::spawn_projectile, DEFVAL(2.0), DEFVAL(0.5), DEFVAL(2.0), DEFVAL(0.0), DEFVAL(0.0), DEFVAL(0), DEFVAL(0.0), DEFVAL(0.0), DEFVAL(false), DEFVAL(0.0), DEFVAL(1.0), DEFVAL(1.0));
 	ClassDB::bind_method(D_METHOD("spawn_status_projectile", "projectile_type", "position", "velocity", "damage", "radius", "lifetime_seconds", "status_damage_per_tick", "status_interval_seconds", "status_duration_seconds", "explosion_radius", "explosion_damage_multiplier", "ricochets", "attraction_radius", "attraction_speed", "pierces_targets", "chill_duration_seconds", "chill_speed_multiplier", "chill_damage_multiplier"),
@@ -69,7 +69,7 @@ int64_t CombatSimulation::spawn(String entity_type, int64_t count, Vector2 posit
 }
 
 int64_t CombatSimulation::spawn_enemy(String enemy_type, int64_t count, Vector2 position, Vector2 velocity,
-		float hp_multiplier) {
+		float hp_multiplier, String affix) {
 	const std::string type = enemy_type.utf8().get_data();
 	const auto profile = dopamine::sim::enemy_profile(type);
 	if (!profile.has_value()) {
@@ -83,14 +83,28 @@ int64_t CombatSimulation::spawn_enemy(String enemy_type, int64_t count, Vector2 
 	SimulationCommand command;
 	command.type = CommandType::Spawn;
 	command.entity_type = std::string(profile->id);
+	command.enemy_affix = affix.utf8().get_data();
 	command.count = static_cast<uint32_t>(count);
 	command.x = static_cast<float>(position.x);
 	command.y = static_cast<float>(position.y);
 	command.hp = profile->health * hp_multiplier;
 	command.threat_level = profile->threat_level;
 	command.enemy_move_speed = profile->speed;
+	if (type == "elite") {
+		if (command.enemy_affix.empty()) command.enemy_affix = "Hasted";
+		if (command.enemy_affix == "Hasted") {
+			command.enemy_move_speed = 100.0F;
+		} else if (command.enemy_affix == "Armored") {
+			command.enemy_move_speed = 75.0F;
+			command.enemy_damage_taken_multiplier = 0.65F;
+		} else {
+			return 0;
+		}
+	} else if (!command.enemy_affix.empty()) {
+		return 0;
+	}
 	const Vector2 initial_velocity = velocity.length() > 0.0
-			? velocity.normalized() * profile->speed : Vector2(profile->speed, 0.0);
+			? velocity.normalized() * command.enemy_move_speed : Vector2(command.enemy_move_speed, 0.0);
 	command.velocity_x = static_cast<float>(initial_velocity.x);
 	command.velocity_y = static_cast<float>(initial_velocity.y);
 	return submit(std::move(command));
@@ -395,9 +409,10 @@ Dictionary CombatSimulation::snapshot() const {
 		components["EnemyType"] = String(entity.type.id.c_str());
 		components["ThreatLevel"] = entity.type.threat_level;
 		components["MoveSpeed"] = entity.type.move_speed;
-		if (entity.type.id == "elite") {
-			components["Affix"] = "Hasted";
+		if (!entity.type.affix.empty()) {
+			components["Affix"] = String(entity.type.affix.c_str());
 		}
+		components["DamageTakenMultiplier"] = entity.type.damage_taken_multiplier;
 		components["Supported"] = entity.type.supported;
 		components["Shielded"] = entity.type.shielded;
 		if (entity.type.support_radius > 0.0F) {

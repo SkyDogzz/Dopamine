@@ -65,8 +65,10 @@ double kill_heal_amount(double threat_level, KillHealConfig config = {});
 
 struct EnemyType {
 	std::string id;
+	std::string affix;
 	float threat_level = 1.0F;
 	float move_speed = 0.0F;
+	float damage_taken_multiplier = 1.0F;
 	float support_radius = 0.0F;
 	float support_speed_multiplier = 1.0F;
 	bool supported = false;
@@ -191,7 +193,8 @@ struct SimulationCoreState {
 class SimulationCore {
 public:
 	EntityId spawn(std::string type, float x, float y, float hp, float velocity_x, float velocity_y,
-			float threat_level = 1.0F, float move_speed = 0.0F);
+			float threat_level = 1.0F, float move_speed = 0.0F, std::string affix = {},
+			float damage_taken_multiplier = 1.0F);
 	EntityId spawn_projectile(std::string type, float x, float y, float damage, float radius,
 			double lifetime_seconds, float velocity_x, float velocity_y, float status_damage_per_tick = 2.0F,
 			double status_interval_seconds = 0.5, double status_duration_seconds = 2.0,

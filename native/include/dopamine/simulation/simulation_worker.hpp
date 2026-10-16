@@ -43,6 +43,7 @@ struct SimulationCommand {
 	CommandType type = CommandType::Pause;
 	uint64_t sequence = 0;
 	std::string entity_type;
+	std::string enemy_affix;
 	uint32_t count = 1;
 	EntityId entity;
 	float x = 0.0F;
@@ -50,6 +51,7 @@ struct SimulationCommand {
 	float hp = 1.0F;
 	float threat_level = 1.0F;
 	float enemy_move_speed = 0.0F;
+	float enemy_damage_taken_multiplier = 1.0F;
 	float velocity_x = 0.0F;
 	float velocity_y = 0.0F;
 	double delta_seconds = 0.0;
@@ -80,7 +82,7 @@ struct SimulationCommand {
 };
 
 struct SimulationWorkerState {
-	uint32_t format_version = 10;
+	uint32_t format_version = 11;
 	SimulationCoreState core_state;
 	bool paused = true;
 	double speed_multiplier = 1.0;

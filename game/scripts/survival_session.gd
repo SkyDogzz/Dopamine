@@ -1499,7 +1499,11 @@ func _try_spawn_elite() -> void:
 		return
 	var spawn_position := player.global_position + Vector2.from_angle(randf() * TAU) * enemy_spawn_radius
 	var hp_multiplier := _enemy_hp_multiplier(wave_director.wave)
-	simulation.spawn_enemy("elite", 1, spawn_position, Vector2.ZERO, hp_multiplier)
+	var affix := _elite_affix_for_roll(randf())
+	simulation.spawn_enemy("elite", 1, spawn_position, Vector2.ZERO, hp_multiplier, affix)
+
+func _elite_affix_for_roll(roll: float) -> String:
+	return "Hasted" if roll < 0.5 else "Armored"
 
 func _spawn_boss_placeholder(boss_type: String) -> void:
 	if not spawn_initial_enemy or _boss_spawn_pending:

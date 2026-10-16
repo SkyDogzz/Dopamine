@@ -526,7 +526,7 @@ Synergies proposées entre reliques :
 9. Summoners : invocations limitées.
 10. Phasers : déplacements intermittents.
 
-Affixes proposés : Armored, Hasted, Volatile, Regenerating, Shielded, Split-on-Death.
+Affixes proposés : Armored, Hasted, Volatile, Regenerating, Shielded, Split-on-Death. Le prototype Survival implémente Hasted (vitesse 100 px/s) et Armored (vitesse 75 px/s, 65 % des dégâts reçus) **[PROPOSÉS]**. Le directeur choisit l’un de ces deux affixes pour les élites; les quatre autres et la compatibilité avec les familles restent à implémenter/arbitrer.
 
 Proposition : Threat Director distribuant un budget de menace entre les familles d'ennemis, avec règles de compatibilité des affixes et prévention des combinaisons impossibles à esquiver.
 

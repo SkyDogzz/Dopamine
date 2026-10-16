@@ -5,6 +5,9 @@ func _initialize() -> void:
 
 func _run() -> void:
 	var session: Node2D = load("res://scenes/survival_session.tscn").instantiate()
+	if session._elite_affix_for_roll(0.0) != "Hasted" or session._elite_affix_for_roll(0.5) != "Armored":
+		_fail("Elite roll should select both supported affixes at the configured threshold")
+		return
 	session.spawn_initial_enemy = false
 	session.wave_spawning_enabled = true
 	session.skip_starting_weapon_choice = true
@@ -33,8 +36,12 @@ func _run() -> void:
 			elite = entity
 			break
 	var components: Dictionary = elite["components"]
-	if components.get("Affix", "") != "Hasted" or not is_equal_approx(float(components["MoveSpeed"]), 100.0):
-		_fail("Elite snapshot should expose its Hasted affix and distinct movement profile")
+	var affix: String = str(components.get("Affix", ""))
+	var valid_hasted := affix == "Hasted" and is_equal_approx(float(components["MoveSpeed"]), 100.0)
+	var valid_armored := affix == "Armored" and is_equal_approx(float(components["MoveSpeed"]), 75.0) and \
+			is_equal_approx(float(components["DamageTakenMultiplier"]), 0.65)
+	if not valid_hasted and not valid_armored:
+		_fail("Elite snapshot should expose a working Hasted or Armored affix")
 		return
 	session._try_spawn_elite()
 	await process_frame
