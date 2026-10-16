@@ -29,6 +29,9 @@ const PRIORITY := {
 	"boss_telegraph": 10, "boss_phase": 9, "boss_defeat": 9,
 	"ui_focus": 1, "ui_confirm": 4, "ui_back": 4, "ui_error": 5, "ui_pause": 5,
 }
+const FAMILY_GAIN_DB := {
+	"level_up": -5.0,
+}
 const MIN_INTERVAL := {
 	"weapon_shot": 0.065, "weapon_zap": 0.09, "weapon_sweep": 0.1,
 	"hit_light": 0.035, "hit_heavy": 0.08, "enemy_kill": 0.045, "xp_pickup": 0.055,
@@ -72,8 +75,10 @@ func play(sound_family: String) -> bool:
 	if voice < 0:
 		return false
 	var variant_index := int(_next_variant.get(sound_family, 0))
-	_players[voice].stream = family_streams[variant_index % family_streams.size()]
-	_players[voice].play()
+	var player := _players[voice]
+	player.stream = family_streams[variant_index % family_streams.size()]
+	player.volume_db = float(FAMILY_GAIN_DB.get(sound_family, 0.0))
+	player.play()
 	_voice_priorities[voice] = priority
 	_next_variant[sound_family] = variant_index + 1
 	_last_played[sound_family] = now
