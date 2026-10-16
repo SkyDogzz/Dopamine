@@ -9,6 +9,10 @@ const RELICS := ["storm_core", "infernal_heart", "blood_chalice", "celestial_eye
 const UI_REFERENCE := "res://assets/source/catalog_ui/generated_reference.png"
 const UI_SOURCE_DIR := "res://assets/source/catalog_ui"
 const UI_ICONS := ["equipment_helmet", "equipment_armor", "equipment_gloves", "equipment_boots", "equipment_amulet", "equipment_ring", "rarity_normal", "rarity_magic", "rarity_mystic", "rarity_legendary", "rarity_mythic", "resource_essence", "resource_powder", "skill_node", "achievement_medal", "run_record"]
+const ROSTER_REFERENCE := "res://assets/source/roster/generated_reference.png"
+const ROSTER_NAMES := ["enemy_chaser", "enemy_sprinter", "enemy_tank", "enemy_shooter", "enemy_buffer", "enemy_exploder", "enemy_shielder", "enemy_summoner", "enemy_summoned", "elite_sprinter", "boss_mid_placeholder", "boss_final_placeholder"]
+const VFX_REFERENCE := "res://assets/source/vfx/weapon_impacts_reference.png"
+const IMPACT_NAMES := ["impact_spark", "impact_star", "impact_slash", "impact_pop", "impact_ring", "impact_burst", "impact_shards", "impact_shock_ring", "impact_angular", "impact_evolved"]
 const WEAPONS := [
 	"lightning_conductor", "inferno_sprayer", "crimson_daggers", "minigun", "toxic_cloud",
 	"sawblades", "meteor_staff", "prism_laser", "void_orb", "frost_nova",
@@ -62,7 +66,45 @@ func _initialize() -> void:
 		if not _export_crop(ui_source, content_rect, background, UI_ICONS[index], "res://assets/icons/catalog", UI_SOURCE_DIR):
 			quit(1)
 			return
-	print("Built 20 weapon/evolution, 11 relic and 16 UI icons with editable Aseprite sources")
+	var roster_texture := load(ROSTER_REFERENCE) as Texture2D
+	if roster_texture == null:
+		push_error("Missing generated roster reference: %s" % ROSTER_REFERENCE)
+		quit(1)
+		return
+	var roster_source := roster_texture.get_image()
+	var roster_cell_width := roster_source.get_width() / 4
+	var roster_cell_height := roster_source.get_height() / 3
+	for index in range(ROSTER_NAMES.size()):
+		var rect := Rect2i((index % 4) * roster_cell_width, floori(float(index) / 4.0) * roster_cell_height, roster_cell_width, roster_cell_height)
+		var background := roster_source.get_pixel(rect.position.x + 4, rect.position.y + 4)
+		var sprite_size := 96 if ROSTER_NAMES[index].begins_with("boss_") else 24
+		if not _export_crop(roster_source, rect, background, ROSTER_NAMES[index], "res://assets/sprites/roster", "res://assets/source/roster", sprite_size):
+			quit(1)
+			return
+	var vfx_texture := load(VFX_REFERENCE) as Texture2D
+	if vfx_texture == null:
+		push_error("Missing generated VFX reference: %s" % VFX_REFERENCE)
+		quit(1)
+		return
+	var vfx_source := vfx_texture.get_image()
+	var impact_cell_width := vfx_source.get_width() / 5
+	var impact_cell_height := vfx_source.get_height() / 2
+	var impact_atlas := Image.create(IMPACT_NAMES.size() * 64, 64, false, Image.FORMAT_RGBA8)
+	impact_atlas.fill(Color.TRANSPARENT)
+	for index in range(IMPACT_NAMES.size()):
+		var rect := Rect2i((index % 5) * impact_cell_width, floori(float(index) / 5.0) * impact_cell_height, impact_cell_width, impact_cell_height)
+		var content_rect := Rect2i(rect.position + Vector2i(10, 10), rect.size - Vector2i(20, 20))
+		var background := vfx_source.get_pixel(content_rect.position.x + 4, content_rect.position.y + 4)
+		if not _export_crop(vfx_source, content_rect, background, IMPACT_NAMES[index], "res://assets/sprites/vfx", "res://assets/source/vfx", 64):
+			quit(1)
+			return
+		var exported := Image.load_from_file(ProjectSettings.globalize_path("res://assets/sprites/vfx/%s.png" % IMPACT_NAMES[index]))
+		impact_atlas.blit_rect(exported, Rect2i(Vector2i.ZERO, exported.get_size()), Vector2i(index * 64, 0))
+	if impact_atlas.save_png("res://assets/sprites/weapon_impacts_pixel.png") != OK:
+		push_error("Could not save the horizontal impact atlas")
+		quit(1)
+		return
+	print("Built catalog/UI/roster icons and a 10-cell pixel impact atlas with editable Aseprite sources")
 	quit()
 
 func _export_cell(source: Image, rect: Rect2i, name: String) -> bool:
@@ -74,7 +116,7 @@ func _export_relic_cell(source: Image, rect: Rect2i, name: String) -> bool:
 	var background := source.get_pixel(content_rect.position.x + 4, content_rect.position.y + 4)
 	return _export_crop(source, content_rect, background, "relic_" + name, OUTPUT_DIR, RELIC_SOURCE_DIR)
 
-func _export_crop(source: Image, rect: Rect2i, background: Color, name: String, output_dir: String, source_dir: String) -> bool:
+func _export_crop(source: Image, rect: Rect2i, background: Color, name: String, output_dir: String, source_dir: String, output_size: int = OUTPUT_SIZE) -> bool:
 	var left := rect.end.x
 	var top := rect.end.y
 	var right := rect.position.x - 1
@@ -90,12 +132,12 @@ func _export_crop(source: Image, rect: Rect2i, background: Color, name: String, 
 		push_error("Empty cell in generated reference: %s" % name)
 		return false
 	var crop := source.get_region(Rect2i(left, top, right - left + 1, bottom - top + 1))
-	var scale := minf(float(OUTPUT_SIZE - 4) / crop.get_width(), float(OUTPUT_SIZE - 4) / crop.get_height())
+	var scale := minf(float(output_size - 4) / crop.get_width(), float(output_size - 4) / crop.get_height())
 	var draw_size := Vector2i(maxi(1, roundi(crop.get_width() * scale)), maxi(1, roundi(crop.get_height() * scale)))
 	crop.resize(draw_size.x, draw_size.y, Image.INTERPOLATE_NEAREST)
-	var result := Image.create(OUTPUT_SIZE, OUTPUT_SIZE, false, Image.FORMAT_RGBA8)
+	var result := Image.create(output_size, output_size, false, Image.FORMAT_RGBA8)
 	result.fill(Color.TRANSPARENT)
-	var offset := (Vector2i(OUTPUT_SIZE, OUTPUT_SIZE) - draw_size) / 2
+	var offset := (Vector2i(output_size, output_size) - draw_size) / 2
 	for y in range(draw_size.y):
 		for x in range(draw_size.x):
 			var color := crop.get_pixel(x, y)

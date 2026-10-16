@@ -38,16 +38,16 @@ func _ready() -> void:
 		return
 
 	var enemy_icons := {
-		"chaser": "enemy_chaser",
-		"sprinter": "enemy_sprinter",
-		"tank": "enemy_tank",
-		"shooter": "enemy_shooter",
-		"buffer": "enemy_buffer.svg",
-		"exploder": "enemy_exploder.svg",
-		"shielder": "enemy_shielder.svg",
-		"summoner": "enemy_summoner.svg",
-		"summoned": "enemy_summoned.svg",
-		"elite": "enemy_sprinter",
+		"chaser": "roster/enemy_chaser",
+		"sprinter": "roster/enemy_sprinter",
+		"tank": "roster/enemy_tank",
+		"shooter": "roster/enemy_shooter",
+		"buffer": "roster/enemy_buffer",
+		"exploder": "roster/enemy_exploder",
+		"shielder": "roster/enemy_shielder",
+		"summoner": "roster/enemy_summoner",
+		"summoned": "roster/enemy_summoned",
+		"elite": "roster/elite_sprinter",
 	}
 	for entity_type in enemy_icons:
 		var icon_file: String = enemy_icons[entity_type]

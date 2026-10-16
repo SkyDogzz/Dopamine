@@ -7,7 +7,7 @@ const SPRITE_RENDERER_SCRIPT := preload("res://scripts/sprite_batch_renderer.gd"
 const CHEST_TEXTURE: Texture2D = preload("res://assets/sprites/chest_closed.png")
 const GROUND_TEXTURE: Texture2D = preload("res://assets/sprites/survival_ground.svg")
 const RUINS_TEXTURE: Texture2D = preload("res://assets/sprites/survival_ruins.svg")
-const WEAPON_IMPACTS_TEXTURE: Texture2D = preload("res://assets/sprites/weapon_impacts.svg")
+const WEAPON_IMPACTS_TEXTURE: Texture2D = preload("res://assets/sprites/weapon_impacts_pixel.png")
 const WEAPON_IMPACT_TYPES := {
 	"lightning_conductor": 0, "infinite_circuit_branch": 0, "unique_lightning_burst": 0,
 	"inferno_sprayer": 1, "wildfire_sprayer": 1,
@@ -294,14 +294,14 @@ var _pending_summon_sequences: Dictionary = {}
 
 @onready var _hp_value: Label = $HUD/RunPanel/RunInfo/StatusRow/HPValue
 @onready var _hp_bar: ProgressBar = $HUD/RunPanel/RunInfo/StatusRow/HPBar
-@onready var _time_value: Label = $HUD/RunPanel/RunInfo/StatusRow/TimeValue
+@onready var _time_value: Label = $HUD/MetaPanel/RunMetaRow/TimeValue
 @onready var _weapon_value: Label = $HUD/RunPanel/RunInfo/LoadoutRow/LoadoutLabel
 @onready var _weapon_icon: TextureRect = $HUD/RunPanel/RunInfo/LoadoutRow/WeaponIcon
 @onready var _xp_value: Label = $HUD/RunPanel/RunInfo/StatusRow/XPValue
 @onready var _xp_bar: ProgressBar = $HUD/RunPanel/RunInfo/StatusRow/XPBar
-@onready var _run_state: Label = $HUD/RunPanel/RunInfo/StatusRow/RunState
-@onready var _wave_value: Label = $HUD/RunPanel/RunInfo/StatusRow/WaveValue
-@onready var _difficulty_value: Label = $HUD/RunPanel/RunInfo/StatusRow/DifficultyValue
+@onready var _run_state: Label = $HUD/MetaPanel/RunMetaRow/RunState
+@onready var _wave_value: Label = $HUD/MetaPanel/RunMetaRow/WaveValue
+@onready var _difficulty_value: Label = $HUD/MetaPanel/RunMetaRow/DifficultyValue
 @onready var _boss_panel: PanelContainer = $HUD/BossPanel
 @onready var _boss_value: Label = $HUD/BossPanel/BossInfo/BossValue
 @onready var _boss_hp_bar: ProgressBar = $HUD/BossPanel/BossInfo/BossHPBar

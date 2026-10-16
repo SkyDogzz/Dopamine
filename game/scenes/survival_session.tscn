@@ -14,8 +14,8 @@ layer = 5
 [node name="RunPanel" type="PanelContainer" parent="HUD"]
 offset_left = 18.0
 offset_top = 14.0
-offset_right = -18.0
-offset_bottom = 116.0
+offset_right = 458.0
+offset_bottom = 100.0
 mouse_filter = 2
 theme_override_constants/margin_left = 14
 theme_override_constants/margin_top = 7
@@ -32,7 +32,7 @@ theme_override_constants/separation = 8
 mouse_filter = 2
 
 [node name="HPValue" type="Label" parent="HUD/RunPanel/RunInfo/StatusRow"]
-custom_minimum_size = Vector2(138, 0)
+custom_minimum_size = Vector2(86, 0)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.9, 0.95, 0.97, 1)
 theme_override_font_sizes/font_size = 13
@@ -40,14 +40,14 @@ text = "HP  100 / 100"
 vertical_alignment = 1
 
 [node name="HPBar" type="ProgressBar" parent="HUD/RunPanel/RunInfo/StatusRow"]
-custom_minimum_size = Vector2(110, 10)
+custom_minimum_size = Vector2(85, 10)
 layout_mode = 2
 size_flags_horizontal = 3
 show_percentage = false
 value = 100.0
 
 [node name="XPValue" type="Label" parent="HUD/RunPanel/RunInfo/StatusRow"]
-custom_minimum_size = Vector2(94, 0)
+custom_minimum_size = Vector2(102, 0)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.64, 0.79, 0.84, 1)
 theme_override_font_sizes/font_size = 12
@@ -55,45 +55,10 @@ text = "LV 1  XP 0 / 10"
 vertical_alignment = 1
 
 [node name="XPBar" type="ProgressBar" parent="HUD/RunPanel/RunInfo/StatusRow"]
-custom_minimum_size = Vector2(110, 10)
+custom_minimum_size = Vector2(85, 10)
 layout_mode = 2
 size_flags_horizontal = 3
 show_percentage = false
-
-[node name="TimeValue" type="Label" parent="HUD/RunPanel/RunInfo/StatusRow"]
-custom_minimum_size = Vector2(62, 0)
-layout_mode = 2
-theme_override_colors/font_color = Color(0.27, 0.9, 0.93, 1)
-theme_override_font_sizes/font_size = 18
-text = "00:00"
-vertical_alignment = 1
-
-[node name="WaveValue" type="Label" parent="HUD/RunPanel/RunInfo/StatusRow"]
-custom_minimum_size = Vector2(120, 0)
-layout_mode = 2
-theme_override_colors/font_color = Color(1, 0.82, 0.4, 1)
-theme_override_font_sizes/font_size = 12
-text = "WAVE 01  •  30 s"
-vertical_alignment = 1
-
-[node name="DifficultyValue" type="Label" parent="HUD/RunPanel/RunInfo/StatusRow"]
-custom_minimum_size = Vector2(84, 0)
-layout_mode = 2
-theme_override_colors/font_color = Color(1, 0.360784, 0.658824, 1)
-theme_override_font_sizes/font_size = 12
-text = "NORMAL"
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="RunState" type="Label" parent="HUD/RunPanel/RunInfo/StatusRow"]
-custom_minimum_size = Vector2(76, 0)
-layout_mode = 2
-tooltip_text = "Press Escape to pause or resume"
-theme_override_colors/font_color = Color(0.27, 0.9, 0.93, 1)
-theme_override_font_sizes/font_size = 11
-text = "IN RUN"
-horizontal_alignment = 2
-vertical_alignment = 1
 
 [node name="LoadoutRow" type="HBoxContainer" parent="HUD/RunPanel/RunInfo"]
 layout_mode = 2
@@ -113,6 +78,54 @@ theme_override_colors/font_color = Color(0.9, 0.95, 0.97, 1)
 theme_override_font_sizes/font_size = 12
 text = "ARMES"
 size_flags_horizontal = 3
+vertical_alignment = 1
+
+[node name="MetaPanel" type="PanelContainer" parent="HUD"]
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -410.0
+offset_top = 14.0
+offset_right = -18.0
+offset_bottom = 68.0
+mouse_filter = 2
+
+[node name="RunMetaRow" type="HBoxContainer" parent="HUD/MetaPanel"]
+theme_override_constants/separation = 8
+mouse_filter = 2
+
+[node name="TimeValue" type="Label" parent="HUD/MetaPanel/RunMetaRow"]
+custom_minimum_size = Vector2(54, 0)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.27, 0.9, 0.93, 1)
+theme_override_font_sizes/font_size = 17
+text = "00:00"
+vertical_alignment = 1
+
+[node name="WaveValue" type="Label" parent="HUD/MetaPanel/RunMetaRow"]
+custom_minimum_size = Vector2(104, 0)
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.82, 0.4, 1)
+theme_override_font_sizes/font_size = 11
+text = "WAVE 01  •  30 s"
+vertical_alignment = 1
+
+[node name="DifficultyValue" type="Label" parent="HUD/MetaPanel/RunMetaRow"]
+custom_minimum_size = Vector2(72, 0)
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.360784, 0.658824, 1)
+theme_override_font_sizes/font_size = 11
+text = "NORMAL"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="RunState" type="Label" parent="HUD/MetaPanel/RunMetaRow"]
+custom_minimum_size = Vector2(76, 0)
+layout_mode = 2
+tooltip_text = "Press Escape to pause or resume"
+theme_override_colors/font_color = Color(0.27, 0.9, 0.93, 1)
+theme_override_font_sizes/font_size = 10
+text = "IN RUN"
+horizontal_alignment = 2
 vertical_alignment = 1
 
 [node name="BossPanel" type="PanelContainer" parent="HUD"]
