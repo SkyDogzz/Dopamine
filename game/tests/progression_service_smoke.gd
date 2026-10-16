@@ -122,6 +122,15 @@ func _run() -> void:
 	if not duplicate.get("ok", false) or not duplicate.get("duplicate", false):
 		_fail("Reprocessing one run ID should be idempotent")
 		return
+	var before_restart: Dictionary = service.load_profile()["profile"]
+	var restarted_service = load("res://scripts/progression_service.gd").new(save_service, "0")
+	var duplicate_after_restart: Dictionary = restarted_service.award_survival_run("run-win", 24, true)
+	var after_restart: Dictionary = restarted_service.load_profile()["profile"]
+	if not duplicate_after_restart.get("ok", false) or not duplicate_after_restart.get("duplicate", false) or \
+			after_restart["resources"] != before_restart["resources"] or \
+			after_restart["equipment_inventory"].size() != before_restart["equipment_inventory"].size():
+		_fail("A rewarded run ID should remain idempotent after recreating the progression service")
+		return
 	var defeat: Dictionary = service.award_survival_run("run-loss", 12, false)
 	if not defeat.get("ok", false) or defeat.get("essence") != 39 or defeat.get("powder_basic") != 56:
 		_fail("A defeated run should grant the proposed resources for its last reached wave")
