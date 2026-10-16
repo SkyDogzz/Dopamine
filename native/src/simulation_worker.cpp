@@ -110,7 +110,7 @@ std::optional<SimulationWorkerState> SimulationWorker::capture_state(std::chrono
 }
 
 bool SimulationWorker::restore_state(const SimulationWorkerState &state) {
-	if (state.format_version != 7 || state.next_sequence == 0 ||
+	if (state.format_version != 8 || state.next_sequence == 0 ||
 			state.next_sequence <= state.pending_sequence ||
 			state.pending_commands.size() > max_queued_commands_ ||
 			state.pending_events.size() > max_pending_events_ || state.logs.size() > 100 ||
@@ -368,6 +368,18 @@ void SimulationWorker::apply(const SimulationCommand &command,
 			steering_target_y_ = command.y;
 			steering_config_ = command.steering;
 			log("steering target updated");
+			break;
+		case CommandType::DashEntity:
+			try {
+				if (simulation_.dash_entity(command.entity, command.velocity_x, command.velocity_y,
+						command.movement_duration_seconds)) {
+					log("entity movement override started");
+				} else {
+					log("entity movement override ignored: stale or unsupported entity ID");
+				}
+			} catch (const std::exception &error) {
+				log(std::string("entity movement override rejected: ") + error.what());
+			}
 			break;
 		case CommandType::SpawnProjectile:
 			if (simulation_.entity_count() >= max_entities_) {

@@ -63,6 +63,45 @@ func _run() -> void:
 	if not await _wait_for_entity_type(session, "summoned"):
 		_fail("Phase two should invoke a capped add alongside its attack")
 		return
+	attack = session._pulse_warden_attacks[boss_key]
+	session._update_pulse_warden_attacks(float(attack["next_attack_at"]), false)
+	attack = session._pulse_warden_attacks[boss_key]
+	if attack["stage"] != "telegraph" or attack["pattern"] != "charge":
+		_fail("Phase two should alternate its aimed attack with a mobile charge")
+		return
+	var phase_two_boss := await _wait_for_boss(session)
+	var phase_two_transform: Dictionary = phase_two_boss["components"]["Transform2D"]
+	var before_phase_two_charge := Vector2(float(phase_two_transform["x"]), float(phase_two_transform["y"]))
+	session._update_pulse_warden_attacks(float(attack["fire_at"]), false)
+	if not await _wait_for_displacement(session, "mid_boss", before_phase_two_charge, 12.0):
+		_fail("The phase two Warden charge should move its boss entity")
+		return
+	session.pulse_warden_phase_three_health_ratio = 0.9
+	session._entities = session.simulation.snapshot()["entities"]
+	session._update_pulse_warden_attacks(float(session.simulation.snapshot()["simulation_time"]), false)
+	attack = session._pulse_warden_attacks[boss_key]
+	if int(attack["phase"]) != 3:
+		_fail("The Warden should enter phase three at its configured health threshold")
+		return
+	session._update_pulse_warden_attacks(float(attack["next_attack_at"]), false)
+	attack = session._pulse_warden_attacks[boss_key]
+	if attack["stage"] != "telegraph" or attack["pattern"] != "radial":
+		_fail("Phase three should retain its readable radial projectile pattern")
+		return
+	session._update_pulse_warden_attacks(float(attack["fire_at"]), false)
+	attack = session._pulse_warden_attacks[boss_key]
+	session._update_pulse_warden_attacks(float(attack["next_attack_at"]), false)
+	attack = session._pulse_warden_attacks[boss_key]
+	if attack["stage"] != "telegraph" or attack["pattern"] != "charge":
+		_fail("Phase three should telegraph a mobile charge after the radial pattern")
+		return
+	var boss_now := await _wait_for_boss(session)
+	var boss_now_transform: Dictionary = boss_now["components"]["Transform2D"]
+	var before_charge := Vector2(float(boss_now_transform["x"]), float(boss_now_transform["y"]))
+	session._update_pulse_warden_attacks(float(attack["fire_at"]), false)
+	if not await _wait_for_displacement(session, "mid_boss", before_charge, 12.0):
+		_fail("The telegraphed Pulse Warden charge should move its boss entity")
+		return
 	session.queue_free()
 	if not await _verify_dopamine_core_patterns_and_phases():
 		return
@@ -108,6 +147,18 @@ func _wait_for_entity_type(session: Node2D, expected_type: String) -> bool:
 		await process_frame
 		for entity in session.simulation.snapshot()["entities"]:
 			if entity["components"].get("EnemyType", "") == expected_type:
+				return true
+	return false
+
+func _wait_for_displacement(session: Node2D, expected_type: String, start: Vector2, distance: float) -> bool:
+	var deadline := Time.get_ticks_msec() + 1500
+	while Time.get_ticks_msec() < deadline:
+		await process_frame
+		for entity in session.simulation.snapshot()["entities"]:
+			if entity["components"].get("EnemyType", "") != expected_type:
+				continue
+			var transform: Dictionary = entity["components"]["Transform2D"]
+			if Vector2(float(transform["x"]), float(transform["y"])).distance_to(start) >= distance:
 				return true
 	return false
 

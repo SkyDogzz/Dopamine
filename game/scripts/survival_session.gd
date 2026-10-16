@@ -73,6 +73,8 @@ const WAVE_HP_CAP := 12.0
 @export var pulse_warden_projectile_damage: float = 8.0
 @export var pulse_warden_projectile_radius: float = 7.0
 @export var pulse_warden_projectile_lifetime: float = 4.0
+@export var pulse_warden_charge_speed: float = 320.0
+@export var pulse_warden_charge_seconds: float = 0.28
 @export_group("Prototype Dopamine Core — proposed patterns")
 @export_range(0.1, 0.9, 0.01) var final_boss_phase_two_health_ratio: float = 0.66
 @export_range(0.1, 0.8, 0.01) var final_boss_phase_three_health_ratio: float = 0.33
@@ -830,24 +832,40 @@ func _update_pulse_warden_attacks(current_simulation_time: float, paused: bool) 
 		var transform: Dictionary = components["Transform2D"]
 		var origin := Vector2(float(transform["x"]), float(transform["y"]))
 		if not _pulse_warden_attacks.has(key):
-			_pulse_warden_attacks[key] = {"phase": phase, "pattern_index": 0,
+			_pulse_warden_attacks[key] = {"entity_id": id, "phase": phase, "pattern_index": 0,
 				"stage": "waiting", "next_attack_at": current_simulation_time + pulse_warden_attack_interval_seconds}
 		var attack: Dictionary = _pulse_warden_attacks[key]
 		attack["origin"] = origin
+		attack["entity_id"] = id
 		if int(attack["phase"]) != phase:
 			attack["phase"] = phase
+			attack["pattern_index"] = 0
 			attack["stage"] = "waiting"
 			attack["next_attack_at"] = current_simulation_time + maxf(0.1, pulse_warden_telegraph_seconds)
-		if str(attack["stage"]) == "telegraph":
+		if str(attack["stage"]) == "charging":
+			if current_simulation_time < float(attack["charge_end_at"]):
+				continue
+			attack["stage"] = "waiting"
+			attack["pattern_index"] = int(attack["pattern_index"]) + 1
+			attack["next_attack_at"] = current_simulation_time + maxf(0.1, pulse_warden_attack_interval_seconds)
+			_last_target = Vector2(INF, INF)
+		elif str(attack["stage"]) == "telegraph":
 			if current_simulation_time < float(attack["fire_at"]):
 				continue
 			_fire_pulse_warden_attack(attack)
+			if str(attack["stage"]) == "charging":
+				continue
 			attack["stage"] = "waiting"
 			attack["pattern_index"] = int(attack["pattern_index"]) + 1
 			attack["next_attack_at"] = current_simulation_time + maxf(0.1, pulse_warden_attack_interval_seconds)
 		elif current_simulation_time >= float(attack["next_attack_at"]):
 			var pattern_index: int = int(attack["pattern_index"])
-			attack["pattern"] = "radial" if phase == 1 or (phase == 3 and pattern_index % 2 == 0) else "aimed"
+			if phase == 1:
+				attack["pattern"] = "radial"
+			elif phase == 2:
+				attack["pattern"] = "aimed" if pattern_index % 2 == 0 else "charge"
+			else:
+				attack["pattern"] = "radial" if pattern_index % 2 == 0 else "charge"
 			attack["aim"] = player.global_position
 			attack["fire_at"] = current_simulation_time + maxf(0.1, pulse_warden_telegraph_seconds)
 			attack["stage"] = "telegraph"
@@ -857,12 +875,26 @@ func _update_pulse_warden_attacks(current_simulation_time: float, paused: bool) 
 
 func _fire_pulse_warden_attack(attack: Dictionary) -> void:
 	var origin: Vector2 = attack["origin"]
-	if str(attack["pattern"]) == "radial":
+	var pattern: String = str(attack["pattern"])
+	if pattern == "radial":
 		var count := maxi(4, pulse_warden_radial_projectile_count)
 		for index in range(count):
 			var direction := Vector2.from_angle(TAU * float(index) / float(count))
 			simulation.spawn_projectile("enemy_projectile", origin, direction * pulse_warden_projectile_speed,
 					pulse_warden_projectile_damage, pulse_warden_projectile_radius, pulse_warden_projectile_lifetime)
+	elif pattern == "charge":
+		var aim: Vector2 = attack["aim"]
+		var direction := (aim - origin).normalized()
+		if direction == Vector2.ZERO:
+			direction = Vector2.RIGHT
+		var entity_id: Dictionary = attack["entity_id"]
+		var sequence: int = simulation.dash_entity(
+			int(entity_id["index"]), int(entity_id["generation"]),
+			direction * pulse_warden_charge_speed, pulse_warden_charge_seconds
+		)
+		if sequence > 0:
+			attack["stage"] = "charging"
+			attack["charge_end_at"] = float(attack["fire_at"]) + pulse_warden_charge_seconds
 	else:
 		var aim: Vector2 = attack["aim"]
 		var direction := (aim - origin).normalized()
@@ -2116,6 +2148,12 @@ func _draw() -> void:
 			draw_circle(origin, 32.0 + alpha * 48.0, Color(1.0, 0.28, 0.2, 0.04 + alpha * 0.08))
 			draw_arc(origin, 32.0 + alpha * 48.0, 0.0, TAU, 48,
 					Color(1.0, 0.4, 0.26, 0.35 + alpha * 0.55), 2.0, true)
+		elif str(attack["pattern"]) == "charge":
+			var aim: Vector2 = attack["aim"]
+			draw_line(origin, aim, Color(1.0, 0.82, 0.25, 0.28 + alpha * 0.62), 8.0 + alpha * 4.0, true)
+			draw_line(origin, aim, Color(1.0, 0.98, 0.72, 0.35 + alpha * 0.55), 2.0, true)
+			draw_arc(aim, 20.0 + alpha * 6.0, 0.0, TAU, 32,
+					Color(1.0, 0.82, 0.25, 0.4 + alpha * 0.5), 2.0, true)
 		else:
 			var aim: Vector2 = attack["aim"]
 			draw_line(origin, aim, Color(1.0, 0.3, 0.24, 0.2 + alpha * 0.55), 3.0, true)

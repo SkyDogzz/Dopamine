@@ -199,6 +199,23 @@ int main() {
 	require(orb_state && orb_state->is_projectile && orb_state->projectile.attraction_radius == 150.0F &&
 			orb_state->projectile.attraction_speed == 40.0F && orb_state->projectile.pierces_targets,
 			"Void Orb field parameters should remain on the shared projectile state");
+	SimulationCore charging_boss;
+	const auto boss_charge = charging_boss.spawn("mid_boss", 0.0F, 0.0F, 1000.0F, 0.0F, 0.0F, 1.0F, 75.0F);
+	require(charging_boss.dash_entity(boss_charge, 0.0F, 200.0F, 0.2),
+			"a valid boss entity should accept a timed movement override");
+	charging_boss.steer_enemies_towards(500.0F, 0.0F, {.max_speed = 75.0F, .separation_radius = 0.0F});
+	charging_boss.advance(0.1);
+	auto charging_state = charging_boss.entity(boss_charge);
+	require(charging_state && std::abs(charging_state->transform.y - 20.0F) < 1e-5F &&
+			charging_state->velocity.y == 200.0F && charging_state->movement_override.has_value(),
+			"timed movement should override target steering and move the entity at dash velocity");
+	SimulationCore restored_charge;
+	restored_charge.restore_state(charging_boss.capture_state());
+	restored_charge.advance(0.1);
+	charging_state = restored_charge.entity(boss_charge);
+	require(charging_state && std::abs(charging_state->transform.y - 40.0F) < 1e-5F &&
+			!charging_state->movement_override.has_value() && charging_state->velocity.y == 0.0F,
+			"movement override duration should survive snapshots and stop on expiry");
 	SimulationCore restored_void_orb;
 	restored_void_orb.restore_state(void_orb.capture_state());
 	const auto restored_orb_state = restored_void_orb.entity(gravity_orb);

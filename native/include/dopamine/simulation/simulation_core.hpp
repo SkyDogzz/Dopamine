@@ -133,6 +133,11 @@ struct ChillEffect {
 	float damage_taken_multiplier = 1.0F;
 };
 
+struct MovementOverride {
+	Velocity2D velocity;
+	double remaining_seconds = 0.0;
+};
+
 enum class CombatEventType {
 	Damage,
 	Death,
@@ -167,6 +172,7 @@ struct Entity {
 	float xp_value = 0.0F;
 	std::optional<DamageOverTime> damage_over_time;
 	std::optional<ChillEffect> chill_effect;
+	std::optional<MovementOverride> movement_override;
 };
 
 struct SimulationCoreState {
@@ -195,6 +201,7 @@ public:
 			double duration_seconds);
 	bool apply_chill(EntityId target, double duration_seconds, float speed_multiplier,
 		float damage_taken_multiplier = 1.0F);
+	bool dash_entity(EntityId target, float velocity_x, float velocity_y, double duration_seconds);
 	void apply_direct_damage(EntityId source, EntityId target, float amount, std::vector<CombatEvent> &events);
 	bool collect_xp_orb(EntityId id, std::vector<CombatEvent> &events);
 	bool despawn(EntityId id);
@@ -242,6 +249,7 @@ private:
 	std::vector<float> xp_values_;
 	std::vector<std::optional<DamageOverTime>> damage_over_time_;
 	std::vector<std::optional<ChillEffect>> chill_effects_;
+	std::vector<std::optional<MovementOverride>> movement_overrides_;
 	std::vector<uint32_t> free_indices_;
 	std::size_t entity_count_ = 0;
 	double simulation_time_ = 0.0;

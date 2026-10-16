@@ -465,6 +465,8 @@ Note de clôture : le blocage historique du smoke `sandbox_ui_smoke.gd` décrit 
 
 - [x] `catalog_icon_assets_smoke.gd` passe sous Godot 4.7.2 pour catalogue, icônes UI, roster, projectiles, impacts, environnement, récompenses et fond skyline; il vérifie les dimensions, palettes et sources Aseprite attendues.
 - [x] Le smoke d’assets vérifie aussi le PNG/source Aseprite 96×96 du Dopamine Core, sa transparence, sa palette ≤16 couleurs et son routage depuis l’entité `final_boss`; `survival_boss_attack_smoke.gd` passe avec le nouveau sprite chargé.
+- [x] `simulation_core` vérifie le déplacement temporisé prioritaire au steering et sa continuité après capture/restauration; `simulation_worker` vérifie le format de snapshot mis à jour. `survival_boss_attack_smoke.gd` vérifie la télégraphie et le déplacement de charge du Pulse Warden en phase 3, ainsi que sa séquence radiale.
+- [x] Après l’ajout des charges de phase 2/3, build natif Debug et un passage de suite CTest complète : 44/44 passent sous Godot 4.7.2 avec `XDG_DATA_HOME` isolé. Deux autres passages complets ont signalé des échecs intermittents des smokes `survival_weapon_catalog_smoke` et `survival_run_result_smoke`; les smokes ciblés repassent seuls/rerun. Ces tests ne sont pas modifiés par cette tranche; leur nondéterminisme reste à corriger avant de considérer la suite fiable.
 - [x] `pilot_asset_batch_smoke.gd` passe pour les exports animés du joueur et leurs sources; `signal_prism_asset_smoke.gd` passe pour l’emblème et son intégration à l’accueil.
 - [x] L’audit de références runtime ne trouve plus d’asset SVG parmi les visuels chargés par les scènes/scripts; les anciens SVG restants sont des références inactives, sauf une référence historique dans `combat_catalog_smoke.gd`.
 

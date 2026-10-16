@@ -33,6 +33,8 @@ void CombatSimulation::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("apply_sandbox_overrides", "overrides"), &CombatSimulation::apply_sandbox_overrides);
 	ClassDB::bind_method(D_METHOD("set_steering_target", "position", "max_speed", "separation_radius", "separation_weight"),
 			&CombatSimulation::set_steering_target);
+	ClassDB::bind_method(D_METHOD("dash_entity", "index", "generation", "velocity", "duration_seconds"),
+			&CombatSimulation::dash_entity);
 	ClassDB::bind_method(D_METHOD("acknowledge_events", "event_sequence"), &CombatSimulation::acknowledge_events);
 	ClassDB::bind_method(D_METHOD("health_decay_amount", "active_time_seconds", "delta_seconds"),
 			&CombatSimulation::health_decay_amount);
@@ -303,6 +305,22 @@ int64_t CombatSimulation::set_steering_target(Vector2 position, float max_speed,
 	return submit(std::move(command));
 }
 
+int64_t CombatSimulation::dash_entity(int64_t index, int64_t generation, Vector2 velocity, double duration_seconds) {
+	constexpr int64_t max_id = std::numeric_limits<uint32_t>::max();
+	if (index < 0 || index > max_id || generation <= 0 || generation > max_id ||
+			!std::isfinite(velocity.x) || !std::isfinite(velocity.y) ||
+			!std::isfinite(duration_seconds) || duration_seconds <= 0.0) {
+		return 0;
+	}
+	SimulationCommand command;
+	command.type = CommandType::DashEntity;
+	command.entity = {static_cast<uint32_t>(index), static_cast<uint32_t>(generation)};
+	command.velocity_x = static_cast<float>(velocity.x);
+	command.velocity_y = static_cast<float>(velocity.y);
+	command.movement_duration_seconds = duration_seconds;
+	return submit(std::move(command));
+}
+
 int64_t CombatSimulation::acknowledge_events(int64_t event_sequence) {
 	if (event_sequence < 0) {
 		return 0;
@@ -407,6 +425,15 @@ Dictionary CombatSimulation::snapshot() const {
 			chill["speed_multiplier"] = entity.chill_effect->speed_multiplier;
 			chill["damage_taken_multiplier"] = entity.chill_effect->damage_taken_multiplier;
 			components["Chill"] = chill;
+		}
+		if (entity.movement_override.has_value()) {
+			Dictionary movement;
+			Dictionary movement_velocity;
+			movement_velocity["x"] = entity.movement_override->velocity.x;
+			movement_velocity["y"] = entity.movement_override->velocity.y;
+			movement["velocity"] = movement_velocity;
+			movement["remaining_seconds"] = entity.movement_override->remaining_seconds;
+			components["MovementOverride"] = movement;
 		}
 		if (entity.is_projectile) {
 			Dictionary projectile;

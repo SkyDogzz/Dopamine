@@ -90,6 +90,7 @@ EntityId SimulationCore::spawn(std::string type, float x, float y, float hp, flo
 		xp_values_.push_back(0.0F);
 		damage_over_time_.emplace_back();
 		chill_effects_.emplace_back();
+		movement_overrides_.emplace_back();
 	} else {
 		index = free_indices_.back();
 		free_indices_.pop_back();
@@ -116,6 +117,7 @@ EntityId SimulationCore::spawn(std::string type, float x, float y, float hp, flo
 	xp_values_[index] = 0.0F;
 	damage_over_time_[index].reset();
 	chill_effects_[index].reset();
+	movement_overrides_[index].reset();
 	++entity_count_;
 	return id;
 }
@@ -242,6 +244,22 @@ bool SimulationCore::apply_chill(EntityId target, double duration_seconds, float
 	return true;
 }
 
+bool SimulationCore::dash_entity(EntityId target, float velocity_x, float velocity_y, double duration_seconds) {
+	if (!std::isfinite(velocity_x) || !std::isfinite(velocity_y) ||
+			!std::isfinite(duration_seconds) || duration_seconds <= 0.0) {
+		throw std::invalid_argument("movement override requires finite velocity and positive duration");
+	}
+	if (target.index >= slots_.size() || !slots_[target.index].active ||
+			slots_[target.index].generation != target.generation || projectile_flags_[target.index] ||
+		xp_orb_flags_[target.index]) {
+		return false;
+	}
+	const MovementOverride movement{{velocity_x, velocity_y}, duration_seconds};
+	movement_overrides_[target.index] = movement;
+	velocities_[target.index] = movement.velocity;
+	return true;
+}
+
 void SimulationCore::apply_direct_damage(EntityId source, EntityId target, float amount,
 		std::vector<CombatEvent> &events) {
 	if (!std::isfinite(amount) || amount <= 0.0F) {
@@ -303,6 +321,7 @@ void SimulationCore::reset() {
 	simulation_time_ = 0.0;
 	for (auto &effect : damage_over_time_) effect.reset();
 	for (auto &effect : chill_effects_) effect.reset();
+	for (auto &movement : movement_overrides_) movement.reset();
 }
 
 SimulationCoreState SimulationCore::capture_state() const {
@@ -322,6 +341,7 @@ SimulationCoreState SimulationCore::capture_state() const {
 		entity.xp_value = xp_values_[index];
 		entity.damage_over_time = damage_over_time_[index];
 		entity.chill_effect = chill_effects_[index];
+		entity.movement_override = movement_overrides_[index];
 		state.entities.push_back(std::move(entity));
 		state.active_slots.push_back(slots_[index].active);
 	}
@@ -449,6 +469,14 @@ void SimulationCore::restore_state(const SimulationCoreState &state) {
 				throw std::invalid_argument("invalid simulation core chill state");
 			}
 		}
+		if (entity.movement_override.has_value()) {
+			const MovementOverride &movement = *entity.movement_override;
+			if (!std::isfinite(movement.velocity.x) || !std::isfinite(movement.velocity.y) ||
+					!std::isfinite(movement.remaining_seconds) || movement.remaining_seconds <= 0.0 ||
+					entity.is_projectile || entity.is_xp_orb) {
+				throw std::invalid_argument("invalid simulation core movement override state");
+			}
+		}
 	}
 	if (active_count != state.entity_count || state.free_indices.size() + active_count != slot_count) {
 		throw std::invalid_argument("inconsistent simulation core entity counts");
@@ -466,6 +494,7 @@ void SimulationCore::restore_state(const SimulationCoreState &state) {
 	restored.xp_values_.reserve(slot_count);
 	restored.damage_over_time_.reserve(slot_count);
 	restored.chill_effects_.reserve(slot_count);
+	restored.movement_overrides_.reserve(slot_count);
 	for (std::size_t index = 0; index < slot_count; ++index) {
 		const Entity &entity = state.entities[index];
 		restored.slots_.push_back({entity.id.generation, state.active_slots[index]});
@@ -479,6 +508,7 @@ void SimulationCore::restore_state(const SimulationCoreState &state) {
 		restored.xp_values_.push_back(entity.xp_value);
 		restored.damage_over_time_.push_back(entity.damage_over_time);
 		restored.chill_effects_.push_back(entity.chill_effect);
+		restored.movement_overrides_.push_back(entity.movement_override);
 	}
 	restored.free_indices_ = state.free_indices;
 	restored.entity_count_ = state.entity_count;
@@ -591,8 +621,20 @@ std::vector<CombatEvent> SimulationCore::advance(double delta_seconds) {
 			: std::vector<Transform2D>{};
 	for (std::size_t index = 0; index < slots_.size(); ++index) {
 		if (slots_[index].active && !projectile_flags_[index] && !xp_orb_flags_[index]) {
-			transforms_[index].x += velocities_[index].x * static_cast<float>(delta_seconds);
-			transforms_[index].y += velocities_[index].y * static_cast<float>(delta_seconds);
+			if (movement_overrides_[index].has_value()) {
+				MovementOverride &movement = *movement_overrides_[index];
+				const double movement_seconds = std::min(delta_seconds, movement.remaining_seconds);
+				transforms_[index].x += movement.velocity.x * static_cast<float>(movement_seconds);
+				transforms_[index].y += movement.velocity.y * static_cast<float>(movement_seconds);
+				movement.remaining_seconds -= delta_seconds;
+				if (movement.remaining_seconds <= 1e-12) {
+					movement_overrides_[index].reset();
+					velocities_[index] = {};
+				}
+			} else {
+				transforms_[index].x += velocities_[index].x * static_cast<float>(delta_seconds);
+				transforms_[index].y += velocities_[index].y * static_cast<float>(delta_seconds);
+			}
 		}
 	}
 
@@ -882,6 +924,9 @@ void SimulationCore::steer_enemies_towards(float target_x, float target_y, Steer
 		if (!slots_[index].active || projectile_flags_[index] || xp_orb_flags_[index]) {
 			continue;
 		}
+		if (movement_overrides_[index].has_value()) {
+			continue;
+		}
 		enemy_types_[index].supported = false;
 		enemy_types_[index].shielded = false;
 		enemy_types_[index].shield_source = {};
@@ -1120,7 +1165,7 @@ std::optional<Entity> SimulationCore::entity(EntityId id) const {
 	const size_t index = static_cast<size_t>(id.index);
 	return Entity{id, transforms_[index], velocities_[index], health_[index], enemy_types_[index],
 			projectile_flags_[index], projectiles_[index], xp_orb_flags_[index], xp_values_[index],
-			damage_over_time_[index], chill_effects_[index]};
+		damage_over_time_[index], chill_effects_[index], movement_overrides_[index]};
 }
 
 std::vector<Entity> SimulationCore::snapshot() const {
@@ -1131,7 +1176,7 @@ std::vector<Entity> SimulationCore::snapshot() const {
 			const EntityId id{index, slots_[index].generation};
 			result.push_back({id, transforms_[index], velocities_[index], health_[index], enemy_types_[index],
 					projectile_flags_[index], projectiles_[index], xp_orb_flags_[index], xp_values_[index],
-					damage_over_time_[index], chill_effects_[index]});
+					damage_over_time_[index], chill_effects_[index], movement_overrides_[index]});
 		}
 	}
 	return result;
