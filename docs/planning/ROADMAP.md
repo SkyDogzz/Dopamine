@@ -553,8 +553,9 @@ Travail requis :
   - [ ] Décider quels gains permanents sont attribués à Armorless.
   - [ ] Vérifier qu’aucun équipement permanent n’est accordé avant validation explicite.
 - [ ] **P7A.6 — Validation**
-  - [ ] Tester une vague, une transition boss, un draft, une amélioration et la mort.
-  - [ ] Tester une session longue et l’idempotence des résultats/classements.
+  - [x] Tester une vague, une transition boss, un draft, une amélioration et la défaite; `armorless_session_cycle_smoke.gd`, `survival_armorless_mode_smoke.gd` et `armorless_run_state_smoke.gd` couvrent ces chemins.
+  - [x] Vérifier l’idempotence des classements avec `armorless_records_smoke.gd`.
+  - [ ] Valider une longue session Armorless intégrée en durée de production; les cinq cycles boss jusqu’à la vague 60 sont actuellement couverts par le directeur, pas par une partie complète.
   - [x] Enregistrer et afficher les records locaux par difficulté, triés par vague puis temps et kills; `armorless_records_smoke.gd` vérifie le classement, l’isolation des récompenses, l’idempotence, le refus des données invalides et la migration v7→v8.
   - [x] Afficher dans le hub le record Armorless de la difficulté sélectionnée; les smokes couvrent la mise à jour par profil et le layout à 640×360, 1280×720 et 1920×1080.
   - [x] Ajouter une vue en lecture seule comparant les records des cinq difficultés; clavier/manette, restauration du focus et layout 640×360, 1280×720 et 1920×1080 sont couverts par les smokes du hub.

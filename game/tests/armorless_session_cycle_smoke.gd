@@ -4,6 +4,8 @@ func _initialize() -> void:
 	call_deferred("_run")
 
 func _run() -> void:
+	var normal_saves := ProjectSettings.globalize_path("user://saves")
+	var saves_before := _save_fingerprints(normal_saves)
 	var session: Node2D = load("res://scenes/survival_session.tscn").instantiate()
 	session.mode_id = "armorless"
 	session.wave_duration_seconds = 0.03
@@ -61,8 +63,7 @@ func _run() -> void:
 		return
 	session.queue_free()
 	await process_frame
-	var normal_saves := ProjectSettings.globalize_path("user://saves")
-	if DirAccess.dir_exists_absolute(normal_saves) and not DirAccess.get_files_at(normal_saves).is_empty():
+	if _save_fingerprints(normal_saves) != saves_before:
 		_fail("An Armorless session cycle must not create or modify normal save slots")
 		return
 	print("Armorless session cycle smoke passed 12 drafts, boss transition and temporary cleanup")
@@ -86,6 +87,14 @@ func _wait_until(predicate: Callable) -> bool:
 		if predicate.call():
 			return true
 	return false
+
+func _save_fingerprints(directory: String) -> Dictionary:
+	var fingerprints := {}
+	if not DirAccess.dir_exists_absolute(directory):
+		return fingerprints
+	for file_name in DirAccess.get_files_at(directory):
+		fingerprints[file_name] = FileAccess.get_sha256(directory.path_join(file_name))
+	return fingerprints
 
 func _fail(message: String) -> void:
 	push_error(message)

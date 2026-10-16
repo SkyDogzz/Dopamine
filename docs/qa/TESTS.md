@@ -875,6 +875,8 @@ Note de clôture : le blocage historique du smoke `sandbox_ui_smoke.gd` décrit 
 - [x] Les sept tests ciblés progression/migration/Sandbox/Armorless passent sous CTest.
 - [ ] Suite complète au 2026-10-16 : 69/84 passent. Dix scénarios d’armes Sandbox échouent à compiler la session car `Sfx` est absent de leur contexte de script; les autres échecs observés sont `combat_catalog_smoke`, `survival_starting_weapon_smoke`, `survival_unique_effects_smoke`, `free_chest_reroll_smoke` et `sandbox_steering_scenario`.
 - [ ] Une session Armorless complète en durée de production reste à valider.
+- [x] Le 2026-10-16, six smokes Armorless passent via `tools/run_godot_test.sh` : état temporaire, générateur, directeur jusqu’à cinq cycles boss/vague 60, application/isolation de progression, session de douze drafts avec boss 12, et records/idempotence. Cette intégration courte ne remplace pas une session complète de production.
+- [x] `armorless_session_cycle_smoke.gd` compare les empreintes SHA-256 des fichiers de sauvegarde normale avant/après; les profils déjà présents ne provoquent plus de faux échec et toute création/modification de fichier est détectée.
 
 ## P5 — Régression intégration combat — 2026-10-16
 
