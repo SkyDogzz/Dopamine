@@ -182,6 +182,8 @@ Douze statistiques candidates : dégâts %, vitesse d'attaque %, chance critique
 
 [PROPOSÉ] Répartition des 120 familles : Combat 25 ; Survival 15 ; Weapons 20 ; Relics & Evolutions 15 ; Equipment 15 ; Difficulty & Bosses 15 ; Progression 10 ; Secrets 5. Jusqu'à 480 récompenses de palier.
 
+[PROPOSÉ — prototype étendu] Le catalogue actuel contient 100 familles, au plancher de la plage [VALIDÉE] de 100–150; la cible éditoriale de 120 ci-dessus reste [PROPOSÉE]. L’extension ajoute dix records de niveau maximal d’arme (niveaux 2–5; +0,0025 point de pourcentage de dégâts par palier), six suivis d’éliminations par affixe élite (1/5/15/50; +0,0025 point de pourcentage de dégâts par palier) et une maîtrise de variété des affixes (1/3/5/6 types; +0,0025 point de pourcentage de dégâts par palier). Ces seuils et bonus sont des hypothèses de départ, pas un arbitrage du budget de puissance.
+
 Exemple Exterminator : 100 / 1 000 / 10 000 / 100 000 kills cumulés ; bonus par palier +0,05 / +0,10 / +0,15 / +0,20 points de pourcentage de dégâts ; total +0,50 % au Diamond. Autres exemples : coups critiques, élites tuées, dégâts par arme, guérison cumulée, boss vaincus, équipement démantelé, enhancements réussis, runs Chaos, évolutions déclenchées.
 
 Effets uniques proposés : Lightning supplémentaire occasionnel ; bouclier temporaire issu du soin excédentaire ; onde de choc à la première évolution ; vitesse temporaire après élimination d’élite ; reroll gratuit du premier chest ; onde de recul à la résurrection. Les comportements de prototype détaillés dans `docs/planning/PROPOSITION_P5.md` ne deviennent pas des décisions du GDD sans validation. Aucun achievement ne désactive le HP decay ni ne procure de revive infini.

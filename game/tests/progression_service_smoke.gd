@@ -400,7 +400,7 @@ func _run() -> void:
 		_fail("Dismantling should remove the item once and persist its proposed rarity powder reward")
 		return
 	var achievement_service = load("res://scripts/progression_service.gd").new(save_service, "achievement")
-	if achievement_service._achievement_definitions.size() != 83 or \
+	if achievement_service._achievement_definitions.size() != 100 or \
 		not achievement_service._achievement_definitions.has("survivor_depth") or \
 		not achievement_service._achievement_definitions.has("veteran_runner") or \
 		not achievement_service._achievement_definitions.has("boss_slayer") or \
@@ -428,18 +428,23 @@ func _run() -> void:
 		"enemy_kills_chaser": 100,
 		"weapon_damage_lightning_conductor": 1250.0,
 		"weapon_kills_lightning_conductor": 10,
+		"max_weapon_level_lightning_conductor": 5,
+		"elite_affix_kills_hasted": 1,
 		"max_relic_level_storm_core": 5,
 		"evolutions_lightning_conductor": 1,
 	})
 	var run_metrics_profile: Dictionary = run_metrics_service.load_profile()["profile"]
 	var rewarded_equipment: Dictionary = run_metrics_award.get("equipment", {})
-	if not run_metrics_award.get("ok", false) or run_metrics_award.get("new_achievement_tier_count") != 16 or \
+	if not run_metrics_award.get("ok", false) or run_metrics_award.get("new_achievement_tier_count") != 22 or \
 		run_metrics_profile["achievement_progress"]["metrics"].get("max_weapon_loadout") != 3 or \
 		run_metrics_profile["achievement_progress"]["metrics"].get("max_relic_loadout") != 4 or \
 		run_metrics_profile["achievement_progress"]["metrics"].get("evolutions_in_run") != 2 or \
 		run_metrics_profile["achievement_progress"]["metrics"].get("enemy_kills_chaser") != 100 or \
 		run_metrics_profile["achievement_progress"]["metrics"].get("weapon_damage_lightning_conductor") != 1250.0 or \
 		run_metrics_profile["achievement_progress"]["metrics"].get("weapon_kills_lightning_conductor") != 10 or \
+		run_metrics_profile["achievement_progress"]["metrics"].get("max_weapon_level_lightning_conductor") != 5 or \
+		run_metrics_profile["achievement_progress"]["metrics"].get("elite_affix_kills_hasted") != 1 or \
+		run_metrics_profile["achievement_progress"]["metrics"].get("elite_affix_types_defeated") != 1 or \
 		run_metrics_profile["achievement_progress"]["metrics"].get("max_relic_level_storm_core") != 5 or \
 		run_metrics_profile["achievement_progress"]["metrics"].get("evolutions_lightning_conductor") != 1 or \
 		run_metrics_profile["achievement_progress"]["metrics"].get("equipment_rarity_%s" % str(rewarded_equipment.get("rarity", ""))) != 1 or \
@@ -453,6 +458,9 @@ func _run() -> void:
 		run_metrics_profile["achievement_progress"]["tiers"].get("enemy_hunter_chaser") != 1 or \
 		run_metrics_profile["achievement_progress"]["tiers"].get("weapon_mastery_lightning_conductor") != 1 or \
 		run_metrics_profile["achievement_progress"]["tiers"].get("weapon_killer_lightning_conductor") != 1 or \
+		run_metrics_profile["achievement_progress"]["tiers"].get("weapon_level_mastery_lightning_conductor") != 4 or \
+		run_metrics_profile["achievement_progress"]["tiers"].get("elite_affix_hunter_hasted") != 1 or \
+		run_metrics_profile["achievement_progress"]["tiers"].get("elite_affix_variety") != 1 or \
 		run_metrics_profile["achievement_progress"]["tiers"].get("relic_mastery_storm_core") != 4 or \
 		run_metrics_profile["achievement_progress"]["tiers"].get("evolution_mastery_lightning_conductor") != 1:
 		_fail("Run build metrics should advance weapon, relic, evolution and survival achievements: %s / %s" % [str(run_metrics_award), str(run_metrics_profile["achievement_progress"])])
@@ -460,9 +468,11 @@ func _run() -> void:
 	if run_metrics_service.award_survival_run("invalid-metrics", 12, false, 0, "easy", {"unknown_metric": 1}).get("error") != "invalid_achievement_metrics" or \
 		run_metrics_service.award_survival_run("forged-equipment-metric", 12, false, 0, "easy", {"equipment_rarity_normal": 99}).get("error") != "invalid_achievement_metrics" or \
 		run_metrics_service.award_survival_run("forged-difficulty-metric", 12, false, 0, "easy", {"boss_victories_at_difficulty_easy": 99}).get("error") != "invalid_achievement_metrics" or \
+		run_metrics_service.award_survival_run("forged-affix-variety", 12, false, 0, "easy", {"elite_affix_types_defeated": 6}).get("error") != "invalid_achievement_metrics" or \
 		run_metrics_service.load_profile()["profile"]["rewarded_survival_runs"].has("invalid-metrics") or \
 		run_metrics_service.load_profile()["profile"]["rewarded_survival_runs"].has("forged-equipment-metric") or \
-		run_metrics_service.load_profile()["profile"]["rewarded_survival_runs"].has("forged-difficulty-metric"):
+		run_metrics_service.load_profile()["profile"]["rewarded_survival_runs"].has("forged-difficulty-metric") or \
+		run_metrics_service.load_profile()["profile"]["rewarded_survival_runs"].has("forged-affix-variety"):
 		_fail("Unknown or service-derived metrics must be rejected before any reward or idempotency state is saved")
 		return
 	var previous_v7_profile := run_metrics_profile.duplicate(true)
@@ -474,10 +484,17 @@ func _run() -> void:
 	for weapon_id in ["lightning_conductor", "inferno_sprayer", "crimson_daggers", "minigun", "toxic_cloud", "sawblades", "meteor_staff", "prism_laser", "void_orb", "frost_nova"]:
 		previous_v7_profile["achievement_progress"]["metrics"].erase("weapon_damage_%s" % weapon_id)
 		previous_v7_profile["achievement_progress"]["metrics"].erase("weapon_kills_%s" % weapon_id)
+		previous_v7_profile["achievement_progress"]["metrics"].erase("max_weapon_level_%s" % weapon_id)
+		previous_v7_profile["achievement_progress"]["tiers"].erase("weapon_level_mastery_%s" % weapon_id)
 		previous_v7_profile["achievement_progress"]["tiers"].erase("weapon_mastery_%s" % weapon_id)
 		previous_v7_profile["achievement_progress"]["tiers"].erase("weapon_killer_%s" % weapon_id)
 		previous_v7_profile["achievement_progress"]["metrics"].erase("evolutions_%s" % weapon_id)
 		previous_v7_profile["achievement_progress"]["tiers"].erase("evolution_mastery_%s" % weapon_id)
+	for affix_id in ["hasted", "armored", "regenerating", "volatile", "shielded", "split_on_death"]:
+		previous_v7_profile["achievement_progress"]["metrics"].erase("elite_affix_kills_%s" % affix_id)
+		previous_v7_profile["achievement_progress"]["tiers"].erase("elite_affix_hunter_%s" % affix_id)
+	previous_v7_profile["achievement_progress"]["metrics"].erase("elite_affix_types_defeated")
+	previous_v7_profile["achievement_progress"]["tiers"].erase("elite_affix_variety")
 	for relic_id in ["storm_core", "infernal_heart", "blood_chalice", "overdrive_engine", "plague_mask", "magnetic_coil", "celestial_eye", "prism_crystal", "singularity", "frozen_crown", "magnet_heart"]:
 		previous_v7_profile["achievement_progress"]["metrics"].erase("max_relic_level_%s" % relic_id)
 		previous_v7_profile["achievement_progress"]["tiers"].erase("relic_mastery_%s" % relic_id)
@@ -504,6 +521,10 @@ func _run() -> void:
 		migrated_v7_profile["achievement_progress"]["tiers"].get("weapon_mastery_lightning_conductor") != 0 or \
 		migrated_v7_profile["achievement_progress"]["metrics"].get("weapon_kills_lightning_conductor") != 0 or \
 		migrated_v7_profile["achievement_progress"]["tiers"].get("weapon_killer_lightning_conductor") != 0 or \
+		migrated_v7_profile["achievement_progress"]["metrics"].get("max_weapon_level_lightning_conductor") != 0 or \
+		migrated_v7_profile["achievement_progress"]["tiers"].get("weapon_level_mastery_lightning_conductor") != 0 or \
+		migrated_v7_profile["achievement_progress"]["metrics"].get("elite_affix_kills_hasted") != 0 or \
+		migrated_v7_profile["achievement_progress"]["tiers"].get("elite_affix_hunter_hasted") != 0 or \
 		migrated_v7_profile["achievement_progress"]["metrics"].get("max_relic_level_storm_core") != 0 or \
 		migrated_v7_profile["achievement_progress"]["tiers"].get("relic_mastery_storm_core") != 0 or \
 		migrated_v7_profile["achievement_progress"]["metrics"].get("evolutions_lightning_conductor") != 0 or \

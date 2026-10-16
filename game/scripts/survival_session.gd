@@ -50,6 +50,10 @@ const ENEMY_DEATH_PIXEL_LIFETIME := 0.32
 const ENEMY_DEATH_PIXEL_COUNT := 8
 const MAX_ENEMY_DEATH_PIXELS := 256
 const ENEMY_DEATH_TYPES := ["chaser", "sprinter", "tank", "shooter", "buffer", "exploder", "shielder", "summoner", "summoned", "elite", "mid_boss", "final_boss"]
+const ELITE_AFFIX_ACHIEVEMENT_IDS := {
+	"Hasted": "hasted", "Armored": "armored", "Regenerating": "regenerating",
+	"Volatile": "volatile", "Shielded": "shielded", "Split-on-Death": "split_on_death",
+}
 const WEAPON_DAMAGE_IDS := ["lightning_conductor", "inferno_sprayer", "crimson_daggers", "minigun", "toxic_cloud", "sawblades", "meteor_staff", "prism_laser", "void_orb", "frost_nova"]
 const RELIC_ACHIEVEMENT_IDS := ["storm_core", "infernal_heart", "blood_chalice", "overdrive_engine", "plague_mask", "magnetic_coil", "celestial_eye", "prism_crystal", "singularity", "frozen_crown", "magnet_heart"]
 const ENEMY_DEATH_PALETTE := [Color("#D4D9E8"), Color("#37E8F5"), Color("#087FB2"), Color("#F6F7FF")]
@@ -312,6 +316,7 @@ var run_over := false
 var _victory_pending := false
 var kill_count := 0
 var _enemy_kills_by_type: Dictionary = {}
+var _elite_affix_kills: Dictionary = {}
 var _weapon_damage_by_id: Dictionary = {}
 var _weapon_kills_by_id: Dictionary = {}
 var _last_target := Vector2(INF, INF)
@@ -799,9 +804,9 @@ func _process(_delta: float) -> void:
 				kill_count += 1
 				var dead_target: Dictionary = event["target"]
 				var dead_enemy_type: String = str(event.get("target_type", ""))
-				_record_enemy_kill(dead_enemy_type)
-				_record_weapon_kill(str(event.get("source_type", "")))
 				var dead_enemy_affix: String = str(event.get("target_affix", ""))
+				_record_enemy_kill(dead_enemy_type, dead_enemy_affix)
+				_record_weapon_kill(str(event.get("source_type", "")))
 				var death_position := Vector2(float(event["position"]["x"]), float(event["position"]["y"]))
 				Sfx.play("boss_defeat" if dead_enemy_type in ["mid_boss", "final_boss"] else "enemy_kill")
 				_add_enemy_death_pixels(dead_enemy_type, death_position)
@@ -1823,7 +1828,10 @@ func _finish_run(victory: bool) -> void:
 		for weapon_id in WEAPON_DAMAGE_IDS:
 			run_metrics["weapon_damage_%s" % weapon_id] = float(_weapon_damage_by_id.get(weapon_id, 0.0))
 			run_metrics["weapon_kills_%s" % weapon_id] = int(_weapon_kills_by_id.get(weapon_id, 0))
+			run_metrics["max_weapon_level_%s" % weapon_id] = loadout.weapon_level(weapon_id)
 			run_metrics["evolutions_%s" % weapon_id] = 1 if loadout.is_evolved(weapon_id) else 0
+		for affix_id in ELITE_AFFIX_ACHIEVEMENT_IDS.values():
+			run_metrics["elite_affix_kills_%s" % affix_id] = int(_elite_affix_kills.get(affix_id, 0))
 		for relic_id in RELIC_ACHIEVEMENT_IDS:
 			run_metrics["max_relic_level_%s" % relic_id] = loadout.relic_level(relic_id)
 		reward = progression_service.award_survival_run(
@@ -1831,9 +1839,12 @@ func _finish_run(victory: bool) -> void:
 		)
 	_run_result.show_result(victory, wave_director.wave, player_active_time, kill_count, reward)
 
-func _record_enemy_kill(enemy_type: String) -> void:
+func _record_enemy_kill(enemy_type: String, affix: String = "") -> void:
 	if enemy_type in ENEMY_DEATH_TYPES:
 		_enemy_kills_by_type[enemy_type] = int(_enemy_kills_by_type.get(enemy_type, 0)) + 1
+	if enemy_type == "elite" and ELITE_AFFIX_ACHIEVEMENT_IDS.has(affix):
+		var affix_id: String = ELITE_AFFIX_ACHIEVEMENT_IDS[affix]
+		_elite_affix_kills[affix_id] = int(_elite_affix_kills.get(affix_id, 0)) + 1
 
 func _record_weapon_damage(source_type: String, amount: float) -> void:
 	if not is_finite(amount) or amount <= 0.0:

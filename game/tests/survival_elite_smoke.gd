@@ -26,6 +26,7 @@ func _run() -> void:
 		return
 	var session: Node2D = load("res://scenes/survival_session.tscn").instantiate()
 	session.progression_service = progression
+	session.difficulty_id = "easy"
 	if session._elite_affix_for_roll(0.1) != "Hasted" or session._elite_affix_for_roll(0.25) != "Armored" or \
 			session._elite_affix_for_roll(0.4) != "Regenerating" or session._elite_affix_for_roll(0.55) != "Volatile" or \
 			session._elite_affix_for_roll(0.75) != "Shielded" or session._elite_affix_for_roll(0.9) != "Split-on-Death":
@@ -39,6 +40,9 @@ func _run() -> void:
 	session.elite_chest_drop_chance = 1.0
 	root.add_child(session)
 	await process_frame
+	if session.loadout.weapon_level("lightning_conductor") != 1:
+		_fail("The real run fixture should own its starter weapon before collecting run metrics")
+		return
 	if session.simulation.spawn_enemy("elite", 1, Vector2.ZERO, Vector2.ZERO, 1.0, "Phaser") != 0:
 		_fail("Elite spawn should reject an affix that has no gameplay implementation")
 		return
@@ -149,6 +153,13 @@ func _run() -> void:
 		_fail("Guaranteed elite chest setting should produce a reward")
 		return
 	session._finish_run(false)
+	var saved_achievement_metrics: Dictionary = progression.load_profile()["profile"]["achievement_progress"]["metrics"]
+	var affix_id: String = session.ELITE_AFFIX_ACHIEVEMENT_IDS[affix]
+	if saved_achievement_metrics.get("elite_affix_kills_%s" % affix_id, 0) != 1 or \
+			saved_achievement_metrics.get("elite_affix_types_defeated", 0) != 1 or \
+			saved_achievement_metrics.get("max_weapon_level_lightning_conductor", 0) != 1:
+		_fail("The actual Easy run result should persist its elite affix kill and account-wide affix variety: %s / %s / %s" % [affix, str(session._elite_affix_kills), str(saved_achievement_metrics)])
+		return
 	var split_session: Node2D = load("res://scenes/survival_session.tscn").instantiate()
 	split_session.spawn_initial_enemy = false
 	split_session.wave_spawning_enabled = false

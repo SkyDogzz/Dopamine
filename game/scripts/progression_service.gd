@@ -131,6 +131,7 @@ func award_survival_run(
 	for run_difficulty in SURVIVAL_DIFFICULTY_SCRIPT.ORDER:
 		derived_metrics.append("runs_at_difficulty_%s" % run_difficulty)
 		derived_metrics.append("boss_victories_at_difficulty_%s" % run_difficulty)
+	derived_metrics.append("elite_affix_types_defeated")
 	for metric_id in run_metrics:
 		var metric_value: Variant = run_metrics[metric_id]
 		if typeof(metric_id) != TYPE_STRING or metric_id in derived_metrics or not metric_aggregations.has(metric_id) or \
@@ -183,6 +184,11 @@ func award_survival_run(
 			achievement_metrics[metric_id] = maxf(float(achievement_metrics[metric_id]), delta)
 		else:
 			achievement_metrics[metric_id] = float(achievement_metrics[metric_id]) + delta
+	var affix_types_defeated := 0
+	for affix_id in ["hasted", "armored", "regenerating", "volatile", "shielded", "split_on_death"]:
+		if float(achievement_metrics.get("elite_affix_kills_%s" % affix_id, 0.0)) > 0.0:
+			affix_types_defeated += 1
+	achievement_metrics["elite_affix_types_defeated"] = affix_types_defeated
 	var newly_unlocked_tiers := 0
 	var new_exterminator_tiers := 0
 	for achievement_id in _achievement_definitions:

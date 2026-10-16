@@ -1079,6 +1079,227 @@
         { "id": "gold", "threshold": 15, "rewards": {"damage_pct": 0.000075} },
         { "id": "diamond", "threshold": 30, "rewards": {"damage_pct": 0.0001} }
       ]
+    },
+    {
+      "id": "weapon_level_mastery_lightning_conductor",
+      "category": "weapons",
+      "secret": false,
+      "metric": "max_weapon_level_lightning_conductor",
+      "aggregation": "max",
+      "tiers": [
+        { "id": "bronze", "threshold": 2, "rewards": {"damage_pct": 2.5e-05} },
+        { "id": "silver", "threshold": 3, "rewards": {"damage_pct": 2.5e-05} },
+        { "id": "gold", "threshold": 4, "rewards": {"damage_pct": 2.5e-05} },
+        { "id": "diamond", "threshold": 5, "rewards": {"damage_pct": 2.5e-05} }
+      ]
+    },
+    {
+      "id": "weapon_level_mastery_inferno_sprayer",
+      "category": "weapons",
+      "secret": false,
+      "metric": "max_weapon_level_inferno_sprayer",
+      "aggregation": "max",
+      "tiers": [
+        { "id": "bronze", "threshold": 2, "rewards": {"damage_pct": 2.5e-05} },
+        { "id": "silver", "threshold": 3, "rewards": {"damage_pct": 2.5e-05} },
+        { "id": "gold", "threshold": 4, "rewards": {"damage_pct": 2.5e-05} },
+        { "id": "diamond", "threshold": 5, "rewards": {"damage_pct": 2.5e-05} }
+      ]
+    },
+    {
+      "id": "weapon_level_mastery_crimson_daggers",
+      "category": "weapons",
+      "secret": false,
+      "metric": "max_weapon_level_crimson_daggers",
+      "aggregation": "max",
+      "tiers": [
+        { "id": "bronze", "threshold": 2, "rewards": {"damage_pct": 2.5e-05} },
+        { "id": "silver", "threshold": 3, "rewards": {"damage_pct": 2.5e-05} },
+        { "id": "gold", "threshold": 4, "rewards": {"damage_pct": 2.5e-05} },
+        { "id": "diamond", "threshold": 5, "rewards": {"damage_pct": 2.5e-05} }
+      ]
+    },
+    {
+      "id": "weapon_level_mastery_minigun",
+      "category": "weapons",
+      "secret": false,
+      "metric": "max_weapon_level_minigun",
+      "aggregation": "max",
+      "tiers": [
+        { "id": "bronze", "threshold": 2, "rewards": {"damage_pct": 2.5e-05} },
+        { "id": "silver", "threshold": 3, "rewards": {"damage_pct": 2.5e-05} },
+        { "id": "gold", "threshold": 4, "rewards": {"damage_pct": 2.5e-05} },
+        { "id": "diamond", "threshold": 5, "rewards": {"damage_pct": 2.5e-05} }
+      ]
+    },
+    {
+      "id": "weapon_level_mastery_toxic_cloud",
+      "category": "weapons",
+      "secret": false,
+      "metric": "max_weapon_level_toxic_cloud",
+      "aggregation": "max",
+      "tiers": [
+        { "id": "bronze", "threshold": 2, "rewards": {"damage_pct": 2.5e-05} },
+        { "id": "silver", "threshold": 3, "rewards": {"damage_pct": 2.5e-05} },
+        { "id": "gold", "threshold": 4, "rewards": {"damage_pct": 2.5e-05} },
+        { "id": "diamond", "threshold": 5, "rewards": {"damage_pct": 2.5e-05} }
+      ]
+    },
+    {
+      "id": "weapon_level_mastery_sawblades",
+      "category": "weapons",
+      "secret": false,
+      "metric": "max_weapon_level_sawblades",
+      "aggregation": "max",
+      "tiers": [
+        { "id": "bronze", "threshold": 2, "rewards": {"damage_pct": 2.5e-05} },
+        { "id": "silver", "threshold": 3, "rewards": {"damage_pct": 2.5e-05} },
+        { "id": "gold", "threshold": 4, "rewards": {"damage_pct": 2.5e-05} },
+        { "id": "diamond", "threshold": 5, "rewards": {"damage_pct": 2.5e-05} }
+      ]
+    },
+    {
+      "id": "weapon_level_mastery_meteor_staff",
+      "category": "weapons",
+      "secret": false,
+      "metric": "max_weapon_level_meteor_staff",
+      "aggregation": "max",
+      "tiers": [
+        { "id": "bronze", "threshold": 2, "rewards": {"damage_pct": 2.5e-05} },
+        { "id": "silver", "threshold": 3, "rewards": {"damage_pct": 2.5e-05} },
+        { "id": "gold", "threshold": 4, "rewards": {"damage_pct": 2.5e-05} },
+        { "id": "diamond", "threshold": 5, "rewards": {"damage_pct": 2.5e-05} }
+      ]
+    },
+    {
+      "id": "weapon_level_mastery_prism_laser",
+      "category": "weapons",
+      "secret": false,
+      "metric": "max_weapon_level_prism_laser",
+      "aggregation": "max",
+      "tiers": [
+        { "id": "bronze", "threshold": 2, "rewards": {"damage_pct": 2.5e-05} },
+        { "id": "silver", "threshold": 3, "rewards": {"damage_pct": 2.5e-05} },
+        { "id": "gold", "threshold": 4, "rewards": {"damage_pct": 2.5e-05} },
+        { "id": "diamond", "threshold": 5, "rewards": {"damage_pct": 2.5e-05} }
+      ]
+    },
+    {
+      "id": "weapon_level_mastery_void_orb",
+      "category": "weapons",
+      "secret": false,
+      "metric": "max_weapon_level_void_orb",
+      "aggregation": "max",
+      "tiers": [
+        { "id": "bronze", "threshold": 2, "rewards": {"damage_pct": 2.5e-05} },
+        { "id": "silver", "threshold": 3, "rewards": {"damage_pct": 2.5e-05} },
+        { "id": "gold", "threshold": 4, "rewards": {"damage_pct": 2.5e-05} },
+        { "id": "diamond", "threshold": 5, "rewards": {"damage_pct": 2.5e-05} }
+      ]
+    },
+    {
+      "id": "weapon_level_mastery_frost_nova",
+      "category": "weapons",
+      "secret": false,
+      "metric": "max_weapon_level_frost_nova",
+      "aggregation": "max",
+      "tiers": [
+        { "id": "bronze", "threshold": 2, "rewards": {"damage_pct": 2.5e-05} },
+        { "id": "silver", "threshold": 3, "rewards": {"damage_pct": 2.5e-05} },
+        { "id": "gold", "threshold": 4, "rewards": {"damage_pct": 2.5e-05} },
+        { "id": "diamond", "threshold": 5, "rewards": {"damage_pct": 2.5e-05} }
+      ]
+    },
+    {
+      "id": "elite_affix_hunter_hasted",
+      "category": "combat",
+      "secret": false,
+      "metric": "elite_affix_kills_hasted",
+      "aggregation": "sum",
+      "tiers": [
+        { "id": "bronze", "threshold": 1, "rewards": {"damage_pct": 2.5e-05} },
+        { "id": "silver", "threshold": 5, "rewards": {"damage_pct": 2.5e-05} },
+        { "id": "gold", "threshold": 15, "rewards": {"damage_pct": 2.5e-05} },
+        { "id": "diamond", "threshold": 50, "rewards": {"damage_pct": 2.5e-05} }
+      ]
+    },
+    {
+      "id": "elite_affix_hunter_armored",
+      "category": "combat",
+      "secret": false,
+      "metric": "elite_affix_kills_armored",
+      "aggregation": "sum",
+      "tiers": [
+        { "id": "bronze", "threshold": 1, "rewards": {"damage_pct": 2.5e-05} },
+        { "id": "silver", "threshold": 5, "rewards": {"damage_pct": 2.5e-05} },
+        { "id": "gold", "threshold": 15, "rewards": {"damage_pct": 2.5e-05} },
+        { "id": "diamond", "threshold": 50, "rewards": {"damage_pct": 2.5e-05} }
+      ]
+    },
+    {
+      "id": "elite_affix_hunter_regenerating",
+      "category": "combat",
+      "secret": false,
+      "metric": "elite_affix_kills_regenerating",
+      "aggregation": "sum",
+      "tiers": [
+        { "id": "bronze", "threshold": 1, "rewards": {"damage_pct": 2.5e-05} },
+        { "id": "silver", "threshold": 5, "rewards": {"damage_pct": 2.5e-05} },
+        { "id": "gold", "threshold": 15, "rewards": {"damage_pct": 2.5e-05} },
+        { "id": "diamond", "threshold": 50, "rewards": {"damage_pct": 2.5e-05} }
+      ]
+    },
+    {
+      "id": "elite_affix_hunter_volatile",
+      "category": "combat",
+      "secret": false,
+      "metric": "elite_affix_kills_volatile",
+      "aggregation": "sum",
+      "tiers": [
+        { "id": "bronze", "threshold": 1, "rewards": {"damage_pct": 2.5e-05} },
+        { "id": "silver", "threshold": 5, "rewards": {"damage_pct": 2.5e-05} },
+        { "id": "gold", "threshold": 15, "rewards": {"damage_pct": 2.5e-05} },
+        { "id": "diamond", "threshold": 50, "rewards": {"damage_pct": 2.5e-05} }
+      ]
+    },
+    {
+      "id": "elite_affix_hunter_shielded",
+      "category": "combat",
+      "secret": false,
+      "metric": "elite_affix_kills_shielded",
+      "aggregation": "sum",
+      "tiers": [
+        { "id": "bronze", "threshold": 1, "rewards": {"damage_pct": 2.5e-05} },
+        { "id": "silver", "threshold": 5, "rewards": {"damage_pct": 2.5e-05} },
+        { "id": "gold", "threshold": 15, "rewards": {"damage_pct": 2.5e-05} },
+        { "id": "diamond", "threshold": 50, "rewards": {"damage_pct": 2.5e-05} }
+      ]
+    },
+    {
+      "id": "elite_affix_hunter_split_on_death",
+      "category": "combat",
+      "secret": false,
+      "metric": "elite_affix_kills_split_on_death",
+      "aggregation": "sum",
+      "tiers": [
+        { "id": "bronze", "threshold": 1, "rewards": {"damage_pct": 2.5e-05} },
+        { "id": "silver", "threshold": 5, "rewards": {"damage_pct": 2.5e-05} },
+        { "id": "gold", "threshold": 15, "rewards": {"damage_pct": 2.5e-05} },
+        { "id": "diamond", "threshold": 50, "rewards": {"damage_pct": 2.5e-05} }
+      ]
+    },
+    {
+      "id": "elite_affix_variety",
+      "category": "difficulty_bosses",
+      "secret": false,
+      "metric": "elite_affix_types_defeated",
+      "aggregation": "max",
+      "tiers": [
+        { "id": "bronze", "threshold": 1, "rewards": {"damage_pct": 2.5e-05} },
+        { "id": "silver", "threshold": 3, "rewards": {"damage_pct": 2.5e-05} },
+        { "id": "gold", "threshold": 5, "rewards": {"damage_pct": 2.5e-05} },
+        { "id": "diamond", "threshold": 6, "rewards": {"damage_pct": 2.5e-05} }
+      ]
     }
   ]
 }
