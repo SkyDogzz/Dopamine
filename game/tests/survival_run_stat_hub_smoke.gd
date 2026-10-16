@@ -45,6 +45,24 @@ func _run() -> void:
 	if not hub.visible or hub.detail_open:
 		_fail("The compact hub should be visible while its detail is closed")
 		return
+	var compact: VBoxContainer = hub.get_node("Compact")
+	var damage_row: HBoxContainer = compact.get_node("damage_pct")
+	if compact.get_child_count() != 3 or damage_row.get_child_count() != 2 or \
+			damage_row.get_child(0) is not TextureRect or damage_row.get_child(1) is not Label:
+		_fail("Compact stats should use one icon and value per vertically stacked row")
+		return
+	var detail_row: VBoxContainer = hub._stat_row(damage)
+	var detail_label: Label = detail_row.get_child(0)
+	var detail_value_row: HBoxContainer = detail_row.get_child(1)
+	if detail_label.text != damage["label"] or detail_value_row.get_child_count() != 2 or \
+			detail_value_row.get_child(0) is not TextureRect or \
+			detail_value_row.get_child(1).text != damage["total_text"]:
+		_fail("Detailed stats should stack the label over an icon and value on the left")
+		return
+	var compact_bounds := compact.get_global_rect()
+	if compact.get_parent() is PanelContainer or compact_bounds.size.x > 100.0:
+		_fail("The compact in-game stat hub should remain narrow and without a background panel")
+		return
 	var start_time := float(session.simulation.snapshot()["simulation_time"])
 	var tab := InputEventKey.new()
 	tab.keycode = KEY_TAB

@@ -12,6 +12,14 @@ const COMPACT_STAT_ICONS := {
 	"move_speed_pct": "res://assets/icons/equipment_boots.png",
 	"critical_chance_pct": "res://assets/sprites/catalog/relic_celestial_eye.png",
 }
+const STAT_ICONS := {
+	"damage_pct": "res://assets/sprites/catalog/weapon_crimson_daggers.png",
+	"move_speed_pct": "res://assets/icons/equipment_boots.png",
+	"critical_chance_pct": "res://assets/sprites/catalog/relic_celestial_eye.png",
+	"max_hp": "res://assets/sprites/catalog/relic_storm_core.png",
+	"pickup_radius_pct": "res://assets/sprites/catalog/relic_magnet_heart.png",
+	"cooldown_reduction_pct": "res://assets/sprites/catalog/relic_overdrive_engine.png",
+}
 
 var detail_open := false
 var _compact_rows: Dictionary = {}
@@ -60,27 +68,26 @@ func _build_compact_panel() -> void:
 	var content := VBoxContainer.new()
 	content.name = "Compact"
 	content.position = Vector2(8.0, 56.0)
-	content.custom_minimum_size = Vector2(92.0, 48.0)
-	content.add_theme_constant_override("separation", 1)
+	content.custom_minimum_size = Vector2(30.0, 48.0)
+	content.add_theme_constant_override("separation", 2)
 	add_child(content)
 	for stat_id in COMPACT_STAT_ICONS:
 		var row := HBoxContainer.new()
 		row.name = str(stat_id)
-		row.custom_minimum_size = Vector2(72.0, 15.0)
-		row.add_theme_constant_override("separation", 4)
+		row.custom_minimum_size = Vector2(28.0, 15.0)
+		row.add_theme_constant_override("separation", 2)
 		row.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		content.add_child(row)
 		var icon := TextureRect.new()
 		icon.name = "Icon"
 		icon.texture = load(COMPACT_STAT_ICONS[stat_id])
-		icon.custom_minimum_size = Vector2(14.0, 14.0)
+		icon.custom_minimum_size = Vector2(12.0, 12.0)
 		icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 		icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 		icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		row.add_child(icon)
 		var value := _label("—", 8, TEXT)
 		value.name = "Value"
-		value.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		row.add_child(value)
 		_compact_rows[stat_id] = {"icon": icon, "value": value}
 
@@ -137,12 +144,26 @@ func _build_detail_panel() -> void:
 func _stat_row(stat: Dictionary) -> Control:
 	var column := VBoxContainer.new()
 	column.add_theme_constant_override("separation", 0)
-	var headline := HBoxContainer.new()
-	column.add_child(headline)
-	var name := _label(str(stat.get("label", "STAT")), 8, TEXT)
-	name.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	headline.add_child(name)
-	headline.add_child(_label(str(stat.get("total_text", "—")), 8, CYAN))
+	var name := _label(str(stat.get("label", "STAT")), 7, TEXT)
+	column.add_child(name)
+	var identity := HBoxContainer.new()
+	identity.add_theme_constant_override("separation", 3)
+	column.add_child(identity)
+	var icon := TextureRect.new()
+	icon.custom_minimum_size = Vector2(12.0, 12.0)
+	icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var stat_id_by_label := {
+		"DAMAGE": "damage_pct", "MOVE SPEED": "move_speed_pct",
+		"CRIT CHANCE": "critical_chance_pct", "MAX HP": "max_hp",
+		"XP PICKUP RADIUS": "pickup_radius_pct", "COOLDOWN REDUCTION": "cooldown_reduction_pct",
+	}
+	var icon_path := str(STAT_ICONS.get(stat_id_by_label.get(str(stat.get("label", "")), ""), ""))
+	if not icon_path.is_empty():
+		icon.texture = load(icon_path)
+	identity.add_child(icon)
+	identity.add_child(_label(str(stat.get("total_text", "—")), 7, CYAN))
 	var contributions := HBoxContainer.new()
 	contributions.add_theme_constant_override("separation", 7)
 	column.add_child(contributions)

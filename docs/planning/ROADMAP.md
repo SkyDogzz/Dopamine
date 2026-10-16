@@ -575,9 +575,11 @@ P1 livre le Sandbox développeur et ne remplace pas cette feature produit.
   - [x] Ajouter `SandboxLabContext` mémoire : il valide le preset, héberge une session Survival sans service de progression/save, désactive vagues/coffres normaux et gèle le HP; il ne crédite aucune progression et remplace un preset seulement en pause.
   - [x] Smoke dédié utilise un `XDG_DATA_HOME` isolé, vérifie le spawn et le stockage local du preset; aucune donnée n’est écrite sous `user://saves`.
 - [ ] **P8.2 — Build et configuration**
+  - [x] Ajouter des contrôles visuels au Lab pour sélectionner une arme/relique et son niveau, ajouter une stat, puis appliquer le build à la session isolée en pause. Les valeurs restent des outils expérimentaux **[PROPOSÉES]**.
+  - [ ] Exposer les équipements, les overrides LIVE/REBUILD/RESTART et les limites de contenu avancées, après définition de leur contrat.
   - [x] Ajouter `SandboxBuild` comme modèle isolé : armes/reliques, évolutions appariées, stats personnalisées finies et équipements de test; validation atomique avant remplacement.
   - [x] Ajouter un éditeur JSON initial et appliquer armes/reliques (niveaux 1–5), évolutions appariées, équipements et stats personnalisées à la session de combat existante.
-  - [ ] Ajouter des contrôles visuels par objet/stat et overrides LIVE/REBUILD/RESTART; niveaux au-delà de 5 restent à implémenter dans le combat.
+  - [ ] Ajouter les contrôles visuels d’équipement et overrides LIVE/REBUILD/RESTART; niveaux au-delà de 5 restent à implémenter dans le combat.
   - [ ] Ajouter overrides LIVE d’un paramètre à la fois.
   - [ ] Ajouter overrides REBUILD/RESTART avec validation atomique.
 - [ ] **P8.3 — Presets et share codes**

@@ -15,6 +15,44 @@ func _run() -> void:
 			lab.context.session.loadout.relic_level("storm_core") != 1:
 		_fail("The default Lab preset build should be applied to the real combat loadout")
 		return
+	var weapon_select: OptionButton = lab.get_node_or_null("Root/Body/Side/Sections/VisualBuild/WeaponRow/WeaponSelect")
+	var weapon_level: SpinBox = lab.get_node_or_null("Root/Body/Side/Sections/VisualBuild/WeaponRow/WeaponLevel")
+	var add_weapon: Button = lab.get_node_or_null("Root/Body/Side/Sections/VisualBuild/AddWeaponButton")
+	var relic_select: OptionButton = lab.get_node_or_null("Root/Body/Side/Sections/VisualBuild/RelicRow/RelicSelect")
+	var relic_level: SpinBox = lab.get_node_or_null("Root/Body/Side/Sections/VisualBuild/RelicRow/RelicLevel")
+	var add_relic: Button = lab.get_node_or_null("Root/Body/Side/Sections/VisualBuild/AddRelicButton")
+	var stat_select: OptionButton = lab.get_node_or_null("Root/Body/Side/Sections/VisualBuild/StatRow/StatSelect")
+	var stat_value: SpinBox = lab.get_node_or_null("Root/Body/Side/Sections/VisualBuild/StatRow/StatValue")
+	var add_stat: Button = lab.get_node_or_null("Root/Body/Side/Sections/VisualBuild/AddStatButton")
+	var apply_build: Button = lab.get_node_or_null("Root/Body/Side/Sections/VisualBuild/ApplyBuildButton")
+	if weapon_select == null or weapon_level == null or add_weapon == null or relic_select == null or \
+			relic_level == null or add_relic == null or stat_select == null or stat_value == null or \
+			add_stat == null or apply_build == null:
+		_fail("Sandbox Lab should provide visual weapon, relic and stat build controls")
+		return
+	weapon_select.select(_option_index_for(weapon_select, "minigun"))
+	weapon_level.value = 2
+	add_weapon.pressed.emit()
+	weapon_level.value = 3
+	add_weapon.pressed.emit()
+	relic_select.select(_option_index_for(relic_select, "magnet_heart"))
+	relic_level.value = 2
+	add_relic.pressed.emit()
+	stat_select.select(_option_index_for(stat_select, "damage_pct"))
+	stat_value.value = 12.5
+	add_stat.pressed.emit()
+	var visual_build: Dictionary = JSON.parse_string(lab.get_node("Root/Body/Side/Sections/BuildJson").text)
+	if visual_build["weapons"].size() != 2 or visual_build["weapons"][1]["level"] != 3 or \
+			visual_build["relics"].size() != 2 or visual_build["stats"]["damage_pct"] != 12.5:
+		_fail("Visual build controls should update the JSON model without duplicating an item")
+		return
+	await lab._apply_visual_build()
+	if lab.context.session.loadout.weapon_level("minigun") != 3 or \
+			lab.context.session.loadout.relic_level("magnet_heart") != 2 or \
+			lab.context.session._equipment_bonus("damage_pct") != 12.5 or \
+			not bool(lab.context.simulation.snapshot()["paused"]):
+		_fail("Apply Build should atomically rebuild the paused isolated combat session from visual controls")
+		return
 	var diagnostics: Label = lab.get_node_or_null("Root/Body/Side/Sections/Diagnostics/RngLog")
 	var dps_summary: Label = lab.get_node_or_null("Root/Body/Side/Sections/Diagnostics/DpsSummary")
 	var dps_sources: Label = lab.get_node_or_null("Root/Body/Side/Sections/Diagnostics/DpsSources")
@@ -218,6 +256,12 @@ func _wait_for_pause(simulation: Object, expected: bool) -> bool:
 		if bool(simulation.snapshot()["paused"]) == expected:
 			return true
 	return false
+
+func _option_index_for(option: OptionButton, metadata: String) -> int:
+	for index in range(option.item_count):
+		if str(option.get_item_metadata(index)) == metadata:
+			return index
+	return -1
 
 func _fail(message: String) -> void:
 	push_error(message)

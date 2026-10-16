@@ -3,6 +3,8 @@ extends Control
 const PRESET_SERVICE_SCRIPT := preload("res://scripts/sandbox_preset_service.gd")
 const PRESET_STORE_SCRIPT := preload("res://scripts/sandbox_preset_store.gd")
 const LAB_CONTEXT_SCRIPT := preload("res://scripts/sandbox_lab_context.gd")
+const COMBAT_CATALOG_SCRIPT := preload("res://scripts/combat_catalog.gd")
+const EQUIPMENT_GENERATOR_SCRIPT := preload("res://scripts/equipment_generator.gd")
 const MAX_DPS_SAMPLES := 4096
 
 @onready var _view: Control = $Root/Body/Left/SimulationView
@@ -18,6 +20,12 @@ const MAX_DPS_SAMPLES := 4096
 @onready var _dps_summary: Label = $Root/Body/Side/Sections/Diagnostics/DpsSummary
 @onready var _dps_sources: Label = $Root/Body/Side/Sections/Diagnostics/DpsSources
 @onready var _rng_log_label: Label = $Root/Body/Side/Sections/Diagnostics/RngLog
+@onready var _weapon_select: OptionButton = $Root/Body/Side/Sections/VisualBuild/WeaponRow/WeaponSelect
+@onready var _weapon_level: SpinBox = $Root/Body/Side/Sections/VisualBuild/WeaponRow/WeaponLevel
+@onready var _relic_select: OptionButton = $Root/Body/Side/Sections/VisualBuild/RelicRow/RelicSelect
+@onready var _relic_level: SpinBox = $Root/Body/Side/Sections/VisualBuild/RelicRow/RelicLevel
+@onready var _stat_select: OptionButton = $Root/Body/Side/Sections/VisualBuild/StatRow/StatSelect
+@onready var _stat_value: SpinBox = $Root/Body/Side/Sections/VisualBuild/StatRow/StatValue
 
 var preset_service: RefCounted
 var preset_store: RefCounted
@@ -49,6 +57,11 @@ func _ready() -> void:
 	$Root/Body/Side/Sections/PresetFileActions/ExportFile.pressed.connect(_save_preset_file)
 	$PresetFileDialog.file_selected.connect(_on_preset_file_selected)
 	$Root/Body/Side/Sections/GodModeToggle.toggled.connect(_set_god_mode)
+	$Root/Body/Side/Sections/VisualBuild/AddWeaponButton.pressed.connect(_add_visual_weapon)
+	$Root/Body/Side/Sections/VisualBuild/AddRelicButton.pressed.connect(_add_visual_relic)
+	$Root/Body/Side/Sections/VisualBuild/AddStatButton.pressed.connect(_add_visual_stat)
+	$Root/Body/Side/Sections/VisualBuild/ApplyBuildButton.pressed.connect(_apply_visual_build)
+	_populate_visual_build_options()
 	for enemy_id in ["chaser", "sprinter", "tank", "shooter", "buffer", "exploder", "shielder", "summoner", "elite"]:
 		_enemy_select.add_item(enemy_id.to_upper())
 		_enemy_select.set_item_metadata(_enemy_select.item_count - 1, enemy_id)
@@ -86,6 +99,92 @@ func _default_preset() -> Dictionary:
 			"relics": [{"id": "storm_core", "level": 1}], "equipment": [], "stats": {},
 		},
 	}
+
+func _populate_visual_build_options() -> void:
+	var catalog = COMBAT_CATALOG_SCRIPT.new()
+	for weapon_id in catalog.weapons:
+		_weapon_select.add_item(str(catalog.weapons[weapon_id]["name"]))
+		_weapon_select.set_item_metadata(_weapon_select.item_count - 1, weapon_id)
+	for relic_id in catalog.relics:
+		_relic_select.add_item(str(catalog.relics[relic_id]["name"]))
+		_relic_select.set_item_metadata(_relic_select.item_count - 1, relic_id)
+	for stat_id in EQUIPMENT_GENERATOR_SCRIPT.STAT_IDS:
+		_stat_select.add_item(str(stat_id).replace("_", " ").to_upper())
+		_stat_select.set_item_metadata(_stat_select.item_count - 1, stat_id)
+	_weapon_select.select(_option_index_for_id(_weapon_select, "lightning_conductor"))
+	_relic_select.select(_option_index_for_id(_relic_select, "storm_core"))
+
+func _option_index_for_id(option: OptionButton, item_id: String) -> int:
+	for index in range(option.item_count):
+		if str(option.get_item_metadata(index)) == item_id:
+			return index
+	return 0
+
+func _add_visual_weapon() -> void:
+	_add_visual_item("weapons", _weapon_select, _weapon_level)
+
+func _add_visual_relic() -> void:
+	_add_visual_item("relics", _relic_select, _relic_level)
+
+func _add_visual_item(family: String, option: OptionButton, level: SpinBox) -> void:
+	var item_id := str(option.get_item_metadata(option.selected))
+	if item_id.is_empty():
+		_set_status("BUILD ITEM UNAVAILABLE", true)
+		return
+	var build_data := _read_visual_build()
+	if build_data.is_empty():
+		return
+	var entries: Array = build_data[family]
+	var updated := false
+	for entry in entries:
+		if str(entry.get("id", "")) != item_id:
+			continue
+		entry["level"] = int(level.value)
+		if family == "weapons" and int(level.value) < 5:
+			entry.erase("evolution_id")
+		updated = true
+		break
+	if not updated:
+		entries.append({"id": item_id, "level": int(level.value)})
+	_write_visual_build(build_data)
+
+func _add_visual_stat() -> void:
+	var stat_id := str(_stat_select.get_item_metadata(_stat_select.selected))
+	if stat_id.is_empty():
+		_set_status("BUILD STAT UNAVAILABLE", true)
+		return
+	var build_data := _read_visual_build()
+	if build_data.is_empty():
+		return
+	build_data["stats"][stat_id] = _stat_value.value
+	_write_visual_build(build_data)
+
+func _read_visual_build() -> Dictionary:
+	var parser := JSON.new()
+	if parser.parse(_build_json.text) != OK or not parser.data is Dictionary:
+		_set_status("BUILD JSON INVALID", true)
+		return {}
+	var build = load("res://scripts/sandbox_build.gd").new()
+	var result: Dictionary = build.load_build(parser.data)
+	if not result.get("ok", false):
+		_set_status("BUILD REJECTED", true)
+		return {}
+	return build.to_dictionary()
+
+func _write_visual_build(build_data: Dictionary) -> void:
+	var build = load("res://scripts/sandbox_build.gd").new()
+	var result: Dictionary = build.load_build(build_data)
+	if not result.get("ok", false):
+		_set_status("BUILD REJECTED", true)
+		return
+	_build_json.text = JSON.stringify(build.to_dictionary(), "  ")
+	_set_status("BUILD EDITED · APPLY WHILE PAUSED", false)
+
+func _apply_visual_build() -> void:
+	var preset := _preset_from_editor()
+	if preset.is_empty():
+		return
+	await _apply_preset(preset)
 
 func _toggle_pause() -> void:
 	var state: Dictionary = context.simulation.snapshot()
@@ -260,7 +359,7 @@ func _preset_from_editor() -> Dictionary:
 	if parser.parse(_build_json.text) != OK or not parser.data is Dictionary:
 		_set_status("BUILD JSON INVALID", true)
 		return {}
-	var preset := _default_preset()
+	var preset: Dictionary = context.active_preset.duplicate(true) if not context.active_preset.is_empty() else _default_preset()
 	preset["preset_id"] = _preset_id.text.strip_edges()
 	preset["name"] = _preset_id.text.strip_edges()
 	preset["initial_build"] = parser.data
