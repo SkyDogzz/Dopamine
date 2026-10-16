@@ -7,6 +7,9 @@ func _run() -> void:
 	if not await _thermal_shock_combines_burn_and_chill_once():
 		_fail("Thermal Shock should trigger from direct Burn/Chill combinations, obey cooldown, and ignore DoT ticks")
 		return
+	if not await _toxic_ignition_combines_poison_and_burn_once():
+		_fail("Toxic Ignition should trigger on a direct second status hit, obey its local cooldown, and ignore DoT ticks")
+		return
 	if not await _weapon_progression_config_is_loaded_and_modifiable():
 		_fail("Survival should load validated weapon progression milestones from the JSON config")
 		return
@@ -998,6 +1001,54 @@ func _thermal_shock_combines_burn_and_chill_once() -> bool:
 				frost_damage = true
 	var valid := burn_sequence > 0 and repeated_sequence == 0 and lethal_sequence == 0 and frost_sequence > 0 and dot_sequence == 0 and \
 		reaction_sequence == 0 and burn_damage and frost_damage
+	session.queue_free()
+	return valid
+
+func _toxic_ignition_combines_poison_and_burn_once() -> bool:
+	var session: Node2D = load("res://scenes/survival_session.tscn").instantiate()
+	session.spawn_initial_enemy = false
+	session.wave_spawning_enabled = false
+	session.skip_starting_weapon_choice = true
+	session.contact_damage_per_hit = 0.0
+	root.add_child(session)
+	await process_frame
+	session.simulation.spawn("test_target", 1, Vector2(50.0, 60.0), 100.0, Vector2.ZERO)
+	session.simulation.spawn("test_target", 1, Vector2(90.0, 60.0), 100.0, Vector2.ZERO)
+	session.simulation.spawn("test_target", 1, Vector2(120.0, 60.0), 100.0, Vector2.ZERO)
+	var targets: Array = await _wait_for_targets(session, 3)
+	if targets.size() != 3:
+		session.queue_free()
+		return false
+	var target_id: Dictionary = targets[0]["id"]
+	var nearby_id: Dictionary = targets[1]["id"]
+	var distant_id: Dictionary = targets[2]["id"]
+	var transform: Dictionary = targets[0]["components"]["Transform2D"]
+	var burn_hit := {"target": target_id, "source_type": "inferno_sprayer", "target_had_poison": true,
+		"is_damage_over_time": false, "amount": 20.0, "remaining_health": 40.0,
+		"position": {"x": transform["x"], "y": transform["y"]}}
+	var sequence: int = session._try_toxic_ignition(burn_hit, 0.0)
+	var cooldown_sequence: int = session._try_toxic_ignition(burn_hit, 0.5)
+	var dot_hit := burn_hit.duplicate(true)
+	dot_hit["is_damage_over_time"] = true
+	var dot_sequence: int = session._try_toxic_ignition(dot_hit, 2.0)
+	var no_prior_status := burn_hit.duplicate(true)
+	no_prior_status["target_had_poison"] = false
+	var no_pair_sequence: int = session._try_toxic_ignition(no_prior_status, 2.0)
+	var nearby_ignition := false
+	var distant_ignition := false
+	var deadline := Time.get_ticks_msec() + 1500
+	while Time.get_ticks_msec() < deadline and not nearby_ignition:
+		await process_frame
+		for event in session.simulation.snapshot()["events"]:
+			if event.get("type", "") != "damage" or event.get("source_type", "") != "toxic_ignition":
+				continue
+			var hit_id: Dictionary = event["target"]
+			if hit_id == nearby_id and is_equal_approx(float(event["amount"]), 10.0):
+				nearby_ignition = true
+			if hit_id == distant_id:
+				distant_ignition = true
+	var valid := sequence > 0 and cooldown_sequence == 0 and dot_sequence == 0 and \
+		no_pair_sequence == 0 and nearby_ignition and not distant_ignition
 	session.queue_free()
 	return valid
 

@@ -277,6 +277,9 @@ var sandbox_rng_seed := 0
 @export_range(0.0, 2.0, 0.05) var thermal_shock_damage_multiplier: float = 0.5
 @export_range(0.0, 10.0, 0.1) var thermal_shock_target_cooldown_seconds: float = 1.0
 @export_range(0.0, 64.0, 0.5) var thermal_shock_projectile_radius: float = 6.0
+const TOXIC_IGNITION_DAMAGE_MULTIPLIER := 0.5
+const TOXIC_IGNITION_RADIUS := 60.0
+const TOXIC_IGNITION_TARGET_COOLDOWN_SECONDS := 1.0
 @export_group("Prototype Bloodstorm — proposed tuning")
 @export var bloodstorm_bleed_damage_per_tick: float = 2.0
 @export var bloodstorm_bleed_interval_seconds: float = 0.5
@@ -357,6 +360,7 @@ var _pandemic_poisoned_targets: Dictionary = {}
 var _pandemic_spread_targets: Dictionary = {}
 var _pandemic_bursts: Array[Dictionary] = []
 var _thermal_shock_next_at: Dictionary = {}
+var _toxic_ignition_next_at: Dictionary = {}
 var _weapon_impacts: Array[Dictionary] = []
 var _enemy_death_pixels: Array[Dictionary] = []
 var _starfall_fragments_spawned: Dictionary = {}
@@ -809,6 +813,7 @@ func _process(_delta: float) -> void:
 					Sfx.play("hit_heavy" if target_type in ["mid_boss", "final_boss"] else "hit_light")
 				_advance_lightning_chain(event, state["entities"], current_simulation_time)
 				_try_thermal_shock(event, state["entities"], current_simulation_time)
+				_try_toxic_ignition(event, current_simulation_time)
 				_add_weapon_impact(source_type, Vector2(float(event["position"]["x"]), float(event["position"]["y"])),
 						bool(event.get("is_damage_over_time", false)))
 				if source_type == "pandemic_cloud":
@@ -2302,8 +2307,10 @@ func _try_thermal_shock(event: Dictionary, entities: Array, active_time: float) 
 			if _entity_key(int(id.get("index", -2)), int(id.get("generation", -2))) != target_key:
 				continue
 			var components: Dictionary = entity.get("components", {})
-			has_burn = float(components.get("Health", {}).get("current", 0.0)) > 0.0 and \
-					str(components.get("DamageOverTime", {}).get("status_type", "")) == "burn"
+			var effects: Array = components.get("DamageOverTimeEffects", [components.get("DamageOverTime", {})])
+			for effect in effects:
+				has_burn = has_burn or str(effect.get("status_type", "")) == "burn"
+			has_burn = float(components.get("Health", {}).get("current", 0.0)) > 0.0 and has_burn
 			break
 		if not has_burn:
 			return 0
@@ -2316,6 +2323,33 @@ func _try_thermal_shock(event: Dictionary, entities: Array, active_time: float) 
 			thermal_shock_projectile_radius, 0.15)
 	if sequence > 0:
 		_thermal_shock_next_at[target_key] = active_time + thermal_shock_target_cooldown_seconds
+	return sequence
+
+func _try_toxic_ignition(event: Dictionary, active_time: float) -> int:
+	if bool(event.get("is_damage_over_time", false)) or float(event.get("amount", 0.0)) <= 0.0 or \
+			float(event.get("remaining_health", 0.0)) <= 0.0:
+		return 0
+	var source_type := str(event.get("source_type", ""))
+	var applies_burn := source_type in ["inferno_sprayer", "wildfire_sprayer"]
+	var applies_poison := source_type in ["toxic_cloud", "pandemic_cloud"]
+	if not applies_burn and not applies_poison:
+		return 0
+	if (applies_burn and not bool(event.get("target_had_poison", false))) or \
+			(applies_poison and not bool(event.get("target_had_burn", false))):
+		return 0
+	var target_id: Dictionary = event.get("target", {})
+	var position: Dictionary = event.get("position", {})
+	if target_id.is_empty() or position.is_empty():
+		return 0
+	var target_key := _entity_key(int(target_id.get("index", -1)), int(target_id.get("generation", -1)))
+	if active_time < float(_toxic_ignition_next_at.get(target_key, 0.0)):
+		return 0
+	var sequence: int = simulation.spawn_projectile("toxic_ignition",
+			Vector2(float(position.get("x", 0.0)), float(position.get("y", 0.0))), Vector2.ZERO,
+			float(event["amount"]) * TOXIC_IGNITION_DAMAGE_MULTIPLIER,
+			0.0, 0.15, 0.0, 0.0, 0.0, TOXIC_IGNITION_RADIUS, 1.0)
+	if sequence > 0:
+		_toxic_ignition_next_at[target_key] = active_time + TOXIC_IGNITION_TARGET_COOLDOWN_SECONDS
 	return sequence
 
 func _advance_lightning_chain(event: Dictionary, entities: Array, active_time: float) -> void:
@@ -3137,12 +3171,14 @@ func _draw() -> void:
 			var transform: Dictionary = components["Transform2D"]
 			var center := Vector2(float(transform["x"]), float(transform["y"]))
 			draw_arc(center, 12.0, 0.0, TAU, 24, Color(0.55, 0.85, 1.0, 0.65), 2.0, true)
-		if components.has("DamageOverTime") and not components.get("IsProjectile", false):
+		if (components.has("DamageOverTime") or components.has("DamageOverTimeEffects")) and not components.get("IsProjectile", false):
 			var status_transform: Dictionary = components["Transform2D"]
 			var status_center := Vector2(float(status_transform["x"]), float(status_transform["y"]))
-			var status: Dictionary = components["DamageOverTime"]
-			var status_color := _status_effect_color(str(status.get("status_type", "generic")))
-			draw_arc(status_center, 14.0, 0.0, TAU, 24, status_color, 2.0, true)
+			var statuses: Array = components.get("DamageOverTimeEffects", [components.get("DamageOverTime", {})])
+			for status_index in statuses.size():
+				var status: Dictionary = statuses[status_index]
+				var status_color := _status_effect_color(str(status.get("status_type", "generic")))
+				draw_arc(status_center, 14.0 + float(status_index) * 3.0, 0.0, TAU, 24, status_color, 2.0, true)
 	for beam in _prism_beams:
 		var beam_color := Color(0.55, 0.95, 1.0, 0.78) if bool(beam["secondary"]) else Color(1.0, 0.92, 0.55, 0.9)
 		draw_line(beam["from"], beam["to"], beam_color, 5.0 if not beam["secondary"] else 3.0, true)

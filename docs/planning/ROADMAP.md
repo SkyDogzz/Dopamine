@@ -343,7 +343,7 @@ Travail requis :
 
 - [ ] **P5.2.1 — Contrats de statut**
   - [x] Lister les statuts implémentés pour les paires : Burn (Inferno/Wildfire), Poison (Toxic/Pandemic), Bleed (Bloodstorm) et Chill (Frost/Absolute Zero). Les paires sans statut restent sans effet inventé.
-  - [x] Vérifier la durée, le tick, le remplacement et l’affichage des DoT : le DoT existant est remplacé, son identité et ses horloges sont publiées dans le snapshot, et un anneau dédié l’indique en Survival. L’empilement simultané reste **[OUVERT]**. Les paramètres chiffrés demeurent **[PROPOSÉS]**.
+  - [x] Vérifier la durée, le tick, le remplacement et l’affichage des DoT : Burn et Poison coexistent et tickent sur leurs horloges indépendantes pour Toxic Ignition **[VALIDÉ]**; réappliquer un même type le remplace. L’empilement impliquant les autres DoT reste **[OUVERT]**. Le snapshot publie tous les effets actifs et l’anneau Survival les distingue; les paramètres chiffrés des armes restent **[PROPOSÉS]**.
   - [x] Vérifier application, expiration et exclusion des cibles mortes avant connexion aux armes.
 - [x] **P5.2.2 — Synergies émergentes**
   - [x] Les chemins existants consomment les événements standards : lifesteal sur damage, contagion Pandemic sur dégâts/statut et mort, Absolute Zero sur mort d’une cible Chill, fragments Starfall sur impact et chaînes Lightning sur dégâts. Les événements DoT portent maintenant leur identité jusqu’au damage/death.
@@ -351,7 +351,7 @@ Travail requis :
 - [ ] **P5.2.3 — Réactions proposées**
   - [x] Implémenter un prototype Thermal Shock : déclenchement par impact direct Burn↔Chill, bonus à 50 % du coup initial et cooldown local de 1 s **[PROPOSÉS]**; le DoT et l’impact de réaction ne chaînent pas.
   - [ ] Valider et équilibrer Thermal Shock sur des runs; son implémentation ne change pas son statut **[PROPOSÉ]**.
-  - [ ] Toxic Ignition : décisions utilisateur **[VALIDÉES, 2026-10-16]** : explosion immédiate à l’application directe du second statut sur une cible portant déjà Poison ou Burn, dégâts égaux à 50 % du coup déclencheur; rayon, consommation des statuts et chaînage restent **[OUVERTS]** avant implémentation. Arbitrer Shatter, Electroplague, Gravity Collapse et Hemorrhage avant leur implémentation.
+  - [x] Toxic Ignition : explosion au coup direct appliquant le second statut sur une cible affectée par l’autre **[VALIDÉ]**; 50 % du coup déclencheur, rayon 60 px, statuts conservés et cooldown local d’une seconde **[VALIDÉS, 2026-10-16]**. L’explosion n’applique aucun statut et ne se chaîne pas récursivement. Vérifier sa calibration en run réelle. Arbitrer Shatter, Electroplague, Gravity Collapse et Hemorrhage avant leur implémentation.
   - [x] Garder Overcharge bloquée par son statut **[OUVERT]**.
 - [ ] **P5.2.4 — Causalité et dégâts**
   - [ ] Ajouter un ID de chaîne et un budget aux réactions seulement après validation du contrat.

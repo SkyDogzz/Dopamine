@@ -170,6 +170,8 @@ struct CombatEvent {
 	std::string status_type;
 	bool is_damage_over_time = false;
 	bool target_was_chilled = false;
+	bool target_had_burn = false;
+	bool target_had_poison = false;
 };
 
 struct Entity {
@@ -182,6 +184,8 @@ struct Entity {
 	ProjectileData projectile;
 	bool is_xp_orb = false;
 	float xp_value = 0.0F;
+	std::vector<DamageOverTime> damage_over_time_effects;
+	// First active DoT retained for legacy callers; use effects for the full set.
 	std::optional<DamageOverTime> damage_over_time;
 	std::optional<ChillEffect> chill_effect;
 	std::optional<MovementOverride> movement_override;
@@ -267,7 +271,7 @@ private:
 	std::vector<ProjectileData> projectiles_;
 	std::vector<bool> xp_orb_flags_;
 	std::vector<float> xp_values_;
-	std::vector<std::optional<DamageOverTime>> damage_over_time_;
+	std::vector<std::vector<DamageOverTime>> damage_over_time_;
 	std::vector<std::optional<ChillEffect>> chill_effects_;
 	std::vector<std::optional<MovementOverride>> movement_overrides_;
 	std::vector<uint32_t> free_indices_;

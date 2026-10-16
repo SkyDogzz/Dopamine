@@ -137,7 +137,7 @@ EntityId SimulationCore::spawn(std::string type, float x, float y, float hp, flo
 	projectiles_[index] = {};
 	xp_orb_flags_[index] = false;
 	xp_values_[index] = 0.0F;
-	damage_over_time_[index].reset();
+	damage_over_time_[index].clear();
 	chill_effects_[index].reset();
 	movement_overrides_[index].reset();
 	++entity_count_;
@@ -279,9 +279,24 @@ bool SimulationCore::apply_damage_over_time(EntityId target, float damage_per_ti
 			xp_orb_flags_[target.index]) {
 		return false;
 	}
-	damage_over_time_[target.index] = DamageOverTime{
-		damage_per_tick, interval_seconds, duration_seconds, interval_seconds, std::move(status_type),
-	};
+	auto &effects = damage_over_time_[target.index];
+	const bool burn_or_poison = status_type == "burn" || status_type == "poison";
+	const bool complementary_active = burn_or_poison && std::any_of(effects.begin(), effects.end(),
+		[&status_type](const DamageOverTime &effect) {
+			return (status_type == "burn" && effect.status_type == "poison") ||
+					(status_type == "poison" && effect.status_type == "burn");
+		});
+	if (!burn_or_poison || (effects.empty() || (!complementary_active &&
+			std::none_of(effects.begin(), effects.end(), [&status_type](const DamageOverTime &effect) {
+				return effect.status_type == status_type;
+			})))) effects.clear();
+	const auto existing = std::find_if(effects.begin(), effects.end(), [&status_type](const DamageOverTime &effect) {
+		return effect.status_type == status_type;
+	});
+	const DamageOverTime next{damage_per_tick, interval_seconds, duration_seconds, interval_seconds,
+			std::move(status_type)};
+	if (existing == effects.end()) effects.push_back(next);
+	else *existing = next;
 	return true;
 }
 
@@ -384,7 +399,7 @@ void SimulationCore::reset() {
 	}
 	entity_count_ = 0;
 	simulation_time_ = 0.0;
-	for (auto &effect : damage_over_time_) effect.reset();
+	for (auto &effects : damage_over_time_) effects.clear();
 	for (auto &effect : chill_effects_) effect.reset();
 	for (auto &movement : movement_overrides_) movement.reset();
 }
@@ -404,7 +419,8 @@ SimulationCoreState SimulationCore::capture_state() const {
 		entity.projectile = projectiles_[index];
 		entity.is_xp_orb = xp_orb_flags_[index];
 		entity.xp_value = xp_values_[index];
-		entity.damage_over_time = damage_over_time_[index];
+		entity.damage_over_time_effects = damage_over_time_[index];
+		if (!entity.damage_over_time_effects.empty()) entity.damage_over_time = entity.damage_over_time_effects.front();
 		entity.chill_effect = chill_effects_[index];
 		entity.movement_override = movement_overrides_[index];
 		state.entities.push_back(std::move(entity));
@@ -436,6 +452,11 @@ void SimulationCore::restore_state(const SimulationCoreState &state) {
 	std::size_t active_count = 0;
 	for (std::size_t index = 0; index < slot_count; ++index) {
 		const Entity &entity = state.entities[index];
+		if (entity.damage_over_time.has_value() != !entity.damage_over_time_effects.empty() ||
+				(entity.damage_over_time.has_value() &&
+					entity.damage_over_time->status_type != entity.damage_over_time_effects.front().status_type)) {
+			throw std::invalid_argument("inconsistent legacy simulation core damage-over-time state");
+		}
 		if (entity.id.index != index || entity.id.generation == 0) {
 			throw std::invalid_argument("invalid simulation core entity identity");
 		}
@@ -514,22 +535,31 @@ void SimulationCore::restore_state(const SimulationCoreState &state) {
 							!std::isfinite(projectile.status_interval_seconds) ||
 							!std::isfinite(projectile.status_duration_seconds) || projectile.status_damage_per_tick <= 0.0F ||
 							projectile.status_interval_seconds <= 0.0 || projectile.status_duration_seconds <= 0.0)) ||
-					(entity.damage_over_time.has_value() || entity.chill_effect.has_value())) {
+					(!entity.damage_over_time_effects.empty() || entity.chill_effect.has_value())) {
 				throw std::invalid_argument("invalid simulation core projectile state");
 			}
 		} else if (entity.is_xp_orb) {
-			if (!std::isfinite(entity.xp_value) || entity.xp_value <= 0.0F || entity.damage_over_time.has_value() ||
+			if (!std::isfinite(entity.xp_value) || entity.xp_value <= 0.0F || !entity.damage_over_time_effects.empty() ||
 					entity.chill_effect.has_value()) {
 				throw std::invalid_argument("invalid simulation core XP orb state");
 			}
-		} else if (entity.damage_over_time.has_value()) {
-			const DamageOverTime &status = *entity.damage_over_time;
-			if (!std::isfinite(status.damage_per_tick) || status.damage_per_tick <= 0.0F ||
-					!std::isfinite(status.interval_seconds) || status.interval_seconds <= 0.0 ||
-					!std::isfinite(status.remaining_seconds) || status.remaining_seconds <= 0.0 ||
-					!std::isfinite(status.time_to_tick) || status.time_to_tick < 0.0 ||
-					status.time_to_tick > status.interval_seconds || !is_known_status_type(status.status_type)) {
-				throw std::invalid_argument("invalid simulation core damage-over-time state");
+		} else {
+			std::vector<std::string> status_types;
+			for (const DamageOverTime &status : entity.damage_over_time_effects) {
+				if (!std::isfinite(status.damage_per_tick) || status.damage_per_tick <= 0.0F ||
+						!std::isfinite(status.interval_seconds) || status.interval_seconds <= 0.0 ||
+						!std::isfinite(status.remaining_seconds) || status.remaining_seconds <= 0.0 ||
+						!std::isfinite(status.time_to_tick) || status.time_to_tick < 0.0 ||
+						status.time_to_tick > status.interval_seconds || !is_known_status_type(status.status_type) ||
+						std::find(status_types.begin(), status_types.end(), status.status_type) != status_types.end()) {
+					throw std::invalid_argument("invalid simulation core damage-over-time state");
+				}
+				status_types.push_back(status.status_type);
+			}
+			if (status_types.size() > 1 && (status_types.size() != 2 ||
+					!((status_types[0] == "burn" && status_types[1] == "poison") ||
+					(status_types[0] == "poison" && status_types[1] == "burn")))) {
+				throw std::invalid_argument("only Burn and Poison may coexist as damage-over-time effects");
 			}
 		}
 		if (entity.chill_effect.has_value()) {
@@ -579,7 +609,7 @@ void SimulationCore::restore_state(const SimulationCoreState &state) {
 		restored.projectiles_.push_back(entity.projectile);
 		restored.xp_orb_flags_.push_back(entity.is_xp_orb);
 		restored.xp_values_.push_back(entity.xp_value);
-		restored.damage_over_time_.push_back(entity.damage_over_time);
+		restored.damage_over_time_.push_back(entity.damage_over_time_effects);
 		restored.chill_effects_.push_back(entity.chill_effect);
 		restored.movement_overrides_.push_back(entity.movement_override);
 	}
@@ -623,19 +653,17 @@ std::size_t SimulationCore::estimate_event_count_upper_bound(double delta_second
 			++target_count;
 			has_volatile_enemy = has_volatile_enemy || enemy_types_[index].death_explosion_radius > 0.0F;
 		}
-		if (!damage_over_time_[index].has_value() || health_[index].current <= 0.0F) {
+		if (damage_over_time_[index].empty() || health_[index].current <= 0.0F) {
 			continue;
 		}
-		const DamageOverTime &status = *damage_over_time_[index];
-		const double active_seconds = std::min(delta_seconds, status.remaining_seconds);
-		const double first_tick = std::max(0.0, status.time_to_tick);
-		if (active_seconds + 1e-12 < first_tick) {
-			continue;
+		for (const DamageOverTime &status : damage_over_time_[index]) {
+			const double active_seconds = std::min(delta_seconds, status.remaining_seconds);
+			const double first_tick = std::max(0.0, status.time_to_tick);
+			if (active_seconds + 1e-12 < first_tick) continue;
+			const long double ticks = std::floor((static_cast<long double>(active_seconds) - first_tick + 1e-12L) /
+					status.interval_seconds) + 1.0L;
+			add_saturated(ticks + 1.0L);
 		}
-		const long double ticks = std::floor((static_cast<long double>(active_seconds) - first_tick + 1e-12L) /
-				status.interval_seconds) + 1.0L;
-		// Each tick emits damage, and at most one of those ticks can also emit death.
-		add_saturated(ticks + 1.0L);
 	}
 	add_saturated(static_cast<long double>(projectile_count) * 2.0L);
 	add_saturated(static_cast<long double>(piercing_projectile_count) * target_count * 2.0L);
@@ -727,30 +755,31 @@ std::vector<CombatEvent> SimulationCore::advance(double delta_seconds) {
 	std::vector<EntityId> to_despawn;
 	std::size_t explosion_targets_processed = 0;
 	for (uint32_t index = 0; index < slots_.size(); ++index) {
-		if (!slots_[index].active || !damage_over_time_[index].has_value()) {
+		if (!slots_[index].active || damage_over_time_[index].empty()) {
 			continue;
 		}
-		DamageOverTime &status = *damage_over_time_[index];
-		const double active_seconds = std::min(delta_seconds, status.remaining_seconds);
-		status.remaining_seconds -= active_seconds;
-		status.time_to_tick -= active_seconds;
 		const EntityId target{index, slots_[index].generation};
-		while (status.time_to_tick <= 1e-12 && status.remaining_seconds >= -1e-12) {
-			const std::size_t event_start = events.size();
-			apply_damage(target, target, status.damage_per_tick, events, to_despawn,
-					explosion_targets_processed);
-			for (std::size_t event_index = event_start; event_index < events.size(); ++event_index) {
-				events[event_index].is_damage_over_time = true;
-				events[event_index].status_type = status.status_type;
-			}
-			status.time_to_tick += status.interval_seconds;
-			if (health_[index].current <= 0.0F) {
-				break;
+		auto &effects = damage_over_time_[index];
+		for (DamageOverTime &status : effects) {
+			if (health_[index].current <= 0.0F) break;
+			const double active_seconds = std::min(delta_seconds, status.remaining_seconds);
+			status.remaining_seconds -= active_seconds;
+			status.time_to_tick -= active_seconds;
+			while (status.time_to_tick <= 1e-12 && status.remaining_seconds >= -1e-12) {
+				const std::size_t event_start = events.size();
+				apply_damage(target, target, status.damage_per_tick, events, to_despawn,
+						explosion_targets_processed);
+				for (std::size_t event_index = event_start; event_index < events.size(); ++event_index) {
+					events[event_index].is_damage_over_time = true;
+					events[event_index].status_type = status.status_type;
+				}
+				status.time_to_tick += status.interval_seconds;
+				if (health_[index].current <= 0.0F) break;
 			}
 		}
-		if (status.remaining_seconds <= 1e-12 || health_[index].current <= 0.0F) {
-			damage_over_time_[index].reset();
-		}
+		std::erase_if(effects, [this, index](const DamageOverTime &status) {
+			return status.remaining_seconds <= 1e-12 || health_[index].current <= 0.0F;
+		});
 	}
 	if (has_active_projectile) {
 		float max_target_displacement = 0.0F;
@@ -1308,6 +1337,10 @@ void SimulationCore::apply_damage(EntityId source, EntityId target, float amount
 	events.back().source_type = source_type;
 	events.back().target_affix = target_type.affix;
 	events.back().target_was_chilled = target_was_chilled;
+	for (const DamageOverTime &status : damage_over_time_[target.index]) {
+		events.back().target_had_burn = events.back().target_had_burn || status.status_type == "burn";
+		events.back().target_had_poison = events.back().target_had_poison || status.status_type == "poison";
+	}
 	if (target_health.current <= 0.0F) {
 		events.push_back({next_event_sequence_++, CombatEventType::Death, source, target,
 				0.0F, 0.0F, enemy_types_[target.index].threat_level,
@@ -1351,7 +1384,8 @@ std::optional<Entity> SimulationCore::entity(EntityId id) const {
 	const size_t index = static_cast<size_t>(id.index);
 	return Entity{id, transforms_[index], velocities_[index], health_[index], enemy_types_[index],
 			projectile_flags_[index], projectiles_[index], xp_orb_flags_[index], xp_values_[index],
-		damage_over_time_[index], chill_effects_[index], movement_overrides_[index]};
+		damage_over_time_[index], damage_over_time_[index].empty() ? std::optional<DamageOverTime>{} :
+				std::optional<DamageOverTime>{damage_over_time_[index].front()}, chill_effects_[index], movement_overrides_[index]};
 }
 
 std::vector<Entity> SimulationCore::snapshot() const {
@@ -1362,7 +1396,8 @@ std::vector<Entity> SimulationCore::snapshot() const {
 			const EntityId id{index, slots_[index].generation};
 			result.push_back({id, transforms_[index], velocities_[index], health_[index], enemy_types_[index],
 					projectile_flags_[index], projectiles_[index], xp_orb_flags_[index], xp_values_[index],
-					damage_over_time_[index], chill_effects_[index], movement_overrides_[index]});
+				damage_over_time_[index], damage_over_time_[index].empty() ? std::optional<DamageOverTime>{} :
+						std::optional<DamageOverTime>{damage_over_time_[index].front()}, chill_effects_[index], movement_overrides_[index]});
 		}
 	}
 	return result;

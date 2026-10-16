@@ -506,7 +506,7 @@ Les combinaisons et résultats sont proposés et non validés : voir le tableau 
 
 Une éventuelle réaction Overcharge nécessitant un statut conducteur supplémentaire reste à définir.
 
-**Décision utilisateur [VALIDÉE, 2026-10-16] — Toxic Ignition :** produire une explosion immédiate à l’application directe du second statut, lorsque la cible porte déjà Poison ou Burn. L’explosion inflige 50 % des dégâts du coup direct déclencheur. Le rayon, la consommation éventuelle des statuts et le chaînage restent **[OUVERTS]**; ne pas traiter le concept comme une règle complète tant que ces points ne sont pas arbitrés.
+**Décisions utilisateur [VALIDÉES, 2026-10-16] — Toxic Ignition :** déclencher une explosion immédiate quand un coup direct applique Burn à une cible déjà empoisonnée ou Poison à une cible déjà brûlée. Les DoT Poison et Burn coexistent sur la cible et infligent leurs ticks selon leurs horloges indépendantes; réappliquer un même DoT le remplace sans effacer l’autre. L’explosion inflige 50 % des dégâts du coup direct déclencheur, dans un rayon de 60 px. Les deux statuts restent actifs après l’explosion. Une cible ne peut déclencher cette réaction qu’une fois par seconde. L’explosion n’applique pas de statut, donc ses dégâts ne déclenchent pas récursivement Toxic Ignition. Cette coexistence validée ne définit pas l’empilement d’autres paires de DoT, qui reste **[OUVERT]**.
 
 Synergies proposées entre reliques :
 

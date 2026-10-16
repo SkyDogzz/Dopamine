@@ -471,14 +471,26 @@ Dictionary CombatSimulation::snapshot() const {
 		components["IsProjectile"] = entity.is_projectile;
 		components["IsXpOrb"] = entity.is_xp_orb;
 		components["XpValue"] = entity.xp_value;
-		if (entity.damage_over_time.has_value()) {
+		if (!entity.damage_over_time_effects.empty()) {
 			Dictionary status;
-			status["damage_per_tick"] = entity.damage_over_time->damage_per_tick;
-			status["interval_seconds"] = entity.damage_over_time->interval_seconds;
-			status["remaining_seconds"] = entity.damage_over_time->remaining_seconds;
-			status["time_to_tick"] = entity.damage_over_time->time_to_tick;
-			status["status_type"] = entity.damage_over_time->status_type.c_str();
+			const auto &primary_status = entity.damage_over_time_effects.front();
+			status["damage_per_tick"] = primary_status.damage_per_tick;
+			status["interval_seconds"] = primary_status.interval_seconds;
+			status["remaining_seconds"] = primary_status.remaining_seconds;
+			status["time_to_tick"] = primary_status.time_to_tick;
+			status["status_type"] = primary_status.status_type.c_str();
 			components["DamageOverTime"] = status;
+			Array statuses;
+			for (const auto &effect : entity.damage_over_time_effects) {
+				Dictionary entry;
+				entry["damage_per_tick"] = effect.damage_per_tick;
+				entry["interval_seconds"] = effect.interval_seconds;
+				entry["remaining_seconds"] = effect.remaining_seconds;
+				entry["time_to_tick"] = effect.time_to_tick;
+				entry["status_type"] = effect.status_type.c_str();
+				statuses.push_back(entry);
+			}
+			components["DamageOverTimeEffects"] = statuses;
 		}
 		if (entity.chill_effect.has_value()) {
 			Dictionary chill;
@@ -540,6 +552,8 @@ Dictionary CombatSimulation::snapshot() const {
 		entry["is_damage_over_time"] = event.is_damage_over_time;
 		entry["status_type"] = event.status_type.c_str();
 		entry["target_was_chilled"] = event.target_was_chilled;
+		entry["target_had_burn"] = event.target_had_burn;
+		entry["target_had_poison"] = event.target_had_poison;
 		entry["remaining_health"] = event.remaining_health;
 		entry["threat_level"] = event.threat_level;
 		entry["target_type"] = event.target_type.c_str();

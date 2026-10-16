@@ -530,6 +530,53 @@ int main() {
 	dot_events = damage_over_time.advance(1.0);
 	require(dot_events.size() == 1 && dot_events[0].amount == 4.0F,
 			"reapplication should replace rather than stack or retain old timing");
+	const auto dual_status_target = damage_over_time.spawn("chaser", 0.0F, 0.0F, 30.0F, 0.0F, 0.0F);
+	require(damage_over_time.apply_damage_over_time(dual_status_target, 2.0F, 0.5, 2.0, "burn") &&
+			damage_over_time.apply_damage_over_time(dual_status_target, 3.0F, 1.0, 2.0, "poison"),
+			"Burn and Poison should coexist on the same target");
+	const auto dual_status_state = damage_over_time.entity(dual_status_target);
+	require(dual_status_state && dual_status_state->damage_over_time_effects.size() == 2,
+			"snapshots should expose both simultaneously active status effects");
+	const auto dual_status_ticks = damage_over_time.advance(1.0);
+	require(std::count_if(dual_status_ticks.begin(), dual_status_ticks.end(), [](const auto &event) {
+			return event.is_damage_over_time && event.status_type == "burn";
+		}) == 2 && std::count_if(dual_status_ticks.begin(), dual_status_ticks.end(), [](const auto &event) {
+			return event.is_damage_over_time && event.status_type == "poison";
+		}) == 1 && damage_over_time.entity(dual_status_target)->health.current == 23.0F,
+			"Burn and Poison should tick on their independent clocks and both damage the target");
+	SimulationCore dual_status_restore;
+	const auto restorable_dual_target = dual_status_restore.spawn("chaser", 0.0F, 0.0F, 30.0F, 0.0F, 0.0F);
+	dual_status_restore.apply_damage_over_time(restorable_dual_target, 2.0F, 0.5, 2.0, "burn");
+	dual_status_restore.apply_damage_over_time(restorable_dual_target, 3.0F, 1.0, 2.0, "poison");
+	const auto dual_status_saved = dual_status_restore.capture_state();
+	SimulationCore dual_status_loaded;
+	dual_status_loaded.restore_state(dual_status_saved);
+	require(dual_status_loaded.entity(restorable_dual_target)->damage_over_time_effects.size() == 2 &&
+			dual_status_loaded.advance(1.0).size() == 3 &&
+			dual_status_loaded.entity(restorable_dual_target)->health.current == 23.0F,
+			"snapshot restoration should retain both active statuses and their independent clocks");
+	SimulationCore dual_lethal_status;
+	const auto dual_lethal_target = dual_lethal_status.spawn("chaser", 0.0F, 0.0F, 2.0F, 0.0F, 0.0F);
+	dual_lethal_status.apply_damage_over_time(dual_lethal_target, 2.0F, 0.5, 1.0, "burn");
+	dual_lethal_status.apply_damage_over_time(dual_lethal_target, 2.0F, 0.5, 1.0, "poison");
+	const auto dual_lethal_events = dual_lethal_status.advance(0.5);
+	require(dual_lethal_events.size() == 2 &&
+			std::count_if(dual_lethal_events.begin(), dual_lethal_events.end(), [](const auto &event) {
+				return event.type == dopamine::sim::CombatEventType::Death;
+			}) == 1,
+			"a lethal first tick should prevent a second DoT from dealing duplicate damage or death");
+	SimulationCore status_hit_context;
+	const auto poisoned_target = status_hit_context.spawn("chaser", 60.0F, 0.0F, 100.0F, 0.0F, 0.0F);
+	status_hit_context.apply_damage_over_time(poisoned_target, 1.0F, 1.0, 3.0, "poison");
+	status_hit_context.spawn_projectile("inferno_sprayer", 0.0F, 0.0F, 10.0F, 3.0F, 2.0,
+			100.0F, 0.0F, 2.0F, 0.5, 2.0);
+	const auto status_hit_events = status_hit_context.advance(0.6);
+	const auto burn_application_hit = std::find_if(status_hit_events.begin(), status_hit_events.end(), [](const auto &event) {
+		return event.type == dopamine::sim::CombatEventType::Damage && event.source_type == "inferno_sprayer";
+	});
+	require(burn_application_hit != status_hit_events.end() && burn_application_hit->target_had_poison &&
+			status_hit_context.entity(poisoned_target)->damage_over_time_effects.size() == 2,
+			"direct hit events should report the pre-hit status pair before applying their new status");
 	require(!damage_over_time.apply_damage_over_time({9999, 1}, 1.0F, 1.0, 1.0),
 			"damage-over-time should reject stale targets");
 	bool rejected_dot = false;
