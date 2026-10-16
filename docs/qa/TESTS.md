@@ -2,8 +2,8 @@
 
 ## Politiques de ciblage exposées dans le Sandbox — 2026-10-16
 
-- [x] `survival_targeting_smoke.gd` vérifie nearest, farthest, highest threat, highest HP, lowest HP, la portée et l’exclusion des ennemis morts, des projectiles et des orbes XP. Ces règles restent **[PROPOSÉES]**.
-- [x] `sandbox_ui_smoke.gd` vérifie le sélecteur à cinq politiques, l’ID affiché, l’effet du choix de politique et de portée, l’effacement après kill-all et la préservation du fixture de sauvegarde normale. Capture Xvfb relue à 640×360; cible, marqueur et réglages restent dans leurs cadres.
+- [x] `survival_targeting_smoke.gd` vérifie nearest, farthest, highest threat, highest HP, lowest HP, les cibles de grappes denses, le centroïde Meteor, la portée et l’exclusion des ennemis morts, des projectiles et des orbes XP. Ces règles restent **[PROPOSÉES]**.
+- [x] `sandbox_ui_smoke.gd` vérifie le sélecteur à neuf politiques, l’ID ou centroïde affiché, les portées et rayons de grappe par défaut, l’effet du choix de politique et de portée, l’effacement après kill-all et la préservation du fixture de sauvegarde normale. Capture Xvfb relue à 640×360; cible, marqueur et réglages restent dans leurs cadres.
 - [x] `survival_weapon_smoke.gd`, `survival_weapon_catalog_smoke.gd` et la suite CTest passent sous Godot 4.7.2 : 47 tests attendus après reconfiguration.
 - [ ] Les sélecteurs spécialisés de grappe et les essais de placement représentatifs restent à faire.
 

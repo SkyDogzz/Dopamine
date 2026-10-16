@@ -1,8 +1,11 @@
 extends Control
 
 const SURVIVAL_TARGETING := preload("res://scripts/survival_targeting.gd")
-const TARGETING_POLICIES := ["nearest", "highest_threat", "highest_health", "lowest_health", "farthest"]
-const TARGETING_LABELS := ["NEAREST", "HIGHEST THREAT", "HIGHEST HP", "LOWEST HP", "FARTHEST"]
+const TARGETING_POLICIES := ["nearest", "highest_threat", "highest_health", "lowest_health", "farthest",
+		"lightning_cluster", "sawblades_cluster", "meteor_centroid", "prism_cluster"]
+const TARGETING_LABELS := ["NEAREST", "HIGHEST THREAT", "HIGHEST HP", "LOWEST HP", "FARTHEST",
+		"LIGHTNING CLUSTER", "SAWBLADE CLUSTER", "METEOR CENTROID", "PRISM CLUSTER"]
+const CLUSTER_POLICIES := ["lightning_cluster", "sawblades_cluster", "meteor_centroid", "prism_cluster"]
 
 const COLOR_MUTED := Color("#8ea3ad")
 const COLOR_CYAN := Color("#45e5ed")
@@ -31,6 +34,7 @@ var _pending_reset_sequence := 0
 @onready var _count: SpinBox = $Shell/Content/SidePanel/Sections/SpawnPanel/SpawnForm/TypeRow/CountSpin
 @onready var _target_policy: OptionButton = $Shell/Content/SidePanel/Sections/TargetingPanel/TargetingForm/PolicySelect
 @onready var _target_range: SpinBox = $Shell/Content/SidePanel/Sections/TargetingPanel/TargetingForm/RangeSpin
+@onready var _cluster_radius: SpinBox = $Shell/Content/SidePanel/Sections/TargetingPanel/TargetingForm/ClusterRadiusSpin
 @onready var _target_status: Label = $Shell/Content/SidePanel/Sections/TargetingPanel/TargetingForm/TargetStatus
 @onready var _entity_info: RichTextLabel = $Shell/Content/SidePanel/Sections/InspectorPanel/InspectorForm/EntityInfo
 @onready var _log_text: RichTextLabel = $Shell/Content/SidePanel/Sections/LogPanel/LogForm/LogText
@@ -83,13 +87,14 @@ func _ready() -> void:
 	for index in TARGETING_POLICIES.size():
 		_target_policy.add_item(TARGETING_LABELS[index])
 		_target_policy.set_item_metadata(index, TARGETING_POLICIES[index])
-	_target_range.value = SURVIVAL_TARGETING.MINIGUN_RANGE
+	_apply_targeting_profile()
 
 	$Shell/Content/MainColumn/Toolbar/Row/PauseButton.pressed.connect(_on_pause_pressed)
 	$Shell/Content/MainColumn/Toolbar/Row/StepButton.pressed.connect(_on_step_pressed)
 	$Shell/Content/MainColumn/Toolbar/Row/SpeedSelect.item_selected.connect(_on_speed_selected)
 	_target_policy.item_selected.connect(_on_target_policy_selected)
 	_target_range.value_changed.connect(_on_target_range_changed)
+	_cluster_radius.value_changed.connect(_on_target_range_changed)
 	$Shell/Content/MainColumn/Toolbar/Row/ResetButton.pressed.connect(_on_reset_pressed)
 	$Shell/Content/SidePanel/Sections/SpawnPanel/SpawnForm/SpawnActions/SpawnButton.pressed.connect(_on_spawn_pressed)
 	$Shell/Content/SidePanel/Sections/SpawnPanel/SpawnForm/SpawnActions/DespawnButton.pressed.connect(_on_despawn_pressed)
@@ -159,7 +164,8 @@ func _refresh() -> void:
 	_view.set_entities(state["entities"])
 	_view.set_selected_entity(_selected_index, _selected_generation)
 	var target_policy: String = str(_target_policy.get_item_metadata(_target_policy.selected))
-	var target: Dictionary = SURVIVAL_TARGETING.select_enemy(state["entities"], Vector2.ZERO, _target_range.value, target_policy)
+	var target: Dictionary = SURVIVAL_TARGETING.preview_target(state["entities"], Vector2.ZERO,
+		_target_range.value, _cluster_radius.value, target_policy)
 	_view.set_target_preview(target, TARGETING_LABELS[_target_policy.selected])
 	_target_status.text = "%s  ·  %s" % [TARGETING_LABELS[_target_policy.selected], "NO TARGET" if target.is_empty() else "#%d / G%d" % [target["id"].x, target["id"].y]]
 
@@ -239,10 +245,18 @@ func _on_speed_selected(index: int) -> void:
 	simulation.set_speed(float(_speed_select.get_item_metadata(index)))
 
 func _on_target_policy_selected(_index: int) -> void:
+	_apply_targeting_profile()
 	_refresh()
 
 func _on_target_range_changed(_value: float) -> void:
 	_refresh()
+
+func _apply_targeting_profile() -> void:
+	var policy: String = str(_target_policy.get_item_metadata(_target_policy.selected))
+	var defaults: Dictionary = SURVIVAL_TARGETING.preview_defaults(policy)
+	_target_range.value = defaults["range"]
+	_cluster_radius.value = defaults["cluster_radius"]
+	_cluster_radius.visible = policy in CLUSTER_POLICIES
 
 func _on_reset_pressed() -> void:
 	var state: Dictionary = simulation.snapshot()

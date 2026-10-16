@@ -150,17 +150,17 @@ const WAVE_HP_CAP := 12.0
 @export var weapon_enabled: bool = true
 @export var lightning_cooldown: float = 0.5
 @export var lightning_damage: float = 12.0
-@export var lightning_range: float = 300.0
+@export var lightning_range: float = SURVIVAL_TARGETING.LIGHTNING_RANGE
 @export var lightning_projectile_speed: float = 800.0
 @export var lightning_projectile_radius: float = 4.0
 @export var lightning_projectile_lifetime: float = 2.0
 @export_range(1, 5) var lightning_chain_count: int = 2
-@export_range(1.0, 1000.0, 1.0) var lightning_chain_range: float = 120.0
+@export_range(1.0, 1000.0, 1.0) var lightning_chain_range: float = SURVIVAL_TARGETING.LIGHTNING_CLUSTER_RADIUS
 @export_range(0.0, 1.0, 0.05) var lightning_chain_damage_multiplier: float = 0.75
 @export_group("Prototype Inferno Sprayer — proposed tuning")
 @export var inferno_cooldown: float = 0.7
 @export var inferno_damage: float = 8.0
-@export var inferno_range: float = 520.0
+@export var inferno_range: float = SURVIVAL_TARGETING.INFERNO_RANGE
 @export var inferno_projectile_speed: float = 650.0
 @export var inferno_projectile_radius: float = 5.0
 @export var inferno_projectile_lifetime: float = 1.2
@@ -173,7 +173,7 @@ const WAVE_HP_CAP := 12.0
 @export_group("Prototype Crimson Daggers — proposed tuning")
 @export var daggers_cooldown: float = 0.8
 @export var daggers_damage: float = 7.0
-@export var daggers_range: float = 480.0
+@export var daggers_range: float = SURVIVAL_TARGETING.DAGGERS_RANGE
 @export var daggers_projectile_speed: float = 900.0
 @export var daggers_projectile_radius: float = 2.5
 @export var daggers_projectile_lifetime: float = 0.8
@@ -191,7 +191,7 @@ const WAVE_HP_CAP := 12.0
 @export_group("Prototype Toxic Cloud — proposed tuning")
 @export var toxic_cooldown: float = 1.4
 @export var toxic_impact_damage: float = 3.0
-@export var toxic_range: float = 560.0
+@export var toxic_range: float = SURVIVAL_TARGETING.TOXIC_RANGE
 @export var toxic_projectile_speed: float = 430.0
 @export var toxic_projectile_radius: float = 4.0
 @export var toxic_projectile_lifetime: float = 1.8
@@ -206,8 +206,8 @@ const WAVE_HP_CAP := 12.0
 @export_group("Prototype Sawblades — proposed tuning")
 @export var sawblades_cooldown: float = 1.8
 @export var sawblades_damage: float = 8.0
-@export var sawblades_range: float = 520.0
-@export var sawblades_cluster_radius: float = 160.0 # [PROPOSED] helps initial ricochet reach a group.
+@export var sawblades_range: float = SURVIVAL_TARGETING.SAWBLADES_RANGE
+@export var sawblades_cluster_radius: float = SURVIVAL_TARGETING.SAWBLADES_CLUSTER_RADIUS # [PROPOSED] helps initial ricochet reach a group.
 @export var sawblades_projectile_speed: float = 360.0
 @export var sawblades_projectile_radius: float = 7.0
 @export var sawblades_projectile_lifetime: float = 2.5
@@ -215,11 +215,11 @@ const WAVE_HP_CAP := 12.0
 @export_group("Prototype Meteor Staff — proposed tuning")
 @export var meteor_staff_cooldown: float = 2.8
 @export var meteor_staff_damage: float = 12.0
-@export var meteor_staff_range: float = 620.0
+@export var meteor_staff_range: float = SURVIVAL_TARGETING.METEOR_RANGE
 @export var meteor_staff_projectile_speed: float = 300.0
 @export var meteor_staff_projectile_radius: float = 8.0
 @export var meteor_staff_projectile_lifetime: float = 2.5
-@export var meteor_staff_cluster_radius: float = 110.0
+@export var meteor_staff_cluster_radius: float = SURVIVAL_TARGETING.METEOR_CLUSTER_RADIUS
 @export var meteor_staff_blast_radius: float = 82.0
 @export_range(0.0, 1.0) var meteor_staff_splash_damage_multiplier: float = 0.55
 @export_range(0.0, 1.0) var celestial_eye_area_per_level: float = 0.03
@@ -230,8 +230,8 @@ const WAVE_HP_CAP := 12.0
 @export_group("Prototype Prism Laser — proposed tuning")
 @export var prism_laser_cooldown: float = 0.12
 @export var prism_laser_damage: float = 3.0
-@export var prism_laser_range: float = 620.0
-@export var spectrum_collapse_cluster_radius: float = 180.0 # [PROPOSED] groups secondary beams around the primary.
+@export var prism_laser_range: float = SURVIVAL_TARGETING.PRISM_RANGE
+@export var spectrum_collapse_cluster_radius: float = SURVIVAL_TARGETING.PRISM_CLUSTER_RADIUS # [PROPOSED] groups secondary beams around the primary.
 @export var prism_laser_projectile_speed: float = 1800.0
 @export var prism_laser_projectile_radius: float = 1.5
 @export var prism_crystal_critical_damage_per_level: float = 0.03
@@ -239,7 +239,7 @@ const WAVE_HP_CAP := 12.0
 @export_group("Prototype Void Orb — proposed tuning")
 @export var void_orb_cooldown: float = 2.4
 @export var void_orb_damage: float = 7.0
-@export var void_orb_range: float = 620.0
+@export var void_orb_range: float = SURVIVAL_TARGETING.VOID_ORB_RANGE
 @export var void_orb_speed: float = 230.0
 @export var void_orb_lifetime: float = 3.0
 @export var void_orb_radius: float = 5.0
@@ -1782,23 +1782,10 @@ func _nearest_lightning_targets(origin: Vector2, excluded_ids: Array[Vector2i], 
 func _lightning_initial_targets(limit: int) -> Array[Dictionary]:
 	if limit <= 0:
 		return []
-	var candidates := _nearest_lightning_targets(player.global_position, [], _entities.size())
-	if candidates.is_empty():
+	var primary := SURVIVAL_TARGETING.select_dense_cluster_target(
+		_entities, player.global_position, lightning_range, lightning_chain_range)
+	if primary.is_empty():
 		return []
-	var primary: Dictionary = {}
-	var best_neighbor_count := -1
-	var best_distance_squared := INF
-	var chain_radius_squared := lightning_chain_range * lightning_chain_range
-	for candidate in candidates:
-		var neighbor_count := 0
-		for other in candidates:
-			if candidate["position"].distance_squared_to(other["position"]) <= chain_radius_squared:
-				neighbor_count += 1
-		var distance_squared := float(candidate["distance_squared"])
-		if neighbor_count > best_neighbor_count or (neighbor_count == best_neighbor_count and distance_squared < best_distance_squared):
-			primary = candidate
-			best_neighbor_count = neighbor_count
-			best_distance_squared = distance_squared
 	var targets: Array[Dictionary] = [primary]
 	if limit == 1:
 		return targets
@@ -2101,114 +2088,16 @@ func _nearest_enemy_excluding(origin: Vector2, max_range: float, excluded: Array
 	return nearest
 
 func _prism_cluster_target(max_range: float) -> Dictionary:
-	var candidates: Array[Dictionary] = []
-	var nearest: Dictionary = {}
-	var best_nearest_distance_squared := max_range * max_range
-	for entity in _entities:
-		var components: Dictionary = entity["components"]
-		if not _is_targetable_enemy(components):
-			continue
-		var transform: Dictionary = components["Transform2D"]
-		var position := Vector2(float(transform["x"]), float(transform["y"]))
-		var distance_squared := player.global_position.distance_squared_to(position)
-		if distance_squared >= max_range * max_range:
-			continue
-		var target := {"position": position, "id": Vector2i(int(entity["id"]["index"]), int(entity["id"]["generation"]))}
-		candidates.append(target)
-		if distance_squared < best_nearest_distance_squared:
-			best_nearest_distance_squared = distance_squared
-			nearest = target
-	if candidates.size() < 2 or spectrum_collapse_cluster_radius <= 0.0:
-		return nearest
-	var best_target: Dictionary = {}
-	var best_neighbor_count := 0
-	var best_distance_squared := max_range * max_range
-	var cluster_radius_squared := spectrum_collapse_cluster_radius * spectrum_collapse_cluster_radius
-	for candidate in candidates:
-		var neighbor_count := 0
-		for other in candidates:
-			if candidate["position"].distance_squared_to(other["position"]) <= cluster_radius_squared:
-				neighbor_count += 1
-		var distance_squared: float = player.global_position.distance_squared_to(candidate["position"])
-		if neighbor_count > best_neighbor_count or (neighbor_count == best_neighbor_count and distance_squared < best_distance_squared):
-			best_neighbor_count = neighbor_count
-			best_distance_squared = distance_squared
-			best_target = candidate
-	return best_target if not best_target.is_empty() else nearest
+	return SURVIVAL_TARGETING.select_dense_cluster_target(
+		_entities, player.global_position, max_range, spectrum_collapse_cluster_radius)
 
 func _meteor_cluster_target() -> Dictionary:
-	var candidates: Array[Dictionary] = []
-	var targets: Array[Dictionary] = []
-	for entity in _entities:
-		var components: Dictionary = entity["components"]
-		if not _is_targetable_enemy(components):
-			continue
-		var transform: Dictionary = components["Transform2D"]
-		var position := Vector2(float(transform["x"]), float(transform["y"]))
-		var target := {"position": position, "id": Vector2i(int(entity["id"]["index"]), int(entity["id"]["generation"]))}
-		targets.append(target)
-		if player.global_position.distance_squared_to(position) < meteor_staff_range * meteor_staff_range:
-			candidates.append(target)
-	if candidates.is_empty():
-		return {}
-	var best_target: Dictionary = {}
-	var best_center := Vector2.ZERO
-	var best_cluster_size := 0
-	var best_distance_squared := meteor_staff_range * meteor_staff_range
-	var cluster_radius_squared := meteor_staff_cluster_radius * meteor_staff_cluster_radius
-	for candidate in candidates:
-		var center := Vector2.ZERO
-		var cluster_size := 0
-		for other in targets:
-			if candidate["position"].distance_squared_to(other["position"]) <= cluster_radius_squared:
-				center += other["position"]
-				cluster_size += 1
-		var distance_squared: float = player.global_position.distance_squared_to(candidate["position"])
-		if cluster_size > best_cluster_size or (cluster_size == best_cluster_size and distance_squared < best_distance_squared):
-			best_target = candidate
-			best_center = center / float(cluster_size)
-			best_cluster_size = cluster_size
-			best_distance_squared = distance_squared
-	return {"id": best_target["id"], "position": best_center} if not best_target.is_empty() else {}
+	return SURVIVAL_TARGETING.select_cluster_centroid(
+		_entities, player.global_position, meteor_staff_range, meteor_staff_cluster_radius)
 
 func _sawblades_cluster_target() -> Dictionary:
-	var targets: Array[Dictionary] = []
-	var launch_targets: Array[Dictionary] = []
-	var nearest: Dictionary = {}
-	var max_distance_squared := sawblades_range * sawblades_range
-	var best_nearest_distance_squared := max_distance_squared
-	for entity in _entities:
-		var components: Dictionary = entity["components"]
-		if not _is_targetable_enemy(components):
-			continue
-		var transform: Dictionary = components["Transform2D"]
-		var position := Vector2(float(transform["x"]), float(transform["y"]))
-		var distance_squared := player.global_position.distance_squared_to(position)
-		var id_data: Dictionary = entity["id"]
-		var target := {"position": position, "id": Vector2i(int(id_data["index"]), int(id_data["generation"]))}
-		targets.append(target)
-		if distance_squared < max_distance_squared:
-			launch_targets.append(target)
-		if distance_squared < best_nearest_distance_squared and distance_squared < max_distance_squared:
-			best_nearest_distance_squared = distance_squared
-			nearest = target
-	if launch_targets.is_empty() or targets.size() < 2 or sawblades_cluster_radius <= 0.0:
-		return nearest
-	var best_target: Dictionary = {}
-	var best_cluster_size := 1
-	var best_distance_squared := max_distance_squared
-	var cluster_radius_squared := sawblades_cluster_radius * sawblades_cluster_radius
-	for candidate in launch_targets:
-		var cluster_size := 0
-		for other in targets:
-			if candidate["position"].distance_squared_to(other["position"]) <= cluster_radius_squared:
-				cluster_size += 1
-		var distance_squared: float = player.global_position.distance_squared_to(candidate["position"])
-		if cluster_size > best_cluster_size or (cluster_size == best_cluster_size and cluster_size > 1 and distance_squared < best_distance_squared):
-			best_cluster_size = cluster_size
-			best_distance_squared = distance_squared
-			best_target = candidate
-	return best_target if not best_target.is_empty() else nearest
+	return SURVIVAL_TARGETING.select_dense_cluster_target(
+		_entities, player.global_position, sawblades_range, sawblades_cluster_radius, true)
 
 func _spawn_starfall_fragments(origin: Vector2, primary_target: Dictionary, entities: Array) -> void:
 	var candidates: Array[Dictionary] = []

@@ -231,6 +231,17 @@ prefix = "RANGE "
 suffix = " u"
 tooltip_text = "Preview range in simulation units. This Sandbox value is independent of Survival weapon tuning."
 
+[node name="ClusterRadiusSpin" type="SpinBox" parent="Shell/Content/SidePanel/Sections/TargetingPanel/TargetingForm"]
+custom_minimum_size = Vector2(0, 19)
+layout_mode = 2
+size_flags_horizontal = 3
+min_value = 0.0
+max_value = 1000.0
+step = 10.0
+prefix = "CLUSTER "
+suffix = " u"
+tooltip_text = "Neighbor radius used only by cluster target previews."
+
 [node name="TargetStatus" type="Label" parent="Shell/Content/SidePanel/Sections/TargetingPanel/TargetingForm"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 8

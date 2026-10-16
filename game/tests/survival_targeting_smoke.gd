@@ -24,6 +24,20 @@ func _initialize() -> void:
 		"Range limits should exclude the farthest enemy without excluding closer targets")
 	assert(TARGETING.select_enemy(entities, Vector2.ZERO, 90.0, "nearest").is_empty(),
 		"Targeting should return no target when enemies exceed the weapon range")
+	var cluster_entities := [
+		_enemy(10, Vector2(50.0, 0.0), 20.0, 1.0),
+		_enemy(11, Vector2(300.0, 0.0), 20.0, 1.0),
+		_enemy(12, Vector2(350.0, 0.0), 20.0, 1.0),
+		_enemy(13, Vector2(370.0, 0.0), 20.0, 1.0),
+		_enemy(14, Vector2(490.0, 0.0), 20.0, 1.0),
+	]
+	assert(TARGETING.select_dense_cluster_target(cluster_entities, Vector2.ZERO, 400.0, 120.0)["id"].x == 11,
+		"Lightning and Prism selectors should choose the nearest member of the densest in-range cluster")
+	assert(TARGETING.select_dense_cluster_target(cluster_entities, Vector2.ZERO, 400.0, 150.0, true)["id"].x == 12,
+		"Sawblades selector should count live neighbors outside launch range")
+	var meteor_target: Dictionary = TARGETING.select_cluster_centroid(cluster_entities, Vector2.ZERO, 400.0, 110.0)
+	assert(meteor_target["id"].x == 11 and is_equal_approx(meteor_target["position"].x, 340.0),
+		"Meteor selector should aim at the densest cluster centroid while retaining its primary target ID")
 	print("Survival targeting policy smoke passed")
 	quit()
 

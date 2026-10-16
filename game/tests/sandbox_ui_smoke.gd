@@ -70,6 +70,7 @@ func _run() -> void:
 	for node_path in [
 		"Shell/Content/SidePanel/Sections/TargetingPanel/TargetingForm/PolicySelect",
 		"Shell/Content/SidePanel/Sections/TargetingPanel/TargetingForm/RangeSpin",
+		"Shell/Content/SidePanel/Sections/TargetingPanel/TargetingForm/ClusterRadiusSpin",
 		"Shell/Content/SidePanel/Sections/InspectorPanel/InspectorForm/StatusTitle",
 		"Shell/Content/SidePanel/Sections/InspectorPanel/InspectorForm/StatusDamageSpin",
 		"Shell/Content/SidePanel/Sections/InspectorPanel/InspectorForm/StatusIntervalSpin",
@@ -117,9 +118,9 @@ func _run() -> void:
 	assert(not target_preview.is_empty() and target_preview["id"] == Vector2i(id["index"], id["generation"]),
 		"Sandbox target preview should expose the nearest live Minigun target")
 	var target_policy: OptionButton = sandbox.get_node("Shell/Content/SidePanel/Sections/TargetingPanel/TargetingForm/PolicySelect")
-	assert(target_policy.item_count == 5, "Sandbox should expose five reusable target policies")
+	assert(target_policy.item_count == 9, "Sandbox should expose the common and cluster target policies")
 	var target_range: SpinBox = sandbox.get_node("Shell/Content/SidePanel/Sections/TargetingPanel/TargetingForm/RangeSpin")
-	target_range.value = 90.0
+	target_range.value = 0.0
 	assert(sandbox.get_node("Shell/Content/SidePanel/Sections/TargetingPanel/TargetingForm/TargetStatus").text.ends_with("NO TARGET"),
 		"Sandbox preview range should hide enemies outside the configured distance")
 	target_range.value = 620.0
@@ -127,6 +128,23 @@ func _run() -> void:
 	target_policy.item_selected.emit(3)
 	assert(sandbox.get_node("Shell/Content/SidePanel/Sections/TargetingPanel/TargetingForm/TargetStatus").text.begins_with("LOWEST HP"),
 		"Sandbox should update the target probe when its policy changes")
+	target_policy.select(5)
+	target_policy.item_selected.emit(5)
+	var cluster_radius: SpinBox = sandbox.get_node("Shell/Content/SidePanel/Sections/TargetingPanel/TargetingForm/ClusterRadiusSpin")
+	assert(cluster_radius.visible and is_equal_approx(cluster_radius.value, 120.0) and is_equal_approx(target_range.value, 300.0),
+		"Lightning preview should load its proposed range and chain radius")
+	target_policy.select(6)
+	target_policy.item_selected.emit(6)
+	assert(is_equal_approx(cluster_radius.value, 160.0) and is_equal_approx(target_range.value, 520.0),
+		"Sawblades preview should load its proposed range and ricochet radius")
+	target_policy.select(7)
+	target_policy.item_selected.emit(7)
+	assert(is_equal_approx(cluster_radius.value, 110.0) and is_equal_approx(target_range.value, 620.0),
+		"Meteor preview should load its proposed range and group radius")
+	target_policy.select(8)
+	target_policy.item_selected.emit(8)
+	assert(is_equal_approx(cluster_radius.value, 180.0) and is_equal_approx(target_range.value, 620.0),
+		"Prism preview should load its proposed range and cluster radius")
 	target_policy.select(0)
 	target_policy.item_selected.emit(0)
 
