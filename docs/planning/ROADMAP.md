@@ -546,9 +546,10 @@ P1 livre le Sandbox développeur et ne remplace pas cette feature produit.
   - [ ] Ajouter overrides LIVE d’un paramètre à la fois.
   - [ ] Ajouter overrides REBUILD/RESTART avec validation atomique.
 - [ ] **P8.3 — Presets et share codes**
-  - [ ] Écrire un schéma versionné avec exemple minimal.
-  - [ ] Sérialiser/désérialiser JSON borné et rejeter champs inconnus/données trop grosses.
-  - [ ] Encoder/décoder le code de partage et vérifier checksum.
+  - [x] Ajouter `sandbox_preset_service.gd` : schéma version 1 fermé, exemple minimal et modes Survival/Endless/Armorless.
+  - [x] Exporter/importer JSON limité à 1 Mio et refuser champs inconnus, types et métadonnées invalides.
+  - [x] Ajouter `DSLAB1:` avec DEFLATE, Base64URL, SHA-256 d’intégrité et décompression plafonnée; smoke de round-trip et corruption.
+  - [ ] Compléter les limites de profondeur/nombre d’éléments et brancher les exports au menu Sandbox.
   - [ ] Vérifier absence de script, chemin local et donnée privée.
 - [ ] **P8.4 — Import de sauvegarde**
   - [ ] Lire un profil normal en lecture seule.
