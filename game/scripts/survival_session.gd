@@ -1453,7 +1453,12 @@ func _finish_run(victory: bool) -> void:
 	_run_result.show_result(victory, wave_director.wave, player_active_time, kill_count, reward)
 
 func _restart_run() -> void:
-	get_tree().reload_current_scene()
+	var replacement: Node2D = load("res://scenes/survival_session.tscn").instantiate()
+	replacement.progression_service = progression_service
+	replacement.difficulty_id = difficulty_id
+	get_tree().root.add_child(replacement)
+	get_tree().current_scene = replacement
+	queue_free()
 
 func _quit_after_run() -> void:
 	if not run_over:

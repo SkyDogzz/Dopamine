@@ -1,5 +1,13 @@
 # Tests d'acceptation et validation
 
+## Run réelle et redémarrage Survival — 2026-10-16
+
+- [x] Lancé depuis l’accueil en Easy avec un profil `XDG_DATA_HOME` temporaire, choix initial manuel, `LOCK HEALTH` et auto-choix des coffres désactivés, aucun HP forcé ni harness de simulation. À vitesse de jeu ×4 choisie dans la pause, la partie s’est terminée en défaite à la vague 1 après 13 s actives et 10 kills.
+- [x] L’écran et le profil montrent +12 Essence, +16 Basic Powder, un Magic Ring, un seul `run_id` récompensé, une pièce d’équipement et 10 kills crédités.
+- [ ] Cette partie n’a pas atteint les 60 s nécessaires au filet de coffre ni le boss final; la victoire et le coffre garanti restent à observer pendant P5.V3.
+- [x] Le contrôle du bouton RUN AGAIN a révélé une perte de difficulté et du service de progression. `survival_run_restart_smoke.gd` vérifie désormais Easy conservé, un nouvel identifiant et une seconde récompense distincte; test enregistré dans CTest.
+- [x] Suite CTest complète : 66/66 sous Godot 4.7.2.
+
 ## Population ennemie sans plafond — 2026-10-16
 
 - [x] `survival_wave_spawn_smoke.gd` crée des fixtures actives jusqu’au seuil de l’ancienne première vague et confirme qu’un spawn ordinaire supplémentaire est quand même accepté.
