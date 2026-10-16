@@ -10,6 +10,9 @@ func _run() -> void:
 	if not await _inferno_prioritizes_high_threat():
 		_fail("Inferno should prioritize the highest-threat enemy in range, breaking ties by distance")
 		return
+	if not await _toxic_cloud_prioritizes_durable_targets():
+		_fail("Toxic Cloud should prioritize the highest-health living enemy in range, breaking ties by distance")
+		return
 	if not await _minigun_holds_target_until_invalid():
 		_fail("Minigun should keep its target until it dies or leaves range, then select another target")
 		return
@@ -114,6 +117,36 @@ func _inferno_prioritizes_high_threat() -> bool:
 	var selected: Dictionary = session._highest_threat_enemy(session.inferno_range)
 	session.queue_free()
 	return selected.get("id", Vector2i(-1, -1)) == Vector2i(22, 1)
+
+func _toxic_cloud_prioritizes_durable_targets() -> bool:
+	var session: Node2D = load("res://scenes/survival_session.tscn").instantiate()
+	session.spawn_initial_enemy = false
+	session.wave_spawning_enabled = false
+	root.add_child(session)
+	await process_frame
+	var origin: Vector2 = session.player.global_position
+	session._entities = [
+		{"id": {"index": 31, "generation": 1}, "components": {
+			"Health": {"current": 20.0}, "Transform2D": {"x": origin.x + 60.0, "y": origin.y},
+		}},
+		{"id": {"index": 32, "generation": 1}, "components": {
+			"Health": {"current": 100.0}, "Transform2D": {"x": origin.x + 180.0, "y": origin.y},
+		}},
+		{"id": {"index": 33, "generation": 1}, "components": {
+			"Health": {"current": 100.0}, "Transform2D": {"x": origin.x + 240.0, "y": origin.y},
+		}},
+		{"id": {"index": 34, "generation": 1}, "components": {
+			"Health": {"current": 1000.0}, "Transform2D": {"x": origin.x + 20.0, "y": origin.y},
+		}},
+		{"id": {"index": 35, "generation": 1}, "components": {
+			"Health": {"current": 10000.0},
+			"Transform2D": {"x": origin.x + session.toxic_range + 1.0, "y": origin.y},
+		}},
+	]
+	session._entities[3]["components"]["Health"]["current"] = 0.0
+	var selected: Dictionary = session._highest_health_enemy(session.toxic_range)
+	session.queue_free()
+	return selected.get("id", Vector2i(-1, -1)) == Vector2i(32, 1)
 
 func _minigun_holds_target_until_invalid() -> bool:
 	var session: Node2D = load("res://scenes/survival_session.tscn").instantiate()

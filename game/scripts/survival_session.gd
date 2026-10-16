@@ -1763,7 +1763,7 @@ func _fire_minigun(active_time: float, paused: bool) -> void:
 func _fire_toxic_cloud(active_time: float, paused: bool) -> void:
 	if not weapon_enabled or loadout.weapon_level("toxic_cloud") == 0 or paused or _chest_open or run_over or toxic_cooldown <= 0.0 or active_time < _next_toxic_time:
 		return
-	var target := _nearest_enemy(toxic_range)
+	var target := _highest_health_enemy(toxic_range)
 	if target.is_empty():
 		return
 	var level: int = loadout.weapon_level("toxic_cloud")
@@ -2125,6 +2125,34 @@ func _highest_threat_enemy(max_range: float) -> Dictionary:
 			threat = 1.0
 		if threat > best_threat or (is_equal_approx(threat, best_threat) and distance_squared < best_distance_squared):
 			best_threat = threat
+			best_distance_squared = distance_squared
+			best_target = {
+				"position": position,
+				"id": Vector2i(int(entity["id"]["index"]), int(entity["id"]["generation"])),
+			}
+	return best_target
+
+func _highest_health_enemy(max_range: float) -> Dictionary:
+	var best_target: Dictionary = {}
+	var best_health := -INF
+	var best_distance_squared := max_range * max_range
+	for entity in _entities:
+		var components: Dictionary = entity["components"]
+		if not _is_targetable_enemy(components):
+			continue
+		var health: Variant = components.get("Health", {})
+		if not health is Dictionary:
+			continue
+		var current_health := float(health.get("current", 0.0))
+		if not is_finite(current_health) or current_health <= 0.0:
+			continue
+		var transform: Dictionary = components["Transform2D"]
+		var position := Vector2(float(transform["x"]), float(transform["y"]))
+		var distance_squared := player.global_position.distance_squared_to(position)
+		if distance_squared >= max_range * max_range:
+			continue
+		if current_health > best_health or (is_equal_approx(current_health, best_health) and distance_squared < best_distance_squared):
+			best_health = current_health
 			best_distance_squared = distance_squared
 			best_target = {
 				"position": position,
