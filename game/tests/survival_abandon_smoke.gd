@@ -34,12 +34,24 @@ func _run() -> void:
 		return
 	var original_size: Vector2i = root.size
 	var confirmation_card: Control = confirmation.get_node("Center/Panel")
-	for size in [Vector2i(960, 600), Vector2i(1280, 800), Vector2i(1600, 900)]:
+	for size in [Vector2i(640, 360), Vector2i(960, 600), Vector2i(1280, 720), Vector2i(1920, 1080)]:
 		root.size = size
 		await process_frame
-		if not Rect2(Vector2.ZERO, Vector2(size)).encloses(confirmation_card.get_global_rect()):
+		var viewport_bounds := Rect2(Vector2.ZERO, Vector2(size))
+		var card_bounds := confirmation_card.get_global_rect()
+		if not viewport_bounds.encloses(card_bounds):
 			_fail("Abandon confirmation should fit viewport %s" % size)
 			return
+		for path in ["Title", "Message", "CancelButton", "ConfirmButton"]:
+			var child := confirmation_card.get_node("Content/%s" % path) as Control
+			if not card_bounds.encloses(child.get_global_rect()):
+				_fail("Abandon confirmation %s should stay inside its card at %s" % [path, size])
+				return
+		if size == Vector2i(640, 360) and "--capture" in OS.get_cmdline_user_args():
+			await RenderingServer.frame_post_draw
+			if root.get_texture().get_image().save_png("/tmp/dopamine-abandon-confirmation.png") != OK:
+				_fail("Could not capture the 640x360 abandon confirmation")
+				return
 	root.size = original_size
 	var cancel_button: Button = confirmation.get_node("Center/Panel/Content/CancelButton")
 	if root.gui_get_focus_owner() != cancel_button:
