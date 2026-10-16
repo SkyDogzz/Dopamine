@@ -4,6 +4,9 @@ func _initialize() -> void:
 	call_deferred("_run")
 
 func _run() -> void:
+	if not await _weapon_progression_config_is_loaded_and_modifiable():
+		_fail("Survival should load validated weapon progression milestones from the JSON config")
+		return
 	if not await _relic_bonuses_and_evolution_are_scoped():
 		_fail("Relic global bonuses should scale per level and evolution damage should require and affect only its weapon")
 		return
@@ -96,6 +99,25 @@ func _run() -> void:
 		return
 	print("Survival weapon catalog smoke passed")
 	quit()
+
+func _weapon_progression_config_is_loaded_and_modifiable() -> bool:
+	var session: Node2D = load("res://scenes/survival_session.tscn").instantiate()
+	session.spawn_initial_enemy = false
+	session.wave_spawning_enabled = false
+	session.skip_starting_weapon_choice = true
+	root.add_child(session)
+	await process_frame
+	var valid: bool = session._weapon_progression_valid and session._weapon_progression.size() == 10 and \
+		is_equal_approx(session._weapon_level_multiplier("lightning_conductor", "damage_multiplier", 2), 1.2) and \
+		is_equal_approx(session._weapon_level_multiplier("lightning_conductor", "damage_multiplier", 5), 1.5) and \
+		session._weapon_level_addition("lightning_conductor", "chain_count_add", 2) == 0 and \
+		session._weapon_level_addition("lightning_conductor", "chain_count_add", 3) == 1 and \
+		is_equal_approx(session._weapon_level_value("crimson_daggers", "projectile_count", 2, 0.0), 2.0) and \
+		is_equal_approx(session._weapon_level_value("crimson_daggers", "projectile_count", 3, 0.0), 3.0)
+	session._weapon_progression["void_orb"]["attraction_force_multiplier"]["5"] = 1.4
+	valid = valid and is_equal_approx(session._weapon_level_multiplier("void_orb", "attraction_force_multiplier", 5), 1.4)
+	session.queue_free()
+	return valid
 
 func _relic_bonuses_and_evolution_are_scoped() -> bool:
 	var loadout_script = load("res://scripts/survival_loadout.gd")

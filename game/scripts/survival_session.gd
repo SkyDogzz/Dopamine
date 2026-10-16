@@ -64,6 +64,8 @@ const WEAPON_ICONS := {
 }
 const WAVE_DIRECTOR_SCRIPT := preload("res://scripts/survival_wave_director.gd")
 const LOADOUT_SCRIPT := preload("res://scripts/survival_loadout.gd")
+const WEAPON_PROGRESSION_IDS := ["lightning_conductor", "inferno_sprayer", "crimson_daggers", "void_orb",
+		"frost_nova", "minigun", "meteor_staff", "sawblades", "toxic_cloud", "prism_laser"]
 const CHEST_DIRECTOR_SCRIPT := preload("res://scripts/survival_chest_director.gd")
 const DIFFICULTY_SCRIPT := preload("res://scripts/survival_difficulty.gd")
 const WAVE_HP_GROWTH := 1.12
@@ -177,6 +179,7 @@ const WAVE_HP_CAP := 12.0
 @export var daggers_projectile_speed: float = 900.0
 @export var daggers_projectile_radius: float = 2.5
 @export var daggers_projectile_lifetime: float = 0.8
+@export var daggers_orbit_angular_speed: float = 5.0
 @export var bloodstorm_orbit_lifetime_seconds: float = 2.4
 @export_group("Prototype Minigun — proposed tuning")
 @export var minigun_cooldown: float = 0.18
@@ -245,7 +248,6 @@ const WAVE_HP_CAP := 12.0
 @export var void_orb_radius: float = 5.0
 @export var void_orb_attraction_radius: float = 135.0
 @export var void_orb_attraction_speed: float = 85.0
-@export_range(0.0, 1.0) var void_orb_level_five_attraction_bonus: float = 0.25
 @export_group("Prototype Frost Nova — proposed tuning")
 @export var frost_nova_cooldown: float = 3.0
 @export var frost_nova_damage: float = 8.0
@@ -349,6 +351,8 @@ var _exploder_attacks: Dictionary = {}
 var _summoner_attacks: Dictionary = {}
 var _pending_summon_sequences: Dictionary = {}
 var _item_level_feedback_expires_at := 0.0
+var _weapon_progression: Dictionary = {}
+var _weapon_progression_valid := false
 
 @onready var _hp_value: Label = $HUD/RunPanel/RunInfo/StatusRow/HPRow/HPValue
 @onready var _hp_bar: ProgressBar = $HUD/RunPanel/RunInfo/StatusRow/HPRow/HPBar
@@ -383,6 +387,11 @@ var _inventory_overlay: Control
 
 func _ready() -> void:
 	Engine.time_scale = 1.0
+	_weapon_progression = _load_weapon_progression()
+	if not _weapon_progression_valid:
+		set_process(false)
+		set_physics_process(false)
+		return
 	texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	_style_run_hud()
 	_sprite_renderer = SPRITE_RENDERER_SCRIPT.new()
@@ -439,6 +448,70 @@ func _ready() -> void:
 	else:
 		_starting_weapon_choice_open = true
 		_chest_choice.present(loadout.starting_weapon_options(), 2, "CHOOSE YOUR STARTING WEAPON")
+
+func _load_weapon_progression() -> Dictionary:
+	var file := FileAccess.open("res://data/weapon_progression.json", FileAccess.READ)
+	if file == null:
+		push_error("Weapon progression config is missing")
+		return {}
+	var parsed: Variant = JSON.parse_string(file.get_as_text())
+	if not parsed is Dictionary or int(parsed.get("version", 0)) != 1 or not parsed.get("weapons") is Dictionary:
+		push_error("Weapon progression config has an invalid root or version")
+		return {}
+	var weapons: Dictionary = parsed["weapons"]
+	if weapons.size() != WEAPON_PROGRESSION_IDS.size():
+		push_error("Weapon progression config must define all ten weapons")
+		return {}
+	for weapon_id in WEAPON_PROGRESSION_IDS:
+		if not weapons.has(weapon_id):
+			push_error("Weapon progression config is missing %s" % weapon_id)
+			return {}
+	for weapon_id in weapons:
+		if not weapons[weapon_id] is Dictionary:
+			push_error("Weapon progression effects must be objects: %s" % weapon_id)
+			return {}
+		for effect_id in weapons[weapon_id]:
+			var milestones: Variant = weapons[weapon_id][effect_id]
+			if not milestones is Dictionary or milestones.is_empty():
+				push_error("Weapon progression milestones must be non-empty objects: %s/%s" % [weapon_id, effect_id])
+				return {}
+			for level_key in milestones:
+				var value: Variant = milestones[level_key]
+				var integer_effect := str(effect_id) in ["projectile_count", "chain_count_add", "ricochet_add"]
+				if int(level_key) < 1 or int(level_key) > LOADOUT_SCRIPT.MAX_LEVEL or \
+					typeof(value) not in [TYPE_INT, TYPE_FLOAT] or not is_finite(float(value)) or float(value) <= 0.0 or \
+					(integer_effect and not is_equal_approx(float(value), float(int(value)))):
+					push_error("Weapon progression milestone is invalid: %s/%s/%s" % [weapon_id, effect_id, level_key])
+					return {}
+	_weapon_progression_valid = true
+	return weapons
+
+func _weapon_level_multiplier(weapon_id: String, effect_id: String, level: int) -> float:
+	var milestones: Dictionary = _weapon_progression.get(weapon_id, {}).get(effect_id, {})
+	var multiplier := 1.0
+	for level_key in milestones:
+		if level >= int(level_key):
+			multiplier *= float(milestones[level_key])
+	return multiplier
+
+func _weapon_level_value(weapon_id: String, effect_id: String, level: int, fallback: float) -> float:
+	var milestones: Dictionary = _weapon_progression.get(weapon_id, {}).get(effect_id, {})
+	var value := fallback
+	var best_level := 0
+	for level_key in milestones:
+		var milestone_level := int(level_key)
+		if milestone_level <= level and milestone_level > best_level:
+			best_level = milestone_level
+			value = float(milestones[level_key])
+	return value
+
+func _weapon_level_addition(weapon_id: String, effect_id: String, level: int) -> int:
+	var milestones: Dictionary = _weapon_progression.get(weapon_id, {}).get(effect_id, {})
+	var value := 0
+	for level_key in milestones:
+		if level >= int(level_key):
+			value += int(milestones[level_key])
+	return value
 
 func _exit_tree() -> void:
 	Engine.time_scale = 1.0
@@ -1610,11 +1683,11 @@ func _fire_lightning_conductor(active_time: float, paused: bool) -> void:
 	if not weapon_enabled or loadout.weapon_level("lightning_conductor") == 0 or paused or _chest_open or run_over or lightning_cooldown <= 0.0 or active_time < _next_weapon_time:
 		return
 	var level: int = loadout.weapon_level("lightning_conductor")
-	var chain_count := lightning_chain_count + (1 if level >= 3 else 0)
-	var damage_multiplier := (1.2 if level >= 2 else 1.0) * (1.25 if level >= 5 else 1.0)
+	var chain_count := lightning_chain_count + _weapon_level_addition("lightning_conductor", "chain_count_add", level)
+	var damage_multiplier := _weapon_level_multiplier("lightning_conductor", "damage_multiplier", level)
 	damage_multiplier *= _weapon_combo_damage_multiplier("lightning_conductor") * _persistent_damage_multiplier()
 	damage_multiplier *= _roll_equipment_critical_multiplier()
-	var cooldown := lightning_cooldown * (0.85 if level >= 4 else 1.0)
+	var cooldown := lightning_cooldown * _weapon_level_multiplier("lightning_conductor", "cooldown_multiplier", level)
 	if loadout.is_evolved("lightning_conductor"):
 		_fire_infinite_circuit(active_time, chain_count, damage_multiplier, cooldown)
 		_try_evolution_shockwave(lightning_damage * damage_multiplier)
@@ -1799,19 +1872,19 @@ func _fire_inferno_sprayer(active_time: float, paused: bool) -> void:
 	if not weapon_enabled or loadout.weapon_level("inferno_sprayer") == 0 or paused or _chest_open or run_over or inferno_cooldown <= 0.0 or active_time < _next_inferno_time:
 		return
 	var level: int = loadout.weapon_level("inferno_sprayer")
-	var targeting_range := SURVIVAL_TARGETING.weapon_range(inferno_range, 1.15 if level >= 3 else 1.0)
+	var targeting_range := SURVIVAL_TARGETING.weapon_range(inferno_range, _weapon_level_multiplier("inferno_sprayer", "range_multiplier", level))
 	var target := _highest_threat_enemy(targeting_range)
 	if target.is_empty():
 		return
 	var direction: Vector2 = (target["position"] - player.global_position).normalized()
 	if direction == Vector2.ZERO:
 		direction = Vector2.RIGHT
-	var damage := inferno_damage * (1.2 if level >= 2 else 1.0)
+	var damage := inferno_damage * _weapon_level_multiplier("inferno_sprayer", "damage_multiplier", level)
 	damage *= _weapon_combo_damage_multiplier("inferno_sprayer")
 	damage *= _persistent_damage_multiplier()
 	damage *= _roll_equipment_critical_multiplier()
-	var projectile_radius := inferno_projectile_radius * (1.2 if level >= 4 else 1.0)
-	var burn_damage := inferno_burn_damage_per_tick * (1.25 if level >= 5 else 1.0)
+	var projectile_radius := inferno_projectile_radius * _weapon_level_multiplier("inferno_sprayer", "jet_width_multiplier", level)
+	var burn_damage := inferno_burn_damage_per_tick * _weapon_level_multiplier("inferno_sprayer", "burn_damage_multiplier", level)
 	var projectile_type := "inferno_sprayer"
 	var explosion_radius := 0.0
 	var explosion_multiplier := 0.0
@@ -1839,7 +1912,7 @@ func _fire_crimson_daggers(active_time: float, paused: bool) -> void:
 	if direction == Vector2.ZERO:
 		direction = Vector2.RIGHT
 	var level: int = loadout.weapon_level("crimson_daggers")
-	var damage := daggers_damage * (1.2 if level >= 2 else 1.0) * (1.25 if level >= 5 else 1.0)
+	var damage := daggers_damage * _weapon_level_multiplier("crimson_daggers", "damage_multiplier", level)
 	damage *= _persistent_damage_multiplier()
 	damage *= _roll_equipment_critical_multiplier()
 	var projectile_type := "crimson_dagger"
@@ -1855,8 +1928,12 @@ func _fire_crimson_daggers(active_time: float, paused: bool) -> void:
 		status_duration = bloodstorm_bleed_duration_seconds
 		projectile_lifetime = maxf(projectile_lifetime, bloodstorm_orbit_lifetime_seconds)
 	var fired := 0
-	var spreads := [-0.06, 0.06] if level < 3 else [-0.08, 0.0, 0.08]
-	var orbit_speed := 6.0 if level >= 4 else 5.0
+	var dagger_count := int(_weapon_level_value("crimson_daggers", "projectile_count", level, 2.0))
+	var max_spread := 0.06 if dagger_count == 2 else 0.08
+	var spreads: Array[float] = []
+	for index in range(dagger_count):
+		spreads.append(0.0 if dagger_count == 1 else lerpf(-max_spread, max_spread, float(index) / float(dagger_count - 1)))
+	var orbit_speed := 5.0 * _weapon_level_multiplier("crimson_daggers", "orbit_speed_multiplier", level)
 	for spread in spreads:
 		var shot_direction: Vector2 = direction.rotated(spread)
 		if simulation.spawn_status_projectile(projectile_type, player.global_position + shot_direction * 14.0,
@@ -1887,14 +1964,14 @@ func _fire_minigun(active_time: float, paused: bool) -> void:
 	if active_time < _next_minigun_time:
 		return
 	var level: int = loadout.weapon_level("minigun")
-	var damage_multiplier := 1.0 + (0.2 if level >= 2 else 0.0)
-	var cadence_multiplier := 1.0 + (0.25 if level >= 3 else 0.0) + (0.25 if level >= 5 else 0.0)
+	var damage_multiplier := _weapon_level_multiplier("minigun", "damage_multiplier", level)
+	var cadence_multiplier := _weapon_level_multiplier("minigun", "cadence_multiplier", level)
 	var combo_multiplier := _weapon_combo_damage_multiplier("minigun")
 	var damage := minigun_damage * damage_multiplier * combo_multiplier * _persistent_damage_multiplier() * _roll_equipment_critical_multiplier()
 	var direction: Vector2 = (target["position"] - player.global_position).normalized()
 	if direction == Vector2.ZERO:
 		direction = Vector2.RIGHT
-	var spread := minigun_spread_radians * (0.85 if level >= 4 else 1.0)
+	var spread := minigun_spread_radians * _weapon_level_multiplier("minigun", "spread_multiplier", level)
 	direction = direction.rotated(randf_range(-spread, spread))
 	var projectile_type := "redline" if loadout.is_evolved("minigun") else "minigun"
 	if simulation.spawn_projectile(projectile_type, player.global_position + direction * 14.0,
@@ -1913,10 +1990,10 @@ func _fire_toxic_cloud(active_time: float, paused: bool) -> void:
 	if target.is_empty():
 		return
 	var level: int = loadout.weapon_level("toxic_cloud")
-	var dot_multiplier := (1.0 + (0.2 if level >= 2 else 0.0) + (0.25 if level >= 5 else 0.0))
+	var dot_multiplier := _weapon_level_multiplier("toxic_cloud", "poison_damage_multiplier", level)
 	dot_multiplier *= _weapon_combo_damage_multiplier("toxic_cloud")
-	var duration := toxic_status_duration_seconds * (1.2 if level >= 4 else 1.0)
-	var cloud_radius := _equipment_area(toxic_cloud_radius * (1.2 if level >= 3 else 1.0))
+	var duration := toxic_status_duration_seconds * _weapon_level_multiplier("toxic_cloud", "status_duration_multiplier", level)
+	var cloud_radius := _equipment_area(toxic_cloud_radius * _weapon_level_multiplier("toxic_cloud", "cloud_radius_multiplier", level))
 	var direction: Vector2 = (target["position"] - player.global_position).normalized()
 	if direction == Vector2.ZERO:
 		direction = Vector2.RIGHT
@@ -1944,9 +2021,9 @@ func _fire_sawblades(active_time: float, paused: bool) -> void:
 		direction = Vector2.RIGHT
 	var level: int = loadout.weapon_level("sawblades")
 	var evolved: bool = loadout.is_evolved("sawblades")
-	var damage_multiplier := (1.2 if level >= 2 else 1.0) * (1.25 if level >= 5 else 1.0)
-	var ricochets := 1 + (1 if level >= 3 else 0) + (1 if evolved else 0)
-	var projectile_speed := sawblades_projectile_speed * (1.2 if level >= 4 else 1.0)
+	var damage_multiplier := _weapon_level_multiplier("sawblades", "damage_multiplier", level)
+	var ricochets := 1 + _weapon_level_addition("sawblades", "ricochet_add", level) + (1 if evolved else 0)
+	var projectile_speed := sawblades_projectile_speed * _weapon_level_multiplier("sawblades", "projectile_speed_multiplier", level)
 	var sequence: int = simulation.spawn_projectile("razorstorm" if evolved else "sawblades",
 			player.global_position + direction * 14.0,
 		direction * _equipment_projectile_speed(projectile_speed),
@@ -1965,8 +2042,8 @@ func _fire_meteor_staff(active_time: float, paused: bool) -> void:
 	var level: int = loadout.weapon_level("meteor_staff")
 	var evolved: bool = loadout.is_evolved("meteor_staff")
 	var projectile_type := "starfall" if evolved else "meteor_staff"
-	var damage_multiplier := (1.2 if level >= 2 else 1.0) * (1.3 if level >= 5 else 1.0)
-	var blast_radius := meteor_staff_blast_radius * (1.2 if level >= 3 else 1.0)
+	var damage_multiplier := _weapon_level_multiplier("meteor_staff", "damage_multiplier", level)
+	var blast_radius := meteor_staff_blast_radius * _weapon_level_multiplier("meteor_staff", "explosion_radius_multiplier", level)
 	var direction: Vector2 = (target["position"] - player.global_position).normalized()
 	if direction == Vector2.ZERO:
 		direction = Vector2.RIGHT
@@ -1980,7 +2057,7 @@ func _fire_meteor_staff(active_time: float, paused: bool) -> void:
 				2.0, 0.5, 2.0, _equipment_area(blast_radius), meteor_staff_splash_damage_multiplier) > 0:
 			fired = true
 	if fired:
-		var cooldown_multiplier := 0.85 if level >= 4 else 1.0
+		var cooldown_multiplier := _weapon_level_multiplier("meteor_staff", "cooldown_multiplier", level)
 		_next_meteor_time = active_time + _effective_weapon_cooldown(meteor_staff_cooldown * cooldown_multiplier)
 
 func _fire_prism_laser(active_time: float, paused: bool) -> void:
@@ -1988,7 +2065,7 @@ func _fire_prism_laser(active_time: float, paused: bool) -> void:
 	if not weapon_enabled or loadout.weapon_level("prism_laser") == 0 or paused or _chest_open or run_over or prism_laser_cooldown <= 0.0:
 		return
 	var level: int = loadout.weapon_level("prism_laser")
-	var range_multiplier := 1.2 if level >= 3 else 1.0
+	var range_multiplier := _weapon_level_multiplier("prism_laser", "range_multiplier", level)
 	var area_multiplier: float = 1.0 + (_equipment_bonus("area_pct") + loadout.global_relic_bonus("area_pct")) / 100.0
 	var laser_range := SURVIVAL_TARGETING.weapon_range(prism_laser_range, range_multiplier, area_multiplier)
 	var target := _prism_cluster_target(laser_range)
@@ -1997,7 +2074,7 @@ func _fire_prism_laser(active_time: float, paused: bool) -> void:
 		_last_prism_active_time = active_time
 		return
 	var evolved: bool = loadout.is_evolved("prism_laser")
-	var damage_multiplier := (1.2 if level >= 2 else 1.0) * (1.25 if level >= 5 else 1.0)
+	var damage_multiplier := _weapon_level_multiplier("prism_laser", "damage_multiplier", level)
 	damage_multiplier *= _weapon_combo_damage_multiplier("prism_laser")
 	var targets: Array[Dictionary] = [target]
 	if evolved:
@@ -2017,7 +2094,7 @@ func _fire_prism_laser(active_time: float, paused: bool) -> void:
 			_prism_beam_endpoints.append(target_position)
 		else:
 			_prism_beam_endpoints[index] = _prism_beam_endpoints[index].move_toward(
-				target_position, prism_laser_projectile_speed * (1.15 if level >= 4 else 1.0) * tracking_delta)
+				target_position, prism_laser_projectile_speed * _weapon_level_multiplier("prism_laser", "beam_tracking_speed_multiplier", level) * tracking_delta)
 		_prism_beams.append({"from": player.global_position, "to": _prism_beam_endpoints[index], "secondary": index > 0})
 	_prism_beam_endpoints.resize(targets.size())
 	if active_time < _next_prism_time:
@@ -2047,10 +2124,10 @@ func _fire_void_orb(active_time: float, paused: bool) -> void:
 	var level: int = loadout.weapon_level("void_orb")
 	var evolved: bool = loadout.is_evolved("void_orb")
 	var direction: Vector2 = (target["position"] - player.global_position).normalized()
-	var damage_multiplier := (1.2 if level >= 2 else 1.0) * (1.25 if level >= 5 else 1.0) * _weapon_combo_damage_multiplier("void_orb")
-	var attraction_radius := void_orb_attraction_radius * (1.2 if level >= 3 else 1.0)
-	var lifetime := void_orb_lifetime * (1.15 if level >= 4 else 1.0)
-	var attraction_speed := void_orb_attraction_speed * (1.0 + (void_orb_level_five_attraction_bonus if level >= 5 else 0.0))
+	var damage_multiplier := _weapon_level_multiplier("void_orb", "damage_multiplier", level) * _weapon_combo_damage_multiplier("void_orb")
+	var attraction_radius := void_orb_attraction_radius * _weapon_level_multiplier("void_orb", "attraction_radius_multiplier", level)
+	var lifetime := void_orb_lifetime * _weapon_level_multiplier("void_orb", "projectile_lifetime_multiplier", level)
+	var attraction_speed := void_orb_attraction_speed * _weapon_level_multiplier("void_orb", "attraction_force_multiplier", level)
 	if evolved:
 		attraction_radius *= 1.5
 		attraction_speed *= 1.25
@@ -2070,8 +2147,8 @@ func _fire_frost_nova(active_time: float, paused: bool) -> void:
 	var evolved: bool = loadout.is_evolved("frost_nova")
 	var area_multiplier: float = 1.0 + (_equipment_bonus("area_pct") + loadout.global_relic_bonus("area_pct")) / 100.0
 	var radius := SURVIVAL_TARGETING.weapon_range(frost_nova_radius,
-		1.2 if level >= 3 else 1.0, area_multiplier)
-	var duration := frost_chill_duration_seconds * (1.2 if level >= 4 else 1.0)
+		_weapon_level_multiplier("frost_nova", "area_multiplier", level), area_multiplier)
+	var duration := frost_chill_duration_seconds * _weapon_level_multiplier("frost_nova", "chill_duration_multiplier", level)
 	var target_count := 0
 	for entity in _entities:
 		var components: Dictionary = entity["components"]
@@ -2084,12 +2161,12 @@ func _fire_frost_nova(active_time: float, paused: bool) -> void:
 	if target_count == 0:
 		return
 	var projectile_type := "absolute_zero" if evolved else "frost_nova"
-	var damage := frost_nova_damage * (1.2 if level >= 2 else 1.0) * _weapon_combo_damage_multiplier("frost_nova") * _persistent_damage_multiplier()
+	var damage := frost_nova_damage * _weapon_level_multiplier("frost_nova", "damage_multiplier", level) * _weapon_combo_damage_multiplier("frost_nova") * _persistent_damage_multiplier()
 	var vulnerability := 1.0 + frozen_crown_vulnerability_at_level_five if evolved else 1.0
 	if simulation.spawn_projectile(projectile_type, player.global_position, Vector2.ZERO, damage,
 			radius, frost_nova_duration_seconds, 2.0, 0.5, 2.0, 0.0, 0.0, 0, 0.0, 0.0,
 			true, duration, frost_chill_speed_multiplier, vulnerability) > 0:
-		_next_frost_nova_time = active_time + _effective_weapon_cooldown(frost_nova_cooldown * (0.8 if level >= 5 else 1.0))
+		_next_frost_nova_time = active_time + _effective_weapon_cooldown(frost_nova_cooldown * _weapon_level_multiplier("frost_nova", "cooldown_multiplier", level))
 
 func _nearest_enemy_excluding(origin: Vector2, max_range: float, excluded: Array[Vector2i]) -> Dictionary:
 	var nearest: Dictionary = {}

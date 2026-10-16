@@ -297,8 +297,7 @@ Travail requis :
   - [x] Implémenter un prototype par politique réutilisable et exposer ses cibles dans Sandbox. Les neuf configurations nearest, farthest, highest threat, highest HP, lowest HP et les quatre variantes spécialisées sont partagées avec le Sandbox; sa sonde règle portée et rayon de grappe et affiche la cible/centroïde. Ces règles restent **[PROPOSÉES]**.
   - [x] Vérifier les armes orbitantes et longue portée avec placements différents. `survival_weapon_catalog_smoke.gd` couvre le ciblage faible PV des Crimson Daggers, Void Orb, Minigun, Lightning, Sawblades, Meteor et Prism; les sélecteurs ignorent les cibles mortes encore présentes dans le snapshot.
   - [x] Réduire uniformément les portées de ciblage par `180/620` (−71 %) afin que les cibles primaires restent dans le rayon visible de l’écran; borner aussi les bonus de portée, Frost Nova, les faisceaux Prism et les rebonds Lightning. Les réglages Sandbox restent indépendants.
-- [ ] **P5.1.11 — Niveaux et feedback des autres armes**
-  - [ ] Compléter les niveaux 1–5 d’une arme à la fois à partir des valeurs proposées.
+- [x] **P5.1.11 — Niveaux et feedback des autres armes** — les niveaux 2–5 des dix armes suivent les valeurs proposées chargées par arme depuis `game/data/weapon_progression.json`; dégâts, bonus de niveau, feedback HUD et rendu sont couverts par les smokes ciblés ci-dessous.
   - [x] Inferno applique les effets proposés des niveaux 2–5 : +20 % dégâts directs, +15 % portée (plafonnée au rayon visible), +20 % largeur de jet et +25 % dégâts de Burn. Le smoke vérifie la cible permise par le bonus de portée, les dégâts/largeur du projectile et le DoT niveau 5; ces chiffres restent **[PROPOSÉS]**.
   - [x] Crimson Daggers applique les effets proposés : +20 % dégâts au niveau 2, une troisième dague au niveau 3, +20 % de vitesse orbitale au niveau 4 et +25 % de dégâts au niveau 5. Bloodstorm conserve ces bonus; le smoke vérifie le nombre, les dégâts et la vitesse orbitale via le snapshot. Chiffres **[PROPOSÉS]**.
   - [x] Lightning Conductor applique les effets proposés : +20 % dégâts au niveau 2, un rebond au niveau 3, −15 % de cooldown au niveau 4 et +25 % dégâts au niveau 5. Le smoke vérifie dégâts, rebonds disponibles et délai entre tirs; chiffres **[PROPOSÉS]**.
@@ -324,8 +323,8 @@ Travail requis :
   - [ ] Tester une extension Legendary/Mythic seulement avec effet unique actif. Le GDD valide la capacité à six, mais aucun effet unique actuellement défini n’accorde cette extension ; l’effet et son application à l’armement de run restent **[OUVERTS]** et ne sont pas inventés ici.
   - [x] Vérifier l’absence de cumul automatique d’un même effet unique actif ; `progression_service_smoke.gd` équipe deux items Legendary avec `overflow_shield` et vérifie que l’effet n’est exposé qu’une fois.
 - [ ] **P5.1.15 — Statut du balancing**
-  - [ ] Charger les valeurs chiffrées proposées depuis une configuration modifiable.
-  - [ ] Garder les valeurs marquées **[PROPOSÉES]** jusqu’à leur décision formelle.
+  - [x] Charger les multiplicateurs, ajouts et valeurs par palier depuis `game/data/weapon_progression.json`; le chargement valide version, dix IDs, niveaux 1–5 et valeurs finies/positives, et échoue visiblement si la configuration est invalide.
+  - [x] Garder les valeurs marquées **[PROPOSÉES]** jusqu’à leur décision formelle; `survival_weapon_catalog_smoke.gd` vérifie aussi qu’une valeur modifiée dans la configuration change le résultat calculé.
 
 ### P5.2 — Statuts et synergies
 
