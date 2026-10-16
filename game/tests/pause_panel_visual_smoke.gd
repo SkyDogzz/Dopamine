@@ -15,6 +15,14 @@ func _run() -> void:
 		overlay.get_node_or_null("Center/Panel/Content/SpeedLabel") == null:
 		_fail("Pause should identify its frozen state and separate the speed control")
 		return
+	var resume := overlay.get_node("Center/Panel/Content/ResumeButton") as Button
+	var abandon := overlay.get_node("Center/Panel/Content/AbandonButton") as Button
+	var confirm_abandon := overlay.get_node("ConfirmationOverlay/Center/Panel/Content/ConfirmButton") as Button
+	if resume.get_theme_color("font_color").to_html(false) != "37e8f5" or \
+		abandon.get_theme_color("font_color").to_html(false) != "ff7181" or \
+		confirm_abandon.get_theme_color("font_color").to_html(false) != "ff7181":
+		_fail("Resume should read as the primary action and abandoning should use the danger accent")
+		return
 	for path in [
 		"Center/Panel/Content/ResumeButton", "Center/Panel/Content/OptionsButton",
 		"Center/Panel/Content/InventoryButton", "Center/Panel/Content/AbandonButton",

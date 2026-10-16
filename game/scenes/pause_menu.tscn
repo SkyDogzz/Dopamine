@@ -80,6 +80,8 @@ popup/item_4/id = 4
 custom_minimum_size = Vector2(0, 24)
 layout_mode = 2
 focus_mode = 2
+theme_override_colors/font_color = Color(0.215686, 0.909804, 0.960784, 1)
+theme_override_colors/font_hover_color = Color(0.215686, 0.909804, 0.960784, 1)
 text = "RESUME"
 
 [node name="OptionsButton" type="Button" parent="Center/Panel/Content"]
@@ -98,6 +100,8 @@ text = "RUN INVENTORY"
 custom_minimum_size = Vector2(0, 24)
 layout_mode = 2
 focus_mode = 2
+theme_override_colors/font_color = Color(1, 0.443137, 0.505882, 1)
+theme_override_colors/font_hover_color = Color(1, 0.443137, 0.505882, 1)
 text = "ABANDON RUN"
 
 [node name="ConfirmationOverlay" type="Control" parent="."]
@@ -163,4 +167,6 @@ text = "KEEP PLAYING"
 custom_minimum_size = Vector2(0, 24)
 layout_mode = 2
 focus_mode = 2
+theme_override_colors/font_color = Color(1, 0.443137, 0.505882, 1)
+theme_override_colors/font_hover_color = Color(1, 0.443137, 0.505882, 1)
 text = "ABANDON RUN"
