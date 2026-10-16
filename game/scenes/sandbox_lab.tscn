@@ -122,6 +122,26 @@ layout_mode = 2
 focus_mode = 2
 text = "RESET COOLDOWNS"
 
+[node name="WaveControls" type="HBoxContainer" parent="Root/Body/Left"]
+layout_mode = 2
+theme_override_constants/separation = 3
+
+[node name="WaveSpin" type="SpinBox" parent="Root/Body/Left/WaveControls"]
+custom_minimum_size = Vector2(62, 20)
+layout_mode = 2
+focus_mode = 2
+min_value = 1.0
+max_value = 999.0
+value = 1.0
+step = 1.0
+rounded = true
+
+[node name="JumpWaveButton" type="Button" parent="Root/Body/Left/WaveControls"]
+custom_minimum_size = Vector2(82, 20)
+layout_mode = 2
+focus_mode = 2
+text = "JUMP WAVE"
+
 [node name="Side" type="ScrollContainer" parent="Root/Body"]
 custom_minimum_size = Vector2(235, 0)
 layout_mode = 2

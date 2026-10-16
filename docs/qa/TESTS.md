@@ -762,3 +762,8 @@ Note de clôture : le blocage historique du smoke `sandbox_ui_smoke.gd` décrit 
 
 - [x] `sandbox_lab_smoke.gd` échoue avant l’implémentation si la commande est absente, puis vérifie que `RESET COOLDOWNS` remet à zéro les dix horloges d’attaque de la session Lab.
 - [x] Smoke passé sous Godot 4.7.2 avec un `XDG_DATA_HOME` neuf; le contexte n’a ni `ProgressionService` ni `SaveService` normal. Les avertissements ObjectDB/resource à la fermeture restent présents dans ce smoke.
+
+## P8.5 — Commande de vague et God Mode Sandbox Lab (2026-10-16)
+
+- [x] `sandbox_lab_smoke.gd` vérifie le saut à la vague 17, la remise du timer à zéro, le maintien des spawns automatiques désactivés et le rejet d’une vague 0; God Mode désactivé reste désactivé après l’import JSON qui remplace la session.
+- [x] Smoke passé sous Godot 4.7.2 avec `XDG_DATA_HOME` neuf. Ces commandes restent propres au contexte Sandbox et ne touchent pas la progression normale.

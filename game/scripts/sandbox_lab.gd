@@ -13,6 +13,7 @@ const LAB_CONTEXT_SCRIPT := preload("res://scripts/sandbox_lab_context.gd")
 @onready var _metrics: Label = $Root/Body/Side/Sections/Metrics
 @onready var _pause_button: Button = $Root/Body/Left/Controls/PauseButton
 @onready var _speed_select: OptionButton = $Root/Body/Left/Controls/SpeedSelect
+@onready var _wave_spin: SpinBox = $Root/Body/Left/WaveControls/WaveSpin
 
 var preset_service: RefCounted
 var preset_store: RefCounted
@@ -31,6 +32,7 @@ func _ready() -> void:
 	$Root/Body/Left/Controls/ResetButton.pressed.connect(_reset)
 	$Root/Body/Left/ProjectileControls/ClearProjectilesButton.pressed.connect(_clear_projectiles)
 	$Root/Body/Left/ProjectileControls/ResetCooldownsButton.pressed.connect(_reset_cooldowns)
+	$Root/Body/Left/WaveControls/JumpWaveButton.pressed.connect(_jump_to_selected_wave)
 	_speed_select.item_selected.connect(_set_speed)
 	$Root/Body/Side/Sections/PresetActions/SavePreset.pressed.connect(_save_preset)
 	$Root/Body/Side/Sections/PresetActions/LoadPreset.pressed.connect(_load_preset)
@@ -110,6 +112,23 @@ func _reset_cooldowns() -> void:
 			"_next_void_orb_time", "_next_frost_nova_time"]:
 		context.session.set(field, 0.0)
 	_set_status("WEAPON COOLDOWNS RESET", false)
+
+func _jump_to_selected_wave() -> void:
+	_jump_to_wave(int(_wave_spin.value))
+
+func _jump_to_wave(wave_number: int) -> void:
+	if wave_number < 1 or wave_number > 999:
+		_set_status("WAVE MUST BE BETWEEN 1 AND 999", true)
+		return
+	var director = context.session.wave_director
+	if director == null:
+		_set_status("WAVE DIRECTOR UNAVAILABLE", true)
+		return
+	director.wave = wave_number
+	director.elapsed_in_wave = 0.0
+	director.state = context.session.WAVE_DIRECTOR_SCRIPT.State.WAVE
+	context.session._boss_spawn_pending = false
+	_set_status("JUMPED TO WAVE %02d" % wave_number, false)
 
 func _reset() -> void:
 	var active_preset: Dictionary = context.active_preset.duplicate(true)

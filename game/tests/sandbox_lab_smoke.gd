@@ -33,6 +33,27 @@ func _run() -> void:
 	if lab.context.progression_service != null or lab.context.normal_save_service != null:
 		_fail("Sandbox commands must not initialize progression or normal save services")
 		return
+	var wave_spin: SpinBox = lab.get_node_or_null("Root/Body/Left/WaveControls/WaveSpin")
+	var jump_wave_button: Button = lab.get_node_or_null("Root/Body/Left/WaveControls/JumpWaveButton")
+	if wave_spin == null or jump_wave_button == null:
+		_fail("Sandbox Lab should expose an isolated jump-wave command")
+		return
+	wave_spin.value = 17
+	jump_wave_button.pressed.emit()
+	if lab.context.session.wave_director.wave != 17 or \
+			lab.context.session.wave_director.elapsed_in_wave != 0.0 or \
+			lab.context.session.wave_director.state != lab.context.session.WAVE_DIRECTOR_SCRIPT.State.WAVE or \
+			lab.context.session.wave_spawning_enabled:
+		_fail("Jump Wave should set the selected wave without enabling regular Sandbox spawns")
+		return
+	if wave_spin.min_value != 1.0 or wave_spin.max_value != 999.0:
+		_fail("Jump Wave UI should bound its target to the supported range")
+		return
+	lab._jump_to_wave(0)
+	if lab.context.session.wave_director.wave != 17 or \
+			lab.get_node("Root/Body/Side/Sections/Status").text != "WAVE MUST BE BETWEEN 1 AND 999":
+		_fail("Jump Wave should reject invalid wave numbers without changing the active wave")
+		return
 	var god_mode: CheckButton = lab.get_node("Root/Body/Side/Sections/GodModeToggle")
 	if not lab.context.session._health_locked:
 		_fail("Sandbox Lab should begin with its isolated god mode enabled")
@@ -58,13 +79,15 @@ func _run() -> void:
 	var imported_file := FileAccess.open(imported_path, FileAccess.WRITE)
 	imported_file.store_string(JSON.stringify(imported_preset))
 	imported_file.close()
+	god_mode.button_pressed = false
 	await lab._import_preset_file(imported_path)
-	if lab.context.active_preset.get("preset_id", "") != "file_import":
+	if lab.context.active_preset.get("preset_id", "") != "file_import" or lab.context.session._health_locked:
 		_fail("A valid JSON file should import and apply to the isolated Lab: status=%s error=%s" % [
 			lab.get_node("Root/Body/Side/Sections/Status").text,
 			str(lab.preset_service.import_json(FileAccess.get_file_as_string(imported_path))),
 		])
 		return
+	god_mode.button_pressed = true
 	var active_before_invalid_import: String = str(lab.context.active_preset["preset_id"])
 	var invalid_file := FileAccess.open(imported_path, FileAccess.WRITE)
 	invalid_file.store_string("{invalid json")
