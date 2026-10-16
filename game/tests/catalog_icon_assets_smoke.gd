@@ -125,28 +125,33 @@ func _check_ground_candidate() -> bool:
 	return true
 
 func _check_active_ground() -> bool:
-	const png_path := "res://assets/sprites/environment/survival_ground_pixel.png"
-	const ase_path := "res://assets/source/environment/survival_ground_pixel.aseprite"
+	const png_path := "res://assets/sprites/environment/survival_ground_tile.png"
+	const ase_path := "res://assets/source/environment/survival_ground_tile.aseprite"
 	if not FileAccess.file_exists(png_path) or not FileAccess.file_exists(ase_path):
-		push_error("Missing active pixel-art ground PNG or editable source")
+		push_error("Missing active 16x16 ground tile PNG or editable source")
 		return false
 	var image := (load(png_path) as Texture2D).get_image()
-	if image.get_size() != Vector2i(256, 256):
-		push_error("Active Survival ground must be 256x256")
+	if image.get_size() != Vector2i(16, 16):
+		push_error("Active Survival ground tile must be 16x16")
 		return false
-	var allowed_colors := {"10152b": true, "1b2340": true, "293354": true, "37314f": true, "075a80": true, "158c62": true}
+	var allowed_colors := {"10152b": true, "1b2340": true, "293354": true}
+	var colors := {}
 	for y in range(image.get_height()):
 		for x in range(image.get_width()):
 			var color_hex := image.get_pixel(x, y).to_html(false)
 			if not allowed_colors.has(color_hex):
 				push_error("Active Survival ground contains a color outside its Art Bible palette: %s" % color_hex)
 				return false
-	for coordinate in range(256):
-		if image.get_pixel(0, coordinate) != image.get_pixel(255, coordinate) or image.get_pixel(coordinate, 0) != image.get_pixel(coordinate, 255):
+			colors[color_hex] = true
+	if colors.size() > 3:
+		push_error("Active Survival ground should stay restrained to three low-contrast palette colors")
+		return false
+	for coordinate in range(16):
+		if image.get_pixel(0, coordinate) != image.get_pixel(15, coordinate) or image.get_pixel(coordinate, 0) != image.get_pixel(coordinate, 15):
 			push_error("Active Survival ground must tile seamlessly on both axes")
 			return false
 	var source := FileAccess.open(ase_path, FileAccess.READ)
-	if source == null or source.get_32() != source.get_length() or source.get_16() != 0xA5E0 or source.get_16() != 1 or source.get_16() != 256 or source.get_16() != 256:
+	if source == null or source.get_32() != source.get_length() or source.get_16() != 0xA5E0 or source.get_16() != 1 or source.get_16() != 16 or source.get_16() != 16:
 		push_error("Invalid editable Aseprite source for active Survival ground")
 		return false
 	if not FileAccess.get_file_as_string("res://scripts/survival_session.gd").contains(png_path):

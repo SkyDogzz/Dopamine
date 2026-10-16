@@ -379,9 +379,10 @@ Note de clôture : le blocage historique du smoke `sandbox_ui_smoke.gd` décrit 
 
 ## Sol Survival pixel art (2026-10-16)
 
-- [x] `process_survival_ground.gd` produit une texture répétable 256×256, limitée à six couleurs de la palette maître, et sa source Aseprite mono-calque depuis le visuel généré.
-- [x] `catalog_icon_assets_smoke.gd` vérifie les dimensions, la palette, l’égalité des bords opposés, la source Aseprite et son branchement dans la scène Survival.
-- [x] La texture SVG et l’ancien candidat moss/stone restent hors du rendu actif; aucune collision ni logique de combat ne change.
+- [x] Historique : `process_survival_ground.gd` produisait une texture répétable 256×256 depuis une référence générée; cette version est remplacée après revue du rendu répété.
+- [x] `process_survival_ground_tile.gd` produit le PNG et la source Aseprite mono-calque de la tuile 16×16 active, avec trois teintes sombres de la palette maître et des bords opposés identiques.
+- [x] `catalog_icon_assets_smoke.gd` vérifie dimensions, palette restreinte, couture sans joint visible, source Aseprite et branchement dans Survival; `pilot_scene_visual_smoke.gd` permet d’inspecter le sol répété en combat.
+- [x] Les textures SVG, l’ancien sol 256×256 et le candidat moss/stone restent hors du rendu actif; aucune collision ni logique de combat ne change.
 
 ## Animations du héros pixel art (2026-10-16)
 

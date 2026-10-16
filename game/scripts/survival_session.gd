@@ -11,7 +11,7 @@ const PICKUP_SPACING_STEP := 16.0
 const PICKUP_SPACING_DIRECTIONS := [Vector2.RIGHT, Vector2.DOWN, Vector2.LEFT, Vector2.UP,
 		Vector2(0.707107, 0.707107), Vector2(-0.707107, 0.707107),
 		Vector2(-0.707107, -0.707107), Vector2(0.707107, -0.707107)]
-const GROUND_TEXTURE: Texture2D = preload("res://assets/sprites/environment/survival_ground_pixel.png")
+const GROUND_TEXTURE: Texture2D = preload("res://assets/sprites/environment/survival_ground_tile.png")
 const RUINS_TEXTURE: Texture2D = preload("res://assets/sprites/environment/survival_ruins_pixel.png")
 const WEAPON_IMPACTS_TEXTURE: Texture2D = preload("res://assets/sprites/weapon_impacts_pixel.png")
 const WEAPON_IMPACT_TYPES := {
