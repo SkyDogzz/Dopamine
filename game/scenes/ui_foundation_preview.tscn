@@ -58,7 +58,7 @@ layout_mode = 2
 size_flags_vertical = 3
 
 [node name="SamplePanel" type="PanelContainer" parent="Content/PreviewCenter"]
-custom_minimum_size = Vector2(520, 0)
+custom_minimum_size = Vector2(640, 0)
 layout_mode = 2
 
 [node name="SampleContent" type="VBoxContainer" parent="Content/PreviewCenter/SamplePanel"]
@@ -67,7 +67,7 @@ theme_override_constants/separation = 14
 
 [node name="Title" type="Label" parent="Content/PreviewCenter/SamplePanel/SampleContent"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 20
+theme_override_font_sizes/font_size = 26
 text = "BUILD THE NEON EDGE"
 
 [node name="Description" type="Label" parent="Content/PreviewCenter/SamplePanel/SampleContent"]

@@ -26,20 +26,20 @@ color = Color(0.027451, 0.039216, 0.058824, 1)
 [node name="Content" type="VBoxContainer" parent="."]
 layout_mode = 1
 anchors_preset = 15
-anchor_left = 0.02
-anchor_top = 0.02
-anchor_right = 0.98
-anchor_bottom = 0.98
+anchor_left = 0.035
+anchor_top = 0.035
+anchor_right = 0.965
+anchor_bottom = 0.965
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_constants/separation = 6
+theme_override_constants/separation = 18
 
 [node name="Header" type="HBoxContainer" parent="Content"]
 layout_mode = 2
 theme_override_constants/separation = 16
 
 [node name="BackButton" type="Button" parent="Content/Header"]
-custom_minimum_size = Vector2(100, 30)
+custom_minimum_size = Vector2(132, 46)
 layout_mode = 2
 focus_mode = 2
 text = "←  ACCUEIL"
@@ -55,14 +55,13 @@ theme_override_font_sizes/font_size = 13
 text = "DOPAMINE  /  PRÉPARATION"
 
 [node name="Title" type="Label" parent="Content/Header/Identity"]
-theme_type_variation = &"PixelHeading"
 layout_mode = 2
 theme_override_colors/font_color = Color(0.270588, 0.898039, 0.929412, 1)
-theme_override_font_sizes/font_size = 8
+theme_override_font_sizes/font_size = 30
 text = "SURVIVAL"
 
 [node name="ProfileStatus" type="Label" parent="Content/Header"]
-custom_minimum_size = Vector2(150, 0)
+custom_minimum_size = Vector2(300, 0)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.556863, 0.639216, 0.678431, 1)
 theme_override_font_sizes/font_size = 12
@@ -73,41 +72,40 @@ vertical_alignment = 1
 [node name="Main" type="HBoxContainer" parent="Content"]
 layout_mode = 2
 size_flags_vertical = 3
-theme_override_constants/separation = 6
+theme_override_constants/separation = 18
 
 [node name="DifficultyCard" type="PanelContainer" parent="Content/Main"]
-custom_minimum_size = Vector2(210, 0)
+custom_minimum_size = Vector2(390, 0)
 layout_mode = 2
 
 [node name="Body" type="VBoxContainer" parent="Content/Main/DifficultyCard"]
 layout_mode = 2
-theme_override_constants/separation = 5
+theme_override_constants/separation = 12
 
 [node name="SectionTitle" type="Label" parent="Content/Main/DifficultyCard/Body"]
-theme_type_variation = &"PixelHeading"
 layout_mode = 2
 theme_override_colors/font_color = Color(0.270588, 0.898039, 0.929412, 1)
-theme_override_font_sizes/font_size = 8
+theme_override_font_sizes/font_size = 19
 text = "DIFFICULTÉ"
 
 [node name="SectionCopy" type="Label" parent="Content/Main/DifficultyCard/Body"]
 custom_minimum_size = Vector2(0, 34)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.556863, 0.639216, 0.678431, 1)
-theme_override_font_sizes/font_size = 10
+theme_override_font_sizes/font_size = 13
 text = "Une victoire débloque la difficulté suivante."
 autowrap_mode = 2
 
 [node name="DifficultyList" type="VBoxContainer" parent="Content/Main/DifficultyCard/Body"]
 layout_mode = 2
 size_flags_vertical = 3
-theme_override_constants/separation = 4
+theme_override_constants/separation = 8
 
 [node name="DifficultyStatus" type="Label" parent="Content/Main/DifficultyCard/Body"]
-custom_minimum_size = Vector2(0, 28)
+custom_minimum_size = Vector2(0, 46)
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.819608, 0.4, 1)
-theme_override_font_sizes/font_size = 10
+theme_override_font_sizes/font_size = 12
 text = "SELECTED: EASY"
 autowrap_mode = 2
 vertical_alignment = 1
@@ -118,23 +116,22 @@ size_flags_horizontal = 3
 
 [node name="Body" type="VBoxContainer" parent="Content/Main/PreparationCard"]
 layout_mode = 2
-theme_override_constants/separation = 5
+theme_override_constants/separation = 14
 
 [node name="ModeTag" type="Label" parent="Content/Main/PreparationCard/Body"]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.360784, 0.658824, 1)
-theme_override_font_sizes/font_size = 10
+theme_override_font_sizes/font_size = 13
 text = "MODE JOUABLE"
 
 [node name="ModeTitle" type="Label" parent="Content/Main/PreparationCard/Body"]
-theme_type_variation = &"PixelHeading"
 layout_mode = 2
 theme_override_colors/font_color = Color(0.898039, 0.94902, 0.960784, 1)
-theme_override_font_sizes/font_size = 8
+theme_override_font_sizes/font_size = 28
 text = "SURVIVAL  •  24 VAGUES"
 
 [node name="ModeDescription" type="Label" parent="Content/Main/PreparationCard/Body"]
-custom_minimum_size = Vector2(0, 18)
+custom_minimum_size = Vector2(0, 58)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.556863, 0.639216, 0.678431, 1)
 text = "Préparez votre équipement permanent et vos compétences avant de lancer une run."
@@ -146,17 +143,17 @@ layout_mode = 2
 [node name="PreparationTitle" type="Label" parent="Content/Main/PreparationCard/Body"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.270588, 0.898039, 0.929412, 1)
-theme_override_font_sizes/font_size = 13
+theme_override_font_sizes/font_size = 17
 text = "PRÉPARATION PERMANENTE"
 
 [node name="EquipmentButton" type="Button" parent="Content/Main/PreparationCard/Body"]
-custom_minimum_size = Vector2(0, 22)
+custom_minimum_size = Vector2(0, 48)
 layout_mode = 2
 focus_mode = 2
 text = "ÉQUIPEMENTS"
 
 [node name="SkillTreeButton" type="Button" parent="Content/Main/PreparationCard/Body"]
-custom_minimum_size = Vector2(0, 22)
+custom_minimum_size = Vector2(0, 48)
 layout_mode = 2
 focus_mode = 2
 text = "ARBRE DE COMPÉTENCES"
@@ -166,19 +163,19 @@ layout_mode = 2
 theme_override_constants/separation = 10
 
 [node name="AchievementsButton" type="Button" parent="Content/Main/PreparationCard/Body/InactiveFeatures"]
-custom_minimum_size = Vector2(0, 20)
+custom_minimum_size = Vector2(0, 42)
 layout_mode = 2
 size_flags_horizontal = 3
 focus_mode = 2
-theme_override_font_sizes/font_size = 10
+theme_override_font_sizes/font_size = 13
 text = "SUCCÈS  ·  BIENTÔT"
 
 [node name="BestiaryButton" type="Button" parent="Content/Main/PreparationCard/Body/InactiveFeatures"]
-custom_minimum_size = Vector2(0, 20)
+custom_minimum_size = Vector2(0, 42)
 layout_mode = 2
 size_flags_horizontal = 3
 focus_mode = 2
-theme_override_font_sizes/font_size = 10
+theme_override_font_sizes/font_size = 13
 text = "BESTIAIRE  ·  BIENTÔT"
 
 [node name="Spacer" type="Control" parent="Content/Main/PreparationCard/Body"]
@@ -186,16 +183,16 @@ layout_mode = 2
 size_flags_vertical = 3
 
 [node name="LaunchButton" type="Button" parent="Content/Main/PreparationCard/Body"]
-custom_minimum_size = Vector2(0, 26)
+custom_minimum_size = Vector2(0, 58)
 layout_mode = 2
 focus_mode = 2
 theme_override_colors/font_color = Color(0.270588, 0.898039, 0.929412, 1)
-theme_override_font_sizes/font_size = 14
+theme_override_font_sizes/font_size = 20
 text = "LANCER LA RUN  →"
 
 [node name="TemporaryLaunchButton" type="Button" parent="Content/Main/PreparationCard/Body"]
-custom_minimum_size = Vector2(0, 20)
+custom_minimum_size = Vector2(0, 42)
 layout_mode = 2
 focus_mode = 2
-theme_override_font_sizes/font_size = 10
+theme_override_font_sizes/font_size = 14
 text = "RUN TEMPORAIRE · SANS SAUVEGARDE"

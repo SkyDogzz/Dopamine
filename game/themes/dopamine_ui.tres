@@ -14,10 +14,10 @@ corner_radius_top_left = 0
 corner_radius_top_right = 0
 corner_radius_bottom_right = 0
 corner_radius_bottom_left = 0
-content_margin_left = 8.0
-content_margin_top = 8.0
-content_margin_right = 8.0
-content_margin_bottom = 8.0
+content_margin_left = 18.0
+content_margin_top = 16.0
+content_margin_right = 18.0
+content_margin_bottom = 16.0
 
 [sub_resource type="StyleBoxFlat" id="ButtonNormal"]
 bg_color = Color(0.062745, 0.082353, 0.168627, 1)
@@ -30,10 +30,10 @@ corner_radius_top_left = 0
 corner_radius_top_right = 0
 corner_radius_bottom_right = 0
 corner_radius_bottom_left = 0
-content_margin_left = 8.0
-content_margin_top = 2.0
-content_margin_right = 8.0
-content_margin_bottom = 2.0
+content_margin_left = 14.0
+content_margin_top = 10.0
+content_margin_right = 14.0
+content_margin_bottom = 10.0
 
 [sub_resource type="StyleBoxFlat" id="ButtonHover"]
 bg_color = Color(0.105882, 0.137255, 0.25098, 1)
@@ -46,10 +46,10 @@ corner_radius_top_left = 0
 corner_radius_top_right = 0
 corner_radius_bottom_right = 0
 corner_radius_bottom_left = 0
-content_margin_left = 8.0
-content_margin_top = 2.0
-content_margin_right = 8.0
-content_margin_bottom = 2.0
+content_margin_left = 14.0
+content_margin_top = 10.0
+content_margin_right = 14.0
+content_margin_bottom = 10.0
 
 [sub_resource type="StyleBoxFlat" id="ButtonPressed"]
 bg_color = Color(0.215686, 0.909804, 0.960784, 1)
@@ -62,10 +62,10 @@ corner_radius_top_left = 0
 corner_radius_top_right = 0
 corner_radius_bottom_right = 0
 corner_radius_bottom_left = 0
-content_margin_left = 8.0
-content_margin_top = 2.0
-content_margin_right = 8.0
-content_margin_bottom = 2.0
+content_margin_left = 14.0
+content_margin_top = 10.0
+content_margin_right = 14.0
+content_margin_bottom = 10.0
 
 [sub_resource type="StyleBoxFlat" id="ButtonFocus"]
 bg_color = Color(0.062745, 0.082353, 0.168627, 1)
@@ -79,9 +79,9 @@ corner_radius_top_right = 0
 corner_radius_bottom_right = 0
 corner_radius_bottom_left = 0
 content_margin_left = 12.0
-content_margin_top = 2.0
+content_margin_top = 8.0
 content_margin_right = 12.0
-content_margin_bottom = 2.0
+content_margin_bottom = 8.0
 
 [sub_resource type="StyleBoxFlat" id="ButtonDisabled"]
 bg_color = Color(0.062745, 0.082353, 0.168627, 1)
@@ -94,10 +94,10 @@ corner_radius_top_left = 0
 corner_radius_top_right = 0
 corner_radius_bottom_right = 0
 corner_radius_bottom_left = 0
-content_margin_left = 8.0
-content_margin_top = 2.0
-content_margin_right = 8.0
-content_margin_bottom = 2.0
+content_margin_left = 14.0
+content_margin_top = 10.0
+content_margin_right = 14.0
+content_margin_bottom = 10.0
 
 [sub_resource type="StyleBoxFlat" id="FieldNormal"]
 bg_color = Color(0.031373, 0.043137, 0.094118, 1)
@@ -148,7 +148,7 @@ content_margin_right = 10.0
 content_margin_bottom = 8.0
 
 [resource]
-default_font_size = 8
+default_font_size = 16
 default_font = ExtResource("font_body")
 Label/fonts/font = ExtResource("font_body")
 Button/fonts/font = ExtResource("font_body")

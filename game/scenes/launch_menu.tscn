@@ -34,12 +34,12 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="Card" type="PanelContainer" parent="Content"]
-custom_minimum_size = Vector2(592, 320)
+custom_minimum_size = Vector2(900, 480)
 layout_mode = 2
 
 [node name="Columns" type="HBoxContainer" parent="Content/Card"]
 layout_mode = 2
-theme_override_constants/separation = 18
+theme_override_constants/separation = 32
 
 [node name="Identity" type="VBoxContainer" parent="Content/Card/Columns"]
 layout_mode = 2
@@ -55,11 +55,10 @@ theme_override_font_sizes/font_size = 14
 text = "SURVIVAL  /  NEON ARCADE"
 
 [node name="Title" type="Label" parent="Content/Card/Columns/Identity"]
-theme_type_variation = &"PixelHeading"
 custom_minimum_size = Vector2(0, 96)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.270588, 0.898039, 0.929412, 1)
-theme_override_font_sizes/font_size = 16
+theme_override_font_sizes/font_size = 52
 text = "DOPAMINE"
 vertical_alignment = 1
 
@@ -67,7 +66,7 @@ vertical_alignment = 1
 custom_minimum_size = Vector2(0, 60)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.556863, 0.639216, 0.678431, 1)
-theme_override_font_sizes/font_size = 13
+theme_override_font_sizes/font_size = 18
 text = "SURVIVE THE SIGNAL."
 vertical_alignment = 1
 
@@ -87,7 +86,7 @@ theme_override_font_sizes/font_size = 12
 text = "A NEON SURVIVAL GAME"
 
 [node name="Menu" type="VBoxContainer" parent="Content/Card/Columns"]
-custom_minimum_size = Vector2(190, 0)
+custom_minimum_size = Vector2(280, 0)
 layout_mode = 2
 size_flags_vertical = 3
 alignment = 1
@@ -103,7 +102,7 @@ custom_minimum_size = Vector2(0, 56)
 layout_mode = 2
 focus_mode = 2
 theme_override_colors/font_color = Color(0.270588, 0.898039, 0.929412, 1)
-theme_override_font_sizes/font_size = 16
+theme_override_font_sizes/font_size = 20
 text = "JOUER"
 
 [node name="OptionsButton" type="Button" parent="Content/Card/Columns/Menu"]

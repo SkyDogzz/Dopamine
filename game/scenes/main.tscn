@@ -29,31 +29,30 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 12.0
-offset_top = 10.0
-offset_right = -12.0
-offset_bottom = -10.0
+offset_left = 22.0
+offset_top = 18.0
+offset_right = -22.0
+offset_bottom = -18.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_constants/separation = 6
+theme_override_constants/separation = 12
 
 [node name="Header" type="HBoxContainer" parent="Shell"]
 layout_mode = 2
 theme_override_constants/separation = 14
 
 [node name="Title" type="Label" parent="Shell/Header"]
-theme_type_variation = &"PixelHeading"
 layout_mode = 2
 text = "DOPAMINE  /  SANDBOX DEV"
-theme_override_font_sizes/font_size = 8
+theme_override_font_sizes/font_size = 22
 
 [node name="SurvivalButton" type="Button" parent="Shell/Header"]
-custom_minimum_size = Vector2(100, 24)
+custom_minimum_size = Vector2(190, 38)
 layout_mode = 2
 text = "PLAY SURVIVAL"
 
 [node name="HomeButton" type="Button" parent="Shell/Header"]
-custom_minimum_size = Vector2(70, 24)
+custom_minimum_size = Vector2(100, 38)
 layout_mode = 2
 focus_mode = 2
 text = "ACCUEIL"
@@ -69,16 +68,16 @@ text = "PAUSED"
 [node name="Content" type="HSplitContainer" parent="Shell"]
 layout_mode = 2
 size_flags_vertical = 3
-split_offset = 370
+split_offset = 770
 
 [node name="MainColumn" type="VBoxContainer" parent="Shell/Content"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
-theme_override_constants/separation = 5
+theme_override_constants/separation = 10
 
 [node name="SimulationView" type="Control" parent="Shell/Content/MainColumn"]
-custom_minimum_size = Vector2(300, 150)
+custom_minimum_size = Vector2(640, 460)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -93,19 +92,19 @@ layout_mode = 2
 theme_override_constants/separation = 8
 
 [node name="PauseButton" type="Button" parent="Shell/Content/MainColumn/Toolbar/Row"]
-custom_minimum_size = Vector2(64, 24)
+custom_minimum_size = Vector2(116, 40)
 layout_mode = 2
 text = "RESUME"
 tooltip_text = "Pause or resume the developer simulation."
 
 [node name="StepButton" type="Button" parent="Shell/Content/MainColumn/Toolbar/Row"]
-custom_minimum_size = Vector2(48, 24)
+custom_minimum_size = Vector2(100, 40)
 layout_mode = 2
 text = "STEP"
 tooltip_text = "Advance the paused simulation by the chosen duration."
 
 [node name="StepDuration" type="SpinBox" parent="Shell/Content/MainColumn/Toolbar/Row"]
-custom_minimum_size = Vector2(64, 24)
+custom_minimum_size = Vector2(116, 40)
 layout_mode = 2
 size_flags_horizontal = 3
 max_value = 10.0
@@ -118,13 +117,13 @@ layout_mode = 2
 size_flags_horizontal = 3
 
 [node name="SpeedSelect" type="OptionButton" parent="Shell/Content/MainColumn/Toolbar/Row"]
-custom_minimum_size = Vector2(64, 24)
+custom_minimum_size = Vector2(116, 40)
 layout_mode = 2
 item_count = 0
 tooltip_text = "Simulation speed multiplier."
 
 [node name="ResetButton" type="Button" parent="Shell/Content/MainColumn/Toolbar/Row"]
-custom_minimum_size = Vector2(48, 24)
+custom_minimum_size = Vector2(100, 40)
 layout_mode = 2
 text = "RESET"
 tooltip_text = "Clear entities, events, metrics and live overrides."
@@ -134,10 +133,10 @@ layout_mode = 2
 
 [node name="MetricRow" type="GridContainer" parent="Shell/Content/MainColumn/Metrics"]
 layout_mode = 2
-columns = 2
-theme_override_constants/separation = 8
-theme_override_constants/h_separation = 8
-theme_override_constants/v_separation = 4
+columns = 4
+theme_override_constants/separation = 16
+theme_override_constants/h_separation = 16
+theme_override_constants/v_separation = 8
 
 [node name="MetricFPS" type="Label" parent="Shell/Content/MainColumn/Metrics/MetricRow"]
 layout_mode = 2
@@ -176,10 +175,9 @@ size_flags_horizontal = 3
 text = "COLLISIONS  0"
 
 [node name="SidePanel" type="ScrollContainer" parent="Shell/Content"]
-custom_minimum_size = Vector2(210, 0)
+custom_minimum_size = Vector2(358, 0)
 layout_mode = 2
 size_flags_vertical = 3
-horizontal_scroll_mode = 0
 
 [node name="Sections" type="VBoxContainer" parent="Shell/Content/SidePanel"]
 layout_mode = 2
@@ -194,24 +192,23 @@ layout_mode = 2
 theme_override_constants/separation = 8
 
 [node name="SpawnTitle" type="Label" parent="Shell/Content/SidePanel/Sections/SpawnPanel/SpawnForm"]
-theme_type_variation = &"PixelHeading"
 layout_mode = 2
 text = "SPAWN ENTITIES"
 tooltip_text = "Choose the type and starting stats for spawned entities."
-theme_override_font_sizes/font_size = 8
+theme_override_font_sizes/font_size = 16
 
 [node name="TypeRow" type="HBoxContainer" parent="Shell/Content/SidePanel/Sections/SpawnPanel/SpawnForm"]
 layout_mode = 2
 theme_override_constants/separation = 8
 
 [node name="EntityType" type="OptionButton" parent="Shell/Content/SidePanel/Sections/SpawnPanel/SpawnForm/TypeRow"]
-custom_minimum_size = Vector2(0, 24)
+custom_minimum_size = Vector2(0, 38)
 layout_mode = 2
 size_flags_horizontal = 3
 tooltip_text = "Select the entity profile to create."
 
 [node name="CountSpin" type="SpinBox" parent="Shell/Content/SidePanel/Sections/SpawnPanel/SpawnForm/TypeRow"]
-custom_minimum_size = Vector2(32, 24)
+custom_minimum_size = Vector2(92, 38)
 layout_mode = 2
 min_value = 1.0
 max_value = 500.0
@@ -224,7 +221,7 @@ layout_mode = 2
 theme_override_constants/separation = 8
 
 [node name="XSpin" type="SpinBox" parent="Shell/Content/SidePanel/Sections/SpawnPanel/SpawnForm/PositionRow"]
-custom_minimum_size = Vector2(0, 24)
+custom_minimum_size = Vector2(0, 38)
 layout_mode = 2
 size_flags_horizontal = 3
 min_value = -2000.0
@@ -234,7 +231,7 @@ prefix = "X "
 tooltip_text = "Starting horizontal position in simulation units."
 
 [node name="YSpin" type="SpinBox" parent="Shell/Content/SidePanel/Sections/SpawnPanel/SpawnForm/PositionRow"]
-custom_minimum_size = Vector2(0, 24)
+custom_minimum_size = Vector2(0, 38)
 layout_mode = 2
 size_flags_horizontal = 3
 min_value = -2000.0
@@ -248,7 +245,7 @@ layout_mode = 2
 theme_override_constants/separation = 8
 
 [node name="HealthSpin" type="SpinBox" parent="Shell/Content/SidePanel/Sections/SpawnPanel/SpawnForm/HealthRow"]
-custom_minimum_size = Vector2(0, 24)
+custom_minimum_size = Vector2(0, 38)
 layout_mode = 2
 size_flags_horizontal = 3
 min_value = 1.0
@@ -259,7 +256,7 @@ prefix = "HP "
 tooltip_text = "Starting health for each entity."
 
 [node name="VelocityXSpin" type="SpinBox" parent="Shell/Content/SidePanel/Sections/SpawnPanel/SpawnForm/HealthRow"]
-custom_minimum_size = Vector2(0, 24)
+custom_minimum_size = Vector2(0, 38)
 layout_mode = 2
 size_flags_horizontal = 3
 min_value = -1000.0
@@ -269,7 +266,7 @@ prefix = "VX "
 tooltip_text = "Initial horizontal velocity in units per second."
 
 [node name="VelocityYSpin" type="SpinBox" parent="Shell/Content/SidePanel/Sections/SpawnPanel/SpawnForm/HealthRow"]
-custom_minimum_size = Vector2(0, 24)
+custom_minimum_size = Vector2(0, 38)
 layout_mode = 2
 size_flags_horizontal = 3
 min_value = -1000.0
@@ -278,30 +275,29 @@ step = 5.0
 prefix = "VY "
 tooltip_text = "Initial vertical velocity in units per second."
 
-[node name="SpawnActions" type="GridContainer" parent="Shell/Content/SidePanel/Sections/SpawnPanel/SpawnForm"]
+[node name="SpawnActions" type="HBoxContainer" parent="Shell/Content/SidePanel/Sections/SpawnPanel/SpawnForm"]
 layout_mode = 2
-columns = 2
 theme_override_constants/separation = 8
 
 [node name="SpawnButton" type="Button" parent="Shell/Content/SidePanel/Sections/SpawnPanel/SpawnForm/SpawnActions"]
-custom_minimum_size = Vector2(0, 24)
+custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
 size_flags_horizontal = 3
 text = "SPAWN"
 tooltip_text = "Create the configured entities."
 
 [node name="DespawnButton" type="Button" parent="Shell/Content/SidePanel/Sections/SpawnPanel/SpawnForm/SpawnActions"]
-custom_minimum_size = Vector2(0, 24)
+custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
 size_flags_horizontal = 3
 text = "DESPAWN"
 tooltip_text = "Remove the selected entity."
 
 [node name="KillButton" type="Button" parent="Shell/Content/SidePanel/Sections/SpawnPanel/SpawnForm/SpawnActions"]
-custom_minimum_size = Vector2(0, 24)
+custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
 size_flags_horizontal = 3
-text = "CLEAR"
+text = "KILL ALL"
 tooltip_text = "Remove every entity from the simulation."
 
 [node name="TuningPanel" type="PanelContainer" parent="Shell/Content/SidePanel/Sections"]
@@ -312,11 +308,10 @@ layout_mode = 2
 theme_override_constants/separation = 8
 
 [node name="TuningTitle" type="Label" parent="Shell/Content/SidePanel/Sections/TuningPanel/TuningForm"]
-theme_type_variation = &"PixelHeading"
 layout_mode = 2
 text = "AI STEERING"
 tooltip_text = "Live tuning for generic spawned enemies. The Sandbox target is world origin (0, 0)."
-theme_override_font_sizes/font_size = 8
+theme_override_font_sizes/font_size = 16
 
 [node name="TuningGrid" type="GridContainer" parent="Shell/Content/SidePanel/Sections/TuningPanel/TuningForm"]
 layout_mode = 2
@@ -325,7 +320,7 @@ theme_override_constants/h_separation = 8
 theme_override_constants/v_separation = 6
 
 [node name="MaxSpeedSpin" type="SpinBox" parent="Shell/Content/SidePanel/Sections/TuningPanel/TuningForm/TuningGrid"]
-custom_minimum_size = Vector2(88, 24)
+custom_minimum_size = Vector2(140, 34)
 layout_mode = 2
 max_value = 500.0
 value = 75.0
@@ -333,7 +328,7 @@ prefix = "SPEED "
 tooltip_text = "Maximum steering speed for generic spawned enemies, in units per second."
 
 [node name="SeparationRadiusSpin" type="SpinBox" parent="Shell/Content/SidePanel/Sections/TuningPanel/TuningForm/TuningGrid"]
-custom_minimum_size = Vector2(88, 24)
+custom_minimum_size = Vector2(140, 34)
 layout_mode = 2
 max_value = 500.0
 value = 18.0
@@ -341,7 +336,7 @@ prefix = "SEP "
 tooltip_text = "Distance used to separate nearby enemies, in world units."
 
 [node name="SeparationWeightSpin" type="SpinBox" parent="Shell/Content/SidePanel/Sections/TuningPanel/TuningForm/TuningGrid"]
-custom_minimum_size = Vector2(88, 24)
+custom_minimum_size = Vector2(140, 34)
 layout_mode = 2
 max_value = 1.0
 step = 0.05
@@ -350,7 +345,7 @@ prefix = "WEIGHT "
 tooltip_text = "Strength of local separation, from 0 to 1."
 
 [node name="CellSizeSpin" type="SpinBox" parent="Shell/Content/SidePanel/Sections/TuningPanel/TuningForm/TuningGrid"]
-custom_minimum_size = Vector2(88, 24)
+custom_minimum_size = Vector2(140, 34)
 layout_mode = 2
 min_value = 1.0
 max_value = 512.0
@@ -359,7 +354,7 @@ prefix = "CELL "
 tooltip_text = "Spatial hash cell size used by steering, in world units."
 
 [node name="ApplyTuningButton" type="Button" parent="Shell/Content/SidePanel/Sections/TuningPanel/TuningForm"]
-custom_minimum_size = Vector2(0, 24)
+custom_minimum_size = Vector2(0, 36)
 layout_mode = 2
 text = "APPLY LIVE TUNING"
 tooltip_text = "Validate and apply all four steering settings together."
@@ -377,13 +372,12 @@ layout_mode = 2
 theme_override_constants/separation = 8
 
 [node name="InspectorTitle" type="Label" parent="Shell/Content/SidePanel/Sections/InspectorPanel/InspectorForm"]
-theme_type_variation = &"PixelHeading"
 layout_mode = 2
 text = "ENTITY INSPECTOR"
-theme_override_font_sizes/font_size = 8
+theme_override_font_sizes/font_size = 16
 
 [node name="EntityInfo" type="RichTextLabel" parent="Shell/Content/SidePanel/Sections/InspectorPanel/InspectorForm"]
-custom_minimum_size = Vector2(0, 80)
+custom_minimum_size = Vector2(0, 140)
 layout_mode = 2
 bbcode_enabled = true
 fit_content = true
@@ -397,7 +391,7 @@ tooltip_text = "Apply a timed damage status to the selected entity. Reapplying r
 theme_override_font_sizes/font_size = 13
 
 [node name="StatusDamageSpin" type="SpinBox" parent="Shell/Content/SidePanel/Sections/InspectorPanel/InspectorForm"]
-custom_minimum_size = Vector2(0, 24)
+custom_minimum_size = Vector2(0, 34)
 layout_mode = 2
 min_value = 0.1
 max_value = 100000.0
@@ -407,7 +401,7 @@ prefix = "DAMAGE / TICK "
 tooltip_text = "Health removed at each status tick."
 
 [node name="StatusIntervalSpin" type="SpinBox" parent="Shell/Content/SidePanel/Sections/InspectorPanel/InspectorForm"]
-custom_minimum_size = Vector2(0, 24)
+custom_minimum_size = Vector2(0, 34)
 layout_mode = 2
 min_value = 0.01
 max_value = 60.0
@@ -418,7 +412,7 @@ suffix = " s"
 tooltip_text = "Simulation seconds between damage ticks."
 
 [node name="StatusDurationSpin" type="SpinBox" parent="Shell/Content/SidePanel/Sections/InspectorPanel/InspectorForm"]
-custom_minimum_size = Vector2(0, 24)
+custom_minimum_size = Vector2(0, 34)
 layout_mode = 2
 min_value = 0.01
 max_value = 600.0
@@ -429,7 +423,7 @@ suffix = " s"
 tooltip_text = "Total simulation time before the status expires."
 
 [node name="ApplyStatusButton" type="Button" parent="Shell/Content/SidePanel/Sections/InspectorPanel/InspectorForm"]
-custom_minimum_size = Vector2(0, 24)
+custom_minimum_size = Vector2(0, 36)
 layout_mode = 2
 text = "APPLY TO SELECTED"
 tooltip_text = "Apply this damage-over-time configuration to the selected entity."
@@ -442,13 +436,12 @@ layout_mode = 2
 theme_override_constants/separation = 8
 
 [node name="LogTitle" type="Label" parent="Shell/Content/SidePanel/Sections/LogPanel/LogForm"]
-theme_type_variation = &"PixelHeading"
 layout_mode = 2
 text = "EVENT LOG"
-theme_override_font_sizes/font_size = 8
+theme_override_font_sizes/font_size = 16
 
 [node name="LogText" type="RichTextLabel" parent="Shell/Content/SidePanel/Sections/LogPanel/LogForm"]
-custom_minimum_size = Vector2(0, 80)
+custom_minimum_size = Vector2(0, 160)
 layout_mode = 2
 scroll_following = true
 selection_enabled = true

@@ -24,7 +24,7 @@ func _run() -> void:
 		for local_index in range(first_enemy, last_enemy):
 			var column := local_index % 25
 			var row := local_index / 25
-			var position := Vector2(-70.0 + float(column) * 6.0, -45.0 + float(row) * 4.5)
+			var position := Vector2(-350.0 + float(column) * 14.0, -260.0 + float(row) * 26.0)
 			last_sequence = simulation.spawn_enemy("chaser", 1, position, Vector2.ZERO)
 			if last_sequence == 0:
 				_fail("Enemy render load exceeded the simulation command capacity")
@@ -37,7 +37,7 @@ func _run() -> void:
 		for index in range(chunk * 200, (chunk + 1) * 200):
 			var column := index % 25
 			var row := index / 25
-			var position := Vector2(-70.0 + float(column) * 6.0, -42.0 + float(row) * 1.0)
+			var position := Vector2(3.0 + float(column) * 17.0, -296.0 + float(row) * 7.4)
 			last_sequence = simulation.spawn_projectile("lightning_conductor", position, Vector2.ZERO, 1.0, 2.0, 60.0)
 			if last_sequence == 0:
 				_fail("Projectile render load exceeded the simulation command capacity")
@@ -45,7 +45,7 @@ func _run() -> void:
 		if not await _wait_for_sequence(simulation, last_sequence):
 			_fail("Could not spawn the projectile render batch")
 			return
-	var elite_sequence: int = simulation.spawn_enemy("elite", 1, Vector2(90.0, 65.0), Vector2.ZERO)
+	var elite_sequence: int = simulation.spawn_enemy("elite", 1, Vector2(300.0, 160.0), Vector2.ZERO)
 	if elite_sequence <= 0:
 		_fail("Could not spawn the Hasted elite render probe")
 		return
@@ -73,11 +73,10 @@ func _run() -> void:
 	await process_frame
 	await RenderingServer.frame_post_draw
 	var image: Image = get_root().get_texture().get_image()
-	if image.is_empty() or image.get_width() < 1280 or image.get_height() < 720:
+	if image.is_empty() or image.get_width() < 1280 or image.get_height() < 800:
 		_fail("Godot did not produce a full-size rendered frame")
 		return
-	var render_scale := float(image.get_width()) / float(ProjectSettings.get_setting("display/window/size/viewport_width"))
-	var enemy_pixel: Vector2 = (view.get_global_transform_with_canvas() * (view.size * 0.5 + Vector2(-70.0, -45.0))) * render_scale
+	var enemy_pixel: Vector2 = view.get_global_transform_with_canvas() * (view.size * 0.5 + Vector2(-350.0, -260.0))
 	var cyan_highlight_visible := false
 	var sampled_color := Color.TRANSPARENT
 	for y in range(int(enemy_pixel.y) - 12, int(enemy_pixel.y) + 13):
@@ -90,13 +89,12 @@ func _run() -> void:
 		if cyan_highlight_visible:
 			break
 	if not cyan_highlight_visible:
-		_fail("The cyan highlight on the known enemy sprite was not visible in the rendered frame: %s at %s" % [sampled_color, enemy_pixel])
+		_fail("The cyan highlight on the known enemy sprite was not visible in the rendered frame: %s" % sampled_color)
 		return
-	var elite_center: Vector2 = (view.get_global_transform_with_canvas() * (view.size * 0.5 + Vector2(90.0, 65.0))) * render_scale
+	var elite_center: Vector2 = view.get_global_transform_with_canvas() * (view.size * 0.5 + Vector2(300.0, 160.0))
 	var haste_ring_visible := false
-	var elite_search_radius := ceili(22.0 * render_scale)
-	for y in range(int(elite_center.y) - elite_search_radius, int(elite_center.y) + elite_search_radius + 1):
-		for x in range(int(elite_center.x) - elite_search_radius, int(elite_center.x) + elite_search_radius + 1):
+	for y in range(int(elite_center.y) - 22, int(elite_center.y) + 23):
+		for x in range(int(elite_center.x) - 22, int(elite_center.x) + 23):
 			var candidate := image.get_pixel(x, y)
 			if candidate.r > 0.65 and candidate.g > 0.15 and candidate.g < 0.65 and candidate.b < 0.5:
 				haste_ring_visible = true
@@ -104,7 +102,7 @@ func _run() -> void:
 		if haste_ring_visible:
 			break
 	if not haste_ring_visible:
-		_fail("The Hasted elite red affix ring was not visible in the rendered frame at %s" % elite_center)
+		_fail("The Hasted elite red affix ring was not visible in the rendered frame")
 		return
 	if image.save_png(SCREENSHOT_PATH) != OK:
 		_fail("Could not save render smoke screenshot")

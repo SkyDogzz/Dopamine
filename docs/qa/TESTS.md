@@ -2,12 +2,12 @@
 
 > Les cases cochées sont des exécutions documentées. Le binaire Godot local est `tools/local/godot-4.7.2/Godot_v4.7.2-stable_linux.x86_64`; il peut être invoqué directement même s’il n’est pas présent dans le `PATH`.
 
-## Application de l’Art Bible UI — 2026-10-16
+## Correction du viewport UI — 2026-10-16
 
-- [x] Le viewport logique est 640×360 (16:9) et la fenêtre initiale 1280×720.
+- [x] Les interfaces conservent leur viewport logique 1280×800 et la fenêtre initiale 1280×800. Le viewport cible 640×360 de l’Art Bible attend l’adaptation responsive de chaque écran.
 - [x] Le thème partagé reprend les couleurs sémantiques de la palette maître, les panneaux opaques et les boutons rectangulaires; Press Start 2P est réservée aux titres, DejaVu Sans au texte courant. Le feedback souris agrandit au survol et décale de 2 px à l’appui. Licences livrées dans `game/assets/fonts/`.
-- [x] Import Godot 4.7.2 et 21 smokes UI de fondation, navigation, hub/profils, layouts 640×360/960×540/1280×720, progression, HUD, pause et Sandbox UI passent avec un `XDG_DATA_HOME` isolé par script.
-- [x] Smoke fenêtré `render_visual_smoke` : 499 ennemis, 2 000 projectiles et une élite rendus à 1280×720 sous Xvfb/Mesa; capture inspectée à `/tmp/dopamine-render-visual-smoke.png`.
+- [x] Import Godot 4.7.2 et 10 smokes ciblés UI passent après le rétablissement du viewport 1280×800, avec un `XDG_DATA_HOME` isolé par script : fondation, hub/layouts 1280×800/1600×900/1920×1080, pause, inventaire, coffre, résultat, navigation et Sandbox.
+- [ ] Le smoke fenêtré et la suite complète ne sont pas relancés après cette correction.
 
 ## Build et intégration
 
@@ -151,7 +151,7 @@ Le runner est fourni par `game/scripts/scenario_runner.gd` et consomme un fichie
 ## UI refonte — ui-foundation (2026-10-15)
 
 - [x] Godot 4.7.2 Linux : import headless du projet avec le Theme UI partagé.
-- [x] Smoke `ui_foundation_smoke.gd` : palette et styles, contrôles requis, focus initial, Tab, limites géométriques à 1280×800, 960×600 et 1600×900, mapping Entrée/Espace/A et Échap/B.
+- [x] Smoke `ui_foundation_smoke.gd` : palette et styles, contrôles requis, focus initial, Tab, limites géométriques à 1280×800, 1600×900 et 1920×1080, mapping Entrée/Espace/A et Échap/B.
 - [x] Lancement fenêtré de la scène de prévisualisation sous Xvfb aux trois tailles ci-dessus; aucune erreur de script ou de parsing. Le smoke confirme les limites du panneau; la revue fenêtrée complète reste limitée par l’absence d’entrée souris interactive dans l’environnement.
 - [ ] Essai avec une manette physique non exécuté : aucun périphérique de jeu n’est présent. Les mappings A/B sont vérifiés dans `InputMap`, ce qui ne prouve pas l’activation sur matériel.
 - [ ] Build natif et CTest non exécutés : `cmake` et `ctest` sont absents de l’environnement. Les artefacts de build préexistants ne sont pas considérés comme une validation de ce changement.

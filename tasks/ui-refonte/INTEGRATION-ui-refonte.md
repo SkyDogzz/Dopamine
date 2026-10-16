@@ -2,9 +2,9 @@
 
 ## Direction artistique appliquée — 2026-10-16
 
-L’Art Bible v1.1 reçue dans `docs/ART_BIBLE.txt` est désormais la référence visuelle partagée. Le viewport logique passe à 640×360 et la fenêtre par défaut à 1280×720; le thème commun utilise les couleurs sémantiques de la palette validée, des panneaux opaques et des boutons carrés. Press Start 2P (SIL OFL) sert aux titres; DejaVu Sans (licence Bitstream Vera/DejaVu) reste la police du corps. Un feedback commun ajoute un léger agrandissement au survol et un décalage de 2 px à l’appui. L’accueil, le hub et le Sandbox développeur ont été adaptés à la surface 16:9 compacte.
+L’Art Bible v1.1 reçue dans `docs/ART_BIBLE.txt` reste la référence visuelle partagée. Le viewport cible 640×360 y est [VALIDÉ], mais sa mise en service est [OUVERTE] jusqu’à l’adaptation responsive de toutes les interfaces, car plusieurs panneaux fixes dépassent cette surface. Le jeu reste actuellement en 1280×800. Le thème commun utilise les couleurs sémantiques de la palette validée, des panneaux opaques et des boutons carrés. Press Start 2P (SIL OFL) sert aux titres; DejaVu Sans (licence Bitstream Vera/DejaVu) reste la police du corps. Un feedback commun ajoute un léger agrandissement au survol et un décalage de 2 px à l’appui.
 
-Après import éditeur Godot 4.7.2, les 21 smokes UI et d’intégration listés ci-dessous ont été relancés avec un `XDG_DATA_HOME` distinct par script; ils passent. Le smoke fenêtré `render_visual_smoke` passe aussi sous Xvfb/Mesa à 1280×720 et sa capture a été inspectée. Vérifiés : bounds du hub à 640×360, 960×540 et 1280×720, états de survol/appui, écrans de coffre/résultat/pause, Sandbox compact et isolation Sandbox. Le smoke de résultat vérifie aussi le libellé « RUN SANS SAUVEGARDE ».
+Avant la correction viewport, 21 smokes UI et d’intégration passaient avec un `XDG_DATA_HOME` isolé par script. Après le rétablissement à 1280×800, 10 smokes ciblés passent : fondation, hub/layouts 1280×800/1600×900/1920×1080, pause, inventaire, coffre, résultat, navigation et Sandbox. Le smoke fenêtré et la suite complète restent à relancer. Le smoke de résultat vérifie aussi le libellé « RUN SANS SAUVEGARDE ».
 
 **Statut : terminée et poussée.** Les sept modules de [`UI_CAPABILITY_MAP.md`](../../UI_CAPABILITY_MAP.md) sont implémentés. L’utilisateur a explicitement demandé de continuer en prenant les décisions nécessaires et de sauter les checkpoints intermédiaires; cette consigne a été suivie sans modifier les plans du goal principal, qui reste en pause.
 
@@ -12,7 +12,7 @@ Après import éditeur Godot 4.7.2, les 21 smokes UI et d’intégration listés
 
 | Module | Résultat |
 |---|---|
-| `ui-foundation` | Theme partagé pixel art néon, styles de contrôles et focus, prévisualisation et adaptations de viewport. |
+| `ui-foundation` | Theme partagé pixel art néon, styles de contrôles et focus, prévisualisation. Adaptation au viewport 640×360 restante. |
 | `ui-settings` | Préférences plein écran/volume et panneau Options réutilisable; intégration depuis Pause conserve les horloges gelées. |
 | `launch-navigation` | Accueil, Options, Quitter, entrée discrète et isolée au Sandbox; navigation Jouer vers le hub. |
 | `survival-hub` | Préparation Survival, difficultés séquentielles, équipement/compétences, boutons Succès/Bestiaire inertes et lancement explicite. |

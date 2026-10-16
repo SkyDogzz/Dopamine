@@ -86,7 +86,7 @@ func _run() -> void:
 	await process_frame
 
 	var preview_panel := preview.get_node("Content/PreviewCenter/SamplePanel") as Control
-	for viewport_size in [Vector2i(640, 360), Vector2i(960, 540), Vector2i(1280, 720)]:
+	for viewport_size in [Vector2i(1280, 800), Vector2i(1600, 900), Vector2i(1920, 1080)]:
 		root.size = viewport_size
 		await process_frame
 		var panel_rect := preview_panel.get_global_rect()
@@ -96,7 +96,7 @@ func _run() -> void:
 		if panel_rect.end.x > viewport_size.x or panel_rect.end.y > viewport_size.y:
 			_fail("Preview panel should not overflow the viewport at %s" % viewport_size)
 			return
-	root.size = Vector2i(640, 360)
+	root.size = Vector2i(1280, 800)
 	await process_frame
 	var tab_event := InputEventKey.new()
 	tab_event.keycode = KEY_TAB
