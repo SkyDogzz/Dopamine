@@ -870,6 +870,7 @@ Note de clôture : le blocage historique du smoke `sandbox_ui_smoke.gd` décrit 
 
 - [x] `armorless_records_smoke.gd` vérifie la migration additive v7→v8, les records séparés par difficulté et l’ordre vague > temps de survie > kills.
 - [x] La session affiche le record personnel au résultat. Le record ne crédite aucune ressource, aucun équipement ni achievement; les autres récompenses permanentes Armorless restent en attente d’arbitrage.
+- [x] `survival_hub_smoke.gd` vérifie que le hub affiche le record de la difficulté sélectionnée après rechargement du profil; `survival_hub_layout_smoke.gd` mesure le texte et vérifie les bornes à 640×360, 1280×720 et 1920×1080.
 - [x] Les sept tests ciblés progression/migration/Sandbox/Armorless passent sous CTest.
 - [ ] Suite complète au 2026-10-16 : 69/84 passent. Dix scénarios d’armes Sandbox échouent à compiler la session car `Sfx` est absent de leur contexte de script; les autres échecs observés sont `combat_catalog_smoke`, `survival_starting_weapon_smoke`, `survival_unique_effects_smoke`, `free_chest_reroll_smoke` et `sandbox_steering_scenario`.
 - [ ] Une interface dédiée de classement et la validation d’une session Armorless complète restent à faire.

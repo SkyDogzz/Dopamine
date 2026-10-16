@@ -9,6 +9,7 @@ const SKILL_TREE_PANEL_SCENE := preload("res://scenes/skill_tree_panel.tscn")
 
 @onready var _difficulty_list: VBoxContainer = $Content/Main/DifficultyCard/Body/DifficultyList
 @onready var _difficulty_status: Label = $Content/Main/DifficultyCard/Body/DifficultyStatus
+@onready var _armorless_record_status: Label = $Content/Main/DifficultyCard/Body/ArmorlessRecordStatus
 @onready var _profile_status: Label = $Content/Header/ProfileStatus
 @onready var _launch_button: Button = $Content/Main/PreparationCard/Body/LaunchButton
 @onready var _armorless_launch_button: Button = $Content/Main/PreparationCard/Body/ArmorlessLaunchButton
@@ -21,6 +22,7 @@ var progression_service: RefCounted
 var selected_difficulty := "easy"
 var _profile_available := false
 var _highest_unlocked_difficulty := "easy"
+var _armorless_records: Dictionary = {}
 var _difficulty_buttons: Dictionary = {}
 var _difficulty_group := ButtonGroup.new()
 var _equipment_panel: Control
@@ -69,6 +71,7 @@ func _create_panels() -> void:
 func _load_profile() -> void:
 	var result: Dictionary = progression_service.load_profile()
 	_profile_available = bool(result.get("ok", false))
+	_armorless_records = result.get("profile", {}).get("armorless_records", {}) if _profile_available else {}
 	_launch_button.disabled = not _profile_available
 	_armorless_launch_button.disabled = not _profile_available
 	_temporary_launch_button.disabled = false
@@ -119,6 +122,17 @@ func _select_difficulty(difficulty_id: String) -> void:
 	var index := DIFFICULTY_SCRIPT.ORDER.find(difficulty_id)
 	_difficulty_status.text = "CHOISIE: %s  •  UNE VICTOIRE DÉBLOQUE LA SUIVANTE" % difficulty_id.to_upper() \
 		if index < DIFFICULTY_SCRIPT.ORDER.size() - 1 else "CHOISIE: CHAOS  •  DIFFICULTÉ MAXIMALE"
+	_refresh_armorless_record()
+
+func _refresh_armorless_record() -> void:
+	var record: Dictionary = _armorless_records.get(selected_difficulty, {})
+	if record.is_empty() or int(record.get("wave", 0)) <= 0:
+		_armorless_record_status.text = "ARMORLESS PB  ·  NONE"
+		return
+	var seconds := int(floor(float(record.get("survival_time_seconds", 0.0))))
+	_armorless_record_status.text = "ARMORLESS PB  ·  WAVE %d  ·  %02d:%02d  ·  %d KILLS" % [
+		int(record["wave"]), seconds / 60, seconds % 60, int(record["kills"]),
+	]
 
 func _on_back_pressed() -> void:
 	var error := get_tree().change_scene_to_file("res://scenes/launch_menu.tscn")

@@ -556,6 +556,8 @@ Travail requis :
   - [ ] Tester une vague, une transition boss, un draft, une amélioration et la mort.
   - [ ] Tester une session longue et l’idempotence des résultats/classements.
   - [x] Enregistrer et afficher les records locaux par difficulté, triés par vague puis temps et kills; `armorless_records_smoke.gd` vérifie le classement, l’isolation des récompenses, l’idempotence, le refus des données invalides et la migration v7→v8.
+  - [x] Afficher dans le hub le record Armorless de la difficulté sélectionnée; les smokes couvrent la mise à jour par profil et le layout à 640×360, 1280×720 et 1920×1080.
+  - [ ] Un écran comparant simultanément les cinq difficultés, une session Armorless complète et l’arbitrage des autres récompenses permanentes restent à faire.
 
 ### P7B — Endless standard (contrat ouvert)
 

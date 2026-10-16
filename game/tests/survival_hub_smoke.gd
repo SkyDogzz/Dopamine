@@ -130,11 +130,20 @@ func _run() -> void:
 	if not easy_win.get("ok", false):
 		_fail("The test profile should record a difficulty unlock")
 		return
+	var armorless_record: Dictionary = progression.record_armorless_result("normal", 12, 300.0, 11)
+	if not armorless_record.get("ok", false) or not armorless_record.get("updated", false):
+		_fail("The test profile should store a Normal Armorless record")
+		return
 	hub._load_profile()
 	if _difficulty_button(hub, "NORMAL").disabled or not _difficulty_button(hub, "HARD").disabled:
 		_fail("The hub should update sequential unlock states from the profile")
 		return
 	_difficulty_button(hub, "NORMAL").pressed.emit()
+	var record_status: Label = hub.get_node_or_null("Content/Main/DifficultyCard/Body/ArmorlessRecordStatus")
+	if record_status == null or not record_status.text.contains("WAVE 12") or \
+		not record_status.text.contains("05:00") or not record_status.text.contains("11 KILLS"):
+		_fail("Selecting Normal should show its Armorless personal best from the profile")
+		return
 	if hub.selected_difficulty != "normal":
 		_fail("An unlocked difficulty should become the selected launch value")
 		return
