@@ -121,7 +121,7 @@ func _run() -> void:
 		return
 	split_session.summoner_max_active_summons = 2
 	split_session.split_on_death_summon_count = 2
-	var elite_position := split_session.player.global_position + Vector2(180.0, 0.0)
+	var elite_position: Vector2 = split_session.player.global_position + Vector2(180.0, 0.0)
 	var split_spawn_sequence: int = split_session.simulation.spawn_enemy(
 		"elite", 1, elite_position, Vector2.ZERO, 1.0, "Split-on-Death"
 	)

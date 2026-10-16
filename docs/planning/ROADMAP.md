@@ -409,7 +409,7 @@ Travail requis :
   - [ ] Exécuter un scénario de chaque famille et affixe.
   - [ ] Vérifier projectiles esquivables et budgets d’invocation/effets.
   - [ ] Parcourir les phases de chaque boss.
-  - [ ] Exécuter `survival_elite_smoke.gd` sous Godot pour vérifier le spawn Split-on-Death plafonné.
+  - [x] Exécuter `survival_elite_smoke.gd` sous Godot 4.7.2 : l’affixe Split-on-Death génère deux adds sous le plafond global.
 - [ ] **P5.V3 — Run de bout en bout**
   - [ ] Jouer Survival sans harness, HP forcés, choix automatiques ou boss tués par script.
   - [ ] Vérifier mort, victoire, coffre et récompense/idempotence.

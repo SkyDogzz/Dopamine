@@ -12,19 +12,28 @@ func _run() -> void:
 		DirAccess.remove_absolute(directory.path_join(file_name))
 	var save_service = load("res://scripts/save_service.gd").new(directory)
 	var progression = load("res://scripts/progression_service.gd").new(save_service, "0")
-	progression.award_survival_run("inventory-fixture", 4, false)
-	progression.award_survival_run("inventory-fixture-two", 5, false)
 	var fixture_profile: Dictionary = progression.load_profile()["profile"]
-	fixture_profile["equipment_inventory"][1]["slot"] = fixture_profile["equipment_inventory"][0]["slot"]
-	fixture_profile["resources"]["powder_basic"] = 100
-	fixture_profile["resources"]["essence"] = 200
-	fixture_profile["equipment_inventory"][0]["rarity"] = "legendary"
-	fixture_profile["equipment_inventory"][0]["stat_lines"] = [
+	var equipment_generator = load("res://scripts/equipment_generator.gd").new(17)
+	var first_equipment: Dictionary = equipment_generator.generate_survival_item("inventory-fixture")
+	var second_equipment: Dictionary = equipment_generator.generate_survival_item("inventory-fixture-two")
+	first_equipment["rarity"] = "legendary"
+	first_equipment["stat_lines"] = [
 		{"stat_id": "damage_pct", "roll_percentile": 0.5, "enhancement_level": 0, "fail_streak": 9},
 		{"stat_id": "attack_speed_pct", "roll_percentile": 0.5, "enhancement_level": 0, "fail_streak": 0},
 		{"stat_id": "critical_chance_pct", "roll_percentile": 0.5, "enhancement_level": 0, "fail_streak": 0},
 	]
-	fixture_profile["equipment_inventory"][0]["unique_effect_id"] = "pending_choice"
+	first_equipment["unique_effect_id"] = "pending_choice"
+	second_equipment["rarity"] = "legendary"
+	second_equipment["stat_lines"] = [
+		{"stat_id": "max_hp", "roll_percentile": 0.5, "enhancement_level": 0, "fail_streak": 0},
+		{"stat_id": "move_speed_pct", "roll_percentile": 0.5, "enhancement_level": 0, "fail_streak": 0},
+		{"stat_id": "xp_pct", "roll_percentile": 0.5, "enhancement_level": 0, "fail_streak": 0},
+	]
+	second_equipment["unique_effect_id"] = "overflow_shield"
+	fixture_profile["equipment_inventory"] = [first_equipment, second_equipment]
+	fixture_profile["equipment_inventory"][1]["slot"] = fixture_profile["equipment_inventory"][0]["slot"]
+	fixture_profile["resources"]["powder_basic"] = 100
+	fixture_profile["resources"]["essence"] = 200
 	if not save_service.save_slot("0", fixture_profile):
 		_fail("Could not save the same-slot inventory fixture")
 		return

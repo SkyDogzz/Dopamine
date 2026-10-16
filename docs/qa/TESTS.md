@@ -2,12 +2,18 @@
 
 > Les cases cochées sont des exécutions documentées. Le binaire Godot local est `tools/local/godot-4.7.2/Godot_v4.7.2-stable_linux.x86_64`; il peut être invoqué directement même s’il n’est pas présent dans le `PATH`.
 
+## Revalidation intégrée P5 — 2026-10-16
+
+- [x] Godot 4.7.2 officiel exécuté depuis `/tmp`; `ctest --test-dir build --output-on-failure` passe avec 45/45 tests, dont import, rendus, Survival, progression, inventaire, élites et scénarios Sandbox.
+- [x] `survival_inventory_smoke.gd` utilise désormais deux équipements de fixture valides et déterministes au lieu de dépendre de récompenses aléatoires; équipement, enhancement, effet unique, compétences et démantèlement passent dans la suite intégrée.
+- [x] `survival_elite_smoke.gd` vérifie le Split-on-Death plafonné sous Godot 4.7.2; les smokes voisins Summoner, boss, vagues et durée passent également.
+
 ## Correction du viewport UI — 2026-10-16
 
 - [x] Les interfaces conservent leur viewport logique 1280×800 et la fenêtre initiale 1280×800. Le viewport cible 640×360 de l’Art Bible attend l’adaptation responsive de chaque écran.
 - [x] Le thème partagé reprend les couleurs sémantiques de la palette maître, les panneaux opaques et les boutons rectangulaires; Press Start 2P est réservée aux titres, DejaVu Sans au texte courant. Le feedback souris agrandit au survol et décale de 2 px à l’appui. Licences livrées dans `game/assets/fonts/`.
 - [x] Import Godot 4.7.2 et 10 smokes ciblés UI passent après le rétablissement du viewport 1280×800, avec un `XDG_DATA_HOME` isolé par script : fondation, hub/layouts 1280×800/1600×900/1920×1080, pause, inventaire, coffre, résultat, navigation et Sandbox.
-- [ ] Le smoke fenêtré et la suite complète ne sont pas relancés après cette correction.
+- [ ] À la date de cette correction, le smoke fenêtré et la suite complète n’avaient pas encore été relancés. La revalidation intégrée ci-dessus couvre depuis l’import et 45 tests CTest; le smoke fenêtré reste à faire.
 
 ## Feedback des niveaux d’objets en run — 2026-10-16
 
@@ -210,7 +216,7 @@
 - [x] (2026-10-15) Void Orb/Singularity/Event Horizon : tests natifs vérifient attraction, impacts pénétrants sur cibles distinctes et capture/restauration ; smoke Survival valide le contrat GDExtension et les impacts. Rayon, force et progression **[PROPOSÉS]**.
 - [x] Shooter P5 : télégraphe de visée avant le tir, pause du cycle, déplacement du projectile ECS, exclusion des dégâts sur les ennemis et collision/dégâts sur le joueur vérifiés par `simulation_core` et `survival_shooter_smoke` sous Godot 4.7.2 Linux. Dégâts, vitesse, rayon et cadence **[PROPOSÉS]**.
 - [x] Buffer P5 : aura de 150 unités, vitesse d’alliés augmentée de 20 %, exclusion des ennemis hors rayon, fin du buff après la mort du soutien et capture/restauration vérifiées par `simulation_core`; snapshot/sprite par `survival_support_enemy_smoke`; profil par `sandbox_enemy_profiles_scenario`. `simulation_worker` vérifie aussi le format de capture 7. Stats et bonus **[PROPOSÉS]**.
-- [x] Elite P5 : sélection Hasted/Armored/Regenerating/Volatile/Shielded/Split-on-Death; facteurs défensifs, blast borné sans chaîne et propagation de l’affixe de mort vérifiée en natif; le smoke `survival_elite_smoke.gd` couvre le split sous plafond, mais n’a pas été exécuté dans l’environnement sans Godot. Les autres vérifications couvrent l’affixe publié, l’explosion bornée sans chaîne et le rejet des affixes non implémentés et des types non élite, spawn après cooldown, budget de menace lié à la population, maximum actif, mort via le pipeline commun et chest élite garanti dans le smoke. HP, vitesse, facteur Armored, taux de régénération, rayon/dégâts Volatile, facteur Shielded, nombre de splits, menace, intervalle, chance, limite et formule du budget restent **[PROPOSÉS]**.
+- [x] Elite P5 : sélection Hasted/Armored/Regenerating/Volatile/Shielded/Split-on-Death; facteurs défensifs, blast borné sans chaîne et propagation de l’affixe de mort vérifiée en natif; le smoke `survival_elite_smoke.gd` vérifie le split sous plafond et passe sous Godot 4.7.2. Les autres vérifications couvrent l’affixe publié, l’explosion bornée sans chaîne et le rejet des affixes non implémentés et des types non élite, spawn après cooldown, budget de menace lié à la population, maximum actif, mort via le pipeline commun et chest élite garanti dans le smoke. HP, vitesse, facteur Armored, taux de régénération, rayon/dégâts Volatile, facteur Shielded, nombre de splits, menace, intervalle, chance, limite et formule du budget restent **[PROPOSÉS]**.
 - [x] Exploder P5 : profil du scénario, déclenchement de proximité, fuse et dégâts figés en pause, explosion une fois, fuite hors du rayon, élimination et conservation du flux kill/soin/XP/coffre vérifiés par `survival_exploder_smoke`. Stats, cadence, rayon, fuse et dégâts **[PROPOSÉS]**.
 - [x] Shielder P5 : réduction de dégâts dans une aura, absence d’effet hors rayon, disparition immédiate à la mort du soutien, source conservée à la capture/restauration vérifiées par `simulation_core`; snapshot, indicateur et sprite par `survival_shielder_smoke`; profil par le scénario Sandbox. Rayon et multiplicateur **[PROPOSÉS]**.
 - [x] Summoner P5 : quatre Summoners concurrents, position de spawn télégraphiée, pause du délai, plafond global de trois invocations, slot libéré puis réutilisé, profils et sprites vérifiés par `survival_summoner_smoke`; chiffres et plafond **[PROPOSÉS]**.
