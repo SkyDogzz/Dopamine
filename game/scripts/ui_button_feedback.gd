@@ -16,6 +16,7 @@ func _attach_button(button: Button) -> void:
 	button.set_meta("ui_feedback_attached", true)
 	button.mouse_entered.connect(_set_hover.bind(button, true))
 	button.mouse_exited.connect(_set_hover.bind(button, false))
+	button.focus_entered.connect(_on_focus_entered)
 	button.button_down.connect(_set_pressed.bind(button, true))
 	button.button_up.connect(_set_pressed.bind(button, false))
 	_center_pivot.call_deferred(button)
@@ -27,12 +28,16 @@ func _center_pivot(button: Button) -> void:
 func _set_hover(button: Button, hovered: bool) -> void:
 	if not is_instance_valid(button):
 		return
+	if hovered:
+		Sfx.play("ui_focus")
 	var tween := button.create_tween()
 	tween.tween_property(button, "scale", HOVER_SCALE if hovered else NORMAL_SCALE, 0.06)
 
 func _set_pressed(button: Button, pressed: bool) -> void:
 	if not is_instance_valid(button):
 		return
+	if pressed:
+		Sfx.play("ui_confirm")
 	var offset_active := bool(button.get_meta("ui_pressed_offset", false))
 	if pressed and not offset_active:
 		button.position.y += 2.0
@@ -40,3 +45,10 @@ func _set_pressed(button: Button, pressed: bool) -> void:
 	elif not pressed and offset_active:
 		button.position.y -= 2.0
 		button.set_meta("ui_pressed_offset", false)
+
+func _on_focus_entered() -> void:
+	Sfx.play("ui_focus")
+
+func _input(event: InputEvent) -> void:
+	if event.is_action_pressed("ui_cancel"):
+		Sfx.play("ui_back")
