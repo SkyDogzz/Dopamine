@@ -39,7 +39,9 @@ jobs:
 
       - name: Build, import and verify the Windows GDExtension
         shell: pwsh
-        run: .\tools\build_windows.ps1 -GodotExecutable $env:GODOT_EXE -NoLaunch -Export
+        run: |
+          $quotedGodotExecutable = '"' + $env:GODOT_EXE + '"'
+          .\tools\build_windows.ps1 -GodotExecutable $quotedGodotExecutable -NoLaunch -Export
 
       - name: Launch exported Windows game headless
         shell: pwsh
