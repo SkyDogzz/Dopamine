@@ -49,22 +49,24 @@ Vérifications ciblées :
 
 ```bash
 ctest --test-dir build --output-on-failure
-godot --headless --path game --script res://tests/sandbox_smoke.gd
-godot --headless --path game --script res://tests/sandbox_ui_smoke.gd
-godot --headless --path game --script res://tests/combat_catalog_smoke.gd
-godot --headless --path game --script res://tests/survival_targeting_smoke.gd
+tools/run_godot_test.sh godot --headless --path game --script res://tests/sandbox_smoke.gd
+tools/run_godot_test.sh godot --headless --path game --script res://tests/sandbox_ui_smoke.gd
+tools/run_godot_test.sh godot --headless --path game --script res://tests/combat_catalog_smoke.gd
+tools/run_godot_test.sh godot --headless --path game --script res://tests/survival_targeting_smoke.gd
 ```
+
+Le wrapper arrête les tests qui dépassent 120 secondes (SIGTERM, puis SIGKILL après 5 secondes). Changez la limite avec `DOPAMINE_TEST_TIMEOUT=300s`, ou utilisez `DOPAMINE_TEST_TIMEOUT=0` pour la désactiver explicitement. `--stay-open` désactive automatiquement la limite, car ces smokes attendent une fermeture manuelle.
 
 Pour lancer un combat Sandbox automatisé dans une fenêtre et garder le résultat (impact, mort et logs) à l’écran jusqu’à Échap :
 
 ```bash
-godot --path game --script res://tests/sandbox_combat_smoke.gd -- --stay-open
+tools/run_godot_test.sh godot --path game --script res://tests/sandbox_combat_smoke.gd -- --stay-open
 ```
 
 Pour parcourir une run Survival de validation avec ses 24 vagues de 30 secondes, à vitesse ×4, dans une fenêtre :
 
 ```bash
-godot --path game --script res://tests/survival_wave_director_smoke.gd -- --production-duration --stay-open
+tools/run_godot_test.sh godot --path game --script res://tests/survival_wave_director_smoke.gd -- --production-duration --stay-open
 ```
 
 Le test simule les ennemis et les transitions de boss, puis attend Échap après l’écran de victoire. Il augmente les HP du joueur pour isoler la durée et les transitions ; ce n’est pas un test d’équilibrage.
@@ -72,7 +74,7 @@ Le test simule les ennemis et les transitions de boss, puis attend Échap après
 Scénario headless avec export JSON des métriques (l’option `--output` peut aussi viser `user://sandbox/logs/...`) :
 
 ```bash
-godot --headless --path game --script res://scripts/scenario_runner.gd -- \
+tools/run_godot_test.sh godot --headless --path game --script res://scripts/scenario_runner.gd -- \
   --scenario=res://scenarios/dev_sandbox.json --output=/tmp/dopamine-scenario.json
 ```
 

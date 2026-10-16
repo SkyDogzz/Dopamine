@@ -28,6 +28,7 @@ if(BUILD_TESTING)
     add_executable(simulation_core_tests native/tests/simulation_core_test.cpp)
     target_link_libraries(simulation_core_tests PRIVATE dopamine_simulation)
     add_test(NAME simulation_core COMMAND simulation_core_tests)
+    set_tests_properties(simulation_core PROPERTIES TIMEOUT 15)
 
     add_executable(simulation_worker_tests native/tests/simulation_worker_test.cpp)
     target_link_libraries(simulation_worker_tests PRIVATE dopamine_simulation)
@@ -58,7 +59,7 @@ if(BUILD_TESTING)
         endif()
         add_test(NAME godot_project_import
             COMMAND "${DOPAMINE_GODOT_EXECUTABLE}" --headless --editor --path "${PROJECT_SOURCE_DIR}/game" --quit)
-        set_tests_properties(godot_project_import PROPERTIES FIXTURES_SETUP godot_project_ready)
+        set_tests_properties(godot_project_import PROPERTIES FIXTURES_SETUP godot_project_ready TIMEOUT 60)
 
         foreach(script_name IN ITEMS sandbox_smoke sandbox_ui_smoke sandbox_combat_smoke sandbox_preset_smoke sandbox_lab_smoke scenario_runner_validation_smoke sandbox_weapon_scenario_validation_smoke render_batching_smoke player_controller_smoke survival_entry_smoke survival_steering_smoke survival_weapon_smoke survival_targeting_smoke survival_weapon_catalog_smoke survival_level_feedback_smoke combat_catalog_smoke survival_starting_weapon_smoke survival_run_stat_hub_smoke survival_run_result_smoke survival_run_restart_smoke survival_final_boss_loot_smoke survival_contact_damage_smoke survival_idle_combat_smoke survival_shooter_smoke survival_support_enemy_smoke survival_elite_smoke survival_unique_effects_smoke survival_exploder_smoke survival_shielder_smoke survival_summoner_smoke survival_boss_attack_smoke survival_lifesteal_smoke survival_damage_causality_smoke survival_wave_director_smoke survival_wave_spawn_smoke survival_wave_duration_smoke survival_pause_smoke chest_choice_smoke free_chest_reroll_smoke survival_chest_director_smoke survival_loadout_smoke survival_chest_smoke save_service_smoke progression_service_smoke survival_progression_smoke survival_difficulty_profile_smoke survival_difficulty_unlock_smoke survival_difficulty_session_smoke survival_inventory_smoke equipment_slots_smoke equipment_rarity_smoke equipment_stats_smoke equipment_enhancement_smoke equipment_economy_smoke armorless_run_state_smoke armorless_equipment_generator_smoke armorless_wave_director_smoke survival_armorless_mode_smoke settings_service_smoke ui_settings_smoke launch_navigation_smoke)
             add_test(NAME ${script_name}
@@ -81,35 +82,35 @@ if(BUILD_TESTING)
                 --script res://scripts/scenario_runner.gd --
                 --scenario=res://scenarios/dev_sandbox.json
                 "--output=${CMAKE_CURRENT_BINARY_DIR}/sandbox_scenario_result.json")
-        set_tests_properties(sandbox_scenario PROPERTIES FIXTURES_REQUIRED godot_project_ready)
+        set_tests_properties(sandbox_scenario PROPERTIES FIXTURES_REQUIRED godot_project_ready TIMEOUT 120)
 
         add_test(NAME sandbox_steering_scenario
             COMMAND "${DOPAMINE_GODOT_EXECUTABLE}" --headless --path "${PROJECT_SOURCE_DIR}/game"
                 --script res://scripts/scenario_runner.gd --
                 --scenario=res://scenarios/steering_smoke.json
                 "--output=${CMAKE_CURRENT_BINARY_DIR}/sandbox_steering_result.json")
-        set_tests_properties(sandbox_steering_scenario PROPERTIES FIXTURES_REQUIRED godot_project_ready)
+        set_tests_properties(sandbox_steering_scenario PROPERTIES FIXTURES_REQUIRED godot_project_ready TIMEOUT 120)
 
         add_test(NAME sandbox_projectile_scenario
             COMMAND "${DOPAMINE_GODOT_EXECUTABLE}" --headless --path "${PROJECT_SOURCE_DIR}/game"
                 --script res://scripts/scenario_runner.gd --
                 --scenario=res://scenarios/projectile_swept_smoke.json
                 "--output=${CMAKE_CURRENT_BINARY_DIR}/sandbox_projectile_result.json")
-        set_tests_properties(sandbox_projectile_scenario PROPERTIES FIXTURES_REQUIRED godot_project_ready)
+        set_tests_properties(sandbox_projectile_scenario PROPERTIES FIXTURES_REQUIRED godot_project_ready TIMEOUT 120)
 
         add_test(NAME sandbox_enemy_profiles_scenario
             COMMAND "${DOPAMINE_GODOT_EXECUTABLE}" --headless --path "${PROJECT_SOURCE_DIR}/game"
                 --script res://scripts/scenario_runner.gd --
                 --scenario=res://scenarios/enemy_profiles_smoke.json
                 "--output=${CMAKE_CURRENT_BINARY_DIR}/sandbox_enemy_profiles_result.json")
-        set_tests_properties(sandbox_enemy_profiles_scenario PROPERTIES FIXTURES_REQUIRED godot_project_ready)
+        set_tests_properties(sandbox_enemy_profiles_scenario PROPERTIES FIXTURES_REQUIRED godot_project_ready TIMEOUT 120)
 
         add_test(NAME sandbox_damage_over_time_scenario
             COMMAND "${DOPAMINE_GODOT_EXECUTABLE}" --headless --path "${PROJECT_SOURCE_DIR}/game"
                 --script res://scripts/scenario_runner.gd --
                 --scenario=res://scenarios/damage_over_time_smoke.json
                 "--output=${CMAKE_CURRENT_BINARY_DIR}/sandbox_damage_over_time_result.json")
-        set_tests_properties(sandbox_damage_over_time_scenario PROPERTIES FIXTURES_REQUIRED godot_project_ready)
+        set_tests_properties(sandbox_damage_over_time_scenario PROPERTIES FIXTURES_REQUIRED godot_project_ready TIMEOUT 120)
 
         foreach(weapon_id IN ITEMS lightning_conductor inferno_sprayer crimson_daggers minigun toxic_cloud sawblades meteor_staff prism_laser void_orb frost_nova)
             add_test(NAME sandbox_weapon_${weapon_id}_scenario
