@@ -49,6 +49,11 @@ func _run() -> void:
 	if volume_slider.texture_filter != CanvasItem.TEXTURE_FILTER_NEAREST:
 		_fail("The volume slider should preserve its pixel-grid handle texture")
 		return
+	var slider_focus := volume_slider.get_theme_stylebox("focus") as StyleBoxFlat
+	if slider_focus == null or slider_focus.bg_color.to_html(false) != "1b2340" or \
+		slider_focus.border_color.to_html(false) != "ffd447" or slider_focus.border_width_left < 2:
+		_fail("The volume slider should use the shared visible gold focus style")
+		return
 	if root.gui_get_focus_owner() != fullscreen_toggle:
 		_fail("Fullscreen setting should receive initial focus")
 		return
