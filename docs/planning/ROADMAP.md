@@ -547,8 +547,9 @@ Travail requis :
   - [x] Vérifier que le directeur Armorless enchaîne cinq cycles de boss aux vagues 12, 24, 36, 48 et 60 sans terminer la run : `armorless_wave_director_smoke.gd`.
   - [x] Vérifier dans une session Armorless que le temps actif et le HP decay continuent en état boss pendant que l'horloge de vague reste gelée, puis continuent après la transition sans reset.
   - [x] Vérifier que la population proposée continue de croître après la vague 24 et que les PV ennemis restent au plafond proposé ×12; les smokes Survival vérifient aussi que le budget ne bloque pas les spawns et que la densité suit la difficulté.
-  - [x] Smoke d'intégration accéléré : une session Armorless de production traverse les 12 drafts et choix d'équipement, le boss de vague 12 puis reprend en vague 13; la fin nettoie équipement/Flux temporaires sans ProgressionService ni écriture de save.
-  - [ ] Parcourir une session Armorless complète en durée de production avec ses drafts, ses boss et ses pauses de choix.
+  - [x] Smoke d'intégration accéléré : une session Armorless traverse 12 drafts et choix d'équipement, le boss de vague 12 puis reprend en vague 13; la fin nettoie équipement/Flux temporaires sans ProgressionService ni écriture de save.
+  - [x] Mode `--production-duration` : la session traverse 60 vagues de 30 secondes simulées, les 60 drafts et les boss des vagues 12/24/36/48/60 à vitesse ×4; le fixture verrouille les PV, désactive les drops de coffres classiques et tue les boss par script. Cela vérifie les transitions de durée longue, pas la survivabilité ni une partie joueur.
+  - [ ] Parcourir une session Armorless complète en durée de production avec ses drafts, ses boss et ses pauses de choix, sans invulnérabilité ni kills scriptés.
 - [ ] **P7A.5 — Récompenses ouvertes**
   - [x] Décision utilisateur **[VALIDÉE, 2026-10-16]** : accorder Essence, Powder et achievements à la fin de run Armorless, sans équipement permanent.
   - [x] Appliquer les récompenses et métriques d’achievements avec l’anti-double-attribution partagé; Armorless conserve ses records par difficulté et n’incrémente pas les métriques d’équipement permanent.

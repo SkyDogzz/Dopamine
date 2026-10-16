@@ -34,7 +34,8 @@
 
 ## P7A.4 — Cycle Armorless intégré — 2026-10-16
 
-- [x] `armorless_session_cycle_smoke.gd` accélère la durée des vagues mais utilise la vraie session : 12 drafts de trois équipements temporaires, choix/reprise, boss de vague 12, transition vers la vague 13 et nettoyage d'équipement/Flux à la sortie.
+- [x] `armorless_session_cycle_smoke.gd` accélère les vagues mais utilise la vraie session : 12 drafts de trois équipements temporaires, choix/reprise, boss de vague 12, transition vers la vague 13 et nettoyage d'équipement/Flux à la sortie.
+- [x] Avec `--production-duration`, le même smoke traverse 60 vagues de 30 secondes simulées, les 60 drafts et les boss des vagues 12/24/36/48/60 à vitesse ×4. Le fixture verrouille les PV, désactive les drops de coffres classiques et tue les boss par script; ce n'est pas une validation de survie ni un parcours joueur.
 - [x] Le smoke vérifie que la session n'a pas de `ProgressionService` et qu'aucun fichier de slot normal n'est écrit.
 - [x] `armorless_session_cycle_smoke.gd` rapporte à la fermeture 4 objets ObjectDB et 2 ressources encore référencés après réussite; le résultat du scénario est vert.
 - [ ] Ce parcours accéléré ne remplace pas une session Armorless complète à durée de production, ni la calibration de la progression à long terme.
