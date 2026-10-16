@@ -325,9 +325,9 @@ Travail requis :
   - [x] Lister les statuts implémentés pour les paires : Burn (Inferno/Wildfire), Poison (Toxic/Pandemic), Bleed (Bloodstorm) et Chill (Frost/Absolute Zero). Les paires sans statut restent sans effet inventé.
   - [x] Vérifier la durée, le tick, le remplacement et l’affichage des DoT : le DoT existant est remplacé, son identité et ses horloges sont publiées dans le snapshot, et un anneau dédié l’indique en Survival. L’empilement simultané reste **[OUVERT]**. Les paramètres chiffrés demeurent **[PROPOSÉS]**.
   - [x] Vérifier application, expiration et exclusion des cibles mortes avant connexion aux armes.
-- [ ] **P5.2.2 — Synergies émergentes**
-  - [ ] Relier les effets par les événements standards de dégâts/statut.
-  - [ ] Vérifier qu’une synergie ne requiert pas une réaction élémentaire non validée.
+- [x] **P5.2.2 — Synergies émergentes**
+  - [x] Les chemins existants consomment les événements standards : lifesteal sur damage, contagion Pandemic sur dégâts/statut et mort, Absolute Zero sur mort d’une cible Chill, fragments Starfall sur impact et chaînes Lightning sur dégâts. Les événements DoT portent maintenant leur identité jusqu’au damage/death.
+  - [x] Vérifier que ces comportements utilisent les contrats d’évolution/statut existants; aucune réaction élémentaire proposée n’est activée. Les évolutions et paramètres de prototype gardent leur statut **[PROPOSÉ]** là où le GDD ne les valide pas.
 - [ ] **P5.2.3 — Réactions proposées**
   - [ ] Garder Thermal Shock, Toxic Ignition, Shatter, Electroplague, Gravity Collapse et Hemorrhage désactivées tant que non validées.
   - [ ] Faire arbitrer chaque réaction avant son implémentation.

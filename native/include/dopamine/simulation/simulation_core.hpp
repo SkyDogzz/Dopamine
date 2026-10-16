@@ -158,6 +158,7 @@ struct CombatEvent {
 	float position_y = 0.0F;
 	std::string target_type;
 	std::string source_type;
+	std::string status_type;
 	bool is_damage_over_time = false;
 	bool target_was_chilled = false;
 };

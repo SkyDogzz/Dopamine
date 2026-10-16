@@ -315,7 +315,7 @@ int main() {
 	const auto captured_worker_state = worker.capture_state(1s);
 	require(captured_worker_state.has_value(), "worker should capture a coherent state at a command barrier");
 	const SimulationWorkerState saved_worker_state = *captured_worker_state;
-	require(saved_worker_state.format_version == 9 && saved_worker_state.paused && saved_worker_state.speed_multiplier == 2.0 &&
+	require(saved_worker_state.format_version == 10 && saved_worker_state.paused && saved_worker_state.speed_multiplier == 2.0 &&
 			saved_worker_state.has_steering_target && saved_worker_state.steering_target_x == 12.0F &&
 			saved_worker_state.steering_target_y == -6.0F && saved_worker_state.steering_config.max_speed == 48.0F &&
 			saved_worker_state.collision_count == benchmark_combat->collision_count &&
@@ -345,6 +345,7 @@ int main() {
 	++gapped_queue_state.next_sequence;
 	require(!worker.restore_state(gapped_queue_state), "worker restore should reject command sequence gaps");
 	SimulationWorkerState queued_command_state = saved_worker_state;
+	queued_command_state.pending_events.front().status_type = "burn";
 	queued_spawn.sequence = queued_command_state.next_sequence;
 	queued_command_state.pending_commands.push_back(queued_spawn);
 	++queued_command_state.next_sequence;
@@ -353,6 +354,7 @@ int main() {
 	require(restored_worker_snapshot->paused && restored_worker_snapshot->speed_multiplier == 2.0 &&
 			restored_worker_snapshot->collision_count == saved_worker_state.collision_count &&
 			restored_worker_snapshot->events.size() == saved_worker_state.pending_events.size() &&
+			restored_worker_snapshot->events.front().status_type == "burn" &&
 			restored_worker_snapshot->last_sequence == saved_worker_state.pending_sequence &&
 			restored_worker_snapshot->steering_config.max_speed == 48.0F,
 			"restored worker snapshot should match the captured worker state");

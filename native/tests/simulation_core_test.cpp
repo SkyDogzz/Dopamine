@@ -384,7 +384,8 @@ int main() {
 	dot_events = damage_over_time.advance(2.0);
 	require(dot_events.size() == 2 && dot_events[0].type == dopamine::sim::CombatEventType::Damage &&
 			dot_events[0].amount == 3.0F && dot_events[0].is_damage_over_time &&
-			dot_events[1].amount == 3.0F && dot_events[1].is_damage_over_time,
+			dot_events[0].status_type == "generic" && dot_events[1].amount == 3.0F &&
+			dot_events[1].is_damage_over_time && dot_events[1].status_type == "generic",
 			"large steps should preserve each due damage-over-time tick");
 	require(damage_over_time.entity(dot_target)->health.current == 14.0F,
 			"damage-over-time should apply cumulative tick damage");
@@ -394,6 +395,15 @@ int main() {
 	const auto expiry_events = expiring_status.advance(2.0);
 	require(expiry_events.size() == 2 && expiring_status.entity(expiring_target)->health.current == 8.0F,
 			"a large step must not emit damage-over-time ticks after the effect expires");
+	SimulationCore lethal_status;
+	const auto lethal_target = lethal_status.spawn("chaser", 0.0F, 0.0F, 2.0F, 0.0F, 0.0F);
+	lethal_status.apply_damage_over_time(lethal_target, 3.0F, 0.5, 1.0, "bleed");
+	const auto lethal_status_events = lethal_status.advance(0.5);
+	require(lethal_status_events.size() == 2 && lethal_status_events[0].is_damage_over_time &&
+			lethal_status_events[0].status_type == "bleed" &&
+			lethal_status_events[1].type == dopamine::sim::CombatEventType::Death &&
+			lethal_status_events[1].status_type == "bleed",
+			"lethal status ticks should preserve identity on damage and death events");
 	SimulationCore excessive_status;
 	std::vector<dopamine::sim::EntityId> excessive_targets;
 	for (int index = 0; index < 10; ++index) {
@@ -441,7 +451,8 @@ int main() {
 			inferno_burn.entity(burn_target)->damage_over_time.has_value(),
 			"Inferno Sprayer projectile hit should apply its configured burn to a surviving target");
 	const auto burn_ticks = inferno_burn.advance(0.25);
-	require(burn_ticks.size() == 1 && burn_ticks[0].is_damage_over_time && burn_ticks[0].amount == 2.5F,
+	require(burn_ticks.size() == 1 && burn_ticks[0].is_damage_over_time &&
+			burn_ticks[0].status_type == "burn" && burn_ticks[0].amount == 2.5F,
 			"Inferno burn should emit a tagged tick using its configured damage");
 	SimulationCore toxic_cloud;
 	const auto poison_primary = toxic_cloud.spawn("chaser", 60.0F, 0.0F, 20.0F, 0.0F, 0.0F);
@@ -456,8 +467,9 @@ int main() {
 			poison_direct->health.current == 19.0F && poison_affected->health.current == 19.5F,
 			"Toxic Cloud should apply poison and its bounded area splash to nearby enemies");
 	const auto poison_ticks = toxic_cloud.advance(0.5);
-	require(poison_ticks.size() == 2 && poison_ticks[0].is_damage_over_time && poison_ticks[1].is_damage_over_time,
-			"Toxic Cloud poison should use the shared bounded DoT event path");
+	require(poison_ticks.size() == 2 && poison_ticks[0].is_damage_over_time && poison_ticks[1].is_damage_over_time &&
+			poison_ticks[0].status_type == "poison" && poison_ticks[1].status_type == "poison",
+			"Toxic Cloud poison should use the shared event path with its status identity");
 	const auto poison_late = toxic_cloud.spawn("chaser", 90.0F, 0.0F, 20.0F, 0.0F, 0.0F);
 	const auto persistent_cloud_state = toxic_cloud.capture_state();
 	SimulationCore restored_cloud;

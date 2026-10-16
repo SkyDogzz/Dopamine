@@ -669,8 +669,9 @@ std::vector<CombatEvent> SimulationCore::advance(double delta_seconds) {
 		while (status.time_to_tick <= 1e-12 && status.remaining_seconds >= -1e-12) {
 			const std::size_t event_start = events.size();
 			apply_damage(target, target, status.damage_per_tick, events, to_despawn);
-			if (event_start < events.size()) {
-				events[event_start].is_damage_over_time = true;
+			for (std::size_t event_index = event_start; event_index < events.size(); ++event_index) {
+				events[event_index].is_damage_over_time = true;
+				events[event_index].status_type = status.status_type;
 			}
 			status.time_to_tick += status.interval_seconds;
 			if (health_[index].current <= 0.0F) {

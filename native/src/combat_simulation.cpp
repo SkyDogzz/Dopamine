@@ -477,6 +477,7 @@ Dictionary CombatSimulation::snapshot() const {
 		entry["target"] = target;
 		entry["amount"] = event.amount;
 		entry["is_damage_over_time"] = event.is_damage_over_time;
+		entry["status_type"] = event.status_type.c_str();
 		entry["target_was_chilled"] = event.target_was_chilled;
 		entry["remaining_health"] = event.remaining_health;
 		entry["threat_level"] = event.threat_level;
