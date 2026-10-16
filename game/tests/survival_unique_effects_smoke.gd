@@ -11,6 +11,7 @@ func _run() -> void:
 	var save_service = load("res://scripts/save_service.gd").new(save_directory)
 	var progression = load("res://scripts/progression_service.gd").new(save_service, "0")
 	var profile: Dictionary = progression.load_profile()["profile"]
+	profile["unlocked_skill_nodes"] = progression.skill_node_ids("weapon_unlocks") + progression.skill_node_ids("relic_unlocks")
 	profile["equipment_inventory"] = [
 		_capacity_item("expanded_legendary", "helmet", "legendary", 3),
 		_capacity_item("expanded_mythic", "ring", "mythic", 4),

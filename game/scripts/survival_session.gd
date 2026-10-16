@@ -1717,6 +1717,11 @@ func _open_chest(options: Array, heading: String) -> bool:
 	var family := "weapon" if heading_upper.contains("WEAPON") else "relic" if heading_upper.contains("RELIC") else ""
 	var reroll_available := not _first_reward_chest_opened and _has_unique_effect("free_first_chest_reroll") and \
 		family in ["weapon", "relic"]
+	if reroll_available:
+		var excluded_ids: Array[String] = []
+		for option in options:
+			excluded_ids.append(str(option.get("id", "")))
+		reroll_available = loadout.offers(family, excluded_ids, options.size()).size() == options.size()
 	if not _chest_choice.present(options, options.size(), heading, reroll_available):
 		return false
 	if not _starting_weapon_choice_open:

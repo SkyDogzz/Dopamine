@@ -896,6 +896,13 @@ Note de clôture : le blocage historique du smoke `sandbox_ui_smoke.gd` décrit 
 - [x] Certains smokes de session terminent avec des avertissements ObjectDB/ressources encore référencées; leurs assertions passent. Ces sorties ne prouvent pas l’absence de fuite mémoire en session longue.
 - [ ] Cette validation automatisée ne remplace pas P5.V3 : une victoire en interface réelle, sans HP forcés, sélection automatique ni boss tué par script, reste à réaliser.
 
+## P5/P6 — Revalidation coffre et effets uniques — 2026-10-16
+
+- [x] `free_chest_reroll_smoke.gd` et `survival_unique_effects_smoke.gd` passent sous Godot 4.7.2 après avoir donné à leurs profils fixtures les déblocages qu'ils utilisent réellement.
+- [x] Le reroll gratuit n'est proposé que si le pool contient assez d'offres inédites pour remplacer tout le choix en cours; le test vérifie le reroll clavier avec trois choix inédits.
+- [ ] Le dernier lancement complet, avant ce correctif ciblé, était rouge (72/86) : les scénarios Sandbox d'armes échouaient sur `Sfx` dans les modifications non commitées de `survival_session.gd`, et des échecs restent à diagnostiquer (`combat_catalog_smoke` dépend de l'ordre/profil, `sandbox_steering_scenario`). Relancer la suite après intégration du travail SFX.
+- [ ] La victoire P5.V3 en run réelle, sans assistance, reste à réaliser.
+
 ## P5 — Revalidation ciblée native et boss — 2026-10-16
 
 - [x] Les exécutables natifs existants `build/simulation_core_tests` et `build/simulation_worker_tests` terminent avec code 0.

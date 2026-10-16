@@ -13,6 +13,7 @@ func _run() -> void:
 	var save_service = load("res://scripts/save_service.gd").new(directory)
 	var progression = load("res://scripts/progression_service.gd").new(save_service, "0")
 	var profile: Dictionary = progression.load_profile()["profile"]
+	profile["unlocked_skill_nodes"] = progression.skill_node_ids("weapon_unlocks") + progression.skill_node_ids("relic_unlocks")
 	var equipment: Dictionary = load("res://scripts/equipment_generator.gd").new(51).generate_survival_item("reroll")
 	equipment["rarity"] = "legendary"
 	equipment["stat_lines"] = [
