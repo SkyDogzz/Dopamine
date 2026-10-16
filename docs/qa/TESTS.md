@@ -401,3 +401,8 @@ Note de clôture : le blocage historique du smoke `sandbox_ui_smoke.gd` décrit 
 
 - [x] Le HUD reprend l’orbe XP 16×16 à sa taille native et en nearest, sans changer les valeurs ni le calcul de progression.
 - [ ] `survival_hud_smoke.gd` vérifie l’asset, sa taille, son filtrage et les bounds des lignes; il reste à exécuter avec Godot.
+
+## Icônes de préparation du hub (2026-10-16)
+
+- [x] Équipements et arbre de compétences réutilisent chacun leur icône pixel dédiée en taille compacte, nearest.
+- [ ] `survival_hub_smoke.gd` couvre les ressources d’icône, la taille et le filtrage; il reste à exécuter avec Godot.

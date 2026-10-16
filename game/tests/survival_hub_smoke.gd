@@ -48,6 +48,15 @@ func _run() -> void:
 		return
 	var achievements := hub.get_node("Content/Main/PreparationCard/Body/InactiveFeatures/AchievementsButton") as Button
 	var bestiary := hub.get_node("Content/Main/PreparationCard/Body/InactiveFeatures/BestiaryButton") as Button
+	var equipment_button := hub.get_node("Content/Main/PreparationCard/Body/EquipmentButton") as Button
+	var skill_button := hub.get_node("Content/Main/PreparationCard/Body/SkillTreeButton") as Button
+	if equipment_button.icon == null or equipment_button.icon.resource_path != "res://assets/icons/catalog/equipment_armor.png" or \
+		skill_button.icon == null or skill_button.icon.resource_path != "res://assets/icons/catalog/skill_node.png" or \
+		equipment_button.get_theme_constant("icon_max_width") != 16 or skill_button.get_theme_constant("icon_max_width") != 16 or \
+		equipment_button.texture_filter != CanvasItem.TEXTURE_FILTER_NEAREST or \
+		skill_button.texture_filter != CanvasItem.TEXTURE_FILTER_NEAREST:
+		_fail("Permanent preparation actions should use their existing compact pixel icons")
+		return
 	if achievements == null or bestiary == null or achievements.focus_mode == Control.FOCUS_NONE or \
 		bestiary.focus_mode == Control.FOCUS_NONE or not achievements.pressed.get_connections().is_empty() or \
 		not bestiary.pressed.get_connections().is_empty():
@@ -77,7 +86,6 @@ func _run() -> void:
 		achievements.get_theme_stylebox("focus") != hub.theme.get_stylebox("focus", "Button"):
 		_fail("Inactive features should look disabled and retain the shared visible focus style")
 		return
-	var equipment_button := hub.get_node("Content/Main/PreparationCard/Body/EquipmentButton") as Button
 	equipment_button.pressed.emit()
 	await process_frame
 	var equipment_panel: Control = hub.get_node("EquipmentInventoryPanel")
@@ -90,7 +98,6 @@ func _run() -> void:
 	if equipment_panel.visible or root.gui_get_focus_owner() != equipment_button:
 		_fail("Closing permanent equipment should return focus to its hub control")
 		return
-	var skill_button := hub.get_node("Content/Main/PreparationCard/Body/SkillTreeButton") as Button
 	skill_button.pressed.emit()
 	await process_frame
 	var skill_panel: Control = hub.get_node("SkillTreePanel")
