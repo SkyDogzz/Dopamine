@@ -66,7 +66,7 @@ Le catalogue actif est défini dans `game/data/combat_catalog.json` :
 | `PressStart2P-Regular.ttf`, `DejaVuSans.ttf` et licences associées | Revue de la hiérarchie titre pixel / texte moderne et de la lisibilité. Le choix exact des fontes reste **[OUVERT]** dans l’Art Bible, même si ces fontes sont déjà utilisées dans le projet. |
 | `game/assets/backgrounds/title_skyline.png` (640×360), source Aseprite éditable dans `game/assets/source/backgrounds/` et source générée `docs/art/source/title_skyline_generated.png` | Le fond conserve sa composition et ses 30 couleurs de la palette maître; le script de traitement exporte maintenant aussi une source Aseprite mono-calque. Il reste à vérifier le décor dans la composition finale de l’accueil. |
 
-Manques visibles : pas de source Aseprite éditable pour le fond skyline existant; pas d’écran ou de jeu d’icônes Succès/Bestiaire (leurs entrées restent volontairement inactives); pas de portrait ou logo image séparé (le titre est du texte). Les réglages, le volume, le plein écran, le focus et les états interactifs relèvent principalement de l’UI vectorielle/nodale et du Theme, pas d’une série de sprites à générer.
+Manques visibles : pas d’écran ou de jeu d’icônes Succès/Bestiaire (leurs entrées restent volontairement inactives); pas de portrait ou logo image séparé (le titre est du texte). Le fond skyline possède maintenant sa source Aseprite éditable dans `game/assets/source/backgrounds/title_skyline.aseprite`. Les réglages, le volume, le plein écran, le focus et les états interactifs relèvent principalement de l’UI vectorielle/nodale et du Theme, pas d’une série de sprites à générer.
 
 ## Interfaces à refaire
 
@@ -82,7 +82,7 @@ L’UI actuelle se partage entre le Theme `game/themes/dopamine_ui.tres`, des sc
 | HUD Survival — `survival_session.tscn` + `survival_session.gd` | HUD construit en scène/code : HP, XP, temps, vague, difficulté, état, arme, boss HP | Recomposer vers un HUD minimal dans les coins, lisible en densité élevée; afficher les informations déjà présentes sans changer les règles. |
 | Choix de coffre — `chest_choice.tscn` | Dialog dynamique de trois choix, image d’arme/relique issue des options | Refaire modal, classification arme/relique, descriptions, rareté et focus; simulation gelée conservée. |
 | Pause — `pause_menu.tscn` | Dimmer, carte, confirmation d’abandon | Refaire menu et confirmation, retours clavier/manette, pause stricte et transitions. |
-| Inventaire de run — `run_inventory_panel.tscn` | Liste dynamique en lecture seule | Refaire lignes d’arme/relique avec icône dédiée, nom, niveau, évolution et description. Équipement permanent reste non modifiable pendant la run. |
+| Inventaire de run — `run_inventory_panel.tscn` | Liste dynamique en lecture seule, avec totaux armes/reliques persistants au-dessus du défilement | Refaire lignes d’arme/relique avec icône dédiée, nom, niveau, évolution et description. Équipement permanent reste non modifiable pendant la run. |
 | Résultat — `run_result_panel.tscn` | Carte victoire/défaite, résumé et récompenses | Refaire hiérarchie du résultat, récompenses/rareté et action de retour/reprise, sans créer de système de succès. |
 | Sandbox développeur — `main.tscn` + `main.gd` | Poste de test dense : simulation, métriques, spawn, tuning, inspecteur, événements | Refaire panneaux et contrôles pour lisibilité; conserver spawn, pause/step/vitesse, sélection, tuning et métriques. Aucune référence à SaveService/progression. |
 

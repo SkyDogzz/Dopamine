@@ -46,6 +46,13 @@ theme_override_font_sizes/font_size = 13
 text = "RUN INVENTORY"
 horizontal_alignment = 1
 
+[node name="Counts" type="Label" parent="Center/Panel/Content"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.647059, 0.682353, 0.764706, 1)
+theme_override_font_sizes/font_size = 8
+text = "WEAPONS 0  •  RELICS 0"
+horizontal_alignment = 1
+
 [node name="Scroll" type="ScrollContainer" parent="Center/Panel/Content"]
 custom_minimum_size = Vector2(0, 120)
 layout_mode = 2

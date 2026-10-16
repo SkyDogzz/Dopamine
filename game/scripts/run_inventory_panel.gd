@@ -4,12 +4,14 @@ signal close_requested
 
 @onready var _items: VBoxContainer = $Center/Panel/Content/Scroll/Items
 @onready var _close_button: Button = $Center/Panel/Content/CloseButton
+@onready var _counts: Label = $Center/Panel/Content/Counts
 
 func _ready() -> void:
 	_close_button.pressed.connect(_on_close_pressed)
 	_close_button.grab_focus()
 
 func show_items(weapons: Array[Dictionary], relics: Array[Dictionary]) -> void:
+	_counts.text = "WEAPONS %d  •  RELICS %d" % [weapons.size(), relics.size()]
 	_add_section("WEAPONS")
 	_add_items(weapons)
 	_add_section("RELICS")
