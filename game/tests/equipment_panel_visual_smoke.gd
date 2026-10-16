@@ -25,6 +25,7 @@ func _run() -> void:
 	var badges: HBoxContainer = item_layout.get_child(0)
 	var item_content: VBoxContainer = item_layout.get_child(1)
 	var status: Label = item_content.get_child(1)
+	var actions: HBoxContainer = item_content.get_child(2)
 	if panel_frame.custom_minimum_size.x < 400:
 		_fail("Equipment panel should reserve enough width for item stats and actions")
 		return
@@ -42,6 +43,11 @@ func _run() -> void:
 			return
 	if not status.text.contains("UNIQUE: LIGHTNING BURST") or status.text.contains("LIGHTNING_BURST"):
 		_fail("Unique effect IDs should be presented as readable names without code separators")
+		return
+	if actions.get_child_count() != 2 or (actions.get_child(0) as Button).text != "UNEQUIP" or \
+		(actions.get_child(0) as Button).get_theme_color("font_color").to_html(false) != "37e8f5" or \
+		(actions.get_child(1) as Button).get_theme_color("font_color").to_html(false) != "ff7181":
+		_fail("Equipment actions should share a compact row with distinct equip and dismantle intent")
 		return
 	if not panel_frame.get_global_rect().size.x <= 640:
 		_fail("Equipment panel should stay within the logical 640px viewport")

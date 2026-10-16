@@ -201,17 +201,26 @@ func _create_item_row(equipment: Dictionary, resources: Dictionary) -> Control:
 	var equip_button := Button.new()
 	var is_equipped := bool(equipment.get("equipped", false))
 	equip_button.text = "UNEQUIP" if is_equipped else "EQUIP"
+	equip_button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	equip_button.add_theme_color_override("font_color", Color("#37E8F5"))
+	equip_button.add_theme_color_override("font_hover_color", Color("#37E8F5"))
+	var actions := HBoxContainer.new()
+	actions.add_theme_constant_override("separation", 4)
+	content.add_child(actions)
 	equip_button.pressed.connect(func() -> void:
 		equipment_state_requested.emit(str(equipment.get("instance_id", "")), not is_equipped)
 	)
-	content.add_child(equip_button)
+	actions.add_child(equip_button)
 	var dismantle_button := Button.new()
 	dismantle_button.text = "DISMANTLE  •  %s POWDER" % DISMANTLE_POWDER[rarity]
+	dismantle_button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	dismantle_button.add_theme_color_override("font_color", Color("#FF7181"))
+	dismantle_button.add_theme_color_override("font_hover_color", Color("#FF7181"))
 	dismantle_button.tooltip_text = "Proposed prototype dismantle yield; economy remains open for calibration."
 	dismantle_button.pressed.connect(func() -> void:
 		dismantle_requested.emit(str(equipment.get("instance_id", "")))
 	)
-	content.add_child(dismantle_button)
+	actions.add_child(dismantle_button)
 	return row
 
 func _close() -> void:

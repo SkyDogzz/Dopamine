@@ -411,3 +411,8 @@ Note de clôture : le blocage historique du smoke `sandbox_ui_smoke.gd` décrit 
 
 - [x] Le statut du menu indique que la touche Échap reprend la run; le contrôle et le gel de simulation restent inchangés.
 - [ ] `pause_panel_visual_smoke.gd` vérifie le rappel et les accents d’action; il reste à exécuter avec Godot.
+
+## Actions compactes de l’équipement (2026-10-16)
+
+- [x] Équiper/déséquiper et démanteler partagent maintenant une rangée; cyan et rouge distinguent leurs intentions, sans changer les signaux ni les règles.
+- [ ] `equipment_panel_visual_smoke.gd` vérifie l’ordre, les libellés et les couleurs; il reste à exécuter avec Godot.
