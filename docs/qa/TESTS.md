@@ -55,6 +55,7 @@
 
 - [x] `survival_chest_choice_smoke.gd` vérifie le titre cyan du coffre d’arme, le titre magenta du coffre de relique, les icônes/descriptions, le focus et l’émission de sélection inchangée.
 - [x] `survival_chest_layout_smoke.gd` passe aux viewports 640×360, 1280×720 et 1920×1080 avec descriptions longues et bonus de prochain niveau.
+- [ ] Le smoke de choix vérifie maintenant les styles distincts du nom et de la description, l’icône 32×32 nearest et le texte complet du bouton; nouvelles assertions à exécuter avec Godot.
 
 ## Accueil — emblème pixel art — 2026-10-16
 

@@ -38,10 +38,18 @@ func _run() -> void:
 				return
 	root.size = original_size
 	var first := buttons.get_child(0) as Button
+	var offer_icon: TextureRect = first.get_node("ContentMargin/OfferRow/OfferIcon")
+	var offer_title: Label = first.get_node("ContentMargin/OfferRow/OfferDetails/OfferTitle")
+	var offer_description: Label = first.get_node("ContentMargin/OfferRow/OfferDetails/OfferDescription")
 	if root.gui_get_focus_owner() != first or first.focus_mode == Control.FOCUS_NONE or \
-		first.icon == null or not first.text.contains("Lightning Conductor") or \
+		offer_icon.texture == null or offer_icon.texture.resource_path != options[0]["icon"] or \
+		offer_icon.texture_filter != CanvasItem.TEXTURE_FILTER_NEAREST or offer_icon.custom_minimum_size != Vector2(32, 32) or \
+		offer_title.text != "Lightning Conductor" or offer_title.get_theme_font_size("font_size") <= offer_description.get_theme_font_size("font_size") or \
+		offer_description.text != "Fires a bolt at the nearest enemy." or \
+		offer_description.get_theme_color("font_color").to_html(false) != "a6aec4" or \
+		first.get_theme_color("font_color").a != 0.0 or offer_description.mouse_filter != Control.MOUSE_FILTER_IGNORE or \
 		not first.text.contains("nearest enemy"):
-		_fail("A chest offer should expose icon, name, description and visible initial focus")
+		_fail("A chest offer should style its icon, name and description separately and keep the full accessible text")
 		return
 	var selected := [""]
 	var selection_count := [0]

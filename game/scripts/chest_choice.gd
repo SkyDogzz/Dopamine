@@ -45,16 +45,67 @@ func present(options: Array, required_count: int = 3, heading: String = "CHEST â
 		var option: Dictionary = options[index]
 		var button := Button.new()
 		button.name = "Choice%d" % index
+		# Keep the complete offer on the button while rendering its title and description separately.
 		button.text = "%s\n%s" % [str(option["title"]), str(option["description"])]
-		button.autowrap_mode = TextServer.AUTOWRAP_WORD
-		button.alignment = HORIZONTAL_ALIGNMENT_LEFT
+		button.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		button.tooltip_text = button.text
+		for state in ["font_color", "font_hover_color", "font_pressed_color", "font_focus_color", "font_disabled_color"]:
+			button.add_theme_color_override(state, Color(1.0, 1.0, 1.0, 0.0))
 		button.add_theme_font_size_override("font_size", 8)
 		button.custom_minimum_size.y = 51.0
 		button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		button.focus_mode = Control.FOCUS_ALL
+		button.icon = null
+		var content_margin := MarginContainer.new()
+		content_margin.name = "ContentMargin"
+		content_margin.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+		content_margin.add_theme_constant_override("margin_left", 7)
+		content_margin.add_theme_constant_override("margin_top", 4)
+		content_margin.add_theme_constant_override("margin_right", 7)
+		content_margin.add_theme_constant_override("margin_bottom", 4)
+		content_margin.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		button.add_child(content_margin)
+		var offer_row := HBoxContainer.new()
+		offer_row.name = "OfferRow"
+		offer_row.add_theme_constant_override("separation", 6)
+		offer_row.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		content_margin.add_child(offer_row)
+		var icon := TextureRect.new()
+		icon.name = "OfferIcon"
+		icon.custom_minimum_size = Vector2(32, 32)
+		icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		icon.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+		icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		var icon_path := str(option.get("icon", ""))
-		if not icon_path.is_empty():
-			button.icon = load(icon_path)
+		if not icon_path.is_empty() and ResourceLoader.exists(icon_path):
+			icon.texture = load(icon_path)
+		else:
+			icon.visible = false
+		offer_row.add_child(icon)
+		var offer_details := VBoxContainer.new()
+		offer_details.name = "OfferDetails"
+		offer_details.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		offer_details.alignment = BoxContainer.ALIGNMENT_CENTER
+		offer_details.add_theme_constant_override("separation", 2)
+		offer_details.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		offer_row.add_child(offer_details)
+		var offer_title := Label.new()
+		offer_title.name = "OfferTitle"
+		offer_title.text = str(option["title"])
+		offer_title.add_theme_color_override("font_color", Color("#F6F7FF"))
+		offer_title.add_theme_font_size_override("font_size", 9)
+		offer_title.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		offer_title.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		offer_details.add_child(offer_title)
+		var offer_description := Label.new()
+		offer_description.name = "OfferDescription"
+		offer_description.text = str(option["description"])
+		offer_description.add_theme_color_override("font_color", Color("#A6AEC4"))
+		offer_description.add_theme_font_size_override("font_size", 8)
+		offer_description.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		offer_description.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		offer_details.add_child(offer_description)
 		button.pressed.connect(_choose.bind(str(option["id"])))
 		_options.add_child(button)
 	visible = true
