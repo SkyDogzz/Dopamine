@@ -12,6 +12,10 @@
 
 - [x] `survival_idle_combat_smoke.gd` vérifie 20 secondes simulées de la première vague en Normal, joueur immobile, arme de départ active et rayon XP/coffre à zéro : 23 ennemis éliminés, 83,3/100 PV restants, aucun XP ni choix collecté. Le défaut historique « aucun dégât jusqu’aux vagues 8–9 » ne se reproduit pas sur ce parcours ciblé; ce n’est pas une validation d’équilibrage complet.
 
+## Ciblage du Minigun — 2026-10-16
+
+- [x] `survival_weapon_catalog_smoke.gd` vérifie le contrat catalogue **[PROPOSÉ]** : acquisition de la cible vivante la plus proche plutôt que d’une cible plus menaçante, conservation de la cible verrouillée quand une autre s’approche, puis reciblage après mort ou sortie de portée. Le changement remet à zéro la montée de cadence de Redline.
+
 ## Correction du viewport UI — 2026-10-16
 
 - [x] Les interfaces conservent leur viewport logique 1280×800 et la fenêtre initiale 1280×800. Le viewport cible 640×360 de l’Art Bible attend l’adaptation responsive de chaque écran.

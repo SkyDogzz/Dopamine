@@ -1880,7 +1880,7 @@ func _fire_minigun(active_time: float, paused: bool) -> void:
 		return
 	var target := _enemy_by_id_in_range(_minigun_target_id, minigun_range)
 	if target.is_empty():
-		target = _highest_threat_enemy(minigun_range)
+		target = _nearest_enemy(minigun_range)
 	if target.is_empty():
 		_minigun_target_id = Vector2i(-1, -1)
 		_redline_fire_time = 0.0
