@@ -22,7 +22,8 @@
 
 - [x] Décision utilisateur **[VALIDÉE]** : après deux attaques normales télégraphiées, enchaîner une attaque télégraphiée existante en Chaos uniquement; Easy à Nightmare gardent leur cadence.
 - [x] `survival_boss_attack_smoke.gd` vérifie la cadence des cinq difficultés, les patterns distincts des deux boss et le gel du télégraphe en pause.
-- [ ] Le chemin d'invocation réutilise le plafond global existant, mais son plafond sous cadence Chaos accélérée n'est pas encore asserté par un test dédié. Dégâts/multiplicateurs et ressenti nécessitent aussi un parcours Chaos représentatif.
+- [x] L'intégration du Dopamine Core remplit deux places avec des adds de fixture, exécute le follow-up spirale puis vérifie que l'invocation reste plafonnée à trois.
+- [ ] Dégâts/multiplicateurs et ressenti nécessitent aussi un parcours Chaos représentatif.
 
 ## P7A.4 — Cycle Armorless intégré — 2026-10-16
 

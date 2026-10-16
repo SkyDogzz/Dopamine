@@ -403,7 +403,18 @@ func _verify_chaos_attack_integration(session: Node2D, boss_type: String) -> boo
 	var stage_before_pause := str(attack["stage"])
 	var pattern_before_pause := str(attack["pattern"])
 	update_boss.call(float(attack["fire_at"]) + 1.0, true)
-	return str(attack["stage"]) == stage_before_pause and str(attack["pattern"]) == pattern_before_pause
+	if str(attack["stage"]) != stage_before_pause or str(attack["pattern"]) != pattern_before_pause:
+		return false
+	if boss_type == "final_boss":
+		for summon_index in range(2):
+			session._entities.append({"id": {"index": 3000 + summon_index, "generation": 1},
+				"components": {"EnemyType": "summoned"}})
+		update_boss.call(float(attack["fire_at"]), false)
+		if str(attack["stage"]) != "spiral" or session._pending_summon_sequences.size() != 1:
+			return false
+		session._spawn_boss_summon(Vector2.ZERO)
+		return session._pending_summon_sequences.size() == 1
+	return true
 
 func _find_entity(session: Node2D, enemy_type: String) -> Dictionary:
 	for entity in session.simulation.snapshot()["entities"]:
