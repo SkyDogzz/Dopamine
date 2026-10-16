@@ -23,7 +23,7 @@ L’audit initial était statique. Les tranches Minigun, Toxic Cloud, Sawblades 
 | P2 Simulation/combat | **Fondation présente, couverture partielle** | Diversité des IA, règles complètes d’ennemis/boss, instrumentation et performance iGPU. |
 | P3 Prototype de combat | **Dix paires et dix évolutions de prototype présentes** | Contrats génériques, retours visuels par niveau, ciblage fidèle, mesures DPS détaillées. |
 | P4 Vertical slice Survival | **Boucle de run prototype présente** | Boss réels, difficulté sélectionnable, run équilibrée et vérifiée sans harness. |
-| P5 Contenu v1.6 | **Non livré** | Les dix paires ont un prototype ; ciblage/feedback par niveau, réactions, contenu ennemi/boss et validations de run restent incomplets. Le Dopamine Core a un sprite dédié, mais son combat et la sortie P5 ne sont pas validés de bout en bout. |
+| P5 Contenu v1.6 | **Prototypes de contenu largement intégrés, jalon non livré** | Les dix paires, les évolutions, le ciblage documenté, les niveaux/feedback et les prototypes ennemis/boss sont présents. Les réactions restent à arbitrer; le balancing et la victoire sans harness en P5.V3 restent à valider. |
 | P6 Progression permanente | **Prototype anticipé seulement** | Catalogue complet, règles et contenus validés, récompenses calibrées et effets uniques actifs. |
 | P7 Modes Endless | **À faire** | Armorless complet ; arbitrages nécessaires pour Endless standard. |
 | P8 Sandbox Lab joueur | **À faire au-delà des outils développeur P1** | Builds libres, presets/import/export, copie de save, snapshots complets et règles de sécurité. |
@@ -31,11 +31,11 @@ L’audit initial était statique. Les tranches Minigun, Toxic Cloud, Sawblades 
 
 ### Lecture rapide : livré, prototype ou survolé
 
-**Bien intégré comme fondation :** simulation native découplée de Godot, worker, commandes/snapshots, limites de charge, outils Sandbox, loop de run Survival, pause/chest/XP, dix armes et effets de combat de base, sauvegarde versionnée, premiers écrans d’équipement.
+**Bien intégré comme fondation :** simulation native découplée de Godot, worker, commandes/snapshots, limites de charge, outils Sandbox, loop de run Survival, pause/chest/XP, dix armes et leurs paires de reliques/évolutions en prototypes de combat, sauvegarde versionnée, premiers écrans d’équipement.
 
-**Intégré en prototype, à ne pas confondre avec une feature finie :** boss (patterns en phases, mais vérification du combat complet et équilibrage manquants), XP auto-bonus, loot/probabilités, dix évolutions, Void Orb à attraction/percée, Frost Nova avec Chill/Absolute Zero, Sawblades à ricochets/Razorstorm, Meteor Staff en zone/Starfall fragmenté, Toxic Cloud en champ persistant, équipement et enhancement, deux nodes de skill tree, famille Exterminator, effets uniques, récompenses de run. Les paramètres restent souvent **[PROPOSÉS]**.
+**Intégré en prototype, à ne pas confondre avec une feature finie :** boss (patterns en phases, combat et équilibrage complets à valider), XP auto-bonus, loot/probabilités, dix évolutions, Void Orb à attraction/percée, Frost Nova avec Chill/Absolute Zero, Sawblades à ricochets/Razorstorm, Meteor Staff en zone/Starfall fragmenté, Toxic Cloud en champ persistant, équipement et enhancement, deux nodes de skill tree, famille Exterminator, effets uniques, récompenses de run et mode Armorless en cours. Les paramètres restent souvent **[PROPOSÉS]**.
 
-**Survolé ou absent par rapport au GDD :** 3 armes et 3 reliques associées restantes ; Minigun, Toxic Cloud, Sawblades et Meteor Staff n’ont pas encore de feedback visuel par niveau ; Magnet Heart n'agit que sur XP (autres pickups et impulsion de niveau 5 absents) ; animation/identité spécifique à chaque niveau ; la mécanique orbitale Crimson Daggers/Bloodstorm est maintenant prototypée, avec équilibrage et feedback visuel encore à revoir ; 8–12 familles ennemies et leurs rôles ; élites à affixes ; charges mobiles du Pulse Warden ; loot de boss et run complète vérifiés sans harness ; difficultés ; réactions élémentaires nommées ; tree ~120 nodes ; achievements ~120 familles ; modes Endless ; Sandbox Lab joueur ; performance iGPU et build Windows.
+**Survolé ou absent par rapport au GDD :** autres pickups attirables par Magnet Heart (seules les orbes XP existent actuellement) ; validation et équilibrage du combat complet des armes et boss ; victoire P5.V3 en run réelle sans assistance ; arbitrage des réactions élémentaires proposées, avec Overcharge **[OUVERT]** ; tree interconnecté d’environ 120 nodes ; environ 120 familles d’achievements ; Armorless complet et Endless standard après arbitrages ; Sandbox Lab joueur complet ; performance sur iGPU et build Windows.
 
 ## Dépendances principales
 
