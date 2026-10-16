@@ -414,7 +414,7 @@ Travail requis :
   - [x] Vérifier relique, niveaux et évolution par paire dans `survival_weapon_catalog_smoke.gd`.
   - [x] Vérifier Magnet Heart avec XP et chest dans `survival_chest_smoke.gd`.
 - [x] **P5.V2 — Validation des ennemis**
-  - [x] Vérifier le roster des huit familles et les six affixes élite dans les smokes Survival et `simulation_core_test`.
+  - [x] Vérifier le roster des huit familles et faire apparaître chacun des six affixes élite dans le scénario Sandbox `enemy_profiles_smoke.json`; `simulation_core_test` couvre leurs effets natifs.
   - [x] Vérifier les attaques esquivables, réactions bornées et plafonds d’invocation dans `survival_exploder_smoke.gd`, `survival_boss_attack_smoke.gd` et `simulation_core_test`.
   - [x] Parcourir sous smoke les phases du Pulse Warden et du Dopamine Core.
   - [x] Exécuter `survival_elite_smoke.gd` sous Godot 4.7.2 : l’affixe Split-on-Death génère deux adds sous le plafond global.
@@ -423,7 +423,7 @@ Travail requis :
   - [ ] Vérifier mort, victoire, coffre et récompense/idempotence.
 - [ ] **P5.V4 — Revue et checkpoint**
   - [x] Consigner les validations et les limites sans changer les statuts de décision du GDD.
-  - [x] Relancer la suite CTest complète : 50/50 passent le 2026-10-16. Le benchmark natif sur 500 ennemis/2 000 projectiles mesure la rafale d’impacts avant/après optimisation; résultats et limites consignés dans `docs/qa/TESTS.md`.
+  - [x] Relancer la suite CTest complète : 51/51 passent le 2026-10-16. Le benchmark natif sur 500 ennemis/2 000 projectiles mesure la rafale d’impacts avant/après optimisation; résultats et limites consignés dans `docs/qa/TESTS.md`.
   - [x] Corriger le travail de zone devenu inutile après saturation du budget d’explosions et committer ce checkpoint documenté.
   - [ ] Faire le parcours sans assistance de P5.V3 et réaliser les scénarios d’armes dans le Sandbox avant de clore le jalon.
 

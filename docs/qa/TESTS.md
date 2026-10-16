@@ -5,7 +5,7 @@
 - [x] `survival_targeting_smoke.gd` vérifie nearest, farthest, highest threat, highest HP, lowest HP, la priorité PV max de Prism dans une grappe dense, les cibles de grappes, le centroïde Meteor, la réduction commune des portées (−71 %, plafond visible de 180 unités), le plafond après bonus de niveau/zone et l’exclusion des ennemis morts, des projectiles et des orbes XP. Ces règles restent **[PROPOSÉES]**.
 - [x] `sandbox_ui_smoke.gd` vérifie le sélecteur à neuf politiques, l’ID ou centroïde affiché, les portées et rayons de grappe par défaut, l’effet du choix de politique et de portée, l’effacement après kill-all et la préservation du fixture de sauvegarde normale. Capture Xvfb relue à 640×360; cible, marqueur et réglages restent dans leurs cadres.
 - [x] `survival_weapon_catalog_smoke.gd` vérifie le regroupement Lightning/Sawblades/Meteor/Prism, les choix par menace/PV/distance, le ciblage faible PV des Crimson Daggers, le focus PV max de Prism, le maintien/reciblage du Minigun, et les bonus Inferno des niveaux 2–5.
-- [x] La suite complète est à 50/50. `survival_run_result_smoke` attend maintenant que le worker ait acquitté la pause après `run_over`; le test passe dix exécutions consécutives puis dans la suite complète. Les smokes profil, unlock et session de difficulté sont désormais enregistrés dans CTest.
+- [x] La suite complète est à 51/51. `survival_run_result_smoke` attend maintenant que le worker ait acquitté la pause après `run_over`; le test passe dix exécutions consécutives puis dans la suite complète. Les smokes profil, unlock et session de difficulté sont désormais enregistrés dans CTest.
 - [x] Les dix armes ont des règles de ciblage distinctes couvertes par les fixtures de comportement et les profils Sandbox.
 - [ ] Leur équilibrage comparatif reste **[OUVERT]**; les sélecteurs numériques sont **[PROPOSÉS]** et la couverture ne prouve pas leur qualité finale.
 
@@ -13,7 +13,7 @@
 
 ## Revalidation intégrée P5 — 2026-10-16
 
-- [x] La suite CTest complète passe à 50/50 sous Godot 4.7.2 et Linux C++23 après intégration des smokes de difficulté et stabilisation du résultat de run; temps CTest total 40,85 s, qui ne constitue pas une mesure de performance en jeu.
+- [x] La suite CTest complète passe à 51/51 sous Godot 4.7.2 et Linux C++23 après intégration des smokes de difficulté, de validation du runner et stabilisation du résultat de run; temps CTest total 40,94 s, qui ne constitue pas une mesure de performance en jeu.
 - [x] Au contrôle précédent, Godot 4.7.2 officiel exécuté depuis `/tmp`; la suite CTest passait avec 45/45 tests. Depuis, deux tests ont été ajoutés; résultat courant ci-dessus.
 - [x] `survival_inventory_smoke.gd` utilise désormais deux équipements de fixture valides et déterministes au lieu de dépendre de récompenses aléatoires; équipement, enhancement, effet unique, compétences et démantèlement passent dans la suite intégrée.
 - [x] `survival_elite_smoke.gd` vérifie le Split-on-Death plafonné sous Godot 4.7.2; les smokes voisins Summoner, boss, vagues et durée passent également.
@@ -23,6 +23,11 @@
 - [x] `build/simulation_benchmark` (Debug, GCC 14.2, Linux x86-64, AMD EPYC-Milan) exécute deux fois le même workload de 500 ennemis et 2 000 projectiles sur 300 frames à 60 Hz. Sans impacts : moyenne 1,27–1,30 ms avant et 1,08–1,13 ms après.
 - [x] La rafale dense `wildfire_impact_burst` mesurait 141,1–143,1 ms/frame en moyenne et 154,4–158,0 ms p95 avant; après avoir évité les requêtes de zone quand le budget de cibles était épuisé, elle mesure 72,6–74,4 ms moyenne et 77,6–82,4 ms p95 (environ 48 % de baisse sur les médianes des deux exécutions).
 - [x] `simulation_core` et `simulation_worker` passent après la modification, puis toute la suite CTest passe 47/47. Le stress test extrême reste au-dessus de 16,7 ms; cette charge concentre toutes les cibles et projectiles au même point et ne constitue pas un profil représentatif de Survival. Aucun budget de performance n’est actuellement défini dans les documents.
+
+## Scénario Sandbox des affixes élite — 2026-10-16
+
+- [x] `enemy_profiles_smoke.json` fait apparaître de façon déterministe Hasted, Armored, Regenerating, Volatile, Shielded et Split-on-Death dans le Sandbox; les attentes vérifient leur identité, leur vitesse et les attributs d’affixe publiés.
+- [x] `scenario_runner.gd` valide `affix` uniquement sur un profil elite et autorise les six IDs supportés; `scenario_runner_validation_smoke.gd` couvre les cas acceptés/refusés. Le snapshot valide les attributs; le scénario passe avec Godot 4.7.2 sans accéder à la sauvegarde normale.
 
 ## Pression de combat sans amélioration — 2026-10-16
 

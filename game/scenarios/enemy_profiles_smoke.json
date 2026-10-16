@@ -2,10 +2,15 @@
   "schema_version": 1,
   "scenario_id": "enemy_profiles_smoke",
   "expected": {
-    "entity_count": 10,
-    "entity_health": [20.0, 24.0, 80.0, 25.0, 35.0, 50.0, 30.0, 40.0, 42.0, 12.0],
-    "entity_speeds": [75.0, 125.0, 45.0, 65.0, 55.0, 100.0, 60.0, 45.0, 42.0, 90.0],
-    "enemy_move_speeds": [75.0, 125.0, 45.0, 65.0, 55.0, 100.0, 60.0, 45.0, 42.0, 90.0]
+    "entity_count": 15,
+    "entity_health": [20.0, 24.0, 80.0, 25.0, 35.0, 50.0, 30.0, 40.0, 42.0, 12.0, 50.0, 50.0, 50.0, 50.0, 50.0],
+    "entity_speeds": [75.0, 125.0, 45.0, 65.0, 55.0, 100.0, 60.0, 45.0, 42.0, 90.0, 75.0, 75.0, 75.0, 75.0, 75.0],
+    "enemy_move_speeds": [75.0, 125.0, 45.0, 65.0, 55.0, 100.0, 60.0, 45.0, 42.0, 90.0, 75.0, 75.0, 75.0, 75.0, 75.0],
+    "enemy_damage_taken_multipliers": [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 0.65, 1.0, 1.0, 0.5, 1.0],
+    "enemy_health_regen_per_second": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.5, 0.0, 0.0, 0.0],
+    "enemy_death_explosion_radii": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 82.0, 0.0, 0.0],
+    "enemy_death_explosion_damages": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 18.0, 0.0, 0.0],
+    "entity_affixes": ["", "", "", "", "", "Hasted", "", "", "", "", "Armored", "Regenerating", "Volatile", "Shielded", "Split-on-Death"]
   },
   "commands": [
     {"type": "spawn_enemy", "enemy_type": "chaser"},
@@ -13,10 +18,15 @@
     {"type": "spawn_enemy", "enemy_type": "tank"},
     {"type": "spawn_enemy", "enemy_type": "shooter"},
     {"type": "spawn_enemy", "enemy_type": "buffer"},
-    {"type": "spawn_enemy", "enemy_type": "elite"},
+    {"type": "spawn_enemy", "enemy_type": "elite", "affix": "Hasted"},
     {"type": "spawn_enemy", "enemy_type": "exploder"},
     {"type": "spawn_enemy", "enemy_type": "shielder"},
     {"type": "spawn_enemy", "enemy_type": "summoner"},
-    {"type": "spawn_enemy", "enemy_type": "summoned"}
+    {"type": "spawn_enemy", "enemy_type": "summoned"},
+    {"type": "spawn_enemy", "enemy_type": "elite", "affix": "Armored"},
+    {"type": "spawn_enemy", "enemy_type": "elite", "affix": "Regenerating"},
+    {"type": "spawn_enemy", "enemy_type": "elite", "affix": "Volatile"},
+    {"type": "spawn_enemy", "enemy_type": "elite", "affix": "Shielded"},
+    {"type": "spawn_enemy", "enemy_type": "elite", "affix": "Split-on-Death"}
   ]
 }

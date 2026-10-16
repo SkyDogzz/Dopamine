@@ -78,7 +78,7 @@ func _parse_options() -> Dictionary:
 			options["output"] = argument.trim_prefix("--output=")
 	return options
 
-func _validate_scenario(scenario: Variant) -> String:
+static func _validate_scenario(scenario: Variant) -> String:
 	if typeof(scenario) != TYPE_DICTIONARY:
 		return "Scenario root must be a JSON object"
 	if scenario.get("schema_version") != 1:
@@ -112,6 +112,9 @@ func _validate_scenario(scenario: Variant) -> String:
 			"spawn_enemy":
 				if typeof(command.get("enemy_type")) != TYPE_STRING or not ["chaser", "sprinter", "tank", "shooter", "buffer", "elite", "exploder", "shielder", "summoner", "summoned"].has(command["enemy_type"]):
 					return "Command %d enemy_type must name a supported profile" % index
+				if command.has("affix") and (typeof(command["affix"]) != TYPE_STRING or \
+					command["enemy_type"] != "elite" or not ["Hasted", "Armored", "Regenerating", "Volatile", "Shielded", "Split-on-Death"].has(command["affix"])):
+					return "Command %d affix must name a supported elite affix and requires enemy_type elite" % index
 				if not _valid_integer(command.get("count", 1)) or int(command.get("count", 1)) < 1 or int(command.get("count", 1)) > 500:
 					return "Command %d count must be between 1 and 500" % index
 				if not _valid_vector(command.get("position", [0, 0])) or not _valid_vector(command.get("velocity", [0, 0])):
@@ -203,7 +206,14 @@ func _check_expected(expected: Dictionary, state: Dictionary, simulation: Object
 			var transform: Dictionary = state["entities"][index]["components"]["Transform2D"]
 			if not is_equal_approx(float(position[0]), float(transform["x"])) or not is_equal_approx(float(position[1]), float(transform["y"])):
 				return "Scenario entity position %d did not match expected value" % index
-	for expected_key in ["entity_health", "entity_health_current", "entity_speeds", "enemy_move_speeds"]:
+	var enemy_component_expectations := {
+		"enemy_move_speeds": "MoveSpeed",
+		"enemy_damage_taken_multipliers": "DamageTakenMultiplier",
+		"enemy_health_regen_per_second": "HealthRegenPerSecond",
+		"enemy_death_explosion_radii": "DeathExplosionRadius",
+		"enemy_death_explosion_damages": "DeathExplosionDamage",
+	}
+	for expected_key in ["entity_health", "entity_health_current", "entity_speeds"] + enemy_component_expectations.keys():
 		if expected.has(expected_key):
 			var values: Variant = expected[expected_key]
 			if typeof(values) != TYPE_ARRAY or values.size() != state["entities"].size():
@@ -217,13 +227,21 @@ func _check_expected(expected: Dictionary, state: Dictionary, simulation: Object
 					actual = float(entity["components"]["Health"]["maximum"])
 				elif expected_key == "entity_health_current":
 					actual = float(entity["components"]["Health"]["current"])
-				elif expected_key == "enemy_move_speeds":
-					actual = float(entity["components"]["MoveSpeed"])
+				elif enemy_component_expectations.has(expected_key):
+					actual = float(entity["components"][enemy_component_expectations[expected_key]])
 				else:
 					var velocity: Dictionary = entity["components"]["Velocity2D"]
 					actual = Vector2(float(velocity["x"]), float(velocity["y"])).length()
 				if not is_equal_approx(float(values[index]), actual):
 					return "Scenario %s[%d] did not match expected value" % [expected_key, index]
+	if expected.has("entity_affixes"):
+		var affixes: Variant = expected["entity_affixes"]
+		if typeof(affixes) != TYPE_ARRAY or affixes.size() != state["entities"].size():
+			return "Scenario entity_affixes must match the snapshot entity count"
+		for index in range(affixes.size()):
+			if typeof(affixes[index]) != TYPE_STRING or \
+				str(state["entities"][index]["components"].get("Affix", "")) != affixes[index]:
+				return "Scenario entity_affixes[%d] did not match expected value" % index
 	if expected.has("collision_count"):
 		if not _valid_integer(expected["collision_count"]) or int(expected["collision_count"]) != state["metrics"]["collision_count"]:
 			return "Scenario collision_count did not match expected value"
@@ -259,16 +277,16 @@ func _check_expected(expected: Dictionary, state: Dictionary, simulation: Object
 				return "Scenario kill_heal_preview did not match expected value"
 	return ""
 
-func _valid_number(value: Variant) -> bool:
+static func _valid_number(value: Variant) -> bool:
 	return (typeof(value) == TYPE_INT or typeof(value) == TYPE_FLOAT) and is_finite(float(value))
 
-func _valid_integer(value: Variant) -> bool:
+static func _valid_integer(value: Variant) -> bool:
 	return _valid_number(value) and float(value) == floor(float(value))
 
-func _valid_vector(value: Variant) -> bool:
+static func _valid_vector(value: Variant) -> bool:
 	return typeof(value) == TYPE_ARRAY and value.size() == 2 and _valid_number(value[0]) and _valid_number(value[1])
 
-func _valid_id(value: Variant) -> bool:
+static func _valid_id(value: Variant) -> bool:
 	return _valid_integer(value) and int(value) >= 0 and int(value) <= 4294967295
 
 func _submit(simulation: Object, command: Dictionary) -> int:
@@ -278,7 +296,7 @@ func _submit(simulation: Object, command: Dictionary) -> int:
 			var velocity: Array = command.get("velocity", [0, 0])
 			return simulation.spawn_enemy(command["enemy_type"], int(command.get("count", 1)),
 					Vector2(float(position[0]), float(position[1])), Vector2(float(velocity[0]), float(velocity[1])),
-					float(command.get("hp_multiplier", 1.0)))
+					float(command.get("hp_multiplier", 1.0)), str(command.get("affix", "")))
 		"spawn":
 			var position: Array = command.get("position", [0, 0])
 			var velocity: Array = command.get("velocity", [0, 0])
