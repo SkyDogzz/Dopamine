@@ -149,7 +149,8 @@ EntityId SimulationCore::spawn_projectile(std::string type, float x, float y, fl
 		double status_interval_seconds, double status_duration_seconds, float explosion_radius,
 		float explosion_damage_multiplier, uint32_t ricochets, float attraction_radius,
 		float attraction_speed, bool pierces_targets, double chill_duration_seconds,
-		float chill_speed_multiplier, float chill_damage_multiplier, float orbit_angular_speed) {
+		float chill_speed_multiplier, float chill_damage_multiplier, float orbit_angular_speed,
+		uint64_t reaction_chain_id, uint32_t reaction_budget) {
 	if (!std::isfinite(damage) || damage <= 0.0F || !std::isfinite(radius) || radius < 0.0F ||
 			!std::isfinite(lifetime_seconds) || lifetime_seconds <= 0.0 || type.empty() ||
 			ricochets > 64 ||
@@ -163,7 +164,7 @@ EntityId SimulationCore::spawn_projectile(std::string type, float x, float y, fl
 			((chill_duration_seconds > 0.0) != (chill_speed_multiplier < 1.0F)) ||
 			!std::isfinite(chill_damage_multiplier) || chill_damage_multiplier < 1.0F ||
 			!std::isfinite(orbit_angular_speed) || orbit_angular_speed < 0.0F ||
-			!std::isfinite(explosion_damage_multiplier) || explosion_damage_multiplier < 0.0F ||
+			!std::isfinite(explosion_damage_multiplier) || explosion_damage_multiplier < 0.0F || reaction_budget > 64 ||
 			!std::isfinite(damage * explosion_damage_multiplier)) {
 		throw std::invalid_argument("invalid projectile");
 	}
@@ -201,6 +202,8 @@ EntityId SimulationCore::spawn_projectile(std::string type, float x, float y, fl
 	projectile.chill_duration_seconds = chill_duration_seconds;
 	projectile.chill_speed_multiplier = chill_speed_multiplier;
 	projectile.chill_damage_multiplier = chill_damage_multiplier;
+	projectile.reaction_chain_id = reaction_chain_id;
+	projectile.reaction_budget = reaction_budget;
 	if (type.starts_with("lightning_arc:") || type == "infinite_circuit_branch") {
 		float nearest_distance_squared = std::numeric_limits<float>::infinity();
 		for (uint32_t index = 0; index < slots_.size(); ++index) {
@@ -522,6 +525,7 @@ void SimulationCore::restore_state(const SimulationCoreState &state) {
 					!std::isfinite(projectile.orbit_radius) || projectile.orbit_radius < 0.0F ||
 					!std::isfinite(projectile.orbit_angular_speed) || projectile.orbit_angular_speed < 0.0F ||
 					!std::isfinite(projectile.orbit_angle) ||
+					projectile.reaction_budget > 64 ||
 					!std::isfinite(projectile.area_time_to_tick) ||
 					!is_known_status_type(projectile.status_type) ||
 					(projectile.persistent_area && ((entity.type.id != "toxic_cloud" && entity.type.id != "pandemic_cloud") ||
@@ -1331,12 +1335,21 @@ void SimulationCore::apply_damage(EntityId source, EntityId target, float amount
 	target_health.current = std::max(0.0F, target_health.current - amount);
 	const std::string source_type = source.index < slots_.size() && slots_[source.index].active &&
 			slots_[source.index].generation == source.generation ? enemy_types_[source.index].id : std::string{};
+	uint64_t reaction_chain_id = 0;
+	uint32_t reaction_budget = 1;
+	if (source.index < slots_.size() && slots_[source.index].active &&
+			slots_[source.index].generation == source.generation && projectile_flags_[source.index]) {
+		reaction_chain_id = projectiles_[source.index].reaction_chain_id;
+		reaction_budget = projectiles_[source.index].reaction_budget;
+	}
 	events.push_back({next_event_sequence_++, CombatEventType::Damage, source, target,
 			amount, target_health.current, enemy_types_[target.index].threat_level,
 			transforms_[target.index].x, transforms_[target.index].y, enemy_types_[target.index].id});
 	events.back().source_type = source_type;
 	events.back().target_affix = target_type.affix;
 	events.back().target_was_chilled = target_was_chilled;
+	events.back().reaction_chain_id = reaction_chain_id;
+	events.back().reaction_budget = reaction_budget;
 	for (const DamageOverTime &status : damage_over_time_[target.index]) {
 		events.back().target_had_burn = events.back().target_had_burn || status.status_type == "burn";
 		events.back().target_had_poison = events.back().target_had_poison || status.status_type == "poison";
@@ -1348,6 +1361,8 @@ void SimulationCore::apply_damage(EntityId source, EntityId target, float amount
 		events.back().source_type = source_type;
 		events.back().target_affix = target_type.affix;
 		events.back().target_was_chilled = target_was_chilled;
+		events.back().reaction_chain_id = reaction_chain_id;
+		events.back().reaction_budget = reaction_budget;
 		if (allow_volatile_explosion && target_type.death_explosion_radius > 0.0F &&
 				volatile_targets_remaining > 0) {
 			const Transform2D center = transforms_[target.index];

@@ -353,8 +353,8 @@ Travail requis :
   - [ ] Valider et équilibrer Thermal Shock sur des runs; son implémentation ne change pas son statut **[PROPOSÉ]**.
   - [x] Toxic Ignition : explosion au coup direct appliquant le second statut sur une cible affectée par l’autre **[VALIDÉ]**; 50 % du coup déclencheur, rayon 60 px, statuts conservés et cooldown local d’une seconde **[VALIDÉS, 2026-10-16]**. L’explosion n’applique aucun statut et ne se chaîne pas récursivement. Vérifier sa calibration en run réelle. Arbitrer Shatter, Electroplague, Gravity Collapse et Hemorrhage avant leur implémentation.
   - [x] Garder Overcharge bloquée par son statut **[OUVERT]**.
-- [ ] **P5.2.4 — Causalité et dégâts**
-  - [ ] Ajouter un ID de chaîne et un budget aux réactions seulement après validation du contrat.
+- [x] **P5.2.4 — Causalité et dégâts**
+  - [x] Toxic Ignition utilise le numéro séquentiel de l’impact déclencheur comme ID de chaîne et consomme son budget unique; le projectile de réaction et ses événements portent le même ID avec un budget restant de zéro. Un budget épuisé refuse tout nouveau déclenchement. Ces champs sont conservés par les snapshots/restaurations. Les réactions proposées ne reçoivent pas de contrat implicite : elles devront suivre cette règle après validation.
   - [x] Vérifier événements directs, DoT létal, lifesteal, mort et attribution XP sans double crédit; `survival_damage_causality_smoke.gd` compte une seule mort/orbe XP par cible directe et DoT, et `survival_lifesteal_smoke.gd` couvre le soin.
 
 ### P5.3 — Coffres et économie de run

@@ -127,6 +127,8 @@ struct ProjectileData {
 	float orbit_radius = 0.0F;
 	float orbit_angular_speed = 0.0F;
 	double orbit_angle = 0.0;
+	uint64_t reaction_chain_id = 0;
+	uint32_t reaction_budget = 1;
 };
 
 struct DamageOverTime {
@@ -172,6 +174,8 @@ struct CombatEvent {
 	bool target_was_chilled = false;
 	bool target_had_burn = false;
 	bool target_had_poison = false;
+	uint64_t reaction_chain_id = 0;
+	uint32_t reaction_budget = 1;
 };
 
 struct Entity {
@@ -214,7 +218,8 @@ public:
 			uint32_t ricochets = 0, float attraction_radius = 0.0F, float attraction_speed = 0.0F,
 			bool pierces_targets = false, double chill_duration_seconds = 0.0,
 			float chill_speed_multiplier = 1.0F, float chill_damage_multiplier = 1.0F,
-			float orbit_angular_speed = 0.0F);
+			float orbit_angular_speed = 0.0F, uint64_t reaction_chain_id = 0,
+			uint32_t reaction_budget = 1);
 	EntityId spawn_xp_orb(float x, float y, float xp_value);
 	void attract_xp_orbs(float target_x, float target_y, float radius, float acceleration,
 			float max_speed, double delta_seconds);

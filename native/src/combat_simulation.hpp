@@ -29,7 +29,8 @@ public:
 			int64_t ricochets = 0, float attraction_radius = 0.0F, float attraction_speed = 0.0F,
 			bool pierces_targets = false, double chill_duration_seconds = 0.0,
 			float chill_speed_multiplier = 1.0F, float chill_damage_multiplier = 1.0F,
-			float orbit_angular_speed = 0.0F);
+			float orbit_angular_speed = 0.0F, int64_t reaction_chain_id = 0,
+			int64_t reaction_budget = 1);
 	int64_t spawn_status_projectile(String projectile_type, Vector2 position, Vector2 velocity, float damage,
 			float radius, double lifetime_seconds, float status_damage_per_tick = 2.0F,
 			double status_interval_seconds = 0.5, double status_duration_seconds = 2.0,
@@ -37,7 +38,8 @@ public:
 			int64_t ricochets = 0, float attraction_radius = 0.0F, float attraction_speed = 0.0F,
 			bool pierces_targets = false, double chill_duration_seconds = 0.0,
 			float chill_speed_multiplier = 1.0F, float chill_damage_multiplier = 1.0F,
-			float orbit_angular_speed = 0.0F);
+			float orbit_angular_speed = 0.0F, int64_t reaction_chain_id = 0,
+			int64_t reaction_budget = 1);
 	int64_t spawn_xp_orb(Vector2 position, float xp_value);
 	int64_t attract_xp_orbs(Vector2 target, float radius, float acceleration, float max_speed,
 		double delta_seconds);

@@ -2330,7 +2330,7 @@ func _try_thermal_shock(event: Dictionary, entities: Array, active_time: float) 
 
 func _try_toxic_ignition(event: Dictionary, active_time: float) -> int:
 	if bool(event.get("is_damage_over_time", false)) or float(event.get("amount", 0.0)) <= 0.0 or \
-			float(event.get("remaining_health", 0.0)) <= 0.0:
+			float(event.get("remaining_health", 0.0)) <= 0.0 or int(event.get("reaction_budget", 1)) <= 0:
 		return 0
 	var source_type := str(event.get("source_type", ""))
 	var applies_burn := source_type in ["inferno_sprayer", "wildfire_sprayer"]
@@ -2347,10 +2347,17 @@ func _try_toxic_ignition(event: Dictionary, active_time: float) -> int:
 	var target_key := _entity_key(int(target_id.get("index", -1)), int(target_id.get("generation", -1)))
 	if active_time < float(_toxic_ignition_next_at.get(target_key, 0.0)):
 		return 0
+	var reaction_chain_id := int(event.get("reaction_chain_id", 0))
+	if reaction_chain_id <= 0:
+		reaction_chain_id = int(event.get("sequence", 0))
+	if reaction_chain_id <= 0:
+		return 0
 	var sequence: int = simulation.spawn_projectile("toxic_ignition",
 			Vector2(float(position.get("x", 0.0)), float(position.get("y", 0.0))), Vector2.ZERO,
 			float(event["amount"]) * TOXIC_IGNITION_DAMAGE_MULTIPLIER,
-			0.0, 0.15, 0.0, 0.0, 0.0, TOXIC_IGNITION_RADIUS, 1.0)
+			0.0, 0.15, 0.0, 0.0, 0.0, TOXIC_IGNITION_RADIUS, 1.0,
+			0, 0.0, 0.0, false, 0.0, 1.0, 1.0, 0.0, reaction_chain_id,
+			int(event.get("reaction_budget", 1)) - 1)
 	if sequence > 0:
 		_toxic_ignition_next_at[target_key] = active_time + TOXIC_IGNITION_TARGET_COOLDOWN_SECONDS
 	return sequence

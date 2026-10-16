@@ -1029,13 +1029,18 @@ func _toxic_ignition_combines_poison_and_burn_once() -> bool:
 	var distant_id: Dictionary = targets[2]["id"]
 	var transform: Dictionary = targets[0]["components"]["Transform2D"]
 	var burn_hit := {"target": target_id, "source_type": "inferno_sprayer", "target_had_poison": true,
-		"is_damage_over_time": false, "amount": 20.0, "remaining_health": 40.0,
+		"sequence": 91, "reaction_budget": 1, "is_damage_over_time": false,
+		"amount": 20.0, "remaining_health": 40.0,
 		"position": {"x": transform["x"], "y": transform["y"]}}
 	var sequence: int = session._try_toxic_ignition(burn_hit, 0.0)
 	var cooldown_sequence: int = session._try_toxic_ignition(burn_hit, 0.5)
 	var dot_hit := burn_hit.duplicate(true)
 	dot_hit["is_damage_over_time"] = true
 	var dot_sequence: int = session._try_toxic_ignition(dot_hit, 2.0)
+	var exhausted_chain_hit := burn_hit.duplicate(true)
+	exhausted_chain_hit["reaction_chain_id"] = 91
+	exhausted_chain_hit["reaction_budget"] = 0
+	var exhausted_chain_sequence: int = session._try_toxic_ignition(exhausted_chain_hit, 2.0)
 	var no_prior_status := burn_hit.duplicate(true)
 	no_prior_status["target_had_poison"] = false
 	var no_pair_sequence: int = session._try_toxic_ignition(no_prior_status, 2.0)
@@ -1052,7 +1057,7 @@ func _toxic_ignition_combines_poison_and_burn_once() -> bool:
 				nearby_ignition = true
 			if hit_id == distant_id:
 				distant_ignition = true
-	var valid := sequence > 0 and cooldown_sequence == 0 and dot_sequence == 0 and \
+	var valid := sequence > 0 and cooldown_sequence == 0 and dot_sequence == 0 and exhausted_chain_sequence == 0 and \
 		no_pair_sequence == 0 and nearby_ignition and not distant_ignition
 	session.queue_free()
 	return valid
@@ -1096,6 +1101,10 @@ func _toxic_ignition_runs_from_real_status_hits() -> bool:
 	var saw_neighbor_blast := false
 	var damaged_distant := false
 	var preserved_both_statuses := false
+	var trigger_event_sequence := 0
+	var reaction_chain_id := 0
+	var reaction_chain_matches_trigger := false
+	var reaction_budget_exhausted := false
 	var deadline := Time.get_ticks_msec() + 3000
 	while Time.get_ticks_msec() < deadline:
 		await process_frame
@@ -1111,19 +1120,27 @@ func _toxic_ignition_runs_from_real_status_hits() -> bool:
 					has_poison = has_poison or str(effect.get("status_type", "")) == "poison"
 				preserved_both_statuses = has_burn and has_poison
 		for event in state["events"]:
+			if event.get("type", "") == "damage" and event.get("source_type", "") == "inferno_sprayer" and \
+				event.get("target", {}) == source_id:
+				trigger_event_sequence = int(event["sequence"])
 			if event.get("type", "") != "damage" or event.get("source_type", "") != "toxic_ignition":
 				continue
 			var hit_id: Dictionary = event["target"]
 			if hit_id == neighbor_id and is_equal_approx(float(event["amount"]), 10.0):
 				saw_neighbor_blast = true
+				reaction_chain_id = int(event.get("reaction_chain_id", 0))
+				reaction_chain_matches_trigger = reaction_chain_id == trigger_event_sequence
+				reaction_budget_exhausted = int(event.get("reaction_budget", -1)) == 0
 			if hit_id == distant_id:
 				damaged_distant = true
 		if saw_neighbor_blast and preserved_both_statuses:
 			break
-	var valid := burn_sequence > 0 and saw_neighbor_blast and not damaged_distant and preserved_both_statuses
+	var valid := burn_sequence > 0 and saw_neighbor_blast and not damaged_distant and preserved_both_statuses and \
+		reaction_chain_matches_trigger and reaction_budget_exhausted
 	if not valid:
-		push_error("Toxic Ignition integration diagnostics: burn=%d neighbor=%s distant=%s statuses=%s source=%s" % [
-			burn_sequence, saw_neighbor_blast, damaged_distant, preserved_both_statuses, source_position])
+		push_error("Toxic Ignition integration diagnostics: burn=%d neighbor=%s distant=%s statuses=%s chain=%d/%d budget_exhausted=%s source=%s" % [
+			burn_sequence, saw_neighbor_blast, damaged_distant, preserved_both_statuses,
+			reaction_chain_id, trigger_event_sequence, reaction_budget_exhausted, source_position])
 	session.queue_free()
 	return valid
 

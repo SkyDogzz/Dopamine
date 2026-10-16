@@ -549,20 +549,29 @@ int main() {
 	const auto ignition_splash_target = toxic_ignition_statuses.spawn("chaser", 20.0F, 0.0F, 100.0F, 0.0F, 0.0F);
 	toxic_ignition_statuses.apply_damage_over_time(ignition_source_target, 2.0F, 0.5, 2.0, "burn");
 	toxic_ignition_statuses.apply_damage_over_time(ignition_source_target, 3.0F, 1.0, 2.0, "poison");
-	toxic_ignition_statuses.spawn_projectile("toxic_ignition", 0.0F, 0.0F, 10.0F, 0.0F, 1.0,
-			0.0F, 0.0F, 0.0F, 0.0, 0.0, 60.0F, 1.0F);
-	const auto ignition_events = toxic_ignition_statuses.advance(0.01);
-	const auto ignited_source = toxic_ignition_statuses.entity(ignition_source_target);
+	const auto ignition_projectile_id = toxic_ignition_statuses.spawn_projectile("toxic_ignition", 0.0F, 0.0F, 10.0F, 0.0F, 1.0,
+			0.0F, 0.0F, 0.0F, 0.0, 0.0, 60.0F, 1.0F, 0, 0.0F, 0.0F,
+			false, 0.0, 1.0F, 1.0F, 0.0F, 77, 0);
+	const auto ignition_snapshot = toxic_ignition_statuses.capture_state();
+	SimulationCore restored_ignition;
+	restored_ignition.restore_state(ignition_snapshot);
+	const auto restored_ignition_projectile = restored_ignition.entity(ignition_projectile_id);
+	require(restored_ignition_projectile && restored_ignition_projectile->projectile.reaction_chain_id == 77 &&
+			restored_ignition_projectile->projectile.reaction_budget == 0,
+			"projectile snapshots should preserve reaction chain ID and remaining budget");
+	const auto ignition_events = restored_ignition.advance(0.01);
+	const auto ignited_source = restored_ignition.entity(ignition_source_target);
 	require(ignited_source && ignited_source->damage_over_time_effects.size() == 2 &&
 			std::any_of(ignited_source->damage_over_time_effects.begin(), ignited_source->damage_over_time_effects.end(),
 					[](const auto &effect) { return effect.status_type == "burn"; }) &&
 			std::any_of(ignited_source->damage_over_time_effects.begin(), ignited_source->damage_over_time_effects.end(),
 					[](const auto &effect) { return effect.status_type == "poison"; }) &&
-			toxic_ignition_statuses.entity(ignition_splash_target)->health.current < 100.0F &&
+			restored_ignition.entity(ignition_splash_target)->health.current < 100.0F &&
 			std::any_of(ignition_events.begin(), ignition_events.end(), [](const auto &event) {
-				return event.type == dopamine::sim::CombatEventType::Damage && event.source_type == "toxic_ignition";
+				return event.type == dopamine::sim::CombatEventType::Damage && event.source_type == "toxic_ignition" &&
+					event.reaction_chain_id == 77 && event.reaction_budget == 0;
 			}),
-			"Toxic Ignition should damage its area while preserving Burn and Poison on the trigger target");
+			"Toxic Ignition should preserve its chain ID and exhausted budget while damaging its area");
 	SimulationCore dual_status_restore;
 	const auto restorable_dual_target = dual_status_restore.spawn("chaser", 0.0F, 0.0F, 30.0F, 0.0F, 0.0F);
 	dual_status_restore.apply_damage_over_time(restorable_dual_target, 2.0F, 0.5, 2.0, "burn");
