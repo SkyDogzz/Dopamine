@@ -10,6 +10,9 @@ func _run() -> void:
 	if not await _toxic_ignition_combines_poison_and_burn_once():
 		_fail("Toxic Ignition should trigger on a direct second status hit, obey its local cooldown, and ignore DoT ticks")
 		return
+	if not await _toxic_ignition_runs_from_real_status_hits():
+		_fail("Real Toxic Cloud poison and Inferno burn hits should trigger Toxic Ignition, preserve both statuses, and damage only targets in its radius")
+		return
 	if not await _weapon_progression_config_is_loaded_and_modifiable():
 		_fail("Survival should load validated weapon progression milestones from the JSON config")
 		return
@@ -1054,6 +1057,76 @@ func _toxic_ignition_combines_poison_and_burn_once() -> bool:
 	session.queue_free()
 	return valid
 
+func _toxic_ignition_runs_from_real_status_hits() -> bool:
+	var session: Node2D = load("res://scenes/survival_session.tscn").instantiate()
+	session.spawn_initial_enemy = false
+	session.wave_spawning_enabled = false
+	session.weapon_enabled = false
+	session.skip_starting_weapon_choice = true
+	session.contact_damage_per_hit = 0.0
+	session.inferno_burn_damage_per_tick = 0.1
+	session.inferno_burn_interval_seconds = 5.0
+	session.inferno_burn_duration_seconds = 10.0
+	session.toxic_damage_per_tick = 0.1
+	session.toxic_tick_interval_seconds = 5.0
+	session.toxic_status_duration_seconds = 10.0
+	root.add_child(session)
+	await process_frame
+	var origin: Vector2 = session.player.global_position
+	session.simulation.spawn("test_target", 1, origin + Vector2(80.0, 0.0), 100.0, Vector2.ZERO)
+	session.simulation.spawn("test_target", 1, origin + Vector2(120.0, 0.0), 100.0, Vector2.ZERO)
+	session.simulation.spawn("test_target", 1, origin + Vector2(150.0, 0.0), 100.0, Vector2.ZERO)
+	var targets: Array = await _wait_for_targets(session, 3)
+	if targets.size() != 3:
+		session.queue_free()
+		return false
+	var source_id: Dictionary = targets[0]["id"]
+	var neighbor_id: Dictionary = targets[1]["id"]
+	var distant_id: Dictionary = targets[2]["id"]
+	var source_position := origin + Vector2(80.0, 0.0)
+	var poison_sequence: int = session.simulation.spawn_projectile("toxic_cloud", origin,
+		Vector2.RIGHT * 1000.0, 1.0, 3.0, 1.0, session.toxic_damage_per_tick,
+		session.toxic_tick_interval_seconds, session.toxic_status_duration_seconds)
+	if poison_sequence <= 0 or not await _wait_for_status(session, source_id, "poison"):
+		session.queue_free()
+		return false
+	var burn_sequence: int = session.simulation.spawn_projectile("inferno_sprayer", origin,
+		Vector2.RIGHT * 1000.0, 20.0, 3.0, 1.0, session.inferno_burn_damage_per_tick,
+		session.inferno_burn_interval_seconds, session.inferno_burn_duration_seconds)
+	var saw_neighbor_blast := false
+	var damaged_distant := false
+	var preserved_both_statuses := false
+	var deadline := Time.get_ticks_msec() + 3000
+	while Time.get_ticks_msec() < deadline:
+		await process_frame
+		var state: Dictionary = session.simulation.snapshot()
+		for entity in state["entities"]:
+			if entity["id"] == source_id:
+				var components: Dictionary = entity["components"]
+				var effects: Array = components.get("DamageOverTimeEffects", [])
+				var has_burn := false
+				var has_poison := false
+				for effect in effects:
+					has_burn = has_burn or str(effect.get("status_type", "")) == "burn"
+					has_poison = has_poison or str(effect.get("status_type", "")) == "poison"
+				preserved_both_statuses = has_burn and has_poison
+		for event in state["events"]:
+			if event.get("type", "") != "damage" or event.get("source_type", "") != "toxic_ignition":
+				continue
+			var hit_id: Dictionary = event["target"]
+			if hit_id == neighbor_id and is_equal_approx(float(event["amount"]), 10.0):
+				saw_neighbor_blast = true
+			if hit_id == distant_id:
+				damaged_distant = true
+		if saw_neighbor_blast and preserved_both_statuses:
+			break
+	var valid := burn_sequence > 0 and saw_neighbor_blast and not damaged_distant and preserved_both_statuses
+	if not valid:
+		push_error("Toxic Ignition integration diagnostics: burn=%d neighbor=%s distant=%s statuses=%s source=%s" % [
+			burn_sequence, saw_neighbor_blast, damaged_distant, preserved_both_statuses, source_position])
+	session.queue_free()
+	return valid
+
 func _sawblades_ricochet_between_targets() -> bool:
 	var session: Node2D = load("res://scenes/survival_session.tscn").instantiate()
 	session.spawn_initial_enemy = false
@@ -1701,6 +1774,20 @@ func _contains_enemy(state: Dictionary, enemy_type: String) -> bool:
 	for entity in state["entities"]:
 		if entity["components"].get("EnemyType", "") == enemy_type:
 			return true
+	return false
+
+func _wait_for_status(session: Node, target_id: Dictionary, status_type: String) -> bool:
+	var deadline := Time.get_ticks_msec() + 2000
+	while Time.get_ticks_msec() < deadline:
+		await process_frame
+		for entity in session.simulation.snapshot()["entities"]:
+			if entity["id"] != target_id:
+				continue
+			var components: Dictionary = entity["components"]
+			var effects: Array = components.get("DamageOverTimeEffects", [components.get("DamageOverTime", {})])
+			for effect in effects:
+				if str(effect.get("status_type", "")) == status_type:
+					return true
 	return false
 
 func _blood_chalice_boosts_kill_heal() -> bool:
