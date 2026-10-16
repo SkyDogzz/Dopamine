@@ -273,7 +273,7 @@ Catalogue d’évolution défini dans le GDD :
 | Minigun | Overdrive Engine | Redline | Prototype ajouté : tirs mono-cible, progression de cadence proposée, Redline accélère en continu ; valeurs configurables et **[PROPOSÉES]**. QA smoke ciblée. |
 | Meteor Staff | Celestial Eye | Starfall | Prototype présent : tir sur groupe et explosion bornée ; Celestial Eye augmente les zones et peut doubler l'impact au niveau 5 ; Starfall envoie 2 fragments par défaut (maximum configurable 8) vers des cibles proches. Tous les réglages **[PROPOSÉS]**. |
 | Sawblades | Magnetic Coil | Razorstorm | Prototype présent : lames natives ricochets sur cibles vivantes non déjà touchées ; dégâts, cadence, vitesse et nombre de rebonds **[PROPOSÉS]**. Magnetic Coil augmente la vitesse des projectiles, bonus linéaire **[PROPOSÉ]** ; Razorstorm ajoute un rebond. Effets d'homing et feedback par niveau restent à faire. |
-| Toxic Cloud | Plague Mask | Pandemic | Prototype de projectile à explosion : applique DoT poison sur impact et zone, Pandemic transmet le DoT à la mort vers 3 cibles au plus ; la persistance visuelle et les effets multi-statut restent absents. Réglages **[PROPOSÉS]**. |
+| Toxic Cloud | Plague Mask | Pandemic | Le projectile devient un champ visuel persistant après impact et empoisonne les nouvelles cibles ; Pandemic transmet le DoT à la mort vers 3 cibles au plus. La durée/rayon restent **[PROPOSÉS]** et les statuts multiples **[OUVERTS]**. |
 | Prism Laser | Prism Crystal | Spectrum Collapse | Prototype de rayon continu sur cible prioritaire ; l’évolution ajoute des faisceaux secondaires distincts. Cadence, dégâts, progression et bonus **[PROPOSÉS]**. |
 | — | Magnet Heart (relique utilitaire) | Aucune | Disponible ; rayon XP augmenté avec valeur **[PROPOSÉE]** configurable ; autres pickups et impulsion absents. |
 
@@ -369,7 +369,7 @@ Travail requis :
   - [x] Ajouter un profil de soutien Buffer avec aura de vitesse visible et bornée.
   - [x] Ajouter le prototype Exploder avec fuse et souffle esquivables **[PROPOSÉS]**.
   - [x] Compléter le roster à huit familles et vérifier les profils par scénario Sandbox.
-  - [ ] Vérifier les compositions de vagues dans Survival.
+  - [x] Smoke Survival seedé : la vague 20 génère les huit familles du roster avec le chemin de spawn de run et la simulation native; le test vérifie leur présence, pas les probabilités d’équilibrage **[PROPOSÉES]**.
 - [ ] **P5.4.2 — Interactions ennemies**
   - [x] Ajouter un buff de soutien visible et borné.
   - [x] Ajouter Shielder : réduction de dégâts bornée dans une aura et retirée à sa mort **[PROPOSÉ]**.

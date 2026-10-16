@@ -108,6 +108,8 @@ func _run() -> void:
 		return
 	session.queue_free()
 	await process_frame
+	if not await _verify_wave_enemy_composition():
+		return
 	if not await _verify_live_wave_clock():
 		return
 	if not await _verify_live_full_run():
@@ -265,3 +267,40 @@ func _wait_for_entity_type(session: Node2D, expected_type: String) -> bool:
 func _fail(message: String) -> void:
 	push_error(message)
 	quit(1)
+
+func _verify_wave_enemy_composition() -> bool:
+	var session: Node2D = load("res://scenes/survival_session.tscn").instantiate()
+	session.wave_spawning_enabled = false
+	session.spawn_initial_enemy = false
+	session.weapon_enabled = false
+	session.skip_starting_weapon_choice = true
+	session.wave_population_cap = 400
+	root.add_child(session)
+	await process_frame
+	session.wave_director.wave = 20
+	seed(0x5EED)
+	for _index in range(256):
+		session._spawn_wave_enemy()
+	var sequence: int = session.simulation.step(0.01)
+	if not await _wait_for_sequence(session, sequence):
+		session.queue_free()
+		return false
+	var seen := {}
+	for entity in session.simulation.snapshot()["entities"]:
+		var kind := str(entity["components"].get("EnemyType", ""))
+		if ["chaser", "sprinter", "tank", "shooter", "buffer", "exploder", "shielder", "summoner"].has(kind):
+			seen[kind] = true
+	session.queue_free()
+	if seen.size() != 8:
+		_fail("Later Survival waves should generate each of the eight implemented enemy families")
+		return false
+	return true
+
+func _wait_for_sequence(session: Node2D, sequence: int) -> bool:
+	var deadline := Time.get_ticks_msec() + 3000
+	while Time.get_ticks_msec() < deadline:
+		await process_frame
+		if int(session.simulation.snapshot().get("last_sequence", 0)) >= sequence:
+			return true
+	_fail("Survival enemy composition commands should reach the simulation")
+	return false
