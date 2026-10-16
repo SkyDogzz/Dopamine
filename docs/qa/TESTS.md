@@ -16,6 +16,12 @@
 - [x] `survival_hub_smoke.gd` vérifie la médaille de Succès et le sprite de chaser du Bestiaire, leur taille compacte nearest, leurs teintes atténuées/dorées selon le focus et leur absence de signal d’action.
 - [x] Capture fenêtrée avec viewport logique 640×360 relue; Succès et Bestiaire sont visuellement secondaires. Le focus est vérifié par le smoke, l’interaction avec une manette physique n’a pas été vérifiée ici.
 
+## Hub Survival — confirmation de difficulté au lancement — 2026-10-16
+
+- [x] Le bouton primaire reprend la difficulté active et suit la sélection Easy → Normal; le smoke confirme que l’action temporaire sans sauvegarde garde son libellé et son parcours distincts.
+- [x] `survival_hub_smoke.gd` passe; `survival_hub_layout_smoke.gd` passe aux viewports 640×360, 1280×720 et 1920×1080.
+- [x] Capture fenêtrée du hub relue à 640×360 logique : sélection, statut et bouton principal sont visibles avec le focus.
+
 ## Inventaire d’équipement — hiérarchie des cartes — 2026-10-16
 
 - [x] `equipment_panel_visual_smoke.gd` contrôle la largeur réservée aux contrôles, la bordure de rareté et le maintien dans les 640 px logiques.

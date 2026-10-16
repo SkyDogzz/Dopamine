@@ -101,6 +101,7 @@ func _select_difficulty(difficulty_id: String) -> void:
 		return
 	selected_difficulty = difficulty_id
 	button.button_pressed = true
+	_launch_button.text = "LANCER LA RUN  ·  %s  →" % difficulty_id.to_upper()
 	var index := DIFFICULTY_SCRIPT.ORDER.find(difficulty_id)
 	_difficulty_status.text = "CHOISIE: %s  •  UNE VICTOIRE DÉBLOQUE LA SUIVANTE" % difficulty_id.to_upper() \
 		if index < DIFFICULTY_SCRIPT.ORDER.size() - 1 else "CHOISIE: CHAOS  •  DIFFICULTÉ MAXIMALE"

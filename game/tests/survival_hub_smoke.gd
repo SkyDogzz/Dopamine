@@ -22,6 +22,11 @@ func _run() -> void:
 	root.add_child(hub)
 	current_scene = hub
 	await process_frame
+	if "--capture" in OS.get_cmdline_user_args():
+		await RenderingServer.frame_post_draw
+		if root.get_texture().get_image().save_png("/tmp/dopamine-survival-hub.png") != OK:
+			_fail("Could not capture the Survival hub render")
+			return
 	var bounds := hub.get_viewport_rect()
 	for path in ["Content", "Content/Header/BackButton", "Content/Main/DifficultyCard", "Content/Main/PreparationCard/Body/LaunchButton"]:
 		var control := hub.get_node(path) as Control
@@ -38,6 +43,11 @@ func _run() -> void:
 	var hard := _difficulty_button(hub, "HARD")
 	if easy == null or not easy.button_pressed or easy.disabled or not normal.disabled or not hard.disabled:
 		_fail("A new profile should select Easy and keep later difficulties visibly locked")
+		return
+	var launch_button: Button = hub.get_node("Content/Main/PreparationCard/Body/LaunchButton")
+	var temporary_launch_button: Button = hub.get_node("Content/Main/PreparationCard/Body/TemporaryLaunchButton")
+	if launch_button.text != "LANCER LA RUN  ·  EASY  →":
+		_fail("The primary launch action should repeat the selected difficulty")
 		return
 	if not hard.tooltip_text.contains("NORMAL"):
 		_fail("A locked difficulty should explain its previous-difficulty requirement")
@@ -130,6 +140,12 @@ func _run() -> void:
 	_difficulty_button(hub, "NORMAL").pressed.emit()
 	if hub.selected_difficulty != "normal":
 		_fail("An unlocked difficulty should become the selected launch value")
+		return
+	if launch_button.text != "LANCER LA RUN  ·  NORMAL  →":
+		_fail("The primary launch action should track difficulty selection")
+		return
+	if temporary_launch_button.text != "RUN TEMPORAIRE · SANS SAUVEGARDE":
+		_fail("The temporary profile action should remain separate from normal difficulty selection")
 		return
 	_difficulty_button(hub, "EASY").pressed.emit()
 	hub._launch_run()
