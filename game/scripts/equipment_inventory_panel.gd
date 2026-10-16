@@ -41,7 +41,7 @@ const POWDER_TIERS := ["basic", "refined", "pure", "prismatic"]
 const EQUIPMENT_GENERATOR_SCRIPT := preload("res://scripts/equipment_generator.gd")
 const UNIQUE_EFFECTS := [
 	"lightning_burst", "overflow_shield", "evolution_shockwave",
-	"elite_haste", "free_first_chest_reroll", "revive_knockback",
+	"elite_haste", "free_first_chest_reroll",
 ]
 const DISMANTLE_POWDER := {
 	"normal": "1 BASIC", "magic": "3 BASIC", "mystic": "1 REFINED",
@@ -178,7 +178,9 @@ func _create_item_row(equipment: Dictionary, resources: Dictionary) -> Control:
 		status.text += "\nUnique effect choice pending"
 	elif str(equipment.get("unique_effect_id", "")) != "":
 		var effect_id := str(equipment["unique_effect_id"])
-		var effect_status := "PROPOSED ACTIVE" if equipment.get("equipped", false) and effect_id in ["lightning_burst", "overflow_shield", "evolution_shockwave", "elite_haste"] else "NO GAMEPLAY EFFECT YET"
+		var effect_status := "PROPOSED ACTIVE" if equipment.get("equipped", false) and effect_id in [
+			"lightning_burst", "overflow_shield", "evolution_shockwave", "elite_haste", "free_first_chest_reroll",
+		] else "NO GAMEPLAY EFFECT YET"
 		status.text += "\nUNIQUE: %s — %s" % [effect_id.replace("_", " ").to_upper(), effect_status]
 	content.add_child(status)
 	if equipment.get("unique_effect_id") == "pending_choice":

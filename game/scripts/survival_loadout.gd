@@ -77,7 +77,7 @@ func _init(seed_value: int = 0) -> void:
 	else:
 		_rng.seed = seed_value
 
-func offers(family: String) -> Array[Dictionary]:
+func offers(family: String, excluded_ids: Array[String] = [], required_count: int = 0) -> Array[Dictionary]:
 	var catalog: Dictionary
 	var owned: Dictionary
 	var descriptions: Dictionary
@@ -124,11 +124,23 @@ func offers(family: String) -> Array[Dictionary]:
 					],
 					"icon": EVOLUTION_ICONS.get(weapon_id, ICONS.get(weapon_id, "")),
 				})
+	if not excluded_ids.is_empty():
+		var excluded_lookup: Dictionary = {}
+		for excluded_id in excluded_ids:
+			excluded_lookup[excluded_id] = true
+		var filtered_candidates: Array[Dictionary] = []
+		for candidate in candidates:
+			if not excluded_lookup.has(str(candidate["id"])):
+				filtered_candidates.append(candidate)
+		candidates = filtered_candidates
+	if required_count > candidates.size():
+		return []
 	if candidates.size() < 3:
-		return candidates
+		return candidates if required_count <= 0 else candidates.slice(0, required_count)
 	var selected: Array[Dictionary] = []
 	var remaining: Array[Dictionary] = candidates.duplicate()
-	for _choice_index in range(mini(3, remaining.size())):
+	var choice_count := mini(3, remaining.size()) if required_count <= 0 else required_count
+	for _choice_index in range(choice_count):
 		var weights: Array[float] = []
 		var total_weight := 0.0
 		for candidate in remaining:

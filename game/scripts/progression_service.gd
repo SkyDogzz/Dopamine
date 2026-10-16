@@ -6,9 +6,13 @@ const ENHANCEMENT_BASE_COSTS := [10, 15, 22, 32, 46, 65, 90, 125, 175, 250]
 const RARITY_COST_MULTIPLIERS := {"normal": 1.0, "magic": 1.5, "mystic": 2.0, "legendary": 3.0, "mythic": 4.0}
 const PROPOSED_SUCCESS_CHANCE := {"basic": 50.0, "refined": 70.0, "pure": 85.0, "prismatic": 95.0}
 const PROPOSED_CRITICAL_FAILURE_CHANCE := {"basic": 10.0, "refined": 5.0, "pure": 2.0, "prismatic": 0.5}
-const PROPOSED_UNIQUE_EFFECTS := [
+const KNOWN_UNIQUE_EFFECTS := [
 	"lightning_burst", "overflow_shield", "evolution_shockwave",
 	"elite_haste", "free_first_chest_reroll", "revive_knockback",
+]
+const PROPOSED_UNIQUE_EFFECTS := [
+	"lightning_burst", "overflow_shield", "evolution_shockwave",
+	"elite_haste", "free_first_chest_reroll",
 ]
 const PROPOSED_DISMANTLE_REWARDS := {
 	"normal": {"powder_basic": 1}, "magic": {"powder_basic": 3},
@@ -424,7 +428,7 @@ func _valid_equipment(equipment: Variant) -> bool:
 		return false
 	var effect_id = equipment.get("unique_effect_id")
 	if typeof(effect_id) != TYPE_STRING or \
-		(equipment["rarity"] in ["legendary", "mythic"] and effect_id != "pending_choice" and effect_id not in PROPOSED_UNIQUE_EFFECTS) or \
+		(equipment["rarity"] in ["legendary", "mythic"] and effect_id != "pending_choice" and effect_id not in KNOWN_UNIQUE_EFFECTS) or \
 			(equipment["rarity"] not in ["legendary", "mythic"] and not effect_id.is_empty()):
 		return false
 	var used_stats: Dictionary = {}

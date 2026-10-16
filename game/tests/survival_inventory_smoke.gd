@@ -57,7 +57,15 @@ func _run() -> void:
 	if choose_effect_button == null:
 		_fail("Legendary equipment should expose its unique effect choice in the hub")
 		return
-	(item_content.get_child(5).get_child(0) as OptionButton).select(1)
+	var effect_select := item_content.get_child(5).get_child(0) as OptionButton
+	if effect_select.item_count != progression.PROPOSED_UNIQUE_EFFECTS.size():
+		_fail("The hub should not offer unique effects without gameplay behavior")
+		return
+	for option_index in range(effect_select.item_count):
+		if effect_select.get_item_metadata(option_index) == "revive_knockback":
+			_fail("Revive Knockback should stay unavailable until a resurrection contract exists")
+			return
+	effect_select.select(1)
 	choose_effect_button.pressed.emit()
 	if progression.load_profile()["profile"]["equipment_inventory"][0]["unique_effect_id"] == "pending_choice":
 		_fail("Selecting a unique effect should persist the choice")

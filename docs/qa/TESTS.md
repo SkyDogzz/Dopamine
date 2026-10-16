@@ -26,6 +26,11 @@
 
 - [x] `survival_elite_smoke.gd` équipe `elite_haste` dans un profil temporaire isolé, tue un élite via le pipeline de dégâts natif, puis vérifie le bonus de mobilité de 15 % et son expiration après trois secondes simulées. Ces valeurs restent **[PROPOSÉES]**.
 
+## P6.5 — Reroll gratuit du premier coffre — 2026-10-16
+
+- [x] `free_chest_reroll_smoke.gd` équipe le reroll gratuit dans un profil temporaire, l’active au clavier, vérifie que les offres remplacées ne reviennent pas et qu’aucun reroll n’est offert au coffre suivant.
+- [x] `progression_service_smoke.gd` vérifie que `revive_knockback` ne peut plus être choisi, mais reste lisible dans un profil qui le contient déjà.
+
 ## P5 — Chaînes Lightning — 2026-10-16
 
 - [x] Un arc Lightning ignore désormais sa cible source afin que le saut touche l’ennemi suivant, y compris lorsque les cibles sont très proches; sa position de départ est bornée par l’écart au prochain ennemi.
@@ -367,7 +372,7 @@ Pour le catalogue, la validation JSON et des références a aussi été vérifi�
 - [x] Équipement persistant : équiper, déséquiper et remplacer une pièce du même slot ; migration des profils précédents. Le prototype P6 applique maintenant les lignes portées à Survival ; leurs plages restent proposées et non calibrées.
 - [x] Progression v5 : migration des profils précédents vers quatre tiers de Powder, conversion 10:1, amélioration de ligne +0..+10, coût de rareté/niveau et pity au dixième essai ; probabilités et coûts restent les valeurs **[PROPOSÉES]** du GDD.
 - [x] UI Enhancement : sélection du tier Powder, affichage du niveau de ligne et ressources, consommation, retour de résultat et inventaire persistant vérifiés dans `survival_inventory_smoke` et revue fenêtrée.
-- [x] Équipement : choix d'un effet unique éligible et démontage persistés. Rendement provisoire. Lightning burst, overflow shield, evolution shockwave et elite haste ont des prototypes ; reroll gratuit et knockback de résurrection sont sans comportement faute de contrats requis.
+- [x] Équipement : choix d'un effet unique éligible et démontage persistés. Rendement provisoire. Lightning burst, overflow shield, evolution shockwave, elite haste et reroll gratuit du premier coffre ont des prototypes; le knockback de résurrection est exclu des nouveaux choix et reste sans gameplay défini.
 - [x] Skill tree prototype : nodes Vitality (+5 % HP, 50 Essence) et Focused Training (+3 % dégâts, prérequis Vitality, 80 Essence), valeurs **[PROPOSÉES]** ; respec gratuit vérifié.
 - [x] Achievement prototype : kills cumulés et quatre paliers Exterminator **[PROPOSÉS]** crédités une seule fois par run ; bonus dégâts cumulés de l'exemple vérifiés.
 - [ ] Rareté ajustée par difficulté/vague et mort précoce, calibrage des rolls, arbitrage vente/démantèlement et validation des bonus. Le rayon de ramassage ne doit jamais affecter la collecte de coffres selon GDD v1.6.

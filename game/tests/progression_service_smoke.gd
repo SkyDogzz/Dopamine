@@ -81,6 +81,9 @@ func _run() -> void:
 	if not save_service.save_slot("0", profile):
 		_fail("The unique effect fixture should save")
 		return
+	if service.choose_unique_effect(inventory[0]["instance_id"], "revive_knockback").get("error") != "invalid_unique_effect":
+		_fail("Unique effects without gameplay should not be offered for new equipment")
+		return
 	var chosen_effect: Dictionary = service.choose_unique_effect(inventory[0]["instance_id"], "overflow_shield")
 	if not chosen_effect.get("ok", false) or \
 			chosen_effect["profile"]["equipment_inventory"][0]["unique_effect_id"] != "overflow_shield":
@@ -292,6 +295,12 @@ func _run() -> void:
 		if difficulty_id == "chaos" and (result.get("essence") != 352 or result.get("powder_basic") != 427):
 			_fail("Chaos victory rewards should use their separate proposed multipliers")
 			return
+	var legacy_effect_profile: Dictionary = service.load_profile()["profile"]
+	legacy_effect_profile["equipment_inventory"][0]["unique_effect_id"] = "revive_knockback"
+	if not save_service.save_slot("0", legacy_effect_profile) or not service.load_profile().get("ok", false) or \
+		service.equipped_unique_effects().has("revive_knockback"):
+		_fail("A stored unsupported effect should remain loadable but must not activate or be newly selectable")
+		return
 	print("Progression service smoke passed")
 	quit()
 

@@ -442,7 +442,7 @@ Travail requis :
 - Le générateur choisit les poids de rareté par difficulté et vague, selon une règle **[PROPOSÉE]**; la pénalité de mort précoce et la calibration statistique/équilibrage des plages restent à faire.
 - Les achievements ne couvrent qu’un compteur de kills avec quatre paliers ; ce n’est pas le catalogue cible de 100–150 familles.
 - Les nodes sont deux prototypes, pas le graphe interconnecté de 100–150.
-- Quatre effets uniques ont un chemin gameplay prototype vérifié; `free_first_chest_reroll` et `revive_knockback` sont stockables mais sans effet. `elite_haste` se déclenche désormais sur la mort d’un élite et ses valeurs de prototype restent **[PROPOSÉES]**.
+- Cinq effets uniques ont un chemin gameplay prototype vérifié; `revive_knockback` reste stockable pour préserver les profils existants, mais n’est plus sélectionnable tant que son comportement n’est pas défini. Les chiffres de ces prototypes restent **[PROPOSÉS]**.
 - Des bonus de stat sont consommés dans Survival ; `pickup_radius_pct` augmente actuellement le rayon des orbes XP seulement et le chest a son propre rayon.
 
 ### Travaux
@@ -469,7 +469,8 @@ Travail requis :
   - [ ] Lister effet, déclencheur, prérequis, portée et feedback de chaque ID disponible.
   - [ ] Relier un effet à son événement de jeu et écrire un scénario ciblé.
   - [x] `elite_haste` est chargé depuis un équipement unique équipé, déclenché par la mort d’un élite et actif 3 secondes simulées avec +15 % de mobilité **[PROPOSÉ]**; `survival_elite_smoke.gd` vérifie activation et expiration.
-  - [ ] Retirer de la sélection les effets sans comportement défini.
+  - [x] `free_first_chest_reroll` relance une fois les options du premier coffre de run sans répéter les choix affichés; le run reste en pause. `free_chest_reroll_smoke.gd` couvre profil équipé, activation clavier, options inédites et absence de bouton aux coffres suivants; comportement **[PROPOSÉ]**.
+  - [x] Retirer `revive_knockback` du choix des nouveaux effets sans supprimer la compatibilité de lecture des profils qui le stockent; vérifié par `progression_service_smoke.gd`.
   - [ ] Vérifier non-cumul automatique et extensions de capacité réelles.
 - [ ] **P6.6 — Skill tree**
   - [ ] Établir le schéma node/prérequis/coût/effet.

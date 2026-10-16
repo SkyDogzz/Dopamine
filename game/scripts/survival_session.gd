@@ -334,6 +334,9 @@ var _world_chests: Array[Dictionary] = []
 var _chest_open := false
 var _active_chest_options: Array = []
 var _active_chest_heading := "CHEST — CHOOSE ONE"
+var _first_reward_chest_opened := false
+var _free_first_chest_reroll_used := false
+var _free_first_chest_reroll_available := false
 var _starting_weapon_choice_open := false
 var _manually_paused := false
 var _contact_damage_until: Dictionary = {}
@@ -421,6 +424,7 @@ func _ready() -> void:
 		set_physics_process(false)
 		return
 	_chest_choice.option_selected.connect(_on_chest_option_selected)
+	_chest_choice.reroll_requested.connect(_reroll_first_chest)
 	_run_result.restart_requested.connect(_restart_run)
 	_run_result.quit_requested.connect(_quit_after_run)
 	_pause_resume_button.pressed.connect(_resume_manually_paused_run)
@@ -1362,6 +1366,8 @@ func open_chest(options: Array) -> bool:
 		var separator := offer_id.find(":")
 		if separator > 0:
 			family = offer_id.left(separator)
+		if family == "evolution":
+			family = "weapon"
 	return _open_chest(options, _chest_heading(family))
 
 func open_chest_family(family: String) -> bool:
@@ -1375,13 +1381,22 @@ func _chest_heading(family: String) -> String:
 	return "CHEST — CHOOSE ONE"
 
 func _open_chest(options: Array, heading: String) -> bool:
-	if simulation == null or run_over or _chest_open or not _chest_choice.present(options, options.size(), heading):
+	if simulation == null or run_over or _chest_open:
+		return false
+	var heading_upper := heading.to_upper()
+	var family := "weapon" if heading_upper.contains("WEAPON") else "relic" if heading_upper.contains("RELIC") else ""
+	var reroll_available := not _first_reward_chest_opened and _has_unique_effect("free_first_chest_reroll") and \
+		family in ["weapon", "relic"]
+	if not _chest_choice.present(options, options.size(), heading, reroll_available):
 		return false
 	if not _starting_weapon_choice_open:
 		Sfx.play("chest_open")
 	_chest_open = true
 	_active_chest_options = options.duplicate(true)
 	_active_chest_heading = heading
+	if not _starting_weapon_choice_open:
+		_first_reward_chest_opened = true
+		_free_first_chest_reroll_available = reroll_available
 	simulation.pause()
 	if _auto_select_first_chest:
 		_chest_choice.call_deferred("choose_first_option")
@@ -1399,7 +1414,8 @@ func _on_chest_option_selected(option_id: String) -> void:
 		return
 	if _chest_open and not _is_active_chest_option(option_id):
 		Sfx.play("ui_error")
-		_chest_choice.present(_active_chest_options, _active_chest_options.size(), _active_chest_heading)
+		_chest_choice.present(_active_chest_options, _active_chest_options.size(), _active_chest_heading,
+				_free_first_chest_reroll_available)
 		return
 	var offer_parts := option_id.split(":", false, 1)
 	var item_family := str(offer_parts[0]) if offer_parts.size() == 2 else ""
@@ -1410,10 +1426,12 @@ func _on_chest_option_selected(option_id: String) -> void:
 	if not applied:
 		Sfx.play("ui_error")
 		if _chest_open:
-			_chest_choice.present(_active_chest_options, _active_chest_options.size(), _active_chest_heading)
+			_chest_choice.present(_active_chest_options, _active_chest_options.size(), _active_chest_heading,
+					_free_first_chest_reroll_available)
 		return
 	_chest_open = false
 	_active_chest_options.clear()
+	_free_first_chest_reroll_available = false
 	Sfx.play("relic_pickup" if item_family == "relic" else "chest_reward")
 	if previous_item_level >= 0:
 		_show_item_level_feedback(item_family, item_id, previous_item_level)
@@ -1430,6 +1448,23 @@ func _is_active_chest_option(option_id: String) -> bool:
 		if str(option.get("id", "")) == option_id:
 			return true
 	return false
+
+func _reroll_first_chest() -> void:
+	if not _chest_open or not _free_first_chest_reroll_available or _free_first_chest_reroll_used:
+		return
+	var excluded_ids: Array[String] = []
+	for option in _active_chest_options:
+		excluded_ids.append(str(option.get("id", "")))
+	var heading_upper := _active_chest_heading.to_upper()
+	var family := "weapon" if heading_upper.contains("WEAPON") else "relic" if heading_upper.contains("RELIC") else ""
+	var rerolled_options: Array[Dictionary] = loadout.offers(family, excluded_ids, _active_chest_options.size())
+	_free_first_chest_reroll_available = false
+	if rerolled_options.size() != _active_chest_options.size():
+		_chest_choice.present(_active_chest_options, _active_chest_options.size(), _active_chest_heading)
+		return
+	_free_first_chest_reroll_used = true
+	_active_chest_options = rerolled_options
+	_chest_choice.present(_active_chest_options, _active_chest_options.size(), _active_chest_heading)
 
 func _loadout_item_level(family: String, item_id: String) -> int:
 	if family == "weapon":

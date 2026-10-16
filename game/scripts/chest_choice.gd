@@ -1,8 +1,10 @@
 extends PanelContainer
 
 signal option_selected(option_id: String)
+signal reroll_requested
 
 @onready var _options: VBoxContainer = $Content/Options
+@onready var _reroll_button: Button = $Content/Reroll
 
 const FAMILY_COLORS := {
 	"weapon": Color("#37E8F5"),
@@ -11,6 +13,7 @@ const FAMILY_COLORS := {
 
 func _ready() -> void:
 	visible = false
+	_reroll_button.pressed.connect(func() -> void: reroll_requested.emit())
 
 func _input(event: InputEvent) -> void:
 	var keyboard_accept := event.is_action_pressed("ui_accept")
@@ -19,13 +22,13 @@ func _input(event: InputEvent) -> void:
 	if not visible or not keyboard_accept:
 		return
 	var focused := get_viewport().gui_get_focus_owner() as Button
-	if focused == null or not _options.is_ancestor_of(focused):
+	if focused == null or (not _options.is_ancestor_of(focused) and focused != _reroll_button):
 		focused = _options.get_child(0) as Button if _options.get_child_count() > 0 else null
 	if focused != null:
 		focused.emit_signal("pressed")
 		get_viewport().set_input_as_handled()
 
-func present(options: Array, required_count: int = 3, heading: String = "CHEST — CHOOSE ONE") -> bool:
+func present(options: Array, required_count: int = 3, heading: String = "CHEST — CHOOSE ONE", reroll_available: bool = false) -> bool:
 	if required_count < 1 or required_count > 3 or options.size() != required_count:
 		return false
 	var seen_ids: Dictionary = {}
@@ -37,6 +40,7 @@ func present(options: Array, required_count: int = 3, heading: String = "CHEST �
 			return false
 		seen_ids[option_id] = true
 	_clear_options()
+	_reroll_button.visible = reroll_available
 	$Content/Title.text = heading
 	var heading_upper := heading.to_upper()
 	var family := "relic" if heading_upper.contains("RELIC") else "weapon" if heading_upper.contains("WEAPON") else ""
