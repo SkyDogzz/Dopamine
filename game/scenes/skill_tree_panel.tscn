@@ -44,7 +44,7 @@ horizontal_alignment = 1
 [node name="Warning" type="Label" parent="Panel/Content"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.647059, 0.682353, 0.764706, 1)
-text = "Prototype branch  •  future nodes and costs remain open."
+text = "100 NODE PROTOTYPE  •  costs and balance are proposed."
 horizontal_alignment = 1
 
 [node name="EssenceRow" type="HBoxContainer" parent="Panel/Content"]

@@ -88,7 +88,28 @@ func _init(save_service: RefCounted, slot_id: String = "0") -> void:
 				"status": "PROPOSED",
 			}
 			previous_node = node_id
+	_append_stat_nodes("max_hp_pct", "vitality", "MAX HP", "vitality_starter", 19, 0.003)
+	_append_stat_nodes("damage_pct", "focused_training", "DAMAGE", "focused_training", 20, 0.003)
+	_append_stat_nodes("move_speed_pct", "fleet_footed", "MOVE SPEED", "fleet_footed", 20, 0.002)
+	_append_stat_nodes("critical_chance_pct", "steady_aim", "CRIT CHANCE", "steady_aim", 20, 0.15)
 	_rng.randomize()
+
+func _append_stat_nodes(stat_id: String, node_prefix: String, stat_name: String, prerequisite: String, count: int, value: float) -> void:
+	for index in range(1, count + 1):
+		var node_id := "%s_%02d" % [node_prefix, index + 1]
+		var bonus_text := "+%.2f%%" % value if stat_id == "critical_chance_pct" else "+%.1f%%" % (value * 100.0)
+		_skill_nodes[node_id] = {
+			"category": "core_stats",
+			"depth": index * 3,
+			"cost": 40 + 10 * index,
+			"unlock_name": "%s %02d" % [stat_name, index + 1],
+			"stat_name": stat_name,
+			"display_bonus": bonus_text,
+			stat_id: value,
+			"prerequisites": [prerequisite],
+			"status": "PROPOSED",
+		}
+		prerequisite = node_id
 
 func award_survival_run(
 	run_id: String, wave_reached: int, victory: bool, kills: int = 0, difficulty_id: String = "normal"
@@ -363,6 +384,8 @@ func skill_node_cost(node_id: String) -> int:
 	if not _skill_nodes.has(node_id):
 		return 0
 	var node: Dictionary = _skill_nodes[node_id]
+	if node.has("cost"):
+		return int(node["cost"])
 	var unlock_surcharge := 80 if node["category"] in ["weapon_unlocks", "relic_unlocks"] else 0
 	return 20 + 10 * int(node["depth"]) + unlock_surcharge
 

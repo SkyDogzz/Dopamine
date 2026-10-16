@@ -112,8 +112,45 @@ func _initialize() -> void:
 		return
 	draft_session.queue_free()
 	await process_frame
+	if not await _verify_full_skill_tree_application():
+		return
 	print("survival_armorless_mode_smoke: passed progression isolation and mode setup")
 	quit(0)
+
+func _verify_full_skill_tree_application() -> bool:
+	var save_service = load("res://scripts/save_service.gd").new("user://full_skill_tree_smoke")
+	var progression = load("res://scripts/progression_service.gd").new(save_service, "0")
+	var profile: Dictionary = progression.load_profile()["profile"]
+	profile["resources"]["essence"] = 50000
+	if not save_service.save_slot("0", profile):
+		_fail("Full skill tree fixture should save")
+		return false
+	for node_id in progression.skill_node_ids():
+		if not progression.unlock_skill_node(node_id).get("ok", false):
+			_fail("Full skill tree fixture could not purchase %s" % node_id)
+			return false
+	for mode in ["survival", "armorless"]:
+		var session: Node2D = load("res://scenes/survival_session.tscn").instantiate()
+		session.mode_id = mode
+		session.progression_service = progression
+		session.spawn_initial_enemy = false
+		session.wave_spawning_enabled = false
+		session.skip_starting_weapon_choice = true
+		root.add_child(session)
+		await process_frame
+		var expected_hp: float = session.simulation.initial_player_hp() * 1.107
+		if not is_equal_approx(session.player_max_hp, expected_hp) or \
+			not is_equal_approx(session._cached_persistent_damage_multiplier, 1.09) or \
+			not is_equal_approx(session.player.move_speed, 240.0 * 1.06) or \
+			not is_equal_approx(session._critical_chance(), 4.0):
+			_fail("All 100 skill nodes should apply their proposed bonuses in %s" % mode)
+			return false
+		if session.loadout._weapons.size() != 10 or session.loadout._relics.size() != 11:
+			_fail("Full skill unlocks should expose every catalog item in %s" % mode)
+			return false
+		session.queue_free()
+		await process_frame
+	return true
 
 func _fail(message: String) -> void:
 	push_error(message)

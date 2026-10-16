@@ -98,22 +98,29 @@ func present(profile: Dictionary) -> void:
 				break
 		var cost: int = progression_service.skill_node_cost(node_id)
 		var button: Button = _additional_unlock_buttons[node_id]
-		var category_label := "WEAPON" if definition.get("category") == "weapon_unlocks" else "RELIC"
+		var category := str(definition.get("category", ""))
+		var category_label := "STAT" if category == "core_stats" else "WEAPON" if category == "weapon_unlocks" else "RELIC"
 		var state_label := "UNLOCKED" if unlocked_node else "AVAILABLE" if ready and essence >= cost else "LOCKED"
-		button.text = "%s · %s · %s" % [category_label, str(definition.get("unlock_name", "" )).to_upper(), state_label]
-		button.tooltip_text = "%s · %d ESSENCE · PROPOSED" % [str(definition.get("unlock_name", "")), cost]
+		var label := str(definition.get("unlock_name", "" )).to_upper()
+		if category == "core_stats":
+			label = "%s · %s" % [label, str(definition.get("display_bonus", ""))]
+		button.text = "%s · %s · %s" % [category_label, label, state_label]
+		button.tooltip_text = "%s · %s · %d ESSENCE · PROPOSED" % [str(definition.get("unlock_name", "")), str(definition.get("display_bonus", "")), cost]
 		button.disabled = unlocked_node or not ready or essence < cost
 	_respec_button.disabled = unlocked.is_empty()
 	visible = true
+	var focus_target: Button
 	for button in [_node_button, _focus_button, _mastery_button, _precision_button, _weapon_unlock_button, _relic_unlock_button]:
 		if not button.disabled:
-			button.grab_focus()
+			focus_target = button
 			break
-	if get_viewport().gui_get_focus_owner() == null:
+	if focus_target == null:
 		for button in _additional_unlock_buttons.values():
 			if not button.disabled:
-				button.grab_focus()
+				focus_target = button
 				break
+	if focus_target != null:
+		focus_target.grab_focus()
 
 func present_error() -> void:
 	_essence.text = "PROFILE UNAVAILABLE"
@@ -150,9 +157,10 @@ func _build_additional_unlock_buttons() -> void:
 	if progression_service == null or not progression_service.has_method("skill_node_ids") or \
 		not progression_service.has_method("skill_node_definition"):
 		return
-	for category in ["weapon_unlocks", "relic_unlocks"]:
+	for category in ["core_stats", "weapon_unlocks", "relic_unlocks"]:
 		for node_id in progression_service.skill_node_ids(category):
-			if node_id in ["unlock_crimson_daggers", "unlock_blood_chalice"]:
+			if node_id in ["vitality_starter", "focused_training", "fleet_footed", "steady_aim", \
+				"unlock_crimson_daggers", "unlock_blood_chalice"]:
 				continue
 			var definition: Dictionary = progression_service.skill_node_definition(node_id)
 			var name := str(definition.get("unlock_name", "Equipment"))
@@ -160,7 +168,8 @@ func _build_additional_unlock_buttons() -> void:
 			button.name = node_id
 			button.custom_minimum_size = Vector2(0, 22)
 			button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-			button.text = "%s · %s · LOCKED" % ["WEAPON" if category == "weapon_unlocks" else "RELIC", name.to_upper()]
+			var category_label := "STAT" if category == "core_stats" else "WEAPON" if category == "weapon_unlocks" else "RELIC"
+			button.text = "%s · %s · LOCKED" % [category_label, name.to_upper()]
 			button.focus_mode = Control.FOCUS_ALL
 			button.pressed.connect(_emit_unlock_requested.bind(node_id))
 			button.focus_entered.connect(_scroll_to_unlock_button.bind(button))

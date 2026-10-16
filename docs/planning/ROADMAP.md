@@ -474,16 +474,17 @@ Travail requis :
   - [x] Retirer `revive_knockback` du choix des nouveaux effets sans supprimer la compatibilité de lecture des profils qui le stockent; vérifié par `progression_service_smoke.gd`.
   - [x] Vérifier non-cumul automatique et extensions de capacité réelles : le smoke équipe deux pièces porteuses du même effet, confirme la déduplication et applique six armes/reliques au maximum. Extension **[PROPOSÉE]**.
 - [ ] **P6.6 — Skill tree**
-  - [ ] Établir le schéma node/prérequis/coût/effet.
+  - [x] Établir le schéma node/prérequis/coût/effet; les valeurs générées et les coûts sont explicitement **[PROPOSÉS]**.
   - [x] Étendre la branche Core Stats à quatre nodes avec Fleet Footed (+2 % vitesse, 110 Essence) et Steady Aim (+1 point de critique, 140 Essence); prérequis, bonus et coûts **[PROPOSÉS]**, vérifiés jusqu'à leur application en Survival/Armorless et au respec.
   - [x] Ajouter des branches prototypes de déblocage d’équipement, en commençant par Crimson Daggers (130 Essence après Vitality) et Blood Chalice (160 Essence après Crimson Daggers), puis étendre les branches séquentielles aux autres entrées du catalogue. L’ordre et les coûts sont **[PROPOSÉS]**.
   - [x] Les profils normaux commencent avec Lightning Conductor, Inferno Sprayer, Storm Core et Infernal Heart; les autres armes et reliques se débloquent par le skill tree et rejoignent les offres/choix initiaux. Le Sandbox conserve le catalogue complet puisqu’il n’injecte aucun service de progression.
   - [x] Étendre les branches de déblocage aux 10 armes et 11 reliques Survival : chaque entrée non starter a un nœud, un prérequis séquentiel dans sa branche et un remboursement au respec. Les coûts augmentent avec la profondeur; cet ordre et ces valeurs sont **[PROPOSÉS]** et restent à calibrer.
   - [x] Générer les boutons d’équipement depuis les métadonnées de nœuds; `progression_service_smoke.gd`, `survival_loadout_smoke.gd` et `skill_tree_panel_visual_smoke.gd` couvrent le catalogue complet, le filtrage des tirages et les IDs émis par les boutons.
-  - [ ] Continuer les branches et élargir les nœuds au-delà de cette tranche; la cible GDD 100–150 reste **[PROPOSÉE]**.
-  - [ ] Ajouter et tester une tranche de branche à la fois jusqu’à la cible décidée (100–150).
-  - [ ] Vérifier coût, déblocages, bonus appliqué et respec gratuit.
-  - [ ] Mesurer le bonus cumulatif avant de fermer l’arbre.
+  - [x] Atteindre 100 nœuds : 83 Core Stats (Vitality et 19 rangs HP; Focused Training et 20 rangs dégâts; Fleet Footed et 20 rangs vitesse; Steady Aim et 20 rangs critique) et 17 déblocages équipement. Le total de 100 est **[VALIDÉ]** dans la plage GDD; la répartition est **[PROPOSÉE]**.
+  - [x] Acheter chaque nœud dans l’ordre de prérequis, appliquer les bonus, déverrouiller les 10 armes/11 reliques et rendre tous les coûts au respec gratuit; `progression_service_smoke.gd` couvre le graphe complet.
+  - [x] `survival_armorless_mode_smoke.gd` vérifie l’application de tous les bonus persistants et le catalogue complet en Survival et Armorless; le Sandbox reste sans ProgressionService.
+  - [x] La somme linéaire indicative des bonus complets donne 29,7 points (10,7 % HP + 9 % dégâts + 6 % vitesse + 4 points de critique); c’est un proxy **[PROPOSÉ]**, pas une mesure d’équivalence de puissance.
+  - [ ] Calibrer la puissance réelle des profils débutant/moyen/complet dans P6.9; décider ensuite si le graphe doit s’étendre au-delà de 100 vers la cible éditoriale **[PROPOSÉE]** d’environ 120.
 - [ ] **P6.7 — Achievements**
   - [x] Établir le schéma JSON métrique/catégorie/secret/agrégation/paliers/récompenses, aligné sur `AchievementDefinition` du GDD.
   - [x] Migrer Exterminator en première famille `combat` chargée depuis `game/data/achievement_catalog.json`; seuils et bonus de l’exemple restent **[PROPOSÉS]**.

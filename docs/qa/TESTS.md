@@ -677,6 +677,13 @@ Note de clôture : le blocage historique du smoke `sandbox_ui_smoke.gd` décrit 
 - [x] `skill_tree_panel_visual_smoke.gd` couvre le défilement, les cartes générées de tout l’équipement, les coûts proposés, les prérequis et les IDs émis.
 - [x] Le smoke vérifie aussi que le focus clavier révèle le dernier déblocage dans le viewport; capture Xvfb relue à 640×360 logique.
 
+## Arbre de compétences 100 nœuds (2026-10-16)
+
+- [x] `progression_service_smoke.gd` achète les 100 nœuds selon leurs prérequis, vérifie le proxy linéaire proposé de 29,7 points, confirme les déblocages et le remboursement total au respec.
+- [x] `survival_armorless_mode_smoke.gd` applique le profil complet à de vraies sessions Survival et Armorless : HP +10,7 %, dégâts +9 %, mobilité +6 %, critique +4 points, dix armes et onze reliques.
+- [x] `skill_tree_panel_visual_smoke.gd` vérifie le rendu des 94 nœuds générés, le focus clavier jusqu’au dernier rang et la capture à 640×360 logique; les trois viewports passent dans `ui_viewport_layout_smoke.gd`.
+- [ ] Le proxy linéaire ne remplace pas la calibration d’équivalence de puissance des profils, qui reste dans P6.9.
+
 - [x] Le HUD reprend l’orbe XP 16×16 à sa taille native et en nearest, sans changer les valeurs ni le calcul de progression.
 - [x] `survival_hud_smoke.gd` vérifie l’asset, sa taille, son filtrage et les bounds des lignes; exécuté avec Godot 4.7.2, passe.
 

@@ -52,8 +52,13 @@ func _run() -> void:
 	if not weapon_unlock.disabled or not relic_unlock.disabled:
 		_fail("Equipment unlock nodes should remain locked until their prerequisites are met (weapon=%s relic=%s)" % [str(weapon_unlock.disabled), str(relic_unlock.disabled)])
 		return
-	if additional_unlocks.get_child_count() != 15:
-		_fail("The tree should show every remaining playable weapon and relic unlock")
+	if additional_unlocks.get_child_count() != 94 or progression.skill_node_ids().size() != 100:
+		_fail("The tree should render all 100 core-stat and equipment nodes")
+		return
+	var crit_rank_button := _button_for_node(additional_unlocks, "steady_aim_02")
+	if crit_rank_button == null or not crit_rank_button.tooltip_text.contains("+0.15%") or \
+		crit_rank_button.tooltip_text.contains("+0.1%"):
+		_fail("Generated critical chance nodes should disclose their exact proposed increment")
 		return
 	if panel.get_node("Panel/Content/NodeScroll/Rows/UnlockBranch/UnlockWeaponCard/Content/Effect").text != "CRIMSON DAGGERS  •  130 ESSENCE  •  PROPOSED" or \
 		panel.get_node("Panel/Content/NodeScroll/Rows/UnlockBranch/UnlockRelicCard/Content/Effect").text != "BLOOD CHALICE  •  160 ESSENCE  •  PROPOSED":
