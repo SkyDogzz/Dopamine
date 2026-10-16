@@ -238,6 +238,7 @@ var progression_service: RefCounted
 var difficulty_id := "normal"
 var _sprite_renderer: RefCounted
 var _hp_fill_style: StyleBoxFlat
+var _run_state_badge_style: StyleBoxFlat
 var _run_id := ""
 var player: CharacterBody2D
 var loadout: RefCounted
@@ -312,7 +313,7 @@ var _pending_summon_sequences: Dictionary = {}
 @onready var _weapon_icon: TextureRect = $HUD/RunPanel/RunInfo/LoadoutRow/WeaponIcon
 @onready var _xp_value: Label = $HUD/RunPanel/RunInfo/StatusRow/XPRow/XPValue
 @onready var _xp_bar: ProgressBar = $HUD/RunPanel/RunInfo/StatusRow/XPRow/XPBar
-@onready var _run_state: Label = $HUD/MetaPanel/MetaRow/RunState
+@onready var _run_state: Label = $HUD/MetaPanel/MetaRow/RunStateBadge/RunState
 @onready var _wave_value: Label = $HUD/MetaPanel/MetaRow/WaveValue
 @onready var _difficulty_value: Label = $HUD/MetaPanel/MetaRow/DifficultyValue
 @onready var _boss_panel: PanelContainer = $HUD/BossPanel
@@ -931,17 +932,18 @@ func _refresh_hud(state: Dictionary) -> void:
 		equipped_names.append(label)
 	_weapon_value.text = "  •  ".join(equipped_names)
 	if wave_director != null and wave_director.state == WAVE_DIRECTOR_SCRIPT.State.VICTORY:
-		_run_state.text = "VICTORY"
-		_run_state.add_theme_color_override("font_color", Color("#48E69B"))
+		_set_run_status("VICTORY", Color("#48E69B"))
 	elif run_over:
-		_run_state.text = "RUN OVER"
-		_run_state.add_theme_color_override("font_color", Color("#FF7181"))
+		_set_run_status("RUN OVER", Color("#FF7181"))
 	elif state["paused"]:
-		_run_state.text = "PAUSED · ESC" if _manually_paused else "PAUSED"
-		_run_state.add_theme_color_override("font_color", Color("#FFD447"))
+		_set_run_status("PAUSED · ESC" if _manually_paused else "PAUSED", Color("#FFD447"))
 	else:
-		_run_state.text = "IN RUN"
-		_run_state.add_theme_color_override("font_color", Color("#48E69B"))
+		_set_run_status("IN RUN", Color("#48E69B"))
+
+func _set_run_status(text: String, color: Color) -> void:
+	_run_state.text = text
+	_run_state.add_theme_color_override("font_color", color)
+	_run_state_badge_style.border_color = color
 
 func _style_run_hud() -> void:
 	var panel_style := StyleBoxFlat.new()
@@ -960,6 +962,16 @@ func _style_run_hud() -> void:
 	meta_style.border_color = Color("#C25BFF")
 	meta_style.border_width_left = 1
 	$HUD/MetaPanel.add_theme_stylebox_override("panel", meta_style)
+	_run_state_badge_style = StyleBoxFlat.new()
+	_run_state_badge_style.bg_color = Color("#10152B")
+	_run_state_badge_style.border_color = Color("#48E69B")
+	_run_state_badge_style.set_border_width_all(1)
+	_run_state_badge_style.set_corner_radius_all(0)
+	_run_state_badge_style.content_margin_left = 3.0
+	_run_state_badge_style.content_margin_top = 1.0
+	_run_state_badge_style.content_margin_right = 3.0
+	_run_state_badge_style.content_margin_bottom = 1.0
+	$HUD/MetaPanel/MetaRow/RunStateBadge.add_theme_stylebox_override("panel", _run_state_badge_style)
 	var bar_background := StyleBoxFlat.new()
 	bar_background.bg_color = Color("#293354")
 	bar_background.set_corner_radius_all(0)

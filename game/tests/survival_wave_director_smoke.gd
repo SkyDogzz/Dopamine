@@ -96,7 +96,7 @@ func _run() -> void:
 	if not session.run_over or not session.simulation.snapshot()["paused"]:
 		_fail("Defeating the final boss placeholder should complete and pause the Survival run")
 		return
-	if session.get_node("HUD/MetaPanel/MetaRow/RunState").text != "VICTORY":
+	if session.get_node("HUD/MetaPanel/MetaRow/RunStateBadge/RunState").text != "VICTORY":
 		_fail("The final boss should show a distinct victory state")
 		return
 	var result_panel = session.get_node("HUD/RunResultOverlay/RunResultPanel")

@@ -16,6 +16,11 @@ func _run() -> void:
 		_fail("The run HUD should expose the selected difficulty")
 		return
 	session._refresh_hud({"paused": false})
+	var run_state: Label = session.get_node("HUD/MetaPanel/MetaRow/RunStateBadge/RunState")
+	var run_state_style := (session.get_node("HUD/MetaPanel/MetaRow/RunStateBadge") as PanelContainer).get_theme_stylebox("panel") as StyleBoxFlat
+	if run_state.text != "IN RUN" or run_state_style.border_color.to_html(false) != "48e69b":
+		_fail("Active runs should use the green status badge")
+		return
 	if not difficulty.text.contains("HARD"):
 		_fail("The run HUD should show the selected difficulty id")
 		return
@@ -37,6 +42,13 @@ func _run() -> void:
 		session.get_node("HUD/RunPanel/RunInfo/StatusRow/XPRow/XPBar").value != 5.0:
 		_fail("The run HUD should display current health, XP, time, wave and weapon state")
 		return
+	session._manually_paused = true
+	session._refresh_hud({"paused": true})
+	if run_state.text != "PAUSED · ESC" or run_state_style.border_color.to_html(false) != "ffd447":
+		_fail("Paused runs should use the amber status badge and retain the Escape hint")
+		return
+	session._manually_paused = false
+	session._refresh_hud({"paused": false})
 	var boss_panel: Control = session.get_node("HUD/BossPanel")
 	var weapon_label: Label = session.get_node("HUD/RunPanel/RunInfo/LoadoutRow/LoadoutLabel")
 	var hp_row: HBoxContainer = session.get_node_or_null("HUD/RunPanel/RunInfo/StatusRow/HPRow")
