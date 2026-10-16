@@ -592,7 +592,8 @@ P1 livre le Sandbox développeur et ne remplace pas cette feature produit.
   - [x] Brancher les actions preset/share code à l’écran Lab; ajouter l’import JSON par sélecteur de fichier avec validation bornée avant application et l’export JSON par sélecteur de destination.
   - [x] Refuser récursivement dans les payloads les champs nommés comme script, commande, chemin système ou donnée d'identité; les codes ne sérialisent que les champs du schéma public v1 et aucun service de save/progression n'est injecté.
 - [ ] **P8.4 — Import de sauvegarde**
-  - [ ] Lire un profil normal en lecture seule.
+- [x] Ajouter `SaveService.read_slot_read_only` : lit et vérifie le slot courant sans migration, restauration de backup ni écriture; le smoke couvre un ancien payload et un slot courant corrompu. La validation/migration en mémoire et l’import dans le build restent à faire.
+- [ ] Lire un profil normal en lecture seule et le valider/migrer uniquement en mémoire.
   - [ ] Construire une copie Sandbox modifiable.
   - [ ] Comparer la sauvegarde source avant/après et tester import invalide.
 - [ ] **P8.5 — Outils de simulation**

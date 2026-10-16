@@ -6,6 +6,11 @@
 - [x] Dans le menu Pause, `LOCK HEALTH` et `AUTO PICK FIRST CHEST` étaient OFF; la vitesse ×4 était sélectionnée manuellement. Défaite affichée à la vague 2, temps actif 00:45, 14 éliminations; l’écran a affiché +13 Essence et +18 Basic Powder.
 - [ ] Ce parcours établit seulement la branche de défaite. Une victoire réelle, un choix de coffre réel et l’idempotence des récompenses restent à vérifier; les smokes ne ferment pas ces critères P5.V3.
 
+## P8.4 — Base de lecture de sauvegarde en Sandbox — 2026-10-16
+
+- [x] `save_service_smoke.gd` vérifie que la lecture seule renvoie un ancien payload sans migration/écriture et refuse un slot courant corrompu même si un backup existe, sans restaurer ni modifier la source. Le chargement normal continue ensuite à récupérer le backup.
+- [ ] Validation/migration en mémoire, conversion en build Sandbox et import via l’interface restent à implémenter.
+
 ## Progression permanente — équipement classique — 2026-10-16
 
 - [x] Contrat de roll d’équipement : `progression_service_smoke.gd` sauvegarde et recharge un percentile maximal `1.0`; le calcul accepte `[0,1]` inclus et refuse percentile non fini/hors plage et enhancement hors `0..10`. `equipment_stats_smoke.gd` et `equipment_enhancement_smoke.gd` passent également.

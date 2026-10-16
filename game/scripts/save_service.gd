@@ -72,6 +72,11 @@ func load_slot(slot_id: String) -> Dictionary:
 		return backup
 	return result
 
+func read_slot_read_only(slot_id: String) -> Dictionary:
+	if not _valid_slot_id(slot_id):
+		return _load_error("invalid_slot")
+	return _read_path(_slot_path(slot_id))
+
 func _read_path(path: String) -> Dictionary:
 	var file := FileAccess.open(path, FileAccess.READ)
 	if file == null:

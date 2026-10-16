@@ -37,6 +37,12 @@ func _run() -> void:
 	var corrupt_file := FileAccess.open(slot_path, FileAccess.WRITE)
 	corrupt_file.store_string("not json")
 	corrupt_file.close()
+	var corrupt_before := FileAccess.get_file_as_string(slot_path)
+	loaded = service.read_slot_read_only("0")
+	if loaded.get("ok", false) or loaded.get("recovered", false) or \
+			FileAccess.get_file_as_string(slot_path) != corrupt_before:
+		_fail("Read-only access should reject a corrupt current slot without restoring its backup")
+		return
 	loaded = service.load_slot("0")
 	if not loaded.get("ok", false) or not loaded.get("recovered", false) or \
 			loaded["payload"].get("essence") != 10:
@@ -46,6 +52,12 @@ func _run() -> void:
 	var legacy_file := FileAccess.open(legacy_path, FileAccess.WRITE)
 	legacy_file.store_string(JSON.stringify({"essence": 7, "legacy_flag": true}))
 	legacy_file.close()
+	var legacy_before := FileAccess.get_file_as_string(legacy_path)
+	loaded = service.read_slot_read_only("legacy")
+	if not loaded.get("ok", false) or not loaded.get("migrated", false) or \
+			loaded["payload"].get("essence") != 7 or FileAccess.get_file_as_string(legacy_path) != legacy_before:
+		_fail("Read-only slot access should return a legacy payload without migrating or rewriting its source")
+		return
 	loaded = service.load_slot("legacy")
 	if not loaded.get("ok", false) or not loaded.get("migrated", false) or \
 			not loaded.get("migration_saved", false) or loaded["payload"].get("essence") != 7:
