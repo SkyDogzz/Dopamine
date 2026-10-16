@@ -47,13 +47,13 @@ Le hub propose aussi `RUN TEMPORAIRE · SANS SAUVEGARDE` : cette partie démarre
 
 ## Lancer sous Windows
 
-Prérequis : Godot 4.7.2 standard pour Windows x86_64, Visual Studio 2022 avec la charge de travail **Desktop development with C++**, CMake 3.21+ et Git dans le `PATH`. Depuis PowerShell à la racine du dépôt :
+Prérequis : Godot 4.7.2 standard pour Windows x86_64 avec ses export templates 4.7.2, Visual Studio 2022 avec la charge de travail **Desktop development with C++**, CMake 3.21+ et Git dans le `PATH`. Depuis PowerShell à la racine du dépôt :
 
 ```powershell
-.\tools\build_windows.ps1 -GodotExecutable "C:\Godot\Godot_v4.7.2-stable_win64.exe"
+.\tools\build_windows.ps1 -GodotExecutable "C:\Godot\Godot_v4.7.2-stable_win64.exe" -Export
 ```
 
-Le script configure le build MSVC x64, compile les GDExtensions debug et release dans `game/bin/windows`, importe le projet et exécute un smoke qui instancie la simulation native. Il ouvre ensuite le projet avec Godot; pour seulement compiler et vérifier, ajouter `-NoLaunch`. Ajouter `-Export` si les export templates 4.7.2 sont installés. Le workflow [GitHub Actions Windows](.github/workflows/build-windows.yml) installe ces templates, exporte puis lance un smoke headless de `Dopamine Survivor.exe`, et publie l’exécutable autonome comme artefact `dopamine-survivor-windows-x86_64`. Un build Windows natif n’a pas encore été exécuté depuis l’environnement Linux de développement; le runner CI doit fournir cette première validation.
+Le script configure le build MSVC x64, compile les GDExtensions debug et release dans `game/bin/windows`, importe le projet et exécute un smoke qui instancie la simulation native. Avec `-Export` et les export templates 4.7.2 installés, il crée `build/windows/export/Dopamine Survivor.exe` puis lance le jeu exporté. Sans `-Export`, il ouvre le projet dans Godot. Pour seulement compiler et vérifier, ajouter `-NoLaunch`. Si CMake signale un arbre Git `godot-cpp` incomplet (« unable to read tree »), le script supprime uniquement le clone FetchContent généré et retente la configuration. Le workflow [GitHub Actions Windows](.github/workflows/build-windows.yml) installe les templates, exporte puis lance un smoke headless de l’exécutable, et publie le jeu comme artefact `dopamine-survivor-windows-x86_64`. Un build Windows natif n’a pas encore été exécuté depuis l’environnement Linux de développement; le runner CI doit fournir cette première validation.
 
 Vérifications ciblées :
 

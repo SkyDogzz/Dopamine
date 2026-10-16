@@ -12,8 +12,32 @@ $buildPath = Join-Path $repositoryRoot "build/windows"
 $releaseBuildPath = Join-Path $repositoryRoot "build/windows-release"
 $godotPath = (Resolve-Path $GodotExecutable).Path
 
-cmake -S $repositoryRoot -B $buildPath -A x64 -DBUILD_TESTING=ON -DGODOTCPP_TARGET=template_debug
-if ($LASTEXITCODE -ne 0) { throw "CMake configuration failed with exit code $LASTEXITCODE" }
+function Invoke-CMakeConfigure([string[]] $Arguments, [string] $BuildDirectory) {
+	$output = & cmake @Arguments 2>&1
+	$exitCode = $LASTEXITCODE
+	$output | ForEach-Object { Write-Host $_ }
+	if ($exitCode -eq 0) { return }
+
+	$errorText = $output -join "`n"
+	if ($errorText -notmatch "unable to read tree|Failed to checkout tag") {
+		throw "CMake configuration failed with exit code $exitCode"
+	}
+
+	Write-Host "The godot-cpp checkout is incomplete; removing only its generated FetchContent directories and retrying."
+	$dependencyDirectory = Join-Path $BuildDirectory "_deps"
+	foreach ($directoryName in @("godot-cpp-src", "godot-cpp-subbuild", "godot-cpp-build")) {
+		$directory = Join-Path $dependencyDirectory $directoryName
+		if (Test-Path $directory) { Remove-Item -Recurse -Force $directory }
+	}
+	& cmake @Arguments
+	if ($LASTEXITCODE -ne 0) { throw "CMake configuration retry failed with exit code $LASTEXITCODE" }
+}
+
+$debugArguments = @(
+	"-S", $repositoryRoot, "-B", $buildPath, "-A", "x64",
+	"-DBUILD_TESTING=ON", "-DGODOTCPP_TARGET=template_debug"
+)
+Invoke-CMakeConfigure $debugArguments $buildPath
 
 cmake --build $buildPath --config Debug --parallel 4
 if ($LASTEXITCODE -ne 0) { throw "Windows extension build failed with exit code $LASTEXITCODE" }
@@ -22,8 +46,7 @@ $releaseArguments = @(
 	"-S", $repositoryRoot, "-B", $releaseBuildPath, "-A", "x64",
 	"-DBUILD_TESTING=OFF", "-DGODOTCPP_TARGET=template_release"
 )
-& cmake @releaseArguments
-if ($LASTEXITCODE -ne 0) { throw "Release CMake configuration failed with exit code $LASTEXITCODE" }
+Invoke-CMakeConfigure $releaseArguments $releaseBuildPath
 
 cmake --build $releaseBuildPath --config Release --parallel 4
 if ($LASTEXITCODE -ne 0) { throw "Windows release extension build failed with exit code $LASTEXITCODE" }
@@ -49,5 +72,9 @@ if ($Export) {
 }
 
 if (-not $NoLaunch) {
-	& $godotPath --path $projectPath
+	if ($Export) {
+		& $exportPath
+	} else {
+		& $godotPath --path $projectPath
+	}
 }
