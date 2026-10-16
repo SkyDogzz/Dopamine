@@ -1189,12 +1189,14 @@ void SimulationCore::apply_damage(EntityId source, EntityId target, float amount
 			amount, target_health.current, enemy_types_[target.index].threat_level,
 			transforms_[target.index].x, transforms_[target.index].y, enemy_types_[target.index].id});
 	events.back().source_type = source_type;
+	events.back().target_affix = target_type.affix;
 	events.back().target_was_chilled = target_was_chilled;
 	if (target_health.current <= 0.0F) {
 		events.push_back({next_event_sequence_++, CombatEventType::Death, source, target,
 				0.0F, 0.0F, enemy_types_[target.index].threat_level,
 				transforms_[target.index].x, transforms_[target.index].y, enemy_types_[target.index].id});
 		events.back().source_type = source_type;
+		events.back().target_affix = target_type.affix;
 		events.back().target_was_chilled = target_was_chilled;
 		if (allow_volatile_explosion && target_type.death_explosion_radius > 0.0F &&
 				volatile_targets_remaining > 0) {

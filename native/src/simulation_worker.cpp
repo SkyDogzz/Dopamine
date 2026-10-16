@@ -110,7 +110,7 @@ std::optional<SimulationWorkerState> SimulationWorker::capture_state(std::chrono
 }
 
 bool SimulationWorker::restore_state(const SimulationWorkerState &state) {
-	if (state.format_version != 13 || state.next_sequence == 0 ||
+	if (state.format_version != 14 || state.next_sequence == 0 ||
 			state.next_sequence <= state.pending_sequence ||
 			state.pending_commands.size() > max_queued_commands_ ||
 			state.pending_events.size() > max_pending_events_ || state.logs.size() > 100 ||

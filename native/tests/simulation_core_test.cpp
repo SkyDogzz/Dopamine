@@ -89,6 +89,14 @@ int main() {
 			shielded_elite.entity(shielded_id)->type.affix == "Shielded" &&
 			shielded_elite.entity(shielded_id)->type.damage_taken_multiplier == 0.5F,
 			"proposed Shielded elite affix should visibly mark and reduce incoming damage");
+	SimulationCore split_elite;
+	const auto split_id = split_elite.spawn("elite", 0.0F, 0.0F, 1.0F, 0.0F, 0.0F,
+			3.0F, 75.0F, "Split-on-Death");
+	std::vector<dopamine::sim::CombatEvent> split_events;
+	split_elite.apply_direct_damage({}, split_id, 1.0F, split_events);
+	require(split_events.size() == 2 && split_events.back().type == dopamine::sim::CombatEventType::Death &&
+			split_events.back().target_affix == "Split-on-Death",
+			"death events should preserve the elite affix for Survival split behavior");
 	require(exploder_profile && exploder_profile->health == 30.0F && exploder_profile->speed == 60.0F &&
 			exploder_profile->threat_level == 2.0F,
 			"proposed Exploder profile should be available to Survival");

@@ -107,6 +107,8 @@ int64_t CombatSimulation::spawn_enemy(String enemy_type, int64_t count, Vector2 
 		} else if (command.enemy_affix == "Shielded") {
 			command.enemy_move_speed = 75.0F;
 			command.enemy_damage_taken_multiplier = 0.5F;
+		} else if (command.enemy_affix == "Split-on-Death") {
+			command.enemy_move_speed = 75.0F;
 		} else {
 			return 0;
 		}
@@ -510,6 +512,7 @@ Dictionary CombatSimulation::snapshot() const {
 		entry["remaining_health"] = event.remaining_health;
 		entry["threat_level"] = event.threat_level;
 		entry["target_type"] = event.target_type.c_str();
+		entry["target_affix"] = event.target_affix.c_str();
 		entry["source_type"] = event.source_type.c_str();
 		Dictionary position;
 		position["x"] = event.position_x;

@@ -144,6 +144,7 @@ const WAVE_HP_CAP := 12.0
 @export var summoner_cooldown_seconds: float = 8.0
 @export var summoner_spawn_radius: float = 42.0
 @export_range(1, 8) var summoner_max_active_summons: int = 3
+@export_range(1, 4) var split_on_death_summon_count: int = 2
 @export_group("Prototype Lightning Conductor — proposed tuning")
 @export var weapon_enabled: bool = true
 @export var lightning_cooldown: float = 0.5
@@ -602,8 +603,11 @@ func _process(_delta: float) -> void:
 				kill_count += 1
 				var dead_target: Dictionary = event["target"]
 				var dead_enemy_type: String = str(event.get("target_type", ""))
+				var dead_enemy_affix: String = str(event.get("target_affix", ""))
 				var death_position := Vector2(float(event["position"]["x"]), float(event["position"]["y"]))
 				_add_enemy_death_pixels(dead_enemy_type, death_position)
+				if dead_enemy_type == "elite" and dead_enemy_affix == "Split-on-Death":
+					_spawn_split_summons(death_position, state)
 				if bool(event.get("target_was_chilled", false)) and loadout.is_evolved("frost_nova") and str(event.get("source_type", "")) != "absolute_zero":
 					simulation.spawn_projectile("absolute_zero", death_position, Vector2.ZERO,
 							frost_nova_damage * absolute_zero_shatter_damage_multiplier * _weapon_combo_damage_multiplier("frost_nova") * _persistent_damage_multiplier(),
@@ -1048,6 +1052,26 @@ func _spawn_boss_summon(origin: Vector2) -> void:
 	)
 	if sequence > 0:
 		_pending_summon_sequences[sequence] = true
+
+func _spawn_split_summons(origin: Vector2, state: Dictionary) -> void:
+	for sequence in _pending_summon_sequences.keys():
+		if int(state["last_sequence"]) >= int(sequence):
+			_pending_summon_sequences.erase(sequence)
+	var active_summons := _pending_summon_sequences.size()
+	for entity in state["entities"]:
+		var components: Dictionary = entity["components"]
+		if not components.get("IsProjectile", false) and components.get("EnemyType", "") == "summoned":
+			active_summons += 1
+	var children := mini(maxi(0, split_on_death_summon_count),
+			maxi(0, summoner_max_active_summons - active_summons))
+	for index in range(children):
+		var direction := Vector2.from_angle(TAU * float(index) / float(children))
+		var hp_multiplier := _enemy_hp_multiplier(wave_director.wave) if wave_director != null else 1.0
+		var sequence: int = simulation.spawn_enemy(
+			"summoned", 1, origin + direction * 18.0, direction, hp_multiplier
+		)
+		if sequence > 0:
+			_pending_summon_sequences[sequence] = true
 
 func _apply_pending_lifesteal(elapsed_active_time: float) -> void:
 	if elapsed_active_time <= 0.0 or _pending_lifesteal <= 0.0 or run_over:
@@ -1503,13 +1527,17 @@ func _try_spawn_elite() -> void:
 	simulation.spawn_enemy("elite", 1, spawn_position, Vector2.ZERO, hp_multiplier, affix)
 
 func _elite_affix_for_roll(roll: float) -> String:
-	if roll < 0.2:
+	if roll < 1.0 / 6.0:
 		return "Hasted"
-	if roll < 0.4:
+	if roll < 2.0 / 6.0:
 		return "Armored"
-	if roll < 0.6:
+	if roll < 3.0 / 6.0:
 		return "Regenerating"
-	return "Volatile" if roll < 0.8 else "Shielded"
+	if roll < 4.0 / 6.0:
+		return "Volatile"
+	if roll < 5.0 / 6.0:
+		return "Shielded"
+	return "Split-on-Death"
 
 func _spawn_boss_placeholder(boss_type: String) -> void:
 	if not spawn_initial_enemy or _boss_spawn_pending:

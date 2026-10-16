@@ -5,10 +5,10 @@ func _initialize() -> void:
 
 func _run() -> void:
 	var session: Node2D = load("res://scenes/survival_session.tscn").instantiate()
-	if session._elite_affix_for_roll(0.1) != "Hasted" or session._elite_affix_for_roll(0.3) != "Armored" or \
-			session._elite_affix_for_roll(0.5) != "Regenerating" or session._elite_affix_for_roll(0.7) != "Volatile" or \
-			session._elite_affix_for_roll(0.9) != "Shielded":
-		_fail("Elite roll should select all five supported affixes at their thresholds")
+	if session._elite_affix_for_roll(0.1) != "Hasted" or session._elite_affix_for_roll(0.25) != "Armored" or \
+			session._elite_affix_for_roll(0.4) != "Regenerating" or session._elite_affix_for_roll(0.55) != "Volatile" or \
+			session._elite_affix_for_roll(0.75) != "Shielded" or session._elite_affix_for_roll(0.9) != "Split-on-Death":
+		_fail("Elite roll should select all six supported affixes at their thresholds")
 		return
 	session.spawn_initial_enemy = false
 	session.wave_spawning_enabled = true
@@ -18,7 +18,7 @@ func _run() -> void:
 	session.elite_chest_drop_chance = 1.0
 	root.add_child(session)
 	await process_frame
-	if session.simulation.spawn_enemy("elite", 1, Vector2.ZERO, Vector2.ZERO, 1.0, "Split-on-Death") != 0:
+	if session.simulation.spawn_enemy("elite", 1, Vector2.ZERO, Vector2.ZERO, 1.0, "Phaser") != 0:
 		_fail("Elite spawn should reject an affix that has no gameplay implementation")
 		return
 	if session.simulation.spawn_enemy("chaser", 1, Vector2.ZERO, Vector2.ZERO, 1.0, "Hasted") != 0:
@@ -54,8 +54,9 @@ func _run() -> void:
 			is_equal_approx(float(components["DeathExplosionDamage"]), 18.0)
 	var valid_shielded := affix == "Shielded" and bool(components["Shielded"]) and \
 			is_equal_approx(float(components["DamageTakenMultiplier"]), 0.5)
-	if not valid_hasted and not valid_armored and not valid_regenerating and not valid_volatile and not valid_shielded:
-		_fail("Elite snapshot should expose a working Hasted, Armored, Regenerating, Volatile or Shielded affix")
+	var valid_split := affix == "Split-on-Death"
+	if not valid_hasted and not valid_armored and not valid_regenerating and not valid_volatile and not valid_shielded and not valid_split:
+		_fail("Elite snapshot should expose one of the six implemented affixes")
 		return
 	session._try_spawn_elite()
 	await process_frame
@@ -109,8 +110,71 @@ func _run() -> void:
 	if session._world_chests.is_empty():
 		_fail("Guaranteed elite chest setting should produce a reward")
 		return
+	session._finish_run(false)
+	var split_session: Node2D = load("res://scenes/survival_session.tscn").instantiate()
+	split_session.spawn_initial_enemy = false
+	split_session.wave_spawning_enabled = false
+	split_session.skip_starting_weapon_choice = true
+	root.add_child(split_session)
+	if not await _wait_until(func() -> bool: return not split_session.simulation.snapshot()["paused"]):
+		_fail("Split-on-Death scenario should start its simulation")
+		return
+	split_session.summoner_max_active_summons = 2
+	split_session.split_on_death_summon_count = 2
+	var elite_position := split_session.player.global_position + Vector2(180.0, 0.0)
+	var split_spawn_sequence: int = split_session.simulation.spawn_enemy(
+		"elite", 1, elite_position, Vector2.ZERO, 1.0, "Split-on-Death"
+	)
+	if not await _wait_until(func() -> bool:
+		return int(split_session.simulation.snapshot()["last_sequence"]) >= split_spawn_sequence
+	):
+		_fail("Split-on-Death elite should reach the simulation")
+		return
+	var split_entity: Dictionary = {}
+	for entity in split_session.simulation.snapshot()["entities"]:
+		if entity["components"].get("Affix", "") == "Split-on-Death":
+			split_entity = entity
+			break
+	if split_entity.is_empty():
+		_fail("Split-on-Death affix should be published on the elite")
+		return
+	var split_transform: Dictionary = split_entity["components"]["Transform2D"]
+	var split_pause_sequence: int = split_session.simulation.pause()
+	if not await _wait_until(func() -> bool:
+		var state: Dictionary = split_session.simulation.snapshot()
+		return state["paused"] and int(state["last_sequence"]) >= split_pause_sequence
+	):
+		_fail("Split-on-Death scenario should pause before its deterministic kill")
+		return
+	var split_position := Vector2(float(split_transform["x"]), float(split_transform["y"]))
+	var split_projectile_sequence: int = split_session.simulation.spawn_projectile(
+		"split_elite_smoke_bolt", split_position, Vector2.ZERO, 1000.0, 32.0, 1.0
+	)
+	if not await _wait_until(func() -> bool:
+		return int(split_session.simulation.snapshot()["last_sequence"]) >= split_projectile_sequence
+	):
+		_fail("Split-on-Death test projectile should reach the simulation")
+		return
+	var split_step_sequence: int = split_session.simulation.step(0.01)
+	if not await _wait_until(func() -> bool:
+		return int(split_session.simulation.snapshot()["last_sequence"]) >= split_step_sequence
+	):
+		_fail("Split-on-Death deterministic kill step should complete")
+		return
+	if not await _wait_until(func() -> bool:
+		return _count_enemy_type(split_session.simulation.snapshot()["entities"], "summoned") == 2
+	):
+		_fail("Split-on-Death should spawn two adds within the global summon cap")
+		return
 	print("Survival elite smoke passed")
 	quit()
+
+func _count_enemy_type(entities: Array, enemy_type: String) -> int:
+	var count := 0
+	for entity in entities:
+		if entity["components"].get("EnemyType", "") == enemy_type:
+			count += 1
+	return count
 
 func _wait_until(predicate: Callable) -> bool:
 	var deadline := Time.get_ticks_msec() + 1500
