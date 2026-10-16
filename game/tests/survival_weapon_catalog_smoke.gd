@@ -206,9 +206,9 @@ func _nearest_weapon_targets_skip_dead_enemies() -> bool:
 			"Health": {"current": 10.0}, "Transform2D": {"x": origin.x + 50.0, "y": origin.y},
 		}},
 	]
-	var nearest: Dictionary = session._nearest_enemy(100.0)
+	var nearest: Dictionary = session._nearest_enemy(620.0)
 	var excluded_ids: Array[Vector2i] = []
-	var lightning_targets: Array = session._nearest_lightning_targets(origin, excluded_ids, 1, 100.0)
+	var lightning_targets: Array = session._nearest_lightning_targets(origin, excluded_ids, 1, 300.0)
 	session._entities = [session._entities[0]]
 	if not session.loadout.apply_offer("weapon:frost_nova"):
 		session.queue_free()
@@ -247,15 +247,15 @@ func _lightning_prioritizes_chainable_clusters() -> bool:
 	session.lightning_range = 400.0
 	session.lightning_chain_range = 90.0
 	session._entities = [
-		{"id": {"index": 81, "generation": 1}, "components": {"Health": {"current": 100.0}, "Transform2D": {"x": origin.x + 40.0, "y": origin.y}}},
-		{"id": {"index": 82, "generation": 1}, "components": {"Health": {"current": 100.0}, "Transform2D": {"x": origin.x + 160.0, "y": origin.y}}},
-		{"id": {"index": 83, "generation": 1}, "components": {"Health": {"current": 100.0}, "Transform2D": {"x": origin.x + 200.0, "y": origin.y + 10.0}}},
-		{"id": {"index": 84, "generation": 1}, "components": {"Health": {"current": 100.0}, "Transform2D": {"x": origin.x + 240.0, "y": origin.y}}},
-		{"id": {"index": 85, "generation": 1}, "components": {"Health": {"current": 0.0}, "Transform2D": {"x": origin.x + 180.0, "y": origin.y + 5.0}}},
+		{"id": {"index": 81, "generation": 1}, "components": {"Health": {"current": 100.0}, "Transform2D": {"x": origin.x + 20.0, "y": origin.y}}},
+		{"id": {"index": 82, "generation": 1}, "components": {"Health": {"current": 100.0}, "Transform2D": {"x": origin.x + 55.0, "y": origin.y}}},
+		{"id": {"index": 83, "generation": 1}, "components": {"Health": {"current": 100.0}, "Transform2D": {"x": origin.x + 75.0, "y": origin.y + 10.0}}},
+		{"id": {"index": 84, "generation": 1}, "components": {"Health": {"current": 100.0}, "Transform2D": {"x": origin.x + 95.0, "y": origin.y}}},
+		{"id": {"index": 85, "generation": 1}, "components": {"Health": {"current": 0.0}, "Transform2D": {"x": origin.x + 65.0, "y": origin.y + 5.0}}},
 	]
 	var targets: Array[Dictionary] = session._lightning_initial_targets(2)
 	session.queue_free()
-	return targets.size() == 2 and targets[0].get("id") == Vector2i(82, 1) and targets[1].get("id") == Vector2i(83, 1)
+	return targets.size() == 2 and targets[0].get("id") == Vector2i(83, 1) and targets[1].get("id") == Vector2i(82, 1)
 
 func _inferno_prioritizes_high_threat() -> bool:
 	var session: Node2D = load("res://scenes/survival_session.tscn").instantiate()
@@ -271,11 +271,11 @@ func _inferno_prioritizes_high_threat() -> bool:
 		}},
 		{"id": {"index": 22, "generation": 1}, "components": {
 			"Health": {"current": 100.0}, "ThreatLevel": 4.0,
-			"Transform2D": {"x": origin.x + 180.0, "y": origin.y},
+			"Transform2D": {"x": origin.x + 100.0, "y": origin.y},
 		}},
 		{"id": {"index": 23, "generation": 1}, "components": {
 			"Health": {"current": 100.0}, "ThreatLevel": 4.0,
-			"Transform2D": {"x": origin.x + 240.0, "y": origin.y},
+			"Transform2D": {"x": origin.x + 130.0, "y": origin.y},
 		}},
 		{"id": {"index": 24, "generation": 1}, "components": {
 			"Health": {"current": 100.0}, "ThreatLevel": 10.0,
@@ -298,10 +298,10 @@ func _toxic_cloud_prioritizes_durable_targets() -> bool:
 			"Health": {"current": 20.0}, "Transform2D": {"x": origin.x + 60.0, "y": origin.y},
 		}},
 		{"id": {"index": 32, "generation": 1}, "components": {
-			"Health": {"current": 100.0}, "Transform2D": {"x": origin.x + 180.0, "y": origin.y},
+			"Health": {"current": 100.0}, "Transform2D": {"x": origin.x + 100.0, "y": origin.y},
 		}},
 		{"id": {"index": 33, "generation": 1}, "components": {
-			"Health": {"current": 100.0}, "Transform2D": {"x": origin.x + 240.0, "y": origin.y},
+			"Health": {"current": 100.0}, "Transform2D": {"x": origin.x + 130.0, "y": origin.y},
 		}},
 		{"id": {"index": 34, "generation": 1}, "components": {
 			"Health": {"current": 1000.0}, "Transform2D": {"x": origin.x + 20.0, "y": origin.y},
@@ -402,10 +402,10 @@ func _sawblades_prioritizes_ricochet_clusters() -> bool:
 	await process_frame
 	var origin: Vector2 = session.player.global_position
 	session._entities = [
-		{"id": {"index": 31, "generation": 1}, "components": {"Health": {"current": 100.0}, "Transform2D": {"x": origin.x + 60.0, "y": origin.y}}},
-		{"id": {"index": 32, "generation": 1}, "components": {"Health": {"current": 100.0}, "Transform2D": {"x": origin.x + 220.0, "y": origin.y}}},
-		{"id": {"index": 33, "generation": 1}, "components": {"Health": {"current": 100.0}, "Transform2D": {"x": origin.x + 250.0, "y": origin.y + 20.0}}},
-		{"id": {"index": 34, "generation": 1}, "components": {"Health": {"current": 100.0}, "Transform2D": {"x": origin.x + 280.0, "y": origin.y}}},
+		{"id": {"index": 31, "generation": 1}, "components": {"Health": {"current": 100.0}, "Transform2D": {"x": origin.x + 20.0, "y": origin.y}}},
+		{"id": {"index": 32, "generation": 1}, "components": {"Health": {"current": 100.0}, "Transform2D": {"x": origin.x + 90.0, "y": origin.y}}},
+		{"id": {"index": 33, "generation": 1}, "components": {"Health": {"current": 100.0}, "Transform2D": {"x": origin.x + 110.0, "y": origin.y + 10.0}}},
+		{"id": {"index": 34, "generation": 1}, "components": {"Health": {"current": 100.0}, "Transform2D": {"x": origin.x + 130.0, "y": origin.y}}},
 	]
 	var clustered: Dictionary = session._sawblades_cluster_target()
 	var cluster_selected: bool = clustered.get("id", Vector2i(-1, -1)) == Vector2i(32, 1)
@@ -443,9 +443,9 @@ func _prism_laser_prioritizes_dense_groups() -> bool:
 	var origin: Vector2 = session.player.global_position
 	session._entities = [
 		{"id": {"index": 61, "generation": 1}, "components": {"Health": {"current": 100.0}, "Transform2D": {"x": origin.x + 20.0, "y": origin.y}}},
-		{"id": {"index": 62, "generation": 1}, "components": {"Health": {"current": 100.0}, "Transform2D": {"x": origin.x + 220.0, "y": origin.y}}},
-		{"id": {"index": 63, "generation": 1}, "components": {"Health": {"current": 300.0}, "Transform2D": {"x": origin.x + 250.0, "y": origin.y + 20.0}}},
-		{"id": {"index": 64, "generation": 1}, "components": {"Health": {"current": 50.0}, "Transform2D": {"x": origin.x + 280.0, "y": origin.y}}},
+		{"id": {"index": 62, "generation": 1}, "components": {"Health": {"current": 100.0}, "Transform2D": {"x": origin.x + 120.0, "y": origin.y}}},
+		{"id": {"index": 63, "generation": 1}, "components": {"Health": {"current": 300.0}, "Transform2D": {"x": origin.x + 145.0, "y": origin.y + 10.0}}},
+		{"id": {"index": 64, "generation": 1}, "components": {"Health": {"current": 50.0}, "Transform2D": {"x": origin.x + 170.0, "y": origin.y}}},
 	]
 	var primary: Dictionary = session._prism_cluster_target(session.prism_laser_range)
 	var excluded: Array[Vector2i] = [primary.get("id", Vector2i(-1, -1))]
@@ -463,7 +463,7 @@ func _void_orb_pulls_and_pierces() -> bool:
 	session.xp_collection_radius = 0.0
 	session.void_orb_cooldown = 1000.0
 	session.void_orb_speed = 1000.0
-	session.void_orb_range = 400.0
+	session.void_orb_range = 620.0
 	session.void_orb_lifetime = 1.0
 	root.add_child(session)
 	await process_frame
@@ -473,7 +473,7 @@ func _void_orb_pulls_and_pierces() -> bool:
 	session.simulation.set_speed(4.0)
 	await _wait_for_simulation_speed(session, 4.0)
 	session.simulation.spawn("test_target", 1, Vector2(150.0, 0.0), 100.0, Vector2.ZERO)
-	session.simulation.spawn("test_target", 1, Vector2(180.0, 0.0), 100.0, Vector2.ZERO)
+	session.simulation.spawn("test_target", 1, Vector2(170.0, 0.0), 100.0, Vector2.ZERO)
 	if (await _wait_for_targets(session, 2)).size() != 2:
 		session.queue_free()
 		return false
@@ -505,7 +505,7 @@ func _frost_nova_chills_and_shatters() -> bool:
 	session.skip_starting_weapon_choice = true
 	session.contact_damage_per_hit = 0.0
 	session.xp_collection_radius = 0.0
-	session.frost_nova_radius = 160.0
+	session.frost_nova_radius = 40.0
 	session.frost_nova_cooldown = 1000.0
 	session.frost_nova_damage = 10.0
 	root.add_child(session)
@@ -519,8 +519,8 @@ func _frost_nova_chills_and_shatters() -> bool:
 		return false
 	session.simulation.set_speed(4.0)
 	await _wait_for_simulation_speed(session, 4.0)
-	session.simulation.spawn("test_target", 1, Vector2(100.0, 0.0), 20.0, Vector2.ZERO)
-	session.simulation.spawn("test_target", 1, Vector2(130.0, 0.0), 100.0, Vector2.ZERO)
+	session.simulation.spawn("test_target", 1, Vector2(20.0, 0.0), 20.0, Vector2.ZERO)
+	session.simulation.spawn("test_target", 1, Vector2(30.0, 0.0), 100.0, Vector2.ZERO)
 	if (await _wait_for_targets(session, 2)).size() != 2:
 		session.queue_free()
 		return false
@@ -595,18 +595,18 @@ func _meteor_staff_prioritizes_densest_group() -> bool:
 	await process_frame
 	var origin: Vector2 = session.player.global_position
 	session._entities = [
-		{"id": {"index": 71, "generation": 1}, "components": {"Health": {"current": 100.0}, "Transform2D": {"x": origin.x + 60.0, "y": origin.y}}},
-		{"id": {"index": 72, "generation": 1}, "components": {"Health": {"current": 100.0}, "Transform2D": {"x": origin.x + 220.0, "y": origin.y}}},
-		{"id": {"index": 73, "generation": 1}, "components": {"Health": {"current": 100.0}, "Transform2D": {"x": origin.x + 250.0, "y": origin.y}}},
-		{"id": {"index": 74, "generation": 1}, "components": {"Health": {"current": 100.0}, "Transform2D": {"x": origin.x + 280.0, "y": origin.y}}},
-		{"id": {"index": 75, "generation": 1}, "components": {"Health": {"current": 0.0}, "Transform2D": {"x": origin.x + 250.0, "y": origin.y + 30.0}}},
+		{"id": {"index": 71, "generation": 1}, "components": {"Health": {"current": 100.0}, "Transform2D": {"x": origin.x + 20.0, "y": origin.y}}},
+		{"id": {"index": 72, "generation": 1}, "components": {"Health": {"current": 100.0}, "Transform2D": {"x": origin.x + 90.0, "y": origin.y}}},
+		{"id": {"index": 73, "generation": 1}, "components": {"Health": {"current": 100.0}, "Transform2D": {"x": origin.x + 110.0, "y": origin.y}}},
+		{"id": {"index": 74, "generation": 1}, "components": {"Health": {"current": 100.0}, "Transform2D": {"x": origin.x + 130.0, "y": origin.y}}},
+		{"id": {"index": 75, "generation": 1}, "components": {"Health": {"current": 0.0}, "Transform2D": {"x": origin.x + 110.0, "y": origin.y + 30.0}}},
 	]
 	var target: Dictionary = session._meteor_cluster_target()
 	session._entities.clear()
 	var no_target: Dictionary = session._meteor_cluster_target()
 	session.queue_free()
-	return target.get("id", Vector2i(-1, -1)) == Vector2i(72, 1) and \
-		Vector2(target.get("position", Vector2.ZERO)).is_equal_approx(origin + Vector2(250.0, 0.0)) and no_target.is_empty()
+	return target.get("id", Vector2i(-1, -1)) == Vector2i(73, 1) and \
+		Vector2(target.get("position", Vector2.ZERO)).is_equal_approx(origin + Vector2(110.0, 0.0)) and no_target.is_empty()
 
 func _meteor_staff_targets_groups_and_starfall_fragments() -> bool:
 	var session: Node2D = load("res://scenes/survival_session.tscn").instantiate()
@@ -900,7 +900,7 @@ func _infinite_circuit_branches() -> bool:
 	if not await _wait_for_simulation_speed(session, 4.0):
 		session.queue_free()
 		return false
-	var points := [Vector2(160.0, -20.0), Vector2(160.0, 20.0), Vector2(200.0, -20.0), Vector2(200.0, 20.0), Vector2(240.0, -20.0), Vector2(240.0, 20.0)]
+	var points := [Vector2(40.0, -10.0), Vector2(40.0, 10.0), Vector2(60.0, -10.0), Vector2(60.0, 10.0), Vector2(80.0, -10.0), Vector2(80.0, 10.0)]
 	for point in points:
 		session.simulation.spawn("test_target", 1, point, 100.0, Vector2.ZERO)
 	var targets := await _wait_for_targets(session, 6)

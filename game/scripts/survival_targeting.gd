@@ -1,5 +1,12 @@
 extends RefCounted
 
+# The camera shows a 640x360 logical viewport centered on the player. Keeping
+# every weapon's targeting radius within the 180-unit half-height guarantees
+# selected targets stay inside the visible rectangle in every direction.
+const VISIBLE_TARGET_RADIUS := 180.0
+const BASE_MAX_WEAPON_RANGE := 620.0
+const WEAPON_RANGE_SCALE := VISIBLE_TARGET_RADIUS / BASE_MAX_WEAPON_RANGE
+
 const MINIGUN_RANGE := 620.0
 const INFERNO_RANGE := 520.0
 const TOXIC_RANGE := 560.0
@@ -13,6 +20,15 @@ const METEOR_RANGE := 620.0
 const METEOR_CLUSTER_RADIUS := 110.0
 const PRISM_RANGE := 620.0
 const PRISM_CLUSTER_RADIUS := 180.0
+
+static func weapon_range(base_range: float, upgrade_multiplier := 1.0, area_multiplier := 1.0) -> float:
+	return minf(base_range * WEAPON_RANGE_SCALE * upgrade_multiplier * area_multiplier, VISIBLE_TARGET_RADIUS)
+
+static func visible_range(base_range: float) -> float:
+	return minf(base_range * WEAPON_RANGE_SCALE, VISIBLE_TARGET_RADIUS)
+
+static func is_inside_visible_radius(origin: Vector2, target: Vector2) -> bool:
+	return origin.distance_squared_to(target) <= VISIBLE_TARGET_RADIUS * VISIBLE_TARGET_RADIUS
 
 static func preview_defaults(policy: String) -> Dictionary:
 	match policy:

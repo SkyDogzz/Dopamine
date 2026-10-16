@@ -149,6 +149,8 @@ Dans Survival, le joueur accepte WASD et les quatre flèches via les mêmes acti
 
 ## Règles de propriété
 
+La fenêtre logique Survival mesure 640×360 et la caméra reste centrée sur le joueur. Les portées de ciblage des dix armes appliquent le même facteur `180 / 620 = 0,2903`, soit une réduction d’environ 71 % : la portée initiale maximale de 620 unités devient 180 unités. Le rayon de 180 unités correspond à la moitié de la hauteur visible et garantit une cible à l’écran quelle que soit sa direction. Les bonus de niveau/zone sont pris en compte et plafonnés à ce rayon; les cibles secondaires de Prism et les rebonds de foudre sont eux aussi gardés dans le cercle visible. Ces chiffres de portée restent **[PROPOSÉS]** et leur calibrage reste **[OUVERT]**.
+
 - Simulation : autorité sur HP/positions des ennemis et impacts de projectiles.
 - Godot : autorité sur menus, progression permanente, rendu et entrées.
 - Joueur/boss : `SurvivalSession` garde provisoirement le HP et le transform joueur sous autorité Godot, testés dans l’intégration ; l’autorité des hitboxes/collisions joueur-boss et leur contrat complet restent **OUVERTS**. Le prototype applique un cooldown de contact corps à corps séparément par ID/génération d’ennemi ; projectiles ennemis et attaques de zone n’utilisent pas ce cooldown. La durée par ennemi de 0,35 s reste **[PROPOSÉE]**.

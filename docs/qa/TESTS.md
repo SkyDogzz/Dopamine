@@ -2,7 +2,7 @@
 
 ## Politiques de ciblage exposées dans le Sandbox — 2026-10-16
 
-- [x] `survival_targeting_smoke.gd` vérifie nearest, farthest, highest threat, highest HP, lowest HP, la priorité PV max de Prism dans une grappe dense, les cibles de grappes, le centroïde Meteor, la portée et l’exclusion des ennemis morts, des projectiles et des orbes XP. Ces règles restent **[PROPOSÉES]**.
+- [x] `survival_targeting_smoke.gd` vérifie nearest, farthest, highest threat, highest HP, lowest HP, la priorité PV max de Prism dans une grappe dense, les cibles de grappes, le centroïde Meteor, la réduction commune des portées (−71 %, plafond visible de 180 unités), le plafond après bonus de niveau/zone et l’exclusion des ennemis morts, des projectiles et des orbes XP. Ces règles restent **[PROPOSÉES]**.
 - [x] `sandbox_ui_smoke.gd` vérifie le sélecteur à neuf politiques, l’ID ou centroïde affiché, les portées et rayons de grappe par défaut, l’effet du choix de politique et de portée, l’effacement après kill-all et la préservation du fixture de sauvegarde normale. Capture Xvfb relue à 640×360; cible, marqueur et réglages restent dans leurs cadres.
 - [x] `survival_weapon_catalog_smoke.gd` passe après extraction; ses fixtures positionnées vérifient le regroupement Lightning/Sawblades/Meteor/Prism, les choix par menace/PV/distance, le ciblage faible PV des Crimson Daggers, le focus PV max de Prism et le maintien/reciblage du Minigun.
 - [x] Import Godot 4.7.2 et CTest passent : 47/47 tests, dont le smoke commun de ciblage et les scénarios Sandbox.

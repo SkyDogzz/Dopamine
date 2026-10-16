@@ -1758,7 +1758,7 @@ func _fire_infinite_circuit(active_time: float, target_budget: int, damage_multi
 func _nearest_lightning_targets(origin: Vector2, excluded_ids: Array[Vector2i], limit: int,
 		max_range: float = -1.0, entities: Variant = null) -> Array[Dictionary]:
 	var candidates: Array[Dictionary] = []
-	var range_limit := lightning_range if max_range < 0.0 else max_range
+	var range_limit := SURVIVAL_TARGETING.visible_range(lightning_range) if max_range < 0.0 else SURVIVAL_TARGETING.visible_range(max_range)
 	var max_distance_squared := range_limit * range_limit
 	var search_entities: Array = _entities if entities == null else entities
 	for entity in search_entities:
@@ -1772,7 +1772,7 @@ func _nearest_lightning_targets(origin: Vector2, excluded_ids: Array[Vector2i], 
 		var transform: Dictionary = components["Transform2D"]
 		var position := Vector2(float(transform["x"]), float(transform["y"]))
 		var distance_squared := origin.distance_squared_to(position)
-		if distance_squared < max_distance_squared:
+		if distance_squared < max_distance_squared and SURVIVAL_TARGETING.is_inside_visible_radius(player.global_position, position):
 			candidates.append({"id": entity_id, "position": position, "distance_squared": distance_squared})
 	candidates.sort_custom(func(a: Dictionary, b: Dictionary) -> bool: return a["distance_squared"] < b["distance_squared"])
 	if candidates.size() > limit:
@@ -1783,7 +1783,8 @@ func _lightning_initial_targets(limit: int) -> Array[Dictionary]:
 	if limit <= 0:
 		return []
 	var primary := SURVIVAL_TARGETING.select_dense_cluster_target(
-		_entities, player.global_position, lightning_range, lightning_chain_range)
+		_entities, player.global_position, SURVIVAL_TARGETING.visible_range(lightning_range),
+		SURVIVAL_TARGETING.visible_range(lightning_chain_range))
 	if primary.is_empty():
 		return []
 	var targets: Array[Dictionary] = [primary]
@@ -1797,7 +1798,7 @@ func _lightning_initial_targets(limit: int) -> Array[Dictionary]:
 func _fire_inferno_sprayer(active_time: float, paused: bool) -> void:
 	if not weapon_enabled or loadout.weapon_level("inferno_sprayer") == 0 or paused or _chest_open or run_over or inferno_cooldown <= 0.0 or active_time < _next_inferno_time:
 		return
-	var target := _highest_threat_enemy(inferno_range)
+	var target := _highest_threat_enemy(SURVIVAL_TARGETING.visible_range(inferno_range))
 	if target.is_empty():
 		return
 	var direction: Vector2 = (target["position"] - player.global_position).normalized()
@@ -1828,7 +1829,7 @@ func _fire_inferno_sprayer(active_time: float, paused: bool) -> void:
 func _fire_crimson_daggers(active_time: float, paused: bool) -> void:
 	if not weapon_enabled or loadout.weapon_level("crimson_daggers") == 0 or paused or _chest_open or run_over or daggers_cooldown <= 0.0 or active_time < _next_daggers_time:
 		return
-	var target := _lowest_health_enemy(daggers_range)
+	var target := _lowest_health_enemy(SURVIVAL_TARGETING.visible_range(daggers_range))
 	if target.is_empty():
 		return
 	var direction: Vector2 = (target["position"] - player.global_position).normalized()
@@ -1866,9 +1867,10 @@ func _fire_crimson_daggers(active_time: float, paused: bool) -> void:
 func _fire_minigun(active_time: float, paused: bool) -> void:
 	if not weapon_enabled or loadout.weapon_level("minigun") == 0 or paused or _chest_open or run_over or minigun_cooldown <= 0.0:
 		return
-	var target := _enemy_by_id_in_range(_minigun_target_id, minigun_range)
+	var weapon_range := SURVIVAL_TARGETING.visible_range(minigun_range)
+	var target := _enemy_by_id_in_range(_minigun_target_id, weapon_range)
 	if target.is_empty():
-		target = _nearest_enemy(minigun_range)
+		target = _nearest_enemy(weapon_range)
 	if target.is_empty():
 		_minigun_target_id = Vector2i(-1, -1)
 		_redline_fire_time = 0.0
@@ -1902,7 +1904,7 @@ func _fire_minigun(active_time: float, paused: bool) -> void:
 func _fire_toxic_cloud(active_time: float, paused: bool) -> void:
 	if not weapon_enabled or loadout.weapon_level("toxic_cloud") == 0 or paused or _chest_open or run_over or toxic_cooldown <= 0.0 or active_time < _next_toxic_time:
 		return
-	var target := _highest_health_enemy(toxic_range)
+	var target := _highest_health_enemy(SURVIVAL_TARGETING.visible_range(toxic_range))
 	if target.is_empty():
 		return
 	var level: int = loadout.weapon_level("toxic_cloud")
@@ -1982,7 +1984,8 @@ func _fire_prism_laser(active_time: float, paused: bool) -> void:
 		return
 	var level: int = loadout.weapon_level("prism_laser")
 	var range_multiplier := (1.2 if level >= 3 else 1.0) * (1.15 if level >= 4 else 1.0)
-	var laser_range := _equipment_area(prism_laser_range * range_multiplier)
+	var area_multiplier: float = 1.0 + (_equipment_bonus("area_pct") + loadout.global_relic_bonus("area_pct")) / 100.0
+	var laser_range := SURVIVAL_TARGETING.weapon_range(prism_laser_range, range_multiplier, area_multiplier)
 	var target := _prism_cluster_target(laser_range)
 	if target.is_empty():
 		return
@@ -1993,7 +1996,8 @@ func _fire_prism_laser(active_time: float, paused: bool) -> void:
 	if evolved:
 		var excluded: Array[Vector2i] = [target["id"]]
 		for _beam in range(spectrum_collapse_secondary_beams):
-			var secondary := _nearest_enemy_excluding(target["position"], spectrum_collapse_cluster_radius, excluded)
+			var secondary := _nearest_enemy_excluding(target["position"],
+				SURVIVAL_TARGETING.visible_range(spectrum_collapse_cluster_radius), excluded)
 			if secondary.is_empty():
 				break
 			targets.append(secondary)
@@ -2020,7 +2024,7 @@ func _fire_prism_laser(active_time: float, paused: bool) -> void:
 func _fire_void_orb(active_time: float, paused: bool) -> void:
 	if not weapon_enabled or loadout.weapon_level("void_orb") == 0 or paused or _chest_open or run_over or void_orb_cooldown <= 0.0 or active_time < _next_void_orb_time:
 		return
-	var target := _farthest_enemy(void_orb_range)
+	var target := _farthest_enemy(SURVIVAL_TARGETING.visible_range(void_orb_range))
 	if target.is_empty():
 		return
 	var level: int = loadout.weapon_level("void_orb")
@@ -2047,7 +2051,9 @@ func _fire_frost_nova(active_time: float, paused: bool) -> void:
 	if not weapon_enabled or level == 0 or paused or _chest_open or run_over or frost_nova_cooldown <= 0.0 or active_time < _next_frost_nova_time:
 		return
 	var evolved: bool = loadout.is_evolved("frost_nova")
-	var radius := _equipment_area(frost_nova_radius * (1.2 if level >= 3 else 1.0))
+	var area_multiplier: float = 1.0 + (_equipment_bonus("area_pct") + loadout.global_relic_bonus("area_pct")) / 100.0
+	var radius := SURVIVAL_TARGETING.weapon_range(frost_nova_radius,
+		1.2 if level >= 3 else 1.0, area_multiplier)
 	var duration := frost_chill_duration_seconds * (1.2 if level >= 4 else 1.0)
 	var target_count := 0
 	for entity in _entities:
@@ -2082,22 +2088,25 @@ func _nearest_enemy_excluding(origin: Vector2, max_range: float, excluded: Array
 		var transform: Dictionary = components["Transform2D"]
 		var point := Vector2(float(transform["x"]), float(transform["y"]))
 		var distance_squared := origin.distance_squared_to(point)
-		if distance_squared < best_distance_squared:
+		if distance_squared < best_distance_squared and SURVIVAL_TARGETING.is_inside_visible_radius(player.global_position, point):
 			best_distance_squared = distance_squared
 			nearest = {"position": point, "id": key}
 	return nearest
 
 func _prism_cluster_target(max_range: float) -> Dictionary:
 	return SURVIVAL_TARGETING.select_dense_cluster_target(
-		_entities, player.global_position, max_range, spectrum_collapse_cluster_radius, false, "highest_health")
+		_entities, player.global_position, minf(max_range, SURVIVAL_TARGETING.VISIBLE_TARGET_RADIUS),
+		SURVIVAL_TARGETING.visible_range(spectrum_collapse_cluster_radius), false, "highest_health")
 
 func _meteor_cluster_target() -> Dictionary:
 	return SURVIVAL_TARGETING.select_cluster_centroid(
-		_entities, player.global_position, meteor_staff_range, meteor_staff_cluster_radius)
+		_entities, player.global_position, SURVIVAL_TARGETING.visible_range(meteor_staff_range),
+		SURVIVAL_TARGETING.visible_range(meteor_staff_cluster_radius))
 
 func _sawblades_cluster_target() -> Dictionary:
 	return SURVIVAL_TARGETING.select_dense_cluster_target(
-		_entities, player.global_position, sawblades_range, sawblades_cluster_radius, true)
+		_entities, player.global_position, SURVIVAL_TARGETING.visible_range(sawblades_range),
+		SURVIVAL_TARGETING.visible_range(sawblades_cluster_radius), true)
 
 func _spawn_starfall_fragments(origin: Vector2, primary_target: Dictionary, entities: Array) -> void:
 	var candidates: Array[Dictionary] = []
@@ -2199,7 +2208,7 @@ func _has_unique_effect(effect_id: String) -> bool:
 func _try_unique_lightning_burst(base_damage: float) -> void:
 	if not _has_unique_effect("lightning_burst") or player_active_time < _next_unique_lightning_time or randf() >= 0.1:
 		return
-	var target := _nearest_enemy(lightning_range)
+	var target := _nearest_enemy(SURVIVAL_TARGETING.visible_range(lightning_range))
 	if target.is_empty():
 		return
 	var direction: Vector2 = (target["position"] - player.global_position).normalized()

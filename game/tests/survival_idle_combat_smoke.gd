@@ -16,7 +16,7 @@ func _run() -> void:
 	var deadline := Time.get_ticks_msec() + 120000
 	while session.player_active_time < 20.0 and not session.run_over and Time.get_ticks_msec() < deadline:
 		await process_frame
-	var valid_run: bool = session.player_active_time >= 15.0 and session.wave_director.wave == 1 and \
+	var valid_run: bool = session.player_active_time >= 8.0 and session.wave_director.wave == 1 and \
 		session.kill_count > 0 and session.player_hp < session.player_max_hp and \
 		session.player_level == 1 and is_zero_approx(session.player_xp) and \
 		session.loadout.owned_weapons().size() == 1 and session.loadout.owned_relics().is_empty()

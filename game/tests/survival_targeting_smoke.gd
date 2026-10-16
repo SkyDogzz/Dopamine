@@ -3,6 +3,22 @@ extends SceneTree
 const TARGETING := preload("res://scripts/survival_targeting.gd")
 
 func _initialize() -> void:
+	var range_defaults: Array[String] = ["nearest", "highest_threat", "highest_health", "lowest_health", "farthest", "lightning_cluster", "sawblades_cluster", "meteor_centroid", "prism_cluster"]
+	for policy in range_defaults:
+		var defaults: Dictionary = TARGETING.preview_defaults(policy)
+		assert(TARGETING.weapon_range(float(defaults["range"])) <= TARGETING.VISIBLE_TARGET_RADIUS,
+			"%s Survival range must stay within the visible radius" % policy)
+	assert(is_equal_approx(TARGETING.WEAPON_RANGE_SCALE, 180.0 / 620.0),
+		"Every weapon range should use the common reduction derived from Prism's maximum base reach")
+	assert(is_equal_approx(TARGETING.weapon_range(620.0, 1.38, 1.2), TARGETING.VISIBLE_TARGET_RADIUS),
+		"Even fully upgraded Prism with area bonuses must not target beyond the screen-safe radius")
+	assert(is_equal_approx(TARGETING.visible_range(620.0), TARGETING.VISIBLE_TARGET_RADIUS),
+		"The common reduction should reduce the former 620-unit reach to the screen-safe radius")
+	assert(is_equal_approx(TARGETING.visible_range(1000.0), TARGETING.VISIBLE_TARGET_RADIUS),
+		"Edited weapon ranges must also respect the visible radius")
+	assert(TARGETING.is_inside_visible_radius(Vector2.ZERO, Vector2(0.0, 180.0)) and
+		not TARGETING.is_inside_visible_radius(Vector2.ZERO, Vector2(181.0, 0.0)),
+		"Primary and chain target selectors should reject enemies beyond the visible circle")
 	var projectile := _enemy(5, Vector2(1.0, 0.0), 100.0, 1000.0)
 	projectile["components"]["IsProjectile"] = true
 	var xp_orb := _enemy(6, Vector2(2.0, 0.0), 100.0, 1000.0)
