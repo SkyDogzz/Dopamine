@@ -2233,27 +2233,32 @@ func _fire_lightning_conductor(active_time: float, paused: bool) -> void:
 func _try_thermal_shock(event: Dictionary, entities: Array, active_time: float) -> int:
 	if bool(event.get("is_damage_over_time", false)) or float(event.get("amount", 0.0)) <= 0.0:
 		return 0
+	var source_type := str(event.get("source_type", ""))
+	var burn_hits_chilled := source_type in ["inferno_sprayer", "wildfire_sprayer"] and \
+			bool(event.get("target_was_chilled", false))
+	var chill_hits_burning := source_type in ["frost_nova", "absolute_zero"]
+	if not burn_hits_chilled and not chill_hits_burning:
+		return 0
+	if float(event.get("remaining_health", 0.0)) <= 0.0:
+		return 0
 	var target_id: Dictionary = event.get("target", {})
 	if target_id.is_empty():
 		return 0
 	var target_key := _entity_key(int(target_id.get("index", -1)), int(target_id.get("generation", -1)))
 	if active_time < float(_thermal_shock_next_at.get(target_key, 0.0)):
 		return 0
-	var target_components: Dictionary = {}
-	for entity in entities:
-		var id: Dictionary = entity.get("id", {})
-		if _entity_key(int(id.get("index", -2)), int(id.get("generation", -2))) == target_key:
-			target_components = entity.get("components", {})
+	if chill_hits_burning:
+		var has_burn := false
+		for entity in entities:
+			var id: Dictionary = entity.get("id", {})
+			if _entity_key(int(id.get("index", -2)), int(id.get("generation", -2))) != target_key:
+				continue
+			var components: Dictionary = entity.get("components", {})
+			has_burn = float(components.get("Health", {}).get("current", 0.0)) > 0.0 and \
+					str(components.get("DamageOverTime", {}).get("status_type", "")) == "burn"
 			break
-	if target_components.is_empty() or float(target_components.get("Health", {}).get("current", 0.0)) <= 0.0:
-		return 0
-	var source_type := str(event.get("source_type", ""))
-	var burn_hits_chilled := source_type in ["inferno_sprayer", "wildfire_sprayer"] and \
-			bool(event.get("target_was_chilled", false))
-	var chill_hits_burning := source_type in ["frost_nova", "absolute_zero"] and \
-			str(target_components.get("DamageOverTime", {}).get("status_type", "")) == "burn"
-	if not burn_hits_chilled and not chill_hits_burning:
-		return 0
+		if not has_burn:
+			return 0
 	var position: Dictionary = event.get("position", {})
 	if position.is_empty():
 		return 0

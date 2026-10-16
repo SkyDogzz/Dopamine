@@ -27,7 +27,7 @@
 
 ## P5.2.3 — Prototype Thermal Shock — 2026-10-16
 
-- [x] `survival_weapon_catalog_smoke.gd` vérifie l’impact de réaction pour Burn direct sur une cible Chill et Chill direct sur une cible Burn, le cooldown par cible, l’exclusion des ticks de DoT et l’absence de chaînage depuis `thermal_shock`.
+- [x] `survival_weapon_catalog_smoke.gd` vérifie l’impact de réaction pour Burn direct sur une cible Chill et Chill direct sur une cible Burn, le cooldown par cible, l’exclusion des ticks DoT et des coups létaux, ainsi que l’absence de chaînage depuis `thermal_shock`.
 - [x] Les deux impacts sont appliqués par le worker natif via le projectile de réaction et produisent respectivement 50 % des dégâts déclencheurs (**[PROPOSÉ]**).
 - [ ] Le prototype, son cooldown de 1 s et le multiplicateur de 50 % restent **[PROPOSÉS]**; il reste à mesurer leur effet pendant des runs représentatives.
 

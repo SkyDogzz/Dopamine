@@ -964,12 +964,15 @@ func _thermal_shock_combines_burn_and_chill_once() -> bool:
 		{"id": burning_target_id, "components": burning_components},
 	]
 	var burn_hit := {"target": chilled_target_id, "source_type": "inferno_sprayer",
-		"target_was_chilled": true, "is_damage_over_time": false, "amount": 10.0,
+		"target_was_chilled": true, "is_damage_over_time": false, "amount": 10.0, "remaining_health": 40.0,
 		"position": {"x": chilled_position.x, "y": chilled_position.y}}
 	var burn_sequence: int = session._try_thermal_shock(burn_hit, entities, 0.0)
 	var repeated_sequence: int = session._try_thermal_shock(burn_hit, entities, 0.5)
+	var lethal_burn_hit := burn_hit.duplicate(true)
+	lethal_burn_hit["remaining_health"] = 0.0
+	var lethal_sequence: int = session._try_thermal_shock(lethal_burn_hit, entities, 2.0)
 	var frost_hit := {"target": burning_target_id, "source_type": "frost_nova",
-		"target_was_chilled": false, "is_damage_over_time": false, "amount": 8.0,
+		"target_was_chilled": false, "is_damage_over_time": false, "amount": 8.0, "remaining_health": 42.0,
 		"position": {"x": burning_position.x, "y": burning_position.y}}
 	var frost_sequence: int = session._try_thermal_shock(frost_hit, entities, 0.0)
 	var dot_hit := burn_hit.duplicate(true)
@@ -993,7 +996,7 @@ func _thermal_shock_combines_burn_and_chill_once() -> bool:
 				burn_damage = true
 			elif hit_id == burning_target_id and is_equal_approx(float(event["amount"]), 4.0):
 				frost_damage = true
-	var valid := burn_sequence > 0 and repeated_sequence == 0 and frost_sequence > 0 and dot_sequence == 0 and \
+	var valid := burn_sequence > 0 and repeated_sequence == 0 and lethal_sequence == 0 and frost_sequence > 0 and dot_sequence == 0 and \
 		reaction_sequence == 0 and burn_damage and frost_damage
 	session.queue_free()
 	return valid
