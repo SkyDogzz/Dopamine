@@ -2,19 +2,19 @@
 
 Plan associé : [`plan-ui-survival-hud.md`](plan-ui-survival-hud.md) · Spec : [`SPEC-survival-hud.md`](SPEC-survival-hud.md)
 
-**Statut : proposé pour validation utilisateur.** Aucun code ne doit être modifié avant validation de cette checklist.
+**Statut : validé par l’utilisateur.** Implémentation incrémentale en cours; tâche 1 terminée.
 
 ## Tâche 1 — Contrat et refonte du HUD
 
 **Description :** Ajouter d’abord un smoke observable du HUD puis réorganiser ses éléments persistants en consommant exclusivement les données de la session/loadout.
 
 **Critères d’acceptation :**
-- [ ] Le smoke vérifie santé/bouclier, XP/niveau, temps, vague/état, difficulté et liste des armes/niveaux avec données de fixture déterministes.
-- [ ] La difficulté affichée vient de `session.difficulty_id`; évolution affichée uniquement quand les données de run l’indiquent déjà.
-- [ ] Le panneau boss est caché sans boss et reflète les HP/phase courants quand un boss est présent.
-- [ ] Aucun calcul gameplay, nouvelle statistique, contrôle de pause ou chemin de progression n’est ajouté au HUD.
+- [x] Le smoke vérifie santé/bouclier, XP/niveau, temps, vague/état, difficulté et liste des armes/niveaux avec données de fixture déterministes.
+- [x] La difficulté affichée vient de `session.difficulty_id`; évolution affichée uniquement quand les données de run l’indiquent déjà.
+- [x] Le panneau boss est caché sans boss et reflète les HP/phase courants quand un boss est présent.
+- [x] Aucun calcul gameplay, nouvelle statistique, contrôle de pause ou chemin de progression n’est ajouté au HUD.
 
-**Vérification :** nouveau `survival_hud_smoke.gd`, smokes Survival pertinents et futur layout smoke aux viewports 960×600, 1280×800 et 1600×900.
+**Vérification :** `survival_hud_smoke.gd` passe et vérifie santé/XP, timer, vague, difficulté, résumé d’armes, boss conditionnel et bounds des enfants du HUD à 960×600, 1280×800 et 1600×900. Passent aussi `survival_weapon_smoke.gd`, `survival_wave_director_smoke.gd`, `survival_difficulty_session_smoke.gd`, `survival_wave_duration_smoke.gd`, l’import headless Godot 4.7.2 et `git diff --check`.
 
 **Dépendances :** spec et plan `survival-hud` validés; module `survival-hub` livré.
 

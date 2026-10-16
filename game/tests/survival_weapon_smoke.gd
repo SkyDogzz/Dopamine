@@ -18,7 +18,7 @@ func _run() -> void:
 	if session.simulation == null:
 		_fail("Survival session should create the shared simulation")
 		return
-	if session.get_node("HUD/RunPanel/RunInfo/HPBar").value != 100.0:
+	if session.get_node("HUD/RunPanel/RunInfo/StatusRow/HPBar").value != 100.0:
 		_fail("Survival HUD should start at the validated player HP")
 		return
 	var selected_chest_options := [""]
@@ -80,13 +80,13 @@ func _run() -> void:
 	if session.player_hp <= 85.0 or int(state["metrics"]["collision_count"]) < 4:
 		_fail("Lightning Conductor should chain damage across both enemies and apply both kill heals")
 		return
-	if session.get_node("HUD/RunPanel/RunInfo/RunState").text != "IN RUN":
+	if session.get_node("HUD/RunPanel/RunInfo/StatusRow/RunState").text != "IN RUN":
 		_fail("Survival HUD should reflect the active run state")
 		return
 	if session.player_level != 2 or session.player_xp != 0.0:
 		_fail("Collected enemy XP should advance the player level")
 		return
-	if not session.get_node("HUD/RunPanel/RunInfo/XPValue").text.begins_with("LV 2"):
+	if not session.get_node("HUD/RunPanel/RunInfo/StatusRow/XPValue").text.begins_with("LV 2"):
 		_fail("Survival HUD should display the new XP level")
 		return
 	print("Survival automatic weapon smoke passed")

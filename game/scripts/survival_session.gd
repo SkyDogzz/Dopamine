@@ -292,15 +292,16 @@ var _exploder_attacks: Dictionary = {}
 var _summoner_attacks: Dictionary = {}
 var _pending_summon_sequences: Dictionary = {}
 
-@onready var _hp_value: Label = $HUD/RunPanel/RunInfo/HPValue
-@onready var _hp_bar: ProgressBar = $HUD/RunPanel/RunInfo/HPBar
-@onready var _time_value: Label = $HUD/RunPanel/RunInfo/TimeValue
-@onready var _weapon_value: Label = $HUD/RunPanel/RunInfo/WeaponValue
-@onready var _weapon_icon: TextureRect = $HUD/RunPanel/RunInfo/WeaponIcon
-@onready var _xp_value: Label = $HUD/RunPanel/RunInfo/XPValue
-@onready var _xp_bar: ProgressBar = $HUD/RunPanel/RunInfo/XPBar
-@onready var _run_state: Label = $HUD/RunPanel/RunInfo/RunState
-@onready var _wave_value: Label = $HUD/RunPanel/RunInfo/WaveValue
+@onready var _hp_value: Label = $HUD/RunPanel/RunInfo/StatusRow/HPValue
+@onready var _hp_bar: ProgressBar = $HUD/RunPanel/RunInfo/StatusRow/HPBar
+@onready var _time_value: Label = $HUD/RunPanel/RunInfo/StatusRow/TimeValue
+@onready var _weapon_value: Label = $HUD/RunPanel/RunInfo/LoadoutRow/LoadoutLabel
+@onready var _weapon_icon: TextureRect = $HUD/RunPanel/RunInfo/LoadoutRow/WeaponIcon
+@onready var _xp_value: Label = $HUD/RunPanel/RunInfo/StatusRow/XPValue
+@onready var _xp_bar: ProgressBar = $HUD/RunPanel/RunInfo/StatusRow/XPBar
+@onready var _run_state: Label = $HUD/RunPanel/RunInfo/StatusRow/RunState
+@onready var _wave_value: Label = $HUD/RunPanel/RunInfo/StatusRow/WaveValue
+@onready var _difficulty_value: Label = $HUD/RunPanel/RunInfo/StatusRow/DifficultyValue
 @onready var _boss_panel: PanelContainer = $HUD/BossPanel
 @onready var _boss_value: Label = $HUD/BossPanel/BossInfo/BossValue
 @onready var _boss_hp_bar: ProgressBar = $HUD/BossPanel/BossInfo/BossHPBar
@@ -783,6 +784,7 @@ func _refresh_hud(state: Dictionary) -> void:
 	_xp_bar.value = player_xp
 	if wave_director != null:
 		_wave_value.text = _wave_status_text()
+	_difficulty_value.text = difficulty_id.to_upper()
 	_refresh_boss_hud()
 	var total_seconds := int(floor(player_active_time))
 	_time_value.text = "%02d:%02d" % [total_seconds / 60, total_seconds % 60]
@@ -831,7 +833,7 @@ func _style_run_hud() -> void:
 	bar_background.bg_color = Color("#172633")
 	bar_background.set_corner_radius_all(3)
 	_hp_bar.add_theme_stylebox_override("background", bar_background)
-	$HUD/RunPanel/RunInfo/XPBar.add_theme_stylebox_override("background", bar_background)
+	_xp_bar.add_theme_stylebox_override("background", bar_background)
 	_hp_fill_style = StyleBoxFlat.new()
 	_hp_fill_style.bg_color = Color("#54e0c1")
 	_hp_fill_style.set_corner_radius_all(3)
@@ -839,7 +841,7 @@ func _style_run_hud() -> void:
 	var xp_fill := StyleBoxFlat.new()
 	xp_fill.bg_color = Color("#45e5ed")
 	xp_fill.set_corner_radius_all(3)
-	$HUD/RunPanel/RunInfo/XPBar.add_theme_stylebox_override("fill", xp_fill)
+	_xp_bar.add_theme_stylebox_override("fill", xp_fill)
 
 func _refresh_boss_hud() -> void:
 	_boss_panel.visible = false
