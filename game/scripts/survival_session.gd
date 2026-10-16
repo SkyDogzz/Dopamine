@@ -1659,7 +1659,7 @@ func _nearest_lightning_targets(origin: Vector2, excluded_ids: Array[Vector2i], 
 func _fire_inferno_sprayer(active_time: float, paused: bool) -> void:
 	if not weapon_enabled or loadout.weapon_level("inferno_sprayer") == 0 or paused or _chest_open or run_over or inferno_cooldown <= 0.0 or active_time < _next_inferno_time:
 		return
-	var target := _nearest_enemy(inferno_range)
+	var target := _highest_threat_enemy(inferno_range)
 	if target.is_empty():
 		return
 	var direction: Vector2 = (target["position"] - player.global_position).normalized()
@@ -2106,6 +2106,31 @@ func _nearest_enemy(max_range: float) -> Dictionary:
 			best_distance_squared = distance_squared
 			nearest = {"position": position, "id": Vector2i(int(entity["id"]["index"]), int(entity["id"]["generation"]))}
 	return nearest
+
+func _highest_threat_enemy(max_range: float) -> Dictionary:
+	var best_target: Dictionary = {}
+	var best_threat := -INF
+	var best_distance_squared := max_range * max_range
+	for entity in _entities:
+		var components: Dictionary = entity["components"]
+		if not _is_targetable_enemy(components):
+			continue
+		var transform: Dictionary = components["Transform2D"]
+		var position := Vector2(float(transform["x"]), float(transform["y"]))
+		var distance_squared := player.global_position.distance_squared_to(position)
+		if distance_squared >= max_range * max_range:
+			continue
+		var threat := float(components.get("ThreatLevel", 1.0))
+		if not is_finite(threat) or threat <= 0.0:
+			threat = 1.0
+		if threat > best_threat or (is_equal_approx(threat, best_threat) and distance_squared < best_distance_squared):
+			best_threat = threat
+			best_distance_squared = distance_squared
+			best_target = {
+				"position": position,
+				"id": Vector2i(int(entity["id"]["index"]), int(entity["id"]["generation"])),
+			}
+	return best_target
 
 func _enemy_by_id_in_range(target_id: Vector2i, max_range: float) -> Dictionary:
 	var max_distance_squared := max_range * max_range

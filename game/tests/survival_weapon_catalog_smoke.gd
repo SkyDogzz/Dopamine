@@ -7,6 +7,9 @@ func _run() -> void:
 	if not await _nearest_weapon_targets_skip_dead_enemies():
 		_fail("Automatic weapons should ignore dead enemies that remain in a simulation snapshot")
 		return
+	if not await _inferno_prioritizes_high_threat():
+		_fail("Inferno should prioritize the highest-threat enemy in range, breaking ties by distance")
+		return
 	if not await _minigun_holds_target_until_invalid():
 		_fail("Minigun should keep its target until it dies or leaves range, then select another target")
 		return
@@ -82,6 +85,35 @@ func _nearest_weapon_targets_skip_dead_enemies() -> bool:
 	session.queue_free()
 	return nearest.get("id", Vector2i(-1, -1)) == Vector2i(2, 1) and \
 		lightning_targets.size() == 1 and lightning_targets[0].get("id") == Vector2i(2, 1) and frost_skipped_dead_targets
+
+func _inferno_prioritizes_high_threat() -> bool:
+	var session: Node2D = load("res://scenes/survival_session.tscn").instantiate()
+	session.spawn_initial_enemy = false
+	session.wave_spawning_enabled = false
+	root.add_child(session)
+	await process_frame
+	var origin: Vector2 = session.player.global_position
+	session._entities = [
+		{"id": {"index": 21, "generation": 1}, "components": {
+			"Health": {"current": 100.0}, "ThreatLevel": 1.0,
+			"Transform2D": {"x": origin.x + 80.0, "y": origin.y},
+		}},
+		{"id": {"index": 22, "generation": 1}, "components": {
+			"Health": {"current": 100.0}, "ThreatLevel": 4.0,
+			"Transform2D": {"x": origin.x + 180.0, "y": origin.y},
+		}},
+		{"id": {"index": 23, "generation": 1}, "components": {
+			"Health": {"current": 100.0}, "ThreatLevel": 4.0,
+			"Transform2D": {"x": origin.x + 240.0, "y": origin.y},
+		}},
+		{"id": {"index": 24, "generation": 1}, "components": {
+			"Health": {"current": 100.0}, "ThreatLevel": 10.0,
+			"Transform2D": {"x": origin.x + session.inferno_range + 1.0, "y": origin.y},
+		}},
+	]
+	var selected: Dictionary = session._highest_threat_enemy(session.inferno_range)
+	session.queue_free()
+	return selected.get("id", Vector2i(-1, -1)) == Vector2i(22, 1)
 
 func _minigun_holds_target_until_invalid() -> bool:
 	var session: Node2D = load("res://scenes/survival_session.tscn").instantiate()
