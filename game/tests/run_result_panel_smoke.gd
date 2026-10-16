@@ -50,6 +50,11 @@ func _run() -> void:
 		panel.get_node("Content/Achievement").text.is_empty():
 		_fail("Victory should display only the provided rewards, item and achievement summary")
 		return
+	var reward_icons: HBoxContainer = panel.get_node("Content/RewardIcons")
+	var reward_icon: TextureRect = reward_icons.get_child(0)
+	if panel.custom_minimum_size.x < 340 or reward_icon.custom_minimum_size != Vector2(24, 24):
+		_fail("Run results should give the reward summary and icons enough visual weight")
+		return
 	panel.show_result(false, 8, 120.0, 30, {"ok": true, "duplicate": true})
 	if rewards.text != "ALREADY REWARDED" or not equipment.text.is_empty() or \
 		panel.get_node("Content").get_node_or_null("RewardIcons") != null or \
