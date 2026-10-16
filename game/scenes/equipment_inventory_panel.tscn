@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene load_steps=3 format=3]
 
-[ext_resource type="Script" path="res://scripts/equipment_inventory_panel.gd" id="1_script"]
+[ext_resource type="Theme" path="res://themes/dopamine_ui.tres" id="1_theme"]
+[ext_resource type="Script" path="res://scripts/equipment_inventory_panel.gd" id="2_script"]
 
 [node name="EquipmentInventoryPanel" type="CenterContainer"]
 anchors_preset = 15
@@ -9,7 +10,8 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 0
-script = ExtResource("1_script")
+theme = ExtResource("1_theme")
+script = ExtResource("2_script")
 
 [node name="Backdrop" type="ColorRect" parent="."]
 layout_mode = 1
@@ -31,34 +33,27 @@ theme_override_constants/separation = 6
 
 [node name="Title" type="Label" parent="Panel/Content"]
 layout_mode = 2
+theme_override_colors/font_color = Color(0.215686, 0.909804, 0.960784, 1)
 theme_override_font_sizes/font_size = 11
 text = "PERMANENT EQUIPMENT"
 horizontal_alignment = 1
 
 [node name="Warning" type="Label" parent="Panel/Content"]
 layout_mode = 2
+theme_override_colors/font_color = Color(0.647059, 0.682353, 0.764706, 1)
 text = "Stat rolls are not calibrated and do not affect combat yet."
 horizontal_alignment = 1
 
 [node name="Resources" type="Label" parent="Panel/Content"]
 layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.831373, 0.278431, 1)
 text = "ESSENCE 0  •  BASIC 0  •  REFINED 0  •  PURE 0  •  PRISMATIC 0"
 horizontal_alignment = 1
 
 [node name="Feedback" type="Label" parent="Panel/Content"]
 visible = false
 layout_mode = 2
-horizontal_alignment = 1
-
-[node name="EmptyState" type="Label" parent="Panel/Content"]
-layout_mode = 2
-text = "No permanent equipment collected yet."
-horizontal_alignment = 1
-
-[node name="ErrorState" type="Label" parent="Panel/Content"]
-visible = false
-layout_mode = 2
-text = "Could not load this profile's equipment."
+theme_override_colors/font_color = Color(0.215686, 0.909804, 0.960784, 1)
 horizontal_alignment = 1
 
 [node name="Scroll" type="ScrollContainer" parent="Panel/Content"]
@@ -69,7 +64,28 @@ horizontal_scroll_mode = 0
 [node name="Items" type="VBoxContainer" parent="Panel/Content/Scroll"]
 layout_mode = 2
 size_flags_horizontal = 3
+size_flags_vertical = 3
+alignment = 1
 theme_override_constants/separation = 4
+
+[node name="EmptyState" type="Label" parent="Panel/Content/Scroll/Items"]
+custom_minimum_size = Vector2(0, 56)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.647059, 0.682353, 0.764706, 1)
+text = "NO PERMANENT EQUIPMENT YET\nComplete a Survival run to find your first item."
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 2
+
+[node name="ErrorState" type="Label" parent="Panel/Content/Scroll/Items"]
+visible = false
+custom_minimum_size = Vector2(0, 56)
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.443137, 0.505882, 1)
+text = "EQUIPMENT COULD NOT BE LOADED\nReturn to the hub and try again."
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 2
 
 [node name="CloseButton" type="Button" parent="Panel/Content"]
 custom_minimum_size = Vector2(0, 21)

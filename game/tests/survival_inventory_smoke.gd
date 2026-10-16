@@ -36,11 +36,11 @@ func _run() -> void:
 	equipment_button.pressed.emit()
 	var panel: Control = hub.get_node("EquipmentInventoryPanel")
 	var items: VBoxContainer = panel.get_node("Panel/Content/Scroll/Items")
-	if not panel.visible or items.get_child_count() != 2:
+	if not panel.visible or _equipment_rows(items).size() != 2:
 		_fail("The hub equipment panel should list the profile's permanent items")
 		return
-	var item_content: VBoxContainer = items.get_child(0).get_child(0).get_child(1)
-	var rarity_icon: TextureRect = items.get_child(0).get_child(0).get_child(0)
+	var item_content: VBoxContainer = _equipment_row(items, 0).get_child(0).get_child(1)
+	var rarity_icon: TextureRect = _equipment_row(items, 0).get_child(0).get_child(0)
 	if rarity_icon.texture == null or rarity_icon.texture.resource_path != "res://assets/icons/catalog/rarity_legendary.png":
 		_fail("Inventory rows should display their equipment rarity icon")
 		return
@@ -53,7 +53,7 @@ func _run() -> void:
 	if progression.load_profile()["profile"]["equipment_inventory"][0]["unique_effect_id"] == "pending_choice":
 		_fail("Selecting a unique effect should persist the choice")
 		return
-	item_content = items.get_child(0).get_child(0).get_child(1)
+	item_content = _equipment_row(items, 0).get_child(0).get_child(1)
 	var enhancement_row: HBoxContainer = item_content.get_child(1)
 	var enhance_button: Button = enhancement_row.get_child(2)
 	if enhance_button.disabled or not enhancement_row.get_child(1).text.contains("BASIC"):
@@ -65,7 +65,7 @@ func _run() -> void:
 		not panel.get_node("Panel/Content/Feedback").text.contains("SUCCESS"):
 		_fail("Hub enhancement should persist and report its guaranteed success")
 		return
-	item_content = items.get_child(0).get_child(0).get_child(1)
+	item_content = _equipment_row(items, 0).get_child(0).get_child(1)
 	_find_button(item_content, "EQUIP").pressed.emit()
 	var equipped_profile: Dictionary = progression.load_profile()["profile"]
 	if not equipped_profile["equipment_inventory"][0]["equipped"] or equipped_profile["equipment_inventory"][1]["equipped"]:
@@ -90,15 +90,15 @@ func _run() -> void:
 		return
 	session.queue_free()
 	await process_frame
-	_find_button(items.get_child(1).get_child(0).get_child(1), "EQUIP").pressed.emit()
+	_find_button(_equipment_row(items, 1).get_child(0).get_child(1), "EQUIP").pressed.emit()
 	var replacement: Dictionary = progression.load_profile()["profile"]
 	if replacement["equipment_inventory"][0]["equipped"] or not replacement["equipment_inventory"][1]["equipped"]:
 		_fail("Equipping another item in the same slot should replace the first one")
 		return
-	_find_button(items.get_child(1).get_child(0).get_child(1), "UNEQUIP").pressed.emit()
-	var dismantle := _find_button(items.get_child(1).get_child(0).get_child(1), "DISMANTLE  •  +1 BASIC POWDER")
+	_find_button(_equipment_row(items, 1).get_child(0).get_child(1), "UNEQUIP").pressed.emit()
+	var dismantle := _find_button(_equipment_row(items, 1).get_child(0).get_child(1), "DISMANTLE  •  +1 BASIC POWDER")
 	if dismantle == null:
-		for child in items.get_child(1).get_child(0).get_child(1).get_children():
+		for child in _equipment_row(items, 1).get_child(0).get_child(1).get_children():
 			if child is Button and child.text.begins_with("DISMANTLE"):
 				dismantle = child
 				break
@@ -106,7 +106,7 @@ func _run() -> void:
 		_fail("Equipment should expose a dismantle action in the hub")
 		return
 	dismantle.pressed.emit()
-	if items.get_child_count() != 1:
+	if _equipment_rows(items).size() != 1:
 		_fail("Dismantling should remove the item from the hub inventory")
 		return
 	if "--capture" in OS.get_cmdline_user_args():
@@ -146,6 +146,17 @@ func _run() -> void:
 	if skill_panel.visible or root.gui_get_focus_owner() != skill_button:
 		_fail("Closing the skill tree should restore focus to its hub control")
 		return
+	panel.present({})
+	var empty_state: Label = panel.get_node("Panel/Content/Scroll/Items/EmptyState")
+	var error_state: Label = panel.get_node("Panel/Content/Scroll/Items/ErrorState")
+	if not empty_state.visible or error_state.visible:
+		_fail("An empty equipment inventory should show its centered empty state")
+		return
+	panel.present_error()
+	if empty_state.visible or not error_state.visible:
+		_fail("An unavailable profile should show its error state instead of the empty state")
+		return
+	panel.get_node("Panel/Content/CloseButton").pressed.emit()
 	print("Hub equipment and skill tree smoke passed")
 	quit()
 
@@ -162,3 +173,13 @@ func _find_button(parent: Node, text_value: String) -> Button:
 			if nested != null:
 				return nested
 	return null
+
+func _equipment_rows(items: VBoxContainer) -> Array[Control]:
+	var rows: Array[Control] = []
+	for child in items.get_children():
+		if child.name.begins_with("Equipment_"):
+			rows.append(child)
+	return rows
+
+func _equipment_row(items: VBoxContainer, index: int) -> Control:
+	return _equipment_rows(items)[index]

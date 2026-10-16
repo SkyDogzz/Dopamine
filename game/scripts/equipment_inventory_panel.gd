@@ -7,8 +7,8 @@ signal unique_effect_requested(instance_id: String, effect_id: String)
 signal dismantle_requested(instance_id: String)
 
 @onready var _items: VBoxContainer = $Panel/Content/Scroll/Items
-@onready var _empty_state: Label = $Panel/Content/EmptyState
-@onready var _error_state: Label = $Panel/Content/ErrorState
+@onready var _empty_state: Label = $Panel/Content/Scroll/Items/EmptyState
+@onready var _error_state: Label = $Panel/Content/Scroll/Items/ErrorState
 @onready var _close_button: Button = $Panel/Content/CloseButton
 @onready var _resources: Label = $Panel/Content/Resources
 @onready var _feedback: Label = $Panel/Content/Feedback
@@ -80,6 +80,7 @@ func show_feedback(message: String) -> void:
 
 func _create_item_row(equipment: Dictionary, resources: Dictionary) -> Control:
 	var row := PanelContainer.new()
+	row.name = "Equipment_%s" % str(equipment.get("instance_id", "item"))
 	row.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	var layout := HBoxContainer.new()
 	layout.add_theme_constant_override("separation", 5)
@@ -189,5 +190,7 @@ func _close() -> void:
 
 func _clear_items() -> void:
 	for child in _items.get_children():
+		if child in [_empty_state, _error_state]:
+			continue
 		_items.remove_child(child)
 		child.queue_free()

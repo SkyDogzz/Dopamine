@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene load_steps=3 format=3]
 
-[ext_resource type="Script" path="res://scripts/skill_tree_panel.gd" id="1_script"]
+[ext_resource type="Theme" path="res://themes/dopamine_ui.tres" id="1_theme"]
+[ext_resource type="Script" path="res://scripts/skill_tree_panel.gd" id="2_script"]
 
 [node name="SkillTreePanel" type="CenterContainer"]
 anchors_preset = 15
@@ -8,7 +9,8 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-script = ExtResource("1_script")
+theme = ExtResource("1_theme")
+script = ExtResource("2_script")
 
 [node name="Backdrop" type="ColorRect" parent="."]
 layout_mode = 1
@@ -30,17 +32,20 @@ theme_override_constants/separation = 7
 
 [node name="Title" type="Label" parent="Panel/Content"]
 layout_mode = 2
+theme_override_colors/font_color = Color(0.215686, 0.909804, 0.960784, 1)
 theme_override_font_sizes/font_size = 12
 text = "SKILL TREE  •  PROTOTYPE"
 horizontal_alignment = 1
 
 [node name="Warning" type="Label" parent="Panel/Content"]
 layout_mode = 2
+theme_override_colors/font_color = Color(0.647059, 0.682353, 0.764706, 1)
 text = "One proposed node is playable. The final graph and costs remain open."
 horizontal_alignment = 1
 
 [node name="Essence" type="Label" parent="Panel/Content"]
 layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.831373, 0.278431, 1)
 text = "ESSENCE 0"
 horizontal_alignment = 1
 
