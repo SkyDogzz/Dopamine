@@ -57,7 +57,7 @@ func present_error() -> void:
 	visible = true
 	_close_button.grab_focus()
 
-func _input(event: InputEvent) -> void:
-	if visible and event is InputEventKey and event.pressed and not event.echo and event.keycode == KEY_ESCAPE:
+func _unhandled_input(event: InputEvent) -> void:
+	if visible and event.is_action_pressed("ui_cancel"):
 		close_requested.emit()
 		get_viewport().set_input_as_handled()

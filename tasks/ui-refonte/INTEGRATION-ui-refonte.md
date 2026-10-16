@@ -23,6 +23,7 @@ Avant la correction viewport, 21 smokes UI et d’intégration passaient avec un
 
 - `OptionsPanel`, `RunInventoryPanel` et la session Survival traitent maintenant `ui_cancel` dans `_unhandled_input`, ce qui permet au bouton B de fermer Options/l’inventaire, ouvrir ou reprendre la pause; Échap garde le même parcours.
 - `launch_navigation_smoke.gd` vérifie le déplacement du focus par croix, Entrée sur l’action focalisée et B pour fermer Options. Les smokes Options, pause, inventaire et confirmation d’abandon envoient des événements Joypad B synthétiques; horloges et simulation restent gelées dans les panneaux.
+- Les panneaux d’équipement et d’arbre de compétences se ferment avec B et restaurent le focus du hub; B revient à l’accueil depuis le hub, le Sandbox développeur et l’écran de résultat. Les smokes `survival_hub_smoke.gd`, `sandbox_ui_smoke.gd` et `run_result_panel_smoke.gd` couvrent ces transitions. Le retour depuis le Sandbox compare aussi la sauvegarde sentinelle avant/après.
 - Aucun contrôleur physique n’étant disponible, ces événements synthétiques valident le routage UI, pas les différences de pilotes ou le comportement matériel.
 
 ## État des modules

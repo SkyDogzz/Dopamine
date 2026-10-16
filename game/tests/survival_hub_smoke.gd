@@ -102,11 +102,9 @@ func _run() -> void:
 	if not equipment_panel.visible:
 		_fail("Equipment should open from the hub")
 		return
-	var equipment_close := equipment_panel.get_node("Panel/Content/CloseButton") as Button
-	equipment_close.pressed.emit()
-	await process_frame
+	await _send_gamepad_cancel()
 	if equipment_panel.visible or root.gui_get_focus_owner() != equipment_button:
-		_fail("Closing permanent equipment should return focus to its hub control")
+		_fail("Gamepad B should close permanent equipment and restore hub focus")
 		return
 	skill_button.pressed.emit()
 	await process_frame
@@ -114,10 +112,9 @@ func _run() -> void:
 	if not skill_panel.visible:
 		_fail("The skill tree should open from the hub")
 		return
-	(skill_panel.get_node("Panel/Content/CloseButton") as Button).pressed.emit()
-	await process_frame
+	await _send_gamepad_cancel()
 	if skill_panel.visible or root.gui_get_focus_owner() != skill_button:
-		_fail("Closing the skill tree should return focus to its hub control")
+		_fail("Gamepad B should close the skill tree and restore hub focus")
 		return
 	var broken_hub: Control = load("res://scenes/survival_hub.tscn").instantiate()
 	broken_hub.progression_service = load("res://scripts/progression_service.gd").new(FailingSaveService.new(), "0")
@@ -163,6 +160,16 @@ func _run() -> void:
 		return
 	current_scene.queue_free()
 	await process_frame
+	var back_hub := load("res://scenes/survival_hub.tscn").instantiate() as Control
+	back_hub.progression_service = progression
+	root.add_child(back_hub)
+	current_scene = back_hub
+	await process_frame
+	await _send_gamepad_cancel()
+	await process_frame
+	if current_scene == null or current_scene.scene_file_path != "res://scenes/launch_menu.tscn":
+		_fail("Gamepad B should return from the hub to the launch menu")
+		return
 	print("Survival hub profile, difficulty, panels, inactive actions and focus smoke passed")
 	quit()
 
@@ -173,6 +180,17 @@ func _difficulty_button(hub: Control, label: String) -> Button:
 		if button.text.begins_with(label):
 			return button
 	return null
+
+func _send_gamepad_cancel() -> void:
+	var event := InputEventJoypadButton.new()
+	event.device = 0
+	event.button_index = JOY_BUTTON_B
+	event.pressed = true
+	Input.parse_input_event(event)
+	await process_frame
+	event.pressed = false
+	Input.parse_input_event(event)
+	await process_frame
 
 func _fail(message: String) -> void:
 	push_error(message)

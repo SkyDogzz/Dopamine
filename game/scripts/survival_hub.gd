@@ -37,6 +37,16 @@ func _ready() -> void:
 	_load_profile()
 	_launch_button.grab_focus() if _profile_available else _back_button.grab_focus()
 
+func _unhandled_input(event: InputEvent) -> void:
+	if not event.is_action_pressed("ui_cancel"):
+		return
+	if (_equipment_panel != null and _equipment_panel.visible) or \
+			(_skill_tree_panel != null and _skill_tree_panel.visible):
+		return
+	_on_back_pressed()
+	if get_viewport() != null:
+		get_viewport().set_input_as_handled()
+
 func _create_panels() -> void:
 	_equipment_panel = EQUIPMENT_PANEL_SCENE.instantiate()
 	_equipment_panel.progression_service = progression_service

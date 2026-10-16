@@ -107,6 +107,12 @@ func _on_home_pressed() -> void:
 	if error != OK:
 		push_error("Could not return to launch menu: %s" % error_string(error))
 
+func _unhandled_input(event: InputEvent) -> void:
+	if event.is_action_pressed("ui_cancel"):
+		_on_home_pressed()
+		if get_viewport() != null:
+			get_viewport().set_input_as_handled()
+
 func _process(delta: float) -> void:
 	_refresh_elapsed += delta
 	if _refresh_elapsed >= 0.1:

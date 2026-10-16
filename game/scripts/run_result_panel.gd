@@ -21,6 +21,12 @@ func _ready() -> void:
 	$Content/QuitButton.pressed.connect(_on_quit_pressed)
 	visible = false
 
+func _unhandled_input(event: InputEvent) -> void:
+	if visible and event.is_action_pressed("ui_cancel"):
+		_on_quit_pressed()
+		if get_viewport() != null:
+			get_viewport().set_input_as_handled()
+
 func show_result(victory: bool, wave_number: int, active_seconds: float, kills: int, reward: Dictionary = {}) -> void:
 	for row_name in ["RewardIcons", "AchievementIcon", "EquipmentIcon"]:
 		var row := $Content.get_node_or_null(row_name)

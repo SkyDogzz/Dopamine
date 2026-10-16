@@ -14,6 +14,7 @@ func _run() -> void:
 	slot_file.close()
 	var sandbox: Control = load("res://scenes/main.tscn").instantiate()
 	root.add_child(sandbox)
+	current_scene = sandbox
 	await process_frame
 	assert(sandbox.theme == load("res://themes/dopamine_ui.tres"), "Sandbox should use the shared UI theme")
 	var metrics: GridContainer = sandbox.get_node("Shell/Content/MainColumn/Metrics/MetricRow")
@@ -202,6 +203,19 @@ func _run() -> void:
 	var saved_files := DirAccess.get_files_at(save_directory)
 	assert(saved_files.size() == 1 and saved_files[0] == "slot_0.json",
 		"Sandbox interactions should not add files to normal progression slots")
+	var home_event := InputEventJoypadButton.new()
+	home_event.device = 0
+	home_event.button_index = JOY_BUTTON_B
+	home_event.pressed = true
+	Input.parse_input_event(home_event)
+	await process_frame
+	home_event.pressed = false
+	Input.parse_input_event(home_event)
+	await process_frame
+	assert(current_scene != null and current_scene.scene_file_path == "res://scenes/launch_menu.tscn",
+		"Gamepad B should return from the isolated Sandbox to the launch menu")
+	assert(FileAccess.get_file_as_string(slot_path) == sentinel,
+		"Leaving the Sandbox with gamepad B should preserve the normal progression save")
 	print("Sandbox UI spawn, inspect, despawn and kill-all checks passed")
 	quit()
 

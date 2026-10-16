@@ -324,6 +324,14 @@ Le runner est fourni par `game/scripts/scenario_runner.gd` et consomme un fichie
 - [x] `survival_inventory_smoke.gd`, `run_result_panel_smoke.gd`, `ui_foundation_smoke.gd`, `survival_hub_layout_smoke.gd` et `launch_navigation_smoke.gd` passent.
 - [x] `sandbox_ui_smoke.gd` passe avec un `XDG_DATA_HOME` neuf et isolé; son premier lancement avait réutilisé les données de smokes précédents et invalidé sa sentinelle de sauvegarde.
 
+## Navigation manette — retour/annuler (2026-10-16)
+
+- [x] `survival_hub_smoke.gd` injecte B pour fermer les panneaux équipement/compétences en restaurant le focus, puis revenir à l’accueil depuis le hub.
+- [x] `run_result_panel_smoke.gd` injecte B depuis l’écran de résultat et vérifie la demande « quitter vers le menu ».
+- [x] `sandbox_ui_smoke.gd` injecte B pour revenir à l’accueil et compare la sauvegarde de progression sentinelle avant/après.
+- [x] Les trois smokes ci-dessus passent sous Godot 4.7.2 via Xvfb avec `XDG_DATA_HOME` isolé. Les avertissements ALSA indiquent l’absence de sortie audio et le fallback vers le driver dummy; aucun échec de script n’est émis.
+- [ ] Interaction avec une manette physique non exécutée; les événements synthétiques vérifient la logique UI et ne remplacent pas le contrôle sur matériel.
+
 ## Art combat — roster statique (2026-10-16)
 
 - [x] Import Godot 4.7.2, `catalog_icon_assets_smoke.gd` (9 ennemis, élite, 2 boss; dimensions 24×24/96×96, impacts 64×64, palette et sources), `render_batching_smoke.gd`, `sandbox_ui_smoke.gd` avec profil isolé et `survival_entry_smoke.gd` passent.

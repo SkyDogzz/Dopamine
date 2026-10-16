@@ -94,6 +94,18 @@ func _run() -> void:
 				_fail("Run result content '%s' should stay inside the panel at viewport %s" % [child.name, size])
 				return
 	root.size = original_size
+	quit_requested[0] = false
+	var cancel := InputEventJoypadButton.new()
+	cancel.device = 0
+	cancel.button_index = JOY_BUTTON_B
+	cancel.pressed = true
+	Input.parse_input_event(cancel)
+	await process_frame
+	cancel.pressed = false
+	Input.parse_input_event(cancel)
+	if not quit_requested[0]:
+		_fail("Gamepad B should activate Quit to Menu from the run result")
+		return
 	panel.queue_free()
 	await process_frame
 	print("Run result panel states, focus and layout smoke passed")
