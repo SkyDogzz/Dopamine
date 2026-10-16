@@ -9,6 +9,10 @@
 - [x] Import Godot 4.7.2 et 10 smokes ciblés UI passent après le rétablissement du viewport 1280×800, avec un `XDG_DATA_HOME` isolé par script : fondation, hub/layouts 1280×800/1600×900/1920×1080, pause, inventaire, coffre, résultat, navigation et Sandbox.
 - [ ] Le smoke fenêtré et la suite complète ne sont pas relancés après cette correction.
 
+## Feedback des niveaux d’objets en run — 2026-10-16
+
+- [x] `survival_level_feedback_smoke.gd` vérifie les notifications d’acquisition et de niveaux 1–5 pour armes et reliques; le toast reste visible à temps de simulation figé, disparaît après expiration simulée et reste dans les viewports 640×360, 1280×800 et 1920×1080.
+
 ## Hub Survival — état visuel des destinations inactives — 2026-10-16
 
 - [x] `survival_hub_smoke.gd` vérifie que Succès et Bestiaire utilisent le style atténué, restent activables au focus et gardent le cadre de focus partagé; ils ne sont pas désactivés.

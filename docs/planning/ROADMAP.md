@@ -297,7 +297,8 @@ Travail requis :
   - [ ] Vérifier les armes de contact/orbitantes et longue portée avec placements différents. Les sélecteurs partagés ignorent maintenant les cibles mortes encore présentes dans le snapshot.
 - [ ] **P5.1.11 — Niveaux et feedback des autres armes**
   - [ ] Compléter les niveaux 1–5 d’une arme à la fois à partir des valeurs proposées.
-  - [ ] Ajouter feedback visuel/UI pour les cinq niveaux.
+  - [x] Ajouter un feedback HUD à l’acquisition et à chaque niveau gagné sur arme/relique; toast lié au temps de simulation et figé en pause.
+  - [ ] Ajouter les retours visuels propres à chaque arme pour les cinq niveaux.
   - [ ] Compléter niveaux 1–5 des reliques et valider leurs bonus linéaires proposés.
   - [ ] Ajouter le changement visuel majeur à l’évolution.
 - [ ] **P5.1.12 — Règle d’évolution/catalogue**

@@ -321,6 +321,7 @@ var _shooter_attacks: Dictionary = {}
 var _exploder_attacks: Dictionary = {}
 var _summoner_attacks: Dictionary = {}
 var _pending_summon_sequences: Dictionary = {}
+var _item_level_feedback_expires_at := 0.0
 
 @onready var _hp_value: Label = $HUD/RunPanel/RunInfo/StatusRow/HPRow/HPValue
 @onready var _hp_bar: ProgressBar = $HUD/RunPanel/RunInfo/StatusRow/HPRow/HPBar
@@ -335,6 +336,8 @@ var _pending_summon_sequences: Dictionary = {}
 @onready var _boss_panel: PanelContainer = $HUD/BossPanel
 @onready var _boss_value: Label = $HUD/BossPanel/BossInfo/BossValue
 @onready var _boss_hp_bar: ProgressBar = $HUD/BossPanel/BossInfo/BossHPBar
+@onready var _item_level_feedback: PanelContainer = $HUD/ItemLevelFeedback
+@onready var _item_level_feedback_label: Label = $HUD/ItemLevelFeedback/FeedbackLabel
 @onready var _chest_choice: PanelContainer = $HUD/ChestOverlay/ChestChoice
 @onready var _run_result_overlay: CenterContainer = $HUD/RunResultOverlay
 @onready var _run_result: PanelContainer = $HUD/RunResultOverlay/RunResultPanel
@@ -1039,6 +1042,8 @@ func _take_enemy_damage(amount: float) -> void:
 	_take_player_damage(amount * float(factors["enemy_damage"]))
 
 func _refresh_hud(state: Dictionary) -> void:
+	if _item_level_feedback.visible and float(state.get("simulation_time", 0.0)) >= _item_level_feedback_expires_at:
+		_item_level_feedback.hide()
 	_hp_value.text = "HP  %.1f / %.0f%s" % [
 		player_hp, player_max_hp, "  •  SHIELD %.1f" % player_shield if player_shield > 0.0 else "",
 	]
@@ -1221,8 +1226,14 @@ func _on_chest_option_selected(option_id: String) -> void:
 			simulation.resume()
 		return
 	_chest_open = false
+	var offer_parts := option_id.split(":", false, 1)
+	var item_family := str(offer_parts[0]) if offer_parts.size() == 2 else ""
+	var item_id := str(offer_parts[1]) if offer_parts.size() == 2 else ""
+	var previous_item_level := _loadout_item_level(item_family, item_id)
 	var previous_magnet_heart_level: int = loadout.relic_level("magnet_heart")
-	loadout.apply_offer(option_id)
+	var applied: bool = loadout.apply_offer(option_id)
+	if applied and previous_item_level >= 0:
+		_show_item_level_feedback(item_family, item_id, previous_item_level)
 	if option_id == "relic:magnet_heart" and previous_magnet_heart_level < loadout.MAX_LEVEL and \
 			loadout.relic_level("magnet_heart") >= loadout.MAX_LEVEL and \
 			is_finite(magnet_heart_level_five_impulse_seconds) and magnet_heart_level_five_impulse_seconds > 0.0:
@@ -1230,6 +1241,29 @@ func _on_chest_option_selected(option_id: String) -> void:
 	chest_option_chosen.emit(option_id)
 	simulation.resume()
 	_complete_pending_victory()
+
+func _loadout_item_level(family: String, item_id: String) -> int:
+	if family == "weapon":
+		return loadout.weapon_level(item_id)
+	if family == "relic":
+		return loadout.relic_level(item_id)
+	return -1
+
+func _show_item_level_feedback(family: String, item_id: String, previous_level: int) -> void:
+	var level := _loadout_item_level(family, item_id)
+	if level <= previous_level:
+		return
+	var item_name := item_id.replace("_", " ").to_upper()
+	for item in loadout.owned_item_details(family):
+		if str(item.get("id", "")) == item_id:
+			item_name = str(item.get("name", item_name)).to_upper()
+			break
+	var action := "ACQUIRED" if previous_level == 0 else "LEVEL UP"
+	_item_level_feedback_label.text = "%s  ·  %s  ·  LV %d" % [action, item_name, level]
+	_item_level_feedback_label.add_theme_color_override("font_color",
+			Color("#37E8F5") if previous_level == 0 else Color("#48E69B"))
+	_item_level_feedback.show()
+	_item_level_feedback_expires_at = float(simulation.snapshot().get("simulation_time", 0.0)) + 1.75
 
 func _complete_pending_victory() -> void:
 	if _victory_pending and not _chest_open and _world_chests.is_empty():

@@ -185,6 +185,26 @@ custom_minimum_size = Vector2(130, 0)
 layout_mode = 2
 show_percentage = false
 
+[node name="ItemLevelFeedback" type="PanelContainer" parent="HUD"]
+visible = false
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -150
+offset_top = 83
+offset_right = 150
+offset_bottom = 108
+mouse_filter = 2
+theme_type_variation = "CompactPanel"
+
+[node name="FeedbackLabel" type="Label" parent="HUD/ItemLevelFeedback"]
+custom_minimum_size = Vector2(280, 18)
+layout_mode = 2
+theme_override_font_sizes/font_size = 9
+text = "ITEM UPGRADED"
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+
 [node name="ChestOverlay" type="CenterContainer" parent="HUD"]
 anchors_preset = 15
 anchor_right = 1.0
