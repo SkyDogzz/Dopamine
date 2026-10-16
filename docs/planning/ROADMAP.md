@@ -404,6 +404,7 @@ Travail requis :
   - [x] Persister la difficulté maximale débloquée (Easy initialement) et transmettre la difficulté choisie du hub à la run.
   - [x] Après une victoire contre le boss de vague 24, débloquer uniquement la difficulté suivante; refuser les récompenses d’une difficulté verrouillée avec `difficulty_locked`. Une défaite ne débloque rien.
   - [x] Vérifier que HP, dégâts ennemis, densité et récompenses utilisent leurs multiplicateurs séparés; les résultats Easy, Normal et Chaos ont un test dédié.
+  - [x] Inclure les smokes de profil, d’unlock et de session dans CTest; l’unlock verrouillé vérifie explicitement l’erreur `difficulty_locked`.
   - Les règles de déblocage sont **[VALIDÉES]**; les multiplicateurs du GDD restent **[PROPOSÉS]**.
 
 ### Vérification et sortie P5
@@ -422,7 +423,7 @@ Travail requis :
   - [ ] Vérifier mort, victoire, coffre et récompense/idempotence.
 - [ ] **P5.V4 — Revue et checkpoint**
   - [x] Consigner les validations et les limites sans changer les statuts de décision du GDD.
-  - [x] Relancer la suite CTest complète : 47/47 passent le 2026-10-16. Le benchmark natif sur 500 ennemis/2 000 projectiles mesure la rafale d’impacts avant/après optimisation; résultats et limites consignés dans `docs/qa/TESTS.md`.
+  - [x] Relancer la suite CTest complète : 50/50 passent le 2026-10-16. Le benchmark natif sur 500 ennemis/2 000 projectiles mesure la rafale d’impacts avant/après optimisation; résultats et limites consignés dans `docs/qa/TESTS.md`.
   - [x] Corriger le travail de zone devenu inutile après saturation du budget d’explosions et committer ce checkpoint documenté.
   - [ ] Faire le parcours sans assistance de P5.V3 et réaliser les scénarios d’armes dans le Sandbox avant de clore le jalon.
 

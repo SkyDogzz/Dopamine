@@ -35,6 +35,11 @@ func _run() -> void:
 			break
 	var overlay = session.get_node("HUD/RunResultOverlay")
 	var panel = session.get_node("HUD/RunResultOverlay/RunResultPanel")
+	deadline = Time.get_ticks_msec() + 1000
+	while Time.get_ticks_msec() < deadline:
+		if session.simulation.snapshot()["paused"] and overlay.visible:
+			break
+		await process_frame
 	if not session.run_over or not session.simulation.snapshot()["paused"] or not overlay.visible:
 		_fail("HP reaching zero should pause the run and show the result screen")
 		return

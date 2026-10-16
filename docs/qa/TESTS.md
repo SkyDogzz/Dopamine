@@ -5,7 +5,7 @@
 - [x] `survival_targeting_smoke.gd` vérifie nearest, farthest, highest threat, highest HP, lowest HP, la priorité PV max de Prism dans une grappe dense, les cibles de grappes, le centroïde Meteor, la réduction commune des portées (−71 %, plafond visible de 180 unités), le plafond après bonus de niveau/zone et l’exclusion des ennemis morts, des projectiles et des orbes XP. Ces règles restent **[PROPOSÉES]**.
 - [x] `sandbox_ui_smoke.gd` vérifie le sélecteur à neuf politiques, l’ID ou centroïde affiché, les portées et rayons de grappe par défaut, l’effet du choix de politique et de portée, l’effacement après kill-all et la préservation du fixture de sauvegarde normale. Capture Xvfb relue à 640×360; cible, marqueur et réglages restent dans leurs cadres.
 - [x] `survival_weapon_catalog_smoke.gd` vérifie le regroupement Lightning/Sawblades/Meteor/Prism, les choix par menace/PV/distance, le ciblage faible PV des Crimson Daggers, le focus PV max de Prism, le maintien/reciblage du Minigun, et les bonus Inferno des niveaux 2–5.
-- [ ] La dernière suite complète a passé 46/47 : `survival_run_result_smoke` a échoué deux fois en exécution complète, mais passe seul et après `survival_starting_weapon_smoke`. Les 46 autres tests, y compris import Godot, ciblage, catalogue et Sandbox, passent; rechercher la fluctuation avant de qualifier la suite complète de verte.
+- [x] La suite complète est à 50/50. `survival_run_result_smoke` attend maintenant que le worker ait acquitté la pause après `run_over`; le test passe dix exécutions consécutives puis dans la suite complète. Les smokes profil, unlock et session de difficulté sont désormais enregistrés dans CTest.
 - [x] Les dix armes ont des règles de ciblage distinctes couvertes par les fixtures de comportement et les profils Sandbox.
 - [ ] Leur équilibrage comparatif reste **[OUVERT]**; les sélecteurs numériques sont **[PROPOSÉS]** et la couverture ne prouve pas leur qualité finale.
 
@@ -13,7 +13,7 @@
 
 ## Revalidation intégrée P5 — 2026-10-16
 
-- [x] La suite CTest complète passe à 47/47 sous Godot 4.7.2 et Linux C++23 après la configuration des progressions d’armes et les smokes de boss final; temps CTest total 39,64 s, qui ne constitue pas une mesure de performance en jeu.
+- [x] La suite CTest complète passe à 50/50 sous Godot 4.7.2 et Linux C++23 après intégration des smokes de difficulté et stabilisation du résultat de run; temps CTest total 40,85 s, qui ne constitue pas une mesure de performance en jeu.
 - [x] Au contrôle précédent, Godot 4.7.2 officiel exécuté depuis `/tmp`; la suite CTest passait avec 45/45 tests. Depuis, deux tests ont été ajoutés; résultat courant ci-dessus.
 - [x] `survival_inventory_smoke.gd` utilise désormais deux équipements de fixture valides et déterministes au lieu de dépendre de récompenses aléatoires; équipement, enhancement, effet unique, compétences et démantèlement passent dans la suite intégrée.
 - [x] `survival_elite_smoke.gd` vérifie le Split-on-Death plafonné sous Godot 4.7.2; les smokes voisins Summoner, boss, vagues et durée passent également.

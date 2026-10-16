@@ -24,9 +24,9 @@ func _run() -> void:
 		_fail("A final boss victory on the highest unlocked difficulty should unlock only the next one")
 		return
 	var skipped_win: Dictionary = service.award_survival_run("skipped-win", 24, true, 0, "hard")
-	if not skipped_win.get("ok", false) or skipped_win.has("newly_unlocked_difficulty") or \
+	if skipped_win.get("ok", false) or skipped_win.get("error") != "difficulty_locked" or \
 		service.load_profile()["profile"]["highest_unlocked_difficulty"] != "normal":
-		_fail("A victory on a later difficulty must not skip the unlock sequence")
+		_fail("A victory on a locked later difficulty must be refused without skipping the unlock sequence")
 		return
 	var normal_win: Dictionary = service.award_survival_run("normal-win", 24, true, 0, "normal")
 	var duplicate: Dictionary = service.award_survival_run("normal-win", 24, true, 0, "normal")
