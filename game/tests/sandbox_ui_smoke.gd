@@ -116,14 +116,20 @@ func _run() -> void:
 	state = await _wait_for_status(sandbox.simulation, id["index"])
 	assert(state["entities"][0]["components"].has("DamageOverTime"), "Sandbox should apply a status to the selected entity")
 	assert(sandbox.get_node("Shell/Content/SidePanel/Sections/InspectorPanel/InspectorForm/EntityInfo").text.contains("DAMAGE OVER TIME"), "Inspector should display active status")
-	sandbox.simulation.step(0.2)
+	sandbox.set_process(false)
+	var status_step_sequence: int = sandbox.simulation.step(0.2)
+	assert(status_step_sequence > 0, "Sandbox should accept a step while paused")
+	state = await _wait_for_sequence(sandbox.simulation, status_step_sequence)
 	state = await _wait_for_damage(sandbox.simulation)
+	if state.is_empty():
+		return
 	assert(state["events"][0]["is_damage_over_time"], "Status damage events should be identified")
 	var expected_damage := 0.0
 	for event in state["events"]:
 		if event["type"] == "damage":
 			expected_damage += float(event["amount"])
 	sandbox._refresh()
+	sandbox.set_process(true)
 	var dps_label: Label = sandbox.get_node("Shell/Content/MainColumn/Metrics/MetricRow/MetricDPS")
 	var expected_dps := expected_damage / float(state["simulation_time"])
 	assert(dps_label.text == "AVG DPS  %.1f" % expected_dps, "Sandbox DPS should use damage events divided by simulated time")

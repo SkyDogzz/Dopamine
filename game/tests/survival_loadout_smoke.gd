@@ -48,14 +48,18 @@ func _initialize() -> void:
 		_fail("Selecting an owned weapon should upgrade it")
 		return
 	var upgraded_weapon_offer := _find_offer(loadout.offers("weapon"), "weapon:inferno_sprayer")
-	if upgraded_weapon_offer.is_empty() or not str(upgraded_weapon_offer["title"]).contains("1 → 2") or \
+	if upgraded_weapon_offer.is_empty() or not str(upgraded_weapon_offer["title"]).contains("2 → 3") or \
 			not str(upgraded_weapon_offer["description"]).contains("NEXT LEVEL: +15% damage"):
 		_fail("Owned weapon offers should explain the effect of the next level")
 		return
 	if not loadout.apply_offer("relic:storm_core") or loadout.relic_level("storm_core") != 1:
 		_fail("Selecting a new relic should add it at level 1")
 		return
-	var upgraded_relic_offer := _find_offer(loadout.offers("relic"), "relic:storm_core")
+	var upgraded_relic_offer := {}
+	for _attempt in range(50):
+		upgraded_relic_offer = _find_offer(loadout.offers("relic"), "relic:storm_core")
+		if not upgraded_relic_offer.is_empty():
+			break
 	if upgraded_relic_offer.is_empty() or not str(upgraded_relic_offer["title"]).contains("1 → 2") or \
 			not str(upgraded_relic_offer["description"]).contains("NEXT LEVEL: +5% damage for its weapon"):
 		_fail("Owned relic offers should explain the effect of the next level")
