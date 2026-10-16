@@ -19,6 +19,9 @@ func _run() -> void:
 	if not await _sawblades_prioritizes_ricochet_clusters():
 		_fail("Sawblades should aim at the nearest target in the densest reachable ricochet cluster")
 		return
+	if not await _void_orb_targets_farthest_live_enemy():
+		_fail("Void Orb should target the farthest living enemy inside its range")
+		return
 	if not await _minigun_holds_target_until_invalid():
 		_fail("Minigun should keep its target until it dies or leaves range, then select another target")
 		return
@@ -270,6 +273,25 @@ func _sawblades_prioritizes_ricochet_clusters() -> bool:
 	var nearest_fallback: bool = fallback.get("id", Vector2i(-1, -1)) == Vector2i(31, 1)
 	session.queue_free()
 	return cluster_selected and nearest_fallback
+
+func _void_orb_targets_farthest_live_enemy() -> bool:
+	var session: Node2D = load("res://scenes/survival_session.tscn").instantiate()
+	session.spawn_initial_enemy = false
+	session.wave_spawning_enabled = false
+	root.add_child(session)
+	await process_frame
+	var origin: Vector2 = session.player.global_position
+	session._entities = [
+		{"id": {"index": 51, "generation": 1}, "components": {"Health": {"current": 100.0}, "Transform2D": {"x": origin.x + 80.0, "y": origin.y}}},
+		{"id": {"index": 52, "generation": 1}, "components": {"Health": {"current": 100.0}, "Transform2D": {"x": origin.x + 260.0, "y": origin.y}}},
+		{"id": {"index": 53, "generation": 1}, "components": {"Health": {"current": 0.0}, "Transform2D": {"x": origin.x + 350.0, "y": origin.y}}},
+		{"id": {"index": 54, "generation": 1}, "components": {"Health": {"current": 100.0}, "Transform2D": {"x": origin.x + session.void_orb_range + 1.0, "y": origin.y}}},
+	]
+	var selected: Dictionary = session._farthest_enemy(session.void_orb_range)
+	session._entities.clear()
+	var no_target: Dictionary = session._farthest_enemy(session.void_orb_range)
+	session.queue_free()
+	return selected.get("id", Vector2i(-1, -1)) == Vector2i(52, 1) and no_target.is_empty()
 
 func _void_orb_pulls_and_pierces() -> bool:
 	var session: Node2D = load("res://scenes/survival_session.tscn").instantiate()

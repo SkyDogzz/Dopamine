@@ -1882,7 +1882,7 @@ func _fire_prism_laser(active_time: float, paused: bool) -> void:
 func _fire_void_orb(active_time: float, paused: bool) -> void:
 	if not weapon_enabled or loadout.weapon_level("void_orb") == 0 or paused or _chest_open or run_over or void_orb_cooldown <= 0.0 or active_time < _next_void_orb_time:
 		return
-	var target := _nearest_enemy(void_orb_range)
+	var target := _farthest_enemy(void_orb_range)
 	if target.is_empty():
 		return
 	var level: int = loadout.weapon_level("void_orb")
@@ -2146,6 +2146,26 @@ func _nearest_enemy(max_range: float) -> Dictionary:
 			best_distance_squared = distance_squared
 			nearest = {"position": position, "id": Vector2i(int(entity["id"]["index"]), int(entity["id"]["generation"]))}
 	return nearest
+
+func _farthest_enemy(max_range: float) -> Dictionary:
+	var farthest: Dictionary = {}
+	var best_distance_squared := -1.0
+	for entity in _entities:
+		var components: Dictionary = entity["components"]
+		if not _is_targetable_enemy(components):
+			continue
+		var transform: Dictionary = components["Transform2D"]
+		var position := Vector2(float(transform["x"]), float(transform["y"]))
+		var distance_squared := player.global_position.distance_squared_to(position)
+		if distance_squared >= max_range * max_range:
+			continue
+		if distance_squared > best_distance_squared:
+			best_distance_squared = distance_squared
+			farthest = {
+				"position": position,
+				"id": Vector2i(int(entity["id"]["index"]), int(entity["id"]["generation"])),
+			}
+	return farthest
 
 func _highest_threat_enemy(max_range: float) -> Dictionary:
 	var best_target: Dictionary = {}
