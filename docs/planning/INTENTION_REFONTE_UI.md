@@ -39,4 +39,4 @@ Toutes les interfaces et actions de menu doivent être utilisables à la souris,
 
 ## Carte des capacités
 
-Les responsabilités, dépendances et l’ordre proposé sont dans [`UI_CAPABILITY_MAP.md`](../../UI_CAPABILITY_MAP.md). Cette carte attend validation avant la rédaction de specs séparées par module.
+Les responsabilités, dépendances et l’ordre proposé sont dans [`UI_CAPABILITY_MAP.md`](../../UI_CAPABILITY_MAP.md), carte validée avant la rédaction de specs séparées par module.
