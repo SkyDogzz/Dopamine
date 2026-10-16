@@ -47,7 +47,6 @@ func present(options: Array, required_count: int = 3, heading: String = "CHEST â
 		var icon_path := str(option.get("icon", ""))
 		if not icon_path.is_empty():
 			button.icon = load(icon_path)
-			button.expand_icon = true
 		button.pressed.connect(_choose.bind(str(option["id"])))
 		_options.add_child(button)
 	visible = true
