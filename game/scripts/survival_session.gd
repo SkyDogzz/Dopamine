@@ -863,7 +863,6 @@ func _process(_delta: float) -> void:
 				_roll_enemy_chests(dead_enemy_type, death_position)
 				if not run_over:
 					var healing: float = _equipment_kill_healing(float(simulation.kill_heal_amount(float(event["threat_level"]))))
-					healing *= 1.0 + float(loadout.relic_level("blood_chalice")) * blood_chalice_heal_per_level
 					player_hp = minf(player_max_hp, player_hp + healing)
 					_spawn_xp_drop(
 						death_position,
@@ -1038,7 +1037,6 @@ func _update_exploder_attacks(current_simulation_time: float, paused: bool) -> v
 		_roll_enemy_chests("exploder", blast_origin)
 		if not run_over:
 			var healing: float = _equipment_kill_healing(float(simulation.kill_heal_amount(float(components.get("ThreatLevel", 2.0)))))
-			healing *= 1.0 + float(loadout.relic_level("blood_chalice")) * blood_chalice_heal_per_level
 			player_hp = minf(player_max_hp, player_hp + healing)
 			_spawn_xp_drop(blast_origin, _equipment_xp_value(xp_per_enemy))
 	for exploder_key in _exploder_attacks.keys():
