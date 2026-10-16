@@ -46,6 +46,9 @@ func _run() -> void:
 	if fullscreen_toggle == null or fullscreen_toggle.focus_mode == Control.FOCUS_NONE:
 		_fail("Fullscreen setting should be focusable")
 		return
+	if volume_slider.texture_filter != CanvasItem.TEXTURE_FILTER_NEAREST:
+		_fail("The volume slider should preserve its pixel-grid handle texture")
+		return
 	if root.gui_get_focus_owner() != fullscreen_toggle:
 		_fail("Fullscreen setting should receive initial focus")
 		return

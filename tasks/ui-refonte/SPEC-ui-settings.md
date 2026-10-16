@@ -10,6 +10,7 @@
 - **[PROPOSÉ]** Les préférences sont appliquées immédiatement, conservées entre les lancements dans une configuration utilisateur dédiée, et chargées au démarrage.
 - **[PROPOSÉ]** « Plein écran » alterne les modes fenêtre et plein écran exclusif de Godot. Le volume général est un curseur 0–100 %, appliqué au bus Master; 0 coupe le son.
 - **[OUVERT]** Courbe de conversion du curseur en décibels, valeur initiale du volume, comportement précis du mode d’affichage selon la plateforme et retour visuel d’une erreur d’application.
+- **[PROPOSÉ]** Le rail et le curseur de volume utilisent l’accent cyan; le bouton plein écran utilise un accent cyan lorsqu’il est activé et une teinte bleu ardoise désactivée. Ces couleurs suivent la palette maître, mais leurs états exacts n’ont pas été validés séparément.
 
 ## Objectif
 

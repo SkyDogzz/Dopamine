@@ -75,7 +75,7 @@ L’UI actuelle se partage entre le Theme `game/themes/dopamine_ui.tres`, des sc
 | Écran / scène | État visuel actuel | Travail UI à inventorier et refaire |
 |---|---|---|
 | Accueil — `launch_menu.tscn` | Carte opaque, titre textuel, boutons; skyline intégrée récemment | Recomposer pour la colonne de menu à gauche, identité/logo + skyline, états hover/press/focus, contraintes de viewport 640×360. |
-| Options — `options_panel.tscn` | Carte et contrôles natifs pour plein écran/volume | Refaire panneaux, hiérarchie typo, slider/toggle, focus et adaptation; comportement minimal confirmé inchangé. |
+| Options — `options_panel.tscn` | Carte compacte; toggle plein écran et slider volume thème néon, curseur rond 12×12 pixel-grid | Poursuivre la vérification des états interactifs et des layouts; réglages plein écran/volume et parcours restent inchangés. La couleur cyan d’activation et la teinte désactivée sont **[PROPOSÉES]**. |
 | Hub Survival — `survival_hub.tscn` | Difficultés et actions permanentes dans deux colonnes | Refaire layout compact responsive, boutons de difficulté, équipements/skills, Succès/Bestiaire inactifs et CTA de run. |
 | Équipement — `equipment_inventory_panel.tscn` | Panneau dynamique, icônes de rareté et thème partagé; états vide/erreur centrés dans la zone défilante | Refaire lignes, icônes, niveaux/états et navigation sans changer le service. |
 | Arbre de compétences — `skill_tree_panel.tscn` | Prototype d’écran et nœuds/actions limités; thème partagé appliqué explicitement | Refaire le cadre et les éléments qui existent. Ne pas créer le graphe complet ni ses règles à partir du seul objectif futur de 120 nœuds du GDD. |

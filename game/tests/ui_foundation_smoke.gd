@@ -82,6 +82,24 @@ func _run() -> void:
 	if scrollbar_focus.border_color.to_html(false) != "ffd447":
 		_fail("Scrollbars should keep a visible gold keyboard/gamepad focus state")
 		return
+	for style_name in ["slider", "grabber_area", "grabber_area_highlight"]:
+		if not shared_theme.has_stylebox(style_name, "HSlider"):
+			_fail("Shared Theme is missing HSlider style: %s" % style_name)
+			return
+	var slider_track := shared_theme.get_stylebox("slider", "HSlider") as StyleBoxFlat
+	var slider_fill := shared_theme.get_stylebox("grabber_area", "HSlider") as StyleBoxFlat
+	if slider_track.bg_color.to_html(false) != "10152b" or slider_fill.bg_color.to_html(false) != "37e8f5":
+		_fail("Slider track and filled value should use the shared neon palette")
+		return
+	var slider_grabber := shared_theme.get_icon("grabber", "HSlider") as GradientTexture2D
+	var slider_grabber_hover := shared_theme.get_icon("grabber_highlight", "HSlider") as GradientTexture2D
+	if slider_grabber == null or slider_grabber.width != 12 or slider_grabber.height != 12 or slider_grabber_hover == null:
+		_fail("Slider handles should use compact pixel-grid theme textures")
+		return
+	if shared_theme.get_color("button_checked_color", "CheckButton").to_html(false) != "37e8f5" or \
+		shared_theme.get_color("button_unchecked_color", "CheckButton").to_html(false) != "64708c":
+		_fail("CheckButton on/off states should use the shared neon palette")
+		return
 
 	for node_name in [
 		"Content/PreviewCenter/SamplePanel/SampleContent/Actions/PrimaryButton",

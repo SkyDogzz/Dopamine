@@ -1,4 +1,4 @@
-[gd_resource type="Theme" load_steps=17 format=3]
+[gd_resource type="Theme" load_steps=24 format=3]
 
 [ext_resource type="FontFile" path="res://assets/fonts/DejaVuSans.ttf" id="font_body"]
 [ext_resource type="FontFile" path="res://assets/fonts/PressStart2P-Regular.ttf" id="font_heading"]
@@ -207,6 +207,56 @@ corner_radius_top_right = 0
 corner_radius_bottom_right = 0
 corner_radius_bottom_left = 0
 
+[sub_resource type="StyleBoxFlat" id="SliderTrack"]
+bg_color = Color(0.062745, 0.082353, 0.168627, 1)
+border_color = Color(0.160784, 0.2, 0.329412, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+corner_radius_top_left = 0
+corner_radius_top_right = 0
+corner_radius_bottom_right = 0
+corner_radius_bottom_left = 0
+
+[sub_resource type="StyleBoxFlat" id="SliderFill"]
+bg_color = Color(0.215686, 0.909804, 0.960784, 1)
+corner_radius_top_left = 0
+corner_radius_top_right = 0
+corner_radius_bottom_right = 0
+corner_radius_bottom_left = 0
+
+[sub_resource type="StyleBoxFlat" id="SliderFillHover"]
+bg_color = Color(0.282353, 0.901961, 0.607843, 1)
+corner_radius_top_left = 0
+corner_radius_top_right = 0
+corner_radius_bottom_right = 0
+corner_radius_bottom_left = 0
+
+[sub_resource type="Gradient" id="SliderGrabberGradient"]
+offsets = PackedFloat32Array(0, 0.82, 1)
+colors = PackedColorArray(0.215686, 0.909804, 0.960784, 1, 0.215686, 0.909804, 0.960784, 1, 0.215686, 0.909804, 0.960784, 0)
+
+[sub_resource type="GradientTexture2D" id="SliderGrabber"]
+gradient = SubResource("SliderGrabberGradient")
+width = 12
+height = 12
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+fill_to = Vector2(0.5, 0)
+
+[sub_resource type="Gradient" id="SliderGrabberHoverGradient"]
+offsets = PackedFloat32Array(0, 0.82, 1)
+colors = PackedColorArray(0.282353, 0.901961, 0.607843, 1, 0.282353, 0.901961, 0.607843, 1, 0.282353, 0.901961, 0.607843, 0)
+
+[sub_resource type="GradientTexture2D" id="SliderGrabberHover"]
+gradient = SubResource("SliderGrabberHoverGradient")
+width = 12
+height = 12
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+fill_to = Vector2(0.5, 0)
+
 [resource]
 default_font_size = 8
 default_font = ExtResource("font_body")
@@ -224,6 +274,18 @@ Button/styles/hover = SubResource("ButtonHover")
 Button/styles/pressed = SubResource("ButtonPressed")
 Button/styles/focus = SubResource("ButtonFocus")
 Button/styles/disabled = SubResource("ButtonDisabled")
+CheckButton/colors/button_checked_color = Color(0.215686, 0.909804, 0.960784, 1)
+CheckButton/colors/button_unchecked_color = Color(0.392157, 0.439216, 0.54902, 1)
+HSlider/styles/slider = SubResource("SliderTrack")
+HSlider/styles/grabber_area = SubResource("SliderFill")
+HSlider/styles/grabber_area_highlight = SubResource("SliderFillHover")
+HSlider/icons/grabber = SubResource("SliderGrabber")
+HSlider/icons/grabber_highlight = SubResource("SliderGrabberHover")
+VSlider/styles/slider = SubResource("SliderTrack")
+VSlider/styles/grabber_area = SubResource("SliderFill")
+VSlider/styles/grabber_area_highlight = SubResource("SliderFillHover")
+VSlider/icons/grabber = SubResource("SliderGrabber")
+VSlider/icons/grabber_highlight = SubResource("SliderGrabberHover")
 Label/colors/font_color = Color(0.964706, 0.968627, 1, 1)
 LineEdit/colors/font_color = Color(0.964706, 0.968627, 1, 1)
 LineEdit/colors/font_placeholder_color = Color(0.647059, 0.682353, 0.764706, 1)
