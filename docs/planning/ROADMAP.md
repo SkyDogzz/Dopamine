@@ -298,8 +298,7 @@ Travail requis :
 - [ ] **P5.1.11 — Niveaux et feedback des autres armes**
   - [ ] Compléter les niveaux 1–5 d’une arme à la fois à partir des valeurs proposées.
   - [x] Ajouter un feedback HUD à l’acquisition et à chaque niveau gagné sur arme/relique; toast lié au temps de simulation et figé en pause.
-  - [x] Minigun : accentuer visuellement l’impact de 6 % par niveau, sans changer dégâts, collision ni cadence (**[PROPOSÉ]**).
-  - [ ] Ajouter les retours visuels propres aux niveaux des neuf autres armes.
+  - [x] Les impacts dédiés des dix armes reprennent le niveau de leur arme et grossissent de 6 % par niveau, sans changer dégâts, collision ou cadence (**[PROPOSÉ]**).
   - [ ] Compléter niveaux 1–5 des reliques et valider leurs bonus linéaires proposés.
   - [ ] Ajouter le changement visuel majeur à l’évolution.
 - [ ] **P5.1.12 — Règle d’évolution/catalogue**

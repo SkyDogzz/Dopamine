@@ -26,6 +26,17 @@ const WEAPON_IMPACT_TYPES := {
 	"void_orb": 8, "event_horizon": 8,
 	"frost_nova": 9, "absolute_zero": 9,
 }
+const WEAPON_IMPACT_SOURCE_IDS := {
+	"lightning_conductor": "lightning_conductor", "unique_lightning_burst": "lightning_conductor",
+	"infinite_circuit_branch": "lightning_conductor", "inferno_sprayer": "inferno_sprayer",
+	"wildfire_sprayer": "inferno_sprayer", "crimson_dagger": "crimson_daggers",
+	"bloodstorm_dagger": "crimson_daggers", "minigun": "minigun", "toxic_cloud": "toxic_cloud",
+	"pandemic_cloud": "toxic_cloud", "sawblades": "sawblades", "razorstorm": "sawblades",
+	"meteor_staff": "meteor_staff", "starfall": "meteor_staff", "starfall_fragment": "meteor_staff",
+	"prism_laser": "prism_laser", "spectrum_collapse": "prism_laser", "prism_secondary": "prism_laser",
+	"void_orb": "void_orb", "event_horizon": "void_orb", "frost_nova": "frost_nova",
+	"absolute_zero": "frost_nova",
+}
 const WEAPON_IMPACT_LIFETIME := 0.22
 const MAX_VISIBLE_WEAPON_IMPACTS := 32
 const LIGHTNING_ARC_LIFETIME := 0.12
@@ -2546,7 +2557,8 @@ func _add_weapon_impact(source_type: String, position: Vector2, is_damage_over_t
 		return
 	if _weapon_impacts.size() >= MAX_VISIBLE_WEAPON_IMPACTS:
 		_weapon_impacts.pop_front()
-	var level: int = loadout.weapon_level("minigun") if impact_type == "minigun" else 1
+	var weapon_id: String = WEAPON_IMPACT_SOURCE_IDS.get(impact_type, "")
+	var level: int = loadout.weapon_level(weapon_id) if not weapon_id.is_empty() else 1
 	_weapon_impacts.append({
 		"type": int(WEAPON_IMPACT_TYPES[impact_type]),
 		"position": position,
@@ -2556,4 +2568,4 @@ func _add_weapon_impact(source_type: String, position: Vector2, is_damage_over_t
 	})
 
 func _weapon_impact_level_scale(level: int) -> float:
-	return 1.0 + 0.06 * float(clampi(level - 1, 0, 4)) # [PROPOSED] visual-only emphasis per Minigun level.
+	return 1.0 + 0.06 * float(clampi(level - 1, 0, 4)) # [PROPOSED] visual-only emphasis per weapon level.

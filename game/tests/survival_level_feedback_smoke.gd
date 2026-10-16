@@ -1,5 +1,12 @@
 extends SceneTree
 
+const IMPACT_SOURCES := {
+	"lightning_conductor": "lightning_primary:smoke", "inferno_sprayer": "inferno_sprayer",
+	"crimson_daggers": "crimson_dagger", "minigun": "minigun", "toxic_cloud": "toxic_cloud",
+	"sawblades": "sawblades", "meteor_staff": "meteor_staff", "prism_laser": "prism_laser",
+	"void_orb": "void_orb", "frost_nova": "frost_nova",
+}
+
 func _initialize() -> void:
 	call_deferred("_run")
 
@@ -16,25 +23,23 @@ func _run() -> void:
 	if not feedback.visible or not label.text.contains("ACQUIRED") or not label.text.contains("MINIGUN") or not label.text.ends_with("LV 1"):
 		_fail("New weapons should show a visible level 1 acquisition notice")
 		return
-	session._add_weapon_impact("minigun", Vector2.ZERO, false)
-	var minigun_impact: Dictionary = session._weapon_impacts.back()
-	var previous_impact_scale: float = session._weapon_impact_level_scale(1)
-	if int(minigun_impact.get("level", 0)) != 1:
-		_fail("Minigun impact feedback should capture the current weapon level")
-		return
 	for expected_level in range(2, 6):
 		session._on_chest_option_selected("weapon:minigun")
 		if not feedback.visible or not label.text.contains("LEVEL UP") or not label.text.ends_with("LV %d" % expected_level):
 			_fail("Weapon level %d should appear in the run HUD feedback" % expected_level)
 			return
-		session._weapon_impacts.clear()
-		session._add_weapon_impact("minigun", Vector2.ZERO, false)
-		minigun_impact = session._weapon_impacts.back()
-		var impact_scale: float = session._weapon_impact_level_scale(int(minigun_impact.get("level", 0)))
-		if int(minigun_impact.get("level", 0)) != expected_level or impact_scale <= previous_impact_scale:
-			_fail("Minigun level %d should produce a stronger weapon-specific hit visual" % expected_level)
-			return
-		previous_impact_scale = impact_scale
+	for weapon_id in IMPACT_SOURCES:
+		var previous_impact_scale := 0.0
+		for expected_level in range(1, 6):
+			session.loadout._weapon_levels[weapon_id] = expected_level
+			session._weapon_impacts.clear()
+			session._add_weapon_impact(IMPACT_SOURCES[weapon_id], Vector2.ZERO, false)
+			var impact: Dictionary = session._weapon_impacts.back()
+			var impact_scale: float = session._weapon_impact_level_scale(int(impact.get("level", 0)))
+			if int(impact.get("level", 0)) != expected_level or impact_scale <= previous_impact_scale:
+				_fail("%s level %d should produce a stronger weapon-specific impact visual" % [weapon_id, expected_level])
+				return
+			previous_impact_scale = impact_scale
 	session._on_chest_option_selected("relic:overdrive_engine")
 	if not feedback.visible or not label.text.contains("ACQUIRED") or not label.text.contains("OVERDRIVE ENGINE") or not label.text.ends_with("LV 1"):
 		_fail("New relics should show a visible level 1 acquisition notice")
