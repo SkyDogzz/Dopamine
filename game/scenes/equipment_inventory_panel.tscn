@@ -70,9 +70,10 @@ alignment = 1
 theme_override_constants/separation = 4
 
 [node name="EmptyState" type="Label" parent="Panel/Content/Scroll/Items"]
-custom_minimum_size = Vector2(0, 56)
+custom_minimum_size = Vector2(0, 72)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.647059, 0.682353, 0.764706, 1)
+theme_override_font_sizes/font_size = 10
 text = "NO PERMANENT EQUIPMENT YET\nComplete a Survival run to find your first item."
 horizontal_alignment = 1
 vertical_alignment = 1
@@ -80,9 +81,10 @@ autowrap_mode = 2
 
 [node name="ErrorState" type="Label" parent="Panel/Content/Scroll/Items"]
 visible = false
-custom_minimum_size = Vector2(0, 56)
+custom_minimum_size = Vector2(0, 72)
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.443137, 0.505882, 1)
+theme_override_font_sizes/font_size = 10
 text = "EQUIPMENT COULD NOT BE LOADED\nReturn to the hub and try again."
 horizontal_alignment = 1
 vertical_alignment = 1

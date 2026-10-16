@@ -29,6 +29,16 @@ func _run() -> void:
 	if not panel_frame.get_global_rect().size.x <= 640:
 		_fail("Equipment panel should stay within the logical 640px viewport")
 		return
+	panel.present({})
+	var empty_state: Label = panel.get_node("Panel/Content/Scroll/Items/EmptyState")
+	var error_state: Label = panel.get_node("Panel/Content/Scroll/Items/ErrorState")
+	if not empty_state.visible or error_state.visible or empty_state.get_theme_font_size("font_size") < 10:
+		_fail("The empty equipment state should remain centered and readable")
+		return
+	panel.present_error()
+	if empty_state.visible or not error_state.visible or error_state.get_theme_font_size("font_size") < 10:
+		_fail("The equipment error state should remain distinct and readable")
+		return
 	print("Equipment panel visual hierarchy smoke passed")
 	quit()
 
