@@ -48,7 +48,7 @@ func _run() -> void:
 		_fail("A Normal wave 24 victory should grant the GDD proposed 88 Essence and 122 Basic Powder")
 		return
 	var profile: Dictionary = save_service.load_slot("0")["payload"]
-	if profile.get("profile_version") != 7 or profile.get("highest_unlocked_difficulty") != "hard" or \
+	if profile.get("profile_version") != 8 or profile.get("highest_unlocked_difficulty") != "hard" or \
 			profile["resources"].get("powder_refined") != 0 or \
 			profile["resources"].get("powder_pure") != 0 or profile["resources"].get("powder_prismatic") != 0:
 		_fail("Progression should initialize all powder tiers and unlock the next difficulty after the Normal victory fixture")
@@ -325,7 +325,7 @@ func _run() -> void:
 	var migrated_duplicate: Dictionary = legacy_service.award_survival_run("already-awarded", 24, true)
 	var migrated_profile: Dictionary = save_service.load_slot("legacy")["payload"]
 	if not migrated_duplicate.get("ok", false) or not migrated_duplicate.get("duplicate", false) or \
-			migrated_profile.get("profile_version") != 7 or \
+			migrated_profile.get("profile_version") != 8 or \
 			migrated_profile.get("highest_unlocked_difficulty") != "easy" or \
 			migrated_profile["resources"].get("essence") != 7 or \
 			migrated_profile["equipment_inventory"].size() != 0:
@@ -361,7 +361,7 @@ func _run() -> void:
 		var migrated_fixture: Dictionary = migration_result["profile"]
 		var migrated_resources: Dictionary = migrated_fixture["resources"]
 		var expected_equipment_count := 1 if version <= 4 else 0
-		if migrated_fixture["profile_version"] != 7 or migrated_fixture["highest_unlocked_difficulty"] != "easy" or \
+		if migrated_fixture["profile_version"] != 8 or migrated_fixture["highest_unlocked_difficulty"] != "easy" or \
 				migrated_fixture["rewarded_survival_runs"] != ["migration-v%d-run" % version] or \
 				migrated_resources["essence"] != 17 or migrated_resources["powder_basic"] != 23 or \
 				migrated_fixture["equipment_inventory"].size() != expected_equipment_count or \
@@ -381,7 +381,7 @@ func _run() -> void:
 	var v6_service = load("res://scripts/progression_service.gd").new(save_service, "version-six")
 	var v6_result: Dictionary = v6_service.load_profile()
 	var v6_profile: Dictionary = v6_result.get("profile", {})
-	if not v6_result.get("ok", false) or v6_profile.get("profile_version") != 7 or \
+	if not v6_result.get("ok", false) or v6_profile.get("profile_version") != 8 or \
 			v6_profile["achievement_progress"]["metrics"]["total_kills"] != 1234 or \
 			v6_profile["achievement_progress"]["tiers"]["exterminator"] != 2 or \
 			v6_profile["achievement_progress"]["tiers"]["survivor_depth"] != 0 or \
@@ -412,7 +412,7 @@ func _run() -> void:
 	var version_two_service = load("res://scripts/progression_service.gd").new(save_service, "version-two")
 	var migrated_profile_result: Dictionary = version_two_service.load_profile()
 	var migrated_inventory: Array = migrated_profile_result.get("profile", {}).get("equipment_inventory", [])
-	if not migrated_profile_result.get("ok", false) or migrated_profile_result["profile"].get("profile_version") != 7 or \
+	if not migrated_profile_result.get("ok", false) or migrated_profile_result["profile"].get("profile_version") != 8 or \
 			migrated_inventory.size() != 2 or migrated_inventory[0].get("equipped", true) or migrated_inventory[1].get("equipped", true):
 		_fail("Version 2 equipment should migrate as unequipped without losing items")
 		return

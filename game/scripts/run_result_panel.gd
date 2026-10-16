@@ -27,7 +27,8 @@ func _unhandled_input(event: InputEvent) -> void:
 		if get_viewport() != null:
 			get_viewport().set_input_as_handled()
 
-func show_result(victory: bool, wave_number: int, active_seconds: float, kills: int, reward: Dictionary = {}) -> void:
+func show_result(victory: bool, wave_number: int, active_seconds: float, kills: int, reward: Dictionary = {},
+		armorless_record: Dictionary = {}) -> void:
 	for row_name in ["RewardIcons", "AchievementIcon", "EquipmentIcon"]:
 		var row := $Content.get_node_or_null(row_name)
 		if row != null:
@@ -45,7 +46,18 @@ func show_result(victory: bool, wave_number: int, active_seconds: float, kills: 
 	add_theme_stylebox_override("panel", result_surface)
 	var total_seconds := int(floor(active_seconds))
 	_summary.text = "WAVE %02d  •  %02d:%02d  •  %d KILLS" % [wave_number, total_seconds / 60, total_seconds % 60, kills]
-	if reward.is_empty():
+	if not armorless_record.is_empty():
+		if not armorless_record.get("ok", false):
+			_rewards.text = "RECORD SAVE FAILED"
+			_rewards.add_theme_color_override("font_color", Color("#FF7181"))
+		else:
+			var record: Dictionary = armorless_record["record"]
+			var record_seconds := int(floor(float(record["survival_time_seconds"])))
+			var prefix := "NEW PERSONAL BEST" if armorless_record.get("updated", false) else "PERSONAL BEST"
+			_rewards.text = "%s  ·  WAVE %02d  ·  %02d:%02d  ·  %d KILLS" % [
+				prefix, int(record["wave"]), record_seconds / 60, record_seconds % 60, int(record["kills"]),
+			]
+	elif reward.is_empty():
 		_rewards.text = "RUN SANS SAUVEGARDE"
 		_equipment.text = ""
 		_achievement.text = ""

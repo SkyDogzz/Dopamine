@@ -1,6 +1,6 @@
 extends RefCounted
 
-const PROFILE_VERSION := 7
+const PROFILE_VERSION := 8
 const STARTER_WEAPONS := ["lightning_conductor", "inferno_sprayer"]
 const STARTER_RELICS := ["storm_core", "infernal_heart"]
 const POWDER_TIERS := ["basic", "refined", "pure", "prismatic"]
@@ -261,6 +261,9 @@ func load_profile() -> Dictionary:
 		migrated = true
 	profile["highest_unlocked_difficulty"] = profile.get("highest_unlocked_difficulty", "easy")
 	profile["unlocked_skill_nodes"] = profile.get("unlocked_skill_nodes", [])
+	if not profile.has("armorless_records") and version < PROFILE_VERSION:
+		profile["armorless_records"] = _empty_armorless_records()
+		migrated = true
 	if not profile.has("achievement_progress"):
 		if version < PROFILE_VERSION:
 			profile["achievement_progress"] = _empty_achievement_progress()
@@ -282,6 +285,28 @@ func load_profile() -> Dictionary:
 
 func can_save_profile() -> bool:
 	return _save_service != null
+
+func record_armorless_result(difficulty_id: String, wave: int, survival_time_seconds: float, kills: int) -> Dictionary:
+	if _save_service == null:
+		return {"ok": false, "error": "save_service_unavailable"}
+	if difficulty_id not in SURVIVAL_DIFFICULTY_SCRIPT.ORDER or wave < 1 or kills < 0 or \
+		not is_finite(survival_time_seconds) or survival_time_seconds < 0.0:
+		return {"ok": false, "error": "invalid_armorless_record"}
+	var profile_result := load_profile()
+	if not profile_result.get("ok", false):
+		return {"ok": false, "error": str(profile_result.get("error", "load_failed"))}
+	var profile: Dictionary = profile_result["profile"]
+	var records: Dictionary = profile["armorless_records"]
+	var previous: Dictionary = records[difficulty_id]
+	var updated := wave > int(previous["wave"]) or (wave == int(previous["wave"]) and
+		(survival_time_seconds > float(previous["survival_time_seconds"]) or
+		(survival_time_seconds == float(previous["survival_time_seconds"]) and kills > int(previous["kills"]))))
+	if updated:
+		records[difficulty_id] = {"wave": wave, "survival_time_seconds": survival_time_seconds, "kills": kills}
+		profile["armorless_records"] = records
+		if not _save_service.save_slot(_slot_id, profile):
+			return {"ok": false, "error": "save_failed"}
+	return {"ok": true, "updated": updated, "record": records[difficulty_id].duplicate(true)}
 
 func set_equipped(instance_id: String, equipped: bool) -> Dictionary:
 	var profile_result := load_profile()
@@ -669,7 +694,14 @@ func _empty_profile() -> Dictionary:
 		"unlocked_skill_nodes": [],
 		"highest_unlocked_difficulty": "easy",
 		"achievement_progress": _empty_achievement_progress(),
+		"armorless_records": _empty_armorless_records(),
 	}
+
+func _empty_armorless_records() -> Dictionary:
+	var records := {}
+	for difficulty_id in SURVIVAL_DIFFICULTY_SCRIPT.ORDER:
+		records[difficulty_id] = {"wave": 0, "survival_time_seconds": 0.0, "kills": 0}
+	return records
 
 func _valid_profile(profile: Dictionary) -> bool:
 	if profile.get("profile_version") != PROFILE_VERSION or not profile.get("resources") is Dictionary or \
@@ -677,8 +709,20 @@ func _valid_profile(profile: Dictionary) -> bool:
 				not profile.get("unlocked_skill_nodes") is Array or \
 				typeof(profile.get("highest_unlocked_difficulty")) != TYPE_STRING or \
 				profile["highest_unlocked_difficulty"] not in SURVIVAL_DIFFICULTY_SCRIPT.ORDER or \
-				not profile.get("achievement_progress") is Dictionary:
+				not profile.get("achievement_progress") is Dictionary or \
+				not profile.get("armorless_records") is Dictionary or \
+				profile["armorless_records"].size() != SURVIVAL_DIFFICULTY_SCRIPT.ORDER.size():
 		return false
+	for difficulty_id in SURVIVAL_DIFFICULTY_SCRIPT.ORDER:
+		var record: Variant = profile["armorless_records"].get(difficulty_id)
+		if not record is Dictionary or record.size() != 3 or \
+			typeof(record.get("wave")) not in [TYPE_INT, TYPE_FLOAT] or not is_finite(float(record["wave"])) or \
+			int(record["wave"]) != float(record["wave"]) or int(record["wave"]) < 0 or \
+			typeof(record.get("survival_time_seconds")) not in [TYPE_INT, TYPE_FLOAT] or \
+			not is_finite(float(record["survival_time_seconds"])) or float(record["survival_time_seconds"]) < 0.0 or \
+			typeof(record.get("kills")) not in [TYPE_INT, TYPE_FLOAT] or not is_finite(float(record["kills"])) or \
+			int(record["kills"]) != float(record["kills"]) or int(record["kills"]) < 0:
+			return false
 	var resources: Dictionary = profile["resources"]
 	for resource in ["essence", "powder_basic", "powder_refined", "powder_pure", "powder_prismatic"]:
 		var value = resources.get(resource)

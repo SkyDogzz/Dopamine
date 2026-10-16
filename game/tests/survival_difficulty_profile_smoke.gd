@@ -11,7 +11,7 @@ func _run() -> void:
 	var save_service = load("res://scripts/save_service.gd").new(directory)
 	var service = load("res://scripts/progression_service.gd").new(save_service, "fresh")
 	var profile: Dictionary = service.load_profile()["profile"]
-	if profile["profile_version"] != 7 or profile["highest_unlocked_difficulty"] != "easy":
+	if profile["profile_version"] != 8 or profile["highest_unlocked_difficulty"] != "easy":
 		_fail("A new profile should start with Easy unlocked")
 		return
 	var difficulty = load("res://scripts/survival_difficulty.gd")
@@ -31,7 +31,7 @@ func _run() -> void:
 		return
 	var legacy_service = load("res://scripts/progression_service.gd").new(save_service, "legacy")
 	var migrated: Dictionary = legacy_service.load_profile()
-	if not migrated.get("ok", false) or migrated["profile"]["profile_version"] != 7 or \
+	if not migrated.get("ok", false) or migrated["profile"]["profile_version"] != 8 or \
 		migrated["profile"]["highest_unlocked_difficulty"] != "easy" or \
 		migrated["profile"]["resources"]["essence"] != 47 or \
 		migrated["profile"]["rewarded_survival_runs"] != ["old-run"] or \
@@ -46,7 +46,7 @@ func _run() -> void:
 		return
 	var version_two_service = load("res://scripts/progression_service.gd").new(save_service, "version-two")
 	var migrated_v2: Dictionary = version_two_service.load_profile()
-	if not migrated_v2.get("ok", false) or migrated_v2["profile"]["profile_version"] != 7 or \
+	if not migrated_v2.get("ok", false) or migrated_v2["profile"]["profile_version"] != 8 or \
 		migrated_v2["profile"]["highest_unlocked_difficulty"] != "easy" or \
 		migrated_v2["profile"]["resources"]["essence"] != 13:
 		_fail("A version 2 profile should migrate to the current schema without losing resources")

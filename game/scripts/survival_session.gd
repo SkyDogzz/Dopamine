@@ -1901,7 +1901,13 @@ func _finish_run(victory: bool) -> void:
 	simulation.pause()
 	_run_result_overlay.visible = true
 	var reward := {}
+	var armorless_record := {}
 	if mode_id == "armorless" and armorless_run_state != null:
+		if progression_service != null and progression_service.can_save_profile() and \
+			progression_service.has_method("record_armorless_result"):
+			armorless_record = progression_service.record_armorless_result(
+				difficulty_id, wave_director.wave, player_active_time, kill_count
+			)
 		armorless_run_state.end_run()
 		_pending_armorless_draft_waves.clear()
 	elif progression_service != null and progression_service.can_save_profile():
@@ -1928,7 +1934,7 @@ func _finish_run(victory: bool) -> void:
 		reward = progression_service.award_survival_run(
 			_run_id, wave_director.wave, victory, kill_count, difficulty_id, run_metrics
 		)
-	_run_result.show_result(victory, wave_director.wave, player_active_time, kill_count, reward)
+	_run_result.show_result(victory, wave_director.wave, player_active_time, kill_count, reward, armorless_record)
 
 func _record_enemy_kill(enemy_type: String, affix: String = "") -> void:
 	if enemy_type in ENEMY_DEATH_TYPES:

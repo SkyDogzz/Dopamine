@@ -118,7 +118,11 @@ func _initialize() -> void:
 	quit(0)
 
 func _verify_full_skill_tree_application() -> bool:
-	var save_service = load("res://scripts/save_service.gd").new("user://full_skill_tree_smoke")
+	var directory := ProjectSettings.globalize_path("user://full_skill_tree_smoke")
+	DirAccess.make_dir_recursive_absolute(directory)
+	for file_name in DirAccess.get_files_at(directory):
+		DirAccess.remove_absolute(directory.path_join(file_name))
+	var save_service = load("res://scripts/save_service.gd").new(directory)
 	var progression = load("res://scripts/progression_service.gd").new(save_service, "0")
 	var profile: Dictionary = progression.load_profile()["profile"]
 	profile["resources"]["essence"] = 50000

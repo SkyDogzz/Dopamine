@@ -43,7 +43,7 @@
 - [x] `save_service_smoke.gd` vérifie que la lecture seule renvoie un ancien payload sans migration/écriture et refuse un slot courant corrompu même si un backup existe, sans restaurer ni modifier la source. Le chargement normal continue ensuite à récupérer le backup.
 - [x] `sandbox_profile_build_smoke.gd` vérifie la copie depuis `read_slot_read_only`, les starters et unlocks du skill tree, les bonus permanents et l’équipement équipé; il compare les octets de la sauvegarde avant/après et refuse sans écriture un ancien profil incomplet.
 - [x] `sandbox_lab_smoke.gd` continue de vérifier que le contexte et la session Lab ne reçoivent aucun service de progression ou de sauvegarde; l’import du profil est une copie locale du build uniquement.
-- [ ] Essayer l’import depuis le Sandbox Lab interactif avec un profil normal v7 et vérifier le texte de refus sur un profil absent/ancien.
+- [ ] Essayer l’import depuis le Sandbox Lab interactif avec un profil normal v8 et vérifier le texte de refus sur un profil absent/ancien.
 - [x] Import UI valide en mémoire les profils courants et copie le build Sandbox sans exposer de capability d’écriture; migration des profils historiques volontairement refusée ici pour préserver la save source.
 
 ## Progression permanente — équipement classique — 2026-10-16
@@ -70,7 +70,7 @@
 
 - [x] Revalidation de cette extension sous Godot 4.7.2 : `progression_service_smoke.gd`, `survival_progression_smoke.gd` et `survival_elite_smoke.gd` passent. `ctest` n’est pas installé/détectable dans l’environnement courant, donc la suite complète n’a pas été relancée. Le smoke élite affiche à la fermeture des avertissements de ressources encore référencées, sans échec fonctionnel.
 
-- [x] Le profil v7 stocke les valeurs de métriques et les paliers par ID d’achievement. `progression_service_smoke.gd` vérifie la migration des profils v1–v6, dont un profil v6 avec progression Exterminator existante, sans perte des kills/paliers/ressources; des données v7 malformed sont rejetées sans réécriture de la save.
+- [x] Le profil v8 stocke les valeurs de métriques, les paliers par ID d’achievement et les records Armorless. `progression_service_smoke.gd` vérifie la migration des profils v1–v6, dont un profil v6 avec progression Exterminator existante, sans perte des kills/paliers/ressources; `armorless_records_smoke.gd` vérifie la migration v7 et le classement local par difficulté sans récompense persistante.
 - [x] `award_survival_run` met à jour les métriques de kills cumulés, kills par type ennemi, meilleure vague, runs terminées, victoires au boss final et victoires Chaos. Les répétitions de `run_id` ne progressent aucune métrique deux fois.
 - [x] Le catalogue compte maintenant 100 familles; le plancher de la cible **[VALIDÉE]** de 100–150 est atteint. Les 12 familles `enemy_hunter_*` suivent les éliminations par type ennemi; les dix `weapon_mastery_*` agrègent les dégâts attribués par arme, les dix `weapon_killer_*` ses éliminations, les onze `relic_mastery_*` le niveau maximal des reliques, les dix `evolution_mastery_*` les évolutions, et dix suivent runs/victoires de boss par difficulté. Les dix nouvelles `weapon_level_mastery_*` enregistrent le niveau maximal de chaque arme; six `elite_affix_hunter_*` suivent les affixes éliminés et `elite_affix_variety` le nombre de types rencontrés. Les compteurs d’équipement, difficulté et diversité d’affixes sont dérivés/refusés lorsqu’ils sont injectés par `run_metrics`. `progression_service_smoke.gd` vérifie les paliers et la migration additive d’un profil v7 qui contenait 83 familles; `survival_elite_smoke.gd` passe par le bilan de run et vérifie le compteur de l’affixe réellement tué ainsi que le niveau d’arme. Les seuils et bonus de ces familles restent **[PROPOSÉS]**; la cible éditoriale de 120 familles reste **[PROPOSÉE]**.
 - [x] Smokes ciblés passés sous Godot 4.7.2 : `progression_service_smoke.gd`, `survival_difficulty_profile_smoke.gd`, `survival_progression_smoke.gd`, `survival_weapon_catalog_smoke.gd` et `run_result_panel_smoke.gd`.
@@ -865,3 +865,11 @@ Note de clôture : le blocage historique du smoke `sandbox_ui_smoke.gd` décrit 
 - [x] Le benchmark affiche désormais `_MSC_FULL_VER` sous MSVC, `__VERSION__` sous GCC/Clang et une valeur de repli ailleurs.
 - [x] Vérifié localement avec `c++ -std=c++23 -Wall -Wextra -Wpedantic -I native/include -fsyntax-only native/benchmarks/simulation_benchmark.cpp`, puis avec `_MSC_VER` et `_MSC_FULL_VER` définis pour compiler la branche MSVC.
 - [ ] Le workflow Windows relancé après cette correction doit encore confirmer la compilation MSVC, l’export et le démarrage de l’exécutable.
+
+## P7A — Records locaux Armorless — 2026-10-16
+
+- [x] `armorless_records_smoke.gd` vérifie la migration additive v7→v8, les records séparés par difficulté et l’ordre vague > temps de survie > kills.
+- [x] La session affiche le record personnel au résultat. Le record ne crédite aucune ressource, aucun équipement ni achievement; les autres récompenses permanentes Armorless restent en attente d’arbitrage.
+- [x] Les sept tests ciblés progression/migration/Sandbox/Armorless passent sous CTest.
+- [ ] Suite complète au 2026-10-16 : 69/84 passent. Dix scénarios d’armes Sandbox échouent à compiler la session car `Sfx` est absent de leur contexte de script; les autres échecs observés sont `combat_catalog_smoke`, `survival_starting_weapon_smoke`, `survival_unique_effects_smoke`, `free_chest_reroll_smoke` et `sandbox_steering_scenario`.
+- [ ] Une interface dédiée de classement et la validation d’une session Armorless complète restent à faire.

@@ -4,7 +4,11 @@ func _initialize() -> void:
 	call_deferred("_run")
 
 func _run() -> void:
-	var save_service = load("res://scripts/save_service.gd").new("user://sandbox_profile_build_smoke")
+	var directory := ProjectSettings.globalize_path("user://sandbox_profile_build_smoke")
+	DirAccess.make_dir_recursive_absolute(directory)
+	for file_name in DirAccess.get_files_at(directory):
+		DirAccess.remove_absolute(directory.path_join(file_name))
+	var save_service = load("res://scripts/save_service.gd").new(directory)
 	var progression = load("res://scripts/progression_service.gd").new(save_service, "0")
 	var loaded: Dictionary = progression.load_profile()
 	if not loaded.get("ok", false):
@@ -20,7 +24,7 @@ func _run() -> void:
 	if not save_service.save_slot("0", profile):
 		_fail("The isolated profile fixture should save")
 		return
-	var source_before := FileAccess.get_file_as_string(ProjectSettings.globalize_path("user://sandbox_profile_build_smoke/slot_0.json"))
+	var source_before := FileAccess.get_file_as_string(directory.path_join("slot_0.json"))
 	var build = load("res://scripts/sandbox_build.gd").new()
 	var result: Dictionary = _import_read_only(save_service, build, "0")
 	var copied: Dictionary = build.to_dictionary()
@@ -31,10 +35,10 @@ func _run() -> void:
 		return
 	profile["resources"]["essence"] = 9
 	if not _import_read_only(save_service, build, "0").get("ok", false) or \
-			FileAccess.get_file_as_string(ProjectSettings.globalize_path("user://sandbox_profile_build_smoke/slot_0.json")) != source_before:
+		FileAccess.get_file_as_string(directory.path_join("slot_0.json")) != source_before:
 		_fail("Importing or editing the copied build must never write the normal profile")
 		return
-	var legacy_path := ProjectSettings.globalize_path("user://sandbox_profile_build_smoke/slot_legacy.json")
+	var legacy_path := directory.path_join("slot_legacy.json")
 	var legacy_file := FileAccess.open(legacy_path, FileAccess.WRITE)
 	var legacy_profile: Dictionary = profile.duplicate(true)
 	legacy_profile["profile_version"] = 6

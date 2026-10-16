@@ -455,7 +455,7 @@ Travail requis :
 ### État actuel et écarts
 
 - `SaveService` possède format versionné/checksum/backup et QA historique de migration/altération.
-- `ProgressionService` possède des profils v7 avec difficulté maximale débloquée (Easy par défaut), récompenses de run, idempotence par `run_id`, inventaire, six slots, cinq raretés, stat lines, enhancement, conversion Powder, arbre de 100 nodes et achievements génériques de huit catégories. La règle [VALIDÉE] de déblocage séquentiel après victoire sur le boss de vague 24 est codée; les récompenses d’une difficulté verrouillée sont refusées. Les facteurs de difficulté [PROPOSÉS] sont centralisés et appliqués à la simulation ainsi qu’aux récompenses. Le hub injecte profil et difficulté dans la run; le raccourci Sandbox fonctionne sans service de progression.
+- `ProgressionService` possède des profils v8 avec difficulté maximale débloquée (Easy par défaut), records Armorless séparés par difficulté, récompenses de run classiques idempotentes par `run_id`, inventaire, six slots, cinq raretés, stat lines, enhancement, conversion Powder, arbre de 100 nodes et achievements génériques de huit catégories. La règle [VALIDÉE] de déblocage séquentiel après victoire sur le boss de vague 24 est codée; les récompenses d’une difficulté verrouillée sont refusées. Les facteurs de difficulté [PROPOSÉS] sont centralisés et appliqués à la simulation ainsi qu’aux récompenses. Le hub injecte profil et difficulté dans la run; le raccourci Sandbox fonctionne sans service de progression.
 - Le générateur choisit les poids de rareté par difficulté et vague et applique un prototype de pénalité aux défaites avant la vague 6; ces règles et coefficients sont **[PROPOSÉS]**, leur calibration statistique et l’équilibrage des plages restent à faire.
 - Les achievements ont un évaluateur générique, des métriques de combat/profondeur/progression/difficulté et un premier suivi du build d’armes/reliques/évolutions/équipement. Le catalogue contient maintenant 100 familles, au plancher de la cible [VALIDÉE] de 100–150; 120 reste la cible éditoriale [PROPOSÉE].
 - L’arbre contient maintenant une tranche de quatre nodes Core Stats en chaîne, mais pas encore le graphe interconnecté de 100–150 ni son budget cumulatif calibré.
@@ -505,14 +505,14 @@ Travail requis :
   - [ ] Calibrer la puissance réelle des profils débutant/moyen/complet dans P6.9; décider ensuite si le graphe doit s’étendre au-delà de 100 vers la cible éditoriale **[PROPOSÉE]** d’environ 120.
 - [ ] **P6.7 — Achievements**
   - [x] Établir le schéma JSON métrique/catégorie/secret/agrégation/paliers/récompenses, aligné sur `AchievementDefinition` du GDD.
-  - [x] Remplacer le suivi isolé d’Exterminator par des métriques et paliers génériques; profils version 7 et migration additive v1–v6, vérifiés par fixtures dédiées.
+  - [x] Remplacer le suivi isolé d’Exterminator par des métriques et paliers génériques; profils version 8 et migration additive v1–v7, vérifiés par fixtures dédiées.
   - [x] Ajouter 83 familles prototypes dans les huit catégories du découpage **[PROPOSÉ]** du GDD, dont douze compteurs de kills par type d’ennemi, dix suivis de dégâts par arme, dix compteurs de kills par arme, onze records de niveau de relique, dix suivis d’évolution par arme, onze compteurs d’équipements récompensés par rareté et slot, et dix suivis de runs/victoires de boss par difficulté. Les compteurs d’équipement et de difficulté sont dérivés par `ProgressionService`, pas injectables par `run_metrics`. Seuils et bonus restent **[PROPOSÉS]**.
   - [x] Étendre à 100 familles : records de niveau maximal pour chacune des dix armes, éliminations par chacun des six affixes élite et diversité cumulée des six affixes. `progression_service_smoke.gd` vérifie les paliers, le rejet de la variété dérivée falsifiée et la migration des profils v7 à 83 familles; `survival_elite_smoke.gd` vérifie l’enregistrement issu d’une vraie élimination et le niveau d’arme enregistré à la fin de run. Ces nouveaux seuils et bonus restent **[PROPOSÉS]**.
   - [x] Reconstituer les bonus de tous les tiers au chargement, compter les paliers débloqués une fois par run idempotente et les résumer à l’écran de résultat.
   - [x] Ajouter les métriques de build d’armes, reliques et évolutions au bilan de run, ainsi que le suivi de la pièce d’équipement garantie; les entrées métriques inconnues ou invalides sont refusées avant toute sauvegarde.
   - [x] Atteindre le plancher validé de 100 familles; la cible éditoriale de 120 est **[PROPOSÉE]**. Les métriques, seuils et récompenses restent **[PROPOSÉS]** et nécessitent une calibration.
 - [ ] **P6.8 — Sauvegarde et migrations**
-- [x] `progression_service_smoke.gd` couvre une fixture pour chaque profil supporté v1–v6 et vérifie migration vers v7, données conservées et champs ajoutés.
+- [x] `progression_service_smoke.gd` couvre une fixture pour chaque profil supporté v1–v6 et vérifie migration vers v8, données conservées et champs ajoutés; `armorless_records_smoke.gd` couvre en plus la migration du profil v7.
   - [x] Vérifier migration, sauvegarde, backup et restauration après corruption : `save_service_smoke.gd` couvre l’enveloppe générique; `progression_service_smoke.gd` récupère maintenant un profil complet via un nouveau SaveService/ProgressionService et valide ses ressources, runs récompensées et équipements.
   - [x] Vérifier idempotence d’un même `run_id` après recréation du service et rechargement du slot, sans nouveau gain de ressources ni pièce d’équipement.
 - [ ] **P6.9 — Calibration**
@@ -555,6 +555,7 @@ Travail requis :
 - [ ] **P7A.6 — Validation**
   - [ ] Tester une vague, une transition boss, un draft, une amélioration et la mort.
   - [ ] Tester une session longue et l’idempotence des résultats/classements.
+  - [x] Enregistrer et afficher les records locaux par difficulté, triés par vague puis temps et kills; `armorless_records_smoke.gd` vérifie le classement, l’isolation des récompenses, l’idempotence, le refus des données invalides et la migration v7→v8.
 
 ### P7B — Endless standard (contrat ouvert)
 
@@ -597,7 +598,7 @@ P1 livre le Sandbox développeur et ne remplace pas cette feature produit.
   - [x] Refuser récursivement dans les payloads les champs nommés comme script, commande, chemin système ou donnée d'identité; les codes ne sérialisent que les champs du schéma public v1 et aucun service de save/progression n'est injecté.
 - [ ] **P8.4 — Import de sauvegarde**
 - [x] Ajouter `SaveService.read_slot_read_only` : lit et vérifie le slot courant sans migration, restauration de backup ni écriture; le smoke couvre un ancien payload et un slot courant corrompu.
-- [x] Ajouter `IMPORT NORMAL PROFILE · READ ONLY` au Sandbox Lab : lit le slot courant, valide strictement le profil v7 en mémoire et refuse les profils anciens/incomplets sans les migrer.
+- [x] Ajouter `IMPORT NORMAL PROFILE · READ ONLY` au Sandbox Lab : lit le slot courant, valide strictement le profil v8 en mémoire et refuse les profils anciens/incomplets sans les migrer.
 - [x] Construire une copie Sandbox modifiable contenant starters, unlocks d'armes/reliques du skill tree, bonus stats d'achievements/skill tree et équipement équipé; les ressources et l'historique de progression ne sont pas copiés.
 - [x] Comparer la sauvegarde source avant/après et tester import courant, profil ancien et profil invalide; le contexte/session Lab ne reçoit toujours aucun service de save/progression.
 - [ ] **P8.5 — Outils de simulation**
