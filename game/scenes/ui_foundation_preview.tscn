@@ -40,7 +40,7 @@ theme_override_constants/separation = 7
 
 [node name="Brand" type="Label" parent="Content/Header"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.270588, 0.898039, 0.929412, 1)
+theme_override_colors/font_color = Color(0.215686, 0.909804, 0.960784, 1)
 theme_override_font_sizes/font_size = 10
 text = "DOPAMINE"
 
@@ -50,7 +50,7 @@ size_flags_horizontal = 3
 
 [node name="Section" type="Label" parent="Content/Header"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.556863, 0.639216, 0.678431, 1)
+theme_override_colors/font_color = Color(0.647059, 0.682353, 0.764706, 1)
 text = "UI FOUNDATION / PREVIEW"
 
 [node name="PreviewCenter" type="CenterContainer" parent="Content"]
@@ -72,7 +72,7 @@ text = "BUILD THE NEON EDGE"
 
 [node name="Description" type="Label" parent="Content/PreviewCenter/SamplePanel/SampleContent"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.556863, 0.639216, 0.678431, 1)
+theme_override_colors/font_color = Color(0.647059, 0.682353, 0.764706, 1)
 text = "Shared styles for menus, run panels and the developer Sandbox."
 autowrap_mode = 2
 
@@ -102,7 +102,7 @@ text = "LOCKED"
 
 [node name="ControlTitle" type="Label" parent="Content/PreviewCenter/SamplePanel/SampleContent"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.270588, 0.898039, 0.929412, 1)
+theme_override_colors/font_color = Color(0.215686, 0.909804, 0.960784, 1)
 text = "FORM CONTROLS"
 
 [node name="Fields" type="HBoxContainer" parent="Content/PreviewCenter/SamplePanel/SampleContent"]
@@ -129,13 +129,13 @@ suffix = " LVL"
 
 [node name="Status" type="Label" parent="Content/PreviewCenter/SamplePanel/SampleContent"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.556863, 0.639216, 0.678431, 1)
+theme_override_colors/font_color = Color(0.647059, 0.682353, 0.764706, 1)
 text = "FOCUS THE PRIMARY ACTION, THEN NAVIGATE WITH TAB OR A CONTROLLER."
 autowrap_mode = 2
 
 [node name="Footer" type="Label" parent="Content"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.556863, 0.639216, 0.678431, 1)
+theme_override_colors/font_color = Color(0.647059, 0.682353, 0.764706, 1)
 text = "PIXEL NEON  •  FOCUS ALWAYS VISIBLE  •  NO SAVE OR PROGRESSION CONTEXT"
 horizontal_alignment = 1
 autowrap_mode = 2

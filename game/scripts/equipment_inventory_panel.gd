@@ -139,7 +139,7 @@ func _create_item_row(equipment: Dictionary, resources: Dictionary) -> Control:
 		)
 		enhancement_row.add_child(enhance_button)
 	var status := Label.new()
-	status.add_theme_color_override("font_color", Color("#ffd166"))
+	status.add_theme_color_override("font_color", Color("#FFD447"))
 	status.text = "PROPOSED STAT ROLLS — experimental balance"
 	if equipment.get("equipped", false):
 		status.text = "EQUIPPED — proposed stat rolls active"

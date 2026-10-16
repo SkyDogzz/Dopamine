@@ -20,7 +20,7 @@ func show_items(weapons: Array[Dictionary], relics: Array[Dictionary]) -> void:
 func _add_section(title: String) -> void:
 	var label := Label.new()
 	label.text = title
-	label.add_theme_color_override("font_color", Color("#45e5ed"))
+	label.add_theme_color_override("font_color", Color("#37E8F5"))
 	label.add_theme_font_size_override("font_size", 8)
 	_items.add_child(label)
 

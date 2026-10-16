@@ -21,7 +21,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-color = Color(0.027451, 0.039216, 0.058824, 1)
+color = Color(0.031373, 0.043137, 0.094118, 1)
 
 [node name="Content" type="VBoxContainer" parent="."]
 layout_mode = 1
@@ -50,20 +50,20 @@ size_flags_horizontal = 3
 
 [node name="Eyebrow" type="Label" parent="Content/Header/Identity"]
 layout_mode = 2
-theme_override_colors/font_color = Color(1, 0.360784, 0.658824, 1)
+theme_override_colors/font_color = Color(1, 0.458824, 0.890196, 1)
 theme_override_font_sizes/font_size = 8
 text = "DOPAMINE  /  PRÉPARATION"
 
 [node name="Title" type="Label" parent="Content/Header/Identity"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.270588, 0.898039, 0.929412, 1)
+theme_override_colors/font_color = Color(0.215686, 0.909804, 0.960784, 1)
 theme_override_font_sizes/font_size = 15
 text = "SURVIVAL"
 
 [node name="ProfileStatus" type="Label" parent="Content/Header"]
 custom_minimum_size = Vector2(150, 0)
 layout_mode = 2
-theme_override_colors/font_color = Color(0.556863, 0.639216, 0.678431, 1)
+theme_override_colors/font_color = Color(0.647059, 0.682353, 0.764706, 1)
 theme_override_font_sizes/font_size = 8
 text = "LOADING PROFILE"
 horizontal_alignment = 2
@@ -84,14 +84,14 @@ theme_override_constants/separation = 6
 
 [node name="SectionTitle" type="Label" parent="Content/Main/DifficultyCard/Body"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.270588, 0.898039, 0.929412, 1)
+theme_override_colors/font_color = Color(0.215686, 0.909804, 0.960784, 1)
 theme_override_font_sizes/font_size = 10
 text = "DIFFICULTÉ"
 
 [node name="SectionCopy" type="Label" parent="Content/Main/DifficultyCard/Body"]
 custom_minimum_size = Vector2(0, 17)
 layout_mode = 2
-theme_override_colors/font_color = Color(0.556863, 0.639216, 0.678431, 1)
+theme_override_colors/font_color = Color(0.647059, 0.682353, 0.764706, 1)
 theme_override_font_sizes/font_size = 8
 text = "Une victoire débloque la difficulté suivante."
 autowrap_mode = 2
@@ -104,7 +104,7 @@ theme_override_constants/separation = 4
 [node name="DifficultyStatus" type="Label" parent="Content/Main/DifficultyCard/Body"]
 custom_minimum_size = Vector2(0, 23)
 layout_mode = 2
-theme_override_colors/font_color = Color(1, 0.819608, 0.4, 1)
+theme_override_colors/font_color = Color(1, 0.831373, 0.278431, 1)
 theme_override_font_sizes/font_size = 8
 text = "SELECTED: EASY"
 autowrap_mode = 2
@@ -120,20 +120,20 @@ theme_override_constants/separation = 7
 
 [node name="ModeTag" type="Label" parent="Content/Main/PreparationCard/Body"]
 layout_mode = 2
-theme_override_colors/font_color = Color(1, 0.360784, 0.658824, 1)
+theme_override_colors/font_color = Color(1, 0.458824, 0.890196, 1)
 theme_override_font_sizes/font_size = 8
 text = "MODE JOUABLE"
 
 [node name="ModeTitle" type="Label" parent="Content/Main/PreparationCard/Body"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.898039, 0.94902, 0.960784, 1)
+theme_override_colors/font_color = Color(0.964706, 0.968627, 1, 1)
 theme_override_font_sizes/font_size = 14
 text = "SURVIVAL  •  24 VAGUES"
 
 [node name="ModeDescription" type="Label" parent="Content/Main/PreparationCard/Body"]
 custom_minimum_size = Vector2(0, 29)
 layout_mode = 2
-theme_override_colors/font_color = Color(0.556863, 0.639216, 0.678431, 1)
+theme_override_colors/font_color = Color(0.647059, 0.682353, 0.764706, 1)
 text = "Préparez votre équipement permanent et vos compétences avant de lancer une run."
 autowrap_mode = 2
 
@@ -142,7 +142,7 @@ layout_mode = 2
 
 [node name="PreparationTitle" type="Label" parent="Content/Main/PreparationCard/Body"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.270588, 0.898039, 0.929412, 1)
+theme_override_colors/font_color = Color(0.215686, 0.909804, 0.960784, 1)
 theme_override_font_sizes/font_size = 8
 text = "PRÉPARATION PERMANENTE"
 
@@ -186,7 +186,7 @@ size_flags_vertical = 3
 custom_minimum_size = Vector2(0, 29)
 layout_mode = 2
 focus_mode = 2
-theme_override_colors/font_color = Color(0.270588, 0.898039, 0.929412, 1)
+theme_override_colors/font_color = Color(0.215686, 0.909804, 0.960784, 1)
 theme_override_font_sizes/font_size = 10
 text = "LANCER LA RUN  →"
 

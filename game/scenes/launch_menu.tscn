@@ -22,7 +22,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-color = Color(0.027451, 0.039216, 0.058824, 1)
+color = Color(0.031373, 0.043137, 0.094118, 1)
 
 [node name="Skyline" type="TextureRect" parent="."]
 layout_mode = 1
@@ -63,14 +63,14 @@ theme_override_constants/separation = 6
 
 [node name="Edition" type="Label" parent="Content/Card/Columns/Identity"]
 layout_mode = 2
-theme_override_colors/font_color = Color(1, 0.360784, 0.658824, 1)
+theme_override_colors/font_color = Color(1, 0.458824, 0.890196, 1)
 theme_override_font_sizes/font_size = 8
 text = "SURVIVAL  /  NEON ARCADE"
 
 [node name="Title" type="Label" parent="Content/Card/Columns/Identity"]
 custom_minimum_size = Vector2(0, 48)
 layout_mode = 2
-theme_override_colors/font_color = Color(0.270588, 0.898039, 0.929412, 1)
+theme_override_colors/font_color = Color(0.215686, 0.909804, 0.960784, 1)
 theme_override_font_sizes/font_size = 26
 text = "DOPAMINE"
 vertical_alignment = 1
@@ -78,7 +78,7 @@ vertical_alignment = 1
 [node name="Tagline" type="Label" parent="Content/Card/Columns/Identity"]
 custom_minimum_size = Vector2(0, 30)
 layout_mode = 2
-theme_override_colors/font_color = Color(0.556863, 0.639216, 0.678431, 1)
+theme_override_colors/font_color = Color(0.647059, 0.682353, 0.764706, 1)
 theme_override_font_sizes/font_size = 9
 text = "SURVIVE THE SIGNAL."
 vertical_alignment = 1
@@ -86,7 +86,7 @@ vertical_alignment = 1
 [node name="Accent" type="ColorRect" parent="Content/Card/Columns/Identity"]
 custom_minimum_size = Vector2(28, 1.5)
 layout_mode = 2
-color = Color(1, 0.360784, 0.658824, 1)
+color = Color(1, 0.458824, 0.890196, 1)
 
 [node name="Spacer" type="Control" parent="Content/Card/Columns/Identity"]
 layout_mode = 2
@@ -94,7 +94,7 @@ size_flags_vertical = 3
 
 [node name="BuildLabel" type="Label" parent="Content/Card/Columns/Identity"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.356863, 0.443137, 0.490196, 1)
+theme_override_colors/font_color = Color(0.345098, 0.388235, 0.509804, 1)
 theme_override_font_sizes/font_size = 8
 text = "A NEON SURVIVAL GAME"
 
@@ -107,14 +107,14 @@ theme_override_constants/separation = 5
 
 [node name="MenuLabel" type="Label" parent="Content/Card/Columns/Menu"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.556863, 0.639216, 0.678431, 1)
+theme_override_colors/font_color = Color(0.647059, 0.682353, 0.764706, 1)
 text = "MENU PRINCIPAL"
 
 [node name="PlayButton" type="Button" parent="Content/Card/Columns/Menu"]
 custom_minimum_size = Vector2(0, 28)
 layout_mode = 2
 focus_mode = 2
-theme_override_colors/font_color = Color(0.270588, 0.898039, 0.929412, 1)
+theme_override_colors/font_color = Color(0.215686, 0.909804, 0.960784, 1)
 theme_override_font_sizes/font_size = 10
 text = "JOUER"
 
@@ -138,6 +138,6 @@ layout_mode = 2
 custom_minimum_size = Vector2(0, 19)
 layout_mode = 2
 focus_mode = 2
-theme_override_colors/font_color = Color(0.556863, 0.639216, 0.678431, 1)
+theme_override_colors/font_color = Color(0.647059, 0.682353, 0.764706, 1)
 theme_override_font_sizes/font_size = 8
 text = "SANDBOX DEV"

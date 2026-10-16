@@ -20,7 +20,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-color = Color(0.0156863, 0.0313726, 0.0470588, 0.82)
+color = Color(0.031373, 0.043137, 0.094118, 0.82)
 
 [node name="Center" type="CenterContainer" parent="."]
 layout_mode = 1
@@ -40,7 +40,7 @@ theme_override_constants/separation = 6
 
 [node name="Title" type="Label" parent="Center/Panel/Content"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.270588, 0.898039, 0.929412, 1)
+theme_override_colors/font_color = Color(0.215686, 0.909804, 0.960784, 1)
 theme_override_font_sizes/font_size = 14
 text = "RUN PAUSED"
 horizontal_alignment = 1
@@ -103,7 +103,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-color = Color(0.0156863, 0.0313726, 0.0470588, 0.92)
+color = Color(0.031373, 0.043137, 0.094118, 0.92)
 
 [node name="Center" type="CenterContainer" parent="ConfirmationOverlay"]
 layout_mode = 1
@@ -123,7 +123,7 @@ theme_override_constants/separation = 6
 
 [node name="Title" type="Label" parent="ConfirmationOverlay/Center/Panel/Content"]
 layout_mode = 2
-theme_override_colors/font_color = Color(1, 0.360784, 0.658824, 1)
+theme_override_colors/font_color = Color(1, 0.458824, 0.890196, 1)
 theme_override_font_sizes/font_size = 12
 text = "ABANDON THIS RUN?"
 horizontal_alignment = 1
@@ -131,7 +131,7 @@ horizontal_alignment = 1
 [node name="Message" type="Label" parent="ConfirmationOverlay/Center/Panel/Content"]
 custom_minimum_size = Vector2(0, 21)
 layout_mode = 2
-theme_override_colors/font_color = Color(0.9, 0.95, 0.97, 1)
+theme_override_colors/font_color = Color(0.964706, 0.968627, 1, 1)
 text = "The run and its unclaimed rewards will be lost."
 horizontal_alignment = 1
 vertical_alignment = 1

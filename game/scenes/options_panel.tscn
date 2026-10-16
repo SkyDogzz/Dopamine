@@ -39,7 +39,7 @@ layout_mode = 2
 
 [node name="Brand" type="Label" parent="Content/Header"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.270588, 0.898039, 0.929412, 1)
+theme_override_colors/font_color = Color(0.215686, 0.909804, 0.960784, 1)
 theme_override_font_sizes/font_size = 10
 text = "DOPAMINE"
 
@@ -49,7 +49,7 @@ size_flags_horizontal = 3
 
 [node name="Section" type="Label" parent="Content/Header"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.556863, 0.639216, 0.678431, 1)
+theme_override_colors/font_color = Color(0.647059, 0.682353, 0.764706, 1)
 text = "SYSTEM SETTINGS"
 
 [node name="Center" type="CenterContainer" parent="Content"]
@@ -71,7 +71,7 @@ text = "OPTIONS"
 
 [node name="Description" type="Label" parent="Content/Center/OptionsCard/OptionsContent"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.556863, 0.639216, 0.678431, 1)
+theme_override_colors/font_color = Color(0.647059, 0.682353, 0.764706, 1)
 text = "DISPLAY AND AUDIO"
 
 [node name="FullscreenToggle" type="CheckButton" parent="Content/Center/OptionsCard/OptionsContent"]
@@ -83,7 +83,7 @@ text = "FULL SCREEN"
 
 [node name="VolumeTitle" type="Label" parent="Content/Center/OptionsCard/OptionsContent"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.270588, 0.898039, 0.929412, 1)
+theme_override_colors/font_color = Color(0.215686, 0.909804, 0.960784, 1)
 text = "MASTER VOLUME"
 
 [node name="VolumeRow" type="HBoxContainer" parent="Content/Center/OptionsCard/OptionsContent"]
@@ -104,7 +104,7 @@ step = 1.0
 unique_name_in_owner = true
 custom_minimum_size = Vector2(32, 0)
 layout_mode = 2
-theme_override_colors/font_color = Color(1, 0.819608, 0.4, 1)
+theme_override_colors/font_color = Color(1, 0.831373, 0.278431, 1)
 text = "100%"
 horizontal_alignment = 2
 
@@ -117,6 +117,6 @@ text = "BACK"
 
 [node name="Footer" type="Label" parent="Content"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.556863, 0.639216, 0.678431, 1)
+theme_override_colors/font_color = Color(0.647059, 0.682353, 0.764706, 1)
 text = "SETTINGS APPLY IMMEDIATELY"
 horizontal_alignment = 1

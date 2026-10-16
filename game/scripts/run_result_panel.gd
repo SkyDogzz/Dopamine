@@ -30,7 +30,7 @@ func show_result(victory: bool, wave_number: int, active_seconds: float, kills: 
 	_equipment.text = ""
 	_achievement.text = ""
 	_title.text = "VICTORY" if victory else "RUN OVER"
-	_title.add_theme_color_override("font_color", Color("#66f2bd") if victory else Color("#ff658a"))
+	_title.add_theme_color_override("font_color", Color("#48E69B") if victory else Color("#FF7181"))
 	var total_seconds := int(floor(active_seconds))
 	_summary.text = "WAVE %02d  •  %02d:%02d  •  %d KILLS" % [wave_number, total_seconds / 60, total_seconds % 60, kills]
 	if reward.is_empty():

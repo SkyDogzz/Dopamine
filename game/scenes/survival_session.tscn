@@ -36,7 +36,7 @@ mouse_filter = 2
 [node name="HPValue" type="Label" parent="HUD/RunPanel/RunInfo/StatusRow"]
 custom_minimum_size = Vector2(43, 0)
 layout_mode = 2
-theme_override_colors/font_color = Color(0.9, 0.95, 0.97, 1)
+theme_override_colors/font_color = Color(0.964706, 0.968627, 1, 1)
 theme_override_font_sizes/font_size = 8
 text = "HP  100 / 100"
 vertical_alignment = 1
@@ -51,7 +51,7 @@ value = 100.0
 [node name="XPValue" type="Label" parent="HUD/RunPanel/RunInfo/StatusRow"]
 custom_minimum_size = Vector2(51, 0)
 layout_mode = 2
-theme_override_colors/font_color = Color(0.64, 0.79, 0.84, 1)
+theme_override_colors/font_color = Color(0.647059, 0.682353, 0.764706, 1)
 theme_override_font_sizes/font_size = 8
 text = "LV 1  XP 0 / 10"
 vertical_alignment = 1
@@ -76,7 +76,7 @@ stretch_mode = 5
 [node name="LoadoutLabel" type="Label" parent="HUD/RunPanel/RunInfo/LoadoutRow"]
 custom_minimum_size = Vector2(0, 13)
 layout_mode = 2
-theme_override_colors/font_color = Color(0.9, 0.95, 0.97, 1)
+theme_override_colors/font_color = Color(0.964706, 0.968627, 1, 1)
 theme_override_font_sizes/font_size = 8
 text = "ARMES"
 size_flags_horizontal = 3
@@ -92,7 +92,7 @@ alignment = 2
 [node name="TimeValue" type="Label" parent="HUD/RunPanel/RunInfo/StatusRow/MetaPanel"]
 custom_minimum_size = Vector2(27, 0)
 layout_mode = 2
-theme_override_colors/font_color = Color(0.27, 0.9, 0.93, 1)
+theme_override_colors/font_color = Color(0.215686, 0.909804, 0.960784, 1)
 theme_override_font_sizes/font_size = 8
 text = "00:00"
 vertical_alignment = 1
@@ -108,7 +108,7 @@ vertical_alignment = 1
 [node name="DifficultyValue" type="Label" parent="HUD/RunPanel/RunInfo/StatusRow/MetaPanel"]
 custom_minimum_size = Vector2(36, 0)
 layout_mode = 2
-theme_override_colors/font_color = Color(1, 0.360784, 0.658824, 1)
+theme_override_colors/font_color = Color(1, 0.458824, 0.890196, 1)
 theme_override_font_sizes/font_size = 8
 text = "NORMAL"
 horizontal_alignment = 1
@@ -118,7 +118,7 @@ vertical_alignment = 1
 custom_minimum_size = Vector2(38, 0)
 layout_mode = 2
 tooltip_text = "Press Escape to pause or resume"
-theme_override_colors/font_color = Color(0.27, 0.9, 0.93, 1)
+theme_override_colors/font_color = Color(0.215686, 0.909804, 0.960784, 1)
 theme_override_font_sizes/font_size = 8
 text = "IN RUN"
 horizontal_alignment = 2

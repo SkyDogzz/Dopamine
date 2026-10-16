@@ -14,7 +14,7 @@
 
 ## Référence technique importante
 
-La résolution logique **640×360 est [VALIDÉE]** dans l’Art Bible. Le projet utilise actuellement **1280×800** parce que les interfaces fixes débordaient après le précédent changement global de viewport. Le nouvel habillage doit adapter chaque écran à 640×360, puis seulement activer cette résolution après validation de tous les parcours. Ne pas répéter le changement global avant cette étape.
+La résolution logique **640×360 est [VALIDÉE]** dans l’Art Bible et le projet l’utilise maintenant avec une fenêtre par défaut de 1280×720, étirée en viewport à échelle entière. Les principaux contrôles des interfaces d’accueil, préparation et Survival sont couverts par `game/tests/ui_viewport_layout_smoke.gd` aux tailles 640×360, 1280×720 et 1920×1080. Cette vérification de géométrie ne remplace pas la revue visuelle finale de chaque écran ni un parcours matériel souris/clavier/manette.
 
 ## État présent du dépôt
 
@@ -116,6 +116,6 @@ La séquence est une proposition d’exécution (**[PROPOSÉ]**), pas une modifi
 - Chaque sprite a sa source éditable et son PNG exporté; vérifier dimensions, transparence, nombre et appartenance des couleurs, contour net et absence de glow précuit.
 - Les sprites 32×32 restent à 16 couleurs distinctes maximum. Les exceptions de palette sont documentées.
 - Les tiles respectent 16×16; le joueur respecte 32×32; les boss suivent le standard 96×96.
-- Chaque scène UI est parcourue à la souris, au clavier et à la manette avec focus visible; bounds et lisibilité vérifiés à 640×360 et à l’upscale cible avant de changer le viewport par défaut.
+- Chaque scène UI est parcourue à la souris, au clavier et à la manette avec focus visible; bounds et lisibilité vérifiés à 640×360 et à l’upscale cible. Le smoke actuel contrôle les bornes, pas tous les états visuels ni le matériel physique.
 - Revoir les assets en situation de combat dense et confirmer que dangers, projectiles, ennemis et objets restent séparables.
 - Les smokes visuels ne valident ni une manette physique ni la direction artistique; conserver une revue visuelle explicite.

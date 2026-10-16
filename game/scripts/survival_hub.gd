@@ -62,7 +62,7 @@ func _load_profile() -> void:
 	_skill_tree_button.disabled = not _profile_available
 	if not _profile_available:
 		_profile_status.text = "PROFIL INDISPONIBLE — LANCEMENT BLOQUÉ"
-		_profile_status.add_theme_color_override("font_color", Color("#ff5ca8"))
+		_profile_status.add_theme_color_override("font_color", Color("#FF75E3"))
 		return
 	_highest_unlocked_difficulty = str(result["profile"].get("highest_unlocked_difficulty", "easy"))
 	_profile_status.text = "PROFIL PRÊT  •  DIFFICULTÉ MAX: %s" % _highest_unlocked_difficulty.to_upper()
