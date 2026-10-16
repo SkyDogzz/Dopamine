@@ -183,6 +183,7 @@ func _verify_live_full_run() -> bool:
 	if production_duration:
 		session.simulation.set_speed(4.0)
 	var chosen_offers := [0]
+	var observed_bosses: Dictionary = {}
 	session.chest_option_chosen.connect(func(_option_id: String) -> void: chosen_offers[0] += 1)
 	var treated_bosses: Dictionary = {}
 	var verified_boss_states: Dictionary = {}
@@ -204,6 +205,7 @@ func _verify_live_full_run() -> bool:
 			var enemy_type: String = components.get("EnemyType", "")
 			if enemy_type != "mid_boss" and enemy_type != "final_boss":
 				continue
+			observed_bosses[enemy_type] = true
 			var id: Dictionary = entity["id"]
 			var key := "%d:%d" % [id["index"], id["generation"]]
 			if not verified_boss_states.has(enemy_type):
@@ -250,6 +252,9 @@ func _verify_live_full_run() -> bool:
 		return false
 	if not mid_boss_return_spawn_verified:
 		_fail("Regular enemy spawning should resume after the wave-12 mid-boss")
+		return false
+	if observed_bosses.size() != 2:
+		_fail("The production-duration run should observe both boss families")
 		return false
 	if session.player_active_time < 1.0:
 		_fail("A live run should account for elapsed simulation time")
