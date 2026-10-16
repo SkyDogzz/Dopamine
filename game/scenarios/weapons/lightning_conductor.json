@@ -1,0 +1,12 @@
+{
+  "schema_version": 1,
+  "scenario_id": "weapon_lightning_conductor",
+  "weapon_id": "lightning_conductor",
+  "relic_id": "storm_core",
+  "targets": [
+    {"position": [60, 0]},
+    {"position": [85, 12]},
+    {"position": [110, -10]}
+  ],
+  "expected": {"damage_events": 1}
+}

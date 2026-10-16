@@ -1,0 +1,8 @@
+{
+  "schema_version": 1,
+  "scenario_id": "weapon_void_orb",
+  "weapon_id": "void_orb",
+  "relic_id": "singularity",
+  "targets": [{"position": [115, 0]}],
+  "expected": {"damage_events": 1}
+}

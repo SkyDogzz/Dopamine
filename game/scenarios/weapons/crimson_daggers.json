@@ -1,0 +1,12 @@
+{
+  "schema_version": 1,
+  "scenario_id": "weapon_crimson_daggers",
+  "weapon_id": "crimson_daggers",
+  "relic_id": "blood_chalice",
+  "targets": [
+    {"position": [30, 0]},
+    {"position": [0, 30]}
+  ],
+  "expected": {"damage_events": 1},
+  "max_steps": 100
+}

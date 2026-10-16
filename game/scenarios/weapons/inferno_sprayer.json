@@ -1,0 +1,8 @@
+{
+  "schema_version": 1,
+  "scenario_id": "weapon_inferno_sprayer",
+  "weapon_id": "inferno_sprayer",
+  "relic_id": "infernal_heart",
+  "targets": [{"position": [90, 0]}],
+  "expected": {"damage_events": 1}
+}

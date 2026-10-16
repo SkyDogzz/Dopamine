@@ -1,0 +1,12 @@
+{
+  "schema_version": 1,
+  "scenario_id": "weapon_meteor_staff",
+  "weapon_id": "meteor_staff",
+  "relic_id": "celestial_eye",
+  "targets": [
+    {"position": [90, 0]},
+    {"position": [105, 4]},
+    {"position": [94, 15]}
+  ],
+  "expected": {"damage_events": 1}
+}

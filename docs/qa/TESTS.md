@@ -1,5 +1,12 @@
 # Tests d'acceptation et validation
 
+## Scénarios de validation des dix armes — 2026-10-16
+
+- [x] `sandbox_weapon_scenario_runner.gd` lance chaque attaque de production contre des cibles déterministes avec une loadout temporaire en mémoire; `progression_service` est nul et aucun `SaveService` n’est chargé.
+- [x] Les dix scénarios passent dans CTest, ainsi que le smoke de validation des fichiers et des entrées invalides : 12/12 tests ciblés, import Godot inclus, sous Godot 4.7.2.
+- [x] Chaque scénario écrit métriques et événements dans un JSON de résultat CTest distinct; les fichiers produits restent dans `build/`.
+- [x] La suite complète passe 64/64 sous Godot 4.7.2 en séquentiel. Une première exécution parallèle avait déclenché l’échec intermittent déjà connu de `survival_weapon_catalog_smoke`; son rerun isolé puis la suite séquentielle passent.
+
 ## Politiques de ciblage exposées dans le Sandbox — 2026-10-16
 
 - [x] `survival_targeting_smoke.gd` vérifie nearest, farthest, highest threat, highest HP, lowest HP, la priorité PV max de Prism dans une grappe dense, les cibles de grappes, le centroïde Meteor, la réduction commune des portées (−71 %, plafond visible de 180 unités), le plafond après bonus de niveau/zone et l’exclusion des ennemis morts, des projectiles et des orbes XP. Ces règles restent **[PROPOSÉES]**.

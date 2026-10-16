@@ -407,8 +407,9 @@ Travail requis :
 
 ### Vérification et sortie P5
 
-- [ ] **P5.V1 — Validation du catalogue**
-  - [ ] Exécuter un scénario Sandbox par arme. Le Sandbox développeur ne propose pas encore les armes comme fixtures; les dix armes sont actuellement couvertes par `survival_weapon_catalog_smoke.gd`.
+- [x] **P5.V1 — Validation du catalogue**
+  - [x] Exécuter un scénario Sandbox headless par arme via `sandbox_weapon_scenario_runner.gd`. Chaque fixture instancie la vraie session Survival sans `ProgressionService`, équipe une arme/relique en mémoire, déclenche l’attaque de production et vérifie au moins un impact.
+  - [x] Valider les dix JSON et rejeter les identifiants d’arme/relique incompatibles, les niveaux hors limite, les positions non finies et les listes de cibles vides; smoke dédié dans `sandbox_weapon_scenario_validation_smoke.gd`.
   - [x] Vérifier relique, niveaux et évolution par paire dans `survival_weapon_catalog_smoke.gd`.
   - [x] Vérifier Magnet Heart avec XP et chest dans `survival_chest_smoke.gd`.
 - [x] **P5.V2 — Validation des ennemis**
@@ -421,7 +422,7 @@ Travail requis :
   - [ ] Vérifier mort, victoire, coffre et récompense/idempotence.
 - [ ] **P5.V4 — Revue et checkpoint**
   - [x] Consigner les validations et les limites sans changer les statuts de décision du GDD.
-  - [x] Relancer la suite CTest complète : 51/51 passent le 2026-10-16. Le benchmark natif sur 500 ennemis/2 000 projectiles mesure la rafale d’impacts avant/après optimisation; résultats et limites consignés dans `docs/qa/TESTS.md`.
+  - [x] Relancer la suite CTest complète : 64/64 passent en séquentiel le 2026-10-16 après ajout des scénarios d’armes. Le benchmark natif sur 500 ennemis/2 000 projectiles mesure la rafale d’impacts avant/après optimisation; résultats et limites consignés dans `docs/qa/TESTS.md`.
   - [x] Corriger le travail de zone devenu inutile après saturation du budget d’explosions et committer ce checkpoint documenté.
   - [ ] Faire le parcours sans assistance de P5.V3 et réaliser les scénarios d’armes dans le Sandbox avant de clore le jalon.
 

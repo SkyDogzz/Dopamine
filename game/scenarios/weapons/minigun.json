@@ -1,0 +1,8 @@
+{
+  "schema_version": 1,
+  "scenario_id": "weapon_minigun",
+  "weapon_id": "minigun",
+  "relic_id": "overdrive_engine",
+  "targets": [{"position": [90, 0]}],
+  "expected": {"damage_events": 1}
+}

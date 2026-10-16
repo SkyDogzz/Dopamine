@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "scenario_id": "weapon_sawblades",
+  "weapon_id": "sawblades",
+  "relic_id": "magnetic_coil",
+  "targets": [
+    {"position": [90, 0]},
+    {"position": [115, 8]}
+  ],
+  "expected": {"damage_events": 1}
+}

@@ -1,0 +1,8 @@
+{
+  "schema_version": 1,
+  "scenario_id": "weapon_prism_laser",
+  "weapon_id": "prism_laser",
+  "relic_id": "prism_crystal",
+  "targets": [{"position": [90, 0]}],
+  "expected": {"damage_events": 1}
+}
