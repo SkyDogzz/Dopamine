@@ -10,7 +10,17 @@ $repositoryRoot = Split-Path -Parent (Split-Path -Parent $MyInvocation.MyCommand
 $projectPath = Join-Path $repositoryRoot "game"
 $buildPath = Join-Path $repositoryRoot "build/windows"
 $releaseBuildPath = Join-Path $repositoryRoot "build/windows-release"
-$godotPath = (Resolve-Path $GodotExecutable).Path
+$godotExecutableInput = $GodotExecutable.Trim()
+if ($godotExecutableInput.Length -ge 2 -and (
+	($godotExecutableInput.StartsWith('"') -and $godotExecutableInput.EndsWith('"')) -or
+	($godotExecutableInput.StartsWith("'") -and $godotExecutableInput.EndsWith("'"))
+)) {
+	$godotExecutableInput = $godotExecutableInput.Substring(1, $godotExecutableInput.Length - 2)
+}
+if (-not (Test-Path -LiteralPath $godotExecutableInput -PathType Leaf)) {
+	throw "Godot executable not found: $godotExecutableInput. Pass the path with -GodotExecutable, or enter it without surrounding quotes when prompted."
+}
+$godotPath = (Resolve-Path -LiteralPath $godotExecutableInput).Path
 
 function Invoke-CMakeConfigure([string[]] $Arguments, [string] $BuildDirectory) {
 	$output = & cmake @Arguments 2>&1

@@ -4,6 +4,7 @@
 
 - [x] Ajouter `tools/build_windows.ps1` pour configurer MSVC x64, compiler les GDExtensions debug/release, importer le projet et exécuter `sandbox_smoke.gd`.
 - [x] Ajouter un preset Windows Desktop x86_64 et le workflow `.github/workflows/build-windows.yml`; le runner installe les templates Godot, exporte le jeu autonome et teste son lancement headless avec les tests natifs C++.
+- [x] Tolérer les guillemets saisis comme partie de la valeur du chemin Godot au prompt; un chemin introuvable échoue avant CMake avec une erreur indiquant la forme attendue.
 - [ ] Le binaire et le chargement Godot n’ont pas encore été exécutés sur Windows; validation réelle attendue du runner CI.
 
 ## Run Survival réelle — validation P5 partielle — 2026-10-16
