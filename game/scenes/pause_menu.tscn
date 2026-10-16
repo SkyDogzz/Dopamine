@@ -33,6 +33,7 @@ grow_vertical = 2
 [node name="Panel" type="PanelContainer" parent="Center"]
 custom_minimum_size = Vector2(250, 0)
 layout_mode = 2
+theme_type_variation = "CompactPanel"
 
 [node name="Content" type="VBoxContainer" parent="Center/Panel"]
 layout_mode = 2
@@ -134,6 +135,7 @@ grow_vertical = 2
 [node name="Panel" type="PanelContainer" parent="ConfirmationOverlay/Center"]
 custom_minimum_size = Vector2(280, 0)
 layout_mode = 2
+theme_type_variation = "CompactPanel"
 
 [node name="Content" type="VBoxContainer" parent="ConfirmationOverlay/Center/Panel"]
 layout_mode = 2
