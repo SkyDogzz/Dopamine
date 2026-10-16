@@ -9,6 +9,16 @@ const PROPOSED_RARITY_WEIGHTS_BY_DIFFICULTY := {
 	"nightmare": [5.0, 15.0, 45.0, 28.0, 7.0],
 	"chaos": [0.0, 5.0, 35.0, 40.0, 20.0],
 }
+const PROPOSED_ARMORLESS_RARITY_WEIGHTS_BY_WAVE := {
+	1: [55.0, 35.0, 9.0, 1.0, 0.0],
+	6: [25.0, 40.0, 27.0, 7.0, 1.0],
+	16: [5.0, 20.0, 45.0, 25.0, 5.0],
+	31: [0.0, 5.0, 25.0, 50.0, 20.0],
+	51: [0.0, 0.0, 10.0, 55.0, 35.0],
+}
+const PROPOSED_ARMORLESS_DIFFICULTY_MULTIPLIERS := {
+	"easy": 0.80, "normal": 1.0, "hard": 1.15, "nightmare": 1.35, "chaos": 1.60,
+}
 # A run reaching each six-wave milestone shifts one percentage point from Normal
 # into the existing non-Normal distribution. This remains a proposed tuning rule.
 const PROPOSED_WAVE_RARITY_SHIFT_PER_SIX_WAVES := 1.0
@@ -36,7 +46,23 @@ func _init(seed_value: int = 0) -> void:
 		_rng.seed = seed_value
 
 func generate_survival_item(run_id: String, difficulty_id: String = "normal", wave_reached: int = 1) -> Dictionary:
-	var rarity := _roll_rarity(rarity_weights_for(difficulty_id, wave_reached))
+	return _generate_item(
+		"survival_%s_equipment" % run_id,
+		rarity_weights_for(difficulty_id, wave_reached), "survival"
+	)
+
+func generate_armorless_draft(run_id: String, difficulty_id: String, wave_reached: int) -> Array[Dictionary]:
+	var draft: Array[Dictionary] = []
+	var weights := armorless_rarity_weights_for(difficulty_id, wave_reached)
+	for index in range(3):
+		draft.append(_generate_item(
+			"armorless_%s_wave_%d_draft_%d" % [run_id, maxi(1, wave_reached), index],
+			weights, "armorless"
+	))
+	return draft
+
+func _generate_item(instance_id: String, weights: Array[float], source_mode: String) -> Dictionary:
+	var rarity := _roll_rarity(weights)
 	var available_stats: Array = STAT_IDS.duplicate()
 	var stat_lines: Array[Dictionary] = []
 	for index in range(STAT_LINE_COUNTS[rarity]):
@@ -48,7 +74,7 @@ func generate_survival_item(run_id: String, difficulty_id: String = "normal", wa
 			"fail_streak": 0,
 		})
 	return {
-		"instance_id": "survival_%s_equipment" % run_id,
+		"instance_id": instance_id,
 		"slot": SLOTS[_rng.randi_range(0, SLOTS.size() - 1)],
 		"rarity": rarity,
 		"stat_lines": stat_lines,
@@ -56,8 +82,27 @@ func generate_survival_item(run_id: String, difficulty_id: String = "normal", wa
 		"rolls_calibrated": false,
 		"roll_ranges_status": "PROPOSED_ACTIVE",
 		"unique_effect_id": "pending_choice" if rarity in ["legendary", "mythic"] else "",
-		"source_mode": "survival",
+		"source_mode": source_mode,
 	}
+
+static func armorless_rarity_weights_for(difficulty_id: String, wave_reached: int) -> Array[float]:
+	var wave := maxi(1, wave_reached)
+	var band_start := 1
+	var band_starts: Array = PROPOSED_ARMORLESS_RARITY_WEIGHTS_BY_WAVE.keys()
+	band_starts.sort()
+	for start_wave in band_starts:
+		if wave >= int(start_wave):
+			band_start = int(start_wave)
+	var weights: Array = PROPOSED_ARMORLESS_RARITY_WEIGHTS_BY_WAVE[band_start].duplicate()
+	var multiplier := float(PROPOSED_ARMORLESS_DIFFICULTY_MULTIPLIERS.get(difficulty_id, 1.0))
+	var total := 0.0
+	for index in range(weights.size()):
+		weights[index] = float(weights[index]) * pow(multiplier, index)
+		total += float(weights[index])
+	var normalized: Array[float] = []
+	for weight in weights:
+		normalized.append(float(weight) * 100.0 / total)
+	return normalized
 
 static func stat_value(stat_id: String, percentile: float, enhancement_level: int = 0) -> float:
 	if not PROPOSED_STAT_RANGES.has(stat_id):
