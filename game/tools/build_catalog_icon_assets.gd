@@ -10,6 +10,8 @@ const DEDICATED_ICON_REFERENCES := {
 	"relic_blood_chalice": "res://assets/source/catalog_relics/relic_blood_chalice_reference.png",
 	"relic_celestial_eye": "res://assets/source/catalog_relics/relic_celestial_eye_reference.png",
 	"relic_frozen_crown": "res://assets/source/catalog_relics/relic_frozen_crown_reference.png",
+	"relic_magnetic_coil": "res://assets/source/catalog_relics/relic_magnetic_coil_reference.png",
+	"relic_overdrive_engine": "res://assets/source/catalog_relics/relic_overdrive_engine_reference.png",
 }
 const RELIC_REFERENCE := "res://assets/source/catalog_relics/generated_reference.png"
 const RELIC_SOURCE_DIR := "res://assets/source/catalog_relics"
