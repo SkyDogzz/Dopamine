@@ -28,6 +28,10 @@ func _run() -> void:
 			decoded["preset"]["initial_build"]["weapons"][0]["id"] != "lightning_conductor":
 		_fail("A preset should survive a share-code round trip: %s" % decoded)
 		return
+	for key in decoded["preset"]:
+		if key not in preset_service.PRESET_KEYS:
+			_fail("Share codes must serialize only the public preset schema")
+			return
 	var directory := ProjectSettings.globalize_path("user://sandbox_preset_smoke/presets")
 	DirAccess.make_dir_recursive_absolute(directory)
 	for file_name in DirAccess.get_files_at(directory):
@@ -53,6 +57,13 @@ func _run() -> void:
 	if preset_service.validate_preset(hostile).get("ok", false):
 		_fail("Unknown path fields must be rejected")
 		return
+	for forbidden_key in ["script", "command", "system_path", "private_data", "password", "access_token", "email"]:
+		var nested_hostile := preset.duplicate(true)
+		nested_hostile["overrides"]["nested"] = {forbidden_key: "must_not_be_shared"}
+		if preset_service.validate_preset(nested_hostile).get("ok", false) or \
+				preset_service.encode_share_code(nested_hostile).get("ok", false):
+			_fail("Preset import and share codes must reject executable, path and private-data fields: %s" % forbidden_key)
+			return
 	if preset_service.decode_share_code(encoded["code"].substr(0, encoded["code"].length() - 1) + "A").get("ok", false):
 		_fail("A damaged share code must fail checksum validation")
 		return

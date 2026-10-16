@@ -6,6 +6,9 @@ const MAX_SHARE_CODE_LENGTH := 2_000_000
 const MAX_NESTING_DEPTH := 16
 const MAX_COLLECTION_ITEMS := 256
 const SHARE_PREFIX := "DSLAB1:"
+const FORBIDDEN_SHARED_KEY_PARTS := [
+	"script", "command", "path", "password", "token", "secret", "private", "email", "username",
+]
 const PRESET_KEYS := [
 	"schema_version", "preset_id", "name", "description", "base_mode",
 	"seed", "overrides", "flags", "initial_build",
@@ -107,7 +110,8 @@ func _valid_tree(value: Variant, depth: int) -> bool:
 		if value.size() > MAX_COLLECTION_ITEMS:
 			return false
 		for key in value:
-			if typeof(key) != TYPE_STRING or not _valid_tree(value[key], depth + 1):
+			if typeof(key) != TYPE_STRING or _has_forbidden_shared_key(str(key)) or \
+					not _valid_tree(value[key], depth + 1):
 				return false
 	elif value is Array:
 		if value.size() > MAX_COLLECTION_ITEMS:
@@ -120,6 +124,13 @@ func _valid_tree(value: Variant, depth: int) -> bool:
 	elif typeof(value) not in [TYPE_NIL, TYPE_BOOL, TYPE_INT, TYPE_FLOAT, TYPE_STRING]:
 		return false
 	return true
+
+func _has_forbidden_shared_key(key: String) -> bool:
+	var normalized := key.to_lower()
+	for forbidden_part in FORBIDDEN_SHARED_KEY_PARTS:
+		if normalized.contains(forbidden_part):
+			return true
+	return false
 
 func _error(code: String) -> Dictionary:
 	return {"ok": false, "error": code}

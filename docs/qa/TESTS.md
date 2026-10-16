@@ -789,3 +789,9 @@ Note de clôture : le blocage historique du smoke `sandbox_ui_smoke.gd` décrit 
 - [x] `survival_run_stat_hub_smoke.gd` vérifie le résumé transparent en lignes verticales icône + valeur et les détails avec libellé au-dessus, icône et total en dessous; navigation Tab et horloges de run continuent de fonctionner.
 - [x] `ui_viewport_layout_smoke.gd` passe à 640×360, 1280×720 et 1920×1080; les deux smokes ciblés passent avec Godot 4.7.2.
 - [ ] Ce slice ne ferme pas P8.2 : les overrides de configuration au-delà des stats de combat, les modes REBUILD/RESTART et les limites de contenu restent à traiter. Les valeurs Sandbox ne sont pas des paramètres de balance validés.
+
+## P8.3 — Validation des champs importés/partagés (2026-10-16)
+
+- [x] `sandbox_preset_smoke.gd` confirme que le code partagé ne sérialise que les champs publics du schéma v1 et rejette récursivement des champs `script`, `command`, chemin système, secret, identifiant et données de profil dans `overrides`, avant validation ou export.
+- [x] Le même smoke vérifie que les IDs de preset ne peuvent pas sortir de `user://sandbox/presets`, que les champs inconnus au niveau racine sont rejetés, et qu’un preset/une construction invalide ne remplace pas le build Sandbox actif. Revalidé sous Godot 4.7.2; `sandbox_lab_smoke.gd` passe aussi avec preset et store.
+- [ ] Les textes name/description sont libres et saisis par l'utilisateur; ils ne sont pas inspectés pour une éventuelle information que l'utilisateur y mettrait lui-même. Aucun service ne collecte ou n'injecte des données de profil dans ces champs.

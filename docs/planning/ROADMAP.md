@@ -590,7 +590,7 @@ P1 livre le Sandbox développeur et ne remplace pas cette feature produit.
   - [x] Borner récursivement profondeur (16), collections (256 éléments chacune) et types JSON autorisés; tests hostiles ciblés.
   - [x] Ajouter `SandboxPresetStore` pour sauvegarder, lister, charger et supprimer les presets sous `user://sandbox/presets`; noms bornés et écriture temporaire validée.
   - [x] Brancher les actions preset/share code à l’écran Lab; ajouter l’import JSON par sélecteur de fichier avec validation bornée avant application et l’export JSON par sélecteur de destination.
-  - [ ] Vérifier absence de script, chemin local et donnée privée.
+  - [x] Refuser récursivement dans les payloads les champs nommés comme script, commande, chemin système ou donnée d'identité; les codes ne sérialisent que les champs du schéma public v1 et aucun service de save/progression n'est injecté.
 - [ ] **P8.4 — Import de sauvegarde**
   - [ ] Lire un profil normal en lecture seule.
   - [ ] Construire une copie Sandbox modifiable.
