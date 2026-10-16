@@ -22,6 +22,9 @@ func _run() -> void:
 	if not await _void_orb_targets_farthest_live_enemy():
 		_fail("Void Orb should target the farthest living enemy inside its range")
 		return
+	if not await _prism_laser_prioritizes_dense_groups():
+		_fail("Prism Laser should select a dense primary group and center secondary beams on it")
+		return
 	if not await _minigun_holds_target_until_invalid():
 		_fail("Minigun should keep its target until it dies or leaves range, then select another target")
 		return
@@ -292,6 +295,25 @@ func _void_orb_targets_farthest_live_enemy() -> bool:
 	var no_target: Dictionary = session._farthest_enemy(session.void_orb_range)
 	session.queue_free()
 	return selected.get("id", Vector2i(-1, -1)) == Vector2i(52, 1) and no_target.is_empty()
+
+func _prism_laser_prioritizes_dense_groups() -> bool:
+	var session: Node2D = load("res://scenes/survival_session.tscn").instantiate()
+	session.spawn_initial_enemy = false
+	session.wave_spawning_enabled = false
+	root.add_child(session)
+	await process_frame
+	var origin: Vector2 = session.player.global_position
+	session._entities = [
+		{"id": {"index": 61, "generation": 1}, "components": {"Health": {"current": 100.0}, "Transform2D": {"x": origin.x + 60.0, "y": origin.y}}},
+		{"id": {"index": 62, "generation": 1}, "components": {"Health": {"current": 100.0}, "Transform2D": {"x": origin.x + 220.0, "y": origin.y}}},
+		{"id": {"index": 63, "generation": 1}, "components": {"Health": {"current": 100.0}, "Transform2D": {"x": origin.x + 250.0, "y": origin.y + 20.0}}},
+		{"id": {"index": 64, "generation": 1}, "components": {"Health": {"current": 100.0}, "Transform2D": {"x": origin.x + 280.0, "y": origin.y}}},
+	]
+	var primary: Dictionary = session._prism_cluster_target(session.prism_laser_range)
+	var excluded: Array[Vector2i] = [primary.get("id", Vector2i(-1, -1))]
+	var secondary: Dictionary = session._nearest_enemy_excluding(primary.get("position", origin), session.spectrum_collapse_cluster_radius, excluded)
+	session.queue_free()
+	return primary.get("id", Vector2i(-1, -1)) == Vector2i(62, 1) and secondary.get("id", Vector2i(-1, -1)) == Vector2i(63, 1)
 
 func _void_orb_pulls_and_pierces() -> bool:
 	var session: Node2D = load("res://scenes/survival_session.tscn").instantiate()

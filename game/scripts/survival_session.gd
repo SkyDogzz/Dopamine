@@ -208,6 +208,7 @@ const WAVE_HP_CAP := 12.0
 @export var prism_laser_cooldown: float = 0.12
 @export var prism_laser_damage: float = 3.0
 @export var prism_laser_range: float = 620.0
+@export var spectrum_collapse_cluster_radius: float = 180.0 # [PROPOSED] groups secondary beams around the primary.
 @export var prism_laser_projectile_speed: float = 1800.0
 @export var prism_laser_projectile_radius: float = 1.5
 @export var prism_crystal_critical_damage_per_level: float = 0.03
@@ -1845,7 +1846,7 @@ func _fire_prism_laser(active_time: float, paused: bool) -> void:
 	var level: int = loadout.weapon_level("prism_laser")
 	var range_multiplier := (1.2 if level >= 3 else 1.0) * (1.15 if level >= 4 else 1.0)
 	var laser_range := _equipment_area(prism_laser_range * range_multiplier)
-	var target := _nearest_enemy(laser_range)
+	var target := _prism_cluster_target(laser_range)
 	if target.is_empty():
 		return
 	var evolved: bool = loadout.is_evolved("prism_laser")
@@ -1855,7 +1856,7 @@ func _fire_prism_laser(active_time: float, paused: bool) -> void:
 	if evolved:
 		var excluded: Array[Vector2i] = [target["id"]]
 		for _beam in range(spectrum_collapse_secondary_beams):
-			var secondary := _nearest_enemy_excluding(laser_range, excluded)
+			var secondary := _nearest_enemy_excluding(target["position"], spectrum_collapse_cluster_radius, excluded)
 			if secondary.is_empty():
 				break
 			targets.append(secondary)
@@ -1930,7 +1931,7 @@ func _fire_frost_nova(active_time: float, paused: bool) -> void:
 			true, duration, frost_chill_speed_multiplier, vulnerability) > 0:
 		_next_frost_nova_time = active_time + _effective_weapon_cooldown(frost_nova_cooldown * (0.8 if level >= 5 else 1.0))
 
-func _nearest_enemy_excluding(max_range: float, excluded: Array[Vector2i]) -> Dictionary:
+func _nearest_enemy_excluding(origin: Vector2, max_range: float, excluded: Array[Vector2i]) -> Dictionary:
 	var nearest: Dictionary = {}
 	var best_distance_squared := max_range * max_range
 	for entity in _entities:
@@ -1943,11 +1944,47 @@ func _nearest_enemy_excluding(max_range: float, excluded: Array[Vector2i]) -> Di
 			continue
 		var transform: Dictionary = components["Transform2D"]
 		var point := Vector2(float(transform["x"]), float(transform["y"]))
-		var distance_squared := player.global_position.distance_squared_to(point)
+		var distance_squared := origin.distance_squared_to(point)
 		if distance_squared < best_distance_squared:
 			best_distance_squared = distance_squared
 			nearest = {"position": point, "id": key}
 	return nearest
+
+func _prism_cluster_target(max_range: float) -> Dictionary:
+	var candidates: Array[Dictionary] = []
+	var nearest: Dictionary = {}
+	var best_nearest_distance_squared := max_range * max_range
+	for entity in _entities:
+		var components: Dictionary = entity["components"]
+		if not _is_targetable_enemy(components):
+			continue
+		var transform: Dictionary = components["Transform2D"]
+		var position := Vector2(float(transform["x"]), float(transform["y"]))
+		var distance_squared := player.global_position.distance_squared_to(position)
+		if distance_squared >= max_range * max_range:
+			continue
+		var target := {"position": position, "id": Vector2i(int(entity["id"]["index"]), int(entity["id"]["generation"]))}
+		candidates.append(target)
+		if distance_squared < best_nearest_distance_squared:
+			best_nearest_distance_squared = distance_squared
+			nearest = target
+	if candidates.size() < 2 or spectrum_collapse_cluster_radius <= 0.0:
+		return nearest
+	var best_target: Dictionary = {}
+	var best_neighbor_count := 0
+	var best_distance_squared := max_range * max_range
+	var cluster_radius_squared := spectrum_collapse_cluster_radius * spectrum_collapse_cluster_radius
+	for candidate in candidates:
+		var neighbor_count := 0
+		for other in candidates:
+			if candidate["position"].distance_squared_to(other["position"]) <= cluster_radius_squared:
+				neighbor_count += 1
+		var distance_squared: float = player.global_position.distance_squared_to(candidate["position"])
+		if neighbor_count > best_neighbor_count or (neighbor_count == best_neighbor_count and distance_squared < best_distance_squared):
+			best_neighbor_count = neighbor_count
+			best_distance_squared = distance_squared
+			best_target = candidate
+	return best_target if not best_target.is_empty() else nearest
 
 func _meteor_cluster_target() -> Dictionary:
 	var anchor := _nearest_enemy(meteor_staff_range)
