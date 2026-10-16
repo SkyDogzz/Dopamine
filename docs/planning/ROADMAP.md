@@ -299,6 +299,7 @@ Travail requis :
   - [x] Réduire uniformément les portées de ciblage par `180/620` (−71 %) afin que les cibles primaires restent dans le rayon visible de l’écran; borner aussi les bonus de portée, Frost Nova, les faisceaux Prism et les rebonds Lightning. Les réglages Sandbox restent indépendants.
 - [ ] **P5.1.11 — Niveaux et feedback des autres armes**
   - [ ] Compléter les niveaux 1–5 d’une arme à la fois à partir des valeurs proposées.
+  - [x] Inferno applique les effets proposés des niveaux 2–5 : +20 % dégâts directs, +15 % portée (plafonnée au rayon visible), +20 % largeur de jet et +25 % dégâts de Burn. Le smoke vérifie la cible permise par le bonus de portée, les dégâts/largeur du projectile et le DoT niveau 5; ces chiffres restent **[PROPOSÉS]**.
   - [x] Ajouter un feedback HUD à l’acquisition et à chaque niveau gagné sur arme/relique; toast lié au temps de simulation et figé en pause.
   - [x] Les impacts dédiés des dix armes reprennent le niveau de leur arme et grossissent de 6 % par niveau, sans changer dégâts, collision ou cadence (**[PROPOSÉ]**).
   - [x] Les onze reliques appliquent leur bonus de stat globale à chacun des cinq niveaux; `survival_weapon_catalog_smoke.gd` vérifie l’accumulation par niveau. Les valeurs restent **[PROPOSÉES]** et ne sont pas déclarées équilibrées.

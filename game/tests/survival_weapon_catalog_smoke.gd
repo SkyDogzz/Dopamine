@@ -19,6 +19,9 @@ func _run() -> void:
 	if not await _inferno_prioritizes_high_threat():
 		_fail("Inferno should prioritize the highest-threat enemy in range, breaking ties by distance")
 		return
+	if not await _inferno_level_progression():
+		_fail("Inferno levels 2–5 should apply their proposed damage, range, width and burn upgrades")
+		return
 	if not await _toxic_cloud_prioritizes_durable_targets():
 		_fail("Toxic Cloud should prioritize the highest-health living enemy in range, breaking ties by distance")
 		return
@@ -285,6 +288,125 @@ func _inferno_prioritizes_high_threat() -> bool:
 	var selected: Dictionary = session._highest_threat_enemy(session.inferno_range)
 	session.queue_free()
 	return selected.get("id", Vector2i(-1, -1)) == Vector2i(22, 1)
+
+func _inferno_level_progression() -> bool:
+	var session: Node2D = load("res://scenes/survival_session.tscn").instantiate()
+	session.spawn_initial_enemy = false
+	session.wave_spawning_enabled = false
+	session.skip_starting_weapon_choice = true
+	session.weapon_enabled = false
+	session.inferno_projectile_speed = 0.0
+	session.inferno_burn_damage_per_tick = 4.0
+	root.add_child(session)
+	await process_frame
+	session.simulation.set_speed(1.0)
+	if not await _wait_for_simulation_speed(session, 1.0):
+		session.queue_free()
+		return false
+	for _level in range(2):
+		if not session.loadout.apply_offer("weapon:inferno_sprayer"):
+			session.queue_free()
+			return false
+	var origin: Vector2 = session.player.global_position
+	session._entities = [
+		{"id": {"index": 91, "generation": 1}, "components": {"Health": {"current": 100.0}, "ThreatLevel": 1.0, "Transform2D": {"x": origin.x, "y": origin.y + 80.0}}},
+		{"id": {"index": 92, "generation": 1}, "components": {"Health": {"current": 100.0}, "ThreatLevel": 10.0, "Transform2D": {"x": origin.x + 160.0, "y": origin.y}}},
+	]
+	session._next_inferno_time = 0.0
+	session.weapon_enabled = true
+	session._fire_inferno_sprayer(1.0, false)
+	session.weapon_enabled = false
+	var level_two_shot := await _wait_for_projectile_count(session, 1)
+	if level_two_shot.size() != 1:
+		session.queue_free()
+		return false
+	var level_two_position := _projectile_position(level_two_shot[0]) - origin
+	if level_two_position.x > 1.0 or level_two_position.y <= 1.0:
+		session.queue_free()
+		return false
+	if not session.loadout.apply_offer("weapon:inferno_sprayer"):
+		session.queue_free()
+		return false
+	session._entities = [
+		{"id": {"index": 91, "generation": 1}, "components": {"Health": {"current": 100.0}, "ThreatLevel": 1.0, "Transform2D": {"x": origin.x, "y": origin.y + 80.0}}},
+		{"id": {"index": 92, "generation": 1}, "components": {"Health": {"current": 100.0}, "ThreatLevel": 10.0, "Transform2D": {"x": origin.x + 160.0, "y": origin.y}}},
+	]
+	session._next_inferno_time = 0.0
+	session.weapon_enabled = true
+	session._fire_inferno_sprayer(2.0, false)
+	session.weapon_enabled = false
+	var level_three_shots := await _wait_for_projectile_count(session, 2)
+	if level_three_shots.size() != 2:
+		session.queue_free()
+		return false
+	var level_three_position := _projectile_position(level_three_shots[1]) - origin
+	if level_three_position.x <= 1.0 or absf(level_three_position.y) > 1.0:
+		session.queue_free()
+		return false
+	if not session.loadout.apply_offer("weapon:inferno_sprayer"):
+		session.queue_free()
+		return false
+	session._entities = [
+		{"id": {"index": 91, "generation": 1}, "components": {"Health": {"current": 100.0}, "ThreatLevel": 1.0, "Transform2D": {"x": origin.x, "y": origin.y + 80.0}}},
+		{"id": {"index": 92, "generation": 1}, "components": {"Health": {"current": 100.0}, "ThreatLevel": 10.0, "Transform2D": {"x": origin.x + 160.0, "y": origin.y}}},
+	]
+	session._next_inferno_time = 0.0
+	session.weapon_enabled = true
+	session._fire_inferno_sprayer(3.0, false)
+	session.weapon_enabled = false
+	var level_four_shots := await _wait_for_projectile_count(session, 3)
+	if level_four_shots.size() != 3:
+		session.queue_free()
+		return false
+	var level_four_projectile: Dictionary = level_four_shots[2]["components"]["Projectile"]
+	if not is_equal_approx(float(level_four_projectile["radius"]), session.inferno_projectile_radius * 1.2) or \
+		not is_equal_approx(float(level_four_projectile["damage"]), session.inferno_damage * 1.2):
+		session.queue_free()
+		return false
+	if not session.loadout.apply_offer("weapon:inferno_sprayer"):
+		session.queue_free()
+		return false
+	session.simulation.kill_all()
+	if not await _wait_for_no_entities(session):
+		session.queue_free()
+		return false
+	session.inferno_projectile_speed = 1000.0
+	session.simulation.spawn("test_target", 1, Vector2(80.0, 0.0), 100.0, Vector2.ZERO)
+	if (await _wait_for_targets(session, 1)).size() != 1:
+		session.queue_free()
+		return false
+	session._entities = session.simulation.snapshot()["entities"]
+	session._next_inferno_time = 0.0
+	session.weapon_enabled = true
+	session._fire_inferno_sprayer(4.0, false)
+	session.weapon_enabled = false
+	var deadline := Time.get_ticks_msec() + 2000
+	while Time.get_ticks_msec() < deadline:
+		await process_frame
+		for entity in session.simulation.snapshot()["entities"]:
+			var status: Dictionary = entity["components"].get("DamageOverTime", {})
+			if status.get("status_type", "") == "burn":
+				var valid_burn := is_equal_approx(float(status["damage_per_tick"]), 5.0)
+				session.queue_free()
+				return valid_burn
+	session.queue_free()
+	return false
+
+func _wait_for_projectile_count(session: Node2D, expected_count: int) -> Array[Dictionary]:
+	var deadline := Time.get_ticks_msec() + 1000
+	while Time.get_ticks_msec() < deadline:
+		await process_frame
+		var projectiles: Array[Dictionary] = []
+		for entity in session.simulation.snapshot()["entities"]:
+			if entity["components"].get("EnemyType", "") == "inferno_sprayer":
+				projectiles.append(entity)
+		if projectiles.size() >= expected_count:
+			return projectiles
+	return []
+
+func _projectile_position(entity: Dictionary) -> Vector2:
+	var transform: Dictionary = entity["components"]["Transform2D"]
+	return Vector2(float(transform["x"]), float(transform["y"]))
 
 func _toxic_cloud_prioritizes_durable_targets() -> bool:
 	var session: Node2D = load("res://scenes/survival_session.tscn").instantiate()

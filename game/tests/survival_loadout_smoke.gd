@@ -81,8 +81,14 @@ func _initialize() -> void:
 		return
 	var upgraded_weapon_offer := _find_offer(loadout.offers("weapon"), "weapon:inferno_sprayer")
 	if upgraded_weapon_offer.is_empty() or not str(upgraded_weapon_offer["title"]).contains("2 → 3") or \
-			not str(upgraded_weapon_offer["description"]).contains("NEXT LEVEL: +15% damage"):
+			not str(upgraded_weapon_offer["description"]).contains("NEXT LEVEL: +15% range"):
 		_fail("Owned weapon offers should explain the effect of the next level")
+		return
+	if loadout._weapon_level_description("inferno_sprayer", 2) != "+20% direct damage" or \
+		loadout._weapon_level_description("inferno_sprayer", 3) != "+15% range" or \
+		loadout._weapon_level_description("inferno_sprayer", 4) != "+20% jet width" or \
+		not loadout._weapon_level_description("inferno_sprayer", 5).contains("+25% Burn"):
+		_fail("Inferno level descriptions should match the proposed level 2–5 progression")
 		return
 	if not loadout.apply_offer("relic:storm_core") or loadout.relic_level("storm_core") != 1:
 		_fail("Selecting a new relic should add it at level 1")

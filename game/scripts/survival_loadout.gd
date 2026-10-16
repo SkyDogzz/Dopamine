@@ -196,7 +196,9 @@ func _weapon_level_description(item_id: String, level: int) -> String:
 	match item_id:
 		"lightning_conductor":
 			return "+1 chain bounce" if level in [2, 4] else "+25% damage" if level == 3 else "Max level; collect combo when Storm Core is also level 5" if level == 5 else "Improves lightning damage"
-		"inferno_sprayer", "crimson_daggers":
+		"inferno_sprayer":
+			return "+20% direct damage" if level == 2 else "+15% range" if level == 3 else "+20% jet width" if level == 4 else "Max level; +25% Burn, collect combo when Infernal Heart is also level 5" if level == 5 else "Improves the fire jet"
+		"crimson_daggers":
 			return "Max level; collect combo when matching relic is also level 5" if level == 5 else "+15% damage"
 		"minigun":
 			return "+20% damage" if level == 2 else "+25% fire rate" if level in [3, 5] else "15% tighter spread" if level == 4 else "Improves shots"

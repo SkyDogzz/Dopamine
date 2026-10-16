@@ -1798,17 +1798,20 @@ func _lightning_initial_targets(limit: int) -> Array[Dictionary]:
 func _fire_inferno_sprayer(active_time: float, paused: bool) -> void:
 	if not weapon_enabled or loadout.weapon_level("inferno_sprayer") == 0 or paused or _chest_open or run_over or inferno_cooldown <= 0.0 or active_time < _next_inferno_time:
 		return
-	var target := _highest_threat_enemy(SURVIVAL_TARGETING.visible_range(inferno_range))
+	var level: int = loadout.weapon_level("inferno_sprayer")
+	var targeting_range := SURVIVAL_TARGETING.weapon_range(inferno_range, 1.15 if level >= 3 else 1.0)
+	var target := _highest_threat_enemy(targeting_range)
 	if target.is_empty():
 		return
 	var direction: Vector2 = (target["position"] - player.global_position).normalized()
 	if direction == Vector2.ZERO:
 		direction = Vector2.RIGHT
-	var level: int = loadout.weapon_level("inferno_sprayer")
-	var damage := inferno_damage * (1.0 + 0.15 * float(level - 1))
+	var damage := inferno_damage * (1.2 if level >= 2 else 1.0)
 	damage *= _weapon_combo_damage_multiplier("inferno_sprayer")
 	damage *= _persistent_damage_multiplier()
 	damage *= _roll_equipment_critical_multiplier()
+	var projectile_radius := inferno_projectile_radius * (1.2 if level >= 4 else 1.0)
+	var burn_damage := inferno_burn_damage_per_tick * (1.25 if level >= 5 else 1.0)
 	var projectile_type := "inferno_sprayer"
 	var explosion_radius := 0.0
 	var explosion_multiplier := 0.0
@@ -1817,8 +1820,8 @@ func _fire_inferno_sprayer(active_time: float, paused: bool) -> void:
 		explosion_radius = _equipment_area(wildfire_explosion_radius)
 		explosion_multiplier = wildfire_explosion_damage_multiplier
 	var projectile_sequence: int = simulation.spawn_status_projectile(projectile_type, player.global_position + direction * 14.0,
-			direction * _equipment_projectile_speed(inferno_projectile_speed), damage, _equipment_area(inferno_projectile_radius),
-			inferno_projectile_lifetime, inferno_burn_damage_per_tick * _weapon_combo_damage_multiplier("inferno_sprayer") * _persistent_damage_multiplier(),
+			direction * _equipment_projectile_speed(inferno_projectile_speed), damage, _equipment_area(projectile_radius),
+			inferno_projectile_lifetime, burn_damage * _weapon_combo_damage_multiplier("inferno_sprayer") * _persistent_damage_multiplier(),
 			inferno_burn_interval_seconds, inferno_burn_duration_seconds,
 			explosion_radius, explosion_multiplier)
 	if projectile_sequence > 0:
