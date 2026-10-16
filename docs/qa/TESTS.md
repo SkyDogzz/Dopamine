@@ -831,3 +831,9 @@ Note de clôture : le blocage historique du smoke `sandbox_ui_smoke.gd` décrit 
 - [x] `sandbox_preset_smoke.gd` confirme que le code partagé ne sérialise que les champs publics du schéma v1 et rejette récursivement des champs `script`, `command`, chemin système, secret, identifiant et données de profil dans `overrides`, avant validation ou export.
 - [x] Le même smoke vérifie que les IDs de preset ne peuvent pas sortir de `user://sandbox/presets`, que les champs inconnus au niveau racine sont rejetés, et qu’un preset/une construction invalide ne remplace pas le build Sandbox actif. Revalidé sous Godot 4.7.2; `sandbox_lab_smoke.gd` passe aussi avec preset et store.
 - [ ] Les textes name/description sont libres et saisis par l'utilisateur; ils ne sont pas inspectés pour une éventuelle information que l'utilisateur y mettrait lui-même. Aucun service ne collecte ou n'injecte des données de profil dans ces champs.
+## Compilation MSVC du benchmark natif — 2026-10-16
+
+- [x] Le premier workflow Windows a atteint la compilation GDExtension, mais le build complet échouait sur `native/benchmarks/simulation_benchmark.cpp` : MSVC ne définit pas `__VERSION__`.
+- [x] Le benchmark affiche désormais `_MSC_FULL_VER` sous MSVC, `__VERSION__` sous GCC/Clang et une valeur de repli ailleurs.
+- [x] Vérifié localement avec `c++ -std=c++23 -Wall -Wextra -Wpedantic -I native/include -fsyntax-only native/benchmarks/simulation_benchmark.cpp`, puis avec `_MSC_VER` et `_MSC_FULL_VER` définis pour compiler la branche MSVC.
+- [ ] Le workflow Windows relancé après cette correction doit encore confirmer la compilation MSVC, l’export et le démarrage de l’exécutable.

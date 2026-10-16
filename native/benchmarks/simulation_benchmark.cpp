@@ -11,6 +11,16 @@
 using dopamine::sim::SimulationCore;
 using Clock = std::chrono::steady_clock;
 
+#if defined(_MSC_VER)
+#define DOPAMINE_STRINGIFY_VALUE(value) #value
+#define DOPAMINE_STRINGIFY(value) DOPAMINE_STRINGIFY_VALUE(value)
+#define DOPAMINE_COMPILER_VERSION "MSVC " DOPAMINE_STRINGIFY(_MSC_FULL_VER)
+#elif defined(__VERSION__)
+#define DOPAMINE_COMPILER_VERSION __VERSION__
+#else
+#define DOPAMINE_COMPILER_VERSION "unknown"
+#endif
+
 namespace {
 
 void report(std::string_view name, std::vector<double> frame_times_ms) {
@@ -35,7 +45,7 @@ int main() {
 	constexpr double delta_seconds = 1.0 / 60.0;
 	std::cout << "workload=enemies:" << enemy_count << ",projectiles:" << projectile_count
 			<< " frames=" << measured_frames << " dt_ms=" << delta_seconds * 1000.0
-			<< " compiler=" << __VERSION__ << " build="
+			<< " compiler=" << DOPAMINE_COMPILER_VERSION << " build="
 #ifdef NDEBUG
 			<< "release\n";
 #else
