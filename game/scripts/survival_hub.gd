@@ -11,6 +11,7 @@ const SKILL_TREE_PANEL_SCENE := preload("res://scenes/skill_tree_panel.tscn")
 @onready var _difficulty_status: Label = $Content/Main/DifficultyCard/Body/DifficultyStatus
 @onready var _profile_status: Label = $Content/Header/ProfileStatus
 @onready var _launch_button: Button = $Content/Main/PreparationCard/Body/LaunchButton
+@onready var _armorless_launch_button: Button = $Content/Main/PreparationCard/Body/ArmorlessLaunchButton
 @onready var _temporary_launch_button: Button = $Content/Main/PreparationCard/Body/TemporaryLaunchButton
 @onready var _equipment_button: Button = $Content/Main/PreparationCard/Body/EquipmentButton
 @onready var _skill_tree_button: Button = $Content/Main/PreparationCard/Body/SkillTreeButton
@@ -32,6 +33,7 @@ func _ready() -> void:
 	_equipment_button.pressed.connect(_open_equipment)
 	_skill_tree_button.pressed.connect(_open_skill_tree)
 	_launch_button.pressed.connect(_launch_run)
+	_armorless_launch_button.pressed.connect(_launch_armorless_run)
 	_temporary_launch_button.pressed.connect(_launch_temporary_run)
 	_create_panels()
 	_load_profile()
@@ -68,6 +70,7 @@ func _load_profile() -> void:
 	var result: Dictionary = progression_service.load_profile()
 	_profile_available = bool(result.get("ok", false))
 	_launch_button.disabled = not _profile_available
+	_armorless_launch_button.disabled = not _profile_available
 	_temporary_launch_button.disabled = false
 	_equipment_button.disabled = not _profile_available
 	_skill_tree_button.disabled = not _profile_available
@@ -128,6 +131,17 @@ func _launch_run() -> void:
 	var entry: Node = SURVIVAL_ENTRY_SCENE.instantiate()
 	entry.progression_service = progression_service
 	entry.difficulty_id = selected_difficulty
+	get_tree().root.add_child(entry)
+	get_tree().current_scene = entry
+	queue_free()
+
+func _launch_armorless_run() -> void:
+	if not _profile_available:
+		return
+	var entry: Node = SURVIVAL_ENTRY_SCENE.instantiate()
+	entry.progression_service = progression_service
+	entry.difficulty_id = selected_difficulty
+	entry.mode_id = "armorless"
 	get_tree().root.add_child(entry)
 	get_tree().current_scene = entry
 	queue_free()

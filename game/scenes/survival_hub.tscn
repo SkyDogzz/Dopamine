@@ -213,6 +213,14 @@ theme_override_colors/font_color = Color(0.215686, 0.909804, 0.960784, 1)
 theme_override_font_sizes/font_size = 10
 text = "LANCER LA RUN  →"
 
+[node name="ArmorlessLaunchButton" type="Button" parent="Content/Main/PreparationCard/Body"]
+custom_minimum_size = Vector2(0, 25)
+layout_mode = 2
+focus_mode = 2
+theme_override_font_sizes/font_size = 8
+text = "ENDLESS ARMORLESS  →"
+tooltip_text = "Run autonome sans équipement permanent. Skill tree et succès conservés."
+
 [node name="TemporaryLaunchButton" type="Button" parent="Content/Main/PreparationCard/Body"]
 custom_minimum_size = Vector2(0, 21)
 layout_mode = 2

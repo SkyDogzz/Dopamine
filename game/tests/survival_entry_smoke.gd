@@ -45,6 +45,9 @@ func _run() -> void:
 	if current_scene.difficulty_id != "normal":
 		_fail("The isolated Sandbox Survival prototype should keep its default tuning")
 		return
+	if current_scene.mode_id != "survival":
+		_fail("Sandbox Survival should keep the normal Survival mode by default")
+		return
 	current_scene.queue_free()
 	await process_frame
 	print("Survival entry smoke passed")

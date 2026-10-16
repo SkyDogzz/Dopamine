@@ -160,6 +160,27 @@ func _run() -> void:
 		return
 	current_scene.queue_free()
 	await process_frame
+	var armorless_hub: Control = load("res://scenes/survival_hub.tscn").instantiate()
+	armorless_hub.progression_service = progression
+	root.add_child(armorless_hub)
+	current_scene = armorless_hub
+	await process_frame
+	var armorless_button: Button = armorless_hub.get_node("Content/Main/PreparationCard/Body/ArmorlessLaunchButton")
+	if armorless_button.disabled or not armorless_button.focus_mode == Control.FOCUS_ALL:
+		_fail("Armorless should be an available, keyboard-focusable hub launch action")
+		return
+	armorless_button.pressed.emit()
+	deadline = Time.get_ticks_msec() + 1500
+	while Time.get_ticks_msec() < deadline:
+		await process_frame
+		if current_scene != armorless_hub:
+			break
+	if current_scene == armorless_hub or current_scene.mode_id != "armorless" or \
+		current_scene.progression_service != progression or not current_scene.wave_director.endless_armorless:
+		_fail("The Armorless hub action should launch the selected difficulty with the persistent profile and endless rules")
+		return
+	current_scene.queue_free()
+	await process_frame
 	var back_hub := load("res://scenes/survival_hub.tscn").instantiate() as Control
 	back_hub.progression_service = progression
 	root.add_child(back_hub)

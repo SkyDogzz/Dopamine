@@ -499,7 +499,8 @@ Travail requis :
 ### P7A — Armorless (règles centrales validées)
 
 - [ ] **P7A.1 — Règles du mode**
-  - [ ] Créer une définition Armorless avec équipement permanent inactif.
+  - [x] Ajouter le choix Armorless au hub et transmettre le mode à la session; le profil reste disponible pour les systèmes autorisés.
+  - [x] Désactiver les bonus d'équipement et effets uniques permanents pendant le mode; conserver les bonus déjà acquis du skill tree et des achievements.
   - [ ] Vérifier skill tree et achievements toujours actifs.
   - [x] Ajouter au directeur un profil Armorless optionnel : cycle de boss toutes les 12 vagues sans victoire forcée après la vague 24; profil Survival inchangé. La cadence de boss reste une valeur **[PROPOSÉE]** du GDD.
 - [ ] **P7A.2 — Draft temporaire**

@@ -63,6 +63,7 @@ const WEAPON_ICONS := {
 	"frost_nova": preload("res://assets/sprites/catalog/weapon_frost_nova.png"),
 }
 const WAVE_DIRECTOR_SCRIPT := preload("res://scripts/survival_wave_director.gd")
+const ARMORLESS_RUN_STATE_SCRIPT := preload("res://scripts/armorless_run_state.gd")
 const LOADOUT_SCRIPT := preload("res://scripts/survival_loadout.gd")
 const WEAPON_PROGRESSION_IDS := ["lightning_conductor", "inferno_sprayer", "crimson_daggers", "void_orb",
 		"frost_nova", "minigun", "meteor_staff", "sawblades", "toxic_cloud", "prism_laser"]
@@ -273,6 +274,8 @@ const WAVE_HP_CAP := 12.0
 
 var simulation: Object
 var progression_service: RefCounted
+var mode_id := "survival"
+var armorless_run_state: RefCounted
 var difficulty_id := "normal"
 var _sprite_renderer: RefCounted
 var _hp_fill_style: StyleBoxFlat
@@ -402,6 +405,9 @@ func _ready() -> void:
 	_style_run_hud()
 	_sprite_renderer = SPRITE_RENDERER_SCRIPT.new()
 	_run_id = Crypto.new().generate_random_bytes(16).hex_encode()
+	if mode_id == "armorless":
+		armorless_run_state = ARMORLESS_RUN_STATE_SCRIPT.new(hash(_run_id))
+		armorless_run_state.begin_run()
 	player = PLAYER_SCENE.instantiate()
 	player.name = "Player"
 	add_child(player)
@@ -441,10 +447,11 @@ func _ready() -> void:
 	if progression_service != null:
 		_refresh_persistent_bonuses()
 		player_max_hp *= 1.0 + progression_service.skill_bonus("max_hp_pct")
-		player_max_hp += _equipment_bonus("max_hp")
+		if mode_id != "armorless":
+			player_max_hp += _equipment_bonus("max_hp")
 	player_hp = player_max_hp
 	player_xp_to_next = xp_base_to_next_level
-	wave_director = WAVE_DIRECTOR_SCRIPT.new()
+	wave_director = WAVE_DIRECTOR_SCRIPT.new(mode_id == "armorless")
 	wave_director.wave_duration_seconds = wave_duration_seconds
 	_next_elite_spawn_time = maxf(0.0, elite_spawn_interval_seconds)
 	_publish_player_target()
@@ -1506,7 +1513,9 @@ func _finish_run(victory: bool) -> void:
 	simulation.pause()
 	_run_result_overlay.visible = true
 	var reward := {}
-	if progression_service != null and progression_service.can_save_profile():
+	if mode_id == "armorless" and armorless_run_state != null:
+		armorless_run_state.end_run()
+	elif progression_service != null and progression_service.can_save_profile():
 		reward = progression_service.award_survival_run(
 			_run_id, wave_director.wave, victory, kill_count, difficulty_id
 		)
@@ -1516,6 +1525,7 @@ func _restart_run() -> void:
 	var replacement: Node2D = load("res://scenes/survival_session.tscn").instantiate()
 	replacement.progression_service = progression_service
 	replacement.difficulty_id = difficulty_id
+	replacement.mode_id = mode_id
 	get_tree().root.add_child(replacement)
 	get_tree().current_scene = replacement
 	queue_free()
@@ -2362,8 +2372,9 @@ func _refresh_persistent_bonuses() -> void:
 	_cached_equipment_bonuses = {}
 	_cached_unique_effects = []
 	if progression_service != null:
-		_cached_equipment_bonuses = progression_service.equipment_bonuses()
-		_cached_unique_effects = progression_service.equipped_unique_effects()
+		if mode_id != "armorless":
+			_cached_equipment_bonuses = progression_service.equipment_bonuses()
+			_cached_unique_effects = progression_service.equipped_unique_effects()
 		_cached_persistent_damage_multiplier += progression_service.skill_bonus("damage_pct")
 		_cached_persistent_damage_multiplier += progression_service.achievement_bonus("damage_pct")
 		_cached_persistent_damage_multiplier += _equipment_bonus("damage_pct") / 100.0
