@@ -2,6 +2,8 @@
 
 Cette carte consigne l’intention approuvée par interview et l’état final de chaque module. Les identifiants restent les références stables des specs et plans. Le bilan de clôture est dans [`tasks/ui-refonte/INTEGRATION-ui-refonte.md`](tasks/ui-refonte/INTEGRATION-ui-refonte.md).
 
+Les états « Livré » ci-dessous décrivent la tranche fonctionnelle et visuelle intégrée le 2026-10-16. Une extension d’intention confirmée le même jour demande maintenant de recréer tous les assets visuels existants et manquants et de refaire graphiquement toutes les interfaces selon l’Art Bible; cette nouvelle tranche n’est pas encore implémentée. Son inventaire est dans [`docs/art/INVENTAIRE_ASSETS_UI.md`](docs/art/INVENTAIRE_ASSETS_UI.md).
+
 La direction artistique partagée est décrite dans [`docs/ART_BIBLE.txt`](docs/ART_BIBLE.txt); ses choix **[VALIDÉS]** gouvernent les écrans de cette carte.
 
 | Module | Responsabilité | Dépendances | État |

@@ -1,0 +1,121 @@
+# Inventaire des assets visuels et de l’UI
+
+**Statut :** inventaire de travail fondé sur le contenu présent dans le dépôt, établi le 2026-10-16. L’intention de recréer tout le catalogue visuel et de refaire toutes les interfaces selon [`ART_BIBLE.txt`](../ART_BIBLE.txt) a été confirmée par l’utilisateur. Ce document recense le travail; il ne constitue pas une validation des propositions visuelles encore ouvertes.
+
+## Portée et règles
+
+- Recréer les assets visuels actuellement utilisés, même lorsqu’ils semblent déjà proches de la direction retenue, et combler les manques du contenu effectivement présent dans le jeu.
+- Couvrir tout le catalogue des 10 armes et 11 reliques, indépendamment de leur disponibilité actuelle en Survival.
+- Refaire visuellement toutes les interfaces existantes et les rendre conformes à l’Art Bible sans modifier leurs comportements validés.
+- Garder le rôle du héros cyan, mais redessiner sa silhouette en personnage top-down chibi.
+- Garder l’isolation stricte du Sandbox et ne pas inventer d’écrans fonctionnels pour Succès ou Bestiaire, qui restent inactifs selon l’interview UI précédente.
+- Pour les sprites, livrer PNG et source Aseprite. Les éléments générés précédemment sans source Aseprite, dont la skyline actuelle, restent à reprendre dans cette filière.
+- Distinguer **[VALIDÉ]**, **[PROPOSÉ]** et **[OUVERT]** comme dans la Bible et le GDD. Une case vide ou une convention habituelle ne vaut pas décision.
+
+## Référence technique importante
+
+La résolution logique **640×360 est [VALIDÉE]** dans l’Art Bible. Le projet utilise actuellement **1280×800** parce que les interfaces fixes débordaient après le précédent changement global de viewport. Le nouvel habillage doit adapter chaque écran à 640×360, puis seulement activer cette résolution après validation de tous les parcours. Ne pas répéter le changement global avant cette étape.
+
+## État présent du dépôt
+
+Inventaire physique : `game/assets/sprites/` contient 42 fichiers graphiques (17 PNG, dont un atlas source, et 25 SVG); `game/assets/icons/` contient 17 PNG (16 icônes utilisables et un atlas source); `game/assets/backgrounds/` contient 1 PNG; `game/assets/fonts/` contient 2 polices et leurs licences. Aucun fichier `.ase` ou `.aseprite` n’est livré pour ces assets.
+
+La plupart des PNG découpés ont 64×64 px. Cette taille de production actuelle n’est pas la taille de sprite validée pour le joueur (32×32) ni la taille de tile (16×16). Les images actuelles sont un mélange de sprites issus d’atlas, d’illustrations SVG et d’icônes; elles n’offrent pas de source Aseprite ni de sheets d’animations intégrées.
+
+### Sprites de jeu existants
+
+| Groupe | Fichiers actuels | Ce qui manque ou doit être repris |
+|---|---|---|
+| Héros | `player_cyan.png` | Nouvelle silhouette cyan 32×32; feuilles `idle` et `walk` de 4 directions × 4 frames (128×128 chacune), source Aseprite. L’ordre des directions reste **[OUVERT]**. |
+| Ennemis communs et supports | `enemy_chaser.png`, `enemy_sprinter.png`, `enemy_tank.png`, `enemy_shooter.png`, `enemy_buffer.svg`, `enemy_exploder.svg`, `enemy_shielder.svg`, `enemy_summoner.svg`, `enemy_summoned.svg` | 9 designs distincts, lisibles par silhouette et conformes aux tailles 16–32 px; la Bible ne fixe pas leur nombre de frames. Livrer les sheets nécessaires par animation après résolution de ce point **[OUVERT]**. |
+| Élites | Pas de sprite d’élite dédié : le rendu réutilise `enemy_sprinter.png`, ajoute un anneau rouge de statut Hasted en code | Apparence d’élite reconnaissable et symbole distinctif validé par la Bible; séparer l’aura VFX du sprite source. |
+| Boss | `boss_mid_placeholder.png`, `boss_final_placeholder.png` | Remplacer les placeholders par les boss réellement utilisés; sprite standard demandé de 96×96 px. Les identités/patterns encore proposés ne doivent pas être inventés comme décisions de design. |
+| Projectiles | `projectile_lightning.png`, `projectile_inferno.png`, `projectile_crimson.png`, `projectile_enemy.png`, `projectile_minigun.svg`, `projectile_toxic_cloud.svg`, `projectile_sawblades.svg`, `projectile_meteor.svg`, `projectile_starfall_fragment.svg`, `projectile_prism_laser.svg`, `projectile_prism_secondary.svg`, `projectile_void_orb.svg`, `projectile_frost_nova.svg` | Refondre les silhouettes comme sprites nets. Le renderer réutilise des sprites pour certaines évolutions; vérifier et produire un visuel distinct quand l’évolution exige une transformation complète. Les traînées restent des VFX séparés. |
+| Récompenses en run | `xp_orb.png`, `chest_closed.png` | Recréer l’orbe XP et le coffre; créer les variantes/frames d’ouverture ou de récompense nécessaires aux animations de récompense validées. Les autres catégories de pickups ne sont pas implémentées et ne sont pas à inventer dans cette passe. |
+| Reliques | `relic_storm_core.png`, `relic_infernal_heart.png`, `relic_blood_chalice.png`, `relic_celestial_eye.svg`, `relic_frozen_crown.svg`, `relic_magnet_heart.svg`, `relic_magnetic_coil.svg`, `relic_overdrive_engine.svg`, `relic_plague_mask.svg`, `relic_prism_crystal.svg`, `relic_singularity.svg` | Recréer les 11 icônes/sprites avec un style homogène. Les icônes d’inventaire ne doivent pas dépendre des projectiles. |
+| Terrain de l’arène actuelle | `survival_ground.svg`, `survival_ruins.svg` | Remplacer par des tiles 16×16 et éléments décoratifs pixel art nets, à faible contraste. Le premier biome officiel et sa palette secondaire restent **[OUVERTS]**; le moss/stone/ruins existant sert de référence provisoire, pas de décision. |
+| Impacts et combat VFX | `weapon_impacts.svg` (atlas de 10 cellules), plus anneaux, arcs, lignes de visée et explosions dessinés par `survival_session.gd` | Refaire les 10 familles d’impact selon la puissance; ajouter explosions de mort en pixels et feedback d’évolution/récompense requis. Garder impacts, télégraphes, traînées, halos et particules séparés des sprites. Répartitions élément/couleur, plafonds VFX et timings détaillés restent **[OUVERTS]**. |
+| Atlases actuels | `dopamine_atlas_source.png` (sprites), `progression_atlas_source.png` (icônes) | Sources aplaties de découpe 4×4, sans couches ni fichiers Aseprite. À remplacer par sources éditables rangées par famille/animation; le script actuel `game/tools/slice_sprite_atlas.gd` n’établit pas une convention d’animation validée. |
+
+### Catalogue à illustrer
+
+Le catalogue actif est défini dans `game/data/combat_catalog.json` :
+
+| Arme | Relique associée | Évolution |
+|---|---|---|
+| Lightning Conductor | Storm Core | Infinite Circuit |
+| Inferno Sprayer | Infernal Heart | Wildfire |
+| Crimson Daggers | Blood Chalice | Bloodstorm |
+| Void Orb | Singularity | Event Horizon |
+| Frost Nova | Frozen Crown | Absolute Zero |
+| Minigun | Overdrive Engine | Redline |
+| Meteor Staff | Celestial Eye | Starfall |
+| Sawblades | Magnetic Coil | Razorstorm |
+| Toxic Cloud | Plague Mask | Pandemic |
+| Prism Laser | Prism Crystal | Spectrum Collapse |
+
+**Assets à produire pour ce catalogue :** 10 icônes dédiées d’armes (le HUD et les choix réutilisent actuellement des sprites de projectile); les 11 icônes de reliques listées plus haut; les sprites de projectile/silhouette nécessaires; un traitement visuel par évolution répondant à la transformation complète validée. Magnet Heart n’a pas d’arme associée ni d’évolution. Les chiffres de puissance/couleur ou tout effet proposé ne doivent pas guider les dessins comme s’ils étaient validés.
+
+### Icônes UI et polices existantes
+
+| Fichiers actuels | Cible de l’inventaire |
+|---|---|
+| `equipment_helmet.png`, `equipment_armor.png`, `equipment_gloves.png`, `equipment_boots.png`, `equipment_amulet.png`, `equipment_ring.png` | Refaire le set homogène des 6 emplacements d’équipement. |
+| `rarity_normal.png`, `rarity_magic.png`, `rarity_mystic.png`, `rarity_legendary.png`, `rarity_mythic.png` | Refaire les 5 marqueurs de rareté en conservant une lecture distincte par forme et valeur, pas seulement par teinte. |
+| `resource_essence.png`, `resource_powder.png`, `achievement_medal.png`, `run_record.png`, `skill_node.png` | Refaire les 5 icônes d’état existantes. Le nœud générique ne préjuge pas du graphe final des compétences. |
+| `PressStart2P-Regular.ttf`, `DejaVuSans.ttf` et licences associées | Revue de la hiérarchie titre pixel / texte moderne et de la lisibilité. Le choix exact des fontes reste **[OUVERT]** dans l’Art Bible, même si ces fontes sont déjà utilisées dans le projet. |
+| `backgrounds/title_skyline.png`; source aplatie `docs/art/source/title_skyline_generated.png` | Le décor courant est 640×360 et limité à 30 couleurs de la palette, mais n’a pas de source Aseprite. Le recréer/authorer dans le format source exigé et le revoir dans la nouvelle composition d’accueil. |
+
+Manques visibles : aucune icône propre à chacune des 10 armes; aucune illustration de récompense avancée par rareté; pas d’écran ou de jeu d’icônes Succès/Bestiaire (leurs entrées restent volontairement inactives); pas de portrait ou logo image séparé (le titre est du texte). Les réglages, le volume, le plein écran, le focus et les états interactifs relèvent principalement de l’UI vectorielle/nodale et du Theme, pas d’une série de sprites à générer.
+
+## Interfaces à refaire
+
+L’UI actuelle se partage entre le Theme `game/themes/dopamine_ui.tres`, des scènes `.tscn` et des contrôles construits dans les scripts. La liste couvre les scènes réellement utilisées; `ui_foundation_preview.tscn` est un outil de prévisualisation/test et non un écran de jeu.
+
+| Écran / scène | État visuel actuel | Travail UI à inventorier et refaire |
+|---|---|---|
+| Accueil — `launch_menu.tscn` | Carte opaque, titre textuel, boutons; skyline intégrée récemment | Recomposer pour la colonne de menu à gauche, identité/logo + skyline, états hover/press/focus, contraintes de viewport 640×360. |
+| Options — `options_panel.tscn` | Carte et contrôles natifs pour plein écran/volume | Refaire panneaux, hiérarchie typo, slider/toggle, focus et adaptation; comportement minimal confirmé inchangé. |
+| Hub Survival — `survival_hub.tscn` | Difficultés et actions permanentes dans deux colonnes | Refaire layout compact responsive, boutons de difficulté, équipements/skills, Succès/Bestiaire inactifs et CTA de run. |
+| Équipement — `equipment_inventory_panel.tscn` | Panneau dynamique et lignes utilisant icônes de slots/rareté | Refaire lignes, icônes, niveaux/états, états vides/erreur et navigation sans changer le service. |
+| Arbre de compétences — `skill_tree_panel.tscn` | Prototype d’écran et nœuds/actions limités | Refaire le cadre et les éléments qui existent. Ne pas créer le graphe complet ni ses règles à partir du seul objectif futur de 120 nœuds du GDD. |
+| HUD Survival — `survival_session.tscn` + `survival_session.gd` | HUD construit en scène/code : HP, XP, temps, vague, difficulté, état, arme, boss HP | Recomposer vers un HUD minimal dans les coins, lisible en densité élevée; afficher les informations déjà présentes sans changer les règles. |
+| Choix de coffre — `chest_choice.tscn` | Dialog dynamique de trois choix, image d’arme/relique issue des options | Refaire modal, classification arme/relique, descriptions, rareté et focus; simulation gelée conservée. |
+| Pause — `pause_menu.tscn` | Dimmer, carte, confirmation d’abandon | Refaire menu et confirmation, retours clavier/manette, pause stricte et transitions. |
+| Inventaire de run — `run_inventory_panel.tscn` | Liste dynamique en lecture seule | Refaire lignes d’arme/relique avec icône dédiée, nom, niveau, évolution et description. Équipement permanent reste non modifiable pendant la run. |
+| Résultat — `run_result_panel.tscn` | Carte victoire/défaite, résumé et récompenses | Refaire hiérarchie du résultat, récompenses/rareté et action de retour/reprise, sans créer de système de succès. |
+| Sandbox développeur — `main.tscn` + `main.gd` | Poste de test dense : simulation, métriques, spawn, tuning, inspecteur, événements | Refaire panneaux et contrôles pour lisibilité; conserver spawn, pause/step/vitesse, sélection, tuning et métriques. Aucune référence à SaveService/progression. |
+
+Composants globaux : fond, cartes opaques à bordure, boutons rectangulaires, champs/toggles/sliders, barres HP/XP/boss, badges d’état, focus visible et transitions pixel rapides. Le theme commun est à refaire avec la palette exacte. Le glow doit rester rendu dynamiquement dans les VFX/états UI, jamais précuit dans les sprites.
+
+## Cible de production ordonnée
+
+1. **Filière visuelle et audit de conformité** — couleur, contour, nearest, sources Aseprite, métadonnées, contrôles palette/dimensions; décider explicitement les inconnues bloquant la production.
+2. **Scène complète représentative** — joueur, terrain courant, XP/coffre, ennemis et projectiles, impacts/télégraphes, HUD/coffre/pause; vérifier la lisibilité en combat chargé.
+3. **Roster complet** — 9 ennemis communs/supports, élites, 2 boss, ennemis projectiles et leurs besoins d’animation.
+4. **Catalogue complet** — 10 armes et leurs évolutions visuelles, projectiles, 11 reliques, 10 icônes dédiées, impacts associés.
+5. **Environnement, pickups et récompenses** — tiles 16×16, ruines/props de faible contraste, objets existants et animation de récompense.
+6. **Icônes UI** — 6 slots, 5 raretés, 2 ressources, skill/achievement/record, identité des armes et reliques.
+7. **Refonte complète UI** — foundation et Theme, puis accueil/options/hub, overlays Survival, Sandbox; toutes les vues et parcours au viewport cible avant activation globale.
+
+La séquence est une proposition d’exécution (**[PROPOSÉ]**), pas une modification de priorité acceptée du roadmap. Les fonctionnalités Succès, Bestiaire et Sandbox Lab joueur ne font pas partie de la production d’assets de cette passe tant qu’elles ne sont pas implémentées.
+
+## Points ouverts à garder visibles
+
+- **[OUVERT]** Ordre des directions sur les sheets, pivots/ancrages et padding; durées et frames des animations hors joueur.
+- **[OUVERT]** Tenue/détails du héros cyan au-delà du rôle et de la couleur confirmés.
+- **[OUVERT]** Identités et patterns complets des boss; conserver les prototypes et ne pas transformer les paramètres de combat **[PROPOSÉS]** en brief visuel définitif.
+- **[OUVERT]** Premier biome canonique et palettes secondaires; l’arène moss/ruins actuelle est seulement une référence de prototype.
+- **[OUVERT]** Correspondance éléments/couleurs, plafonds/paramètres VFX, rareté des animations et exigences de réduction des flashes.
+- **[OUVERT]** Choix final des fontes, tailles de texte/boutons et wireframes détaillés au-delà de la priorité de lisibilité.
+- **[OUVERT]** Structure de sources Aseprite (.ase ou .aseprite) et métadonnées d’export. Le livrable PNG + source Aseprite, lui, est **[VALIDÉ]**.
+- **[OUVERT]** Comportement du viewport 640×360 sur formats différents et politique d’upscale; le format logique 16:9 reste **[VALIDÉ]**.
+
+## Vérification attendue lors de la production
+
+- Chaque sprite a sa source éditable et son PNG exporté; vérifier dimensions, transparence, nombre et appartenance des couleurs, contour net et absence de glow précuit.
+- Les sprites 32×32 restent à 16 couleurs distinctes maximum. Les exceptions de palette sont documentées.
+- Les tiles respectent 16×16; le joueur respecte 32×32; les boss suivent le standard 96×96.
+- Chaque scène UI est parcourue à la souris, au clavier et à la manette avec focus visible; bounds et lisibilité vérifiés à 640×360 et à l’upscale cible avant de changer le viewport par défaut.
+- Revoir les assets en situation de combat dense et confirmer que dangers, projectiles, ennemis et objets restent séparables.
+- Les smokes visuels ne valident ni une manette physique ni la direction artistique; conserver une revue visuelle explicite.

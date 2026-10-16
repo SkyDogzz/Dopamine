@@ -37,6 +37,18 @@ Toutes les interfaces et actions de menu doivent être utilisables à la souris,
 - Construire le Sandbox Lab joueur complet de P8; la refonte porte sur le Sandbox développeur déjà présent.
 - Modifier les décisions acceptées des ADR, l’équilibrage proposé ou la séparation des sauvegardes.
 
+## Extension confirmée — refonte visuelle complète, 2026-10-16
+
+L’utilisateur confirme maintenant la recréation de **tous les assets visuels existants**, y compris ceux déjà proches du style, et la production des assets manquants pour le catalogue complet des 10 armes et 11 reliques. La silhouette actuelle du héros peut être refaite, mais son identité et sa dominante cyan sont conservées.
+
+Toutes les interfaces existantes doivent également être refaites pour appliquer `docs/ART_BIBLE.txt`, en conservant les comportements du parcours ci-dessus et l’isolation Sandbox/progression. Le premier livrable est un inventaire complet des assets et écrans; la production se fera ensuite par lots cohérents.
+
+Les contraintes validées de la Bible gouvernent la production. Les décisions encore **[OUVERTES]** — par exemple l’ordre des directions sur les feuilles, les frames d’animation des ennemis, le biome canonique et les paramètres VFX — restent visibles et ne deviennent pas des faits implicites. Le PNG et sa source Aseprite sont le format de livraison validé pour les sprites.
+
+Le viewport logique 640×360 reste **[VALIDÉ]**, mais ne sera remis en service qu’après adaptation responsive et vérification de toutes les interfaces; le jeu reste à 1280×800 jusque-là. Les comportements de jeu, les fonctionnalités Succès/Bestiaire non implémentées et le Sandbox Lab joueur P8 restent hors de cette extension.
+
+L’inventaire de référence est [`docs/art/INVENTAIRE_ASSETS_UI.md`](../art/INVENTAIRE_ASSETS_UI.md).
+
 ## Carte des capacités
 
 Les responsabilités, dépendances et l’ordre proposé sont dans [`UI_CAPABILITY_MAP.md`](../../UI_CAPABILITY_MAP.md), carte validée avant la rédaction de specs séparées par module.
