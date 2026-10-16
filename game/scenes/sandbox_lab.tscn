@@ -140,7 +140,7 @@ placeholder_text = "Initial build JSON (weapons/relics/equipment/stats)"
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.831373, 0.278431, 1)
 theme_override_font_sizes/font_size = 7
-text = "BUILD VALIDATED AND STORED; WEAPON COMBAT ROUTING NOT CONNECTED YET."
+text = "WEAPON/RELIC BUILD APPLIED TO COMBAT. LEVELS 1–5; STATS ARE SANDBOX ONLY."
 autowrap_mode = 2
 
 [node name="PresetActions" type="HBoxContainer" parent="Root/Body/Side/Sections"]
@@ -189,12 +189,12 @@ layout_mode = 2
 focus_mode = 2
 item_count = 0
 
-[node name="PlayerModeNote" type="Label" parent="Root/Body/Side/Sections"]
+[node name="GodModeToggle" type="CheckButton" parent="Root/Body/Side/Sections"]
+custom_minimum_size = Vector2(0, 21)
 layout_mode = 2
-theme_override_colors/font_color = Color(1, 0.831373, 0.278431, 1)
-theme_override_font_sizes/font_size = 7
-text = "NO PLAYER ENTITY IN THIS SIMULATION CONTEXT"
-autowrap_mode = 2
+focus_mode = 2
+button_pressed = true
+text = "GOD MODE"
 
 [node name="Metrics" type="Label" parent="Root/Body/Side/Sections"]
 layout_mode = 2

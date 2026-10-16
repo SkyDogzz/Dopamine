@@ -2,7 +2,7 @@ extends RefCounted
 
 const WEAPON_CAP := 64
 const RELIC_CAP := 128
-const LEVEL_CAP := 100
+const LEVEL_CAP := 5
 const COMBAT_CATALOG_SCRIPT := preload("res://scripts/combat_catalog.gd")
 
 var weapons: Dictionary = {}

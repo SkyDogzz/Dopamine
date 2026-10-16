@@ -75,7 +75,9 @@ func _run() -> void:
 		_fail("Preset payloads must reject excessive nesting")
 		return
 	var context = load("res://scripts/sandbox_lab_context.gd").new(preset_service)
-	if not context.start(preset).get("ok", false) or context.progression_service != null or \
+	root.add_child(context)
+	var context_start: Dictionary = await context.start(preset)
+	if not context_start.get("ok", false) or context.progression_service != null or \
 			context.normal_save_service != null or context.seed != preset["seed"]:
 		_fail("Sandbox Lab context must start from validated data without normal progression services")
 		return
@@ -104,7 +106,23 @@ func _run() -> void:
 	if not reset_apply.get("ok", false) or context.seed != preset["seed"]:
 		_fail("A paused Lab should transactionally reset into a validated preset")
 		return
+	var evolved_preset := preset.duplicate(true)
+	evolved_preset["initial_build"] = {
+		"weapons": [{"id": "lightning_conductor", "level": 5, "evolution_id": "infinite_circuit"}],
+		"relics": [{"id": "storm_core", "level": 5}], "equipment": [], "stats": {"damage_pct": 25.0},
+	}
+	var evolved_result: Dictionary = await context.apply_preset(evolved_preset)
+	if not evolved_result.get("ok", false) or not context.session.loadout.is_evolved("lightning_conductor") or \
+			context.session._equipment_bonus("damage_pct") != 25.0:
+		_fail("Sandbox build should apply a valid evolution and isolated custom damage stat")
+		return
+	var mismatched_evolution := evolved_preset.duplicate(true)
+	mismatched_evolution["initial_build"]["weapons"][0]["evolution_id"] = "wildfire"
+	if (await context.apply_preset(mismatched_evolution)).get("ok", false):
+		_fail("A weapon must reject an evolution belonging to a different catalog pair")
+		return
 	context.stop()
+	context.queue_free()
 	print("Sandbox preset smoke passed")
 	quit()
 

@@ -16,13 +16,14 @@ const LAB_CONTEXT_SCRIPT := preload("res://scripts/sandbox_lab_context.gd")
 
 var preset_service: RefCounted
 var preset_store: RefCounted
-var context: RefCounted
+var context: Node
 var _elapsed := 0.0
 
 func _ready() -> void:
 	preset_service = PRESET_SERVICE_SCRIPT.new()
 	preset_store = PRESET_STORE_SCRIPT.new("user://sandbox/presets", preset_service)
 	context = LAB_CONTEXT_SCRIPT.new(preset_service)
+	add_child(context)
 	$Root/Header/HomeButton.pressed.connect(_go_home)
 	_pause_button.pressed.connect(_toggle_pause)
 	$Root/Body/Left/Controls/SpawnButton.pressed.connect(_spawn_enemies)
@@ -33,6 +34,7 @@ func _ready() -> void:
 	$Root/Body/Side/Sections/PresetActions/LoadPreset.pressed.connect(_load_preset)
 	$Root/Body/Side/Sections/PresetActions/ExportCode.pressed.connect(_copy_share_code)
 	$Root/Body/Side/Sections/PresetActions/ImportCode.pressed.connect(_import_share_code)
+	$Root/Body/Side/Sections/GodModeToggle.toggled.connect(_set_god_mode)
 	for enemy_id in ["chaser", "sprinter", "tank", "shooter", "buffer", "exploder", "shielder", "summoner", "elite"]:
 		_enemy_select.add_item(enemy_id.to_upper())
 		_enemy_select.set_item_metadata(_enemy_select.item_count - 1, enemy_id)
@@ -40,8 +42,8 @@ func _ready() -> void:
 		_speed_select.add_item("×%s" % speed)
 		_speed_select.set_item_metadata(_speed_select.item_count - 1, speed)
 	_speed_select.select(2)
-	_build_json.text = JSON.stringify({"weapons": [], "relics": [], "equipment": [], "stats": {}}, "  ")
-	var started: Dictionary = context.start(_default_preset())
+	_build_json.text = JSON.stringify(_default_preset()["initial_build"], "  ")
+	var started: Dictionary = await context.start(_default_preset())
 	if not started.get("ok", false):
 		_set_status("LAB INIT FAILED: %s" % str(started.get("error", "unknown")), true)
 		return
@@ -65,7 +67,10 @@ func _default_preset() -> Dictionary:
 		"schema_version": 1, "preset_id": "lab_default", "name": "Lab Default",
 		"description": "Empty isolated combat lab", "base_mode": "survival", "seed": 1,
 		"overrides": {}, "flags": {},
-		"initial_build": {"weapons": [], "relics": [], "equipment": [], "stats": {}},
+		"initial_build": {
+			"weapons": [{"id": "lightning_conductor", "level": 1}],
+			"relics": [{"id": "storm_core", "level": 1}], "equipment": [], "stats": {},
+		},
 	}
 
 func _toggle_pause() -> void:
@@ -75,7 +80,7 @@ func _toggle_pause() -> void:
 
 func _spawn_enemies() -> void:
 	var enemy_id := str(_enemy_select.get_item_metadata(_enemy_select.selected))
-	var sequence: int = context.simulation.spawn_enemy(enemy_id, 10, Vector2.ZERO, Vector2.ZERO)
+	var sequence: int = context.simulation.spawn_enemy(enemy_id, 10, Vector2(120.0, 0.0), Vector2.ZERO)
 	_set_status("SPAWN QUEUED" if sequence > 0 else "SPAWN REJECTED", sequence <= 0)
 
 func _kill_all() -> void:
@@ -83,13 +88,30 @@ func _kill_all() -> void:
 	_set_status("KILL ALL QUEUED" if sequence > 0 else "COMMAND REJECTED", sequence <= 0)
 
 func _reset() -> void:
-	var sequence: int = context.simulation.reset()
-	_set_status("RESET QUEUED" if sequence > 0 else "RESET REJECTED", sequence <= 0)
+	var active_preset: Dictionary = context.active_preset.duplicate(true)
+	if active_preset.is_empty():
+		_set_status("NO ACTIVE PRESET", true)
+		return
+	var state: Dictionary = context.simulation.snapshot()
+	if not bool(state["paused"]):
+		context.simulation.pause()
+		var deadline := Time.get_ticks_msec() + 1000
+		while not bool(context.simulation.snapshot()["paused"]) and Time.get_ticks_msec() < deadline:
+			await get_tree().process_frame
+	var result: Dictionary = await context.apply_preset(active_preset)
+	_set_status("LAB RESET FROM PRESET" if result.get("ok", false) else \
+		"RESET FAILED: %s" % str(result.get("error", "unknown")), not result.get("ok", false))
 
 func _set_speed(index: int) -> void:
 	var speed := float(_speed_select.get_item_metadata(index))
 	var sequence: int = context.simulation.set_speed(speed)
 	_set_status("SPEED ×%s" % speed if sequence > 0 else "SPEED REJECTED", sequence <= 0)
+
+func _set_god_mode(enabled: bool) -> void:
+	context.god_mode_enabled = enabled
+	if context.session != null:
+		context.session._health_locked = enabled
+	_set_status("GOD MODE ON" if enabled else "GOD MODE OFF", false)
 
 func _save_preset() -> void:
 	var data := _preset_from_editor()
@@ -143,6 +165,11 @@ func _preset_from_editor() -> Dictionary:
 	return checked["preset"]
 
 func _apply_preset(preset: Dictionary) -> void:
+	if context.simulation != null and not bool(context.simulation.snapshot()["paused"]):
+		context.simulation.pause()
+		var deadline := Time.get_ticks_msec() + 1000
+		while not bool(context.simulation.snapshot()["paused"]) and Time.get_ticks_msec() < deadline:
+			await get_tree().process_frame
 	var result: Dictionary = await context.apply_preset(preset)
 	if not result.get("ok", false):
 		_set_status("APPLY FAILED: %s" % str(result.get("error", "unknown")), true)

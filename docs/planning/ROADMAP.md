@@ -539,11 +539,12 @@ P1 livre le Sandbox développeur et ne remplace pas cette feature produit.
 
 - [ ] **P8.1 — Entrée et contexte isolé**
   - [x] Ajouter l’accès distinct Sandbox Lab au menu avant sélection/création de save; l’entrée `SANDBOX DEV` reste le Sandbox développeur P1.
-  - [x] Ajouter `SandboxLabContext` mémoire : il valide le preset, instancie uniquement `CombatSimulation`, n’injecte aucun service de progression/save et réinitialise transactionnellement seulement lorsque la simulation est en pause.
+  - [x] Ajouter `SandboxLabContext` mémoire : il valide le preset, héberge une session Survival sans service de progression/save, désactive vagues/coffres normaux et gèle le HP; il ne crédite aucune progression et remplace un preset seulement en pause.
   - [x] Smoke dédié utilise un `XDG_DATA_HOME` isolé, vérifie le spawn et le stockage local du preset; aucune donnée n’est écrite sous `user://saves`.
 - [ ] **P8.2 — Build et configuration**
-  - [x] Ajouter `SandboxBuild` comme modèle isolé : 10 armes, 11 reliques, évolutions appariées, stats personnalisées finies et équipements de test libres. Validation atomique avant remplacement du build.
-  - [ ] Créer l’éditeur de build initial et relier ses valeurs au combat; les plafonds proposés restent configurables/arbitrables.
+  - [x] Ajouter `SandboxBuild` comme modèle isolé : armes/reliques, évolutions appariées, stats personnalisées finies et équipements de test; validation atomique avant remplacement.
+  - [x] Ajouter un éditeur JSON initial et appliquer armes/reliques (niveaux 1–5), évolutions appariées, équipements et stats personnalisées à la session de combat existante.
+  - [ ] Ajouter des contrôles visuels par objet/stat et overrides LIVE/REBUILD/RESTART; niveaux au-delà de 5 restent à implémenter dans le combat.
   - [ ] Ajouter overrides LIVE d’un paramètre à la fois.
   - [ ] Ajouter overrides REBUILD/RESTART avec validation atomique.
 - [ ] **P8.3 — Presets et share codes**
@@ -559,9 +560,9 @@ P1 livre le Sandbox développeur et ne remplace pas cette feature produit.
   - [ ] Construire une copie Sandbox modifiable.
   - [ ] Comparer la sauvegarde source avant/après et tester import invalide.
 - [ ] **P8.5 — Outils de simulation**
-  - [ ] Ajouter God mode et confirmer qu’il ne traverse pas vers Survival; le contexte actuel n’a pas d’entité joueur.
+  - [x] Ajouter God Mode commutable qui ne verrouille que le HP de la session Lab isolée; Survival normal n’est pas modifié.
   - [x] Première tranche UI ajoute pause, vitesse, spawn d’ennemis, kill all et reset à `CombatSimulation`.
-  - [ ] Ajouter clear/reset cooldowns/wave et autres commandes Lab.
+  - [ ] Ajouter clear projectiles, reset cooldowns, commandes de vague et God Mode persistant à travers les imports de preset.
   - [ ] Ajouter logs RNG et DPS par fenêtre/source.
 - [ ] **P8.6 — Snapshots**
   - [ ] Lister l’état minimal à capturer, y compris RNG, clocks, queues et build.
