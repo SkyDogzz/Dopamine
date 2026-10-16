@@ -442,7 +442,7 @@ Travail requis :
 - Le générateur choisit les poids de rareté par difficulté et vague, selon une règle **[PROPOSÉE]**; la pénalité de mort précoce et la calibration statistique/équilibrage des plages restent à faire.
 - Les achievements ne couvrent qu’un compteur de kills avec quatre paliers ; ce n’est pas le catalogue cible de 100–150 familles.
 - Les nodes sont deux prototypes, pas le graphe interconnecté de 100–150.
-- Quatre effets uniques ont un chemin gameplay prototype selon QA ; `free_first_chest_reroll` et `revive_knockback` sont stockables mais sans effet. `elite_haste` ne constitue pas un comportement vérifié tant que le système d’élites ne le déclenche pas.
+- Quatre effets uniques ont un chemin gameplay prototype vérifié; `free_first_chest_reroll` et `revive_knockback` sont stockables mais sans effet. `elite_haste` se déclenche désormais sur la mort d’un élite et ses valeurs de prototype restent **[PROPOSÉES]**.
 - Des bonus de stat sont consommés dans Survival ; `pickup_radius_pct` augmente actuellement le rayon des orbes XP seulement et le chest a son propre rayon.
 
 ### Travaux
@@ -468,6 +468,7 @@ Travail requis :
 - [ ] **P6.5 — Effets uniques**
   - [ ] Lister effet, déclencheur, prérequis, portée et feedback de chaque ID disponible.
   - [ ] Relier un effet à son événement de jeu et écrire un scénario ciblé.
+  - [x] `elite_haste` est chargé depuis un équipement unique équipé, déclenché par la mort d’un élite et actif 3 secondes simulées avec +15 % de mobilité **[PROPOSÉ]**; `survival_elite_smoke.gd` vérifie activation et expiration.
   - [ ] Retirer de la sélection les effets sans comportement défini.
   - [ ] Vérifier non-cumul automatique et extensions de capacité réelles.
 - [ ] **P6.6 — Skill tree**

@@ -4,7 +4,28 @@ func _initialize() -> void:
 	call_deferred("_run")
 
 func _run() -> void:
+	var directory := ProjectSettings.globalize_path("user://survival_elite_smoke")
+	DirAccess.make_dir_recursive_absolute(directory)
+	for file_name in DirAccess.get_files_at(directory):
+		DirAccess.remove_absolute(directory.path_join(file_name))
+	var save_service = load("res://scripts/save_service.gd").new(directory)
+	var progression = load("res://scripts/progression_service.gd").new(save_service, "0")
+	var profile: Dictionary = progression.load_profile()["profile"]
+	var equipment: Dictionary = load("res://scripts/equipment_generator.gd").new(1).generate_survival_item("elite-haste")
+	equipment["rarity"] = "legendary"
+	equipment["stat_lines"] = [
+		{"stat_id": "damage_pct", "roll_percentile": 0.5, "enhancement_level": 0, "fail_streak": 0},
+		{"stat_id": "max_hp", "roll_percentile": 0.5, "enhancement_level": 0, "fail_streak": 0},
+		{"stat_id": "move_speed_pct", "roll_percentile": 0.5, "enhancement_level": 0, "fail_streak": 0},
+	]
+	equipment["unique_effect_id"] = "elite_haste"
+	equipment["equipped"] = true
+	profile["equipment_inventory"] = [equipment]
+	if not save_service.save_slot("0", profile):
+		_fail("Could not save the equipped Elite Haste fixture")
+		return
 	var session: Node2D = load("res://scenes/survival_session.tscn").instantiate()
+	session.progression_service = progression
 	if session._elite_affix_for_roll(0.1) != "Hasted" or session._elite_affix_for_roll(0.25) != "Armored" or \
 			session._elite_affix_for_roll(0.4) != "Regenerating" or session._elite_affix_for_roll(0.55) != "Volatile" or \
 			session._elite_affix_for_roll(0.75) != "Shielded" or session._elite_affix_for_roll(0.9) != "Split-on-Death":
@@ -88,6 +109,10 @@ func _run() -> void:
 	):
 		_fail("Simulation should pause before the deterministic elite kill")
 		return
+	var base_move_speed: float = session.player.move_speed
+	if not session._has_unique_effect("elite_haste"):
+		_fail("An equipped unique effect should be loaded into the Survival session")
+		return
 	var transform: Dictionary = components["Transform2D"]
 	var projectile_sequence: int = session.simulation.spawn_projectile(
 		"elite_smoke_bolt", Vector2(float(transform["x"]), float(transform["y"])),
@@ -106,6 +131,15 @@ func _run() -> void:
 		return
 	if not await _wait_until(func() -> bool: return session.kill_count == 1):
 		_fail("Elite death should enter the ordinary kill reward path")
+		return
+	if not is_equal_approx(session._elite_haste_expires_at, session.player_active_time + 3.0) or \
+		not is_equal_approx(session.player.move_speed, base_move_speed * 1.15):
+		_fail("Elite Haste should grant 15% move speed for three active seconds after an elite death")
+		return
+	session.player_active_time = session._elite_haste_expires_at
+	session._refresh_player_move_speed()
+	if not is_equal_approx(session.player.move_speed, base_move_speed):
+		_fail("Elite Haste should expire on the active simulation clock")
 		return
 	if session._world_chests.is_empty():
 		_fail("Guaranteed elite chest setting should produce a reward")
