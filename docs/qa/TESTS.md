@@ -406,3 +406,8 @@ Note de clôture : le blocage historique du smoke `sandbox_ui_smoke.gd` décrit 
 
 - [x] Équipements et arbre de compétences réutilisent chacun leur icône pixel dédiée en taille compacte, nearest.
 - [ ] `survival_hub_smoke.gd` couvre les ressources d’icône, la taille et le filtrage; il reste à exécuter avec Godot.
+
+## Rappel de reprise dans la pause (2026-10-16)
+
+- [x] Le statut du menu indique que la touche Échap reprend la run; le contrôle et le gel de simulation restent inchangés.
+- [ ] `pause_panel_visual_smoke.gd` vérifie le rappel et les accents d’action; il reste à exécuter avec Godot.

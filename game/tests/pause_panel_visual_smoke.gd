@@ -11,7 +11,8 @@ func _run() -> void:
 	if panel.custom_minimum_size.x < 240 or confirmation.custom_minimum_size.x < 260:
 		_fail("Pause and abandon panels should provide room for their labels and controls")
 		return
-	if overlay.get_node_or_null("Center/Panel/Content/PausedStatus") == null or \
+	var paused_status := overlay.get_node_or_null("Center/Panel/Content/PausedStatus") as Label
+	if paused_status == null or not paused_status.text.contains("ESC") or \
 		overlay.get_node_or_null("Center/Panel/Content/SpeedLabel") == null:
 		_fail("Pause should identify its frozen state and separate the speed control")
 		return
