@@ -542,7 +542,8 @@ P1 livre le Sandbox développeur et ne remplace pas cette feature produit.
   - [x] Ajouter `SandboxLabContext` mémoire : il valide le preset, instancie uniquement `CombatSimulation`, n’injecte aucun service de progression/save et réinitialise transactionnellement seulement lorsque la simulation est en pause.
   - [ ] Vérifier sentinelle et chemins de sauvegarde séparés.
 - [ ] **P8.2 — Build et configuration**
-  - [ ] Créer l’éditeur de build initial.
+  - [x] Ajouter `SandboxBuild` comme modèle isolé : 10 armes, 11 reliques, évolutions appariées, stats personnalisées finies et équipements de test libres. Validation atomique avant remplacement du build.
+  - [ ] Créer l’éditeur de build initial et relier ses valeurs au combat; les plafonds proposés restent configurables/arbitrables.
   - [ ] Ajouter overrides LIVE d’un paramètre à la fois.
   - [ ] Ajouter overrides REBUILD/RESTART avec validation atomique.
 - [ ] **P8.3 — Presets et share codes**

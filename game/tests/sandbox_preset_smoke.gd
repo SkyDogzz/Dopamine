@@ -79,9 +79,25 @@ func _run() -> void:
 			context.normal_save_service != null or context.seed != preset["seed"]:
 		_fail("Sandbox Lab context must start from validated data without normal progression services")
 		return
+	var materialized_weapons: Array = context.build.to_dictionary()["weapons"]
+	if materialized_weapons.size() != 1 or materialized_weapons[0]["id"] != "lightning_conductor" or \
+			int(materialized_weapons[0]["level"]) != 2:
+		_fail("The preset initial build should be materialized in the isolated Lab model")
+		return
 	var invalid_apply: Dictionary = await context.apply_preset(too_deep)
 	if invalid_apply.get("ok", false) or context.active_preset["preset_id"] != preset["preset_id"]:
 		_fail("A rejected preset must not replace the active Sandbox Lab context")
+		return
+	var invalid_build_preset := preset.duplicate(true)
+	invalid_build_preset["initial_build"]["weapons"] = [{"id": "unknown_weapon", "level": 1}]
+	var invalid_build_result: Dictionary = await context.apply_preset(invalid_build_preset)
+	if invalid_build_result.get("ok", false) or context.build.to_dictionary()["weapons"].size() != 1:
+		_fail("An invalid build must be rejected without replacing the current Lab build")
+		return
+	var excessive_level_preset := preset.duplicate(true)
+	excessive_level_preset["initial_build"]["weapons"] = [{"id": "lightning_conductor", "level": 101}]
+	if (await context.apply_preset(excessive_level_preset)).get("ok", false):
+		_fail("Sandbox build levels above the proposed technical cap must be rejected")
 		return
 	context.simulation.pause()
 	var reset_apply: Dictionary = await context.apply_preset(preset)
