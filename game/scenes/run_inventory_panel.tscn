@@ -55,6 +55,13 @@ theme_override_font_sizes/font_size = 8
 text = "WEAPONS 0  •  RELICS 0"
 horizontal_alignment = 1
 
+[node name="Feedback" type="Label" parent="Center/Panel/Content"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.831373, 0.278431, 1)
+theme_override_font_sizes/font_size = 8
+horizontal_alignment = 1
+autowrap_mode = 2
+
 [node name="Scroll" type="ScrollContainer" parent="Center/Panel/Content"]
 custom_minimum_size = Vector2(0, 200)
 layout_mode = 2

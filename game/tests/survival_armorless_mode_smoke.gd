@@ -76,6 +76,32 @@ func _initialize() -> void:
 		if not is_equal_approx(draft_session._equipment_bonus(stat_id), value):
 			_fail("Selected Armorless equipment stats should affect run combat values")
 			return
+	draft_session.armorless_run_state.add_flux(100)
+	draft_session._manually_paused = true
+	draft_session.simulation.pause()
+	draft_session.get_node("HUD/PauseOverlay").show()
+	draft_session._open_run_inventory()
+	await process_frame
+	var inventory: Control = draft_session.get_node("HUD/RunInventoryPanel")
+	var upgrade_button := _find_button_with_text(inventory, "UPGRADE  ·")
+	if upgrade_button == null or upgrade_button.disabled:
+		_fail("Armorless run inventory should expose a focused enhancement action when Flux covers its cost")
+		return
+	var flux_before_upgrade: int = draft_session.armorless_run_state.flux()
+	var upgraded_line: Dictionary = chosen_equipment["stat_lines"][0]
+	var upgrade_cost: int = draft_session.armorless_run_state.enhancement_cost(
+		str(chosen_equipment["rarity"]), int(upgraded_line["enhancement_level"])
+	)
+	upgrade_button.pressed.emit()
+	var feedback: String = inventory.get_node("Center/Panel/Content/Feedback").text
+	if draft_session.armorless_run_state.flux() != flux_before_upgrade - upgrade_cost or \
+		feedback.is_empty() or not draft_session.simulation.snapshot()["paused"]:
+		_fail("Enhancing a temporary stat from pause should spend Flux, report the result and keep simulation frozen")
+		return
+	var focused_button := root.gui_get_focus_owner() as Button
+	if focused_button == null or not focused_button.name.begins_with("Upgrade_"):
+		_fail("After an enhancement result, focus should return to that stat's upgrade control")
+		return
 	draft_session._finish_run(false)
 	if not draft_session.armorless_run_state.temporary_equipment().is_empty():
 		_fail("Armorless equipment should be discarded when the run ends")
@@ -88,3 +114,12 @@ func _initialize() -> void:
 func _fail(message: String) -> void:
 	push_error(message)
 	quit(1)
+
+func _find_button_with_text(root_node: Node, text_fragment: String) -> Button:
+	if root_node is Button and str(root_node.text).contains(text_fragment):
+		return root_node as Button
+	for child in root_node.get_children():
+		var found := _find_button_with_text(child, text_fragment)
+		if found != null:
+			return found
+	return null

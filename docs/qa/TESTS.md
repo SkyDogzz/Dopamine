@@ -401,6 +401,7 @@ Pour le catalogue, la validation JSON et des références a aussi été vérifi�
 - [x] Magnet Heart sous Godot 4.7.2 Linux : disponible sans évolution, bonus XP aux niveaux 1 et 5, plafond de niveau respecté et aucun effet sur le coffre à distance.
 - [x] Achievement tiers débloqués une seule fois et bonus cumulés vérifiés pour la famille prototype Exterminator ; le catalogue et les seuils complets restent à définir.
 - [ ] Armorless : 3 équipements proposés après chaque vague, 1 choisi ; Flux temporaire.
+- [ ] Armorless : amélioration depuis l'inventaire de pause, coût débité du Flux, résultat visible, simulation suspendue et aucun Powder/sauvegarde permanente.
 - [x] `SaveService` : slot JSON versionné, checksum SHA-256, remplacement via temporaire, backup relu après altération/corruption et migration de la fixture v0 dictionnaire brut ; vérifié par `save_service_smoke`. Cette fixture ne définit pas un ancien schéma de production. Le service n’est pas chargé par le Sandbox.
 - [x] Progression Survival : gains d’Essence/Powder selon la formule **[PROPOSÉE]** Normal, cumul sur plusieurs runs, défaite récompensée et `run_id` idempotent ; injection du service uniquement par l’entrée Survival et smoke avec slot temporaire isolé.
 - [x] Idempotence après redémarrage : `progression_service_smoke.gd` crée un nouveau `ProgressionService`, recharge le même slot, rejoue un `run_id` déjà récompensé et vérifie l’absence de ressources et équipement supplémentaires.

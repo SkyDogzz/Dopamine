@@ -512,6 +512,7 @@ Travail requis :
   - [x] Ajouter un solde Flux en mémoire de run et le gain après chaque vague, avec validation et anti-double-crédit. Formule GDD **[PROPOSÉE]**.
   - [x] Améliorer une ligne temporaire avec consommation du coût, progression +8 % par niveau et plafond +10. Coûts et chances restent **[PROPOSÉS]**.
   - [x] Vérifier réussite garantie par pity, échec, échec critique et disparition du Flux en fin de run avec `armorless_run_state_smoke.gd`.
+  - [x] Rendre les améliorations temporaires accessibles depuis l'inventaire de pause Armorless; afficher coût/solde, résultat, focus restauré et simulation toujours suspendue.
 - [ ] **P7A.4 — Longue durée**
   - [ ] Vérifier HP decay sans reset, pauses boss et budgets de densité.
   - [ ] Tester plusieurs cycles de boss et scaling proposé.

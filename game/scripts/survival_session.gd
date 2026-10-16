@@ -611,8 +611,41 @@ func _open_run_inventory() -> void:
 	_inventory_overlay = inventory_scene.instantiate() as Control
 	_inventory_overlay.name = "RunInventoryPanel"
 	_inventory_overlay.close_requested.connect(_close_run_inventory)
+	_inventory_overlay.armorless_enhancement_requested.connect(_enhance_armorless_equipment)
 	$HUD.add_child(_inventory_overlay)
-	_inventory_overlay.show_items(loadout.owned_item_details("weapon"), loadout.owned_item_details("relic"))
+	_refresh_run_inventory()
+
+func _enhance_armorless_equipment(instance_id: String, stat_id: String) -> void:
+	if not _manually_paused or mode_id != "armorless" or armorless_run_state == null or _inventory_overlay == null:
+		return
+	var previous_max_hp_bonus := _equipment_bonus("max_hp")
+	var result: Dictionary = armorless_run_state.enhance_equipment(instance_id, stat_id)
+	if result.get("ok", false):
+		player_max_hp += _equipment_bonus("max_hp") - previous_max_hp_bonus
+		player_hp = minf(player_hp, player_max_hp)
+		_refresh_persistent_bonuses()
+	var message := ""
+	if result.get("ok", false):
+		message = "ENHANCEMENT SUCCESS" if result["success"] else \
+			"CRITICAL FAILURE — LEVEL LOST" if result["critical_failure"] else "ENHANCEMENT FAILED"
+	else:
+		message = "NOT ENOUGH FLUX  ·  %d REQUIRED" % int(result.get("cost", 0)) \
+			if result.get("error", "") == "insufficient_flux" else "UPGRADE UNAVAILABLE"
+	_refresh_run_inventory(message, not result.get("ok", false))
+	_inventory_overlay.focus_enhancement(instance_id, stat_id)
+
+func _refresh_run_inventory(feedback: String = "", is_error: bool = false) -> void:
+	if _inventory_overlay == null:
+		return
+	if mode_id == "armorless" and armorless_run_state != null:
+		_inventory_overlay.show_items(
+			loadout.owned_item_details("weapon"), loadout.owned_item_details("relic"),
+			armorless_run_state.temporary_equipment(), armorless_run_state.flux()
+		)
+	else:
+		_inventory_overlay.show_items(loadout.owned_item_details("weapon"), loadout.owned_item_details("relic"))
+	if not feedback.is_empty():
+		_inventory_overlay.show_feedback(feedback, is_error)
 
 func _close_run_inventory() -> void:
 	if _inventory_overlay == null:

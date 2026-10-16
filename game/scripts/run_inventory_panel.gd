@@ -1,13 +1,18 @@
 extends Control
 
 signal close_requested
+signal armorless_enhancement_requested(instance_id: String, stat_id: String)
 
 const FOCUS_COLOR := Color("#FFD447")
+const EQUIPMENT_GENERATOR := preload("res://scripts/equipment_generator.gd")
+const ARMORLESS_RUN_STATE := preload("res://scripts/armorless_run_state.gd")
 @onready var _items: VBoxContainer = $Center/Panel/Content/Scroll/Items
 @onready var _scroll: ScrollContainer = $Center/Panel/Content/Scroll
 @onready var _close_button: Button = $Center/Panel/Content/CloseButton
 @onready var _counts: Label = $Center/Panel/Content/Counts
+@onready var _feedback: Label = $Center/Panel/Content/Feedback
 var _focused_item_style: StyleBoxFlat
+var _enhancement_buttons: Dictionary = {}
 
 func _ready() -> void:
 	_scroll.focus_mode = Control.FOCUS_ALL
@@ -19,12 +24,23 @@ func _ready() -> void:
 	_close_button.pressed.connect(_on_close_pressed)
 	_close_button.grab_focus()
 
-func show_items(weapons: Array[Dictionary], relics: Array[Dictionary]) -> void:
-	_counts.text = "WEAPONS %d  •  RELICS %d  •  SCROLL ↑↓ / WHEEL" % [weapons.size(), relics.size()]
+func show_items(
+	weapons: Array[Dictionary], relics: Array[Dictionary],
+	temporary_equipment: Array[Dictionary] = [], flux: int = -1
+) -> void:
+	_clear_items()
+	_enhancement_buttons.clear()
+	_feedback.text = ""
+	_counts.text = "WEAPONS %d  •  RELICS %d%s  •  SCROLL ↑↓ / WHEEL" % [
+		weapons.size(), relics.size(), "  •  FLUX %d" % flux if flux >= 0 else "",
+	]
 	_add_section("WEAPONS")
 	_add_items(weapons)
 	_add_section("RELICS")
 	_add_items(relics)
+	if flux >= 0:
+		_add_section("ARMORLESS EQUIPMENT  ·  %d FLUX" % flux)
+		_add_armorless_equipment(temporary_equipment, flux)
 	if weapons.is_empty() and relics.is_empty():
 		_add_label("No weapons or relics equipped.")
 	for child in _items.get_children():
@@ -32,6 +48,61 @@ func show_items(weapons: Array[Dictionary], relics: Array[Dictionary]) -> void:
 			child.grab_focus()
 			return
 	_close_button.grab_focus()
+
+func show_feedback(message: String, is_error: bool = false) -> void:
+	_feedback.text = message
+	_feedback.add_theme_color_override("font_color", Color("#FF7181") if is_error else Color("#FFD447"))
+
+func focus_enhancement(instance_id: String, stat_id: String) -> void:
+	var key := "%s:%s" % [instance_id, stat_id]
+	if _enhancement_buttons.has(key):
+		var button := _enhancement_buttons[key] as Button
+		(button if not button.disabled else _close_button).grab_focus()
+
+func _clear_items() -> void:
+	for child in _items.get_children():
+		_items.remove_child(child)
+		child.queue_free()
+
+func _add_armorless_equipment(equipment: Array[Dictionary], flux: int) -> void:
+	if equipment.is_empty():
+		_add_label("No temporary equipment yet.")
+		return
+	for item in equipment:
+		var row := PanelContainer.new()
+		row.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		_items.add_child(row)
+		var details := VBoxContainer.new()
+		details.add_theme_constant_override("separation", 3)
+		row.add_child(details)
+		var title := Label.new()
+		title.text = "%s  ·  %s" % [str(item["rarity"]).to_upper(), str(item["slot"]).to_upper()]
+		title.add_theme_color_override("font_color", Color("#37E8F5"))
+		title.add_theme_font_size_override("font_size", 8)
+		details.add_child(title)
+		for line in item["stat_lines"]:
+			var stat_id := str(line["stat_id"])
+			var level := int(line["enhancement_level"])
+			var value := EQUIPMENT_GENERATOR.stat_value(stat_id, float(line["roll_percentile"]), level)
+			var line_row := HBoxContainer.new()
+			line_row.add_theme_constant_override("separation", 5)
+			details.add_child(line_row)
+			var label := Label.new()
+			label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+			label.text = "%s  ·  +%d/10" % [EQUIPMENT_GENERATOR.stat_label(stat_id, value), level]
+			label.add_theme_font_size_override("font_size", 8)
+			label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+			line_row.add_child(label)
+			var cost := ARMORLESS_RUN_STATE.enhancement_cost(str(item["rarity"]), level)
+			var button := Button.new()
+			button.name = "Upgrade_%s_%s" % [str(item["instance_id"]), stat_id]
+			button.text = "UPGRADE  ·  %d FLUX" % cost
+			button.disabled = cost <= 0 or cost > flux or level >= 10
+			button.focus_mode = Control.FOCUS_ALL
+			button.add_theme_font_size_override("font_size", 8)
+			button.pressed.connect(armorless_enhancement_requested.emit.bind(str(item["instance_id"]), stat_id))
+			line_row.add_child(button)
+			_enhancement_buttons["%s:%s" % [str(item["instance_id"]), stat_id]] = button
 
 func _add_section(title: String) -> void:
 	var label := Label.new()
