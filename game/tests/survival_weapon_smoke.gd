@@ -80,7 +80,7 @@ func _run() -> void:
 	if session.player_hp <= 85.0 or int(state["metrics"]["collision_count"]) < 4:
 		_fail("Lightning Conductor should chain damage across both enemies and apply both kill heals")
 		return
-	if session.get_node("HUD/MetaPanel/RunMetaRow/RunState").text != "IN RUN":
+	if session.get_node("HUD/RunPanel/RunInfo/StatusRow/MetaPanel/RunState").text != "IN RUN":
 		_fail("Survival HUD should reflect the active run state")
 		return
 	if session.player_level != 2 or session.player_xp != 0.0:

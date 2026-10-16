@@ -47,44 +47,44 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="Card" type="PanelContainer" parent="Content"]
-custom_minimum_size = Vector2(900, 480)
+custom_minimum_size = Vector2(450, 240)
 layout_mode = 2
 
 [node name="Columns" type="HBoxContainer" parent="Content/Card"]
 layout_mode = 2
-theme_override_constants/separation = 32
+theme_override_constants/separation = 16
 
 [node name="Identity" type="VBoxContainer" parent="Content/Card/Columns"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 alignment = 1
-theme_override_constants/separation = 12
+theme_override_constants/separation = 6
 
 [node name="Edition" type="Label" parent="Content/Card/Columns/Identity"]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.360784, 0.658824, 1)
-theme_override_font_sizes/font_size = 14
+theme_override_font_sizes/font_size = 8
 text = "SURVIVAL  /  NEON ARCADE"
 
 [node name="Title" type="Label" parent="Content/Card/Columns/Identity"]
-custom_minimum_size = Vector2(0, 96)
+custom_minimum_size = Vector2(0, 48)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.270588, 0.898039, 0.929412, 1)
-theme_override_font_sizes/font_size = 52
+theme_override_font_sizes/font_size = 26
 text = "DOPAMINE"
 vertical_alignment = 1
 
 [node name="Tagline" type="Label" parent="Content/Card/Columns/Identity"]
-custom_minimum_size = Vector2(0, 60)
+custom_minimum_size = Vector2(0, 30)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.556863, 0.639216, 0.678431, 1)
-theme_override_font_sizes/font_size = 18
+theme_override_font_sizes/font_size = 9
 text = "SURVIVE THE SIGNAL."
 vertical_alignment = 1
 
 [node name="Accent" type="ColorRect" parent="Content/Card/Columns/Identity"]
-custom_minimum_size = Vector2(56, 3)
+custom_minimum_size = Vector2(28, 1.5)
 layout_mode = 2
 color = Color(1, 0.360784, 0.658824, 1)
 
@@ -95,15 +95,15 @@ size_flags_vertical = 3
 [node name="BuildLabel" type="Label" parent="Content/Card/Columns/Identity"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.356863, 0.443137, 0.490196, 1)
-theme_override_font_sizes/font_size = 12
+theme_override_font_sizes/font_size = 8
 text = "A NEON SURVIVAL GAME"
 
 [node name="Menu" type="VBoxContainer" parent="Content/Card/Columns"]
-custom_minimum_size = Vector2(280, 0)
+custom_minimum_size = Vector2(140, 0)
 layout_mode = 2
 size_flags_vertical = 3
 alignment = 1
-theme_override_constants/separation = 10
+theme_override_constants/separation = 5
 
 [node name="MenuLabel" type="Label" parent="Content/Card/Columns/Menu"]
 layout_mode = 2
@@ -111,33 +111,33 @@ theme_override_colors/font_color = Color(0.556863, 0.639216, 0.678431, 1)
 text = "MENU PRINCIPAL"
 
 [node name="PlayButton" type="Button" parent="Content/Card/Columns/Menu"]
-custom_minimum_size = Vector2(0, 56)
+custom_minimum_size = Vector2(0, 28)
 layout_mode = 2
 focus_mode = 2
 theme_override_colors/font_color = Color(0.270588, 0.898039, 0.929412, 1)
-theme_override_font_sizes/font_size = 20
+theme_override_font_sizes/font_size = 10
 text = "JOUER"
 
 [node name="OptionsButton" type="Button" parent="Content/Card/Columns/Menu"]
-custom_minimum_size = Vector2(0, 48)
+custom_minimum_size = Vector2(0, 24)
 layout_mode = 2
 focus_mode = 2
 text = "OPTIONS"
 
 [node name="QuitButton" type="Button" parent="Content/Card/Columns/Menu"]
-custom_minimum_size = Vector2(0, 48)
+custom_minimum_size = Vector2(0, 24)
 layout_mode = 2
 focus_mode = 2
 text = "QUITTER"
 
 [node name="MenuSpacer" type="Control" parent="Content/Card/Columns/Menu"]
-custom_minimum_size = Vector2(0, 18)
+custom_minimum_size = Vector2(0, 9)
 layout_mode = 2
 
 [node name="SandboxButton" type="Button" parent="Content/Card/Columns/Menu"]
-custom_minimum_size = Vector2(0, 38)
+custom_minimum_size = Vector2(0, 19)
 layout_mode = 2
 focus_mode = 2
 theme_override_colors/font_color = Color(0.556863, 0.639216, 0.678431, 1)
-theme_override_font_sizes/font_size = 13
+theme_override_font_sizes/font_size = 8
 text = "SANDBOX DEV"

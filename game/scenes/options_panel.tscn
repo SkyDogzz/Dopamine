@@ -32,7 +32,7 @@ anchor_right = 0.96
 anchor_bottom = 0.96
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_constants/separation = 18
+theme_override_constants/separation = 9
 
 [node name="Header" type="HBoxContainer" parent="Content"]
 layout_mode = 2
@@ -40,7 +40,7 @@ layout_mode = 2
 [node name="Brand" type="Label" parent="Content/Header"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.270588, 0.898039, 0.929412, 1)
-theme_override_font_sizes/font_size = 20
+theme_override_font_sizes/font_size = 10
 text = "DOPAMINE"
 
 [node name="HeaderSpacer" type="Control" parent="Content/Header"]
@@ -57,16 +57,16 @@ layout_mode = 2
 size_flags_vertical = 3
 
 [node name="OptionsCard" type="PanelContainer" parent="Content/Center"]
-custom_minimum_size = Vector2(560, 0)
+custom_minimum_size = Vector2(280, 0)
 layout_mode = 2
 
 [node name="OptionsContent" type="VBoxContainer" parent="Content/Center/OptionsCard"]
 layout_mode = 2
-theme_override_constants/separation = 18
+theme_override_constants/separation = 9
 
 [node name="Title" type="Label" parent="Content/Center/OptionsCard/OptionsContent"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 30
+theme_override_font_sizes/font_size = 15
 text = "OPTIONS"
 
 [node name="Description" type="Label" parent="Content/Center/OptionsCard/OptionsContent"]
@@ -76,7 +76,7 @@ text = "DISPLAY AND AUDIO"
 
 [node name="FullscreenToggle" type="CheckButton" parent="Content/Center/OptionsCard/OptionsContent"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 48)
+custom_minimum_size = Vector2(0, 24)
 layout_mode = 2
 focus_mode = 2
 text = "FULL SCREEN"
@@ -88,11 +88,11 @@ text = "MASTER VOLUME"
 
 [node name="VolumeRow" type="HBoxContainer" parent="Content/Center/OptionsCard/OptionsContent"]
 layout_mode = 2
-theme_override_constants/separation = 14
+theme_override_constants/separation = 7
 
 [node name="VolumeSlider" type="HSlider" parent="Content/Center/OptionsCard/OptionsContent/VolumeRow"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 44)
+custom_minimum_size = Vector2(0, 22)
 layout_mode = 2
 size_flags_horizontal = 3
 focus_mode = 2
@@ -102,7 +102,7 @@ step = 1.0
 
 [node name="VolumeValue" type="Label" parent="Content/Center/OptionsCard/OptionsContent/VolumeRow"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(64, 0)
+custom_minimum_size = Vector2(32, 0)
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.819608, 0.4, 1)
 text = "100%"
@@ -110,7 +110,7 @@ horizontal_alignment = 2
 
 [node name="BackButton" type="Button" parent="Content/Center/OptionsCard/OptionsContent"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(160, 48)
+custom_minimum_size = Vector2(80, 24)
 layout_mode = 2
 focus_mode = 2
 text = "BACK"

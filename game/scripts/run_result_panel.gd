@@ -67,13 +67,13 @@ func _add_icon_row(row_name: String, anchor: Control, paths: Array) -> void:
 	var row := HBoxContainer.new()
 	row.name = row_name
 	row.alignment = BoxContainer.ALIGNMENT_CENTER
-	row.add_theme_constant_override("separation", 12)
+	row.add_theme_constant_override("separation", 6)
 	row.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	for path in paths:
 		if not ResourceLoader.exists(path):
 			continue
 		var icon := TextureRect.new()
-		icon.custom_minimum_size = Vector2(36, 36)
+		icon.custom_minimum_size = Vector2(18, 18)
 		icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 		icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 		icon.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST

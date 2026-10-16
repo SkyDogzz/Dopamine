@@ -11,7 +11,7 @@ func _run() -> void:
 	session.wave_spawning_enabled = false
 	root.add_child(session)
 	await process_frame
-	var difficulty: Label = session.get_node_or_null("HUD/MetaPanel/RunMetaRow/DifficultyValue")
+	var difficulty: Label = session.get_node_or_null("HUD/RunPanel/RunInfo/StatusRow/MetaPanel/DifficultyValue")
 	if difficulty == null:
 		_fail("The run HUD should expose the selected difficulty")
 		return
@@ -30,8 +30,8 @@ func _run() -> void:
 	session._refresh_hud({"paused": false})
 	if not session.get_node("HUD/RunPanel/RunInfo/StatusRow/HPValue").text.contains("SHIELD 6") or \
 		session.get_node("HUD/RunPanel/RunInfo/StatusRow/XPValue").text != "LV 2  XP 5 / 20" or \
-		session.get_node("HUD/MetaPanel/RunMetaRow/TimeValue").text != "01:03" or \
-		not session.get_node("HUD/MetaPanel/RunMetaRow/WaveValue").text.contains("WAVE 04") or \
+		session.get_node("HUD/RunPanel/RunInfo/StatusRow/MetaPanel/TimeValue").text != "01:03" or \
+		not session.get_node("HUD/RunPanel/RunInfo/StatusRow/MetaPanel/WaveValue").text.contains("WAVE 04") or \
 		session.get_node("HUD/RunPanel/RunInfo/LoadoutRow/LoadoutLabel").text != "LC Lv1" or \
 		session.get_node("HUD/RunPanel/RunInfo/StatusRow/HPBar").value != 42.0 or \
 		session.get_node("HUD/RunPanel/RunInfo/StatusRow/XPBar").value != 5.0:

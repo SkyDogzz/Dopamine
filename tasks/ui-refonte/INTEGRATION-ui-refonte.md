@@ -1,4 +1,4 @@
-# Bilan d’intégration — refonte UI complète
+# Bilan d’intégration — tranche fonctionnelle initiale
 
 ## Direction artistique appliquée — 2026-10-16
 
@@ -6,13 +6,13 @@ L’Art Bible v1.1 reçue dans `docs/ART_BIBLE.txt` reste la référence visuell
 
 Avant la correction viewport, 21 smokes UI et d’intégration passaient avec un `XDG_DATA_HOME` isolé par script. Après le rétablissement à 1280×800, 10 smokes ciblés passent : fondation, hub/layouts 1280×800/1600×900/1920×1080, pause, inventaire, coffre, résultat, navigation et Sandbox. Le smoke fenêtré et la suite complète restent à relancer. Le smoke de résultat vérifie aussi le libellé « RUN SANS SAUVEGARDE ».
 
-**Statut : terminée et poussée.** Les sept modules de [`UI_CAPABILITY_MAP.md`](../../UI_CAPABILITY_MAP.md) sont implémentés. L’utilisateur a explicitement demandé de continuer en prenant les décisions nécessaires et de sauter les checkpoints intermédiaires; cette consigne a été suivie sans modifier les plans du goal principal, qui reste en pause.
+**Statut de cette tranche : terminée et poussée.** Elle fournit les comportements fonctionnels et le premier thème, mais ne clôt pas l’objectif actuel. L’extension confirmée qui demande de refaire visuellement chaque écran et tous les assets du jeu est en cours. Voir l’[inventaire des assets et interfaces](../../docs/art/INVENTAIRE_ASSETS_UI.md) et le statut courant dans la [carte des capacités](../../UI_CAPABILITY_MAP.md). Le viewport 640×360 est activé dans le travail courant après adaptations initiales; tous les parcours et écrans restent à vérifier avant de considérer la refonte complète achevée.
 
 ## État des modules
 
 | Module | Résultat |
 |---|---|
-| `ui-foundation` | Theme partagé pixel art néon, styles de contrôles et focus, prévisualisation. Adaptation au viewport 640×360 restante. |
+| `ui-foundation` | Theme partagé pixel art néon, styles de contrôles et focus, prévisualisation. Cette extension poursuit la conformité complète à l’Art Bible et aux écrans à 640×360. |
 | `ui-settings` | Préférences plein écran/volume et panneau Options réutilisable; intégration depuis Pause conserve les horloges gelées. |
 | `launch-navigation` | Accueil, Options, Quitter, entrée discrète et isolée au Sandbox; navigation Jouer vers le hub. |
 | `survival-hub` | Préparation Survival, difficultés séquentielles, équipement/compétences, boutons Succès/Bestiaire inertes et lancement explicite. |

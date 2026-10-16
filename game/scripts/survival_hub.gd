@@ -78,7 +78,8 @@ func _build_difficulties() -> void:
 		var difficulty_id: String = DIFFICULTY_SCRIPT.ORDER[index]
 		var unlocked := index <= highest_index
 		var button := Button.new()
-		button.custom_minimum_size = Vector2(0, 46)
+		button.custom_minimum_size = Vector2(0, 23)
+		button.add_theme_font_size_override("font_size", 8)
 		button.focus_mode = Control.FOCUS_ALL
 		button.toggle_mode = true
 		button.button_group = _difficulty_group

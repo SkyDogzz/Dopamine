@@ -21,7 +21,7 @@ func _add_section(title: String) -> void:
 	var label := Label.new()
 	label.text = title
 	label.add_theme_color_override("font_color", Color("#45e5ed"))
-	label.add_theme_font_size_override("font_size", 13)
+	label.add_theme_font_size_override("font_size", 8)
 	_items.add_child(label)
 
 func _add_items(items: Array[Dictionary]) -> void:
@@ -34,10 +34,10 @@ func _add_items(items: Array[Dictionary]) -> void:
 		row.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		_items.add_child(row)
 		var layout := HBoxContainer.new()
-		layout.add_theme_constant_override("separation", 12)
+		layout.add_theme_constant_override("separation", 6)
 		row.add_child(layout)
 		var icon := TextureRect.new()
-		icon.custom_minimum_size = Vector2(36, 36)
+		icon.custom_minimum_size = Vector2(18, 18)
 		icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 		var icon_path := str(item.get("icon", ""))
 		if not icon_path.is_empty() and ResourceLoader.exists(icon_path):

@@ -82,10 +82,10 @@ func _create_item_row(equipment: Dictionary, resources: Dictionary) -> Control:
 	var row := PanelContainer.new()
 	row.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	var layout := HBoxContainer.new()
-	layout.add_theme_constant_override("separation", 10)
+	layout.add_theme_constant_override("separation", 5)
 	row.add_child(layout)
 	var icon := TextureRect.new()
-	icon.custom_minimum_size = Vector2(48, 48)
+	icon.custom_minimum_size = Vector2(24, 24)
 	icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	icon.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
@@ -97,7 +97,7 @@ func _create_item_row(equipment: Dictionary, resources: Dictionary) -> Control:
 	layout.add_child(icon)
 	var content := VBoxContainer.new()
 	content.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	content.add_theme_constant_override("separation", 4)
+	content.add_theme_constant_override("separation", 2)
 	layout.add_child(content)
 	var title := Label.new()
 	title.text = "%s  •  %s" % [rarity.to_upper(), slot.to_upper()]
@@ -116,7 +116,7 @@ func _create_item_row(equipment: Dictionary, resources: Dictionary) -> Control:
 		]
 		enhancement_row.add_child(details)
 		var powder_choice := OptionButton.new()
-		powder_choice.custom_minimum_size.x = 115
+		powder_choice.custom_minimum_size.x = 58
 		for tier_index in range(POWDER_TIERS.size()):
 			powder_choice.add_item(POWDER_TIERS[tier_index].to_upper())
 			powder_choice.set_item_metadata(tier_index, POWDER_TIERS[tier_index])

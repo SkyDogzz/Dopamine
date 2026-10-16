@@ -22,16 +22,16 @@ color = Color(0.0196078, 0.0431373, 0.0627451, 0.82)
 mouse_filter = 2
 
 [node name="Panel" type="PanelContainer" parent="."]
-custom_minimum_size = Vector2(620, 520)
+custom_minimum_size = Vector2(310, 260)
 layout_mode = 2
 
 [node name="Content" type="VBoxContainer" parent="Panel"]
 layout_mode = 2
-theme_override_constants/separation = 12
+theme_override_constants/separation = 6
 
 [node name="Title" type="Label" parent="Panel/Content"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 22
+theme_override_font_sizes/font_size = 11
 text = "PERMANENT EQUIPMENT"
 horizontal_alignment = 1
 
@@ -69,10 +69,10 @@ horizontal_scroll_mode = 0
 [node name="Items" type="VBoxContainer" parent="Panel/Content/Scroll"]
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_constants/separation = 8
+theme_override_constants/separation = 4
 
 [node name="CloseButton" type="Button" parent="Panel/Content"]
-custom_minimum_size = Vector2(0, 42)
+custom_minimum_size = Vector2(0, 21)
 layout_mode = 2
 text = "CLOSE  •  ESC"
 focus_mode = 2

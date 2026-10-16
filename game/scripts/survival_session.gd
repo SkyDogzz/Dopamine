@@ -301,14 +301,14 @@ var _pending_summon_sequences: Dictionary = {}
 
 @onready var _hp_value: Label = $HUD/RunPanel/RunInfo/StatusRow/HPValue
 @onready var _hp_bar: ProgressBar = $HUD/RunPanel/RunInfo/StatusRow/HPBar
-@onready var _time_value: Label = $HUD/MetaPanel/RunMetaRow/TimeValue
+@onready var _time_value: Label = $HUD/RunPanel/RunInfo/StatusRow/MetaPanel/TimeValue
 @onready var _weapon_value: Label = $HUD/RunPanel/RunInfo/LoadoutRow/LoadoutLabel
 @onready var _weapon_icon: TextureRect = $HUD/RunPanel/RunInfo/LoadoutRow/WeaponIcon
 @onready var _xp_value: Label = $HUD/RunPanel/RunInfo/StatusRow/XPValue
 @onready var _xp_bar: ProgressBar = $HUD/RunPanel/RunInfo/StatusRow/XPBar
-@onready var _run_state: Label = $HUD/MetaPanel/RunMetaRow/RunState
-@onready var _wave_value: Label = $HUD/MetaPanel/RunMetaRow/WaveValue
-@onready var _difficulty_value: Label = $HUD/MetaPanel/RunMetaRow/DifficultyValue
+@onready var _run_state: Label = $HUD/RunPanel/RunInfo/StatusRow/MetaPanel/RunState
+@onready var _wave_value: Label = $HUD/RunPanel/RunInfo/StatusRow/MetaPanel/WaveValue
+@onready var _difficulty_value: Label = $HUD/RunPanel/RunInfo/StatusRow/MetaPanel/DifficultyValue
 @onready var _boss_panel: PanelContainer = $HUD/BossPanel
 @onready var _boss_value: Label = $HUD/BossPanel/BossInfo/BossValue
 @onready var _boss_hp_bar: ProgressBar = $HUD/BossPanel/BossInfo/BossHPBar
@@ -890,7 +890,7 @@ func _refresh_hud(state: Dictionary) -> void:
 	_hp_bar.max_value = player_max_hp
 	_hp_bar.value = player_hp
 	var hp_ratio := player_hp / player_max_hp if player_max_hp > 0.0 else 0.0
-	_hp_fill_style.bg_color = Color("#54e0c1") if hp_ratio > 0.6 else Color("#ffd166") if hp_ratio > 0.3 else Color("#ff5c70")
+	_hp_fill_style.bg_color = Color("#48E69B") if hp_ratio > 0.6 else Color("#FFD447") if hp_ratio > 0.3 else Color("#FF7181")
 	_hp_value.add_theme_color_override("font_color", _hp_fill_style.bg_color)
 	_xp_value.text = "LV %d  XP %.0f / %.0f" % [player_level, player_xp, player_xp_to_next]
 	_xp_bar.max_value = player_xp_to_next
@@ -922,41 +922,41 @@ func _refresh_hud(state: Dictionary) -> void:
 	_weapon_value.text = "  •  ".join(equipped_names)
 	if wave_director != null and wave_director.state == WAVE_DIRECTOR_SCRIPT.State.VICTORY:
 		_run_state.text = "VICTORY"
-		_run_state.add_theme_color_override("font_color", Color("#54e0c1"))
+		_run_state.add_theme_color_override("font_color", Color("#48E69B"))
 	elif run_over:
 		_run_state.text = "RUN OVER"
-		_run_state.add_theme_color_override("font_color", Color("#ff5c70"))
+		_run_state.add_theme_color_override("font_color", Color("#FF7181"))
 	elif state["paused"]:
 		_run_state.text = "PAUSED · ESC" if _manually_paused else "PAUSED"
-		_run_state.add_theme_color_override("font_color", Color("#ffd166"))
+		_run_state.add_theme_color_override("font_color", Color("#FFD447"))
 	else:
 		_run_state.text = "IN RUN"
-		_run_state.add_theme_color_override("font_color", Color("#54e0c1"))
+		_run_state.add_theme_color_override("font_color", Color("#48E69B"))
 
 func _style_run_hud() -> void:
 	var panel_style := StyleBoxFlat.new()
-	panel_style.bg_color = Color("#0b1521")
-	panel_style.border_color = Color("#34495b")
+	panel_style.bg_color = Color("#10152B")
+	panel_style.border_color = Color("#293354")
 	panel_style.set_border_width_all(1)
 	panel_style.border_width_left = 3
-	panel_style.border_color = Color("#45e5ed")
+	panel_style.border_color = Color("#37E8F5")
 	panel_style.set_corner_radius_all(0)
-	panel_style.content_margin_left = 12.0
-	panel_style.content_margin_top = 6.0
-	panel_style.content_margin_right = 12.0
-	panel_style.content_margin_bottom = 6.0
+	panel_style.content_margin_left = 5.0
+	panel_style.content_margin_top = 2.0
+	panel_style.content_margin_right = 5.0
+	panel_style.content_margin_bottom = 2.0
 	$HUD/RunPanel.add_theme_stylebox_override("panel", panel_style)
 	var bar_background := StyleBoxFlat.new()
-	bar_background.bg_color = Color("#172633")
+	bar_background.bg_color = Color("#293354")
 	bar_background.set_corner_radius_all(0)
 	_hp_bar.add_theme_stylebox_override("background", bar_background)
 	_xp_bar.add_theme_stylebox_override("background", bar_background)
 	_hp_fill_style = StyleBoxFlat.new()
-	_hp_fill_style.bg_color = Color("#54e0c1")
+	_hp_fill_style.bg_color = Color("#48E69B")
 	_hp_fill_style.set_corner_radius_all(0)
 	_hp_bar.add_theme_stylebox_override("fill", _hp_fill_style)
 	var xp_fill := StyleBoxFlat.new()
-	xp_fill.bg_color = Color("#45e5ed")
+	xp_fill.bg_color = Color("#37E8F5")
 	xp_fill.set_corner_radius_all(0)
 	_xp_bar.add_theme_stylebox_override("fill", xp_fill)
 

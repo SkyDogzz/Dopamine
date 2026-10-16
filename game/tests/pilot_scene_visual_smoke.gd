@@ -20,6 +20,12 @@ func _run() -> void:
 	if player_sprite.texture.get_size() != Vector2(32, 32) or player_sprite.scale != Vector2.ONE:
 		_fail("Player sprite does not use its native 32x32 size")
 		return
+	var hud: Control = session.get_node("HUD/RunPanel")
+	var hud_rect := hud.get_global_rect()
+	var meta: Control = session.get_node("HUD/RunPanel/RunInfo/StatusRow/MetaPanel")
+	if hud_rect.position.x > 9.0 or hud_rect.end.x < 631.0 or meta.get_global_rect().position.x < 200.0:
+		_fail("Run HUD should be one full-width bar with run metadata aligned on the right")
+		return
 	for position in [Vector2(80, 20), Vector2(-60, -30), Vector2(-90, 40)]:
 		if session.simulation.spawn_enemy("chaser", 1, position, Vector2.ZERO) <= 0:
 			_fail("Could not add the combat scene enemies")
@@ -34,7 +40,7 @@ func _run() -> void:
 	await process_frame
 	await RenderingServer.frame_post_draw
 	var image: Image = root.get_texture().get_image()
-	if image.is_empty() or image.get_width() < 1280 or image.get_height() < 800 or image.save_png(SCREENSHOT) != OK:
+	if image.is_empty() or image.get_width() != 640 or image.get_height() != 360 or image.save_png(SCREENSHOT) != OK:
 		_fail("Could not render the pilot scene at the current gameplay viewport")
 		return
 	print("Pilot scene screenshot: %s" % SCREENSHOT)
