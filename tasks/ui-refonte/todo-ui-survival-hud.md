@@ -2,7 +2,7 @@
 
 Plan associé : [`plan-ui-survival-hud.md`](plan-ui-survival-hud.md) · Spec : [`SPEC-survival-hud.md`](SPEC-survival-hud.md)
 
-**Statut : validé par l’utilisateur.** Implémentation incrémentale en cours; tâche 1 terminée.
+**Statut : validé par l’utilisateur.** Implémentation incrémentale en cours; tâches 1 et 2 terminées.
 
 ## Tâche 1 — Contrat et refonte du HUD
 
@@ -27,12 +27,12 @@ Plan associé : [`plan-ui-survival-hud.md`](plan-ui-survival-hud.md) · Spec : [
 **Description :** Clarifier visuellement famille et choix d’un coffre, en conservant les identifiants, descriptions, ressources et règles actuels.
 
 **Critères d’acceptation :**
-- [ ] Les offres s’affichent comme choix distincts avec type de coffre, nom, description et icône lorsqu’elle existe.
-- [ ] Le premier choix reçoit le focus; les offres sont parcourables au clavier/manette et activables à la souris.
-- [ ] La sélection renvoie l’identifiant existant une seule fois; une présentation invalide ne relance pas la simulation.
-- [ ] Le smoke vérifie que simulation et horloges restent suspendues jusqu’au choix, puis reprennent avec le comportement actuel.
+- [x] Les offres s’affichent comme choix distincts avec type de coffre, nom, description et icône lorsqu’elle existe.
+- [x] Le premier choix reçoit le focus; les boutons natifs restent parcourables au clavier/manette et activables à la souris.
+- [x] La sélection renvoie l’identifiant existant une seule fois; une présentation invalide ne relance pas la simulation.
+- [x] Le smoke intégré vérifie que simulation et horloges restent suspendues jusqu’au choix, puis reprennent avec le comportement actuel.
 
-**Vérification :** `survival_chest_smoke.gd`, test de contrat de `ChestChoice.present` si le smoke intégré ne couvre pas les rejets d’entrées invalides, et régression pause/horloges pertinente.
+**Vérification :** `survival_chest_choice_smoke.gd` passe pour coffres d’arme/relique, type, descriptions, icônes, focus, sélection unique, entrée invalide et bounds des viewports 960×600, 1280×800 et 1600×900. `survival_chest_smoke.gd` passe pour suspension/reprise réelle de la run au ramassage/choix.
 
 **Dépendances :** Tâche 1 pour cohérence du thème et du focus.
 

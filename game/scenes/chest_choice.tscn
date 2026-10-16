@@ -1,20 +1,35 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene load_steps=3 format=3]
 
-[ext_resource type="Script" path="res://scripts/chest_choice.gd" id="1_script"]
+[ext_resource type="Theme" path="res://themes/dopamine_ui.tres" id="1_theme"]
+[ext_resource type="Script" path="res://scripts/chest_choice.gd" id="2_script"]
 
 [node name="ChestChoice" type="PanelContainer"]
-custom_minimum_size = Vector2(520, 330)
-script = ExtResource("1_script")
+custom_minimum_size = Vector2(620, 430)
+theme = ExtResource("1_theme")
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 16
+script = ExtResource("2_script")
 
 [node name="Content" type="VBoxContainer" parent="."]
+layout_mode = 2
 theme_override_constants/separation = 12
 
 [node name="Title" type="Label" parent="Content"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 24
+theme_override_colors/font_color = Color(0.270588, 0.898039, 0.929412, 1)
+theme_override_font_sizes/font_size = 22
 text = "CHEST — CHOOSE ONE"
+horizontal_alignment = 1
+
+[node name="Instruction" type="Label" parent="Content"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.556863, 0.639216, 0.678431, 1)
+theme_override_font_sizes/font_size = 12
+text = "SELECT ONE UPGRADE TO CONTINUE"
 horizontal_alignment = 1
 
 [node name="Options" type="VBoxContainer" parent="Content"]
 layout_mode = 2
-theme_override_constants/separation = 8
+theme_override_constants/separation = 10
