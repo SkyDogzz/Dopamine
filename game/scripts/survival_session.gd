@@ -114,6 +114,12 @@ const WAVE_HP_CAP := 12.0
 @export var elite_chest_drop_chance: float = 0.15
 @export var chest_guarantee_interval_seconds: float = 60.0
 @export var chest_collection_radius: float = 36.0
+@export_group("Chest offer weights — proposed")
+@export_range(0.1, 5.0, 0.05) var owned_upgrade_offer_weight: float = 1.5
+@export_range(0.1, 5.0, 0.05) var matching_relic_offer_weight: float = 2.0
+@export_range(0.1, 5.0, 0.05) var matching_weapon_offer_weight: float = 1.5
+@export_range(0.1, 5.0, 0.05) var near_evolution_offer_weight: float = 1.25
+@export_range(0.1, 5.0, 0.05) var combined_offer_weight_cap: float = 3.0
 @export_group("Prototype contact damage — proposed tuning")
 @export var contact_damage_per_hit: float = 10.0
 @export var body_contact_cooldown_seconds: float = 0.35
@@ -380,6 +386,13 @@ func _ready() -> void:
 	add_child(player)
 	player.controls_enabled = false
 	loadout = LOADOUT_SCRIPT.new()
+	loadout.offer_weights = {
+		"owned_upgrade": owned_upgrade_offer_weight,
+		"matching_relic": matching_relic_offer_weight,
+		"matching_weapon": matching_weapon_offer_weight,
+		"near_evolution": near_evolution_offer_weight,
+		"combined_cap": combined_offer_weight_cap,
+	}
 	_chest_director = CHEST_DIRECTOR_SCRIPT.new()
 	_chest_director.ordinary_drop_chance = ordinary_chest_drop_chance
 	_chest_director.elite_drop_chance = elite_chest_drop_chance

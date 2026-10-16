@@ -45,6 +45,18 @@ func _initialize() -> void:
 	if loadout.weapon_level("lightning_conductor") != 1 or loadout.owned_weapons().size() != 1:
 		_fail("The chosen starting weapon should enter the loadout at level 1")
 		return
+	if not is_equal_approx(loadout._offer_weight("relic", "relic:storm_core"), 2.0):
+		_fail("A relic paired with an owned weapon should receive its proposed preference weight")
+		return
+	var preference_fixture = loadout_script.new(41)
+	preference_fixture.choose_starting_weapon("lightning_conductor")
+	var matching_relic_appearances := 0
+	for _sample in range(300):
+		if not _find_offer(preference_fixture.offers("relic"), "relic:storm_core").is_empty():
+			matching_relic_appearances += 1
+	if matching_relic_appearances <= 100:
+		_fail("Weighted offers should present a matching relic more often than a uniform three-of-eleven draw")
+		return
 	var weapon_offers: Array = loadout.offers("weapon")
 	if not _has_three_unique(weapon_offers):
 		_fail("Weapon chest should offer three unique eligible upgrades or new weapons")
@@ -77,6 +89,21 @@ func _initialize() -> void:
 		return
 	if not is_equal_approx(loadout.global_relic_bonus("damage_pct"), 5.0):
 		_fail("Storm Core should grant a global damage bonus before its weapon combo evolves")
+		return
+	if not is_equal_approx(loadout._offer_weight("weapon", "weapon:lightning_conductor"), 2.25) or \
+		not is_equal_approx(loadout._offer_weight("relic", "relic:storm_core"), 3.0):
+		_fail("Owned upgrades and matching pairs should combine their proposed weights up to the cap")
+		return
+	var near_evolution_fixture = loadout_script.new(37)
+	near_evolution_fixture._weapon_levels["lightning_conductor"] = 4
+	near_evolution_fixture._relic_levels["storm_core"] = 4
+	near_evolution_fixture.offer_weights = {
+		"owned_upgrade": 1.0, "matching_relic": 1.0, "matching_weapon": 1.0,
+		"near_evolution": 1.25, "combined_cap": 5.0,
+	}
+	if not is_equal_approx(near_evolution_fixture._offer_weight("relic", "relic:storm_core"), 1.25) or \
+		not is_equal_approx(near_evolution_fixture._offer_weight("weapon", "evolution:lightning_conductor"), 1.25):
+		_fail("Near-ready pairs and eligible evolutions should receive the proposed evolution weight")
 		return
 	if loadout.is_evolved("lightning_conductor"):
 		_fail("Owning the matching relic should not evolve an unmaxed weapon")

@@ -50,6 +50,13 @@ var _relic_descriptions := {}
 var _weapon_definitions := {}
 var _relic_definitions := {}
 var _rng := RandomNumberGenerator.new()
+var offer_weights := {
+	"owned_upgrade": 1.5,
+	"matching_relic": 2.0,
+	"matching_weapon": 1.5,
+	"near_evolution": 1.25,
+	"combined_cap": 3.0,
+}
 
 func _init(seed_value: int = 0) -> void:
 	var catalog = COMBAT_CATALOG_SCRIPT.new()
@@ -119,12 +126,66 @@ func offers(family: String) -> Array[Dictionary]:
 				})
 	if candidates.size() < 3:
 		return candidates
-	for index in range(candidates.size() - 1, 0, -1):
-		var other := _rng.randi_range(0, index)
-		var temporary: Dictionary = candidates[index]
-		candidates[index] = candidates[other]
-		candidates[other] = temporary
-	return candidates.slice(0, mini(3, candidates.size()))
+	var selected: Array[Dictionary] = []
+	var remaining: Array[Dictionary] = candidates.duplicate()
+	for _choice_index in range(mini(3, remaining.size())):
+		var weights: Array[float] = []
+		var total_weight := 0.0
+		for candidate in remaining:
+			var weight := _offer_weight(family, str(candidate["id"]))
+			weights.append(weight)
+			total_weight += weight
+		var chosen_index := 0
+		if total_weight > 0.0:
+			var roll := _rng.randf() * total_weight
+			for index in range(weights.size()):
+				roll -= weights[index]
+				if roll < 0.0:
+					chosen_index = index
+					break
+		else:
+			chosen_index = _rng.randi_range(0, remaining.size() - 1)
+		selected.append(remaining.pop_at(chosen_index))
+	return selected
+
+func _offer_weight(family: String, offer_id: String) -> float:
+	var weight := 1.0
+	var parts := offer_id.split(":", false, 1)
+	if parts.size() != 2:
+		return weight
+	if parts[0] == "evolution":
+		weight *= _configured_offer_weight("near_evolution")
+	elif family == "weapon" and parts[0] == "weapon":
+		var weapon_id: String = parts[1]
+		var weapon_definition: Dictionary = _weapon_definitions.get(weapon_id, {})
+		if _weapon_levels.has(weapon_id):
+			weight *= _configured_offer_weight("owned_upgrade")
+		var paired_relic_id := str(weapon_definition.get("relic_id", ""))
+		if _relic_levels.has(paired_relic_id):
+			weight *= _configured_offer_weight("matching_weapon")
+			if not is_evolved(weapon_id) and _weapon_level_after_offer(weapon_id) >= 4 and relic_level(paired_relic_id) >= 4:
+				weight *= _configured_offer_weight("near_evolution")
+	elif family == "relic" and parts[0] == "relic":
+		var relic_id: String = parts[1]
+		var relic_definition: Dictionary = _relic_definitions.get(relic_id, {})
+		var paired_weapon_id := str(relic_definition.get("weapon_id", ""))
+		if _relic_levels.has(relic_id):
+			weight *= _configured_offer_weight("owned_upgrade")
+		if not paired_weapon_id.is_empty() and weapon_level(paired_weapon_id) > 0:
+			weight *= _configured_offer_weight("matching_relic")
+			if not is_evolved(paired_weapon_id) and weapon_level(paired_weapon_id) >= 4 and _relic_level_after_offer(relic_id) >= 4:
+				weight *= _configured_offer_weight("near_evolution")
+	return maxf(minf(weight, _configured_offer_weight("combined_cap")), 0.1)
+
+func _configured_offer_weight(key: String) -> float:
+	var value := float(offer_weights.get(key, 1.0))
+	return maxf(value, 0.1) if is_finite(value) else 1.0
+
+func _weapon_level_after_offer(weapon_id: String) -> int:
+	return mini(weapon_level(weapon_id) + 1, MAX_LEVEL)
+
+func _relic_level_after_offer(relic_id: String) -> int:
+	return mini(relic_level(relic_id) + 1, MAX_LEVEL)
 
 func _next_level_description(family: String, item_id: String, level: int) -> String:
 	if family == "relic":

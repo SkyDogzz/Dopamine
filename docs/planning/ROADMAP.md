@@ -340,9 +340,9 @@ Travail requis :
 
 - [ ] **P5.3.1 — Éligibilité des offres**
   - [x] Produire trois choix distincts quand au moins trois choix existent ; test ciblé des armes niveau max, slots pleins et absence de choix éligibles.
-  - [ ] Ajouter la préférence synergie comme poids, sans retirer les offres valides.
+  - [x] Ajouter la préférence synergie comme poids multiplicatifs et tirage pondéré sans remise; tous les poids restent strictement positifs et aucune offre éligible n’est supprimée.
   - [x] Vérifier objets niveau max, slots pleins et arme niveau 5 sans relique. La relique garde ses offres même lorsque l’arme est niveau 5.
-  - La pondération reste en attente : les synergies et leurs règles d’association ne sont pas encore validées dans P5.2.
+  - Les poids par défaut du GDD (**[PROPOSÉS]**) sont configurables dans Survival : amélioration possédée ×1,5, relique liée à une arme possédée ×2, arme liée à une relique possédée ×1,5, évolution prête/proche ×1,25, plafond combiné ×3. « Proche » signifie ici que le choix amène les deux membres d’une paire non évoluée au niveau 4 ou plus; cette interprétation reste **[PROPOSÉE]**.
 - [ ] **P5.3.2 — Pause et reprise**
   - [x] Suspendre la simulation et vérifier que ses horloges ne progressent pas pendant le modal; `survival_chest_smoke.gd` contrôle aussi l’horloge active affichée.
   - [x] Vérifier la reprise après sélection dans `survival_chest_smoke.gd`; fermeture invalide et retour d’inventaire restent à couvrir.
@@ -351,8 +351,8 @@ Travail requis :
   - [x] Vérifier l’offre après chaque chemin de niveaux de l’arme, et après acquisition/amélioration de la relique jusqu’au niveau 5.
   - [x] Ouvrir un vrai coffre d’arme, afficher l’unique évolution devenue éligible et la collecter; `survival_weapon_catalog_smoke.gd` vérifie que le combo s’active après cette collecte.
 - [ ] **P5.3.4 — Probabilités**
-  - [ ] Garder taux, poids, pity et rerolls accessibles en configuration.
-  - [ ] Faire arbitrer les valeurs nécessaires avant leur verrouillage.
+  - [ ] Garder taux, poids, pity et rerolls accessibles en configuration. Les taux de drop, le filet anti-malchance et les poids sont déjà modifiables dans Survival; le reroll doit attendre son intégration avec la progression.
+  - [ ] Faire arbitrer les valeurs nécessaires avant leur verrouillage; les coefficients restent **[PROPOSÉS]**.
 - [ ] **P5.3.5 — Collecte**
   - [x] Préserver le rayon séparé `chest_collection_radius`.
   - [x] Vérifier par régression qu'un pickup très élevé n'attire pas un chest éloigné.
