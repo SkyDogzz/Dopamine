@@ -79,7 +79,13 @@ func _run() -> void:
 		return
 	for _level in range(5):
 		session.loadout.apply_offer("weapon:minigun")
-	session.loadout.apply_offer("relic:overdrive_engine")
+	for _level in range(5):
+		session.loadout.apply_offer("relic:overdrive_engine")
+	if session.loadout.has_method("is_evolution_ready") and \
+		session.loadout.call("is_evolution_ready", "minigun") and \
+		not session.loadout.apply_offer("evolution:minigun"):
+		_fail("The HUD evolution fixture should claim the ready max-level combo")
+		return
 	session._refresh_hud({"paused": false})
 	if not session.get_node("HUD/RunPanel/RunInfo/LoadoutRow/LoadoutLabel").text.contains("MG Lv5 REDLINE"):
 		_fail("The HUD should show an evolution marker from the current run loadout")

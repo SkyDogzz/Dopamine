@@ -335,7 +335,15 @@ Le runner est fourni par `game/scripts/scenario_runner.gd` et consomme un fichie
 ## Repère de défilement — inventaire de run (2026-10-16)
 
 - [x] Les totaux d’armes/reliques indiquent maintenant les commandes de défilement clavier et molette, au-dessus de la liste.
-- [ ] `survival_pause_inventory_smoke.gd` n’a pas été rejoué après ce changement; Godot est absent du PATH dans l’environnement courant.
+- [x] `survival_pause_inventory_smoke.gd` passe sous Godot 4.7.2; la capture logique 640×360 a été inspectée et le repère tient sur une ligne.
+
+## Revalidation de la refonte UI (2026-10-16)
+
+- [x] Import éditeur Godot 4.7.2 réussi, y compris la réimportation de la tuile Survival mise à jour.
+- [x] Les 18 smokes ciblés passent sous Xvfb/Mesa, avec un `XDG_DATA_HOME` distinct : `ui_foundation_smoke`, `ui_settings_smoke`, `launch_navigation_smoke`, `survival_hub_smoke`, `survival_hub_layout_smoke`, `ui_viewport_layout_smoke`, `survival_hud_smoke`, `survival_chest_choice_smoke`, `survival_chest_layout_smoke`, `run_result_panel_smoke`, `survival_pause_smoke`, `survival_pause_inventory_smoke`, `survival_abandon_smoke`, `survival_inventory_smoke`, `sandbox_ui_smoke`, `catalog_icon_assets_smoke`, `pilot_scene_visual_smoke` et `render_visual_smoke`.
+- [x] Les bounds UI passent de 640×360 à 1920×1080; le smoke HUD contrôle aussi les tailles intermédiaires jusqu’à 1600×900. Les captures Survival et Sandbox ont été générées; la capture récente de l’inventaire est inspectée à 640×360.
+- [x] Le smoke Sandbox conserve son profil sentinelle inchangé; le smoke d’assets contrôle dimensions, palettes, sources Aseprite et la densité réduite de la tuile active.
+- [ ] Manette physique, plein écran sur écran réel et sortie audio matérielle restent à vérifier; la simulation de manette est synthétique et l’audio utilise le driver dummy en environnement Xvfb.
 
 ## Art combat — roster statique (2026-10-16)
 

@@ -14,8 +14,16 @@ func _run() -> void:
 		if not session.loadout.apply_offer("weapon:lightning_conductor"):
 			_fail("The lightning weapon fixture should upgrade to level five")
 			return
-	if not session.loadout.apply_offer("relic:storm_core") or \
-		not session.loadout.apply_offer("weapon:minigun") or \
+	for _level in range(5):
+		if not session.loadout.apply_offer("relic:storm_core"):
+			_fail("Storm Core should reach its max level for the evolution fixture")
+			return
+	if session.loadout.has_method("is_evolution_ready") and \
+		session.loadout.call("is_evolution_ready", "lightning_conductor") and \
+		not session.loadout.apply_offer("evolution:lightning_conductor"):
+		_fail("The inventory fixture should claim its ready max-level combo")
+		return
+	if not session.loadout.apply_offer("weapon:minigun") or \
 		not session.loadout.apply_offer("relic:magnet_heart"):
 		_fail("The inventory fixture should equip an evolved weapon, a base weapon and relics")
 		return
@@ -82,6 +90,11 @@ func _run() -> void:
 	if row_count != 4:
 		_fail("Inventory should list exactly two weapons and two relics")
 		return
+	if "--capture" in OS.get_cmdline_user_args():
+		await RenderingServer.frame_post_draw
+		if root.get_texture().get_image().save_png("/tmp/dopamine-run-inventory-current.png") != OK:
+			_fail("Could not capture the run inventory at the logical viewport")
+			return
 	if inventory.get_node("Center/Panel/Content/Counts").text != "WEAPONS 2  •  RELICS 2  •  SCROLL ↑↓ / WHEEL":
 		_fail("Run inventory should keep counts and its scroll hint visible above the item list")
 		return
@@ -122,7 +135,7 @@ func _run() -> void:
 		_fail("Gamepad cancel should close inventory, restore Pause focus and keep the run paused")
 		return
 	if session.loadout.weapon_level("lightning_conductor") != 5 or \
-		session.loadout.weapon_level("minigun") != 1 or session.loadout.relic_level("storm_core") != 1 or \
+		session.loadout.weapon_level("minigun") != 1 or session.loadout.relic_level("storm_core") != 5 or \
 		session.loadout.relic_level("magnet_heart") != 1:
 		_fail("Viewing and closing the inventory must not mutate the run loadout")
 		return
