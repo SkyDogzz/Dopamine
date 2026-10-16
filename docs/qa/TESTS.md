@@ -4,8 +4,9 @@
 
 - [x] `survival_targeting_smoke.gd` vérifie nearest, farthest, highest threat, highest HP, lowest HP, les cibles de grappes denses, le centroïde Meteor, la portée et l’exclusion des ennemis morts, des projectiles et des orbes XP. Ces règles restent **[PROPOSÉES]**.
 - [x] `sandbox_ui_smoke.gd` vérifie le sélecteur à neuf politiques, l’ID ou centroïde affiché, les portées et rayons de grappe par défaut, l’effet du choix de politique et de portée, l’effacement après kill-all et la préservation du fixture de sauvegarde normale. Capture Xvfb relue à 640×360; cible, marqueur et réglages restent dans leurs cadres.
-- [x] `survival_weapon_smoke.gd`, `survival_weapon_catalog_smoke.gd` et la suite CTest passent sous Godot 4.7.2 : 47 tests attendus après reconfiguration.
-- [ ] Les sélecteurs spécialisés de grappe et les essais de placement représentatifs restent à faire.
+- [x] `survival_weapon_catalog_smoke.gd` passe après extraction; ses fixtures positionnées vérifient le regroupement Lightning/Sawblades/Meteor/Prism, les choix par menace/PV/distance, le ciblage faible PV des Crimson Daggers et le maintien/reciblage du Minigun.
+- [x] Import Godot 4.7.2 et CTest passent : 47/47 tests, dont le smoke commun de ciblage et les scénarios Sandbox.
+- [ ] Le critère GDD de dix politiques intelligentes propres et leur équilibrage comparatif restent **[OUVERTS]**; la couverture existante prouve les comportements proposés, pas leur qualité finale.
 
 > Les cases cochées sont des exécutions documentées. Le binaire Godot local est `tools/local/godot-4.7.2/Godot_v4.7.2-stable_linux.x86_64`; il peut être invoqué directement même s’il n’est pas présent dans le `PATH`.
 
