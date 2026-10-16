@@ -430,7 +430,8 @@ Note de clôture : le blocage historique du smoke `sandbox_ui_smoke.gd` décrit 
 ## Branche visuelle de l’arbre de compétences (2026-10-16)
 
 - [x] `skill_tree_panel_visual_smoke.gd` couvre les deux nœuds existants, le connecteur, la séparation entre action et effet/coût proposé et les statuts de déverrouillage; smoke passé sous Godot 4.7.2.
-- [x] Capture fenêtrée sous Xvfb relue à 640×360 logique; le cadre et les deux cartes tiennent dans le viewport, et le focus reste visible.
+- [x] Les effets/coûts utilisent 8 px avec retour à la ligne; le smoke échoue si leur taille passe sous ce seuil.
+- [x] Capture fenêtrée sous Xvfb relue à 640×360 logique; le cadre et les deux cartes tiennent dans le viewport, le texte est plus lisible, et le focus reste visible.
 - [x] `ui_viewport_layout_smoke.gd` vérifie toutes les interfaces à 640×360, 1280×720 et 1920×1080.
 
 ## Repère XP du HUD (2026-10-16)

@@ -36,6 +36,10 @@ func _run() -> void:
 		panel.get_node("Panel/Content/NodeBranch/FollowupCard/Content/Effect").text != "+3% DAMAGE  •  80 ESSENCE  •  PROPOSED":
 		_fail("Node actions should stay concise while proposed effects and costs remain explicit")
 		return
+	if panel.get_node("Panel/Content/NodeBranch/FoundationCard/Content/Effect").get_theme_font_size("font_size") < 8 or \
+		panel.get_node("Panel/Content/NodeBranch/FollowupCard/Content/Effect").get_theme_font_size("font_size") < 8:
+		_fail("Proposed skill effects should remain readable at the 640x360 logical viewport")
+		return
 	if not panel.get_global_rect().encloses(frame.get_global_rect()):
 		_fail("Skill tree frame should remain within the 640x360 logical viewport")
 		return

@@ -95,7 +95,7 @@ texture_filter = 1
 [node name="Effect" type="Label" parent="Panel/Content/NodeBranch/FoundationCard/Content"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.647059, 0.682353, 0.764706, 1)
-theme_override_font_sizes/font_size = 7
+theme_override_font_sizes/font_size = 8
 text = "+5% MAX HP  •  50 ESSENCE  •  PROPOSED"
 horizontal_alignment = 1
 autowrap_mode = 2
@@ -136,7 +136,7 @@ texture_filter = 1
 [node name="Effect" type="Label" parent="Panel/Content/NodeBranch/FollowupCard/Content"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.647059, 0.682353, 0.764706, 1)
-theme_override_font_sizes/font_size = 7
+theme_override_font_sizes/font_size = 8
 text = "+3% DAMAGE  •  80 ESSENCE  •  PROPOSED"
 horizontal_alignment = 1
 autowrap_mode = 2
