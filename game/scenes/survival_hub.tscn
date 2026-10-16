@@ -119,6 +119,7 @@ vertical_alignment = 1
 [node name="PreparationCard" type="PanelContainer" parent="Content/Main"]
 layout_mode = 2
 size_flags_horizontal = 3
+theme_type_variation = "CompactPanel"
 
 [node name="Body" type="VBoxContainer" parent="Content/Main/PreparationCard"]
 layout_mode = 2
