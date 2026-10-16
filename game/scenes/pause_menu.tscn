@@ -45,6 +45,23 @@ theme_override_font_sizes/font_size = 28
 text = "RUN PAUSED"
 horizontal_alignment = 1
 
+[node name="SpeedSelect" type="OptionButton" parent="Center/Panel/Content"]
+custom_minimum_size = Vector2(0, 44)
+layout_mode = 2
+focus_mode = 2
+item_count = 5
+selected = 2
+popup/item_0/text = "GAME SPEED  ×0.25"
+popup/item_0/id = 0
+popup/item_1/text = "GAME SPEED  ×0.5"
+popup/item_1/id = 1
+popup/item_2/text = "GAME SPEED  ×1"
+popup/item_2/id = 2
+popup/item_3/text = "GAME SPEED  ×2"
+popup/item_3/id = 3
+popup/item_4/text = "GAME SPEED  ×4"
+popup/item_4/id = 4
+
 [node name="ResumeButton" type="Button" parent="Center/Panel/Content"]
 custom_minimum_size = Vector2(0, 48)
 layout_mode = 2

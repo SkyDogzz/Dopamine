@@ -10,6 +10,7 @@
 - **[VALIDÉ]** L’équipement permanent et l’arbre de compétences ne sont pas modifiables pendant une run.
 - **[VALIDÉ]** Confirmer l’abandon arrête la run et ramène à l’accueil sans accorder la récompense de victoire; annuler conserve la run en pause.
 - **[VALIDÉ]** Ouvrir les Options depuis la pause ne fait avancer ni simulation ni horloges. En revenant des Options, la pause reste ouverte.
+- **[VALIDÉ]** Le menu Pause permet de choisir la vitesse globale de run (×0,25, ×0,5, ×1, ×2, ×4); la simulation de combat et les traitements Godot suivent le même multiplicateur, qui revient à ×1 en quittant Survival.
 - **[VALIDÉ]** Les interfaces sont navigables à la souris, au clavier et à la manette, avec un focus visible.
 - **[VALIDÉ]** Le Sandbox développeur reste strictement isolé de `SaveService` et de la progression normale.
 - **[PROPOSÉ]** L’état pause appartient à `survival_session.gd`; le panneau Options existant est réutilisé en superposition et rend le focus à son action d’origine.

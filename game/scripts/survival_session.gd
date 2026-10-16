@@ -309,6 +309,7 @@ var _pending_summon_sequences: Dictionary = {}
 @onready var _run_result_overlay: CenterContainer = $HUD/RunResultOverlay
 @onready var _run_result: PanelContainer = $HUD/RunResultOverlay/RunResultPanel
 @onready var _pause_overlay: Control = $HUD/PauseOverlay
+@onready var _pause_speed_select: OptionButton = $HUD/PauseOverlay/Center/Panel/Content/SpeedSelect
 @onready var _pause_resume_button: Button = $HUD/PauseOverlay/Center/Panel/Content/ResumeButton
 @onready var _pause_options_button: Button = $HUD/PauseOverlay/Center/Panel/Content/OptionsButton
 @onready var _pause_inventory_button: Button = $HUD/PauseOverlay/Center/Panel/Content/InventoryButton
@@ -321,6 +322,7 @@ var _options_overlay: Control
 var _inventory_overlay: Control
 
 func _ready() -> void:
+	Engine.time_scale = 1.0
 	texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	_style_run_hud()
 	_sprite_renderer = SPRITE_RENDERER_SCRIPT.new()
@@ -342,6 +344,7 @@ func _ready() -> void:
 	_chest_choice.option_selected.connect(_on_chest_option_selected)
 	_run_result.restart_requested.connect(_restart_run)
 	_pause_resume_button.pressed.connect(_resume_manually_paused_run)
+	_pause_speed_select.item_selected.connect(_on_pause_speed_selected)
 	_pause_options_button.pressed.connect(_open_pause_options)
 	_pause_inventory_button.pressed.connect(_open_run_inventory)
 	_pause_abandon_button.pressed.connect(_open_abandon_confirmation)
@@ -368,6 +371,16 @@ func _ready() -> void:
 	else:
 		_starting_weapon_choice_open = true
 		_chest_choice.present(loadout.starting_weapon_options(), 2, "CHOOSE YOUR STARTING WEAPON")
+
+func _exit_tree() -> void:
+	Engine.time_scale = 1.0
+
+func _on_pause_speed_selected(index: int) -> void:
+	if not _manually_paused or simulation == null:
+		return
+	var multiplier: float = [0.25, 0.5, 1.0, 2.0, 4.0][index]
+	Engine.time_scale = multiplier
+	simulation.set_speed(multiplier)
 
 func _physics_process(_delta: float) -> void:
 	_publish_player_target()

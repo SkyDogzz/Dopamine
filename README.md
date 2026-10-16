@@ -41,6 +41,7 @@ godot --path game
 Le premier lancement de l’éditeur importe le projet et vérifie la GDExtension. Le dernier lancement ouvre l’accueil. Le Sandbox développeur reste accessible par son entrée secondaire et fonctionne sans sauvegarde.
 La fenêtre initiale reste en 1280×800 afin que toutes les interfaces existantes conservent leur mise en page. Le passage au viewport logique 640×360 de l’Art Bible attend l’adaptation responsive de chaque écran.
 Depuis l’accueil, `JOUER` ouvre le hub de préparation et lance une run Survival avec la difficulté choisie. Le bouton `PLAY SURVIVAL` du Sandbox développeur ouvre toujours le prototype et son choix d’arme initial, sans `SaveService` ni progression normale; `ACCUEIL` revient au menu.
+En Survival, le menu de pause propose une vitesse de run de ×0,25 à ×4. La simulation de combat et le temps Godot suivent ce multiplicateur; le jeu revient à ×1 à la sortie de la run.
 Le hub propose aussi `RUN TEMPORAIRE · SANS SAUVEGARDE` : cette partie démarre avec un profil vide en mémoire, en difficulté Easy, et ses récompenses de fin sont abandonnées sans modifier la sauvegarde normale.
 
 Vérifications ciblées :
