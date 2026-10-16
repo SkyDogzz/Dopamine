@@ -128,6 +128,9 @@ func award_survival_run(
 		derived_metrics.append("equipment_rarity_%s" % rarity)
 	for slot in EQUIPMENT_GENERATOR_SCRIPT.SLOTS:
 		derived_metrics.append("equipment_slot_%s" % slot)
+	for run_difficulty in SURVIVAL_DIFFICULTY_SCRIPT.ORDER:
+		derived_metrics.append("runs_at_difficulty_%s" % run_difficulty)
+		derived_metrics.append("boss_victories_at_difficulty_%s" % run_difficulty)
 	for metric_id in run_metrics:
 		var metric_value: Variant = run_metrics[metric_id]
 		if typeof(metric_id) != TYPE_STRING or metric_id in derived_metrics or not metric_aggregations.has(metric_id) or \
@@ -168,6 +171,8 @@ func award_survival_run(
 		"equipment_items_collected": 1,
 		"equipment_rarity_%s" % str(equipment["rarity"]): 1,
 		"equipment_slot_%s" % str(equipment["slot"]): 1,
+		"runs_at_difficulty_%s" % difficulty_id: 1,
+		"boss_victories_at_difficulty_%s" % difficulty_id: 1 if final_boss_vanquished else 0,
 	}
 	metric_deltas.merge(run_metrics)
 	for metric_id in metric_deltas:

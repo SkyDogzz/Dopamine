@@ -949,6 +949,136 @@
         { "id": "gold", "threshold": 50, "rewards": {"damage_pct": 0.000075} },
         { "id": "diamond", "threshold": 100, "rewards": {"damage_pct": 0.0001} }
       ]
+    },
+    {
+      "id": "easy_runner_mastery",
+      "category": "difficulty_bosses",
+      "secret": false,
+      "metric": "runs_at_difficulty_easy",
+      "aggregation": "sum",
+      "tiers": [
+        { "id": "bronze", "threshold": 10, "rewards": {"damage_pct": 0.000025} },
+        { "id": "silver", "threshold": 25, "rewards": {"damage_pct": 0.00005} },
+        { "id": "gold", "threshold": 50, "rewards": {"damage_pct": 0.000075} },
+        { "id": "diamond", "threshold": 100, "rewards": {"damage_pct": 0.0001} }
+      ]
+    },
+    {
+      "id": "easy_boss_mastery",
+      "category": "difficulty_bosses",
+      "secret": false,
+      "metric": "boss_victories_at_difficulty_easy",
+      "aggregation": "sum",
+      "tiers": [
+        { "id": "bronze", "threshold": 1, "rewards": {"damage_pct": 0.000025} },
+        { "id": "silver", "threshold": 5, "rewards": {"damage_pct": 0.00005} },
+        { "id": "gold", "threshold": 15, "rewards": {"damage_pct": 0.000075} },
+        { "id": "diamond", "threshold": 30, "rewards": {"damage_pct": 0.0001} }
+      ]
+    },
+    {
+      "id": "normal_runner_mastery",
+      "category": "difficulty_bosses",
+      "secret": false,
+      "metric": "runs_at_difficulty_normal",
+      "aggregation": "sum",
+      "tiers": [
+        { "id": "bronze", "threshold": 10, "rewards": {"damage_pct": 0.000025} },
+        { "id": "silver", "threshold": 25, "rewards": {"damage_pct": 0.00005} },
+        { "id": "gold", "threshold": 50, "rewards": {"damage_pct": 0.000075} },
+        { "id": "diamond", "threshold": 100, "rewards": {"damage_pct": 0.0001} }
+      ]
+    },
+    {
+      "id": "normal_boss_mastery",
+      "category": "difficulty_bosses",
+      "secret": false,
+      "metric": "boss_victories_at_difficulty_normal",
+      "aggregation": "sum",
+      "tiers": [
+        { "id": "bronze", "threshold": 1, "rewards": {"damage_pct": 0.000025} },
+        { "id": "silver", "threshold": 5, "rewards": {"damage_pct": 0.00005} },
+        { "id": "gold", "threshold": 15, "rewards": {"damage_pct": 0.000075} },
+        { "id": "diamond", "threshold": 30, "rewards": {"damage_pct": 0.0001} }
+      ]
+    },
+    {
+      "id": "hard_runner_mastery",
+      "category": "difficulty_bosses",
+      "secret": false,
+      "metric": "runs_at_difficulty_hard",
+      "aggregation": "sum",
+      "tiers": [
+        { "id": "bronze", "threshold": 10, "rewards": {"damage_pct": 0.000025} },
+        { "id": "silver", "threshold": 25, "rewards": {"damage_pct": 0.00005} },
+        { "id": "gold", "threshold": 50, "rewards": {"damage_pct": 0.000075} },
+        { "id": "diamond", "threshold": 100, "rewards": {"damage_pct": 0.0001} }
+      ]
+    },
+    {
+      "id": "hard_boss_mastery",
+      "category": "difficulty_bosses",
+      "secret": false,
+      "metric": "boss_victories_at_difficulty_hard",
+      "aggregation": "sum",
+      "tiers": [
+        { "id": "bronze", "threshold": 1, "rewards": {"damage_pct": 0.000025} },
+        { "id": "silver", "threshold": 5, "rewards": {"damage_pct": 0.00005} },
+        { "id": "gold", "threshold": 15, "rewards": {"damage_pct": 0.000075} },
+        { "id": "diamond", "threshold": 30, "rewards": {"damage_pct": 0.0001} }
+      ]
+    },
+    {
+      "id": "nightmare_runner_mastery",
+      "category": "difficulty_bosses",
+      "secret": false,
+      "metric": "runs_at_difficulty_nightmare",
+      "aggregation": "sum",
+      "tiers": [
+        { "id": "bronze", "threshold": 10, "rewards": {"damage_pct": 0.000025} },
+        { "id": "silver", "threshold": 25, "rewards": {"damage_pct": 0.00005} },
+        { "id": "gold", "threshold": 50, "rewards": {"damage_pct": 0.000075} },
+        { "id": "diamond", "threshold": 100, "rewards": {"damage_pct": 0.0001} }
+      ]
+    },
+    {
+      "id": "nightmare_boss_mastery",
+      "category": "difficulty_bosses",
+      "secret": false,
+      "metric": "boss_victories_at_difficulty_nightmare",
+      "aggregation": "sum",
+      "tiers": [
+        { "id": "bronze", "threshold": 1, "rewards": {"damage_pct": 0.000025} },
+        { "id": "silver", "threshold": 5, "rewards": {"damage_pct": 0.00005} },
+        { "id": "gold", "threshold": 15, "rewards": {"damage_pct": 0.000075} },
+        { "id": "diamond", "threshold": 30, "rewards": {"damage_pct": 0.0001} }
+      ]
+    },
+    {
+      "id": "chaos_runner_mastery",
+      "category": "difficulty_bosses",
+      "secret": false,
+      "metric": "runs_at_difficulty_chaos",
+      "aggregation": "sum",
+      "tiers": [
+        { "id": "bronze", "threshold": 10, "rewards": {"damage_pct": 0.000025} },
+        { "id": "silver", "threshold": 25, "rewards": {"damage_pct": 0.00005} },
+        { "id": "gold", "threshold": 50, "rewards": {"damage_pct": 0.000075} },
+        { "id": "diamond", "threshold": 100, "rewards": {"damage_pct": 0.0001} }
+      ]
+    },
+    {
+      "id": "chaos_boss_mastery",
+      "category": "difficulty_bosses",
+      "secret": false,
+      "metric": "boss_victories_at_difficulty_chaos",
+      "aggregation": "sum",
+      "tiers": [
+        { "id": "bronze", "threshold": 1, "rewards": {"damage_pct": 0.000025} },
+        { "id": "silver", "threshold": 5, "rewards": {"damage_pct": 0.00005} },
+        { "id": "gold", "threshold": 15, "rewards": {"damage_pct": 0.000075} },
+        { "id": "diamond", "threshold": 30, "rewards": {"damage_pct": 0.0001} }
+      ]
     }
   ]
 }
