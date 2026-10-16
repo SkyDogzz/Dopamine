@@ -30,9 +30,14 @@ func _run() -> void:
 		if button.icon == null:
 			_fail("Starting weapon choices should display their weapon sprites")
 			return
-	if current_scene.progression_service == null:
-		_fail("The normal Survival entry should receive progression save capability")
+	if current_scene.progression_service != null:
+		_fail("The Sandbox Survival route must not receive normal progression save capability")
 		return
+	if current_scene.difficulty_id != "normal":
+		_fail("The isolated Sandbox Survival prototype should keep its default tuning")
+		return
+	current_scene.queue_free()
+	await process_frame
 	print("Survival entry smoke passed")
 	quit()
 

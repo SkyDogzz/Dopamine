@@ -38,6 +38,12 @@ func _run() -> void:
 	if service.award_survival_run("invalid", 24, true, 0, "insane").get("error") != "invalid_difficulty":
 		_fail("Unknown difficulty IDs must be rejected before rewards are recorded")
 		return
+	var easy_reward: Dictionary = service.award_survival_run("easy-reward", 4, false, 0, "easy")
+	var hard_reward: Dictionary = service.award_survival_run("hard-reward", 4, false, 0, "hard")
+	if easy_reward.get("essence") != 16 or easy_reward.get("powder_basic") != 22 or \
+		hard_reward.get("essence") != 37 or hard_reward.get("powder_basic") != 48:
+		_fail("The proposed difficulty factors should scale persistent rewards")
+		return
 	print("Survival difficulty unlock smoke passed")
 	quit()
 

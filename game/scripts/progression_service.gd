@@ -53,14 +53,14 @@ func award_survival_run(
 		return {"ok": true, "duplicate": true, "essence": 0, "powder_basic": 0}
 	var wave := clampi(wave_reached, 1, 24)
 	var final_boss_vanquished := victory and wave >= 24
+	var difficulty_factors: Dictionary = SURVIVAL_DIFFICULTY_SCRIPT.DATA[difficulty_id]
 	var newly_unlocked_difficulty := ""
 	var unlocked_index: int = SURVIVAL_DIFFICULTY_SCRIPT.ORDER.find(profile["highest_unlocked_difficulty"])
 	if final_boss_vanquished and difficulty_index == unlocked_index and unlocked_index < SURVIVAL_DIFFICULTY_SCRIPT.ORDER.size() - 1:
 		newly_unlocked_difficulty = SURVIVAL_DIFFICULTY_SCRIPT.ORDER[unlocked_index + 1]
 		profile["highest_unlocked_difficulty"] = newly_unlocked_difficulty
-	# Normal difficulty uses the GDD's proposed base multipliers of 1.0.
-	var essence_reward := roundi(15.0 + 2.0 * wave + (25.0 if final_boss_vanquished else 0.0))
-	var powder_reward := roundi(20.0 + 3.0 * wave + (30.0 if final_boss_vanquished else 0.0))
+	var essence_reward := roundi((15.0 + 2.0 * wave + (25.0 if final_boss_vanquished else 0.0)) * difficulty_factors["essence"])
+	var powder_reward := roundi((20.0 + 3.0 * wave + (30.0 if final_boss_vanquished else 0.0)) * difficulty_factors["powder"])
 	profile["resources"]["essence"] = int(profile["resources"]["essence"]) + essence_reward
 	profile["resources"]["powder_basic"] = int(profile["resources"]["powder_basic"]) + powder_reward
 	var equipment: Dictionary = _equipment_generator.generate_survival_item(run_id)

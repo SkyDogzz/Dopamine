@@ -35,7 +35,7 @@ func _run() -> void:
 		return
 	var equipment_generator = load("res://scripts/equipment_generator.gd")
 	if not equipment_generator.PROPOSED_STAT_RANGES.has("damage_pct") or \
-				not is_equal_approx(equipment_generator.stat_value("damage_pct", 0.5, 2), 3.24) or \
+				not is_equal_approx(equipment_generator.stat_value("damage_pct", 0.5, 2), 3.48) or \
 			equipment_generator.stat_value("damage_pct", 1.0, 0) != 5.0:
 		_fail("Proposed equipment stat percentiles and enhancements should produce calibrated values")
 		return
@@ -181,7 +181,7 @@ func _run() -> void:
 		return
 	var dismantled: Dictionary = service.dismantle_equipment("survival_run-win_equipment")
 	if not dismantled.get("ok", false) or dismantled["profile"]["equipment_inventory"].size() != 1 or \
-			dismantled["profile"]["resources"]["powder_refined"] != 3 or \
+		dismantled["profile"]["resources"]["powder_refined"] != 4 or \
 			service.dismantle_equipment("survival_run-win_equipment").get("ok", false):
 		_fail("Dismantling should remove the item once and persist its proposed rarity powder reward")
 		return

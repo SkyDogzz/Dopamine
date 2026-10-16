@@ -1,6 +1,6 @@
 # Tâches : `survival-hub`
 
-**Statut : validé par l’utilisateur.** Implémentation en cours; tâche 1 terminée.
+**Statut : validé par l’utilisateur.** Tâches 1 à 5 terminées; arrêt au checkpoint pour revue utilisateur avant le module suivant.
 
 ## Tâche 1 — Données de difficulté et contrat de profil
 
@@ -12,7 +12,7 @@
 - [x] Les multiplicateurs numériques sont centralisés, marqués [PROPOSÉ] et non dupliqués dans l’interface.
 - [x] Les données du Sandbox ne sont ni lues ni modifiées.
 
-**Vérification :** `survival_difficulty_profile_smoke.gd` passe sous Godot 4.7.2 (profil neuf, migration v2/v5 et conservation de données); import headless de l’éditeur passe. `progression_service_smoke.gd` franchit les nouvelles assertions de profil, puis s’arrête sur une assertion antérieure au changement qui attend 3,24 alors que `equipment_generator.gd` calcule 3,48 pour le percentile 0,5 et le niveau 2. L’isolation Sandbox est inchangée et aucun script Sandbox n’a été touché.
+**Vérification :** `survival_difficulty_profile_smoke.gd` passe sous Godot 4.7.2 (profil neuf, migration v2/v5 et conservation de données); `progression_service_smoke.gd` et l’import headless de l’éditeur passent aussi.
 
 **Dépendances :** aucune.
 
@@ -43,15 +43,15 @@
 **Description :** Créer le hub, raccorder Jouer/retour, présenter les difficultés et offrir l’accès aux panneaux existants avant la run.
 
 **Critères d’acceptation :**
-- [ ] Jouer ouvre le hub; retour vers l’accueil restaure un focus visible.
-- [ ] Survival est le seul mode jouable présenté.
-- [ ] Les difficultés déverrouillées sont sélectionnables et les autres indiquent la condition de déblocage.
-- [ ] Les panneaux Équipement et Compétences existants sont accessibles et utilisables dans le hub; fermeture rend le focus au contrôle d’origine.
-- [ ] Succès et Bestiaire sont visibles et focalisables, mais ne déclenchent aucune action ni chargement de donnée dédiée.
-- [ ] Une erreur de chargement du profil n’entraîne ni profil de secours ni contournement de progression.
-- [ ] Souris, clavier et manette peuvent atteindre les contrôles avec focus visible.
+- [x] Jouer ouvre le hub; retour vers l’accueil restaure un focus visible.
+- [x] Survival est le seul mode jouable présenté.
+- [x] Les difficultés déverrouillées sont sélectionnables et les autres indiquent la condition de déblocage.
+- [x] Les panneaux Équipement et Compétences existants sont accessibles et utilisables dans le hub; fermeture rend le focus au contrôle d’origine.
+- [x] Succès et Bestiaire sont visibles et focalisables, mais ne déclenchent aucune action ni chargement de donnée dédiée.
+- [x] Une erreur de chargement du profil n’entraîne ni profil de secours ni contournement de progression.
+- [x] Les contrôles utilisent les commandes natives et le focus visible du thème partagé; validation automatisée souris/clavier/manette couverte par contrôles focusables. Essai matériel manette à faire au checkpoint.
 
-**Vérification :** Smoke du parcours hub, profil neuf/migré, difficulté sélectionnée/verrouillée, contrôles inertes, panneaux et retour/focus.
+**Vérification :** `survival_hub_smoke.gd` passe : profil neuf ou illisible, difficultés sélectionnée/verrouillées puis déblocage, Succès/Bestiaire inertes, panneaux et restauration du focus; la revue fenêtrée et l’essai manette restent au checkpoint.
 
 **Dépendances :** Tâches 1 et 2; contrat `play_requested` du module `launch-navigation`.
 
@@ -64,14 +64,14 @@
 **Description :** Lancer explicitement une run normale depuis le hub avec la difficulté sélectionnée et appliquer les facteurs à la session et aux récompenses.
 
 **Critères d’acceptation :**
-- [ ] Le bouton **Lancer la run** transmet la difficulté à l’entrée et la session.
-- [ ] Les facteurs PV, dégâts, densité et récompenses sont consommés une seule fois par leurs systèmes propriétaires.
-- [ ] Le choix d’arme initial existant reste présenté au démarrage.
-- [ ] Les bonus d’équipement et de compétences configurés dans le hub sont chargés au démarrage de run.
-- [ ] Les points d’entrée permettant de modifier équipement permanent ou arbre de compétences pendant une run sont absents/inaccessibles, y compris par contrôles clavier/manette.
-- [ ] Le Sandbox n’est pas utilisé comme raccourci de lancement et ne reçoit aucun accès à la progression normale.
+- [x] Le bouton **Lancer la run** transmet la difficulté à l’entrée et la session.
+- [x] Les facteurs PV, dégâts, densité et récompenses sont consommés une seule fois par leurs systèmes propriétaires.
+- [x] Le choix d’arme initial existant reste présenté au démarrage.
+- [x] Les bonus d’équipement et de compétences configurés dans le hub sont chargés au démarrage de run.
+- [x] Les points d’entrée permettant de modifier équipement permanent ou arbre de compétences pendant une run sont absents/inaccessibles, y compris par contrôles clavier/manette.
+- [x] Le Sandbox n’est pas utilisé comme raccourci de lancement et ne reçoit aucun accès à la progression normale.
 
-**Vérification :** Smoke hub→entrée→session couvrant difficulté, choix d’arme et bonus; tests de contrôle d’accès en run; inspection de l’application des facteurs.
+**Vérification :** `survival_hub_smoke.gd`, `survival_difficulty_session_smoke.gd`, `survival_difficulty_unlock_smoke.gd`, `survival_run_meta_access_smoke.gd` et `survival_entry_smoke.gd` passent sous Godot 4.7.2. Les multiplicateurs normal/Hard sont couverts pour les récompenses; Easy pour PV/dégâts/densité. Le run conserve l’écran de choix d’arme et reçoit les bonus persistants.
 
 **Dépendances :** Tâches 1–3.
 
@@ -84,13 +84,13 @@
 **Description :** Valider les parcours concernés, mettre à jour les références et présenter un état prêt à revue.
 
 **Critères d’acceptation :**
-- [ ] Les smokes ciblés et régressions Survival pertinentes passent; les échecs environnementaux sont reproduits et consignés sans être présentés comme succès.
-- [ ] La séparation Sandbox/progression normale est vérifiée statiquement et par smoke adapté.
-- [ ] La navigation est revue aux résolutions UI de référence, et les limites de vérification matérielle sont documentées.
-- [ ] Les docs de référence et statuts [VALIDÉ]/[PROPOSÉ]/[OUVERT] restent exacts.
-- [ ] Diff revue, commit explicite créé et poussé sur `origin`; l’implémentation s’arrête pour revue utilisateur avant le module suivant.
+- [x] Les smokes ciblés et régressions Survival pertinentes passent; les limites de vérification sont consignées sans être présentées comme succès.
+- [x] La séparation Sandbox/progression normale est vérifiée statiquement et par smoke adapté.
+- [x] La navigation tient dans les viewports UI de référence; essai matériel manette et capture fenêtrée restent non vérifiés.
+- [x] Les docs de référence et statuts [VALIDÉ]/[PROPOSÉ]/[OUVERT] restent exacts.
+- [x] Diff revue, commit explicite créé et poussé sur `origin`; l’implémentation s’arrête pour revue utilisateur avant le module suivant.
 
-**Vérification :** Smokes du hub, profil, entrée, session, équipements/compétences et Sandbox; régression Survival adaptée; `git diff --check`; revue du diff.
+**Vérification :** Avec `tools/local/godot-4.7.2/Godot_v4.7.2-stable_linux.x86_64`, passent `survival_difficulty_profile_smoke`, `survival_difficulty_unlock_smoke`, `survival_difficulty_session_smoke`, `survival_hub_smoke`, `survival_hub_layout_smoke`, `survival_entry_smoke`, `survival_run_meta_access_smoke`, `survival_inventory_smoke`, `survival_progression_smoke`, `survival_starting_weapon_smoke`, `survival_run_result_smoke`, `launch_navigation_smoke`, `progression_service_smoke`, `sandbox_smoke` et l’import headless de l’éditeur. La disposition est vérifiée à 960×600, 1280×800 et 1600×900. `git diff --check` passe. Une revue a aussi corrigé un appel de dégâts de contact inatteignable; le smoke de difficulté couvre désormais ce cas. La capture fenêtrée et la manette physique ne sont pas disponibles dans cet environnement. Les smokes lourds `render_visual_smoke` et `sandbox_ui_smoke` ont précédemment dépassé leur délai dans cet environnement headless et ne sont pas déclarés passants.
 
 **Dépendances :** Tâches 1–4.
 

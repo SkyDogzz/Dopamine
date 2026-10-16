@@ -38,6 +38,7 @@ const WEAPON_ICONS := {
 const WAVE_DIRECTOR_SCRIPT := preload("res://scripts/survival_wave_director.gd")
 const LOADOUT_SCRIPT := preload("res://scripts/survival_loadout.gd")
 const CHEST_DIRECTOR_SCRIPT := preload("res://scripts/survival_chest_director.gd")
+const DIFFICULTY_SCRIPT := preload("res://scripts/survival_difficulty.gd")
 const WAVE_HP_GROWTH := 1.12
 const WAVE_HP_CAP := 12.0
 
@@ -223,6 +224,7 @@ const WAVE_HP_CAP := 12.0
 
 var simulation: Object
 var progression_service: RefCounted
+var difficulty_id := "normal"
 var _sprite_renderer: RefCounted
 var _hp_fill_style: StyleBoxFlat
 var _run_id := ""
@@ -278,7 +280,6 @@ var _starting_weapon_choice_open := false
 var _manually_paused := false
 var _contact_invulnerable_until := 0.0
 var _pending_lifesteal := 0.0
-var _inventory_was_running := false
 var _cached_persistent_damage_multiplier := 1.0
 var _cached_equipment_bonuses: Dictionary = {}
 var _cached_unique_effects: Array[String] = []
@@ -304,10 +305,6 @@ var _pending_summon_sequences: Dictionary = {}
 @onready var _boss_value: Label = $HUD/BossPanel/BossInfo/BossValue
 @onready var _boss_hp_bar: ProgressBar = $HUD/BossPanel/BossInfo/BossHPBar
 @onready var _chest_choice: PanelContainer = $HUD/ChestOverlay/ChestChoice
-@onready var _equipment_button: Button = $HUD/EquipmentButton
-@onready var _equipment_panel: CenterContainer = $HUD/EquipmentInventoryOverlay
-@onready var _skill_tree_button: Button = $HUD/SkillsButton
-@onready var _skill_tree_panel: CenterContainer = $HUD/SkillTreeOverlay
 @onready var _run_result_overlay: CenterContainer = $HUD/RunResultOverlay
 @onready var _run_result: PanelContainer = $HUD/RunResultOverlay/RunResultPanel
 
@@ -332,20 +329,6 @@ func _ready() -> void:
 		return
 	_chest_choice.option_selected.connect(_on_chest_option_selected)
 	_run_result.restart_requested.connect(_restart_run)
-	_equipment_button.pressed.connect(_open_equipment_inventory)
-	_skill_tree_button.pressed.connect(_open_skill_tree)
-	_equipment_panel.close_requested.connect(_close_equipment_inventory)
-	_equipment_panel.equipment_state_requested.connect(_set_equipment_state)
-	_equipment_panel.enhancement_requested.connect(_enhance_equipment)
-	_equipment_panel.unique_effect_requested.connect(_choose_unique_effect)
-	_equipment_panel.dismantle_requested.connect(_dismantle_equipment)
-	_equipment_panel.progression_service = progression_service
-	_skill_tree_panel.close_requested.connect(_close_skill_tree)
-	_skill_tree_panel.unlock_requested.connect(_unlock_skill_node)
-	_skill_tree_panel.respec_requested.connect(_respec_skill_tree)
-	_skill_tree_panel.progression_service = progression_service
-	_equipment_button.visible = progression_service != null
-	_skill_tree_button.visible = progression_service != null
 	player_max_hp = simulation.initial_player_hp()
 	_base_player_move_speed = player.move_speed
 	if progression_service != null:
@@ -359,7 +342,8 @@ func _ready() -> void:
 	_next_elite_spawn_time = maxf(0.0, elite_spawn_interval_seconds)
 	_publish_player_target()
 	if spawn_initial_enemy and not wave_spawning_enabled:
-		simulation.spawn_enemy("chaser", 1, player.global_position + Vector2(140.0, 0.0), Vector2.ZERO)
+		simulation.spawn_enemy("chaser", 1, player.global_position + Vector2(140.0, 0.0), Vector2.ZERO,
+			float(DIFFICULTY_SCRIPT.DATA.get(difficulty_id, DIFFICULTY_SCRIPT.DATA["normal"])["enemy_hp"]))
 	if skip_starting_weapon_choice:
 		loadout.choose_starting_weapon("lightning_conductor")
 		simulation.resume()
@@ -373,8 +357,7 @@ func _physics_process(_delta: float) -> void:
 func _unhandled_key_input(event: InputEvent) -> void:
 	if not event is InputEventKey or not event.pressed or event.echo or event.keycode != KEY_ESCAPE:
 		return
-	if simulation == null or run_over or _chest_open or _starting_weapon_choice_open or \
-			_equipment_panel.visible or _skill_tree_panel.visible:
+	if simulation == null or run_over or _chest_open or _starting_weapon_choice_open:
 		return
 	if _manually_paused:
 		_manually_paused = false
@@ -536,7 +519,7 @@ func _apply_contact_damage(state: Dictionary, current_simulation_time: float) ->
 			var projectile_distance := player_contact_radius + float(projectile.get("radius", 0.0))
 			if player.global_position.distance_squared_to(projectile_position) > projectile_distance * projectile_distance:
 				continue
-			_take_player_damage(float(projectile.get("damage", shooter_projectile_damage)))
+			_take_enemy_damage(float(projectile.get("damage", shooter_projectile_damage)))
 			_contact_invulnerable_until = current_simulation_time + contact_invulnerability_seconds
 			var projectile_id: Dictionary = entity["id"]
 			simulation.despawn(int(projectile_id["index"]), int(projectile_id["generation"]))
@@ -548,7 +531,7 @@ func _apply_contact_damage(state: Dictionary, current_simulation_time: float) ->
 		var contact_distance := player_contact_radius + enemy_contact_radius
 		if player.global_position.distance_squared_to(enemy_position) > contact_distance * contact_distance:
 			continue
-		_take_player_damage(contact_damage_per_hit)
+		_take_enemy_damage(contact_damage_per_hit)
 		_contact_invulnerable_until = current_simulation_time + contact_invulnerability_seconds
 		return
 
@@ -619,7 +602,7 @@ func _update_exploder_attacks(current_simulation_time: float, paused: bool) -> v
 		var blast_origin: Vector2 = attack["origin"]
 		if player.global_position.distance_squared_to(blast_origin) <= exploder_blast_radius * exploder_blast_radius and \
 				current_simulation_time >= _contact_invulnerable_until:
-			_take_player_damage(exploder_damage)
+			_take_enemy_damage(exploder_damage)
 			_contact_invulnerable_until = current_simulation_time + contact_invulnerability_seconds
 		simulation.despawn(int(id["index"]), int(id["generation"]))
 		attack["phase"] = "detonated"
@@ -671,7 +654,9 @@ func _update_summoner_attacks(current_simulation_time: float, paused: bool) -> v
 		attack["origin"] = origin
 		if current_simulation_time < float(attack["summon_at"]) or free_summon_slots <= 0:
 			continue
-		var sequence: int = simulation.spawn_enemy("summoned", 1, attack["spawn_position"], Vector2.ZERO)
+		var sequence: int = simulation.spawn_enemy(
+			"summoned", 1, attack["spawn_position"], Vector2.ZERO, _enemy_hp_multiplier(wave_director.wave)
+		)
 		if sequence <= 0:
 			continue
 		_pending_summon_sequences[sequence] = true
@@ -756,7 +741,9 @@ func _spawn_boss_summon(origin: Vector2) -> void:
 	if active_summons >= summoner_max_active_summons:
 		return
 	var spawn_position := origin + Vector2.from_angle(randf() * TAU) * summoner_spawn_radius
-	var sequence: int = simulation.spawn_enemy("summoned", 1, spawn_position, Vector2.ZERO)
+	var sequence: int = simulation.spawn_enemy(
+		"summoned", 1, spawn_position, Vector2.ZERO, _enemy_hp_multiplier(wave_director.wave)
+	)
 	if sequence > 0:
 		_pending_summon_sequences[sequence] = true
 
@@ -777,6 +764,10 @@ func _take_player_damage(amount: float) -> void:
 	var absorbed := minf(player_shield, amount)
 	player_shield -= absorbed
 	player_hp = maxf(0.0, player_hp - (amount - absorbed))
+
+func _take_enemy_damage(amount: float) -> void:
+	var factors: Dictionary = DIFFICULTY_SCRIPT.DATA.get(difficulty_id, DIFFICULTY_SCRIPT.DATA["normal"])
+	_take_player_damage(amount * float(factors["enemy_damage"]))
 
 func _refresh_hud(state: Dictionary) -> void:
 	_hp_value.text = "HP  %.1f / %.0f%s" % [
@@ -954,129 +945,10 @@ func _finish_run(victory: bool) -> void:
 	_run_result_overlay.visible = true
 	var reward := {}
 	if progression_service != null:
-		reward = progression_service.award_survival_run(_run_id, wave_director.wave, victory, kill_count)
-	_run_result.show_result(victory, wave_director.wave, player_active_time, kill_count, reward)
-
-func _open_equipment_inventory() -> void:
-	if progression_service == null or run_over or _chest_open or _starting_weapon_choice_open or _equipment_panel.visible:
-		return
-	_inventory_was_running = not bool(simulation.snapshot()["paused"])
-	if _inventory_was_running:
-		simulation.pause()
-	var result: Dictionary = progression_service.load_profile()
-	if result.get("ok", false):
-		_equipment_panel.present(result["profile"])
-	else:
-		_equipment_panel.present_error()
-
-func _open_skill_tree() -> void:
-	if progression_service == null or run_over or _chest_open or _starting_weapon_choice_open or \
-			_equipment_panel.visible or _skill_tree_panel.visible:
-		return
-	_inventory_was_running = not bool(simulation.snapshot()["paused"])
-	if _inventory_was_running:
-		simulation.pause()
-	var result: Dictionary = progression_service.load_profile()
-	if result.get("ok", false):
-		_skill_tree_panel.present(result["profile"])
-	else:
-		_skill_tree_panel.present_error()
-
-func _close_equipment_inventory() -> void:
-	if _inventory_was_running and not run_over:
-		simulation.resume()
-	_inventory_was_running = false
-	_equipment_button.grab_focus()
-
-func _close_skill_tree() -> void:
-	_skill_tree_panel.visible = false
-	if _inventory_was_running and not run_over:
-		simulation.resume()
-	_inventory_was_running = false
-	_skill_tree_button.grab_focus()
-
-func _unlock_skill_node(node_id: String) -> void:
-	var result: Dictionary = progression_service.unlock_skill_node(node_id)
-	if result.get("ok", false):
-		var health_ratio := player_hp / player_max_hp if player_max_hp > 0.0 else 1.0
-		player_max_hp = simulation.initial_player_hp() * (1.0 + progression_service.skill_bonus("max_hp_pct")) + _equipment_bonus("max_hp")
-		player_hp = player_max_hp * health_ratio
-		_refresh_persistent_bonuses()
-		_skill_tree_panel.present(result["profile"])
-	else:
-		_skill_tree_panel.present_error()
-
-func _respec_skill_tree() -> void:
-	var result: Dictionary = progression_service.respec_skill_tree()
-	if result.get("ok", false):
-		var health_ratio := player_hp / player_max_hp if player_max_hp > 0.0 else 1.0
-		player_max_hp = simulation.initial_player_hp() * (1.0 + progression_service.skill_bonus("max_hp_pct")) + _equipment_bonus("max_hp")
-		player_hp = player_max_hp * health_ratio
-		_refresh_persistent_bonuses()
-		_skill_tree_panel.present(result["profile"])
-	else:
-		_skill_tree_panel.present_error()
-
-func _set_equipment_state(instance_id: String, equipped: bool) -> void:
-	if progression_service == null or not _equipment_panel.visible:
-		return
-	var result: Dictionary = progression_service.set_equipped(instance_id, equipped)
-	if result.get("ok", false):
-		_refresh_persistent_bonuses()
-		var health_ratio := player_hp / player_max_hp if player_max_hp > 0.0 else 1.0
-		player_max_hp = simulation.initial_player_hp() * (1.0 + progression_service.skill_bonus("max_hp_pct")) + _equipment_bonus("max_hp")
-		player_hp = minf(player_max_hp, player_max_hp * health_ratio)
-		_equipment_panel.present(result["profile"])
-	else:
-		_equipment_panel.present_error()
-
-func _enhance_equipment(instance_id: String, stat_id: String, powder_tier: String) -> void:
-	if progression_service == null or not _equipment_panel.visible:
-		return
-	var result: Dictionary = progression_service.enhance_equipment(instance_id, stat_id, powder_tier)
-	if result.get("ok", false):
-		_refresh_persistent_bonuses()
-		var health_ratio := player_hp / player_max_hp if player_max_hp > 0.0 else 1.0
-		player_max_hp = simulation.initial_player_hp() * (1.0 + progression_service.skill_bonus("max_hp_pct")) + _equipment_bonus("max_hp")
-		player_hp = minf(player_max_hp, player_max_hp * health_ratio)
-		_equipment_panel.present(result["profile"])
-		_equipment_panel.show_feedback(
-			"ENHANCEMENT SUCCESS" if result["success"] else \
-				"CRITICAL FAILURE — LEVEL LOST" if result["critical_failure"] else "ENHANCEMENT FAILED"
+		reward = progression_service.award_survival_run(
+			_run_id, wave_director.wave, victory, kill_count, difficulty_id
 		)
-	else:
-		_equipment_panel.show_feedback("ENHANCEMENT FAILED: %s" % str(result.get("error", "unknown")))
-
-func _choose_unique_effect(instance_id: String, effect_id: String) -> void:
-	if progression_service == null or not _equipment_panel.visible:
-		return
-	var result: Dictionary = progression_service.choose_unique_effect(instance_id, effect_id)
-	if result.get("ok", false):
-		_refresh_persistent_bonuses()
-		_equipment_panel.present(result["profile"])
-		_equipment_panel.show_feedback("EFFECT SAVED — PROPOSED BEHAVIOR ACTIVE WHEN EQUIPPED" if effect_id in ["lightning_burst", "overflow_shield", "evolution_shockwave", "elite_haste"] else "EFFECT SAVED — PROTOTYPE ONLY; NO GAMEPLAY EFFECT")
-	else:
-		_equipment_panel.show_feedback("EFFECT CHOICE FAILED: %s" % str(result.get("error", "unknown")))
-
-func _dismantle_equipment(instance_id: String) -> void:
-	if progression_service == null or not _equipment_panel.visible:
-		return
-	var result: Dictionary = progression_service.dismantle_equipment(instance_id)
-	if result.get("ok", false):
-		_refresh_persistent_bonuses()
-		var health_ratio := player_hp / player_max_hp if player_max_hp > 0.0 else 1.0
-		player_max_hp = simulation.initial_player_hp() * (1.0 + progression_service.skill_bonus("max_hp_pct")) + _equipment_bonus("max_hp")
-		player_hp = minf(player_max_hp, player_max_hp * health_ratio)
-		_equipment_panel.present(result["profile"])
-		var reward_parts: PackedStringArray = []
-		for resource in result["powder_rewards"]:
-			reward_parts.append("+%d %s" % [
-				int(result["powder_rewards"][resource]), resource.trim_prefix("powder_").to_upper(),
-			])
-		var reward_text := ", ".join(reward_parts)
-		_equipment_panel.show_feedback("ITEM DISMANTLED — %s" % reward_text)
-	else:
-		_equipment_panel.show_feedback("DISMANTLE FAILED: %s" % str(result.get("error", "unknown")))
+	_run_result.show_result(victory, wave_director.wave, player_active_time, kill_count, reward)
 
 func _restart_run() -> void:
 	get_tree().reload_current_scene()
@@ -1143,7 +1015,7 @@ func _spawn_wave_enemy() -> void:
 		enemy_type = "shielder"
 	if wave_director.wave >= 12 and randf() < 0.08:
 		enemy_type = "summoner"
-	var hp_multiplier := minf(pow(WAVE_HP_GROWTH, float(wave_director.wave - 1)), WAVE_HP_CAP)
+	var hp_multiplier := _enemy_hp_multiplier(wave_director.wave)
 	simulation.spawn_enemy(enemy_type, 1, spawn_position, Vector2.ZERO, hp_multiplier)
 
 func _try_spawn_elite() -> void:
@@ -1170,7 +1042,7 @@ func _try_spawn_elite() -> void:
 	if randf() > clampf(elite_spawn_chance, 0.0, 1.0):
 		return
 	var spawn_position := player.global_position + Vector2.from_angle(randf() * TAU) * enemy_spawn_radius
-	var hp_multiplier := minf(pow(WAVE_HP_GROWTH, float(wave_director.wave - 1)), WAVE_HP_CAP)
+	var hp_multiplier := _enemy_hp_multiplier(wave_director.wave)
 	simulation.spawn_enemy("elite", 1, spawn_position, Vector2.ZERO, hp_multiplier)
 
 func _spawn_boss_placeholder(boss_type: String) -> void:
@@ -1181,7 +1053,8 @@ func _spawn_boss_placeholder(boss_type: String) -> void:
 		if components.get("EnemyType", "") == boss_type:
 			return
 	var spawn_position := player.global_position + Vector2.RIGHT.rotated(randf() * TAU) * enemy_spawn_radius
-	simulation.spawn(boss_type, 1, spawn_position, boss_placeholder_hp, Vector2.ZERO, 25.0)
+	var enemy_hp_factor: float = DIFFICULTY_SCRIPT.DATA.get(difficulty_id, DIFFICULTY_SCRIPT.DATA["normal"])["enemy_hp"]
+	simulation.spawn(boss_type, 1, spawn_position, boss_placeholder_hp * enemy_hp_factor, Vector2.ZERO, 25.0)
 	_boss_spawn_pending = true
 
 func debug_advance_wave() -> void:
@@ -1214,7 +1087,13 @@ func _kill_boss_placeholder(boss_type: String) -> void:
 func _wave_population(wave_number: int) -> int:
 	var progress := float(wave_number - 1) / 23.0
 	var proposed_population := roundi(10.0 + 390.0 * pow(progress, 1.5))
-	return clampi(roundi(float(proposed_population) * wave_population_scale), 1, wave_population_cap)
+	var density_factor: float = DIFFICULTY_SCRIPT.DATA.get(difficulty_id, DIFFICULTY_SCRIPT.DATA["normal"])["density"]
+	return clampi(roundi(float(proposed_population) * wave_population_scale * density_factor), 1, wave_population_cap)
+
+func _enemy_hp_multiplier(wave_number: int) -> float:
+	var wave_factor := minf(pow(WAVE_HP_GROWTH, float(wave_number - 1)), WAVE_HP_CAP)
+	var difficulty_factor: float = DIFFICULTY_SCRIPT.DATA.get(difficulty_id, DIFFICULTY_SCRIPT.DATA["normal"])["enemy_hp"]
+	return wave_factor * difficulty_factor
 
 func _wave_status_text() -> String:
 	match wave_director.state:

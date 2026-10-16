@@ -16,6 +16,9 @@ func _run() -> void:
 	if launch_menu == null:
 		_fail("Launch menu should instantiate as a Control")
 		return
+	var hub_route := Callable(launch_menu, "_open_survival_hub")
+	if launch_menu.play_requested.is_connected(hub_route):
+		launch_menu.play_requested.disconnect(hub_route)
 	root.add_child(launch_menu)
 	await process_frame
 	for control_name in ["PlayButton", "OptionsButton", "QuitButton", "SandboxButton"]:

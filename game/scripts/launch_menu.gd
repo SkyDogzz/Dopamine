@@ -11,6 +11,7 @@ var _options_panel: Control
 
 func _ready() -> void:
 	_play_button.pressed.connect(_on_play_pressed)
+	play_requested.connect(_open_survival_hub)
 	_options_button.pressed.connect(_on_options_pressed)
 	_quit_button.pressed.connect(_on_quit_pressed)
 	_sandbox_button.pressed.connect(_on_sandbox_pressed)
@@ -18,6 +19,11 @@ func _ready() -> void:
 
 func _on_play_pressed() -> void:
 	play_requested.emit()
+
+func _open_survival_hub() -> void:
+	var error := get_tree().change_scene_to_file("res://scenes/survival_hub.tscn")
+	if error != OK:
+		push_error("Could not open Survival hub: %s" % error_string(error))
 
 func _on_quit_pressed() -> void:
 	get_tree().quit()
