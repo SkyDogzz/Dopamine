@@ -421,6 +421,7 @@ Dictionary CombatSimulation::snapshot() const {
 		components["Velocity2D"] = velocity;
 		components["Health"] = health;
 		components["EnemyType"] = String(entity.type.id.c_str());
+		components["CollisionRadius"] = entity.type.collision_radius;
 		components["ThreatLevel"] = entity.type.threat_level;
 		components["MoveSpeed"] = entity.type.move_speed;
 		if (!entity.type.affix.empty()) {

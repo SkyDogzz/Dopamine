@@ -32,8 +32,14 @@ int main() {
 	const auto shielder_profile = enemy_profile("shielder");
 	const auto summoner_profile = enemy_profile("summoner");
 	const auto summoned_profile = enemy_profile("summoned");
+	const auto mid_boss_profile = enemy_profile("mid_boss");
+	const auto final_boss_profile = enemy_profile("final_boss");
 	require(chaser_profile && chaser_profile->health == 20.0F && chaser_profile->speed == 75.0F,
 			"proposed chaser profile should match GDD starting values");
+	require(chaser_profile->collision_radius == 12.0F && mid_boss_profile &&
+			mid_boss_profile->collision_radius == 26.0F && final_boss_profile &&
+			final_boss_profile->collision_radius == 26.0F,
+			"enemy body radii should match the rendered mob and boss sprite diameters");
 	require(sprinter_profile && sprinter_profile->health == 12.0F && sprinter_profile->speed == 125.0F,
 			"proposed sprinter profile should match GDD starting values");
 	require(tank_profile && tank_profile->health == 80.0F && tank_profile->speed == 45.0F,
@@ -558,11 +564,11 @@ int main() {
 	for (double step_seconds : {1.0 / 120.0, 1.0 / 60.0, 1.0 / 30.0, 0.1}) {
 		SimulationCore timed_status;
 		const auto timed_target = timed_status.spawn("chaser", 0.0F, 0.0F, 100.0F, 0.0F, 0.0F);
-		const auto moving_entity = timed_status.spawn("chaser", 0.0F, 20.0F, 100.0F, 100.0F, 0.0F);
+		const auto moving_entity = timed_status.spawn("chaser", 0.0F, 30.0F, 100.0F, 100.0F, 0.0F);
 		timed_status.apply_damage_over_time(timed_target, 2.0F, 0.25, 1.0);
 		int ticks = 0;
 		float previous_x = 0.0F;
-		float previous_y = 20.0F;
+		float previous_y = 30.0F;
 		for (double elapsed = 0.0; elapsed < 1.0 - 1e-12; elapsed += step_seconds) {
 			const double step = std::min(step_seconds, 1.0 - elapsed);
 			for (const auto &event : timed_status.advance(step)) {
@@ -642,6 +648,29 @@ int main() {
 			"lethal hit should remove the enemy and consumed projectile");
 	require(std::abs(combat.simulation_time() - 0.2) < 0.001,
 			"combat step should retain its explicit duration");
+	SimulationCore boss_hitbox;
+	const auto boss_hitbox_target = boss_hitbox.spawn("final_boss", 25.0F, 0.0F, 100.0F, 0.0F, 0.0F);
+	boss_hitbox.spawn_projectile("test_projectile", 0.0F, 0.0F, 1.0F, 0.1F, 1.0, 0.0F, 0.0F);
+	boss_hitbox.advance(0.01);
+	require(boss_hitbox.entity(boss_hitbox_target)->health.current == 99.0F,
+			"projectile collision should use the large boss hitbox instead of the normal-mob radius");
+	SimulationCore normal_mob_hitbox;
+	const auto normal_mob_target = normal_mob_hitbox.spawn("chaser", 25.0F, 0.0F, 100.0F, 0.0F, 0.0F);
+	normal_mob_hitbox.spawn_projectile("test_projectile", 0.0F, 0.0F, 1.0F, 0.1F, 1.0, 0.0F, 0.0F);
+	normal_mob_hitbox.advance(0.01);
+	require(normal_mob_hitbox.entity(normal_mob_target)->health.current == 100.0F,
+			"projectile should not hit a normal mob outside its visible sprite footprint");
+	SimulationCore body_overlap;
+	const auto body_first = body_overlap.spawn("chaser", 0.0F, 0.0F, 20.0F, 0.0F, 0.0F);
+	const auto body_second = body_overlap.spawn("tank", 30.0F, 0.0F, 80.0F, 0.0F, 0.0F);
+	body_overlap.dash_entity(body_second, -100.0F, 0.0F, 1.0);
+	body_overlap.advance(0.2);
+	const auto body_first_after = body_overlap.entity(body_first);
+	const auto body_second_after = body_overlap.entity(body_second);
+	require(body_first_after && body_second_after &&
+			std::hypot(body_first_after->transform.x - body_second_after->transform.x,
+					body_first_after->transform.y - body_second_after->transform.y) >= 24.0F,
+			"overlapping enemy bodies should be separated by the sum of their hitbox radii");
 	SimulationCore lightning_chain;
 	const auto lightning_source = lightning_chain.spawn("chaser", 0.0F, 0.0F, 100.0F, 0.0F, 0.0F);
 	const auto lightning_target = lightning_chain.spawn("chaser", 40.0F, 0.0F, 100.0F, 0.0F, 0.0F);

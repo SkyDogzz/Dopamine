@@ -10,7 +10,6 @@ namespace dopamine::sim {
 
 namespace {
 
-constexpr float enemy_collision_radius = 12.0F; // Provisional until hitboxes are specified.
 constexpr float proposed_bloodstorm_orbit_radius = 30.0F;
 constexpr float proposed_bloodstorm_orbit_angular_speed = 5.0F;
 
@@ -41,6 +40,8 @@ std::optional<EnemyProfile> enemy_profile(std::string_view id) {
 	if (id == "buffer") return EnemyProfile{"buffer", 35.0F, 55.0F, 2.0F, 150.0F, 1.2F};
 	// Elite base stats and affix tuning remain proposed prototypes.
 	if (id == "elite") return EnemyProfile{"elite", 50.0F, 100.0F, 3.0F};
+	if (id == "mid_boss") return EnemyProfile{"mid_boss", 1.0F, 0.0F, 10.0F, 0.0F, 1.0F, 0.0F, 1.0F, 26.0F};
+	if (id == "final_boss") return EnemyProfile{"final_boss", 1.0F, 0.0F, 25.0F, 0.0F, 1.0F, 0.0F, 1.0F, 26.0F};
 	return std::nullopt;
 }
 
@@ -129,7 +130,9 @@ EntityId SimulationCore::spawn(std::string type, float x, float y, float hp, flo
 			profile ? profile->shield_radius : 0.0F,
 			profile ? profile->shield_damage_multiplier : 1.0F,
 			false,
-			{}};
+			{},
+			profile ? profile->collision_radius : 12.0F,
+			profile.has_value() && (type == "mid_boss" || type == "final_boss" || type == "elite")};
 	projectile_flags_[index] = false;
 	projectiles_[index] = {};
 	xp_orb_flags_[index] = false;
@@ -199,7 +202,7 @@ EntityId SimulationCore::spawn_projectile(std::string type, float x, float y, fl
 	projectile.chill_speed_multiplier = chill_speed_multiplier;
 	projectile.chill_damage_multiplier = chill_damage_multiplier;
 	if (type.starts_with("lightning_arc:") || type == "infinite_circuit_branch") {
-		float nearest_distance_squared = enemy_collision_radius * enemy_collision_radius;
+		float nearest_distance_squared = std::numeric_limits<float>::infinity();
 		for (uint32_t index = 0; index < slots_.size(); ++index) {
 			if (!slots_[index].active || projectile_flags_[index] || xp_orb_flags_[index] || health_[index].current <= 0.0F) {
 				continue;
@@ -207,7 +210,8 @@ EntityId SimulationCore::spawn_projectile(std::string type, float x, float y, fl
 			const float dx = transforms_[index].x - x;
 			const float dy = transforms_[index].y - y;
 			const float distance_squared = dx * dx + dy * dy;
-			if (distance_squared < nearest_distance_squared) {
+			const float target_radius = enemy_types_[index].collision_radius;
+			if (distance_squared <= target_radius * target_radius && distance_squared < nearest_distance_squared) {
 				nearest_distance_squared = distance_squared;
 				projectile.ignores_source_entity = true;
 				projectile.source_entity = {index, slots_[index].generation};
@@ -412,6 +416,7 @@ void SimulationCore::restore_state(const SimulationCoreState &state) {
 		const bool valid_health = std::isfinite(entity.health.current) && std::isfinite(entity.health.maximum) &&
 				entity.health.maximum > 0.0F && entity.health.current > 0.0F &&
 				entity.health.current <= entity.health.maximum;
+		const bool valid_collision = std::isfinite(entity.type.collision_radius) && entity.type.collision_radius > 0.0F;
 		const bool valid_type = !entity.type.id.empty() && std::isfinite(entity.type.threat_level) &&
 				entity.type.threat_level > 0.0F && std::isfinite(entity.type.move_speed) && entity.type.move_speed >= 0.0F &&
 				std::isfinite(entity.type.damage_taken_multiplier) && entity.type.damage_taken_multiplier > 0.0F &&
@@ -430,7 +435,7 @@ void SimulationCore::restore_state(const SimulationCoreState &state) {
 					? entity.type.shield_radius == 0.0F && entity.type.shield_source.generation != 0 &&
 						entity.type.shield_source.index < slot_count
 					: entity.type.shield_source.generation == 0);
-		if (!valid_transform || !valid_health || !valid_type || !valid_support || !valid_shield ||
+		if (!valid_transform || !valid_health || !valid_type || !valid_collision || !valid_support || !valid_shield ||
 				(entity.is_projectile && entity.is_xp_orb)) {
 			throw std::invalid_argument("invalid active simulation core entity");
 		}
@@ -657,6 +662,7 @@ std::vector<CombatEvent> SimulationCore::advance(double delta_seconds) {
 	const std::vector<Transform2D> start_positions = has_active_projectile
 			? transforms_
 			: std::vector<Transform2D>{};
+	const std::vector<Transform2D> positions_before_movement = transforms_;
 	for (std::size_t index = 0; index < slots_.size(); ++index) {
 		if (slots_[index].active && !projectile_flags_[index] && !xp_orb_flags_[index]) {
 			if (delta_seconds > 0.0 && health_[index].current < health_[index].maximum &&
@@ -680,6 +686,7 @@ std::vector<CombatEvent> SimulationCore::advance(double delta_seconds) {
 			}
 		}
 	}
+	resolve_enemy_body_collisions(positions_before_movement);
 
 	std::vector<CombatEvent> events;
 	std::vector<EntityId> to_despawn;
@@ -712,14 +719,15 @@ std::vector<CombatEvent> SimulationCore::advance(double delta_seconds) {
 	}
 	if (has_active_projectile) {
 		float max_target_displacement = 0.0F;
+		float max_target_radius = 0.0F;
 		for (uint32_t index = 0; index < slots_.size(); ++index) {
 			if (slots_[index].active && !projectile_flags_[index] && !xp_orb_flags_[index]) {
 				max_target_displacement = std::max(max_target_displacement,
 						static_cast<float>(std::hypot(transforms_[index].x - start_positions[index].x,
 								transforms_[index].y - start_positions[index].y)));
+				max_target_radius = std::max(max_target_radius, enemy_types_[index].collision_radius);
 			}
 		}
-		constexpr float enemy_collision_radius = 12.0F; // Provisional until hitboxes are specified.
 		const SpatialIndex spatial_index = build_spatial_index({});
 		for (uint32_t projectile_index = 0; projectile_index < slots_.size(); ++projectile_index) {
 			if (!slots_[projectile_index].active || !projectile_flags_[projectile_index]) {
@@ -734,6 +742,11 @@ std::vector<CombatEvent> SimulationCore::advance(double delta_seconds) {
 							projectile.explosion_radius, {})) {
 						if (projectile.hit_targets.size() >= slots_.size()) {
 							break;
+						}
+						const float dx = transforms_[target_index].x - transforms_[projectile_index].x;
+						const float dy = transforms_[target_index].y - transforms_[projectile_index].y;
+						if (dx * dx + dy * dy > projectile.explosion_radius * projectile.explosion_radius) {
+							continue;
 						}
 						const EntityId target{target_index, slots_[target_index].generation};
 						if (projectile_flags_[target_index] || xp_orb_flags_[target_index] ||
@@ -776,7 +789,7 @@ std::vector<CombatEvent> SimulationCore::advance(double delta_seconds) {
 			const float segment_x = projectile_end.x - projectile_start.x;
 			const float segment_y = projectile_end.y - projectile_start.y;
 			const float half_segment_length = std::hypot(segment_x, segment_y) * 0.5F;
-			const float broadphase_radius = half_segment_length + max_target_displacement + projectile.radius + enemy_collision_radius;
+			const float broadphase_radius = half_segment_length + max_target_displacement + projectile.radius + max_target_radius;
 			const float midpoint_x = (projectile_start.x + projectile_end.x) * 0.5F;
 			const float midpoint_y = (projectile_start.y + projectile_end.y) * 0.5F;
 			const auto candidates = query_spatial_index(spatial_index, midpoint_x, midpoint_y,
@@ -807,7 +820,7 @@ std::vector<CombatEvent> SimulationCore::advance(double delta_seconds) {
 						: 0.0;
 				const double closest_x = relative_start_x + relative_delta_x * closest_t;
 				const double closest_y = relative_start_y + relative_delta_y * closest_t;
-				const double combined_radius = projectile.radius + enemy_collision_radius;
+				const double combined_radius = projectile.radius + enemy_types_[target_index].collision_radius;
 				if (closest_x * closest_x + closest_y * closest_y > combined_radius * combined_radius) {
 					continue;
 				}
@@ -838,6 +851,12 @@ std::vector<CombatEvent> SimulationCore::advance(double delta_seconds) {
 						}
 						if (splash_index == target_index || projectile_flags_[splash_index] || xp_orb_flags_[splash_index] ||
 								health_[splash_index].current <= 0.0F) {
+							continue;
+						}
+						const float splash_dx = transforms_[splash_index].x - transforms_[target_index].x;
+						const float splash_dy = transforms_[splash_index].y - transforms_[target_index].y;
+						if (splash_dx * splash_dx + splash_dy * splash_dy >
+								projectile.explosion_radius * projectile.explosion_radius) {
 							continue;
 						}
 						++explosion_targets_processed;
@@ -929,6 +948,61 @@ std::vector<CombatEvent> SimulationCore::advance(double delta_seconds) {
 	return events;
 }
 
+void SimulationCore::resolve_enemy_body_collisions(const std::vector<Transform2D> &previous_transforms) {
+	float maximum_radius = 0.0F;
+	std::vector<bool> moving(slots_.size(), false);
+	for (uint32_t index = 0; index < slots_.size(); ++index) {
+		if (slots_[index].active && !projectile_flags_[index] && !xp_orb_flags_[index]) {
+			maximum_radius = std::max(maximum_radius, enemy_types_[index].collision_radius);
+			moving[index] = std::abs(transforms_[index].x - previous_transforms[index].x) > 1e-6F ||
+					std::abs(transforms_[index].y - previous_transforms[index].y) > 1e-6F;
+		}
+	}
+	if (maximum_radius <= 0.0F) {
+		return;
+	}
+	const SpatialIndex spatial_index = build_spatial_index({});
+	for (uint32_t index = 0; index < slots_.size(); ++index) {
+		if (!slots_[index].active || projectile_flags_[index] || xp_orb_flags_[index]) {
+			continue;
+		}
+		const float own_radius = enemy_types_[index].collision_radius;
+		const auto neighbors = query_spatial_index(spatial_index, transforms_[index].x, transforms_[index].y,
+				own_radius + maximum_radius, {});
+		for (uint32_t neighbor_index : neighbors) {
+			if (neighbor_index == index || projectile_flags_[neighbor_index] || xp_orb_flags_[neighbor_index] ||
+					(neighbor_index < index && moving[neighbor_index]) || (!moving[index] && !moving[neighbor_index])) {
+				continue;
+			}
+			const float combined_radius = own_radius + enemy_types_[neighbor_index].collision_radius;
+			float dx = transforms_[neighbor_index].x - transforms_[index].x;
+			float dy = transforms_[neighbor_index].y - transforms_[index].y;
+			float distance = std::hypot(dx, dy);
+			if (distance >= combined_radius) {
+				continue;
+			}
+			if (distance <= 1e-6F) {
+				dx = 1.0F;
+				dy = 0.0F;
+				distance = 1.0F;
+			}
+			const float correction = (combined_radius - distance) / distance;
+			const float offset_x = dx * correction;
+			const float offset_y = dy * correction;
+			if (moving[index] && moving[neighbor_index]) {
+				transforms_[neighbor_index].x += offset_x;
+				transforms_[neighbor_index].y += offset_y;
+			} else if (moving[index]) {
+				transforms_[index].x -= offset_x;
+				transforms_[index].y -= offset_y;
+			} else if (moving[neighbor_index]) {
+				transforms_[neighbor_index].x += offset_x;
+				transforms_[neighbor_index].y += offset_y;
+			}
+		}
+	}
+}
+
 void SimulationCore::steer_enemies_towards(float target_x, float target_y, SteeringConfig config) {
 	if (!std::isfinite(target_x) || !std::isfinite(target_y) || !std::isfinite(config.max_speed) ||
 			config.max_speed < 0.0F || !std::isfinite(config.separation_radius) ||
@@ -958,10 +1032,12 @@ void SimulationCore::steer_enemies_towards(float target_x, float target_y, Steer
 	std::vector<Velocity2D> next_velocities = velocities_;
 	float maximum_support_radius = 0.0F;
 	float maximum_shield_radius = 0.0F;
+	float maximum_collision_radius = 0.0F;
 	for (uint32_t index = 0; index < slots_.size(); ++index) {
 		if (slots_[index].active && !projectile_flags_[index] && !xp_orb_flags_[index]) {
 			maximum_support_radius = std::max(maximum_support_radius, enemy_types_[index].support_radius);
 			maximum_shield_radius = std::max(maximum_shield_radius, enemy_types_[index].shield_radius);
+			maximum_collision_radius = std::max(maximum_collision_radius, enemy_types_[index].collision_radius);
 		}
 	}
 	const bool needs_spatial_index = (config.separation_radius > 0.0F && config.separation_weight > 0.0F) ||
@@ -986,7 +1062,8 @@ void SimulationCore::steer_enemies_towards(float target_x, float target_y, Steer
 
 		if (config.separation_radius > 0.0F && config.separation_weight > 0.0F) {
 			const auto neighbors = query_spatial_index(spatial_index, position.x, position.y,
-					config.separation_radius, config.spatial_hash);
+					std::max(config.separation_radius, enemy_types_[index].collision_radius + maximum_collision_radius),
+					config.spatial_hash);
 			double separation_x = 0.0;
 			double separation_y = 0.0;
 			for (uint32_t neighbor_index : neighbors) {
@@ -996,11 +1073,13 @@ void SimulationCore::steer_enemies_towards(float target_x, float target_y, Steer
 				const double dx = static_cast<double>(position.x) - transforms_[neighbor_index].x;
 				const double dy = static_cast<double>(position.y) - transforms_[neighbor_index].y;
 				const double distance = std::hypot(dx, dy);
-				if (distance > 0.0) {
-					const double strength = (config.separation_radius - distance) / config.separation_radius;
+				const double separation_radius = std::max(static_cast<double>(config.separation_radius),
+						static_cast<double>(enemy_types_[index].collision_radius + enemy_types_[neighbor_index].collision_radius));
+				if (distance > 0.0 && distance < separation_radius) {
+					const double strength = (separation_radius - distance) / separation_radius;
 					separation_x += dx / distance * strength;
 					separation_y += dy / distance * strength;
-				} else {
+				} else if (distance <= 0.0) {
 					separation_x += neighbor_index < index ? 1.0 : -1.0;
 				}
 			}

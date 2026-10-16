@@ -319,8 +319,8 @@
 - [x] Résultat de run : `run_result_panel_smoke.gd` passe sous Godot 4.7.2; `QUIT TO MENU` reste sous `RUN AGAIN`, émet son signal de navigation et le panneau tient aux viewports testés.
 - [x] P3 boss final : une mort réelle génère les chests boss éligibles et la victoire attend la collecte et le choix de chaque chest.
 - [x] P3 contact : collision joueur-ennemi, cooldown corps à corps séparé par ennemi, projectiles indépendants, pause/reprise des contrôles et verrouillage après la fin vérifiés sous Godot 4.7.2 headless; 0,35 s **[PROPOSÉ]**.
-- [x] P3 contact : projectiles amis et orbes exclus; le rayon de contact enemy correspond au disque affiché (8 unités); les projectiles ennemis ne partagent pas le cooldown des collisions corps à corps.
-- [x] (2026-10-16) `survival_contact_damage_smoke.gd` passe sous Godot 4.7.2 : un même ennemi respecte son propre délai corps à corps, un autre peut toucher pendant ce délai, un projectile ennemi reste indépendant, puis le premier ennemi peut retoucher après expiration.
+- [x] P3 contact : rayons joueur/mob alignés sur les sprites (16 + 12 unités), bord exact de contact et séparation du cooldown projectiles ennemis; le rayon joueur préserve encore son statut proposé.
+- [x] `survival_contact_damage_smoke.gd` couvre le cercle de contact à 16 + 12 unités, puis vérifie qu’un même ennemi respecte son propre délai corps à corps, un autre peut toucher pendant ce délai et un projectile ennemi reste indépendant. Le smoke nécessite la GDExtension reconstruite pour publier `CollisionRadius`; la bibliothèque locale est antérieure à ce champ.
 - [x] (2026-10-16) `survival_loadout_smoke.gd` vérifie le bonus global de chacune des 11 reliques, les dix paires arrivées niveau 5 sans évolution automatique, puis l’activation uniquement après collecte de l’offre d’évolution.
 - [x] (2026-10-16) `survival_loadout_smoke.gd` vérifie cinq reliques en capacité normale, puis six armes et six reliques avec le bonus de capacité, et refuse le septième item. `survival_unique_effects_smoke.gd` vérifie en session que deux équipements porteurs de `expanded_loadout` dédupliquent l'effet et activent les deux slots supplémentaires. Ce contrat et ses valeurs restent **[PROPOSÉS]**.
 - [x] (2026-10-16) `survival_weapon_catalog_smoke.gd` vérifie que les sélecteurs partagés, le ciblage Lightning et Frost Nova ignorent une cible morte encore publiée dans le snapshot; le catalogue complet reste vert.
@@ -381,6 +381,7 @@ Pour le catalogue, la validation JSON et des références a aussi été vérifi�
 - [x] Les profils ennemis gardent leurs vitesses typées avec HP de vague multiplicatifs ; les multiplicateurs HP nuls ou non finis sont refusés.
 - [x] Spatial hash trouve les cibles aux coordonnées négatives, au bord du rayon et aux frontières testées.
 - [x] Swept collision détecte les projectiles rapides contre une cible en mouvement.
+- [x] Hitboxes dérivées du rendu : radius 12 pour mobs 24 px, radius 26 pour boss 52 px, test projectile normal/boss, résolution des corps mobiles ennemis et steering dimensionné selon leur paire; les rayons AoE ne sont pas élargis par les hitboxes. Vérification native `simulation_core_test` compilée directement avec g++ et exécutée avec succès.
 - [x] DoT partagé : ticks en temps simulé, durée, grand pas, remplacement, cible obsolète et événements identifiés.
 - [x] Scénario Sandbox JSON applique un DoT, vérifie la santé restante et compte les événements de tick tagués.
 - [x] Pas de simulation 1/120, 1/60, 1/30 et 100 ms : position, vitesse et HP restent finis; déplacement égal à la vitesse intégrée, sans saut; DoT indépendant du pas.

@@ -83,7 +83,7 @@ func set_entities(entities: Array, origin: Vector2 = Vector2.ZERO) -> void:
 			continue
 		var transform: Dictionary = components["Transform2D"]
 		var point := origin + Vector2(float(transform["x"]), float(transform["y"]))
-		var size := _size_for_entity(sprite_id)
+		var size := _size_for_entity(sprite_id, components)
 		var rotation := 0.0
 		if sprite_id.begins_with("projectile_"):
 			var velocity: Dictionary = components.get("Velocity2D", {})
@@ -252,11 +252,11 @@ func _sprite_for_entity(components: Dictionary) -> String:
 		_:
 			return "enemy_chaser"
 
-func _size_for_entity(sprite_id: String) -> float:
+func _size_for_entity(sprite_id: String, components: Dictionary = {}) -> float:
 	if sprite_id == "projectile_starfall_fragment":
 		return 10.0
-	if sprite_id.begins_with("boss_"):
-		return 52.0
+	if components.has("CollisionRadius"):
+		return float(components["CollisionRadius"]) * 2.0
 	if sprite_id.begins_with("projectile_"):
 		return 14.0
 	if sprite_id == "xp_orb":

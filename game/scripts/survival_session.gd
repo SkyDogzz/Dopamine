@@ -129,8 +129,7 @@ const WAVE_HP_CAP := 12.0
 @export_group("Prototype contact damage — proposed tuning")
 @export var contact_damage_per_hit: float = 10.0
 @export var body_contact_cooldown_seconds: float = 0.35
-@export var player_contact_radius: float = 10.0
-@export var enemy_contact_radius: float = 8.0
+@export var player_contact_radius: float = 16.0
 @export var enemy_separation_radius: float = 18.0
 @export_range(0.0, 1.0) var enemy_separation_weight: float = 0.5
 @export_group("Prototype shooter attacks — proposed tuning")
@@ -894,7 +893,7 @@ func _apply_contact_damage(state: Dictionary, current_simulation_time: float) ->
 			continue
 		var transform: Dictionary = components["Transform2D"]
 		var enemy_position := Vector2(float(transform["x"]), float(transform["y"]))
-		var contact_distance := player_contact_radius + enemy_contact_radius
+		var contact_distance := player_contact_radius + float(components.get("CollisionRadius", 12.0))
 		if player.global_position.distance_squared_to(enemy_position) > contact_distance * contact_distance:
 			continue
 		var id: Dictionary = entity.get("id", {})
@@ -960,8 +959,10 @@ func _update_exploder_attacks(current_simulation_time: float, paused: bool) -> v
 			continue
 		var transform: Dictionary = components["Transform2D"]
 		var origin := Vector2(float(transform["x"]), float(transform["y"]))
+		var exploder_contact_radius := float(components.get("CollisionRadius", 12.0))
 		if not _exploder_attacks.has(key):
-			if player.global_position.distance_squared_to(origin) > exploder_trigger_radius * exploder_trigger_radius:
+			var trigger_distance := player_contact_radius + exploder_contact_radius + exploder_trigger_radius
+			if player.global_position.distance_squared_to(origin) > trigger_distance * trigger_distance:
 				continue
 			_exploder_attacks[key] = {"origin": origin, "detonate_at": current_simulation_time + maxf(0.05, exploder_fuse_seconds)}
 		var attack: Dictionary = _exploder_attacks[key]
@@ -969,7 +970,8 @@ func _update_exploder_attacks(current_simulation_time: float, paused: bool) -> v
 		if current_simulation_time < float(attack["detonate_at"]):
 			continue
 		var blast_origin: Vector2 = attack["origin"]
-		if player.global_position.distance_squared_to(blast_origin) <= exploder_blast_radius * exploder_blast_radius:
+		var blast_distance := player_contact_radius + exploder_blast_radius
+		if player.global_position.distance_squared_to(blast_origin) <= blast_distance * blast_distance:
 			_take_enemy_damage(exploder_damage)
 		simulation.despawn(int(id["index"]), int(id["generation"]))
 		attack["phase"] = "detonated"
@@ -1210,7 +1212,7 @@ func _fire_dopamine_core_attack(attack: Dictionary) -> void:
 		_spawn_boss_summon(origin)
 	if pattern == "ray" and _player_inside_final_boss_ray(origin, aim):
 		_take_enemy_damage(final_boss_ray_damage)
-	elif pattern == "zone" and player.global_position.distance_to(aim) <= final_boss_zone_radius:
+	elif pattern == "zone" and player.global_position.distance_to(aim) <= final_boss_zone_radius + player_contact_radius:
 		_take_enemy_damage(final_boss_zone_damage)
 	elif pattern == "combined" and (_player_inside_final_boss_ray(origin, aim) or
 			player.global_position.distance_to(aim) <= final_boss_zone_radius):
@@ -1218,7 +1220,7 @@ func _fire_dopamine_core_attack(attack: Dictionary) -> void:
 
 func _player_inside_final_boss_ray(origin: Vector2, aim: Vector2) -> bool:
 	var closest_point := Geometry2D.get_closest_point_to_segment(player.global_position, origin, aim)
-	return player.global_position.distance_to(closest_point) <= final_boss_ray_width
+	return player.global_position.distance_to(closest_point) <= final_boss_ray_width + player_contact_radius
 
 func _spawn_boss_summon(origin: Vector2) -> void:
 	var active_summons := _pending_summon_sequences.size()

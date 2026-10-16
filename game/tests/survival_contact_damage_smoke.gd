@@ -36,16 +36,24 @@ func _run() -> void:
 	if not is_equal_approx(session.player_hp, 100.0):
 		_fail("XP orbs near the player must not cause contact damage")
 		return
-	session._entities = [{"components": {
-		"EnemyType": "chaser",
-		"Transform2D": {"x": 20.0, "y": 0.0},
+	session._entities = [{"id": {"index": 6, "generation": 1}, "components": {
+		"EnemyType": "chaser", "CollisionRadius": 12.0,
+		"Transform2D": {"x": 1000.0, "y": 1000.0},
 	}}]
+	session._contact_damage_until.clear()
+	session.player.global_position = Vector2.ZERO
 	session._apply_contact_damage({"paused": false}, 5.0)
 	if not is_equal_approx(session.player_hp, 100.0):
 		_fail("Enemy contact damage should not trigger before the visible hit circles touch")
 		return
+	session._entities[0]["components"]["Transform2D"] = {"x": 28.0, "y": 0.0}
+	session._contact_damage_until.clear()
+	session._apply_contact_damage({"paused": false}, 5.0)
+	if not is_equal_approx(session.player_hp, 90.0):
+		_fail("Player and standard mob hit circles should touch at their combined 28 unit radius")
+		return
 	session._entities = [{"id": {"index": 7, "generation": 1}, "components": {
-		"EnemyType": "chaser",
+		"EnemyType": "chaser", "CollisionRadius": 12.0,
 		"Transform2D": {"x": 0.0, "y": 0.0},
 	}}]
 	session.player_hp = 100.0
@@ -59,7 +67,7 @@ func _run() -> void:
 		_fail("The same enemy should respect its body-contact cooldown")
 		return
 	session._entities = [{"id": {"index": 8, "generation": 1}, "components": {
-		"EnemyType": "chaser", "Transform2D": {"x": 0.0, "y": 0.0},
+		"EnemyType": "chaser", "CollisionRadius": 12.0, "Transform2D": {"x": 0.0, "y": 0.0},
 	}}]
 	session._apply_contact_damage(active_state, 10.1)
 	if not is_equal_approx(session.player_hp, 80.0):
@@ -74,7 +82,7 @@ func _run() -> void:
 		_fail("An enemy projectile should not be blocked by a body-contact cooldown")
 		return
 	session._entities = [{"id": {"index": 7, "generation": 1}, "components": {
-		"EnemyType": "chaser", "Transform2D": {"x": 0.0, "y": 0.0},
+		"EnemyType": "chaser", "CollisionRadius": 12.0, "Transform2D": {"x": 0.0, "y": 0.0},
 	}}]
 	session._apply_contact_damage(active_state, 10.36)
 	if not is_equal_approx(session.player_hp, 63.0):

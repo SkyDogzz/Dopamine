@@ -79,6 +79,8 @@ struct EnemyType {
 	float shield_damage_multiplier = 1.0F;
 	bool shielded = false;
 	EntityId shield_source;
+	float collision_radius = 12.0F;
+	bool body_collision_enabled = true;
 };
 
 struct EnemyProfile {
@@ -90,6 +92,7 @@ struct EnemyProfile {
 	float support_speed_multiplier = 1.0F;
 	float shield_radius = 0.0F;
 	float shield_damage_multiplier = 1.0F;
+	float collision_radius = 12.0F;
 };
 
 std::optional<EnemyProfile> enemy_profile(std::string_view id);
@@ -251,6 +254,7 @@ private:
 	void apply_damage(EntityId source, EntityId target, float amount,
 			std::vector<CombatEvent> &events, std::vector<EntityId> &deferred_despawns,
 			std::size_t &volatile_targets_remaining, bool allow_volatile_explosion = true);
+	void resolve_enemy_body_collisions(const std::vector<Transform2D> &previous_transforms);
 	std::vector<Slot> slots_;
 	std::vector<Transform2D> transforms_;
 	std::vector<Velocity2D> velocities_;
