@@ -57,6 +57,21 @@ func _run() -> void:
 		achievements.disabled or bestiary.disabled:
 		_fail("Inactive hub features should use muted visuals but remain focusable")
 		return
+	if achievements.icon == null or achievements.icon.resource_path != "res://assets/icons/catalog/achievement_medal.png" or \
+		bestiary.icon == null or bestiary.icon.resource_path != "res://assets/sprites/roster/enemy_chaser.png":
+		_fail("Inactive Success and Bestiary entries should use their existing pixel art icons")
+		return
+	if achievements.get_theme_constant("icon_max_width") != 16 or bestiary.get_theme_constant("icon_max_width") != 16 or \
+		achievements.texture_filter != CanvasItem.TEXTURE_FILTER_NEAREST or \
+		bestiary.texture_filter != CanvasItem.TEXTURE_FILTER_NEAREST:
+		_fail("Inactive entry icons should keep a compact nearest-filtered pixel size")
+		return
+	if achievements.get_theme_color("icon_normal_color").to_html(false) != "7b87a2" or \
+		bestiary.get_theme_color("icon_normal_color").to_html(false) != "7b87a2" or \
+		achievements.get_theme_color("icon_focus_color").to_html(false) != "ffd447" or \
+		bestiary.get_theme_color("icon_focus_color").to_html(false) != "ffd447":
+		_fail("Inactive entry icons should stay muted at rest and use gold when focused")
+		return
 	var inactive_style := achievements.get_theme_stylebox("normal") as StyleBoxFlat
 	if inactive_style.bg_color.to_html(false) != "1b2340" or \
 		achievements.get_theme_stylebox("focus") != hub.theme.get_stylebox("focus", "Button"):
