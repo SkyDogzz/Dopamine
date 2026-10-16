@@ -1987,25 +1987,39 @@ func _prism_cluster_target(max_range: float) -> Dictionary:
 	return best_target if not best_target.is_empty() else nearest
 
 func _meteor_cluster_target() -> Dictionary:
-	var anchor := _nearest_enemy(meteor_staff_range)
-	if anchor.is_empty():
-		return {}
-	var anchor_position: Vector2 = anchor["position"]
-	var center := anchor_position
-	var target_count := 1
+	var candidates: Array[Dictionary] = []
+	var targets: Array[Dictionary] = []
 	for entity in _entities:
 		var components: Dictionary = entity["components"]
 		if not _is_targetable_enemy(components):
 			continue
-		var id: Dictionary = entity["id"]
-		if Vector2i(int(id["index"]), int(id["generation"])) == anchor["id"]:
-			continue
 		var transform: Dictionary = components["Transform2D"]
 		var position := Vector2(float(transform["x"]), float(transform["y"]))
-		if anchor_position.distance_squared_to(position) <= meteor_staff_cluster_radius * meteor_staff_cluster_radius:
-			center += position
-			target_count += 1
-	return {"id": anchor["id"], "position": center / float(target_count)}
+		var target := {"position": position, "id": Vector2i(int(entity["id"]["index"]), int(entity["id"]["generation"]))}
+		targets.append(target)
+		if player.global_position.distance_squared_to(position) < meteor_staff_range * meteor_staff_range:
+			candidates.append(target)
+	if candidates.is_empty():
+		return {}
+	var best_target: Dictionary = {}
+	var best_center := Vector2.ZERO
+	var best_cluster_size := 0
+	var best_distance_squared := meteor_staff_range * meteor_staff_range
+	var cluster_radius_squared := meteor_staff_cluster_radius * meteor_staff_cluster_radius
+	for candidate in candidates:
+		var center := Vector2.ZERO
+		var cluster_size := 0
+		for other in targets:
+			if candidate["position"].distance_squared_to(other["position"]) <= cluster_radius_squared:
+				center += other["position"]
+				cluster_size += 1
+		var distance_squared: float = player.global_position.distance_squared_to(candidate["position"])
+		if cluster_size > best_cluster_size or (cluster_size == best_cluster_size and distance_squared < best_distance_squared):
+			best_target = candidate
+			best_center = center / float(cluster_size)
+			best_cluster_size = cluster_size
+			best_distance_squared = distance_squared
+	return {"id": best_target["id"], "position": best_center} if not best_target.is_empty() else {}
 
 func _sawblades_cluster_target() -> Dictionary:
 	var targets: Array[Dictionary] = []

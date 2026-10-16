@@ -25,6 +25,9 @@ func _run() -> void:
 	if not await _prism_laser_prioritizes_dense_groups():
 		_fail("Prism Laser should select a dense primary group and center secondary beams on it")
 		return
+	if not await _meteor_staff_prioritizes_densest_group():
+		_fail("Meteor Staff should target the densest reachable group and aim at its centroid")
+		return
 	if not await _minigun_holds_target_until_invalid():
 		_fail("Minigun should keep its target until it dies or leaves range, then select another target")
 		return
@@ -448,6 +451,27 @@ func _sawblades_ricochet_between_targets() -> bool:
 			return true
 	session.queue_free()
 	return false
+
+func _meteor_staff_prioritizes_densest_group() -> bool:
+	var session: Node2D = load("res://scenes/survival_session.tscn").instantiate()
+	session.spawn_initial_enemy = false
+	session.wave_spawning_enabled = false
+	root.add_child(session)
+	await process_frame
+	var origin: Vector2 = session.player.global_position
+	session._entities = [
+		{"id": {"index": 71, "generation": 1}, "components": {"Health": {"current": 100.0}, "Transform2D": {"x": origin.x + 60.0, "y": origin.y}}},
+		{"id": {"index": 72, "generation": 1}, "components": {"Health": {"current": 100.0}, "Transform2D": {"x": origin.x + 220.0, "y": origin.y}}},
+		{"id": {"index": 73, "generation": 1}, "components": {"Health": {"current": 100.0}, "Transform2D": {"x": origin.x + 250.0, "y": origin.y}}},
+		{"id": {"index": 74, "generation": 1}, "components": {"Health": {"current": 100.0}, "Transform2D": {"x": origin.x + 280.0, "y": origin.y}}},
+		{"id": {"index": 75, "generation": 1}, "components": {"Health": {"current": 0.0}, "Transform2D": {"x": origin.x + 250.0, "y": origin.y + 30.0}}},
+	]
+	var target: Dictionary = session._meteor_cluster_target()
+	session._entities.clear()
+	var no_target: Dictionary = session._meteor_cluster_target()
+	session.queue_free()
+	return target.get("id", Vector2i(-1, -1)) == Vector2i(72, 1) and \
+		Vector2(target.get("position", Vector2.ZERO)).is_equal_approx(origin + Vector2(250.0, 0.0)) and no_target.is_empty()
 
 func _meteor_staff_targets_groups_and_starfall_fragments() -> bool:
 	var session: Node2D = load("res://scenes/survival_session.tscn").instantiate()
