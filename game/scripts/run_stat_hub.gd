@@ -56,16 +56,12 @@ func update_stats(stats: Dictionary, xp_status: String) -> void:
 		_detail_content.add_child(_stat_row(stat))
 
 func _build_compact_panel() -> void:
-	var panel := PanelContainer.new()
-	panel.name = "Compact"
-	panel.position = Vector2(8.0, 56.0)
-	panel.custom_minimum_size = Vector2(214.0, 25.0)
-	panel.add_theme_stylebox_override("panel", _panel_style(CYAN))
-	add_child(panel)
 	var content := VBoxContainer.new()
-	content.name = "Content"
+	content.name = "Compact"
+	content.position = Vector2(8.0, 56.0)
+	content.custom_minimum_size = Vector2(214.0, 25.0)
 	content.add_theme_constant_override("separation", 1)
-	panel.add_child(content)
+	add_child(content)
 	var heading := _label("RUN STATS  ·  TAB", 8, CYAN)
 	content.add_child(heading)
 	_compact_values = _label("DMG 100%   SPD 240   CRIT 0%", 8, TEXT)
