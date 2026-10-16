@@ -358,7 +358,7 @@ Le runner est fourni par `game/scripts/scenario_runner.gd` et consomme un fichie
 ## UI refonte — survival-pause (2026-10-16)
 
 - [x] `survival_pause_smoke.gd` est enregistré dans CTest et vérifie que `LOCK HEALTH` apparaît sous la vitesse, bloque dégâts PV/bouclier lorsqu'il est actif puis restaure le calcul normal à sa désactivation.
-- [x] Validation de la tranche : le smoke Pause passe seul et dans CTest. La suite complète passe 51/52; `survival_weapon_catalog_smoke` échoue sur son assertion existante de branchement Infinite Circuit, même relancé seul; les 51 autres tests passent.
+- [x] Validation de la tranche : le smoke Pause passe seul et dans CTest. Une suite complète séquentielle passe 51/52 sur un échec Infinite Circuit; `survival_weapon_catalog_smoke` a ensuite passé directement et sur trois répétitions CTest consécutives, ce qui confirme un échec intermittent plutôt qu'une régression systématique.
 - [x] Godot 4.7.2 Linux : import headless réussi; `survival_pause_smoke.gd` vérifie ouverture/reprise, focus, temps Simulation/actif/vague et positions joueur/ennemi figés, retour d’Options par bouton/Échap et bornes Pause aux viewports 960×600, 1280×800 et 1600×900.
 - [x] `survival_pause_inventory_smoke.gd` vérifie la projection en lecture seule de deux armes/deux reliques, noms, niveaux, descriptions, icônes et évolution active; l’ouverture place le focus sur le premier objet, les flèches déplacent le focus et le défilement, le contour doré est visible et les icônes 24×24 utilisent le filtrage nearest.
 - [x] Le même smoke ferme l’inventaire par B synthétique et vérifie le retour du focus à Pause en maintenant la run gelée.
