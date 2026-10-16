@@ -32,6 +32,10 @@
 
 - [x] `survival_elite_smoke.gd` équipe `elite_haste` dans un profil temporaire isolé, tue un élite via le pipeline de dégâts natif, puis vérifie le bonus de mobilité de 15 %, son expiration après trois secondes simulées et le feedback HUD. Ces valeurs restent **[PROPOSÉES]**.
 
+## P6.5 — Scénarios d’effets uniques — 2026-10-16
+
+- [x] `survival_unique_effects_smoke.gd` vérifie l’absence d’effet sans équipement, le ciblage visible et le cooldown de Lightning Burst, puis l’inactivité d’Evolution Shockwave avant évolution et son unique activation à huit projectiles au tir suivant. Les réglages restent **[PROPOSÉS]**.
+
 ## P6.5 — Reroll gratuit du premier coffre — 2026-10-16
 
 - [x] `free_chest_reroll_smoke.gd` équipe le reroll gratuit dans un profil temporaire, l’active au clavier, vérifie que les offres remplacées ne reviennent pas et qu’aucun reroll n’est offert au coffre suivant.
