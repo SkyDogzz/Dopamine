@@ -902,7 +902,8 @@ Note de clôture : le blocage historique du smoke `sandbox_ui_smoke.gd` décrit 
 - [x] Le reroll gratuit n'est proposé que si le pool contient assez d'offres inédites pour remplacer tout le choix en cours; le test vérifie le reroll clavier avec trois choix inédits.
 - [x] Après correction du test d'ordre aléatoire et des fixtures de coffre/capacité, les 19 smokes P5 sélectionnés plus l'import Godot passent ensemble (20/20).
 - [x] Revalidation de tous les tests CTest hors scénarios `sandbox_*` : 64/64 passent en séquentiel sous Godot 4.7.2, incluant combat natif, Survival, contenu P5, progression, Armorless et interfaces.
-- [ ] Le dernier lancement complet, avant ces corrections ciblées, était rouge (72/86). La suite complète reste à relancer après intégration du travail SFX; les scénarios Sandbox d'armes échouaient sur `Sfx` dans les modifications non commitées de `survival_session.gd`, et `sandbox_steering_scenario` reste à diagnostiquer.
+- [x] `sandbox_steering_scenario` passe après mise à jour de sa position attendue : la hitbox ennemie est maintenant alignée à 12 unités de rayon et la séparation des corps écarte les deux chasers de 24 unités au total.
+- [ ] Le dernier lancement complet, avant ces corrections ciblées, était rouge (72/86). La suite complète reste à relancer après intégration du travail SFX; les scénarios Sandbox d'armes échouaient sur `Sfx` dans les modifications non commitées de `survival_session.gd`.
 - [ ] La victoire P5.V3 en run réelle, sans assistance, reste à réaliser.
 
 ## P5 — Revalidation ciblée native et boss — 2026-10-16
