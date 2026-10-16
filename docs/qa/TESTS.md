@@ -58,6 +58,12 @@
 
 - [ ] Ce parcours est scripté et synthétique, sans décision d’évitement, avec un seul seed par combinaison. Des reruns identiques varient (fresh/Easy : 71–85 s et 8–15 kills observés), donc les chiffres du tableau sont un relevé exploratoire et non un résultat statistique. Il ne permet pas de représenter un joueur, comparer statistiquement les builds ou ajuster des paramètres **[PROPOSÉS]**; aucun tuning n’a été modifié. Les parcours humains et plusieurs seeds restent requis pour fermer P6.9.
 
+### Reruns mobiles Easy — profil neuf — 2026-10-16
+
+- [x] Commande : `tools/run_godot_test.sh /tmp/dopamine-godot-4.7.2/Godot_v4.7.2-stable_linux.x86_64 --headless --audio-driver Dummy --path game --script res://tests/progression_balance_survey.gd -- --tier=fresh --difficulty=easy --movement=square --replicates=3` avec un `XDG_DATA_HOME` isolé.
+- [x] Trois sessions Survival réelles du harness, sans invincibilité, XP et coffres accessibles automatiquement : 47,07 / 67,88 / 66,18 secondes simulées; 9 / 12 / 10 kills; vague 2 / 3 / 3; DPS sortant 4,05 / 4,10 / 4,84; distance 11 440 / 16 288 / 15 888 unités. Chaque run finit par défaite, sans récompense persistée.
+- [ ] Échantillon limité à un profil, une difficulté et une politique de mouvement carrée sans évitement. Il établit la dispersion de ce protocole seulement; aucun paramètre **[PROPOSÉ]** n’est ajusté et P6.9 reste ouvert.
+
 ## P6.3 — Portée de ramassage équipement et XP — 2026-10-16
 
 - [x] `equipment_stats_smoke.gd` charge un seul bonus d’équipement par profil et lance une session Survival séparée par stat; vérifie HP, mobilité, dégâts, cadence, chance et dégâts critiques, soin par élimination, aire, cooldown, XP, portée de collecte et vitesse projectile.
