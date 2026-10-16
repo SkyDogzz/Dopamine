@@ -6,7 +6,7 @@ const PLAYER_SCENE := preload("res://scenes/player.tscn")
 const SPRITE_RENDERER_SCRIPT := preload("res://scripts/sprite_batch_renderer.gd")
 const CHEST_TEXTURE: Texture2D = preload("res://assets/sprites/chest_closed.png")
 const GROUND_TEXTURE: Texture2D = preload("res://assets/sprites/survival_ground.svg")
-const RUINS_TEXTURE: Texture2D = preload("res://assets/sprites/survival_ruins.svg")
+const RUINS_TEXTURE: Texture2D = preload("res://assets/sprites/environment/survival_ruins_pixel.png")
 const WEAPON_IMPACTS_TEXTURE: Texture2D = preload("res://assets/sprites/weapon_impacts_pixel.png")
 const WEAPON_IMPACT_TYPES := {
 	"lightning_conductor": 0, "infinite_circuit_branch": 0, "unique_lightning_burst": 0,

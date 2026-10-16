@@ -20,6 +20,8 @@ const PROJECTILE_NAMES := [
 	"projectile_frost_nova", "projectile_infinite_circuit", "projectile_wildfire", "projectile_bloodstorm", "projectile_event_horizon", "projectile_absolute_zero",
 	"projectile_pandemic", "projectile_razorstorm", "projectile_starfall", "projectile_spectrum_collapse", "projectile_unique_lightning_burst", "projectile_evolution_shockwave",
 ]
+const GROUND_REFERENCE := "res://assets/source/environment/ground_candidate_reference.png"
+const RUINS_REFERENCE := "res://assets/source/environment/ruins_candidate_reference.png"
 const WEAPONS := [
 	"lightning_conductor", "inferno_sprayer", "crimson_daggers", "minigun", "toxic_cloud",
 	"sawblades", "meteor_staff", "prism_laser", "void_orb", "frost_nova",
@@ -126,7 +128,38 @@ func _initialize() -> void:
 		if not _export_crop(projectile_source, content_rect, background, PROJECTILE_NAMES[index], "res://assets/sprites/projectiles", "res://assets/source/projectiles", 16):
 			quit(1)
 			return
-	print("Built catalog/UI/roster icons, impact VFX and 24 projectile sprites with editable Aseprite sources")
+	var ground_texture := load(GROUND_REFERENCE) as Texture2D
+	if ground_texture == null:
+		push_error("Missing generated ground candidate reference: %s" % GROUND_REFERENCE)
+		quit(1)
+		return
+	var ground := ground_texture.get_image()
+	ground.resize(64, 64, Image.INTERPOLATE_BILINEAR)
+	ground.resize(256, 256, Image.INTERPOLATE_NEAREST)
+	for y in range(ground.get_height()):
+		for x in range(ground.get_width()):
+			ground.set_pixel(x, y, _nearest_palette_color(ground.get_pixel(x, y)))
+	if ground.save_png("res://assets/sprites/environment/ground_moss_stone_candidate.png") != OK or not _save_aseprite(ground, "res://assets/source/environment/ground_moss_stone_candidate.aseprite", "ground_moss_stone_candidate"):
+		push_error("Could not save the palette-limited ground candidate")
+		quit(1)
+		return
+	var ruins_texture := load(RUINS_REFERENCE) as Texture2D
+	if ruins_texture == null:
+		push_error("Missing generated ruins candidate reference: %s" % RUINS_REFERENCE)
+		quit(1)
+		return
+	var ruins := ruins_texture.get_image()
+	ruins.resize(512, 512, Image.INTERPOLATE_NEAREST)
+	ruins.resize(1536, 1536, Image.INTERPOLATE_NEAREST)
+	for y in range(ruins.get_height()):
+		for x in range(ruins.get_width()):
+			var pixel := ruins.get_pixel(x, y)
+			ruins.set_pixel(x, y, Color.TRANSPARENT if pixel.a < 0.5 else _nearest_palette_color(pixel))
+	if ruins.save_png("res://assets/sprites/environment/survival_ruins_pixel.png") != OK or not _save_aseprite(ruins, "res://assets/source/environment/survival_ruins_pixel.aseprite", "survival_ruins_pixel"):
+		push_error("Could not save the palette-limited ruins candidate")
+		quit(1)
+		return
+	print("Built catalog/UI/roster icons, VFX, projectiles and pixel-environment candidates with editable Aseprite sources")
 	quit()
 
 func _export_cell(source: Image, rect: Rect2i, name: String) -> bool:

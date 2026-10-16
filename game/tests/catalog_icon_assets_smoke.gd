@@ -32,6 +32,9 @@ func _initialize() -> void:
 		if not _check_icon(projectile_name):
 			quit(1)
 			return
+	if not _check_ground_candidate():
+		quit(1)
+		return
 	var impact_atlas := load("res://assets/sprites/weapon_impacts_pixel.png") as Texture2D
 	if impact_atlas == null or impact_atlas.get_size() != Vector2(640.0, 64.0):
 		push_error("The impact atlas should contain ten horizontal 64x64 cells")
@@ -69,5 +72,41 @@ func _check_icon(asset_name: String) -> bool:
 	var source := FileAccess.open(ase_path, FileAccess.READ)
 	if source == null or source.get_32() != source.get_length() or source.get_16() != 0xA5E0 or source.get_16() != 1 or source.get_16() != expected_size.x or source.get_16() != expected_size.y:
 		push_error("Invalid editable Aseprite source for %s" % asset_name)
+		return false
+	return true
+
+func _check_ground_candidate() -> bool:
+	var png_path := "res://assets/sprites/environment/ground_moss_stone_candidate.png"
+	var ase_path := "res://assets/source/environment/ground_moss_stone_candidate.aseprite"
+	if not FileAccess.file_exists(png_path) or not FileAccess.file_exists(ase_path):
+		push_error("Missing PNG or Aseprite source for the ground candidate")
+		return false
+	var image := (load(png_path) as Texture2D).get_image()
+	if image.get_size() != Vector2i(256, 256):
+		push_error("The ground candidate should be a 256x256 texture composed of 16x16 pixel cells")
+		return false
+	var colors := {}
+	for y in range(image.get_height()):
+		for x in range(image.get_width()):
+			colors[image.get_pixel(x, y).to_html(false)] = true
+	if colors.size() > 32:
+		push_error("The ground candidate should use only the validated 32-color master palette")
+		return false
+	var source := FileAccess.open(ase_path, FileAccess.READ)
+	if source == null or source.get_32() != source.get_length() or source.get_16() != 0xA5E0 or source.get_16() != 1 or source.get_16() != 256 or source.get_16() != 256:
+		push_error("Invalid editable Aseprite source for the ground candidate")
+		return false
+	var ruins_png := "res://assets/sprites/environment/survival_ruins_pixel.png"
+	var ruins_ase := "res://assets/source/environment/survival_ruins_pixel.aseprite"
+	if not FileAccess.file_exists(ruins_png) or not FileAccess.file_exists(ruins_ase):
+		push_error("Missing PNG or Aseprite source for Survival ruins")
+		return false
+	var ruins := (load(ruins_png) as Texture2D).get_image()
+	if ruins.get_size() != Vector2i(1536, 1536):
+		push_error("Survival ruins should match their 1536x1536 world overlay")
+		return false
+	var ruins_source := FileAccess.open(ruins_ase, FileAccess.READ)
+	if ruins_source == null or ruins_source.get_32() != ruins_source.get_length() or ruins_source.get_16() != 0xA5E0 or ruins_source.get_16() != 1 or ruins_source.get_16() != 1536 or ruins_source.get_16() != 1536:
+		push_error("Invalid editable Aseprite source for Survival ruins")
 		return false
 	return true
