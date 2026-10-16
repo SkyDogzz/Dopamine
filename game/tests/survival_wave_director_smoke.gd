@@ -181,6 +181,9 @@ func _verify_live_full_run() -> bool:
 		session.player_max_hp = 10000.0
 	root.add_child(session)
 	if production_duration:
+		# _ready() initializes HP, so apply the test-only pool after the session enters the tree.
+		session.player_max_hp = 10000.0
+		session.player_hp = 10000.0
 		session.simulation.set_speed(4.0)
 	var chosen_offers := [0]
 	var observed_bosses: Dictionary = {}

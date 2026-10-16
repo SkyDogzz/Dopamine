@@ -218,6 +218,7 @@
 - [x] `survival_final_boss_loot_smoke.gd` vérifie que le boss final déclenche les deux familles de coffres garanties et configurables, que chaque choix laisse la simulation en pause, puis que l’écran de victoire apparaît après le dernier coffre.
 - [x] `survival_boss_attack_smoke.gd` et `survival_wave_director_smoke.gd` passent avec le smoke de loot; cela valide transitions, attaques, victoire et séquence de coffres sous harness, pas une run sans assistance (P5.V3).
 - [x] (2026-10-16) `survival_wave_director_smoke.gd` observe désormais les deux familles de boss dans le parcours accéléré de 24 vagues et exige que toutes deux aient été traitées avant la victoire. Ce run garde HP élevés, dégâts de boss par DoT de test et choix de coffre automatiques; il ne remplace pas le parcours P5.V3 manuel.
+- [x] Revalidation longue après correction du harness : les 10 000 PV de test sont assignés après `_ready()`, qui initialise sinon le joueur à ses PV normaux. Le parcours `--production-duration` passe les 24 vagues, traite les deux boss, résout les coffres garantis et atteint VICTORY sous Godot 4.7.2 en 174 s environ. La première tentative était morte par HP decay avant le boss final; la validation reste assistée et ne clôt pas P5.V3.
 
 ## Ciblage du Minigun — 2026-10-16
 
