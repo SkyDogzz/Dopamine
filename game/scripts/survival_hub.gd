@@ -6,6 +6,7 @@ const DIFFICULTY_SCRIPT := preload("res://scripts/survival_difficulty.gd")
 const SURVIVAL_ENTRY_SCENE := preload("res://scenes/survival_entry.tscn")
 const EQUIPMENT_PANEL_SCENE := preload("res://scenes/equipment_inventory_panel.tscn")
 const SKILL_TREE_PANEL_SCENE := preload("res://scenes/skill_tree_panel.tscn")
+const ARMORLESS_RECORDS_PANEL_SCENE := preload("res://scenes/armorless_records_panel.tscn")
 
 @onready var _difficulty_list: VBoxContainer = $Content/Main/DifficultyCard/Body/DifficultyList
 @onready var _difficulty_status: Label = $Content/Main/DifficultyCard/Body/DifficultyStatus
@@ -16,6 +17,7 @@ const SKILL_TREE_PANEL_SCENE := preload("res://scenes/skill_tree_panel.tscn")
 @onready var _temporary_launch_button: Button = $Content/Main/PreparationCard/Body/TemporaryLaunchButton
 @onready var _equipment_button: Button = $Content/Main/PreparationCard/Body/EquipmentButton
 @onready var _skill_tree_button: Button = $Content/Main/PreparationCard/Body/SkillTreeButton
+@onready var _records_button: Button = $Content/Header/RecordsButton
 @onready var _back_button: Button = $Content/Header/BackButton
 
 var progression_service: RefCounted
@@ -27,6 +29,7 @@ var _difficulty_buttons: Dictionary = {}
 var _difficulty_group := ButtonGroup.new()
 var _equipment_panel: Control
 var _skill_tree_panel: Control
+var _records_panel: Control
 
 func _ready() -> void:
 	if progression_service == null:
@@ -34,6 +37,7 @@ func _ready() -> void:
 	_back_button.pressed.connect(_on_back_pressed)
 	_equipment_button.pressed.connect(_open_equipment)
 	_skill_tree_button.pressed.connect(_open_skill_tree)
+	_records_button.pressed.connect(_open_armorless_records)
 	_launch_button.pressed.connect(_launch_run)
 	_armorless_launch_button.pressed.connect(_launch_armorless_run)
 	_temporary_launch_button.pressed.connect(_launch_temporary_run)
@@ -45,7 +49,8 @@ func _unhandled_input(event: InputEvent) -> void:
 	if not event.is_action_pressed("ui_cancel"):
 		return
 	if (_equipment_panel != null and _equipment_panel.visible) or \
-			(_skill_tree_panel != null and _skill_tree_panel.visible):
+			(_skill_tree_panel != null and _skill_tree_panel.visible) or \
+			(_records_panel != null and _records_panel.visible):
 		return
 	_on_back_pressed()
 	if get_viewport() != null:
@@ -61,6 +66,9 @@ func _create_panels() -> void:
 	_equipment_panel.dismantle_requested.connect(_dismantle_equipment)
 	_equipment_panel.sell_requested.connect(_sell_equipment)
 	add_child(_equipment_panel)
+	_records_panel = ARMORLESS_RECORDS_PANEL_SCENE.instantiate()
+	_records_panel.close_requested.connect(_close_armorless_records)
+	add_child(_records_panel)
 	_skill_tree_panel = SKILL_TREE_PANEL_SCENE.instantiate()
 	_skill_tree_panel.progression_service = progression_service
 	_skill_tree_panel.close_requested.connect(_close_skill_tree)
@@ -77,6 +85,7 @@ func _load_profile() -> void:
 	_temporary_launch_button.disabled = false
 	_equipment_button.disabled = not _profile_available
 	_skill_tree_button.disabled = not _profile_available
+	_records_button.disabled = not _profile_available
 	if not _profile_available:
 		_profile_status.text = "PROFIL INDISPONIBLE — LANCEMENT BLOQUÉ"
 		_profile_status.add_theme_color_override("font_color", Color("#FF75E3"))
@@ -176,6 +185,13 @@ func _open_equipment() -> void:
 func _open_skill_tree() -> void:
 	var result: Dictionary = progression_service.load_profile()
 	_skill_tree_panel.present(result["profile"]) if result.get("ok", false) else _skill_tree_panel.present_error()
+
+func _open_armorless_records() -> void:
+	_records_panel.present(_armorless_records)
+
+func _close_armorless_records() -> void:
+	_records_panel.visible = false
+	_records_button.grab_focus()
 
 func _close_equipment() -> void:
 	_equipment_panel.visible = false

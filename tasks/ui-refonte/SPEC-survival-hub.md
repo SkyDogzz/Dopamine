@@ -8,6 +8,7 @@
 - **[VALIDÉ]** Les difficultés sont Easy, Normal, Hard, Nightmare et Chaos. Easy est débloquée au départ; chacune des suivantes se débloque après une victoire dans la difficulté précédente.
 - **[VALIDÉ]** L’équipement permanent et l’arbre de compétences se consultent et se modifient dans le hub avant la run; ils ne sont pas modifiables pendant une run.
 - **[VALIDÉ]** Succès et Bestiaire sont visibles mais sans fonctionnalité ni contenu inventé.
+- **[VALIDÉ]** L’accueil expose les records; le hub présente les records Armorless locaux des cinq difficultés en lecture seule, sans modifier la progression.
 - **[VALIDÉ]** La scène de démarrage est l’accueil; **Jouer** transmet au hub. Le Sandbox reste strictement séparé de la progression normale et de `SaveService`.
 - **[PROPOSÉ]** Les entrées visibles mais inactives Succès/Bestiaire gardent un style atténué tout en conservant le focus clavier/manette visible; elles ne sont pas désactivées pour préserver leur atteignabilité.
 - **[PROPOSÉ]** Le choix Easy/Normal/Hard/Nightmare/Chaos applique provisoirement les multiplicateurs numériques du GDD, centralisés pour pouvoir être recalibrés. Les chiffres gardent le statut **[PROPOSÉ]** et ne sont pas présentés comme équilibrés ou validés.
@@ -42,6 +43,7 @@ Compléter le parcours **Jouer → préparation Survival → lancement explicite
 - Réutiliser les panneaux existants d’équipement permanent et d’arbre de compétences dans le hub, en conservant les fonctionnalités déjà présentes de ces panneaux.
 - Retirer l’accès de modification à ces panneaux depuis l’interface d’une run; les bonus sélectionnés dans le hub sont chargés au démarrage de la run.
 - Afficher Succès et Bestiaire en contrôles focusables inertes; ils n’ouvrent aucun écran et ne chargent aucune donnée dédiée.
+- Afficher un accès focusable aux records Armorless par difficulté; la table utilise les données locales existantes et indique les difficultés sans record.
 - Ajouter un bouton explicite **Lancer la run** qui utilise la voie Survival normale, passe la difficulté sélectionnée et conserve le choix d’arme initial déjà présenté au début de la session.
 - Afficher proprement une erreur de profil indisponible sans créer de nouveau fichier ou profil de secours qui contournerait `SaveService`.
 - Préserver les contrôles souris/clavier/manette, l’ordre de focus visible, le thème partagé et la direction pixel art néon.
@@ -74,6 +76,7 @@ Compléter le parcours **Jouer → préparation Survival → lancement explicite
 - [x] Les multiplicateurs appliqués correspondent à la table GDD provisoire ci-dessus, restent centralisés et sont identifiés **[PROPOSÉS]** dans la documentation/code de tuning.
 - [x] Le choix de difficulté atteint la session et la récompense; la session consomme les multiplicateurs pertinents sans modifier les comportements spéciaux encore ouverts de Chaos.
 - [x] Les panneaux existants Équipement et Compétences sont utilisables dans le hub; les changements s’appliquent à la run suivante.
+- [x] La vue Records Armorless compare les cinq difficultés en lecture seule; Échap/manette ferme le panneau et rend le focus à l’action d’ouverture.
 - [x] Pendant une run, aucun contrôle ou chemin UI ne permet de modifier l’équipement permanent ou l’arbre de compétences.
 - [ ] Succès et Bestiaire sont visibles et atteignables par focus, restent inertes à la souris, au clavier et à la manette, et n’ajoutent aucune donnée fictive.
 - [x] L’action **Lancer la run** ouvre le parcours de run normal, transmet la difficulté et conserve le choix d’arme initial.

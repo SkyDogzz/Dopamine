@@ -2,6 +2,13 @@
 
 **Statut : terminé.** Les tâches d’implémentation et d’intégration sont achevées; revue matérielle documentée comme non effectuée.
 
+## Addendum — Consultation des records Armorless
+
+- [x] Ajouter un accès au tableau des cinq records par difficulté sans créer de nouvelle donnée de progression.
+- [x] Vérifier état vide, record existant, navigation manette/clavier et restitution du focus.
+- [x] Vérifier le panneau dans les viewports 640×360, 1280×720 et 1920×1080.
+- [x] Conserver le panneau en lecture seule et hors du parcours Sandbox.
+
 ## Tâche 1 — Données de difficulté et contrat de profil
 
 **Description :** Centraliser les données des cinq difficultés et étendre le profil normal pour mémoriser les déblocages séquentiels, avec migration additive.

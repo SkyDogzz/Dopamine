@@ -29,6 +29,7 @@ func _run() -> void:
 		var preparation_card := hub.get_node("Content/Main/PreparationCard") as PanelContainer
 		var right := preparation_card.get_global_rect()
 		var launch := (hub.get_node("Content/Main/PreparationCard/Body/LaunchButton") as Control).get_global_rect()
+		var records_button := (hub.get_node("Content/Header/RecordsButton") as Control).get_global_rect()
 		var record_status := (hub.get_node("Content/Main/DifficultyCard/Body/ArmorlessRecordStatus") as Control).get_global_rect()
 		var difficulty_style := difficulty_card.get_theme_stylebox("panel") as StyleBoxFlat
 		var preparation_style := preparation_card.get_theme_stylebox("panel") as StyleBoxFlat
@@ -37,8 +38,8 @@ func _run() -> void:
 			_fail("Hub should keep difficulty secondary and highlight the preparation action surface")
 			return
 		if not bounds.encloses(content) or not bounds.encloses(left) or not bounds.encloses(right) or \
-			not bounds.encloses(launch) or not left.encloses(record_status) or left.intersects(right):
-			_fail("Hub layout should fit and keep columns separate at %s: left=%s right=%s launch=%s" % [size, left, right, launch])
+			not bounds.encloses(launch) or not bounds.encloses(records_button) or not left.encloses(record_status) or left.intersects(right):
+			_fail("Hub layout should fit and keep columns separate at %s: left=%s right=%s launch=%s records=%s" % [size, left, right, launch, records_button])
 			return
 		var record_label: Label = hub.get_node("Content/Main/DifficultyCard/Body/ArmorlessRecordStatus")
 		if not record_label.text.contains("WAVE 12") or record_label.text.find("111 KILLS") < 0:
@@ -52,10 +53,31 @@ func _run() -> void:
 				size, record_text_width, record_label.size.x,
 			])
 			return
-		if size == Vector2i(640, 360) and "--capture" in OS.get_cmdline_user_args():
+		var records_button_node: Button = hub.get_node("Content/Header/RecordsButton")
+		records_button_node.pressed.emit()
+		await process_frame
+		var records_panel := hub.get_node("ArmorlessRecordsPanel") as Control
+		var records_rect := records_panel.get_node("Panel") as Control
+		if not records_panel.visible or not bounds.encloses(records_rect.get_global_rect()):
+			_fail("The records panel should fit within the viewport at %s" % size)
+			return
+		var records_list: VBoxContainer = records_panel.get_node("Panel/Content/RecordsScroll/Records")
+		for row in records_list.get_children():
+			var row_control := row as Control
+			var row_text_width: float = row_control.get_theme_font("font").get_string_size(
+				(row as Label).text, HORIZONTAL_ALIGNMENT_LEFT, -1, 8
+			).x
+			if not records_rect.get_global_rect().encloses(row_control.get_global_rect()) or row_text_width > row_control.size.x:
+				_fail("Records should remain inside the panel without clipping at %s" % size)
+				return
+		var capture_records: bool = size == Vector2i(640, 360) and "--capture-records" in OS.get_cmdline_user_args()
+		if not capture_records:
+			records_panel.visible = false
+		if size == Vector2i(640, 360) and ("--capture" in OS.get_cmdline_user_args() or capture_records):
 			await RenderingServer.frame_post_draw
-			if viewport.get_texture().get_image().save_png("/tmp/dopamine-survival-hub.png") != OK:
-				_fail("Could not capture the 640x360 Survival hub render")
+			var capture_path := "/tmp/dopamine-survival-records.png" if capture_records else "/tmp/dopamine-survival-hub.png"
+			if viewport.get_texture().get_image().save_png(capture_path) != OK:
+				_fail("Could not capture the 640x360 Survival hub render: %s" % capture_path)
 				return
 		viewport.queue_free()
 		await process_frame

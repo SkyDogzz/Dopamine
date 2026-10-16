@@ -2,6 +2,8 @@
 
 **Statut : terminé.** Le hub et son intégration Survival sont livrés; voir [`INTEGRATION-ui-refonte.md`](INTEGRATION-ui-refonte.md).
 
+**Addendum 2026-10-16 :** la demande validée du GDD de présenter les records est couverte par une vue locale Armorless, en lecture seule. Elle réutilise les données déjà persistées et n’ajoute aucun transfert au Sandbox.
+
 ## Objectif et limites
 
 Relier **Jouer** au hub de préparation Survival, transférer une difficulté autorisée vers la run normale et limiter la modification d’équipement permanent et de compétences au hub. Les décisions [VALIDÉ], les réglages [PROPOSÉ] et les comportements [OUVERT] restent tels que consignés dans [`SPEC-survival-hub.md`](SPEC-survival-hub.md).

@@ -557,7 +557,8 @@ Travail requis :
   - [ ] Tester une session longue et l’idempotence des résultats/classements.
   - [x] Enregistrer et afficher les records locaux par difficulté, triés par vague puis temps et kills; `armorless_records_smoke.gd` vérifie le classement, l’isolation des récompenses, l’idempotence, le refus des données invalides et la migration v7→v8.
   - [x] Afficher dans le hub le record Armorless de la difficulté sélectionnée; les smokes couvrent la mise à jour par profil et le layout à 640×360, 1280×720 et 1920×1080.
-  - [ ] Un écran comparant simultanément les cinq difficultés, une session Armorless complète et l’arbitrage des autres récompenses permanentes restent à faire.
+  - [x] Ajouter une vue en lecture seule comparant les records des cinq difficultés; clavier/manette, restauration du focus et layout 640×360, 1280×720 et 1920×1080 sont couverts par les smokes du hub.
+  - [ ] Une session Armorless complète et l’arbitrage des autres récompenses permanentes restent à faire.
 
 ### P7B — Endless standard (contrat ouvert)
 

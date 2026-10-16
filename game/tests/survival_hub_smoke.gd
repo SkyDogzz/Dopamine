@@ -60,6 +60,10 @@ func _run() -> void:
 	var bestiary := hub.get_node("Content/Main/PreparationCard/Body/InactiveFeatures/BestiaryButton") as Button
 	var equipment_button := hub.get_node("Content/Main/PreparationCard/Body/EquipmentButton") as Button
 	var skill_button := hub.get_node("Content/Main/PreparationCard/Body/SkillTreeButton") as Button
+	var records_button := hub.get_node_or_null("Content/Header/RecordsButton") as Button
+	if records_button == null or records_button.focus_mode == Control.FOCUS_NONE:
+		_fail("Armorless records should have a keyboard-focusable hub action")
+		return
 	if equipment_button.icon == null or equipment_button.icon.resource_path != "res://assets/icons/catalog/equipment_armor.png" or \
 		skill_button.icon == null or skill_button.icon.resource_path != "res://assets/icons/catalog/skill_node.png" or \
 		equipment_button.get_theme_constant("icon_max_width") != 16 or skill_button.get_theme_constant("icon_max_width") != 16 or \
@@ -121,7 +125,8 @@ func _run() -> void:
 	root.add_child(broken_hub)
 	await process_frame
 	if not broken_hub.get_node("Content/Header/ProfileStatus").text.contains("PROFIL INDISPONIBLE") or \
-		not broken_hub.get_node("Content/Main/PreparationCard/Body/LaunchButton").disabled:
+		not broken_hub.get_node("Content/Main/PreparationCard/Body/LaunchButton").disabled or \
+		not broken_hub.get_node("Content/Header/RecordsButton").disabled:
 		_fail("A profile load error should be clear and must block run launch")
 		return
 	broken_hub.queue_free()
@@ -149,6 +154,34 @@ func _run() -> void:
 		return
 	if launch_button.text != "LANCER LA RUN  ·  NORMAL  →":
 		_fail("The primary launch action should track difficulty selection")
+		return
+	records_button.pressed.emit()
+	await process_frame
+	var records_panel: Control = hub.get_node_or_null("ArmorlessRecordsPanel")
+	var record_rows: VBoxContainer = records_panel.get_node_or_null("Panel/Content/RecordsScroll/Records") if records_panel != null else null
+	if records_panel == null or not records_panel.visible or record_rows == null or record_rows.get_child_count() != 5:
+		_fail("The hub should open a read-only Armorless records panel with all five difficulties: panel=%s visible=%s rows=%s" % [
+			records_panel != null, records_panel.visible if records_panel != null else false,
+		record_rows.get_child_count() if record_rows != null else -1,
+		])
+		return
+	var normal_record_row := ""
+	var easy_record_row := ""
+	for row in record_rows.get_children():
+		if row.name == "NORMAL":
+			normal_record_row = (row as Label).text
+		elif row.name == "EASY":
+			easy_record_row = (row as Label).text
+	if not easy_record_row.contains("AUCUN RECORD"):
+		_fail("The records panel should show an explicit empty state for difficulties without a record")
+		return
+	if not normal_record_row.contains("VAGUE 12") or not normal_record_row.contains("05:00") or \
+		not normal_record_row.contains("11 KILLS"):
+		_fail("The records panel should show the saved Normal score: %s" % normal_record_row)
+		return
+	await _send_gamepad_cancel()
+	if records_panel.visible or root.gui_get_focus_owner() != records_button:
+		_fail("Gamepad B should close the records panel and restore hub focus")
 		return
 	if temporary_launch_button.text != "RUN TEMPORAIRE · SANS SAUVEGARDE":
 		_fail("The temporary profile action should remain separate from normal difficulty selection")
