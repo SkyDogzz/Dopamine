@@ -47,7 +47,7 @@ text = "RUN INVENTORY"
 horizontal_alignment = 1
 
 [node name="Scroll" type="ScrollContainer" parent="Center/Panel/Content"]
-custom_minimum_size = Vector2(0, 380)
+custom_minimum_size = Vector2(0, 240)
 layout_mode = 2
 size_flags_vertical = 3
 horizontal_scroll_mode = 0

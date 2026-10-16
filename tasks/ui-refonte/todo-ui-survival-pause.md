@@ -2,7 +2,7 @@
 
 Plan : [`plan-ui-survival-pause.md`](plan-ui-survival-pause.md) · Spec : [`SPEC-survival-pause.md`](SPEC-survival-pause.md)
 
-**Statut : validé par l’utilisateur.** Tâches 1 à 4 terminées; tâche 5 d’intégration reste à faire. Le plan principal reste en pause et inchangé.
+**Statut : terminé et poussé.** Tâches 1 à 5 terminées. Le plan principal reste en pause et inchangé.
 
 ## Tâche 1 — Pause manuelle et invariance temporelle
 
@@ -84,15 +84,15 @@ Plan : [`plan-ui-survival-pause.md`](plan-ui-survival-pause.md) · Spec : [`SPEC
 **Description :** Tester les couches ensemble, relire les frontières architecturales et committer/pousser la tranche achevée.
 
 **Critères d’acceptation :**
-- [ ] Parcours pause → Options → pause et pause → inventaire → pause gardent session/horloges suspendues et focus cohérent.
-- [ ] L’abandon confirmé revient à l’accueil sans progression; l’annulation conserve la run.
-- [ ] Smokes Pause, Options, inventaire/loadout, armes départ, coffres, HUD, résultats, durée/vagues, entrée/hub et Sandbox pertinents passent.
-- [ ] Import headless Godot et `git diff --check` passent; revue aux viewports 960×600, 1280×800, 1600×900 réalisée ou ses limites consignées.
-- [ ] Navigation souris/clavier/manette vérifiée lorsque disponible; indisponibilité matérielle n’est pas présentée comme réussite.
-- [ ] Le diff ne change pas l’équilibrage, les récompenses normales, la progression ou les dépendances Sandbox; documentation mise à jour seulement si le contrat change.
-- [ ] Commit explicite poussé sur `origin`; arrêt pour validation avant `sandbox-ui`.
+- [x] Parcours pause → Options → pause et pause → inventaire → pause gardent session/horloges suspendues et focus cohérent.
+- [x] L’abandon confirmé revient à l’accueil sans progression; l’annulation conserve la run.
+- [x] Smokes Pause, Options, inventaire/loadout, armes départ, coffres, HUD, résultats, durée/vagues, entrée/hub et Sandbox pertinents passent.
+- [x] Import headless Godot et `git diff --check` passent; Pause, inventaire et confirmation tiennent aux viewports 960×600, 1280×800 et 1600×900.
+- [x] Les contrats de focus, boutons et clavier sont vérifiés; interaction physique à la manette indisponible et non revendiquée.
+- [x] Le diff ne change pas l’équilibrage, les récompenses normales, la progression ni les dépendances Sandbox; `docs/qa/TESTS.md` consigne vérifications et limites.
+- [x] Commits explicites poussés sur `origin`; pause du travail avant le module `sandbox-ui`.
 
-**Vérification :** suite ciblée documentée dans le plan; `ctest` à l’avancée majeure si l’environnement de build est disponible.
+**Vérification :** voir `docs/qa/TESTS.md`. `ctest`/build natif non exécutés car `ctest` et `cmake` sont absents; `combat_catalog_smoke.gd` demeure en échec sur une assertion de texte historique qui contredit le catalogue courant, sans dépendance avec cette tranche. Les smokes inventaire, pause et run result valident les données actuellement utilisées.
 
 **Dépendances :** Tâches 1–4.
 

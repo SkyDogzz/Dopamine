@@ -55,6 +55,15 @@ func _run() -> void:
 	if not bool(session.simulation.snapshot()["paused"]):
 		_fail("Opening run inventory must keep the simulation paused")
 		return
+	var original_size: Vector2i = root.size
+	var inventory_card: Control = inventory.get_node("Center/Panel")
+	for size in [Vector2i(960, 600), Vector2i(1280, 800), Vector2i(1600, 900)]:
+		root.size = size
+		await process_frame
+		if not Rect2(Vector2.ZERO, Vector2(size)).encloses(inventory_card.get_global_rect()):
+			_fail("Run inventory should fit viewport %s; card=%s viewport=%s" % [size, inventory_card.get_global_rect(), root.size])
+			return
+	root.size = original_size
 	var close_button: Button = inventory.get_node("Center/Panel/Content/CloseButton")
 	close_button.pressed.emit()
 	await process_frame

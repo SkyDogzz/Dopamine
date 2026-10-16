@@ -33,6 +33,15 @@ func _run() -> void:
 	if confirmation == null or not confirmation.visible or not bool(session.simulation.snapshot()["paused"]):
 		_fail("Abandon should require confirmation while the run stays paused")
 		return
+	var original_size: Vector2i = root.size
+	var confirmation_card: Control = confirmation.get_node("Center/Panel")
+	for size in [Vector2i(960, 600), Vector2i(1280, 800), Vector2i(1600, 900)]:
+		root.size = size
+		await process_frame
+		if not Rect2(Vector2.ZERO, Vector2(size)).encloses(confirmation_card.get_global_rect()):
+			_fail("Abandon confirmation should fit viewport %s" % size)
+			return
+	root.size = original_size
 	var cancel_button: Button = confirmation.get_node("Center/Panel/Content/CancelButton")
 	if root.gui_get_focus_owner() != cancel_button:
 		_fail("Abandon confirmation should focus the safe cancel action first")

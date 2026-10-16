@@ -10,9 +10,15 @@ func _run() -> void:
 	session.wave_spawning_enabled = false
 	root.add_child(session)
 	await process_frame
+	var spawn_sequence: int = session.simulation.spawn_enemy(
+		"chaser", 1, session.player.global_position + Vector2(120.0, 0.0), Vector2(-20.0, 0.0)
+	)
+	var spawn_deadline := Time.get_ticks_msec() + 1000
+	while int(session.simulation.snapshot()["last_sequence"]) < spawn_sequence and Time.get_ticks_msec() < spawn_deadline:
+		await process_frame
 	var state: Dictionary = session.simulation.snapshot()
-	if bool(state["paused"]):
-		_fail("The pause smoke requires an active run")
+	if bool(state["paused"]) or state["entities"].is_empty():
+		_fail("The pause smoke requires an active run with an enemy fixture")
 		return
 
 	session._unhandled_key_input(_escape_event())
@@ -31,6 +37,16 @@ func _run() -> void:
 	var paused_active_time := float(session.player_active_time)
 	var paused_wave_time := float(session.wave_director.elapsed_in_wave)
 	var paused_player_position: Vector2 = session.player.global_position
+	var paused_enemy_position := _enemy_position(state)
+	var original_size: Vector2i = root.size
+	var pause_card: Control = pause_menu.get_node("Center/Panel")
+	for size in [Vector2i(960, 600), Vector2i(1280, 800), Vector2i(1600, 900)]:
+		root.size = size
+		await process_frame
+		if not Rect2(Vector2.ZERO, Vector2(size)).encloses(pause_card.get_global_rect()):
+			_fail("Pause menu should fit viewport %s" % size)
+			return
+	root.size = original_size
 	var options_button: Button = pause_menu.get_node("Center/Panel/Content/OptionsButton")
 	options_button.pressed.emit()
 	await process_frame
@@ -71,8 +87,8 @@ func _run() -> void:
 	if not is_equal_approx(float(state["simulation_time"]), paused_simulation_time) or \
 		not is_equal_approx(session.player_active_time, paused_active_time) or \
 		not is_equal_approx(session.wave_director.elapsed_in_wave, paused_wave_time) or \
-		session.player.global_position != paused_player_position:
-		_fail("Simulation, run clocks, wave clock and player position should stay frozen during pause")
+		session.player.global_position != paused_player_position or _enemy_position(state) != paused_enemy_position:
+		_fail("Simulation, run clocks, wave clock and actor positions should stay frozen during pause")
 		return
 
 	session._unhandled_key_input(_escape_event())
@@ -97,6 +113,10 @@ func _escape_event() -> InputEventKey:
 	event.keycode = KEY_ESCAPE
 	event.pressed = true
 	return event
+
+func _enemy_position(state: Dictionary) -> Vector2:
+	var transform: Dictionary = state["entities"][0]["components"]["Transform2D"]
+	return Vector2(float(transform["x"]), float(transform["y"]))
 
 func _fail(message: String) -> void:
 	push_error(message)

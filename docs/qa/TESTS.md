@@ -158,5 +158,15 @@ Le runner est fourni par `game/scripts/scenario_runner.gd` et consomme un fichie
 - [x] Prévisualisation fenêtrée sous Xvfb aux trois tailles sans erreur de script; rendu examiné à 1280×800.
 - [ ] Interaction physique souris/clavier/manette non parcourue de bout en bout; aucun contrôleur n’est présent et aucun outil de souris interactive n’est disponible dans cet environnement. Le smoke headless vérifie le focus initial, le contrat de fermeture et les mappings A/B, pas leur activation matérielle.
 - [ ] Plein écran sur écran réel et sortie audio sur haut-parleurs/casque non vérifiés; seules les API DisplayServer/AudioServer et leurs valeurs sous headless ont été exercées.
-- [ ] Test d’intégration de l’écran Options depuis la pause reporté au module `survival-pause`; aucune avance de simulation n’est revendiquée ici.
+- [x] Test d’intégration de l’écran Options depuis la pause couvert par `survival_pause_smoke.gd` : Retour et Échap ramènent à Pause, restaurent le focus et ne font avancer ni temps Simulation, ni temps actif, ni position joueur.
 - [ ] Build natif et CTest non exécutés : `cmake` et `ctest` sont absents de l’environnement.
+
+## UI refonte — survival-pause (2026-10-16)
+
+- [x] Godot 4.7.2 Linux : import headless réussi; `survival_pause_smoke.gd` vérifie ouverture/reprise, focus, temps Simulation/actif/vague et positions joueur/ennemi figés, retour d’Options par bouton/Échap et bornes Pause aux viewports 960×600, 1280×800 et 1600×900.
+- [x] `survival_pause_inventory_smoke.gd` vérifie la projection en lecture seule de deux armes/deux reliques, noms, niveaux, descriptions, icônes et évolution active; ouverture/fermeture, focus de retour et bounds de l’inventaire aux trois viewports.
+- [x] `survival_abandon_smoke.gd` vérifie focus sûr, annulation souris/Échap, bounds de la confirmation, retour à l’accueil, suppression de session et absence de changement aux ressources, objets ou runs récompensées du profil.
+- [x] Régressions passées : `survival_starting_weapon_smoke`, `survival_chest_choice_smoke`, `survival_chest_smoke`, `survival_hud_smoke`, `run_result_panel_smoke`, `survival_run_result_smoke`, `survival_loadout_smoke`, `survival_inventory_smoke`, `survival_wave_director_smoke`, `survival_wave_duration_smoke`, `survival_entry_smoke`, `survival_hub_smoke`, `survival_hub_layout_smoke`, `launch_navigation_smoke`, `ui_settings_smoke`, `settings_service_smoke`, `sandbox_smoke` et `sandbox_ui_smoke`.
+- [ ] `combat_catalog_smoke.gd` garde une assertion historique « Dagues en orbite autour du joueur, non lancées » qui échoue avec le catalogue actuel, lequel décrit Crimson Daggers comme deux dagues tirées en éventail. Le smoke d’inventaire pause consomme les données courantes et passe; aucune donnée ou règle de combat n’a été modifiée ici.
+- [ ] Parcours matériel complet souris/clavier/manette non réalisé; le focus, les actions A/B et les contrats bouton/Échap sont testés sous headless, mais aucun périphérique ni entrée fenêtrée interactive n’était disponible.
+- [ ] CTest/build natif non exécutés : `ctest` et `cmake` sont absents du PATH. `git diff --check` passe.
