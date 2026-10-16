@@ -59,7 +59,10 @@ func _run() -> void:
 	temporary_session._finish_run(true)
 	if temporary_session._run_result.get_node("Content/Rewards").text != "RUN SANS SAUVEGARDE" or \
 		save_service.load_slot("0")["payload"] != profile:
-		_fail("A temporary run should show no-save feedback and leave the normal profile untouched")
+		_fail("A temporary run should show no-save feedback and leave the normal profile untouched: %s / %s" % [
+			temporary_session._run_result.get_node("Content/Rewards").text,
+			save_service.load_slot("0")["payload"] == profile,
+		])
 		return
 	temporary_session.queue_free()
 	await process_frame

@@ -1037,7 +1037,7 @@ func _finish_run(victory: bool) -> void:
 	simulation.pause()
 	_run_result_overlay.visible = true
 	var reward := {}
-	if progression_service != null:
+	if progression_service != null and progression_service.can_save_profile():
 		reward = progression_service.award_survival_run(
 			_run_id, wave_director.wave, victory, kill_count, difficulty_id
 		)

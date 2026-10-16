@@ -134,6 +134,9 @@ func load_profile() -> Dictionary:
 		return {"ok": false, "error": "save_failed"}
 	return {"ok": true, "profile": profile.duplicate(true)}
 
+func can_save_profile() -> bool:
+	return _save_service != null
+
 func set_equipped(instance_id: String, equipped: bool) -> Dictionary:
 	var profile_result := load_profile()
 	if not profile_result.get("ok", false):
