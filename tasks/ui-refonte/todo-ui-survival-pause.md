@@ -2,7 +2,7 @@
 
 Plan : [`plan-ui-survival-pause.md`](plan-ui-survival-pause.md) · Spec : [`SPEC-survival-pause.md`](SPEC-survival-pause.md)
 
-**Statut : validé par l’utilisateur.** Tâches 1 à 3 terminées; tâches 4 et 5 restent à faire. Le plan principal reste en pause et inchangé.
+**Statut : validé par l’utilisateur.** Tâches 1 à 4 terminées; tâche 5 d’intégration reste à faire. Le plan principal reste en pause et inchangé.
 
 ## Tâche 1 — Pause manuelle et invariance temporelle
 
@@ -65,13 +65,13 @@ Plan : [`plan-ui-survival-pause.md`](plan-ui-survival-pause.md) · Spec : [`SPEC
 **Description :** Ajouter une confirmation accessible, annulation sans effet et sortie définitive vers l’accueil sans récompense de complétion.
 
 **Critères d’acceptation :**
-- [ ] Abandonner ouvre une confirmation et son focus initial est prévisible.
-- [ ] Annuler ferme la confirmation, garde la session suspendue et restaure le focus sur Abandonner.
-- [ ] Confirmer quitte vers `launch_menu.tscn` et la session n’est plus active.
-- [ ] Le chemin ne déclenche pas `_finish_run()`, victoire, octroi de récompense, récompense de défaite ou progression de profil.
-- [ ] Échap de la confirmation annule seulement celle-ci sans reprendre la run.
+- [x] Abandonner ouvre une confirmation et son focus initial est prévisible et sûr (Garder la run).
+- [x] Annuler ferme la confirmation, garde la session suspendue et restaure le focus sur Abandonner.
+- [x] Confirmer quitte vers `launch_menu.tscn` et la session n’est plus active.
+- [x] Le chemin ne déclenche pas `_finish_run()`, victoire, octroi de récompense, récompense de défaite ou progression de profil.
+- [x] Échap de la confirmation annule seulement celle-ci sans reprendre la run.
 
-**Vérification :** smoke avec profil fixture comparé avant/après confirmation/annulation; vérifier la destination et l’absence d’objet simulation actif.
+**Vérification :** `survival_abandon_smoke.gd` compare le profil avant/après avec confirmation et annulation, vérifie destination/focus et suppression de session. Passent aussi `survival_run_result_smoke.gd`, `survival_progression_smoke.gd`, les smokes pause et inventaire, l’import headless Godot 4.7.2 et `git diff --check`.
 
 **Dépendances :** Tâche 1.
 

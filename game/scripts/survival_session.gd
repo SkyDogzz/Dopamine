@@ -312,6 +312,10 @@ var _pending_summon_sequences: Dictionary = {}
 @onready var _pause_resume_button: Button = $HUD/PauseOverlay/Center/Panel/Content/ResumeButton
 @onready var _pause_options_button: Button = $HUD/PauseOverlay/Center/Panel/Content/OptionsButton
 @onready var _pause_inventory_button: Button = $HUD/PauseOverlay/Center/Panel/Content/InventoryButton
+@onready var _pause_abandon_button: Button = $HUD/PauseOverlay/Center/Panel/Content/AbandonButton
+@onready var _abandon_confirmation: Control = $HUD/PauseOverlay/ConfirmationOverlay
+@onready var _abandon_cancel_button: Button = $HUD/PauseOverlay/ConfirmationOverlay/Center/Panel/Content/CancelButton
+@onready var _abandon_confirm_button: Button = $HUD/PauseOverlay/ConfirmationOverlay/Center/Panel/Content/ConfirmButton
 
 var _options_overlay: Control
 var _inventory_overlay: Control
@@ -340,6 +344,9 @@ func _ready() -> void:
 	_pause_resume_button.pressed.connect(_resume_manually_paused_run)
 	_pause_options_button.pressed.connect(_open_pause_options)
 	_pause_inventory_button.pressed.connect(_open_run_inventory)
+	_pause_abandon_button.pressed.connect(_open_abandon_confirmation)
+	_abandon_cancel_button.pressed.connect(_close_abandon_confirmation)
+	_abandon_confirm_button.pressed.connect(_confirm_abandon_run)
 	player_max_hp = simulation.initial_player_hp()
 	_base_player_move_speed = player.move_speed
 	if progression_service != null:
@@ -370,7 +377,9 @@ func _unhandled_key_input(event: InputEvent) -> void:
 		return
 	if simulation == null or run_over or _chest_open or _starting_weapon_choice_open:
 		return
-	if _manually_paused:
+	if _abandon_confirmation.visible:
+		_close_abandon_confirmation()
+	elif _manually_paused:
 		_resume_manually_paused_run()
 	elif not bool(simulation.snapshot()["paused"]):
 		_manually_paused = true
@@ -428,6 +437,29 @@ func _close_run_inventory() -> void:
 func _restore_run_inventory_focus() -> void:
 	if _manually_paused and is_instance_valid(_pause_inventory_button):
 		_pause_inventory_button.grab_focus()
+
+func _open_abandon_confirmation() -> void:
+	if not _manually_paused:
+		return
+	_abandon_confirmation.show()
+	_abandon_cancel_button.grab_focus()
+
+func _close_abandon_confirmation() -> void:
+	_abandon_confirmation.hide()
+	if _manually_paused:
+		_pause_abandon_button.grab_focus()
+
+func _confirm_abandon_run() -> void:
+	if not _manually_paused or simulation == null:
+		return
+	simulation.pause()
+	_manually_paused = false
+	run_over = true
+	var error := get_tree().change_scene_to_file("res://scenes/launch_menu.tscn")
+	if error != OK:
+		run_over = false
+		_manually_paused = true
+		push_error("Could not return to launch menu after abandoning the run: %s" % error_string(error))
 
 func _process(_delta: float) -> void:
 	if simulation == null:
