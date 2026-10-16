@@ -12,6 +12,10 @@ const DEDICATED_ICON_REFERENCES := {
 	"relic_frozen_crown": "res://assets/source/catalog_relics/relic_frozen_crown_reference.png",
 	"relic_magnetic_coil": "res://assets/source/catalog_relics/relic_magnetic_coil_reference.png",
 	"relic_overdrive_engine": "res://assets/source/catalog_relics/relic_overdrive_engine_reference.png",
+	"relic_plague_mask": "res://assets/source/catalog_relics/relic_plague_mask_reference.png",
+	"relic_prism_crystal": "res://assets/source/catalog_relics/relic_prism_crystal_reference.png",
+	"relic_singularity": "res://assets/source/catalog_relics/relic_singularity_reference.png",
+	"relic_magnet_heart": "res://assets/source/catalog_relics/relic_magnet_heart_reference.png",
 }
 const RELIC_REFERENCE := "res://assets/source/catalog_relics/generated_reference.png"
 const RELIC_SOURCE_DIR := "res://assets/source/catalog_relics"
