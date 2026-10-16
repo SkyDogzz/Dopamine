@@ -189,9 +189,11 @@ func _verify_dopamine_core_patterns_and_phases() -> bool:
 	var boss: Dictionary = _find_entity(core_session, "final_boss")
 	var boss_id: Dictionary = boss["id"]
 	var boss_key: String = core_session._entity_key(int(boss_id["index"]), int(boss_id["generation"]))
-	core_session._update_dopamine_core_attacks(0.0, false)
-	core_session._update_dopamine_core_attacks(core_session.final_boss_attack_interval_seconds, false)
+	var current_time := float(core_session.simulation.snapshot()["simulation_time"])
+	core_session._update_dopamine_core_attacks(current_time, false)
 	var attack: Dictionary = core_session._dopamine_core_attacks[boss_key]
+	core_session._update_dopamine_core_attacks(float(attack["next_attack_at"]), false)
+	attack = core_session._dopamine_core_attacks[boss_key]
 	if attack["stage"] != "telegraph" or attack["pattern"] != "ray":
 		core_session.queue_free()
 		_fail("Phase one should telegraph a ray before firing")
