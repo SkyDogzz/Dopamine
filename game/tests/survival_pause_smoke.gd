@@ -33,8 +33,12 @@ func _run() -> void:
 		return
 	var speed_select: OptionButton = pause_menu.get_node("Center/Panel/Content/SpeedSelect")
 	var health_lock: CheckButton = pause_menu.get_node_or_null("Center/Panel/Content/HealthLockButton")
+	var auto_select_chest: CheckButton = pause_menu.get_node_or_null("Center/Panel/Content/AutoSelectChestButton")
 	if health_lock == null or health_lock.get_global_rect().position.y <= speed_select.get_global_rect().end.y:
 		_fail("The health lock toggle should appear below simulation speed")
+		return
+	if auto_select_chest == null or auto_select_chest.get_global_rect().position.y <= health_lock.get_global_rect().end.y or auto_select_chest.button_pressed:
+		_fail("Auto-select should appear below health lock and be disabled by default")
 		return
 	session.player_hp = 50.0
 	session.player_shield = 5.0
@@ -136,9 +140,36 @@ func _run() -> void:
 	if bool(state["paused"]) or pause_menu.visible:
 		_fail("Escape should resume the same run after a gamepad pause")
 		return
+	await _send_input(_escape_event())
+	auto_select_chest.button_pressed = true
+	auto_select_chest.toggled.emit(true)
+	var chosen_ids := [""]
+	session.chest_option_chosen.connect(func(option_id: String) -> void: chosen_ids[0] = option_id)
+	if not session.open_chest_family("weapon"):
+		_fail("Auto-select fixture should open a valid weapon chest")
+		return
+	var expected_first_id := str(session._active_chest_options[0]["id"]) if not session._active_chest_options.is_empty() else ""
+	if expected_first_id.is_empty():
+		_fail("Auto-select fixture should offer at least one chest option")
+		return
+	var auto_selected: Dictionary = await _wait_until(session, func(snapshot: Dictionary) -> bool:
+		return not snapshot["paused"] and not session._chest_open and not chosen_ids[0].is_empty()
+	)
+	if auto_selected.is_empty() or chosen_ids[0] != expected_first_id:
+		_fail("Auto-select should choose the first offered chest option and resume: expected=%s actual=%s" % [expected_first_id, chosen_ids[0]])
+		return
 
 	print("Survival pause smoke passed")
 	quit()
+
+func _wait_until(session: Node, predicate: Callable) -> Dictionary:
+	var deadline := Time.get_ticks_msec() + 1000
+	while Time.get_ticks_msec() < deadline:
+		var snapshot: Dictionary = session.simulation.snapshot()
+		if predicate.call(snapshot):
+			return snapshot
+		await process_frame
+	return {}
 
 func _escape_event() -> InputEventKey:
 	var event := InputEventKey.new()

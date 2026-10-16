@@ -375,6 +375,7 @@ var _weapon_progression_valid := false
 @onready var _pause_overlay: Control = $HUD/PauseOverlay
 @onready var _pause_speed_select: OptionButton = $HUD/PauseOverlay/Center/Panel/Content/SpeedSelect
 @onready var _pause_health_lock_button: CheckButton = $HUD/PauseOverlay/Center/Panel/Content/HealthLockButton
+@onready var _pause_auto_select_chest_button: CheckButton = $HUD/PauseOverlay/Center/Panel/Content/AutoSelectChestButton
 @onready var _pause_resume_button: Button = $HUD/PauseOverlay/Center/Panel/Content/ResumeButton
 @onready var _pause_options_button: Button = $HUD/PauseOverlay/Center/Panel/Content/OptionsButton
 @onready var _pause_inventory_button: Button = $HUD/PauseOverlay/Center/Panel/Content/InventoryButton
@@ -386,6 +387,7 @@ var _weapon_progression_valid := false
 var _options_overlay: Control
 var _inventory_overlay: Control
 var _health_locked := false
+var _auto_select_first_chest := false
 
 func _ready() -> void:
 	Engine.time_scale = 1.0
@@ -425,6 +427,7 @@ func _ready() -> void:
 	_pause_resume_button.pressed.connect(_resume_manually_paused_run)
 	_pause_speed_select.item_selected.connect(_on_pause_speed_selected)
 	_pause_health_lock_button.toggled.connect(_on_pause_health_lock_toggled)
+	_pause_auto_select_chest_button.toggled.connect(_on_pause_auto_select_chest_toggled)
 	_pause_options_button.pressed.connect(_open_pause_options)
 	_pause_inventory_button.pressed.connect(_open_run_inventory)
 	_pause_abandon_button.pressed.connect(_open_abandon_confirmation)
@@ -531,6 +534,12 @@ func _on_pause_health_lock_toggled(enabled: bool) -> void:
 		_pause_health_lock_button.set_pressed_no_signal(_health_locked)
 		return
 	_health_locked = enabled
+
+func _on_pause_auto_select_chest_toggled(enabled: bool) -> void:
+	if not _manually_paused:
+		_pause_auto_select_chest_button.set_pressed_no_signal(_auto_select_first_chest)
+		return
+	_auto_select_first_chest = enabled
 
 func _physics_process(_delta: float) -> void:
 	_publish_player_target()
@@ -1360,6 +1369,8 @@ func _open_chest(options: Array, heading: String) -> bool:
 	_active_chest_options = options.duplicate(true)
 	_active_chest_heading = heading
 	simulation.pause()
+	if _auto_select_first_chest:
+		_chest_choice.call_deferred("choose_first_option")
 	return true
 
 func _on_chest_option_selected(option_id: String) -> void:

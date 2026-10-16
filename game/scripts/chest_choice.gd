@@ -116,6 +116,12 @@ func _choose(option_id: String) -> void:
 	visible = false
 	option_selected.emit(option_id)
 
+func choose_first_option() -> bool:
+	if not visible or _options.get_child_count() == 0:
+		return false
+	(_options.get_child(0) as Button).emit_signal("pressed")
+	return true
+
 func _clear_options() -> void:
 	for child in _options.get_children():
 		_options.remove_child(child)

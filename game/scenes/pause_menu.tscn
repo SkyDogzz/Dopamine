@@ -83,6 +83,12 @@ layout_mode = 2
 focus_mode = 2
 text = "LOCK HEALTH"
 
+[node name="AutoSelectChestButton" type="CheckButton" parent="Center/Panel/Content"]
+custom_minimum_size = Vector2(0, 22)
+layout_mode = 2
+focus_mode = 2
+text = "AUTO PICK FIRST CHEST"
+
 [node name="ResumeButton" type="Button" parent="Center/Panel/Content"]
 custom_minimum_size = Vector2(0, 24)
 layout_mode = 2
