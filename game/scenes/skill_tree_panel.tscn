@@ -25,7 +25,7 @@ color = Color(0.031373, 0.043137, 0.094118, 0.82)
 mouse_filter = 2
 
 [node name="Panel" type="PanelContainer" parent="."]
-custom_minimum_size = Vector2(420, 226)
+custom_minimum_size = Vector2(420, 250)
 layout_mode = 2
 theme_type_variation = "CompactPanel"
 
@@ -65,12 +65,12 @@ theme_override_colors/font_color = Color(1, 0.831373, 0.278431, 1)
 text = "ESSENCE 0"
 
 [node name="NodeBranch" type="HBoxContainer" parent="Panel/Content"]
-custom_minimum_size = Vector2(0, 104)
+custom_minimum_size = Vector2(0, 128)
 layout_mode = 2
 theme_override_constants/separation = 6
 
 [node name="FoundationCard" type="PanelContainer" parent="Panel/Content/NodeBranch"]
-custom_minimum_size = Vector2(164, 104)
+custom_minimum_size = Vector2(164, 128)
 layout_mode = 2
 size_flags_horizontal = 3
 theme_type_variation = "InsetPanel"
@@ -112,7 +112,7 @@ horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="FollowupCard" type="PanelContainer" parent="Panel/Content/NodeBranch"]
-custom_minimum_size = Vector2(164, 104)
+custom_minimum_size = Vector2(164, 128)
 layout_mode = 2
 size_flags_horizontal = 3
 theme_type_variation = "InsetPanel"
@@ -141,6 +141,29 @@ layout_mode = 2
 theme_override_colors/font_color = Color(0.647059, 0.682353, 0.764706, 1)
 theme_override_font_sizes/font_size = 8
 text = "+3% DAMAGE  •  80 ESSENCE  •  PROPOSED"
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="MasteryKicker" type="Label" parent="Panel/Content/NodeBranch/FollowupCard/Content"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.831373, 0.278431, 1)
+theme_override_font_sizes/font_size = 8
+text = "MASTERY · LOCKED"
+horizontal_alignment = 1
+
+[node name="MasteryButton" type="Button" parent="Panel/Content/NodeBranch/FollowupCard/Content"]
+custom_minimum_size = Vector2(0, 25)
+layout_mode = 2
+text = "UNLOCK NODE"
+icon = ExtResource("3_skill_node")
+theme_override_constants/icon_max_width = 12
+texture_filter = 1
+
+[node name="MasteryEffect" type="Label" parent="Panel/Content/NodeBranch/FollowupCard/Content"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.647059, 0.682353, 0.764706, 1)
+theme_override_font_sizes/font_size = 8
+text = "+2% MOVE SPEED  •  110 ESSENCE  •  PROPOSED"
 horizontal_alignment = 1
 autowrap_mode = 2
 

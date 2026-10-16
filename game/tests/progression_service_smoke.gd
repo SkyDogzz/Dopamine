@@ -190,25 +190,32 @@ func _run() -> void:
 		_fail("The same unique effect on multiple equipped items should activate once, not stack: %s" % [service.equipped_unique_effects()])
 		return
 	profile = service.load_profile()["profile"]
-	profile["resources"]["essence"] = 200
+	profile["resources"]["essence"] = 350
 	if not save_service.save_slot("0", profile):
 		_fail("The skill tree fixture should save")
 		return
 	if service.unlock_skill_node("focused_training").get("error") != "skill_prerequisite_locked":
 		_fail("A skill node should reject purchase until its prerequisite is unlocked")
 		return
+	if service.unlock_skill_node("fleet_footed").get("error") != "skill_prerequisite_locked":
+		_fail("A mastery node should reject purchase until its branch prerequisite is unlocked")
+		return
 	var unlocked: Dictionary = service.unlock_skill_node("vitality_starter")
 	var focused: Dictionary = service.unlock_skill_node("focused_training")
+	var fleet: Dictionary = service.unlock_skill_node("fleet_footed")
 	if service.skill_node_cost("vitality_starter") != 50 or service.skill_node_cost("focused_training") != 80 or \
-			not unlocked.get("ok", false) or not focused.get("ok", false) or \
+			service.skill_node_cost("fleet_footed") != 110 or not unlocked.get("ok", false) or \
+			not focused.get("ok", false) or not fleet.get("ok", false) or \
 			service.skill_bonus("max_hp_pct") != 0.05 or service.skill_bonus("damage_pct") != 0.03 or \
-			focused["profile"]["resources"]["essence"] != 70 or \
+			service.skill_bonus("move_speed_pct") != 0.02 or \
+			fleet["profile"]["resources"]["essence"] != 110 or \
 			service.unlock_skill_node("vitality_starter").get("ok", false):
-		_fail("The prototype skill node should spend Essence once and expose its proposed passive bonus")
+		_fail("The proposed skill branch should enforce prerequisites, spend Essence once and expose its passive bonuses")
 		return
 	var respecced: Dictionary = service.respec_skill_tree()
 	if not respecced.get("ok", false) or service.skill_bonus("max_hp_pct") != 0.0 or \
-			service.skill_bonus("damage_pct") != 0.0 or respecced["profile"]["resources"]["essence"] != 200:
+			service.skill_bonus("damage_pct") != 0.0 or service.skill_bonus("move_speed_pct") != 0.0 or \
+			respecced["profile"]["resources"]["essence"] != 350:
 		_fail("Skill respec should be free and refund the spent Essence")
 		return
 	var legacy_service = load("res://scripts/progression_service.gd").new(save_service, "legacy")

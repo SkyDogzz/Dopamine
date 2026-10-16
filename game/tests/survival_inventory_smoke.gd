@@ -166,9 +166,30 @@ func _run() -> void:
 	if not is_equal_approx(progression.skill_bonus("damage_pct"), 0.03):
 		_fail("Unlocking Focused Training should persist its proposed damage bonus")
 		return
+	var mastery_button: Button = skill_panel.get_node("Panel/Content/NodeBranch/FollowupCard/Content/MasteryButton")
+	if mastery_button.disabled:
+		_fail("The skill mastery node should become available after its branch prerequisite")
+		return
+	mastery_button.pressed.emit()
+	if not is_equal_approx(progression.skill_bonus("move_speed_pct"), 0.02):
+		_fail("Unlocking Fleet Footed should persist its proposed move speed bonus")
+		return
+	var skill_session: Node2D = load("res://scenes/survival_session.tscn").instantiate()
+	skill_session.progression_service = progression
+	skill_session.spawn_initial_enemy = false
+	skill_session.wave_spawning_enabled = false
+	skill_session.skip_starting_weapon_choice = true
+	root.add_child(skill_session)
+	await process_frame
+	if not is_equal_approx(skill_session.player.move_speed, 240.0 * 1.02):
+		_fail("The unlocked proposed move speed node should affect a real Survival session")
+		return
+	skill_session.queue_free()
+	await process_frame
 	skill_panel.get_node("Panel/Content/RespecButton").pressed.emit()
 	if not is_zero_approx(progression.skill_bonus("max_hp_pct")) or \
 		not is_zero_approx(progression.skill_bonus("damage_pct")) or \
+		not is_zero_approx(progression.skill_bonus("move_speed_pct")) or \
 		progression.load_profile()["profile"]["resources"]["essence"] != 240:
 		_fail("Free skill respec should restore Essence and remove prototype bonuses")
 		return
