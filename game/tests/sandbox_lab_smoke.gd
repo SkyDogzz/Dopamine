@@ -25,10 +25,17 @@ func _run() -> void:
 	var stat_value: SpinBox = lab.get_node_or_null("Root/Body/Side/Sections/VisualBuild/StatRow/StatValue")
 	var add_stat: Button = lab.get_node_or_null("Root/Body/Side/Sections/VisualBuild/AddStatButton")
 	var apply_build: Button = lab.get_node_or_null("Root/Body/Side/Sections/VisualBuild/ApplyBuildButton")
+	var equipment_slot: OptionButton = lab.get_node_or_null("Root/Body/Side/Sections/VisualBuild/EquipmentRow/EquipmentSlot")
+	var equipment_stat: OptionButton = lab.get_node_or_null("Root/Body/Side/Sections/VisualBuild/EquipmentRow/EquipmentStat")
+	var equipment_value: SpinBox = lab.get_node_or_null("Root/Body/Side/Sections/VisualBuild/EquipmentRow/EquipmentValue")
+	var add_equipment: Button = lab.get_node_or_null("Root/Body/Side/Sections/VisualBuild/AddEquipmentButton")
+	var live_damage: SpinBox = lab.get_node_or_null("Root/Body/Side/Sections/LiveOverride/DamageValue")
+	var apply_live_damage: Button = lab.get_node_or_null("Root/Body/Side/Sections/LiveOverride/ApplyDamage")
 	if weapon_select == null or weapon_level == null or add_weapon == null or relic_select == null or \
 			relic_level == null or add_relic == null or stat_select == null or stat_value == null or \
-			add_stat == null or apply_build == null:
-		_fail("Sandbox Lab should provide visual weapon, relic and stat build controls")
+			add_stat == null or apply_build == null or equipment_slot == null or equipment_stat == null or \
+			equipment_value == null or add_equipment == null or live_damage == null or apply_live_damage == null:
+		_fail("Sandbox Lab should provide visual build controls and a live damage override")
 		return
 	weapon_select.select(_option_index_for(weapon_select, "minigun"))
 	weapon_level.value = 2
@@ -41,17 +48,36 @@ func _run() -> void:
 	stat_select.select(_option_index_for(stat_select, "damage_pct"))
 	stat_value.value = 12.5
 	add_stat.pressed.emit()
+	equipment_slot.select(_option_index_for(equipment_slot, "boots"))
+	equipment_stat.select(_option_index_for(equipment_stat, "move_speed_pct"))
+	equipment_value.value = 7.5
+	add_equipment.pressed.emit()
 	var visual_build: Dictionary = JSON.parse_string(lab.get_node("Root/Body/Side/Sections/BuildJson").text)
 	if visual_build["weapons"].size() != 2 or visual_build["weapons"][1]["level"] != 3 or \
-			visual_build["relics"].size() != 2 or visual_build["stats"]["damage_pct"] != 12.5:
+			visual_build["relics"].size() != 2 or visual_build["stats"]["damage_pct"] != 12.5 or \
+			visual_build["equipment"].size() != 1 or \
+			visual_build["equipment"][0]["slot"] != "boots" or \
+			visual_build["equipment"][0]["stats"]["move_speed_pct"] != 7.5:
 		_fail("Visual build controls should update the JSON model without duplicating an item")
 		return
 	await lab._apply_visual_build()
 	if lab.context.session.loadout.weapon_level("minigun") != 3 or \
 			lab.context.session.loadout.relic_level("magnet_heart") != 2 or \
 			lab.context.session._equipment_bonus("damage_pct") != 12.5 or \
+			lab.context.session._equipment_bonus("move_speed_pct") != 7.5 or \
 			not bool(lab.context.simulation.snapshot()["paused"]):
 		_fail("Apply Build should atomically rebuild the paused isolated combat session from visual controls")
+		return
+	if not is_equal_approx(lab.context.session._cached_persistent_damage_multiplier, 1.125) or \
+			not is_equal_approx(lab.context.session._persistent_damage_multiplier(), 1.18125):
+		_fail("Sandbox build damage must affect the same effective multiplier used by combat")
+		return
+	live_damage.value = 10.0
+	apply_live_damage.pressed.emit()
+	if not is_equal_approx(float(lab.context.session._cached_equipment_bonuses["damage_pct"]), 22.5) or \
+			not is_equal_approx(lab.context.session._persistent_damage_multiplier(), 1.28625) or \
+			lab.context.active_preset["initial_build"]["equipment"].size() != 1:
+		_fail("Live damage override should update combat immediately without changing the active preset build")
 		return
 	var diagnostics: Label = lab.get_node_or_null("Root/Body/Side/Sections/Diagnostics/RngLog")
 	var dps_summary: Label = lab.get_node_or_null("Root/Body/Side/Sections/Diagnostics/DpsSummary")

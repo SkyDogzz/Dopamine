@@ -276,11 +276,69 @@ layout_mode = 2
 focus_mode = 2
 text = "ADD / UPDATE STAT"
 
+[node name="EquipmentRow" type="HBoxContainer" parent="Root/Body/Side/Sections/VisualBuild"]
+layout_mode = 2
+theme_override_constants/separation = 3
+
+[node name="EquipmentSlot" type="OptionButton" parent="Root/Body/Side/Sections/VisualBuild/EquipmentRow"]
+custom_minimum_size = Vector2(0, 20)
+size_flags_horizontal = 3
+layout_mode = 2
+focus_mode = 2
+item_count = 0
+
+[node name="EquipmentStat" type="OptionButton" parent="Root/Body/Side/Sections/VisualBuild/EquipmentRow"]
+custom_minimum_size = Vector2(0, 20)
+size_flags_horizontal = 3
+layout_mode = 2
+focus_mode = 2
+item_count = 0
+
+[node name="EquipmentValue" type="SpinBox" parent="Root/Body/Side/Sections/VisualBuild/EquipmentRow"]
+custom_minimum_size = Vector2(70, 20)
+layout_mode = 2
+focus_mode = 2
+min_value = -10000.0
+max_value = 10000.0
+value = 5.0
+step = 0.5
+
+[node name="AddEquipmentButton" type="Button" parent="Root/Body/Side/Sections/VisualBuild"]
+custom_minimum_size = Vector2(0, 20)
+layout_mode = 2
+focus_mode = 2
+text = "ADD / UPDATE EQUIPMENT"
+
 [node name="ApplyBuildButton" type="Button" parent="Root/Body/Side/Sections/VisualBuild"]
 custom_minimum_size = Vector2(0, 21)
 layout_mode = 2
 focus_mode = 2
 text = "APPLY BUILD · PAUSE / REBUILD"
+
+[node name="LiveOverride" type="VBoxContainer" parent="Root/Body/Side/Sections"]
+layout_mode = 2
+theme_override_constants/separation = 2
+
+[node name="LiveOverrideTitle" type="Label" parent="Root/Body/Side/Sections/LiveOverride"]
+layout_mode = 2
+theme_type_variation = "PixelHeading"
+theme_override_font_sizes/font_size = 8
+text = "LIVE OVERRIDE · DAMAGE"
+
+[node name="DamageValue" type="SpinBox" parent="Root/Body/Side/Sections/LiveOverride"]
+custom_minimum_size = Vector2(0, 20)
+layout_mode = 2
+focus_mode = 2
+min_value = -10000.0
+max_value = 10000.0
+value = 0.0
+step = 0.5
+
+[node name="ApplyDamage" type="Button" parent="Root/Body/Side/Sections/LiveOverride"]
+custom_minimum_size = Vector2(0, 20)
+layout_mode = 2
+focus_mode = 2
+text = "APPLY LIVE DAMAGE %"
 
 [node name="PresetActions" type="HBoxContainer" parent="Root/Body/Side/Sections"]
 layout_mode = 2

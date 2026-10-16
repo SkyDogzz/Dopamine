@@ -117,4 +117,7 @@ func _apply_build(target_session: Node2D, target_build: RefCounted) -> bool:
 		for stat_id in equipment["stats"]:
 			bonuses[stat_id] = float(bonuses.get(stat_id, 0.0)) + float(equipment["stats"][stat_id])
 	target_session._cached_equipment_bonuses = bonuses
+	target_session._cached_persistent_damage_multiplier = maxf(
+		0.0, 1.0 + float(bonuses.get("damage_pct", 0.0)) / 100.0
+	)
 	return true

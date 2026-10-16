@@ -778,6 +778,7 @@ Note de clôture : le blocage historique du smoke `sandbox_ui_smoke.gd` décrit 
 ## P8.2 — Build visuel du Sandbox Lab et lisibilité du PHUB (2026-10-16)
 
 - [x] `sandbox_lab_smoke.gd` vérifie l’ajout et le changement de niveau d’arme/relique sans doublons, l’ajout d’une stat, puis l’application du build à la simulation Sandbox en pause. Le contexte reste isolé des services de progression et sauvegarde normale.
+- [x] Le même smoke couvre un équipement visuel par slot/stat, son effet sur le bonus effectif, et un override LIVE de dégâts qui change le multiplicateur réellement utilisé sans modifier le preset actif.
 - [x] `survival_run_stat_hub_smoke.gd` vérifie le résumé transparent en lignes verticales icône + valeur et les détails avec libellé au-dessus, icône et total en dessous; navigation Tab et horloges de run continuent de fonctionner.
 - [x] `ui_viewport_layout_smoke.gd` passe à 640×360, 1280×720 et 1920×1080; les deux smokes ciblés passent avec Godot 4.7.2.
-- [ ] Ce slice ne ferme pas P8.2 : l’édition d’équipements, les overrides de simulation et les limites de contenu restent à traiter. Les valeurs Sandbox ne sont pas des paramètres de balance validés.
+- [ ] Ce slice ne ferme pas P8.2 : les autres overrides LIVE, les modes REBUILD/RESTART et les limites de contenu restent à traiter. Les valeurs Sandbox ne sont pas des paramètres de balance validés.
