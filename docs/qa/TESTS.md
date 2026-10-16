@@ -18,6 +18,13 @@
 - [x] `survival_elite_smoke.gd` affiche des avertissements ObjectDB/ressources encore référencées à la fermeture après réussite; aucun échec de scénario observé.
 - [ ] Ces smokes ne valident ni les patterns Chaos encore **[OUVERTS]**, ni le balancing, ni une victoire jouée sans harness (P5.V3).
 
+## P7A.4 — Cycle Armorless intégré — 2026-10-16
+
+- [x] `armorless_session_cycle_smoke.gd` accélère la durée des vagues mais utilise la vraie session : 12 drafts de trois équipements temporaires, choix/reprise, boss de vague 12, transition vers la vague 13 et nettoyage d'équipement/Flux à la sortie.
+- [x] Le smoke vérifie que la session n'a pas de `ProgressionService` et qu'aucun fichier de slot normal n'est écrit.
+- [x] `armorless_session_cycle_smoke.gd` rapporte à la fermeture 4 objets ObjectDB et 2 ressources encore référencés après réussite; le résultat du scénario est vert.
+- [ ] Ce parcours accéléré ne remplace pas une session Armorless complète à durée de production, ni la calibration de la progression à long terme.
+
 ## P8.4 — Base de lecture de sauvegarde en Sandbox — 2026-10-16
 
 - [x] `save_service_smoke.gd` vérifie que la lecture seule renvoie un ancien payload sans migration/écriture et refuse un slot courant corrompu même si un backup existe, sans restaurer ni modifier la source. Le chargement normal continue ensuite à récupérer le backup.
