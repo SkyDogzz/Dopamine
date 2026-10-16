@@ -732,13 +732,12 @@ func _process(_delta: float) -> void:
 					_victory_pending = true
 				_roll_enemy_chests(dead_enemy_type, death_position)
 				if not run_over:
-					var healing: float = float(simulation.kill_heal_amount(float(event["threat_level"])))
+					var healing: float = _equipment_kill_healing(float(simulation.kill_heal_amount(float(event["threat_level"]))))
 					healing *= 1.0 + float(loadout.relic_level("blood_chalice")) * blood_chalice_heal_per_level
-					healing *= 1.0 + _equipment_bonus("kill_healing_pct") / 100.0
 					player_hp = minf(player_max_hp, player_hp + healing)
 					_spawn_xp_drop(
 						death_position,
-						xp_per_enemy * (1.0 + _equipment_bonus("xp_pct") / 100.0)
+						_equipment_xp_value(xp_per_enemy)
 					)
 			"xp_collected":
 				var id: Dictionary = event["target"]
@@ -901,11 +900,10 @@ func _update_exploder_attacks(current_simulation_time: float, paused: bool) -> v
 		kill_count += 1
 		_roll_enemy_chests("exploder", blast_origin)
 		if not run_over:
-			var healing: float = float(simulation.kill_heal_amount(float(components.get("ThreatLevel", 2.0))))
+			var healing: float = _equipment_kill_healing(float(simulation.kill_heal_amount(float(components.get("ThreatLevel", 2.0)))))
 			healing *= 1.0 + float(loadout.relic_level("blood_chalice")) * blood_chalice_heal_per_level
-			healing *= 1.0 + _equipment_bonus("kill_healing_pct") / 100.0
 			player_hp = minf(player_max_hp, player_hp + healing)
-			_spawn_xp_drop(blast_origin, xp_per_enemy * (1.0 + _equipment_bonus("xp_pct") / 100.0))
+			_spawn_xp_drop(blast_origin, _equipment_xp_value(xp_per_enemy))
 	for exploder_key in _exploder_attacks.keys():
 		if not active_exploders.has(exploder_key):
 			_exploder_attacks.erase(exploder_key)
@@ -2366,6 +2364,12 @@ func _refresh_persistent_bonuses() -> void:
 
 func _equipment_bonus(stat_id: String) -> float:
 	return float(_cached_equipment_bonuses.get(stat_id, 0.0))
+
+func _equipment_kill_healing(base_healing: float) -> float:
+	return base_healing * (1.0 + _equipment_bonus("kill_healing_pct") / 100.0)
+
+func _equipment_xp_value(base_xp: float) -> float:
+	return base_xp * (1.0 + _equipment_bonus("xp_pct") / 100.0)
 
 func _refresh_player_move_speed() -> void:
 	var haste_multiplier := 1.15 if _has_unique_effect("elite_haste") and player_active_time < _elite_haste_expires_at else 1.0

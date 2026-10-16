@@ -20,6 +20,7 @@
 
 ## P6.3 — Portée de ramassage équipement et XP — 2026-10-16
 
+- [x] `equipment_stats_smoke.gd` charge un seul bonus d’équipement par profil et lance une session Survival séparée par stat; vérifie HP, mobilité, dégâts, cadence, chance et dégâts critiques, soin par élimination, aire, cooldown, XP, portée de collecte et vitesse projectile.
 - [x] `survival_chest_smoke.gd` passe sous Godot 4.7.2; le rayon bonus et l’impulsion Magnet Heart collectent les orbes XP, tandis qu’un coffre placé au-delà de `chest_collection_radius` reste intact.
 
 ## P6.5 — Effet Elite Haste — 2026-10-16

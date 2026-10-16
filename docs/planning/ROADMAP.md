@@ -359,7 +359,7 @@ Travail requis :
   - [x] Ouvrir un vrai coffre d’arme, afficher l’unique évolution devenue éligible et la collecter; `survival_weapon_catalog_smoke.gd` vérifie que le combo s’active après cette collecte.
 - [ ] **P5.3.4 — Probabilités**
   - [x] Garder les taux de drop, le filet anti-malchance et les poids d’offres accessibles en configuration; `survival_chest_director_smoke.gd` et `survival_loadout_smoke.gd` couvrent ces paramètres.
-  - [ ] Intégrer le reroll avec les effets uniques de progression permanente (P6.5); aucune commande de reroll n’est exposée en run à ce stade.
+  - [x] Intégrer `free_first_chest_reroll` au premier coffre de run via P6.5; le comportement reste **[PROPOSÉ]** et est couvert par `free_chest_reroll_smoke.gd`.
   - [ ] Faire arbitrer les valeurs nécessaires avant leur verrouillage; les coefficients restent **[PROPOSÉS]**.
 - [ ] **P5.3.5 — Collecte**
   - [x] Préserver le rayon séparé `chest_collection_radius`.
@@ -457,8 +457,7 @@ Travail requis :
   - [x] Smoke ciblé vérifie les poids Easy/Chaos, la conservation de la somme à 100 %, l’effet de vague sur le tirage seedé et les poids proposés par difficulté; cela ne constitue pas un calibrage statistique.
   - [x] `equipment_rarity_smoke.gd` vérifie par seed 20 000 tirages sur les cinq difficultés aux vagues 1 et 24 dans une tolérance statistique; les probabilités et la règle de progression restent **[PROPOSÉES]**, non calibrées.
 - [ ] **P6.3 — Application des statistiques**
-  - [ ] Vérifier une stat à la fois dans une session Survival.
-  - [ ] Couvrir HP, mobilité, dégât, cadence, critique, soin, aire, cooldown, XP et vitesse projectile.
+  - [x] `equipment_stats_smoke.gd` équipe une seule stat par profil et ouvre une vraie session Survival pour vérifier l’effet de HP, mobilité, dégâts, cadence, critiques, soin, aire, cooldown, XP, rayon de ramassage et vitesse projectile.
   - [x] `survival_chest_smoke.gd` vérifie l’application du rayon de ramassage aux XP, dont l’impulsion Magnet Heart, puis confirme qu’un grand rayon ne collecte jamais un coffre hors de sa portée dédiée.
 - [ ] **P6.4 — Enhancement**
   - [ ] Tester une ligne de stat de +0 à +10 avec chacun des quatre tiers Powder.
