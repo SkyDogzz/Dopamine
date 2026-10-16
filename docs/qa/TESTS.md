@@ -15,7 +15,10 @@
 ## P8.4 — Base de lecture de sauvegarde en Sandbox — 2026-10-16
 
 - [x] `save_service_smoke.gd` vérifie que la lecture seule renvoie un ancien payload sans migration/écriture et refuse un slot courant corrompu même si un backup existe, sans restaurer ni modifier la source. Le chargement normal continue ensuite à récupérer le backup.
-- [ ] Validation/migration en mémoire, conversion en build Sandbox et import via l’interface restent à implémenter.
+- [x] `sandbox_profile_build_smoke.gd` vérifie la copie depuis `read_slot_read_only`, les starters et unlocks du skill tree, les bonus permanents et l’équipement équipé; il compare les octets de la sauvegarde avant/après et refuse sans écriture un ancien profil incomplet.
+- [x] `sandbox_lab_smoke.gd` continue de vérifier que le contexte et la session Lab ne reçoivent aucun service de progression ou de sauvegarde; l’import du profil est une copie locale du build uniquement.
+- [ ] Essayer l’import depuis le Sandbox Lab interactif avec un profil normal v7 et vérifier le texte de refus sur un profil absent/ancien.
+- [x] Import UI valide en mémoire les profils courants et copie le build Sandbox sans exposer de capability d’écriture; migration des profils historiques volontairement refusée ici pour préserver la save source.
 
 ## Progression permanente — équipement classique — 2026-10-16
 

@@ -25,6 +25,7 @@ func _run() -> void:
 	var stat_value: SpinBox = lab.get_node_or_null("Root/Body/Side/Sections/VisualBuild/StatRow/StatValue")
 	var add_stat: Button = lab.get_node_or_null("Root/Body/Side/Sections/VisualBuild/AddStatButton")
 	var apply_build: Button = lab.get_node_or_null("Root/Body/Side/Sections/VisualBuild/ApplyBuildButton")
+	var import_profile: Button = lab.get_node_or_null("Root/Body/Side/Sections/VisualBuild/ImportProfileButton")
 	var equipment_slot: OptionButton = lab.get_node_or_null("Root/Body/Side/Sections/VisualBuild/EquipmentRow/EquipmentSlot")
 	var equipment_stat: OptionButton = lab.get_node_or_null("Root/Body/Side/Sections/VisualBuild/EquipmentRow/EquipmentStat")
 	var equipment_value: SpinBox = lab.get_node_or_null("Root/Body/Side/Sections/VisualBuild/EquipmentRow/EquipmentValue")
@@ -34,10 +35,10 @@ func _run() -> void:
 	var apply_live_stat: Button = lab.get_node_or_null("Root/Body/Side/Sections/LiveOverride/ApplyStat")
 	if weapon_select == null or weapon_level == null or add_weapon == null or relic_select == null or \
 			relic_level == null or add_relic == null or stat_select == null or stat_value == null or \
-			add_stat == null or apply_build == null or equipment_slot == null or equipment_stat == null or \
+			add_stat == null or apply_build == null or import_profile == null or equipment_slot == null or equipment_stat == null or \
 			equipment_value == null or add_equipment == null or live_stat == null or live_value == null or \
 			apply_live_stat == null:
-		_fail("Sandbox Lab should provide visual build controls and live stat overrides")
+		_fail("Sandbox Lab should provide profile import, visual build controls and live stat overrides")
 		return
 	weapon_select.select(_option_index_for(weapon_select, "minigun"))
 	weapon_level.value = 2

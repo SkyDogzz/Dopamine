@@ -196,6 +196,12 @@ theme_type_variation = "PixelHeading"
 theme_override_font_sizes/font_size = 8
 text = "VISUAL BUILD EDITOR"
 
+[node name="ImportProfileButton" type="Button" parent="Root/Body/Side/Sections/VisualBuild"]
+custom_minimum_size = Vector2(0, 20)
+layout_mode = 2
+focus_mode = 2
+text = "IMPORT NORMAL PROFILE · READ ONLY"
+
 [node name="WeaponRow" type="HBoxContainer" parent="Root/Body/Side/Sections/VisualBuild"]
 layout_mode = 2
 theme_override_constants/separation = 3

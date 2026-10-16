@@ -5,6 +5,8 @@ const PRESET_STORE_SCRIPT := preload("res://scripts/sandbox_preset_store.gd")
 const LAB_CONTEXT_SCRIPT := preload("res://scripts/sandbox_lab_context.gd")
 const COMBAT_CATALOG_SCRIPT := preload("res://scripts/combat_catalog.gd")
 const EQUIPMENT_GENERATOR_SCRIPT := preload("res://scripts/equipment_generator.gd")
+const SAVE_SERVICE_SCRIPT := preload("res://scripts/save_service.gd")
+const PROGRESSION_SCRIPT := preload("res://scripts/progression_service.gd")
 const MAX_DPS_SAMPLES := 4096
 
 @onready var _view: Control = $Root/Body/Left/SimulationView
@@ -68,6 +70,7 @@ func _ready() -> void:
 	$Root/Body/Side/Sections/VisualBuild/AddStatButton.pressed.connect(_add_visual_stat)
 	$Root/Body/Side/Sections/VisualBuild/AddEquipmentButton.pressed.connect(_add_visual_equipment)
 	$Root/Body/Side/Sections/VisualBuild/ApplyBuildButton.pressed.connect(_apply_visual_build)
+	$Root/Body/Side/Sections/VisualBuild/ImportProfileButton.pressed.connect(_import_normal_profile)
 	$Root/Body/Side/Sections/LiveOverride/ApplyStat.pressed.connect(_apply_live_stat_override)
 	_populate_visual_build_options()
 	for enemy_id in ["chaser", "sprinter", "tank", "shooter", "buffer", "exploder", "shielder", "summoner", "elite"]:
@@ -250,6 +253,25 @@ func _apply_visual_build() -> void:
 	if preset.is_empty():
 		return
 	await _apply_preset(preset)
+
+func _import_normal_profile() -> void:
+	var save_service = SAVE_SERVICE_SCRIPT.new()
+	var loaded: Dictionary = save_service.read_slot_read_only("0")
+	if not loaded.get("ok", false):
+		_set_status("PROFILE IMPORT FAILED: %s" % str(loaded.get("error", "unavailable")).to_upper(), true)
+		return
+	var profile: Variant = loaded.get("payload", {})
+	var progression = PROGRESSION_SCRIPT.new(null, "0")
+	if not profile is Dictionary or not progression._valid_profile(profile):
+		_set_status("PROFILE IMPORT FAILED: INVALID / LEGACY PROFILE", true)
+		return
+	var build = load("res://scripts/sandbox_build.gd").new()
+	var result: Dictionary = build.load_profile_copy(profile)
+	if not result.get("ok", false):
+		_set_status("PROFILE IMPORT FAILED: %s" % str(result.get("error", "invalid")).to_upper(), true)
+		return
+	_build_json.text = JSON.stringify(build.to_dictionary(), "  ")
+	_set_status("PROFILE COPIED · SANDBOX BUILD ONLY", false)
 
 func _toggle_pause() -> void:
 	var state: Dictionary = context.simulation.snapshot()

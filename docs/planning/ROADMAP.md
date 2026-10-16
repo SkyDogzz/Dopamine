@@ -593,10 +593,10 @@ P1 livre le Sandbox développeur et ne remplace pas cette feature produit.
   - [x] Brancher les actions preset/share code à l’écran Lab; ajouter l’import JSON par sélecteur de fichier avec validation bornée avant application et l’export JSON par sélecteur de destination.
   - [x] Refuser récursivement dans les payloads les champs nommés comme script, commande, chemin système ou donnée d'identité; les codes ne sérialisent que les champs du schéma public v1 et aucun service de save/progression n'est injecté.
 - [ ] **P8.4 — Import de sauvegarde**
-- [x] Ajouter `SaveService.read_slot_read_only` : lit et vérifie le slot courant sans migration, restauration de backup ni écriture; le smoke couvre un ancien payload et un slot courant corrompu. La validation/migration en mémoire et l’import dans le build restent à faire.
-- [ ] Lire un profil normal en lecture seule et le valider/migrer uniquement en mémoire.
-  - [ ] Construire une copie Sandbox modifiable.
-  - [ ] Comparer la sauvegarde source avant/après et tester import invalide.
+- [x] Ajouter `SaveService.read_slot_read_only` : lit et vérifie le slot courant sans migration, restauration de backup ni écriture; le smoke couvre un ancien payload et un slot courant corrompu.
+- [x] Ajouter `IMPORT NORMAL PROFILE · READ ONLY` au Sandbox Lab : lit le slot courant, valide strictement le profil v7 en mémoire et refuse les profils anciens/incomplets sans les migrer.
+- [x] Construire une copie Sandbox modifiable contenant starters, unlocks d'armes/reliques du skill tree, bonus stats d'achievements/skill tree et équipement équipé; les ressources et l'historique de progression ne sont pas copiés.
+- [x] Comparer la sauvegarde source avant/après et tester import courant, profil ancien et profil invalide; le contexte/session Lab ne reçoit toujours aucun service de save/progression.
 - [ ] **P8.5 — Outils de simulation**
   - [x] Ajouter God Mode commutable qui ne verrouille que le HP de la session Lab isolée; Survival normal n’est pas modifié.
   - [x] Première tranche UI ajoute pause, vitesse, spawn d’ennemis, kill all, clear projectiles et reset à la session de combat isolée.

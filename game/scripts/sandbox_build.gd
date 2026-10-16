@@ -4,6 +4,10 @@ const WEAPON_CAP := 64
 const RELIC_CAP := 128
 const LEVEL_CAP := 5
 const COMBAT_CATALOG_SCRIPT := preload("res://scripts/combat_catalog.gd")
+const PROGRESSION_SCRIPT := preload("res://scripts/progression_service.gd")
+const EQUIPMENT_GENERATOR_SCRIPT := preload("res://scripts/equipment_generator.gd")
+const PROFILE_WEAPON_STARTERS := ["lightning_conductor", "inferno_sprayer"]
+const PROFILE_RELIC_STARTERS := ["storm_core", "infernal_heart"]
 
 var weapons: Dictionary = {}
 var relics: Dictionary = {}
@@ -38,6 +42,56 @@ func to_dictionary() -> Dictionary:
 		"equipment": equipment.duplicate(true),
 		"stats": stats.duplicate(true),
 	}
+
+func load_profile_copy(profile: Variant) -> Dictionary:
+	if not profile is Dictionary:
+		return _error("invalid_profile")
+	var progression = PROGRESSION_SCRIPT.new(null, "sandbox_copy")
+	if not progression._valid_profile(profile):
+		return _error("invalid_profile")
+	var unlocked_nodes: Array = profile["unlocked_skill_nodes"]
+	var copied_weapons: Array[Dictionary] = []
+	var copied_relics: Array[Dictionary] = []
+	for weapon_id in PROFILE_WEAPON_STARTERS:
+		copied_weapons.append({"id": weapon_id, "level": 1})
+	for relic_id in PROFILE_RELIC_STARTERS:
+		copied_relics.append({"id": relic_id, "level": 1})
+	for node_id in unlocked_nodes:
+		var definition: Dictionary = progression.skill_node_definition(str(node_id))
+		var weapon_id := str(definition.get("unlocks_weapon", ""))
+		var relic_id := str(definition.get("unlocks_relic", ""))
+		if not weapon_id.is_empty():
+			copied_weapons.append({"id": weapon_id, "level": 1})
+		if not relic_id.is_empty():
+			copied_relics.append({"id": relic_id, "level": 1})
+	var copied_stats: Dictionary = {}
+	var stat_ids: Array[String] = ["damage_pct", "attack_speed_pct", "critical_chance_pct", "critical_damage_pct",
+		"max_hp_pct", "move_speed_pct", "kill_healing_pct", "area_pct", "cooldown_reduction_pct",
+		"xp_pct", "pickup_radius_pct", "projectile_speed_pct"]
+	for stat_id in stat_ids:
+		var value := 0.0
+		for node_id in unlocked_nodes:
+			value += float(progression.skill_node_definition(str(node_id)).get(stat_id, 0.0))
+		var tiers: Dictionary = profile["achievement_progress"]["tiers"]
+		for achievement_id in progression._achievement_definitions:
+			var achievement: Dictionary = progression._achievement_definitions[achievement_id]
+			var reward_tiers: Array = achievement["tiers"]
+			for index in range(mini(int(tiers[achievement_id]), reward_tiers.size())):
+				value += float(reward_tiers[index]["rewards"].get(stat_id, 0.0))
+		if not is_zero_approx(value):
+			copied_stats[stat_id] = value
+	var copied_equipment: Array[Dictionary] = []
+	for equipment in profile["equipment_inventory"]:
+		if not equipment["equipped"]:
+			continue
+		var equipment_stats: Dictionary = {}
+		for line in equipment["stat_lines"]:
+			var stat_id := str(line["stat_id"])
+			equipment_stats[stat_id] = float(equipment_stats.get(stat_id, 0.0)) + \
+				EQUIPMENT_GENERATOR_SCRIPT.stat_value(stat_id, float(line["roll_percentile"]), int(line["enhancement_level"]))
+		copied_equipment.append({"id": str(equipment["instance_id"]), "slot": str(equipment["slot"]), "stats": equipment_stats})
+	return load_build({"weapons": copied_weapons, "relics": copied_relics,
+		"equipment": copied_equipment, "stats": copied_stats})
 
 func _validate(build: Variant) -> Dictionary:
 	if not build is Dictionary:
