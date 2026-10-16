@@ -2,6 +2,7 @@ extends RefCounted
 
 const MAX_PROJECTILE_TRAILS := 256
 const PROJECTILE_TRAIL_LENGTH := 12.0
+const PERSISTENT_AREA_RIPPLE_PERIOD := 1.2
 const PROJECTILE_TRAIL_SHADOW := Color("#075A80", 0.8)
 const PROJECTILE_TRAIL_COLOR := Color("#37E8F5", 0.72)
 const SPRITE_FILES := {
@@ -130,6 +131,11 @@ func draw_enemy_feedback(canvas: CanvasItem, entities: Array, origin: Vector2 = 
 				canvas.draw_circle(field_center, field_radius, Color(0.25, 1.0, 0.58, 0.075))
 				canvas.draw_arc(field_center, field_radius, 0.0, TAU, 64,
 						Color(0.35, 1.0, 0.62, 0.72), 2.0, true)
+				var ripple_radius := persistent_area_ripple_radius(
+						float(projectile.get("remaining_seconds", 0.0)), field_radius)
+				if ripple_radius > 0.0:
+					canvas.draw_arc(field_center, ripple_radius, 0.0, TAU, 32,
+							Color(0.82, 1.0, 0.3, 0.62), 2.0, true)
 			continue
 		var transform: Dictionary = components["Transform2D"]
 		var center := origin + Vector2(float(transform["x"]), float(transform["y"]))
@@ -152,6 +158,13 @@ func multimesh_for(sprite_id: String) -> MultiMesh:
 	if not _batches.has(sprite_id):
 		return null
 	return _batches[sprite_id]["multimesh"]
+
+static func persistent_area_ripple_radius(remaining_seconds: float, area_radius: float) -> float:
+	if not is_finite(remaining_seconds) or remaining_seconds <= 0.0 or \
+			not is_finite(area_radius) or area_radius <= 0.0:
+		return 0.0
+	var phase := fposmod(remaining_seconds, PERSISTENT_AREA_RIPPLE_PERIOD) / PERSISTENT_AREA_RIPPLE_PERIOD
+	return area_radius * lerpf(0.2, 0.82, phase)
 
 func _sprite_for_entity(components: Dictionary) -> String:
 	if components.get("IsProjectile", false):

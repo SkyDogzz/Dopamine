@@ -26,6 +26,11 @@ func _run() -> void:
 	for index in range(9):
 		var names := ["infinite_circuit", "wildfire", "bloodstorm", "event_horizon", "absolute_zero", "pandemic", "razorstorm", "starfall", "spectrum_collapse"]
 		entities.append(_entity(2510 + index, "projectile_" + names[index], -80.0 + index * 18.0, 0.0))
+	var pandemic_field := _entity(2520, "projectile_pandemic", 240, 0)
+	pandemic_field["components"]["Projectile"] = {
+		"persistent_area": true, "area_radius": 48.0, "remaining_seconds": 0.9,
+	}
+	entities.append(pandemic_field)
 	view.set_entities(entities)
 	assert(view._enemy_multimesh.instance_count == 500, "500 enemies should fit one MultiMesh batch")
 	assert(view._projectile_multimesh.instance_count == 2000, "2,000 projectiles should fit one MultiMesh batch")
@@ -43,6 +48,11 @@ func _run() -> void:
 	assert(view._sprite_renderer.multimesh_for("projectile_meteor").instance_count == 1, "Meteor Staff should use dedicated meteor art")
 	assert(view._sprite_renderer.multimesh_for("projectile_starfall_fragment").instance_count == 1, "Starfall fragments should use separate art")
 	assert(view._sprite_renderer.multimesh_for("projectile_void_orb").instance_count == 1, "Void Orb and Event Horizon should use dedicated art")
+	var first_ripple: float = view._sprite_renderer.persistent_area_ripple_radius(0.9, 48.0)
+	var next_ripple: float = view._sprite_renderer.persistent_area_ripple_radius(0.6, 48.0)
+	assert(first_ripple > 0.0 and first_ripple < 48.0 and not is_equal_approx(first_ripple, next_ripple), "Pandemic field ripple should travel inside the field as simulation time advances")
+	assert(is_zero_approx(view._sprite_renderer.persistent_area_ripple_radius(0.6, 0.0)), "A zero-radius persistent field should not draw a ripple")
+	assert(is_zero_approx(view._sprite_renderer.persistent_area_ripple_radius(0.0, 48.0)), "An expired persistent field should not draw a ripple")
 	assert(view._sprite_renderer._batches["projectile_sawblades"]["texture"].resource_path.ends_with("projectiles/projectile_sawblades.png"), "Sawblades should load their dedicated pixel-art sprite")
 	assert(view._sprite_renderer._batches["projectile_meteor"]["texture"].resource_path.ends_with("projectiles/projectile_meteor.png"), "Meteor Staff should load its pixel-art meteor")
 	assert(view._sprite_renderer._batches["projectile_starfall_fragment"]["texture"].resource_path.ends_with("projectiles/projectile_starfall_fragment.png"), "Starfall should load its fragment sprite")
@@ -50,7 +60,8 @@ func _run() -> void:
 	assert(view._sprite_renderer._batches["projectile_toxic_cloud"]["texture"].resource_path.ends_with("projectiles/projectile_toxic_cloud.png"), "Toxic Cloud batch should load its distinct pixel-art sprite")
 	for projectile_name in ["infinite_circuit", "wildfire", "bloodstorm", "event_horizon", "absolute_zero", "pandemic", "razorstorm", "starfall", "spectrum_collapse"]:
 		var batch_name: String = "projectile_" + projectile_name
-		assert(view._sprite_renderer.multimesh_for(batch_name).instance_count == 1, "Evolved projectile %s should use its own batch" % projectile_name)
+		var expected_instances := 2 if projectile_name == "pandemic" else 1
+		assert(view._sprite_renderer.multimesh_for(batch_name).instance_count == expected_instances, "Evolved projectile %s should use its own batch" % projectile_name)
 	assert(view._sprite_renderer._batches["enemy_chaser"]["texture"].resource_path.ends_with("enemy_chaser.png"), "Chaser batch should load its pixel-art sprite")
 	view.set_selected_entity(10, 1)
 	assert(view._selected_entity_found, "Selecting an enemy should preserve its overlay above the batches")
