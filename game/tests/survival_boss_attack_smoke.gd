@@ -63,6 +63,9 @@ func _run() -> void:
 	if not await _wait_for_entity_type(session, "summoned"):
 		_fail("Phase two should invoke a capped add alongside its attack")
 		return
+	session.queue_free()
+	if not await _verify_dopamine_core_patterns_and_phases():
+		return
 	print("Survival boss attack smoke passed")
 	quit()
 
@@ -88,7 +91,7 @@ func _wait_for_health_ratio(session: Node2D, ratio: float) -> Dictionary:
 	return {}
 
 func _wait_for_projectiles(session: Node2D, expected: int) -> bool:
-	var deadline := Time.get_ticks_msec() + 1500
+	var deadline := Time.get_ticks_msec() + 3000
 	while Time.get_ticks_msec() < deadline:
 		await process_frame
 		var count := 0
@@ -111,3 +114,136 @@ func _wait_for_entity_type(session: Node2D, expected_type: String) -> bool:
 func _fail(message: String) -> void:
 	push_error(message)
 	quit(1)
+
+func _verify_dopamine_core_patterns_and_phases() -> bool:
+	var core_session: Node2D = load("res://scenes/survival_session.tscn").instantiate()
+	core_session.wave_spawning_enabled = false
+	core_session.spawn_initial_enemy = false
+	core_session.weapon_enabled = false
+	core_session.skip_starting_weapon_choice = true
+	core_session.contact_damage_per_hit = 0.0
+	core_session.final_boss_attack_interval_seconds = 1.0
+	core_session.final_boss_telegraph_seconds = 0.25
+	core_session.final_boss_zone_radius = 70.0
+	root.add_child(core_session)
+	await process_frame
+	core_session.simulation.spawn("final_boss", 1, Vector2(0.0, -300.0), 1000.0, Vector2.ZERO, 25.0)
+	if not await _wait_for_entity_type(core_session, "final_boss"):
+		core_session.queue_free()
+		_fail("The Dopamine Core should spawn in Survival")
+		return false
+	core_session._entities = core_session.simulation.snapshot()["entities"]
+	var boss: Dictionary = _find_entity(core_session, "final_boss")
+	var boss_id: Dictionary = boss["id"]
+	var boss_key: String = core_session._entity_key(int(boss_id["index"]), int(boss_id["generation"]))
+	core_session._update_dopamine_core_attacks(0.0, false)
+	core_session._update_dopamine_core_attacks(core_session.final_boss_attack_interval_seconds, false)
+	var attack: Dictionary = core_session._dopamine_core_attacks[boss_key]
+	if attack["stage"] != "telegraph" or attack["pattern"] != "ray":
+		core_session.queue_free()
+		_fail("Phase one should telegraph a ray before firing")
+		return false
+	core_session._update_dopamine_core_attacks(float(attack["fire_at"]), true)
+	if attack["stage"] != "telegraph":
+		core_session.queue_free()
+		_fail("The Dopamine Core telegraph should freeze while paused")
+		return false
+	core_session.player.global_position += Vector2(100.0, 0.0)
+	var hp_before_dodge: float = core_session.player_hp
+	core_session._update_dopamine_core_attacks(float(attack["fire_at"]), false)
+	if not is_equal_approx(core_session.player_hp, hp_before_dodge):
+		core_session.queue_free()
+		_fail("Moving out of the telegraphed ray should avoid its damage")
+		return false
+	var next_attack_at: float = float(attack["next_attack_at"])
+	core_session._update_dopamine_core_attacks(next_attack_at, false)
+	attack = core_session._dopamine_core_attacks[boss_key]
+	if attack["pattern"] != "zone" or attack["stage"] != "telegraph":
+		core_session.queue_free()
+		_fail("Phase one should also telegraph a dodgeable danger zone")
+		return false
+	var telegraph_point: Vector2 = attack["aim"]
+	core_session.player.global_position = telegraph_point
+	var zone_hp_before: float = core_session.player_hp
+	core_session._update_dopamine_core_attacks(float(attack["fire_at"]), false)
+	if core_session.player_hp >= zone_hp_before:
+		core_session.queue_free()
+		_fail("Remaining inside the final boss danger zone should deal damage")
+		return false
+	var damage_sequence: int = core_session.simulation.apply_damage_over_time(
+			int(boss_id["index"]), int(boss_id["generation"]), 400.0, 0.05, 0.05)
+	if damage_sequence <= 0 or not await _wait_for_boss_health_ratio(core_session, 0.66):
+		core_session.queue_free()
+		_fail("The final boss should transition into phase two after taking damage")
+		return false
+	core_session._entities = core_session.simulation.snapshot()["entities"]
+	var now: float = float(core_session.simulation.snapshot()["simulation_time"])
+	core_session._update_dopamine_core_attacks(now, false)
+	attack = core_session._dopamine_core_attacks[boss_key]
+	if int(attack["phase"]) != 2:
+		core_session.queue_free()
+		_fail("The Dopamine Core should expose its second health phase")
+		return false
+	core_session._update_dopamine_core_attacks(float(attack["next_attack_at"]), false)
+	attack = core_session._dopamine_core_attacks[boss_key]
+	if attack["pattern"] != "spiral":
+		core_session.queue_free()
+		_fail("Phase two should telegraph the proposed spiral pattern")
+		return false
+	core_session._update_dopamine_core_attacks(float(attack["fire_at"]), false)
+	if not await _wait_for_entity_type(core_session, "summoned") or \
+			not await _wait_for_projectiles(core_session, core_session.final_boss_spiral_projectile_count):
+		core_session.queue_free()
+		_fail("Phase two should emit its rotating spiral shots and invoke adds within the existing cap")
+		return false
+	damage_sequence = core_session.simulation.apply_damage_over_time(
+			int(boss_id["index"]), int(boss_id["generation"]), 300.0, 0.05, 0.05)
+	if damage_sequence <= 0 or not await _wait_for_boss_health_ratio(core_session, 0.33):
+		core_session.queue_free()
+		_fail("The final boss should transition into phase three after taking damage")
+		return false
+	core_session._entities = core_session.simulation.snapshot()["entities"]
+	now = float(core_session.simulation.snapshot()["simulation_time"])
+	core_session._update_dopamine_core_attacks(now, false)
+	attack = core_session._dopamine_core_attacks[boss_key]
+	if int(attack["phase"]) != 3:
+		core_session.queue_free()
+		_fail("The Dopamine Core should expose its third health phase")
+		return false
+	core_session._update_dopamine_core_attacks(float(attack["next_attack_at"]), false)
+	attack = core_session._dopamine_core_attacks[boss_key]
+	if attack["pattern"] != "combined":
+		core_session.queue_free()
+		_fail("Phase three should telegraph combined attacks")
+		return false
+	core_session.player.global_position += Vector2(300.0, 0.0)
+	var combined_hp_before: float = core_session.player_hp
+	core_session._update_dopamine_core_attacks(float(attack["fire_at"]), false)
+	if not is_equal_approx(core_session.player_hp, combined_hp_before) or \
+			not await _wait_for_projectiles(core_session, core_session.final_boss_spiral_projectile_count * 2):
+		core_session.queue_free()
+		_fail("Phase three should combine dodgeable danger signals with a spiral volley")
+		return false
+	var core_hud: String = core_session.get_node("HUD/BossPanel/BossInfo/BossValue").text
+	core_session.queue_free()
+	if not core_hud.contains("DOPAMINE CORE") or not core_hud.contains("PHASE 3"):
+		_fail("The boss HUD should identify the Dopamine Core and its current phase")
+		return false
+	return true
+
+func _find_entity(session: Node2D, enemy_type: String) -> Dictionary:
+	for entity in session.simulation.snapshot()["entities"]:
+		if entity["components"].get("EnemyType", "") == enemy_type:
+			return entity
+	return {}
+
+func _wait_for_boss_health_ratio(session: Node2D, maximum_ratio: float) -> bool:
+	var deadline := Time.get_ticks_msec() + 2500
+	while Time.get_ticks_msec() < deadline:
+		await process_frame
+		var boss := _find_entity(session, "final_boss")
+		if not boss.is_empty():
+			var health: Dictionary = boss["components"]["Health"]
+			if float(health["current"]) / float(health["maximum"]) <= maximum_ratio:
+				return true
+	return false

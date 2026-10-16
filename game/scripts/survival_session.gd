@@ -73,6 +73,21 @@ const WAVE_HP_CAP := 12.0
 @export var pulse_warden_projectile_damage: float = 8.0
 @export var pulse_warden_projectile_radius: float = 7.0
 @export var pulse_warden_projectile_lifetime: float = 4.0
+@export_group("Prototype Dopamine Core — proposed patterns")
+@export_range(0.1, 0.9, 0.01) var final_boss_phase_two_health_ratio: float = 0.66
+@export_range(0.1, 0.8, 0.01) var final_boss_phase_three_health_ratio: float = 0.33
+@export var final_boss_attack_interval_seconds: float = 2.6
+@export var final_boss_telegraph_seconds: float = 0.85
+@export var final_boss_ray_width: float = 20.0
+@export var final_boss_zone_radius: float = 76.0
+@export var final_boss_ray_damage: float = 12.0
+@export var final_boss_zone_damage: float = 16.0
+@export_range(6, 24) var final_boss_spiral_projectile_count: int = 14
+@export var final_boss_spiral_shot_interval_seconds: float = 0.09
+@export var final_boss_projectile_speed: float = 185.0
+@export var final_boss_projectile_damage: float = 8.0
+@export var final_boss_projectile_radius: float = 7.0
+@export var final_boss_projectile_lifetime: float = 4.5
 @export_group("Prototype elite director — proposed tuning")
 @export var elite_spawn_interval_seconds: float = 45.0
 @export_range(0.0, 1.0) var elite_spawn_chance: float = 0.35
@@ -246,6 +261,7 @@ var _next_enemy_spawn_time := 0.0
 var _next_elite_spawn_time := 0.0
 var _boss_spawn_pending := false
 var _pulse_warden_attacks: Dictionary = {}
+var _dopamine_core_attacks: Dictionary = {}
 var player_level := 1
 var player_xp := 0.0
 var player_xp_to_next := 10.0
@@ -604,6 +620,7 @@ func _process(_delta: float) -> void:
 	_update_exploder_attacks(current_simulation_time, bool(state["paused"]))
 	_update_summoner_attacks(current_simulation_time, bool(state["paused"]))
 	_update_pulse_warden_attacks(current_simulation_time, bool(state["paused"]))
+	_update_dopamine_core_attacks(current_simulation_time, bool(state["paused"]))
 	_collect_nearby_xp_orbs(state)
 	_collect_nearby_chests(state)
 	_complete_pending_victory()
@@ -860,6 +877,93 @@ func _fire_pulse_warden_attack(attack: Dictionary) -> void:
 	if int(attack["phase"]) >= 2:
 		_spawn_boss_summon(origin)
 
+func _update_dopamine_core_attacks(current_simulation_time: float, paused: bool) -> void:
+	if paused or run_over:
+		return
+	var active_cores: Dictionary = {}
+	for entity in _entities:
+		var components: Dictionary = entity["components"]
+		if components.get("IsProjectile", false) or components.get("EnemyType", "") != "final_boss":
+			continue
+		var id: Dictionary = entity["id"]
+		var key := _entity_key(int(id["index"]), int(id["generation"]))
+		active_cores[key] = true
+		var health: Dictionary = components["Health"]
+		var health_ratio := float(health["current"]) / maxf(1.0, float(health["maximum"]))
+		var phase := 3 if health_ratio <= final_boss_phase_three_health_ratio else \
+				2 if health_ratio <= final_boss_phase_two_health_ratio else 1
+		var transform: Dictionary = components["Transform2D"]
+		var origin := Vector2(float(transform["x"]), float(transform["y"]))
+		if not _dopamine_core_attacks.has(key):
+			_dopamine_core_attacks[key] = {"phase": phase, "pattern_index": 0,
+				"stage": "waiting", "next_attack_at": current_simulation_time + final_boss_attack_interval_seconds}
+		var attack: Dictionary = _dopamine_core_attacks[key]
+		attack["origin"] = origin
+		if int(attack["phase"]) != phase:
+			attack["phase"] = phase
+			attack["pattern_index"] = 0
+			attack["stage"] = "waiting"
+			attack["next_attack_at"] = current_simulation_time + maxf(0.1, final_boss_telegraph_seconds)
+		if str(attack["stage"]) == "spiral":
+			if current_simulation_time >= float(attack["spiral_next_at"]):
+				var count := maxi(6, final_boss_spiral_projectile_count)
+				var shot_index: int = int(attack["spiral_shot_index"])
+				var angle := float(attack["pattern_index"]) * 0.24 + float(shot_index) * 0.42
+				var direction := Vector2.from_angle(angle)
+				simulation.spawn_projectile("enemy_projectile", origin, direction * final_boss_projectile_speed,
+						final_boss_projectile_damage, final_boss_projectile_radius, final_boss_projectile_lifetime)
+				shot_index += 1
+				attack["spiral_shot_index"] = shot_index
+				if shot_index >= count:
+					attack["stage"] = "waiting"
+					attack["pattern_index"] = int(attack["pattern_index"]) + 1
+					attack["next_attack_at"] = current_simulation_time + maxf(0.1, final_boss_attack_interval_seconds)
+				else:
+					attack["spiral_next_at"] = current_simulation_time + maxf(0.02, final_boss_spiral_shot_interval_seconds)
+		elif str(attack["stage"]) == "telegraph":
+			if current_simulation_time < float(attack["fire_at"]):
+				continue
+			_fire_dopamine_core_attack(attack)
+			if str(attack["stage"]) != "spiral":
+				attack["stage"] = "waiting"
+				attack["pattern_index"] = int(attack["pattern_index"]) + 1
+				attack["next_attack_at"] = current_simulation_time + maxf(0.1, final_boss_attack_interval_seconds)
+		elif current_simulation_time >= float(attack["next_attack_at"]):
+			var pattern_index: int = int(attack["pattern_index"])
+			var pattern := "ray" if pattern_index % 2 == 0 else "zone"
+			if phase == 2:
+				pattern = "spiral"
+			elif phase == 3:
+				pattern = "combined"
+			attack["pattern"] = pattern
+			attack["aim"] = player.global_position
+			attack["fire_at"] = current_simulation_time + maxf(0.1, final_boss_telegraph_seconds)
+			attack["stage"] = "telegraph"
+	for key in _dopamine_core_attacks.keys():
+		if not active_cores.has(key):
+			_dopamine_core_attacks.erase(key)
+
+func _fire_dopamine_core_attack(attack: Dictionary) -> void:
+	var origin: Vector2 = attack["origin"]
+	var aim: Vector2 = attack["aim"]
+	var pattern: String = str(attack["pattern"])
+	if pattern == "spiral" or pattern == "combined":
+		attack["stage"] = "spiral"
+		attack["spiral_shot_index"] = 0
+		attack["spiral_next_at"] = float(attack["fire_at"])
+		_spawn_boss_summon(origin)
+	if pattern == "ray" and _player_inside_final_boss_ray(origin, aim):
+		_take_enemy_damage(final_boss_ray_damage)
+	elif pattern == "zone" and player.global_position.distance_to(aim) <= final_boss_zone_radius:
+		_take_enemy_damage(final_boss_zone_damage)
+	elif pattern == "combined" and (_player_inside_final_boss_ray(origin, aim) or
+			player.global_position.distance_to(aim) <= final_boss_zone_radius):
+		_take_enemy_damage(maxf(final_boss_ray_damage, final_boss_zone_damage))
+
+func _player_inside_final_boss_ray(origin: Vector2, aim: Vector2) -> bool:
+	var closest_point := Geometry2D.get_closest_point_to_segment(player.global_position, origin, aim)
+	return player.global_position.distance_to(closest_point) <= final_boss_ray_width
+
 func _spawn_boss_summon(origin: Vector2) -> void:
 	var active_summons := _pending_summon_sequences.size()
 	for entity in _entities:
@@ -1005,6 +1109,11 @@ func _refresh_boss_hud() -> void:
 			var phase := 3 if health_ratio <= pulse_warden_phase_three_health_ratio else \
 					2 if health_ratio <= pulse_warden_phase_two_health_ratio else 1
 			boss_label = "PULSE WARDEN  •  PHASE %d" % phase
+		else:
+			var health_ratio := current_hp / maxf(1.0, maximum_hp)
+			var phase := 3 if health_ratio <= final_boss_phase_three_health_ratio else \
+					2 if health_ratio <= final_boss_phase_two_health_ratio else 1
+			boss_label = "DOPAMINE CORE  •  PHASE %d" % phase
 		_boss_value.text = "%s  %.0f / %.0f" % [boss_label, current_hp, maximum_hp]
 		_boss_hp_bar.max_value = maximum_hp
 		_boss_hp_bar.value = current_hp
@@ -2012,6 +2121,25 @@ func _draw() -> void:
 			draw_line(origin, aim, Color(1.0, 0.3, 0.24, 0.2 + alpha * 0.55), 3.0, true)
 			draw_arc(aim, 16.0 + alpha * 4.0, 0.0, TAU, 32,
 					Color(1.0, 0.43, 0.25, 0.4 + alpha * 0.5), 2.0, true)
+	for attack in _dopamine_core_attacks.values():
+		if str(attack.get("stage", "")) != "telegraph":
+			continue
+		var time_left := clampf(float(attack["fire_at"]) - _last_simulation_time, 0.0, final_boss_telegraph_seconds)
+		var alpha := 1.0 - time_left / maxf(final_boss_telegraph_seconds, 0.01)
+		var origin: Vector2 = attack["origin"]
+		var aim: Vector2 = attack["aim"]
+		var pattern: String = str(attack["pattern"])
+		var danger_color := Color(0.82, 0.32, 1.0, 0.22 + alpha * 0.55)
+		if pattern == "ray" or pattern == "combined":
+			draw_line(origin, aim, danger_color, 3.0 + alpha * 2.0, true)
+			draw_arc(aim, final_boss_ray_width, 0.0, TAU, 32, danger_color, 2.0, true)
+		if pattern == "zone" or pattern == "combined":
+			draw_circle(aim, final_boss_zone_radius, Color(0.75, 0.25, 1.0, 0.06 + alpha * 0.12))
+			draw_arc(aim, final_boss_zone_radius, 0.0, TAU, 48, danger_color, 2.0 + alpha, true)
+		if pattern == "spiral" or pattern == "combined":
+			var ring_radius := 34.0 + alpha * 36.0
+			draw_circle(origin, ring_radius, Color(0.68, 0.25, 1.0, 0.04 + alpha * 0.08))
+			draw_arc(origin, ring_radius, 0.0, TAU, 48, danger_color, 2.0, true)
 	for entity in _entities:
 		var components: Dictionary = entity["components"]
 		if not components.get("IsProjectile", false) or not ["void_orb", "event_horizon"].has(str(components.get("EnemyType", ""))):
