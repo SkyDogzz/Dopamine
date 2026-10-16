@@ -56,8 +56,11 @@ func _initialize() -> void:
 		_fail("Implemented Magnet Heart should enter the Survival relic pool")
 		return
 	var starting_options: Array = loadout.starting_weapon_options()
-	if starting_options.size() != 2 or starting_options[0]["title"] != "Lightning Conductor" or \
-			starting_options[1]["title"] != "Inferno Sprayer":
+	var starting_titles: Array[String] = []
+	for option in starting_options:
+		starting_titles.append(str(option["title"]))
+	starting_titles.sort()
+	if starting_titles != ["Inferno Sprayer", "Lightning Conductor"]:
 		_fail("Starting weapon choices should resolve names from the loaded catalog")
 		return
 	print("Combat catalog smoke passed")
