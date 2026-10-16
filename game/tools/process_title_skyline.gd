@@ -2,6 +2,7 @@ extends SceneTree
 
 const SOURCE_PATH := "res://../docs/art/source/title_skyline_generated.png"
 const OUTPUT_PATH := "res://assets/backgrounds/title_skyline.png"
+const SOURCE_ASE_PATH := "res://assets/source/backgrounds/title_skyline.aseprite"
 const OUTPUT_SIZE := Vector2i(640, 360)
 const PALETTE := [
 	"080B18", "10152B", "1B2340", "293354", "3D4868", "586381", "7B87A2", "A5AEC3",
@@ -37,9 +38,71 @@ func _initialize() -> void:
 			image.set_pixel(x, y, nearest_color)
 			colors_used[nearest_color.to_html(false)] = true
 	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path("res://assets/backgrounds"))
-	if image.save_png(OUTPUT_PATH) != OK:
+	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path("res://assets/source/backgrounds"))
+	if image.save_png(OUTPUT_PATH) != OK or not _save_aseprite(image, SOURCE_ASE_PATH, "title_skyline"):
 		push_error("Could not save pixelized skyline")
 		quit(1)
 		return
 	print("Saved %s (%dx%d, %d Art Bible palette colors)" % [OUTPUT_PATH, OUTPUT_SIZE.x, OUTPUT_SIZE.y, colors_used.size()])
 	quit()
+
+func _save_aseprite(image: Image, path: String, layer_name: String) -> bool:
+	var layer := PackedByteArray()
+	for value in [3, 0, 0, 0, 0, 0]: _u16(layer, value)
+	layer.append(255)
+	layer.append_array([0, 0, 0])
+	_string(layer, layer_name)
+	var cel := PackedByteArray()
+	for value in [0, 0, 0]: _u16(cel, value)
+	cel.append(255)
+	_u16(cel, 0)
+	_u16(cel, 0)
+	cel.append_array([0, 0, 0, 0, 0])
+	_u16(cel, image.get_width())
+	_u16(cel, image.get_height())
+	cel.append_array(image.get_data())
+	var chunks := _chunk(0x2004, layer) + _chunk(0x2005, cel)
+	var frame := PackedByteArray()
+	_u32(frame, chunks.size() + 16)
+	_u16(frame, 0xF1FA)
+	_u16(frame, 2)
+	_u16(frame, 100)
+	frame.append_array([0, 0])
+	_u32(frame, 0)
+	frame.append_array(chunks)
+	var file := PackedByteArray()
+	file.resize(128)
+	file.encode_u32(0, 128 + frame.size())
+	file.encode_u16(4, 0xA5E0)
+	file.encode_u16(6, 1)
+	file.encode_u16(8, image.get_width())
+	file.encode_u16(10, image.get_height())
+	file.encode_u16(12, 32)
+	file.encode_u32(14, 1)
+	file.encode_u16(18, 100)
+	file.encode_u8(34, 1)
+	file.encode_u8(35, 1)
+	file.append_array(frame)
+	var output := FileAccess.open(path, FileAccess.WRITE)
+	if output == null: return false
+	output.store_buffer(file)
+	return output.get_error() == OK
+
+func _chunk(chunk_type: int, data: PackedByteArray) -> PackedByteArray:
+	var chunk := PackedByteArray()
+	_u32(chunk, data.size() + 6)
+	_u16(chunk, chunk_type)
+	chunk.append_array(data)
+	return chunk
+
+func _string(target: PackedByteArray, value: String) -> void:
+	var bytes := value.to_utf8_buffer()
+	_u16(target, bytes.size())
+	target.append_array(bytes)
+
+func _u16(target: PackedByteArray, value: int) -> void:
+	target.append(value & 255)
+	target.append((value >> 8) & 255)
+
+func _u32(target: PackedByteArray, value: int) -> void:
+	for shift in [0, 8, 16, 24]: target.append((value >> shift) & 255)

@@ -39,12 +39,15 @@ func _initialize() -> void:
 		if not _check_reward(reward_name):
 			quit(1)
 			return
+	if not _check_title_skyline():
+		quit(1)
+		return
 	var impact_atlas := load("res://assets/sprites/weapon_impacts_pixel.png") as Texture2D
 	if impact_atlas == null or impact_atlas.get_size() != Vector2(640.0, 64.0):
 		push_error("The impact atlas should contain ten horizontal 64x64 cells")
 		quit(1)
 		return
-	print("Asset smoke passed: weapons, evolutions, relics, UI, roster, VFX, projectiles, environment and rewards")
+	print("Asset smoke passed: weapons, evolutions, relics, UI, roster, VFX, projectiles, environment, rewards and skyline")
 	quit()
 
 func _check_icon(asset_name: String) -> bool:
@@ -138,5 +141,28 @@ func _check_reward(reward_name: String) -> bool:
 	var source := FileAccess.open(ase_path, FileAccess.READ)
 	if source == null or source.get_32() != source.get_length() or source.get_16() != 0xA5E0 or source.get_16() != 1 or source.get_16() != expected_size or source.get_16() != expected_size:
 		push_error("Invalid editable Aseprite source for %s" % reward_name)
+		return false
+	return true
+
+func _check_title_skyline() -> bool:
+	var png_path := "res://assets/backgrounds/title_skyline.png"
+	var ase_path := "res://assets/source/backgrounds/title_skyline.aseprite"
+	if not FileAccess.file_exists(png_path) or not FileAccess.file_exists(ase_path):
+		push_error("Missing title skyline PNG or Aseprite source")
+		return false
+	var image := (load(png_path) as Texture2D).get_image()
+	if image.get_size() != Vector2i(640, 360):
+		push_error("Title skyline should remain at the validated 640x360 size")
+		return false
+	var colors := {}
+	for y in range(image.get_height()):
+		for x in range(image.get_width()):
+			colors[image.get_pixel(x, y).to_html(false)] = true
+	if colors.size() > 32:
+		push_error("Title skyline should use the 32-color master palette")
+		return false
+	var source := FileAccess.open(ase_path, FileAccess.READ)
+	if source == null or source.get_32() != source.get_length() or source.get_16() != 0xA5E0 or source.get_16() != 1 or source.get_16() != 640 or source.get_16() != 360:
+		push_error("Invalid editable Aseprite source for the title skyline")
 		return false
 	return true
