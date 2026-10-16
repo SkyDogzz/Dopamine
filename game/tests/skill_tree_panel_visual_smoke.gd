@@ -9,8 +9,11 @@ func _run() -> void:
 	panel.present({"resources": {"essence": 100}, "unlocked_skill_nodes": []})
 	await process_frame
 	var frame: Control = panel.get_node("Panel")
-	var vitality: Button = panel.get_node("Panel/Content/VitalityButton")
-	var focus: Button = panel.get_node("Panel/Content/FocusButton")
+	var vitality: Button = panel.get_node("Panel/Content/NodeBranch/FoundationCard/Content/VitalityButton")
+	var focus: Button = panel.get_node("Panel/Content/NodeBranch/FollowupCard/Content/FocusButton")
+	var branch: HBoxContainer = panel.get_node("Panel/Content/NodeBranch")
+	var foundation_card: PanelContainer = panel.get_node("Panel/Content/NodeBranch/FoundationCard")
+	var followup_card: PanelContainer = panel.get_node("Panel/Content/NodeBranch/FollowupCard")
 	var essence_icon: TextureRect = panel.get_node("Panel/Content/EssenceRow/EssenceIcon")
 	var essence: Label = panel.get_node("Panel/Content/EssenceRow/Essence")
 	if essence_icon.texture == null or essence_icon.texture.resource_path != "res://assets/icons/catalog/resource_essence.png" or \
@@ -25,8 +28,13 @@ func _run() -> void:
 		vitality.texture_filter != CanvasItem.TEXTURE_FILTER_NEAREST or focus.texture_filter != CanvasItem.TEXTURE_FILTER_NEAREST:
 		_fail("Skill node icons should remain compact and pixel crisp")
 		return
-	if vitality.size.x < 390 or focus.size.x < 390:
-		_fail("Skill node choices should have enough width for their cost and effect text")
+	if branch.get_child_count() != 3 or foundation_card.size.x < 150 or followup_card.size.x < 150:
+		_fail("The two existing skill nodes should form a readable connected branch")
+		return
+	if vitality.text != "UNLOCK NODE" or focus.text != "UNLOCK NODE" or \
+		panel.get_node("Panel/Content/NodeBranch/FoundationCard/Content/Effect").text != "+5% MAX HP  •  50 ESSENCE  •  PROPOSED" or \
+		panel.get_node("Panel/Content/NodeBranch/FollowupCard/Content/Effect").text != "+3% DAMAGE  •  80 ESSENCE  •  PROPOSED":
+		_fail("Node actions should stay concise while proposed effects and costs remain explicit")
 		return
 	if not panel.get_global_rect().encloses(frame.get_global_rect()):
 		_fail("Skill tree frame should remain within the 640x360 logical viewport")
@@ -34,6 +42,16 @@ func _run() -> void:
 	if vitality.disabled or not focus.disabled or vitality.focus_mode == Control.FOCUS_NONE:
 		_fail("Skill choices should preserve their current prerequisites and keyboard focus")
 		return
+	panel.present({"resources": {"essence": 130}, "unlocked_skill_nodes": ["vitality_starter"]})
+	if vitality.text != "UNLOCKED" or focus.disabled or \
+		panel.get_node("Panel/Content/NodeBranch/FollowupCard/Content/Kicker").text != "FOLLOW-UP · AVAILABLE":
+		_fail("Unlock state should update on its own node and expose the funded follow-up")
+		return
+	if "--capture" in OS.get_cmdline_user_args():
+		await RenderingServer.frame_post_draw
+		if root.get_texture().get_image().save_png("/tmp/dopamine-skill-tree.png") != OK:
+			_fail("Could not capture the skill tree panel render")
+			return
 	print("Skill tree panel visual hierarchy smoke passed")
 	quit()
 

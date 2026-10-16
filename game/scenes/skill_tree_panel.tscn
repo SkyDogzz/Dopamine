@@ -25,25 +25,25 @@ color = Color(0.031373, 0.043137, 0.094118, 0.82)
 mouse_filter = 2
 
 [node name="Panel" type="PanelContainer" parent="."]
-custom_minimum_size = Vector2(420, 210)
+custom_minimum_size = Vector2(420, 226)
 layout_mode = 2
 
 [node name="Content" type="VBoxContainer" parent="Panel"]
 layout_mode = 2
-theme_override_constants/separation = 7
+theme_override_constants/separation = 5
 
 [node name="Title" type="Label" parent="Panel/Content"]
 layout_mode = 2
 theme_type_variation = "PixelHeading"
 theme_override_colors/font_color = Color(0.215686, 0.909804, 0.960784, 1)
 theme_override_font_sizes/font_size = 10
-text = "SKILL TREE  •  PROTOTYPE"
+text = "SKILL TREE"
 horizontal_alignment = 1
 
 [node name="Warning" type="Label" parent="Panel/Content"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.647059, 0.682353, 0.764706, 1)
-text = "One proposed node is playable. The final graph and costs remain open."
+text = "Prototype branch  •  future nodes and costs remain open."
 horizontal_alignment = 1
 
 [node name="EssenceRow" type="HBoxContainer" parent="Panel/Content"]
@@ -63,33 +63,83 @@ layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.831373, 0.278431, 1)
 text = "ESSENCE 0"
 
-[node name="RootNodeLabel" type="Label" parent="Panel/Content"]
+[node name="NodeBranch" type="HBoxContainer" parent="Panel/Content"]
+custom_minimum_size = Vector2(0, 104)
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="FoundationCard" type="PanelContainer" parent="Panel/Content/NodeBranch"]
+custom_minimum_size = Vector2(164, 104)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Content" type="VBoxContainer" parent="Panel/Content/NodeBranch/FoundationCard"]
+layout_mode = 2
+theme_override_constants/separation = 3
+
+[node name="Kicker" type="Label" parent="Panel/Content/NodeBranch/FoundationCard/Content"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.215686, 0.909804, 0.960784, 1)
 theme_override_font_sizes/font_size = 8
-text = "FOUNDATION NODE"
+text = "FOUNDATION"
+horizontal_alignment = 1
 
-[node name="VitalityButton" type="Button" parent="Panel/Content"]
-custom_minimum_size = Vector2(0, 23)
+[node name="VitalityButton" type="Button" parent="Panel/Content/NodeBranch/FoundationCard/Content"]
+custom_minimum_size = Vector2(0, 25)
 layout_mode = 2
-text = "VITALITY STARTER"
+text = "UNLOCK NODE"
 icon = ExtResource("3_skill_node")
 theme_override_constants/icon_max_width = 12
 texture_filter = 1
 
-[node name="FollowupNodeLabel" type="Label" parent="Panel/Content"]
+[node name="Effect" type="Label" parent="Panel/Content/NodeBranch/FoundationCard/Content"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.647059, 0.682353, 0.764706, 1)
-theme_override_font_sizes/font_size = 8
-text = "FOLLOW-UP  ·  REQUIRES FOUNDATION"
+theme_override_font_sizes/font_size = 7
+text = "+5% MAX HP  •  50 ESSENCE  •  PROPOSED"
+horizontal_alignment = 1
+autowrap_mode = 2
 
-[node name="FocusButton" type="Button" parent="Panel/Content"]
-custom_minimum_size = Vector2(0, 23)
+[node name="BranchConnector" type="Label" parent="Panel/Content/NodeBranch"]
+custom_minimum_size = Vector2(20, 0)
 layout_mode = 2
-text = "FOCUSED TRAINING"
+theme_override_colors/font_color = Color(1, 0.831373, 0.278431, 1)
+theme_override_font_sizes/font_size = 11
+text = "◆›"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="FollowupCard" type="PanelContainer" parent="Panel/Content/NodeBranch"]
+custom_minimum_size = Vector2(164, 104)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Content" type="VBoxContainer" parent="Panel/Content/NodeBranch/FollowupCard"]
+layout_mode = 2
+theme_override_constants/separation = 3
+
+[node name="Kicker" type="Label" parent="Panel/Content/NodeBranch/FollowupCard/Content"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.831373, 0.278431, 1)
+theme_override_font_sizes/font_size = 8
+text = "FOLLOW-UP · LOCKED"
+horizontal_alignment = 1
+
+[node name="FocusButton" type="Button" parent="Panel/Content/NodeBranch/FollowupCard/Content"]
+custom_minimum_size = Vector2(0, 25)
+layout_mode = 2
+text = "UNLOCK NODE"
 icon = ExtResource("3_skill_node")
 theme_override_constants/icon_max_width = 12
 texture_filter = 1
+
+[node name="Effect" type="Label" parent="Panel/Content/NodeBranch/FollowupCard/Content"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.647059, 0.682353, 0.764706, 1)
+theme_override_font_sizes/font_size = 7
+text = "+3% DAMAGE  •  80 ESSENCE  •  PROPOSED"
+horizontal_alignment = 1
+autowrap_mode = 2
 
 [node name="RespecButton" type="Button" parent="Panel/Content"]
 custom_minimum_size = Vector2(0, 20)

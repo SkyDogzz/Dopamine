@@ -22,6 +22,7 @@
 - [x] `ui_viewport_layout_smoke.gd` passe pour toutes les interfaces aux viewports 640×360, 1280×720 et 1920×1080.
 - [x] Capture fenêtrée de l’inventaire vérifiée à 640×360 logique et fenêtre 1280×720; les lignes, options, états et actions restent dans le panneau.
 - [ ] `survival_inventory_smoke.gd` n’a pas terminé dans le délai de 30 s lors de cette vérification; le processus a été arrêté. Parcours de progression non revalidé dans cette tranche.
+- [x] Nouvelle vérification : le smoke hub/inventaire/compétences passe après correction de ses recherches d’icône de rareté et d’action de démantèlement dans l’arborescence actuelle.
 - [x] `equipment_panel_visual_smoke.gd` vérifie maintenant les états vide/erreur exclusifs, le contraste, le centrage et la taille 10 px; captures des deux états revues à 640×360 logique.
 - [x] `equipment_panel_visual_smoke.gd` vérifie que le nom de l’effet unique est rendu en texte lisible sans séparateurs d’identifiant. Le smoke visuel et `survival_inventory_smoke.gd` passent.
 
@@ -404,7 +405,13 @@ Note de clôture : le blocage historique du smoke `sandbox_ui_smoke.gd` décrit 
 ## Icône de ressource dans l’arbre de compétences (2026-10-16)
 
 - [x] Le solde d’essence reprend l’icône dédiée de la Bible d’assets, en nearest, sans changer son calcul ni les prérequis des nœuds.
-- [ ] `skill_tree_panel_visual_smoke.gd` vérifie l’icône, le filtrage et la valeur affichée; il reste à exécuter avec Godot.
+- [x] `skill_tree_panel_visual_smoke.gd` vérifie l’icône, le filtrage et la valeur affichée sous Godot 4.7.2.
+
+## Branche visuelle de l’arbre de compétences (2026-10-16)
+
+- [x] `skill_tree_panel_visual_smoke.gd` couvre les deux nœuds existants, le connecteur, la séparation entre action et effet/coût proposé et les statuts de déverrouillage; smoke passé sous Godot 4.7.2.
+- [x] Capture fenêtrée sous Xvfb relue à 640×360 logique; le cadre et les deux cartes tiennent dans le viewport, et le focus reste visible.
+- [x] `ui_viewport_layout_smoke.gd` vérifie toutes les interfaces à 640×360, 1280×720 et 1920×1080.
 
 ## Repère XP du HUD (2026-10-16)
 

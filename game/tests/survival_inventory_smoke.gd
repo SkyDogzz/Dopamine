@@ -40,7 +40,7 @@ func _run() -> void:
 		_fail("The hub equipment panel should list the profile's permanent items")
 		return
 	var item_content: VBoxContainer = _equipment_row(items, 0).get_child(0).get_child(1)
-	var rarity_icon: TextureRect = _equipment_row(items, 0).get_child(0).get_child(0)
+	var rarity_icon: TextureRect = _equipment_row(items, 0).get_child(0).get_child(0).get_child(1)
 	if rarity_icon.texture == null or rarity_icon.texture.resource_path != "res://assets/icons/catalog/rarity_legendary.png":
 		_fail("Inventory rows should display their equipment rarity icon")
 		return
@@ -98,10 +98,7 @@ func _run() -> void:
 	_find_button(_equipment_row(items, 1).get_child(0).get_child(1), "UNEQUIP").pressed.emit()
 	var dismantle := _find_button(_equipment_row(items, 1).get_child(0).get_child(1), "DISMANTLE  •  +1 BASIC POWDER")
 	if dismantle == null:
-		for child in _equipment_row(items, 1).get_child(0).get_child(1).get_children():
-			if child is Button and child.text.begins_with("DISMANTLE"):
-				dismantle = child
-				break
+		dismantle = _find_button_with_prefix(_equipment_row(items, 1).get_child(0).get_child(1), "DISMANTLE")
 	if dismantle == null:
 		_fail("Equipment should expose a dismantle action in the hub")
 		return
@@ -121,14 +118,14 @@ func _run() -> void:
 	var skill_button: Button = hub.get_node("Content/Main/PreparationCard/Body/SkillTreeButton")
 	skill_button.pressed.emit()
 	var skill_panel: Control = hub.get_node("SkillTreePanel")
-	if not skill_panel.visible or skill_panel.get_node("Panel/Content/VitalityButton").disabled:
+	if not skill_panel.visible or skill_panel.get_node("Panel/Content/NodeBranch/FoundationCard/Content/VitalityButton").disabled:
 		_fail("The hub skill tree should show the proposed node when funded")
 		return
-	skill_panel.get_node("Panel/Content/VitalityButton").pressed.emit()
+	skill_panel.get_node("Panel/Content/NodeBranch/FoundationCard/Content/VitalityButton").pressed.emit()
 	if not is_equal_approx(progression.skill_bonus("max_hp_pct"), 0.05):
 		_fail("Unlocking Vitality should persist its proposed maximum HP bonus")
 		return
-	var focus_button: Button = skill_panel.get_node("Panel/Content/FocusButton")
+	var focus_button: Button = skill_panel.get_node("Panel/Content/NodeBranch/FollowupCard/Content/FocusButton")
 	if focus_button.disabled:
 		_fail("The dependent prototype skill node should become available")
 		return
@@ -170,6 +167,16 @@ func _find_button(parent: Node, text_value: String) -> Button:
 			return child
 		if child.get_child_count() > 0:
 			var nested := _find_button(child, text_value)
+			if nested != null:
+				return nested
+	return null
+
+func _find_button_with_prefix(parent: Node, text_prefix: String) -> Button:
+	for child in parent.get_children():
+		if child is Button and child.text.begins_with(text_prefix):
+			return child
+		if child.get_child_count() > 0:
+			var nested := _find_button_with_prefix(child, text_prefix)
 			if nested != null:
 				return nested
 	return null

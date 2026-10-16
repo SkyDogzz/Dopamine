@@ -5,8 +5,11 @@ signal unlock_requested(node_id: String)
 signal respec_requested
 
 @onready var _essence: Label = $Panel/Content/EssenceRow/Essence
-@onready var _node_button: Button = $Panel/Content/VitalityButton
-@onready var _focus_button: Button = $Panel/Content/FocusButton
+@onready var _node_button: Button = $Panel/Content/NodeBranch/FoundationCard/Content/VitalityButton
+@onready var _focus_button: Button = $Panel/Content/NodeBranch/FollowupCard/Content/FocusButton
+@onready var _node_effect: Label = $Panel/Content/NodeBranch/FoundationCard/Content/Effect
+@onready var _focus_effect: Label = $Panel/Content/NodeBranch/FollowupCard/Content/Effect
+@onready var _focus_kicker: Label = $Panel/Content/NodeBranch/FollowupCard/Content/Kicker
 @onready var _respec_button: Button = $Panel/Content/RespecButton
 @onready var _close_button: Button = $Panel/Content/CloseButton
 
@@ -29,9 +32,13 @@ func present(profile: Dictionary) -> void:
 	var has_node := NODE_ID in unlocked
 	var has_focus := "focused_training" in unlocked
 	_essence.text = "ESSENCE %d" % essence
-	_node_button.text = "VITALITY STARTER  •  +5%% MAX HP  •  %d ESSENCE  •  PROPOSED" % vitality_cost if not has_node else "VITALITY STARTER  •  UNLOCKED"
+	_node_button.text = "UNLOCKED" if has_node else "UNLOCK NODE"
+	_node_effect.text = "+5%% MAX HP  •  %d ESSENCE  •  PROPOSED" % vitality_cost
 	_node_button.disabled = has_node or essence < vitality_cost
-	_focus_button.text = "FOCUSED TRAINING  •  +3%% DAMAGE  •  %d ESSENCE  •  PROPOSED" % focus_cost if not has_focus else "FOCUSED TRAINING  •  UNLOCKED"
+	_focus_button.text = "UNLOCKED" if has_focus else "UNLOCK NODE"
+	_focus_effect.text = "+3%% DAMAGE  •  %d ESSENCE  •  PROPOSED" % focus_cost
+	_focus_kicker.text = "FOLLOW-UP · UNLOCKED" if has_focus else \
+		"FOLLOW-UP · AVAILABLE" if has_node and essence >= focus_cost else "FOLLOW-UP · LOCKED"
 	_focus_button.disabled = has_focus or not has_node or essence < focus_cost
 	_respec_button.disabled = unlocked.is_empty()
 	visible = true
@@ -39,9 +46,14 @@ func present(profile: Dictionary) -> void:
 
 func present_error() -> void:
 	_essence.text = "PROFILE UNAVAILABLE"
+	_node_effect.text = "PROFILE COULD NOT BE READ"
+	_focus_effect.text = "PROFILE COULD NOT BE READ"
 	_node_button.disabled = true
 	_focus_button.disabled = true
 	_respec_button.disabled = true
+	_node_button.text = "UNAVAILABLE"
+	_focus_button.text = "UNAVAILABLE"
+	_focus_kicker.text = "FOLLOW-UP · LOCKED"
 	visible = true
 	_close_button.grab_focus()
 
