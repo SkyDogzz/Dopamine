@@ -290,7 +290,7 @@ var _lightning_chain_states: Dictionary = {}
 var _lightning_arcs: Array[Dictionary] = []
 var _next_lightning_chain_id := 0
 var _redline_fire_time := 0.0
-var _redline_target_id := Vector2i(-1, -1)
+var _minigun_target_id := Vector2i(-1, -1)
 var _pandemic_poisoned_targets: Dictionary = {}
 var _pandemic_spread_targets: Dictionary = {}
 var _pandemic_bursts: Array[Dictionary] = []
@@ -1728,14 +1728,16 @@ func _fire_crimson_daggers(active_time: float, paused: bool) -> void:
 func _fire_minigun(active_time: float, paused: bool) -> void:
 	if not weapon_enabled or loadout.weapon_level("minigun") == 0 or paused or _chest_open or run_over or minigun_cooldown <= 0.0:
 		return
-	var target := _nearest_enemy(minigun_range)
+	var target := _enemy_by_id_in_range(_minigun_target_id, minigun_range)
 	if target.is_empty():
-		_redline_target_id = Vector2i(-1, -1)
+		target = _nearest_enemy(minigun_range)
+	if target.is_empty():
+		_minigun_target_id = Vector2i(-1, -1)
 		_redline_fire_time = 0.0
 		return
 	var target_id: Vector2i = target["id"]
-	if target_id != _redline_target_id:
-		_redline_target_id = target_id
+	if target_id != _minigun_target_id:
+		_minigun_target_id = target_id
 		_redline_fire_time = active_time
 	if active_time < _next_minigun_time:
 		return
@@ -2104,6 +2106,21 @@ func _nearest_enemy(max_range: float) -> Dictionary:
 			best_distance_squared = distance_squared
 			nearest = {"position": position, "id": Vector2i(int(entity["id"]["index"]), int(entity["id"]["generation"]))}
 	return nearest
+
+func _enemy_by_id_in_range(target_id: Vector2i, max_range: float) -> Dictionary:
+	var max_distance_squared := max_range * max_range
+	for entity in _entities:
+		var components: Dictionary = entity["components"]
+		if not _is_targetable_enemy(components):
+			continue
+		var id: Dictionary = entity["id"]
+		if Vector2i(int(id["index"]), int(id["generation"])) != target_id:
+			continue
+		var transform: Dictionary = components["Transform2D"]
+		var position := Vector2(float(transform["x"]), float(transform["y"]))
+		if player.global_position.distance_squared_to(position) < max_distance_squared:
+			return {"position": position, "id": target_id}
+	return {}
 
 func _is_targetable_enemy(components: Dictionary) -> bool:
 	if components.get("IsProjectile", false) or components.get("IsXpOrb", false):

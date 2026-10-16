@@ -7,6 +7,9 @@ func _run() -> void:
 	if not await _nearest_weapon_targets_skip_dead_enemies():
 		_fail("Automatic weapons should ignore dead enemies that remain in a simulation snapshot")
 		return
+	if not await _minigun_holds_target_until_invalid():
+		_fail("Minigun should keep its target until it dies or leaves range, then select another target")
+		return
 	if not await _weapon_kills_target("lightning_conductor", "storm_core", 12.4):
 		_fail("Storm Core should boost Lightning Conductor enough to defeat the test target")
 		return
@@ -79,6 +82,45 @@ func _nearest_weapon_targets_skip_dead_enemies() -> bool:
 	session.queue_free()
 	return nearest.get("id", Vector2i(-1, -1)) == Vector2i(2, 1) and \
 		lightning_targets.size() == 1 and lightning_targets[0].get("id") == Vector2i(2, 1) and frost_skipped_dead_targets
+
+func _minigun_holds_target_until_invalid() -> bool:
+	var session: Node2D = load("res://scenes/survival_session.tscn").instantiate()
+	session.spawn_initial_enemy = false
+	session.wave_spawning_enabled = false
+	session.weapon_enabled = false
+	root.add_child(session)
+	await process_frame
+	if not session.loadout.apply_offer("weapon:minigun"):
+		session.queue_free()
+		return false
+	session.weapon_enabled = true
+	var first_id := Vector2i(11, 1)
+	var second_id := Vector2i(12, 1)
+	session._entities = [
+		{"id": {"index": first_id.x, "generation": first_id.y}, "components": {
+			"Health": {"current": 100.0}, "Transform2D": {"x": 80.0, "y": 0.0},
+		}},
+		{"id": {"index": second_id.x, "generation": second_id.y}, "components": {
+			"Health": {"current": 100.0}, "Transform2D": {"x": 140.0, "y": 0.0},
+		}},
+	]
+	session._fire_minigun(10.0, false)
+	var acquired_nearest: bool = session._minigun_target_id == first_id
+	session._entities.reverse()
+	session._entities[0]["components"]["Transform2D"]["x"] = 20.0
+	session._entities[1]["components"]["Transform2D"]["x"] = 160.0
+	session._fire_minigun(11.0, false)
+	var retained_target: bool = session._minigun_target_id == first_id
+	session._entities[1]["components"]["Health"]["current"] = 0.0
+	session._fire_minigun(12.0, false)
+	var retargeted_after_death: bool = session._minigun_target_id == second_id and is_equal_approx(session._redline_fire_time, 12.0)
+	session._entities[1]["components"]["Health"]["current"] = 100.0
+	session._entities[0]["components"]["Transform2D"]["x"] = 700.0
+	session._entities[1]["components"]["Transform2D"]["x"] = 30.0
+	session._fire_minigun(13.0, false)
+	var retargeted_after_leaving_range: bool = session._minigun_target_id == first_id and is_equal_approx(session._redline_fire_time, 13.0)
+	session.queue_free()
+	return acquired_nearest and retained_target and retargeted_after_death and retargeted_after_leaving_range
 
 func _prism_laser_tracks_and_splits() -> bool:
 	var session: Node2D = load("res://scenes/survival_session.tscn").instantiate()
