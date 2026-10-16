@@ -20,6 +20,12 @@ const STAT_ICONS := {
 	"pickup_radius_pct": "res://assets/sprites/catalog/relic_magnet_heart.png",
 	"cooldown_reduction_pct": "res://assets/sprites/catalog/relic_overdrive_engine.png",
 }
+const SOURCE_ICONS := {
+	"run": "res://assets/icons/catalog/run_record.png",
+	"equipment": "res://assets/icons/catalog/equipment_armor.png",
+	"achievements": "res://assets/icons/catalog/achievement_medal.png",
+	"skill_tree": "res://assets/icons/catalog/skill_node.png",
+}
 
 var detail_open := false
 var _compact_rows: Dictionary = {}
@@ -145,6 +151,7 @@ func _stat_row(stat: Dictionary) -> Control:
 	var column := VBoxContainer.new()
 	column.add_theme_constant_override("separation", 0)
 	var name := _label(str(stat.get("label", "STAT")), 7, TEXT)
+	name.tooltip_text = str(stat.get("label", "STAT"))
 	column.add_child(name)
 	var identity := HBoxContainer.new()
 	identity.add_theme_constant_override("separation", 3)
@@ -163,17 +170,28 @@ func _stat_row(stat: Dictionary) -> Control:
 	if not icon_path.is_empty():
 		icon.texture = load(icon_path)
 	identity.add_child(icon)
-	identity.add_child(_label(str(stat.get("total_text", "—")), 7, CYAN))
+	var total := _label(str(stat.get("total_text", "—")), 7, CYAN)
+	total.tooltip_text = "%s — TOTAL" % str(stat.get("label", "STAT"))
+	identity.add_child(total)
 	var contributions := HBoxContainer.new()
-	contributions.add_theme_constant_override("separation", 7)
+	contributions.add_theme_constant_override("separation", 4)
 	column.add_child(contributions)
 	for source in ["run", "equipment", "achievements", "skill_tree"]:
 		var source_value := float(stat.get(source, 0.0))
 		if is_zero_approx(source_value):
 			continue
-		var source_name: String = {"run": "R/XP", "equipment": "G", "achievements": "A", "skill_tree": "T"}[source]
 		var source_color: Color = {"run": CYAN, "equipment": MAGENTA, "achievements": YELLOW, "skill_tree": GREEN}[source]
-		contributions.add_child(_label("%s %s" % [source_name, str(stat.get("source_text", {}).get(source, "0"))], 7, source_color))
+		var source_icon := TextureRect.new()
+		source_icon.texture = load(SOURCE_ICONS[source])
+		source_icon.custom_minimum_size = Vector2(9.0, 9.0)
+		source_icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		source_icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		source_icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		source_icon.tooltip_text = {"run": "Run / XP", "equipment": "Équipement", "achievements": "Succès", "skill_tree": "Arbre de compétences"}[source]
+		contributions.add_child(source_icon)
+		var contribution_value := _label(str(stat.get("source_text", {}).get(source, "0")), 7, source_color)
+		contribution_value.tooltip_text = "%s — %s" % [str(stat.get("label", "STAT")), source_icon.tooltip_text]
+		contributions.add_child(contribution_value)
 	return column
 
 func _label(value: String, font_size: int, color: Color) -> Label:

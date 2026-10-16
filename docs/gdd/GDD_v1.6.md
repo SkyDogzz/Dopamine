@@ -262,7 +262,7 @@ Architecture : BaseBalanceConfig → SandboxOverrideLayer → RuntimeConfigResol
 
 [VALIDÉ — EXTENSION DU 2026-10-16] Pendant une run, un hub compact à gauche affiche les statistiques courantes de la run. Tab ouvre un panneau détaillé en lecture seule qui présente les totaux et leur contribution par source : progression acquise pendant la run (dont bonus automatiques d'XP), équipement, achievements et skill tree. L'ouverture de ce panneau ne met pas la run en pause. Aucun retour visuel ponctuel n'accompagne le gain de niveau XP.
 
-[À DÉFINIR] Statistiques exactes et format compact du hub, disposition détaillée du panneau Tab, regroupement des sources et navigation de fermeture. Le hub doit refléter les valeurs effectives en run ; le panneau Tab doit permettre d'en comprendre les contributions sans interrompre le gameplay.
+[PARTIELLEMENT DÉFINI] Le panneau Tab empile le libellé de chaque statistique au-dessus de son icône et de sa valeur totale. Les contributions de sources sont affichées en paires icône + valeur, sans libellés textuels; des info-bulles donnent le nom de la statistique et des sources. Le détail reste aligné à gauche. La sélection exacte des statistiques du hub compact et la navigation de fermeture restent à définir. Le hub reflète les valeurs effectives en run; le panneau Tab explique leurs contributions sans interrompre le gameplay.
 
 <a id="16"></a>
 

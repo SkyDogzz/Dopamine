@@ -56,9 +56,15 @@ func _run() -> void:
 	var detail_value_row: HBoxContainer = detail_row.get_child(1)
 	if detail_label.text != damage["label"] or detail_value_row.get_child_count() != 2 or \
 			detail_value_row.get_child(0) is not TextureRect or \
-			detail_value_row.get_child(1).text != damage["total_text"]:
+			detail_value_row.get_child(1).text != damage["total_text"] or \
+			detail_row.get_child_count() != 3 or detail_row.get_child(2).get_child_count() != 8:
 		_fail("Detailed stats should stack the label over an icon and value on the left")
 		return
+	var source_row: HBoxContainer = detail_row.get_child(2)
+	for index in range(0, source_row.get_child_count(), 2):
+		if source_row.get_child(index) is not TextureRect or source_row.get_child(index + 1) is not Label:
+			_fail("Stat contributions should use source icon and value pairs without text labels")
+			return
 	var compact_bounds := compact.get_global_rect()
 	if compact.get_parent() is PanelContainer or compact_bounds.size.x > 100.0:
 		_fail("The compact in-game stat hub should remain narrow and without a background panel")

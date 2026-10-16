@@ -11,16 +11,17 @@
 - À chaque niveau d'XP, une statistique de combat ou utilitaire liée à la run reçoit automatiquement un bonus selon une rotation fixe, identique dans toutes les runs.
 - Aucun toast, animation ou retour visuel ponctuel n'accompagne ce bonus. Les valeurs courantes se lisent dans le hub et leur attribution se consulte dans Tab.
 - Le Sandbox reste strictement isolé de la progression normale et ne reçoit pas de dépendance à `SaveService` ou `ProgressionService`.
+- Dans les lignes détaillées, le libellé de statistique est seul sur sa ligne; dessous, l'icône de statistique précède la valeur totale. Chaque contribution présente une icône de source et sa valeur, sans texte de libellé. Des info-bulles conservent les noms pour la compréhension à la souris.
 
 ## Paramètres encore à définir
 
 - Liste et ordre des statistiques de la rotation XP.
 - Montant par statistique et éventuels caps.
 - Statistiques exactes affichées dans le hub compact et leur format visuel.
-- Disposition détaillée, regroupement et navigation de fermeture du panneau Tab.
+- Navigation de fermeture du panneau Tab.
 - Règle de cumul/ordre des modificateurs lorsqu'une même statistique a plusieurs sources, dans les limites de l'architecture déjà documentées.
 
-La première présentation affiche Damage, Move Speed et Crit Chance dans le hub compact. Le panneau Tab détaille Damage, Move Speed, Attack Speed, Cooldown Reduction, Crit Chance, Crit Damage, Max HP, Area, Projectile Speed, XP Gain, XP Pickup Radius, Kill Healing et Lifesteal. Chaque ligne montre le total et les sources non nulles : run (reliques/effets temporaires), équipement, achievements et skill tree. Le panneau est aligné à gauche pour laisser le centre de l'arène visible; son bouton Close reçoit le focus à l'ouverture.
+La première présentation affiche Damage, Move Speed et Crit Chance dans le hub compact. Le panneau Tab détaille Damage, Move Speed, Attack Speed, Cooldown Reduction, Crit Chance, Crit Damage, Max HP, Area, Projectile Speed, XP Gain, XP Pickup Radius, Kill Healing et Lifesteal. Chaque statistique empile son libellé, l'icône et la valeur totale, puis les paires icône/valeur des sources non nulles : run (reliques/effets temporaires), équipement, achievements et skill tree. Le panneau est aligné à gauche pour laisser le centre de l'arène visible; son bouton Close reçoit le focus à l'ouverture.
 
 Les paramètres de rotation XP ne doivent pas être inventés ni présentés comme validés. L'implémentation peut commencer par le contrat de contribution par source et les panneaux de lecture, en conservant le bonus XP explicitement inactif tant que sa table n'est pas décidée.
 
