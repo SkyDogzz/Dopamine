@@ -5,6 +5,9 @@ const SOURCE_DIR := "res://assets/source/catalog_weapons"
 const OUTPUT_DIR := "res://assets/sprites/catalog"
 const DEDICATED_ICON_REFERENCES := {
 	"weapon_lightning_conductor": "res://assets/source/catalog_weapons/weapon_lightning_conductor_reference.png",
+	"weapon_inferno_sprayer": "res://assets/source/catalog_weapons/weapon_inferno_sprayer_reference.png",
+	"weapon_crimson_daggers": "res://assets/source/catalog_weapons/weapon_crimson_daggers_reference.png",
+	"weapon_minigun": "res://assets/source/catalog_weapons/weapon_minigun_reference.png",
 	"relic_storm_core": "res://assets/source/catalog_relics/relic_storm_core_reference.png",
 	"relic_infernal_heart": "res://assets/source/catalog_relics/relic_infernal_heart_reference.png",
 	"relic_blood_chalice": "res://assets/source/catalog_relics/relic_blood_chalice_reference.png",
