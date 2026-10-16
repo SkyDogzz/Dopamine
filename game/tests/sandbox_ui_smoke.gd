@@ -37,6 +37,7 @@ func _run() -> void:
 	var spawn_actions: HBoxContainer = sandbox.get_node("Shell/Content/SidePanel/Sections/SpawnPanel/SpawnForm/SpawnActions")
 	for panel_path in [
 		"Shell/Content/SidePanel/Sections/SpawnPanel",
+		"Shell/Content/SidePanel/Sections/TargetingPanel",
 		"Shell/Content/SidePanel/Sections/TuningPanel",
 		"Shell/Content/SidePanel/Sections/InspectorPanel",
 		"Shell/Content/SidePanel/Sections/LogPanel",
@@ -67,6 +68,8 @@ func _run() -> void:
 	assert(sandbox.get_node("Shell/Header/SurvivalButton").text == "PLAY SURVIVAL", "Sandbox should expose the Survival prototype entry")
 	assert(sandbox.simulation != null, "Sandbox UI should create its simulation without a save")
 	for node_path in [
+		"Shell/Content/SidePanel/Sections/TargetingPanel/TargetingForm/PolicySelect",
+		"Shell/Content/SidePanel/Sections/TargetingPanel/TargetingForm/RangeSpin",
 		"Shell/Content/SidePanel/Sections/InspectorPanel/InspectorForm/StatusTitle",
 		"Shell/Content/SidePanel/Sections/InspectorPanel/InspectorForm/StatusDamageSpin",
 		"Shell/Content/SidePanel/Sections/InspectorPanel/InspectorForm/StatusIntervalSpin",
@@ -113,6 +116,19 @@ func _run() -> void:
 	var target_preview: Dictionary = sandbox.get_node("Shell/Content/MainColumn/SimulationView")._target_preview
 	assert(not target_preview.is_empty() and target_preview["id"] == Vector2i(id["index"], id["generation"]),
 		"Sandbox target preview should expose the nearest live Minigun target")
+	var target_policy: OptionButton = sandbox.get_node("Shell/Content/SidePanel/Sections/TargetingPanel/TargetingForm/PolicySelect")
+	assert(target_policy.item_count == 5, "Sandbox should expose five reusable target policies")
+	var target_range: SpinBox = sandbox.get_node("Shell/Content/SidePanel/Sections/TargetingPanel/TargetingForm/RangeSpin")
+	target_range.value = 90.0
+	assert(sandbox.get_node("Shell/Content/SidePanel/Sections/TargetingPanel/TargetingForm/TargetStatus").text.ends_with("NO TARGET"),
+		"Sandbox preview range should hide enemies outside the configured distance")
+	target_range.value = 620.0
+	target_policy.select(3)
+	target_policy.item_selected.emit(3)
+	assert(sandbox.get_node("Shell/Content/SidePanel/Sections/TargetingPanel/TargetingForm/TargetStatus").text.begins_with("LOWEST HP"),
+		"Sandbox should update the target probe when its policy changes")
+	target_policy.select(0)
+	target_policy.item_selected.emit(0)
 
 	sandbox.get_node("Shell/Content/MainColumn/SimulationView").entity_selected.emit(id["index"], id["generation"])
 	if "--capture" in OS.get_cmdline_user_args():

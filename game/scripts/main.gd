@@ -1,6 +1,8 @@
 extends Control
 
 const SURVIVAL_TARGETING := preload("res://scripts/survival_targeting.gd")
+const TARGETING_POLICIES := ["nearest", "highest_threat", "highest_health", "lowest_health", "farthest"]
+const TARGETING_LABELS := ["NEAREST", "HIGHEST THREAT", "HIGHEST HP", "LOWEST HP", "FARTHEST"]
 
 const COLOR_MUTED := Color("#8ea3ad")
 const COLOR_CYAN := Color("#45e5ed")
@@ -27,6 +29,9 @@ var _pending_reset_sequence := 0
 @onready var _speed_select: OptionButton = $Shell/Content/MainColumn/Toolbar/Row/SpeedSelect
 @onready var _entity_type: OptionButton = $Shell/Content/SidePanel/Sections/SpawnPanel/SpawnForm/TypeRow/EntityType
 @onready var _count: SpinBox = $Shell/Content/SidePanel/Sections/SpawnPanel/SpawnForm/TypeRow/CountSpin
+@onready var _target_policy: OptionButton = $Shell/Content/SidePanel/Sections/TargetingPanel/TargetingForm/PolicySelect
+@onready var _target_range: SpinBox = $Shell/Content/SidePanel/Sections/TargetingPanel/TargetingForm/RangeSpin
+@onready var _target_status: Label = $Shell/Content/SidePanel/Sections/TargetingPanel/TargetingForm/TargetStatus
 @onready var _entity_info: RichTextLabel = $Shell/Content/SidePanel/Sections/InspectorPanel/InspectorForm/EntityInfo
 @onready var _log_text: RichTextLabel = $Shell/Content/SidePanel/Sections/LogPanel/LogForm/LogText
 var _state_badge_style: StyleBoxFlat
@@ -75,10 +80,16 @@ func _ready() -> void:
 	for speed in [0.25, 0.5, 1.0, 2.0, 4.0]:
 		_speed_select.add_item("×%s" % speed)
 		_speed_select.set_item_metadata(_speed_select.item_count - 1, speed)
+	for index in TARGETING_POLICIES.size():
+		_target_policy.add_item(TARGETING_LABELS[index])
+		_target_policy.set_item_metadata(index, TARGETING_POLICIES[index])
+	_target_range.value = SURVIVAL_TARGETING.MINIGUN_RANGE
 
 	$Shell/Content/MainColumn/Toolbar/Row/PauseButton.pressed.connect(_on_pause_pressed)
 	$Shell/Content/MainColumn/Toolbar/Row/StepButton.pressed.connect(_on_step_pressed)
 	$Shell/Content/MainColumn/Toolbar/Row/SpeedSelect.item_selected.connect(_on_speed_selected)
+	_target_policy.item_selected.connect(_on_target_policy_selected)
+	_target_range.value_changed.connect(_on_target_range_changed)
 	$Shell/Content/MainColumn/Toolbar/Row/ResetButton.pressed.connect(_on_reset_pressed)
 	$Shell/Content/SidePanel/Sections/SpawnPanel/SpawnForm/SpawnActions/SpawnButton.pressed.connect(_on_spawn_pressed)
 	$Shell/Content/SidePanel/Sections/SpawnPanel/SpawnForm/SpawnActions/DespawnButton.pressed.connect(_on_despawn_pressed)
@@ -89,6 +100,8 @@ func _ready() -> void:
 
 	$Shell/Header/Title.add_theme_color_override("font_color", COLOR_CYAN)
 	$Shell/Content/SidePanel/Sections/SpawnPanel/SpawnForm/SpawnTitle.add_theme_color_override("font_color", COLOR_CYAN)
+	$Shell/Content/SidePanel/Sections/TargetingPanel/TargetingForm/TargetingTitle.add_theme_color_override("font_color", COLOR_AMBER)
+	$Shell/Content/SidePanel/Sections/TargetingPanel/TargetingForm/TargetStatus.add_theme_color_override("font_color", COLOR_AMBER)
 	$Shell/Content/SidePanel/Sections/InspectorPanel/InspectorForm/InspectorTitle.add_theme_color_override("font_color", COLOR_CYAN)
 	$Shell/Content/SidePanel/Sections/LogPanel/LogForm/LogTitle.add_theme_color_override("font_color", COLOR_CYAN)
 	$Shell/Content/SidePanel/Sections/SpawnPanel/SpawnForm/SpawnActions/DespawnButton.add_theme_color_override("font_color", COLOR_AMBER)
@@ -145,7 +158,10 @@ func _refresh() -> void:
 	_select_speed(float(state["speed_multiplier"]))
 	_view.set_entities(state["entities"])
 	_view.set_selected_entity(_selected_index, _selected_generation)
-	_view.set_target_preview(SURVIVAL_TARGETING.nearest_enemy(state["entities"], Vector2.ZERO, SURVIVAL_TARGETING.MINIGUN_RANGE))
+	var target_policy: String = str(_target_policy.get_item_metadata(_target_policy.selected))
+	var target: Dictionary = SURVIVAL_TARGETING.select_enemy(state["entities"], Vector2.ZERO, _target_range.value, target_policy)
+	_view.set_target_preview(target, TARGETING_LABELS[_target_policy.selected])
+	_target_status.text = "%s  ·  %s" % [TARGETING_LABELS[_target_policy.selected], "NO TARGET" if target.is_empty() else "#%d / G%d" % [target["id"].x, target["id"].y]]
 
 	var metrics: Dictionary = state["metrics"]
 	$Shell/Content/MainColumn/Metrics/MetricRow/MetricFPS.text = "FPS  %d" % Engine.get_frames_per_second()
@@ -221,6 +237,12 @@ func _on_step_pressed() -> void:
 
 func _on_speed_selected(index: int) -> void:
 	simulation.set_speed(float(_speed_select.get_item_metadata(index)))
+
+func _on_target_policy_selected(_index: int) -> void:
+	_refresh()
+
+func _on_target_range_changed(_value: float) -> void:
+	_refresh()
 
 func _on_reset_pressed() -> void:
 	var state: Dictionary = simulation.snapshot()

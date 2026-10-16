@@ -20,6 +20,7 @@ var _xp_multimesh: MultiMesh
 var _selected_point := Vector2.ZERO
 var _selected_entity_found := false
 var _target_preview: Dictionary = {}
+var _target_preview_label := "TARGET"
 
 func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_STOP
@@ -50,8 +51,9 @@ func set_selected_entity(index: int, generation: int) -> void:
 	_sprite_renderer.set_selected_entity(index, generation)
 	set_entities(_entities)
 
-func set_target_preview(target: Dictionary) -> void:
+func set_target_preview(target: Dictionary, label: String) -> void:
 	_target_preview = target
+	_target_preview_label = label
 	queue_redraw()
 
 func _draw() -> void:
@@ -77,7 +79,7 @@ func _draw() -> void:
 		var target_point: Vector2 = center + _target_preview["position"]
 		draw_line(center, target_point, COLOR_TARGET, 1.0)
 		draw_arc(target_point, 16.0, 0.0, TAU, 24, COLOR_TARGET, 2.0)
-		draw_string(ThemeDB.fallback_font, target_point + Vector2(14, 12), "MINIGUN %d / G%d" % [target_id.x, target_id.y], HORIZONTAL_ALIGNMENT_LEFT, -1.0, 12, COLOR_TARGET)
+		draw_string(ThemeDB.fallback_font, target_point + Vector2(14, 12), "%s %d / G%d" % [_target_preview_label, target_id.x, target_id.y], HORIZONTAL_ALIGNMENT_LEFT, -1.0, 12, COLOR_TARGET)
 
 func _gui_input(event: InputEvent) -> void:
 	if not event is InputEventMouseButton:

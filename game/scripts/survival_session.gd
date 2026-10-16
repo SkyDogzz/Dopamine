@@ -2334,108 +2334,19 @@ func _try_evolution_shockwave(base_damage: float) -> void:
 			direction * 400.0, base_damage, 6.0, 0.3)
 
 func _nearest_enemy(max_range: float) -> Dictionary:
-	return SURVIVAL_TARGETING.nearest_enemy(_entities, player.global_position, max_range)
+	return SURVIVAL_TARGETING.select_enemy(_entities, player.global_position, max_range, "nearest")
 
 func _farthest_enemy(max_range: float) -> Dictionary:
-	var farthest: Dictionary = {}
-	var best_distance_squared := -1.0
-	for entity in _entities:
-		var components: Dictionary = entity["components"]
-		if not _is_targetable_enemy(components):
-			continue
-		var transform: Dictionary = components["Transform2D"]
-		var position := Vector2(float(transform["x"]), float(transform["y"]))
-		var distance_squared := player.global_position.distance_squared_to(position)
-		if distance_squared >= max_range * max_range:
-			continue
-		if distance_squared > best_distance_squared:
-			best_distance_squared = distance_squared
-			farthest = {
-				"position": position,
-				"id": Vector2i(int(entity["id"]["index"]), int(entity["id"]["generation"])),
-			}
-	return farthest
+	return SURVIVAL_TARGETING.select_enemy(_entities, player.global_position, max_range, "farthest")
 
 func _highest_threat_enemy(max_range: float) -> Dictionary:
-	var best_target: Dictionary = {}
-	var best_threat := -INF
-	var best_distance_squared := max_range * max_range
-	for entity in _entities:
-		var components: Dictionary = entity["components"]
-		if not _is_targetable_enemy(components):
-			continue
-		var transform: Dictionary = components["Transform2D"]
-		var position := Vector2(float(transform["x"]), float(transform["y"]))
-		var distance_squared := player.global_position.distance_squared_to(position)
-		if distance_squared >= max_range * max_range:
-			continue
-		var threat := float(components.get("ThreatLevel", 1.0))
-		if not is_finite(threat) or threat <= 0.0:
-			threat = 1.0
-		if threat > best_threat or (is_equal_approx(threat, best_threat) and distance_squared < best_distance_squared):
-			best_threat = threat
-			best_distance_squared = distance_squared
-			best_target = {
-				"position": position,
-				"id": Vector2i(int(entity["id"]["index"]), int(entity["id"]["generation"])),
-			}
-	return best_target
+	return SURVIVAL_TARGETING.select_enemy(_entities, player.global_position, max_range, "highest_threat")
 
 func _highest_health_enemy(max_range: float) -> Dictionary:
-	var best_target: Dictionary = {}
-	var best_health := -INF
-	var best_distance_squared := max_range * max_range
-	for entity in _entities:
-		var components: Dictionary = entity["components"]
-		if not _is_targetable_enemy(components):
-			continue
-		var health: Variant = components.get("Health", {})
-		if not health is Dictionary:
-			continue
-		var current_health := float(health.get("current", 0.0))
-		if not is_finite(current_health) or current_health <= 0.0:
-			continue
-		var transform: Dictionary = components["Transform2D"]
-		var position := Vector2(float(transform["x"]), float(transform["y"]))
-		var distance_squared := player.global_position.distance_squared_to(position)
-		if distance_squared >= max_range * max_range:
-			continue
-		if current_health > best_health or (is_equal_approx(current_health, best_health) and distance_squared < best_distance_squared):
-			best_health = current_health
-			best_distance_squared = distance_squared
-			best_target = {
-				"position": position,
-				"id": Vector2i(int(entity["id"]["index"]), int(entity["id"]["generation"])),
-			}
-	return best_target
+	return SURVIVAL_TARGETING.select_enemy(_entities, player.global_position, max_range, "highest_health")
 
 func _lowest_health_enemy(max_range: float) -> Dictionary:
-	var best_target: Dictionary = {}
-	var best_health := INF
-	var best_distance_squared := max_range * max_range
-	for entity in _entities:
-		var components: Dictionary = entity["components"]
-		if not _is_targetable_enemy(components):
-			continue
-		var health: Variant = components.get("Health", {})
-		if not health is Dictionary:
-			continue
-		var current_health := float(health.get("current", 0.0))
-		if not is_finite(current_health) or current_health <= 0.0:
-			continue
-		var transform: Dictionary = components["Transform2D"]
-		var position := Vector2(float(transform["x"]), float(transform["y"]))
-		var distance_squared := player.global_position.distance_squared_to(position)
-		if distance_squared >= max_range * max_range:
-			continue
-		if current_health < best_health or (is_equal_approx(current_health, best_health) and distance_squared < best_distance_squared):
-			best_health = current_health
-			best_distance_squared = distance_squared
-			best_target = {
-				"position": position,
-				"id": Vector2i(int(entity["id"]["index"]), int(entity["id"]["generation"])),
-			}
-	return best_target
+	return SURVIVAL_TARGETING.select_enemy(_entities, player.global_position, max_range, "lowest_health")
 
 func _enemy_by_id_in_range(target_id: Vector2i, max_range: float) -> Dictionary:
 	var max_distance_squared := max_range * max_range

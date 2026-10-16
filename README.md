@@ -52,6 +52,7 @@ ctest --test-dir build --output-on-failure
 godot --headless --path game --script res://tests/sandbox_smoke.gd
 godot --headless --path game --script res://tests/sandbox_ui_smoke.gd
 godot --headless --path game --script res://tests/combat_catalog_smoke.gd
+godot --headless --path game --script res://tests/survival_targeting_smoke.gd
 ```
 
 Pour lancer un combat Sandbox automatisé dans une fenêtre et garder le résultat (impact, mort et logs) à l’écran jusqu’à Échap :

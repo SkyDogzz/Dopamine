@@ -198,6 +198,45 @@ layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 5
 
+[node name="TargetingPanel" type="PanelContainer" parent="Shell/Content/SidePanel/Sections"]
+layout_mode = 2
+theme_type_variation = "InsetPanel"
+
+[node name="TargetingForm" type="VBoxContainer" parent="Shell/Content/SidePanel/Sections/TargetingPanel"]
+layout_mode = 2
+theme_override_constants/separation = 3
+
+[node name="TargetingTitle" type="Label" parent="Shell/Content/SidePanel/Sections/TargetingPanel/TargetingForm"]
+layout_mode = 2
+theme_type_variation = "PixelHeading"
+text = "TARGET PREVIEW"
+tooltip_text = "Preview a proposed weapon target selector in the isolated Sandbox."
+theme_override_font_sizes/font_size = 8
+
+[node name="PolicySelect" type="OptionButton" parent="Shell/Content/SidePanel/Sections/TargetingPanel/TargetingForm"]
+custom_minimum_size = Vector2(0, 19)
+layout_mode = 2
+size_flags_horizontal = 3
+tooltip_text = "Choose which proposed target-selection policy the Sandbox displays."
+
+[node name="RangeSpin" type="SpinBox" parent="Shell/Content/SidePanel/Sections/TargetingPanel/TargetingForm"]
+custom_minimum_size = Vector2(0, 19)
+layout_mode = 2
+size_flags_horizontal = 3
+min_value = 0.0
+max_value = 2000.0
+step = 10.0
+value = 620.0
+prefix = "RANGE "
+suffix = " u"
+tooltip_text = "Preview range in simulation units. This Sandbox value is independent of Survival weapon tuning."
+
+[node name="TargetStatus" type="Label" parent="Shell/Content/SidePanel/Sections/TargetingPanel/TargetingForm"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 8
+text = "NEAREST  ·  NO TARGET"
+tooltip_text = "Current preview target ID, or no target in range."
+
 [node name="SpawnPanel" type="PanelContainer" parent="Shell/Content/SidePanel/Sections"]
 layout_mode = 2
 theme_type_variation = "InsetPanel"
