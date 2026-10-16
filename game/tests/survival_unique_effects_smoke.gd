@@ -4,7 +4,25 @@ func _initialize() -> void:
 	call_deferred("_run")
 
 func _run() -> void:
+	var save_directory := ProjectSettings.globalize_path("user://survival_unique_effects_smoke")
+	DirAccess.make_dir_recursive_absolute(save_directory)
+	for file_name in DirAccess.get_files_at(save_directory):
+		DirAccess.remove_absolute(save_directory.path_join(file_name))
+	var save_service = load("res://scripts/save_service.gd").new(save_directory)
+	var progression = load("res://scripts/progression_service.gd").new(save_service, "0")
+	var profile: Dictionary = progression.load_profile()["profile"]
+	profile["equipment_inventory"] = [
+		_capacity_item("expanded_legendary", "helmet", "legendary", 3),
+		_capacity_item("expanded_mythic", "ring", "mythic", 4),
+	]
+	for equipment in profile["equipment_inventory"]:
+		equipment["unique_effect_id"] = "expanded_loadout"
+		equipment["equipped"] = true
+	if not save_service.save_slot("0", profile):
+		_fail("Could not save the equipped capacity effect fixtures")
+		return
 	var session: Node2D = load("res://scenes/survival_session.tscn").instantiate()
+	session.progression_service = progression
 	session.skip_starting_weapon_choice = true
 	session.spawn_initial_enemy = false
 	session.wave_spawning_enabled = false
@@ -13,6 +31,23 @@ func _run() -> void:
 	if session.simulation == null:
 		_fail("Survival combat simulation should initialize")
 		return
+	if progression.equipped_unique_effects() != ["expanded_loadout"] or \
+			session.loadout.max_slots("weapon") != 6 or session.loadout.max_slots("relic") != 6:
+		_fail("Equipping duplicate capacity effects should unlock only one weapon and relic slot")
+		return
+	var weapon_ids: Array = session.loadout._weapons.keys()
+	var relic_ids: Array = session.loadout._relics.keys()
+	for index in range(6):
+		if not session.loadout.apply_offer("weapon:%s" % weapon_ids[index]) or \
+				not session.loadout.apply_offer("relic:%s" % relic_ids[index]):
+			_fail("The equipped effect should allow six weapons and six relics in the run")
+			return
+	if session.loadout.apply_offer("weapon:%s" % weapon_ids[6]) or \
+			session.loadout.apply_offer("relic:%s" % relic_ids[6]):
+		_fail("An active capacity effect must not raise either loadout beyond six items")
+		return
+	session._cached_unique_effects.clear()
+	session.loadout.set_slot_capacity_bonus(0, 0)
 	if not await _wait_for_simulation_running(session):
 		_fail("Survival session should start before the unique-effect checks")
 		return
@@ -109,6 +144,21 @@ func _seed_for_lightning_success() -> int:
 		if randf() < 0.1:
 			return seed_value
 	return 0
+
+func _capacity_item(instance_id: String, slot: String, rarity: String, stat_count: int) -> Dictionary:
+	var generator = load("res://scripts/equipment_generator.gd")
+	var stat_lines: Array[Dictionary] = []
+	for index in range(stat_count):
+		stat_lines.append({
+			"stat_id": generator.STAT_IDS[index], "roll_percentile": 0.5,
+			"enhancement_level": 0, "fail_streak": 0,
+		})
+	return {
+		"instance_id": instance_id, "slot": slot, "rarity": rarity,
+		"stat_lines": stat_lines, "equipped": true,
+		"rolls_calibrated": false, "unique_effect_id": "expanded_loadout",
+		"source_mode": "survival",
+	}
 
 func _count_projectiles(session: Node2D, projectile_type: String) -> int:
 	var count := 0

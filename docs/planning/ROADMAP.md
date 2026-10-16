@@ -320,7 +320,7 @@ Travail requis :
   - [ ] Étendre l'attraction aux soins, ressources, monnaies et bonus temporaires lorsqu'ils existent.
 - [ ] **P5.1.14 — Slots et effets de capacité**
   - [x] Vérifier cinq slots de reliques en run normale ; `survival_loadout_smoke.gd` couvre cinq reliques distinctes, refuse une sixième et ne propose plus de nouvel item quand les slots sont pleins.
-  - [ ] Tester une extension Legendary/Mythic seulement avec effet unique actif. Le GDD valide la capacité à six, mais aucun effet unique actuellement défini n’accorde cette extension ; l’effet et son application à l’armement de run restent **[OUVERTS]** et ne sont pas inventés ici.
+  - [x] Tester l’extension Legendary/Mythic avec `expanded_loadout` équipé : +1 arme et +1 relique, plafond six, doublons dédupliqués; contrat et valeurs restent **[PROPOSÉS]** dans `EFFETS_UNIQUES_P6.md`. Couvert par `survival_unique_effects_smoke.gd` et `survival_loadout_smoke.gd`.
   - [x] Vérifier l’absence de cumul automatique d’un même effet unique actif ; `progression_service_smoke.gd` équipe deux items Legendary avec `overflow_shield` et vérifie que l’effet n’est exposé qu’une fois.
 - [ ] **P5.1.15 — Statut du balancing**
   - [x] Charger les multiplicateurs, ajouts et valeurs par palier depuis `game/data/weapon_progression.json`; le chargement valide version, dix IDs, niveaux 1–5 et valeurs finies/positives, et échoue visiblement si la configuration est invalide.
@@ -466,12 +466,12 @@ Travail requis :
   - [x] Prototype d’économie choisi : vente contre Essence seule (5/10/20/40/80 selon rareté), démantèlement contre Powder seule selon `PROPOSITION_P5.md`; la vente demande confirmation et ne rembourse pas les enhancements. Rendements et chances restent **[PROPOSÉS]**, à calibrer.
   - [x] `equipment_economy_smoke.gd` vérifie les ventes par rareté, l’impossibilité de repayer une pièce supprimée et le rejet d’un `fail_streak` supérieur à 9, garde-fou de la tentative garantie.
 - [ ] **P6.5 — Effets uniques**
-  - [x] `EFFETS_UNIQUES_P6.md` inventorie les cinq IDs actifs, leurs prérequis, déclencheurs, portée/limites, feedback et statuts **[PROPOSÉ]**; `revive_knockback` est identifié comme legacy sans gameplay.
+  - [x] `EFFETS_UNIQUES_P6.md` inventorie les six IDs actifs, leurs prérequis, déclencheurs, portée/limites, feedback et statuts **[PROPOSÉ]**; `revive_knockback` est identifié comme legacy sans gameplay.
   - [x] `survival_unique_effects_smoke.gd` vérifie les prérequis équipés, la portée visible et le cooldown de Lightning Burst, puis le gating par évolution, le feedback et l'activation unique d'Evolution Shockwave; `survival_inventory_smoke.gd`, `survival_elite_smoke.gd` et `free_chest_reroll_smoke.gd` couvrent Overflow Shield, Elite Haste et le reroll.
   - [x] `elite_haste` est chargé depuis un équipement unique équipé, déclenché par la mort d’un élite et actif 3 secondes simulées avec +15 % de mobilité **[PROPOSÉ]**; `survival_elite_smoke.gd` vérifie activation et expiration.
   - [x] `free_first_chest_reroll` relance une fois les options du premier coffre de run sans répéter les choix affichés; le run reste en pause. `free_chest_reroll_smoke.gd` couvre profil équipé, activation clavier, options inédites et absence de bouton aux coffres suivants; comportement **[PROPOSÉ]**.
   - [x] Retirer `revive_knockback` du choix des nouveaux effets sans supprimer la compatibilité de lecture des profils qui le stockent; vérifié par `progression_service_smoke.gd`.
-  - [ ] Vérifier non-cumul automatique et extensions de capacité réelles.
+  - [x] Vérifier non-cumul automatique et extensions de capacité réelles : le smoke équipe deux pièces porteuses du même effet, confirme la déduplication et applique six armes/reliques au maximum. Extension **[PROPOSÉE]**.
 - [ ] **P6.6 — Skill tree**
   - [ ] Établir le schéma node/prérequis/coût/effet.
   - [ ] Ajouter et tester une tranche de branche à la fois jusqu’à la cible décidée (100–150).

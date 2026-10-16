@@ -146,6 +146,8 @@ Douze statistiques candidates : dégâts %, vitesse d'attaque %, chance critique
 
 [VALIDÉ] Effets uniques peuvent augmenter la capacité d'armes ou reliques à six ; un même effet unique actif ne se cumule pas automatiquement plusieurs fois. [PROPOSÉ] En cas de perte du slot bonus, l'objet supplémentaire devient inactif plutôt que détruit.
 
+[PROPOSÉ] Le prototype `expanded_loadout` ajoute un slot d'arme et un slot de relique (plafond de six chacun) lorsqu'une pièce porteuse de l'effet est équipée. Plusieurs pièces avec cet effet ne cumulent pas le bonus. La répartition du bonus entre les deux familles et son calibrage restent à valider.
+
 <a id="8"></a>
 
 ## 08 — Enhancement et Powder

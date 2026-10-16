@@ -38,8 +38,11 @@ const EVOLUTION_ICONS := {
 }
 const STARTING_WEAPONS := ["lightning_conductor", "inferno_sprayer"]
 const MAX_SLOTS := 5
+const MAX_EXPANDED_SLOTS := 6
 const MAX_LEVEL := 5
 
+var _weapon_slot_limit := MAX_SLOTS
+var _relic_slot_limit := MAX_SLOTS
 var _weapon_levels := {}
 var _relic_levels := {}
 var _evolved_weapons := {}
@@ -104,7 +107,7 @@ func offers(family: String, excluded_ids: Array[String] = [], required_count: in
 				"description": "%s\nNEXT LEVEL: %s" % [description, _next_level_description(family, item_id, next_level)],
 				"icon": ICONS.get(item_id, ""),
 			})
-		elif owned.size() < MAX_SLOTS:
+		elif owned.size() < _slot_limit(family):
 			candidates.append({
 				"id": "%s:%s" % [family, item_id],
 				"title": catalog[item_id],
@@ -286,11 +289,25 @@ func apply_offer(offer_id: String) -> bool:
 		if int(owned[item_id]) >= MAX_LEVEL:
 			return false
 		owned[item_id] = int(owned[item_id]) + 1
-	elif owned.size() < MAX_SLOTS:
+	elif owned.size() < _slot_limit(parts[0]):
 		owned[item_id] = 1
 	else:
 		return false
 	return true
+
+func set_slot_capacity_bonus(weapon_slots: int, relic_slots: int) -> void:
+	_weapon_slot_limit = mini(MAX_EXPANDED_SLOTS, MAX_SLOTS + clampi(weapon_slots, 0, 1))
+	_relic_slot_limit = mini(MAX_EXPANDED_SLOTS, MAX_SLOTS + clampi(relic_slots, 0, 1))
+
+func max_slots(family: String) -> int:
+	return _slot_limit(family)
+
+func _slot_limit(family: String) -> int:
+	if family == "weapon":
+		return _weapon_slot_limit
+	if family == "relic":
+		return _relic_slot_limit
+	return 0
 
 func weapon_level(item_id: String) -> int:
 	return int(_weapon_levels.get(item_id, 0))

@@ -8,11 +8,11 @@ const PROPOSED_SUCCESS_CHANCE := {"basic": 50.0, "refined": 70.0, "pure": 85.0, 
 const PROPOSED_CRITICAL_FAILURE_CHANCE := {"basic": 10.0, "refined": 5.0, "pure": 2.0, "prismatic": 0.5}
 const KNOWN_UNIQUE_EFFECTS := [
 	"lightning_burst", "overflow_shield", "evolution_shockwave",
-	"elite_haste", "free_first_chest_reroll", "revive_knockback",
+	"elite_haste", "free_first_chest_reroll", "expanded_loadout", "revive_knockback",
 ]
 const PROPOSED_UNIQUE_EFFECTS := [
 	"lightning_burst", "overflow_shield", "evolution_shockwave",
-	"elite_haste", "free_first_chest_reroll",
+	"elite_haste", "free_first_chest_reroll", "expanded_loadout",
 ]
 const PROPOSED_DISMANTLE_REWARDS := {
 	"normal": {"powder_basic": 1}, "magic": {"powder_basic": 3},

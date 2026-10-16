@@ -224,6 +224,20 @@ func _initialize() -> void:
 		if not full_relic_fixture.owned_relics().has(str(offer["id"]).trim_prefix("relic:")):
 			_fail("A full relic loadout should offer upgrades only, not another new relic")
 			return
+	var expanded_fixture = loadout_script.new(37)
+	expanded_fixture.set_slot_capacity_bonus(1, 1)
+	var weapon_ids: Array = expanded_fixture._weapons.keys()
+	var expanded_relic_ids: Array = expanded_fixture._relics.keys()
+	for index in range(6):
+		if not expanded_fixture.apply_offer("weapon:%s" % weapon_ids[index]) or \
+				not expanded_fixture.apply_offer("relic:%s" % expanded_relic_ids[index]):
+			_fail("An active capacity effect should allow six weapons and six relics")
+			return
+	if expanded_fixture.owned_weapons().size() != 6 or expanded_fixture.owned_relics().size() != 6 or \
+		expanded_fixture.apply_offer("weapon:%s" % weapon_ids[6]) or \
+		expanded_fixture.apply_offer("relic:%s" % expanded_relic_ids[6]):
+		_fail("Expanded loadout capacity should stop at six and reject a seventh item")
+		return
 	print("Survival loadout smoke passed")
 	quit()
 

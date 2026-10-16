@@ -2367,7 +2367,9 @@ func _refresh_persistent_bonuses() -> void:
 		_cached_persistent_damage_multiplier += progression_service.skill_bonus("damage_pct")
 		_cached_persistent_damage_multiplier += progression_service.achievement_bonus("damage_pct")
 		_cached_persistent_damage_multiplier += _equipment_bonus("damage_pct") / 100.0
-		_refresh_player_move_speed()
+	var capacity_bonus := 1 if _has_unique_effect("expanded_loadout") else 0
+	loadout.set_slot_capacity_bonus(capacity_bonus, capacity_bonus)
+	_refresh_player_move_speed()
 
 func _equipment_bonus(stat_id: String) -> float:
 	return float(_cached_equipment_bonuses.get(stat_id, 0.0))
