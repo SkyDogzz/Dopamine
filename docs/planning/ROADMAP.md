@@ -497,8 +497,9 @@ Travail requis :
   - [x] Vérifier migration, sauvegarde, backup et restauration après corruption : `save_service_smoke.gd` couvre l’enveloppe générique; `progression_service_smoke.gd` récupère maintenant un profil complet via un nouveau SaveService/ProgressionService et valide ses ressources, runs récompensées et équipements.
   - [x] Vérifier idempotence d’un même `run_id` après recréation du service et rechargement du slot, sans nouveau gain de ressources ni pièce d’équipement.
 - [ ] **P6.9 — Calibration**
-  - [ ] Collecter des builds sans bonus, moyens et fortement avancés.
-  - [ ] Comparer survie/dégâts/temps de run sur chaque difficulté disponible.
+  - [x] Ajouter `game/tests/progression_balance_survey.gd`, un relevé reproductible en sandbox de profil : nouveau profil, profil intermédiaire (44 nodes Core Stats, 8 % PV / 6 % dégâts / 4 % vitesse / 2,5 points de critique) et arbre complet (100 nodes, 10,7 % PV / 9 % dégâts / 6 % vitesse / 4 points de critique). Il utilise les vrais bonus du service de progression, des sauvegardes temporaires dédiées et ne persiste aucune récompense de run.
+  - [x] Comparer une baseline immobile sur les cinq difficultés, trois seeds appariés entre profils. Les résultats détaillés et leurs limites sont consignés dans `docs/qa/TESTS.md`.
+  - [ ] Collecter des parcours représentatifs avec déplacement joueur; la baseline immobile meurt en vague 1 et ne mesure donc pas la durée d’une run complète ni son équilibre en jeu.
   - [ ] Ajuster uniquement les paramètres dont le statut autorise l’équilibrage.
 
 **Critère de sortie :** boucle permanente complète, compréhensible, migrable, idempotente et calibrée sans fuite vers Sandbox.

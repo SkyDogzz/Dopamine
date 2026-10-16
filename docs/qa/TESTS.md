@@ -18,6 +18,23 @@
 - [x] `progression_service_smoke.gd` vérifie les poids, la somme de 100 %, le transfert proposé par paliers de vagues et que le contexte affecte effectivement le résultat généré.
 - [ ] Pénalité de mort précoce et calibration des taux restent à définir/mesurer; cette implémentation ne les déclare pas validés.
 
+## P6.9 — Baseline synthétique de balance — 2026-10-16
+
+- [x] Commande : `tools/local/godot-4.7.2/Godot_v4.7.2-stable_linux.x86_64 --headless --audio-driver Dummy --path game --script res://tests/progression_balance_survey.gd`.
+- [x] Le script mesure 3 profils × 5 difficultés × 3 seeds (45 runs), avec les mêmes seeds par difficulté entre profils. Les profils sont construits dans `user://progression_balance_survey/`; les récompenses et sauvegardes normales sont désactivées. Les bonus affichés viennent du `ProgressionService` réel.
+- [x] Chaque run est immobile, sans invincibilité, accélérée à 4× moteur et 4× simulation; XP et coffres sont artificiellement à portée et le premier choix est pris automatiquement. La mesure s’arrête à la mort ou après 720 s simulées. Les durées ci-dessous sont les médianes simulées jusqu’à la mort; les éliminations sont aussi les médianes.
+
+| Profil | Easy | Normal | Hard | Nightmare | Chaos |
+|---|---:|---:|---:|---:|---:|
+| Neuf — survie / éliminations | 12,8 s / 8 | 9,6 s / 4 | 8,3 s / 1 | 7,5 s / 1 | 7,4 s / 0 |
+| Intermédiaire — survie / éliminations | 14,6 s / 12 | 9,6 s / 4 | 8,3 s / 1 | 7,5 s / 1 | 7,5 s / 0 |
+| Arbre complet — survie / éliminations | 13,7 s / 10 | 9,6 s / 4 | 8,3 s / 1 | 7,9 s / 1 | 7,5 s / 0 |
+
+- [x] Les 45 runs se terminent en vague 1. Les dégâts sortants moyens par seconde sont mesurés et imprimés par le script; ces résultats et la survie évoluent peu entre les builds à partir de Normal.
+- [ ] Ce protocole mesure un joueur immobile et une collecte artificiellement facilitée; il ne représente pas un parcours humain et ne permet pas de régler le tuning de difficulté. Aucun paramètre **[PROPOSÉ]** n’a été modifié sur cette seule base. Une calibration représentative et une durée de run complète restent requises pour P6.9.
+- [x] Le script s’exécute avec `-- --tier=fresh --difficulty=easy --replicates=1` pour un cas ciblé; `--replicates=N` accepte 1 à 10.
+- [x] Godot retourne le code 0, avec un avertissement ObjectDB de ressources encore référencées à la fermeture, également visible sur les parcours du harness; il n’affecte pas les résultats imprimés.
+
 ## P6.3 — Portée de ramassage équipement et XP — 2026-10-16
 
 - [x] `equipment_stats_smoke.gd` charge un seul bonus d’équipement par profil et lance une session Survival séparée par stat; vérifie HP, mobilité, dégâts, cadence, chance et dégâts critiques, soin par élimination, aire, cooldown, XP, portée de collecte et vitesse projectile.
