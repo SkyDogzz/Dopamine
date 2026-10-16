@@ -549,7 +549,8 @@ P1 livre le Sandbox développeur et ne remplace pas cette feature produit.
   - [x] Ajouter `sandbox_preset_service.gd` : schéma version 1 fermé, exemple minimal et modes Survival/Endless/Armorless.
   - [x] Exporter/importer JSON limité à 1 Mio et refuser champs inconnus, types et métadonnées invalides.
   - [x] Ajouter `DSLAB1:` avec DEFLATE, Base64URL, SHA-256 d’intégrité et décompression plafonnée; smoke de round-trip et corruption.
-  - [ ] Compléter les limites de profondeur/nombre d’éléments et brancher les exports au menu Sandbox.
+  - [x] Borner récursivement profondeur (16), collections (256 éléments chacune) et types JSON autorisés; tests hostiles ciblés.
+  - [ ] Brancher les exports au menu Sandbox et ajouter stockage/import interactifs.
   - [ ] Vérifier absence de script, chemin local et donnée privée.
 - [ ] **P8.4 — Import de sauvegarde**
   - [ ] Lire un profil normal en lecture seule.

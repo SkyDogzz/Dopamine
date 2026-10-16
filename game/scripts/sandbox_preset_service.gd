@@ -3,6 +3,8 @@ extends RefCounted
 const SCHEMA_VERSION := 1
 const MAX_JSON_BYTES := 1_048_576
 const MAX_SHARE_CODE_LENGTH := 2_000_000
+const MAX_NESTING_DEPTH := 16
+const MAX_COLLECTION_ITEMS := 256
 const SHARE_PREFIX := "DSLAB1:"
 const PRESET_KEYS := [
 	"schema_version", "preset_id", "name", "description", "base_mode",
@@ -27,6 +29,9 @@ func validate_preset(preset: Variant) -> Dictionary:
 	if not preset["overrides"] is Dictionary or not preset["flags"] is Dictionary or \
 			not preset["initial_build"] is Dictionary:
 		return _error("invalid_payload")
+	for key in ["overrides", "flags", "initial_build"]:
+		if not _valid_tree(preset[key], 0):
+			return _error("payload_limits_exceeded")
 	var json := JSON.stringify(preset)
 	if json.to_utf8_buffer().size() > MAX_JSON_BYTES:
 		return _error("too_large")
@@ -94,6 +99,27 @@ func _valid_identifier(value: Variant, max_length: int) -> bool:
 
 func _valid_text(value: Variant, max_length: int) -> bool:
 	return typeof(value) == TYPE_STRING and str(value).length() <= max_length
+
+func _valid_tree(value: Variant, depth: int) -> bool:
+	if depth > MAX_NESTING_DEPTH:
+		return false
+	if value is Dictionary:
+		if value.size() > MAX_COLLECTION_ITEMS:
+			return false
+		for key in value:
+			if typeof(key) != TYPE_STRING or not _valid_tree(value[key], depth + 1):
+				return false
+	elif value is Array:
+		if value.size() > MAX_COLLECTION_ITEMS:
+			return false
+		for item in value:
+			if not _valid_tree(item, depth + 1):
+				return false
+	elif typeof(value) == TYPE_FLOAT and not is_finite(value):
+		return false
+	elif typeof(value) not in [TYPE_NIL, TYPE_BOOL, TYPE_INT, TYPE_FLOAT, TYPE_STRING]:
+		return false
+	return true
 
 func _error(code: String) -> Dictionary:
 	return {"ok": false, "error": code}

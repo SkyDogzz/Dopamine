@@ -39,6 +39,21 @@ func _run() -> void:
 	if preset_service.import_json("{}".repeat(300000)).get("ok", false):
 		_fail("An oversized preset JSON payload must be rejected")
 		return
+	var too_many_overrides := preset.duplicate(true)
+	for index in range(257):
+		too_many_overrides["overrides"]["setting_%d" % index] = index
+	if preset_service.validate_preset(too_many_overrides).get("ok", false):
+		_fail("Preset override collections must reject excessive entries")
+		return
+	var too_deep := preset.duplicate(true)
+	var nested: Dictionary = too_deep["overrides"]
+	for _index in range(18):
+		var child := {}
+		nested["nested"] = child
+		nested = child
+	if preset_service.validate_preset(too_deep).get("ok", false):
+		_fail("Preset payloads must reject excessive nesting")
+		return
 	print("Sandbox preset smoke passed")
 	quit()
 

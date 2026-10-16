@@ -377,7 +377,7 @@ Pour le catalogue, la validation JSON et des références a aussi été vérifi�
 
 ## Progression et modes
 
-- [x] (2026-10-16) `sandbox_preset_smoke.gd` vérifie le round-trip du share code `DSLAB1:`, le schéma fermé, le rejet des champs de chemin, la détection d’une corruption et la limite JSON de 1 Mio. La limite de profondeur et le branchement UI restent à faire.
+- [x] (2026-10-16) `sandbox_preset_smoke.gd` vérifie le round-trip du share code `DSLAB1:`, le schéma fermé, le rejet des champs de chemin, la détection d’une corruption, la limite JSON de 1 Mio, profondeur 16 et collections de 256 éléments. Le branchement UI reste à faire.
 
 - [x] Survival : run intégrée aux durées nominales de 24 × 30 s (720 s simulées, accélérées ×4), timer arrêté pendant les deux boss et HP decay actif. Le harness augmente les HP du joueur pour isoler le déroulement, applique les dégâts de test aux placeholders et choisit automatiquement les chests ; il ne valide pas l'équilibrage.
 - [x] Une instance d'équipement permanente par run Survival, y compris défaite ; slot parmi les six validés et lignes sans statistique répétée. La rareté suit les tables par difficulté et progression de vague **[PROPOSÉES]**; pénalité de mort précoce non implémentée.
