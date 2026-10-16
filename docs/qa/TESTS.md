@@ -918,6 +918,7 @@ Note de clôture : le blocage historique du smoke `sandbox_ui_smoke.gd` décrit 
 ## P5 — Coexistence Burn/Poison et Toxic Ignition — 2026-10-16
 
 - [x] `native/tests/simulation_core_test.cpp` couvre Burn et Poison actifs simultanément sur une cible, leurs ticks sur horloges indépendantes, leur conservation lors de la capture/restauration, et l’observation du Poison préexistant par un impact direct Inferno qui ajoute Burn.
+- [x] Le même test natif applique maintenant un projectile Toxic Ignition avec dégâts de zone à une cible portant déjà Burn et Poison; il confirme les dégâts sur une cible voisine et la conservation des deux effets sur la cible déclencheuse après l’explosion. `simulation_core_tests` recompilé et exécuté avec code 0.
 - [x] `survival_weapon_catalog_smoke.gd` passe sous Godot 4.7.2 : Toxic Ignition part d’un impact direct appliquant le second statut, inflige 50 % du coup dans le rayon configuré, respecte le cooldown par cible et ignore les ticks DoT.
 - [ ] La victoire P5.V3 sans assistance et l’équilibrage de Toxic Ignition restent à vérifier en run réelle; les tests automatisés ne les remplacent pas.
 

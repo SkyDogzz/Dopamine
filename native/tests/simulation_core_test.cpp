@@ -544,6 +544,25 @@ int main() {
 			return event.is_damage_over_time && event.status_type == "poison";
 		}) == 1 && damage_over_time.entity(dual_status_target)->health.current == 23.0F,
 			"Burn and Poison should tick on their independent clocks and both damage the target");
+	SimulationCore toxic_ignition_statuses;
+	const auto ignition_source_target = toxic_ignition_statuses.spawn("chaser", 10.0F, 0.0F, 100.0F, 0.0F, 0.0F);
+	const auto ignition_splash_target = toxic_ignition_statuses.spawn("chaser", 20.0F, 0.0F, 100.0F, 0.0F, 0.0F);
+	toxic_ignition_statuses.apply_damage_over_time(ignition_source_target, 2.0F, 0.5, 2.0, "burn");
+	toxic_ignition_statuses.apply_damage_over_time(ignition_source_target, 3.0F, 1.0, 2.0, "poison");
+	toxic_ignition_statuses.spawn_projectile("toxic_ignition", 0.0F, 0.0F, 10.0F, 0.0F, 1.0,
+			0.0F, 0.0F, 0.0F, 0.0, 0.0, 60.0F, 1.0F);
+	const auto ignition_events = toxic_ignition_statuses.advance(0.01);
+	const auto ignited_source = toxic_ignition_statuses.entity(ignition_source_target);
+	require(ignited_source && ignited_source->damage_over_time_effects.size() == 2 &&
+			std::any_of(ignited_source->damage_over_time_effects.begin(), ignited_source->damage_over_time_effects.end(),
+					[](const auto &effect) { return effect.status_type == "burn"; }) &&
+			std::any_of(ignited_source->damage_over_time_effects.begin(), ignited_source->damage_over_time_effects.end(),
+					[](const auto &effect) { return effect.status_type == "poison"; }) &&
+			toxic_ignition_statuses.entity(ignition_splash_target)->health.current < 100.0F &&
+			std::any_of(ignition_events.begin(), ignition_events.end(), [](const auto &event) {
+				return event.type == dopamine::sim::CombatEventType::Damage && event.source_type == "toxic_ignition";
+			}),
+			"Toxic Ignition should damage its area while preserving Burn and Poison on the trigger target");
 	SimulationCore dual_status_restore;
 	const auto restorable_dual_target = dual_status_restore.spawn("chaser", 0.0F, 0.0F, 30.0F, 0.0F, 0.0F);
 	dual_status_restore.apply_damage_over_time(restorable_dual_target, 2.0F, 0.5, 2.0, "burn");
