@@ -806,6 +806,149 @@
         { "id": "gold", "threshold": 15, "rewards": {"damage_pct": 0.000075} },
         { "id": "diamond", "threshold": 50, "rewards": {"damage_pct": 0.0001} }
       ]
+    },
+    {
+      "id": "equipment_rarity_normal",
+      "category": "equipment",
+      "secret": false,
+      "metric": "equipment_rarity_normal",
+      "aggregation": "sum",
+      "tiers": [
+        { "id": "bronze", "threshold": 10, "rewards": {"damage_pct": 0.000025} },
+        { "id": "silver", "threshold": 25, "rewards": {"damage_pct": 0.00005} },
+        { "id": "gold", "threshold": 50, "rewards": {"damage_pct": 0.000075} },
+        { "id": "diamond", "threshold": 100, "rewards": {"damage_pct": 0.0001} }
+      ]
+    },
+    {
+      "id": "equipment_rarity_magic",
+      "category": "equipment",
+      "secret": false,
+      "metric": "equipment_rarity_magic",
+      "aggregation": "sum",
+      "tiers": [
+        { "id": "bronze", "threshold": 10, "rewards": {"damage_pct": 0.000025} },
+        { "id": "silver", "threshold": 25, "rewards": {"damage_pct": 0.00005} },
+        { "id": "gold", "threshold": 50, "rewards": {"damage_pct": 0.000075} },
+        { "id": "diamond", "threshold": 100, "rewards": {"damage_pct": 0.0001} }
+      ]
+    },
+    {
+      "id": "equipment_rarity_mystic",
+      "category": "equipment",
+      "secret": false,
+      "metric": "equipment_rarity_mystic",
+      "aggregation": "sum",
+      "tiers": [
+        { "id": "bronze", "threshold": 10, "rewards": {"damage_pct": 0.000025} },
+        { "id": "silver", "threshold": 25, "rewards": {"damage_pct": 0.00005} },
+        { "id": "gold", "threshold": 50, "rewards": {"damage_pct": 0.000075} },
+        { "id": "diamond", "threshold": 100, "rewards": {"damage_pct": 0.0001} }
+      ]
+    },
+    {
+      "id": "equipment_rarity_legendary",
+      "category": "equipment",
+      "secret": false,
+      "metric": "equipment_rarity_legendary",
+      "aggregation": "sum",
+      "tiers": [
+        { "id": "bronze", "threshold": 10, "rewards": {"damage_pct": 0.000025} },
+        { "id": "silver", "threshold": 25, "rewards": {"damage_pct": 0.00005} },
+        { "id": "gold", "threshold": 50, "rewards": {"damage_pct": 0.000075} },
+        { "id": "diamond", "threshold": 100, "rewards": {"damage_pct": 0.0001} }
+      ]
+    },
+    {
+      "id": "equipment_rarity_mythic",
+      "category": "equipment",
+      "secret": false,
+      "metric": "equipment_rarity_mythic",
+      "aggregation": "sum",
+      "tiers": [
+        { "id": "bronze", "threshold": 10, "rewards": {"damage_pct": 0.000025} },
+        { "id": "silver", "threshold": 25, "rewards": {"damage_pct": 0.00005} },
+        { "id": "gold", "threshold": 50, "rewards": {"damage_pct": 0.000075} },
+        { "id": "diamond", "threshold": 100, "rewards": {"damage_pct": 0.0001} }
+      ]
+    },
+    {
+      "id": "equipment_slot_helmet",
+      "category": "equipment",
+      "secret": false,
+      "metric": "equipment_slot_helmet",
+      "aggregation": "sum",
+      "tiers": [
+        { "id": "bronze", "threshold": 10, "rewards": {"damage_pct": 0.000025} },
+        { "id": "silver", "threshold": 25, "rewards": {"damage_pct": 0.00005} },
+        { "id": "gold", "threshold": 50, "rewards": {"damage_pct": 0.000075} },
+        { "id": "diamond", "threshold": 100, "rewards": {"damage_pct": 0.0001} }
+      ]
+    },
+    {
+      "id": "equipment_slot_armor",
+      "category": "equipment",
+      "secret": false,
+      "metric": "equipment_slot_armor",
+      "aggregation": "sum",
+      "tiers": [
+        { "id": "bronze", "threshold": 10, "rewards": {"damage_pct": 0.000025} },
+        { "id": "silver", "threshold": 25, "rewards": {"damage_pct": 0.00005} },
+        { "id": "gold", "threshold": 50, "rewards": {"damage_pct": 0.000075} },
+        { "id": "diamond", "threshold": 100, "rewards": {"damage_pct": 0.0001} }
+      ]
+    },
+    {
+      "id": "equipment_slot_gloves",
+      "category": "equipment",
+      "secret": false,
+      "metric": "equipment_slot_gloves",
+      "aggregation": "sum",
+      "tiers": [
+        { "id": "bronze", "threshold": 10, "rewards": {"damage_pct": 0.000025} },
+        { "id": "silver", "threshold": 25, "rewards": {"damage_pct": 0.00005} },
+        { "id": "gold", "threshold": 50, "rewards": {"damage_pct": 0.000075} },
+        { "id": "diamond", "threshold": 100, "rewards": {"damage_pct": 0.0001} }
+      ]
+    },
+    {
+      "id": "equipment_slot_boots",
+      "category": "equipment",
+      "secret": false,
+      "metric": "equipment_slot_boots",
+      "aggregation": "sum",
+      "tiers": [
+        { "id": "bronze", "threshold": 10, "rewards": {"damage_pct": 0.000025} },
+        { "id": "silver", "threshold": 25, "rewards": {"damage_pct": 0.00005} },
+        { "id": "gold", "threshold": 50, "rewards": {"damage_pct": 0.000075} },
+        { "id": "diamond", "threshold": 100, "rewards": {"damage_pct": 0.0001} }
+      ]
+    },
+    {
+      "id": "equipment_slot_amulet",
+      "category": "equipment",
+      "secret": false,
+      "metric": "equipment_slot_amulet",
+      "aggregation": "sum",
+      "tiers": [
+        { "id": "bronze", "threshold": 10, "rewards": {"damage_pct": 0.000025} },
+        { "id": "silver", "threshold": 25, "rewards": {"damage_pct": 0.00005} },
+        { "id": "gold", "threshold": 50, "rewards": {"damage_pct": 0.000075} },
+        { "id": "diamond", "threshold": 100, "rewards": {"damage_pct": 0.0001} }
+      ]
+    },
+    {
+      "id": "equipment_slot_ring",
+      "category": "equipment",
+      "secret": false,
+      "metric": "equipment_slot_ring",
+      "aggregation": "sum",
+      "tiers": [
+        { "id": "bronze", "threshold": 10, "rewards": {"damage_pct": 0.000025} },
+        { "id": "silver", "threshold": 25, "rewards": {"damage_pct": 0.00005} },
+        { "id": "gold", "threshold": 50, "rewards": {"damage_pct": 0.000075} },
+        { "id": "diamond", "threshold": 100, "rewards": {"damage_pct": 0.0001} }
+      ]
     }
   ]
 }

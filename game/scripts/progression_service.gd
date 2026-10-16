@@ -124,6 +124,10 @@ func award_survival_run(
 		return _award_error("achievement_catalog_invalid")
 	var metric_aggregations := _achievement_metric_aggregations()
 	var derived_metrics := ["total_kills", "highest_wave", "completed_runs", "boss_victories", "chaos_victories", "equipment_items_collected"]
+	for rarity in EQUIPMENT_GENERATOR_SCRIPT.RARITIES:
+		derived_metrics.append("equipment_rarity_%s" % rarity)
+	for slot in EQUIPMENT_GENERATOR_SCRIPT.SLOTS:
+		derived_metrics.append("equipment_slot_%s" % slot)
 	for metric_id in run_metrics:
 		var metric_value: Variant = run_metrics[metric_id]
 		if typeof(metric_id) != TYPE_STRING or metric_id in derived_metrics or not metric_aggregations.has(metric_id) or \
@@ -162,6 +166,8 @@ func award_survival_run(
 		"boss_victories": 1 if final_boss_vanquished else 0,
 		"chaos_victories": 1 if final_boss_vanquished and difficulty_id == "chaos" else 0,
 		"equipment_items_collected": 1,
+		"equipment_rarity_%s" % str(equipment["rarity"]): 1,
+		"equipment_slot_%s" % str(equipment["slot"]): 1,
 	}
 	metric_deltas.merge(run_metrics)
 	for metric_id in metric_deltas:
