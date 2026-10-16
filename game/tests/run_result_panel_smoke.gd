@@ -4,8 +4,11 @@ func _initialize() -> void:
 	call_deferred("_run")
 
 func _run() -> void:
+	var host := CenterContainer.new()
+	host.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	root.add_child(host)
 	var panel: Control = load("res://scenes/run_result_panel.tscn").instantiate()
-	root.add_child(panel)
+	host.add_child(panel)
 	await process_frame
 	if panel.theme == null:
 		_fail("Run result should use the shared UI theme")
@@ -57,13 +60,22 @@ func _run() -> void:
 	if rewards.text != "PROGRESSION SAVE FAILED":
 		_fail("A progression save error should stay distinct from an empty profile")
 		return
+	var long_reward := success_reward.duplicate(true)
+	long_reward["equipment"]["unique_effect_id"] = "pending_choice"
+	panel.show_result(true, 24, 605.0, 90, long_reward)
 	var original_size: Vector2i = root.size
-	for size in [Vector2i(960, 600), Vector2i(1280, 800), Vector2i(1600, 900)]:
+	for size in [Vector2i(640, 360), Vector2i(960, 600), Vector2i(1280, 720), Vector2i(1600, 900), Vector2i(1920, 1080)]:
 		root.size = size
 		await process_frame
-		if not Rect2(Vector2.ZERO, Vector2(size)).encloses(panel.get_global_rect()):
+		var visible_bounds := Rect2(Vector2.ZERO, panel.get_viewport().get_visible_rect().size)
+		var panel_bounds := panel.get_global_rect()
+		if not visible_bounds.encloses(panel_bounds):
 			_fail("Run result should fit viewport %s" % size)
 			return
+		for child in panel.get_node("Content").get_children():
+			if child is Control and child.visible and not panel_bounds.encloses((child as Control).get_global_rect()):
+				_fail("Run result content '%s' should stay inside the panel at viewport %s" % [child.name, size])
+				return
 	root.size = original_size
 	panel.queue_free()
 	await process_frame

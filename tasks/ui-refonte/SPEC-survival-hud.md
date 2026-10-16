@@ -12,6 +12,8 @@
 - **[PROPOSÉ]** Conserver seulement les informations déjà produites par les systèmes Survival. Aucun nouveau compteur, bonus ou comportement de combat n’est inventé pour remplir l’interface.
 - **[OUVERT]** Wireframe final, affichage du nombre d’ennemis et réglages VFX restent ouverts dans le GDD; ce module ne les tranche pas.
 
+La revue de layout 2026-10-16 confirme que le panneau de résultat existant reste centré et contenu jusqu’à 640×360 même avec la ligne d’effet unique longue. Ce test ne ferme pas le wireframe HUD global **[OUVERT]**.
+
 ## Objectif
 
 Refondre les interfaces directement liées à une run Survival — HUD, choix de coffre et résultat — pour rendre leur état immédiatement lisible et leur présentation cohérente avec le thème UI partagé, sans modifier les règles de simulation ou de progression.
