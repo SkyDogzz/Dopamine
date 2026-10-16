@@ -1,0 +1,63 @@
+name: Windows build
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "CMakeLists.txt"
+      - "native/**"
+      - "game/**"
+      - "tools/build_windows.ps1"
+      - ".github/workflows/build-windows.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: windows-2022
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download Godot 4.7.2
+        shell: pwsh
+        run: |
+          $archive = Join-Path $env:RUNNER_TEMP "godot-windows.zip"
+          $destination = Join-Path $env:RUNNER_TEMP "godot-windows"
+          Invoke-WebRequest "https://github.com/godotengine/godot/releases/download/4.7.2-stable/Godot_v4.7.2-stable_win64.exe.zip" -OutFile $archive
+          Expand-Archive -Path $archive -DestinationPath $destination
+          "GODOT_EXE=$destination/Godot_v4.7.2-stable_win64.exe" >> $env:GITHUB_ENV
+
+          $templatesArchive = Join-Path $env:RUNNER_TEMP "godot-templates.tpz"
+          $templatesExtracted = Join-Path $env:RUNNER_TEMP "godot-templates"
+          $templatesInstalled = Join-Path $env:APPDATA "Godot/export_templates/4.7.2.stable"
+          Invoke-WebRequest "https://github.com/godotengine/godot/releases/download/4.7.2-stable/Godot_v4.7.2-stable_export_templates.tpz" -OutFile $templatesArchive
+          Expand-Archive -Path $templatesArchive -DestinationPath $templatesExtracted
+          New-Item -ItemType Directory -Force -Path $templatesInstalled | Out-Null
+          Copy-Item -Path (Join-Path $templatesExtracted "templates/*") -Destination $templatesInstalled -Recurse -Force
+
+      - name: Build, import and verify the Windows GDExtension
+        shell: pwsh
+        run: .\tools\build_windows.ps1 -GodotExecutable $env:GODOT_EXE -NoLaunch -Export
+
+      - name: Launch exported Windows game headless
+        shell: pwsh
+        run: |
+          $launchOutput = & "build/windows/export/Dopamine Survivor.exe" --headless --quit-after 3 2>&1
+          $launchOutput | Write-Output
+          if ($LASTEXITCODE -ne 0) { throw "Exported Windows game failed with exit code $LASTEXITCODE" }
+          if ($launchOutput -match "GDExtension.*(not found|failed|unavailable)|Cannot get class 'CombatSimulation'") {
+            throw "Exported game did not load its GDExtension"
+          }
+
+      - name: Run native simulation tests
+        shell: pwsh
+        run: ctest --test-dir build/windows -C Debug --output-on-failure -R "^simulation_(core|worker)$"
+
+      - name: Upload runnable Godot project
+        uses: actions/upload-artifact@v4
+        with:
+          name: dopamine-survivor-windows-x86_64
+          path: |
+            build/windows/export/**

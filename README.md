@@ -45,6 +45,16 @@ Depuis l’accueil, `JOUER` ouvre le hub de préparation et lance une run Surviv
 En Survival, le HUD garde un aperçu des statistiques à gauche; Tab ouvre leur détail sans interrompre la run, et Échap le ferme avant d'ouvrir la pause. Le menu de pause propose une vitesse de run de ×0,25 à ×4, le verrouillage des dégâts et la sélection automatique de la première option des coffres. La simulation de combat et le temps Godot suivent ce multiplicateur; le jeu revient à ×1 à la sortie de la run.
 Le hub propose aussi `RUN TEMPORAIRE · SANS SAUVEGARDE` : cette partie démarre avec un profil vide en mémoire, en difficulté Easy, et ses récompenses de fin sont abandonnées sans modifier la sauvegarde normale.
 
+## Lancer sous Windows
+
+Prérequis : Godot 4.7.2 standard pour Windows x86_64, Visual Studio 2022 avec la charge de travail **Desktop development with C++**, CMake 3.21+ et Git dans le `PATH`. Depuis PowerShell à la racine du dépôt :
+
+```powershell
+.\tools\build_windows.ps1 -GodotExecutable "C:\Godot\Godot_v4.7.2-stable_win64.exe"
+```
+
+Le script configure le build MSVC x64, compile les GDExtensions debug et release dans `game/bin/windows`, importe le projet et exécute un smoke qui instancie la simulation native. Il ouvre ensuite le projet avec Godot; pour seulement compiler et vérifier, ajouter `-NoLaunch`. Ajouter `-Export` si les export templates 4.7.2 sont installés. Le workflow [GitHub Actions Windows](.github/workflows/build-windows.yml) installe ces templates, exporte puis lance un smoke headless de `Dopamine Survivor.exe`, et publie l’exécutable autonome comme artefact `dopamine-survivor-windows-x86_64`. Un build Windows natif n’a pas encore été exécuté depuis l’environnement Linux de développement; le runner CI doit fournir cette première validation.
+
 Vérifications ciblées :
 
 ```bash

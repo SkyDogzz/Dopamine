@@ -90,8 +90,9 @@ P6 a déjà du code anticipé, mais le chemin nominal reste P5 puis P6. P7 stand
   - [ ] Vérifier `.gitignore` pour les builds CMake, imports Godot et binaires de runtime.
   - [ ] Vérifier qu’un import/build ne laisse aucun fichier généré suivi par Git.
 - [ ] **P0.4 — Compatibilité Windows**
-  - [ ] Configurer puis compiler avec la chaîne Windows convenue.
-  - [ ] Lancer l’éditeur et confirmer le chargement de la GDExtension sous Windows.
+  - [x] Ajouter `tools/build_windows.ps1`, les entrées Windows debug/release du `.gdextension`, le preset x86_64 et `.github/workflows/build-windows.yml` pour build MSVC et export autonome.
+  - [ ] Exécuter le workflow sur un runner Windows et vérifier son artefact; le poste actuel est Linux et n’a pas MSVC/PowerShell.
+  - [ ] Confirmer le chargement interactif de la GDExtension sous Windows.
   - [ ] Consigner les écarts au build Linux sans changer la cible plateforme implicitement.
 - [ ] **P0.5 — Automatisation éventuelle**
   - [ ] Décider si les builds Linux/Windows doivent être automatisés.

@@ -1,5 +1,11 @@
 # Tests d'acceptation et validation
 
+## Préparation du build Windows — 2026-10-16
+
+- [x] Ajouter `tools/build_windows.ps1` pour configurer MSVC x64, compiler les GDExtensions debug/release, importer le projet et exécuter `sandbox_smoke.gd`.
+- [x] Ajouter un preset Windows Desktop x86_64 et le workflow `.github/workflows/build-windows.yml`; le runner installe les templates Godot, exporte le jeu autonome et teste son lancement headless avec les tests natifs C++.
+- [ ] Le binaire et le chargement Godot n’ont pas encore été exécutés sur Windows; validation réelle attendue du runner CI.
+
 ## Run Survival réelle — validation P5 partielle — 2026-10-16
 
 - [x] Depuis l’accueil et le hub, démarrage manuel d’une run Easy avec Lightning Conductor dans Godot 4.7.2; profil isolé par `XDG_DATA_HOME=/tmp/dopamine-p5-real-profile`.

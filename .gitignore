@@ -2,3 +2,4 @@
 /cmake-build-*/
 /game/.godot/
 /game/bin/linux/
+/game/bin/windows/

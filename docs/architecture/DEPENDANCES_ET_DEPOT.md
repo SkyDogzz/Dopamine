@@ -13,7 +13,7 @@
 | JSON | JSON Schema + validation runtime | ACCEPTÉ |
 | JSON C++ | nlohmann/json ou autre parseur validé | OUVERT |
 | Profiling | Godot profiler + Tracy + compteurs custom | ACCEPTÉ |
-| CI | GitHub Actions Windows + Linux | ACCEPTÉ |
+| CI | GitHub Actions Windows + Linux | ACCEPTÉ — workflow Windows compile et exporte le jeu x86_64; Linux reste à ajouter |
 | ECS externe | Aucun (ECS maison) | ACCEPTÉ |
 | Steamworks | Couche d'intégration optionnelle tardive | PROPOSÉ |
 
@@ -44,13 +44,13 @@ dopamine-survivor/
 ├── docs/{gdd,architecture,adr,planning,qa}/
 ├── scripts/
 ├── third_party/
-└── .github/workflows/{validate,build-windows,build-linux}.yml
+└── .github/workflows/build-windows.yml
 ```
 
 ## Pipeline CI recommandé
 
 1. Valider format et schémas JSON.
-2. Compiler C++23 et GDExtension Windows/Linux.
+2. Compiler C++23 et GDExtension Windows/Linux (workflow Windows présent; workflow Linux à ajouter).
 3. Exécuter tests ECS/physique/combat en C++.
 4. Démarrer Godot en mode headless pour tests d'intégration.
 5. Exécuter benchmark court non bloquant et comparer métriques à un baseline versionné.

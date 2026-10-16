@@ -6,7 +6,7 @@ include(CTest)
 include(FetchContent)
 
 set(GODOTCPP_API_VERSION "4.7" CACHE STRING "Godot API version" FORCE)
-set(GODOTCPP_TARGET "template_debug" CACHE STRING "godot-cpp target" FORCE)
+set(GODOTCPP_TARGET "template_debug" CACHE STRING "godot-cpp target")
 
 FetchContent_Declare(
     godot-cpp
@@ -137,4 +137,10 @@ set_target_properties(dopamine PROPERTIES
     PREFIX "lib"
     OUTPUT_NAME "dopamine${GODOTCPP_SUFFIX}"
     LIBRARY_OUTPUT_DIRECTORY "${PROJECT_SOURCE_DIR}/game/bin/${GODOTCPP_PLATFORM}"
+    RUNTIME_OUTPUT_DIRECTORY "${PROJECT_SOURCE_DIR}/game/bin/${GODOTCPP_PLATFORM}"
 )
+foreach(configuration IN ITEMS Debug Release RelWithDebInfo MinSizeRel)
+    set_target_properties(dopamine PROPERTIES
+        "RUNTIME_OUTPUT_DIRECTORY_${configuration}" "${PROJECT_SOURCE_DIR}/game/bin/${GODOTCPP_PLATFORM}"
+    )
+endforeach()
