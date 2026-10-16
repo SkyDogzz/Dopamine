@@ -189,3 +189,10 @@ focus_mode = 2
 theme_override_colors/font_color = Color(0.270588, 0.898039, 0.929412, 1)
 theme_override_font_sizes/font_size = 20
 text = "LANCER LA RUN  →"
+
+[node name="TemporaryLaunchButton" type="Button" parent="Content/Main/PreparationCard/Body"]
+custom_minimum_size = Vector2(0, 42)
+layout_mode = 2
+focus_mode = 2
+theme_override_font_sizes/font_size = 14
+text = "RUN TEMPORAIRE · SANS SAUVEGARDE"

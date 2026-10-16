@@ -48,6 +48,21 @@ func _run() -> void:
 			profile["achievement_progress"]["total_kills"] != 100:
 		_fail("Finishing the same run twice must not duplicate its persistent reward")
 		return
+	var temporary_session: Node2D = load("res://scenes/survival_session.tscn").instantiate()
+	temporary_session.progression_service = load("res://scripts/progression_service.gd").new(null, "temporary")
+	temporary_session.skip_starting_weapon_choice = true
+	temporary_session.spawn_initial_enemy = false
+	temporary_session.wave_spawning_enabled = false
+	temporary_session.weapon_enabled = false
+	root.add_child(temporary_session)
+	await process_frame
+	temporary_session._finish_run(true)
+	if temporary_session._run_result.get_node("Content/Rewards").text != "RUN SANS SAUVEGARDE" or \
+		save_service.load_slot("0")["payload"] != profile:
+		_fail("A temporary run should show no-save feedback and leave the normal profile untouched")
+		return
+	temporary_session.queue_free()
+	await process_frame
 	print("Survival progression smoke passed")
 	quit()
 

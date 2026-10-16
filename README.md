@@ -39,6 +39,7 @@ godot --path game
 
 Le premier lancement de l’éditeur importe le projet et vérifie la GDExtension. Le dernier lancement ouvre l’accueil. Le Sandbox développeur reste accessible par son entrée secondaire et fonctionne sans sauvegarde.
 Depuis l’accueil, `JOUER` ouvre le hub de préparation et lance une run Survival avec la difficulté choisie. Le bouton `PLAY SURVIVAL` du Sandbox développeur ouvre toujours le prototype et son choix d’arme initial, sans `SaveService` ni progression normale; `ACCUEIL` revient au menu.
+Le hub propose aussi `RUN TEMPORAIRE · SANS SAUVEGARDE` : cette partie démarre avec un profil vide en mémoire, en difficulté Easy, et ses récompenses de fin sont abandonnées sans modifier la sauvegarde normale.
 
 Vérifications ciblées :
 

@@ -32,7 +32,7 @@ func show_result(victory: bool, wave_number: int, active_seconds: float, kills: 
 	var total_seconds := int(floor(active_seconds))
 	_summary.text = "WAVE %02d  •  %02d:%02d  •  %d KILLS" % [wave_number, total_seconds / 60, total_seconds % 60, kills]
 	if reward.is_empty():
-		_rewards.text = "NO PROFILE ATTACHED"
+		_rewards.text = "RUN SANS SAUVEGARDE"
 		_equipment.text = ""
 		_achievement.text = ""
 	elif reward.get("ok", false):
