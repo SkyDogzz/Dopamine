@@ -344,8 +344,8 @@ Travail requis :
   - [x] Vérifier objets niveau max, slots pleins et arme niveau 5 sans relique. La relique garde ses offres même lorsque l’arme est niveau 5.
   - La pondération reste en attente : les synergies et leurs règles d’association ne sont pas encore validées dans P5.2.
 - [ ] **P5.3.2 — Pause et reprise**
-  - [ ] Suspendre simulation et horloge pendant le modal.
-  - [ ] Vérifier reprise après sélection, fermeture invalide et retour d’inventaire.
+  - [x] Suspendre la simulation et vérifier que ses horloges ne progressent pas pendant le modal; `survival_chest_smoke.gd` contrôle aussi l’horloge active affichée.
+  - [x] Vérifier la reprise après sélection dans `survival_chest_smoke.gd`; fermeture invalide et retour d’inventaire restent à couvrir.
 - [ ] **P5.3.3 — Évolution post-choix**
   - [ ] Vérifier l’évolution après ajout d’une arme.
   - [ ] Vérifier l’évolution après montée de niveau d’arme.

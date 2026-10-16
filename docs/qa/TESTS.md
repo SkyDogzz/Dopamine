@@ -20,6 +20,10 @@
 - [x] Vérifie aussi que les armes/évolutions déjà maximisées ne réapparaissent pas dans les offres.
 - [x] `survival_contact_damage_smoke.gd` couvre séparément le délai de contact corporel par ennemi et confirme que les projectiles ennemis ne partagent pas ce délai.
 
+## Pause du choix de coffre — 2026-10-16
+
+- [x] `survival_chest_smoke.gd` attend que l’interface ait rejoint le dernier snapshot, puis vérifie pendant 120 ms que la simulation, le temps actif affiché et l’état pause restent figés; il vérifie aussi la reprise après sélection.
+
 ## Hub Survival — état visuel des destinations inactives — 2026-10-16
 
 - [x] `survival_hub_smoke.gd` vérifie que Succès et Bestiaire utilisent le style atténué, restent activables au focus et gardent le cadre de focus partagé; ils ne sont pas désactivés.

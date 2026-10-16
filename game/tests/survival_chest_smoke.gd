@@ -142,6 +142,23 @@ func _run() -> void:
 	if opened.is_empty():
 		_fail("An eligible enemy chest drop should be collected and open the three-choice modal")
 		return
+	var settled_chest: Dictionary = await _wait_until(session, func(snapshot: Dictionary) -> bool:
+		return snapshot["paused"] and is_equal_approx(session._last_simulation_time, float(snapshot["simulation_time"]))
+	)
+	if settled_chest.is_empty():
+		_fail("Survival HUD clocks should catch up to the paused chest snapshot")
+		return
+	var chest_open_time: float = float(settled_chest["simulation_time"])
+	var chest_open_active_time: float = session.player_active_time
+	await create_timer(0.12).timeout
+	var during_chest: Dictionary = session.simulation.snapshot()
+	if not during_chest["paused"] or not is_equal_approx(float(during_chest["simulation_time"]), chest_open_time) or \
+			not is_equal_approx(session.player_active_time, chest_open_active_time):
+		_fail("Opening a chest should freeze both clocks: sim %.6f→%.6f, active %.6f→%.6f, paused=%s" % [
+			chest_open_time, float(during_chest["simulation_time"]), chest_open_active_time,
+		session.player_active_time, str(during_chest["paused"]),
+		])
+		return
 	if session.get_node("HUD/ChestOverlay/ChestChoice/Content/Title").text != "WEAPON CHEST — CHOOSE ONE":
 		_fail("Collected weapon chests should identify their item type in the heading")
 		return
