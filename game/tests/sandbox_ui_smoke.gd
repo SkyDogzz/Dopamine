@@ -17,7 +17,7 @@ func _run() -> void:
 	await process_frame
 	assert(sandbox.theme == load("res://themes/dopamine_ui.tres"), "Sandbox should use the shared UI theme")
 	var metrics: GridContainer = sandbox.get_node("Shell/Content/MainColumn/Metrics/MetricRow")
-	assert(metrics.columns == 4, "Sandbox metrics should wrap into a readable compact grid")
+	assert(metrics.columns == 2, "Sandbox metrics should wrap into a readable two-column grid at 640x360")
 	assert(sandbox.get_node("Shell/Content/MainColumn/SimulationView").clip_contents,
 		"Simulation entities should stay clipped to the playfield")
 	assert(sandbox.get_node("Shell/Header/HomeButton").has_focus(), "Sandbox should start with a visible keyboard focus")

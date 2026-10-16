@@ -29,8 +29,9 @@ layout_mode = 2
 theme_override_constants/separation = 14
 
 [node name="Title" type="Label" parent="Panel/Content"]
+theme_type_variation = &"PixelHeading"
 layout_mode = 2
-theme_override_font_sizes/font_size = 24
+theme_override_font_sizes/font_size = 8
 text = "SKILL TREE  •  PROTOTYPE"
 horizontal_alignment = 1
 

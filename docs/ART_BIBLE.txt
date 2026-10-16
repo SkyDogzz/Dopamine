@@ -1,0 +1,357 @@
+DOPAMINE SURVIVOR — ART BIBLE
+Version : 1.1 (palette HEX, résolution logique et convention spritesheets validées)
+Date : 2026-10-16
+Statut : document de référence artistique pour artistes, Codex, outils de génération et intégration Godot.
+
+CONVENTIONS
+[VALIDÉ] Décision explicite du propriétaire du projet. Obligatoire jusqu'à révision.
+[PROPOSÉ] Recommandation de production, non approuvée ; ne pas la présenter comme une contrainte.
+[À CONFIRMER] Question ouverte, aucun choix présumé.
+[ATTENTION] Risque de contradiction, ambiguïté ou compromis à traiter.
+Les dimensions indiquent les dimensions en pixels de la source, sauf mention contraire.
+
+======================================================================
+1. IDENTITÉ ARTISTIQUE — PHASE 1 [VALIDÉ]
+======================================================================
+1. Preset directeur : Neon Arcade.
+2. Rendu général : pixel art strict + VFX modernes.
+3. Sprite du joueur : 32 × 32 pixels.
+4. Taille des tiles : 16 × 16 pixels.
+5. Perspective : top-down (vue du dessus, et non 3/4 ou isométrique).
+6. Proportions : chibi léger.
+7. Palette : palette néon contrôlée.
+8. Contours : bleu nuit.
+9. VFX : élevés et contextuels.
+10. Interface : pixel arcade sobre.
+11. Écran titre : ville néon pixelisée.
+12. Priorité transversale : lisibilité prioritaire.
+
+NOTE DE COMPTAGE : la phase 1 était désignée dans l'échange comme « 11 décisions ».
+Elle comprend 11 champs de questionnaire (rendu, sprite, tiles, perspective,
+proportions, palette, contours, VFX, interface, écran titre, priorité), plus le
+nom du preset Neon Arcade, qui sert d'étiquette et non de décision supplémentaire.
+
+PRINCIPE DIRECTEUR
+Les silhouettes, projectiles, ennemis et informations de gameplay doivent rester
+immédiatement identifiables malgré une action dense et de nombreux effets.
+L'intensité visuelle vient des animations et VFX contextuels, sans altérer la
+précision du pixel art des assets sources.
+
+======================================================================
+2. PALETTE ET COULEURS — PHASE 2 [VALIDÉ]
+======================================================================
+- Palette maître : 32 couleurs.
+- Couleurs néon dominantes : cyan, magenta et jaune.
+- Fond des arènes : variable entre violet et bleu nuit.
+- Couleurs par sprite de 32 × 32 : 16 maximum.
+- Ombres : deux teintes.
+- Glow : VFX uniquement (pas de glow pré-rendu dans les sprites sources).
+- Code couleur des dégâts : par élément.
+
+[PROPOSÉ] Enregistrer la palette maître en .gpl ou .ase et versionner ses codes HEX.
+[PROPOSÉ] Tester la palette validée dans une scène réelle avant la production en série.
+[PROPOSÉ] Réserver des valeurs de luminance contrastées aux silhouettes et
+aux télégraphes de danger, même lorsque leurs teintes diffèrent.
+[VALIDÉ] Les 32 couleurs HEX figurent dans la section 12.
+[À CONFIRMER] Liste des éléments de dégâts et correspondance couleur/élément.
+[À CONFIRMER] Définition opérationnelle des « deux teintes » d'ombre :
+deux teintes sombres en plus de la base, ou deux valeurs au total ?
+
+======================================================================
+3. PERSONNAGES ET ENNEMIS — PHASE 2 [VALIDÉ]
+======================================================================
+- Personnage principal : petit personnage arcade.
+- Directions d'animation : 4 (haut, bas, gauche, droite).
+- Animation de marche : 4 frames.
+- Animation idle : 4 frames.
+- Ennemis communs : mélange de monstres et de machines.
+- Taille des ennemis communs : variable de 16 × 16 à 32 × 32.
+- Boss : 96 × 96.
+- Élites : aura + symbole distinctif.
+- Mort des ennemis : explosion de pixels.
+
+[PROPOSÉ] Chaque classe d'ennemi possède une silhouette reconnaissable
+indépendamment de sa couleur et de son aura.
+[PROPOSÉ] Les sprites source conservent des contours nets d'un pixel logique ;
+la taille des effets d'aura est indépendante de celle du sprite.
+[À CONFIRMER] Personnages jouables additionnels, skins et règles de variation.
+[À CONFIRMER] Le 96 × 96 des boss est-il une taille fixe pour tous les boss,
+ou une taille standard autorisant des exceptions ?
+[À CONFIRMER] Durées en millisecondes des frames idle/marche et vitesses
+par état (4 frames ne déterminent pas une durée d'animation).
+[À CONFIRMER] Règles de retournement gauche/droite pour les sprites asymétriques.
+
+======================================================================
+4. ARMES, ATTAQUES ET VFX — PHASE 2 [VALIDÉ]
+======================================================================
+- Projectiles : sprites nets avec traînées néon.
+- Impacts : effets adaptatifs selon la puissance.
+- Évolution des armes : transformation visuelle complète.
+- Screen shake : intensité proportionnée à la puissance des attaques.
+- Hitstop : 2 à 3 frames sur les gros coups.
+- Affichage des dégâts : critiques + totaux agrégés.
+- Animations de récompense : spectaculaires selon la rareté.
+- Synchronisation musicale : boss et évolutions.
+
+[PROPOSÉ] Distinguer le sprite projectile (pixel art net) de sa traînée
+(VFX moderne), pour garantir une lecture claire de sa trajectoire.
+[PROPOSÉ] Appliquer un budget adaptatif de particules et fusionner les
+impacts similaires lorsque l'écran est très chargé.
+[PROPOSÉ] Fournir des paramètres indépendants pour screen shake, flash,
+particules et intensité des récompenses.
+[À CONFIRMER] Échelle d'intensité par type d'attaque et plafonds de shake.
+[À CONFIRMER] Le hitstop de 2–3 frames dépend-il du framerate de rendu ou
+d'une durée fixe en millisecondes ? Une durée fixe est recommandée.
+[À CONFIRMER] Règles de transformation de chaque arme à l'évolution.
+[À CONFIRMER] Animations et couleurs des dégâts critiques, soins et statuts.
+
+======================================================================
+5. INTERFACE ET BOUTONS — PHASE 2 [VALIDÉ]
+======================================================================
+- Boutons principaux : rectangles bordés.
+- Survol : contour lumineux et agrandissement.
+- Appui : décalage visuel de 2 pixels.
+- Désactivé : gris sombre.
+- Titres : police pixel épaisse.
+- Textes : police moderne ; titres en pixel art.
+- Panneaux : fond opaque avec bordure.
+- HUD en combat : minimaliste, dans les coins.
+- Menus : transitions pixel rapides.
+
+[PROPOSÉ] Définir des états de bouton normal, hover, pressed, disabled,
+focused (clavier/manette) avec la même grille de pixels.
+[PROPOSÉ] Conserver des cibles interactives suffisamment grandes, même si
+leur contour visuel est pixelisé.
+[À CONFIRMER] Polices exactes, licences, tailles et hiérarchie typographique.
+[À CONFIRMER] Dimensions des boutons, marges, espacements et épaisseurs de bordure.
+[À CONFIRMER] Contenu et placement précis du HUD (HP, XP, timer, armes,
+reliques, progression de vague, etc.).
+[À CONFIRMER] Navigation clavier/manette et état de focus visible.
+
+======================================================================
+6. ÉCRAN TITRE ET ENVIRONNEMENTS — PHASE 2 [VALIDÉ]
+======================================================================
+- Écran titre : logo + skyline.
+- Ville néon : toits de gratte-ciel.
+- Animation du décor : enseignes clignotantes.
+- Menu principal : colonne verticale à gauche.
+- Environnements de jeu : biomes variés.
+- Détails au sol : très faibles.
+- Éléments interactifs du décor : aucun au départ.
+
+[PROPOSÉ] Garder les sols plus sombres et moins contrastés que les ennemis,
+les projectiles et les objets ramassables.
+[PROPOSÉ] Les biomes changent l'ambiance et les couleurs de fond tout en
+conservant les règles communes de lisibilité et la palette de référence.
+[À CONFIRMER] Liste, ordre et identité de chaque biome.
+[VALIDÉ] Résolution logique 640 × 360, format 16:9.
+[À CONFIRMER] Mise en page responsive du menu titre.
+[À CONFIRMER] Animation exacte de la skyline et limites des clignotements.
+
+======================================================================
+7. PRODUCTION DES ASSETS — PHASE 2 [VALIDÉ]
+======================================================================
+- Spritesheets : grille lignes / colonnes.
+[VALIDÉ] Un fichier par animation ; une ligne par direction (haut, bas, gauche, droite), une colonne par frame.
+[À CONFIRMER] Ordre exact des lignes et règles pour animations avec des nombres de frames différents.
+- Livraison : PNG + fichier source Aseprite.
+- Palette : exceptions autorisées uniquement si documentées.
+- Validation automatique : complète, animations comprises.
+- Retouche humaine : correction des assets importants.
+- Réalisation des effets : réglages utilisateur + adaptation automatique.
+- Première priorité de production : scène de combat complète.
+
+[PROPOSÉ] Organisation des fichiers :
+  assets/source/<category>/<asset_name>.aseprite
+  assets/export/<category>/<asset_name>.png
+  assets/meta/<category>/<asset_name>.json
+  docs/art/palette_master.*
+  docs/art/asset_exceptions.txt
+Le JSON est ici un fichier technique interne proposé ; la livraison obligatoire
+validée demeure PNG + source Aseprite.
+
+[PROPOSÉ] Convention de nommage : snake_case, avec préfixe de catégorie.
+[PROPOSÉ] Métadonnées d'animation : largeur/hauteur frame, lignes/colonnes,
+nom d'animation, ordre des frames, durée, origine/pivot et collision.
+[PROPOSÉ] Validateur automatique : dimensions, transparence, couleurs,
+exceptions, découpage de spritesheet, cohérence des frames, noms, fichiers
+sources manquants, absence d'anti-aliasing involontaire, compatibilité Godot.
+[ATTENTION] La validation de cohérence artistique ne peut pas être entièrement
+réduite à des tests techniques : un contrôle visuel reste nécessaire.
+[À CONFIRMER] Format exact des fichiers Aseprite (.ase ou .aseprite).
+[À CONFIRMER] Structure et sens des lignes/colonnes pour chaque animation.
+[À CONFIRMER] Outil de génération (PixelLab, Scenario, autre) et droits d'usage.
+[À CONFIRMER] Règles de validation visuelle et seuil d'acceptation.
+
+======================================================================
+8. CONTRATS DE RENDU ET DE LISIBILITÉ
+======================================================================
+[VALIDÉ] Pixel art strict pour les assets sources.
+[VALIDÉ] VFX modernes autorisés, élevés mais contextuels.
+[VALIDÉ] Glow limité aux VFX.
+[VALIDÉ] Lisibilité prioritaire.
+[VALIDÉ] Effets réglables et adaptatifs.
+
+[PROPOSÉ] Filtrage nearest-neighbor pour les textures pixel art.
+[PROPOSÉ] Pas d'anti-aliasing, de flou, de dégradé lissé ni de faux détail
+« pixel art » dans les sprites sources.
+[PROPOSÉ] Les VFX modernes peuvent utiliser shaders, transparence et
+composition additive, mais ne doivent pas masquer les télégraphes de danger.
+[PROPOSÉ] Mettre en place un mode de réduction des flashes et une option
+pour désactiver les secousses de caméra.
+[PROPOSÉ] Tester la lisibilité sur une scène de combat chargée, pas seulement
+sur des assets isolés ou des captures d'écran de menus.
+[VALIDÉ] Résolution logique du jeu : 640 × 360 pixels (16:9).
+[PROPOSÉ] Affichage 1920 × 1080 avec mise à l’échelle entière ×3, filtre nearest.
+[À CONFIRMER] Zoom caméra et politique pixel-perfect lors des mouvements sous-pixel.
+[À CONFIRMER] Plateformes cibles et budgets de performances.
+
+======================================================================
+9. RISQUES DE CONTRADICTION ET ARBITRAGES
+======================================================================
+A. Pixel art strict + VFX modernes + glow uniquement dans les VFX.
+   Statut : COMPATIBLE si sprites et VFX sont deux couches distinctes.
+   Ne pas intégrer de halo flou dans les PNG des sprites.
+
+B. Palette maître 32 couleurs + exceptions documentées.
+   Statut : COMPATIBLE. La palette est la référence, non une interdiction
+   absolue de toute couleur extérieure. Chaque exception doit être justifiée.
+
+C. Maximum 16 couleurs par sprite 32×32 + deux teintes d'ombre.
+   Statut : COMPATIBLE, sous réserve de définir comment sont comptées les
+   teintes d'ombre, le contour et les éventuelles variantes.
+
+D. Lisibilité prioritaire + VFX élevés + récompenses spectaculaires.
+   Statut : TENSION DE DESIGN, non contradiction logique.
+   Nécessite des plafonds, une hiérarchie de priorité visuelle et des réglages.
+
+E. Sprite joueur 32×32 + top-down + chibi léger.
+   Statut : COMPATIBLE. Une feuille de référence est nécessaire pour éviter
+   que les générateurs produisent du 3/4 top-down à la place.
+
+F. HUD minimaliste + nombreuses armes, reliques et informations de combat.
+   Statut : TENSION DE DESIGN. Définir quelles informations restent visibles
+   et lesquelles sont contextuelles ou consultables dans un menu.
+
+G. Biomes variés + palette maître de 32 couleurs.
+   Statut : COMPATIBLE avec accents, combinaisons et exceptions documentées.
+   Nécessite de définir les palettes par biome.
+
+H. Hitstop « 2–3 frames » + framerate variable.
+   Statut : AMBIGUÏTÉ TECHNIQUE. Privilégier une durée temporelle explicite
+   pour obtenir un ressenti stable indépendamment des FPS.
+
+I. Agrandissement au hover + UI pixel-perfect.
+   Statut : TENSION TECHNIQUE. Définir si l'agrandissement s'effectue par
+   paliers entiers, par animation de conteneur ou via un rendu distinct.
+
+Aucune contradiction bloquante n'est identifiée parmi les choix explicites.
+
+======================================================================
+10. QUESTIONS RESTANTES — ORDRE RECOMMANDÉ
+======================================================================
+PRIORITÉ HAUTE (avant génération en série)
+1. [RÉSOLU] Résolution logique : 640 × 360 (16:9).
+2. [RÉSOLU] Palette maître : 32 codes HEX fixés en section 12.
+3. Quel est le modèle visuel exact du joueur : silhouette, vêtements, visage,
+   orientations et références ?
+4. Quels sont les premiers ennemis, boss et armes à produire pour la scène test ?
+5. [PARTIELLEMENT RÉSOLU] Un fichier par animation, lignes par direction, colonnes par frame. Quel ordre des directions et quelle politique de frames manquantes ?
+6. Quels sont les pivots et points d'ancrage des sprites ?
+7. Quels éléments de gameplay doivent toujours rester visibles dans le HUD ?
+8. Quelle est la première arène/biome du prototype ?
+9. Quelles sont les règles de contraste et de télégraphie des attaques ennemies ?
+10. Quel niveau maximal de VFX est acceptable en combat chargé ?
+
+PRIORITÉ MOYENNE (avant industrialisation)
+11. Quelle est la palette secondaire de chaque biome ?
+12. Quels sont les éléments de dégâts et leurs couleurs ?
+13. Quelles polices exactes utiliser pour les titres et textes ?
+14. Quels sont les timings d'animation en millisecondes ?
+15. Quelles sont les durées/limites du hitstop et du screen shake ?
+16. Quelles conventions de fichiers, formats sources et métadonnées adopter ?
+17. Quel générateur d'assets et quelle méthode de contrôle qualité utiliser ?
+18. Quelles exceptions à la palette sont autorisées, par qui et comment ?
+19. Quelle politique d'accessibilité pour les flashes et clignotements ?
+20. Quelle compatibilité et quelles cibles de performances pour Godot ?
+
+PRIORITÉ BASSE (après premier prototype jouable)
+21. Quels skins et variantes de personnages ?
+22. Quelles animations spéciales de victoire, défaite et évolution ?
+23. Quelle animation détaillée pour les récompenses rares ?
+24. Quels comportements lumineux et musicaux pour les écrans de menu ?
+25. Quelle stratégie de variations visuelles des boss et élites ?
+
+======================================================================
+11. BRIEF DE PRODUCTION POUR UN AGENT / ARTISTE
+======================================================================
+Créer des assets de Dopamine Survivor dans le style Neon Arcade.
+Respecter toutes les lignes [VALIDÉ] du présent document.
+Ne pas transformer une ligne [PROPOSÉ] en exigence sans approbation.
+Demander une clarification lorsqu'un point [À CONFIRMER] est indispensable.
+Pour les sprites : vrai pixel art, top-down, silhouettes nettes, contours bleu
+nuit, palette maître 32 couleurs, au plus 16 couleurs par sprite 32×32,
+sources Aseprite et PNG exporté, pas de glow incorporé dans les sprites.
+Pour les effets : VFX modernes, contextuels, adaptatifs, compatibles avec
+les réglages de réduction d'effets et avec une lisibilité prioritaire.
+Pour l'UI : arcade sobre, boutons rectangulaires bordés, textes lisibles.
+Produire en premier une scène de combat complète représentative.
+Vérifier techniquement ET visuellement les assets avant intégration.
+
+
+======================================================================
+12. ADDENDUM v1.1 — SPÉCIFICATIONS VALIDÉES
+======================================================================
+
+12.1 PALETTE MAÎTRE [VALIDÉ]
+Palette de référence de 32 couleurs HEX, par groupe fonctionnel :
+  Ombres et contours : #080B18, #10152B, #1B2340, #293354, #3D4868, #586381, #7B87A2, #A5AEC3
+  Neutres et lumières : #D4D9E8, #F6F7FF, #37314F, #59476F, #826999, #AD91BB, #D2B9D9, #EEDCF4
+  Cyan et bleu : #075A80, #087FB2, #0EB8D4, #37E8F5
+  Magenta et violet : #7623A8, #A52DCA, #E13ACB, #FF75E3
+  Jaune et orange : #A85B19, #E69825, #FFD447, #FFF19A
+  Accents secondaires : #158C62, #48E69B, #C83B62, #FF7181
+
+RÈGLES :
+- Les sprites 32×32 utilisent au maximum 16 couleurs distinctes.
+- Les exceptions à la palette maître restent possibles si documentées.
+- Les couleurs ci-dessus sont les références, pas des valeurs de glow à précuire dans les sprites.
+- Les correspondances élément -> couleur restent [À CONFIRMER].
+
+12.2 RÉSOLUTION LOGIQUE [VALIDÉ]
+- Surface de rendu logique : 640 × 360 pixels, format 16:9.
+- Exemple de sortie : 1920 × 1080 à l'échelle entière ×3.
+- Filtrage nearest, gestion des écrans non 16:9 et zoom caméra :
+  [PROPOSÉ / À CONFIRMER selon le paramètre].
+- Attention : un joueur de 32×32 occupe 5 % de la hauteur logique
+  (32/360 ≈ 8,9 %) ; vérifier sa lisibilité en situation.
+
+12.3 SPRITESHEETS [VALIDÉ]
+- Un fichier de spritesheet par animation (ex. player_walk.png, player_idle.png).
+- Chaque ligne représente une direction ; chaque colonne une frame.
+- Joueur : frame 32×32, 4 directions, 4 frames de marche et 4 d'idle.
+- Pour une animation de 4 frames et 4 directions : feuille 128×128 pixels.
+- L'ordre exact des directions dans les lignes est [À CONFIRMER].
+- Les animations ayant des durées différentes et les sprites plus grands
+  nécessitent des métadonnées et des règles à définir.
+- Source Aseprite et PNG exporté obligatoires, selon la phase 2.
+
+12.4 VÉRIFICATION DES CONTRADICTIONS
+- Palette maître fixe vs exceptions documentées : COMPATIBLE.
+- Pixel art strict vs VFX modernes : COMPATIBLE si les VFX restent séparés.
+- Résolution 640×360 vs sprites 32×32 : COMPATIBLE ; la lisibilité
+  dépendra du zoom, de la caméra et de la densité d'ennemis.
+- Un fichier par animation vs grille lignes/colonnes : COMPATIBLE.
+- Glow VFX uniquement vs survol de bouton lumineux : COMPATIBLE
+  si l'effet est rendu dynamiquement et non précuit dans le sprite UI.
+- Aucun conflit bloquant nouveau.
+
+12.5 QUESTIONS RESTANTES PRIORITAIRES
+1. Ordre des lignes de direction (haut/bas/gauche/droite).
+2. Règles de transparence, pivots, alignement et padding des frames.
+3. Mise à l'échelle et letterboxing sur les écrans non 16:9.
+4. Politique de caméra pixel-perfect et de zoom.
+5. Correspondance des éléments de dégâts aux couleurs.
+6. Première scène de référence pour tester les 32 couleurs.
+
+FIN DU DOCUMENT

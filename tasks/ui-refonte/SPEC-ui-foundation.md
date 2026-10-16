@@ -1,11 +1,13 @@
 # Spec : `ui-foundation`
 
+La direction visuelle de référence est [`docs/ART_BIBLE.txt`](../../docs/ART_BIBLE.txt) v1.1. Ses décisions **[VALIDÉES]** priment sur les hypothèses UI historiques de cette spec; ses recommandations **[PROPOSÉES]** et questions **[À CONFIRMER]** restent distinctes.
+
 **Statut : implémentée et livrée.** La spec a été validée dans la conversation; les critères automatisables sont vérifiés. Le parcours matériel souris/manette reste non vérifié faute de périphériques.
 
 ## Hypothèses
 
 1. Le thème réutilise les contrôles natifs Godot `Control` et les assets déjà présents; aucune dépendance UI externe n’est nécessaire.
-2. Le viewport logique reste à 1280×800 avec le stretch actuel (`canvas_items`, aspect `expand`). Les layouts doivent suivre la taille disponible sans redéfinir cette résolution.
+2. Le viewport logique est 640×360 (16:9), décision **[VALIDÉE]** dans `docs/ART_BIBLE.txt` v1.1. Le rendu conserve le stretch Godot `canvas_items`, aspect `expand`; la fenêtre par défaut est 1280×720 (échelle ×2).
 3. En l’absence de maquettes externes, l’interface Sandbox actuelle sert de référence matérielle pour la palette pixel art néon; elle sera simplifiée et clarifiée, pas copiée telle quelle.
 4. Ce module fournit les règles visuelles et de focus communes. Chaque module d’écran reste responsable de connecter ces règles à ses propres contrôles et comportements.
 
@@ -22,7 +24,7 @@ Donner à toutes les interfaces une base visuelle et d’interaction cohérente,
 
 ## Critères d’acceptation
 
-- [x] Un thème partagé fournit les couleurs, styles de texte, panneaux, boutons, champs et espacements nécessaires aux écrans de la carte.
+- [x] Un thème partagé fournit la palette, les styles de texte, les panneaux opaques, les boutons rectangulaires, les champs et espacements nécessaires aux écrans de la carte; titres en police bitmap Press Start 2P et corps de texte sans-serif.
 - [x] Les styles distinguent au minimum les états normal, survol, pressé, focus et désactivé; le focus clavier/manette est visible sans dépendre uniquement de la couleur.
 - [ ] Un parcours d’exemple utilisant les composants partagés se parcourt à la souris, au clavier et à la manette avec activation cohérente.
 - [x] Les conteneurs et composants s’adaptent au viewport étendu; aucune géométrie d’écran complet ne repose uniquement sur des positions absolues.
@@ -76,14 +78,14 @@ Les contrôles réutilisables restent composés de Nodes Godot natifs. Ne pas re
 
 - Importer le projet sous Godot headless pour détecter les erreurs de ressource et de script.
 - Ajouter un smoke ciblé seulement si une propriété de thème ou de focus peut être vérifiée de façon fiable sans fenêtre.
-- Lancer le jeu fenêtré à 1280×800 et à une taille plus petite ainsi qu’une plus grande; vérifier débordement, lisibilité, redimensionnement et focus.
+- Lancer le jeu fenêtré à 1280×720 (échelle entière ×2), à une taille plus petite ainsi qu’une plus grande; vérifier débordement, lisibilité, redimensionnement et focus.
 - Parcourir un écran représentatif uniquement à la souris, uniquement au clavier et uniquement à la manette; vérifier le focus visible et l’activation.
 - Lors de l’intégration, lancer les tests pertinents après changement et la suite complète au checkpoint de la fondation.
 
 ## Limites
 
 - **Toujours :** utiliser `Control` et `InputMap`; conserver les actions de mouvement existantes; réutiliser le thème/composants lorsqu’ils sont déjà suffisants; garder un focus visible; vérifier les changements de rendu.
-- **Demander avant :** ajouter une dépendance UI, changer le viewport logique ou modifier un contrat de sauvegarde/progression.
+- **Demander avant :** ajouter une dépendance UI ou modifier un contrat de sauvegarde/progression. Le viewport 640×360 est désormais **[VALIDÉ]** par l’Art Bible.
 - **Ne jamais :** donner au Sandbox un accès à `SaveService`; coder en dur des données de gameplay dans le thème; présenter des valeurs **[PROPOSÉES]** comme validées; ajouter des fonctions Succès/Bestiaire au nom de la cohérence UI.
 
 ## Hors périmètre

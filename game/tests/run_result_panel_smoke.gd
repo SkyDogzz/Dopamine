@@ -16,8 +16,8 @@ func _run() -> void:
 	panel.show_result(false, 4, 65.8, 12)
 	if panel.get_node("Content/Title").text != "RUN OVER" or \
 		not summary.text.contains("WAVE 04") or not summary.text.contains("01:05") or \
-		not summary.text.contains("12 KILLS") or rewards.text != "NO PROFILE ATTACHED":
-		_fail("A run without progression should show its defeat summary without invented rewards")
+		not summary.text.contains("12 KILLS") or rewards.text != "RUN SANS SAUVEGARDE":
+		_fail("A run without progression should clearly identify its no-save result")
 		return
 	var restart := panel.get_node("Content/RestartButton") as Button
 	if root.gui_get_focus_owner() != restart:

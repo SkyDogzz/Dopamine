@@ -37,24 +37,12 @@ func _ready() -> void:
 		push_error("CombatSimulation GDExtension class is unavailable")
 		return
 
-	var enemy_icons := {
-		"chaser": "enemy_chaser",
-		"sprinter": "enemy_sprinter",
-		"tank": "enemy_tank",
-		"shooter": "enemy_shooter",
-		"buffer": "enemy_buffer.svg",
-		"exploder": "enemy_exploder.svg",
-		"shielder": "enemy_shielder.svg",
-		"summoner": "enemy_summoner.svg",
-		"summoned": "enemy_summoned.svg",
-		"elite": "enemy_sprinter",
-	}
-	for entity_type in enemy_icons:
-		var icon_file: String = enemy_icons[entity_type]
-		if not icon_file.contains("."):
-			icon_file += ".png"
-		var texture: Texture2D = load("res://assets/sprites/%s" % icon_file)
-		_entity_type.add_icon_item(texture, entity_type.to_upper())
+	var entity_types := [
+		"chaser", "sprinter", "tank", "shooter", "buffer",
+		"exploder", "shielder", "summoner", "summoned", "elite",
+	]
+	for entity_type in entity_types:
+		_entity_type.add_item(entity_type.to_upper())
 		_entity_type.set_item_metadata(_entity_type.item_count - 1, entity_type)
 	for speed in [0.25, 0.5, 1.0, 2.0, 4.0]:
 		_speed_select.add_item("×%s" % speed)

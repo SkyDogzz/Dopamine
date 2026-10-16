@@ -66,9 +66,27 @@ func _run() -> void:
 	if root.gui_get_focus_owner() != primary_button:
 		_fail("Primary action should receive initial focus")
 		return
+	var primary_position := primary_button.position
+	primary_button.emit_signal("button_down")
+	if primary_button.position.y != primary_position.y + 2.0:
+		_fail("Pressing a menu button should show a two-pixel downward offset")
+		return
+	primary_button.emit_signal("button_up")
+	if primary_button.position != primary_position:
+		_fail("Releasing a menu button should restore its layout position")
+		return
+	primary_button.emit_signal("mouse_entered")
+	await process_frame
+	await process_frame
+	if primary_button.scale.x <= 1.0:
+		_fail("Hovering a menu button should enlarge it slightly")
+		return
+	primary_button.emit_signal("mouse_exited")
+	await process_frame
+	await process_frame
 
 	var preview_panel := preview.get_node("Content/PreviewCenter/SamplePanel") as Control
-	for viewport_size in [Vector2i(1280, 800), Vector2i(960, 600), Vector2i(1600, 900)]:
+	for viewport_size in [Vector2i(640, 360), Vector2i(960, 540), Vector2i(1280, 720)]:
 		root.size = viewport_size
 		await process_frame
 		var panel_rect := preview_panel.get_global_rect()
@@ -78,7 +96,7 @@ func _run() -> void:
 		if panel_rect.end.x > viewport_size.x or panel_rect.end.y > viewport_size.y:
 			_fail("Preview panel should not overflow the viewport at %s" % viewport_size)
 			return
-	root.size = Vector2i(1280, 800)
+	root.size = Vector2i(640, 360)
 	await process_frame
 	var tab_event := InputEventKey.new()
 	tab_event.keycode = KEY_TAB

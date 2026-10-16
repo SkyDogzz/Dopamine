@@ -1,6 +1,13 @@
 # Tests d'acceptation et validation
 
-> Les cases cochées sont des exécutions historiques documentées. Lors de l’audit documentaire du 2026-10-15, Godot/Godot 4 n’est pas présent dans le PATH ; les smoke tests GDScript n’ont pas été relancés. Cette session vérifie les diffs et références, pas les résultats runtime historiques.
+> Les cases cochées sont des exécutions documentées. Le binaire Godot local est `tools/local/godot-4.7.2/Godot_v4.7.2-stable_linux.x86_64`; il peut être invoqué directement même s’il n’est pas présent dans le `PATH`.
+
+## Application de l’Art Bible UI — 2026-10-16
+
+- [x] Le viewport logique est 640×360 (16:9) et la fenêtre initiale 1280×720.
+- [x] Le thème partagé reprend les couleurs sémantiques de la palette maître, les panneaux opaques et les boutons rectangulaires; Press Start 2P est réservée aux titres, DejaVu Sans au texte courant. Le feedback souris agrandit au survol et décale de 2 px à l’appui. Licences livrées dans `game/assets/fonts/`.
+- [x] Import Godot 4.7.2 et 21 smokes UI de fondation, navigation, hub/profils, layouts 640×360/960×540/1280×720, progression, HUD, pause et Sandbox UI passent avec un `XDG_DATA_HOME` isolé par script.
+- [x] Smoke fenêtré `render_visual_smoke` : 499 ennemis, 2 000 projectiles et une élite rendus à 1280×720 sous Xvfb/Mesa; capture inspectée à `/tmp/dopamine-render-visual-smoke.png`.
 
 ## Build et intégration
 

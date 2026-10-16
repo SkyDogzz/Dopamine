@@ -2,6 +2,8 @@
 
 Cette carte consigne l’intention approuvée par interview et l’état final de chaque module. Les identifiants restent les références stables des specs et plans. Le bilan de clôture est dans [`tasks/ui-refonte/INTEGRATION-ui-refonte.md`](tasks/ui-refonte/INTEGRATION-ui-refonte.md).
 
+La direction artistique partagée est décrite dans [`docs/ART_BIBLE.txt`](docs/ART_BIBLE.txt); ses choix **[VALIDÉS]** gouvernent les écrans de cette carte.
+
 | Module | Responsabilité | Dépendances | État |
 |---|---|---|---|
 | [`ui-foundation`](tasks/ui-refonte/SPEC-ui-foundation.md) | Thème partagé, composants réutilisables, navigation au focus, adaptation aux résolutions et langage visuel pixel art néon lisible. | — | Livré |

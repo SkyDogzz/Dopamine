@@ -13,6 +13,7 @@
 7. [Roadmap GDD v1.6](docs/planning/ROADMAP.md).
 8. [Risques](docs/planning/RISQUES.md) et [tests d'acceptation](docs/qa/TESTS.md).
 9. [Intention de refonte UI](docs/planning/INTENTION_REFONTE_UI.md) et [carte des capacités UI](UI_CAPABILITY_MAP.md) — périmètre confirmé par interview; specs et avancement par module dans `tasks/ui-refonte/`.
+10. [Art Bible](docs/ART_BIBLE.txt) — direction visuelle validée, palette maître, résolution logique et contrats des assets/UI.
 
 ## Statuts
 
@@ -38,6 +39,7 @@ godot --path game
 ```
 
 Le premier lancement de l’éditeur importe le projet et vérifie la GDExtension. Le dernier lancement ouvre l’accueil. Le Sandbox développeur reste accessible par son entrée secondaire et fonctionne sans sauvegarde.
+Le viewport logique suit l’Art Bible : 640×360 (16:9), avec une fenêtre initiale 1280×720.
 Depuis l’accueil, `JOUER` ouvre le hub de préparation et lance une run Survival avec la difficulté choisie. Le bouton `PLAY SURVIVAL` du Sandbox développeur ouvre toujours le prototype et son choix d’arme initial, sans `SaveService` ni progression normale; `ACCUEIL` revient au menu.
 Le hub propose aussi `RUN TEMPORAIRE · SANS SAUVEGARDE` : cette partie démarre avec un profil vide en mémoire, en difficulté Easy, et ses récompenses de fin sont abandonnées sans modifier la sauvegarde normale.
 

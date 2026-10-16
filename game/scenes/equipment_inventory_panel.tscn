@@ -30,8 +30,9 @@ layout_mode = 2
 theme_override_constants/separation = 12
 
 [node name="Title" type="Label" parent="Panel/Content"]
+theme_type_variation = &"PixelHeading"
 layout_mode = 2
-theme_override_font_sizes/font_size = 22
+theme_override_font_sizes/font_size = 8
 text = "PERMANENT EQUIPMENT"
 horizontal_alignment = 1
 

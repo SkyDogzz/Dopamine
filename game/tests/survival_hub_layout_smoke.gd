@@ -9,7 +9,7 @@ func _initialize() -> void:
 	call_deferred("_run")
 
 func _run() -> void:
-	for size in [Vector2i(960, 600), Vector2i(1280, 800), Vector2i(1600, 900)]:
+	for size in [Vector2i(640, 360), Vector2i(960, 540), Vector2i(1280, 720)]:
 		var viewport := SubViewport.new()
 		viewport.size = size
 		viewport.render_target_update_mode = SubViewport.UPDATE_ALWAYS
@@ -30,7 +30,7 @@ func _run() -> void:
 			return
 		viewport.queue_free()
 		await process_frame
-	print("Survival hub fits 960x600, 1280x800 and 1600x900 viewports")
+	print("Survival hub fits 640x360, 960x540 and 1280x720 viewports")
 	quit()
 
 func _fail(message: String) -> void:
