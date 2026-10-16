@@ -169,7 +169,7 @@ func _create_item_row(equipment: Dictionary, resources: Dictionary) -> Control:
 	elif str(equipment.get("unique_effect_id", "")) != "":
 		var effect_id := str(equipment["unique_effect_id"])
 		var effect_status := "PROPOSED ACTIVE" if equipment.get("equipped", false) and effect_id in ["lightning_burst", "overflow_shield", "evolution_shockwave", "elite_haste"] else "NO GAMEPLAY EFFECT YET"
-		status.text += "\nUNIQUE: %s — %s" % [effect_id.to_upper(), effect_status]
+		status.text += "\nUNIQUE: %s — %s" % [effect_id.replace("_", " ").to_upper(), effect_status]
 	content.add_child(status)
 	if equipment.get("unique_effect_id") == "pending_choice":
 		var effect_row := HBoxContainer.new()

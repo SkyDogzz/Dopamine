@@ -12,7 +12,8 @@ func _run() -> void:
 			"slot": "boots",
 			"rarity": "legendary",
 			"stat_lines": [],
-			"equipped": false,
+			"equipped": true,
+			"unique_effect_id": "lightning_burst",
 		}],
 		"resources": {},
 	})
@@ -20,11 +21,16 @@ func _run() -> void:
 	var panel_frame: Control = panel.get_node("Panel")
 	var row: Control = panel.get_node("Panel/Content/Scroll/Items/Equipment_visual-fixture")
 	var row_style := row.get_theme_stylebox("panel") as StyleBoxFlat
+	var item_content: VBoxContainer = row.get_child(0).get_child(1)
+	var status: Label = item_content.get_child(1)
 	if panel_frame.custom_minimum_size.x < 400:
 		_fail("Equipment panel should reserve enough width for item stats and actions")
 		return
 	if row_style == null or row_style.border_color.to_html(false) != "ffd447" or row_style.border_width_left < 3:
 		_fail("Equipment rows should use the rarity color as a strong left edge")
+		return
+	if not status.text.contains("UNIQUE: LIGHTNING BURST") or status.text.contains("LIGHTNING_BURST"):
+		_fail("Unique effect IDs should be presented as readable names without code separators")
 		return
 	if not panel_frame.get_global_rect().size.x <= 640:
 		_fail("Equipment panel should stay within the logical 640px viewport")
