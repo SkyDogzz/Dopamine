@@ -1570,3 +1570,8 @@ Note de clôture : le blocage historique du smoke `sandbox_ui_smoke.gd` décrit 
 - [x] `survival_magnet_heart_synergy_smoke.gd` vérifie que chaque effet attend le niveau 5 des deux reliques; Magnetic Coil accroît la vitesse maximale du pulse, Celestial Eye en étend le rayon, et Singularity déplace les orbes XP vers Event Horizon pendant qu’un Void Orb distant est actif. Le smoke confirme la découverte des deux types de champ.
 - [x] Les orbes XP restent hors de l’attraction native Void Orb sans la synergie Magnet Heart + Singularity; un test cœur natif conserve cette séparation. Les coffres restent exclus de toute attraction.
 - [i] L’existence des trois synergies est **[VALIDÉE]** par l’utilisateur (« les 3 »); leurs conditions de niveau, leur déclenchement pendant Magnetic Pulse et les multiplicateurs ×1,5 restent **[PROPOSÉS]** et à calibrer.
+
+## P7B — Directeur Endless standard — 2026-10-17
+
+- [x] `survival_wave_director_smoke.gd` vérifie le prototype **[PROPOSÉ]** : après la vague 24, les cycles continuent sans victoire et un mid-boss revient aux vagues 24 et 36.
+- [i] Difficultés Easy–Chaos et multiplicateurs existants sont réutilisés par défaut; lancement, transition, récompenses, sortie et records restent à arbitrer/implémenter. Les valeurs de scaling ne sont pas validées.

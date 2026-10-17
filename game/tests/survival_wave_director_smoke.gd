@@ -72,6 +72,20 @@ func _run() -> void:
 	if not director.boss_defeated() or director.state != director_script.State.VICTORY:
 		_fail("Defeating the final boss should complete the run")
 		return
+	var endless_director = director_script.new(false, true)
+	endless_director.wave = 24
+	if not endless_director.advance(30.0) or endless_director.wave != 24 or \
+			endless_director.state != director_script.State.MID_BOSS or \
+			not endless_director.boss_defeated() or endless_director.wave != 25:
+		_fail("Endless standard should continue past wave 24 after a recurring mid-boss")
+		return
+	for _wave in range(25, 37):
+		endless_director.advance(30.0)
+	if endless_director.wave != 36 or endless_director.state != director_script.State.MID_BOSS or \
+			not endless_director.boss_defeated() or endless_director.wave != 37 or \
+			endless_director.state != director_script.State.WAVE:
+		_fail("Endless standard should repeat its mid-boss cadence every 12 waves without victory")
+		return
 	var session: Node2D = load("res://scenes/survival_session.tscn").instantiate()
 	session.wave_spawning_enabled = false
 	session.weapon_enabled = false

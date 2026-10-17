@@ -592,7 +592,7 @@ Travail requis :
   - [ ] Décider déblocage et lancement depuis menu.
   - [ ] Décider continuation après vague 24 et état du build/HP.
   - [ ] Décider sortie, records, cadence boss et récompenses.
-  - [ ] Donner un statut explicite aux règles de difficulté/scaling.
+  - [x] Prototype **[PROPOSÉ]** choisi pour la difficulté/cadence : réutiliser Easy–Chaos et les multiplicateurs existants; un mid-boss récurrent toutes les 12 vagues, y compris après 24. `survival_wave_director_smoke.gd` confirme les vagues 24 et 36 et l’absence de victoire forcée. Calibration et règles de sortie/récompenses restent ouvertes.
 - [ ] **P7B.2 — Implémentation post-décision**
   - [ ] Ajouter chaque mode d’entrée comme parcours séparé vérifiable.
   - [ ] Tester transition Survival→Endless et lancement menu indépendamment.

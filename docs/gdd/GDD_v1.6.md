@@ -219,6 +219,8 @@ Données : AchievementDefinition {id, category, secret, metric, aggregation, tie
 
 [PROPOSÉ] Cycles après vague 24 : ennemis plus puissants, élites et mutations, boss récurrents ; maîtrise répétable temporaire avec rendements décroissants après max des objets. Records de vague et survie.
 
+Prototype de cadence **[PROPOSÉ, 2026-10-17]** retenu pour l’implémentation : réutiliser les difficultés et multiplicateurs existants, puis déclencher un mid-boss toutes les 12 vagues, y compris aux vagues 24, 36, 48, etc. Cette sélection suit la demande utilisateur de poursuivre les décisions et l’implémentation sans checkpoint; elle ne transforme pas les valeurs de difficulté/scaling en décisions **[VALIDÉES]**.
+
 [OUVERT] Déblocage, difficulté, cadence des boss, nature de la maîtrise répétable, modalités de sortie, récompenses et classement. Ces options ne sont pas des décisions officiellement arrêtées.
 
 <a id="13"></a>

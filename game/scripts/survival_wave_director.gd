@@ -8,9 +8,11 @@ var wave := 1
 var elapsed_in_wave := 0.0
 var state := State.WAVE
 var endless_armorless := false
+var endless_standard := false
 
-func _init(is_endless_armorless: bool = false) -> void:
+func _init(is_endless_armorless: bool = false, is_endless_standard: bool = false) -> void:
 	endless_armorless = is_endless_armorless
+	endless_standard = is_endless_standard
 
 func advance(delta_seconds: float) -> bool:
 	if state != State.WAVE or not is_finite(delta_seconds) or delta_seconds < 0.0 or \
@@ -21,12 +23,12 @@ func advance(delta_seconds: float) -> bool:
 	while state == State.WAVE and elapsed_in_wave >= wave_duration_seconds:
 		elapsed_in_wave -= wave_duration_seconds
 		advanced = true
-		if wave % 12 == 0 and (endless_armorless or wave != 24):
+		if wave % 12 == 0 and (endless_armorless or endless_standard or wave != 24):
 			state = State.MID_BOSS
 			elapsed_in_wave = 0.0
 			break
 		if wave == 24:
-			state = State.MID_BOSS if endless_armorless else State.FINAL_BOSS
+			state = State.MID_BOSS if endless_armorless or endless_standard else State.FINAL_BOSS
 			elapsed_in_wave = 0.0
 			break
 		wave += 1
