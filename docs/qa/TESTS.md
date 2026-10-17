@@ -1474,6 +1474,7 @@ Note de clôture : le blocage historique du smoke `sandbox_ui_smoke.gd` décrit 
 - [x] `skill_tree_panel_visual_smoke.gd` vérifie le rendu des 94 nœuds générés, le focus clavier jusqu’au dernier rang et la capture à 640×360 logique; les trois viewports passent dans `ui_viewport_layout_smoke.gd`.
 - [x] Le même smoke vérifie que les infobulles de rangs de statistiques et de déblocages d’équipement nomment leurs prérequis respectifs; exécution ciblée Godot 4.7.2 réussie le 2026-10-17.
 - [x] Réexécuter via CTest le 2026-10-17 : `godot_project_import` et `skill_tree_panel_visual_smoke` passent (2/2), ce qui vérifie aussi l’intégration du script de scène au projet importé.
+- [x] Le panneau présente les 94 entrées générées sous trois en-têtes — rangs de statistiques, armes et reliques — dans l’ordre du service. Le smoke vérifie libellés et ordre; exécution directe et CTest passent le 2026-10-17.
 - [ ] Le proxy linéaire ne remplace pas la calibration d’équivalence de puissance des profils, qui reste dans P6.9.
 
 ## Économie proposée de l’arbre de compétences (2026-10-16)

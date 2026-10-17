@@ -52,8 +52,20 @@ func _run() -> void:
 	if not weapon_unlock.disabled or not relic_unlock.disabled:
 		_fail("Equipment unlock nodes should remain locked until their prerequisites are met (weapon=%s relic=%s)" % [str(weapon_unlock.disabled), str(relic_unlock.disabled)])
 		return
-	if additional_unlocks.get_child_count() != 94 or progression.skill_node_ids().size() != 100:
+	if _button_count(additional_unlocks) != 94 or progression.skill_node_ids().size() != 100:
 		_fail("The tree should render all 100 core-stat and equipment nodes")
+		return
+	for heading_name in ["CoreStatsHeading", "WeaponUnlocksHeading", "RelicUnlocksHeading"]:
+		if additional_unlocks.get_node_or_null(heading_name) == null:
+			_fail("Generated skill nodes should be grouped by category: %s" % heading_name)
+			return
+	var core_heading: Label = additional_unlocks.get_node("CoreStatsHeading")
+	var weapon_heading: Label = additional_unlocks.get_node("WeaponUnlocksHeading")
+	var relic_heading: Label = additional_unlocks.get_node("RelicUnlocksHeading")
+	if core_heading.text != "CORE STAT RANKS" or weapon_heading.text != "WEAPON UNLOCKS" or \
+		relic_heading.text != "RELIC UNLOCKS" or \
+		core_heading.get_index() >= weapon_heading.get_index() or weapon_heading.get_index() >= relic_heading.get_index():
+		_fail("Skill node category headings should be clear and follow the tree's category order")
 		return
 	var crit_rank_button := _button_for_node(additional_unlocks, "steady_aim_02")
 	if crit_rank_button == null or not crit_rank_button.tooltip_text.contains("+0.15%") or \
@@ -170,9 +182,16 @@ func _fail(message: String) -> void:
 
 func _button_for_node(container: VBoxContainer, node_id: String) -> Button:
 	for button in container.get_children():
-		if (button as Button).name == node_id:
+		if button is Button and button.name == node_id:
 			return button as Button
 	return null
+
+func _button_count(container: VBoxContainer) -> int:
+	var count := 0
+	for child in container.get_children():
+		if child is Button:
+			count += 1
+	return count
 
 func _send_key(keycode: Key) -> void:
 	var event := InputEventKey.new()

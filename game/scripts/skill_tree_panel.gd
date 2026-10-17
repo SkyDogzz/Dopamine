@@ -166,7 +166,21 @@ func _build_additional_unlock_buttons() -> void:
 	if progression_service == null or not progression_service.has_method("skill_node_ids") or \
 		not progression_service.has_method("skill_node_definition"):
 		return
+	var headings := {
+		"core_stats": ["CoreStatsHeading", "CORE STAT RANKS"],
+		"weapon_unlocks": ["WeaponUnlocksHeading", "WEAPON UNLOCKS"],
+		"relic_unlocks": ["RelicUnlocksHeading", "RELIC UNLOCKS"],
+	}
 	for category in ["core_stats", "weapon_unlocks", "relic_unlocks"]:
+		var heading := Label.new()
+		heading.name = headings[category][0]
+		heading.text = headings[category][1]
+		heading.custom_minimum_size = Vector2(0, 16)
+		heading.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		heading.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+		heading.add_theme_color_override("font_color", Color("#37e8f5"))
+		heading.add_theme_font_size_override("font_size", 8)
+		_additional_unlocks.add_child(heading)
 		for node_id in progression_service.skill_node_ids(category):
 			if node_id in ["vitality_starter", "focused_training", "fleet_footed", "steady_aim", \
 				"unlock_crimson_daggers", "unlock_blood_chalice"]:
