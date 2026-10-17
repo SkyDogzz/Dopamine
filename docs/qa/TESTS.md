@@ -28,6 +28,12 @@
 - [x] Les smokes couvrent choix distincts, niveaux/slots pleins, pondération configurable sans suppression d’offres éligibles, ainsi que présentation et focus clavier des options de coffre.
 - [i] Le smoke de présentation a émis un avertissement de ressources au shutdown; les assertions de coffre ont passé. Les coefficients de poids et leur interprétation restent **[PROPOSÉS]** et l’arbitrage P5.3.4 reste **[OUVERT]**.
 
+## P5.3.4 — Fréquence des drops de coffres — 2026-10-17
+
+- [x] `survival_chest_director_smoke.gd` réalise 40 000 tirages reproductibles par famille : les ordinaires donnent 198 armes et 194 reliques (valeur proposée 0,5 %); les élites donnent 6 060 armes, 5 930 reliques et 933 doubles drops (valeur proposée 15 % indépendante par famille). La même fixture vérifie que ces valeurs sont bien les défauts du directeur.
+- [x] Le smoke cible passe sous Godot 4.7.2 en 0,12 s. Les graines fixes et tolérances bornées rendent le contrôle déterministe; il vérifie l’implémentation des probabilités, pas leur balance ni leur validation de design.
+- [ ] Les taux, l’intervalle anti-malchance et les poids d’offres demeurent **[PROPOSÉS]**; l’arbitrage nécessaire avant verrouillage reste **[OUVERT]**.
+
 ## P5.3.5 — Collecte — 2026-10-17
 
 - [x] Sous Godot 4.7.2, `survival_chest_smoke.gd` passe : rayon de coffre distinct du rayon XP même avec Magnet Heart, attraction XP jusqu’au niveau 5, placement XP/coffres sans chevauchement complet, collecte à proximité et ouverture du choix. Le test détecte également la récompense quand un seul choix reste éligible.

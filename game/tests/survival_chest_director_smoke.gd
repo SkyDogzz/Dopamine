@@ -28,6 +28,46 @@ func _initialize() -> void:
 	if elite_director.roll_drops(1.0, eligible, true) != ["weapon", "relic"]:
 		_fail("An elite should use the configured elite drop chance")
 		return
+	var ordinary_sample = director_script.new(44017)
+	ordinary_sample.guarantee_interval_seconds = 0.0
+	if not is_equal_approx(ordinary_sample.ordinary_drop_chance, 0.005):
+		_fail("The proposed ordinary family drop chance should default to 0.5%")
+		return
+	var ordinary_weapon_drops := 0
+	var ordinary_relic_drops := 0
+	var sample_count := 40000
+	for index in range(sample_count):
+		var drops: Array = ordinary_sample.roll_drops(float(index) / 1000.0, ["weapon", "relic"])
+		ordinary_weapon_drops += int(drops.has("weapon"))
+		ordinary_relic_drops += int(drops.has("relic"))
+	if ordinary_weapon_drops not in range(120, 281) or ordinary_relic_drops not in range(120, 281):
+		_fail("Ordinary family drops should statistically follow the configured 0.5% chance: %d/%d" % [
+			ordinary_weapon_drops, ordinary_relic_drops,
+		])
+		return
+	var elite_sample = director_script.new(44018)
+	elite_sample.guarantee_interval_seconds = 0.0
+	if not is_equal_approx(elite_sample.elite_drop_chance, 0.15):
+		_fail("The proposed elite family drop chance should default to 15%")
+		return
+	var elite_weapon_drops := 0
+	var elite_relic_drops := 0
+	var elite_double_drops := 0
+	for index in range(sample_count):
+		var drops: Array = elite_sample.roll_drops(float(index) / 1000.0, ["weapon", "relic"], true)
+		elite_weapon_drops += int(drops.has("weapon"))
+		elite_relic_drops += int(drops.has("relic"))
+		elite_double_drops += int(drops.has("weapon") and drops.has("relic"))
+	if elite_weapon_drops not in range(5700, 6301) or elite_relic_drops not in range(5700, 6301) or \
+			elite_double_drops not in range(750, 1051):
+		_fail("Elite family drops should follow independent configured 15% chances: %d/%d/%d" % [
+			elite_weapon_drops, elite_relic_drops, elite_double_drops,
+		])
+		return
+	print("Chest drop samples: ordinary=%d/%d, elite=%d/%d, elite_both=%d/%d" % [
+		ordinary_weapon_drops, ordinary_relic_drops, elite_weapon_drops, elite_relic_drops,
+		elite_double_drops, sample_count,
+	])
 	print("Survival chest director smoke passed")
 	quit()
 
