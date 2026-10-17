@@ -55,7 +55,8 @@ func show_result(victory: bool, wave_number: int, active_seconds: float, kills: 
 		else:
 			var record: Dictionary = armorless_record["record"]
 			var record_seconds := int(floor(float(record["survival_time_seconds"])))
-			var prefix := "NEW PERSONAL BEST" if armorless_record.get("updated", false) else "PERSONAL BEST"
+			var mode_prefix := "ENDLESS " if armorless_record.get("mode_id", "armorless") == "endless" else ""
+			var prefix := mode_prefix + ("NEW PERSONAL BEST" if armorless_record.get("updated", false) else "PERSONAL BEST")
 			_record.text = "%s  ·  WAVE %02d  ·  %02d:%02d  ·  %d KILLS" % [
 				prefix, int(record["wave"]), record_seconds / 60, record_seconds % 60, int(record["kills"]),
 			]

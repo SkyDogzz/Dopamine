@@ -21,9 +21,9 @@ func _run() -> void:
 		_fail("Could not seed the previous v7 profile")
 		return
 	var migrated: Dictionary = progression.load_profile()
-	if not migrated.get("ok", false) or int(migrated["profile"]["profile_version"]) != 8 or \
+	if not migrated.get("ok", false) or int(migrated["profile"]["profile_version"]) != 9 or \
 		migrated["profile"]["armorless_records"]["normal"]["wave"] != 0:
-		_fail("A v7 profile should migrate additively to v8 with empty Armorless records")
+		_fail("A v7 profile should migrate additively to v9 with empty Armorless records")
 		return
 	var first: Dictionary = progression.record_armorless_result("normal", 12, 240.0, 300)
 	if not first.get("ok", false) or not first.get("updated", false):

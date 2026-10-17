@@ -11,9 +11,11 @@ const ARMORLESS_RECORDS_PANEL_SCENE := preload("res://scenes/armorless_records_p
 @onready var _difficulty_list: VBoxContainer = $Content/Main/DifficultyCard/Body/DifficultyList
 @onready var _difficulty_status: Label = $Content/Main/DifficultyCard/Body/DifficultyStatus
 @onready var _armorless_record_status: Label = $Content/Main/DifficultyCard/Body/ArmorlessRecordStatus
+@onready var _endless_record_status: Label = $Content/Main/DifficultyCard/Body/EndlessRecordStatus
 @onready var _profile_status: Label = $Content/Header/ProfileStatus
 @onready var _launch_button: Button = $Content/Main/PreparationCard/Body/LaunchButton
-@onready var _armorless_launch_button: Button = $Content/Main/PreparationCard/Body/ArmorlessLaunchButton
+@onready var _armorless_launch_button: Button = $Content/Main/PreparationCard/Body/ModeButtons/ArmorlessLaunchButton
+@onready var _endless_launch_button: Button = $Content/Main/PreparationCard/Body/ModeButtons/EndlessLaunchButton
 @onready var _temporary_launch_button: Button = $Content/Main/PreparationCard/Body/TemporaryLaunchButton
 @onready var _equipment_button: Button = $Content/Main/PreparationCard/Body/EquipmentButton
 @onready var _skill_tree_button: Button = $Content/Main/PreparationCard/Body/SkillTreeButton
@@ -25,6 +27,7 @@ var selected_difficulty := "easy"
 var _profile_available := false
 var _highest_unlocked_difficulty := "easy"
 var _armorless_records: Dictionary = {}
+var _endless_records: Dictionary = {}
 var _difficulty_buttons: Dictionary = {}
 var _difficulty_group := ButtonGroup.new()
 var _equipment_panel: Control
@@ -40,6 +43,7 @@ func _ready() -> void:
 	_records_button.pressed.connect(_open_armorless_records)
 	_launch_button.pressed.connect(_launch_run)
 	_armorless_launch_button.pressed.connect(_launch_armorless_run)
+	_endless_launch_button.pressed.connect(_launch_endless_run)
 	_temporary_launch_button.pressed.connect(_launch_temporary_run)
 	_create_panels()
 	_load_profile()
@@ -80,6 +84,12 @@ func _load_profile() -> void:
 	var result: Dictionary = progression_service.load_profile()
 	_profile_available = bool(result.get("ok", false))
 	_armorless_records = result.get("profile", {}).get("armorless_records", {}) if _profile_available else {}
+	_endless_records = result.get("profile", {}).get("endless_standard_records", {}) if _profile_available else {}
+	var endless_unlocked := _profile_available and bool(result["profile"].get("endless_standard_unlocked", false))
+	_endless_launch_button.disabled = not endless_unlocked
+	_endless_launch_button.text = "ENDLESS STANDARD  →" if endless_unlocked else "ENDLESS STANDARD  ·  VERROUILLÉ"
+	_endless_launch_button.tooltip_text = "Débloqué après une victoire en Survival." if not endless_unlocked else \
+		"Lance une nouvelle run Endless avec les armes et reliques au niveau 1."
 	_launch_button.disabled = not _profile_available
 	_armorless_launch_button.disabled = not _profile_available
 	_temporary_launch_button.disabled = false
@@ -132,6 +142,7 @@ func _select_difficulty(difficulty_id: String) -> void:
 	_difficulty_status.text = "CHOISIE: %s  •  UNE VICTOIRE DÉBLOQUE LA SUIVANTE" % difficulty_id.to_upper() \
 		if index < DIFFICULTY_SCRIPT.ORDER.size() - 1 else "CHOISIE: CHAOS  •  DIFFICULTÉ MAXIMALE"
 	_refresh_armorless_record()
+	_refresh_endless_record()
 
 func _refresh_armorless_record() -> void:
 	var record: Dictionary = _armorless_records.get(selected_difficulty, {})
@@ -140,6 +151,16 @@ func _refresh_armorless_record() -> void:
 		return
 	var seconds := int(floor(float(record.get("survival_time_seconds", 0.0))))
 	_armorless_record_status.text = "ARMORLESS PB  ·  WAVE %d  ·  %02d:%02d  ·  %d KILLS" % [
+		int(record["wave"]), seconds / 60, seconds % 60, int(record["kills"]),
+	]
+
+func _refresh_endless_record() -> void:
+	var record: Dictionary = _endless_records.get(selected_difficulty, {})
+	if record.is_empty() or int(record.get("wave", 0)) <= 0:
+		_endless_record_status.text = "ENDLESS PB  ·  NONE"
+		return
+	var seconds := int(floor(float(record.get("survival_time_seconds", 0.0))))
+	_endless_record_status.text = "ENDLESS PB  ·  WAVE %d  ·  %02d:%02d  ·  %d KILLS" % [
 		int(record["wave"]), seconds / 60, seconds % 60, int(record["kills"]),
 	]
 
@@ -165,6 +186,17 @@ func _launch_armorless_run() -> void:
 	entry.progression_service = progression_service
 	entry.difficulty_id = selected_difficulty
 	entry.mode_id = "armorless"
+	get_tree().root.add_child(entry)
+	get_tree().current_scene = entry
+	queue_free()
+
+func _launch_endless_run() -> void:
+	if not _profile_available or _endless_launch_button.disabled:
+		return
+	var entry: Node = SURVIVAL_ENTRY_SCENE.instantiate()
+	entry.progression_service = progression_service
+	entry.difficulty_id = selected_difficulty
+	entry.mode_id = "endless"
 	get_tree().root.add_child(entry)
 	get_tree().current_scene = entry
 	queue_free()

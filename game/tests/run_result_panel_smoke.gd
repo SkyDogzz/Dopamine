@@ -115,6 +115,13 @@ func _run() -> void:
 		not panel.get_node("Content/Achievement").text.contains("OTHER TIERS +2"):
 		_fail("Armorless should display resources, achievement progress and its record without permanent equipment")
 		return
+	panel.show_result(false, 30, 1200.0, 450, {"ok": true, "duplicate": false, "essence": 75, "powder_basic": 110}, {
+		"ok": true, "updated": true, "mode_id": "endless",
+		"record": {"wave": 30, "survival_time_seconds": 1200.0, "kills": 450},
+	})
+	if not panel.get_node("Content/Record").text.contains("ENDLESS NEW PERSONAL BEST"):
+		_fail("Endless standard results should identify their record separately from Armorless")
+		return
 	var original_size: Vector2i = root.size
 	for size in [Vector2i(640, 360), Vector2i(960, 600), Vector2i(1280, 720), Vector2i(1600, 900), Vector2i(1920, 1080)]:
 		root.size = size

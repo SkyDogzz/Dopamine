@@ -564,7 +564,7 @@ func _ready() -> void:
 			player_max_hp += _equipment_bonus("max_hp")
 	player_hp = player_max_hp
 	player_xp_to_next = xp_base_to_next_level
-	wave_director = WAVE_DIRECTOR_SCRIPT.new(mode_id == "armorless")
+	wave_director = WAVE_DIRECTOR_SCRIPT.new(mode_id == "armorless", mode_id == "endless")
 	wave_director.wave_duration_seconds = wave_duration_seconds
 	_next_elite_spawn_time = maxf(0.0, elite_spawn_interval_seconds)
 	_publish_player_target()
@@ -792,6 +792,12 @@ func _confirm_abandon_run() -> void:
 	if not _manually_paused or simulation == null:
 		return
 	simulation.pause()
+	if mode_id == "endless":
+		_abandon_confirmation.hide()
+		_pause_overlay.hide()
+		_manually_paused = false
+		_finish_run(false)
+		return
 	if mode_id == "armorless" and armorless_run_state != null:
 		armorless_run_state.end_run()
 		_pending_armorless_draft_waves.clear()
@@ -2025,6 +2031,17 @@ func _finish_run(victory: bool) -> void:
 	_run_result_overlay.visible = true
 	var reward := {}
 	var armorless_record := {}
+	if mode_id == "endless":
+		if progression_service != null and progression_service.can_save_profile():
+			if progression_service.has_method("record_endless_standard_result"):
+				armorless_record = progression_service.record_endless_standard_result(
+					difficulty_id, wave_director.wave, player_active_time, kill_count
+				)
+			armorless_record["mode_id"] = "endless"
+			if progression_service.has_method("award_endless_standard_run"):
+				reward = progression_service.award_endless_standard_run(
+					_run_id, wave_director.wave, kill_count, difficulty_id, _run_achievement_metrics()
+				)
 	if mode_id == "armorless" and armorless_run_state != null:
 		if progression_service != null and progression_service.can_save_profile() and \
 			progression_service.has_method("record_armorless_result"):

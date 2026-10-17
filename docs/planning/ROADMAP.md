@@ -467,7 +467,7 @@ Travail requis :
 ### État actuel et écarts
 
 - `SaveService` possède format versionné/checksum/backup et QA historique de migration/altération.
-- `ProgressionService` possède des profils v8 avec difficulté maximale débloquée (Easy par défaut), records Armorless séparés par difficulté, récompenses de run classiques idempotentes par `run_id`, inventaire, six slots, cinq raretés, stat lines, enhancement, conversion Powder, arbre de 100 nodes et achievements génériques de huit catégories. La règle [VALIDÉE] de déblocage séquentiel après victoire sur le boss de vague 24 est codée; les récompenses d’une difficulté verrouillée sont refusées. Les facteurs de difficulté [PROPOSÉS] sont centralisés et appliqués à la simulation ainsi qu’aux récompenses. Le hub injecte profil et difficulté dans la run; le raccourci Sandbox fonctionne sans service de progression.
+- `ProgressionService` possède des profils v9 avec difficulté maximale débloquée (Easy par défaut), records Armorless/Endless séparés par difficulté, récompenses de run classiques idempotentes par `run_id`, inventaire, six slots, cinq raretés, stat lines, enhancement, conversion Powder, arbre de 100 nodes et achievements génériques de huit catégories. La règle [VALIDÉE] de déblocage séquentiel après victoire sur le boss de vague 24 est codée; les récompenses d’une difficulté verrouillée sont refusées. Les facteurs de difficulté [PROPOSÉS] sont centralisés et appliqués à la simulation ainsi qu’aux récompenses. Le hub injecte profil et difficulté dans la run; le raccourci Sandbox fonctionne sans service de progression.
 - Le générateur choisit les poids de rareté par difficulté et vague et applique un prototype de pénalité aux défaites avant la vague 6; ces règles et coefficients sont **[PROPOSÉS]**, leur calibration statistique et l’équilibrage des plages restent à faire.
 - Les achievements ont un évaluateur générique, des métriques de combat/profondeur/progression/difficulté et un premier suivi du build d’armes/reliques/évolutions/équipement. Le catalogue contient maintenant 100 familles, au plancher de la cible [VALIDÉE] de 100–150; 120 reste la cible éditoriale [PROPOSÉE].
 - L’arbre contient maintenant une tranche de quatre nodes Core Stats en chaîne, mais pas encore le graphe interconnecté de 100–150 ni son budget cumulatif calibré.
@@ -525,7 +525,7 @@ Travail requis :
   - [x] Ajouter les métriques de build d’armes, reliques et évolutions au bilan de run, ainsi que le suivi de la pièce d’équipement garantie; les entrées métriques inconnues ou invalides sont refusées avant toute sauvegarde.
   - [x] Atteindre le plancher validé de 100 familles; la cible éditoriale de 120 est **[PROPOSÉE]**. Les métriques, seuils et récompenses restent **[PROPOSÉS]** et nécessitent une calibration.
 - [x] **P6.8 — Sauvegarde et migrations**
-  - [x] `progression_service_smoke.gd` couvre une fixture pour chaque profil supporté v1–v6 et vérifie migration vers v8, données conservées et champs ajoutés; `armorless_records_smoke.gd` couvre en plus la migration du profil v7.
+  - [x] `progression_service_smoke.gd` couvre une fixture pour chaque profil supporté v1–v6 et vérifie migration vers v9, données conservées et champs ajoutés; `armorless_records_smoke.gd` couvre en plus la migration v7→v9.
   - [x] Vérifier migration, sauvegarde, backup et restauration après corruption : `save_service_smoke.gd` couvre l’enveloppe générique; `progression_service_smoke.gd` récupère maintenant un profil complet via un nouveau SaveService/ProgressionService et valide ses ressources, runs récompensées et équipements.
   - [x] Vérifier idempotence d’un même `run_id` après recréation du service et rechargement du slot, sans nouveau gain de ressources ni pièce d’équipement.
 - [ ] **P6.9 — Calibration**
@@ -581,24 +581,22 @@ Travail requis :
   - [x] Tester une vague, une transition boss, un draft, une amélioration et la défaite; `armorless_session_cycle_smoke.gd`, `survival_armorless_mode_smoke.gd` et `armorless_run_state_smoke.gd` couvrent ces chemins.
   - [x] Vérifier l’idempotence des classements avec `armorless_records_smoke.gd`.
   - [ ] Valider une longue session Armorless intégrée en durée de production; les cinq cycles boss jusqu’à la vague 60 sont actuellement couverts par le directeur, pas par une partie complète.
-  - [x] Enregistrer et afficher les records locaux par difficulté, triés par vague puis temps et kills; `armorless_records_smoke.gd` vérifie le classement, l’isolation des récompenses, l’idempotence, le refus des données invalides et la migration v7→v8.
+  - [x] Enregistrer et afficher les records locaux Armorless par difficulté, triés par vague puis temps et kills; `armorless_records_smoke.gd` vérifie le classement, l’isolation des récompenses, l’idempotence, le refus des données invalides et la migration v7→v9.
   - [x] Afficher dans le hub le record Armorless de la difficulté sélectionnée; les smokes couvrent la mise à jour par profil et le layout à 640×360, 1280×720 et 1920×1080.
   - [x] Ajouter une vue en lecture seule comparant les records des cinq difficultés; clavier/manette, restauration du focus et layout 640×360, 1280×720 et 1920×1080 sont couverts par les smokes du hub.
   - [ ] Une session Armorless complète reste à valider. Les catégories de récompenses permanentes sont **[VALIDÉES]** : Essence, Basic Powder et achievements, sans équipement; seuls les montants/formules du mode sans fin restent **[PROPOSÉS]** à calibrer.
 
-### P7B — Endless standard (contrat ouvert)
+### P7B — Endless standard (prototype fonctionnel, réglages proposés)
 
-- [ ] **P7B.1 — Arbitrages avant code**
-  - [ ] Décider déblocage et lancement depuis menu.
-  - [ ] Décider continuation après vague 24 et état du build/HP.
-  - [ ] Décider sortie, records, cadence boss et récompenses.
-  - [x] Prototype **[PROPOSÉ]** choisi pour la difficulté/cadence : réutiliser Easy–Chaos et les multiplicateurs existants; un mid-boss récurrent toutes les 12 vagues, y compris après 24. `survival_wave_director_smoke.gd` confirme les vagues 24 et 36 et l’absence de victoire forcée. Calibration et règles de sortie/récompenses restent ouvertes.
+- [ ] **P7B.1 — Contrat de prototype**
+  - [x] Prototype **[PROPOSÉ]** choisi sous délégation : déblocage après victoire Survival, lancement hub uniquement, armes/reliques au niveau 1, mort ou abandon, records par difficulté et récompenses Survival sans bonus de boss final/équipement garanti. Continuation après vague 24 reste ouverte.
+  - [x] Réutiliser Easy–Chaos et les multiplicateurs existants; mid-boss toutes les 12 vagues, y compris aux vagues 24 et 36. `survival_wave_director_smoke.gd` confirme ces transitions et l’absence de victoire forcée.
 - [ ] **P7B.2 — Implémentation post-décision**
-  - [ ] Ajouter chaque mode d’entrée comme parcours séparé vérifiable.
-  - [ ] Tester transition Survival→Endless et lancement menu indépendamment.
-  - [ ] Vérifier records et récompenses idempotents.
+  - [x] Ajouter un lancement Endless dans le hub, verrouillé avant victoire Survival; l’entrée réutilise le service de progression normal et la difficulté choisie.
+  - [x] Ajouter une smoke de bout en bout pour mort/abandon, résultat et persistance; la transition Survival→Endless immédiate reste ouverte.
+  - [x] Ajouter migration additive du profil v8→v9, records séparés par difficulté et récompenses idempotentes sans équipement garanti; smokes dédiés passent.
 
-**Critère de sortie :** Armorless conforme aux règles validées et propositions clairement paramétrées ; Endless standard seulement après arbitrages.
+**Critère de sortie :** Armorless conforme aux règles validées et propositions clairement paramétrées; Endless standard jouable via le hub, vérifié pour mort/abandon et persistance, avec continuation et calibration toujours explicitement ouvertes.
 
 ## P8 — Sandbox Lab destiné au joueur
 
@@ -638,7 +636,7 @@ P1 livre le Sandbox développeur et ne remplace pas cette feature produit.
   - [x] Refuser récursivement dans les payloads les champs nommés comme script, commande, chemin système ou donnée d'identité; les codes ne sérialisent que les champs du schéma public v1 et aucun service de save/progression n'est injecté.
 - [x] **P8.4 — Import de sauvegarde**
 - [x] Ajouter `SaveService.read_slot_read_only` : lit et vérifie le slot courant sans migration, restauration de backup ni écriture; le smoke couvre un ancien payload et un slot courant corrompu.
-- [x] Ajouter `IMPORT NORMAL PROFILE · READ ONLY` au Sandbox Lab : lit le slot courant, valide strictement le profil v8 en mémoire et refuse les profils anciens/incomplets sans les migrer.
+- [x] Ajouter `IMPORT NORMAL PROFILE · READ ONLY` au Sandbox Lab : lit le slot courant, valide strictement le profil courant en mémoire et refuse les profils anciens/incomplets sans les migrer.
 - [x] Construire une copie Sandbox modifiable contenant starters, unlocks d'armes/reliques du skill tree, bonus stats d'achievements/skill tree et équipement équipé; les ressources et l'historique de progression ne sont pas copiés.
 - [x] Comparer la sauvegarde source avant/après et tester import courant, profil ancien et profil invalide; le contexte/session Lab ne reçoit toujours aucun service de save/progression.
 - [x] **P8.5 — Outils de simulation**

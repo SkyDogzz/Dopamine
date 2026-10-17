@@ -46,6 +46,10 @@ func _run() -> void:
 		return
 	var launch_button: Button = hub.get_node("Content/Main/PreparationCard/Body/LaunchButton")
 	var temporary_launch_button: Button = hub.get_node("Content/Main/PreparationCard/Body/TemporaryLaunchButton")
+	var endless_launch_button: Button = hub.get_node("Content/Main/PreparationCard/Body/ModeButtons/EndlessLaunchButton")
+	if not endless_launch_button.disabled:
+		_fail("Endless standard should stay locked before a Survival victory")
+		return
 	if launch_button.text != "LANCER LA RUN  ·  EASY  →":
 		_fail("The primary launch action should repeat the selected difficulty")
 		return
@@ -205,7 +209,14 @@ func _run() -> void:
 	if not armorless_record.get("ok", false) or not armorless_record.get("updated", false):
 		_fail("The test profile should store a Normal Armorless record")
 		return
+	var endless_record: Dictionary = progression.record_endless_standard_result("normal", 18, 900.0, 27)
+	if not endless_record.get("ok", false) or not endless_record.get("updated", false):
+		_fail("The test profile should store an Easy Endless standard record")
+		return
 	hub._load_profile()
+	if endless_launch_button.disabled:
+		_fail("A Survival final-boss victory should unlock the Endless hub action")
+		return
 	if _difficulty_button(hub, "NORMAL").disabled or not _difficulty_button(hub, "HARD").disabled:
 		_fail("The hub should update sequential unlock states from the profile")
 		return
@@ -214,6 +225,11 @@ func _run() -> void:
 	if record_status == null or not record_status.text.contains("WAVE 12") or \
 		not record_status.text.contains("05:00") or not record_status.text.contains("11 KILLS"):
 		_fail("Selecting Normal should show its Armorless personal best from the profile")
+		return
+	var endless_record_status: Label = hub.get_node_or_null("Content/Main/DifficultyCard/Body/EndlessRecordStatus")
+	if endless_record_status == null or not endless_record_status.text.contains("WAVE 18") or \
+		not endless_record_status.text.contains("15:00") or not endless_record_status.text.contains("27 KILLS"):
+		_fail("The hub should show the selected difficulty's Endless standard personal best")
 		return
 	if hub.selected_difficulty != "normal":
 		_fail("An unlocked difficulty should become the selected launch value")
@@ -276,7 +292,7 @@ func _run() -> void:
 	root.add_child(armorless_hub)
 	current_scene = armorless_hub
 	await process_frame
-	var armorless_button: Button = armorless_hub.get_node("Content/Main/PreparationCard/Body/ArmorlessLaunchButton")
+	var armorless_button: Button = armorless_hub.get_node("Content/Main/PreparationCard/Body/ModeButtons/ArmorlessLaunchButton")
 	if armorless_button.disabled or not armorless_button.focus_mode == Control.FOCUS_ALL:
 		_fail("Armorless should be an available, keyboard-focusable hub launch action")
 		return
@@ -301,6 +317,26 @@ func _run() -> void:
 	await process_frame
 	if current_scene == null or current_scene.scene_file_path != "res://scenes/launch_menu.tscn":
 		_fail("Gamepad B should return from the hub to the launch menu")
+		return
+	var endless_hub := load("res://scenes/survival_hub.tscn").instantiate() as Control
+	endless_hub.progression_service = progression
+	root.add_child(endless_hub)
+	current_scene = endless_hub
+	await process_frame
+	var endless_button: Button = endless_hub.get_node("Content/Main/PreparationCard/Body/ModeButtons/EndlessLaunchButton")
+	if endless_button.disabled or endless_button.text != "ENDLESS STANDARD  →":
+		_fail("A previously unlocked Endless mode should be clearly available in the hub")
+		return
+	endless_hub._launch_endless_run()
+	deadline = Time.get_ticks_msec() + 1500
+	while Time.get_ticks_msec() < deadline:
+		await process_frame
+		if current_scene != endless_hub:
+			break
+	if current_scene == endless_hub or current_scene.mode_id != "endless" or \
+		current_scene.difficulty_id != "easy" or current_scene.progression_service != progression or \
+		not current_scene.wave_director.endless_standard:
+		_fail("The unlocked hub action should start an Endless standard session with its endless director")
 		return
 	print("Survival hub profile, difficulty, panels, inactive actions and focus smoke passed")
 	quit()

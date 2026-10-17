@@ -1,6 +1,6 @@
 extends RefCounted
 
-const PROFILE_VERSION := 8
+const PROFILE_VERSION := 9
 const STARTER_WEAPONS := ["lightning_conductor", "inferno_sprayer"]
 const STARTER_RELICS := ["storm_core", "infernal_heart"]
 const POWDER_TIERS := ["basic", "refined", "pure", "prismatic"]
@@ -123,9 +123,15 @@ func award_armorless_run(
 ) -> Dictionary:
 	return _award_run(run_id, wave_reached, false, kills, difficulty_id, run_metrics, false)
 
+func award_endless_standard_run(
+	run_id: String, wave_reached: int, kills: int = 0, difficulty_id: String = "normal",
+	run_metrics: Dictionary = {}
+) -> Dictionary:
+	return _award_run(run_id, wave_reached, false, kills, difficulty_id, run_metrics, false, true)
+
 func _award_run(
 	run_id: String, wave_reached: int, victory: bool, kills: int, difficulty_id: String,
-	run_metrics: Dictionary, award_equipment: bool
+	run_metrics: Dictionary, award_equipment: bool, require_endless_unlock: bool = false
 ) -> Dictionary:
 	if _save_service == null or not _valid_run_id(run_id):
 		return _award_error("invalid_run")
@@ -153,6 +159,8 @@ func _award_run(
 	if not profile_result.get("ok", false):
 		return _award_error(str(profile_result.get("error", "load_failed")))
 	var profile: Dictionary = profile_result["profile"]
+	if require_endless_unlock and not bool(profile.get("endless_standard_unlocked", false)):
+		return _award_error("endless_standard_locked")
 	var rewarded_runs: Array = profile["rewarded_survival_runs"]
 	if rewarded_runs.has(run_id):
 		return {"ok": true, "duplicate": true, "essence": 0, "powder_basic": 0}
@@ -163,6 +171,8 @@ func _award_run(
 	var final_boss_vanquished := award_equipment and victory and wave >= 24
 	var difficulty_factors: Dictionary = SURVIVAL_DIFFICULTY_SCRIPT.DATA[difficulty_id]
 	var newly_unlocked_difficulty := ""
+	if final_boss_vanquished:
+		profile["endless_standard_unlocked"] = true
 	if final_boss_vanquished and difficulty_index == unlocked_index and unlocked_index < SURVIVAL_DIFFICULTY_SCRIPT.ORDER.size() - 1:
 		newly_unlocked_difficulty = SURVIVAL_DIFFICULTY_SCRIPT.ORDER[unlocked_index + 1]
 		profile["highest_unlocked_difficulty"] = newly_unlocked_difficulty
@@ -289,6 +299,13 @@ func load_profile() -> Dictionary:
 			if achievement_progress != normalized_achievement_progress:
 				profile["achievement_progress"] = normalized_achievement_progress
 				migrated = true
+	if not profile.has("endless_standard_unlocked"):
+		var metrics: Dictionary = profile.get("achievement_progress", {}).get("metrics", {})
+		profile["endless_standard_unlocked"] = float(metrics.get("boss_victories", 0.0)) > 0.0
+		migrated = true
+	if not profile.has("endless_standard_records"):
+		profile["endless_standard_records"] = _empty_endless_standard_records()
+		migrated = true
 	if migrated:
 		profile["profile_version"] = PROFILE_VERSION
 	if not _valid_profile(profile):
@@ -318,6 +335,30 @@ func record_armorless_result(difficulty_id: String, wave: int, survival_time_sec
 	if updated:
 		records[difficulty_id] = {"wave": wave, "survival_time_seconds": survival_time_seconds, "kills": kills}
 		profile["armorless_records"] = records
+		if not _save_service.save_slot(_slot_id, profile):
+			return {"ok": false, "error": "save_failed"}
+	return {"ok": true, "updated": updated, "record": records[difficulty_id].duplicate(true)}
+
+func record_endless_standard_result(difficulty_id: String, wave: int, survival_time_seconds: float, kills: int) -> Dictionary:
+	if _save_service == null:
+		return {"ok": false, "error": "save_service_unavailable"}
+	if difficulty_id not in SURVIVAL_DIFFICULTY_SCRIPT.ORDER or wave < 1 or kills < 0 or \
+			not is_finite(survival_time_seconds) or survival_time_seconds < 0.0:
+		return {"ok": false, "error": "invalid_endless_standard_record"}
+	var profile_result := load_profile()
+	if not profile_result.get("ok", false):
+		return {"ok": false, "error": str(profile_result.get("error", "load_failed"))}
+	var profile: Dictionary = profile_result["profile"]
+	if not bool(profile.get("endless_standard_unlocked", false)):
+		return {"ok": false, "error": "endless_standard_locked"}
+	var records: Dictionary = profile["endless_standard_records"]
+	var previous: Dictionary = records[difficulty_id]
+	var updated := wave > int(previous["wave"]) or (wave == int(previous["wave"]) and
+		(survival_time_seconds > float(previous["survival_time_seconds"]) or
+		(survival_time_seconds == float(previous["survival_time_seconds"]) and kills > int(previous["kills"]))))
+	if updated:
+		records[difficulty_id] = {"wave": wave, "survival_time_seconds": survival_time_seconds, "kills": kills}
+		profile["endless_standard_records"] = records
 		if not _save_service.save_slot(_slot_id, profile):
 			return {"ok": false, "error": "save_failed"}
 	return {"ok": true, "updated": updated, "record": records[difficulty_id].duplicate(true)}
@@ -709,9 +750,17 @@ func _empty_profile() -> Dictionary:
 		"highest_unlocked_difficulty": "easy",
 		"achievement_progress": _empty_achievement_progress(),
 		"armorless_records": _empty_armorless_records(),
+		"endless_standard_unlocked": false,
+		"endless_standard_records": _empty_endless_standard_records(),
 	}
 
 func _empty_armorless_records() -> Dictionary:
+	var records := {}
+	for difficulty_id in SURVIVAL_DIFFICULTY_SCRIPT.ORDER:
+		records[difficulty_id] = {"wave": 0, "survival_time_seconds": 0.0, "kills": 0}
+	return records
+
+func _empty_endless_standard_records() -> Dictionary:
 	var records := {}
 	for difficulty_id in SURVIVAL_DIFFICULTY_SCRIPT.ORDER:
 		records[difficulty_id] = {"wave": 0, "survival_time_seconds": 0.0, "kills": 0}
@@ -724,19 +773,17 @@ func _valid_profile(profile: Dictionary) -> bool:
 				typeof(profile.get("highest_unlocked_difficulty")) != TYPE_STRING or \
 				profile["highest_unlocked_difficulty"] not in SURVIVAL_DIFFICULTY_SCRIPT.ORDER or \
 				not profile.get("achievement_progress") is Dictionary or \
+				typeof(profile.get("endless_standard_unlocked")) != TYPE_BOOL or \
 				not profile.get("armorless_records") is Dictionary or \
-				profile["armorless_records"].size() != SURVIVAL_DIFFICULTY_SCRIPT.ORDER.size():
+				profile["armorless_records"].size() != SURVIVAL_DIFFICULTY_SCRIPT.ORDER.size() or \
+				not profile.get("endless_standard_records") is Dictionary or \
+				profile["endless_standard_records"].size() != SURVIVAL_DIFFICULTY_SCRIPT.ORDER.size():
 		return false
-	for difficulty_id in SURVIVAL_DIFFICULTY_SCRIPT.ORDER:
-		var record: Variant = profile["armorless_records"].get(difficulty_id)
-		if not record is Dictionary or record.size() != 3 or \
-			typeof(record.get("wave")) not in [TYPE_INT, TYPE_FLOAT] or not is_finite(float(record["wave"])) or \
-			int(record["wave"]) != float(record["wave"]) or int(record["wave"]) < 0 or \
-			typeof(record.get("survival_time_seconds")) not in [TYPE_INT, TYPE_FLOAT] or \
-			not is_finite(float(record["survival_time_seconds"])) or float(record["survival_time_seconds"]) < 0.0 or \
-			typeof(record.get("kills")) not in [TYPE_INT, TYPE_FLOAT] or not is_finite(float(record["kills"])) or \
-			int(record["kills"]) != float(record["kills"]) or int(record["kills"]) < 0:
-			return false
+	for records_name in ["armorless_records", "endless_standard_records"]:
+		var record_set: Dictionary = profile[records_name]
+		for difficulty_id in SURVIVAL_DIFFICULTY_SCRIPT.ORDER:
+			if not _valid_mode_record(record_set.get(difficulty_id)):
+				return false
 	var resources: Dictionary = profile["resources"]
 	for resource in ["essence", "powder_basic", "powder_refined", "powder_pure", "powder_prismatic"]:
 		var value = resources.get(resource)
@@ -774,6 +821,15 @@ func _valid_profile(profile: Dictionary) -> bool:
 				return false
 			equipped_slots[equipment["slot"]] = true
 	return true
+
+func _valid_mode_record(record: Variant) -> bool:
+	return record is Dictionary and record.size() == 3 and \
+		typeof(record.get("wave")) in [TYPE_INT, TYPE_FLOAT] and is_finite(float(record["wave"])) and \
+		int(record["wave"]) == float(record["wave"]) and int(record["wave"]) >= 0 and \
+		typeof(record.get("survival_time_seconds")) in [TYPE_INT, TYPE_FLOAT] and \
+		is_finite(float(record["survival_time_seconds"])) and float(record["survival_time_seconds"]) >= 0.0 and \
+		typeof(record.get("kills")) in [TYPE_INT, TYPE_FLOAT] and is_finite(float(record["kills"])) and \
+		int(record["kills"]) == float(record["kills"]) and int(record["kills"]) >= 0
 
 func _valid_equipment(equipment: Variant) -> bool:
 	if not equipment is Dictionary or equipment.get("source_mode") != "survival" or \
