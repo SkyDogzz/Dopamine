@@ -575,7 +575,7 @@ Travail requis :
   - [x] Enregistrer et afficher les records locaux par difficulté, triés par vague puis temps et kills; `armorless_records_smoke.gd` vérifie le classement, l’isolation des récompenses, l’idempotence, le refus des données invalides et la migration v7→v8.
   - [x] Afficher dans le hub le record Armorless de la difficulté sélectionnée; les smokes couvrent la mise à jour par profil et le layout à 640×360, 1280×720 et 1920×1080.
   - [x] Ajouter une vue en lecture seule comparant les records des cinq difficultés; clavier/manette, restauration du focus et layout 640×360, 1280×720 et 1920×1080 sont couverts par les smokes du hub.
-  - [ ] Une session Armorless complète et l’arbitrage des autres récompenses permanentes restent à faire.
+  - [ ] Une session Armorless complète reste à valider. Les catégories de récompenses permanentes sont **[VALIDÉES]** : Essence, Basic Powder et achievements, sans équipement; seuls les montants/formules du mode sans fin restent **[PROPOSÉS]** à calibrer.
 
 ### P7B — Endless standard (contrat ouvert)
 
