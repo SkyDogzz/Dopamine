@@ -485,7 +485,7 @@ Travail requis :
   - [x] Ajouter au prototype une pénalité de rareté lors d’une défaite avant la vague 6 : poids Mystic+ réduits jusqu’à 50 % en vague 1 puis remontant linéairement à la normale en vague 6; aucune pénalité sur une victoire. Règle et coefficients **[PROPOSÉS]**, calibration toujours requise.
   - [x] Smoke ciblé vérifie les poids Easy/Chaos, la conservation de la somme à 100 %, l’effet de vague sur le tirage seedé et les poids proposés par difficulté; cela ne constitue pas un calibrage statistique.
   - [x] `equipment_rarity_smoke.gd` vérifie par seed 20 000 tirages sur les cinq difficultés aux vagues 1 et 24 dans une tolérance statistique; les probabilités et la règle de progression restent **[PROPOSÉES]**, non calibrées.
-- [ ] **P6.3 — Application des statistiques**
+- [x] **P6.3 — Application des statistiques**
   - [x] `equipment_stats_smoke.gd` équipe une seule stat par profil et ouvre une vraie session Survival pour vérifier l’effet de HP, mobilité, dégâts, cadence, critiques, soin, aire, cooldown, XP, rayon de ramassage et vitesse projectile.
   - [x] `survival_chest_smoke.gd` vérifie l’application du rayon de ramassage aux XP, dont l’impulsion Magnet Heart, puis confirme qu’un grand rayon ne collecte jamais un coffre hors de sa portée dédiée.
 - [ ] **P6.4 — Enhancement**

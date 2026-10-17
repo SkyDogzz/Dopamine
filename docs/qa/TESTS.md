@@ -18,6 +18,12 @@
 - [x] `save_service_smoke.gd` et `progression_service_smoke.gd` passent sous Godot 4.7.2 avec deux `XDG_DATA_HOME` temporaires isolés (`/tmp/dopamine-p68-*`). Ils couvrent respectivement l’enveloppe/backup/restauration et migrations/idempotence des récompenses.
 - [x] La vérification ciblée confirme les preuves historiques de migration v1–v8 et d’absence de double attribution après recréation des services; elle ne remplace pas le CTest complet.
 
+## P6.3 — Réapplication des statistiques d’équipement — 2026-10-17
+
+- [x] Sur le checkout courant, `equipment_stats_smoke.gd` passe sous Godot 4.7.2 avec un `XDG_DATA_HOME` isolé. Il vérifie les douze statistiques d’équipement : PV max, mobilité, dégâts, cadence, chance/dégâts critiques, soin par élimination, aire, cooldown, XP, rayon de collecte XP et vitesse de projectile.
+- [x] `survival_chest_smoke.gd` passe également; il confirme que le rayon d’XP, y compris Magnet Heart, ne change pas le rayon dédié aux coffres. Godot signale 6 instances ObjectDB et 3 ressources encore utilisées à l’arrêt, sans échec d’assertion.
+- [i] Cette validation ferme l’application fonctionnelle des statistiques P6.3; les plages et l’équilibrage de ces bonus restent **[PROPOSÉS]** et P6.9 demeure ouvert.
+
 ## P5.1.14 — Slots et déduplication des effets uniques — 2026-10-17
 
 - [x] Depuis un `git archive` propre du commit `6647f3f`, l’import Godot 4.7.2 puis `survival_loadout_smoke.gd`, `survival_unique_effects_smoke.gd` et `progression_service_smoke.gd` passent avec des `XDG_DATA_HOME` isolés.
