@@ -72,6 +72,7 @@
 - [x] Décision utilisateur **[VALIDÉE, réponse A]** : garder l’audio livré comme candidate de release.
 - [x] Inventaire mécanique du 2026-10-17 : 38 WAV SFX correspondent exactement aux 38 entrées du manifeste; tous sont 44,1 kHz, mono, PCM16 et leurs durées concordent avec le manifeste à 2 ms près. Les recipes de synthèse sont dans `game/assets/audio/sfx/recipes.json`; `Sfx` les charge dans le jeu. Aucun fichier WAV ne manque ni n’est absent du manifeste.
 - [x] Provenance recensée dans `THIRD_PARTY_NOTICES.md` : boucle Space City MintoDog CC0, SHA-256 correspondant au fichier; SFX produits depuis les recettes internes par Bfxr2 CLI MIT (commit référencé), outil de génération non inclus dans l’export. La chaîne documentée ne contient pas d’échantillons tiers identifiés. Voir `game/assets/audio/sfx/README.md`.
+- [x] Revalidation reproductible : manifeste et ensemble de fichiers exacts, 38/38 formats conformes, écart maximal entre durée WAV et manifeste de 0,478 ms; SHA-256 de Space City `6ecb8408cd84b1031425e8f1b941d7a89ab8a850cea2833ac2e005f76544d7a7`.
 - [ ] Écouter la galerie et le jeu avec effets simultanés, vérifier les niveaux relatifs et la priorité des cues sur haut-parleurs/casque; l’environnement de développement headless ne permet pas cette validation matérielle.
 
 ## P7B.1 — Compteurs du segment de continuation — 2026-10-17
@@ -1841,6 +1842,12 @@ Note de clôture : le blocage historique du smoke `sandbox_ui_smoke.gd` décrit 
 - [x] Recontrôle le 2026-10-17, seed `20261018`, mêmes conditions à vitesse réelle : défaite vague 1 après 23,89 s actives, 3 kills, niveau 2 et 5 772 unités parcourues. Aucun changement de `user://saves` détecté. La divergence par rapport aux essais précédents confirme que le bot à entrées frame-driven n’est pas une base de calibration.
 - [i] Comme les essais précédents, ce kite synthétique meurt avant le premier boss et ne remplace pas une run humaine complète; aucun paramètre **[PROPOSÉ]** n’est modifié.
 - [ ] Ces runs meurent avant le premier boss de vague 12; la session complète Armorless de production reste à valider manuellement, avec ses décisions de draft et sans assistance.
+
+## P7A/P9.2 — Survey Armorless à durée étendue — 2026-10-17
+
+- [x] `armorless_natural_run_survey.gd` accepte maintenant `--max-wave` (1–120) et `--max-wall-seconds` (jusqu’à 3 600 s); les sorties consignent drafts choisis, maximum d’équipement temporaire/Flux, ratio actif/mural et FPS. Le contrôle des empreintes confirme que `user://saves` n’est pas modifié.
+- [x] Deux parcours Easy, seed `20261017`, kite et sélection synthétique orientée survie, vitesse ×1, HP normaux, sans kills scriptés ni profil de progression attaché : défaites vague 2 après 37,89 s (9 kills, niveau 3, un draft) et 40,47 s (11 kills, niveau 2, un draft, maximum 1 équipement temporaire et 7 Flux). Le ratio actif/mural était 0,999 pour les deux; aucun slot de sauvegarde normale n’a été modifié.
+- [i] Ces exécutions s’arrêtent en défaite avant le premier boss et leur draft/mouvement est piloté par heuristiques; elles ne valident ni la survie ni les récompenses d’une session complète représentative. Elles ne justifient aucun changement des courbes **[PROPOSÉES]**. La validation humaine Armorless reste requise pour P7A.5/P7A.6 et l’équilibrage P6.9.
 
 
 ## P8.1/P8.3 — Sélecteur de mode Sandbox Lab — 2026-10-17

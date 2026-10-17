@@ -2,8 +2,10 @@ extends SceneTree
 
 const ARMORLESS_RUN_STATE := preload("res://scripts/armorless_run_state.gd")
 const EQUIPMENT_GENERATOR := preload("res://scripts/equipment_generator.gd")
-const MAX_WAVE := 60
-const MAX_WALL_SECONDS := 300.0
+const DEFAULT_MAX_WAVE := 60
+const MAX_WAVE_LIMIT := 120
+const DEFAULT_MAX_WALL_SECONDS := 300.0
+const MAX_WALL_SECONDS_LIMIT := 3600.0
 
 var _movement_actions: Array[String] = []
 const DRAFT_STAT_WEIGHTS := {
@@ -23,7 +25,8 @@ func _run() -> void:
 	var run_seed := 20261017
 	var movement_mode := "kite"
 	var draft_strategy := "first"
-	var max_wall_seconds := MAX_WALL_SECONDS
+	var max_wave := DEFAULT_MAX_WAVE
+	var max_wall_seconds := DEFAULT_MAX_WALL_SECONDS
 	for argument in OS.get_cmdline_user_args():
 		if argument.begins_with("--seed="):
 			run_seed = int(argument.trim_prefix("--seed="))
@@ -33,14 +36,19 @@ func _run() -> void:
 			draft_strategy = argument.trim_prefix("--draft=")
 		elif argument.begins_with("--max-wall-seconds="):
 			max_wall_seconds = float(argument.trim_prefix("--max-wall-seconds="))
+		elif argument.begins_with("--max-wave="):
+			max_wave = int(argument.trim_prefix("--max-wave="))
 	if movement_mode not in ["kite", "stationary"]:
 		_fail("Movement mode must be kite or stationary")
 		return
 	if draft_strategy not in ["first", "survival"]:
 		_fail("Draft strategy must be first or survival")
 		return
-	if not is_finite(max_wall_seconds) or max_wall_seconds <= 0.0 or max_wall_seconds > MAX_WALL_SECONDS:
-		_fail("Maximum wall duration must be between 0 and %d seconds" % int(MAX_WALL_SECONDS))
+	if max_wave < 1 or max_wave > MAX_WAVE_LIMIT:
+		_fail("Maximum wave must be between 1 and %d" % MAX_WAVE_LIMIT)
+		return
+	if not is_finite(max_wall_seconds) or max_wall_seconds <= 0.0 or max_wall_seconds > MAX_WALL_SECONDS_LIMIT:
+		_fail("Maximum wall duration must be between 0 and %d seconds" % int(MAX_WALL_SECONDS_LIMIT))
 		return
 	if not _verify_draft_strategy():
 		_fail("The survival draft strategy failed its deterministic ranking checks")
@@ -76,8 +84,11 @@ func _run() -> void:
 	var direction_seed := 0
 	var frame_count := 0
 	var path_distance := 0.0
+	var drafts_selected := 0
+	var max_temporary_items := 0
+	var max_flux := 0
 	var previous_position: Vector2 = session.player.global_position
-	while not session.run_over and session.wave_director.wave <= MAX_WAVE and \
+	while not session.run_over and session.wave_director.wave <= max_wave and \
 			Time.get_ticks_msec() - started_at < int(max_wall_seconds * 1000.0):
 		if movement_mode == "kite" and session.player_active_time >= next_move_at:
 			_set_kite_movement(session, direction_seed)
@@ -91,6 +102,9 @@ func _run() -> void:
 			var selected_index := _best_survival_draft_index(draft, equipment)
 			if selected_index >= 0 and selected_index < draft.size():
 				session._choose_armorless_draft_option("armorless:%s" % str(draft[selected_index]["instance_id"]))
+				drafts_selected += 1
+				max_temporary_items = maxi(max_temporary_items, session.armorless_run_state.temporary_equipment().size())
+		max_flux = maxi(max_flux, session.armorless_run_state.flux())
 		var current_position: Vector2 = session.player.global_position
 		path_distance += previous_position.distance_to(current_position)
 		previous_position = current_position
@@ -99,22 +113,25 @@ func _run() -> void:
 	if session.run_over:
 		var title := str(session.get_node("HUD/RunResultOverlay/RunResultPanel/Content/Title").text)
 		result = "victory" if title == "VICTORY" else "defeat" if title == "RUN OVER" else "unknown"
-	elif session.wave_director.wave > MAX_WAVE:
-		result = "wave_60_complete"
+	elif session.wave_director.wave > max_wave:
+		result = "wave_limit_complete"
 	var active_seconds: float = session.player_active_time
 	var wall_seconds := float(Time.get_ticks_msec() - started_at) / 1000.0
 	var final_snapshot: Dictionary = session.simulation.snapshot()
 	var metrics: Dictionary = final_snapshot.get("metrics", {})
 	var wall_hz := float(frame_count) / wall_seconds if wall_seconds > 0.0 else 0.0
 	var simulation_rate := active_seconds / wall_seconds if wall_seconds > 0.0 else 0.0
-	print("armorless_natural_run,seed=%d,difficulty=easy,movement=%s,draft=%s,result=%s,wave=%d,wave_state=%s,paused=%s,chest_open=%s,active_seconds=%.2f,wall_seconds=%.2f,simulation_rate=%.3f,frame_hz=%.1f,entities=%d,projectiles=%d,xp_orbs=%d,collisions=%d,kills=%d,level=%d,hp=%.1f/%.1f,path=%.1f" % [
+	var reward_label := str(session._run_result_overlay.get_node("RunResultPanel/Content/Rewards").text)
+	print("armorless_natural_run,seed=%d,difficulty=easy,movement=%s,draft=%s,result=%s,wave=%d,wave_state=%s,paused=%s,chest_open=%s,active_seconds=%.2f,wall_seconds=%.2f,simulation_rate=%.3f,frame_hz=%.1f,entities=%d,projectiles=%d,xp_orbs=%d,collisions=%d,kills=%d,level=%d,hp=%.1f/%.1f,path=%.1f,drafts_selected=%d,max_temporary_items=%d,max_flux=%d,profile_attached=false,reward_summary=%s" % [
 		run_seed,
 		movement_mode, draft_strategy, result, session.wave_director.wave, session.wave_director.state,
 		final_snapshot.get("paused", false), session._chest_open, active_seconds, wall_seconds,
 		simulation_rate, wall_hz, int(metrics.get("entity_count", 0)), int(metrics.get("projectile_count", 0)),
 		int(metrics.get("xp_orb_count", 0)), int(metrics.get("collision_count", 0)),
 		session.kill_count, session.player_level,
-		session.player_hp, session.player_max_hp, path_distance,
+		session.player_hp, session.player_max_hp, path_distance, drafts_selected,
+		max_temporary_items, max_flux,
+		reward_label,
 	])
 	session.queue_free()
 	await process_frame
