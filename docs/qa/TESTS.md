@@ -126,7 +126,7 @@
 
 - [x] Depuis un `git archive` propre du commit `e730115`, l’import Godot 4.7.2 puis `survival_loadout_smoke.gd`, `survival_chest_director_smoke.gd` et `survival_chest_choice_smoke.gd` passent avec des profils `XDG_DATA_HOME` isolés.
 - [x] Les smokes couvrent choix distincts, niveaux/slots pleins, pondération configurable sans suppression d’offres éligibles, ainsi que présentation et focus clavier des options de coffre.
-- [i] Le smoke de présentation a émis un avertissement de ressources au shutdown; les assertions de coffre ont passé. Les coefficients de poids et leur interprétation restent **[PROPOSÉS]** et l’arbitrage P5.3.4 reste **[OUVERT]**.
+- [i] Le smoke de présentation a émis un avertissement de ressources au shutdown; les assertions de coffre ont passé. Les poids précis sont maintenant **[VALIDÉS]**; l’interprétation d’« évolution proche » reste **[PROPOSÉE]**.
 
 ## P5.3.4 — Fréquence des drops de coffres — 2026-10-17
 
@@ -138,7 +138,13 @@
 - [x] Cohorte de dix runs Easy ×4 avec profil arbre complet (`full`) et kite : 454 kills, 14 coffres arme (2 ordinaires, 12 filet), 12 coffres relique (tous filet), aucun drop élite/boss. Deux runs outliers atteignent la vague 12 et ~393–396 s simulées, mais finissent en défaite avant de tuer le boss. Données brutes : [`data/progression_balance_chest_full_kite_20261017.csv`](data/progression_balance_chest_full_kite_20261017.csv); commande : `XDG_DATA_HOME=/tmp/dopamine-chest-full-kite-20261017 tools/local/godot-4.7.2/Godot_v4.7.2-stable_linux.x86_64 --headless --path game --script res://tests/progression_balance_survey.gd -- --tier=full --difficulty=easy --movement=kite --replicates=10` (code 0). La grande dispersion montre la sensibilité au pilotage/cadence du bot; 2 drops ordinaires d’arme et zéro de relique sur 454 kills ne permettent pas de valider ni de rejeter les probabilités proposées.
 - [x] Après ajout d’une assertion d’attribution (total par famille = somme ordinaire/élite/boss/filet), une session Easy ×1 ciblée passe sous Godot 4.7.2 avec 36 kills et un coffre d’arme attribué au tirage ordinaire; les autres compteurs restent à zéro.
 - [i] Les cohortes loot (3 puis 10 runs) et kite (deux groupes de 10 runs) ne calibrent pas les taux ordinaires; elles établissent la mesure des drops observés et du filet en sessions Survival simulées. La paire de runs longues n’est pas représentative et ne ferme pas l’équilibrage.
-- [ ] Les taux, l’intervalle anti-malchance et les poids d’offres demeurent **[PROPOSÉS]**; l’arbitrage nécessaire avant verrouillage reste **[OUVERT]**.
+- [i] Les cohortes n’ont pas calibré les probabilités; leurs mesures antérieures utilisent le taux ordinaire de 0,5 % alors proposé. Depuis l’arbitrage utilisateur ci-dessous, le taux ordinaire et les poids transformés sont **[VALIDÉS]**; 15 % élite, garantie boss, filet 60 s et interprétation d’évolution proche restent **[PROPOSÉS]**.
+
+## P5.3.4 — Valeurs de coffre arbitrées par l’utilisateur — 2026-10-17
+
+- [x] **[VALIDÉ]** Taux de drop ordinaire porté à 0,75 % indépendamment pour chaque famille. `survival_chest_director_smoke.gd` passe avec 40 000 tirages seedés par famille : 296 coffres d’arme et 301 reliques; le seuil d’acceptation statistique couvre le taux configuré.
+- [x] **[VALIDÉ]** Transformation des poids par `1 + (x−1)/2`, plafond inclus : amélioration ×1,25, relique assortie ×1,5, arme assortie ×1,25, évolution prête/proche ×1,125, plafond combiné ×2. `survival_loadout_smoke.gd` passe; il vérifie aussi qu’une arme nouvelle non assortie garde un poids positif de ×1.
+- [i] Les valeurs élite 15 %, garantie boss et filet anti-malchance 60 s restent **[PROPOSÉES]**; « évolution proche » conserve son interprétation proposée niveau 4+. Les taux retenus ne constituent pas encore une calibration en run représentative.
 
 ## P5.3.5 — Collecte — 2026-10-17
 

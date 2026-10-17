@@ -368,7 +368,7 @@ Travail requis :
   - [x] Produire trois choix distincts quand au moins trois choix existent ; test ciblé des armes niveau max, slots pleins et absence de choix éligibles.
   - [x] Ajouter la préférence synergie comme poids multiplicatifs et tirage pondéré sans remise; tous les poids restent strictement positifs et aucune offre éligible n’est supprimée.
   - [x] Vérifier objets niveau max, slots pleins et arme niveau 5 sans relique. La relique garde ses offres même lorsque l’arme est niveau 5.
-  - Les poids par défaut du GDD (**[PROPOSÉS]**) sont configurables dans Survival : amélioration possédée ×1,5, relique liée à une arme possédée ×2, arme liée à une relique possédée ×1,5, évolution prête/proche ×1,25, plafond combiné ×3. « Proche » signifie ici que le choix amène les deux membres d’une paire non évoluée au niveau 4 ou plus; cette interprétation reste **[PROPOSÉE]**.
+  - Les valeurs d’offres sont désormais **[VALIDÉES, 2026-10-17]** après application de la formule utilisateur `(x−1)/2+1` à chaque poids proposé et au plafond : amélioration possédée ×1,25, relique liée ×1,5, arme liée ×1,25, évolution prête/proche ×1,125, plafond combiné ×2. Le tirage reste sans remise et chaque option éligible garde un poids positif. « Proche » signifie ici que le choix amène les deux membres d’une paire non évoluée au niveau 4 ou plus; cette interprétation reste **[PROPOSÉE]**.
 - [x] **P5.3.2 — Pause et reprise**
   - [x] Suspendre la simulation et vérifier que ses horloges ne progressent pas pendant le modal; `survival_chest_smoke.gd` contrôle aussi l’horloge active affichée.
   - [x] Vérifier la reprise après sélection et le rejet d’une liste/sélection invalide dans `survival_chest_smoke.gd`; un choix invalide conserve le modal et la pause. `survival_pause_inventory_smoke.gd` confirme le retour vers le menu Pause, le focus et la simulation toujours figée.
@@ -379,8 +379,9 @@ Travail requis :
 - [ ] **P5.3.4 — Probabilités**
   - [x] Garder les taux de drop, le filet anti-malchance et les poids d’offres accessibles en configuration; `survival_chest_director_smoke.gd` vérifie désormais aussi, sur 40 000 tirages seedés, les fréquences ordinaires/élites et l’indépendance des deux familles; `survival_loadout_smoke.gd` couvre les poids d’offres.
   - [x] Instrumenter `progression_balance_survey.gd` pour enregistrer les drops réels par famille et distinguer tirages ordinaires, élites, boss et filet; les trois parcours initiaux, dix runs Easy ×1, dix Easy ×4 en kite et dix Easy ×4 avec profil complet sont archivés sous `docs/qa/data/progression_balance_chest_*_20261017.csv`. Le profil complet atteint 454 kills, deux drops ordinaires d’arme et aucun drop ordinaire relique; les cohortes observent aussi le filet. Dispersion du bot et faible nombre de drops ordinaires : les taux ne sont pas calibrés.
+  - [x] **[VALIDÉ, 2026-10-17]** Porter le drop ordinaire de chaque famille à 0,75 %; les valeurs d’offres deviennent ×1,25 / ×1,5 / ×1,25 / ×1,125, plafond combiné ×2 selon `(x−1)/2+1`. Le test seedé vérifie 40 000 tirages par famille; les défauts élite 15 % et filet 60 s restent **[PROPOSÉS]**.
   - [x] Intégrer `free_first_chest_reroll` au premier coffre de run via P6.5; le comportement reste **[PROPOSÉ]** et est couvert par `free_chest_reroll_smoke.gd`.
-  - [ ] Faire arbitrer les valeurs nécessaires avant leur verrouillage; les coefficients restent **[PROPOSÉS]**.
+  - [ ] Calibrer les taux avec des runs représentatives avant leur verrouillage; 0,75 % ordinaire et les poids d’offres sont **[VALIDÉS]**, tandis que les 15 % élite, la garantie boss et le filet 60 s restent **[PROPOSÉS]**.
 - [x] **P5.3.5 — Collecte**
   - [x] Préserver le rayon séparé `chest_collection_radius`.
   - [x] Vérifier par régression qu'un pickup très élevé n'attire pas un chest éloigné.

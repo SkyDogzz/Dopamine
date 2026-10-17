@@ -160,17 +160,17 @@ var sandbox_health_decay_multiplier := 1.0
 @export_range(0.0, 1.0) var elite_spawn_chance: float = 0.35
 @export_range(1, 5) var elite_max_active: int = 1
 @export_range(1.0, 3.0, 0.05) var chaos_support_spawn_chance_multiplier: float = 1.5
-@export_group("Prototype loot — proposed rates")
-@export var ordinary_chest_drop_chance: float = 0.005
+@export_group("Chest drop rates")
+@export var ordinary_chest_drop_chance: float = 0.0075
 @export var elite_chest_drop_chance: float = 0.15
 @export var chest_guarantee_interval_seconds: float = 60.0
 @export var chest_collection_radius: float = 36.0
-@export_group("Chest offer weights — proposed")
-@export_range(0.1, 5.0, 0.05) var owned_upgrade_offer_weight: float = 1.5
-@export_range(0.1, 5.0, 0.05) var matching_relic_offer_weight: float = 2.0
-@export_range(0.1, 5.0, 0.05) var matching_weapon_offer_weight: float = 1.5
-@export_range(0.1, 5.0, 0.05) var near_evolution_offer_weight: float = 1.25
-@export_range(0.1, 5.0, 0.05) var combined_offer_weight_cap: float = 3.0
+@export_group("Chest offer weights")
+@export_range(0.1, 5.0, 0.05) var owned_upgrade_offer_weight: float = 1.25
+@export_range(0.1, 5.0, 0.05) var matching_relic_offer_weight: float = 1.5
+@export_range(0.1, 5.0, 0.05) var matching_weapon_offer_weight: float = 1.25
+@export_range(0.1, 5.0, 0.025) var near_evolution_offer_weight: float = 1.125
+@export_range(0.1, 5.0, 0.05) var combined_offer_weight_cap: float = 2.0
 @export_group("Prototype contact damage — proposed tuning")
 @export var contact_damage_per_hit: float = 10.0
 @export var body_contact_cooldown_seconds: float = 0.35

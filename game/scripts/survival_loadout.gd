@@ -56,11 +56,11 @@ var _relic_definitions := {}
 var _starting_weapon_pool: Array[String] = ["lightning_conductor", "inferno_sprayer"]
 var _rng := RandomNumberGenerator.new()
 var offer_weights := {
-	"owned_upgrade": 1.5,
-	"matching_relic": 2.0,
-	"matching_weapon": 1.5,
-	"near_evolution": 1.25,
-	"combined_cap": 3.0,
+	"owned_upgrade": 1.25,
+	"matching_relic": 1.5,
+	"matching_weapon": 1.25,
+	"near_evolution": 1.125,
+	"combined_cap": 2.0,
 }
 
 func _init(seed_value: int = 0) -> void:

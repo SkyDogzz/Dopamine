@@ -30,8 +30,8 @@ func _initialize() -> void:
 		return
 	var ordinary_sample = director_script.new(44017)
 	ordinary_sample.guarantee_interval_seconds = 0.0
-	if not is_equal_approx(ordinary_sample.ordinary_drop_chance, 0.005):
-		_fail("The proposed ordinary family drop chance should default to 0.5%")
+	if not is_equal_approx(ordinary_sample.ordinary_drop_chance, 0.0075):
+		_fail("The validated ordinary family drop chance should default to 0.75%")
 		return
 	var ordinary_weapon_drops := 0
 	var ordinary_relic_drops := 0
@@ -40,8 +40,8 @@ func _initialize() -> void:
 		var drops: Array = ordinary_sample.roll_drops(float(index) / 1000.0, ["weapon", "relic"])
 		ordinary_weapon_drops += int(drops.has("weapon"))
 		ordinary_relic_drops += int(drops.has("relic"))
-	if ordinary_weapon_drops not in range(120, 281) or ordinary_relic_drops not in range(120, 281):
-		_fail("Ordinary family drops should statistically follow the configured 0.5% chance: %d/%d" % [
+	if ordinary_weapon_drops not in range(220, 381) or ordinary_relic_drops not in range(220, 381):
+		_fail("Ordinary family drops should statistically follow the configured 0.75% chance: %d/%d" % [
 			ordinary_weapon_drops, ordinary_relic_drops,
 		])
 		return

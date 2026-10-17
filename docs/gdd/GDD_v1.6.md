@@ -139,7 +139,9 @@ Paires de contenu validées :
 
 [VALIDÉ] Chests d’armes et de reliques obtenus sur les ennemis, trois choix par ouverture, préférence pour les améliorations et synergies, et protection anti-malchance. Les slots pleins limitent les propositions aux améliorations encore disponibles. Les rerolls sont limités et obtenus via la progression. Le gameplay est en pause pendant le choix. Toute acquisition/amélioration peut rendre un choix d’évolution disponible ; le combo ne s’active qu’à sa collecte.
 
-[PROPOSÉ] Probabilité de drop par ennemi ordinaire : 0,5 % pour chaque famille ; élite : 15 % par famille ; boss : un chest de chaque famille garanti. Filet de sécurité : au moins un chest éligible de chaque famille toutes les 60 secondes. Poids de proposition : ×1,5 upgrade équipé ; ×2 relique correspondant à une arme ; ×1,5 arme correspondant à une relique ; ×1,25 évolution proche ; multiplicateur combiné plafonné à ×3.
+[VALIDÉ — EXTENSION DU 2026-10-17] Probabilité de drop par ennemi ordinaire : 0,75 % par famille, tirée indépendamment pour les chests d’armes et de reliques. Poids d’offre : formule `poids_final = 1 + (poids_proposé − 1) / 2`, appliquée à chaque multiplicateur et au plafond combiné. Les poids résultants sont ×1,25 pour une amélioration possédée, ×1,5 pour une relique liée à une arme possédée, ×1,25 pour une arme liée à une relique possédée, ×1,125 pour une évolution prête/proche, plafond combiné ×2. Le tirage reste sans remise parmi les options éligibles et garde à chacune un poids positif.
+
+[PROPOSÉ] Élite : 15 % par famille ; boss : un chest de chaque famille éligible garanti. Filet de sécurité : au moins un chest éligible de chaque famille toutes les 60 secondes, au prochain événement de mort ennemi.
 
 [À TESTER] Éviter les tirages impossibles lorsque les slots sont pleins ; définir les alternatives quand tout est niveau 5 ; ne pas compter plusieurs fois les drops garantis ; prévenir les biais extrêmes ; empêcher l'ouverture en double après chargement.
 

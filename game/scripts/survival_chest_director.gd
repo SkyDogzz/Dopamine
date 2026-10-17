@@ -1,6 +1,6 @@
 extends RefCounted
 
-var ordinary_drop_chance := 0.005
+var ordinary_drop_chance := 0.0075
 var elite_drop_chance := 0.15
 var guarantee_interval_seconds := 60.0
 var _last_drop_time := {"weapon": 0.0, "relic": 0.0}
