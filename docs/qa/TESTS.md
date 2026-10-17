@@ -1077,3 +1077,10 @@ Note de clôture : le blocage historique du smoke `sandbox_ui_smoke.gd` décrit 
 - [x] Les deux cibles sont maintenant séparées, les armes automatiques désactivées, et les diagnostics d’échec affichent séquences/hits observés. Le smoke catalogue passe 10 fois de suite.
 - [x] CTest séquentiel complet sous Godot 4.7.2 : **87/87 tests passent en 61,40 s**, incluant le smoke catalogue, le Sandbox Lab, les snapshots, les scénarios des dix armes et le rendu sous Xvfb.
 - [ ] Le checkpoint est exécuté sur l’hôte Linux actuel; il ne remplace pas le profilage GPU de référence ou les parcours humains de P5/P6/P7.
+
+## P7A — Survey Armorless sans invulnérabilité — 2026-10-17
+
+- [x] `armorless_natural_run_survey.gd` démarre Armorless Easy avec l’arme de départ normale, spawns et dégâts de contact actifs, PV non verrouillés, sans kills scriptés; un kite simple pilote le joueur et le harness auto-sélectionne le premier draft. Le script vérifie aussi l’absence d’écriture dans `user://saves`.
+- [x] Trois essais batch : seed 20261017, défaite vague 2 à 51,54 s actives, 14 kills, niveau 3; seed 20261018, défaite vague 2 à 50,75 s, 6 kills, niveau 2; seed 20261019, défaite vague 4 à 108,21 s, 46 kills, niveau 2. Tous finissent à 0 PV.
+- [x] Une exécution standalone du seed 20261017 avait auparavant fini vague 1 à 22,59 s actives avec 4 kills. Le déplacement synthétique via Input dépend du cadencement de frames : ces mesures ne sont pas statistiquement reproductibles et ne représentent pas un parcours humain. Elles ne changent aucun paramètre **[PROPOSÉ]**.
+- [ ] Ces runs meurent avant le premier boss de vague 12; la session complète Armorless de production reste à valider manuellement, avec ses décisions de draft et sans assistance.
