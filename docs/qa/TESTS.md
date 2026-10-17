@@ -116,6 +116,29 @@
 - [x] Régénérer les trois formations complètes avec seed `20261017` remplace les tableaux pré-seed; certaines valeurs changent pour les armes à comportements aléatoires. Aucun tuning **[PROPOSÉ]** n’est modifié.
 - [i] Cette vérification montre la reproductibilité des dégâts bruts pour certains cas et seeds, pas une calibration statistique de toutes les branches aléatoires.
 
+## P9.1 — Survey Survival par archétype et arme — 2026-10-17
+
+- [x] `survival_archetype_balance_survey.gd` mesure **360 cas** : 12 archétypes (`chaser`, `sprinter`, `tank`, `shooter`, `buffer`, `exploder`, `shielder`, `summoner`, `summoned`, `elite`, `mid_boss`, `final_boss`) × 10 armes × 3 builds (niveau 1, niveau 5 + relique 5, évolution). Seed `20261017`, difficulté Normal, un ennemi initial à 84 px, joueur immobile à PV ordinaires, dégradation passive des PV désactivée, simulation à ×4, plafond de 18 s simulées et multiplicateur de PV ennemi ×1000. XP et coffres sont désactivés; la sonde vérifie que le build reste exactement celui annoncé. Les options `--enemy`, `--weapon`, `--build` filtrent les cas; le CSV complet est archivé dans [`data/survival_archetype_balance_seed_20261017.csv`](data/survival_archetype_balance_seed_20261017.csv).
+
+  | Archétype | Survie moyenne | Vivant après 18 s |
+  |---|---:|---:|
+  | Chaser | 5,07 s | 1/30 |
+  | Sprinter | 4,58 s | 1/30 |
+  | Tank | 5,74 s | 2/30 |
+  | Shooter | 5,25 s | 2/30 |
+  | Buffer | 5,55 s | 2/30 |
+  | Exploder | 18,03 s | 30/30 |
+  | Shielder | 5,73 s | 2/30 |
+  | Summoner | 4,73 s | 1/30 |
+  | Summoned | 4,86 s | 1/30 |
+  | Elite | 4,74 s | 1/30 |
+  | Mid Boss | 4,68 s | 1/30 |
+  | Final Boss | 4,45 s | 1/30 |
+
+- [i] Le multiplicateur de PV élevé évite que les dégâts de l’arme éliminent rapidement la cible; il empêche aussi d’observer les transitions de phase des boss. Les dégâts de l’arme agrègent les ennemis présents dans la rencontre, donc incluent les invocations du Summoner. Une seule unité initiale ne reproduit ni une vague ni le soutien d’un groupe; les PV nets peuvent inclure le soin sur élimination. L’Exploder se détruit après son explosion. Le chronométrage reste frame-driven.
+- [i] Exécution sur le checkout de travail contenant le diff local non commité de `game/scripts/survival_session.gd` associé aux SFX et au rayon du boss; ce diff n’a pas été inclus dans ce commit. Une baseline propre est nécessaire avant tout tuning. Le survey filtré pour `exploder/crimson_daggers/evolved` et la matrice complète terminent avec code 0, sans erreur ni avertissement de ressources.
+- [ ] Cette collecte n’équilibre pas les valeurs **[PROPOSÉES]** : il reste à comparer des vagues mobiles et représentatives, les profils de joueur, les affixes d’élite et les phases complètes de boss avant toute conclusion de balance.
+
 ## Revalidation de la suite après export Linux — 2026-10-17
 
 - Première exécution CTest séquentielle sur le checkout courant : **86/87**. Le smoke catalogue inspectait le buffer temporaire d’événements alors que `SurvivalSession` acquitte les événements qu’elle consomme; la course pouvait masquer un dégât déjà appliqué.
