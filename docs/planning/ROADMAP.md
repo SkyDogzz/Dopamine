@@ -672,7 +672,7 @@ P1 livre le Sandbox développeur et ne remplace pas cette feature produit.
   - [ ] Tester sauvegarde interrompue, backup, restauration et migrations.
   - [ ] Vérifier double récompense et clôture propre des threads.
 - [ ] **P9.7 — Plateformes**
-  - [ ] Refaire build Linux propre sur machine propre.
+  - [ ] Refaire build Linux propre sur machine propre. Un répertoire CMake vierge dans `/tmp` sur l’hôte actuel compile depuis le `godot-cpp` épinglé et passe 87/87 CTest; voir `docs/qa/TESTS.md`. Une machine distincte n’a pas encore été vérifiée.
   - [ ] Refaire build Windows propre et lancer la GDExtension.
   - [ ] Tester contrôles, chemins et rendu sur les deux plateformes.
 - [ ] **P9.8 — Préparation de livraison**

@@ -6,6 +6,13 @@
 - Commande : `/tmp/cmake-3.31.12-linux-x86_64/bin/ctest --test-dir build --output-on-failure -j1`, après configuration avec `DOPAMINE_GODOT_EXECUTABLE` pointant sur `tools/local/godot-4.7.2/Godot_v4.7.2-stable_linux.x86_64`.
 - Cette suite vérifie les parcours automatisés sur l’hôte Linux actuel; elle ne remplace ni une run Armorless manuelle complète, ni le profilage sur iGPU cible, ni le build Windows.
 
+## Build Linux depuis un répertoire CMake vierge — 2026-10-17
+
+- Configuration neuve dans `/tmp/dopamine-p9-linux-clean` avec CMake 3.31.12, GCC 14.2.0 et Godot officiel 4.7.2; FetchContent a récupéré le `godot-cpp` épinglé et généré les 2 135 bindings.
+- `cmake --build /tmp/dopamine-p9-linux-clean --parallel 4` a compilé la simulation, `godot-cpp` et `game/bin/linux/libdopamine.linux.template_debug.x86_64.so` depuis les sources.
+- CTest de ce build propre : **87/87 passent en 60,52 s**, incluant l’import Godot et le smoke de rendu.
+- C’est un build neuf dans le même hôte et le même checkout, pas une machine Linux propre. Le binaire runtime dans `game/bin/linux` est généré/ignoré; Windows et iGPU de référence ne sont pas couverts.
+
 ## Validation d'isolation Sandbox Lab P8.8 — 2026-10-17
 
 - `sandbox_lab_smoke.gd` écrit un slot normal sentinelle dans son `XDG_DATA_HOME` de test, puis démarre le Lab, applique des builds, lance le combat et effectue Reset; le contenu du slot est comparé octet pour octet à la fin.
