@@ -333,6 +333,8 @@ const TOXIC_IGNITION_TARGET_COOLDOWN_SECONDS := 1.0
 @export_range(1.0, 10.0, 0.1) var magnet_heart_level_five_radius_multiplier: float = 3.0
 @export_range(1.0, 2000.0, 1.0) var magnet_heart_level_five_acceleration: float = 600.0
 @export_range(1.0, 1000.0, 1.0) var magnet_heart_level_five_max_speed: float = 240.0
+@export_range(1.0, 4.0, 0.1) var magnet_heart_magnetic_coil_speed_multiplier: float = 1.5
+@export_range(1.0, 4.0, 0.1) var magnet_heart_celestial_eye_radius_multiplier: float = 1.5
 @export_group("Prototype XP — proposed tuning")
 @export var xp_per_enemy: float = 5.0
 @export var xp_collection_radius: float = 36.0
@@ -1727,8 +1729,46 @@ func _update_magnet_heart_pulse(state: Dictionary, elapsed_active_time: float) -
 			_magnet_heart_impulse_expires_at = simulation_time + magnet_heart_level_five_pulse_duration_seconds
 	if _magnet_heart_impulse_expires_at > simulation_time and elapsed_active_time > 0.0:
 		simulation.attract_xp_orbs(player.global_position,
-			xp_collection_radius * maxf(1.0, magnet_heart_level_five_radius_multiplier),
-			magnet_heart_level_five_acceleration, magnet_heart_level_five_max_speed, elapsed_active_time)
+			_magnet_heart_effective_pulse_radius(), magnet_heart_level_five_acceleration,
+			_magnet_heart_effective_pulse_max_speed(), elapsed_active_time)
+		for field in _magnet_heart_singularity_fields():
+			simulation.attract_xp_orbs(field["position"], field["radius"],
+				magnet_heart_level_five_acceleration, _magnet_heart_effective_pulse_max_speed(), elapsed_active_time)
+
+func _magnet_heart_synergy_active(relic_id: String) -> bool:
+	return loadout.relic_level("magnet_heart") >= loadout.MAX_LEVEL and \
+		loadout.relic_level(relic_id) >= loadout.MAX_LEVEL
+
+func _magnet_heart_effective_pulse_radius() -> float:
+	var radius := xp_collection_radius * maxf(1.0, magnet_heart_level_five_radius_multiplier)
+	if _magnet_heart_synergy_active("celestial_eye") and \
+			is_finite(magnet_heart_celestial_eye_radius_multiplier) and magnet_heart_celestial_eye_radius_multiplier > 1.0:
+		radius *= magnet_heart_celestial_eye_radius_multiplier
+	return radius
+
+func _magnet_heart_effective_pulse_max_speed() -> float:
+	var max_speed := magnet_heart_level_five_max_speed
+	if _magnet_heart_synergy_active("magnetic_coil") and \
+			is_finite(magnet_heart_magnetic_coil_speed_multiplier) and magnet_heart_magnetic_coil_speed_multiplier > 1.0:
+		max_speed *= magnet_heart_magnetic_coil_speed_multiplier
+	return max_speed
+
+func _magnet_heart_singularity_fields() -> Array:
+	var fields: Array = []
+	if not _magnet_heart_synergy_active("singularity"):
+		return fields
+	for entity in _entities:
+		var components: Dictionary = entity["components"]
+		if not components.get("IsProjectile", false) or \
+				str(components.get("EnemyType", "")) not in ["void_orb", "event_horizon"]:
+			continue
+		var projectile: Dictionary = components.get("Projectile", {})
+		var radius := float(projectile.get("attraction_radius", 0.0))
+		var transform: Dictionary = components.get("Transform2D", {})
+		var position := Vector2(float(transform.get("x", NAN)), float(transform.get("y", NAN)))
+		if is_finite(radius) and radius > 0.0 and position.is_finite():
+			fields.append({"position": position, "radius": radius})
+	return fields
 
 func _add_xp(amount: float) -> void:
 	player_xp += amount
@@ -3555,7 +3595,7 @@ func _draw() -> void:
 	draw_texture_rect(GROUND_TEXTURE, Rect2(-8192.0, -8192.0, 16384.0, 16384.0), true)
 	draw_texture_rect(RUINS_TEXTURE, Rect2(-768.0, -768.0, 1536.0, 1536.0), false, Color(1.0, 1.0, 1.0, 0.88))
 	if _last_simulation_time < _magnet_heart_impulse_expires_at:
-		var impulse_radius := xp_collection_radius * maxf(1.0, magnet_heart_level_five_radius_multiplier)
+		var impulse_radius := _magnet_heart_effective_pulse_radius()
 		draw_arc(player.global_position, impulse_radius, 0.0, TAU, 64, Color(0.22, 0.9, 1.0, 0.42), 1.5, true)
 	if not reduced_effects:
 		_sprite_renderer.draw_projectile_trails(self)

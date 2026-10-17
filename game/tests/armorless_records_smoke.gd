@@ -114,6 +114,7 @@ func _run() -> void:
 
 func _check_proposed_reward_formula(directory: String) -> bool:
 	var formula_directory := directory.path_join("reward_formula")
+	_remove_directory_contents(formula_directory)
 	DirAccess.make_dir_recursive_absolute(formula_directory)
 	var formula_saves = SAVE_SERVICE.new(formula_directory)
 	var formula_progression = PROGRESSION.new(formula_saves, "0")
@@ -145,6 +146,16 @@ func _check_proposed_reward_formula(directory: String) -> bool:
 					[int(after["essence"]) - int(before["essence"]), int(after["powder_basic"]) - int(before["powder_basic"])],
 				])
 	return true
+
+func _remove_directory_contents(directory: String) -> void:
+	if not DirAccess.dir_exists_absolute(directory):
+		return
+	for file_name in DirAccess.get_files_at(directory):
+		DirAccess.remove_absolute(directory.path_join(file_name))
+	for directory_name in DirAccess.get_directories_at(directory):
+		var child_directory := directory.path_join(directory_name)
+		_remove_directory_contents(child_directory)
+		DirAccess.remove_absolute(child_directory)
 
 func _fail_formula(message: String) -> bool:
 	_fail(message)

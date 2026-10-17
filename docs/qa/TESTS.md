@@ -1564,3 +1564,9 @@ Note de clôture : le blocage historique du smoke `sandbox_ui_smoke.gd` décrit 
 - [x] `survival_weapon_catalog_smoke.gd` confirme que Magnetic Coil niveau 4 ne configure aucun homing, que le niveau 5 le configure sur Sawblades/Razorstorm, et que le rayon transmis respecte le plafond de ciblage visible.
 - [x] Build Debug de la GDExtension et CTest séquentiel complet : **92/92 tests passent en 62,79 s** avec `PATH=/tmp/cmake-3.31.12-linux-x86_64/bin:$PATH cmake --build build --parallel 4 && PATH=/tmp/cmake-3.31.12-linux-x86_64/bin:$PATH ctest --test-dir build --output-on-failure -j1`.
 - [i] Le smoke catalogue isolé affiche à la fermeture 2 instances ObjectDB et une ressource encore référencées; CTest demeure vert. La vitesse angulaire proposée (1 rad/s) et son rayon de recherche ne sont pas calibrés en run représentative.
+
+## P5.1.13 — Synergies Magnet Heart — 2026-10-17
+
+- [x] `survival_magnet_heart_synergy_smoke.gd` vérifie que chaque effet attend le niveau 5 des deux reliques; Magnetic Coil accroît la vitesse maximale du pulse, Celestial Eye en étend le rayon, et Singularity déplace les orbes XP vers le champ Void Orb/Event Horizon actif pendant le pulse.
+- [x] Les orbes XP restent hors de l’attraction native Void Orb sans la synergie Magnet Heart + Singularity; un test cœur natif conserve cette séparation. Les coffres restent exclus de toute attraction.
+- [i] L’existence des trois synergies est **[VALIDÉE]** par l’utilisateur (« les 3 »); leurs conditions de niveau, leur déclenchement pendant Magnetic Pulse et les multiplicateurs ×1,5 restent **[PROPOSÉS]** et à calibrer.

@@ -471,11 +471,13 @@ Progression proposée :
 
 **Effet niv. 5 proposé — Magnetic Pulse :** toutes les 20 secondes, attire les objets éligibles dans un rayon de 300% du rayon de base, sans attirer les coffres. Les objets accélèrent vers le joueur au lieu d’être téléportés.
 
-Synergies proposées :
+Synergies **[VALIDÉES par l’utilisateur, 2026-10-17 — réponse « les 3 »]** :
 
 - Magnet Heart + Magnetic Coil : vitesse d’attraction accrue.
 - Magnet Heart + Singularity : attraction de l’XP par gravité.
 - Magnet Heart + Celestial Eye : rayon des impulsions augmenté.
+
+Prototype **[PROPOSÉ]** : une synergie s’active quand les deux reliques concernées sont au niveau 5, pendant Magnetic Pulse. Magnetic Coil multiplie la vitesse maximale d’attraction par 1,5; Singularity attire les orbes XP dans le champ actif de Void Orb/Event Horizon vers celui-ci; Celestial Eye multiplie le rayon de pulse par 1,5. Les prérequis de niveau, ce timing et ces multiplicateurs restent **[PROPOSÉS]**, configurables et à calibrer.
 
 **Nouveau total : 10 armes, 11 reliques, toujours 5 slots de reliques.**
 

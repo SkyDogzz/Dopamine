@@ -330,6 +330,7 @@ Travail requis :
   - [x] Appliquer le bonus de rayon **[PROPOSÉ]** configurable de 25 % par niveau aux orbes XP.
   - [x] Vérifier orbe XP et chest séparément : le bonus n'élargit jamais le rayon du chest.
   - [x] Au niveau 5, déclencher périodiquement Magnetic Pulse **[PROPOSÉE]** dans 300 % du rayon XP; le cœur natif accélère progressivement les orbes XP vers le joueur, les collecte seulement dans le rayon XP normal, puis arrête leur mouvement à la fin de l'impulsion. L'anneau, le cycle, le mouvement et la collecte gèlent en pause; aucun chest n'est affecté. Intervalle 20 s, durée 1,5 s, accélération 600 et vitesse max 240 **[PROPOSÉS]** et configurables.
+  - [x] Les trois synergies Magnet Heart + Magnetic Coil/Singularity/Celestial Eye sont **[VALIDÉES]** comme périmètre. Prototype configurable **[PROPOSÉ]** : deux reliques niveau 5, effet durant Magnetic Pulse, vitesse Coil ×1,5, attraction XP par le champ Void Orb/Event Horizon et rayon Celestial Eye ×1,5; smoke Survival vérifie seuils, vitesse/rayon et attraction vers le champ sans attirer les coffres.
   - [ ] Étendre l'attraction aux soins, ressources, monnaies et bonus temporaires lorsqu'ils existent.
 - [x] **P5.1.14 — Slots et effets de capacité**
   - [x] Vérifier cinq slots de reliques en run normale ; `survival_loadout_smoke.gd` couvre cinq reliques distinctes, refuse une sixième et ne propose plus de nouvel item quand les slots sont pleins.

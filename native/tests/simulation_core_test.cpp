@@ -277,15 +277,20 @@ int main() {
 
 	SimulationCore void_orb;
 	const auto pulled_target = void_orb.spawn("chaser", -20.0F, 0.0F, 100.0F, 0.0F, 0.0F);
+	const auto ordinary_xp_orb = void_orb.spawn_xp_orb(60.0F, 0.0F, 1.0F);
 	const auto gravity_orb = void_orb.spawn_projectile("void_orb", 80.0F, 0.0F, 2.0F, 3.0F, 3.0,
 			0.0F, 0.0F, 2.0F, 0.5, 2.0, 0.0F, 0.0F, 0, 150.0F, 40.0F, true);
 	void_orb.steer_enemies_towards(-100.0F, 0.0F, {.max_speed = 30.0F});
 	void_orb.advance(0.25);
 	const auto pulled_state = void_orb.entity(pulled_target);
+	const auto ordinary_xp_state = void_orb.entity(ordinary_xp_orb);
 	const auto orb_state = void_orb.entity(gravity_orb);
 	require(pulled_state && pulled_state->transform.x > -20.0F &&
 			pulled_state->velocity.x > 0.0F,
 			"Void Orb attraction should pull nearby enemies toward its field centre");
+	require(ordinary_xp_state && ordinary_xp_state->is_xp_orb && ordinary_xp_state->velocity.x == 0.0F &&
+			ordinary_xp_state->velocity.y == 0.0F,
+			"Void Orb should not attract XP without the Magnet Heart + Singularity synergy");
 	require(orb_state && orb_state->is_projectile && orb_state->projectile.attraction_radius == 150.0F &&
 			orb_state->projectile.attraction_speed == 40.0F && orb_state->projectile.pierces_targets,
 			"Void Orb field parameters should remain on the shared projectile state");
