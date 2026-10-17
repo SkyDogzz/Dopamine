@@ -703,7 +703,7 @@ P1 livre le Sandbox développeur et ne remplace pas cette feature produit.
   - [ ] Refaire build Windows propre et lancer la GDExtension.
   - [ ] Tester contrôles, chemins et rendu sur les deux plateformes.
   - [x] Vérifier le SHA-512 officiel des templates Godot 4.7.2, installer le template Linux release x86_64, exporter `build/linux/export/DopamineSurvivor.x86_64` et lancer le menu trois frames en headless; détails dans `docs/qa/TESTS.md`.
-  - [x] Confirmer que le processus autonome mappe `libdopamine.linux.template_release.x86_64.so`; la vérification directe d’instanciation de `CombatSimulation` reste ouverte.
+  - [x] Confirmer que le processus autonome mappe `libdopamine.linux.template_release.x86_64.so`. La vérification directe d’instanciation de `CombatSimulation`, d’abord restée ouverte après ce seul contrôle de chargement, a ensuite été réalisée dans une session reconstruite avec le même template release et la même extension; voir la preuve du snapshot propre ci-dessus et `docs/qa/TESTS.md`.
   - [x] Naviguer par entrée clavier synthétique depuis l’accueil, passer par le hub et démarrer une run Survival depuis l’exécutable exporté; le HUD `IN RUN` et l’arme de départ s’affichent sans erreur d’indisponibilité de `CombatSimulation`.
   - [x] Copier l’exécutable et son sidecar GDExtension vers un répertoire extérieur au dépôt, démarrer avec un `XDG_DATA_HOME` vierge et quitter proprement. Cette relocation vérifie l’absence de dépendance aux chemins du checkout, mais reste sur le même hôte.
   - [ ] Refaire le parcours clavier/contrôleur et le rendu sur un poste Linux avec matériel réel; le contrôle courant utilise Xvfb/Mesa llvmpipe.
