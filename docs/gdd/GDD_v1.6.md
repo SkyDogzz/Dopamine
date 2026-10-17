@@ -95,7 +95,7 @@ Boucle Survival : choisir difficulté et arme initiale → survivre à une vague
 
 [PROPOSÉ] Multiplicateurs par difficulté (HP / dégâts / densité / Essence / Powder) : Easy 0,75 / 0,70 / 0,80 / 0,70 / 0,70 ; Normal 1 / 1 / 1 / 1 / 1 ; Hard 1,5 / 1,3 / 1,2 / 1,6 / 1,5 ; Nightmare 2,2 / 1,7 / 1,5 / 2,5 / 2,3 ; Chaos 3,2 / 2,3 / 1,8 / 4 / 3,5.
 
-[OUVERT] Catalogue détaillé des patterns des boss, compositions de vagues, seuils d'élites et budget de simulation. Les trois mutations Chaos validées, leurs valeurs et leur ressenti restent à vérifier et équilibrer sur des runs représentatives.
+[VALIDÉ — EXTENSION DU 2026-10-17, réponse A] Garder les rosters et patterns prototypes comme base, compléter les lacunes requises par le GDD, puis calibrer les compositions de vagues, seuils d’élites et budget de simulation sur des runs représentatives. Aucun chiffre sans mesure ne devient définitif. Les détails non spécifiés des patterns et les paramètres/ressentis restent **[PROPOSÉS]** ou **[OUVERTS]** jusqu’à leur vérification QA. Les mutations Chaos validées gardent leurs règles; leurs coefficients et leur ressenti restent à équilibrer en runs représentatives.
 
 <a id="5"></a>
 
