@@ -24,6 +24,12 @@
 - [x] `godot_project_import`, `sandbox_smoke`, `sandbox_combat_smoke` et `combat_catalog_smoke` passent : 4/4.
 - [ ] Les templates Linux 4.7.2 ne sont pas installés. Le test n’est donc pas un export autonome, et ne valide pas le lancement par `linux_release.x86_64` ni la distribution des notices dans un dossier d’installation.
 
+## Revalidation de la suite après export Linux — 2026-10-17
+
+- Première exécution CTest séquentielle sur le checkout courant : **86/87**. `survival_weapon_catalog_smoke` n’a observé qu’un des deux dégâts Thermal Shock attendus (Chill→Burn); le diagnostic montrait les deux commandes acceptées, mais aucun dégât Thermal Shock sur la cible Burn→Chill.
+- Le smoke catalogue a ensuite passé **10/10** répétitions isolées, puis CTest complet a passé **87/87 en 60,26 s**.
+- La cause de l’échec intermittent n’est pas établie. Ne pas considérer la flakiness comme corrigée; surveiller les prochaines suites. Ces résultats ont été obtenus sur un checkout contenant aussi un diff local non commité de `survival_session.gd`, donc ils ne décrivent pas uniquement le commit `9ff5246`.
+
 ## Build et lancement depuis un clone Git propre — 2026-10-17
 
 - Clone local neuf du commit `09baf7a`, puis configuration CMake 3.31.12, compilation complète avec GCC 14.2.0, import Godot 4.7.2 et lancement headless de la scène principale : réussis. FetchContent a récupéré le SHA `godot-cpp` verrouillé.
