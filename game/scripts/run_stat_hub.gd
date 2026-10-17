@@ -9,12 +9,12 @@ const YELLOW := Color("#FFD447")
 const GREEN := Color("#48E69B")
 const COMPACT_STAT_ICONS := {
 	"damage_pct": "res://assets/sprites/catalog/weapon_crimson_daggers.png",
-	"move_speed_pct": "res://assets/icons/equipment_boots.png",
+	"move_speed_pct": "res://assets/icons/catalog/equipment_boots.png",
 	"critical_chance_pct": "res://assets/sprites/catalog/relic_celestial_eye.png",
 }
 const STAT_ICONS := {
 	"damage_pct": "res://assets/sprites/catalog/weapon_crimson_daggers.png",
-	"move_speed_pct": "res://assets/icons/equipment_boots.png",
+	"move_speed_pct": "res://assets/icons/catalog/equipment_boots.png",
 	"critical_chance_pct": "res://assets/sprites/catalog/relic_celestial_eye.png",
 	"max_hp": "res://assets/sprites/catalog/relic_storm_core.png",
 	"pickup_radius_pct": "res://assets/sprites/catalog/relic_magnet_heart.png",

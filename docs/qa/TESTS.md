@@ -1,5 +1,13 @@
 # Tests d'acceptation et validation
 
+## P9.8 — Décision de droits visuels et registre des assets — 2026-10-17
+
+- [x] Décision P9.8 sur les droits visuels **[VALIDÉE, réponse A]** : remplacer ou exclure tout visuel dont les droits/provenance ne sont pas vérifiables.
+- [x] Création de `docs/art/PROVENANCE_ASSETS.csv` : 165 enregistrements (140 PNG, 25 SVG) avec hashes SHA-256, tailles et simples candidats de sources éditables.
+- [x] Godot 4.7.2 exporte le PCK Linux/X11 après modification : 5 134 748 octets; le journal confirme que les assets racine inutilisés sont exclus et que l’icône catalogue, le héros animé, le roster et les récompenses actifs restent empaquetés. Les presets Windows/Linux partagent ces règles.
+- [x] 63/165 PNG/SVG sont maintenant marqués exclus dans le registre; 102/165 restent présents et nécessitent une preuve vérifiable ou remplacement/exclusion avant release.
+- [i] L’export PCK vérifie le filtrage, pas les droits. Les 165 lignes gardent le statut **[OUVERT]** côté provenance; aucune source Aseprite ni correspondance de nom n’est comptée comme clearance.
+
 ## P6.4 — Reroll payant d’effet unique — 2026-10-17
 
 - [x] Décision utilisateur **[VALIDÉE, réponse A]** : après paiement, le joueur choisit un effet différent; l’effet actuel n’est pas proposé.

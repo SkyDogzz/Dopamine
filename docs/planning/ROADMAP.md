@@ -764,6 +764,9 @@ P1 livre le Sandbox développeur et ne remplace pas cette feature produit.
   - [x] Refaire le staging depuis `8d91079` après le correctif des compteurs Endless; build Release vierge, inventaire filtré, extraction, dépendances et démarrage vérifiés. Archive/SHA-256 et limites dans `docs/qa/TESTS.md`; toujours non distribuable.
   - [x] Refaire le staging depuis `4965876` avec `git archive`, CMake Release vierge, export Linux/X11 filtré, extraction, contrôle `ldd`, démarrage headless et chargement de la GDExtension adjacente. Archive de 35 711 839 octets, SHA-256 `6e420e0736e4905360c13e839a7fc40ec03a9441a5fe7a50690ea3ffc9f4b09d`; revalidation sur `HEAD` `4bd52e4` : seules la QA et le survey filtré diffèrent sous `game/`. Reste non versionnée et non distribuable. Détails dans `docs/qa/TESTS.md`.
   - [x] Valider en CI le paquet Windows filtré après extraction : le run `39075607404` contrôle README, notices, licences référencées, exécutable et GDExtension, puis démarre le jeu extrait sans erreur et publie l’artefact non versionné; voir `docs/qa/TESTS.md`.
+  - [x] Arbitrage utilisateur **[VALIDÉ, 2026-10-17] — réponse A** : remplacer ou exclure avant release les visuels dont les droits et la provenance ne sont pas vérifiables.
+  - [x] Inspecter les presets Windows/Linux et le PCK Linux/X11 : 63 visuels racine/références non actifs sont exclus et 102 assets requis par le prototype restent inclus. Le registre hashé note l’état de paquet de chacun; la clearance n’est pas implicite.
+  - [ ] Examiner les 102 PNG/SVG encore inclus consignés dans `docs/art/PROVENANCE_ASSETS.csv`; pour chacun, enregistrer une preuve vérifiable ou le remplacer/l’exclure avant release. Les sources Aseprite, fichiers SVG éditables et correspondances de nom ne valent pas preuve de droits.
   - [ ] Vérifier contenu, dépendances, licences, sauvegarde et notes de version.
   - [ ] Préparer publication après validation des critères, sans la confondre avec un build local.
 

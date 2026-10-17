@@ -26,6 +26,8 @@ Contrôle du PCK produit par Godot 4.7.2 (2026-10-17) : les presets Windows Desk
 
 Contrôle de métadonnées (2026-10-17) : aucune des images PNG parcourues sous `game/assets/` et `docs/art/source/` ne contient de chunk `tEXt`, `zTXt`, `iTXt` ou `eXIf`. Les références raster et les noms de sources ne permettent donc pas à eux seuls d’établir l’outil de génération, l’auteur, les conditions d’utilisation ou une attribution requise. La provenance et les droits des assets artistiques restent **[OUVERTS]** pour P9.8; ne pas interpréter la présence d’une source Aseprite comme une clearance.
 
+Décision de release **[VALIDÉE, 2026-10-17, réponse A]** : tout visuel livré sans provenance et droits vérifiables doit être remplacé ou exclu. Le registre [`PROVENANCE_ASSETS.csv`](PROVENANCE_ASSETS.csv) contient le chemin, le SHA-256, la taille, les sources éditables candidates et l’état de paquet des 165 PNG/SVG hors sources (140 PNG, 25 SVG). Les correspondances par nom sont des pistes d’audit, pas des preuves de lien ni de droits. L’export PCK Linux/X11 contrôlé après le changement contient 102 visuels encore utilisés et exclut 63 doublons/références inactifs; les chemins Windows et Linux utilisent les mêmes règles. Les 165 droits restent **[OUVERTS]** : les 102 fichiers encore empaquetés doivent avoir une preuve vérifiable ou être remplacés/exclus avant P9.8.
+
 La plupart des PNG historiques découpés ont 64×64 px. Le héros pilote est maintenant 32×32, le chaser 24×24 et le projectile Lightning Conductor 16×16; aucune animation n’est incluse. Les autres images restent un mélange de sprites issus d’atlas, d’illustrations SVG et d’icônes.
 
 ### Sprites de jeu existants
