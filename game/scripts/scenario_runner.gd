@@ -121,6 +121,10 @@ static func _validate_scenario(scenario: Variant) -> String:
 					return "Command %d position and velocity must be finite 2-number arrays" % index
 				if not _valid_number(command.get("hp_multiplier", 1.0)) or float(command.get("hp_multiplier", 1.0)) <= 0.0:
 					return "Command %d hp_multiplier must be positive and finite" % index
+				if not _valid_number(command.get("movement_speed_multiplier", 1.0)) or \
+						float(command.get("movement_speed_multiplier", 1.0)) < 0.1 or \
+						float(command.get("movement_speed_multiplier", 1.0)) > 10.0:
+					return "Command %d movement_speed_multiplier must be between 0.1 and 10" % index
 			"spawn_projectile":
 				if typeof(command.get("projectile_type")) != TYPE_STRING or String(command["projectile_type"]).is_empty():
 					return "Command %d requires projectile_type" % index
@@ -296,7 +300,8 @@ func _submit(simulation: Object, command: Dictionary) -> int:
 			var velocity: Array = command.get("velocity", [0, 0])
 			return simulation.spawn_enemy(command["enemy_type"], int(command.get("count", 1)),
 					Vector2(float(position[0]), float(position[1])), Vector2(float(velocity[0]), float(velocity[1])),
-					float(command.get("hp_multiplier", 1.0)), str(command.get("affix", "")))
+					float(command.get("hp_multiplier", 1.0)), str(command.get("affix", "")),
+					float(command.get("movement_speed_multiplier", 1.0)))
 		"spawn":
 			var position: Array = command.get("position", [0, 0])
 			var velocity: Array = command.get("velocity", [0, 0])

@@ -55,6 +55,10 @@ func _run() -> void:
 		"GDExtension should reject a non-positive typed enemy health multiplier")
 	assert(simulation.spawn_enemy("sprinter", 1, Vector2.ZERO, Vector2.ZERO, INF) == 0,
 		"GDExtension should reject a non-finite typed enemy health multiplier")
+	assert(simulation.spawn_enemy("sprinter", 1, Vector2.ZERO, Vector2.ZERO, 1.0, "", 0.0) == 0,
+		"GDExtension should reject non-positive enemy speed multipliers")
+	assert(simulation.spawn_enemy("sprinter", 1, Vector2.ZERO, Vector2.ZERO, 1.0, "", 10.1) == 0,
+		"GDExtension should reject enemy speed multipliers above its technical cap")
 	assert(is_equal_approx(scaled_profile_state["entities"][0]["components"]["Health"]["maximum"], 24.0),
 		"GDExtension should scale typed enemy health without losing its profile")
 	assert(is_equal_approx(scaled_profile_state["entities"][0]["components"]["MoveSpeed"], 125.0),

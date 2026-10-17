@@ -12,7 +12,7 @@ func _run() -> void:
 		"description": "A bounded test preset",
 		"base_mode": "survival",
 		"seed": 12345,
-		"overrides": {"enemy_hp": 2.0, "contact_damage_per_hit": 5.0},
+		"overrides": {"enemy_hp": 2.0, "enemy_speed": 2.0, "contact_damage_per_hit": 5.0},
 		"flags": {"god_mode": false},
 		"initial_build": {"weapons": [{"id": "lightning_conductor", "level": 2}]},
 	}
@@ -95,6 +95,16 @@ func _run() -> void:
 	out_of_range_override["overrides"]["enemy_hp"] = 1000.1
 	if preset_service.validate_preset(out_of_range_override).get("ok", false):
 		_fail("Enemy HP multiplier should respect its hard upper bound")
+		return
+	var excessive_enemy_speed := preset.duplicate(true)
+	excessive_enemy_speed["overrides"]["enemy_speed"] = 10.1
+	if preset_service.validate_preset(excessive_enemy_speed).get("ok", false):
+		_fail("Enemy speed multiplier should respect its hard upper bound")
+		return
+	var too_slow_enemy_speed := preset.duplicate(true)
+	too_slow_enemy_speed["overrides"]["enemy_speed"] = 0.05
+	if preset_service.validate_preset(too_slow_enemy_speed).get("ok", false):
+		_fail("Enemy speed multiplier should respect its hard lower bound")
 		return
 	var invalid_contact_damage := preset.duplicate(true)
 	invalid_contact_damage["overrides"]["contact_damage_per_hit"] = -0.1
