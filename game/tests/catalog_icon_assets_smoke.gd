@@ -86,16 +86,21 @@ func _check_exported_png_sources() -> bool:
 	_collect_aseprite_stems("res://assets/source", source_stems)
 	var png_paths := PackedStringArray()
 	_collect_exported_png_paths("res://assets", png_paths)
+	var repository_root := ProjectSettings.globalize_path("res://").path_join("..").simplify_path()
+	var exception_document := FileAccess.get_file_as_string(repository_root.path_join("docs/art/asset_exceptions.txt"))
 	var missing_sources := PackedStringArray()
 	for png_path in png_paths:
 		if source_stems.has(png_path.get_file().get_basename()):
 			continue
 		missing_sources.append(png_path)
-		if not SOURCELESS_PNG_EXCEPTIONS.has(png_path):
+		var documented_path: String = png_path.trim_prefix("res://").insert(0, "game/")
+		if not SOURCELESS_PNG_EXCEPTIONS.has(png_path) or not exception_document.contains(documented_path):
 			push_error("PNG without a matching Aseprite source must be documented as an exception: %s" % png_path)
 			return false
 	for exception_path in SOURCELESS_PNG_EXCEPTIONS:
-		if not png_paths.has(exception_path) or source_stems.has(exception_path.get_file().get_basename()):
+		var documented_path: String = exception_path.trim_prefix("res://").insert(0, "game/")
+		if not png_paths.has(exception_path) or source_stems.has(exception_path.get_file().get_basename()) or \
+			not exception_document.contains(documented_path):
 			push_error("The documented source-format exception should remain present and source-less: %s" % exception_path)
 			return false
 	print("Asset source audit passed: %d PNGs, %d documented source-format exceptions" % [png_paths.size(), missing_sources.size()])
