@@ -93,12 +93,16 @@ if (-not $SkipProjectChecks) {
 if ($Export) {
 	$exportDirectory = Join-Path $buildPath "export"
 	New-Item -ItemType Directory -Force -Path $exportDirectory | Out-Null
-	$exportPath = Join-Path $exportDirectory "Dopamine Survivor.exe"
-	$exportOutput = & $godotPath --headless --path $projectPath --export-release "Windows Desktop" $exportPath 2>&1
+	$exportPath = Join-Path $exportDirectory "DopamineSurvivor.exe"
+	Write-Host "Export target: $exportPath"
+	$exportOutput = & $godotPath --verbose --headless --path $projectPath --export-release "Windows Desktop" $exportPath 2>&1
 	$exportOutput | ForEach-Object { Write-Host $_ }
 	if ($LASTEXITCODE -ne 0) { throw "Windows export failed with exit code $LASTEXITCODE" }
 	if ($exportOutput -match "(?m)(ERROR:|SCRIPT ERROR:)") { throw "Windows export reported errors" }
-	if (-not (Test-Path $exportPath)) { throw "Godot did not create the exported executable: $exportPath" }
+	if (-not (Test-Path $exportPath)) {
+		$exportContents = Get-ChildItem -LiteralPath $exportDirectory -Force | ForEach-Object { $_.FullName }
+		throw "Godot returned success without creating the exported executable '$exportPath'. Export directory contains: $($exportContents -join ', ')"
+	}
 }
 
 if (-not $NoLaunch) {

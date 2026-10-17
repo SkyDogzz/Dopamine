@@ -46,7 +46,7 @@ jobs:
       - name: Launch exported Windows game headless
         shell: pwsh
         run: |
-          $launchOutput = & "build/windows/export/Dopamine Survivor.exe" --headless --quit-after 3 2>&1
+          $launchOutput = & "build/windows/export/DopamineSurvivor.exe" --headless --quit-after 3 2>&1
           $launchOutput | Write-Output
           if ($LASTEXITCODE -ne 0) { throw "Exported Windows game failed with exit code $LASTEXITCODE" }
           if ($launchOutput -match "GDExtension.*(not found|failed|unavailable)|Cannot get class 'CombatSimulation'") {
