@@ -10,6 +10,7 @@
 - [x] Recontrôle ciblé de `survival_difficulty_profile_smoke.gd` et `survival_difficulty_unlock_smoke.gd` sous Godot 4.7.2 headless : les deux passent.
 - [x] Recontrôle ciblé du `survival_weapon_catalog_smoke.gd` sous Godot 4.7.2 headless : passe, y compris les réactions existantes et leurs règles de causalité. Godot affiche à la fermeture 2 instances ObjectDB et 1 ressource encore utilisée; les assertions réussissent.
 - [x] Recontrôle ciblé du `survival_chest_smoke.gd` sous Godot 4.7.2 headless : passe pour les coffres, la collecte XP séparée et les choix de run.
+- [x] Recontrôle ciblé de `survival_loadout_smoke.gd` et `survival_damage_causality_smoke.gd` sous Godot 4.7.2 headless : les deux passent pour l’éligibilité du loadout et l’attribution sans double mort/récompense.
 - [x] La suite automatisée ne prouve pas la run réelle; sa confirmation utilisateur est consignée séparément dans la section P5.V3 ci-dessous.
 
 ## Préparation du build Windows — 2026-10-16
