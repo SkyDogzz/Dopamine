@@ -798,7 +798,7 @@
 ## P6.4 — Arbitrage et contrôle statistique Enhancement — 2026-10-17
 
 - [x] L’utilisateur valide l’option A : garder les tables de coûts, chances et démantèlement proposées comme base à calibrer par essais; cela ne valide aucun chiffre. Voir le GDD §8 et `docs/planning/DECISIONS_RESTANTES.md`.
-- [x] `enhancement_probability_smoke.gd` exécute 800 000 tirages seedés par le même helper que la transaction de production; succès par tier/niveau et échecs critiques conditionnels restent dans une tolérance absolue de 1 point de pourcentage des tables **[PROPOSÉES]**. Le test contrôle aussi la réussite garantie après neuf échecs consécutifs. Reconfiguration CMake puis CTest ciblé (import Godot, enhancement, service de progression et économie) : **5/5 passent en 4,69 s**.
+- [x] `enhancement_probability_smoke.gd` exécute 800 000 tirages de réussite et 400 000 tirages conditionnels d’échec critique avec le même helper que la transaction de production. Les fréquences seedées par tier/niveau restent dans cinq écarts-types binomiaux des tables **[PROPOSÉES]**; le test contrôle aussi la réussite garantie après neuf échecs consécutifs. Reconfiguration CMake puis CTest ciblé (import Godot, enhancement, service de progression et économie) : **5/5 passent en 4,68 s**.
 - [i] Le contrôle vérifie l’implémentation et les tables configurées, il ne calibre pas la provenance/mix des tiers, l’afflux de Powder, les dépenses réelles ou le rythme ressenti. Ces mesures représentatives restent ouvertes; aucune valeur n’a été ajustée ni promue.
 
 ## P6.4 — Espérance analytique de l'enhancement — 2026-10-17

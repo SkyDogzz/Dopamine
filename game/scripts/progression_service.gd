@@ -434,8 +434,11 @@ func _roll_enhancement(level: int, powder_tier: String, fail_streak: int) -> Dic
 	var success_chance: float = maxf(0.0, PROPOSED_SUCCESS_CHANCE[powder_tier] - 3.0 * level)
 	if _rng.randf() * 100.0 < success_chance:
 		return {"success": true, "critical_failure": false}
-	var critical_failure: bool = _rng.randf() * 100.0 < PROPOSED_CRITICAL_FAILURE_CHANCE[powder_tier]
+	var critical_failure := _roll_critical_failure(powder_tier)
 	return {"success": false, "critical_failure": critical_failure}
+
+func _roll_critical_failure(powder_tier: String) -> bool:
+	return _rng.randf() * 100.0 < PROPOSED_CRITICAL_FAILURE_CHANCE[powder_tier]
 
 func enhancement_cost(rarity: String, current_level: int) -> int:
 	if not RARITY_COST_MULTIPLIERS.has(rarity) or current_level < 0 or current_level >= ENHANCEMENT_BASE_COSTS.size():
