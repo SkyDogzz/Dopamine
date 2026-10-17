@@ -59,10 +59,6 @@ try {
 }
 if ($testExitCode -ne 0) { throw "CTest failed with exit code $testExitCode; profiling was not started." }
 
-Write-Host "Importing the game project, then starting the interactive capture."
-& $godotPath --headless --editor --path $projectPath --quit
-if ($LASTEXITCODE -ne 0) { throw "Godot project import failed with exit code $LASTEXITCODE" }
-
 $outputFile = if ([System.IO.Path]::IsPathRooted($OutputPath)) {
 	$OutputPath
 } else {
@@ -71,12 +67,18 @@ $outputFile = if ([System.IO.Path]::IsPathRooted($OutputPath)) {
 $outputFile = [System.IO.Path]::GetFullPath($outputFile)
 New-Item -ItemType Directory -Force -Path (Split-Path -Parent $outputFile) | Out-Null
 
-Write-Host "Starting Dopamine Survivor. The CSV will be written to: $outputFile"
+Write-Host "Starting the imported, isolated test project. The CSV will be written to: $outputFile"
 Write-Host "Play a temporary no-save Survival run at speed x1, then close the game to finish the capture."
 $profileArgument = "--profile-output=$outputFile"
-& $godotPath --path $projectPath -- $profileArgument
-if ($LASTEXITCODE -ne 0) { throw "Godot exited with code $LASTEXITCODE" }
-if (-not (Test-Path -LiteralPath $outputFile -PathType Leaf)) {
-	throw "Godot did not create the profiling output. Confirm that the project started successfully."
+try {
+	& $godotPath --path $testProjectPath -- $profileArgument
+	if ($LASTEXITCODE -ne 0) { throw "Godot exited with code $LASTEXITCODE" }
+	if (-not (Test-Path -LiteralPath $outputFile -PathType Leaf)) {
+		throw "Godot did not create the profiling output. Confirm that the project started successfully."
+	}
+} finally {
+	if (Test-Path -LiteralPath $testUserDataPath) {
+		Remove-Item -LiteralPath $testUserDataPath -Recurse -Force
+	}
 }
 Write-Host "All tests passed; profiling complete: $outputFile"
