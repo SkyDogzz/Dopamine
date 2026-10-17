@@ -127,6 +127,13 @@
 - [x] La version filtrée mesure 76 882 240 octets contre 106 103 688 octets avant filtre (29 221 448 octets de moins). SHA-256 : exécutable `19cfba86d61e3b8f7d37e191068846cdee4ec3181923d7c21b803ab86372a4ad`; GDExtension `2b6810ad2e66b56fb3202da350e666f4ef3ce3a159a601b92e0fcf663aa6206d`.
 - [ ] Vérification sur une machine Linux distincte, iGPU réelle, contrôleur physique et plateformes hors Linux toujours ouvertes; ce résultat est un build staging de validation, pas une release produit.
 
+## P9.8 — Revalidation staging Linux — 2026-10-17
+
+- [x] Depuis le commit `379b9aad23bb9d6284722b485e2f094fd5d7c15d`, `tools/package_linux_staging.sh` reconstruit un checkout `git archive` propre en Release (Linux x86_64, GCC 14.2.0, CMake 3.31.12, Godot 4.7.2, `godot-cpp` `b8530af7546a3fcae80cef2477526569fd42ffc2`), exporte Linux/X11 et filtre les ressources de développement.
+- [x] Le script extrait l’archive, vérifie les bibliothèques partagées, démarre l’exécutable headless avec un `XDG_DATA_HOME` vierge et confirme le chargement de la GDExtension Release adjacente; aucune ligne `ERROR:` au démarrage.
+- [x] Archive staging non distribuable : `build/linux/staging/DopamineSurvivor-linux-379b9aa-staging.tar.gz`, 31 966 641 octets, SHA-256 `bbfb3f2d20ecd143005c588c7d1419c54e5c48cd3a434a181a7279094e73790c`. `sha256sum -c` passe.
+- [i] Cette vérification headless valide l’assemblage et le démarrage, pas une partie jouée, la persistance en usage, l’installation sur une machine distincte, le GPU réel ou les autres plateformes. Le paquet reste un staging sans version de jeu.
+
 ## P9.1 — Relevé exploratoire DPS des dix armes — 2026-10-17
 
 - [x] Les 90 cas ont terminé sous Godot 4.7.2 sans erreur avec `--seed=20261017`. Chaque formation a été lancée par `XDG_DATA_HOME=/tmp/dopamine-seeded-<formation> tools/local/godot-4.7.2/Godot_v4.7.2-stable_linux.x86_64 --headless --audio-driver Dummy --path game --script res://tests/combat_weapon_balance_survey.gd -- --formation=<formation> --seed=20261017`. Chaque cas utilise vitesse ×4 et 18 secondes de simulation active. Les nombres sont le DPS observé en dégâts totaux / temps actif :

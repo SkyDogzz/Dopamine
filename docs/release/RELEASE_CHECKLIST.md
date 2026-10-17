@@ -11,6 +11,7 @@
 - [ ] Pour chaque artefact retenu, consigner plateforme/architecture, commit source, versions de Godot/templates/toolchain, commandes, taille et SHA-256.
 - [x] Vérifier le paquet Linux non versionné de staging (exécutable, GDExtension, notices, licences référencées, extraction et démarrage headless); les sommes et limites sont dans [`../qa/TESTS.md`](../qa/TESTS.md). Ce paquet est explicitement non distribuable.
 - [x] Automatiser et exécuter `tools/package_linux_staging.sh` depuis le snapshot propre `c318888`; compilation Release CMake vierge, inventaire, notices, extraction, SHA-256 et démarrage sont consignés dans la QA. La version commerciale reste **[OUVERTE]**.
+- [x] Refaire la reconstruction complète depuis `379b9aad23bb9d6284722b485e2f094fd5d7c15d`; archive `DopamineSurvivor-linux-379b9aa-staging.tar.gz` (31 966 641 octets), SHA-256 `bbfb3f2d20ecd143005c588c7d1419c54e5c48cd3a434a181a7279094e73790c`, extraction et démarrage headless de l’exécutable avec sa GDExtension Release vérifiés. Détails dans [`../qa/TESTS.md`](../qa/TESTS.md); toujours non distribuable.
 
 ## Contenu et critères d’acceptation
 
@@ -42,4 +43,4 @@
 
 - P9.6 — stabilité/sauvegardes : cochée dans la roadmap, avec limite explicite pour l’interruption réelle au niveau système de fichiers.
 - P9.7 — plateformes : export Linux x86_64 et parcours logiciel vérifiés sur l’hôte courant; validation machine propre, matériel réel et Windows restent ouvertes.
-- P9.8 — staging Linux filtré reconstruit depuis `c90a2c6` et démarré après extraction; version d’artefact, audit de provenance des assets/audio, validation des sauvegardes, autres plateformes et notes de version restent ouverts.
+- P9.8 — staging Linux filtré reconstruit depuis `379b9aa` et démarré après extraction; version d’artefact, audit de provenance des assets/audio, validation des sauvegardes, autres plateformes et notes de version restent ouverts.
