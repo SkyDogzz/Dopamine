@@ -4,6 +4,7 @@
 
 - [x] L’arbitrage utilisateur **[VALIDÉ, 2026-10-17]** fixe Electroplague à 60 px, sans plafond de cibles : un coup direct de Shock sur Poison copie les paramètres et la durée restante du statut aux ennemis vivants à portée; aucun dégât direct, remplacement d’un Poison présent ni propagation depuis les ticks DoT. Le smoke `survival_weapon_catalog_smoke.gd` couvre la frontière du rayon, cinq cibles sans cap, les exclusions et l’absence de dégâts/collisions.
 - [x] Après ajout du type de statut à la commande de DoT et passage du snapshot worker au format 16, `make -C build -j4` compile la GDExtension; `simulation_core_tests`, `simulation_worker_tests` et `survival_weapon_catalog_smoke.gd` passent sous Godot 4.7.2. Ce smoke réutilise la session Survival normale sans attacher de service de progression.
+- [x] Revalidation complète après Electroplague et snapshot format 16 : CTest séquentiel passe 86/86 sous Godot 4.7.2 en 59,61 s, incluant les smokes Survival et Sandbox des dix armes.
 
 - [x] Après le correctif de collision des ennemis immobiles et la reconstruction de la GDExtension Linux, `ctest --test-dir build --output-on-failure -j1` passe 86/86 en 60,45 s sous Godot 4.7.2. La suite comprend l’import Godot, les tests natifs, les smokes Survival/progression et les scénarios Sandbox des dix armes.
 - [x] Le smoke `survival_weapon_catalog_smoke` passe également dans cette suite : coexistence Burn/Poison et Toxic Ignition restent conformes aux paramètres **[VALIDÉS]**.
