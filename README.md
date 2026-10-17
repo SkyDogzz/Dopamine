@@ -50,6 +50,15 @@ Le hub propose aussi `RUN TEMPORAIRE · SANS SAUVEGARDE` : cette partie démarre
 
 Le preset `Linux/X11` permet d’exporter les données du projet en PCK avec `godot --headless --path game --export-pack "Linux/X11" ../build/linux/DopamineSurvivor.pck`. Ce PCK n’est pas un exécutable autonome. Pour compiler l’extension native release dans un répertoire distinct du build Debug, utilisez `cmake -S . -B build/linux-release -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTING=OFF -DGODOTCPP_TARGET=template_release`, puis `cmake --build build/linux-release --parallel 4`. Avec les templates Linux 4.7.2 installés, l’export autonome `Linux/X11` a été produit; le parcours clavier sous Xvfb démarre une run Survival et charge la GDExtension release. Le rendu sur matériel réel, les contrôleurs physiques et une installation vierge restent à vérifier (voir `docs/qa/TESTS.md`).
 
+Pour refaire le paquet de validation staging depuis le commit `HEAD` (build CMake Release vierge, export Linux filtré, notices, archive et smoke après extraction), avec Godot 4.7.2 et ses templates Linux installés :
+
+```bash
+GODOT_EXECUTABLE=tools/local/godot-4.7.2/Godot_v4.7.2-stable_linux.x86_64 \
+  tools/package_linux_staging.sh
+```
+
+Le script archive le commit, donc les changements non commités ne sont pas inclus. Il écrit une archive et son SHA-256 sous `build/linux/staging/`. Le paquet est un staging non versionné, pas une release ni un artefact à distribuer.
+
 ## Lancer sous Windows
 
 Prérequis : Godot 4.7.2 standard pour Windows x86_64 avec ses export templates 4.7.2, Visual Studio 2022 avec la charge de travail **Desktop development with C++**, CMake 3.21+ et Git dans le `PATH`. Depuis PowerShell à la racine du dépôt :

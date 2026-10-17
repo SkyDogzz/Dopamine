@@ -10,7 +10,7 @@
 - [ ] Construire depuis un checkout propre reproductible pour chaque plateforme de release; distinguer les exports vérifiés localement des artefacts réellement distribuables.
 - [ ] Pour chaque artefact retenu, consigner plateforme/architecture, commit source, versions de Godot/templates/toolchain, commandes, taille et SHA-256.
 - [x] Vérifier le paquet Linux non versionné de staging (exécutable, GDExtension, notices, licences référencées, extraction et démarrage headless); les sommes et limites sont dans [`../qa/TESTS.md`](../qa/TESTS.md). Ce paquet est explicitement non distribuable.
-- [x] Refaire un paquet staging filtré depuis le snapshot propre `c90a2c6`; compilation Release CMake vierge, inventaire du contenu, notices, extraction et démarrage avec profil Godot vierge sont consignés dans la QA. La version commerciale reste **[OUVERTE]**.
+- [x] Automatiser et exécuter `tools/package_linux_staging.sh` depuis le snapshot propre `c318888`; compilation Release CMake vierge, inventaire, notices, extraction, SHA-256 et démarrage sont consignés dans la QA. La version commerciale reste **[OUVERTE]**.
 
 ## Contenu et critères d’acceptation
 
