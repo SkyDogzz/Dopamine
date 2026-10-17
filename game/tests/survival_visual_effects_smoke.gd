@@ -70,8 +70,17 @@ func _run() -> void:
 	session._weapon_impacts.clear()
 	session._damage_numbers.clear()
 	session._add_damage_number(15.0, target_position, "pause", false, session._last_simulation_time)
-	session.simulation.pause()
-	var paused_time: float = float(session.simulation.snapshot()["simulation_time"])
+	var pause_sequence: int = session.simulation.pause()
+	var pause_deadline := Time.get_ticks_msec() + 1500
+	var pause_state: Dictionary = session.simulation.snapshot()
+	while (not bool(pause_state["paused"]) or int(pause_state["last_sequence"]) < pause_sequence) and \
+			Time.get_ticks_msec() < pause_deadline:
+		await process_frame
+		pause_state = session.simulation.snapshot()
+	if not bool(pause_state["paused"]) or int(pause_state["last_sequence"]) < pause_sequence:
+		_fail("The simulation should acknowledge the pause before checking visual lifetimes")
+		return
+	var paused_time: float = float(pause_state["simulation_time"])
 	var number_lifetime: float = float(session._damage_numbers[0]["expires_at"]) - session._last_simulation_time
 	await create_timer(number_lifetime + 0.1).timeout
 	if session._damage_numbers.is_empty() or \

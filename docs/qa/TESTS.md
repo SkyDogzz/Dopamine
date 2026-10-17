@@ -251,6 +251,11 @@
 - [x] Le smoke ciblé passe sous Godot 4.7.2 avec un profil `XDG_DATA_HOME` isolé : `XDG_DATA_HOME=/tmp/dopamine-elite-combinations-final tools/run_godot_test.sh tools/local/godot-4.7.2/Godot_v4.7.2-stable_linux.x86_64 --headless --audio-driver Dummy --path game --script res://tests/survival_elite_smoke.gd`.
 - [i] Godot signale encore des références audio SFX/Ogg des autoloads à l’arrêt (14 objets, 6 ressources en exécution verbose); aucun échec d’assertion. Ce contrôle couvre les contrats d’implémentation, pas le réglage du danger ni le ressenti des combinaisons en run Chaos.
 
+## Checkpoint CTest complet — validation des paires d’affixes — 2026-10-17
+
+- [x] CTest séquentiel passe **113/113 en 77,61 s** : `XDG_DATA_HOME=/tmp/dopamine-p54-full-checkpoint-rerun DOPAMINE_TEST_TIMEOUT=480s /tmp/cmake-3.31.12-linux-x86_64/bin/ctest --test-dir build --output-on-failure -j1`.
+- [x] Une première exécution à 112/113 a révélé que `survival_visual_effects_smoke.gd` lisait le temps et l’état `paused` avant l’acquittement du worker. La fixture attend maintenant le numéro de séquence de pause; le test visuel ciblé passe 2/2 avec l’import, puis le checkpoint complet passe. Aucun script de jeu ni contrat de pause n’a été modifié.
+
 ## P5.4.1–5 — Roster, interactions, élites et boss — 2026-10-17
 
 - [x] Depuis un snapshot propre de `7221c57`, passent sous Godot 4.7.2 : `survival_support_enemy_smoke.gd`, `survival_shielder_smoke.gd`, `survival_summoner_smoke.gd`, `survival_exploder_smoke.gd`, `survival_elite_smoke.gd`, `survival_wave_director_smoke.gd`, `survival_boss_attack_smoke.gd` et `survival_final_boss_loot_smoke.gd`.
