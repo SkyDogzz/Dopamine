@@ -708,6 +708,7 @@ func _unhandled_input(event: InputEvent) -> void:
 	elif not bool(simulation.snapshot()["paused"]):
 		_manually_paused = true
 		simulation.pause()
+		Sfx.play("ui_pause")
 		_pause_overlay.show()
 		_pause_resume_button.grab_focus()
 	else:
@@ -2490,6 +2491,7 @@ func _fire_lightning_conductor(active_time: float, paused: bool) -> void:
 	if projectile_sequence <= 0:
 		_lightning_chain_states.erase(chain_id)
 		return
+	Sfx.play("weapon_zap")
 	_try_unique_lightning_burst(lightning_damage * damage_multiplier)
 	_try_evolution_shockwave(lightning_damage * damage_multiplier)
 	_next_weapon_time = active_time + _effective_weapon_cooldown(cooldown)
@@ -2879,6 +2881,7 @@ func _fire_infinite_circuit(active_time: float, target_budget: int, damage_multi
 					break
 			frontier = next_frontier
 	if fired:
+		Sfx.play("weapon_zap")
 		_try_unique_lightning_burst(lightning_damage * damage_multiplier)
 		_next_weapon_time = active_time + _effective_weapon_cooldown(cooldown)
 
