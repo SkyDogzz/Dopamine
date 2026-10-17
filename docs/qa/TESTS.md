@@ -245,6 +245,12 @@
 - [x] Dix seeds appariés (`20261017`–`20261026`), 1 000 spawns chacun par difficulté. Normal : 2 523/10 000 Buffer, Shielder ou Summoner (25,23 %); Chaos : 3 573/10 000 (35,73 %), soit +41,62 %. Les comptes par famille sont Buffer 734→989 (+34,7 %), Shielder 975→1 372 (+40,7 %), Summoner 814→1 212 (+48,9 %).
 - [i] Cette sonde utilise la fonction de spawn réelle et quantifie la composition finale après les tirages successifs; elle ne simule pas les vagues, dégâts, élites, boss ni survie, et ne calibre donc pas les règles Chaos **[PROPOSÉES]**. Les variations par famille reflètent l’ordre des tirages et les remplacements entre familles. Une run Chaos représentative et l’équilibrage des combinaisons d’affixes restent ouverts. Aucune valeur n’a été modifiée.
 
+## P5.4.6 — Combinaisons de deux affixes élite — 2026-10-17
+
+- [x] `survival_elite_smoke.gd` instancie l’API native de production et vérifie les 15 paires possibles parmi Hasted, Armored, Regenerating, Volatile, Shielded et Split-on-Death. Chaque paire doit être acceptée et publiée dans le snapshot avec sa vitesse Hasted, ses réductions de dégâts composées, sa régénération et son explosion, selon les affixes présents.
+- [x] Le smoke ciblé passe sous Godot 4.7.2 avec un profil `XDG_DATA_HOME` isolé : `XDG_DATA_HOME=/tmp/dopamine-elite-combinations-final tools/run_godot_test.sh tools/local/godot-4.7.2/Godot_v4.7.2-stable_linux.x86_64 --headless --audio-driver Dummy --path game --script res://tests/survival_elite_smoke.gd`.
+- [i] Godot signale encore des références audio SFX/Ogg des autoloads à l’arrêt (14 objets, 6 ressources en exécution verbose); aucun échec d’assertion. Ce contrôle couvre les contrats d’implémentation, pas le réglage du danger ni le ressenti des combinaisons en run Chaos.
+
 ## P5.4.1–5 — Roster, interactions, élites et boss — 2026-10-17
 
 - [x] Depuis un snapshot propre de `7221c57`, passent sous Godot 4.7.2 : `survival_support_enemy_smoke.gd`, `survival_shielder_smoke.gd`, `survival_summoner_smoke.gd`, `survival_exploder_smoke.gd`, `survival_elite_smoke.gd`, `survival_wave_director_smoke.gd`, `survival_boss_attack_smoke.gd` et `survival_final_boss_loot_smoke.gd`.

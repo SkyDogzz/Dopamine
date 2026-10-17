@@ -58,11 +58,57 @@ func _run() -> void:
 			not is_equal_approx(float(combined_affix_entity["components"]["DamageTakenMultiplier"]), 0.325):
 		_fail("Distinct elite affix effects should coexist and multiply damage reduction")
 		return
+	var affix_ids := ["Hasted", "Armored", "Regenerating", "Volatile", "Shielded", "Split-on-Death"]
+	var expected_pairs := {}
+	var last_combo_sequence := 0
+	for first_index in range(affix_ids.size()):
+		for second_index in range(first_index + 1, affix_ids.size()):
+			var first_affix: String = affix_ids[first_index]
+			var second_affix: String = affix_ids[second_index]
+			var pair_id := first_affix + "+" + second_affix
+			expected_pairs[pair_id] = [first_affix, second_affix]
+			last_combo_sequence = combo_simulation.spawn_enemy("elite", 1,
+				Vector2(first_index * 120.0, second_index * 120.0), Vector2.ZERO, 1.0, pair_id)
+			if last_combo_sequence <= 0:
+				_fail("The production simulation should accept distinct affix pair %s" % pair_id)
+				return
+	if not await _wait_until(func() -> bool:
+		return int(combo_simulation.snapshot()["last_sequence"]) >= last_combo_sequence
+	):
+		_fail("The production simulation should publish all fifteen distinct elite affix pairs")
+		return
+	var observed_pairs := {}
+	for entity in combo_simulation.snapshot()["entities"]:
+		var components: Dictionary = entity["components"]
+		var pair_id := str(components.get("Affix", ""))
+		if not expected_pairs.has(pair_id):
+			continue
+		var pair: Array = expected_pairs[pair_id]
+		var has_hasted: bool = pair.has("Hasted")
+		var has_armored: bool = pair.has("Armored")
+		var has_regenerating: bool = pair.has("Regenerating")
+		var has_volatile: bool = pair.has("Volatile")
+		var has_shielded: bool = pair.has("Shielded")
+		var expected_damage_multiplier := (0.65 if has_armored else 1.0) * \
+			(0.5 if has_shielded else 1.0)
+		if components.get("Affixes", []) != pair or \
+				not is_equal_approx(float(components["MoveSpeed"]), 100.0 if has_hasted else 75.0) or \
+				not is_equal_approx(float(components["DamageTakenMultiplier"]), expected_damage_multiplier) or \
+				not is_equal_approx(float(components["HealthRegenPerSecond"]), 0.5 if has_regenerating else 0.0) or \
+				not is_equal_approx(float(components["DeathExplosionRadius"]), 82.0 if has_volatile else 0.0) or \
+				not is_equal_approx(float(components["DeathExplosionDamage"]), 18.0 if has_volatile else 0.0):
+			_fail("Pair %s should preserve and combine each affix effect" % pair_id)
+			return
+		observed_pairs[pair_id] = true
+	if observed_pairs.size() != expected_pairs.size():
+		_fail("The production simulation should expose every distinct two-affix combination")
+		return
 	if combo_simulation.spawn_enemy("elite", 1, Vector2.ZERO, Vector2.ZERO, 1.0, "Armored+Armored") != 0 or \
 			combo_simulation.spawn_enemy("elite", 1, Vector2.ZERO, Vector2.ZERO, 1.0, "Armored+") != 0:
 		_fail("Elite affix combinations should reject duplicate or malformed affixes")
 		return
 	combo_simulation = null
+	await process_frame
 	session.spawn_initial_enemy = false
 	session.wave_spawning_enabled = true
 	session.skip_starting_weapon_choice = true
