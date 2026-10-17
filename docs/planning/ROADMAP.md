@@ -606,6 +606,7 @@ P1 livre le Sandbox développeur et ne remplace pas cette feature produit.
   - [x] Ajouter l’override LIVE typé `enemy_speed` (×0,1–×10) au preset et au Lab; seul le mouvement des ennemis créés ensuite par Spawn change, profils et affixes compris.
   - [x] Régler la taille des lots Spawn dans le Lab (1–500 par commande), la persister dans les presets et valider la limite native de 500 commandes/2 500 entités.
   - [x] Persister le profil ennemi sélectionné par Spawn dans les presets/snapshots; valider les neuf profils du Sandbox et restaurer la sélection sans affecter les vagues normales.
+  - [x] Choisir les six affixes Elite existants pour Spawn, les conserver dans preset/snapshot et n’activer le contrôle que sur le profil Elite; leurs effets gardent le statut **[PROPOSÉ]** du GDD.
   - [x] Ajouter l’override LIVE typé `contact_damage_per_hit` (0–1000) au preset et au Lab; il s’applique à la prochaine collision de la session isolée et vaut zéro par défaut.
   - [x] Exposer la seed du preset comme réglage RESTART; elle s’applique au Reset, est persistée, et invalide/refuse un snapshot tant que le redémarrage n’a pas eu lieu.
   - [ ] Compléter les overrides de configuration LIVE/REBUILD/RESTART et les limites de contenu avancées, après définition de leur contrat.

@@ -13,7 +13,7 @@ func _run() -> void:
 		"base_mode": "survival",
 		"seed": 12345,
 		"overrides": {"enemy_hp": 2.0, "enemy_speed": 2.0, "spawn_count": 25,
-			"spawn_enemy_type": "chaser", "contact_damage_per_hit": 5.0},
+			"spawn_enemy_type": "elite", "spawn_enemy_affix": "Hasted", "contact_damage_per_hit": 5.0},
 		"flags": {"god_mode": false},
 		"initial_build": {"weapons": [{"id": "lightning_conductor", "level": 2}]},
 	}
@@ -96,6 +96,11 @@ func _run() -> void:
 	invalid_spawn_type["overrides"]["spawn_enemy_type"] = "unknown_enemy"
 	if preset_service.validate_preset(invalid_spawn_type).get("ok", false):
 		_fail("Presets should reject enemy types outside the Sandbox Lab roster")
+		return
+	var invalid_spawn_affix := preset.duplicate(true)
+	invalid_spawn_affix["overrides"]["spawn_enemy_affix"] = "Ghost"
+	if preset_service.validate_preset(invalid_spawn_affix).get("ok", false):
+		_fail("Presets should reject elite affixes outside the supported set")
 		return
 	var out_of_range_override := preset.duplicate(true)
 	out_of_range_override["overrides"]["enemy_hp"] = 1000.1

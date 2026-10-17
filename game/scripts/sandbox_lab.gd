@@ -18,6 +18,8 @@ const MAX_ENEMIES_PER_SPAWN := 500
 @onready var _build_json: TextEdit = $Root/Body/Side/Sections/BuildJson
 @onready var _share_code: LineEdit = $Root/Body/Side/Sections/ShareCode
 @onready var _enemy_select: OptionButton = $Root/Body/Side/Sections/EnemySelect
+@onready var _elite_affix_title: Label = $Root/Body/Side/Sections/EnemyConfig/EliteAffixTitle
+@onready var _elite_affix_select: OptionButton = $Root/Body/Side/Sections/EnemyConfig/EliteAffixSelect
 @onready var _metrics: Label = $Root/Body/Side/Sections/Metrics
 @onready var _pause_button: Button = $Root/Body/Left/Controls/PauseButton
 @onready var _spawn_button: Button = $Root/Body/Left/Controls/SpawnButton
@@ -96,6 +98,10 @@ func _ready() -> void:
 		_enemy_select.add_item(enemy_id.to_upper())
 		_enemy_select.set_item_metadata(_enemy_select.item_count - 1, enemy_id)
 	_enemy_select.item_selected.connect(_set_spawn_enemy_type_override)
+	_elite_affix_select.item_selected.connect(_set_spawn_enemy_affix_override)
+	for affix in PRESET_SERVICE_SCRIPT.VALID_ELITE_AFFIXES:
+		_elite_affix_select.add_item(str(affix).to_upper().replace("-", " "))
+		_elite_affix_select.set_item_metadata(_elite_affix_select.item_count - 1, affix)
 	for speed in [0.25, 0.5, 1.0, 2.0, 4.0]:
 		_speed_select.add_item("×%s" % speed)
 		_speed_select.set_item_metadata(_speed_select.item_count - 1, speed)
@@ -109,6 +115,7 @@ func _ready() -> void:
 	_enemy_speed_multiplier.value = float(context.active_preset["overrides"].get("enemy_speed", 1.0))
 	_spawn_count.value = float(context.active_preset["overrides"].get("spawn_count", SPAWN_BATCH_SIZE))
 	_select_spawn_enemy_type(str(context.active_preset["overrides"].get("spawn_enemy_type", "chaser")))
+	_select_spawn_enemy_affix(str(context.active_preset["overrides"].get("spawn_enemy_affix", "Hasted")))
 	_contact_damage.value = float(context.active_preset["overrides"].get("contact_damage_per_hit", 0.0))
 	_seed_control.value = float(context.active_preset["seed"])
 	_pause_button.grab_focus()
@@ -130,7 +137,8 @@ func _default_preset() -> Dictionary:
 	return {
 		"schema_version": 1, "preset_id": "lab_default", "name": "Lab Default",
 		"description": "Empty isolated combat lab", "base_mode": "survival", "seed": 1,
-		"overrides": {"spawn_count": SPAWN_BATCH_SIZE, "spawn_enemy_type": "chaser"}, "flags": {},
+		"overrides": {"spawn_count": SPAWN_BATCH_SIZE, "spawn_enemy_type": "chaser",
+			"spawn_enemy_affix": "Hasted"}, "flags": {},
 		"initial_build": {
 			"weapons": [{"id": "lightning_conductor", "level": 1}],
 			"relics": [{"id": "storm_core", "level": 1}], "equipment": [], "stats": {},
@@ -319,8 +327,10 @@ func _spawn_enemies() -> void:
 		_set_status("ENTITY LIMIT %d · REMOVE ENTITIES BEFORE SPAWNING" % MAX_SIMULATION_ENTITIES, true)
 		return
 	var enemy_id := str(_enemy_select.get_item_metadata(_enemy_select.selected))
+	var enemy_affix := str(_elite_affix_select.get_item_metadata(_elite_affix_select.selected)) \
+		if enemy_id == "elite" else ""
 	var sequence: int = context.simulation.spawn_enemy(enemy_id, spawn_count,
-		Vector2(120.0, 0.0), Vector2.ZERO, float(_enemy_hp_multiplier.value), "",
+		Vector2(120.0, 0.0), Vector2.ZERO, float(_enemy_hp_multiplier.value), enemy_affix,
 		float(_enemy_speed_multiplier.value))
 	_set_status("SPAWN QUEUED" if sequence > 0 else "SPAWN REJECTED", sequence <= 0)
 
@@ -334,13 +344,34 @@ func _set_spawn_enemy_type_override(index: int) -> void:
 	if context == null or context.active_preset.is_empty() or index < 0 or index >= _enemy_select.item_count:
 		return
 	context.active_preset["overrides"]["spawn_enemy_type"] = str(_enemy_select.get_item_metadata(index))
+	_refresh_elite_affix_control()
+
+func _set_spawn_enemy_affix_override(index: int) -> void:
+	if context == null or context.active_preset.is_empty() or index < 0 or index >= _elite_affix_select.item_count:
+		return
+	context.active_preset["overrides"]["spawn_enemy_affix"] = str(_elite_affix_select.get_item_metadata(index))
+
+func _refresh_elite_affix_control() -> void:
+	var is_elite := str(_enemy_select.get_item_metadata(_enemy_select.selected)) == "elite"
+	_elite_affix_title.visible = is_elite
+	_elite_affix_select.visible = is_elite
+	_elite_affix_select.disabled = not is_elite
 
 func _select_spawn_enemy_type(enemy_id: String) -> void:
 	for index in range(_enemy_select.item_count):
 		if str(_enemy_select.get_item_metadata(index)) == enemy_id:
 			_enemy_select.select(index)
+			_refresh_elite_affix_control()
 			return
 	_enemy_select.select(0)
+	_refresh_elite_affix_control()
+
+func _select_spawn_enemy_affix(affix_id: String) -> void:
+	for index in range(_elite_affix_select.item_count):
+		if str(_elite_affix_select.get_item_metadata(index)) == affix_id:
+			_elite_affix_select.select(index)
+			return
+	_elite_affix_select.select(0)
 
 func _set_enemy_hp_override(value: float) -> void:
 	if context == null or context.active_preset.is_empty():
@@ -420,6 +451,7 @@ func _restore_snapshot() -> void:
 	_enemy_speed_multiplier.value = float(context.active_preset["overrides"].get("enemy_speed", 1.0))
 	_spawn_count.value = float(context.active_preset["overrides"].get("spawn_count", SPAWN_BATCH_SIZE))
 	_select_spawn_enemy_type(str(context.active_preset["overrides"].get("spawn_enemy_type", "chaser")))
+	_select_spawn_enemy_affix(str(context.active_preset["overrides"].get("spawn_enemy_affix", "Hasted")))
 	_contact_damage.value = float(context.active_preset["overrides"].get("contact_damage_per_hit", 0.0))
 	_seed_control.value = float(context.seed)
 	var stat_id := str(_live_stat_select.get_item_metadata(_live_stat_select.selected))
@@ -576,6 +608,7 @@ func _preset_from_editor() -> Dictionary:
 	preset["overrides"]["enemy_speed"] = _enemy_speed_multiplier.value
 	preset["overrides"]["spawn_count"] = int(_spawn_count.value)
 	preset["overrides"]["spawn_enemy_type"] = str(_enemy_select.get_item_metadata(_enemy_select.selected))
+	preset["overrides"]["spawn_enemy_affix"] = str(_elite_affix_select.get_item_metadata(_elite_affix_select.selected))
 	preset["overrides"]["contact_damage_per_hit"] = _contact_damage.value
 	var checked: Dictionary = preset_service.validate_preset(preset)
 	var build = load("res://scripts/sandbox_build.gd").new()
@@ -601,6 +634,7 @@ func _apply_preset(preset: Dictionary) -> void:
 	_enemy_speed_multiplier.value = float(preset["overrides"].get("enemy_speed", 1.0))
 	_spawn_count.value = float(preset["overrides"].get("spawn_count", SPAWN_BATCH_SIZE))
 	_select_spawn_enemy_type(str(preset["overrides"].get("spawn_enemy_type", "chaser")))
+	_select_spawn_enemy_affix(str(preset["overrides"].get("spawn_enemy_affix", "Hasted")))
 	_contact_damage.value = float(preset["overrides"].get("contact_damage_per_hit", 0.0))
 	_seed_control.value = float(preset["seed"])
 	context.live_stat_overrides.clear()

@@ -15,6 +15,7 @@ const PRESET_KEYS := [
 ]
 const VALID_MODES := ["survival", "endless", "armorless"]
 const VALID_SPAWN_ENEMY_TYPES := ["chaser", "sprinter", "tank", "shooter", "buffer", "exploder", "shielder", "summoner", "elite"]
+const VALID_ELITE_AFFIXES := ["Hasted", "Armored", "Regenerating", "Volatile", "Shielded", "Split-on-Death"]
 const OVERRIDE_LIMITS := {
 	"enemy_hp": Vector2(0.1, 1000.0),
 	"enemy_speed": Vector2(0.1, 10.0),
@@ -44,6 +45,11 @@ func validate_preset(preset: Variant) -> Dictionary:
 			if typeof(preset["overrides"][override_id]) != TYPE_STRING or \
 					str(preset["overrides"][override_id]) not in VALID_SPAWN_ENEMY_TYPES:
 				return _error("invalid_override_spawn_enemy_type")
+			continue
+		if str(override_id) == "spawn_enemy_affix":
+			if typeof(preset["overrides"][override_id]) != TYPE_STRING or \
+					str(preset["overrides"][override_id]) not in VALID_ELITE_AFFIXES:
+				return _error("invalid_override_spawn_enemy_affix")
 			continue
 		if not OVERRIDE_LIMITS.has(override_id):
 			return _error("unsupported_override")

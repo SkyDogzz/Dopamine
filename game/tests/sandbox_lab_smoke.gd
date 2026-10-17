@@ -39,7 +39,9 @@ func _run() -> void:
 		return
 	var spawn_count: SpinBox = lab.get_node_or_null("Root/Body/Side/Sections/EnemyConfig/SpawnCount")
 	var enemy_select: OptionButton = lab.get_node_or_null("Root/Body/Side/Sections/EnemySelect")
-	if spawn_count == null or enemy_select == null or spawn_count.value != 10.0 or \
+	var elite_affix_select: OptionButton = lab.get_node_or_null("Root/Body/Side/Sections/EnemyConfig/EliteAffixSelect")
+	if spawn_count == null or enemy_select == null or elite_affix_select == null or \
+			spawn_count.value != 10.0 or not elite_affix_select.disabled or \
 			not lab._can_spawn_batch(2490) or lab._can_spawn_batch(2491) or lab._can_spawn_batch(2500):
 		_fail("The default spawn count should fit exactly within the native 2500-entity limit")
 		return
@@ -151,6 +153,9 @@ func _run() -> void:
 	enemy_select.item_selected.emit(sprinter_index)
 	if str(lab.context.active_preset["overrides"].get("spawn_enemy_type", "")) != "sprinter":
 		_fail("Changing the Spawn enemy type should persist in the active preset")
+		return
+	if not elite_affix_select.disabled:
+		_fail("Elite affix selection should be disabled for a non-elite profile")
 		return
 	contact_damage.value = 5.0
 	if not is_equal_approx(float(lab.context.session.contact_damage_per_hit), 5.0) or \
@@ -383,6 +388,7 @@ func _run() -> void:
 			float(saved_preset["preset"]["overrides"].get("enemy_speed", 0.0)) != 2.0 or \
 			int(saved_preset["preset"]["overrides"].get("spawn_count", 0)) != 3 or \
 			str(saved_preset["preset"]["overrides"].get("spawn_enemy_type", "")) != "sprinter" or \
+			str(saved_preset["preset"]["overrides"].get("spawn_enemy_affix", "")) != "Hasted" or \
 			float(saved_preset["preset"]["overrides"].get("contact_damage_per_hit", 0.0)) != 5.0:
 		_fail("The Lab UI should save a valid preset in the isolated Sandbox store")
 		return
@@ -390,7 +396,7 @@ func _run() -> void:
 	var imported_preset: Dictionary = lab._default_preset()
 	imported_preset["preset_id"] = "file_import"
 	imported_preset["overrides"] = {"enemy_hp": 3.0, "enemy_speed": 3.0, "spawn_count": 4,
-		"spawn_enemy_type": "sprinter", "contact_damage_per_hit": 7.0}
+		"spawn_enemy_type": "elite", "spawn_enemy_affix": "Volatile", "contact_damage_per_hit": 7.0}
 	var imported_file := FileAccess.open(imported_path, FileAccess.WRITE)
 	imported_file.store_string(JSON.stringify(imported_preset))
 	imported_file.close()
@@ -399,7 +405,9 @@ func _run() -> void:
 	if lab.context.active_preset.get("preset_id", "") != "file_import" or lab.context.session._health_locked or \
 			float(enemy_hp_override.value) != 3.0 or float(contact_damage.value) != 7.0 or \
 			float(enemy_speed_override.value) != 3.0 or int(spawn_count.value) != 4 or \
-			str(enemy_select.get_item_metadata(enemy_select.selected)) != "sprinter" or \
+			str(enemy_select.get_item_metadata(enemy_select.selected)) != "elite" or \
+			str(elite_affix_select.get_item_metadata(elite_affix_select.selected)) != "Volatile" or \
+			elite_affix_select.disabled or \
 			not is_equal_approx(float(lab.context.session.contact_damage_per_hit), 7.0):
 		_fail("A valid JSON file should import and apply to the isolated Lab: status=%s error=%s" % [
 			lab.get_node("Root/Body/Side/Sections/Status").text,
@@ -423,10 +431,13 @@ func _run() -> void:
 	if not await _wait_for_entities(lab.context.simulation, 4):
 		_fail("The Lab spawn control should add enemies to its native simulation")
 		return
-	if float(lab.context.simulation.snapshot()["entities"][0]["components"]["Health"]["maximum"]) != 36.0:
+	if float(lab.context.simulation.snapshot()["entities"][0]["components"]["Health"]["maximum"]) != 150.0:
 		_fail("Imported enemy HP configuration should affect the Lab spawn command")
 		return
-	if float(lab.context.simulation.snapshot()["entities"][0]["components"]["MoveSpeed"]) != 375.0:
+	var imported_elite: Dictionary = lab.context.simulation.snapshot()["entities"][0]["components"]
+	if float(imported_elite["MoveSpeed"]) != 225.0 or str(imported_elite["Affix"]) != "Volatile" or \
+			float(imported_elite["DeathExplosionRadius"]) != 82.0 or \
+			float(imported_elite["DeathExplosionDamage"]) != 18.0:
 		_fail("Imported enemy speed configuration should affect the Lab spawn command")
 		return
 	lab.context.simulation.resume()

@@ -395,6 +395,18 @@ allow_greater = false
 allow_lesser = false
 step = 1.0
 
+[node name="EliteAffixTitle" type="Label" parent="Root/Body/Side/Sections/EnemyConfig"]
+layout_mode = 2
+theme_type_variation = "PixelHeading"
+theme_override_font_sizes/font_size = 8
+text = "ELITE AFFIX · ELITE PROFILE ONLY"
+
+[node name="EliteAffixSelect" type="OptionButton" parent="Root/Body/Side/Sections/EnemyConfig"]
+custom_minimum_size = Vector2(0, 20)
+layout_mode = 2
+focus_mode = 2
+item_count = 0
+
 [node name="ContactDamageTitle" type="Label" parent="Root/Body/Side/Sections/EnemyConfig"]
 layout_mode = 2
 theme_type_variation = "PixelHeading"
