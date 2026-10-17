@@ -59,7 +59,7 @@ Boucle Survival : choisir difficulté et arme initiale → survivre à une vague
 
 [VALIDÉ — EXTENSION DU 2026-10-16] Chaque montée de niveau d'XP accorde automatiquement un bonus, à partir du passage du niveau 1 au niveau 2. Une rotation fixe, commune aux runs, suit cet ordre puis recommence : dégâts %, vitesse d'attaque %, chance critique %, dégâts critiques %, PV maximum, vitesse de déplacement %, soin par élimination %, zone %, réduction de cooldown %, gain d'XP %, rayon de collecte XP % et vitesse projectile %. Chaque stat en pourcentage gagne 1 point de pourcentage à son tour ; le PV maximum est multiplié par 1,01 à son tour et les PV actuels sont ajustés pour conserver leur ratio. Ces bonus ne persistent pas entre les runs. Aucun choix ni retour ponctuel n'accompagne le gain ; les contributions sont consultables dans les statistiques de run.
 
-[OUVERT] Les caps d'équilibrage restent à mesurer ; les plafonds déjà appliqués par le combat (chance critique et réduction de cooldown) restent en vigueur.
+[VALIDÉ — EXTENSION DU 2026-10-17, réponse A] Conserver pendant les mesures les caps actuels : chance critique limitée à 100 % et réduction de cooldown limitée à 90 % (durée minimale 10 %). Leur équilibre final reste **[OUVERT]** et doit être mesuré avec les profils P6.9.
 
 <a id="3"></a>
 

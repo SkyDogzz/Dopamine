@@ -51,6 +51,10 @@
 
 - [x] Décision utilisateur **[VALIDÉE, réponse A]** : conserver les budgets de prototype **[PROPOSÉS]**, comparer les profils débutant/intermédiaire/complet, et ne revoir l’allocation que si un écart est mesuré. Les surveys existants sont exploratoires et ne valent pas validation finale.
 
+## P5.2/P6.9 — Caps critique et cooldown — 2026-10-17
+
+- [x] Décision utilisateur **[VALIDÉE, réponse A]** : conserver les garde-fous actuels pendant les mesures : critique bornée à 100 %, réduction de cooldown à 90 % (plancher de durée 10 %). Le statut validé couvre la méthode de mesure, pas le calibrage définitif.
+
 ## P5.1.13 — Pickups futurs de Magnet Heart — 2026-10-17
 
 - [x] Décision utilisateur **[VALIDÉE, réponse A]** : déterminer l’interaction avec Magnet Heart au moment de spécifier chaque pickup futur. Cela ne définit ni ne crée des pickups; XP reste le seul pickup actuel affecté.
