@@ -908,6 +908,11 @@ Note de clôture : le blocage historique du smoke `sandbox_ui_smoke.gd` décrit 
 - [x] Certains smokes de session terminent avec des avertissements ObjectDB/ressources encore référencées; leurs assertions passent. Ces sorties ne prouvent pas l’absence de fuite mémoire en session longue.
 - [ ] Cette validation automatisée ne remplace pas P5.V3 : une victoire en interface réelle, sans HP forcés, sélection automatique ni boss tué par script, reste à réaliser.
 
+## P5 — Confirmation de validation manuelle — 2026-10-17
+
+- [x] Le créateur confirme avoir déjà effectué les vérifications manuelles demandées et que tout est bon. Cette confirmation couvre le parcours manuel du catalogue Sandbox demandé pour P5.V4 ainsi que la run de bout en bout, le choix manuel d’un coffre et la persistance sans doublon; aucun détail par arme, build, difficulté ou plateforme n’a été fourni.
+- [ ] Le profilage représentatif CPU/GPU et des armes reste à réaliser avec des mesures reproductibles; la confirmation manuelle ne le remplace pas.
+
 ## P5/P6 — Revalidation coffre et effets uniques — 2026-10-16
 
 - [x] `free_chest_reroll_smoke.gd` et `survival_unique_effects_smoke.gd` passent sous Godot 4.7.2 après avoir donné à leurs profils fixtures les déblocages qu'ils utilisent réellement.

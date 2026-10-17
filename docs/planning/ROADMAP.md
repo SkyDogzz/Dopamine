@@ -23,7 +23,7 @@ L’audit initial était statique. Les tranches Minigun, Toxic Cloud, Sawblades 
 | P2 Simulation/combat | **Fondation présente, couverture partielle** | Diversité des IA, règles complètes d’ennemis/boss, instrumentation et performance iGPU. |
 | P3 Prototype de combat | **Dix paires et dix évolutions de prototype présentes** | Contrats génériques, retours visuels par niveau, ciblage fidèle, mesures DPS détaillées. |
 | P4 Vertical slice Survival | **Boucle de run prototype présente** | Boss réels, difficulté sélectionnable, run équilibrée et vérifiée sans harness. |
-| P5 Contenu v1.6 | **Prototypes de contenu largement intégrés, jalon non livré** | Les dix paires, évolutions, niveaux/feedback et prototypes ennemis/boss sont présents. Le créateur confirme une victoire sans assistance pour P5.V3; restent l’essai manuel du catalogue dans le Sandbox, l’arbitrage des réactions et le balancing. Le stress test concentré reste au-dessus du budget de frame et n’est pas représentatif d’une vague. |
+| P5 Contenu v1.6 | **Prototypes de contenu largement intégrés, jalon non livré** | Les dix paires, évolutions, niveaux/feedback et prototypes ennemis/boss sont présents. Le créateur confirme les vérifications manuelles demandées, dont le catalogue Sandbox et la run complète; restent le profilage représentatif, l’arbitrage des réactions et le balancing. Le stress test concentré reste au-dessus du budget de frame et n’est pas représentatif d’une vague. |
 | P6 Progression permanente | **Prototype anticipé seulement** | Catalogue complet, règles et contenus validés, récompenses calibrées et effets uniques actifs. |
 | P7 Modes Endless | **À faire** | Armorless complet ; arbitrages nécessaires pour Endless standard. |
 | P8 Sandbox Lab joueur | **À faire au-delà des outils développeur P1** | Builds libres, presets/import/export, copie de save, snapshots complets et règles de sécurité. |
@@ -446,7 +446,8 @@ Travail requis :
   - [x] Après P5.2.4, recompiler avec CMake et exécuter CTest en séquentiel : 86/86 passent sous Godot 4.7.2; cela vérifie aussi les snapshots format 15 et les dix scénarios Sandbox d’armes.
   - [x] Après l’optimisation du résolveur de collisions, recompiler la GDExtension Linux et relancer CTest le 2026-10-17 : 86/86 passent en 60,45 s sous Godot 4.7.2.
   - [x] Enregistrer la confirmation utilisateur de P5.V3 (run de victoire, coffre, récompenses et relance) ; voir `docs/qa/TESTS.md`.
-  - [ ] Parcourir manuellement les dix armes dans le Sandbox interactif avant de clore le jalon.
+  - [x] Le créateur confirme le 2026-10-17 avoir terminé les vérifications manuelles demandées et que tout est bon; aucun détail par arme/build/difficulté/plateforme n’a été fourni (voir `docs/qa/TESTS.md`).
+  - [ ] Effectuer un profilage représentatif CPU/GPU et des armes avant de clore le jalon.
   - [x] Investiguer l’écart du benchmark natif Debug : le résolveur spatial parcourait les collisions de corps quand aucun ennemi ne bougeait. Sortie anticipée, tests core/worker 2/2; la rafale revient à 73,0–73,8 ms. Résultats et limites dans `docs/qa/PERFORMANCE.md`.
 
 **Critère de sortie :** dix armes, onze reliques, leurs évolutions, 8–12 familles, élites et boss utilisables dans une run complète ; Sandbox et progression séparés. Après P5, poursuivre P6–P9 selon le goal principal actif.
