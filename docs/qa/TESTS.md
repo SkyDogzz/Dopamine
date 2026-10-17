@@ -3,10 +3,11 @@
 ## P9.8 — Décision de droits visuels et registre des assets — 2026-10-17
 
 - [x] Décision P9.8 sur les droits visuels **[VALIDÉE, réponse A]** : remplacer ou exclure tout visuel dont les droits/provenance ne sont pas vérifiables.
-- [x] Création de `docs/art/PROVENANCE_ASSETS.csv` : 165 enregistrements (140 PNG, 25 SVG) avec hashes SHA-256, tailles et simples candidats de sources éditables.
+- [x] Création de `docs/art/PROVENANCE_ASSETS.csv` : 165 enregistrements (140 PNG, 25 SVG) avec hashes SHA-256, taille, statut de paquet, mapping vers la référence signée, résultat C2PA et base contractuelle.
 - [x] Godot 4.7.2 exporte le PCK Linux/X11 après modification : 5 134 748 octets; le journal confirme que les assets racine inutilisés sont exclus et que l’icône catalogue, le héros animé, le roster et les récompenses actifs restent empaquetés. Les presets Windows/Linux partagent ces règles.
-- [x] 63/165 PNG/SVG sont maintenant marqués exclus dans le registre; 102/165 restent présents et nécessitent une preuve vérifiable ou remplacement/exclusion avant release.
-- [i] L’export PCK vérifie le filtrage, pas les droits. Les 165 lignes gardent le statut **[OUVERT]** côté provenance; aucune source Aseprite ni correspondance de nom n’est comptée comme clearance.
+- [x] 63/165 PNG/SVG sont exclus du PCK; 102/165 restent présents. Leur statut de provenance est détaillé dans les deux contrôles C2PA ci-dessous.
+- [x] `c2patool` 0.28.2 avec trust list C2PA officielle vérifie 49 références d’origine : 22 manifestes **Trusted** et 27 **Invalid** (EKU requis manquant). Les signatures et hashes de contenu passent pour les 49; les 27 invalides ne sont pas acceptés comme sources de release. Les 102 assets inclus se répartissent en 43 via source Trusted, 58 via source Invalid, 1 depuis le générateur code du dépôt.
+- [i] Les signaux C2PA attestent une origine ChatGPT/OpenAI, pas une propriété légale ni l’unicité. Les 43 actifs issus de références Trusted exigent encore une revue visuelle de tierces marques/similitudes; remplacer/exclure les 58 actifs issus de références Invalid avant release. Conditions et limites sont documentées dans `docs/art/INVENTAIRE_ASSETS_UI.md`.
 
 ## P6.4 — Reroll payant d’effet unique — 2026-10-17
 
