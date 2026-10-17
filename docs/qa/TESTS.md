@@ -239,6 +239,12 @@
 - [x] Les smokes couvrent difficulté transmise à la run, victoire/défaite et déblocage séquentiel, multiplicateurs Easy/Normal/Chaos distincts, cadence du suivi Chaos après deux attaques normales pour les deux boss, télégraphes et pause.
 - [i] Les multiplicateurs restent **[PROPOSÉS]** et la run Chaos représentative reste à valider dans P9. Le smoke boss affiche un avertissement ObjectDB/ressource à l’arrêt sans échec d’assertion.
 
+## P5.4.6 — Composition des soutiens Normal/Chaos — 2026-10-17
+
+- [x] `survival_support_spawn_survey.gd` appelle le spawner de production en wave 12, sans arme active ni `ProgressionService`, et vérifie avant/après que les fichiers de sauvegarde normale n’ont pas changé. Commande : `XDG_DATA_HOME=/tmp/dopamine-support-spawn-survey-final DOPAMINE_TEST_TIMEOUT=240s tools/run_godot_test.sh tools/local/godot-4.7.2/Godot_v4.7.2-stable_linux.x86_64 --headless --audio-driver Dummy --path game --script res://tests/survival_support_spawn_survey.gd -- --seed=20261017 --replicates=10 --output=../docs/qa/data/survival_support_spawn_survey_20261017.csv`.
+- [x] Dix seeds appariés (`20261017`–`20261026`), 1 000 spawns chacun par difficulté. Normal : 2 523/10 000 Buffer, Shielder ou Summoner (25,23 %); Chaos : 3 573/10 000 (35,73 %), soit +41,62 %. Les comptes par famille sont Buffer 734→989 (+34,7 %), Shielder 975→1 372 (+40,7 %), Summoner 814→1 212 (+48,9 %).
+- [i] Cette sonde utilise la fonction de spawn réelle et quantifie la composition finale après les tirages successifs; elle ne simule pas les vagues, dégâts, élites, boss ni survie, et ne calibre donc pas les règles Chaos **[PROPOSÉES]**. Les variations par famille reflètent l’ordre des tirages et les remplacements entre familles. Une run Chaos représentative et l’équilibrage des combinaisons d’affixes restent ouverts. Aucune valeur n’a été modifiée.
+
 ## P5.4.1–5 — Roster, interactions, élites et boss — 2026-10-17
 
 - [x] Depuis un snapshot propre de `7221c57`, passent sous Godot 4.7.2 : `survival_support_enemy_smoke.gd`, `survival_shielder_smoke.gd`, `survival_summoner_smoke.gd`, `survival_exploder_smoke.gd`, `survival_elite_smoke.gd`, `survival_wave_director_smoke.gd`, `survival_boss_attack_smoke.gd` et `survival_final_boss_loot_smoke.gd`.

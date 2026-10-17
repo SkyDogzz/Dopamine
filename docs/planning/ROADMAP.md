@@ -431,6 +431,7 @@ Travail requis :
   - [x] Inclure les smokes de profil, d’unlock et de session dans CTest; l’unlock verrouillé vérifie explicitement l’erreur `difficulty_locked`.
   - Les règles de déblocage sont **[VALIDÉES]**; les multiplicateurs du GDD restent **[PROPOSÉS]**.
   - [x] Chaos : Buffer, Shielder et Summoner ont une chance d’apparition multipliée par 1,5 **[PROPOSÉ]**; les élites tirent deux affixes distincts dont les effets se combinent; les boss cyclent leurs patterns existants sans répétition immédiate. Le follow-up reste après deux attaques normales; HP, vitesse de boss et plafond global d’invocations ne sont pas modifiés. Smokes ciblés `survival_wave_spawn_smoke.gd`, `survival_elite_smoke.gd` et `survival_boss_attack_smoke.gd`.
+  - [x] Mesurer la composition du spawner de production à la vague 12 avec `survival_support_spawn_survey.gd` : dix seeds appariés, 10 000 spawns par difficulté, résultat agrégé 25,23 % de soutiens en Normal et 35,73 % en Chaos (+41,6 %). CSV et limites dans `docs/qa/TESTS.md`; le survey ne simule ni combat ni survie.
   - [ ] Équilibrer le multiplicateur de soutien et les combinaisons d’affixes, puis vérifier les mutations en run Chaos représentative. Quatre paires exploratoires Chaos/Normal à loadout forcé terminent toutes avant la vague 3; résultats et limites consignés dans `docs/qa/TESTS.md` et `docs/qa/data/thermal_shock_chaos_vs_normal_20261017.csv`, sans calibration.
 
 ### Vérification et sortie P5
