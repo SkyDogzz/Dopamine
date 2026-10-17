@@ -16,59 +16,59 @@ Roadmap détaillée et audit GDD/code : [`docs/planning/ROADMAP.md`](../docs/pla
 ## P5 — Contenu v1.6 (jalon actif)
 
 - [ ] **P5.1 — Compléter les armes, reliques et évolutions**
-  - [x] **P5.1.1 — Contrat catalogue :** définitions des dix armes, dix reliques associées et Magnet Heart ; relations contrôlées au chargement ; dix paires prototypées et Magnet Heart sont disponibles en Survival. JSON Schema reste à intégrer.
+  - [x] **P5.1.1 — Contrat catalogue :** dix armes, dix reliques associées et Magnet Heart ; références contrôlées au chargement et JSON Schema validé. Les dix paires et Magnet Heart sont disponibles en Survival.
   - Pour chaque nouvelle paire, faire les petites tranches suivantes dans l’ordre :
-    - [ ] Ajouter les définitions stables arme/relique/évolution et valider les références.
-    - [ ] Ajouter uniquement l’attaque de base de l’arme et vérifier son ciblage Sandbox.
-    - [ ] Ajouter l’effet de relique et vérifier chacun de ses niveaux.
-    - [ ] Ajouter l’évolution et tester avant/après acquisition de la relique.
-    - [ ] Ajouter le feedback visuel des niveaux et de l’évolution.
-    - [ ] Faire le smoke de cette paire avant de commencer la suivante.
+    - [x] Ajouter les définitions stables arme/relique/évolution et valider les références pour les dix paires.
+    - [x] Ajouter les attaques et vérifier le ciblage des dix armes dans Survival/Sandbox.
+    - [x] Ajouter les bonus de relique et vérifier leurs cinq niveaux.
+    - [x] Ajouter les évolutions et vérifier les deux ordres d’acquisition de la relique.
+    - [x] Ajouter le feedback visuel des niveaux et des évolutions.
+    - [x] Vérifier chaque paire par smoke avant d’étendre le catalogue.
   - [x] Ajouter un prototype Frost Nova/Frozen Crown/Absolute Zero : Chill natif et shatter borné ; valeurs **[PROPOSÉES]**.
   - [x] Prototyper Void Orb/Singularity/Event Horizon : projectile lent perçant et attraction native ; réglages **[PROPOSÉS]**.
-  - [x] Ajouter un prototype Minigun/Overdrive Engine/Redline ; chiffres de progression et cadence **[PROPOSÉS]**, projectile propre ajouté ; feedback par niveau/évolution encore à faire.
-  - [x] Ajouter un prototype Toxic Cloud/Plague Mask/Pandemic ; DoT partagé en zone et propagation bornée à la mort ; le nuage visuel persistant et les statuts multiples restent à faire, valeurs **[PROPOSÉES]**.
+  - [x] Ajouter un prototype Minigun/Overdrive Engine/Redline ; projectile, feedback par niveau et évolution ajoutés ; chiffres de progression et cadence **[PROPOSÉS]**.
+  - [x] Ajouter un prototype Toxic Cloud/Plague Mask/Pandemic ; DoT partagé en zone, nuage visuel persistant et propagation bornée à la mort ; les statuts multiples sont pris en charge. Valeurs **[PROPOSÉES]**.
   - [x] Ajouter un prototype Sawblades/Magnetic Coil/Razorstorm ; ricochets natifs vers des cibles non touchées et vitesse de projectile bonus, chiffres **[PROPOSÉS]**.
   - [x] Ajouter un prototype Meteor Staff/Celestial Eye/Starfall ; ciblage de groupe, explosion et fragments, réglages **[PROPOSÉS]**.
   - [x] Prototyper Prism Laser/Prism Crystal/Spectrum Collapse (réglages **[PROPOSÉS]**).
   - [x] Ajouter Magnet Heart comme relique sans évolution ; appliquer le rayon XP **[PROPOSÉ]** et préserver l'exclusion des chests.
-  - [ ] Étendre Magnet Heart aux autres collectibles et à l'impulsion **[PROPOSÉE]** de niveau 5.
-  - [ ] Vérifier les niveaux 1–5, feedback visuel et règles d’évolution sur une paire à la fois.
-  - [ ] Corriger Bloodstorm : dagues orbitantes, puis smoke collisions/saignement/lifesteal.
-  - [x] Vérifier les cinq slots normaux et le non-cumul d’un même effet unique actif ; l’extension à six reste à implémenter avec un effet défini, car aucun des IDs uniques actuels ne porte cette capacité (**[OUVERT]**).
-  - **Vérifier :** smoke Sandbox pour chaque paire, niveaux max, évolution avant/après acquisition de relique.
+  - [x] Magnet Heart attire les orbes XP et son impulsion de niveau 5 ; les soins, ressources, monnaies et bonus temporaires restent **[OUVERTS]** jusqu’à ce que ces pickups soient définis.
+  - [x] Vérifier les niveaux 1–5, feedback visuel et règles d’évolution sur les dix paires.
+  - [x] Bloodstorm : dagues orbitantes ; smoke des collisions, du saignement et du lifesteal.
+  - [x] Vérifier les cinq slots normaux, l’extension proposée à six et le non-cumul d’un même effet unique actif. Les valeurs de capacité restent **[PROPOSÉES]**.
+  - [x] Vérifier par smoke Sandbox/Survival les dix paires, niveaux max et évolution avant/après acquisition de relique.
 
 - [ ] **P5.2 — Statuts et synergies**
-  - [ ] Définir durée, cumul/remplacement et expiration des statuts utilisés par le catalogue.
-  - [ ] Vérifier dégâts directs, DoT, lifesteal et événements de mort sans double attribution.
-  - [ ] Garder les réactions nommées désactivées jusqu’à validation ; Overcharge reste **[OUVERT]**.
-  - **Vérifier :** scénarios Sandbox d’application, expiration et effets en chaîne bornés.
+  - [x] Définir et vérifier application, durée, remplacement, expiration, dégâts directs/DoT, lifesteal et événements de mort sans double attribution.
+  - [x] Valider Toxic Ignition et borner sa chaîne ; Thermal Shock reste **[PROPOSÉ]**, les autres réactions nommées attendent arbitrage et Overcharge reste **[OUVERT]**.
+  - [x] Vérifier par smokes Sandbox/Survival l’application, l’expiration et les effets en chaîne bornés.
+  - [ ] Équilibrer les réactions proposées sur des runs représentatives.
 
 - [ ] **P5.3 — Chests et règles de run**
-  - [ ] Vérifier trois options uniques, objets max, slots pleins et armes niveau 5 non évoluées.
-  - [ ] Vérifier pause/reprise et évolution après chaque acquisition/amélioration.
-  - [ ] Garder probabilités/poids/rerolls proposés configurables tant qu’ils ne sont pas arbitrés.
+  - [x] Vérifier trois options uniques, objets max, slots pleins et armes niveau 5 non évoluées.
+  - [x] Vérifier pause/reprise et évolution après chaque acquisition/amélioration.
+  - [x] Garder probabilités/poids/rerolls proposés configurables tant qu’ils ne sont pas arbitrés ; leur calibration et arbitrage restent ouverts.
   - [x] Ajouter le smoke `pickup_radius` élevé : XP collectée à distance, chest inchangé.
   - [x] Exécuter ce smoke sous Godot 4.7.2 Linux ; XP collectée, coffre toujours hors de portée.
-  - **Vérifier :** smoke chest ciblé puis test de run.
+  - [x] Exécuter les smokes ciblés du directeur, du loadout, des chests et de leurs transitions.
+  - [ ] Vérifier le choix d’un coffre et les récompenses dans une run complète jouée en interface.
 
 - [ ] **P5.4 — Ennemis et boss**
-  - [ ] Ajouter une famille mêlée distincte et smoke spawn/déplacement/mort.
-  - [ ] Ajouter une famille rapide et smoke son contre-jeu.
-  - [ ] Ajouter une famille distance et projectile télégraphié esquivable.
-  - [ ] Ajouter soutien puis explosif comme deux comportements séparés.
-  - [ ] Compléter jusqu’à 8–12 familles et couvrir les compositions de vagues.
-  - [ ] Ajouter un affixe d’élite avec budget et récompense, puis étendre le catalogue.
-  - [ ] Implémenter une phase de mid-boss à la fois, puis boss final à phases.
-  - [ ] Ajouter sélection/déblocage séquentiel des difficultés ; conserver multiplicateurs proposés.
-  - **Vérifier :** scénario par famille/affixe, esquive des projectiles et transitions de boss.
+  - [x] Ajouter les familles mêlée, rapide, distance, soutien, explosif, shielder et summoner ; vérifier les profils et leurs comportements.
+  - [x] Compléter le roster à huit familles et couvrir les compositions seedées de vagues.
+  - [x] Ajouter les six affixes d’élite proposés avec budget, récompense et limites d’invocation.
+  - [x] Implémenter et tester les phases du mid-boss et du boss final, leurs télégraphes et esquives.
+  - [x] Ajouter la sélection et le déblocage séquentiel des difficultés ; les multiplicateurs restent **[PROPOSÉS]**.
+  - [x] Vérifier par scénarios et smokes les familles, affixes, attaques et transitions de boss.
+  - [ ] Calibrer les profils, affixes et patterns sur des runs représentatives.
 
 - [ ] **P5.5 — Validation de sortie**
-  - [ ] Parcourir tout le catalogue dans Sandbox sans harness qui choisit les résultats.
+  - [ ] Parcourir manuellement tout le catalogue dans le Sandbox interactif.
   - [ ] Jouer une run Survival complète avec HP normaux et boss pilotés par le joueur.
-  - [ ] Exécuter la batterie QA P5 et profilage représentatif.
+  - [x] Exécuter la batterie CTest complète : 86/86 passent en séquentiel sous Godot 4.7.2 le 2026-10-17.
+  - [ ] Effectuer un profilage représentatif CPU/GPU et des armes.
   - [ ] Mettre à jour GDD/interfaces/ADR selon les seules décisions confirmées.
-  - [ ] Committer le jalon puis s’arrêter avant P6.
+  - [ ] Committer le jalon puis poursuivre P6–P9 selon le goal principal actif.
 
 ## P6 — Progression permanente (prototype anticipé, non terminée)
 

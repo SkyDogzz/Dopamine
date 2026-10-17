@@ -84,15 +84,17 @@ Livrer d’abord un Sandbox développeur autonome, puis le premier playable Surv
 
 ## Suite de la roadmap — phases v1.6
 
-Le détail exhaustif et l’audit code/GDD sont dans [`docs/planning/ROADMAP.md`](../docs/planning/ROADMAP.md). Le découpage v1.6 place le contenu de dix armes, onze reliques, évolutions et ennemis en P5 ; la progression permanente est P6. Le prototype de progression déjà présent est un travail anticipé, non une clôture du jalon. L'arrêt demandé est après P5.
+Le détail exhaustif et l’audit GDD/code sont dans [`docs/planning/ROADMAP.md`](../docs/planning/ROADMAP.md). Le découpage v1.6 place le contenu de dix armes, onze reliques, évolutions et ennemis en P5 ; la progression permanente est P6. Le prototype de progression déjà présent est un travail anticipé, non une clôture du jalon. Le goal principal actif poursuit P6–P9 après P5.
 
-### P5 — Contenu de combat v1.6 (à réaliser)
+### P5 — Contenu de combat v1.6 (implémentation largement vérifiée, jalon encore ouvert)
 
-- [ ] Étendre les trois paires prototypes aux dix armes et onze reliques, dont Magnet Heart ; corriger Crimson Daggers/Bloodstorm pour respecter le comportement orbitant validé.
-- [ ] Implémenter cinq niveaux visibles, évolutions uniques automatiques et règles de coffre.
-- [ ] Garantir que le ramassage étendu n'attire jamais les coffres, quelle que soit la source du bonus.
-- [ ] Compléter statuts, synergies, 8–12 familles d'ennemis, élites et boss multi-phases selon contrats validés ; garder les réactions nommées, chiffres et patterns proposés tant qu'ils ne sont pas arbitrés.
-- [ ] Vérifier tout le contenu dans Sandbox, une run Survival, et batterie complète de fin de jalon.
+- [x] Étendre le catalogue aux dix armes et onze reliques, dont Magnet Heart ; Bloodstorm utilise des dagues orbitantes et les dix évolutions possèdent leurs prototypes.
+- [x] Implémenter et tester cinq niveaux, feedback, règles d’évolution et d’éligibilité des coffres.
+- [x] Garder le rayon d’attraction XP séparé de la collecte des coffres ; les autres types de pickup restent **[OUVERTS]** jusqu’à leur définition.
+- [x] Compléter les statuts partagés, synergies bornées, huit familles d’ennemis, six affixes d’élite et prototypes de boss multi-phases. Les paramètres marqués **[PROPOSÉS]** restent provisoires ; Shatter, Electroplague, Gravity Collapse et Hemorrhage ne sont pas activés sans arbitrage.
+- [x] Exécuter la suite CTest complète : 86/86 passent en séquentiel sous Godot 4.7.2 le 2026-10-17.
+- [ ] Parcourir manuellement le catalogue dans le Sandbox interactif et jouer une run Survival jusqu’à la victoire sans assistance; vérifier choix de coffre et idempotence des récompenses.
+- [ ] Calibrer les prototypes sur des runs représentatives et consigner le profilage de performance requis.
 
 ### P6 — Progression permanente (prototype existant, jalon incomplet)
 
