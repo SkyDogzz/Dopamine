@@ -154,6 +154,13 @@
 - [x] Archive staging non distribuable : `build/linux/staging/DopamineSurvivor-linux-f806909-staging.tar.gz`, 31 968 166 octets, SHA-256 `f2da78adb6398e82f4547441d57f19d919935966e21840cfc2f90195ffe6edc9`. `sha256sum -c` passe.
 - [i] Cette vérification valide l’assemblage et le démarrage headless; elle ne valide pas une partie jouée, une installation sur une machine distincte, le GPU réel ou les autres plateformes. Le paquet reste un staging sans version de jeu.
 
+## P9.8 — Staging Linux depuis `7b20dd4` — 2026-10-17
+
+- [x] `tools/package_linux_staging.sh` reconstruit un `git archive` propre de `7b20dd485f1078bce51531839554d0e6b9fadfc9` en Release avec GCC 14.2.0, CMake 3.31.12, Godot officiel 4.7.2 et `godot-cpp` épinglé à `b8530af7546a3fcae80cef2477526569fd42ffc2`.
+- [x] Import Godot, export Linux/X11 et filtre des ressources de développement réussis. Le script extrait l’archive, vérifie les dépendances partagées, démarre le jeu avec un `XDG_DATA_HOME` vierge et confirme le chargement de la GDExtension Release adjacente sans erreur `ERROR:`.
+- [x] Archive staging non distribuable : `build/linux/staging/DopamineSurvivor-linux-7b20dd4-staging.tar.gz`, 31 974 354 octets; SHA-256 `c4530505fe31fbe2bfa9122c3a37aa5f9ff290ede7814c562b35d19563b83393`. Le paquet contient la continuation Endless et le mode Endless du Sandbox Lab présents dans ce commit.
+- [i] Même hôte Linux virtualisé et démarrage headless : ce résultat ne valide pas une partie jouée, les sauvegardes en usage, une installation distincte, le GPU réel ou Windows. Le paquet reste un staging sans version de jeu.
+
 ## P9.1 — Relevé exploratoire DPS des dix armes — 2026-10-17
 
 - [x] Les 90 cas ont terminé sous Godot 4.7.2 sans erreur avec `--seed=20261017`. Chaque formation a été lancée par `XDG_DATA_HOME=/tmp/dopamine-seeded-<formation> tools/local/godot-4.7.2/Godot_v4.7.2-stable_linux.x86_64 --headless --audio-driver Dummy --path game --script res://tests/combat_weapon_balance_survey.gd -- --formation=<formation> --seed=20261017`. Chaque cas utilise vitesse ×4 et 18 secondes de simulation active. Les nombres sont le DPS observé en dégâts totaux / temps actif :
