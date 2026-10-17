@@ -677,7 +677,8 @@ P1 livre le Sandbox développeur et ne remplace pas cette feature produit.
 - [ ] **P9.3 — Présentation audiovisuelle**
   - [ ] Vérifier feedback des dégâts directs/critique/statut.
   - [ ] Vérifier télégraphes au milieu d’effets chargés.
-  - [ ] Ajouter options de réduction VFX et régler audio par vague/boss.
+  - [x] Ajouter une option VFX persistante dans Options : trails, impacts décoratifs, pixels de mort, arcs Lightning et flashs Pandemic sont masqués; télégraphes et cues de gameplay restent visibles. Le périmètre/default restent **[PROPOSÉS]** et sont couverts par `survival_visual_effects_smoke.gd` et `ui_settings_smoke.gd`.
+  - [ ] Régler l’audio par vague/boss.
   - [ ] Remplacer progressivement les assets placeholders, un lot visuel par lot.
 - [ ] **P9.4 — Accessibilité et commandes**
   - [x] Vérifier par événements synthétiques dans `survival_hub_smoke.gd` l’accès clavier/manette à Succès et Bestiaire, leur focus visible et leur inertie à l’activation souris/clavier/manette; les périphériques physiques restent à tester.

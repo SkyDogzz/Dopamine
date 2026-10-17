@@ -35,6 +35,7 @@ func _run() -> void:
 		"Content/Center/OptionsCard/OptionsContent/FullscreenToggle",
 		"Content/Center/OptionsCard/OptionsContent/VolumeRow/VolumeSlider",
 		"Content/Center/OptionsCard/OptionsContent/VolumeRow/VolumeValue",
+		"Content/Center/OptionsCard/OptionsContent/ReducedEffectsToggle",
 		"Content/Center/OptionsCard/OptionsContent/BackButton",
 	]:
 		if panel.get_node_or_null(node_path) == null:
@@ -43,6 +44,7 @@ func _run() -> void:
 	var fullscreen_toggle := panel.get_node("Content/Center/OptionsCard/OptionsContent/FullscreenToggle") as CheckButton
 	var volume_slider := panel.get_node("Content/Center/OptionsCard/OptionsContent/VolumeRow/VolumeSlider") as HSlider
 	var volume_value := panel.get_node("Content/Center/OptionsCard/OptionsContent/VolumeRow/VolumeValue") as Label
+	var reduced_effects_toggle := panel.get_node("Content/Center/OptionsCard/OptionsContent/ReducedEffectsToggle") as CheckButton
 	var back_button := panel.get_node("Content/Center/OptionsCard/OptionsContent/BackButton") as Button
 	var options_card := panel.get_node("Content/Center/OptionsCard") as Control
 	var options_surface := options_card.get_theme_stylebox("panel") as StyleBoxFlat
@@ -61,6 +63,9 @@ func _run() -> void:
 		return
 	if fullscreen_toggle == null or fullscreen_toggle.focus_mode == Control.FOCUS_NONE:
 		_fail("Fullscreen setting should be focusable")
+		return
+	if reduced_effects_toggle == null or reduced_effects_toggle.focus_mode == Control.FOCUS_NONE:
+		_fail("Reduced visual effects setting should be focusable")
 		return
 	if volume_slider.texture_filter != CanvasItem.TEXTURE_FILTER_NEAREST:
 		_fail("The volume slider should preserve its pixel-grid handle texture")
@@ -91,6 +96,15 @@ func _run() -> void:
 	await _send_gamepad_button(JOY_BUTTON_A)
 	if _settings.fullscreen_enabled:
 		_fail("Gamepad A should toggle fullscreen through the focused CheckButton")
+		return
+	reduced_effects_toggle.grab_focus()
+	await _send_key(KEY_SPACE)
+	if not _settings.reduced_visual_effects_enabled or not reduced_effects_toggle.button_pressed:
+		_fail("Space should enable reduced visual effects through the focused CheckButton")
+		return
+	await _send_gamepad_button(JOY_BUTTON_A)
+	if _settings.reduced_visual_effects_enabled or reduced_effects_toggle.button_pressed:
+		_fail("Gamepad A should disable reduced visual effects through the focused CheckButton")
 		return
 	for action_name in ["ui_accept", "ui_cancel", "ui_up", "ui_down", "ui_left", "ui_right"]:
 		if not InputMap.has_action(action_name):
@@ -147,11 +161,13 @@ func _run() -> void:
 	await process_frame
 	var reopened_toggle := reopened_panel.get_node("Content/Center/OptionsCard/OptionsContent/FullscreenToggle") as CheckButton
 	var reopened_slider := reopened_panel.get_node("Content/Center/OptionsCard/OptionsContent/VolumeRow/VolumeSlider") as HSlider
-	if reopened_toggle.button_pressed or reopened_slider.value != 43.0:
+	var reopened_reduced_effects := reopened_panel.get_node("Content/Center/OptionsCard/OptionsContent/ReducedEffectsToggle") as CheckButton
+	if reopened_toggle.button_pressed or reopened_slider.value != 43.0 or reopened_reduced_effects.button_pressed:
 		_fail("Reopened Options panel should reflect the latest stored preferences")
 		return
 	_settings.set_fullscreen_enabled(false)
 	_settings.set_master_volume_percent(100.0)
+	_settings.set_reduced_visual_effects_enabled(false)
 
 	print("Options panel theme, controls, focus, preference updates and close contract passed")
 	quit()

@@ -266,6 +266,8 @@ Architecture : BaseBalanceConfig → SandboxOverrideLayer → RuntimeConfigResol
 
 [VALIDÉ] Les retours de dégâts sont agrégés et les critiques mis en évidence. Les impacts combinent flash, particules et audio avec hitstop sélectif ; les dangers et télégraphes ennemis restent prioritaires visuellement. Des options réduisent les VFX ; la musique EDM/synthwave s’adapte aux vagues et boss.
 
+[PROPOSÉ — prototype P9.3] L’option `Réduire les effets visuels`, désactivée par défaut, masque les trails de projectiles, impacts décoratifs, pixels de mort, arcs Lightning et flashs de propagation Pandemic. Elle conserve les projectiles, champs persistants, statuts, auras et télégraphes de danger. Ce découpage doit encore être vérifié en jeu et confirmé; il n’altère ni les règles de combat ni le flux RNG.
+
 [VALIDÉ] Direction pixel art néon ; HUD lisible à très forte densité ; support manette. Menus : écran d'accueil avec Play et Sandbox Lab accessibles indépendamment ; choix de sauvegarde seulement pour Play ; choix de mode et difficulté ; préparation de run ; HUD ; chests ; écran de mort/victoire ; inventaire ; enhancement ; skill tree ; achievements ; records ; Sandbox configuration et panneau live.
 
 [PROPOSÉ] HUD : HP et decay actuel, vague/timer, difficulté, XP/niveau, armes/reliques, évolutions, boss HP, dégâts agrégés. Armorless : comparer trois équipements à chaque vague, stats positives/négatives et comparaison avec l'objet équipé, choix d'effet unique sur Legendary/Mythic, solde de Flux, enhancements accessibles pendant pause. Sandbox : onglets de paramètres, éditeur de build, contrôles de simulation, panneau DPS/logs, recherche de paramètres, export/import.

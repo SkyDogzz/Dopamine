@@ -5,6 +5,7 @@ signal close_requested
 @onready var _fullscreen_toggle: CheckButton = %FullscreenToggle
 @onready var _volume_slider: HSlider = %VolumeSlider
 @onready var _volume_value: Label = %VolumeValue
+@onready var _reduced_effects_toggle: CheckButton = %ReducedEffectsToggle
 @onready var _back_button: Button = %BackButton
 @onready var _settings: SettingsService = get_node("/root/Settings")
 
@@ -13,6 +14,7 @@ var _syncing_controls := false
 func _ready() -> void:
 	_fullscreen_toggle.toggled.connect(_on_fullscreen_toggled)
 	_volume_slider.value_changed.connect(_on_volume_changed)
+	_reduced_effects_toggle.toggled.connect(_on_reduced_effects_toggled)
 	_back_button.pressed.connect(_on_back_pressed)
 	_settings.settings_changed.connect(_sync_from_settings)
 	_sync_from_settings()
@@ -32,6 +34,10 @@ func _on_volume_changed(value: float) -> void:
 	if not _syncing_controls:
 		_settings.set_master_volume_percent(value)
 
+func _on_reduced_effects_toggled(enabled: bool) -> void:
+	if not _syncing_controls:
+		_settings.set_reduced_visual_effects_enabled(enabled)
+
 func _on_back_pressed() -> void:
 	close_requested.emit()
 
@@ -40,4 +46,5 @@ func _sync_from_settings() -> void:
 	_fullscreen_toggle.button_pressed = _settings.fullscreen_enabled
 	_volume_slider.value = _settings.master_volume_percent
 	_volume_value.text = "%d%%" % roundi(_settings.master_volume_percent)
+	_reduced_effects_toggle.button_pressed = _settings.reduced_visual_effects_enabled
 	_syncing_controls = false

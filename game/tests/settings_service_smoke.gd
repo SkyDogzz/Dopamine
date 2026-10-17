@@ -22,11 +22,13 @@ func _run() -> void:
 	var settings = settings_script.new(CONFIG_PATH)
 	root.add_child(settings)
 	await process_frame
-	if not settings.has_method("set_fullscreen_enabled") or not settings.has_method("set_master_volume_percent"):
-		_fail("Settings service should expose the two bounded setters")
+	if not settings.has_method("set_fullscreen_enabled") or not settings.has_method("set_master_volume_percent") or \
+			not settings.has_method("set_reduced_visual_effects_enabled"):
+		_fail("Settings service should expose the display, audio and visual-effects setters")
 		return
-	if settings.get("fullscreen_enabled") != false or settings.get("master_volume_percent") != 100.0:
-		_fail("Missing preferences should use windowed and 100 percent volume defaults")
+	if settings.get("fullscreen_enabled") != false or settings.get("master_volume_percent") != 100.0 or \
+			settings.get("reduced_visual_effects_enabled") != false:
+		_fail("Missing preferences should use windowed, full-volume and standard-effects defaults")
 		return
 
 	settings.set_fullscreen_enabled(true)
@@ -48,24 +50,28 @@ func _run() -> void:
 		_fail("Zero volume should map to a finite Master bus level")
 		return
 	settings.set_master_volume_percent(63.0)
+	settings.set_reduced_visual_effects_enabled(true)
 	await process_frame
 	var restored = settings_script.new(CONFIG_PATH)
 	root.add_child(restored)
 	await process_frame
-	if restored.get("fullscreen_enabled") != true or restored.get("master_volume_percent") != 63.0:
-		_fail("Settings should persist and reload both supported preferences")
+	if restored.get("fullscreen_enabled") != true or restored.get("master_volume_percent") != 63.0 or \
+			restored.get("reduced_visual_effects_enabled") != true:
+		_fail("Settings should persist and reload display, audio and visual-effects preferences")
 		return
 
 	var invalid_config := ConfigFile.new()
 	invalid_config.set_value("settings", "fullscreen_enabled", "invalid")
 	invalid_config.set_value("settings", "master_volume_percent", 1000.0)
+	invalid_config.set_value("settings", "reduced_visual_effects_enabled", "invalid")
 	if invalid_config.save(CONFIG_PATH) != OK:
 		_fail("Smoke could not write its isolated invalid settings fixture")
 		return
 	var invalid = settings_script.new(CONFIG_PATH)
 	root.add_child(invalid)
 	await process_frame
-	if invalid.get("fullscreen_enabled") != false or invalid.get("master_volume_percent") != 100.0:
+	if invalid.get("fullscreen_enabled") != false or invalid.get("master_volume_percent") != 100.0 or \
+			invalid.get("reduced_visual_effects_enabled") != false:
 		_fail("Invalid preferences should fall back to safe defaults")
 		return
 

@@ -269,6 +269,14 @@
 - `ui_settings_smoke.gd` vérifie les flèches sur le slider de volume, Espace puis A sur le plein écran et Échap puis B pour fermer. La réouverture relit les valeurs persistées, puis le smoke remet le plein écran et le volume à leurs valeurs initiales.
 - Le smoke passe directement sous Godot 4.7.2 headless et reste déjà enregistré dans CTest. Ces événements synthétiques ne valident pas un parcours avec périphérique physique.
 
+## P9.3 — Option de réduction des effets visuels — 2026-10-17
+
+- [x] `SettingsService` persiste `reduced_visual_effects_enabled` dans `user://settings.cfg`, avec `false` par défaut et repli sûr pour les préférences invalides; le service ne référence ni progression ni saves.
+- [x] `OptionsPanel` ajoute un `CheckButton` sous ACCESSIBILITY; `ui_settings_smoke.gd` vérifie le focus et l’activation Entrée/A, la persistance/réouverture, et le layout partagé reste dans les bornes 640×360, 1280×720 et 1920×1080.
+- [x] `survival_visual_effects_smoke.gd` confirme l’activation par défaut, la suppression immédiate des effets décoratifs visibles, l’absence de changement au snapshot de combat en pause et la conservation du flux RNG pour les impacts/arcs.
+- [i] Sont masqués : trails, impacts décoratifs, pixels de mort, arcs Lightning et flashs Pandemic. Télégraphes, projectiles, champs persistants, statuts et auras restent visibles. Ce périmètre/default reste **[PROPOSÉ]** et attend une vérification en jeu; le smoke ne constitue pas une évaluation sensorielle.
+- [x] Après ajout du smoke, CTest séquentiel complet : **92/92 passent en 63,46 s**. Le checkout inclut toujours des changements locaux non committés de `survival_session.gd` liés à l’audio et à la collision de zone du boss, qui n’ont pas été inclus dans cette tranche.
+
 ## P9.4 — Commandes de l’écran de résultat — 2026-10-17
 
 - `run_result_panel_smoke.gd` utilise Entrée sur Recommencer, D-pad pour atteindre Quitter, A pour émettre la demande de navigation, puis B et Échap pour la fermeture. Aucun callback ne redémarre une run ou ne crédite une récompense dans ce test de présentation.

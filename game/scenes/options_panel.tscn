@@ -123,6 +123,22 @@ theme_override_colors/font_color = Color(1, 0.831373, 0.278431, 1)
 text = "100%"
 horizontal_alignment = 2
 
+[node name="EffectsDivider" type="HSeparator" parent="Content/Center/OptionsCard/OptionsContent"]
+layout_mode = 2
+
+[node name="AccessibilityTitle" type="Label" parent="Content/Center/OptionsCard/OptionsContent"]
+layout_mode = 2
+theme_type_variation = "PixelHeading"
+theme_override_colors/font_color = Color(0.215686, 0.909804, 0.960784, 1)
+text = "ACCESSIBILITY"
+
+[node name="ReducedEffectsToggle" type="CheckButton" parent="Content/Center/OptionsCard/OptionsContent"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 24)
+layout_mode = 2
+focus_mode = 2
+text = "REDUCE VISUAL EFFECTS"
+
 [node name="BackButton" type="Button" parent="Content/Center/OptionsCard/OptionsContent"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(80, 24)
