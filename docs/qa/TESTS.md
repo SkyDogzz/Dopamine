@@ -45,6 +45,13 @@
 - [x] Le checkpoint comprend le `survival_impact_status_visual_smoke` sous Xvfb/Mesa llvmpipe, qui vérifie les pixels des impacts critiques et les anneaux des cinq statuts, le smoke headless correspondant, l’import Godot, les autres tests de rendu, Sandbox, progression, armes, boss, Armorless et Endless.
 - [i] Il s'agit d'une validation automatisée sur l'hôte Linux actuel; elle ne clôt pas les runs représentatives, le GPU de référence ni les validations de plateforme ouvertes dans la roadmap.
 
+## P9.3 — Sprite prototype du Pulse Warden — 2026-10-17
+
+- [x] Remplacer l’export visuel du boss intermédiaire par `boss_pulse_warden.png`, avec source Aseprite dans `game/assets/source/roster/` et référence générée archivée dans `docs/art/source/pulse_warden_generated.png`.
+- [x] `process_pulse_warden.gd` reconstruit le PNG 96×96 depuis la source, conserve la transparence et limite les pixels à 16 couleurs de la palette maître; le test assets vérifie dimension, palette, source et route `mid_boss` du renderer.
+- [x] `catalog_icon_assets_smoke.gd` et `survival_boss_attack_smoke.gd` passent sous Godot 4.7.2. Le second signale des instances/ressources encore référencées à l’arrêt malgré ses assertions réussies.
+- [i] Sprite visuel prototype uniquement : il ne canonise ni l’identité du boss, ni ses patterns, et ne modifie aucun gameplay. Les deux exports placeholder historiques restent stockés mais inactifs; revue en mouvement sur GPU cible encore ouverte.
+
 ## P5.1.14 — Slots et déduplication des effets uniques — 2026-10-17
 
 - [x] Depuis un `git archive` propre du commit `6647f3f`, l’import Godot 4.7.2 puis `survival_loadout_smoke.gd`, `survival_unique_effects_smoke.gd` et `progression_service_smoke.gd` passent avec des `XDG_DATA_HOME` isolés.
