@@ -1,0 +1,23 @@
+# Exact absorbing Markov-chain expectation from +0 to +10 using current proposed chances, critical-loss rules, pity, and ProgressionService.enhancement_cost.
+# One powder tier is used for every attempt; mixing tiers, drops, conversion supply, and real-player economy are not modeled.
+powder_tier,rarity,expected_attempts,expected_powder,expected_levels_lost_to_critical_failures
+basic,normal,34.543,3407.15,2.129
+basic,magic,34.543,5118.40,2.129
+basic,mystic,34.543,6814.30,2.129
+basic,legendary,34.543,10221.45,2.129
+basic,mythic,34.543,13628.60,2.129
+refined,normal,18.844,1771.96,0.400
+refined,magic,18.844,2661.91,0.400
+refined,mystic,18.844,3543.93,0.400
+refined,legendary,18.844,5315.89,0.400
+refined,mythic,18.844,7087.86,0.400
+pure,normal,14.311,1313.67,0.081
+pure,magic,14.311,1973.47,0.081
+pure,mystic,14.311,2627.35,0.081
+pure,legendary,14.311,3941.02,0.081
+pure,mythic,14.311,5254.69,0.081
+prismatic,normal,12.425,1126.75,0.012
+prismatic,magic,12.425,1692.68,0.012
+prismatic,mystic,12.425,2253.50,0.012
+prismatic,legendary,12.425,3380.25,0.012
+prismatic,mythic,12.425,4506.99,0.012

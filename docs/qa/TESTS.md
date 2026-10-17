@@ -555,6 +555,21 @@
 - [x] `equipment_enhancement_smoke.gd` vérifie les niveaux +0..+10 avec chaque tier Powder, réussite garantie au dixième essai, échec normal, échec critique avec protection au niveau 0, coûts proposés par niveau/rareté et conversions 10:1 à sens unique. Coûts et probabilités restent **[PROPOSÉS]** et non calibrés.
 - [x] `equipment_economy_smoke.gd` vérifie les ventes uniques des cinq raretés, le crédit Essence sans Powder, et le rejet d'un fail streak hors plage 0..9. `survival_inventory_smoke.gd` vérifie la confirmation avant vente et le rafraîchissement de l'inventaire; les valeurs de vente restent **[PROPOSÉES]** et non calibrées.
 
+## P6.4 — Espérance analytique de l'enhancement — 2026-10-17
+
+- [x] `enhancement_economy_expected_cost.gd` résout les états absorbants (niveau 0–9 × fail streak 0–9) à partir des constantes de `ProgressionService`; la réussite au dixième essai, les pertes critiques avec plancher +0 et le coût appliqué à chaque tentative sont inclus. Le script s’exécute sans écriture de sauvegarde.
+- [x] Résultats attendus pour une ligne +0→+10 en gardant le même tier de Powder à chaque tentative :
+
+  | Powder | Tentatives attendues | Coût si Normal | Coût si Mythic | Niveaux perdus par échecs critiques (espérance) |
+  |---|---:|---:|---:|---:|
+  | Basic | 34,543 | 3 407,15 | 13 628,60 | 2,129 |
+  | Refined | 18,844 | 1 771,96 | 7 087,86 | 0,400 |
+  | Pure | 14,311 | 1 313,67 | 5 254,69 | 0,081 |
+  | Prismatic | 12,425 | 1 126,75 | 4 506,99 | 0,012 |
+
+- [x] Les vingt combinaisons poudre/rareté complètes sont archivées dans [`data/enhancement_expected_cost_20261017.csv`](data/enhancement_expected_cost_20261017.csv); le script peut les régénérer.
+- [i] L’espérance est une propriété des chiffres proposés et du modèle de code, pas une validation de rythme. Elle ne modélise ni la provenance et le mélange de tiers, ni les récompenses/démantèlements, ni les conversions réellement choisies. Les probabilités, coûts et rendements restent **[PROPOSÉS]**; la calibration joueur demeure ouverte.
+
 ## P6.5 — Effet Elite Haste — 2026-10-16
 
 - [x] `survival_elite_smoke.gd` équipe `elite_haste` dans un profil temporaire isolé, tue un élite via le pipeline de dégâts natif, puis vérifie le bonus de mobilité de 15 %, son expiration après trois secondes simulées et le feedback HUD. Ces valeurs restent **[PROPOSÉES]**.
