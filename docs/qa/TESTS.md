@@ -1,5 +1,11 @@
 # Tests d'acceptation et validation
 
+## P7B.1 — Arbitrage de l’état en continuation Endless — 2026-10-17
+
+- [x] Décision utilisateur **[VALIDÉE]** : la continuation après victoire conserve HP, build et niveaux de run; elle crédite Survival avant de créer l’ID Endless.
+- [x] `endless_standard_session_smoke.gd` couvre le transfert d’état et l’absence de double crédit; l’entrée depuis le hub suit son profil distinct, encore **[PROPOSÉ]**.
+- [i] La validation automatique couvre le contrat implémenté, pas la calibration du mode Endless ni une run représentative.
+
 ## P7B/P8 — Endless standard dans le Sandbox Lab — 2026-10-17
 
 - [x] `sandbox_preset_smoke.gd` démarre successivement Survival, Armorless puis Endless standard dans le même `SandboxLabContext`; le changement de preset reste transactionnel et exige la pause.
