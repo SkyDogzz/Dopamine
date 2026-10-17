@@ -1190,7 +1190,7 @@ Pour le catalogue, la validation JSON et des références a aussi été vérifi�
 - [x] Achievement tiers débloqués une seule fois et bonus cumulés vérifiés pour la famille prototype Exterminator ; le catalogue et les seuils complets restent à définir.
 - [ ] Armorless : 3 équipements proposés après chaque vague, 1 choisi ; Flux temporaire.
 - [ ] Armorless : amélioration depuis l'inventaire de pause, coût débité du Flux, résultat visible, simulation suspendue et aucun Powder/sauvegarde permanente.
-- [x] Armorless : le directeur traverse cinq cycles de boss jusqu'à la vague 60; une session vérifie le temps actif et le HP decay pendant l'état boss alors que l'horloge de vague reste gelée, puis leur continuité après transition. La population proposée continue de croître après la vague 24 tandis que les PV ennemis restent au plafond proposé ×12. La durée de production avec drafts et boss effectivement joués reste à valider.
+- [x] Armorless : le directeur traverse cinq cycles de boss jusqu'à la vague 60; une session vérifie le temps actif et le HP decay pendant l'état boss alors que l'horloge de vague reste gelée, puis leur continuité après transition. La session suit la formule HP **[PROPOSÉE]** du GDD : ×1,10 jusqu'à la vague 24, puis ×1,055 par vague. La durée de production avec drafts et boss effectivement joués reste à valider.
 - [x] `SaveService` : slot JSON versionné, checksum SHA-256, remplacement via temporaire, backup relu après altération/corruption et migration de la fixture v0 dictionnaire brut ; vérifié par `save_service_smoke`. Cette fixture ne définit pas un ancien schéma de production. Le service n’est pas chargé par le Sandbox.
 - [x] Progression Survival : gains d’Essence/Powder selon la formule **[PROPOSÉE]** Normal, cumul sur plusieurs runs, défaite récompensée et `run_id` idempotent ; injection du service uniquement par l’entrée Survival et smoke avec slot temporaire isolé.
 - [x] Idempotence après redémarrage : `progression_service_smoke.gd` crée un nouveau `ProgressionService`, recharge le même slot, rejoue un `run_id` déjà récompensé et vérifie l’absence de ressources et équipement supplémentaires.
@@ -1719,6 +1719,13 @@ Note de clôture : le blocage historique du smoke `sandbox_ui_smoke.gd` décrit 
 - [x] Revalidation ciblée le 2026-10-17 : import Godot, `survival_magnet_heart_synergy_smoke` et `survival_chest_smoke` passent sous CTest (**3/3**).
 - [i] L’existence des trois synergies est **[VALIDÉE]** par l’utilisateur (« les 3 »); leurs conditions de niveau, leur déclenchement pendant Magnetic Pulse et les multiplicateurs ×1,5 restent **[PROPOSÉS]** et à calibrer.
 - [i] Le GDD laisse l'attraction des soins, ressources, monnaies et bonus temporaires **[OUVERTE]** jusqu'à la définition de ces pickups. Aucun n'existe actuellement; leur ajout n'est pas inféré depuis Magnet Heart et le travail correspondant reste conditionnel.
+
+## P7A — Courbe de PV Armorless conforme au prototype GDD — 2026-10-17
+
+- [x] `armorless_wave_director_smoke.gd` échouait avant correction car le calcul partageait la courbe Survival ×1,12 plafonnée à ×12. Le test vérifie désormais le facteur GDD aux vagues 24, 25 et 60 : `1,10^(w−1)` jusqu’à 24, puis `1,10^23 × 1,055^(w−24)`.
+- [x] Smoke Armorless, smoke des multiplicateurs Survival et smoke de session Endless standard passent sous Godot 4.7.2; les deux autres modes gardent leurs courbes respectives. Le smoke Endless affiche au shutdown 2 instances ObjectDB et 1 ressource référencées, sans assertion échouée.
+- [x] CTest complet après la correction : **112/112 passent en séquentiel en 74,59 s** avec `/tmp/cmake-3.31.12-linux-x86_64/bin/ctest --test-dir build --output-on-failure -j1`, incluant l’ensemble Sandbox, progression et scénarios Survival.
+- [i] Cette correction aligne le prototype sur la formule **[PROPOSÉE]** du GDD; elle ne valide pas ses coefficients ni l’équilibrage de longue durée.
 
 ## P7B — Directeur Endless standard — 2026-10-17
 

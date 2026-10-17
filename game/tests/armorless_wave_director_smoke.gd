@@ -35,9 +35,12 @@ func _run() -> void:
 	if session.simulation == null:
 		_fail("Armorless long-run session should initialize its simulation")
 		return
+	var armorless_hp_wave_24: float = pow(1.10, 23.0)
 	if session._wave_population(60) <= session._wave_population(24) or \
-		not is_equal_approx(session._enemy_hp_multiplier(60), session._enemy_hp_multiplier(24)):
-		_fail("Armorless population should keep growing while proposed enemy HP scaling remains at its cap")
+		not is_equal_approx(session._enemy_hp_multiplier(24), armorless_hp_wave_24) or \
+		not is_equal_approx(session._enemy_hp_multiplier(25), armorless_hp_wave_24 * 1.055) or \
+		not is_equal_approx(session._enemy_hp_multiplier(60), armorless_hp_wave_24 * pow(1.055, 36.0)):
+		_fail("Armorless enemy HP should follow its proposed 1.10 pre-24 and 1.055 post-24 growth curve")
 		return
 	session.wave_director.wave = 12
 	session.wave_director.state = DIRECTOR_SCRIPT.State.MID_BOSS

@@ -2423,9 +2423,16 @@ func _wave_enemy_spawn_interval() -> float:
 	return maxf(0.05, base_interval / spawn_scale)
 
 func _enemy_hp_multiplier(wave_number: int) -> float:
-	var wave_factor := minf(pow(WAVE_HP_GROWTH, float(wave_number - 1)), WAVE_HP_CAP)
-	if mode_id == "endless" and wave_number > 24:
-		wave_factor = WAVE_HP_CAP * pow(1.055, float(wave_number - 24))
+	var wave_factor: float
+	if mode_id == "armorless":
+		if wave_number <= 24:
+			wave_factor = pow(1.10, float(wave_number - 1))
+		else:
+			wave_factor = pow(1.10, 23.0) * pow(1.055, float(wave_number - 24))
+	else:
+		wave_factor = minf(pow(WAVE_HP_GROWTH, float(wave_number - 1)), WAVE_HP_CAP)
+		if mode_id == "endless" and wave_number > 24:
+			wave_factor = WAVE_HP_CAP * pow(1.055, float(wave_number - 24))
 	var difficulty_factor: float = DIFFICULTY_SCRIPT.DATA.get(difficulty_id, DIFFICULTY_SCRIPT.DATA["normal"])["enemy_hp"]
 	return wave_factor * difficulty_factor
 
