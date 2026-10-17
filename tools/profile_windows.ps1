@@ -48,6 +48,10 @@ try {
 	& ctest --test-dir $buildPath -C Debug --output-on-failure -j1
 	$testExitCode = $LASTEXITCODE
 } finally {
+	$testUserDataPath = Join-Path $env:APPDATA ("Godot/app_userdata/" + $testProjectName)
+	if (Test-Path -LiteralPath $testUserDataPath) {
+		Remove-Item -LiteralPath $testUserDataPath -Recurse -Force
+	}
 	$testDataPath = Join-Path $buildPath "test_appdata"
 	if (Test-Path -LiteralPath $testDataPath) {
 		Remove-Item -LiteralPath $testDataPath -Recurse -Force

@@ -43,6 +43,7 @@ if(BUILD_TESTING)
     if(DOPAMINE_GODOT_EXECUTABLE)
         function(dopamine_isolate_windows_test_data test_name)
             if(WIN32)
+                file(MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/test_appdata/${test_name}")
                 set_tests_properties(${test_name} PROPERTIES
                     ENVIRONMENT "APPDATA=${CMAKE_CURRENT_BINARY_DIR}/test_appdata/${test_name}")
             endif()
@@ -80,7 +81,6 @@ if(BUILD_TESTING)
         add_test(NAME godot_project_import
             COMMAND "${DOPAMINE_GODOT_EXECUTABLE}" --headless --editor --path "${DOPAMINE_GAME_PROJECT_DIR}" --quit)
         set_tests_properties(godot_project_import PROPERTIES FIXTURES_SETUP godot_project_ready TIMEOUT 60)
-        dopamine_isolate_windows_test_data(godot_project_import)
 
         foreach(script_name IN ITEMS sandbox_smoke sandbox_ui_smoke sandbox_combat_smoke sandbox_preset_smoke sandbox_lab_smoke sandbox_snapshot_smoke sandbox_profile_build_smoke scenario_runner_validation_smoke sandbox_weapon_scenario_validation_smoke render_batching_smoke catalog_icon_assets_smoke pilot_asset_batch_smoke signal_prism_asset_smoke pause_panel_visual_smoke survival_abandon_smoke survival_chest_choice_smoke survival_chest_layout_smoke survival_run_meta_access_smoke survival_speed_control_smoke ui_foundation_smoke ui_viewport_layout_smoke armorless_session_cycle_smoke player_controller_smoke survival_entry_smoke survival_steering_smoke survival_weapon_smoke survival_targeting_smoke survival_weapon_catalog_smoke survival_level_feedback_smoke survival_visual_effects_smoke combat_catalog_smoke survival_starting_weapon_smoke survival_run_stat_hub_smoke survival_xp_run_bonuses_smoke survival_hud_smoke survival_run_result_smoke survival_run_restart_smoke survival_final_boss_loot_smoke survival_contact_damage_smoke survival_idle_combat_smoke survival_shooter_smoke survival_support_enemy_smoke survival_elite_smoke survival_unique_effects_smoke survival_exploder_smoke survival_shielder_smoke survival_summoner_smoke survival_boss_attack_smoke survival_lifesteal_smoke survival_magnet_heart_synergy_smoke survival_damage_causality_smoke survival_wave_director_smoke survival_wave_spawn_smoke survival_wave_duration_smoke survival_pause_smoke survival_pause_inventory_smoke chest_choice_smoke free_chest_reroll_smoke survival_chest_director_smoke survival_loadout_smoke survival_chest_smoke save_service_smoke progression_service_smoke survival_progression_smoke survival_difficulty_profile_smoke survival_difficulty_unlock_smoke survival_difficulty_session_smoke survival_inventory_smoke equipment_slots_smoke equipment_rarity_smoke equipment_stats_smoke equipment_enhancement_smoke equipment_economy_smoke armorless_run_state_smoke armorless_equipment_generator_smoke armorless_wave_director_smoke survival_armorless_mode_smoke armorless_records_smoke endless_standard_progression_smoke endless_standard_session_smoke settings_service_smoke ui_settings_smoke launch_navigation_smoke survival_hub_smoke survival_hub_layout_smoke skill_tree_panel_visual_smoke equipment_panel_visual_smoke run_result_panel_smoke)
             add_test(NAME ${script_name}
