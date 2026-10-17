@@ -14,6 +14,7 @@
 - [x] Recontrôle ciblé de `survival_loadout_smoke.gd` et `survival_damage_causality_smoke.gd` sous Godot 4.7.2 headless : les deux passent pour l’éligibilité du loadout et l’attribution sans double mort/récompense.
 - [x] Recontrôle ciblé de `survival_elite_smoke.gd`, `survival_support_enemy_smoke.gd`, `survival_shielder_smoke.gd`, `survival_summoner_smoke.gd` et `survival_exploder_smoke.gd` : les cinq passent sous Godot 4.7.2 headless. Le smoke élite affiche 8 instances ObjectDB et 4 ressources encore utilisées à la fermeture.
 - [x] Recontrôle du `survival_wave_spawn_smoke.gd` sous Godot 4.7.2 headless : passe; une tentative au-delà de l’ancien plafond de première vague ajoute bien un ennemi.
+- [x] Exécution directe de `build/simulation_core_tests` et `build/simulation_worker_tests` : les deux binaires terminent avec le code 0. `sandbox_weapon_scenario_validation_smoke.gd` passe aussi sous Godot 4.7.2. Ces vérifications ciblées ne remplacent pas CTest complet; `ctest` et `cmake` ne sont pas détectables dans le PATH courant.
 - [x] La suite automatisée ne prouve pas la run réelle; sa confirmation utilisateur est consignée séparément dans la section P5.V3 ci-dessous.
 
 ## Préparation du build Windows — 2026-10-16
