@@ -27,6 +27,8 @@ func _run() -> void:
 	var state_before: Dictionary = session.simulation.snapshot()
 	if "--capture" in OS.get_cmdline_user_args() and not await _verify_impact_capture(session):
 		return
+	if "--capture" in OS.get_cmdline_user_args() and not await _verify_status_capture(session):
+		return
 	session._add_weapon_impact("inferno_sprayer", Vector2.ZERO, false)
 	session._add_weapon_impact("inferno_sprayer", Vector2.RIGHT * 20.0, false, true)
 	session._add_enemy_death_pixels("chaser", Vector2.ZERO)
@@ -109,6 +111,73 @@ func _count_changed_pixels(baseline: Image, rendered: Image, center: Vector2) ->
 			if baseline.get_pixel(x, y).is_equal_approx(rendered.get_pixel(x, y)):
 				continue
 			changed += 1
+	return changed
+
+func _verify_status_capture(session: Node2D) -> bool:
+	var status_types := ["burn", "poison", "bleed"]
+	var positions := [Vector2(-190.0, 55.0), Vector2.ZERO + Vector2(0.0, 55.0), Vector2(190.0, 55.0)]
+	var screen_positions: Array[Vector2] = []
+	var entities: Array = []
+	for index in status_types.size():
+		var position: Vector2 = positions[index]
+		screen_positions.append(session.get_global_transform_with_canvas() * position)
+		entities.append({
+			"id": {"index": index, "generation": 1},
+			"components": {
+				"EnemyType": "chaser",
+				"Transform2D": {"x": position.x, "y": position.y},
+			},
+		})
+	session._entities = entities
+	session._sprite_renderer.set_entities(entities)
+	session.queue_redraw()
+	await process_frame
+	await RenderingServer.frame_post_draw
+	var baseline: Image = root.get_texture().get_image()
+	for index in entities.size():
+		entities[index]["components"]["DamageOverTimeEffects"] = [{"status_type": status_types[index]}]
+	session._entities = entities
+	session._sprite_renderer.set_entities(entities)
+	session.queue_redraw()
+	await process_frame
+	await RenderingServer.frame_post_draw
+	var status_image: Image = root.get_texture().get_image()
+	for index in status_types.size():
+		var pixels := _count_annulus_differences(baseline, status_image, screen_positions[index], 12.0, 18.0)
+		if pixels < 8:
+			_fail("The %s status ring should render outside the enemy sprite" % status_types[index])
+			return false
+		print("%s status ring changed pixels: %d" % [status_types[index], pixels])
+	if status_image.save_png("/tmp/dopamine-status-rings.png") != OK:
+		_fail("Could not save the status ring visual capture")
+		return false
+	_settings.set_reduced_visual_effects_enabled(true)
+	session.queue_redraw()
+	await process_frame
+	await RenderingServer.frame_post_draw
+	var reduced_image: Image = root.get_texture().get_image()
+	for index in status_types.size():
+		if _count_annulus_differences(baseline, reduced_image, screen_positions[index], 12.0, 18.0) < 8:
+			_settings.set_reduced_visual_effects_enabled(false)
+			_fail("Reduced decorative effects should preserve the %s status ring" % status_types[index])
+			return false
+	_settings.set_reduced_visual_effects_enabled(false)
+	session._entities = []
+	session._sprite_renderer.set_entities([])
+	return true
+
+func _count_annulus_differences(baseline: Image, rendered: Image, center: Vector2,
+		inner_radius: float, outer_radius: float) -> int:
+	var changed := 0
+	var outer_squared := outer_radius * outer_radius
+	var inner_squared := inner_radius * inner_radius
+	for y in range(maxi(0, int(center.y - outer_radius)), mini(rendered.get_height(), int(center.y + outer_radius + 1.0))):
+		for x in range(maxi(0, int(center.x - outer_radius)), mini(rendered.get_width(), int(center.x + outer_radius + 1.0))):
+			var offset := Vector2(x, y) - center
+			if offset.length_squared() < inner_squared or offset.length_squared() > outer_squared:
+				continue
+			if not baseline.get_pixel(x, y).is_equal_approx(rendered.get_pixel(x, y)):
+				changed += 1
 	return changed
 
 func _next_impact_random(session: Node2D, reduced: bool) -> float:
