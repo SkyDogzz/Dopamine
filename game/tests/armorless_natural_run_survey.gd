@@ -6,6 +6,15 @@ const MAX_WAVE := 60
 const MAX_WALL_SECONDS := 300.0
 
 var _movement_actions: Array[String] = []
+const DRAFT_STAT_WEIGHTS := {
+	"max_hp": 1.0,
+	"kill_healing_pct": 8.0,
+	"move_speed_pct": 2.0,
+	"damage_pct": 1.5,
+	"attack_speed_pct": 1.0,
+	"xp_pct": 0.5,
+	"pickup_radius_pct": 0.25,
+}
 
 func _initialize() -> void:
 	call_deferred("_run")
@@ -13,13 +22,22 @@ func _initialize() -> void:
 func _run() -> void:
 	var run_seed := 20261017
 	var movement_mode := "kite"
+	var draft_strategy := "first"
 	for argument in OS.get_cmdline_user_args():
 		if argument.begins_with("--seed="):
 			run_seed = int(argument.trim_prefix("--seed="))
 		elif argument.begins_with("--movement="):
 			movement_mode = argument.trim_prefix("--movement=")
+		elif argument.begins_with("--draft="):
+			draft_strategy = argument.trim_prefix("--draft=")
 	if movement_mode not in ["kite", "stationary"]:
 		_fail("Movement mode must be kite or stationary")
+		return
+	if draft_strategy not in ["first", "survival"]:
+		_fail("Draft strategy must be first or survival")
+		return
+	if not _verify_draft_strategy():
+		_fail("The survival draft strategy failed its deterministic ranking checks")
 		return
 	var save_directory := ProjectSettings.globalize_path("user://saves")
 	var save_fingerprints := _save_fingerprints(save_directory)
@@ -42,7 +60,7 @@ func _run() -> void:
 	session.armorless_run_state = ARMORLESS_RUN_STATE.new(run_seed ^ 0xA24B)
 	session.armorless_run_state.begin_run()
 	session._armorless_equipment_generator = EQUIPMENT_GENERATOR.new(run_seed ^ 0x24A2)
-	session._auto_select_first_chest = true
+	session._auto_select_first_chest = draft_strategy == "first"
 	# Keep real-time rates here: fast-forwarding the worker changes how often
 	# the frame-driven kite can react, which changes combat behavior.
 	session.simulation.set_speed(1.0)
@@ -59,6 +77,12 @@ func _run() -> void:
 			direction_seed += 1
 			next_move_at = session.player_active_time + 0.5
 		await process_frame
+		if draft_strategy == "survival" and session._chest_open and session.mode_id == "armorless":
+			var draft: Array[Dictionary] = session.armorless_run_state.current_draft()
+			var equipment: Array[Dictionary] = session.armorless_run_state.temporary_equipment()
+			var selected_index := _best_survival_draft_index(draft, equipment)
+			if selected_index >= 0 and selected_index < draft.size():
+				session._choose_armorless_draft_option("armorless:%s" % str(draft[selected_index]["instance_id"]))
 		var current_position: Vector2 = session.player.global_position
 		path_distance += previous_position.distance_to(current_position)
 		previous_position = current_position
@@ -70,9 +94,9 @@ func _run() -> void:
 	elif session.wave_director.wave > MAX_WAVE:
 		result = "wave_60_complete"
 	var active_seconds: float = session.player_active_time
-	print("armorless_natural_run,seed=%d,difficulty=easy,movement=%s,result=%s,wave=%d,active_seconds=%.2f,kills=%d,level=%d,hp=%.1f/%.1f,path=%.1f" % [
+	print("armorless_natural_run,seed=%d,difficulty=easy,movement=%s,draft=%s,result=%s,wave=%d,active_seconds=%.2f,kills=%d,level=%d,hp=%.1f/%.1f,path=%.1f" % [
 		run_seed,
-		movement_mode, result, session.wave_director.wave, active_seconds, session.kill_count, session.player_level,
+		movement_mode, draft_strategy, result, session.wave_director.wave, active_seconds, session.kill_count, session.player_level,
 		session.player_hp, session.player_max_hp, path_distance,
 	])
 	session.queue_free()
@@ -85,6 +109,58 @@ func _run() -> void:
 		_fail("The Armorless survey must advance combat and its selected movement mode")
 		return
 	quit(0)
+
+func _best_survival_draft_index(draft: Array[Dictionary], current_equipment: Array[Dictionary]) -> int:
+	if draft.is_empty():
+		return -1
+	var best_index := 0
+	var best_score := -INF
+	for index in range(draft.size()):
+		var candidate: Dictionary = draft[index]
+		var score := _survival_item_score(candidate)
+		for current_item in current_equipment:
+			if str(current_item.get("slot", "")) == str(candidate.get("slot", "")):
+				score -= _survival_item_score(current_item)
+				break
+		if score > best_score:
+			best_score = score
+			best_index = index
+	return best_index
+
+func _survival_item_score(item: Dictionary) -> float:
+	var score := 0.0
+	for line in item.get("stat_lines", []):
+		if not line is Dictionary:
+			continue
+		var stat_id := str(line.get("stat_id", ""))
+		var weight := float(DRAFT_STAT_WEIGHTS.get(stat_id, 0.0))
+		if weight <= 0.0:
+			continue
+		var value := EQUIPMENT_GENERATOR.stat_value(
+			stat_id, float(line.get("roll_percentile", 0.0)), int(line.get("enhancement_level", 0))
+		)
+		score += value * weight
+	return score
+
+func _verify_draft_strategy() -> bool:
+	var healing_item := {"slot": "ring", "stat_lines": [
+		{"stat_id": "kill_healing_pct", "roll_percentile": 1.0, "enhancement_level": 0},
+	]}
+	var health_item := {"slot": "ring", "stat_lines": [
+		{"stat_id": "max_hp", "roll_percentile": 1.0, "enhancement_level": 0},
+	]}
+	if _best_survival_draft_index([health_item, healing_item], []) != 1:
+		return false
+	var stronger_health_item := health_item.duplicate(true)
+	stronger_health_item["stat_lines"][0]["roll_percentile"] = 0.8
+	var weaker_health_item := health_item.duplicate(true)
+	weaker_health_item["stat_lines"][0]["roll_percentile"] = 0.0
+	var mobility_item := {"slot": "boots", "stat_lines": [
+		{"stat_id": "move_speed_pct", "roll_percentile": 1.0, "enhancement_level": 0},
+	]}
+	return _best_survival_draft_index(
+		[weaker_health_item, mobility_item], [stronger_health_item]
+	) == 1
 
 func _set_kite_movement(session: Node2D, orbit_direction: int) -> void:
 	var nearest_offset := Vector2.ZERO
