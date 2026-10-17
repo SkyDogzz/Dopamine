@@ -608,6 +608,7 @@
 
 ## P7A.5 — Contrat de récompense Armorless — 2026-10-17
 
+- [x] L’utilisateur choisit l’option A : conserver scaling, rareté et récompenses **[PROPOSÉS]** comme base de mesure. Aucun coefficient ni montant n’est promu; voir GDD §13 et `docs/planning/DECISIONS_RESTANTES.md`.
 - [x] `armorless_records_smoke.gd` vérifie les montants des formules **[PROPOSÉES]** aux vagues 24 et 25 sur Easy, Normal, Hard, Nightmare et Chaos. Les dix cas confirment que la vague 25 continue la formule sans bonus de victoire du boss final; ils ne valident pas le rythme ressenti ni l’économie.
 - [x] Montants Essence/Powder de référence aux vagues 24 → 25 : Easy 44/64 → 46/67; Normal 63/92 → 65/95; Hard 101/138 → 104/143; Nightmare 158/212 → 163/218; Chaos 252/322 → 260/333.
 - [ ] Les coefficients restent **[PROPOSÉS]**. Leur calibration demande encore une longue run Armorless sans assistance et une comparaison du rythme de progression des ressources.

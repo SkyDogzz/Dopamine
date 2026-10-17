@@ -581,6 +581,7 @@ Travail requis :
   - [ ] Parcourir une session Armorless complète en durée de production avec ses drafts, ses boss et ses pauses de choix, sans invulnérabilité ni kills scriptés.
 - [ ] **P7A.5 — Récompenses ouvertes**
   - [x] Décision utilisateur **[VALIDÉE, 2026-10-16]** : accorder Essence, Powder et achievements à la fin de run Armorless, sans équipement permanent.
+  - [x] Décision utilisateur **[VALIDÉE, 2026-10-17] — option A** : garder les formules proposées de scaling, rareté et récompenses comme base de mesure; aucun chiffre n’est validé et la calibration en run longue reste requise.
   - [x] Appliquer les récompenses et métriques d’achievements avec l’anti-double-attribution partagé; Armorless conserve ses records par difficulté et n’incrémente pas les métriques d’équipement permanent.
   - [x] Afficher ressources, achievements et record dans le résultat de run sans ligne d’équipement.
   - [x] Vérifier qu’un run au-delà de la vague 24 garde sa vague complète pour achievements et calcul de récompenses, sans bonus de boss final ni déblocage de difficulté.

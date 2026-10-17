@@ -251,6 +251,8 @@ Prototype d’accès/cadence/fin **[PROPOSÉ, 2026-10-17]** retenu pour l’impl
 
 [PROPOSÉ] Réutiliser la formule de récompenses Survival sans bonus de boss final : Essence = arrondi((15 + 2 × vague atteinte) × multiplicateur de difficulté), Basic Powder = arrondi((20 + 3 × vague atteinte) × multiplicateur de difficulté). Comme Armorless est sans fin, la formule continue après la vague 24 ; montants et multiplicateurs restent à calibrer.
 
+[VALIDÉ — EXTENSION DU 2026-10-17] Pour P7A.5, conserver les formules de scaling, rareté et récompenses Armorless **[PROPOSÉES]** comme base de mesure en runs longues. Cette décision n’en valide aucun coefficient ni montant : les règles restent **[PROPOSÉES]** jusqu’à la calibration sur une session complète représentative, sans assistance.
+
 [À TESTER] Draft à trois slots identiques, objets multiples d'un slot, gestion de l'inventaire temporaire, remplacement d'un équipement qui fournit un slot d'arme, destruction de Flux à la mort, sauvegarde/reprise et anti-double-attribution.
 
 <a id="14"></a>
