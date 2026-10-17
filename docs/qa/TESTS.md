@@ -28,6 +28,10 @@
 
 - [x] Décision utilisateur **[VALIDÉE, réponse A]** : reporter la maîtrise répétable après la livraison; aucune maîtrise répétable n’est requise au lancement. Le prototype garde ses records et récompenses documentés séparément.
 
+## P6.6 — Périmètre de lancement de l’arbre — 2026-10-17
+
+- [x] Décision utilisateur **[VALIDÉE, réponse A]** : conserver 100 nœuds au lancement et calibrer le budget actuel; différer l’extension proposée vers environ 120. Les valeurs de coûts et bonus restent **[PROPOSÉES]**.
+
 ## P7B.1 — Compteurs du segment de continuation — 2026-10-17
 
 - [x] `endless_standard_session_smoke.gd` vérifie qu’après la continuation HP/build/niveaux persistent, tandis que durée affichée/enregistrée, kills et compteurs additifs d’achievements repartent pour l’ID Endless. L’horloge interne reste monotone pour conserver les expirations et le rythme de simulation.

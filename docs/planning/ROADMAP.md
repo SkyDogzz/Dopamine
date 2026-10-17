@@ -515,6 +515,7 @@ Travail requis :
   - [x] Exposer et implémenter `revive_once`; `survival_revive_smoke.gd` vérifie dialogue, confirmation/refus, restauration, invulnérabilité, usage unique, Survival/Endless standard, exclusions Armorless/Sandbox et chargement depuis l’équipement permanent.
   - [x] Vérifier non-cumul automatique et extensions de capacité réelles : le smoke équipe deux pièces porteuses du même effet, confirme la déduplication et applique six armes/reliques au maximum. Extension **[PROPOSÉE]**.
 - [ ] **P6.6 — Skill tree**
+  - [x] Décision utilisateur **[VALIDÉE, 2026-10-17] — réponse A** : garder les 100 nœuds pour le lancement et calibrer le budget; différer l’extension proposée à environ 120. Les coûts et bonus restent **[PROPOSÉS]**.
   - [x] Établir le schéma node/prérequis/coût/effet; les valeurs générées et les coûts sont explicitement **[PROPOSÉS]**.
   - [x] Étendre la branche Core Stats à quatre nodes avec Fleet Footed (+2 % vitesse, 110 Essence) et Steady Aim (+1 point de critique, 140 Essence); prérequis, bonus et coûts **[PROPOSÉS]**, vérifiés jusqu'à leur application en Survival/Armorless et au respec.
   - [x] Ajouter des branches prototypes de déblocage d’équipement, en commençant par Crimson Daggers (130 Essence après Vitality) et Blood Chalice (160 Essence après Crimson Daggers), puis étendre les branches séquentielles aux autres entrées du catalogue. L’ordre et les coûts sont **[PROPOSÉS]**.
