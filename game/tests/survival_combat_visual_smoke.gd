@@ -66,6 +66,16 @@ func _run() -> void:
 	if not await _wait_for_sequence(session.simulation, sequence):
 		_fail("Could not publish the combat visual XP orb")
 		return
+	session.simulation.pause()
+	session.set_process(false)
+	session._pulse_warden_attacks["visual_smoke"] = {
+		"stage": "telegraph",
+		"pattern": "charge",
+		"fire_at": session._last_simulation_time + session.pulse_warden_telegraph_seconds * 0.5,
+		"origin": Vector2(260.0, -100.0),
+		"aim": Vector2(260.0, 100.0),
+	}
+	session.queue_redraw()
 	var camera: Camera2D = session.player.get_node("Camera2D")
 	camera.zoom = Vector2.ONE
 	await process_frame
@@ -77,8 +87,36 @@ func _run() -> void:
 	if image.save_png(SCREENSHOT) != OK:
 		_fail("Could not save Survival combat visual capture")
 		return
+	var telegraph_pixel: Vector2 = session.get_global_transform_with_canvas() * Vector2(260.0, 0.0)
+	if not _contains_color(image, telegraph_pixel, func(color: Color) -> bool:
+		return color.r > 0.55 and color.g > 0.4 and color.b < 0.5
+	):
+		_fail("A boss charge telegraph should remain visible among dense combat visuals")
+		return
+	var settings := root.get_node("Settings") as SettingsService
+	settings.set_reduced_visual_effects_enabled(true)
+	session.queue_redraw()
+	await process_frame
+	await RenderingServer.frame_post_draw
+	var reduced_image: Image = root.get_texture().get_image()
+	if not session._visual_effects_reduced() or not _contains_color(reduced_image, telegraph_pixel,
+			func(color: Color) -> bool:
+				return color.r > 0.55 and color.g > 0.4 and color.b < 0.5
+	):
+		settings.set_reduced_visual_effects_enabled(false)
+		_fail("Reduced decorative effects must preserve the boss charge telegraph")
+		return
+	settings.set_reduced_visual_effects_enabled(false)
 	print("Survival combat visual capture: %s" % SCREENSHOT)
 	quit()
+
+func _contains_color(image: Image, center: Vector2, predicate: Callable) -> bool:
+	for y in range(int(center.y) - 4, int(center.y) + 5):
+		for x in range(int(center.x) - 4, int(center.x) + 5):
+			if x >= 0 and x < image.get_width() and y >= 0 and y < image.get_height() and \
+					predicate.call(image.get_pixel(x, y)):
+				return true
+	return false
 
 func _wait_for_sequence(simulation: Object, sequence: int) -> bool:
 	if sequence <= 0:

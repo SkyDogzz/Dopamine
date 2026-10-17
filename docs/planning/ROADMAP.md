@@ -677,7 +677,7 @@ P1 livre le Sandbox développeur et ne remplace pas cette feature produit.
   - [ ] Vérifier paramètres de soin/decay/lifesteal en modes retenus.
 - [ ] **P9.3 — Présentation audiovisuelle**
   - [ ] Vérifier feedback des dégâts directs/critique/statut.
-  - [ ] Vérifier télégraphes au milieu d’effets chargés.
+  - [x] Vérifier les télégraphes au milieu d’effets chargés; `survival_combat_visual_smoke.gd` rend maintenant la charge du Pulse Warden sur la capture du combat dense et confirme un pixel du télégraphe dans l’image.
   - [x] Ajouter une option VFX persistante dans Options : trails, impacts décoratifs, pixels de mort, arcs Lightning et flashs Pandemic sont masqués; télégraphes et cues de gameplay restent visibles. Le périmètre/default restent **[PROPOSÉS]** et sont couverts par `survival_visual_effects_smoke.gd` et `ui_settings_smoke.gd`.
   - [ ] Régler l’audio par vague/boss.
   - [ ] Remplacer progressivement les assets placeholders, un lot visuel par lot.

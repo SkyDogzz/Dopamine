@@ -24,6 +24,13 @@
 - [x] `survival_chest_smoke.gd` passe également; il confirme que le rayon d’XP, y compris Magnet Heart, ne change pas le rayon dédié aux coffres. Godot signale 6 instances ObjectDB et 3 ressources encore utilisées à l’arrêt, sans échec d’assertion.
 - [i] Cette validation ferme l’application fonctionnelle des statistiques P6.3; les plages et l’équilibrage de ces bonus restent **[PROPOSÉS]** et P6.9 demeure ouvert.
 
+## P9.3 — Télégraphe au milieu d’un combat chargé — 2026-10-17
+
+- [x] Le test CTest `survival_combat_visual_smoke` rend maintenant la charge télégraphiée du Pulse Warden en même temps que les neuf familles d’ennemis, 24 projectiles, deux impacts, des pixels de mort, un orbe XP et un coffre. Il vérifie dans la capture 640×360 qu’un pixel jaune du télégraphe reste visible à son emplacement attendu et demeure présent quand les effets décoratifs réduits sont activés.
+- [x] Le test échoue quand le télégraphe manque de la fixture, puis passe avec l’attaque télégraphiée réelle; capture inspectée sous Xvfb/Mesa llvmpipe : `/tmp/dopamine-survival-combat-visual.png`.
+- [x] CTest ciblé avec son fixture d’import Godot : **2/2 réussis en 3,12 s**.
+- [i] Cette vérification valide le rendu superposé, pas la lisibilité sur le GPU cible ni la calibration des couleurs/durées **[PROPOSÉES]**.
+
 ## P5.1.14 — Slots et déduplication des effets uniques — 2026-10-17
 
 - [x] Depuis un `git archive` propre du commit `6647f3f`, l’import Godot 4.7.2 puis `survival_loadout_smoke.gd`, `survival_unique_effects_smoke.gd` et `progression_service_smoke.gd` passent avec des `XDG_DATA_HOME` isolés.
