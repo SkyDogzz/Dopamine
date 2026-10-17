@@ -67,7 +67,7 @@ Boucle Survival : choisir difficulté et arme initiale → survivre à une vague
 
 [VALIDÉ] Mouvement précis et instantané, sans inertie significative ; pas de dash de base, certains équipements peuvent en accorder un. HP initial = 100. Perte passive de HP initiale = 1,5 HP/s, croissante linéairement avec le temps de combat actif. Les kills soignent selon le niveau de menace des ennemis. Lifesteal sur dégâts avec soft cap. Le délai entre deux dégâts de contact corps à corps est suivi séparément pour chaque ennemi ; il ne bloque pas les projectiles ni les autres attaques. Revives rares.
 
-[VALIDÉ — EXTENSION DU 2026-10-17, réponses C puis B] Un effet unique d’équipement accorde un revive, au maximum une fois par run. Au coup fatal, un dialogue demande si le joueur veut consommer ce revive.
+[VALIDÉ — EXTENSION DU 2026-10-17, réponses C puis B] Un effet unique d’équipement accorde un revive, au maximum une fois par run. Au coup fatal, un dialogue demande si le joueur veut consommer ce revive; s’il confirme, le joueur revient avec 50 % de ses PV maximum.
 
 [OUVERT] L’ID d’effet à utiliser (`revive_knockback` ou autre), les PV rendus, la protection après reprise et les modes concernés restent à définir. Le prototype `revive_knockback` reste désactivé jusque-là.
 
