@@ -118,6 +118,11 @@ func _run() -> void:
 	var contact_damage_control: SpinBox = lab.get_node("Root/Body/Side/Sections/EnemyConfig/ContactDamage")
 	var enemy_speed_control: SpinBox = lab.get_node("Root/Body/Side/Sections/EnemyConfig/EnemySpeedMultiplier")
 	var spawn_count_control: SpinBox = lab.get_node("Root/Body/Side/Sections/EnemyConfig/SpawnCount")
+	var enemy_select: OptionButton = lab.get_node("Root/Body/Side/Sections/EnemySelect")
+	var sprinter_index := _enemy_type_index(enemy_select, "sprinter")
+	var tank_index := _enemy_type_index(enemy_select, "tank")
+	enemy_select.select(sprinter_index)
+	enemy_select.item_selected.emit(sprinter_index)
 	contact_damage_control.value = 3.0
 	enemy_speed_control.value = 2.0
 	spawn_count_control.value = 3.0
@@ -141,6 +146,8 @@ func _run() -> void:
 	contact_damage_control.value = 9.0
 	enemy_speed_control.value = 4.0
 	spawn_count_control.value = 4.0
+	enemy_select.select(tank_index)
+	enemy_select.item_selected.emit(tank_index)
 	lab_context.live_stat_overrides.clear()
 	var clear_sequence: int = lab_context.simulation.kill_all()
 	if clear_sequence <= 0 or not await _wait_for_sequence(lab_context.simulation, clear_sequence):
@@ -158,6 +165,8 @@ func _run() -> void:
 			float(lab_context.active_preset["overrides"].get("enemy_speed", -1.0)) != 2.0 or \
 			int(spawn_count_control.value) != 3 or \
 			int(lab_context.active_preset["overrides"].get("spawn_count", 0)) != 3 or \
+			str(enemy_select.get_item_metadata(enemy_select.selected)) != "sprinter" or \
+			str(lab_context.active_preset["overrides"].get("spawn_enemy_type", "")) != "sprinter" or \
 			lab_context.live_stat_overrides.get("damage_pct") != 15.0 or \
 			lab_context.build.to_dictionary()["weapons"].size() != 1 or \
 			int(lab_context.simulation.snapshot()["metrics"]["entity_count"]) != 1:
@@ -177,7 +186,7 @@ func _run() -> void:
 	lab._spawn_enemies()
 	if not await _wait_for_sequence(lab_context.simulation, next_lab_sequence) or \
 			lab_context.simulation.snapshot()["entities"].size() != 4 or \
-			float(lab_context.simulation.snapshot()["entities"][1]["components"]["MoveSpeed"]) != 150.0:
+			float(lab_context.simulation.snapshot()["entities"][1]["components"]["MoveSpeed"]) != 250.0:
 		_fail("Restored enemy speed override should affect subsequent Lab spawns")
 		return
 	var corrupt_lab_snapshot: Dictionary = lab_context.latest_snapshot.duplicate(true)
@@ -220,3 +229,9 @@ func _wait_until(predicate: Callable) -> bool:
 func _fail(message: String) -> void:
 	push_error(message)
 	quit(1)
+
+func _enemy_type_index(select: OptionButton, enemy_id: String) -> int:
+	for index in range(select.item_count):
+		if str(select.get_item_metadata(index)) == enemy_id:
+			return index
+	return -1

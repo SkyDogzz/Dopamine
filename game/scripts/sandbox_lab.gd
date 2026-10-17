@@ -95,6 +95,7 @@ func _ready() -> void:
 	for enemy_id in ["chaser", "sprinter", "tank", "shooter", "buffer", "exploder", "shielder", "summoner", "elite"]:
 		_enemy_select.add_item(enemy_id.to_upper())
 		_enemy_select.set_item_metadata(_enemy_select.item_count - 1, enemy_id)
+	_enemy_select.item_selected.connect(_set_spawn_enemy_type_override)
 	for speed in [0.25, 0.5, 1.0, 2.0, 4.0]:
 		_speed_select.add_item("×%s" % speed)
 		_speed_select.set_item_metadata(_speed_select.item_count - 1, speed)
@@ -107,6 +108,7 @@ func _ready() -> void:
 	_enemy_hp_multiplier.value = float(context.active_preset["overrides"].get("enemy_hp", 1.0))
 	_enemy_speed_multiplier.value = float(context.active_preset["overrides"].get("enemy_speed", 1.0))
 	_spawn_count.value = float(context.active_preset["overrides"].get("spawn_count", SPAWN_BATCH_SIZE))
+	_select_spawn_enemy_type(str(context.active_preset["overrides"].get("spawn_enemy_type", "chaser")))
 	_contact_damage.value = float(context.active_preset["overrides"].get("contact_damage_per_hit", 0.0))
 	_seed_control.value = float(context.active_preset["seed"])
 	_pause_button.grab_focus()
@@ -128,7 +130,7 @@ func _default_preset() -> Dictionary:
 	return {
 		"schema_version": 1, "preset_id": "lab_default", "name": "Lab Default",
 		"description": "Empty isolated combat lab", "base_mode": "survival", "seed": 1,
-		"overrides": {"spawn_count": SPAWN_BATCH_SIZE}, "flags": {},
+		"overrides": {"spawn_count": SPAWN_BATCH_SIZE, "spawn_enemy_type": "chaser"}, "flags": {},
 		"initial_build": {
 			"weapons": [{"id": "lightning_conductor", "level": 1}],
 			"relics": [{"id": "storm_core", "level": 1}], "equipment": [], "stats": {},
@@ -328,6 +330,18 @@ func _set_spawn_count_override(value: float) -> void:
 	context.active_preset["overrides"]["spawn_count"] = int(value)
 	_spawn_button.text = "SPAWN x%d" % int(value)
 
+func _set_spawn_enemy_type_override(index: int) -> void:
+	if context == null or context.active_preset.is_empty() or index < 0 or index >= _enemy_select.item_count:
+		return
+	context.active_preset["overrides"]["spawn_enemy_type"] = str(_enemy_select.get_item_metadata(index))
+
+func _select_spawn_enemy_type(enemy_id: String) -> void:
+	for index in range(_enemy_select.item_count):
+		if str(_enemy_select.get_item_metadata(index)) == enemy_id:
+			_enemy_select.select(index)
+			return
+	_enemy_select.select(0)
+
 func _set_enemy_hp_override(value: float) -> void:
 	if context == null or context.active_preset.is_empty():
 		return
@@ -405,6 +419,7 @@ func _restore_snapshot() -> void:
 	_enemy_hp_multiplier.value = float(context.active_preset["overrides"].get("enemy_hp", 1.0))
 	_enemy_speed_multiplier.value = float(context.active_preset["overrides"].get("enemy_speed", 1.0))
 	_spawn_count.value = float(context.active_preset["overrides"].get("spawn_count", SPAWN_BATCH_SIZE))
+	_select_spawn_enemy_type(str(context.active_preset["overrides"].get("spawn_enemy_type", "chaser")))
 	_contact_damage.value = float(context.active_preset["overrides"].get("contact_damage_per_hit", 0.0))
 	_seed_control.value = float(context.seed)
 	var stat_id := str(_live_stat_select.get_item_metadata(_live_stat_select.selected))
@@ -560,6 +575,7 @@ func _preset_from_editor() -> Dictionary:
 	preset["overrides"]["enemy_hp"] = _enemy_hp_multiplier.value
 	preset["overrides"]["enemy_speed"] = _enemy_speed_multiplier.value
 	preset["overrides"]["spawn_count"] = int(_spawn_count.value)
+	preset["overrides"]["spawn_enemy_type"] = str(_enemy_select.get_item_metadata(_enemy_select.selected))
 	preset["overrides"]["contact_damage_per_hit"] = _contact_damage.value
 	var checked: Dictionary = preset_service.validate_preset(preset)
 	var build = load("res://scripts/sandbox_build.gd").new()
@@ -584,6 +600,7 @@ func _apply_preset(preset: Dictionary) -> void:
 	_enemy_hp_multiplier.value = float(preset["overrides"].get("enemy_hp", 1.0))
 	_enemy_speed_multiplier.value = float(preset["overrides"].get("enemy_speed", 1.0))
 	_spawn_count.value = float(preset["overrides"].get("spawn_count", SPAWN_BATCH_SIZE))
+	_select_spawn_enemy_type(str(preset["overrides"].get("spawn_enemy_type", "chaser")))
 	_contact_damage.value = float(preset["overrides"].get("contact_damage_per_hit", 0.0))
 	_seed_control.value = float(preset["seed"])
 	context.live_stat_overrides.clear()
