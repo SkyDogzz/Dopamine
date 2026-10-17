@@ -1407,7 +1407,7 @@ func _fire_dopamine_core_attack(attack: Dictionary) -> void:
 	elif pattern == "zone" and player.global_position.distance_to(aim) <= final_boss_zone_radius + player_contact_radius:
 		_take_enemy_damage(final_boss_zone_damage)
 	elif pattern == "combined" and (_player_inside_final_boss_ray(origin, aim) or
-			player.global_position.distance_to(aim) <= final_boss_zone_radius):
+			player.global_position.distance_to(aim) <= final_boss_zone_radius + player_contact_radius):
 		_take_enemy_damage(maxf(final_boss_ray_damage, final_boss_zone_damage))
 
 func _player_inside_final_boss_ray(origin: Vector2, aim: Vector2) -> bool:
