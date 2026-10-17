@@ -63,6 +63,12 @@
 - [x] Le checkpoint inclut import Godot, rendus Xvfb, Sandbox et ses snapshots, Survival, armes, ennemis/boss, coffres, progression, Armorless, Endless standard, réglages, UI, parcours clavier/manette synthétique et scénarios Sandbox des dix armes. Les smokes directs du HUD avec contraste et des sources d’assets passent aussi sur le checkout, mais ils ne font pas partie des 98 tests CTest enregistrés.
 - [i] La suite est exécutée sur l’hôte Linux actuel; elle ne valide pas une partie humaine représentative, le GPU physique, une manette physique ou les plateformes de livraison encore ouvertes.
 
+## CTest intègre l’audit des assets et le contraste du HUD — 2026-10-17
+
+- [x] `CMakeLists.txt` enregistre `catalog_icon_assets_smoke` et `survival_hud_smoke` dans la suite standard; ce dernier reçoit un `XDG_DATA_HOME` isolé. Le CTest complet passe **100/100 tests en 67,80 s** après reconfiguration CMake avec Godot 4.7.2.
+- [x] Les nouveaux gates imposent la correspondance PNG/source avec les seules exceptions documentées et le contraste minimum configuré de 4,5:1 pour les six libellés du HUD Survival.
+- [i] Exécuté sur le commit `dd27f55` avec le même diff local préexistant dans `survival_session.gd`; l’hôte Linux logiciel ne valide toujours pas le matériel de rendu, les contrôles physiques ou les runs de calibration.
+
 ## P9.8 — Revalidation staging Linux du Pulse Warden — 2026-10-17
 
 - [x] Depuis le commit `78f37e46d3773307d822dfe89f808cc3575b4e70`, `tools/package_linux_staging.sh` a compilé un checkout `git archive` propre en Release (Linux x86_64, GCC 14.2.0, CMake 3.31.12, Godot 4.7.2, `godot-cpp` `b8530af7546a3fcae80cef2477526569fd42ffc2`) et exporté Linux/X11 avec le sprite du Pulse Warden.
