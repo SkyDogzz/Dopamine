@@ -1,0 +1,14 @@
+# Godot 4.7.2; seed base=20261016; difficulty=Easy; movement=kite; simulation speed=4x.
+# Ten full-skill-tree profile Survival runs; normal HP/spawns, no scripted kills, isolated XDG_DATA_HOME.
+# All runs ended by defeat; two long outliers reached wave 12, but no elite/boss drop was observed.
+tier,difficulty,movement,simulation_speed,replicate,unlocked_nodes,hp_bonus_pct,damage_bonus_pct,speed_bonus_pct,crit_bonus_pct,active_seconds,wall_seconds,path_distance,wave,kills,level,outgoing_damage,outgoing_dps,net_hp_loss,boss_defeated,result,weapon_drops,relic_drops,ordinary_weapon_drops,ordinary_relic_drops,elite_weapon_drops,elite_relic_drops,boss_weapon_drops,boss_relic_drops,pity_weapon_drops,pity_relic_drops
+full,easy,kite,4.0,1,100,10.70,9.00,6.00,4.00,24.31,6.08,6326.08,1,5,3,85.87,3.53,110.70,false,defeat,0,0,0,0,0,0,0,0,0,0
+full,easy,kite,4.0,2,100,10.70,9.00,6.00,4.00,25.48,6.38,6495.68,1,0,1,45.78,1.80,110.70,false,defeat,0,0,0,0,0,0,0,0,0,0
+full,easy,kite,4.0,3,100,10.70,9.00,6.00,4.00,63.04,15.77,16044.15,3,6,3,134.82,2.14,110.70,false,defeat,0,0,0,0,0,0,0,0,0,0
+full,easy,kite,4.0,4,100,10.70,9.00,6.00,4.00,59.89,14.98,15247.04,2,7,3,227.23,3.79,110.70,false,defeat,0,0,0,0,0,0,0,0,0,0
+full,easy,kite,4.0,5,100,10.70,9.00,6.00,4.00,62.44,15.62,15891.52,3,11,4,217.39,3.48,110.70,false,defeat,0,0,0,0,0,0,0,0,0,0
+full,easy,kite,4.0,6,100,10.70,9.00,6.00,4.00,62.53,15.65,15925.44,3,19,5,435.22,6.96,110.70,false,defeat,1,1,0,0,0,0,0,0,1,1
+full,easy,kite,4.0,7,100,10.70,9.00,6.00,4.00,77.74,19.45,19775.34,3,12,4,380.65,4.90,110.70,false,defeat,1,1,0,0,0,0,0,0,1,1
+full,easy,kite,4.0,8,100,10.70,9.00,6.00,4.00,396.02,99.14,101591.00,12,189,19,5618.67,14.19,110.70,false,defeat,5,5,0,0,0,0,0,0,5,5
+full,easy,kite,4.0,9,100,10.70,9.00,6.00,4.00,392.87,98.40,100888.05,12,202,19,5617.08,14.30,110.70,false,defeat,7,5,2,0,0,0,0,0,5,5
+full,easy,kite,4.0,10,100,10.70,9.00,6.00,4.00,49.05,12.27,12482.55,2,3,2,111.54,2.27,110.70,false,defeat,0,0,0,0,0,0,0,0,0,0
