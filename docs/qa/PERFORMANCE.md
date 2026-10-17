@@ -45,6 +45,23 @@ L’environnement utilisé pour la reprise expose 8 vCPU AMD EPYC-Milan sous KVM
 
 Recontrôle lors de la reprise du goal : `/dev/dri/card0` et `renderD128` sont présents, mais `lspci` identifie uniquement un adaptateur Virtio 1.0 (`1af4:1050`) sous KVM. Aucun accès à l’identité ou aux compteurs du GPU hôte n’est exposé; ni `DISPLAY`, ni `perf`, `nvidia-smi`, `radeontop` ou `intel_gpu_top` ne sont disponibles. La présence de ces nœuds DRM ne constitue donc pas une mesure de l’iGPU cible. Le profilage GPU de référence reste **[OUVERT]**.
 
+## Procédure de capture sur Windows — profil représentatif Survival
+
+À exécuter sur la machine Windows cible, dans un clone propre. Prérequis : Godot 4.7.2 standard, Visual Studio 2022 avec **Desktop development with C++**, CMake 3.21+ et Git dans le `PATH` (voir [README — Lancer sous Windows](../../README.md#lancer-sous-windows)). Remplacer le chemin d’exemple par le chemin du fichier `.exe` réel; ne pas ajouter un second nom d’exécutable comme sous-dossier.
+
+```powershell
+git clone https://github.com/SkyDogzz/Dopamine.git
+Set-Location .\Dopamine
+.\tools\build_windows.ps1 -GodotExecutable "C:\Godot\Godot_v4.7.2-stable_win64.exe" -NoLaunch
+& "C:\Godot\Godot_v4.7.2-stable_win64.exe" --editor --path .\game
+```
+
+Dans Godot, lancer le projet (F6/F5 selon la scène active) et démarrer une run Survival à vitesse ×1. Dans le panneau **Debugger** en bas, onglet **Profiler** → **Start** mesure temps de frame, script, physique et audio. Onglet **Visual Profiler** → **Start** mesure le coût de rendu CPU et GPU. Les deux profils sont des outils de diagnostic avec surcharge; le premier inclut le coût de rendu global dans le temps de frame, et le second sépare les tâches de rendu CPU/GPU.
+
+Garder la même taille de fenêtre pendant les captures. Capturer 30–60 secondes de combat actif à une vague chargée (idéalement vague 10–12 et le mid-boss), sans pause ni accélération, puis arrêter les deux profiles et prendre leurs captures d’écran. Noter modèle CPU, GPU, version du pilote, résolution, méthode de rendu Godot, difficulté, vague et armes/reliques/niveaux visibles. À 60 FPS, le repère est 16,67 ms par frame; transmettre les captures et les notes permettra d’identifier si le temps vient des scripts/physique ou du rendu.
+
+Le **Profiler** standard localise les fonctions GDScript et les étapes moteur; le **Visual Profiler** montre les étapes de rendu sur CPU/GPU. Ils ne donnent pas de symboles lisibles pour les fonctions C++ internes de Godot ou de la GDExtension. Si le temps de simulation reste dominant sans fonction script responsable, un profileur natif Windows et des symboles de débogage seront une étape séparée. Les résultats de l’éditeur ne sont pas une certification de build Release; conserver ces mesures comme diagnostic matériel réel et les comparer à des runs identiques.
+
 ## Recontrôle Debug depuis `6f55f2f` — 2026-10-17
 
 Le benchmark a été reconstruit avec CMake 3.31.12 puis lancé trois fois sur Linux x86_64, AMD EPYC-Milan virtualisé sous KVM (8 vCPU), GCC 14.2.0. Chaque répétition mesure 300 pas de `SimulationCore::advance` à 60 Hz : 500 ennemis immobiles et 2 000 projectiles, sans impact, puis 2 000 impacts Wildfire concentrés par pas sur les ennemis regroupés.

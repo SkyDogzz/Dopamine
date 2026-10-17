@@ -585,7 +585,7 @@
 
 - [x] Quatre paires de runs seedées avec `thermal_shock_run_survey.gd`, Godot 4.7.2, vitesse ×1, PV ordinaires et spawns normaux. Le harness impose Inferno Sprayer Lv1 + Frost Nova Lv1, auto-sélectionne le premier coffre et pilote un bot kite. Les résultats bruts sont dans [`data/thermal_shock_chaos_vs_normal_20261017.csv`](data/thermal_shock_chaos_vs_normal_20261017.csv).
 - [x] En Chaos, les quatre essais meurent vague 1 en 6,85–20,14 s, avec zéro élimination; Thermal Shock produit 0–5 événements et 0–20 dégâts. En Normal, les essais meurent vague 1–3 en 26,32–74,34 s, avec 11–25 éliminations et 3–7 événements de réaction (12,04–28,16 dégâts).
-- [ ] Ces échantillons révèlent surtout les limites du bot et la forte pression du Chaos; le build forcé, les choix automatiques et l’échec avant vague 3 ne permettent pas de calibrer le multiplicateur Chaos ni Thermal Shock. Garder les chiffres **[PROPOSÉS]** et le critère de run représentative ouvert.
+- [i] Ces échantillons révèlent surtout les limites du bot et la forte pression du Chaos; le build forcé, les choix automatiques et l’échec avant vague 3 ne calibrent pas le multiplicateur Chaos. Thermal Shock a ensuite été validé par le créateur le 2026-10-17; ces runs ne constituent pas une calibration représentative.
 - [x] Chaque exécution a quitté avec code 0, mais Godot a signalé 1–3 ressources et 2–6 instances ObjectDB encore référencées à la fermeture; leur origine n’a pas été isolée et reste à analyser séparément des résultats de gameplay.
 
 ## P5.2.3 — Toxic Ignition — 2026-10-16
@@ -1450,7 +1450,7 @@ Note de clôture : le blocage historique du smoke `sandbox_ui_smoke.gd` décrit 
 - [x] Le smoke Infinite Circuit a mis au jour une origine de tir erronée des branches (créées au-delà de leur cible, vers l’extérieur) ; elles partent maintenant du parent vers la cible suivante. Le test couvre le comportement de chaîne et d’évolution.
 - [x] `survival_wave_director_smoke.gd` vérifie que le timer de vague reste suspendu pendant les deux boss, que le decay joueur continue et que les spawns réguliers reprennent après le mid-boss de vague 12. Le smoke garde un intervalle de spawn court en mode accéléré pour tester cette reprise dans la fenêtre de run.
 - [x] `survival_wave_duration_smoke.gd` compare la durée de vague au temps de simulation déjà traité par `SurvivalSession`, en tenant compte du temps écoulé avant le début de la mesure; le contrôle a passé trois exécutions de suite.
-- [x] `survival_chest_smoke.gd` vérifie Magnetic Pulse niveau 5 : l’orbe accélère progressivement dans 300 % du rayon, ne se téléporte pas et n’est collectée qu’à la portée normale; le rayon de coffre reste indépendant. Le smoke contrôle aussi le gel du timer et du mouvement en pause. Intervalle, durée, accélération et vitesse max restent **[PROPOSÉS]**.
+- [x] `survival_chest_smoke.gd` vérifie Magnetic Pulse niveau 5 : l’orbe accélère progressivement dans 300 % du rayon, ne se téléporte pas et n’est collectée qu’à la portée normale; le rayon de coffre reste indépendant. Le smoke contrôle aussi le gel du timer et du mouvement en pause. Intervalle 20 s, durée 1,5 s, accélération 600 et vitesse max 240 sont **[VALIDÉS, 2026-10-17]**.
 - [x] Après ces changements, build natif Debug et suite CTest complète sous Godot 4.7.2 avec `XDG_DATA_HOME` isolé : 44/44 passent. Les smokes `survival_weapon_catalog_smoke`, `survival_run_result_smoke` et `survival_wave_director_smoke` ont également passé plusieurs exécutions ciblées.
 - [x] `pilot_asset_batch_smoke.gd` passe pour les exports animés du joueur et leurs sources; `signal_prism_asset_smoke.gd` passe pour l’emblème et son intégration à l’accueil.
 - [x] L’audit de références runtime ne trouve plus d’asset SVG parmi les visuels chargés par les scènes/scripts; les anciens SVG restants sont des références inactives, sauf une référence historique dans `combat_catalog_smoke.gd`.
@@ -1724,8 +1724,14 @@ Note de clôture : le blocage historique du smoke `sandbox_ui_smoke.gd` décrit 
 - [x] `survival_magnet_heart_synergy_smoke.gd` vérifie que chaque effet attend le niveau 5 des deux reliques; Magnetic Coil accroît la vitesse maximale du pulse, Celestial Eye en étend le rayon, et Singularity déplace les orbes XP vers Event Horizon pendant qu’un Void Orb distant est actif. Le smoke confirme la découverte des deux types de champ.
 - [x] Les orbes XP restent hors de l’attraction native Void Orb sans la synergie Magnet Heart + Singularity; un test cœur natif conserve cette séparation. Les coffres restent exclus de toute attraction.
 - [x] Revalidation ciblée le 2026-10-17 : import Godot, `survival_magnet_heart_synergy_smoke` et `survival_chest_smoke` passent sous CTest (**3/3**).
-- [i] L’existence des trois synergies est **[VALIDÉE]** par l’utilisateur (« les 3 »); leurs conditions de niveau, leur déclenchement pendant Magnetic Pulse et les multiplicateurs ×1,5 restent **[PROPOSÉS]** et à calibrer.
+- [x] Les trois synergies et leurs paramètres sont **[VALIDÉS, 2026-10-17]** : reliques niveau 5 pendant le pulse, Coil ×1,5 vitesse max, Singularity attire l’XP vers le champ Void Orb/Event Horizon, Celestial Eye ×1,5 rayon.
 - [i] Le GDD laisse l'attraction des soins, ressources, monnaies et bonus temporaires **[OUVERTE]** jusqu'à la définition de ces pickups. Aucun n'existe actuellement; leur ajout n'est pas inféré depuis Magnet Heart et le travail correspondant reste conditionnel.
+
+## P5 — Décisions Thermal Shock et Magnet Heart — 2026-10-17
+
+- [x] Le créateur valide Thermal Shock : coup direct Burn↔Chill, impact supplémentaire égal à 50 % des dégâts déclencheurs, cooldown local d’une seconde par cible; DoT et impacts de réaction exclus du chaînage.
+- [x] Le créateur valide Magnet Heart dans le périmètre des pickups existants : +25 % de rayon XP par niveau; Magnetic Pulse niveau 5 toutes les 20 s pendant 1,5 s dans 300 % du rayon, accélération 600 et vitesse max 240; collecte dans le rayon XP normal; pause figée; coffres exclus. Les trois synergies sont validées au niveau 5 pendant le pulse, avec les paramètres consignés ci-dessus.
+- [i] Les anciennes runs exploratoires Thermal Shock ne calibrent pas ces décisions. L’attraction des soins, ressources, monnaies et bonus temporaires reste hors périmètre jusqu’à la définition de ces pickups.
 
 ## P7A — Courbe de PV Armorless conforme au prototype GDD — 2026-10-17
 

@@ -105,7 +105,7 @@ Boucle Survival : choisir difficulté et arme initiale → survivre à une vague
 
 **Gravity Collapse [VALIDÉE, 2026-10-17] :** un coup direct d’Impact sur un ennemi vivant dans le champ gravitationnel actif de Void Orb/Event Horizon déclenche immédiatement une explosion centrée sur cet ennemi. L’explosion inflige 50 % des dégâts déclencheurs aux ennemis vivants à portée de 60 px, cible centrale comprise une seule fois; aucun coup direct supplémentaire n’est ajouté et la réaction ne chaîne pas. L’éligibilité du prototype à tous les impacts directs hors Void Orb/Event Horizon et projectiles de réaction reste **[PROPOSÉE]**, à calibrer en run.
 
-**Prototype [PROPOSÉ] — Thermal Shock :** une attaque directe de Burn sur une cible déjà Chill, ou une attaque directe de Chill sur une cible qui porte Burn, ajoute un impact immédiat égal à 50 % de l’attaque déclencheuse. Un cooldown proposé de 1 s par cible borne la répétition; les dégâts sur la durée et les impacts de Thermal Shock ne déclenchent pas la réaction. Ces coefficients restent à équilibrer et la règle n’est pas promue **[VALIDÉE]**.
+**Thermal Shock [VALIDÉ, 2026-10-17] :** un coup direct de Burn sur une cible déjà Chill, ou de Chill sur une cible qui porte Burn, ajoute immédiatement un impact égal à 50 % des dégâts directs déclencheurs. Un cooldown local d’une seconde par cible borne la répétition. Les dégâts sur la durée et les impacts de Thermal Shock ne déclenchent pas la réaction. Ces valeurs sont celles du prototype validé; leur ressenti en run reste à observer.
 
 [VALIDÉ] Dix armes distinctes, chacune à ciblage automatique intelligent propre, dont l’efficacité dépend fortement du positionnement et du déplacement. Le choix de départ se fait parmi deux armes débloquées. Aucun doublon d’arme en run normale (doublons autorisés dans le Sandbox). Chaque arme et relique a cinq niveaux ; les niveaux d’arme ont des améliorations fixes, principalement statistiques, et une évolution majeure conserve le niveau 5. Chaque relique accorde aussi un bonus à une statistique globale en run normale. Le combo associé ne renforce que son arme : il devient disponible comme choix d’évolution lorsque l’arme et la relique atteignent toutes deux le niveau 5, puis ne s’active qu’après collecte de ce choix. La relique n’est pas consommée. Une seule évolution par arme ; une arme niveau 5 non évoluée ne peut plus apparaître comme amélioration ordinaire de chest. Chaque niveau d’arme reçoit un retour visuel, même pour une hausse uniquement statistique. Les bonus de relique progressent linéairement.
 
@@ -459,15 +459,15 @@ Le prototype applique le « Homing léger » de Magnetic Coil au projectile Sawb
 - Aucune arme associée.
 - Aucune évolution d'arme associée.
 - Occupe un slot de relique normal.
-- Augmente la distance de ramassage des objets.
-- Attire XP, soins, ressources, monnaies et bonus temporaires ramassables.
+- Augmente la distance de ramassage des orbes d'XP **[VALIDÉ — 2026-10-17]**.
+- Attire les orbes d’XP. L’attraction des soins, ressources, monnaies et bonus temporaires reste **[OUVERTE]** jusqu’à la définition de ces pickups.
 - **N'attire jamais les coffres.**
 - Les coffres restent au sol et exigent proximité ou interaction du joueur.
 - Cette exclusion s'applique aussi aux effets de ramassage provenant des équipements, du skill tree et des autres reliques.
 
 **[OUVERT]** Le GDD valide l'attraction des soins, ressources, monnaies et bonus temporaires lorsqu'ils existent, mais ne définit pas ces pickups (effet, valeur ou apparition). Ne pas créer ces objets par déduction de la règle Magnet Heart ; définir chaque pickup avant de l'ajouter au jeu.
 
-Progression proposée :
+Progression **[VALIDÉE — 2026-10-17]** :
 
 | Niveau | Bonus de rayon |
 | ------ | -------------- |
@@ -477,7 +477,7 @@ Progression proposée :
 | 4      | +100%          |
 | 5      | +125%          |
 
-**Effet niv. 5 proposé — Magnetic Pulse :** toutes les 20 secondes, attire les objets éligibles dans un rayon de 300% du rayon de base, sans attirer les coffres. Les objets accélèrent vers le joueur au lieu d’être téléportés.
+**Effet niv. 5 [VALIDÉ — 2026-10-17] — Magnetic Pulse :** toutes les 20 secondes, attire progressivement les orbes d’XP pendant 1,5 seconde dans un rayon de 300 % du rayon de base, sans les téléporter ni attirer les coffres. L’accélération est de 600 et la vitesse maximale de 240; la collecte reste limitée au rayon XP normal. Le pulse et son déplacement se figent en pause.
 
 Synergies **[VALIDÉES par l’utilisateur, 2026-10-17 — réponse « les 3 »]** :
 
@@ -485,7 +485,7 @@ Synergies **[VALIDÉES par l’utilisateur, 2026-10-17 — réponse « les 3 »]
 - Magnet Heart + Singularity : attraction de l’XP par gravité.
 - Magnet Heart + Celestial Eye : rayon des impulsions augmenté.
 
-Prototype **[PROPOSÉ]** : une synergie s’active quand les deux reliques concernées sont au niveau 5, pendant Magnetic Pulse. Magnetic Coil multiplie la vitesse maximale d’attraction par 1,5; Singularity attire les orbes XP dans le champ actif de Void Orb/Event Horizon vers celui-ci; Celestial Eye multiplie le rayon de pulse par 1,5. Les prérequis de niveau, ce timing et ces multiplicateurs restent **[PROPOSÉS]**, configurables et à calibrer.
+**Règles des synergies [VALIDÉES — 2026-10-17] :** les deux reliques concernées doivent être au niveau 5 et l’effet s’active pendant Magnetic Pulse. Magnetic Coil multiplie la vitesse maximale d’attraction par 1,5; Singularity attire les orbes XP vers le champ actif de Void Orb/Event Horizon; Celestial Eye multiplie le rayon du pulse par 1,5. Ces valeurs et conditions correspondent au prototype implémenté.
 
 **Nouveau total : 10 armes, 11 reliques, toujours 5 slots de reliques.**
 
@@ -518,7 +518,7 @@ Les statuts de décision sont indiqués par réaction dans le tableau ci-dessous
 
 | Réaction         | Combinaison           | Résultat                              |
 | ---------------- | --------------------- | ------------------------------------- |
-| Thermal Shock    | Burn + Freeze         | Dégâts immédiats **[PROPOSÉ]**         |
+| Thermal Shock    | Burn + Chill          | Impact direct supplémentaire à 50 %, cooldown local d’une seconde **[VALIDÉ, 2026-10-17]** |
 | Toxic Ignition   | Poison + Burn         | Explosion chimique **[VALIDÉ]**        |
 | Shatter          | Freeze + Impact/Shred | Dégâts bonus et fragments **[VALIDÉ]** |
 | Electroplague    | Poison + Shock        | Propagation de Poison **[VALIDÉ]**     |
