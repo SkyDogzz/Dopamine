@@ -142,6 +142,8 @@ func _run() -> void:
 	if empty_state.visible or not error_state.visible or error_state.get_theme_font_size("font_size") < 10:
 		_fail("The equipment error state should remain distinct and readable")
 		return
+	panel.queue_free()
+	await process_frame
 	print("Equipment panel visual hierarchy smoke passed")
 	quit()
 

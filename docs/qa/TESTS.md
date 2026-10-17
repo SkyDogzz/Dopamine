@@ -58,7 +58,7 @@
 ## P9.4 — Événements d’entrée de l’inventaire d’équipement — 2026-10-17
 
 - `equipment_panel_visual_smoke.gd` envoie Entrée sur l’action équipée, déplace ensuite le focus par D-pad et envoie A. Le signal d’équipement est observé sans connecter de service qui appliquerait la modification; aucune vente, amélioration ou démolition n’est effectuée.
-- Le smoke visuel est enregistré dans CTest. En exécution directe il passe, avec les avertissements existants à la fermeture : 5 instances ObjectDB et 2 ressources restent référencées.
+- Le smoke visuel est enregistré dans CTest. La première exécution révélait 5 instances ObjectDB et 2 ressources retenues à la fermeture; libérer explicitement le panneau supprime ces avertissements. L’exécution directe après correction passe sans message de fuite.
 - Les entrées sont synthétiques; la navigation sur une manette physique et le parcours complet de l’inventaire restent à vérifier.
 
 ## Build et lancement depuis un clone Git propre — 2026-10-17
