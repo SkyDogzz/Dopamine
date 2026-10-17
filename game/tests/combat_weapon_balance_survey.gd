@@ -13,6 +13,7 @@ const TARGET_COUNT := 24
 const TARGET_HP := 1000000.0
 var _weapon_filter := ""
 var _formation_filter := "cluster"
+var _survey_seed := 20261017
 
 func _initialize() -> void:
 	call_deferred("_run")
@@ -23,6 +24,8 @@ func _run() -> void:
 			_weapon_filter = argument.trim_prefix("--weapon=")
 		elif argument.begins_with("--formation="):
 			_formation_filter = argument.trim_prefix("--formation=")
+		elif argument.begins_with("--seed="):
+			_survey_seed = int(argument.trim_prefix("--seed="))
 	if not _weapon_filter.is_empty() and _weapon_filter not in WEAPON_IDS:
 		push_error("Unknown weapon filter: %s" % _weapon_filter)
 		quit(1)
@@ -31,6 +34,7 @@ func _run() -> void:
 		push_error("Unknown formation filter: %s" % _formation_filter)
 		quit(1)
 		return
+	print("# survey_seed=%d" % _survey_seed)
 	print("weapon,formation,build,weapon_level,relic_level,evolved,active_seconds,damage,dps,loop_interval_p95_ms,loop_interval_max_ms")
 	for weapon_id in WEAPON_IDS:
 		if not _weapon_filter.is_empty() and weapon_id != _weapon_filter:
@@ -51,6 +55,8 @@ func _measure(weapon_id: String, build: Dictionary) -> bool:
 	session.skip_starting_weapon_choice = true
 	session.weapon_enabled = false
 	session._health_locked = true
+	session.sandbox_diagnostics_enabled = true
+	session.sandbox_rng_seed = _survey_seed
 	root.add_child(session)
 	await process_frame
 	if session.simulation == null:
