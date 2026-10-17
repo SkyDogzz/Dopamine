@@ -159,6 +159,32 @@
 - [x] Trois seeds indépendants sous Godot 4.7.2 headless, sans invincibilité : survie 34,05 / 46,46 / 44,15 s; vagues atteintes 2 / 2 / 2; éliminations 3 / 6 / 11; DPS sortant 4,24 / 4,09 / 7,36; distance 8 304 / 11 168 / 10 608 unités. Les trois runs finissent par défaite, sans récompense persistée.
 - [ ] Il s’agit d’un contrôleur déterministe simplifié, pas d’un parcours humain ou d’un évitement complet. Trois runs Easy sur un profil ne suffisent pas au calibrage; aucune valeur **[PROPOSÉE]** n’a été modifiée et P6.9 reste ouvert.
 
+### Matrice multi-profil kite — 2026-10-17
+
+- [x] Reproduction : `DOPAMINE_TEST_TIMEOUT=1800s tools/run_godot_test.sh tools/local/godot-4.7.2/Godot_v4.7.2-stable_linux.x86_64 --headless --path game --script res://tests/progression_balance_survey.gd -- --tier=all --difficulty=all --movement=kite --replicates=3`.
+- [x] 45 sessions réelles de Survival, à ×4 moteur et simulation, sans invincibilité ni kills scriptés; XP/chests restent accessibles automatiquement. Le contexte de profil est isolé sous `user://progression_balance_survey/`; aucun gain de run n’est persisté. Toutes les sessions terminent en défaite avant le boss final.
+
+| Profil | Difficulté | Survie médiane (s) | Vague médiane | Kills médianes | DPS médian |
+|---|---|---:|---:|---:|---:|
+| Neuf | Easy | 48,72 | 2 | 5 | 3,03 |
+| Neuf | Normal | 22,92 | 1 | 9 | 6,56 |
+| Neuf | Hard | 22,67 | 1 | 0 | 5,23 |
+| Neuf | Nightmare | 31,36 | 2 | 0 | 2,30 |
+| Neuf | Chaos | 16,21 | 1 | 0 | 2,60 |
+| Intermédiaire | Easy | 62,23 | 3 | 5 | 2,94 |
+| Intermédiaire | Normal | 54,69 | 2 | 6 | 4,48 |
+| Intermédiaire | Hard | 17,79 | 1 | 1 | 6,86 |
+| Intermédiaire | Nightmare | 26,67 | 1 | 0 | 5,96 |
+| Intermédiaire | Chaos | 19,55 | 1 | 0 | 3,74 |
+| Arbre complet | Easy | 35,43 | 2 | 7 | 6,48 |
+| Arbre complet | Normal | 29,35 | 1 | 5 | 5,50 |
+| Arbre complet | Hard | 30,92 | 2 | 1 | 6,37 |
+| Arbre complet | Nightmare | 16,77 | 1 | 0 | 3,71 |
+| Arbre complet | Chaos | 12,32 | 1 | 0 | 3,55 |
+
+- [ ] La durée médiane n’augmente pas systématiquement avec la progression permanente; la politique kite ne ramasse pas assez d’XP pour atteindre un build de run complet et ne modélise pas un joueur humain. Les écarts et les défaites précoces caractérisent ce protocole, pas une preuve d’équilibre ni une autorisation d’ajuster les valeurs **[PROPOSÉES]**. Parcours humains, progression normale durant une longue run et calibration ressentie restent requis pour fermer P6.9.
+- [x] Godot termine avec le code 0; il affiche à l’arrêt des avertissements ObjectDB/ressources encore référencées par le harness, sans échec de session ni récompense enregistrée.
+
 ## P6.3 — Portée de ramassage équipement et XP — 2026-10-16
 
 - [x] `equipment_stats_smoke.gd` charge un seul bonus d’équipement par profil et lance une session Survival séparée par stat; vérifie HP, mobilité, dégâts, cadence, chance et dégâts critiques, soin par élimination, aire, cooldown, XP, portée de collecte et vitesse projectile.
