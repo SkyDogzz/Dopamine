@@ -29,6 +29,7 @@
 - [x] Téléchargement des templates officiels 4.7.2 depuis `downloads.godotengine.org`; le SHA-512 de l’archive correspond au manifeste officiel. Seul `linux_release.x86_64` a été installé dans `~/.local/share/godot/export_templates/4.7.2.stable/`.
 - [x] `tools/local/godot-4.7.2/Godot_v4.7.2-stable_linux.x86_64 --headless --path game --export-release "Linux/X11" build/linux/export/DopamineSurvivor.x86_64` termine avec le code 0. Il produit un exécutable ELF x86_64 d’environ 102 Mo et copie `libdopamine.linux.template_release.x86_64.so` à côté (environ 1,1 Mo); le PCK est intégré à l’exécutable.
 - [x] `build/linux/export/DopamineSurvivor.x86_64 --headless --audio-driver Dummy --quit-after 3` démarre le runtime exporté, charge la scène d’accueil et termine avec le code 0 sans erreur de chargement signalée.
+- [x] Pendant un runtime exporté, `/proc/<pid>/maps` contient le sidecar `libdopamine.linux.template_release.x86_64.so`, confirmant que le chargeur dynamique l’a chargé. Cela ne prouve pas à lui seul que `CombatSimulation` a été instanciée.
 - [ ] Une tentative `--script res://tests/sandbox_smoke.gd` depuis l’exécutable exporté ne termine pas en 30 secondes et ne produit pas de résultat. L’instanciation explicite de `CombatSimulation` et le parcours interactif depuis l’export restent donc à vérifier; le simple démarrage du menu ne les prouve pas.
 - [ ] Ce contrôle porte sur un export local de l’hôte Linux courant, pas sur une installation vierge ni sur une autre distribution. Les notices tierces et le paquet distribuable restent à vérifier.
 

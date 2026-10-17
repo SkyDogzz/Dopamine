@@ -699,6 +699,7 @@ P1 livre le Sandbox développeur et ne remplace pas cette feature produit.
   - [ ] Refaire build Windows propre et lancer la GDExtension.
   - [ ] Tester contrôles, chemins et rendu sur les deux plateformes.
   - [x] Vérifier le SHA-512 officiel des templates Godot 4.7.2, installer le template Linux release x86_64, exporter `build/linux/export/DopamineSurvivor.x86_64` et lancer le menu trois frames en headless; détails dans `docs/qa/TESTS.md`.
+  - [x] Confirmer que le processus autonome mappe `libdopamine.linux.template_release.x86_64.so`; la vérification directe d’instanciation de `CombatSimulation` reste ouverte.
   - [ ] Confirmer l’instanciation de `CombatSimulation` depuis l’exécutable exporté; le smoke lancé avec `--script res://tests/sandbox_smoke.gd` a dépassé 30 s sans résultat.
 - [ ] **P9.8 — Préparation de livraison**
   - [ ] Établir checklist release et versions d’artefacts.
