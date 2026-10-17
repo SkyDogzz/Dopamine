@@ -36,7 +36,8 @@
 - [ ] Répéter la comparaison pour chaque autre template distribué et inclure ses notices dans le paquet versionné correspondant.
 - [x] Faire un contrôle mécanique des sources d’image : les 136 PNG avec correspondance de base et les trois exceptions hors du dossier de références sont décrits dans [`../art/INVENTAIRE_ASSETS_UI.md`](../art/INVENTAIRE_ASSETS_UI.md) et [`../art/asset_exceptions.txt`](../art/asset_exceptions.txt).
 - [ ] Vérifier la provenance et les droits de chaque asset livré, y compris les fichiers générés, les sources éditables et toute attribution requise; les inventaires artistiques ne valent pas clearance complète.
-- [ ] **[OUVERT]** Confirmer avec le responsable audio le mix et les niveaux de la musique intégrée et l’inventaire/provenance des sons effectivement livrés. La boucle synthwave est attribuée sous CC0 dans `THIRD_PARTY_NOTICES.md`; cette provenance ne valide pas le mix ni les autres sons.
+- [x] Décision utilisateur **[VALIDÉE, 2026-10-17] — réponse A** : garder l’audio actuel comme candidate de release.
+- [ ] Auditer à l’écoute le mix et les niveaux, puis vérifier l’inventaire, les licences et la provenance de tous les sons effectivement livrés. La boucle synthwave est attribuée sous CC0 dans `THIRD_PARTY_NOTICES.md`; cette provenance ne valide pas le mix ni les autres sons.
 
 ## Distribution et communication
 

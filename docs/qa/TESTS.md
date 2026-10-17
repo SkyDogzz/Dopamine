@@ -67,6 +67,11 @@
 
 - [x] Décision utilisateur **[VALIDÉE, réponse A]** : SemVer, première release distribuable `1.0.0` après validation P9. La version ne sera ajoutée au projet et aux artefacts qu’au jalon de release; les paquets staging restent non versionnés.
 
+## P9.8 — Candidate audio — 2026-10-17
+
+- [x] Décision utilisateur **[VALIDÉE, réponse A]** : garder l’audio livré comme candidate de release.
+- [ ] L’écoute du mix/niveaux et l’audit des sons effectivement livrés restent à faire; la provenance CC0 de la boucle synthwave ne suffit pas à valider les autres assets.
+
 ## P7B.1 — Compteurs du segment de continuation — 2026-10-17
 
 - [x] `endless_standard_session_smoke.gd` vérifie qu’après la continuation HP/build/niveaux persistent, tandis que durée affichée/enregistrée, kills et compteurs additifs d’achievements repartent pour l’ID Endless. L’horloge interne reste monotone pour conserver les expirations et le rythme de simulation.
@@ -1863,7 +1868,7 @@ Note de clôture : le blocage historique du smoke `sandbox_ui_smoke.gd` décrit 
 - [x] Les orbes XP restent hors de l’attraction native Void Orb sans la synergie Magnet Heart + Singularity; un test cœur natif conserve cette séparation. Les coffres restent exclus de toute attraction.
 - [x] Revalidation ciblée le 2026-10-17 : import Godot, `survival_magnet_heart_synergy_smoke` et `survival_chest_smoke` passent sous CTest (**3/3**).
 - [x] Les trois synergies et leurs paramètres sont **[VALIDÉS, 2026-10-17]** : reliques niveau 5 pendant le pulse, Coil ×1,5 vitesse max, Singularity attire l’XP vers le champ Void Orb/Event Horizon, Celestial Eye ×1,5 rayon.
-- [i] Le GDD laisse l'attraction des soins, ressources, monnaies et bonus temporaires **[OUVERTE]** jusqu'à la définition de ces pickups. Aucun n'existe actuellement; leur ajout n'est pas inféré depuis Magnet Heart et le travail correspondant reste conditionnel.
+- [i] Décision utilisateur **[VALIDÉE, 2026-10-17]** : définir l’interaction Magnet Heart dans le contrat de chaque pickup futur. Aucun n’existe actuellement; leur ajout et leur comportement restent conditionnels et ne sont pas inférés depuis Magnet Heart.
 
 ## P5 — Décisions Thermal Shock et Magnet Heart — 2026-10-17
 
