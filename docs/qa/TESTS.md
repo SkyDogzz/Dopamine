@@ -369,12 +369,14 @@
 
 - [x] Deux lancements de `armorless_natural_run_survey.gd` en Easy, mode kite, seed `20261017`, vitesse ×1, PV ordinaires et sans éliminations scriptées. La sonde sélectionne automatiquement le premier coffre et vérifie que les fichiers de sauvegarde normale gardent les mêmes empreintes.
 
-  | Résultat | Temps simulé | Kills | Niveau | Parcours |
-  |---|---:|---:|---:|---:|
-  | Défaite vague 2 | 37,94 s | 12 | 2 | 9 144 px |
-  | Défaite vague 2 | 39,84 s | 18 | 3 | 9 600 px |
+  | Seed | Résultat | Temps simulé | Kills | Niveau | Parcours |
+  |---:|---|---:|---:|---:|---:|
+  | 20261017 | Défaite vague 2 | 37,94 s | 12 | 2 | 9 144 px |
+  | 20261017 | Défaite vague 2 | 39,84 s | 18 | 3 | 9 600 px |
 
-- [i] Le même seed produit des résultats différents, car le contrôleur kite dépend du rythme des frames et la sonde laisse la simulation à vitesse réelle. Ces deux échantillons exploratoires ne constituent ni une run complète, ni un modèle de joueur humain, et ne valident pas les multiplicateurs **[PROPOSÉS]** d’Armorless. Les deux processus finissent avec les mêmes avertissements : 2 instances ObjectDB et 1 ressource encore référencées. Le contrôle d’empreintes de sauvegarde normale réussit.
+- [x] Deux échantillons supplémentaires sous Godot 4.7.2 headless, vitesse ×1, Easy, déplacement kite et PV ordinaires : seed `20261030`, défaite vague 2 à 52,04 s (10 kills, niveau 3, 12 524 px); seed `20261031`, défaite vague 3 à 60,81 s (17 kills, niveau 3, 14 627,9 px). Chacun termine avec code 0 et confirme l’absence de modification aux sauvegardes normales; les avertissements de fermeture restent à 2 instances ObjectDB et 1 ressource.
+
+- [i] Les deux répétitions du seed `20261017` produisent des résultats différents, car le contrôleur kite dépend du rythme des frames et la sonde laisse la simulation à vitesse réelle. Les quatre échantillons exploratoires ne constituent ni une run complète ni un modèle de joueur humain et ne valident pas les multiplicateurs **[PROPOSÉS]** d’Armorless. Les quatre processus signalent à l’arrêt 2 instances ObjectDB et 1 ressource encore référencées; les contrôles d’empreintes confirment l’absence d’écriture aux sauvegardes normales.
 
 ## Build et lancement depuis un clone Git propre — 2026-10-17
 
