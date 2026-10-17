@@ -1942,6 +1942,12 @@ Note de clôture : le blocage historique du smoke `sandbox_ui_smoke.gd` décrit 
 - [x] Les runs `39071499095` (`4333878`) et `39071606317` (`6559be1`) ont aussi passé après des changements de code. Le run `39072675433` (commit `229689c`, [GitHub Actions](https://github.com/SkyDogzz/Dopamine/actions/runs/39072675433)) passe également le build Windows x64, l’import/GDExtension Release, l’export autonome, l’archive/extraction, le démarrage headless du jeu extrait, les tests natifs et la publication. L’API GitHub indique un artefact de 74 066 766 octets, digest `sha256:556635d8548bc8e1070c128b9f07afe50c5bf7efe8c89e20c0d995e69da68f2f`. Le workflow vérifie l’exécutable extrait avant sa publication; l’artefact de cette exécution n’a pas été téléchargé localement.
 - [i] Cette validation automatise le build/export et le démarrage headless; elle ne remplace pas une run interactive Windows au clavier/manette, ni le rendu et l’audio sur matériel physique.
 
+## P9.7/P9.8 — Filtrage du preset Windows Desktop — 2026-10-17
+
+- [x] La recherche textuelle de `assets/source`, `tests/` et `tools/` dans `game/scripts/`, `game/scenes/`, `game/data/` et `game/project.godot` ne trouve aucune référence runtime.
+- [x] Godot 4.7.2 exporte le preset `Windows Desktop` en PCK depuis cet hôte Linux : 552 ressources consignées, 206 enregistrements `.import`, aucune ressource des trois chemins exclus et aucun warning. Le preset Windows exclut maintenant `tests/**`, `tools/**` et `assets/source/**`, comme Linux.
+- [i] Cette commande vérifie le filtre PCK du preset Windows depuis l’éditeur Linux; elle ne produit ni ne lance un exécutable Windows. Le build/export/launch Windows complet reste couvert par les runs CI consignés plus haut et doit être revalidé après ce commit.
+
 ## P9.8 — Staging Linux Release depuis `4965876` — 2026-10-17
 
 - [x] `tools/package_linux_staging.sh` reconstruit l’archive Git du commit `4965876` dans un dossier temporaire avec CMake 3.31.12, GCC 14.2.0, Godot 4.7.2 et `godot-cpp` épinglé à `b8530af7546a3fcae80cef2477526569fd42ffc2`. La GDExtension Linux x86_64 Release et l’export autonome `Linux/X11` passent depuis un CMake vierge.
