@@ -353,7 +353,8 @@ Travail requis :
   - [ ] Valider et équilibrer Thermal Shock sur des runs; son implémentation ne change pas son statut **[PROPOSÉ]**.
   - [x] Toxic Ignition : explosion au coup direct appliquant le second statut sur une cible affectée par l’autre **[VALIDÉ]**; 50 % du coup déclencheur, rayon 60 px, statuts conservés et cooldown local d’une seconde **[VALIDÉS, 2026-10-16]**. L’explosion n’applique aucun statut et ne se chaîne pas récursivement. Vérifier sa calibration en run réelle.
   - [x] Shatter : coup direct des Crimson Daggers, Minigun, Sawblades, Meteor Staff ou Void Orb sur une cible gelée → dégâts bonus sur la cible et fragments vers les ennemis proches; les évolutions correspondantes sont incluses. Ticks DoT, sources élémentaires et chaîne des fragments exclus. Les chiffres restent **[PROPOSÉS]** configurables; `survival_weapon_catalog_smoke.gd` vérifie les sources, cibles, dégâts et budget de réaction.
-  - [ ] Arbitrer Electroplague, Gravity Collapse et Hemorrhage avant leur implémentation.
+  - [x] Electroplague **[VALIDÉE, 2026-10-17]** : un coup direct de Shock sur Poison propage le même effet à toutes les cibles ennemies vivantes dans un rayon de 60 px, sans plafond; aucun dégât direct, remplacement ou chaîne sur DoT. Implémentation et smoke dans `survival_weapon_catalog_smoke.gd`.
+  - [ ] Arbitrer Gravity Collapse et Hemorrhage avant leur implémentation.
   - [x] Garder Overcharge bloquée par son statut **[OUVERT]**.
 - [x] **P5.2.4 — Causalité et dégâts**
   - [x] Toxic Ignition utilise le numéro séquentiel de l’impact déclencheur comme ID de chaîne et consomme son budget unique; le projectile de réaction et ses événements portent le même ID avec un budget restant de zéro. Un budget épuisé refuse tout nouveau déclenchement. Ces champs sont conservés par les snapshots/restaurations. Les réactions proposées ne reçoivent pas de contrat implicite : elles devront suivre cette règle après validation.

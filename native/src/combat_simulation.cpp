@@ -25,8 +25,8 @@ void CombatSimulation::_bind_methods() {
 			&CombatSimulation::attract_xp_orbs);
 	ClassDB::bind_method(D_METHOD("stop_xp_orb_attraction"), &CombatSimulation::stop_xp_orb_attraction);
 	ClassDB::bind_method(D_METHOD("collect_xp_orb", "index", "generation"), &CombatSimulation::collect_xp_orb);
-	ClassDB::bind_method(D_METHOD("apply_damage_over_time", "index", "generation", "damage_per_tick", "interval_seconds", "duration_seconds"),
-			&CombatSimulation::apply_damage_over_time);
+	ClassDB::bind_method(D_METHOD("apply_damage_over_time", "index", "generation", "damage_per_tick", "interval_seconds", "duration_seconds", "status_type"),
+			&CombatSimulation::apply_damage_over_time, DEFVAL(String("generic")));
 	ClassDB::bind_method(D_METHOD("despawn", "index", "generation"), &CombatSimulation::despawn);
 	ClassDB::bind_method(D_METHOD("kill_all"), &CombatSimulation::kill_all);
 	ClassDB::bind_method(D_METHOD("pause"), &CombatSimulation::pause);
@@ -251,11 +251,14 @@ int64_t CombatSimulation::collect_xp_orb(int64_t index, int64_t generation) {
 }
 
 int64_t CombatSimulation::apply_damage_over_time(int64_t index, int64_t generation, float damage_per_tick,
-		double interval_seconds, double duration_seconds) {
+		double interval_seconds, double duration_seconds, String status_type) {
 	constexpr int64_t max_id = std::numeric_limits<uint32_t>::max();
+	const std::string status_type_value = status_type.utf8().get_data();
 	if (index < 0 || index > max_id || generation <= 0 || generation > max_id ||
 			!std::isfinite(damage_per_tick) || damage_per_tick <= 0.0F || !std::isfinite(interval_seconds) ||
-			interval_seconds <= 0.0 || !std::isfinite(duration_seconds) || duration_seconds <= 0.0) {
+			interval_seconds <= 0.0 || !std::isfinite(duration_seconds) || duration_seconds <= 0.0 ||
+			(status_type_value != "generic" && status_type_value != "burn" &&
+			 status_type_value != "poison" && status_type_value != "bleed")) {
 		return 0;
 	}
 	SimulationCommand command;
@@ -264,6 +267,7 @@ int64_t CombatSimulation::apply_damage_over_time(int64_t index, int64_t generati
 	command.status_damage_per_tick = damage_per_tick;
 	command.status_interval_seconds = interval_seconds;
 	command.status_duration_seconds = duration_seconds;
+	command.status_type = status_type_value;
 	return submit(std::move(command));
 }
 

@@ -110,7 +110,7 @@ std::optional<SimulationWorkerState> SimulationWorker::capture_state(std::chrono
 }
 
 bool SimulationWorker::restore_state(const SimulationWorkerState &state) {
-	if (state.format_version != 15 || state.next_sequence == 0 ||
+	if (state.format_version != 16 || state.next_sequence == 0 ||
 			state.next_sequence <= state.pending_sequence ||
 			state.pending_commands.size() > max_queued_commands_ ||
 			state.pending_events.size() > max_pending_events_ || state.logs.size() > 100 ||
@@ -443,7 +443,7 @@ void SimulationWorker::apply(const SimulationCommand &command,
 		case CommandType::ApplyDamageOverTime:
 			try {
 				if (simulation_.apply_damage_over_time(command.entity, command.status_damage_per_tick,
-						command.status_interval_seconds, command.status_duration_seconds)) {
+						command.status_interval_seconds, command.status_duration_seconds, command.status_type)) {
 					log("damage-over-time applied to entity " + std::to_string(command.entity.index));
 				} else {
 					log("damage-over-time ignored: stale or unsupported entity ID");

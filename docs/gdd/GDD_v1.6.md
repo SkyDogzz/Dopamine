@@ -95,7 +95,9 @@ Boucle Survival : choisir difficulté et arme initiale → survivre à une vague
 
 [VALIDÉ] Les interactions entre armes peuvent émerger des dégâts et statuts. Aucune limite artificielle aux synergies n’est ajoutée pour le seul équilibrage, sous réserve des protections techniques.
 
-[PROPOSÉ] Réactions élémentaires entre statuts ; Shatter est maintenant validée comme indiqué en annexe, les autres combinaisons restent proposées.
+[PROPOSÉ] Réactions élémentaires entre statuts ; Shatter et Electroplague sont validées comme indiqué en annexe. Les autres combinaisons restent proposées ou ouvertes.
+
+**Electroplague [VALIDÉE, 2026-10-17] :** un coup direct de Shock sur une cible empoisonnée propage son Poison à toutes les autres cibles ennemies vivantes dans un rayon de 60 px, sans plafond de cibles. La propagation copie les dégâts par tick, l’intervalle et la durée restante du Poison; elle n’inflige aucun dégât direct. Une cible déjà empoisonnée conserve son effet existant. Les ticks de DoT et les effets propagés ne déclenchent pas de propagation en chaîne sans nouveau coup direct de Shock.
 
 **Prototype [PROPOSÉ] — Thermal Shock :** une attaque directe de Burn sur une cible déjà Chill, ou une attaque directe de Chill sur une cible qui porte Burn, ajoute un impact immédiat égal à 50 % de l’attaque déclencheuse. Un cooldown proposé de 1 s par cible borne la répétition; les dégâts sur la durée et les impacts de Thermal Shock ne déclenchent pas la réaction. Ces coefficients restent à équilibrer et la règle n’est pas promue **[VALIDÉE]**.
 

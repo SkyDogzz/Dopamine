@@ -46,7 +46,7 @@ public:
 	int64_t stop_xp_orb_attraction();
 	int64_t collect_xp_orb(int64_t index, int64_t generation);
 	int64_t apply_damage_over_time(int64_t index, int64_t generation, float damage_per_tick,
-			double interval_seconds, double duration_seconds);
+			double interval_seconds, double duration_seconds, String status_type = String("generic"));
 	int64_t despawn(int64_t index, int64_t generation);
 	int64_t kill_all();
 	int64_t pause();

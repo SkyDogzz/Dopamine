@@ -10,6 +10,7 @@
 
 using namespace std::chrono_literals;
 using dopamine::sim::CommandType;
+using dopamine::sim::Entity;
 using dopamine::sim::SimulationCommand;
 using dopamine::sim::SimulationWorker;
 using dopamine::sim::SimulationWorkerState;
@@ -315,7 +316,7 @@ int main() {
 	const auto captured_worker_state = worker.capture_state(1s);
 	require(captured_worker_state.has_value(), "worker should capture a coherent state at a command barrier");
 	const SimulationWorkerState saved_worker_state = *captured_worker_state;
-	require(saved_worker_state.format_version == 15 && saved_worker_state.paused && saved_worker_state.speed_multiplier == 2.0 &&
+	require(saved_worker_state.format_version == 16 && saved_worker_state.paused && saved_worker_state.speed_multiplier == 2.0 &&
 			saved_worker_state.has_steering_target && saved_worker_state.steering_target_x == 12.0F &&
 			saved_worker_state.steering_target_y == -6.0F && saved_worker_state.steering_config.max_speed == 48.0F &&
 			saved_worker_state.collision_count == benchmark_combat->collision_count &&
@@ -327,7 +328,7 @@ int main() {
 
 	worker.stop();
 	SimulationWorkerState unsupported_worker_state = saved_worker_state;
-	unsupported_worker_state.format_version = 6;
+	unsupported_worker_state.format_version = 15;
 	require(!worker.restore_state(unsupported_worker_state), "worker should reject a snapshot from the previous format");
 	SimulationWorkerState invalid_worker_state = saved_worker_state;
 	invalid_worker_state.speed_multiplier = 8.0;
@@ -353,6 +354,23 @@ int main() {
 	queued_spawn.sequence = queued_command_state.next_sequence;
 	queued_command_state.pending_commands.push_back(queued_spawn);
 	++queued_command_state.next_sequence;
+	SimulationCommand queued_poison;
+	queued_poison.type = CommandType::ApplyDamageOverTime;
+	for (std::size_t index = 0; index < queued_command_state.core_state.active_slots.size(); ++index) {
+		const Entity &entity = queued_command_state.core_state.entities[index];
+		if (queued_command_state.core_state.active_slots[index] && !entity.is_projectile && !entity.is_xp_orb &&
+				entity.health.current > 0.0F) {
+			queued_poison.entity = entity.id;
+			break;
+		}
+	}
+	queued_poison.status_damage_per_tick = 2.0F;
+	queued_poison.status_interval_seconds = 0.5;
+	queued_poison.status_duration_seconds = 2.0;
+	queued_poison.status_type = "poison";
+	queued_poison.sequence = queued_command_state.next_sequence;
+	queued_command_state.pending_commands.push_back(queued_poison);
+	++queued_command_state.next_sequence;
 	require(worker.restore_state(queued_command_state), "stopped worker should restore a validated full worker state");
 	const auto restored_worker_snapshot = worker.snapshot();
 	require(restored_worker_snapshot->paused && restored_worker_snapshot->speed_multiplier == 2.0 &&
@@ -369,9 +387,17 @@ int main() {
 	acknowledge_restored_events.type = CommandType::AcknowledgeEvents;
 	acknowledge_restored_events.event_sequence = queued_command_state.last_event_sequence;
 	const uint64_t acknowledge_sequence = submit_and_wait(worker, acknowledge_restored_events);
+	bool restored_pending_poison = false;
+	for (const Entity &entity : worker.snapshot()->entities) {
+		if (entity.id == queued_poison.entity && entity.damage_over_time &&
+				entity.damage_over_time->status_type == "poison") {
+			restored_pending_poison = true;
+		}
+	}
 	require(acknowledge_sequence == queued_command_state.next_sequence &&
-			worker.snapshot()->entities.size() == queued_command_state.core_state.entity_count + 1,
-			"restored worker should continue command numbering after the captured queue");
+			worker.snapshot()->entities.size() == queued_command_state.core_state.entity_count + 1 &&
+			restored_pending_poison,
+			"restored worker should keep queued typed statuses and continue command numbering after restore");
 	step.delta_seconds = 0.01;
 	const uint64_t restored_step_sequence = submit_and_wait(worker, step);
 	const auto after_restored_step = worker.snapshot();

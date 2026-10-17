@@ -42,6 +42,9 @@ const WEAPON_IMPACT_SOURCE_IDS := {
 }
 const SHATTER_IMPACT_SOURCE_TYPES := ["crimson_dagger", "bloodstorm_dagger", "minigun", "redline",
 		"sawblades", "razorstorm", "meteor_staff", "starfall", "starfall_fragment", "void_orb", "event_horizon"]
+const ELECTROPLAGUE_SHOCK_SOURCE_TYPES := ["lightning_primary", "lightning_arc", "lightning_conductor",
+		"infinite_circuit_branch", "unique_lightning_burst"]
+const ELECTROPLAGUE_SPREAD_RADIUS := 60.0
 const WEAPON_IMPACT_LIFETIME := 0.22
 const MAX_VISIBLE_WEAPON_IMPACTS := 32
 const STATUS_EFFECT_COLORS := {
@@ -824,6 +827,7 @@ func _process(_delta: float) -> void:
 				_advance_lightning_chain(event, state["entities"], current_simulation_time)
 				_try_thermal_shock(event, state["entities"], current_simulation_time)
 				_try_toxic_ignition(event, current_simulation_time)
+				_try_electroplague(event, state["entities"])
 				_try_shatter(event, state["entities"])
 				_add_weapon_impact(source_type, Vector2(float(event["position"]["x"]), float(event["position"]["y"])),
 						bool(event.get("is_damage_over_time", false)))
@@ -2432,6 +2436,56 @@ func _try_toxic_ignition(event: Dictionary, active_time: float) -> int:
 	if sequence > 0:
 		_toxic_ignition_next_at[target_key] = active_time + TOXIC_IGNITION_TARGET_COOLDOWN_SECONDS
 	return sequence
+
+func _try_electroplague(event: Dictionary, entities: Array) -> int:
+	if bool(event.get("is_damage_over_time", false)) or not bool(event.get("target_had_poison", false)) or \
+			float(event.get("amount", 0.0)) <= 0.0:
+		return 0
+	var source_type := str(event.get("source_type", "")).get_slice(":", 0)
+	if not ELECTROPLAGUE_SHOCK_SOURCE_TYPES.has(source_type):
+		return 0
+	var target_id: Dictionary = event.get("target", {})
+	var origin_data: Dictionary = event.get("position", {})
+	if target_id.is_empty() or origin_data.is_empty():
+		return 0
+	var source_key := Vector2i(int(target_id.get("index", -1)), int(target_id.get("generation", -1)))
+	var poison: Dictionary = {}
+	for entity in entities:
+		var id: Dictionary = entity.get("id", {})
+		if Vector2i(int(id.get("index", -2)), int(id.get("generation", -2))) != source_key:
+			continue
+		var components: Dictionary = entity.get("components", {})
+		for status in components.get("DamageOverTimeEffects", [components.get("DamageOverTime", {})]):
+			if str(status.get("status_type", "")) == "poison":
+				poison = status
+				break
+		break
+	if poison.is_empty() or float(poison.get("remaining_seconds", 0.0)) <= 0.0:
+		return 0
+	var origin := Vector2(float(origin_data["x"]), float(origin_data["y"]))
+	var radius_squared := (ELECTROPLAGUE_SPREAD_RADIUS + 0.01) * (ELECTROPLAGUE_SPREAD_RADIUS + 0.01)
+	var spread_count := 0
+	for entity in entities:
+		var id: Dictionary = entity.get("id", {})
+		if Vector2i(int(id.get("index", -2)), int(id.get("generation", -2))) == source_key:
+			continue
+		var components: Dictionary = entity.get("components", {})
+		if not _is_targetable_enemy(components):
+			continue
+		var already_poisoned := false
+		for status in components.get("DamageOverTimeEffects", [components.get("DamageOverTime", {})]):
+			already_poisoned = already_poisoned or str(status.get("status_type", "")) == "poison"
+		if already_poisoned:
+			continue
+		var transform: Dictionary = components.get("Transform2D", {})
+		var candidate := Vector2(float(transform.get("x", 0.0)), float(transform.get("y", 0.0)))
+		if origin.distance_squared_to(candidate) > radius_squared:
+			continue
+		if simulation.apply_damage_over_time(int(id["index"]), int(id["generation"]),
+				float(poison["damage_per_tick"]), float(poison["interval_seconds"]),
+				float(poison["remaining_seconds"]), "poison") > 0:
+			spread_count += 1
+	return spread_count
 
 func _advance_lightning_chain(event: Dictionary, entities: Array, active_time: float) -> void:
 	var source_parts := str(event.get("source_type", "")).split(":", false, 1)

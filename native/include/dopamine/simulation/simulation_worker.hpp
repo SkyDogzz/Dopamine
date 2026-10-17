@@ -85,13 +85,14 @@ struct SimulationCommand {
 	float status_damage_per_tick = 0.0F;
 	double status_interval_seconds = 0.0;
 	double status_duration_seconds = 0.0;
+	std::string status_type = "generic";
 	uint64_t event_sequence = 0;
 	SteeringConfig steering;
 	std::shared_ptr<std::promise<SimulationWorkerState>> capture_promise;
 };
 
 struct SimulationWorkerState {
-	uint32_t format_version = 15;
+	uint32_t format_version = 16;
 	SimulationCoreState core_state;
 	bool paused = true;
 	double speed_multiplier = 1.0;

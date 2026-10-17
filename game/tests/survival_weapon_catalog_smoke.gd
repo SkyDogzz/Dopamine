@@ -13,6 +13,9 @@ func _run() -> void:
 	if not await _toxic_ignition_runs_from_real_status_hits():
 		_fail("Real Toxic Cloud poison and Inferno burn hits should trigger Toxic Ignition, preserve both statuses, and damage only targets in its radius")
 		return
+	if not await _electroplague_spreads_existing_poison_on_direct_shock():
+		_fail("A direct Shock hit on a poisoned target should copy its Poison to every living enemy within 60 px, without extra damage or reapplying existing Poison")
+		return
 	if not await _weapon_progression_config_is_loaded_and_modifiable():
 		_fail("Survival should load validated weapon progression milestones from the JSON config")
 		return
@@ -1157,6 +1160,99 @@ func _toxic_ignition_combines_poison_and_burn_once() -> bool:
 				distant_ignition = true
 	var valid := sequence > 0 and cooldown_sequence == 0 and dot_sequence == 0 and exhausted_chain_sequence == 0 and \
 		no_pair_sequence == 0 and nearby_ignition and not distant_ignition
+	session.queue_free()
+	return valid
+
+func _electroplague_spreads_existing_poison_on_direct_shock() -> bool:
+	var session: Node2D = load("res://scenes/survival_session.tscn").instantiate()
+	session.spawn_initial_enemy = false
+	session.wave_spawning_enabled = false
+	session.skip_starting_weapon_choice = true
+	session.weapon_enabled = false
+	session.contact_damage_per_hit = 0.0
+	root.add_child(session)
+	await process_frame
+	session.simulation.pause()
+	var pause_deadline := Time.get_ticks_msec() + 2500
+	while Time.get_ticks_msec() < pause_deadline and not bool(session.simulation.snapshot().get("paused", false)):
+		await process_frame
+	if not bool(session.simulation.snapshot().get("paused", false)):
+		session.queue_free()
+		return false
+	var positions: Array[Vector2] = [Vector2(100.0, 100.0), Vector2(110.0, 100.0),
+		Vector2(120.0, 100.0), Vector2(130.0, 100.0), Vector2(140.0, 100.0),
+		Vector2(150.0, 100.0), Vector2(160.0, 100.0), Vector2(160.5, 100.0)]
+	for position in positions:
+		session.simulation.spawn("test_target", 1, position, 1000.0, Vector2.ZERO)
+	var targets: Array = await _wait_for_targets(session, positions.size())
+	if targets.size() != positions.size():
+		session.queue_free()
+		return false
+	var source_id: Dictionary = targets[0]["id"]
+	var already_poisoned_id: Dictionary = targets[1]["id"]
+	var source_sequence: int = session.simulation.apply_damage_over_time(
+		int(source_id["index"]), int(source_id["generation"]), 3.0, 1.0, 3.0, "poison")
+	var existing_sequence: int = session.simulation.apply_damage_over_time(
+		int(already_poisoned_id["index"]), int(already_poisoned_id["generation"]), 7.0, 0.75, 1.5, "poison")
+	if source_sequence <= 0 or existing_sequence <= 0 or \
+			not await _wait_for_status(session, source_id, "poison") or \
+			not await _wait_for_status(session, already_poisoned_id, "poison"):
+		session.queue_free()
+		return false
+	var existing_state: Dictionary = session.simulation.snapshot()
+	var source_entity: Dictionary = {}
+	for entity in existing_state["entities"]:
+		if entity["id"] == source_id:
+			source_entity = entity
+			break
+	if source_entity.is_empty():
+		session.queue_free()
+		return false
+	var source_status: Dictionary = source_entity["components"]["DamageOverTime"]
+	var source_transform: Dictionary = source_entity["components"]["Transform2D"]
+	var event := {"type": "damage", "source_type": "lightning_primary:electroplague-test",
+		"target": source_id, "target_had_poison": true, "is_damage_over_time": false,
+		"amount": 10.0, "remaining_health": 900.0,
+		"position": {"x": source_transform["x"], "y": source_transform["y"]}}
+	var ineligible_event := event.duplicate(true)
+	ineligible_event["source_type"] = "inferno_sprayer"
+	var rejected_source: Variant = session.call("_try_electroplague", ineligible_event, existing_state["entities"])
+	ineligible_event = event.duplicate(true)
+	ineligible_event["is_damage_over_time"] = true
+	var rejected_tick: Variant = session.call("_try_electroplague", ineligible_event, existing_state["entities"])
+	ineligible_event = event.duplicate(true)
+	ineligible_event["target_had_poison"] = false
+	var rejected_unpoisoned: Variant = session.call("_try_electroplague", ineligible_event, existing_state["entities"])
+	var propagated: Variant = session.call("_try_electroplague", event, existing_state["entities"])
+	if rejected_source != 0 or rejected_tick != 0 or rejected_unpoisoned != 0 or propagated != 5:
+		session.queue_free()
+		return false
+	for index in range(2, 7):
+		if not await _wait_for_status(session, targets[index]["id"], "poison"):
+			session.queue_free()
+			return false
+	var final_state: Dictionary = session.simulation.snapshot()
+	var copied_statuses := 0
+	var preserved_existing := false
+	var outside_has_poison := false
+	for entity in final_state["entities"]:
+		var entity_id: Dictionary = entity["id"]
+		var components: Dictionary = entity["components"]
+		var status: Dictionary = components.get("DamageOverTime", {})
+		if entity_id == already_poisoned_id:
+			preserved_existing = float(status.get("damage_per_tick", 0.0)) == 7.0 and \
+					float(status.get("remaining_seconds", 0.0)) <= 1.5
+		elif entity_id == targets[7]["id"]:
+			outside_has_poison = status.get("status_type", "") == "poison"
+		elif entity_id != source_id and status.get("status_type", "") == "poison":
+			copied_statuses += 1
+			if not is_equal_approx(float(status.get("damage_per_tick", 0.0)), float(source_status["damage_per_tick"])) or \
+					not is_equal_approx(float(status.get("interval_seconds", 0.0)), float(source_status["interval_seconds"])) or \
+					float(status.get("remaining_seconds", 0.0)) > float(source_status["remaining_seconds"]):
+				session.queue_free()
+				return false
+	var valid := copied_statuses == 5 and preserved_existing and not outside_has_poison and \
+				int(final_state["metrics"]["collision_count"]) == int(existing_state["metrics"]["collision_count"])
 	session.queue_free()
 	return valid
 
