@@ -44,6 +44,10 @@
 
 - [x] Décision utilisateur **[VALIDÉE, réponse A]** : déterminer l’interaction avec Magnet Heart au moment de spécifier chaque pickup futur. Cela ne définit ni ne crée des pickups; XP reste le seul pickup actuel affecté.
 
+## P9 — Détails visuels — 2026-10-17
+
+- [x] Décision utilisateur **[VALIDÉE, réponse A]** : garder la direction de l’ART_BIBLE et reporter les choix fins non bloquants à la QA de release. Les couleurs d’éléments/faisceaux, la police, le rythme de clignotement et l’identité du boss placeholder restent à vérifier ou arbitrer.
+
 ## P7B.1 — Compteurs du segment de continuation — 2026-10-17
 
 - [x] `endless_standard_session_smoke.gd` vérifie qu’après la continuation HP/build/niveaux persistent, tandis que durée affichée/enregistrée, kills et compteurs additifs d’achievements repartent pour l’ID Endless. L’horloge interne reste monotone pour conserver les expirations et le rythme de simulation.
