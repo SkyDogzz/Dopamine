@@ -694,7 +694,8 @@ P1 livre le Sandbox développeur et ne remplace pas cette feature produit.
   - [x] Tester un fichier temporaire de sauvegarde partiellement écrit, un slot absent avec backup valide, la restauration, le nettoyage au prochain enregistrement et les migrations; limites du scénario dans `docs/qa/TESTS.md`.
   - [x] Vérifier l’idempotence des récompenses après redémarrage du service et l’arrêt/join du worker, y compris sous soumission concurrente; `progression_service_smoke.gd` et `simulation_worker` couvrent ces chemins.
 - [ ] **P9.7 — Plateformes**
-  - [ ] Refaire build Linux propre sur machine propre. Un répertoire CMake vierge dans `/tmp` sur l’hôte actuel compile depuis le `godot-cpp` épinglé et passe 87/87 CTest; voir `docs/qa/TESTS.md`. Une machine distincte n’a pas encore été vérifiée.
+  - [x] Refaire le build et l’export Linux depuis un snapshot Git propre avec un répertoire CMake vierge sur l’hôte courant; le probe release instancie `CombatSimulation` dans une session. La compilation et les limites sont consignées dans `docs/qa/TESTS.md`.
+  - [ ] Refaire build Linux et parcours sur une machine distincte; l’hôte de validation courant est virtualisé.
   - [x] Ajouter un preset Linux/X11 et une route `linux.release.x86_64` pour la GDExtension; le PCK 4.7.2 s’exporte sans warning, se charge avec le runtime Linux et l’extension debug, et les quatre checks import/Sandbox/catalogue passent. C’est une validation de pack et de chargement sur l’hôte courant, pas un export autonome.
   - [ ] Refaire build Windows propre et lancer la GDExtension.
   - [ ] Tester contrôles, chemins et rendu sur les deux plateformes.

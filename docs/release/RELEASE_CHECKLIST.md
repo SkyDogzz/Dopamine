@@ -10,6 +10,7 @@
 - [ ] Construire depuis un checkout propre reproductible pour chaque plateforme de release; distinguer les exports vérifiés localement des artefacts réellement distribuables.
 - [ ] Pour chaque artefact retenu, consigner plateforme/architecture, commit source, versions de Godot/templates/toolchain, commandes, taille et SHA-256.
 - [x] Vérifier le paquet Linux non versionné de staging (exécutable, GDExtension, notices, licences référencées, extraction et démarrage headless); les sommes et limites sont dans [`../qa/TESTS.md`](../qa/TESTS.md). Ce paquet est explicitement non distribuable.
+- [x] Refaire un paquet staging depuis le snapshot propre `90a1fdabded9acc03b93ca14d5ab7364c7478d33`; le hash et les versions de toolchain sont consignés dans la QA. Le binaire du paquet instancie la session de probe; la version commerciale reste **[OUVERTE]**.
 
 ## Contenu et critères d’acceptation
 

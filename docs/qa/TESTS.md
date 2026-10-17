@@ -64,6 +64,14 @@
 - [x] SHA-256 de l’archive staging : `2de45351244927208d0379f342a2f0a1abcab11c9af03ed101f268ae9c017ec4`. Exécutable : `d67e0588395d072d446dcee4a6f8fe14506fb193852b2687a44608565198e647`; GDExtension : `a6d148c988fcb78476b3e43fb721869a0b2fddc1251e78ed1033231690b05dfa`.
 - [ ] L’archive utilise un export local existant sans manifeste du commit source; elle n’a pas de version de jeu assignée et n’est pas un artefact de release. Recréer un paquet versionné depuis un commit approuvé après fermeture des gates de contenu et provenance.
 
+## P9.7/P9.8 — Export Linux depuis un snapshot propre — 2026-10-17
+
+- [x] `git archive` du commit `90a1fdabded9acc03b93ca14d5ab7364c7478d33`, configuration CMake vierge en Release et compilation de la GDExtension `template_release` sous Linux x86_64 (GCC 14.2.0, CMake 3.31.12, Godot 4.7.2, `godot-cpp` verrouillé à `b8530af7546a3fcae80cef2477526569fd42ffc2`). L’export autonome `Linux/X11` a été produit depuis ce snapshot.
+- [x] La reconstruction de session autonome lance une `SurvivalSession`, instancie la classe native `CombatSimulation`, lit son snapshot puis ferme la session/worker proprement. Ce probe temporaire a utilisé le même template Linux release et la même GDExtension, mais un main scene distinct du jeu.
+- [x] Le paquet staging avec l’exécutable, la GDExtension, les notices Godot/polices et le commit source a été extrait puis lancé avec un `XDG_DATA_HOME` vierge. SHA-256 du paquet : `71435df9388c5047dcec7aa95bedadc8e36f788b1a111391d7cf0b25ac8ef201`; exécutable : `dbc71c3681c0b86ae6c66cf21d010009b1515830973d825b500d8ba4f5f82f61`; GDExtension : `d0efcd2a50be00971745d828838b2fb97bfccbf2a7b72e01b184716f7be52c11`.
+- [i] L’import éditeur de ce snapshot a signalé l’absence de la bibliothèque debug parce que la configuration a compilé uniquement `template_release`. L’export release et le probe natif exporté ont réussi; aucun binaire debug n’a été inclus dans le paquet.
+- [ ] Source propre et CMake vierge, mais même hôte KVM; ce contrôle ne valide pas une machine Linux distincte, une cible iGPU réelle, Windows, une version produit, ni les autres gates de release.
+
 ## Revalidation de la suite après export Linux — 2026-10-17
 
 - Première exécution CTest séquentielle sur le checkout courant : **86/87**. Le smoke catalogue inspectait le buffer temporaire d’événements alors que `SurvivalSession` acquitte les événements qu’elle consomme; la course pouvait masquer un dégât déjà appliqué.
