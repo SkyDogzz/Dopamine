@@ -14,6 +14,7 @@ const PRESET_KEYS := [
 	"seed", "overrides", "flags", "initial_build",
 ]
 const VALID_MODES := ["survival", "endless", "armorless"]
+const OVERRIDE_LIMITS := {"enemy_hp": Vector2(0.1, 1000.0)}
 
 func validate_preset(preset: Variant) -> Dictionary:
 	if not preset is Dictionary or preset.size() != PRESET_KEYS.size():
@@ -32,6 +33,14 @@ func validate_preset(preset: Variant) -> Dictionary:
 	if not preset["overrides"] is Dictionary or not preset["flags"] is Dictionary or \
 			not preset["initial_build"] is Dictionary:
 		return _error("invalid_payload")
+	for override_id in preset["overrides"]:
+		if not OVERRIDE_LIMITS.has(override_id):
+			return _error("unsupported_override")
+		var value: Variant = preset["overrides"][override_id]
+		var limits: Vector2 = OVERRIDE_LIMITS[override_id]
+		if typeof(value) not in [TYPE_INT, TYPE_FLOAT] or not is_finite(float(value)) or \
+				float(value) < limits.x or float(value) > limits.y:
+			return _error("invalid_override_%s" % str(override_id))
 	for key in ["overrides", "flags", "initial_build"]:
 		if not _valid_tree(preset[key], 0):
 			return _error("payload_limits_exceeded")

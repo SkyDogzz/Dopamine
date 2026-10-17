@@ -1049,3 +1049,9 @@ Note de clôture : le blocage historique du smoke `sandbox_ui_smoke.gd` décrit 
 - [x] `survival_starting_weapon_smoke.gd` cherchait Inferno Sprayer par index fixe alors que les deux offres de départ sont mélangées. Le test sélectionne maintenant l’offre par son titre affiché.
 - [x] Le smoke passe cinq exécutions consécutives sous Godot 4.7.2 headless, en vérifiant la pause avant sélection puis la reprise de simulation, du temps actif et du HP decay après choix.
 - [ ] Le smoke conserve un avertissement de ressource à la fermeture; cela n’affecte pas ses assertions fonctionnelles.
+
+## P8.2 — Override typé des PV ennemis Sandbox — 2026-10-17
+
+- [x] `sandbox_preset_smoke.gd` vérifie l’acceptation de `enemy_hp` valide et le rejet des autres clés d’override et d’un multiplicateur au-delà de 1000.
+- [x] `sandbox_lab_smoke.gd` vérifie que le preset charge le multiplicateur 2, que le contrôle expose cette valeur, et que Spawn produit un Chaser à 40 PV via la commande native (20 PV de base ×2).
+- [x] Le contrôle LIVE est intégré aux presets sauvegardés/partagés; il ne retouche pas les entités existantes et n’est pas transmis à Survival normal. Les bornes sont des limites techniques du Sandbox, pas des valeurs de balance validées.

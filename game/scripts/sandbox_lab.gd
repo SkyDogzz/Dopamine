@@ -35,6 +35,7 @@ const SPAWN_BATCH_SIZE := 10
 @onready var _equipment_value: SpinBox = $Root/Body/Side/Sections/VisualBuild/EquipmentRow/EquipmentValue
 @onready var _live_stat_select: OptionButton = $Root/Body/Side/Sections/LiveOverride/StatSelect
 @onready var _live_stat_value: SpinBox = $Root/Body/Side/Sections/LiveOverride/StatValue
+@onready var _enemy_hp_multiplier: SpinBox = $Root/Body/Side/Sections/EnemyConfig/EnemyHpMultiplier
 @onready var _capture_snapshot_button: Button = $Root/Body/Left/SnapshotControls/CaptureButton
 @onready var _restore_snapshot_button: Button = $Root/Body/Left/SnapshotControls/RestoreButton
 
@@ -77,6 +78,7 @@ func _ready() -> void:
 	$Root/Body/Side/Sections/VisualBuild/ApplyBuildButton.pressed.connect(_apply_visual_build)
 	$Root/Body/Side/Sections/VisualBuild/ImportProfileButton.pressed.connect(_import_normal_profile)
 	$Root/Body/Side/Sections/LiveOverride/ApplyStat.pressed.connect(_apply_live_stat_override)
+	_enemy_hp_multiplier.value_changed.connect(_set_enemy_hp_override)
 	_populate_visual_build_options()
 	for enemy_id in ["chaser", "sprinter", "tank", "shooter", "buffer", "exploder", "shielder", "summoner", "elite"]:
 		_enemy_select.add_item(enemy_id.to_upper())
@@ -90,6 +92,7 @@ func _ready() -> void:
 	if not started.get("ok", false):
 		_set_status("LAB INIT FAILED: %s" % str(started.get("error", "unknown")), true)
 		return
+	_enemy_hp_multiplier.value = float(context.active_preset["overrides"].get("enemy_hp", 1.0))
 	_pause_button.grab_focus()
 	_refresh()
 
@@ -289,8 +292,14 @@ func _spawn_enemies() -> void:
 		_set_status("ENTITY LIMIT %d · REMOVE ENTITIES BEFORE SPAWNING" % MAX_SIMULATION_ENTITIES, true)
 		return
 	var enemy_id := str(_enemy_select.get_item_metadata(_enemy_select.selected))
-	var sequence: int = context.simulation.spawn_enemy(enemy_id, SPAWN_BATCH_SIZE, Vector2(120.0, 0.0), Vector2.ZERO)
+	var sequence: int = context.simulation.spawn_enemy(enemy_id, SPAWN_BATCH_SIZE,
+		Vector2(120.0, 0.0), Vector2.ZERO, float(_enemy_hp_multiplier.value))
 	_set_status("SPAWN QUEUED" if sequence > 0 else "SPAWN REJECTED", sequence <= 0)
+
+func _set_enemy_hp_override(value: float) -> void:
+	if context == null or context.active_preset.is_empty():
+		return
+	context.active_preset["overrides"]["enemy_hp"] = value
 
 func _can_spawn_batch(current_count: int) -> bool:
 	return current_count >= 0 and current_count + SPAWN_BATCH_SIZE <= MAX_SIMULATION_ENTITIES
@@ -334,6 +343,7 @@ func _restore_snapshot() -> void:
 	if not context.restore_snapshot(context.latest_snapshot):
 		_set_status("SNAPSHOT RESTORE REJECTED", true)
 		return
+	_enemy_hp_multiplier.value = float(context.active_preset["overrides"].get("enemy_hp", 1.0))
 	var stat_id := str(_live_stat_select.get_item_metadata(_live_stat_select.selected))
 	_live_stat_value.value = float(context.live_stat_overrides.get(stat_id, 0.0))
 	_refresh()
@@ -483,6 +493,7 @@ func _preset_from_editor() -> Dictionary:
 	preset["preset_id"] = _preset_id.text.strip_edges()
 	preset["name"] = _preset_id.text.strip_edges()
 	preset["initial_build"] = parser.data
+	preset["overrides"]["enemy_hp"] = _enemy_hp_multiplier.value
 	var checked: Dictionary = preset_service.validate_preset(preset)
 	var build = load("res://scripts/sandbox_build.gd").new()
 	var build_result: Dictionary = build.load_build(parser.data)
@@ -503,6 +514,7 @@ func _apply_preset(preset: Dictionary) -> void:
 		return
 	_preset_id.text = str(preset["preset_id"])
 	_build_json.text = JSON.stringify(preset["initial_build"], "  ")
+	_enemy_hp_multiplier.value = float(preset["overrides"].get("enemy_hp", 1.0))
 	context.live_stat_overrides.clear()
 	_restore_snapshot_button.disabled = true
 	_live_stat_value.value = 0.0

@@ -338,6 +338,25 @@ layout_mode = 2
 focus_mode = 2
 text = "APPLY BUILD · PAUSE / REBUILD"
 
+[node name="EnemyConfig" type="VBoxContainer" parent="Root/Body/Side/Sections"]
+layout_mode = 2
+theme_override_constants/separation = 2
+
+[node name="EnemyHpTitle" type="Label" parent="Root/Body/Side/Sections/EnemyConfig"]
+layout_mode = 2
+theme_type_variation = "PixelHeading"
+theme_override_font_sizes/font_size = 8
+text = "ENEMY HP · LIVE FOR NEW SPAWNS"
+
+[node name="EnemyHpMultiplier" type="SpinBox" parent="Root/Body/Side/Sections/EnemyConfig"]
+custom_minimum_size = Vector2(0, 20)
+layout_mode = 2
+focus_mode = 2
+min_value = 0.1
+max_value = 1000.0
+value = 1.0
+step = 0.1
+
 [node name="LiveOverride" type="VBoxContainer" parent="Root/Body/Side/Sections"]
 layout_mode = 2
 theme_override_constants/separation = 2

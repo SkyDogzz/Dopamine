@@ -65,12 +65,29 @@ func _run() -> void:
 	var live_stat: OptionButton = lab.get_node_or_null("Root/Body/Side/Sections/LiveOverride/StatSelect")
 	var live_value: SpinBox = lab.get_node_or_null("Root/Body/Side/Sections/LiveOverride/StatValue")
 	var apply_live_stat: Button = lab.get_node_or_null("Root/Body/Side/Sections/LiveOverride/ApplyStat")
+	var enemy_hp_override: SpinBox = lab.get_node_or_null("Root/Body/Side/Sections/EnemyConfig/EnemyHpMultiplier")
 	if weapon_select == null or weapon_level == null or add_weapon == null or relic_select == null or \
 			relic_level == null or add_relic == null or stat_select == null or stat_value == null or \
 			add_stat == null or apply_build == null or import_profile == null or equipment_slot == null or equipment_stat == null or \
 			equipment_value == null or add_equipment == null or live_stat == null or live_value == null or \
-			apply_live_stat == null:
-		_fail("Sandbox Lab should provide profile import, visual build controls and live stat overrides")
+			apply_live_stat == null or enemy_hp_override == null:
+		_fail("Sandbox Lab should provide profile import, visual build controls and typed enemy HP configuration")
+		return
+	if not is_equal_approx(float(enemy_hp_override.value), 1.0):
+		_fail("A preset without an enemy HP override should use the neutral multiplier")
+		return
+	enemy_hp_override.value = 2.0
+	if not is_equal_approx(float(lab.context.active_preset["overrides"]["enemy_hp"]), 2.0):
+		_fail("Changing the LIVE Lab control should update the active preset")
+		return
+	var previous_spawn_sequence := int(lab.context.simulation.snapshot()["last_sequence"])
+	lab._spawn_enemies()
+	while int(lab.context.simulation.snapshot()["last_sequence"]) <= previous_spawn_sequence:
+		await process_frame
+	var spawned_enemy_state: Dictionary = lab.context.simulation.snapshot()
+	if spawned_enemy_state["entities"].size() != 10 or \
+			float(spawned_enemy_state["entities"][0]["components"]["Health"]["maximum"]) != 40.0:
+		_fail("The configured enemy HP multiplier should reach each Lab spawn command")
 		return
 	weapon_select.select(_option_index_for(weapon_select, "minigun"))
 	weapon_level.value = 2
@@ -291,7 +308,9 @@ func _run() -> void:
 	lab.preset_store = load("res://scripts/sandbox_preset_store.gd").new(directory, lab.preset_service)
 	lab.get_node("Root/Body/Side/Sections/PresetId").text = "smoke_build"
 	lab._save_preset()
-	if not lab.preset_store.load_preset("smoke_build").get("ok", false):
+	var saved_preset: Dictionary = lab.preset_store.load_preset("smoke_build")
+	if not saved_preset.get("ok", false) or \
+			float(saved_preset["preset"]["overrides"].get("enemy_hp", 0.0)) != 2.0:
 		_fail("The Lab UI should save a valid preset in the isolated Sandbox store")
 		return
 	var imported_path := directory.path_join("imported.json")

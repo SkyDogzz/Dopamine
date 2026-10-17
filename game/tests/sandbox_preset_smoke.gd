@@ -71,19 +71,30 @@ func _run() -> void:
 		_fail("An oversized preset JSON payload must be rejected")
 		return
 	var too_many_overrides := preset.duplicate(true)
+	too_many_overrides["overrides"].clear()
 	for index in range(257):
-		too_many_overrides["overrides"]["setting_%d" % index] = index
+		too_many_overrides["flags"]["flag_%d" % index] = index
 	if preset_service.validate_preset(too_many_overrides).get("ok", false):
-		_fail("Preset override collections must reject excessive entries")
+		_fail("Preset flag collections must reject excessive entries")
 		return
 	var too_deep := preset.duplicate(true)
-	var nested: Dictionary = too_deep["overrides"]
+	var nested: Dictionary = too_deep["flags"]
 	for _index in range(18):
 		var child := {}
 		nested["nested"] = child
 		nested = child
 	if preset_service.validate_preset(too_deep).get("ok", false):
 		_fail("Preset payloads must reject excessive nesting")
+		return
+	var unsupported_override := preset.duplicate(true)
+	unsupported_override["overrides"]["unknown_setting"] = 2.0
+	if preset_service.validate_preset(unsupported_override).get("ok", false):
+		_fail("Presets must reject configuration overrides without a runtime contract")
+		return
+	var out_of_range_override := preset.duplicate(true)
+	out_of_range_override["overrides"]["enemy_hp"] = 1000.1
+	if preset_service.validate_preset(out_of_range_override).get("ok", false):
+		_fail("Enemy HP multiplier should respect its hard upper bound")
 		return
 	var context = load("res://scripts/sandbox_lab_context.gd").new(preset_service)
 	root.add_child(context)
