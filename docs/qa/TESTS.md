@@ -1,5 +1,11 @@
 # Tests d'acceptation et validation
 
+## P9.8 — Staging Linux Release depuis `8d91079` — 2026-10-17
+
+- [x] `tools/package_linux_staging.sh` reconstruit un `git archive` propre du commit `8d91079560020a140b3a48cb6189fb7da909ec91` avec CMake 3.31.12, GCC 14.2.0, Godot 4.7.2 et `godot-cpp` `b8530af7546a3fcae80cef2477526569fd42ffc2`. Build Release vierge, import, export Linux/X11 filtré, extraction, notices/licences, absence des ressources de développement, `ldd` sans dépendance manquante et lancement headless avec la GDExtension Release adjacente passent.
+- [x] Archive non distribuable `DopamineSurvivor-linux-8d91079-staging.tar.gz`, 31 988 718 octets; SHA-256 `d6430957e88c72e3b89f87802ac87836341eb65fdad225a9bbdeaf7123888faa`; manifeste `.sha256` généré à côté dans `build/linux/staging/`.
+- [i] Cette reconstruction inclut le correctif des compteurs Endless à la continuation; elle valide le staging Linux sur le même hôte virtualisé, pas une installation machine distincte, le GPU physique, les sauvegardes en usage, les plateformes autres que Linux ni une version distribuable.
+
 ## P7B.1 — Arbitrage de l’état en continuation Endless — 2026-10-17
 
 - [x] Décision utilisateur **[VALIDÉE]** : la continuation après victoire conserve HP, build et niveaux de run; elle crédite Survival avant de créer l’ID Endless.

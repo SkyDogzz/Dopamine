@@ -743,6 +743,7 @@ P1 livre le Sandbox développeur et ne remplace pas cette feature produit.
   - [x] Comparer l’inventaire Godot au template Linux release 4.7.2 effectivement utilisé; autres templates et inclusion des notices dans les paquets restent à vérifier.
   - [x] Vérifier un paquet Linux staging non versionné avec notices, extraction propre et démarrage headless; ce n’est pas l’artefact final. Détails dans `docs/qa/TESTS.md`.
   - [x] Reconstruire et vérifier un nouveau staging depuis le commit `86351b6` avec CMake vierge : Release, archive filtrée, notices/licences, dépendances, SHA-256 et démarrage extrait passent. Ce paquet reste non versionné et non distribuable.
+  - [x] Refaire le staging depuis `8d91079` après le correctif des compteurs Endless; build Release vierge, inventaire filtré, extraction, dépendances et démarrage vérifiés. Archive/SHA-256 et limites dans `docs/qa/TESTS.md`; toujours non distribuable.
   - [ ] Vérifier contenu, dépendances, licences, sauvegarde et notes de version.
   - [ ] Préparer publication après validation des critères, sans la confondre avec un build local.
 
