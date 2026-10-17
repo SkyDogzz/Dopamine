@@ -40,6 +40,10 @@
 
 - [x] Décision utilisateur **[VALIDÉE, réponse A]** : conserver les budgets de prototype **[PROPOSÉS]**, comparer les profils débutant/intermédiaire/complet, et ne revoir l’allocation que si un écart est mesuré. Les surveys existants sont exploratoires et ne valent pas validation finale.
 
+## P5.1.13 — Pickups futurs de Magnet Heart — 2026-10-17
+
+- [x] Décision utilisateur **[VALIDÉE, réponse A]** : déterminer l’interaction avec Magnet Heart au moment de spécifier chaque pickup futur. Cela ne définit ni ne crée des pickups; XP reste le seul pickup actuel affecté.
+
 ## P7B.1 — Compteurs du segment de continuation — 2026-10-17
 
 - [x] `endless_standard_session_smoke.gd` vérifie qu’après la continuation HP/build/niveaux persistent, tandis que durée affichée/enregistrée, kills et compteurs additifs d’achievements repartent pour l’ID Endless. L’horloge interne reste monotone pour conserver les expirations et le rythme de simulation.

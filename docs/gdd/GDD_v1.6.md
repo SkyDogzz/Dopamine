@@ -474,12 +474,12 @@ Le prototype applique le « Homing léger » de Magnetic Coil au projectile Sawb
 - Aucune évolution d'arme associée.
 - Occupe un slot de relique normal.
 - Augmente la distance de ramassage des orbes d'XP **[VALIDÉ — 2026-10-17]**.
-- Attire les orbes d’XP. L’attraction des soins, ressources, monnaies et bonus temporaires reste **[OUVERTE]** jusqu’à la définition de ces pickups.
+- Attire les orbes d’XP. **[VALIDÉ — EXTENSION DU 2026-10-17, réponse A]** Décider séparément l’interaction de Magnet Heart lors de la définition de chaque nouveau pickup (soin, ressource, monnaie ou bonus temporaire). Aucun de ces effets n’est présumé avant ce contrat.
 - **N'attire jamais les coffres.**
 - Les coffres restent au sol et exigent proximité ou interaction du joueur.
 - Cette exclusion s'applique aussi aux effets de ramassage provenant des équipements, du skill tree et des autres reliques.
 
-**[OUVERT]** Le GDD valide l'attraction des soins, ressources, monnaies et bonus temporaires lorsqu'ils existent, mais ne définit pas ces pickups (effet, valeur ou apparition). Ne pas créer ces objets par déduction de la règle Magnet Heart ; définir chaque pickup avant de l'ajouter au jeu.
+Les soins, ressources, monnaies et bonus temporaires n’ont pas de contrat de pickup; ils ne sont pas inclus ni créés par déduction de Magnet Heart. Toute nouvelle famille reste **[OUVERTE]** quant à son effet, sa valeur et son apparition; décider aussi de son interaction avec Magnet Heart dans son propre contrat avant implémentation.
 
 Progression **[VALIDÉE — 2026-10-17]** :
 
