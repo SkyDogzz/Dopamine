@@ -1,6 +1,7 @@
 extends SceneTree
 
 const CRITICAL_IMPACT_CAPTURE := "/tmp/dopamine-critical-hit-impact.png"
+const DAMAGE_NUMBER_CAPTURE := "/tmp/dopamine-aggregated-damage-number.png"
 const STATUS_RING_ANNULI := {
 	"burn": Vector2(12.0, 18.0), "poison": Vector2(12.0, 18.0), "bleed": Vector2(12.0, 18.0),
 	"chill": Vector2(8.0, 15.0), "shock": Vector2(16.0, 22.0),
@@ -43,6 +44,20 @@ func _run() -> void:
 	if projectile_sequence <= 0 or not await _wait_for_critical_impact(session):
 		_fail("A native critical projectile should produce a critical weapon impact")
 		return
+	if session._damage_numbers.size() != 1 or not bool(session._damage_numbers[0]["critical"]):
+		_fail("A native critical damage event should produce a highlighted damage number")
+		return
+	session._damage_numbers.clear()
+	var aggregation_time: float = session._last_simulation_time
+	session._add_damage_number(4.0, target_position, "target", false, aggregation_time)
+	session._add_damage_number(6.0, target_position, "target", false, aggregation_time + 0.05)
+	session._add_damage_number(2.0, target_position, "target", true, aggregation_time + 0.06)
+	if session._damage_numbers.size() != 2 or \
+		not is_equal_approx(float(session._damage_numbers[0]["amount"]), 10.0) or \
+		not bool(session._damage_numbers[1]["critical"]):
+		_fail("Rapid hits on one target should aggregate while preserving a separate critical callout")
+		return
+	session._damage_numbers.clear()
 	var camera := session.player.get_node("Camera2D") as Camera2D
 	if session._camera_shake_strength <= 0.0:
 		_fail("A native direct damage event should trigger visual camera shake")
@@ -53,7 +68,17 @@ func _run() -> void:
 		return
 	await create_timer(0.15).timeout
 	session._weapon_impacts.clear()
+	session._damage_numbers.clear()
+	session._add_damage_number(15.0, target_position, "pause", false, session._last_simulation_time)
 	session.simulation.pause()
+	var paused_time: float = float(session.simulation.snapshot()["simulation_time"])
+	var number_lifetime: float = float(session._damage_numbers[0]["expires_at"]) - session._last_simulation_time
+	await create_timer(number_lifetime + 0.1).timeout
+	if session._damage_numbers.is_empty() or \
+		float(session.simulation.snapshot()["simulation_time"]) != paused_time:
+		_fail("Damage numbers should remain visible while simulation time is paused")
+		return
+	session._damage_numbers.clear()
 	session.set_process(false)
 	await process_frame
 	var shake_state_before: Dictionary = session.simulation.snapshot()
@@ -81,6 +106,8 @@ func _run() -> void:
 		_fail("Screen shake must not change combat entities or simulation sequence")
 		return
 	var state_before: Dictionary = session.simulation.snapshot()
+	if "--capture" in OS.get_cmdline_user_args() and not await _verify_damage_number_capture(session):
+		return
 	if "--capture" in OS.get_cmdline_user_args() and not await _verify_impact_capture(session):
 		return
 	if "--capture" in OS.get_cmdline_user_args() and not await _verify_status_capture(session):
@@ -158,6 +185,37 @@ func _verify_impact_capture(session: Node2D) -> bool:
 		_fail("Could not save the critical impact visual capture")
 		return false
 	session._weapon_impacts.clear()
+	return true
+
+func _verify_damage_number_capture(session: Node2D) -> bool:
+	var position := Vector2(180.0, 90.0)
+	var screen_position: Vector2 = session.get_global_transform_with_canvas() * position
+	session._damage_numbers.clear()
+	session.queue_redraw()
+	await process_frame
+	await RenderingServer.frame_post_draw
+	var baseline: Image = root.get_texture().get_image()
+	session._add_damage_number(73.0, position, "capture", false, session._last_simulation_time)
+	session.queue_redraw()
+	await process_frame
+	await RenderingServer.frame_post_draw
+	var normal_render: Image = root.get_texture().get_image()
+	var normal_pixels := _count_changed_pixels(baseline, normal_render, screen_position)
+	session._damage_numbers.clear()
+	session._add_damage_number(73.0, position, "capture", true, session._last_simulation_time)
+	session.queue_redraw()
+	await process_frame
+	await RenderingServer.frame_post_draw
+	var rendered: Image = root.get_texture().get_image()
+	var changed_pixels := _count_changed_pixels(baseline, rendered, screen_position)
+	if normal_pixels < 8 or changed_pixels <= normal_pixels:
+		_fail("Normal damage numbers should render and critical numbers should have visible emphasis")
+		return false
+	if rendered.save_png(DAMAGE_NUMBER_CAPTURE) != OK:
+		_fail("Could not save the aggregated damage number capture")
+		return false
+	session._damage_numbers.clear()
+	print("Damage number changed pixels: normal=%d critical=%d" % [normal_pixels, changed_pixels])
 	return true
 
 func _count_changed_pixels(baseline: Image, rendered: Image, center: Vector2) -> int:

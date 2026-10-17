@@ -58,6 +58,10 @@ const GRAVITY_COLLAPSE_DAMAGE_MULTIPLIER := 0.5
 const WEAPON_IMPACT_LIFETIME := 0.22
 const MAX_VISIBLE_WEAPON_IMPACTS := 32
 const CRITICAL_HIT_IMPACT_SCALE := 1.45 # [PROPOSÉ] Critical hits use the same weapon sprite at a larger size; no new color mapping.
+const DAMAGE_NUMBER_FONT: FontFile = preload("res://assets/fonts/PressStart2P-Regular.ttf")
+const DAMAGE_NUMBER_LIFETIME := 0.5 # [PROPOSÉ] Active simulation seconds.
+const DAMAGE_NUMBER_AGGREGATION_WINDOW := 0.12 # [PROPOSÉ] Merge repeated hits on one target.
+const MAX_VISIBLE_DAMAGE_NUMBERS := 48 # [PROPOSÉ] Presentation-only crowding limit.
 const STATUS_EFFECT_COLORS := {
 	"burn": Color("#FFD447"), "poison": Color("#48E69B"), "bleed": Color("#FF7181"),
 }
@@ -418,6 +422,7 @@ var _toxic_ignition_next_at: Dictionary = {}
 var _overcharge_shock_expires_at: Dictionary = {}
 var _overcharge_next_at: Dictionary = {}
 var _weapon_impacts: Array[Dictionary] = []
+var _damage_numbers: Array[Dictionary] = []
 var _enemy_death_pixels: Array[Dictionary] = []
 var _starfall_fragments_spawned: Dictionary = {}
 var _entities: Array = []
@@ -863,6 +868,7 @@ func _process(_delta: float) -> void:
 		_lightning_arcs[index]["remaining"] = float(_lightning_arcs[index]["remaining"]) - elapsed_active_time
 		if float(_lightning_arcs[index]["remaining"]) <= 0.0:
 			_lightning_arcs.remove_at(index)
+	_prune_damage_numbers(current_simulation_time)
 	if elapsed_active_time > 0.0 and not run_over:
 		if player_shield > 0.0 and player_active_time >= _shield_expires_at:
 			player_shield = 0.0
@@ -889,6 +895,10 @@ func _process(_delta: float) -> void:
 					var target_type := str(event.get("target_type", ""))
 					_start_screen_shake(float(event["amount"]))
 					Sfx.play("hit_heavy" if target_type in ["mid_boss", "final_boss"] else "hit_light")
+				if str(event.get("target_type", "")) not in ["player", "player_projectile"]:
+					_add_damage_number(float(event["amount"]),
+							Vector2(float(event["position"]["x"]), float(event["position"]["y"])), target_key,
+							bool(event.get("critical_hit", false)), current_simulation_time)
 				_advance_lightning_chain(event, state["entities"], current_simulation_time)
 				_try_thermal_shock(event, state["entities"], current_simulation_time)
 				_try_toxic_ignition(event, current_simulation_time)
@@ -3793,6 +3803,46 @@ func _draw() -> void:
 			var particle_color: Color = pixel["color"]
 			particle_color.a *= fade
 			draw_rect(Rect2(pixel["position"] - Vector2.ONE * pixel_size * 0.5, Vector2.ONE * pixel_size), particle_color)
+	for damage_number in _damage_numbers:
+		var fade := clampf((float(damage_number["expires_at"]) - _last_simulation_time) / DAMAGE_NUMBER_LIFETIME, 0.0, 1.0)
+		var age := DAMAGE_NUMBER_LIFETIME * (1.0 - fade)
+		var amount := str(roundi(float(damage_number["amount"])))
+		var critical := bool(damage_number["critical"])
+		var text := "CRIT %s" % amount if critical else amount
+		var color := Color("#FFD447") if critical else Color("#F6F7FF")
+		color.a = fade
+		var text_size := DAMAGE_NUMBER_FONT.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, 8)
+		var position: Vector2 = damage_number["position"] + Vector2(-text_size.x * 0.5, -18.0 - age * 12.0)
+		draw_string_outline(DAMAGE_NUMBER_FONT, position.round(), text, HORIZONTAL_ALIGNMENT_LEFT, -1, 8, 2, Color(0.02, 0.03, 0.08, fade))
+		draw_string(DAMAGE_NUMBER_FONT, position.round(), text, HORIZONTAL_ALIGNMENT_LEFT, -1, 8, color)
+
+func _add_damage_number(amount: float, position: Vector2, target_id: String, critical: bool,
+		simulation_time: float) -> void:
+	if amount <= 0.0:
+		return
+	for index in range(_damage_numbers.size() - 1, -1, -1):
+		var number: Dictionary = _damage_numbers[index]
+		if str(number["target_id"]) != target_id or bool(number["critical"]) != critical or \
+			simulation_time - float(number["last_hit_at"]) > DAMAGE_NUMBER_AGGREGATION_WINDOW:
+			continue
+		number["amount"] = float(number["amount"]) + amount
+		number["position"] = position
+		number["last_hit_at"] = simulation_time
+		number["expires_at"] = simulation_time + DAMAGE_NUMBER_LIFETIME
+		queue_redraw()
+		return
+	if _damage_numbers.size() >= MAX_VISIBLE_DAMAGE_NUMBERS:
+		_damage_numbers.pop_front()
+	_damage_numbers.append({
+		"amount": amount, "position": position, "target_id": target_id, "critical": critical,
+		"last_hit_at": simulation_time, "expires_at": simulation_time + DAMAGE_NUMBER_LIFETIME,
+	})
+	queue_redraw()
+
+func _prune_damage_numbers(simulation_time: float) -> void:
+	for index in range(_damage_numbers.size() - 1, -1, -1):
+		if simulation_time >= float(_damage_numbers[index]["expires_at"]):
+			_damage_numbers.remove_at(index)
 
 func _add_enemy_death_pixels(enemy_type: String, position: Vector2) -> void:
 	if _visual_effects_reduced() or not ENEMY_DEATH_TYPES.has(enemy_type):
