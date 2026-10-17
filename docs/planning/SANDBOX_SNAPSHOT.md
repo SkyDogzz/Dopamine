@@ -1,6 +1,6 @@
 # Contrat des snapshots Sandbox Lab
 
-Statut : inventaire technique **[PROPOSÉ]**, sans changement du format de preset ni des sauvegardes normales.
+Statut : snapshot de session Lab en mémoire, version 1. Il ne change ni le format de preset ni les sauvegardes normales.
 
 ## Frontière
 
@@ -12,19 +12,19 @@ Le snapshot doit être validé complètement avant restauration. Une version inc
 
 | Groupe | Données minimales | État du code |
 |---|---|---|
-| Format | version explicite du snapshot | absent du contrat public Lab |
-| Simulation native | entités/slots et générations, positions, vitesses, PV, projectiles, DoT, Chill, champs persistants, temps simulé et séquence d’événements | `SimulationCoreState` capture/restaure ces données en C++; l’API GDExtension ne l’expose pas |
-| Worker | pause, vitesse, steering, file de commandes, prochaine séquence, événements en attente, compteurs et logs | `SimulationWorkerState` capture/restaure ces données en C++; capture refusée si le worker ne peut pas répondre; restauration exige un worker arrêté |
-| Run Godot | temps actif, PV, RNG seed/état, horloges d’armes, cibles verrouillées, états de chaînes/réactions et timers des attaques ennemies | conservé dans `SurvivalSession`, sans API de capture/restauration |
-| Build et configuration Lab | `SandboxBuild`, équipement de test, statistiques personnalisées, seed et overrides acceptés | build/preset disponibles séparément dans `SandboxLabContext`; pas de capture atomique avec la session |
+| Format | version explicite du snapshot | version 1, strictement validée |
+| Simulation native | entités/slots et générations, positions, vitesses, PV, projectiles, DoT, Chill, champs persistants, temps simulé et séquence d’événements | checkpoint opaque natif format 17, validé avant restauration |
+| Worker | pause, vitesse, steering, file de commandes, prochaine séquence, événements en attente, compteurs et logs | inclus dans le checkpoint natif; la capture passe par la barrière worker |
+| Run Godot | variables primitives/tableaux/dictionnaires prises en charge, RNGs, position/vitesse joueur, cible, vague, loadout et timers de coffres | `SurvivalSession.capture_sandbox_snapshot_state()`; uniquement en pause et hors modal/fin de run |
+| Build et configuration Lab | `SandboxBuild`, preset, seed, God Mode et overrides LIVE | capturés dans `SandboxLabContext`; validation du preset/build avant toute mutation |
 
 Les éléments de rendu dérivés (batches de sprites, particules/transitions visuelles) sont reconstruits depuis l’état restauré et ne font pas partie de la source de vérité. Les opérations UI en cours ne sont pas sérialisées; la capture et la restauration s’effectuent en pause.
 
 ## Couverture existante et écart
 
-`simulation_core_test` et `simulation_worker_test` vérifient les copies natives, leur restauration, le rejet d’une version de worker incompatible, ainsi que la conservation et la validation des commandes en attente. `CombatSimulation.capture_state()` et `restore_state()` exposent maintenant cette couche native à Godot : le smoke `sandbox_snapshot_smoke.gd` capture un ennemi, le supprime, restaure son état et vérifie qu’une version incompatible est refusée sans altérer la simulation.
+`simulation_core_test` et `simulation_worker_test` vérifient les copies natives, leur restauration, le rejet d’une version de worker incompatible, ainsi que la conservation et la validation des commandes en attente. `CombatSimulation.capture_state()` et `restore_state()` exposent cette couche native à Godot. Le smoke `sandbox_snapshot_smoke.gd` couvre aussi la capture et la reprise d’une session Lab complète : build, RNG, horloges, position joueur, état natif et overrides LIVE. Il vérifie le rejet d’une version incompatible et d’un build dépassant les slots, sans altérer la session.
 
-Cette API native est un checkpoint opaque en mémoire, format 17; elle ne fournit pas un format exportable. La tranche P8.6 reste ouverte jusqu’à son intégration atomique avec l’état Godot (RNG, horloges, build et configuration), le Lab et son test de reprise. Les commandes en attente sont testées dans `simulation_worker_test`; le smoke Godot couvre actuellement la reprise de l’état natif simple, pas l’orchestration d’une file de commandes depuis l’interface.
+Le Lab expose `CAPTURE SNAPSHOT` et `RESTORE SNAPSHOT`; un seul checkpoint est conservé en mémoire jusqu’au changement de preset ou à la fermeture du Lab. Les actions sont désactivées hors pause et refusées en présence d’un choix modal ou d’un état terminal. Le checkpoint n’est ni exportable ni persistant. Les saves normales, la progression et les récompenses ne sont jamais capturées ou modifiées. Les commandes en attente sont couvertes par `simulation_worker_test`; le bouton de capture s’appuie sur la barrière native.
 
 La reprise déterministe est limitée à l’état capturé : elle ne couvre ni le rendu dérivé, ni l’audio, ni les délais muraux du worker; elle ne promet pas une synchronisation identique des frames entre matériels. Les opérations de gameplay consomment le RNG Godot seedé du Lab; la restauration complète doit remettre son état et l’horloge active en place avec la simulation.
 

@@ -111,7 +111,7 @@ func _run() -> void:
 		_fail("Live max HP should update the player's health ceiling immediately")
 		return
 	await lab._apply_visual_build()
-	if not lab._live_stat_overrides.is_empty() or \
+	if not lab.context.live_stat_overrides.is_empty() or \
 			not is_equal_approx(lab.context.session._critical_chance(), 0.0) or \
 			not is_equal_approx(lab.context.session._persistent_damage_multiplier(), 1.18125) or \
 			lab.context.session.player_max_hp != 110.0:

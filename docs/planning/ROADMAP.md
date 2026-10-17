@@ -632,7 +632,8 @@ P1 livre le Sandbox développeur et ne remplace pas cette feature produit.
   - [x] Inventorier l’état minimal à capturer, y compris RNG, horloges, queues et build; contrat et lacunes actuelles consignés dans [`SANDBOX_SNAPSHOT.md`](SANDBOX_SNAPSHOT.md).
   - [x] Exposer le checkpoint natif et capturer/restaurer sans perte une scène simple; `sandbox_snapshot_smoke.gd` vérifie un ennemi et l’état pause.
   - [x] Vérifier le rejet de version incompatible par l’API Godot, ainsi que commandes en attente et séquences par `simulation_worker_test`; l’intégration Godot→file de commandes reste à couvrir.
-  - [x] Documenter format opaque en mémoire, état hors worker et limites du déterminisme dans `SANDBOX_SNAPSHOT.md`; intégration du RNG/build/horloges au Lab reste requise.
+  - [x] Documenter format opaque en mémoire, état hors worker et limites du déterminisme dans `SANDBOX_SNAPSHOT.md`; le Lab capture/restaure maintenant en mémoire l’état natif, la session Godot (RNG, horloges, joueur, vague), le build et les overrides LIVE.
+  - [x] Ajouter `CAPTURE SNAPSHOT` / `RESTORE SNAPSHOT`, disponibles en pause; vérifier la reprise complète et le rejet sans mutation d’une version inconnue ou d’un build dépassant les slots.
 - [ ] **P8.7 — Limites et sécurité**
   - [ ] Mesurer les ressources d’une commande extrême.
   - [ ] Ajouter avertissement puis hard cap pour chaque ressource retenue.

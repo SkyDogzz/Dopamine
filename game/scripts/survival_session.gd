@@ -100,6 +100,15 @@ const DIFFICULTY_SCRIPT := preload("res://scripts/survival_difficulty.gd")
 const WAVE_HP_GROWTH := 1.12
 const WAVE_HP_CAP := 12.0
 const MAX_SANDBOX_RNG_LOG_ENTRIES := 256
+const SANDBOX_SNAPSHOT_VALUE_TYPES := [
+	TYPE_NIL, TYPE_BOOL, TYPE_INT, TYPE_FLOAT, TYPE_STRING, TYPE_STRING_NAME,
+	TYPE_VECTOR2, TYPE_VECTOR2I, TYPE_RECT2, TYPE_RECT2I, TYPE_VECTOR3, TYPE_VECTOR3I,
+	TYPE_VECTOR4, TYPE_VECTOR4I, TYPE_COLOR, TYPE_ARRAY, TYPE_DICTIONARY,
+	TYPE_PACKED_BYTE_ARRAY, TYPE_PACKED_INT32_ARRAY, TYPE_PACKED_INT64_ARRAY,
+	TYPE_PACKED_FLOAT32_ARRAY, TYPE_PACKED_FLOAT64_ARRAY, TYPE_PACKED_STRING_ARRAY,
+	TYPE_PACKED_VECTOR2_ARRAY, TYPE_PACKED_VECTOR3_ARRAY, TYPE_PACKED_COLOR_ARRAY,
+	TYPE_PACKED_VECTOR4_ARRAY,
+]
 
 @export var spawn_initial_enemy: bool = true
 @export var wave_spawning_enabled: bool = true
@@ -3191,6 +3200,150 @@ func _effective_weapon_cooldown(base_cooldown: float) -> float:
 	var speed_multiplier: float = 1.0 + (_equipment_bonus("attack_speed_pct") + loadout.global_relic_bonus("attack_speed_pct") + _xp_run_stat_bonus("attack_speed_pct")) / 100.0
 	var cooldown_multiplier: float = maxf(0.1, 1.0 - (_equipment_bonus("cooldown_reduction_pct") + loadout.global_relic_bonus("cooldown_reduction_pct") + _xp_run_stat_bonus("cooldown_reduction_pct")) / 100.0)
 	return base_cooldown * cooldown_multiplier / speed_multiplier
+
+func capture_sandbox_snapshot_state() -> Dictionary:
+	if not sandbox_diagnostics_enabled or mode_id != "survival" or progression_service != null or \
+			player == null or loadout == null or wave_director == null or _chest_director == null or \
+			_chest_open or _starting_weapon_choice_open or run_over:
+		return {}
+	return {
+		"script_fields": _sandbox_snapshot_script_fields(),
+		"rng_seed": _sandbox_rng.seed,
+		"rng_state": _sandbox_rng.state,
+		"player_position": player.global_position,
+		"player_velocity": player.velocity,
+		"last_target": {
+			"valid": _last_target.is_finite(),
+			"position": _last_target if _last_target.is_finite() else Vector2.ZERO,
+		},
+		"wave_director": {
+			"wave": wave_director.wave,
+			"elapsed_in_wave": wave_director.elapsed_in_wave,
+			"state": wave_director.state,
+			"wave_duration_seconds": wave_director.wave_duration_seconds,
+			"endless_armorless": wave_director.endless_armorless,
+		},
+		"loadout": {
+			"weapon_slot_limit": loadout._weapon_slot_limit,
+			"relic_slot_limit": loadout._relic_slot_limit,
+			"rng_state": loadout._rng.state,
+			"offer_weights": loadout.offer_weights.duplicate(true),
+		},
+		"chest_director": {
+			"last_drop_time": _chest_director._last_drop_time.duplicate(true),
+			"rng_state": _chest_director._rng.state,
+		},
+	}
+
+func can_restore_sandbox_snapshot_state(snapshot: Variant) -> bool:
+	if not snapshot is Dictionary or snapshot.size() != 9 or \
+			not snapshot.has("script_fields") or not snapshot.has("rng_seed") or \
+			not snapshot.has("rng_state") or not snapshot.has("player_position") or \
+			not snapshot.has("player_velocity") or not snapshot.has("last_target") or \
+			not snapshot.has("wave_director") or \
+			not snapshot.has("loadout") or not snapshot.has("chest_director"):
+		return false
+	var fields: Variant = snapshot["script_fields"]
+	var current_fields := _sandbox_snapshot_script_fields()
+	if not fields is Dictionary or fields.size() != current_fields.size():
+		return false
+	for field in current_fields:
+		if not fields.has(field) or typeof(fields[field]) != typeof(current_fields[field]) or \
+				not _sandbox_snapshot_value_supported(fields[field]):
+			return false
+	if typeof(snapshot["rng_seed"]) != TYPE_INT or typeof(snapshot["rng_state"]) != TYPE_INT or \
+			not snapshot["player_position"] is Vector2 or not snapshot["player_position"].is_finite() or \
+			not snapshot["player_velocity"] is Vector2 or not snapshot["player_velocity"].is_finite():
+		return false
+	var last_target: Variant = snapshot["last_target"]
+	if not last_target is Dictionary or last_target.size() != 2 or \
+			typeof(last_target.get("valid", null)) != TYPE_BOOL or \
+			not last_target.get("position", null) is Vector2 or not last_target["position"].is_finite():
+		return false
+	var director: Variant = snapshot["wave_director"]
+	if not director is Dictionary or director.size() != 5 or \
+			typeof(director.get("wave", null)) != TYPE_INT or int(director["wave"]) < 1 or \
+			typeof(director.get("state", null)) != TYPE_INT or int(director["state"]) < 0 or int(director["state"]) > 3 or \
+			typeof(director.get("endless_armorless", null)) != TYPE_BOOL or \
+			typeof(director.get("elapsed_in_wave", null)) not in [TYPE_INT, TYPE_FLOAT] or \
+			typeof(director.get("wave_duration_seconds", null)) not in [TYPE_INT, TYPE_FLOAT] or \
+			not is_finite(float(director["elapsed_in_wave"])) or float(director["elapsed_in_wave"]) < 0.0 or \
+			not is_finite(float(director["wave_duration_seconds"])) or float(director["wave_duration_seconds"]) <= 0.0:
+		return false
+	var loadout_state: Variant = snapshot["loadout"]
+	if not loadout_state is Dictionary or loadout_state.size() != 4 or \
+			typeof(loadout_state.get("weapon_slot_limit", null)) != TYPE_INT or \
+			typeof(loadout_state.get("relic_slot_limit", null)) != TYPE_INT or \
+			typeof(loadout_state.get("rng_state", null)) != TYPE_INT or \
+			not loadout_state.get("offer_weights", null) is Dictionary or \
+			not _sandbox_snapshot_value_supported(loadout_state["offer_weights"]):
+		return false
+	var chest_state: Variant = snapshot["chest_director"]
+	if not chest_state is Dictionary or chest_state.size() != 2 or \
+			typeof(chest_state.get("rng_state", null)) != TYPE_INT or \
+			not chest_state.get("last_drop_time", null) is Dictionary or \
+			not _sandbox_snapshot_value_supported(chest_state["last_drop_time"]):
+		return false
+	return true
+
+func restore_sandbox_snapshot_state(snapshot: Dictionary) -> bool:
+	if not can_restore_sandbox_snapshot_state(snapshot):
+		return false
+	for field in snapshot["script_fields"]:
+		var value: Variant = snapshot["script_fields"][field]
+		set(field, value.duplicate(true) if value is Array or value is Dictionary else value)
+	_sandbox_rng.seed = int(snapshot["rng_seed"])
+	_sandbox_rng.state = int(snapshot["rng_state"])
+	player.global_position = snapshot["player_position"]
+	player.velocity = snapshot["player_velocity"]
+	var last_target: Dictionary = snapshot["last_target"]
+	_last_target = last_target["position"] if bool(last_target["valid"]) else Vector2(INF, INF)
+	var director: Dictionary = snapshot["wave_director"]
+	wave_director.wave = int(director["wave"])
+	wave_director.elapsed_in_wave = float(director["elapsed_in_wave"])
+	wave_director.state = int(director["state"])
+	wave_director.wave_duration_seconds = float(director["wave_duration_seconds"])
+	wave_director.endless_armorless = bool(director["endless_armorless"])
+	var loadout_state: Dictionary = snapshot["loadout"]
+	loadout._weapon_slot_limit = int(loadout_state["weapon_slot_limit"])
+	loadout._relic_slot_limit = int(loadout_state["relic_slot_limit"])
+	loadout._rng.state = int(loadout_state["rng_state"])
+	loadout.offer_weights = loadout_state["offer_weights"].duplicate(true)
+	var chest_state: Dictionary = snapshot["chest_director"]
+	_chest_director._last_drop_time = chest_state["last_drop_time"].duplicate(true)
+	_chest_director._rng.state = int(chest_state["rng_state"])
+	_refresh_player_move_speed()
+	_refresh_hud(simulation.snapshot())
+	return true
+
+func _sandbox_snapshot_script_fields() -> Dictionary:
+	var fields: Dictionary = {}
+	for property in get_property_list():
+		if (int(property.get("usage", 0)) & PROPERTY_USAGE_SCRIPT_VARIABLE) == 0:
+			continue
+		var field := str(property.get("name", ""))
+		var value: Variant = get(field)
+		if _sandbox_snapshot_value_supported(value):
+			fields[field] = value.duplicate(true) if value is Array or value is Dictionary else value
+	return fields
+
+func _sandbox_snapshot_value_supported(value: Variant, depth: int = 0) -> bool:
+	if depth > 32 or typeof(value) not in SANDBOX_SNAPSHOT_VALUE_TYPES:
+		return false
+	if typeof(value) == TYPE_FLOAT and not is_finite(value):
+		return false
+	if value is Vector2 and not value.is_finite():
+		return false
+	if value is Array:
+		for item in value:
+			if not _sandbox_snapshot_value_supported(item, depth + 1):
+				return false
+	elif value is Dictionary:
+		for key in value:
+			if not _sandbox_snapshot_value_supported(key, depth + 1) or \
+					not _sandbox_snapshot_value_supported(value[key], depth + 1):
+				return false
+	return true
 
 func _random_float(purpose: String) -> float:
 	var value: float = _sandbox_rng.randf() if sandbox_diagnostics_enabled else randf()

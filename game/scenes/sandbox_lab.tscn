@@ -107,6 +107,23 @@ layout_mode = 2
 focus_mode = 2
 item_count = 0
 
+[node name="SnapshotControls" type="HBoxContainer" parent="Root/Body/Left"]
+layout_mode = 2
+theme_override_constants/separation = 3
+
+[node name="CaptureButton" type="Button" parent="Root/Body/Left/SnapshotControls"]
+custom_minimum_size = Vector2(132, 20)
+layout_mode = 2
+focus_mode = 2
+text = "CAPTURE SNAPSHOT"
+
+[node name="RestoreButton" type="Button" parent="Root/Body/Left/SnapshotControls"]
+custom_minimum_size = Vector2(132, 20)
+layout_mode = 2
+focus_mode = 2
+disabled = true
+text = "RESTORE SNAPSHOT"
+
 [node name="ProjectileControls" type="HBoxContainer" parent="Root/Body/Left"]
 layout_mode = 2
 

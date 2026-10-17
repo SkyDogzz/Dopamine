@@ -33,6 +33,8 @@ const MAX_DPS_SAMPLES := 4096
 @onready var _equipment_value: SpinBox = $Root/Body/Side/Sections/VisualBuild/EquipmentRow/EquipmentValue
 @onready var _live_stat_select: OptionButton = $Root/Body/Side/Sections/LiveOverride/StatSelect
 @onready var _live_stat_value: SpinBox = $Root/Body/Side/Sections/LiveOverride/StatValue
+@onready var _capture_snapshot_button: Button = $Root/Body/Left/SnapshotControls/CaptureButton
+@onready var _restore_snapshot_button: Button = $Root/Body/Left/SnapshotControls/RestoreButton
 
 var preset_service: RefCounted
 var preset_store: RefCounted
@@ -41,7 +43,6 @@ var _elapsed := 0.0
 var _diagnostic_session_id := 0
 var _damage_totals: Dictionary = {}
 var _dps_samples: Array[Dictionary] = []
-var _live_stat_overrides: Dictionary = {}
 
 func _ready() -> void:
 	preset_service = PRESET_SERVICE_SCRIPT.new()
@@ -53,6 +54,8 @@ func _ready() -> void:
 	$Root/Body/Left/Controls/SpawnButton.pressed.connect(_spawn_enemies)
 	$Root/Body/Left/Controls/KillButton.pressed.connect(_kill_all)
 	$Root/Body/Left/Controls/ResetButton.pressed.connect(_reset)
+	_capture_snapshot_button.pressed.connect(_capture_snapshot)
+	_restore_snapshot_button.pressed.connect(_restore_snapshot)
 	$Root/Body/Left/ProjectileControls/ClearProjectilesButton.pressed.connect(_clear_projectiles)
 	$Root/Body/Left/ProjectileControls/ResetCooldownsButton.pressed.connect(_reset_cooldowns)
 	$Root/Body/Left/WaveControls/JumpWaveButton.pressed.connect(_jump_to_selected_wave)
@@ -211,11 +214,11 @@ func _apply_live_stat_override() -> void:
 		return
 	var new_value: float = _live_stat_value.value
 	var session = context.session
-	var previous_value := float(_live_stat_overrides.get(stat_id, 0.0))
+	var previous_value := float(context.live_stat_overrides.get(stat_id, 0.0))
 	var base_bonus := float(session._cached_equipment_bonuses.get(stat_id, 0.0)) - previous_value
 	var total_bonus := base_bonus + new_value
 	session._cached_equipment_bonuses[stat_id] = total_bonus
-	_live_stat_overrides[stat_id] = new_value
+	context.live_stat_overrides[stat_id] = new_value
 	match stat_id:
 		"damage_pct":
 			session._cached_persistent_damage_multiplier = maxf(0.0, 1.0 + total_bonus / 100.0)
@@ -305,6 +308,27 @@ func _reset_cooldowns() -> void:
 			"_next_void_orb_time", "_next_frost_nova_time"]:
 		context.session.set(field, 0.0)
 	_set_status("WEAPON COOLDOWNS RESET", false)
+
+func _capture_snapshot() -> void:
+	var result: Dictionary = context.capture_snapshot()
+	if not result.get("ok", false):
+		_set_status("SNAPSHOT FAILED: %s" % str(result.get("error", "unknown")).to_upper(), true)
+		return
+	_restore_snapshot_button.disabled = false
+	_set_status("SNAPSHOT CAPTURED · FORMAT %d" % int(result["snapshot"]["format_version"]), false)
+
+func _restore_snapshot() -> void:
+	if context.latest_snapshot.is_empty():
+		_restore_snapshot_button.disabled = true
+		_set_status("NO SNAPSHOT CAPTURED", true)
+		return
+	if not context.restore_snapshot(context.latest_snapshot):
+		_set_status("SNAPSHOT RESTORE REJECTED", true)
+		return
+	var stat_id := str(_live_stat_select.get_item_metadata(_live_stat_select.selected))
+	_live_stat_value.value = float(context.live_stat_overrides.get(stat_id, 0.0))
+	_refresh()
+	_set_status("SNAPSHOT RESTORED", false)
 
 func _jump_to_selected_wave() -> void:
 	_jump_to_wave(int(_wave_spin.value))
@@ -470,7 +494,8 @@ func _apply_preset(preset: Dictionary) -> void:
 		return
 	_preset_id.text = str(preset["preset_id"])
 	_build_json.text = JSON.stringify(preset["initial_build"], "  ")
-	_live_stat_overrides.clear()
+	context.live_stat_overrides.clear()
+	_restore_snapshot_button.disabled = true
 	_live_stat_value.value = 0.0
 	_set_status("PRESET APPLIED TO COMBAT", false)
 
@@ -478,6 +503,13 @@ func _refresh() -> void:
 	var state: Dictionary = context.simulation.snapshot()
 	_view.set_entities(state["entities"])
 	_pause_button.text = "RESUME" if state["paused"] else "PAUSE"
+	_capture_snapshot_button.disabled = not bool(state["paused"])
+	_restore_snapshot_button.disabled = not bool(state["paused"]) or context.latest_snapshot.is_empty()
+	var active_speed: float = float(state.get("speed_multiplier", 1.0))
+	for index in range(_speed_select.item_count):
+		if is_equal_approx(float(_speed_select.get_item_metadata(index)), active_speed):
+			_speed_select.select(index)
+			break
 	var metrics: Dictionary = state["metrics"]
 	_metrics.text = "ENTITIES %d  ·  PROJECTILES %d\nSIM %.2f s  ·  FPS %d" % [
 		int(metrics["entity_count"]), int(metrics["projectile_count"]),

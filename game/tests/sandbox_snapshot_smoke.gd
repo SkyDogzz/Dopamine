@@ -47,6 +47,103 @@ func _run() -> void:
 			float(after_rejection["simulation_time"]) != float(restored["simulation_time"]):
 		_fail("Rejecting an incompatible snapshot must leave the live simulation unchanged")
 		return
+	var lab: Control = load("res://scenes/sandbox_lab.tscn").instantiate()
+	root.add_child(lab)
+	var lab_context: Node = lab.context
+	if lab_context == null or not lab_context.has_method("capture_snapshot") or \
+			not lab_context.has_method("restore_snapshot"):
+		_fail("Sandbox Lab should expose complete isolated session capture and restore")
+		return
+	var deadline := Time.get_ticks_msec() + 3000
+	while lab_context.simulation == null and Time.get_ticks_msec() < deadline:
+		await process_frame
+	if lab_context.simulation == null or lab_context.progression_service != null or \
+			lab_context.normal_save_service != null:
+		_fail("Snapshot fixture should use an initialized isolated Lab")
+		return
+	if not bool(lab_context.simulation.snapshot().get("paused", false)):
+		lab._toggle_pause()
+		if not await _wait_until(func() -> bool:
+			return bool(lab_context.simulation.snapshot().get("paused", false))
+		):
+			_fail("Sandbox snapshot fixture should pause before capture")
+			return
+	var lab_sequence: int = lab_context.simulation.spawn_enemy("tank", 1, Vector2(120, 90), Vector2.ZERO)
+	if lab_sequence <= 0 or not await _wait_for_sequence(lab_context.simulation, lab_sequence):
+		_fail("Sandbox snapshot should begin with a real Lab enemy")
+		return
+	var lab_session: Node2D = lab_context.session
+	lab_session.player_active_time = 12.5
+	lab_session.player_hp = 37.0
+	lab_session._next_weapon_time = 17.0
+	lab_session._sandbox_rng.state = 123456789
+	lab_session.loadout._rng.state = 87654321
+	lab_session._chest_director._rng.state = 123987
+	lab_session.wave_director.wave = 4
+	lab_session.wave_director.elapsed_in_wave = 11.25
+	lab_session.player.global_position = Vector2(222.0, 144.0)
+	lab_context.live_stat_overrides["damage_pct"] = 15.0
+	var capture_button: Button = lab.get_node("Root/Body/Left/SnapshotControls/CaptureButton")
+	var restore_button: Button = lab.get_node("Root/Body/Left/SnapshotControls/RestoreButton")
+	capture_button.pressed.emit()
+	if lab_context.latest_snapshot.is_empty() or restore_button.disabled:
+		_fail("Capture Snapshot should expose a valid in-memory Lab checkpoint (%s)" % \
+			str(lab.get_node("Root/Body/Side/Sections/Status").text))
+		return
+	lab_session.player_active_time = 0.0
+	lab_session.player_hp = 1.0
+	lab_session._next_weapon_time = 0.0
+	lab_session._sandbox_rng.state = 987654321
+	lab_session.loadout._rng.state = 987654321
+	lab_session._chest_director._rng.state = 987654321
+	lab_session.wave_director.wave = 1
+	lab_session.wave_director.elapsed_in_wave = 0.0
+	lab_session.player.global_position = Vector2.ZERO
+	lab_context.live_stat_overrides.clear()
+	var clear_sequence: int = lab_context.simulation.kill_all()
+	if clear_sequence <= 0 or not await _wait_for_sequence(lab_context.simulation, clear_sequence):
+		_fail("Sandbox snapshot fixture should alter native state before restore")
+		return
+	restore_button.pressed.emit()
+	if lab_session.player_active_time != 12.5 or lab_session.player_hp != 37.0 or \
+			lab_session._next_weapon_time != 17.0 or lab_session._sandbox_rng.state != 123456789 or \
+			lab_session.loadout._rng.state != 87654321 or lab_session._chest_director._rng.state != 123987 or \
+			lab_session.wave_director.wave != 4 or lab_session.wave_director.elapsed_in_wave != 11.25 or \
+			lab_session.player.global_position != Vector2(222.0, 144.0) or \
+			lab_context.live_stat_overrides.get("damage_pct") != 15.0 or \
+			lab_context.build.to_dictionary()["weapons"].size() != 1 or \
+			int(lab_context.simulation.snapshot()["metrics"]["entity_count"]) != 1:
+		_fail("Lab restore should recover build, RNG, clocks, player, simulation and UI override state: %s" % str({
+			"time": lab_session.player_active_time, "hp": lab_session.player_hp,
+			"weapon_time": lab_session._next_weapon_time, "rng": lab_session._sandbox_rng.state,
+			"loadout_rng": lab_session.loadout._rng.state, "chest_rng": lab_session._chest_director._rng.state,
+			"wave": lab_session.wave_director.wave, "wave_time": lab_session.wave_director.elapsed_in_wave,
+			"position": lab_session.player.global_position,
+			"overrides": lab_context.live_stat_overrides,
+			"build": lab_context.build.to_dictionary(),
+			"entities": lab_context.simulation.snapshot()["metrics"]["entity_count"],
+			"status": lab.get_node("Root/Body/Side/Sections/Status").text,
+		}))
+		return
+	var corrupt_lab_snapshot: Dictionary = lab_context.latest_snapshot.duplicate(true)
+	corrupt_lab_snapshot["format_version"] = 99
+	if lab_context.restore_snapshot(corrupt_lab_snapshot) or lab_session.player_active_time != 12.5 or \
+			int(lab_context.simulation.snapshot()["metrics"]["entity_count"]) != 1:
+		_fail("Lab must reject incompatible snapshots before changing current state")
+		return
+	var oversized_build_snapshot: Dictionary = lab_context.latest_snapshot.duplicate(true)
+	var oversized_build: Dictionary = oversized_build_snapshot["build"].duplicate(true)
+	oversized_build["weapons"] = []
+	for weapon_id in ["lightning_conductor", "inferno_sprayer", "crimson_daggers", "minigun", "toxic_cloud", "sawblades"]:
+		oversized_build["weapons"].append({"id": weapon_id, "level": 1})
+	oversized_build_snapshot["build"] = oversized_build
+	if lab_context.restore_snapshot(oversized_build_snapshot) or lab_session.player_active_time != 12.5 or \
+			int(lab_context.simulation.snapshot()["metrics"]["entity_count"]) != 1:
+		_fail("Lab must reject snapshots whose build exceeds loadout slots without changing the session")
+		return
+	lab_context.stop()
+	lab.queue_free()
+	await process_frame
 	quit(0)
 
 func _wait_for_sequence(simulation: Object, sequence: int) -> bool:
