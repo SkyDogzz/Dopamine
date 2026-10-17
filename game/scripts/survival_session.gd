@@ -26,7 +26,7 @@ const WEAPON_IMPACT_TYPES := {
 	"meteor_staff": 6, "starfall": 6, "starfall_fragment": 6,
 	"prism_laser": 7, "spectrum_collapse": 7, "prism_secondary": 7,
 	"void_orb": 8, "event_horizon": 8,
-	"frost_nova": 9, "absolute_zero": 9, "thermal_shock": 9,
+	"frost_nova": 9, "absolute_zero": 9, "thermal_shock": 9, "shatter_impact": 9, "shatter_fragment": 9,
 }
 const WEAPON_IMPACT_SOURCE_IDS := {
 	"lightning_conductor": "lightning_conductor", "unique_lightning_burst": "lightning_conductor",
@@ -37,8 +37,11 @@ const WEAPON_IMPACT_SOURCE_IDS := {
 	"meteor_staff": "meteor_staff", "starfall": "meteor_staff", "starfall_fragment": "meteor_staff",
 	"prism_laser": "prism_laser", "spectrum_collapse": "prism_laser", "prism_secondary": "prism_laser",
 	"void_orb": "void_orb", "event_horizon": "void_orb", "frost_nova": "frost_nova",
-	"absolute_zero": "frost_nova", "thermal_shock": "frost_nova",
+	"absolute_zero": "frost_nova", "thermal_shock": "frost_nova", "shatter_impact": "frost_nova",
+	"shatter_fragment": "frost_nova",
 }
+const SHATTER_IMPACT_SOURCE_TYPES := ["crimson_dagger", "bloodstorm_dagger", "minigun", "redline",
+		"sawblades", "razorstorm", "meteor_staff", "starfall", "starfall_fragment", "void_orb", "event_horizon"]
 const WEAPON_IMPACT_LIFETIME := 0.22
 const MAX_VISIBLE_WEAPON_IMPACTS := 32
 const STATUS_EFFECT_COLORS := {
@@ -273,6 +276,13 @@ var sandbox_rng_seed := 0
 @export var frozen_crown_vulnerability_at_level_five: float = 0.25
 @export var absolute_zero_shatter_radius: float = 76.0
 @export_range(0.0, 2.0) var absolute_zero_shatter_damage_multiplier: float = 0.75
+@export_group("Prototype Shatter — proposed tuning")
+@export_range(0.0, 1.0, 0.05) var shatter_fragment_damage_multiplier: float = 0.25
+@export_range(0, 8) var shatter_fragment_count: int = 3
+@export_range(0.0, 240.0, 1.0) var shatter_fragment_radius: float = 96.0
+@export_range(1.0, 2000.0, 1.0) var shatter_fragment_speed: float = 700.0
+@export_range(0.1, 5.0, 0.1) var shatter_fragment_lifetime_seconds: float = 0.75
+@export_range(0.0, 16.0, 0.5) var shatter_fragment_projectile_radius: float = 3.0
 @export_group("Prototype Thermal Shock — proposed tuning")
 @export_range(0.0, 2.0, 0.05) var thermal_shock_damage_multiplier: float = 0.5
 @export_range(0.0, 10.0, 0.1) var thermal_shock_target_cooldown_seconds: float = 1.0
@@ -814,6 +824,7 @@ func _process(_delta: float) -> void:
 				_advance_lightning_chain(event, state["entities"], current_simulation_time)
 				_try_thermal_shock(event, state["entities"], current_simulation_time)
 				_try_toxic_ignition(event, current_simulation_time)
+				_try_shatter(event, state["entities"])
 				_add_weapon_impact(source_type, Vector2(float(event["position"]["x"]), float(event["position"]["y"])),
 						bool(event.get("is_damage_over_time", false)))
 				if source_type == "pandemic_cloud":
@@ -2327,6 +2338,66 @@ func _try_thermal_shock(event: Dictionary, entities: Array, active_time: float) 
 	if sequence > 0:
 		_thermal_shock_next_at[target_key] = active_time + thermal_shock_target_cooldown_seconds
 	return sequence
+
+func _try_shatter(event: Dictionary, entities: Array) -> int:
+	if bool(event.get("is_damage_over_time", false)) or not bool(event.get("target_was_chilled", false)) or \
+			float(event.get("amount", 0.0)) <= 0.0:
+		return 0
+	if not SHATTER_IMPACT_SOURCE_TYPES.has(str(event.get("source_type", ""))):
+		return 0
+	var reaction_budget := int(event.get("reaction_budget", 1))
+	if reaction_budget <= 0:
+		return 0
+	var target_id: Dictionary = event.get("target", {})
+	var position: Dictionary = event.get("position", {})
+	if target_id.is_empty() or position.is_empty():
+		return 0
+	var origin := Vector2(float(position.get("x", 0.0)), float(position.get("y", 0.0)))
+	var primary_id := Vector2i(int(target_id.get("index", -1)), int(target_id.get("generation", -1)))
+	var candidates: Array[Dictionary] = []
+	var radius_squared := shatter_fragment_radius * shatter_fragment_radius
+	var bonus_radius := shatter_fragment_projectile_radius
+	for entity in entities:
+		var components: Dictionary = entity.get("components", {})
+		var id: Dictionary = entity.get("id", {})
+		var entity_id := Vector2i(int(id.get("index", -2)), int(id.get("generation", -2)))
+		if entity_id == primary_id:
+			bonus_radius = maxf(bonus_radius, float(components.get("CollisionRadius", 0.0)))
+			continue
+		if not _is_targetable_enemy(components):
+			continue
+		var transform: Dictionary = components.get("Transform2D", {})
+		var candidate_position := Vector2(float(transform.get("x", 0.0)), float(transform.get("y", 0.0)))
+		var distance_squared := origin.distance_squared_to(candidate_position)
+		if distance_squared <= radius_squared:
+			candidates.append({"position": candidate_position, "distance_squared": distance_squared})
+	candidates.sort_custom(func(a: Dictionary, b: Dictionary) -> bool:
+		return a["distance_squared"] < b["distance_squared"])
+	var reaction_chain_id := int(event.get("reaction_chain_id", 0))
+	if reaction_chain_id <= 0:
+		reaction_chain_id = int(event.get("sequence", 0))
+	var spawned := 0
+	if float(event.get("remaining_health", 0.0)) > 0.0 and simulation.spawn_projectile(
+			"shatter_impact", origin, Vector2.ZERO,
+			float(event["amount"]) * shatter_fragment_damage_multiplier,
+			bonus_radius, shatter_fragment_lifetime_seconds,
+			0.0, 0.0, 0.0, 0.0, 0.0, 0, 0.0, 0.0, false,
+			0.0, 1.0, 1.0, 0.0, reaction_chain_id, reaction_budget - 1) > 0:
+		spawned += 1
+	for index in range(mini(shatter_fragment_count, candidates.size())):
+		var target_position: Vector2 = candidates[index]["position"]
+		var direction := (target_position - origin).normalized()
+		if direction == Vector2.ZERO:
+			continue
+		var sequence: int = simulation.spawn_projectile("shatter_fragment", origin + direction * 24.0,
+				direction * _equipment_projectile_speed(shatter_fragment_speed),
+				float(event["amount"]) * shatter_fragment_damage_multiplier,
+				_equipment_area(shatter_fragment_projectile_radius), shatter_fragment_lifetime_seconds,
+				0.0, 0.0, 0.0, 0.0, 0.0, 0, 0.0, 0.0, false,
+				0.0, 1.0, 1.0, 0.0, reaction_chain_id, reaction_budget - 1)
+		if sequence > 0:
+			spawned += 1
+	return spawned
 
 func _try_toxic_ignition(event: Dictionary, active_time: float) -> int:
 	if bool(event.get("is_damage_over_time", false)) or float(event.get("amount", 0.0)) <= 0.0 or \

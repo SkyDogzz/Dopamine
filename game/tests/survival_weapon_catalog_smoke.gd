@@ -106,8 +106,106 @@ func _run() -> void:
 	if not await _frost_nova_chills_and_shatters():
 		_fail("Frost Nova should Chill nearby targets and Absolute Zero should shatter a frozen kill")
 		return
+	if not await _shatter_reacts_to_approved_direct_impacts_only():
+		_fail("Shatter should launch bounded fragments from approved direct weapon hits on chilled targets only")
+		return
 	print("Survival weapon catalog smoke passed")
 	quit()
+
+func _shatter_reacts_to_approved_direct_impacts_only() -> bool:
+	var session: Node2D = load("res://scenes/survival_session.tscn").instantiate()
+	session.spawn_initial_enemy = false
+	session.wave_spawning_enabled = false
+	session.weapon_enabled = false
+	session.skip_starting_weapon_choice = true
+	session.contact_damage_per_hit = 0.0
+	root.add_child(session)
+	await process_frame
+	session.simulation.set_speed(4.0)
+	await _wait_for_simulation_speed(session, 4.0)
+	for position in [Vector2(100.0, 100.0), Vector2(130.0, 100.0), Vector2(70.0, 100.0),
+			Vector2(100.0, 130.0), Vector2(400.0, 100.0)]:
+		session.simulation.spawn("test_target", 1, position, 1000.0, Vector2.ZERO)
+	var targets: Array = await _wait_for_targets(session, 5)
+	if targets.size() != 5:
+		session.queue_free()
+		return false
+	var primary: Dictionary = targets[0]
+	var primary_id: Dictionary = primary["id"]
+	var primary_components: Dictionary = primary["components"]
+	var primary_position := Vector2(float(primary_components["Transform2D"]["x"]),
+			float(primary_components["Transform2D"]["y"]))
+	var hit := {"target": primary_id, "source_type": "minigun", "target_was_chilled": true,
+		"is_damage_over_time": false, "amount": 20.0, "remaining_health": 80.0,
+		"sequence": 41, "reaction_budget": 1,
+		"position": {"x": primary_position.x, "y": primary_position.y}}
+	var approved_sources := ["crimson_dagger", "bloodstorm_dagger", "minigun", "redline", "sawblades",
+		"razorstorm", "meteor_staff", "starfall", "starfall_fragment", "void_orb", "event_horizon"]
+	var spawned_count := 0
+	for source_type in approved_sources:
+		var source_hit := hit.duplicate(true)
+		source_hit["source_type"] = source_type
+		spawned_count += int(session.call("_try_shatter", source_hit, session.simulation.snapshot()["entities"]))
+	var excluded_count := 0
+	for source_type in ["inferno_sprayer", "lightning_primary", "toxic_cloud", "frost_nova", "shatter_fragment"]:
+		var excluded_hit := hit.duplicate(true)
+		excluded_hit["source_type"] = source_type
+		excluded_count += int(session.call("_try_shatter", excluded_hit, session.simulation.snapshot()["entities"]))
+	var dot_hit := hit.duplicate(true)
+	dot_hit["is_damage_over_time"] = true
+	var dot_count := int(session.call("_try_shatter", dot_hit, session.simulation.snapshot()["entities"]))
+	var exhausted_hit := hit.duplicate(true)
+	exhausted_hit["reaction_budget"] = 0
+	var exhausted_count := int(session.call("_try_shatter", exhausted_hit, session.simulation.snapshot()["entities"]))
+	var fragment_damage_total := 0.0
+	var deadline := Time.get_ticks_msec() + 2500
+	while Time.get_ticks_msec() < deadline and fragment_damage_total < 165.0:
+		await process_frame
+		fragment_damage_total = float(session._weapon_damage_by_id.get("frost_nova", 0.0))
+	var unchilled_hit := hit.duplicate(true)
+	unchilled_hit["target_was_chilled"] = false
+	var unchilled_count := int(session.call("_try_shatter", unchilled_hit, session.simulation.snapshot()["entities"]))
+	var no_fragments_session: Node2D = load("res://scenes/survival_session.tscn").instantiate()
+	no_fragments_session.spawn_initial_enemy = false
+	no_fragments_session.wave_spawning_enabled = false
+	no_fragments_session.weapon_enabled = false
+	no_fragments_session.skip_starting_weapon_choice = true
+	no_fragments_session.shatter_fragment_count = 0
+	root.add_child(no_fragments_session)
+	await process_frame
+	no_fragments_session.simulation.spawn("test_target", 1, Vector2(100.0, 100.0), 1000.0, Vector2.ZERO)
+	var no_fragments_targets: Array = await _wait_for_targets(no_fragments_session, 1)
+	if no_fragments_targets.is_empty():
+		no_fragments_session.queue_free()
+		session.queue_free()
+		return false
+	var no_fragments_entities: Array = no_fragments_session.simulation.snapshot()["entities"]
+	var no_fragments_target: Dictionary = no_fragments_targets[0]
+	var no_fragments_components: Dictionary = no_fragments_target["components"]
+	var no_fragments_position := Vector2(float(no_fragments_components["Transform2D"]["x"]),
+			float(no_fragments_components["Transform2D"]["y"]))
+	var no_fragments_hit := hit.duplicate(true)
+	no_fragments_hit["target"] = no_fragments_target["id"]
+	no_fragments_hit["position"] = {"x": no_fragments_position.x, "y": no_fragments_position.y}
+	var primary_bonus_only := int(no_fragments_session.call("_try_shatter", no_fragments_hit,
+			no_fragments_entities)) == 1
+	no_fragments_session.queue_free()
+	var valid := spawned_count == approved_sources.size() * 4 and excluded_count == 0 and dot_count == 0 and \
+			exhausted_count == 0 and unchilled_count == 0 and primary_bonus_only and \
+			is_equal_approx(fragment_damage_total, 220.0) and \
+			is_equal_approx(_target_health(session, primary_id), 945.0) and \
+			is_equal_approx(_target_health(session, targets[1]["id"]), 945.0) and \
+			is_equal_approx(_target_health(session, targets[2]["id"]), 945.0) and \
+			is_equal_approx(_target_health(session, targets[3]["id"]), 945.0) and \
+			is_equal_approx(_target_health(session, targets[4]["id"]), 1000.0)
+	if not valid:
+		push_error("Shatter diagnostics: spawned=%d excluded=%d dot=%d exhausted=%d unchilled=%d damage=%s hp=%s/%s/%s/%s/%s" %
+				[spawned_count, excluded_count, dot_count, exhausted_count, unchilled_count, fragment_damage_total,
+				_target_health(session, primary_id), _target_health(session, targets[1]["id"]),
+				_target_health(session, targets[2]["id"]), _target_health(session, targets[3]["id"]),
+				_target_health(session, targets[4]["id"])])
+	session.queue_free()
+	return valid
 
 func _weapon_progression_config_is_loaded_and_modifiable() -> bool:
 	var session: Node2D = load("res://scenes/survival_session.tscn").instantiate()

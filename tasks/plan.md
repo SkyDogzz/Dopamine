@@ -91,7 +91,7 @@ Le détail exhaustif et l’audit GDD/code sont dans [`docs/planning/ROADMAP.md`
 - [x] Étendre le catalogue aux dix armes et onze reliques, dont Magnet Heart ; Bloodstorm utilise des dagues orbitantes et les dix évolutions possèdent leurs prototypes.
 - [x] Implémenter et tester cinq niveaux, feedback, règles d’évolution et d’éligibilité des coffres.
 - [x] Garder le rayon d’attraction XP séparé de la collecte des coffres ; les autres types de pickup restent **[OUVERTS]** jusqu’à leur définition.
-- [x] Compléter les statuts partagés, synergies bornées, huit familles d’ennemis, six affixes d’élite et prototypes de boss multi-phases. Les paramètres marqués **[PROPOSÉS]** restent provisoires ; Shatter, Electroplague, Gravity Collapse et Hemorrhage ne sont pas activés sans arbitrage.
+- [x] Compléter les statuts partagés, synergies bornées, huit familles d’ennemis, six affixes d’élite et prototypes de boss multi-phases. Les paramètres marqués **[PROPOSÉS]** restent provisoires ; Shatter est validée et prototypée, tandis qu’Electroplague, Gravity Collapse et Hemorrhage restent en attente d’arbitrage.
 - [x] Recompiler la GDExtension Linux après l’optimisation du cœur et exécuter CTest : 86/86 passent en séquentiel sous Godot 4.7.2 le 2026-10-17.
 - [x] Le créateur confirme la victoire Survival sans assistance, le choix manuel d’un coffre et l’absence de doublon des récompenses après relance (2026-10-17; détails de build non fournis).
 - [ ] Parcourir manuellement le catalogue dans le Sandbox interactif.

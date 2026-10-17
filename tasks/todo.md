@@ -40,7 +40,7 @@ Roadmap détaillée et audit GDD/code : [`docs/planning/ROADMAP.md`](../docs/pla
 
 - [ ] **P5.2 — Statuts et synergies**
   - [x] Définir et vérifier application, durée, remplacement, expiration, dégâts directs/DoT, lifesteal et événements de mort sans double attribution.
-  - [x] Valider Toxic Ignition et borner sa chaîne ; Thermal Shock reste **[PROPOSÉ]**, les autres réactions nommées attendent arbitrage et Overcharge reste **[OUVERT]**.
+  - [x] Valider Toxic Ignition et borner sa chaîne ; Thermal Shock reste **[PROPOSÉ]**. Shatter est **[VALIDÉE]** et prototypée pour Crimson Daggers, Minigun, Sawblades, Meteor Staff et Void Orb; les autres réactions nommées attendent arbitrage et Overcharge reste **[OUVERT]**.
   - [x] Vérifier par smokes Sandbox/Survival l’application, l’expiration et les effets en chaîne bornés.
   - [ ] Équilibrer les réactions proposées sur des runs représentatives.
 

@@ -23,6 +23,8 @@ func _run() -> void:
 	entities.append(_entity(2506, "projectile_meteor", 180, 0))
 	entities.append(_entity(2507, "projectile_starfall_fragment", 200, 0))
 	entities.append(_entity(2508, "projectile_void_orb", 220, 0))
+	entities.append(_entity(2530, "projectile_shatter_fragment", 260, 0))
+	entities.append(_entity(2531, "projectile_shatter_impact", 280, 0))
 	for index in range(9):
 		var names := ["infinite_circuit", "wildfire", "bloodstorm", "event_horizon", "absolute_zero", "pandemic", "razorstorm", "starfall", "spectrum_collapse"]
 		entities.append(_entity(2510 + index, "projectile_" + names[index], -80.0 + index * 18.0, 0.0))
@@ -50,6 +52,8 @@ func _run() -> void:
 	assert(view._sprite_renderer.multimesh_for("projectile_sawblades").instance_count == 1, "Sawblades should use their own projectile art")
 	assert(view._sprite_renderer.multimesh_for("projectile_meteor").instance_count == 1, "Meteor Staff should use dedicated meteor art")
 	assert(view._sprite_renderer.multimesh_for("projectile_starfall_fragment").instance_count == 1, "Starfall fragments should use separate art")
+	assert(view._sprite_renderer.multimesh_for("projectile_shatter_fragment").instance_count == 1, "Shatter fragments should render with dedicated frost art")
+	assert(view._sprite_renderer.multimesh_for("projectile_shatter_impact").instance_count == 1, "Shatter bonus damage should render with dedicated frost art")
 	assert(view._sprite_renderer.multimesh_for("projectile_void_orb").instance_count == 1, "Void Orb and Event Horizon should use dedicated art")
 	var first_ripple: float = view._sprite_renderer.persistent_area_ripple_radius(0.9, 48.0)
 	var next_ripple: float = view._sprite_renderer.persistent_area_ripple_radius(0.6, 48.0)
@@ -59,6 +63,8 @@ func _run() -> void:
 	assert(view._sprite_renderer._batches["projectile_sawblades"]["texture"].resource_path.ends_with("projectiles/projectile_sawblades.png"), "Sawblades should load their dedicated pixel-art sprite")
 	assert(view._sprite_renderer._batches["projectile_meteor"]["texture"].resource_path.ends_with("projectiles/projectile_meteor.png"), "Meteor Staff should load its pixel-art meteor")
 	assert(view._sprite_renderer._batches["projectile_starfall_fragment"]["texture"].resource_path.ends_with("projectiles/projectile_starfall_fragment.png"), "Starfall should load its fragment sprite")
+	assert(view._sprite_renderer._batches["projectile_shatter_fragment"]["texture"].resource_path.ends_with("projectiles/projectile_absolute_zero.png"), "Shatter should reuse the existing Absolute Zero frost fragment sprite")
+	assert(view._sprite_renderer._batches["projectile_shatter_impact"]["texture"].resource_path.ends_with("projectiles/projectile_absolute_zero.png"), "Shatter bonus impact should reuse the existing Absolute Zero frost sprite")
 	assert(view._sprite_renderer._batches["projectile_void_orb"]["texture"].resource_path.ends_with("projectiles/projectile_void_orb.png"), "Void Orb should load its dedicated sprite")
 	assert(view._sprite_renderer._batches["projectile_toxic_cloud"]["texture"].resource_path.ends_with("projectiles/projectile_toxic_cloud.png"), "Toxic Cloud batch should load its distinct pixel-art sprite")
 	for projectile_name in ["infinite_circuit", "wildfire", "bloodstorm", "event_horizon", "absolute_zero", "pandemic", "razorstorm", "starfall", "spectrum_collapse"]:

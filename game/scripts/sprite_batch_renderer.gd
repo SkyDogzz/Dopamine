@@ -38,6 +38,8 @@ const SPRITE_FILES := {
 	"projectile_bloodstorm": "projectiles/projectile_bloodstorm",
 	"projectile_event_horizon": "projectiles/projectile_event_horizon",
 	"projectile_absolute_zero": "projectiles/projectile_absolute_zero",
+	"projectile_shatter_impact": "projectiles/projectile_absolute_zero",
+	"projectile_shatter_fragment": "projectiles/projectile_absolute_zero",
 	"projectile_pandemic": "projectiles/projectile_pandemic",
 	"projectile_razorstorm": "projectiles/projectile_razorstorm",
 	"projectile_starfall": "projectiles/projectile_starfall",
@@ -221,6 +223,10 @@ func _sprite_for_entity(components: Dictionary) -> String:
 				return "projectile_frost_nova"
 			"absolute_zero":
 				return "projectile_absolute_zero"
+			"shatter_impact":
+				return "projectile_shatter_impact"
+			"shatter_fragment":
+				return "projectile_shatter_fragment"
 			"thermal_shock":
 				return "projectile_absolute_zero"
 			_:

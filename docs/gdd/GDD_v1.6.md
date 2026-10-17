@@ -95,7 +95,7 @@ Boucle Survival : choisir difficulté et arme initiale → survivre à une vague
 
 [VALIDÉ] Les interactions entre armes peuvent émerger des dégâts et statuts. Aucune limite artificielle aux synergies n’est ajoutée pour le seul équilibrage, sous réserve des protections techniques.
 
-[PROPOSÉ] Réactions élémentaires entre statuts ; les combinaisons et effets listés en annexe restent à valider.
+[PROPOSÉ] Réactions élémentaires entre statuts ; Shatter est maintenant validée comme indiqué en annexe, les autres combinaisons restent proposées.
 
 **Prototype [PROPOSÉ] — Thermal Shock :** une attaque directe de Burn sur une cible déjà Chill, ou une attaque directe de Chill sur une cible qui porte Burn, ajoute un impact immédiat égal à 50 % de l’attaque déclencheuse. Un cooldown proposé de 1 s par cible borne la répétition; les dégâts sur la durée et les impacts de Thermal Shock ne déclenchent pas la réaction. Ces coefficients restent à équilibrer et la règle n’est pas promue **[VALIDÉE]**.
 
@@ -476,7 +476,7 @@ Synergies proposées :
 - Interactions émergentes entre armes via dégâts et statuts.
 - Pas de limitation artificielle des synergies pour des raisons d'équilibrage ; seules les protections techniques nécessaires sont autorisées.
 
-### Réactions élémentaires proposées
+### Réactions élémentaires
 
 Les combinaisons et résultats sont proposés et non validés : voir le tableau ci-dessous. Overcharge impliquant un statut conducteur supplémentaire reste ouvert.
 
@@ -499,7 +499,7 @@ Les combinaisons et résultats sont proposés et non validés : voir le tableau 
 | ---------------- | --------------------- | ------------------------------------- |
 | Thermal Shock    | Burn + Freeze         | Dégâts immédiats                      |
 | Toxic Ignition   | Poison + Burn         | Explosion chimique                    |
-| Shatter          | Freeze + Impact/Shred | Dégâts et fragments                   |
+| Shatter          | Freeze + Impact/Shred | Dégâts bonus et fragments **[VALIDÉ]** |
 | Electroplague    | Poison + Shock        | Propagation de Poison                 |
 | Gravity Collapse | Gravity + Impact      | Dégâts de zone amplifiés              |
 | Hemorrhage       | Bleed + Crit          | Accélération des dégâts de saignement |
@@ -507,6 +507,8 @@ Les combinaisons et résultats sont proposés et non validés : voir le tableau 
 Une éventuelle réaction Overcharge nécessitant un statut conducteur supplémentaire reste à définir.
 
 **Décisions utilisateur [VALIDÉES, 2026-10-16] — Toxic Ignition :** déclencher une explosion immédiate quand un coup direct applique Burn à une cible déjà empoisonnée ou Poison à une cible déjà brûlée. Les DoT Poison et Burn coexistent sur la cible et infligent leurs ticks selon leurs horloges indépendantes; réappliquer un même DoT le remplace sans effacer l’autre. L’explosion inflige 50 % des dégâts du coup direct déclencheur, dans un rayon de 60 px. Les deux statuts restent actifs après l’explosion. Une cible ne peut déclencher cette réaction qu’une fois par seconde. L’explosion n’applique pas de statut, donc ses dégâts ne déclenchent pas récursivement Toxic Ignition. Cette coexistence validée ne définit pas l’empilement d’autres paires de DoT, qui reste **[OUVERT]**.
+
+**Décision utilisateur [VALIDÉE, 2026-10-17] — Shatter :** un coup direct de Crimson Daggers, Minigun, Sawblades, Meteor Staff ou Void Orb sur une cible encore gelée déclenche des dégâts bonus sur cette cible et des fragments vers les ennemis proches. Les évolutions de ces armes gardent la même éligibilité. Les ticks de statut et les sources feu, foudre, poison et glace ne déclenchent pas Shatter; les fragments terminent la chaîne de réaction et ne peuvent pas la relancer. Le prototype ajoute 25 % des dégâts du coup déclencheur sur la cible gelée puis choisit jusqu’à trois cibles vivantes distinctes les plus proches dans un rayon de 96 px et lance un fragment vers chacune. Multiplicateur de dégâts (25 % du coup déclencheur par fragment), nombre (3), rayon (96 px), vitesse (700 px/s), durée de vie (0,75 s) et rayon de collision (3 px) restent **[PROPOSÉS]**, configurables et à calibrer.
 
 Synergies proposées entre reliques :
 
