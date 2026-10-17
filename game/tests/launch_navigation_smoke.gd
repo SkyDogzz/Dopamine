@@ -127,6 +127,11 @@ func _run() -> void:
 		not logical_viewport.encloses(menu_rect) or not logical_viewport.encloses(identity_rect):
 		_fail("Launch menu should place its vertical menu at the left of the identity area: %s / %s" % [menu_rect, identity_rect])
 		return
+	if "--capture" in OS.get_cmdline_user_args():
+		await RenderingServer.frame_post_draw
+		if root.get_texture().get_image().save_png("/tmp/dopamine-launch-menu.png") != OK:
+			_fail("Could not capture the launch menu render")
+			return
 	var sandbox_lab_button := current_scene.get_node("%s/SandboxLabButton" % MENU_PATH) as Button
 	sandbox_lab_button.pressed.emit()
 	await process_frame
@@ -134,11 +139,6 @@ func _run() -> void:
 	if current_scene == null or current_scene.scene_file_path != "res://scenes/sandbox_lab.tscn":
 		_fail("The separate Sandbox Lab button should open the player Lab scene")
 		return
-	if "--capture" in OS.get_cmdline_user_args():
-		await RenderingServer.frame_post_draw
-		if root.get_texture().get_image().save_png("/tmp/dopamine-launch-menu.png") != OK:
-			_fail("Could not capture the launch menu render")
-			return
 	print("Launch menu controls, initial focus and hub navigation contract passed")
 	quit()
 

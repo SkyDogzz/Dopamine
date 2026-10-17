@@ -759,6 +759,18 @@ Le runner est fourni par `game/scripts/scenario_runner.gd` et consomme un fichie
 - [x] Le smoke Sandbox conserve son profil sentinelle inchangé; le smoke d’assets contrôle dimensions, palettes, sources Aseprite et la densité réduite de la tuile active.
 - [ ] Manette physique, plein écran sur écran réel et sortie audio matérielle restent à vérifier; la simulation de manette est synthétique et l’audio utilise le driver dummy en environnement Xvfb.
 
+## Revue visuelle de l’accueil — 2026-10-17
+
+- [x] Corriger `launch_navigation_smoke.gd` : l’option `--capture` capturait auparavant le Sandbox Lab après navigation, malgré le nom `dopamine-launch-menu.png`. La capture est maintenant faite sur l’accueil revenu du Sandbox, avant d’ouvrir le Lab.
+- [x] `launch_navigation_smoke.gd -- --capture` passe sous Godot 4.7.2 avec Xvfb/Mesa llvmpipe; la capture logique 640×360 a été inspectée. La colonne de menu à gauche, l’identité à droite, le focus initial sur Jouer et l’accès Sandbox secondaire respectent la composition prévue.
+- [ ] La capture llvmpipe ne valide pas le rendu sur écran physique; les tailles supérieures restent couvertes par les smokes de géométrie, sans inspection visuelle dédiée dans ce passage.
+
+## Revue visuelle du hub Survival — 2026-10-17
+
+- [x] `survival_hub_layout_smoke.gd -- --capture` passe sous Godot 4.7.2/Xvfb et produit `/tmp/dopamine-survival-hub.png` à 640×360; la capture a été inspectée. Difficulté choisie et verrouillées, statut de profil, records, équipement/compétences et trois parcours de lancement restent dans la surface logique, avec la carte de préparation mise en évidence.
+- [x] Les viewports 640×360, 1280×720 et 1920×1080 restent couverts par le smoke de bounds et d’absence de chevauchement.
+- [ ] Revue des tailles agrandies sur rendu réel et navigation avec souris/manette physiques non effectuées.
+
 ## Icône catalogue — Lightning Conductor (2026-10-16)
 
 - [x] Référence générée dédiée conservée dans `game/assets/source/catalog_weapons/`; le builder remplace l’ancienne cellule aplatie et régénère le PNG 32×32 ainsi que sa source Aseprite depuis `DEDICATED_ICON_REFERENCES`.

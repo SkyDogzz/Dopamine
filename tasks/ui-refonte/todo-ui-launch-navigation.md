@@ -11,7 +11,7 @@
 - [x] Les contrôles sont focusables, ordonnés et gardent le focus visible.
 - [x] Jouer émet un signal vérifiable sans démarrer directement une run ni pointer sur une fausse scène.
 
-**Vérification :** Smoke ciblé `launch_navigation_smoke.gd` de la scène, du focus initial et du signal Jouer passé sous Godot 4.7.2 headless; inspection fenêtrée complète au checkpoint.
+**Vérification :** Smoke `launch_navigation_smoke.gd` de la scène, du focus initial, des commandes et de la navigation passé sous Godot 4.7.2. `--capture` produit maintenant la vraie scène d’accueil (et non le Sandbox Lab atteint plus tard par le smoke); capture logique 640×360 inspectée sous Xvfb/Mesa llvmpipe. Revue physique souris/manette et inspection visuelle aux tailles agrandies restent ouvertes.
 
 **Dépendances :** ui-foundation, ui-settings.
 
@@ -57,6 +57,6 @@
 ## Checkpoint — module prêt à revue
 
 - [x] Toutes les tâches de code sont implémentées; une régression Sandbox reste à diagnostiquer.
-- [x] Limite de revue fenêtrée initiale consignée; les smokes de navigation et les revues des modules UI ultérieurs sont consignés dans `docs/qa/TESTS.md`. Une interaction physique complète reste non vérifiée.
+- [x] Capture de l’accueil sous Xvfb inspectée à 640×360 et résultat consigné dans `docs/qa/TESTS.md`; les bounds agrandis sont couverts par smoke. Une interaction physique et une inspection visuelle complète à toutes les tailles restent non vérifiées.
 - [x] La séparation Sandbox/progression normale est contrôlée statiquement et par `sandbox_ui_smoke.gd`, qui préserve le slot sentinelle avec un profil temporaire isolé.
 - [x] Limites d’environnement documentées; l’utilisateur a validé la poursuite vers `survival-hub`.
