@@ -11,3 +11,5 @@ Préserver Sandbox-first et l’isolation stricte des sauvegardes; garder sépar
 ## Reprise
 
 Le goal Codex associé est actif. Poursuivre à partir de P5 en consultant le GDD, les ADR, l’architecture, la roadmap, les risques et les tests d’acceptation référencés dans [`README.md`](../../README.md), sans remplacer ni réécrire les plans existants.
+
+Les arbitrages utilisateur encore ouverts et les validations non décisionnelles sont indexés dans [`DECISIONS_RESTANTES.md`](DECISIONS_RESTANTES.md). Ce registre propose des options d’interview sans les traiter comme des décisions adoptées.
