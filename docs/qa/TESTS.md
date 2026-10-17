@@ -30,6 +30,12 @@
 - Le smoke vérifie désormais les PV persistants des deux cibles, résultat indépendant de l’acquittement du buffer. Après le changement, `survival_weapon_catalog_smoke` passe **10/10** répétitions et CTest complet **87/87 en 61,48 s**.
 - Les résultats ont été obtenus sur un checkout contenant aussi un diff local non commité de `survival_session.gd`; ils ne décrivent donc pas uniquement le commit `61e6b8e`.
 
+## P9.4 — Navigation des entrées inactives du hub — 2026-10-17
+
+- `survival_hub_smoke.gd` parcourt Succès et Bestiaire avec touches fléchées, D-pad et activation A/Entrée; un clic souris synthétique est aussi envoyé. Les contrôles reçoivent un focus visible mais n’ouvrent aucun panneau ni ne déclenchent de données.
+- Le smoke ciblé passe sous Godot 4.7.2 : import projet et hub, **2/2**.
+- Les interactions sur vraie souris/manette et le parcours physique complet du menu restent à vérifier sur matériel.
+
 ## Build et lancement depuis un clone Git propre — 2026-10-17
 
 - Clone local neuf du commit `09baf7a`, puis configuration CMake 3.31.12, compilation complète avec GCC 14.2.0, import Godot 4.7.2 et lancement headless de la scène principale : réussis. FetchContent a récupéré le SHA `godot-cpp` verrouillé.

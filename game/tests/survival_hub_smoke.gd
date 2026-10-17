@@ -100,6 +100,44 @@ func _run() -> void:
 		achievements.get_theme_stylebox("focus") != hub.theme.get_stylebox("focus", "Button"):
 		_fail("Inactive features should look disabled and retain the shared visible focus style")
 		return
+	equipment_button.grab_focus()
+	await _send_key(KEY_DOWN)
+	if root.gui_get_focus_owner() != skill_button:
+		_fail("Keyboard navigation should reach the skill tree from equipment")
+		return
+	await _send_key(KEY_DOWN)
+	var inactive_focus := root.gui_get_focus_owner()
+	if inactive_focus != achievements and inactive_focus != bestiary:
+		_fail("Keyboard navigation should reach an inactive feature from the skill tree")
+		return
+	await _send_key(KEY_RIGHT if inactive_focus == achievements else KEY_LEFT)
+	if root.gui_get_focus_owner() != (bestiary if inactive_focus == achievements else achievements):
+		_fail("Keyboard navigation should reach both inactive features")
+		return
+	await _send_key(KEY_ENTER)
+	await _send_mouse_click(achievements)
+	if achievements.pressed.get_connections().size() > 0 or bestiary.pressed.get_connections().size() > 0 or \
+		hub.get_node_or_null("AchievementsPanel") != null or hub.get_node_or_null("BestiaryPanel") != null:
+		_fail("Keyboard activation should leave inactive features inert")
+		return
+	equipment_button.grab_focus()
+	await _send_gamepad_button(JOY_BUTTON_DPAD_DOWN)
+	if root.gui_get_focus_owner() != skill_button:
+		_fail("Gamepad navigation should reach the skill tree from equipment")
+		return
+	await _send_gamepad_button(JOY_BUTTON_DPAD_DOWN)
+	inactive_focus = root.gui_get_focus_owner()
+	if inactive_focus != achievements and inactive_focus != bestiary:
+		_fail("Gamepad navigation should reach an inactive feature from the skill tree")
+		return
+	await _send_gamepad_button(JOY_BUTTON_DPAD_RIGHT if inactive_focus == achievements else JOY_BUTTON_DPAD_LEFT)
+	if root.gui_get_focus_owner() != (bestiary if inactive_focus == achievements else achievements):
+		_fail("Gamepad navigation should reach both inactive features")
+		return
+	await _send_gamepad_button(JOY_BUTTON_A)
+	if hub.get_node_or_null("AchievementsPanel") != null or hub.get_node_or_null("BestiaryPanel") != null:
+		_fail("Gamepad activation should leave inactive features inert")
+		return
 	equipment_button.pressed.emit()
 	await process_frame
 	var equipment_panel: Control = hub.get_node("EquipmentInventoryPanel")
@@ -251,6 +289,39 @@ func _send_gamepad_cancel() -> void:
 	var event := InputEventJoypadButton.new()
 	event.device = 0
 	event.button_index = JOY_BUTTON_B
+	event.pressed = true
+	Input.parse_input_event(event)
+	await process_frame
+	event.pressed = false
+	Input.parse_input_event(event)
+	await process_frame
+
+func _send_key(keycode: Key) -> void:
+	var event := InputEventKey.new()
+	event.keycode = keycode
+	event.pressed = true
+	Input.parse_input_event(event)
+	await process_frame
+	event.pressed = false
+	Input.parse_input_event(event)
+	await process_frame
+
+func _send_gamepad_button(button_index: JoyButton) -> void:
+	var event := InputEventJoypadButton.new()
+	event.device = 0
+	event.button_index = button_index
+	event.pressed = true
+	Input.parse_input_event(event)
+	await process_frame
+	event.pressed = false
+	Input.parse_input_event(event)
+	await process_frame
+
+func _send_mouse_click(control: Control) -> void:
+	var event := InputEventMouseButton.new()
+	event.position = control.get_global_rect().get_center()
+	event.global_position = event.position
+	event.button_index = MOUSE_BUTTON_LEFT
 	event.pressed = true
 	Input.parse_input_event(event)
 	await process_frame

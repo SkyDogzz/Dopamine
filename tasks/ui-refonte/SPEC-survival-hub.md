@@ -78,7 +78,7 @@ Compléter le parcours **Jouer → préparation Survival → lancement explicite
 - [x] Les panneaux existants Équipement et Compétences sont utilisables dans le hub; les changements s’appliquent à la run suivante.
 - [x] La vue Records Armorless compare les cinq difficultés en lecture seule; Échap/manette ferme le panneau et rend le focus à l’action d’ouverture.
 - [x] Pendant une run, aucun contrôle ou chemin UI ne permet de modifier l’équipement permanent ou l’arbre de compétences.
-- [ ] Succès et Bestiaire sont visibles et atteignables par focus, restent inertes à la souris, au clavier et à la manette, et n’ajoutent aucune donnée fictive.
+- [x] Succès et Bestiaire sont visibles, atteignables au clavier/manette, inertes à l’activation clavier/manette/souris simulée et n’ajoutent aucune donnée fictive; `survival_hub_smoke.gd` vérifie le parcours et l’absence de destinations. L’interaction avec des périphériques physiques reste à essayer.
 - [x] L’action **Lancer la run** ouvre le parcours de run normal, transmet la difficulté et conserve le choix d’arme initial.
 - [x] Aucune donnée du Sandbox n’est lue/modifiée; aucune dépendance Sandbox → `SaveService` ou progression n’est ajoutée.
 - [x] La navigation et les panneaux restent lisibles aux résolutions UI de référence, avec focus visible et sans action nécessitant une souris.

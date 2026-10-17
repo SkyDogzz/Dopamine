@@ -675,6 +675,7 @@ P1 livre le Sandbox développeur et ne remplace pas cette feature produit.
   - [ ] Ajouter options de réduction VFX et régler audio par vague/boss.
   - [ ] Remplacer progressivement les assets placeholders, un lot visuel par lot.
 - [ ] **P9.4 — Accessibilité et commandes**
+  - [x] Vérifier par événements synthétiques dans `survival_hub_smoke.gd` l’accès clavier/manette à Succès et Bestiaire, leur focus visible et leur inertie à l’activation souris/clavier/manette; les périphériques physiques restent à tester.
   - [ ] Parcourir menus et choix uniquement au clavier.
   - [ ] Parcourir les mêmes écrans à la manette avec focus visible.
   - [ ] Vérifier contraste, taille/hiérarchie HUD et réglages d’effets.
