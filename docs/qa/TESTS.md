@@ -1,5 +1,11 @@
 # Tests d'acceptation et validation
 
+## Checkpoint complet Linux — 2026-10-17
+
+- CTest séquentiel, build Debug existant, Godot officiel 4.7.2 : **87/87 tests passent en 59,80 s**. Cela couvre simulation core/worker, import Godot, rendu sous Xvfb, armes/catalogue, boss, progression, Armorless, Sandbox Lab/snapshots et scénarios des dix armes.
+- Commande : `/tmp/cmake-3.31.12-linux-x86_64/bin/ctest --test-dir build --output-on-failure -j1`, après configuration avec `DOPAMINE_GODOT_EXECUTABLE` pointant sur `tools/local/godot-4.7.2/Godot_v4.7.2-stable_linux.x86_64`.
+- Cette suite vérifie les parcours automatisés sur l’hôte Linux actuel; elle ne remplace ni une run Armorless manuelle complète, ni le profilage sur iGPU cible, ni le build Windows.
+
 ## Validation d'isolation Sandbox Lab P8.8 — 2026-10-17
 
 - `sandbox_lab_smoke.gd` écrit un slot normal sentinelle dans son `XDG_DATA_HOME` de test, puis démarre le Lab, applique des builds, lance le combat et effectue Reset; le contenu du slot est comparé octet pour octet à la fin.
