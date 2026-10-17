@@ -77,19 +77,27 @@ if (-not $DebugOnly) {
 }
 
 if (-not $SkipProjectChecks) {
-	& $godotPath --headless --editor --path $projectPath --quit
+	$importOutput = & $godotPath --headless --editor --path $projectPath --import --quit 2>&1
+	$importOutput | ForEach-Object { Write-Host $_ }
 	if ($LASTEXITCODE -ne 0) { throw "Godot project import failed with exit code $LASTEXITCODE" }
+	if ($importOutput -match "(?m)(ERROR:|SCRIPT ERROR:)") { throw "Godot project import reported errors" }
 
-	& $godotPath --headless --path $projectPath --script "res://tests/sandbox_smoke.gd"
+	$smokeOutput = & $godotPath --headless --path $projectPath --script "res://tests/sandbox_smoke.gd" 2>&1
+	$smokeOutput | ForEach-Object { Write-Host $_ }
 	if ($LASTEXITCODE -ne 0) { throw "GDExtension smoke test failed with exit code $LASTEXITCODE" }
+	if ($smokeOutput -match "(?m)(SCRIPT ERROR:|Assertion failed|Cannot get class 'CombatSimulation'|GDExtension.*(failed|unavailable))") {
+		throw "GDExtension smoke test reported errors"
+	}
 }
 
 if ($Export) {
 	$exportDirectory = Join-Path $buildPath "export"
 	New-Item -ItemType Directory -Force -Path $exportDirectory | Out-Null
 	$exportPath = Join-Path $exportDirectory "Dopamine Survivor.exe"
-	& $godotPath --headless --path $projectPath --export-release "Windows Desktop" $exportPath
+	$exportOutput = & $godotPath --headless --path $projectPath --export-release "Windows Desktop" $exportPath 2>&1
+	$exportOutput | ForEach-Object { Write-Host $_ }
 	if ($LASTEXITCODE -ne 0) { throw "Windows export failed with exit code $LASTEXITCODE" }
+	if ($exportOutput -match "(?m)(ERROR:|SCRIPT ERROR:)") { throw "Windows export reported errors" }
 	if (-not (Test-Path $exportPath)) { throw "Godot did not create the exported executable: $exportPath" }
 }
 

@@ -1783,3 +1783,9 @@ Note de clôture : le blocage historique du smoke `sandbox_ui_smoke.gd` décrit 
 - [x] `tools/package_linux_staging.sh` a reconstruit un checkout Git archivé du commit `65ed8d0`, avec CMake 3.31.12, GCC 14.2.0, Godot 4.7.2 et `godot-cpp` verrouillé. Build Release vierge, import/export Linux/X11 filtré, extraction, notices/licences, exclusion des ressources de développement, résolution des bibliothèques et démarrage headless de l’exécutable extrait avec GDExtension Release adjacente passent.
 - [x] Archive non distribuable : `DopamineSurvivor-linux-65ed8d0-staging.tar.gz`, SHA-256 `e7a6dd0f9e4947babb6ec20c800a0a213aab9bbce6b193670da2934cc0b6a99d`; manifeste SHA-256 généré à côté dans `build/linux/staging/`.
 - [i] Il s’agit d’un staging Linux x86_64 non versionné et non distribuable; cela ne clôt pas les validations d’installation distincte, GPU réel, sauvegardes en usage, autres plateformes ni les gates de release finale.
+
+## P9.7 — Diagnostic Windows CI export — 2026-10-17
+
+- [x] GitHub Actions run `39062222551` (source `23c6185`) compiled the Debug and Release GDExtensions, but did not produce the Windows executable. The log also reports missing imported audio samples and `CombatSimulation` unavailable in `sandbox_smoke.gd`; PowerShell continued because Godot returned exit code 0 for the script assertion. Therefore the run is failed and does not validate an export.
+- [x] `tools/build_windows.ps1` now uses Godot's documented `--import` wait, captures and prints import/smoke/export output, and treats import errors, GDScript assertions and missing `CombatSimulation` as failures even when Godot exits 0.
+- [i] This change is not yet validated on Windows; the next workflow run must prove import, smoke, export and extracted executable launch. No Windows Release artifact is claimed.
