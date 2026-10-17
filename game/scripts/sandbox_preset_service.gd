@@ -42,6 +42,10 @@ func validate_preset(preset: Variant) -> Dictionary:
 			not preset["initial_build"] is Dictionary:
 		return _error("invalid_payload")
 	for override_id in preset["overrides"]:
+		if str(override_id) == "wave_spawning_enabled":
+			if typeof(preset["overrides"][override_id]) != TYPE_BOOL:
+				return _error("invalid_override_wave_spawning_enabled")
+			continue
 		if str(override_id) == "spawn_enemy_type":
 			if typeof(preset["overrides"][override_id]) != TYPE_STRING or \
 					str(preset["overrides"][override_id]) not in VALID_SPAWN_ENEMY_TYPES:

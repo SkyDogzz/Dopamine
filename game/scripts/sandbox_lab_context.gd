@@ -35,8 +35,9 @@ func start(preset: Variant) -> Dictionary:
 	candidate_session.sandbox_rng_seed = int(checked["preset"]["seed"])
 	candidate_session.difficulty_id = "normal"
 	candidate_session.skip_starting_weapon_choice = true
-	candidate_session.spawn_initial_enemy = false
-	candidate_session.wave_spawning_enabled = false
+	var wave_spawning_enabled: bool = bool(checked["preset"]["overrides"].get("wave_spawning_enabled", false))
+	candidate_session.spawn_initial_enemy = wave_spawning_enabled
+	candidate_session.wave_spawning_enabled = wave_spawning_enabled
 	candidate_session.weapon_enabled = true
 	candidate_session.ordinary_chest_drop_chance = 0.0
 	candidate_session.elite_chest_drop_chance = 0.0

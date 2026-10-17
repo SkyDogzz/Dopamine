@@ -610,6 +610,7 @@ P1 livre le Sandbox développeur et ne remplace pas cette feature produit.
   - [x] Ajouter Mid Boss et Final Boss au Spawn du Lab; ils apparaissent un à la fois avec les PV de boss configurés pour Survival, et l’option boss reste dans les presets. Les patrons et paramètres de combat conservent leurs statuts de conception existants.
   - [x] Ajouter l’override LIVE typé `contact_damage_per_hit` (0–1000) au preset et au Lab; il s’applique à la prochaine collision de la session isolée et vaut zéro par défaut.
   - [x] Ajouter l’override LIVE `health_decay_multiplier` (×0–×10) au preset et au Lab; il modifie le decay HP uniquement lorsque les diagnostics Sandbox sont activés. Valeur par défaut ×1, limite technique de l’outil.
+  - [x] Ajouter `wave_spawning_enabled` (booléen, défaut faux) au preset et au Lab; l’activer réutilise le directeur de vagues Survival uniquement dans la session Sandbox isolée, et snapshots/restauration conservent le réglage.
   - [x] Exposer la seed du preset comme réglage RESTART; elle s’applique au Reset, est persistée, et invalide/refuse un snapshot tant que le redémarrage n’a pas eu lieu.
   - [ ] Compléter les overrides de configuration LIVE/REBUILD/RESTART et les limites de contenu avancées, après définition de leur contrat.
   - [x] Ajouter `SandboxBuild` comme modèle isolé : armes/reliques, évolutions appariées, stats personnalisées finies et équipements de test; validation atomique avant remplacement.

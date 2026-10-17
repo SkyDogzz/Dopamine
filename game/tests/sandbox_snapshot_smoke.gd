@@ -117,6 +117,7 @@ func _run() -> void:
 	lab_session.player.global_position = Vector2(222.0, 144.0)
 	var contact_damage_control: SpinBox = lab.get_node("Root/Body/Side/Sections/EnemyConfig/ContactDamage")
 	var health_decay_control: SpinBox = lab.get_node("Root/Body/Side/Sections/EnemyConfig/HealthDecayMultiplier")
+	var wave_spawning_control: CheckBox = lab.get_node("Root/Body/Side/Sections/EnemyConfig/WaveSpawningToggle")
 	var enemy_speed_control: SpinBox = lab.get_node("Root/Body/Side/Sections/EnemyConfig/EnemySpeedMultiplier")
 	var spawn_count_control: SpinBox = lab.get_node("Root/Body/Side/Sections/EnemyConfig/SpawnCount")
 	var enemy_select: OptionButton = lab.get_node("Root/Body/Side/Sections/EnemySelect")
@@ -131,6 +132,8 @@ func _run() -> void:
 	elite_affix_select.item_selected.emit(volatile_index)
 	contact_damage_control.value = 3.0
 	health_decay_control.value = 2.5
+	wave_spawning_control.button_pressed = true
+	wave_spawning_control.toggled.emit(true)
 	enemy_speed_control.value = 2.0
 	spawn_count_control.value = 3.0
 	lab_context.live_stat_overrides["damage_pct"] = 15.0
@@ -152,6 +155,8 @@ func _run() -> void:
 	lab_session.player.global_position = Vector2.ZERO
 	contact_damage_control.value = 9.0
 	health_decay_control.value = 4.0
+	wave_spawning_control.button_pressed = false
+	wave_spawning_control.toggled.emit(false)
 	enemy_speed_control.value = 4.0
 	spawn_count_control.value = 4.0
 	enemy_select.select(tank_index)
@@ -172,6 +177,9 @@ func _run() -> void:
 			lab_session.contact_damage_per_hit != 3.0 or contact_damage_control.value != 3.0 or \
 			float(lab_context.active_preset["overrides"].get("contact_damage_per_hit", -1.0)) != 3.0 or \
 			lab_session.sandbox_health_decay_multiplier != 2.5 or health_decay_control.value != 2.5 or \
+			not lab_session.wave_spawning_enabled or not lab_session.spawn_initial_enemy or \
+			not wave_spawning_control.button_pressed or \
+			lab_context.active_preset["overrides"].get("wave_spawning_enabled", false) != true or \
 			float(lab_context.active_preset["overrides"].get("health_decay_multiplier", -1.0)) != 2.5 or \
 			enemy_speed_control.value != 2.0 or \
 			float(lab_context.active_preset["overrides"].get("enemy_speed", -1.0)) != 2.0 or \

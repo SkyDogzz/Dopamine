@@ -437,6 +437,12 @@ max_value = 10.0
 value = 1.0
 step = 0.1
 
+[node name="WaveSpawningToggle" type="CheckBox" parent="Root/Body/Side/Sections/EnemyConfig"]
+custom_minimum_size = Vector2(0, 20)
+layout_mode = 2
+focus_mode = 2
+text = "AUTO WAVE SPAWNING"
+
 [node name="SeedTitle" type="Label" parent="Root/Body/Side/Sections/EnemyConfig"]
 layout_mode = 2
 theme_type_variation = "PixelHeading"

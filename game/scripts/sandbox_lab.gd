@@ -44,6 +44,7 @@ const MAX_ENEMIES_PER_SPAWN := 500
 @onready var _spawn_count: SpinBox = $Root/Body/Side/Sections/EnemyConfig/SpawnCount
 @onready var _contact_damage: SpinBox = $Root/Body/Side/Sections/EnemyConfig/ContactDamage
 @onready var _health_decay_multiplier: SpinBox = $Root/Body/Side/Sections/EnemyConfig/HealthDecayMultiplier
+@onready var _wave_spawning_toggle: CheckBox = $Root/Body/Side/Sections/EnemyConfig/WaveSpawningToggle
 @onready var _seed_control: SpinBox = $Root/Body/Side/Sections/EnemyConfig/Seed
 @onready var _capture_snapshot_button: Button = $Root/Body/Left/SnapshotControls/CaptureButton
 @onready var _restore_snapshot_button: Button = $Root/Body/Left/SnapshotControls/RestoreButton
@@ -94,6 +95,7 @@ func _ready() -> void:
 	_spawn_count.value_changed.connect(_set_spawn_count_override)
 	_contact_damage.value_changed.connect(_set_contact_damage_override)
 	_health_decay_multiplier.value_changed.connect(_set_health_decay_override)
+	_wave_spawning_toggle.toggled.connect(_set_wave_spawning_override)
 	_seed_control.value_changed.connect(_set_seed_override)
 	_populate_visual_build_options()
 	for enemy_id in ["chaser", "sprinter", "tank", "shooter", "buffer", "exploder", "shielder", "summoner", "elite", "mid_boss", "final_boss"]:
@@ -120,6 +122,7 @@ func _ready() -> void:
 	_select_spawn_enemy_affix(str(context.active_preset["overrides"].get("spawn_enemy_affix", "Hasted")))
 	_contact_damage.value = float(context.active_preset["overrides"].get("contact_damage_per_hit", 0.0))
 	_health_decay_multiplier.value = float(context.active_preset["overrides"].get("health_decay_multiplier", 1.0))
+	_wave_spawning_toggle.button_pressed = bool(context.active_preset["overrides"].get("wave_spawning_enabled", false))
 	_seed_control.value = float(context.active_preset["seed"])
 	_pause_button.grab_focus()
 	_refresh()
@@ -141,7 +144,8 @@ func _default_preset() -> Dictionary:
 		"schema_version": 1, "preset_id": "lab_default", "name": "Lab Default",
 		"description": "Empty isolated combat lab", "base_mode": "survival", "seed": 1,
 		"overrides": {"spawn_count": SPAWN_BATCH_SIZE, "spawn_enemy_type": "chaser",
-			"spawn_enemy_affix": "Hasted", "health_decay_multiplier": 1.0}, "flags": {},
+			"spawn_enemy_affix": "Hasted", "health_decay_multiplier": 1.0,
+			"wave_spawning_enabled": false}, "flags": {},
 		"initial_build": {
 			"weapons": [{"id": "lightning_conductor", "level": 1}],
 			"relics": [{"id": "storm_core", "level": 1}], "equipment": [], "stats": {},
@@ -410,6 +414,14 @@ func _set_health_decay_override(value: float) -> void:
 	if context.session != null:
 		context.session.sandbox_health_decay_multiplier = value
 
+func _set_wave_spawning_override(enabled: bool) -> void:
+	if context == null or context.active_preset.is_empty():
+		return
+	context.active_preset["overrides"]["wave_spawning_enabled"] = enabled
+	if context.session != null:
+		context.session.wave_spawning_enabled = enabled
+		context.session.spawn_initial_enemy = enabled
+
 func _set_seed_override(value: float) -> void:
 	if context == null or context.active_preset.is_empty():
 		return
@@ -474,6 +486,7 @@ func _restore_snapshot() -> void:
 	_select_spawn_enemy_affix(str(context.active_preset["overrides"].get("spawn_enemy_affix", "Hasted")))
 	_contact_damage.value = float(context.active_preset["overrides"].get("contact_damage_per_hit", 0.0))
 	_health_decay_multiplier.value = float(context.active_preset["overrides"].get("health_decay_multiplier", 1.0))
+	_wave_spawning_toggle.button_pressed = bool(context.active_preset["overrides"].get("wave_spawning_enabled", false))
 	_seed_control.value = float(context.seed)
 	var stat_id := str(_live_stat_select.get_item_metadata(_live_stat_select.selected))
 	_live_stat_value.value = float(context.live_stat_overrides.get(stat_id, 0.0))
@@ -632,6 +645,7 @@ func _preset_from_editor() -> Dictionary:
 	preset["overrides"]["spawn_enemy_affix"] = str(_elite_affix_select.get_item_metadata(_elite_affix_select.selected))
 	preset["overrides"]["contact_damage_per_hit"] = _contact_damage.value
 	preset["overrides"]["health_decay_multiplier"] = _health_decay_multiplier.value
+	preset["overrides"]["wave_spawning_enabled"] = _wave_spawning_toggle.button_pressed
 	var checked: Dictionary = preset_service.validate_preset(preset)
 	var build = load("res://scripts/sandbox_build.gd").new()
 	var build_result: Dictionary = build.load_build(parser.data)
@@ -659,6 +673,7 @@ func _apply_preset(preset: Dictionary) -> void:
 	_select_spawn_enemy_affix(str(preset["overrides"].get("spawn_enemy_affix", "Hasted")))
 	_contact_damage.value = float(preset["overrides"].get("contact_damage_per_hit", 0.0))
 	_health_decay_multiplier.value = float(preset["overrides"].get("health_decay_multiplier", 1.0))
+	_wave_spawning_toggle.button_pressed = bool(preset["overrides"].get("wave_spawning_enabled", false))
 	_seed_control.value = float(preset["seed"])
 	context.live_stat_overrides.clear()
 	_restore_snapshot_button.disabled = true

@@ -14,7 +14,7 @@ func _run() -> void:
 		"seed": 12345,
 		"overrides": {"enemy_hp": 2.0, "enemy_speed": 2.0, "spawn_count": 25,
 			"spawn_enemy_type": "elite", "spawn_enemy_affix": "Hasted", "contact_damage_per_hit": 5.0,
-			"health_decay_multiplier": 2.5},
+			"health_decay_multiplier": 2.5, "wave_spawning_enabled": false},
 		"flags": {"god_mode": false},
 		"initial_build": {"weapons": [{"id": "lightning_conductor", "level": 2}]},
 	}
@@ -149,6 +149,16 @@ func _run() -> void:
 	if preset_service.validate_preset(negative_health_decay).get("ok", false):
 		_fail("Health decay multiplier should reject negative values")
 		return
+	var waves_enabled_preset := preset.duplicate(true)
+	waves_enabled_preset["overrides"]["wave_spawning_enabled"] = true
+	if not preset_service.validate_preset(waves_enabled_preset).get("ok", false):
+		_fail("Sandbox presets should accept the explicit wave-spawning toggle")
+		return
+	var invalid_waves_enabled_preset := preset.duplicate(true)
+	invalid_waves_enabled_preset["overrides"]["wave_spawning_enabled"] = "true"
+	if preset_service.validate_preset(invalid_waves_enabled_preset).get("ok", false):
+		_fail("Wave spawning override should reject non-boolean values")
+		return
 	var context = load("res://scripts/sandbox_lab_context.gd").new(preset_service)
 	root.add_child(context)
 	var context_start: Dictionary = await context.start(preset)
@@ -156,7 +166,8 @@ func _run() -> void:
 			context.normal_save_service != null or context.seed != preset["seed"] or \
 			context.session.sandbox_rng_seed != 12345 or \
 			not is_equal_approx(context.session.contact_damage_per_hit, 5.0) or \
-			not is_equal_approx(context.session.sandbox_health_decay_multiplier, 2.5):
+			not is_equal_approx(context.session.sandbox_health_decay_multiplier, 2.5) or \
+			context.session.wave_spawning_enabled:
 		_fail("Sandbox Lab context must start from validated data without normal progression services")
 		return
 	var materialized_weapons: Array = context.build.to_dictionary()["weapons"]

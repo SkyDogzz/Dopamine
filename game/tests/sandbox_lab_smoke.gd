@@ -83,6 +83,7 @@ func _run() -> void:
 	var enemy_speed_override: SpinBox = lab.get_node_or_null("Root/Body/Side/Sections/EnemyConfig/EnemySpeedMultiplier")
 	var contact_damage: SpinBox = lab.get_node_or_null("Root/Body/Side/Sections/EnemyConfig/ContactDamage")
 	var health_decay_multiplier: SpinBox = lab.get_node_or_null("Root/Body/Side/Sections/EnemyConfig/HealthDecayMultiplier")
+	var wave_spawning_toggle: CheckBox = lab.get_node_or_null("Root/Body/Side/Sections/EnemyConfig/WaveSpawningToggle")
 	var seed_control: SpinBox = lab.get_node_or_null("Root/Body/Side/Sections/EnemyConfig/Seed")
 	var restore_hp_button: Button = lab.get_node_or_null("Root/Body/Left/Controls/RestoreHpButton")
 	if weapon_select == null or weapon_level == null or add_weapon == null or relic_select == null or \
@@ -90,10 +91,22 @@ func _run() -> void:
 			add_stat == null or apply_build == null or import_profile == null or equipment_slot == null or equipment_stat == null or \
 			equipment_value == null or add_equipment == null or live_stat == null or live_value == null or \
 			apply_live_stat == null or enemy_hp_override == null or enemy_speed_override == null or \
-			contact_damage == null or health_decay_multiplier == null or seed_control == null or \
+			contact_damage == null or health_decay_multiplier == null or wave_spawning_toggle == null or seed_control == null or \
 			restore_hp_button == null:
 		_fail("Sandbox Lab should provide profile import, visual build controls and typed combat configuration")
 		return
+	if wave_spawning_toggle.button_pressed or lab.context.session.wave_spawning_enabled or \
+			lab.context.session.spawn_initial_enemy:
+		_fail("Sandbox automatic wave spawning should be disabled by default")
+		return
+	wave_spawning_toggle.button_pressed = true
+	wave_spawning_toggle.toggled.emit(true)
+	if not lab.context.session.wave_spawning_enabled or not lab.context.session.spawn_initial_enemy or \
+			lab.context.active_preset["overrides"].get("wave_spawning_enabled", false) != true:
+		_fail("Enabling automatic waves should update the isolated session and active preset")
+		return
+	wave_spawning_toggle.button_pressed = false
+	wave_spawning_toggle.toggled.emit(false)
 	if not is_equal_approx(seed_control.value, 1.0) or spawn_count.value != 10.0:
 		_fail("The default Sandbox preset should expose seed 1")
 		return
