@@ -105,8 +105,18 @@ func _run() -> void:
 			lab.context.active_preset["overrides"].get("wave_spawning_enabled", false) != true:
 		_fail("Enabling automatic waves should update the isolated session and active preset")
 		return
+	lab.context.session.enemy_spawn_interval = 0.05
+	lab.context.session.player_active_time = 1.0
+	lab.context.session._next_enemy_spawn_time = 0.0
+	if not await _wait_for_entities(lab.context.simulation, 1):
+		_fail("Enabling automatic wave spawning should create an enemy through the regular wave director")
+		return
 	wave_spawning_toggle.button_pressed = false
 	wave_spawning_toggle.toggled.emit(false)
+	var automatic_wave_cleanup: int = lab.context.simulation.kill_all()
+	if automatic_wave_cleanup <= 0 or not await _wait_for_sequence(lab.context.simulation, automatic_wave_cleanup):
+		_fail("The automatic wave smoke should clean up its spawned enemy before continuing")
+		return
 	if not is_equal_approx(seed_control.value, 1.0) or spawn_count.value != 10.0:
 		_fail("The default Sandbox preset should expose seed 1")
 		return
@@ -555,6 +565,14 @@ func _wait_for_entities(simulation: Object, expected_count: int) -> bool:
 	while Time.get_ticks_msec() < deadline:
 		await process_frame
 		if int(simulation.snapshot()["metrics"]["entity_count"]) >= expected_count:
+			return true
+	return false
+
+func _wait_for_sequence(simulation: Object, sequence: int) -> bool:
+	var deadline := Time.get_ticks_msec() + 1500
+	while Time.get_ticks_msec() < deadline:
+		await process_frame
+		if int(simulation.snapshot().get("last_sequence", 0)) >= sequence:
 			return true
 	return false
 
