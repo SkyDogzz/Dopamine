@@ -101,6 +101,26 @@ tar --sort=name --mtime="@$source_date_epoch" --owner=0 --group=0 --numeric-owne
 
 mkdir -p "$verify_dir"
 tar -xzf "$output_dir/$artifact_name" -C "$verify_dir"
+for required_file in \
+	'DopamineSurvivor.x86_64' \
+	'libdopamine.linux.template_release.x86_64.so' \
+	'THIRD_PARTY_NOTICES.md' \
+	'docs/release/licenses/godot-4.7.2-copyright-info.json' \
+	'docs/release/licenses/godot-4.7.2-license-info.json' \
+	'game/assets/fonts/PRESS-START-2P-OFL.txt' \
+	'game/assets/fonts/DEJAVU-LICENSE.txt' \
+	'README.txt'; do
+	if [[ ! -f "$verify_dir/$required_file" ]]; then
+		echo "The extracted staging package is missing: $required_file" >&2
+		exit 1
+	fi
+done
+package_file_list="$tmp_dir/package-files.txt"
+tar -tzf "$output_dir/$artifact_name" >"$package_file_list"
+if grep -Eq '(^|/)(tests|tools|assets/source)/' "$package_file_list"; then
+	echo "The staging archive contains development-only files." >&2
+	exit 1
+fi
 ldd "$verify_dir/DopamineSurvivor.x86_64" "$verify_dir/libdopamine.linux.template_release.x86_64.so" >"$tmp_dir/ldd.log"
 if grep -q 'not found' "$tmp_dir/ldd.log"; then
 	echo "The staged binaries have unresolved shared-library dependencies." >&2

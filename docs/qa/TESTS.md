@@ -58,6 +58,13 @@
 - [x] Archive staging non distribuable : `build/linux/staging/DopamineSurvivor-linux-78f37e4-staging.tar.gz`, 31 977 842 octets, SHA-256 `4616c25c2cae69b1e0db9ad118b1c60ed2a0823fe3544f904e630d3e1b792bfc`; le fichier `.sha256` est créé à côté.
 - [i] Cette preuve valide l’assemblage et le démarrage headless du commit publié, pas une partie jouée, les sauvegardes en usage, une machine Linux distincte, le GPU réel, les autres plateformes ou une version distribuable.
 
+## P9.8 — Contenu de l’archive Linux staging — 2026-10-17
+
+- [x] `tools/package_linux_staging.sh` contrôle après extraction la présence de l’exécutable, de la GDExtension Release, du README, des notices, des archives de licences Godot et des licences des deux polices; il rejette une archive contenant `tests/`, `tools/` ou `assets/source/`.
+- [x] `bash -n tools/package_linux_staging.sh` passe. Reconstruction depuis l’archive Git propre du commit `fa6429887665521b7d1185aeb7ab1a3f97a27272`, build CMake Release vierge, import/export Godot 4.7.2, contrôles sur l’archive extraite, `ldd` sans dépendance manquante, chargement de la GDExtension Release et démarrage headless sans `ERROR:` passent.
+- [x] Archive non distribuable : `DopamineSurvivor-linux-fa64298-staging.tar.gz`, 31 977 821 octets; SHA-256 `8bcf9259bd6f987840f76afd6577607d39c97d7ecbd028aaa7382eeb5d21985c`.
+- [i] Cela valide le contenu du staging Linux x86_64 sur l’hôte virtualisé actuel; ce n’est ni un artefact versionné ni une validation d’installation, de sauvegarde en jeu, de GPU réel ou d’une autre plateforme.
+
 ## P9.3 — Sprite prototype du Pulse Warden — 2026-10-17
 
 - [x] Remplacer l’export visuel du boss intermédiaire par `boss_pulse_warden.png`, avec source Aseprite dans `game/assets/source/roster/` et référence générée archivée dans `docs/art/source/pulse_warden_generated.png`.
