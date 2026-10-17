@@ -662,7 +662,7 @@ P1 livre le Sandbox développeur et ne remplace pas cette feature produit.
 ## P9 — Équilibrage, accessibilité, polish et livraison
 
 - [ ] **P9.1 — Équilibrage combat**
-  - [x] Collecter DPS/survie par arme et archétype sur une configuration documentée; matrice exploratoire de 360 cas dans `docs/qa/data/survival_archetype_balance_seed_20261017.csv`, limites dans `docs/qa/TESTS.md`.
+  - [x] Collecter DPS/survie par arme et archétype sur une configuration documentée; matrice stationnaire de 360 cas et pilote orbit sur 12 archétypes dans `docs/qa/data/`, limites dans `docs/qa/TESTS.md`.
   - [x] Comparer les dix armes aux niveaux 1, 5+relique 5 et évolution sur formations `single`, `cluster` et `approach` avec `combat_weapon_balance_survey.gd`; les valeurs brutes et les limites sont consignées dans `docs/qa/TESTS.md`. Une collecte par cas reste exploratoire et ne calibre pas les paramètres proposés.
   - [ ] Ajuster les valeurs proposées via données de balance, pas par changements cachés.
 - [ ] **P9.2 — Économie et durée**

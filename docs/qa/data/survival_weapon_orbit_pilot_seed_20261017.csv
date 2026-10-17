@@ -1,0 +1,14 @@
+# Godot 4.7.2; seed=20261017; difficulty=normal; simulation speed=1x.
+# Synthetic orbit pilot, not a player model: one Chaser, level-5 weapon + matching level-5 relic, 18 simulated seconds maximum.
+# Health decay, XP and chests disabled; enemy HP x1000. The player orbits using a standoff derived from each weapon's effective range.
+enemy,weapon,build,movement,active_seconds,weapon_damage,weapon_dps,enemy_hp_remaining,enemy_defeated,player_hp_remaining,player_hp_net_loss,player_alive,path_distance,kills
+chaser,lightning_conductor,level_5,orbit,18.00,945.00,52.49,19055.00,false,50.0,50.0,true,4320.0,0
+chaser,inferno_sprayer,level_5,orbit,18.01,307.20,17.06,19615.31,false,100.0,0.0,true,4328.0,0
+chaser,crimson_daggers,level_5,orbit,18.01,0.00,0.00,20000.00,false,100.0,0.0,true,4324.0,0
+chaser,minigun,level_5,orbit,18.01,864.00,47.99,19135.86,false,100.0,0.0,true,4324.0,0
+chaser,toxic_cloud,level_5,orbit,18.01,48.75,2.71,19878.12,false,100.0,0.0,true,4324.0,0
+chaser,sawblades,level_5,orbit,18.00,120.00,6.67,19880.00,false,100.0,0.0,true,4324.0,0
+chaser,meteor_staff,level_5,orbit,18.01,149.76,8.31,19850.23,false,100.0,0.0,true,4328.0,0
+chaser,prism_laser,level_5,orbit,18.01,630.00,34.99,19370.00,false,100.0,0.0,true,4324.0,0
+chaser,void_orb,level_5,orbit,18.02,105.00,5.83,19895.00,false,100.0,0.0,true,4328.0,0
+chaser,frost_nova,level_5,orbit,16.65,67.20,4.04,19932.80,false,0.0,100.0,false,4004.0,0

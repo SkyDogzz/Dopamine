@@ -1,6 +1,7 @@
 extends SceneTree
 
 const LOADOUT_SCRIPT := preload("res://scripts/survival_loadout.gd")
+const SURVIVAL_TARGETING := preload("res://scripts/survival_targeting.gd")
 const WEAPON_IDS := ["lightning_conductor", "inferno_sprayer", "crimson_daggers", "minigun",
 		"toxic_cloud", "sawblades", "meteor_staff", "prism_laser", "void_orb", "frost_nova"]
 const ENEMY_TYPES := ["chaser", "sprinter", "tank", "shooter", "buffer", "exploder",
@@ -13,12 +14,15 @@ const BUILD_CASES := [
 const ACTIVE_SECONDS := 18.0
 const ENEMY_HP_MULTIPLIER := 1000.0
 const PLAYER_DISTANCE := 84.0
-const SIMULATION_SPEED := 4.0
+const STATIONARY_SIMULATION_SPEED := 4.0
+const MOBILE_SIMULATION_SPEED := 1.0
 
 var _weapon_filter := ""
 var _enemy_filter := ""
 var _build_filter := ""
+var _movement_mode := "stationary"
 var _survey_seed := 20261017
+var _movement_actions: Array[String] = []
 
 func _initialize() -> void:
 	call_deferred("_run")
@@ -31,6 +35,8 @@ func _run() -> void:
 			_enemy_filter = argument.trim_prefix("--enemy=")
 		elif argument.begins_with("--build="):
 			_build_filter = argument.trim_prefix("--build=")
+		elif argument.begins_with("--movement="):
+			_movement_mode = argument.trim_prefix("--movement=")
 		elif argument.begins_with("--seed="):
 			_survey_seed = int(argument.trim_prefix("--seed="))
 	if not _weapon_filter.is_empty() and _weapon_filter not in WEAPON_IDS:
@@ -45,11 +51,15 @@ func _run() -> void:
 	if not _build_filter.is_empty() and _build_filter not in build_names:
 		_fail("Unknown build filter: %s" % _build_filter)
 		return
+	if _movement_mode not in ["stationary", "kite", "orbit"]:
+		_fail("Movement mode must be stationary, kite, or orbit")
+		return
 
-	print("# survey_seed=%d,difficulty=normal,simulation_speed=%.1fx,player_movement=none,health_decay=disabled" % [
-		_survey_seed, SIMULATION_SPEED,
+	var simulation_speed := _simulation_speed()
+	print("# survey_seed=%d,difficulty=normal,simulation_speed=%.1fx,player_movement=%s,health_decay=disabled" % [
+		_survey_seed, simulation_speed, _movement_mode,
 	])
-	print("enemy,weapon,build,active_seconds,weapon_damage,weapon_dps,enemy_hp_remaining,enemy_defeated,player_hp_remaining,player_hp_net_loss,player_alive,kills")
+	print("enemy,weapon,build,movement,active_seconds,weapon_damage,weapon_dps,enemy_hp_remaining,enemy_defeated,player_hp_remaining,player_hp_net_loss,player_alive,path_distance,kills")
 	var success := true
 	for enemy_type in ENEMY_TYPES:
 		if not _enemy_filter.is_empty() and enemy_type != _enemy_filter:
@@ -68,6 +78,7 @@ func _run() -> void:
 		if not success:
 			break
 	Engine.time_scale = 1.0
+	_clear_movement_actions()
 	if success:
 		print("Archetype survival survey completed; raw comparison only, no tuning judgement applied")
 		quit(0)
@@ -139,15 +150,32 @@ func _measure(enemy_type: String, weapon_id: String, build: Dictionary) -> bool:
 		return false
 
 	var initial_player_hp := float(session.player_hp)
-	session.simulation.set_speed(SIMULATION_SPEED)
-	Engine.time_scale = SIMULATION_SPEED
+	var simulation_speed := _simulation_speed()
+	session.simulation.set_speed(simulation_speed)
+	Engine.time_scale = simulation_speed
 	session.weapon_enabled = true
 	var start_active := float(session.player_active_time)
+	var next_move_at := start_active
+	var direction_seed := 0
+	var path_distance := 0.0
+	var previous_position: Vector2 = session.player.global_position
 	var deadline := Time.get_ticks_msec() + 60000
 	while float(session.player_active_time) - start_active < ACTIVE_SECONDS and \
 			Time.get_ticks_msec() < deadline and not session.run_over:
+		if _movement_mode != "stationary" and session.player_active_time >= next_move_at:
+			if _movement_mode == "orbit":
+				_set_orbit_movement(session, direction_seed, weapon_id)
+				next_move_at = session.player_active_time + 0.25
+			else:
+				_set_kite_movement(session, direction_seed)
+				next_move_at = session.player_active_time + 0.5
+			direction_seed += 1
 		await process_frame
+		var current_position: Vector2 = session.player.global_position
+		path_distance += previous_position.distance_to(current_position)
+		previous_position = current_position
 	var active_seconds := float(session.player_active_time) - start_active
+	_clear_movement_actions()
 	var health_remaining := _enemy_health(session, enemy_type)
 	var weapon_damage := float(session._weapon_damage_by_id.get(weapon_id, 0.0))
 	var player_hp_remaining := float(session.player_hp)
@@ -172,10 +200,10 @@ func _measure(enemy_type: String, weapon_id: String, build: Dictionary) -> bool:
 		])
 		session.queue_free()
 		return false
-	print("%s,%s,%s,%.2f,%.2f,%.2f,%.2f,%s,%.1f,%.1f,%s,%d" % [
-		enemy_type, weapon_id, build["name"], active_seconds, weapon_damage,
+	print("%s,%s,%s,%s,%.2f,%.2f,%.2f,%.2f,%s,%.1f,%.1f,%s,%.1f,%d" % [
+		enemy_type, weapon_id, build["name"], _movement_mode, active_seconds, weapon_damage,
 		weapon_damage / active_seconds, health_remaining, str(enemy_defeated),
-		player_hp_remaining, player_hp_net_loss, str(alive), kills,
+		player_hp_remaining, player_hp_net_loss, str(alive), path_distance, kills,
 	])
 	session.queue_free()
 	await process_frame
@@ -198,7 +226,99 @@ func _enemy_health(session: Node, enemy_type: String) -> float:
 			total += maxf(0.0, float(components.get("Health", {}).get("current", 0.0)))
 	return total
 
+func _simulation_speed() -> float:
+	return STATIONARY_SIMULATION_SPEED if _movement_mode == "stationary" else MOBILE_SIMULATION_SPEED
+
+func _set_kite_movement(session: Node, orbit_direction: int) -> void:
+	var away := _nearest_enemy_offset(session).normalized()
+	var tangent := Vector2(-away.y, away.x) * (1.0 if orbit_direction % 2 == 0 else -1.0)
+	_set_movement((away * 0.8 + tangent * 0.6).normalized())
+
+func _set_orbit_movement(session: Node, orbit_direction: int, weapon_id: String) -> void:
+	var offset := _nearest_enemy_offset(session)
+	if offset == Vector2.ZERO:
+		_set_movement(Vector2.UP)
+		return
+	var distance := offset.length()
+	var away := offset / distance
+	var target_distance := minf(_effective_weapon_range(session, weapon_id) * 0.75, 105.0)
+	var min_distance := maxf(32.0, target_distance * 0.8)
+	var max_distance := target_distance * 1.1
+	var radial := Vector2.ZERO
+	if distance < min_distance:
+		radial = away
+	elif distance > max_distance:
+		radial = -away
+	var turn := floori(float(orbit_direction) / 8.0)
+	var tangent := Vector2(-away.y, away.x) * (1.0 if turn % 2 == 0 else -1.0)
+	_set_movement((radial + tangent).normalized() if radial != Vector2.ZERO else tangent)
+
+func _effective_weapon_range(session: Node, weapon_id: String) -> float:
+	var level: int = session.loadout.weapon_level(weapon_id)
+	match weapon_id:
+		"lightning_conductor":
+			return SURVIVAL_TARGETING.visible_range(session.lightning_range)
+		"inferno_sprayer":
+			return SURVIVAL_TARGETING.weapon_range(session.inferno_range,
+				session._weapon_level_multiplier(weapon_id, "range_multiplier", level))
+		"crimson_daggers":
+			return SURVIVAL_TARGETING.visible_range(session.daggers_range)
+		"minigun":
+			return SURVIVAL_TARGETING.visible_range(session.minigun_range)
+		"toxic_cloud":
+			return SURVIVAL_TARGETING.visible_range(session.toxic_range)
+		"sawblades":
+			return SURVIVAL_TARGETING.visible_range(session.sawblades_range)
+		"meteor_staff":
+			return SURVIVAL_TARGETING.visible_range(session.meteor_staff_range)
+		"prism_laser":
+			return SURVIVAL_TARGETING.visible_range(session.prism_laser_range)
+		"void_orb":
+			return SURVIVAL_TARGETING.visible_range(session.void_orb_range)
+		"frost_nova":
+			var area_multiplier: float = 1.0 + session.loadout.global_relic_bonus("area_pct") / 100.0
+			return SURVIVAL_TARGETING.weapon_range(session.frost_nova_radius,
+				session._weapon_level_multiplier(weapon_id, "area_multiplier", level), area_multiplier)
+	return 0.0
+
+func _nearest_enemy_offset(session: Node) -> Vector2:
+	var nearest_offset := Vector2.ZERO
+	var nearest_distance_squared := INF
+	for entity in session.simulation.snapshot()["entities"]:
+		var components: Dictionary = entity["components"]
+		if components.get("IsProjectile", false) or components.get("IsXpOrb", false) or \
+				float(components.get("Health", {}).get("current", 0.0)) <= 0.0:
+			continue
+		var transform: Dictionary = components.get("Transform2D", {})
+		var enemy_position := Vector2(float(transform.get("x", 0.0)), float(transform.get("y", 0.0)))
+		var offset: Vector2 = session.player.global_position - enemy_position
+		if offset.length_squared() < nearest_distance_squared:
+			nearest_distance_squared = offset.length_squared()
+			nearest_offset = offset
+	return nearest_offset
+
+func _set_movement(direction: Vector2) -> void:
+	var actions: Array[String] = []
+	if direction.x < -0.35:
+		actions.append("move_left")
+	elif direction.x > 0.35:
+		actions.append("move_right")
+	if direction.y < -0.35:
+		actions.append("move_up")
+	elif direction.y > 0.35:
+		actions.append("move_down")
+	_clear_movement_actions()
+	_movement_actions = actions
+	for action in _movement_actions:
+		Input.action_press(action)
+
+func _clear_movement_actions() -> void:
+	for action in _movement_actions:
+		Input.action_release(action)
+	_movement_actions.clear()
+
 func _fail(message: String) -> void:
 	Engine.time_scale = 1.0
+	_clear_movement_actions()
 	push_error(message)
 	quit(1)

@@ -118,7 +118,7 @@
 
 ## P9.1 — Survey Survival par archétype et arme — 2026-10-17
 
-- [x] `survival_archetype_balance_survey.gd` mesure **360 cas** : 12 archétypes (`chaser`, `sprinter`, `tank`, `shooter`, `buffer`, `exploder`, `shielder`, `summoner`, `summoned`, `elite`, `mid_boss`, `final_boss`) × 10 armes × 3 builds (niveau 1, niveau 5 + relique 5, évolution). Seed `20261017`, difficulté Normal, un ennemi initial à 84 px, joueur immobile à PV ordinaires, dégradation passive des PV désactivée, simulation à ×4, plafond de 18 s simulées et multiplicateur de PV ennemi ×1000. XP et coffres sont désactivés; la sonde vérifie que le build reste exactement celui annoncé. Les options `--enemy`, `--weapon`, `--build` filtrent les cas; le CSV complet est archivé dans [`data/survival_archetype_balance_seed_20261017.csv`](data/survival_archetype_balance_seed_20261017.csv).
+- [x] `survival_archetype_balance_survey.gd` mesure **360 cas** : 12 archétypes (`chaser`, `sprinter`, `tank`, `shooter`, `buffer`, `exploder`, `shielder`, `summoner`, `summoned`, `elite`, `mid_boss`, `final_boss`) × 10 armes × 3 builds (niveau 1, niveau 5 + relique 5, évolution). Seed `20261017`, difficulté Normal, un ennemi initial à 84 px, joueur immobile à PV ordinaires, dégradation passive des PV désactivée, simulation à ×4, plafond de 18 s simulées et multiplicateur de PV ennemi ×1000. XP et coffres sont désactivés; la sonde vérifie que le build reste exactement celui annoncé. Les options `--enemy`, `--weapon`, `--build` et `--movement` filtrent les cas; `stationary`, `kite` et `orbit` sont les profils de déplacement. Le CSV stationnaire est archivé dans [`data/survival_archetype_balance_seed_20261017.csv`](data/survival_archetype_balance_seed_20261017.csv).
 
   | Archétype | Survie moyenne | Vivant après 18 s |
   |---|---:|---:|
@@ -138,6 +138,32 @@
 - [i] Le multiplicateur de PV élevé évite que les dégâts de l’arme éliminent rapidement la cible; il empêche aussi d’observer les transitions de phase des boss. Les dégâts de l’arme agrègent les ennemis présents dans la rencontre, donc incluent les invocations du Summoner. Une seule unité initiale ne reproduit ni une vague ni le soutien d’un groupe; les PV nets peuvent inclure le soin sur élimination. L’Exploder se détruit après son explosion. Le chronométrage reste frame-driven.
 - [i] Exécution sur le checkout de travail contenant le diff local non commité de `game/scripts/survival_session.gd` associé aux SFX et au rayon du boss; ce diff n’a pas été inclus dans ce commit. Une baseline propre est nécessaire avant tout tuning. Le survey filtré pour `exploder/crimson_daggers/evolved` et la matrice complète terminent avec code 0, sans erreur ni avertissement de ressources.
 - [ ] Cette collecte n’équilibre pas les valeurs **[PROPOSÉES]** : il reste à comparer des vagues mobiles et représentatives, les profils de joueur, les affixes d’élite et les phases complètes de boss avant toute conclusion de balance.
+
+## P9.1 — Comparaison stationnaire/orbit — 2026-10-17
+
+- [x] Étendre le survey avec `orbit`: le joueur reste à une distance déterminée par la portée effective de son arme, corrige radialement hors de sa zone et change d’angle toutes les 0,25 s. Ce profil tourne à ×1; `kite` reprend le déplacement d’évasion existant et tourne aussi à ×1. Les runs stationnaires restent à ×4. Aucun changement de gameplay ne découle de ces profils de sonde.
+- [x] Comparer sur les 12 archétypes un build unique Lightning Conductor niveau 5 + Storm Core niveau 5, à PV ordinaires et sans HP decay, avec un multiplicateur de PV ennemi ×1000. Le résultat orbit est dans [`data/survival_archetype_orbit_pilot_seed_20261017.csv`](data/survival_archetype_orbit_pilot_seed_20261017.csv). Dix rencontres sur douze atteignent 18 s; le Mid Boss tue le joueur à 16,02 s et le Final Boss à 14,56 s. L’Exploder se détruit; le Summoner fait apparaître des invocations.
+
+  | Archétype | Stationnaire: survie / PV restants | Orbit: survie / PV restants |
+  |---|---:|---:|
+  | Chaser | 4,19 s / 0 | 18,02 s / 90 |
+  | Sprinter | 3,88 s / 0 | 18,01 s / 40 |
+  | Tank | 4,59 s / 0 | 18,01 s / 80 |
+  | Shooter | 4,27 s / 0 | 18,01 s / 32 |
+  | Buffer | 4,47 s / 0 | 18,01 s / 80 |
+  | Exploder | 18,02 s / 88,2 | 18,01 s / 88,2 |
+  | Shielder | 4,59 s / 0 | 18,01 s / 70 |
+  | Summoner | 5,14 s / 0 | 18,01 s / 92,4 |
+  | Summoned | 4,00 s / 0 | 18,01 s / 100 |
+  | Elite | 4,01 s / 0 | 18,01 s / 60 |
+  | Mid Boss | 4,01 s / 0 | 16,02 s / 0 |
+  | Final Boss | 3,62 s / 0 | 14,56 s / 0 |
+
+- [i] Le mouvement modifie fortement le résultat; le pilote orbit n’est qu’un profil synthétique d’une rencontre à une cible. Les PV nets incluent le soin d’élimination. Les PV élevés empêchent les transitions de phase des boss, le HP decay est désactivé et un build/une arme ne représentent pas une run. Les paramètres de combat restent **[PROPOSÉS]** et aucun équilibrage n’est validé par cette comparaison.
+- [i] Le processus Godot termine avec code 0, mais signale 2 instances ObjectDB et 1 ressource encore référencées après le pilote comprenant les boss; la cause n’est pas attribuée à ce script et reste à diagnostiquer.
+
+- [x] Exercer ensuite le profil orbit sur les dix armes contre un Chaser avec un build niveau 5 + relique niveau 5, seed `20261017`; le relevé brut est dans [`data/survival_weapon_orbit_pilot_seed_20261017.csv`](data/survival_weapon_orbit_pilot_seed_20261017.csv). Il termine avec code 0. Dans ce protocole, les dégâts vont de 0 (Crimson Daggers) à 945 (Lightning Conductor), et Frost Nova tue le joueur à 16,65 s.
+- [i] Ce pilote confirme que le contrôleur orbit synthétique ne convient pas à une comparaison générale des armes : son rayon, la géométrie d’attaque et les déplacements propres à chaque arme interagissent différemment. Il sert à diagnostiquer la sonde, pas à comparer ou régler le DPS. Le jeu et les valeurs **[PROPOSÉES]** restent inchangés. Les avertissements ObjectDB/ressource sont reproduits à l’arrêt.
 
 ## Revalidation de la suite après export Linux — 2026-10-17
 

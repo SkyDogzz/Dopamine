@@ -1,0 +1,16 @@
+# Godot 4.7.2; seed=20261017; difficulty=normal; simulation speed=1x.
+# Player follows the nearest enemy at an orbit distance derived from that weapon's effective range; health decay, XP and chests disabled.
+# Initial archetype at 84 px; 18 simulated seconds maximum; lightning_conductor level 5 + Storm Core level 5.
+enemy,weapon,build,movement,active_seconds,weapon_damage,weapon_dps,enemy_hp_remaining,enemy_defeated,player_hp_remaining,player_hp_net_loss,player_alive,path_distance,kills
+chaser,lightning_conductor,level_5,orbit,18.02,945.00,52.46,19055.00,false,90.0,10.0,true,4324.0,0
+sprinter,lightning_conductor,level_5,orbit,18.01,945.00,52.46,11055.00,false,40.0,60.0,true,4324.0,0
+tank,lightning_conductor,level_5,orbit,18.01,945.00,52.48,79055.00,false,80.0,20.0,true,4324.0,0
+shooter,lightning_conductor,level_5,orbit,18.01,945.00,52.46,24055.00,false,32.0,68.0,true,4324.0,0
+buffer,lightning_conductor,level_5,orbit,18.01,945.00,52.46,34055.00,false,80.0,20.0,true,4328.0,0
+exploder,lightning_conductor,level_5,orbit,18.01,45.00,2.50,0.00,true,88.2,11.8,true,4324.0,1
+shielder,lightning_conductor,level_5,orbit,18.01,945.00,52.46,39055.00,false,70.0,30.0,true,4328.0,0
+summoner,lightning_conductor,level_5,orbit,18.01,978.75,54.34,41083.12,false,92.4,7.6,true,4324.0,3
+summoned,lightning_conductor,level_5,orbit,18.01,945.00,52.46,11055.00,false,100.0,0.0,true,4328.0,0
+elite,lightning_conductor,level_5,orbit,18.01,945.00,52.48,49055.00,false,60.0,40.0,true,4320.0,0
+mid_boss,lightning_conductor,level_5,orbit,16.02,832.50,51.97,212.50,false,0.0,100.0,false,3844.0,2
+final_boss,lightning_conductor,level_5,orbit,14.56,765.00,52.53,280.00,false,0.0,100.0,false,3500.0,2
