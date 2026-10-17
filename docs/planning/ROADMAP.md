@@ -1,6 +1,6 @@
 # Roadmap complète — Dopamine Survivor, GDD v1.6
 
-Cette roadmap transforme le [GDD consolidé v1.6](../gdd/GDD_v1.6.md), l’architecture, les ADR et les documents QA en travaux ordonnés et vérifiables. Elle décrit l’état constaté dans le dépôt au 2026-10-16 ainsi que le chemin restant. Elle ne remplace pas les décisions de ces documents.
+Cette roadmap transforme le [GDD consolidé v1.6](../gdd/GDD_v1.6.md), l’architecture, les ADR et les documents QA en travaux ordonnés et vérifiables. Elle décrit l’état constaté dans le dépôt au 2026-10-17 ainsi que le chemin restant. Elle ne remplace pas les décisions de ces documents.
 
 **Ordre de travail :** Linux-first ; Sandbox développeur MVP d’abord ; Survival jouable ensuite. Le module UI **PHUB — Run Stat Hub** est une tranche indépendante déjà priorisée après le HUD Survival et peut être implémentée avant la clôture des jalons P5/P6. Pour les jalons de contenu et progression, garder le contenu P5 avant la progression P6. Le cœur de simulation est partagé, mais la progression et les sauvegardes normales restent inaccessibles au Sandbox. Le goal principal actif couvre les jalons P5 à P9.
 
@@ -23,19 +23,19 @@ L’audit initial était statique. Les tranches Minigun, Toxic Cloud, Sawblades 
 | P2 Simulation/combat | **Fondation présente, couverture partielle** | Diversité des IA, règles complètes d’ennemis/boss, instrumentation et performance iGPU. |
 | P3 Prototype de combat | **Dix paires et dix évolutions de prototype présentes** | Contrats génériques, retours visuels par niveau, ciblage fidèle, mesures DPS détaillées. |
 | P4 Vertical slice Survival | **Boucle de run prototype présente** | Boss réels, difficulté sélectionnable, run équilibrée et vérifiée sans harness. |
-| P5 Contenu v1.6 | **Prototypes de contenu largement intégrés, jalon non livré** | Les dix paires, évolutions, niveaux/feedback et prototypes ennemis/boss sont présents. Le créateur confirme les vérifications manuelles demandées, dont le catalogue Sandbox et la run complète; restent le profilage représentatif, l’arbitrage des réactions et le balancing. Le stress test concentré reste au-dessus du budget de frame et n’est pas représentatif d’une vague. |
-| P6 Progression permanente | **Prototype anticipé seulement** | Catalogue complet, règles et contenus validés, récompenses calibrées et effets uniques actifs. |
-| P7 Modes Endless | **À faire** | Armorless complet ; arbitrages nécessaires pour Endless standard. |
-| P8 Sandbox Lab joueur | **À faire au-delà des outils développeur P1** | Builds libres, presets/import/export, copie de save, snapshots complets et règles de sécurité. |
+| P5 Contenu v1.6 | **Contenu et prototypes intégrés; checkpoint ouvert** | Les dix paires, leurs prototypes d’évolution et les huit familles/boss sont présentes; le créateur a confirmé une run complète et les vérifications manuelles. Restent Overcharge et autres règles encore ouvertes, calibration représentative, run Chaos ressentie et profilage sur iGPU cible. Le stress test concentré dépasse le budget d’une frame et ne représente pas une vague. |
+| P6 Progression permanente | **Boucle fonctionnelle implémentée; calibration incomplète** | Équipement, économie prototype, 100 nodes, 100 familles d’achievements, récompenses et migrations sont implémentés et couverts par smokes. Restent les décisions économiques ouvertes et la calibration représentative des profils et budgets de puissance. |
+| P7 Modes Endless | **Armorless fonctionnel; validation longue incomplète** | Armorless possède drafts, Flux, récompenses et records; il reste une run complète non assistée et la calibration des formules proposées. Endless standard attend les arbitrages de P7B. |
+| P8 Sandbox Lab joueur | **P8.1–P8.8 implémentés** | Builds, modes Survival/Armorless, presets/import/export, import de profil en lecture seule, snapshots et contrôles de simulation sont couverts par des smokes d’isolation. Endless standard reste refusé tant que ses règles sont ouvertes. |
 | P9 Qualité et livraison | **Partiel** | Performance sur vrai iGPU, accessibilité/VFX/audio, stabilité prolongée et Windows. |
 
 ### Lecture rapide : livré, prototype ou survolé
 
 **Bien intégré comme fondation :** simulation native découplée de Godot, worker, commandes/snapshots, limites de charge, outils Sandbox, loop de run Survival, pause/chest/XP, dix armes et leurs paires de reliques/évolutions en prototypes de combat, sauvegarde versionnée, premiers écrans d’équipement.
 
-**Intégré en prototype, à ne pas confondre avec une feature finie :** boss (patterns en phases, combat et équilibrage complets à valider), loot/probabilités, dix évolutions, Void Orb à attraction/percée, Frost Nova avec Chill/Absolute Zero, Sawblades à ricochets/Razorstorm, Meteor Staff en zone/Starfall fragmenté, Toxic Cloud en champ persistant, équipement et enhancement, trois nodes Core Stats, famille Exterminator, effets uniques, récompenses de run et mode Armorless en cours. Les paramètres restent souvent **[PROPOSÉS]**.
+**Fonctionnel mais non calibré :** boss et leurs patterns, probabilités de loot, dix évolutions et effets uniques; équipement/enhancement et économie, arbre à 100 nœuds, 100 familles d’achievements et récompenses de run; mode Armorless et Sandbox Lab isolé. Les paramètres restent souvent **[PROPOSÉS]** et les validations de run complète ou de matériel cible ne sont pas remplacées par les smokes.
 
-**Survolé ou absent par rapport au GDD :** autres pickups attirables par Magnet Heart (seules les orbes XP existent actuellement) ; validation et équilibrage du combat complet des armes et boss ; essai manuel du catalogue d’armes dans le Sandbox ; arbitrage des réactions élémentaires proposées, avec Overcharge **[OUVERT]** ; tree interconnecté d’environ 120 nodes ; catalogue d’achievements au plancher de 100 familles; l’extension vers la cible éditoriale proposée de 120 reste à faire ; Armorless complet et Endless standard après arbitrages ; Sandbox Lab joueur complet ; performance sur iGPU et build Windows.
+**Survolé, ouvert ou non validé :** pickups de soin/ressources/monnaies non encore définis; équilibrage des armes, boss, loot et progression; réactions proposées et Overcharge **[OUVERT]**; extension éventuelle de l’arbre et des achievements vers 120 (cible **[PROPOSÉE]**); partie Armorless complète sans assistance; conception d’Endless standard; validation CPU/GPU sur iGPU cible et livraison Windows. Le Sandbox Lab joueur n’est plus à faire : ses critères P8.1–P8.8 sont cochés et ses smokes ciblés sont consignés dans la QA.
 
 ## Dépendances principales
 
