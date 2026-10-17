@@ -49,6 +49,12 @@
 - Commande : `/tmp/cmake-3.31.12-linux-x86_64/bin/ctest --test-dir build --output-on-failure -j1`.
 - Le checkout contenait aussi un diff local non commité de `game/scripts/survival_session.gd`; le résultat atteste l’état combiné du checkout, mais ne peut pas être attribué exclusivement au commit `26cd944`. Ce test ne couvre toujours pas le GPU cible ni les interactions physiques.
 
+## P9.4 — Événements d’entrée de l’arbre de compétences — 2026-10-17
+
+- `skill_tree_panel_visual_smoke.gd` envoie une flèche droite puis Entrée pour sélectionner un nœud disponible, et D-pad bas puis A pour parcourir et activer le nœud d’arme disponible. Les signaux doivent garder leurs IDs stables; le test observe uniquement les requêtes et ne débloque rien.
+- Le script visuel est maintenant enregistré dans CTest afin que cette couverture clavier/manette synthétique soit exécutée avec la suite Godot.
+- Le test ne simule ni l’ergonomie sur une vraie manette ni un parcours physique complet du menu.
+
 ## Build et lancement depuis un clone Git propre — 2026-10-17
 
 - Clone local neuf du commit `09baf7a`, puis configuration CMake 3.31.12, compilation complète avec GCC 14.2.0, import Godot 4.7.2 et lancement headless de la scène principale : réussis. FetchContent a récupéré le SHA `godot-cpp` verrouillé.

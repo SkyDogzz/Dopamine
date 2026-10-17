@@ -118,6 +118,29 @@ func _run() -> void:
 	if not precision.disabled or panel.get_node("Panel/Content/NodeScroll/Rows/NodeBranch/FollowupCard/Content/PrecisionKicker").text != "ADVANCED · LOCKED":
 		_fail("The advanced critical node should remain locked until Fleet Footed is unlocked")
 		return
+	var input_requests: Array[String] = []
+	panel.unlock_requested.connect(func(node_id: String) -> void: input_requests.append(node_id))
+	vitality.grab_focus()
+	await _send_key(KEY_RIGHT)
+	if root.gui_get_focus_owner() != focus:
+		_fail("The right arrow should navigate from Vitality to the available follow-up node")
+		return
+	await _send_key(KEY_ENTER)
+	if input_requests != ["focused_training"]:
+		_fail("Enter should request the focused skill node by its stable ID")
+		return
+	focus.grab_focus()
+	await _send_gamepad_button(JOY_BUTTON_DPAD_DOWN)
+	var gamepad_target := root.gui_get_focus_owner() as Button
+	if gamepad_target == null or gamepad_target == focus:
+		_fail("The gamepad D-pad should move focus from the follow-up skill node")
+		return
+	input_requests.clear()
+	weapon_unlock.grab_focus()
+	await _send_gamepad_button(JOY_BUTTON_A)
+	if input_requests != ["unlock_crimson_daggers"]:
+		_fail("Gamepad A should activate the focused skill node by its stable ID")
+		return
 	var all_node_ids: Array[String] = progression.skill_node_ids()
 	var final_node_id: String = all_node_ids.back()
 	all_node_ids.pop_back()
@@ -145,3 +168,24 @@ func _button_for_node(container: VBoxContainer, node_id: String) -> Button:
 		if (button as Button).name == node_id:
 			return button as Button
 	return null
+
+func _send_key(keycode: Key) -> void:
+	var event := InputEventKey.new()
+	event.keycode = keycode
+	event.pressed = true
+	Input.parse_input_event(event)
+	await process_frame
+	event.pressed = false
+	Input.parse_input_event(event)
+	await process_frame
+
+func _send_gamepad_button(button_index: JoyButton) -> void:
+	var event := InputEventJoypadButton.new()
+	event.device = 0
+	event.button_index = button_index
+	event.pressed = true
+	Input.parse_input_event(event)
+	await process_frame
+	event.pressed = false
+	Input.parse_input_event(event)
+	await process_frame
