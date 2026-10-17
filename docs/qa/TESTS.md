@@ -1,5 +1,12 @@
 # Tests d'acceptation et validation
 
+## P7B/P8 — Endless standard dans le Sandbox Lab — 2026-10-17
+
+- [x] `sandbox_preset_smoke.gd` démarre successivement Survival, Armorless puis Endless standard dans le même `SandboxLabContext`; le changement de preset reste transactionnel et exige la pause.
+- [x] Le smoke confirme que la session Endless Lab active `endless_standard`, garde le verrouillage HP et n’injecte aucun `ProgressionService` ni `SaveService` normal.
+- [x] `sandbox_lab_smoke.gd` et la suite CTest complète passent sous Godot 4.7.2 : **95/95 tests en 64,06 s**.
+- [i] Cela valide l’exécution isolée du mode et les contrats automatiques, pas la calibration des règles Endless **[PROPOSÉES]** ni une run représentative de jeu.
+
 ## Checkpoint complet Linux — 2026-10-17
 
 - CTest séquentiel, build Debug existant, Godot officiel 4.7.2 : **87/87 tests passent en 59,80 s**. Cela couvre simulation core/worker, import Godot, rendu sous Xvfb, armes/catalogue, boss, progression, Armorless, Sandbox Lab/snapshots et scénarios des dix armes.

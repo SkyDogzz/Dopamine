@@ -23,8 +23,6 @@ func start(preset: Variant) -> Dictionary:
 	if not checked.get("ok", false):
 		return checked
 	var base_mode := str(checked["preset"]["base_mode"])
-	if base_mode == "endless":
-		return {"ok": false, "error": "mode_unavailable"}
 	var build_script = load("res://scripts/sandbox_build.gd")
 	var candidate_build = build_script.new()
 	var build_result: Dictionary = candidate_build.load_build(checked["preset"]["initial_build"])

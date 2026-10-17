@@ -25,8 +25,8 @@ L’audit initial était statique. Les tranches Minigun, Toxic Cloud, Sawblades 
 | P4 Vertical slice Survival | **Boucle de run prototype présente** | Boss réels, difficulté sélectionnable, run équilibrée et vérifiée sans harness. |
 | P5 Contenu v1.6 | **Contenu et prototypes intégrés; checkpoint ouvert** | Les dix paires, leurs prototypes d’évolution et les huit familles/boss sont présentes; les trois mutations Chaos supplémentaires sont implémentées et couvertes par smokes. Restent la calibration représentative, run Chaos ressentie et profilage sur iGPU cible. Le stress test concentré dépasse le budget d’une frame et ne représente pas une vague. |
 | P6 Progression permanente | **Boucle fonctionnelle implémentée; calibration incomplète** | Équipement, économie prototype, 100 nodes, 100 familles d’achievements, récompenses et migrations sont implémentés et couverts par smokes. Restent les décisions économiques ouvertes et la calibration représentative des profils et budgets de puissance. |
-| P7 Modes Endless | **Armorless fonctionnel; validation longue incomplète** | Armorless possède drafts, Flux, récompenses et records; il reste une run complète non assistée et la calibration des formules proposées. Endless standard attend les arbitrages de P7B. |
-| P8 Sandbox Lab joueur | **P8.1–P8.8 implémentés** | Builds, modes Survival/Armorless, presets/import/export, import de profil en lecture seule, snapshots et contrôles de simulation sont couverts par des smokes d’isolation. Endless standard reste refusé tant que ses règles sont ouvertes. |
+| P7 Modes Endless | **Prototypes Armorless et Endless standard fonctionnels; validation incomplète** | Armorless possède drafts, Flux, récompenses et records; une run complète non assistée et la calibration des formules proposées restent requises. Endless standard est jouable depuis le hub et après une victoire Survival; ses paramètres restent **[PROPOSÉS]**, à calibrer, et sa validation de run représentative reste à faire. |
+| P8 Sandbox Lab joueur | **P8.1–P8.8 implémentés** | Builds, trois modes (Survival, Endless standard et Armorless), presets/import/export, import de profil en lecture seule, snapshots et contrôles de simulation sont couverts par des smokes d’isolation. Endless s’exécute dans le contexte isolé sans service de progression/sauvegarde normale. |
 | P9 Qualité et livraison | **Partiel** | Performance sur vrai iGPU, accessibilité/VFX/audio, soak graphique sur matériel cible et Windows. |
 
 ### Lecture rapide : livré, prototype ou survolé
@@ -35,7 +35,7 @@ L’audit initial était statique. Les tranches Minigun, Toxic Cloud, Sawblades 
 
 **Fonctionnel mais non calibré :** boss et leurs patterns, probabilités de loot, dix évolutions et effets uniques; équipement/enhancement et économie, arbre à 100 nœuds, 100 familles d’achievements et récompenses de run; mode Armorless et Sandbox Lab isolé. Les paramètres restent souvent **[PROPOSÉS]** et les validations de run complète ou de matériel cible ne sont pas remplacées par les smokes.
 
-**Survolé, ouvert ou non validé :** pickups de soin/ressources/monnaies non encore définis; équilibrage des armes, boss, loot et progression; équilibrage des réactions dont les paramètres Overcharge restent **[PROPOSÉS]**; extension éventuelle de l’arbre et des achievements vers 120 (cible **[PROPOSÉE]**); partie Armorless complète sans assistance; conception d’Endless standard; validation CPU/GPU sur iGPU cible et livraison Windows. Le Sandbox Lab joueur n’est plus à faire : ses critères P8.1–P8.8 sont cochés et ses smokes ciblés sont consignés dans la QA.
+**Survolé, ouvert ou non validé :** pickups de soin/ressources/monnaies non encore définis; équilibrage des armes, boss, loot et progression; équilibrage des réactions dont les paramètres Overcharge restent **[PROPOSÉS]**; extension éventuelle de l’arbre et des achievements vers 120 (cible **[PROPOSÉE]**); partie Armorless complète sans assistance; validation représentative d’Endless standard et calibration de ses paramètres **[PROPOSÉS]**; validation CPU/GPU sur iGPU cible et livraison Windows. Le Sandbox Lab joueur n’est plus à faire : ses critères P8.1–P8.8 sont cochés et ses smokes ciblés sont consignés dans la QA.
 
 ## Dépendances principales
 
@@ -591,11 +591,12 @@ Travail requis :
 - [ ] **P7B.1 — Contrat de prototype**
   - [x] Prototype **[PROPOSÉ]** choisi sous délégation : déblocage après victoire Survival, lancement depuis le hub ou continuation après le boss, armes/reliques niveau 1 depuis le hub et build/HP conservés en continuation; mort/abandon, records par difficulté, récompenses sans bonus de boss final/équipement garanti.
   - [x] Réutiliser Easy–Chaos; scaling existant jusqu’à 24 puis +5,5 % HP ennemis par vague; mid-boss toutes les 12 vagues, y compris aux vagues 24 et 36. La croissance HP reste **[PROPOSÉE]**.
-- [ ] **P7B.2 — Implémentation post-décision**
+- [x] **P7B.2 — Prototype implémenté**
   - [x] Ajouter un lancement Endless dans le hub, verrouillé avant victoire Survival; l’entrée réutilise le service de progression normal et la difficulté choisie.
   - [x] Après victoire Survival, proposer `CONTINUE AS ENDLESS`; créditer la victoire, démarrer un nouvel ID de run à la vague 25, conserver HP/build/niveaux, reprendre la simulation et éviter le double crédit Survival. Smoke dans `endless_standard_session_smoke.gd`.
   - [x] Ajouter une smoke de bout en bout pour mort/abandon, résultat, persistance et continuation.
   - [x] Ajouter migration additive du profil v8→v9, records séparés par difficulté et récompenses idempotentes sans équipement garanti; smokes dédiés passent.
+  - [x] Ouvrir le mode Endless standard au Sandbox Lab comme troisième mode exécutable; conserver diagnostics, PV verrouillés, coffres normaux désactivés et aucune injection de service de progression/sauvegarde. Les règles de P7B restent **[PROPOSÉES]**.
 
 **Critère de sortie :** Armorless conforme aux règles validées et propositions clairement paramétrées; Endless standard jouable depuis le hub et en continuation immédiate, vérifié pour mort/abandon et persistance. Calibration et maîtrise répétable restent explicitement ouvertes.
 
@@ -605,7 +606,7 @@ P1 livre le Sandbox développeur et ne remplace pas cette feature produit.
 
 - [x] **P8.1 — Entrée et contexte isolé**
   - [x] Ajouter l’accès distinct Sandbox Lab au menu avant sélection/création de save; l’entrée `SANDBOX DEV` reste le Sandbox développeur P1.
-  - [x] Ajouter `SandboxLabContext` mémoire : il valide le preset, héberge une session Survival ou Armorless sans service de progression/save, désactive les coffres normaux et gèle le HP; il ne crédite aucune progression et remplace un preset seulement en pause. Le mode Endless standard est refusé explicitement tant que ses règles restent **[OUVERTES]**.
+  - [x] Ajouter `SandboxLabContext` mémoire : il valide le preset, héberge une session Survival, Endless standard ou Armorless sans service de progression/save, désactive les coffres normaux et gèle le HP; il ne crédite aucune progression et remplace un preset seulement en pause. Les règles d’Endless standard restent identifiées **[PROPOSÉES]**.
   - [x] Smoke dédié utilise un `XDG_DATA_HOME` isolé, vérifie le spawn et le stockage local du preset; aucune donnée n’est écrite sous `user://saves`.
 - [x] **P8.2 — Build et configuration**
   - [x] Ajouter des contrôles visuels au Lab pour sélectionner une arme/relique et son niveau, ajouter une stat, puis appliquer le build à la session isolée en pause. Les valeurs restent des outils expérimentaux **[PROPOSÉES]**.
@@ -621,14 +622,14 @@ P1 livre le Sandbox développeur et ne remplace pas cette feature produit.
   - [x] Ajouter `wave_spawning_enabled` (booléen, défaut faux) au preset et au Lab; l’activer réutilise le directeur de vagues Survival uniquement dans la session Sandbox isolée, et snapshots/restauration conservent le réglage.
   - [x] Exposer la seed du preset comme réglage RESTART; elle s’applique au Reset, est persistée, et invalide/refuse un snapshot tant que le redémarrage n’a pas eu lieu.
   - [x] Définir et documenter les cycles LIVE/REBUILD/RESTART et leurs limites de contenu dans `docs/architecture/INTERFACES.md`; les smokes Lab, preset et snapshot vérifient leur validation et leur application atomique. Les niveaux >5 ne sont pas pris en charge car le GDD fixe le niveau maximum à cinq.
-  - [x] Ajouter un sélecteur visible et navigable clavier/manette pour les modes exécutables Survival et Armorless; le mode choisi est intégré aux presets appliqués/exportés. Endless standard reste refusé tant que ses règles sont **[OUVERTES]**.
+  - [x] Ajouter un sélecteur visible et navigable clavier/manette pour les trois modes exécutables Survival, Endless standard et Armorless; le mode choisi est intégré aux presets appliqués/exportés.
   - [x] Ajouter `SandboxBuild` comme modèle isolé : armes/reliques, évolutions appariées, stats personnalisées finies et équipements de test; validation atomique avant remplacement.
   - [x] Ajouter un éditeur JSON initial et appliquer armes/reliques (niveaux 1–5), évolutions appariées, équipements et stats personnalisées à la session de combat existante.
   - [x] Implémenter REBUILD par application en pause du champ `initial_build` et RESTART par seed en attente jusqu’au Reset; le combat conserve le maximum validé de cinq niveaux.
   - [x] Ajouter des overrides LIVE sélectionnables par statistique; ils restent transitoires et sont effacés lors d’une reconstruction du build.
   - [x] Valider atomiquement les champs LIVE, REBUILD et RESTART; les valeurs invalides laissent la session active et son snapshot inchangés.
 - [x] **P8.3 — Presets et share codes**
-  - [x] Ajouter `sandbox_preset_service.gd` : schéma version 1 fermé et modes Survival/Endless/Armorless; le contexte exécute Survival et Armorless, tandis qu’Endless renvoie `mode_unavailable` sans remplacer la session active.
+  - [x] Ajouter `sandbox_preset_service.gd` : schéma version 1 fermé et modes Survival/Endless/Armorless; les trois modes sont exécutables dans le contexte Lab isolé.
   - [x] Exporter/importer JSON limité à 1 Mio et refuser champs inconnus, types et métadonnées invalides.
   - [x] Ajouter `DSLAB1:` avec DEFLATE, Base64URL, SHA-256 d’intégrité et décompression plafonnée; smoke de round-trip et corruption.
   - [x] Borner récursivement profondeur (16), collections (256 éléments chacune) et types JSON autorisés; tests hostiles ciblés.
