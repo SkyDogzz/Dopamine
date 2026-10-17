@@ -3,6 +3,7 @@
 ## P9.7 — Parcours clavier/manette et rendu Linux/X11 — 2026-10-17
 
 - [x] `XDG_DATA_HOME=/tmp/dopamine-p97-linux-interactions ctest --test-dir build --output-on-failure -R '^(keyboard_menu_journey_smoke|gamepad_menu_journey_smoke|render_visual_smoke|pilot_scene_visual_smoke|survival_combat_visual_smoke)$' -j1` passe **6/6** avec le fixture d’import Godot. Les deux parcours utilisent des événements clavier/gamepad synthétiques; les trois smokes visuels tournent sous Xvfb/Mesa.
+- [x] Staging Linux propre depuis `19da193` : CMake Release vierge, Godot 4.7.2, export Linux/X11 filtré, extraction, notices/licences, `ldd` sans dépendance manquante et lancement de l’exécutable extrait avec la GDExtension Release adjacente chargée. Archive non distribuable de **33 670 735 octets**, SHA-256 `b3d6e06a12d791d48e77967892766e200f8a2f4a45c44377cdf0e1f2da182f61`, dans `build/linux/staging/`.
 - [i] Cette validation couvre le viewport et le rendu logiciel Linux de l’hôte virtualisé. Elle ne couvre pas un écran, GPU, clavier ou contrôleur physiques, ni le parcours interactif Windows.
 
 ## P9.8 — Décision de droits visuels et registre des assets — 2026-10-17
