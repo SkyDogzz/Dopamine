@@ -80,6 +80,12 @@
 - [x] Depuis le commit `78f37e46d3773307d822dfe89f808cc3575b4e70`, `tools/package_linux_staging.sh` a compilé un checkout `git archive` propre en Release (Linux x86_64, GCC 14.2.0, CMake 3.31.12, Godot 4.7.2, `godot-cpp` `b8530af7546a3fcae80cef2477526569fd42ffc2`) et exporté Linux/X11 avec le sprite du Pulse Warden.
 - [x] Le script a filtré les ressources `tests/`, `tools/` et `assets/source/`, assemblé l’exécutable, la GDExtension Release et les notices/licences, extrait l’archive, validé les bibliothèques partagées puis démarré le jeu avec un `XDG_DATA_HOME` vierge. Le chargeur a confirmé la GDExtension Release adjacente et aucun `ERROR:` n’est apparu au démarrage.
 - [x] Archive staging non distribuable : `build/linux/staging/DopamineSurvivor-linux-78f37e4-staging.tar.gz`, 31 977 842 octets, SHA-256 `4616c25c2cae69b1e0db9ad118b1c60ed2a0823fe3544f904e630d3e1b792bfc`; le fichier `.sha256` est créé à côté.
+
+## P9.8 — Rebuild staging Linux sur `86351b6` — 2026-10-17
+
+- [x] `tools/package_linux_staging.sh` reconstruit depuis un `git archive` propre du commit `86351b6`, avec Godot 4.7.2, CMake 3.31.12 et GCC 14.2.0; compilation Release vierge, import/export Godot, extraction, vérification des notices et dépendances, puis démarrage headless de l’exécutable extrait avec la GDExtension adjacente passent.
+- [x] Archive de staging non distribuable `DopamineSurvivor-linux-86351b6-staging.tar.gz`, 31 977 826 octets, SHA-256 `1ed5f60ae063a42af7da0f0142aee3ede57ccd9b90c8e784b111f388e2057d59`; `sha256sum -c` confirme la somme. L’archive contient seulement l’exécutable, la GDExtension, README de staging, notices et licences requises; aucun contenu de développement.
+- [i] Cette preuve couvre Linux x86_64 sur l’hôte virtualisé actuel et reste un staging non versionné, non distribuable; l’installation machine distincte, le GPU physique, Windows et la version du jeu restent ouverts.
 - [i] Cette preuve valide l’assemblage et le démarrage headless du commit publié, pas une partie jouée, les sauvegardes en usage, une machine Linux distincte, le GPU réel, les autres plateformes ou une version distribuable.
 
 ## P9.8 — Contenu de l’archive Linux staging — 2026-10-17
