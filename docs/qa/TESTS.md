@@ -1709,7 +1709,9 @@ Note de clôture : le blocage historique du smoke `sandbox_ui_smoke.gd` décrit 
 
 - [x] `survival_magnet_heart_synergy_smoke.gd` vérifie que chaque effet attend le niveau 5 des deux reliques; Magnetic Coil accroît la vitesse maximale du pulse, Celestial Eye en étend le rayon, et Singularity déplace les orbes XP vers Event Horizon pendant qu’un Void Orb distant est actif. Le smoke confirme la découverte des deux types de champ.
 - [x] Les orbes XP restent hors de l’attraction native Void Orb sans la synergie Magnet Heart + Singularity; un test cœur natif conserve cette séparation. Les coffres restent exclus de toute attraction.
+- [x] Revalidation ciblée le 2026-10-17 : import Godot, `survival_magnet_heart_synergy_smoke` et `survival_chest_smoke` passent sous CTest (**3/3**).
 - [i] L’existence des trois synergies est **[VALIDÉE]** par l’utilisateur (« les 3 »); leurs conditions de niveau, leur déclenchement pendant Magnetic Pulse et les multiplicateurs ×1,5 restent **[PROPOSÉS]** et à calibrer.
+- [i] Le GDD laisse l'attraction des soins, ressources, monnaies et bonus temporaires **[OUVERTE]** jusqu'à la définition de ces pickups. Aucun n'existe actuellement; leur ajout n'est pas inféré depuis Magnet Heart et le travail correspondant reste conditionnel.
 
 ## P7B — Directeur Endless standard — 2026-10-17
 
