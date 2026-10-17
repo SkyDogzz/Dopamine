@@ -1302,3 +1302,8 @@ Note de clôture : le blocage historique du smoke `sandbox_ui_smoke.gd` décrit 
 - [x] `sandbox_lab_smoke.gd` vérifie le sélecteur clavier/manette (OptionButton focusable), ses deux options exécutables, le défaut Survival, la sérialisation du choix Armorless dans un preset et l’application de ce mode à la session isolée.
 - [x] Le Sandbox Lab reste sans `ProgressionService`/`SaveService`; Endless standard n’est pas exposé dans le sélecteur et reste **[OUVERT]** dans le GDD.
 - [x] `sandbox_lab_smoke.gd` passe sous Godot 4.7.2 headless.
+
+## P9.4 — Ouverture clavier des panneaux du hub — 2026-10-17
+
+- [x] `survival_hub_smoke.gd` envoie Entrée sur Équipements puis Arbre de compétences, et Échap pour les fermer; chaque fermeture doit rendre le focus à son bouton d’origine. Le smoke dédié passe sous Godot 4.7.2 headless.
+- [ ] Ce test ciblé ne remplace pas un parcours humain de tous les menus et choix au clavier; ce critère P9.4 reste ouvert.

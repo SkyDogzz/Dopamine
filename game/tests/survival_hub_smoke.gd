@@ -158,6 +158,24 @@ func _run() -> void:
 	if skill_panel.visible or root.gui_get_focus_owner() != skill_button:
 		_fail("Gamepad B should close the skill tree and restore hub focus")
 		return
+	equipment_button.grab_focus()
+	await _send_key(KEY_ENTER)
+	if not equipment_panel.visible:
+		_fail("Keyboard Enter should open permanent equipment from the hub")
+		return
+	await _send_key(KEY_ESCAPE)
+	if equipment_panel.visible or root.gui_get_focus_owner() != equipment_button:
+		_fail("Keyboard Escape should close equipment and restore hub focus")
+		return
+	skill_button.grab_focus()
+	await _send_key(KEY_ENTER)
+	if not skill_panel.visible:
+		_fail("Keyboard Enter should open the skill tree from the hub")
+		return
+	await _send_key(KEY_ESCAPE)
+	if skill_panel.visible or root.gui_get_focus_owner() != skill_button:
+		_fail("Keyboard Escape should close the skill tree and restore hub focus")
+		return
 	var broken_hub: Control = load("res://scenes/survival_hub.tscn").instantiate()
 	broken_hub.progression_service = load("res://scripts/progression_service.gd").new(FailingSaveService.new(), "0")
 	root.add_child(broken_hub)
