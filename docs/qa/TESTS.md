@@ -1708,7 +1708,7 @@ Note de clôture : le blocage historique du smoke `sandbox_ui_smoke.gd` décrit 
 ## P7B — Directeur Endless standard — 2026-10-17
 
 - [x] `survival_wave_director_smoke.gd` vérifie le prototype **[PROPOSÉ]** : après la vague 24, les cycles continuent sans victoire et un mid-boss revient aux vagues 24 et 36.
-- [i] Difficultés Easy–Chaos et multiplicateurs existants sont réutilisés par défaut; lancement, transition, récompenses, sortie et records restent à arbitrer/implémenter. Les valeurs de scaling ne sont pas validées.
+- [i] Cette preuve ne couvre que le directeur et sa cadence de boss. Les parcours de lancement, continuation, mort/abandon, récompenses, records et persistance sont couverts par `endless_standard_progression_smoke.gd`, `endless_standard_session_smoke.gd` et les contrôles du hub consignés dans la section de validation P7B ci-dessus. Les règles et valeurs de scaling restent **[PROPOSÉES]**; les mesures de run représentatives restent à faire.
 
 ## P9.8 — Staging Linux Release depuis `adefcc9` — 2026-10-17
 
