@@ -15,7 +15,6 @@ func _ready() -> void:
 	_player = AudioStreamPlayer.new()
 	_player.name = "AdaptiveMusicPlayer"
 	_player.stream = TRACK
-	_player.stream.loop = true
 	_player.volume_db = SILENT_VOLUME_DB
 	add_child(_player)
 	_player.play()
