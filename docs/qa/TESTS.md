@@ -7,6 +7,7 @@
 - [x] Le benchmark Debug concentré a été comparé avant/après correction de la collision des ennemis immobiles : moyenne passée d’environ 120 ms à 73 ms/frame. `simulation_core` et `simulation_worker` passent (2/2), puis CTest complet passe (86/86). Les mesures répétées et limites du scénario sont dans [`PERFORMANCE.md`](PERFORMANCE.md).
 - [x] Recontrôle ciblé du `survival_wave_director_smoke.gd` sous Godot 4.7.2 headless : passe. Godot affiche à la fermeture 12 instances ObjectDB et 5 ressources encore utilisées; les assertions du smoke réussissent. Ce test complète les preuves des transitions de vague/boss, sans remplacer le parcours manuel.
 - [x] Recontrôle ciblé du `survival_boss_attack_smoke.gd` sous Godot 4.7.2 headless : passe. Godot affiche à la fermeture 7 instances ObjectDB et 1 ressource encore utilisée; les assertions des attaques/phases réussissent.
+- [x] Recontrôle ciblé de `survival_difficulty_profile_smoke.gd` et `survival_difficulty_unlock_smoke.gd` sous Godot 4.7.2 headless : les deux passent.
 - [x] La suite automatisée ne prouve pas la run réelle; sa confirmation utilisateur est consignée séparément dans la section P5.V3 ci-dessous.
 
 ## Préparation du build Windows — 2026-10-16
