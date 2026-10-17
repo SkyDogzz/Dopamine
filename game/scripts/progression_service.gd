@@ -410,14 +410,13 @@ func enhance_equipment(instance_id: String, stat_id: String, powder_tier: String
 		if int(profile["resources"].get(resource_key, 0)) < cost:
 			return {"ok": false, "error": "insufficient_powder", "cost": cost}
 		profile["resources"][resource_key] -= cost
-		var chance := maxf(0.0, PROPOSED_SUCCESS_CHANCE[powder_tier] - 3.0 * level)
-		var success := int(line["fail_streak"]) >= 9 or _rng.randf() * 100.0 < chance
-		var critical_failure := false
+		var outcome := _roll_enhancement(level, powder_tier, int(line["fail_streak"]))
+		var success: bool = outcome["success"]
+		var critical_failure: bool = outcome["critical_failure"]
 		if success:
 			line["enhancement_level"] = level + 1
 			line["fail_streak"] = 0
 		else:
-			critical_failure = _rng.randf() * 100.0 < PROPOSED_CRITICAL_FAILURE_CHANCE[powder_tier]
 			if critical_failure:
 				line["enhancement_level"] = maxi(0, level - 1)
 			line["fail_streak"] = int(line["fail_streak"]) + 1
@@ -428,6 +427,15 @@ func enhance_equipment(instance_id: String, stat_id: String, powder_tier: String
 			"cost": cost, "profile": profile.duplicate(true),
 		}
 	return {"ok": false, "error": "equipment_not_found"}
+
+func _roll_enhancement(level: int, powder_tier: String, fail_streak: int) -> Dictionary:
+	if fail_streak >= 9:
+		return {"success": true, "critical_failure": false}
+	var success_chance: float = maxf(0.0, PROPOSED_SUCCESS_CHANCE[powder_tier] - 3.0 * level)
+	if _rng.randf() * 100.0 < success_chance:
+		return {"success": true, "critical_failure": false}
+	var critical_failure: bool = _rng.randf() * 100.0 < PROPOSED_CRITICAL_FAILURE_CHANCE[powder_tier]
+	return {"success": false, "critical_failure": critical_failure}
 
 func enhancement_cost(rarity: String, current_level: int) -> int:
 	if not RARITY_COST_MULTIPLIERS.has(rarity) or current_level < 0 or current_level >= ENHANCEMENT_BASE_COSTS.size():

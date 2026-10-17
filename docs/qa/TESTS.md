@@ -795,6 +795,12 @@
 - [x] Revalidation ciblée sous Godot 4.7.2 le 2026-10-17 : `equipment_enhancement_smoke.gd` passe après l’ajout de la sonde d’espérance; les branches de réussite/échec sont toujours couvertes par le service réel.
 - [x] Le 2026-10-17, `equipment_economy_smoke.gd` revalide les ventes et couvre aussi le démantèlement des cinq raretés : yields Basic/Refined/Pure attendus, soldes cumulés par tier, suppression de chaque pièce et refus d’un second crédit. Les rendements restent **[PROPOSÉS]**.
 
+## P6.4 — Arbitrage et contrôle statistique Enhancement — 2026-10-17
+
+- [x] L’utilisateur valide l’option A : garder les tables de coûts, chances et démantèlement proposées comme base à calibrer par essais; cela ne valide aucun chiffre. Voir le GDD §8 et `docs/planning/DECISIONS_RESTANTES.md`.
+- [x] `enhancement_probability_smoke.gd` exécute 800 000 tirages seedés par le même helper que la transaction de production; succès par tier/niveau et échecs critiques conditionnels restent dans une tolérance absolue de 1 point de pourcentage des tables **[PROPOSÉES]**. Le test contrôle aussi la réussite garantie après neuf échecs consécutifs. Reconfiguration CMake puis CTest ciblé (import Godot, enhancement, service de progression et économie) : **5/5 passent en 4,69 s**.
+- [i] Le contrôle vérifie l’implémentation et les tables configurées, il ne calibre pas la provenance/mix des tiers, l’afflux de Powder, les dépenses réelles ou le rythme ressenti. Ces mesures représentatives restent ouvertes; aucune valeur n’a été ajustée ni promue.
+
 ## P6.4 — Espérance analytique de l'enhancement — 2026-10-17
 
 - [x] `enhancement_economy_expected_cost.gd` résout les états absorbants (niveau 0–9 × fail streak 0–9) à partir des constantes de `ProgressionService`; la réussite au dixième essai, les pertes critiques avec plancher +0 et le coût appliqué à chaque tentative sont inclus. Le script s’exécute sans écriture de sauvegarde.

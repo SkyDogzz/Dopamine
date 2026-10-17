@@ -179,6 +179,8 @@ Douze statistiques candidates : dégâts %, vitesse d'attaque %, chance critique
 
 [OUVERT] Poudres consommables selon niveau et rareté, prix exact du reroll, économie de démantèlement, prévention des exploits de conversion.
 
+[VALIDÉ — EXTENSION DU 2026-10-17] Pour P6.4, conserver les tableaux de coûts, probabilités et rendements proposés comme base de calibration par essais. Cette décision ne valide aucun chiffre : ces paramètres restent **[PROPOSÉS]** jusqu’à ce que des mesures de jeu représentatives justifient leur promotion ou leur ajustement. Le prix du reroll d’effet unique et les protections contre les abus de conversion restent **[OUVERTS]**.
+
 <a id="9"></a>
 
 ## 09 — Progression permanente et économie

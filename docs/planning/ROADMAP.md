@@ -495,6 +495,7 @@ Travail requis :
   - [x] `equipment_stats_smoke.gd` équipe une seule stat par profil et ouvre une vraie session Survival pour vérifier l’effet de HP, mobilité, dégâts, cadence, critiques, soin, aire, cooldown, XP, rayon de ramassage et vitesse projectile.
   - [x] `survival_chest_smoke.gd` vérifie l’application du rayon de ramassage aux XP, dont l’impulsion Magnet Heart, puis confirme qu’un grand rayon ne collecte jamais un coffre hors de sa portée dédiée.
 - [ ] **P6.4 — Enhancement**
+  - [x] Arbitrage utilisateur **[VALIDÉ, 2026-10-17] — option A** : garder les tables proposées comme base et les calibrer par essais; les chiffres restent **[PROPOSÉS]** jusqu’à mesure représentative. Le reroll d’effet unique et les protections de conversion restent **[OUVERTS]**.
   - [x] `equipment_enhancement_smoke.gd` vérifie une ligne +0..+10 avec Basic, Refined, Pure et Prismatic, y compris le +8 % par niveau.
   - [x] Le smoke vérifie réussite, échec normal, échec critique avec protection au niveau 0, et réussite garantie après neuf échecs.
   - [x] Le smoke vérifie la table proposée de coûts pour chaque rareté/niveau, les conversions 10:1 vers le tier suivant et le refus de conversion depuis Prismatic.
@@ -502,6 +503,7 @@ Travail requis :
   - [x] `equipment_economy_smoke.gd` vérifie les ventes par rareté, l’impossibilité de repayer une pièce supprimée et le rejet d’un `fail_streak` supérieur à 9, garde-fou de la tentative garantie.
   - [x] Vérifier les rendements de démantèlement proposés des cinq raretés, l’accumulation par tier Powder, l’absence de récompense répétée et la suppression de l’objet; les rendements restent **[PROPOSÉS]**.
   - [x] Modéliser l'espérance de tentatives, de Powder et de niveaux perdus pour une ligne +0→+10 avec une chaîne de Markov absorbante; résultats et script dans `docs/qa/TESTS.md` et `game/tests/enhancement_economy_expected_cost.gd`. Cette mesure suit les valeurs **[PROPOSÉES]**, sans calibrer les gains de poudre ni le rythme ressenti.
+  - [ ] Mesurer sur des essais représentatifs la fréquence des résultats, les dépenses et l’afflux de Powder par rareté; comparer aux attentes analytiques avant de modifier ou promouvoir des valeurs.
 - [ ] **P6.5 — Effets uniques**
   - [x] `EFFETS_UNIQUES_P6.md` inventorie les six IDs actifs, leurs prérequis, déclencheurs, portée/limites, feedback et statuts **[PROPOSÉ]**; `revive_knockback` est identifié comme legacy sans gameplay.
   - [x] `survival_unique_effects_smoke.gd` vérifie les prérequis équipés, la portée visible et le cooldown de Lightning Burst, puis le gating par évolution, le feedback et l'activation unique d'Evolution Shockwave; `survival_inventory_smoke.gd`, `survival_elite_smoke.gd` et `free_chest_reroll_smoke.gd` couvrent Overflow Shield, Elite Haste et le reroll.
