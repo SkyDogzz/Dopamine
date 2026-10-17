@@ -1,0 +1,7 @@
+# Godot 4.7.2; exploratory runs on Normal, speed x1, normal HP and enemy spawns.
+# Inferno Sprayer and Frost Nova Lv1 were granted directly to force Burn/Chill overlap; first chest choice auto-selected.
+# Controlled kite bot; each run ended in defeat before wave 5. This sample does not calibrate the proposed reaction.
+seed,result,active_seconds,wave,kills,level,burn_weapon_damage,chill_weapon_damage,thermal_shock_damage_events,thermal_shock_damage,hp_current,hp_max
+20261023,defeat,96.21,4,28,3,225.92,72.56,5,20.12,0.0,100.0
+20261024,defeat,60.06,3,15,2,104.72,56.40,4,16.12,0.0,100.0
+20261025,defeat,64.36,3,22,2,185.12,72.40,6,24.16,0.0,100.0
