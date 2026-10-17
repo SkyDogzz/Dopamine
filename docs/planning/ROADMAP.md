@@ -477,6 +477,7 @@ Travail requis :
 - Les achievements ont un évaluateur générique, des métriques de combat/profondeur/progression/difficulté et un premier suivi du build d’armes/reliques/évolutions/équipement. Le catalogue contient maintenant 100 familles, au plancher de la cible [VALIDÉE] de 100–150; 120 reste la cible éditoriale [PROPOSÉE].
 - Les 100 nœuds sont définis et débloquables. Dans le panneau, quatre nœuds Core Stats ont une présentation en cartes de branche; les autres sont groupés par catégorie et leurs infobulles nomment les prérequis. Le graphe et le budget cumulatif ne sont donc pas calibrés ni présentés comme une carte complète. Une extension vers environ 120 nœuds reste **[PROPOSÉE]**.
 - Cinq effets uniques ont un chemin gameplay prototype vérifié; `revive_knockback` reste stockable pour préserver les profils existants, mais n’est plus sélectionnable tant que son comportement n’est pas défini. Les chiffres de ces prototypes restent **[PROPOSÉS]**.
+- La règle GDD **[VALIDÉE]** « revives rares » n’a pas de contrat de déclenchement/source/limite/état après reprise; ce point est **[OUVERT]** dans `DECISIONS_RESTANTES.md`. Ne pas activer `revive_knockback` ni déclarer cette partie complète avant arbitrage.
 - Des bonus de stat sont consommés dans Survival ; `pickup_radius_pct` augmente actuellement le rayon des orbes XP seulement et le chest a son propre rayon.
 
 ### Travaux

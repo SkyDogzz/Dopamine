@@ -13,6 +13,8 @@ Les effets ci-dessous sont les effets sélectionnables et exécutés en Survival
 
 `equipped_unique_effects()` déduplique un même ID actif porté sur plusieurs pièces. `revive_knockback` demeure accepté en lecture pour les anciennes saves, mais n'est plus proposé aux nouvelles pièces et n'a pas de comportement de jeu.
 
+Le GDD valide le principe de revives rares mais ne définit pas leur contrat. Le déclencheur, la source, la fréquence/plafond par run, les PV et protections après reprise, et les modes concernés sont **[OUVERTS]** dans `DECISIONS_RESTANTES.md`; l'effet legacy reste désactivé jusqu’à cet arbitrage.
+
 ## Calibration encore ouverte
 
 - Le smoke `survival_unique_effects_smoke.gd` passe sous Godot 4.7.2 et couvre les prérequis équipés, la cible à portée, le cooldown, l’évolution préalable, l’émission des huit projectiles et l’unicité d’activation.

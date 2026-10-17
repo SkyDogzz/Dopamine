@@ -67,6 +67,8 @@ Boucle Survival : choisir difficulté et arme initiale → survivre à une vague
 
 [VALIDÉ] Mouvement précis et instantané, sans inertie significative ; pas de dash de base, certains équipements peuvent en accorder un. HP initial = 100. Perte passive de HP initiale = 1,5 HP/s, croissante linéairement avec le temps de combat actif. Les kills soignent selon le niveau de menace des ennemis. Lifesteal sur dégâts avec soft cap. Le délai entre deux dégâts de contact corps à corps est suivi séparément pour chaque ennemi ; il ne bloque pas les projectiles ni les autres attaques. Revives rares.
 
+[OUVERT] Le GDD ne définit pas le déclencheur, la source d’acquisition, la limite par run ni l’état rendu au joueur après un revive. Le prototype `revive_knockback` dépend de ce contrat; ne pas l’activer ni inventer de revive avant arbitrage.
+
 [PROPOSÉ] Le HP decay s’applique pendant tout le gameplay, y compris hors combat et pendant les boss, mais est suspendu par une vraie pause, dont la sélection d’un chest. D(t) = 1,5 + 0,004 t HP/s (t en secondes actives). Perte exacte sur [t,t+Δt] = 1,5 Δt + 0,002((t+Δt)^2 - t²). Après 60 secondes sans soin : 97,2 HP perdus. Après 720 secondes : 2 116,8 HP perdus. Le timer ne progresse pas pendant les menus en pause, mais progresse pendant les combats de boss.
 
 [PROPOSÉ] Soin par kill H(T)=2+3√T, menace T bornée dans [0,5 ; 25] ; ennemi ordinaire T=1 → +5 HP. Menace calculée depuis archétype et multiplicateurs HP/dégâts/vitesse. Lifesteal : rendement normal jusqu'à 10 HP/s puis efficacité de 25 % au-delà ; dégâts sur la durée donnent 25 % de leur lifesteal théorique. Délai de contact corps à corps par ennemi : 0,35 s.
