@@ -64,8 +64,8 @@ Roadmap détaillée et audit GDD/code : [`docs/planning/ROADMAP.md`](../docs/pla
 
 - [ ] **P5.5 — Validation de sortie**
   - [ ] Parcourir manuellement tout le catalogue dans le Sandbox interactif.
-  - [ ] Jouer une run Survival complète avec HP normaux et boss pilotés par le joueur.
-  - [x] Exécuter la batterie CTest complète : 86/86 passent en séquentiel sous Godot 4.7.2 le 2026-10-17.
+  - [x] Le créateur confirme une run complète sans assistance, le choix manuel d’un coffre et les récompenses persistées sans doublon après relance (2026-10-17 ; détails non fournis).
+  - [x] Exécuter la batterie CTest complète après l’optimisation du cœur : 86/86 passent en séquentiel sous Godot 4.7.2 le 2026-10-17.
   - [ ] Effectuer un profilage représentatif CPU/GPU et des armes.
   - [ ] Mettre à jour GDD/interfaces/ADR selon les seules décisions confirmées.
   - [ ] Committer le jalon puis poursuivre P6–P9 selon le goal principal actif.

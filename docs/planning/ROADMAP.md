@@ -23,7 +23,7 @@ L’audit initial était statique. Les tranches Minigun, Toxic Cloud, Sawblades 
 | P2 Simulation/combat | **Fondation présente, couverture partielle** | Diversité des IA, règles complètes d’ennemis/boss, instrumentation et performance iGPU. |
 | P3 Prototype de combat | **Dix paires et dix évolutions de prototype présentes** | Contrats génériques, retours visuels par niveau, ciblage fidèle, mesures DPS détaillées. |
 | P4 Vertical slice Survival | **Boucle de run prototype présente** | Boss réels, difficulté sélectionnable, run équilibrée et vérifiée sans harness. |
-| P5 Contenu v1.6 | **Prototypes de contenu largement intégrés, jalon non livré** | Les dix paires, les évolutions, le ciblage documenté, les niveaux/feedback et les prototypes ennemis/boss sont présents. Les réactions restent à arbitrer; le balancing et la victoire sans harness en P5.V3 restent à valider. |
+| P5 Contenu v1.6 | **Prototypes de contenu largement intégrés, jalon non livré** | Les dix paires, évolutions, niveaux/feedback et prototypes ennemis/boss sont présents. Le créateur confirme une victoire sans assistance pour P5.V3; restent l’essai manuel du catalogue dans le Sandbox, l’arbitrage des réactions et le balancing. Le stress test concentré reste au-dessus du budget de frame et n’est pas représentatif d’une vague. |
 | P6 Progression permanente | **Prototype anticipé seulement** | Catalogue complet, règles et contenus validés, récompenses calibrées et effets uniques actifs. |
 | P7 Modes Endless | **À faire** | Armorless complet ; arbitrages nécessaires pour Endless standard. |
 | P8 Sandbox Lab joueur | **À faire au-delà des outils développeur P1** | Builds libres, presets/import/export, copie de save, snapshots complets et règles de sécurité. |
@@ -35,7 +35,7 @@ L’audit initial était statique. Les tranches Minigun, Toxic Cloud, Sawblades 
 
 **Intégré en prototype, à ne pas confondre avec une feature finie :** boss (patterns en phases, combat et équilibrage complets à valider), loot/probabilités, dix évolutions, Void Orb à attraction/percée, Frost Nova avec Chill/Absolute Zero, Sawblades à ricochets/Razorstorm, Meteor Staff en zone/Starfall fragmenté, Toxic Cloud en champ persistant, équipement et enhancement, trois nodes Core Stats, famille Exterminator, effets uniques, récompenses de run et mode Armorless en cours. Les paramètres restent souvent **[PROPOSÉS]**.
 
-**Survolé ou absent par rapport au GDD :** autres pickups attirables par Magnet Heart (seules les orbes XP existent actuellement) ; validation et équilibrage du combat complet des armes et boss ; victoire P5.V3 en run réelle sans assistance ; arbitrage des réactions élémentaires proposées, avec Overcharge **[OUVERT]** ; tree interconnecté d’environ 120 nodes ; catalogue d’achievements au plancher de 100 familles; l’extension vers la cible éditoriale proposée de 120 reste à faire ; Armorless complet et Endless standard après arbitrages ; Sandbox Lab joueur complet ; performance sur iGPU et build Windows.
+**Survolé ou absent par rapport au GDD :** autres pickups attirables par Magnet Heart (seules les orbes XP existent actuellement) ; validation et équilibrage du combat complet des armes et boss ; essai manuel du catalogue d’armes dans le Sandbox ; arbitrage des réactions élémentaires proposées, avec Overcharge **[OUVERT]** ; tree interconnecté d’environ 120 nodes ; catalogue d’achievements au plancher de 100 familles; l’extension vers la cible éditoriale proposée de 120 reste à faire ; Armorless complet et Endless standard après arbitrages ; Sandbox Lab joueur complet ; performance sur iGPU et build Windows.
 
 ## Dépendances principales
 
@@ -435,17 +435,19 @@ Travail requis :
   - [x] Vérifier les attaques esquivables, réactions bornées et plafonds d’invocation dans `survival_exploder_smoke.gd`, `survival_boss_attack_smoke.gd` et `simulation_core_test`.
   - [x] Parcourir sous smoke les phases du Pulse Warden et du Dopamine Core.
   - [x] Exécuter `survival_elite_smoke.gd` sous Godot 4.7.2 : l’affixe Split-on-Death génère deux adds sous le plafond global.
-- [ ] **P5.V3 — Run de bout en bout**
+- [x] **P5.V3 — Run de bout en bout**
   - [x] Défaite en interface réelle, Easy avec Lightning Conductor, profil `XDG_DATA_HOME` isolé, verrouillage de vie et choix auto désactivés : écran RUN OVER à la vague 2 après 00:45 et 14 éliminations; le panneau a affiché +13 Essence et +18 Basic Powder.
-  - [ ] Jouer jusqu’à la victoire en interface réelle, sans harness, HP forcés, choix automatiques ou boss tué par script.
-  - [ ] Vérifier en interface réelle le choix d’un coffre, la remise des récompenses et leur idempotence.
+  - [x] Le créateur confirme le 2026-10-17 une victoire en interface réelle sans assistance, un choix manuel de coffre, et les récompenses persistées sans duplication après relance. Rapport utilisateur consigné dans `docs/qa/TESTS.md`; difficulté, arme, plateforme et montants ne sont pas précisés.
 - [ ] **P5.V4 — Revue et checkpoint**
   - [x] Consigner les validations et les limites sans changer les statuts de décision du GDD.
   - [x] Relancer la suite CTest complète : 66/66 passent en séquentiel le 2026-10-16 après correction du redémarrage de run. Le benchmark natif sur 500 ennemis/2 000 projectiles mesure la rafale d’impacts avant/après optimisation; résultats et limites consignés dans `docs/qa/TESTS.md`.
   - [x] Corriger l’arc Lightning qui retouchait sa source à courte distance; smoke natif ciblé et catalogue vérifiés, 10 répétitions consécutives puis CTest complet 67/67.
   - [x] Corriger le travail de zone devenu inutile après saturation du budget d’explosions et committer ce checkpoint documenté.
   - [x] Après P5.2.4, recompiler avec CMake et exécuter CTest en séquentiel : 86/86 passent sous Godot 4.7.2; cela vérifie aussi les snapshots format 15 et les dix scénarios Sandbox d’armes.
-  - [ ] Faire le parcours sans assistance de P5.V3 et réaliser les scénarios d’armes dans le Sandbox avant de clore le jalon.
+  - [x] Après l’optimisation du résolveur de collisions, recompiler la GDExtension Linux et relancer CTest le 2026-10-17 : 86/86 passent en 60,45 s sous Godot 4.7.2.
+  - [x] Enregistrer la confirmation utilisateur de P5.V3 (run de victoire, coffre, récompenses et relance) ; voir `docs/qa/TESTS.md`.
+  - [ ] Parcourir manuellement les dix armes dans le Sandbox interactif avant de clore le jalon.
+  - [x] Investiguer l’écart du benchmark natif Debug : le résolveur spatial parcourait les collisions de corps quand aucun ennemi ne bougeait. Sortie anticipée, tests core/worker 2/2; la rafale revient à 73,0–73,8 ms. Résultats et limites dans `docs/qa/PERFORMANCE.md`.
 
 **Critère de sortie :** dix armes, onze reliques, leurs évolutions, 8–12 familles, élites et boss utilisables dans une run complète ; Sandbox et progression séparés. Après P5, poursuivre P6–P9 selon le goal principal actif.
 

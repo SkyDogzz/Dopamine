@@ -1018,15 +1018,17 @@ std::vector<CombatEvent> SimulationCore::advance(double delta_seconds) {
 
 void SimulationCore::resolve_enemy_body_collisions(const std::vector<Transform2D> &previous_transforms) {
 	float maximum_radius = 0.0F;
+	bool has_moving_enemy = false;
 	std::vector<bool> moving(slots_.size(), false);
 	for (uint32_t index = 0; index < slots_.size(); ++index) {
 		if (slots_[index].active && !projectile_flags_[index] && !xp_orb_flags_[index]) {
 			maximum_radius = std::max(maximum_radius, enemy_types_[index].collision_radius);
 			moving[index] = std::abs(transforms_[index].x - previous_transforms[index].x) > 1e-6F ||
 					std::abs(transforms_[index].y - previous_transforms[index].y) > 1e-6F;
+			has_moving_enemy = has_moving_enemy || moving[index];
 		}
 	}
-	if (maximum_radius <= 0.0F) {
+	if (!has_moving_enemy || maximum_radius <= 0.0F) {
 		return;
 	}
 	const SpatialIndex spatial_index = build_spatial_index({});

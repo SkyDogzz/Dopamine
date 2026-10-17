@@ -19,6 +19,22 @@ cmake --build build-release --target simulation_benchmark --parallel 4
 
 Ce résultat valide le setup et fournit un premier repère CPU. Il ne valide pas la cible globale 60 FPS sur GPU intégré : rendu, GDExtension, worker, steering actif et matériel de référence ne sont pas couverts.
 
+## Rafale Debug et collisions de corps immobiles — 2026-10-17
+
+Environnement : Linux x86_64, AMD EPYC-Milan virtualisé avec 8 CPU visibles, GCC 14.2.0, build Debug. Chaque mesure couvre 300 pas à 60 Hz et uniquement `SimulationCore::advance`. Le benchmark répète 2 000 impacts Wildfire concentrés sur 500 ennemis immobiles.
+
+| Version / état | Répétition | Moyenne | P50 | P95 | P99 | Maximum |
+|---|---:|---:|---:|---:|---:|---:|
+| Référence `1304c27` | 1 | 72,714 ms | 72,018 ms | 77,872 ms | 89,301 ms | 95,438 ms |
+| HEAD avant correctif | 1 | 120,418 ms | 119,236 ms | 131,622 ms | 145,149 ms | 158,744 ms |
+| HEAD avant correctif | 2 | 120,390 ms | 119,086 ms | 127,609 ms | 133,293 ms | 151,222 ms |
+| Après sortie anticipée | 1 | 73,042 ms | 72,426 ms | 79,297 ms | 90,406 ms | 98,179 ms |
+| Après sortie anticipée | 2 | 73,770 ms | 72,823 ms | 82,531 ms | 89,430 ms | 94,767 ms |
+
+Cause : `resolve_enemy_body_collisions` reconstruisait l’index spatial et parcourait les voisins même si aucun ennemi n’avait bougé. La méthode quitte maintenant avant ces opérations lorsque tous les ennemis sont immobiles. `simulation_core` et `simulation_worker` passent (2/2 CTest). Les moyennes de rafale reviennent près de la référence `1304c27`, avec une baisse de 39 % par rapport aux deux essais avant le correctif.
+
+La rafale concentrée reste très au-dessus de 16,67 ms/frame. Elle regroupe toutes les cibles et tous les impacts au même point; elle est extrême et ne représente pas une vague Survival. Ce résultat ne valide pas la cible globale à 60 FPS sur iGPU; une charge représentative avec steering et rendu Godot reste requise.
+
 ## Smoke rendu Godot sous Xvfb
 
 Le test CTest `render_visual_smoke` ouvre la scène Sandbox en fenêtre 1280×800, alimente la simulation avec 500 ennemis et 2 000 projectiles, puis vérifie le contenu des batches MultiMesh et la couleur d’un pixel ennemi dans l’image rendue. La capture est écrite dans `/tmp/dopamine-render-visual-smoke.png`.

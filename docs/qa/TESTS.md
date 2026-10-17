@@ -2,9 +2,10 @@
 
 ## Revalidation P5 après reprise — 2026-10-17
 
-- [x] Sous Godot 4.7.2, `ctest --test-dir build --output-on-failure -j1` passe 86/86 en 60,61 s. La suite comprend l’import Godot, les tests natifs, les smokes Survival/progression et les scénarios Sandbox des dix armes.
+- [x] Après le correctif de collision des ennemis immobiles et la reconstruction de la GDExtension Linux, `ctest --test-dir build --output-on-failure -j1` passe 86/86 en 60,45 s sous Godot 4.7.2. La suite comprend l’import Godot, les tests natifs, les smokes Survival/progression et les scénarios Sandbox des dix armes.
 - [x] Le smoke `survival_weapon_catalog_smoke` passe également dans cette suite : coexistence Burn/Poison et Toxic Ignition restent conformes aux paramètres **[VALIDÉS]**.
-- [ ] Cette suite automatisée ne ferme pas P5.V3 : victoire en run réelle sans assistance, choix de coffre réel et idempotence des récompenses restent à vérifier.
+- [x] Le benchmark Debug concentré a été comparé avant/après correction de la collision des ennemis immobiles : moyenne passée d’environ 120 ms à 73 ms/frame. `simulation_core` et `simulation_worker` passent (2/2), puis CTest complet passe (86/86). Les mesures répétées et limites du scénario sont dans [`PERFORMANCE.md`](PERFORMANCE.md).
+- [x] La suite automatisée ne prouve pas la run réelle; sa confirmation utilisateur est consignée séparément dans la section P5.V3 ci-dessous.
 
 ## Préparation du build Windows — 2026-10-16
 
@@ -18,6 +19,11 @@
 - [x] Depuis l’accueil et le hub, démarrage manuel d’une run Easy avec Lightning Conductor dans Godot 4.7.2; profil isolé par `XDG_DATA_HOME=/tmp/dopamine-p5-real-profile`.
 - [x] Dans le menu Pause, `LOCK HEALTH` et `AUTO PICK FIRST CHEST` étaient OFF; la vitesse ×4 était sélectionnée manuellement. Défaite affichée à la vague 2, temps actif 00:45, 14 éliminations; l’écran a affiché +13 Essence et +18 Basic Powder.
 - [ ] Ce parcours établit seulement la branche de défaite. Une victoire réelle, un choix de coffre réel et l’idempotence des récompenses restent à vérifier; les smokes ne ferment pas ces critères P5.V3.
+
+## P5.V3 — Confirmation de run complète — 2026-10-17
+
+- [x] Le créateur confirme avoir déjà joué une run complète en interface réelle et que les contrôles demandés sont bons : victoire contre le boss final sans assistance, choix manuel d’un coffre, récompenses visibles et persistées sans doublon après relance.
+- [x] Cette validation est un retour utilisateur direct; la session n’a pas été observée indépendamment. La difficulté, l’arme de départ, la plateforme et les valeurs exactes des récompenses ne sont pas consignées.
 
 ## P5.4 — Revalidation ciblée des ennemis, boss et difficultés — 2026-10-16
 
