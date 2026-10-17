@@ -222,23 +222,23 @@ func _rect(image: Image, x: int, y: int, width: int, height: int, color: Color) 
 func _draw_ruins(image: Image) -> void:
 	var w := image.get_width()
 	var h := image.get_height()
-	for y in range(h):
-		for x in range(w):
-			var tile_x := x / 16
-			var tile_y := y / 16
-			var value := absi((tile_x * 92821 + tile_y * 68917 + tile_x * tile_y * 17) % 101)
-			image.set_pixel(x, y, _color(1 + value % 3))
-	# Sparse, blocky broken walls and columns; each cluster is deterministic.
-	for i in range(48):
+	image.fill(Color.TRANSPARENT)
+	# Dark, sparse masonry silhouettes sit above the arena floor without hiding it.
+	for i in range(30):
 		var x := (i * 67 + i * i * 13) % w
 		var y := (i * 113 + i * i * 7) % h
-		var width := 12 + (i * 19 % 42)
-		var height := 8 + (i * 23 % 36)
-		var color := _color(3 + i % 3)
+		var width := 3 + (i * 7 % 12)
+		var height := 2 + (i * 5 % 7)
+		var color := _color(1 + i % 3)
 		for yy in range(y, mini(y + height, h)):
 			for xx in range(x, mini(x + width, w)):
-				if ((xx / 6 + yy / 6 + i) % 5) != 0:
+				if ((xx + yy + i) % 4) != 0:
 					image.set_pixel(xx, yy, color)
+		# A broken side wall and a few detached stones add a readable ruin edge.
+		var edge_x := mini(x + width, w - 1)
+		for yy in range(y, mini(y + height + 3, h)):
+			if (yy + i) % 3 != 0:
+				image.set_pixel(edge_x, yy, color)
 
 func _line(image: Image, x0: int, y0: int, x1: int, y1: int, thickness: int, color: Color) -> void:
 	var steps := maxi(absi(x1 - x0), absi(y1 - y0))

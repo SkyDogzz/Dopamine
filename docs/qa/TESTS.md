@@ -4,14 +4,15 @@
 
 - [x] Décision P9.8 sur les droits visuels **[VALIDÉE, réponse A]** : remplacer ou exclure tout visuel dont les droits/provenance ne sont pas vérifiables.
 - [x] Création de `docs/art/PROVENANCE_ASSETS.csv` : 165 enregistrements (140 PNG, 25 SVG) avec hashes SHA-256, taille, statut de paquet, mapping vers la référence signée, résultat C2PA et base contractuelle.
-- [x] Godot 4.7.2 exporte le PCK Linux/X11 après modification : 5 134 748 octets; le journal confirme que les assets racine inutilisés sont exclus et que l’icône catalogue, le héros animé, le roster et les récompenses actifs restent empaquetés. Les presets Windows/Linux partagent ces règles.
+- [x] Godot 4.7.2 exporte le PCK Linux/X11 filtré : 5 089 644 octets; le journal confirme que les assets racine inutilisés sont exclus et que les visuels actifs restent empaquetés. Les presets Windows/Linux partagent ces règles.
 - [x] 63/165 PNG/SVG sont exclus du PCK; 102/165 restent présents. Leur statut de provenance est détaillé dans les deux contrôles C2PA ci-dessous.
 - [x] `c2patool` 0.28.2 avec trust list C2PA officielle vérifie 49 références d’origine : 22 manifestes **Trusted** et 27 **Invalid** (EKU requis manquant). Les signatures et hashes de contenu passent pour les 49; les 27 invalides ne sont pas acceptés comme sources de release. Les 58 actifs auparavant associés aux références Invalid sont régénérés par formes internes sans entrée visuelle externe; le paquet prévu se répartit en 43 actifs issus de sources Trusted et 59 depuis le générateur interne.
 - [i] Les signaux C2PA attestent une origine ChatGPT/OpenAI, pas une propriété légale ni l’unicité. Le screening visuel initial de la planche des 43 actifs Trusted n’a détecté aucun logo de tiers ni personnage reconnaissable; ce constat ne vaut pas clearance juridique. Les nouveaux sprites exigent une revue en jeu de lisibilité/cohérence avant release. Conditions et limites sont documentées dans `docs/art/INVENTAIRE_ASSETS_UI.md`.
 - [x] Remplacement procédural : Godot 4.7.2 régénère 58 PNG, leurs sources Aseprite, l’atlas d’impacts et Signal Prism depuis le code interne. Le registre vérifie le SHA-256 de chaque PNG et du script, ainsi que les 58 sources éditables.
 - [x] L’import éditeur passe; `catalog_icon_assets_smoke.gd`, `signal_prism_asset_smoke.gd` et `render_batching_smoke.gd` passent. Le smoke catalogue confirme 140 PNG et deux exceptions documentées.
-- [x] Export PCK Linux/X11 contrôlé : 5 089 532 octets, SHA-256 `e5d821822d1aef55bf3629b35859b7516b7bd309b1f4a0a754f7a2a6b2cfc61b`. Les nouveaux visuels sont présents; le journal ne contient ni `assets/source/original_procedural/` ni `tools/generate_original_visuals.gd`. Le PCK démarre sous Godot headless sans erreur.
-- [i] Cette tranche ne valide pas l’apparence de chaque sprite en jeu. La revue manuelle de lisibilité/cohérence et la revue de similitudes des 43 assets issus de références Trusted restent des portes P9.8 ouvertes.
+- [x] Export PCK Linux/X11 contrôlé après correction du décor : 5 089 644 octets, SHA-256 `4a14a25061b84678df9da14bd240387bab20df35a74a95e09f42b87467977ee9`. Les nouveaux visuels sont présents; le journal ne contient ni `assets/source/original_procedural/` ni `tools/generate_original_visuals.gd`. Le PCK démarre sous Godot headless sans erreur.
+- [x] Le smoke visuel Survival/Ctest passe et la capture `/tmp/dopamine-survival-combat-visual.png` a été inspectée : les nouveaux projectiles/VFX restent visibles dans une scène dense, et les ruines transparentes n’écrasent plus le sol.
+- [i] Ce rendu couvre une sélection, pas chaque sprite et état d’animation. La revue d’intégration complète (lisibilité, cohérence et similitudes) reste une porte P9.8 ouverte.
 
 ## P6.4 — Reroll payant d’effet unique — 2026-10-17
 
