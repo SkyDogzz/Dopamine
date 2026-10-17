@@ -70,6 +70,14 @@ Prérequis : Godot 4.7.2 standard pour Windows x86_64 avec ses export templates 
 
 Le script configure le build MSVC x64, compile les GDExtensions debug et release dans `game/bin/windows`, importe le projet et exécute un smoke qui instancie la simulation native. Avec `-Export` et les export templates 4.7.2 installés, il crée `build/windows/export/Dopamine Survivor.exe` puis lance le jeu exporté. Sans `-Export`, il ouvre le projet dans Godot. Pour seulement compiler et vérifier, ajouter `-NoLaunch`. Si CMake signale un arbre Git `godot-cpp` incomplet (« unable to read tree »), le script supprime uniquement le clone FetchContent généré et retente la configuration. Le workflow [GitHub Actions Windows](.github/workflows/build-windows.yml) installe les templates, exporte puis lance un smoke headless de l’exécutable, et publie le jeu comme artefact `dopamine-survivor-windows-x86_64`. Un build Windows natif n’a pas encore été exécuté depuis l’environnement Linux de développement; le runner CI doit fournir cette première validation.
 
+Pour profiler une run Windows et écrire directement un CSV prêt à examiner ou committer :
+
+```powershell
+.\tools\profile_windows.ps1 -GodotExecutable "C:\Godot\Godot_v4.7.2-stable_win64.exe"
+```
+
+Le script compile d’abord l’extension Debug si elle manque, lance le jeu et écrit `docs/qa/data/windows_survival_profile.csv`. Joue idéalement une **run temporaire sans sauvegarde**, en difficulté Normal et vitesse ×1; ferme le jeu quand tu as assez de combat mesuré. Le fichier est écrasé au prochain lancement. Il contient une ligne par seconde avec les temps de frame et de physique (moyenne, P95, maximum), FPS, compteurs de rendu, mémoire vidéo estimée, identité CPU/GPU, résolution et contexte Survival (vague, ennemis, projectiles, pause). La capture continue pendant les menus de pause et les choix; évite de les inclure dans la portion de combat que tu veux comparer. Ce CSV est du profilage de diagnostic : il ne mesure pas le temps GPU par frame et ne remplace pas le Visual Profiler Godot pour attribuer précisément le coût de rendu.
+
 Vérifications ciblées :
 
 ```bash

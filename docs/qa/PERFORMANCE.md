@@ -45,7 +45,21 @@ L’environnement utilisé pour la reprise expose 8 vCPU AMD EPYC-Milan sous KVM
 
 Recontrôle lors de la reprise du goal : `/dev/dri/card0` et `renderD128` sont présents, mais `lspci` identifie uniquement un adaptateur Virtio 1.0 (`1af4:1050`) sous KVM. Aucun accès à l’identité ou aux compteurs du GPU hôte n’est exposé; ni `DISPLAY`, ni `perf`, `nvidia-smi`, `radeontop` ou `intel_gpu_top` ne sont disponibles. La présence de ces nœuds DRM ne constitue donc pas une mesure de l’iGPU cible. Le profilage GPU de référence reste **[OUVERT]**.
 
-## Procédure de capture sur Windows — profil représentatif Survival
+## Profil Windows automatisé — CSV par run
+
+Depuis PowerShell à la racine du clone Windows, démarre le jeu et le collecteur avec :
+
+```powershell
+.\tools\profile_windows.ps1 -GodotExecutable "C:\Godot\Godot_v4.7.2-stable_win64.exe"
+```
+
+Au premier lancement, le script compile l’extension Windows Debug si elle est absente, puis ouvre le jeu. Le collecteur écrit une ligne par seconde dans `docs/qa/data/windows_survival_profile.csv` et ferme proprement le fichier à la fermeture du jeu. Le CSV est écrasé à chaque nouvelle capture; copie-le ailleurs ou committe-le avant de relancer si tu veux conserver une mesure. `-OutputPath` permet de choisir un autre chemin relatif au dépôt ou un chemin absolu.
+
+Fais une run temporaire sans sauvegarde, difficulté Normal, vitesse ×1 et à taille de fenêtre constante. Laisse tourner 30 à 60 secondes de combat actif à une vague chargée (idéalement vague 10–12 et mid-boss), puis ferme le jeu. La capture enregistre aussi les menus et les pauses, repérables dans la colonne `paused`; filtre-les pour comparer le combat.
+
+Chaque ligne donne les temps de frame et de physique (moyenne, P95, maximum en ms), FPS, appels de dessin, primitives, mémoire vidéo estimée, compteurs d’objets, OS, CPU, adaptateur GPU, renderer, résolution, scène et contexte de run (mode, difficulté, vague, état, ennemis, projectiles). Les métriques s’appuient sur les compteurs natifs de Godot. Elles n’incluent pas le coût par fonction GDScript ni le temps GPU par frame; pour identifier les fonctions coûteuses et profiler le rendu CPU/GPU, utilise en complément les Profiler et Visual Profiler de l’éditeur. Ce CSV facilite le partage d’une capture, mais n’est pas en lui-même un rapport d’attribution des coûts.
+
+## Profil manuel dans l’éditeur Windows
 
 À exécuter sur la machine Windows cible, dans un clone propre. Prérequis : Godot 4.7.2 standard, Visual Studio 2022 avec **Desktop development with C++**, CMake 3.21+ et Git dans le `PATH` (voir [README — Lancer sous Windows](../../README.md#lancer-sous-windows)). Remplacer le chemin d’exemple par le chemin du fichier `.exe` réel; ne pas ajouter un second nom d’exécutable comme sous-dossier.
 

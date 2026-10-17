@@ -12,6 +12,7 @@ run/main_scene="res://scenes/launch_menu.tscn"
 Settings="*res://scripts/settings_service.gd"
 Sfx="*res://scripts/sfx_service.gd"
 UIFeedback="*res://scripts/ui_button_feedback.gd"
+PerformanceCapture="*res://scripts/performance_capture.gd"
 
 [display]
 
