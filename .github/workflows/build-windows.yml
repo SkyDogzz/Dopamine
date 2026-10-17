@@ -51,8 +51,16 @@ jobs:
         shell: pwsh
         run: |
           $exportedGame = (Resolve-Path -LiteralPath "build/windows/export/DopamineSurvivor.exe").Path
-          $launchOutput = & $exportedGame --verbose --headless --quit-after 3 2>&1
-          $launchExitCode = $LASTEXITCODE
+          $stdoutPath = Join-Path $env:RUNNER_TEMP "dopamine-windows-game.stdout.log"
+          $stderrPath = Join-Path $env:RUNNER_TEMP "dopamine-windows-game.stderr.log"
+          $gameProcess = Start-Process -FilePath $exportedGame `
+            -ArgumentList @("--verbose", "--headless", "--quit-after", "3") `
+            -Wait -PassThru -RedirectStandardOutput $stdoutPath -RedirectStandardError $stderrPath
+          $launchExitCode = $gameProcess.ExitCode
+          $launchOutput = @()
+          foreach ($logPath in @($stdoutPath, $stderrPath)) {
+            if (Test-Path -LiteralPath $logPath) { $launchOutput += Get-Content -LiteralPath $logPath }
+          }
           $launchOutput | Write-Output
           if ($launchExitCode -ne 0) { throw "Exported Windows game failed with exit code ${launchExitCode}: $exportedGame" }
           if ($launchOutput -match "GDExtension.*(not found|failed|unavailable)|Cannot get class 'CombatSimulation'") {
