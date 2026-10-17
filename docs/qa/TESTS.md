@@ -11,7 +11,7 @@
 
 - CTest séquentiel, build Debug existant, Godot officiel 4.7.2 : **87/87 tests passent en 59,80 s**. Cela couvre simulation core/worker, import Godot, rendu sous Xvfb, armes/catalogue, boss, progression, Armorless, Sandbox Lab/snapshots et scénarios des dix armes.
 - Commande : `/tmp/cmake-3.31.12-linux-x86_64/bin/ctest --test-dir build --output-on-failure -j1`, après configuration avec `DOPAMINE_GODOT_EXECUTABLE` pointant sur `tools/local/godot-4.7.2/Godot_v4.7.2-stable_linux.x86_64`.
-- Cette suite vérifie les parcours automatisés sur l’hôte Linux actuel; elle ne remplace ni une run Armorless manuelle complète, ni le profilage sur iGPU cible, ni le build Windows.
+- Les résultats de suite ci-dessous sont des instantanés par hôte et par date, pas une assertion que chaque plateforme a le même état. La validation Windows Debug et sa run Easy sont consignées dans [Profil Windows complet — 2026-10-17](#p97-validation-windows-debug-et-run-easy-complète--2026-10-17). Ces preuves ne remplacent ni une run Armorless manuelle complète, ni le profilage sur iGPU cible, ni un export Windows Release vérifié après extraction.
 
 ## P6.8 — Revalidation sauvegarde et progression — 2026-10-17
 
@@ -1713,6 +1713,13 @@ Note de clôture : le blocage historique du smoke `sandbox_ui_smoke.gd` décrit 
 - [x] Le même smoke compose ces panneaux sur quatre fonds de scène de la palette ART_BIBLE (ombre, rouge, cyan, jaune) et exige 4,5:1 pour chaque libellé, y compris le badge d’état. Le contraste est calculé à partir des couleurs et de l’alpha du panneau; ce n’est pas une mesure par capture de chaque scène complète.
 - [x] Le smoke passe directement sous Godot 4.7.2 headless avec un `XDG_DATA_HOME` isolé.
 - [i] La couverture de fonds s’appuie sur la composition des couleurs de la palette, pas sur chaque arrière-plan de gameplay rendu. La taille perçue des textes, la hiérarchie, et le rendu sur écran/GPU réel restent à vérifier.
+
+## P9.7 — Validation Windows Debug et run Easy complète — 2026-10-17
+
+- [x] Le rapport fourni depuis le clone Windows montre la configuration CMake/MSVC x64, la compilation de `libdopamine.windows.template_debug.x86_64.dll` et des exécutables natifs, puis **108/108 tests CTest réussis en séquentiel** sous Godot 4.7.2.
+- [x] Le CSV versionné [`data/windows_survival_profile.csv`](data/windows_survival_profile.csv) contient 802 secondes d’échantillons, une run Easy jusqu’à la victoire Survival puis le début d’Endless. Cette capture confirme l’exécution de la GDExtension dans une vraie session de jeu.
+- [i] Le journal de la première tentative de capture mentionne aussi des ressources importées manquantes et une erreur de script pendant l’initialisation; la capture finale existe néanmoins et couvre une session complète. Ce rapport ne documente pas un build Release ni une exportation Windows autonome.
+- [ ] Checkout propre, export Release, extraction et lancement Windows restent à vérifier. Le parcours avec périphérique physique et les réglages de rendu sur matériel restent ouverts.
 
 ## P5.1.5 — Homing léger Magnetic Coil — 2026-10-17
 

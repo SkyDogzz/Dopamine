@@ -21,7 +21,7 @@
 ## Contenu et critères d’acceptation
 
 - [ ] Faire l’audit final de contenu contre les critères du GDD v1.6 et de la roadmap P5–P9; les prototypes présents ne prouvent pas à eux seuls que les jalons de contenu, calibration et run complète sont achevés.
-- [x] Vérifications automatisées de stabilité et d’isolation Sandbox consignées : CTest 91/91 sur le checkout courant, soak Survival/Sandbox et fingerprints des sauvegardes normales. Les limites de cette preuve sont dans [`../qa/TESTS.md`](../qa/TESTS.md).
+- [x] Vérifications automatisées de stabilité et d’isolation Sandbox consignées : CTest Linux 91/91 (instantané du 2026-10-17), soak Survival/Sandbox et empreintes des sauvegardes normales; une capture Windows séparée rapporte 108/108 CTest sous MSVC/Godot 4.7.2. Les dates et limites de chaque preuve sont dans [`../qa/TESTS.md`](../qa/TESTS.md).
 - [ ] Vérifier sur une installation de release la création, migration, backup et restauration des sauvegardes, puis confirmer qu’une partie temporaire/Sandbox ne modifie aucune sauvegarde normale.
 - [ ] Parcourir le jeu exporté à la souris, au clavier et à la manette sur chaque plateforme retenue; vérifier focus, lisibilité, rendu et sortie audio sur matériel.
 - [x] Relire le contenu du staging Linux `c90a2c6` : journal d’export avec scènes, scripts, données, polices, sprites, audio et extension; les ressources `tests/`, `tools/` et `assets/source/` sont exclues. La portée et les limites sont consignées dans [`../qa/TESTS.md`](../qa/TESTS.md).
@@ -47,5 +47,5 @@
 ## État connu
 
 - P9.6 — stabilité/sauvegardes : cochée dans la roadmap, avec limite explicite pour l’interruption réelle au niveau système de fichiers.
-- P9.7 — plateformes : export Linux x86_64 et parcours logiciel vérifiés sur l’hôte courant; validation machine propre, matériel réel et Windows restent ouvertes.
+- P9.7 — plateformes : export Linux x86_64 vérifié sur l’hôte de développement; build Windows Debug, GDExtension et run Easy complète vérifiés sur le PC Windows du créateur. Export Windows Release après extraction, machine Linux distincte, périphériques physiques et rendu matériel cible restent ouverts.
 - P9.8 — staging Linux filtré reconstruit depuis `adefcc9`; contenu extrait, dépendances et démarrage vérifiés. Version d’artefact, audit de provenance des assets/audio, validation des sauvegardes, autres plateformes et notes de version restent ouverts.
