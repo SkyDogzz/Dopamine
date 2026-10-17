@@ -1557,3 +1557,10 @@ Note de clôture : le blocage historique du smoke `sandbox_ui_smoke.gd` décrit 
 - [x] Les trois variations utilisent maintenant #A5AEC3, couleur secondaire validée dans `docs/ART_BIBLE.txt`; le ratio mesuré est 6,94:1. Le test calcule le ratio de luminance pour les trois variations et exige au moins 4,5:1. Le smoke passe sous Godot 4.7.2; la capture `/tmp/dopamine-survival-hub.png` a été inspectée à 640×360 logique sous Xvfb/Mesa llvmpipe.
 - [x] CTest complet après le changement partagé de Theme : **91/91 tests passent en 64,76 s** avec `/tmp/cmake-3.31.12-linux-x86_64/bin/ctest --test-dir build --output-on-failure -j1`.
 - [ ] Ce contrôle couvre seulement les trois variations citées; le contraste des autres composants, la hiérarchie HUD, les options de réduction des effets et les écrans sur matériel réel restent à vérifier.
+
+## P5.1.5 — Homing léger Magnetic Coil — 2026-10-17
+
+- [x] Le test natif `simulation_core_test.cpp` vérifie la correction d’angle bornée par le temps simulé, la conservation de vitesse et la sauvegarde/restauration du projectile; il échouait avant l’ajout des champs de homing.
+- [x] `survival_weapon_catalog_smoke.gd` confirme que Magnetic Coil niveau 4 ne configure aucun homing, que le niveau 5 le configure sur Sawblades/Razorstorm, et que le rayon transmis respecte le plafond de ciblage visible.
+- [x] Build Debug de la GDExtension et CTest séquentiel complet : **92/92 tests passent en 62,79 s** avec `PATH=/tmp/cmake-3.31.12-linux-x86_64/bin:$PATH cmake --build build --parallel 4 && PATH=/tmp/cmake-3.31.12-linux-x86_64/bin:$PATH ctest --test-dir build --output-on-failure -j1`.
+- [i] Le smoke catalogue isolé affiche à la fermeture 2 instances ObjectDB et une ressource encore référencées; CTest demeure vert. La vitesse angulaire proposée (1 rad/s) et son rayon de recherche ne sont pas calibrés en run représentative.

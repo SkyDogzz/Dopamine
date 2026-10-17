@@ -407,7 +407,8 @@ void SimulationWorker::apply(const SimulationCommand &command,
 						command.projectile_pierces_targets, command.projectile_chill_duration,
 						command.projectile_chill_speed_multiplier, command.projectile_chill_damage_multiplier,
 						command.projectile_orbit_angular_speed, command.projectile_reaction_chain_id,
-						command.projectile_reaction_budget, command.projectile_critical_hit);
+						command.projectile_reaction_budget, command.projectile_critical_hit,
+						command.projectile_homing_turn_rate, command.projectile_homing_radius);
 				log("spawned projectile " + command.entity_type);
 			} catch (const std::exception &error) {
 				log(std::string("projectile rejected: ") + error.what());

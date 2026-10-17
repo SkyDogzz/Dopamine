@@ -126,6 +126,8 @@ struct ProjectileData {
 	float orbit_center_y = 0.0F;
 	float orbit_radius = 0.0F;
 	float orbit_angular_speed = 0.0F;
+	float homing_turn_rate = 0.0F;
+	float homing_radius = 0.0F;
 	double orbit_angle = 0.0;
 	uint64_t reaction_chain_id = 0;
 	uint32_t reaction_budget = 1;
@@ -222,7 +224,8 @@ public:
 			bool pierces_targets = false, double chill_duration_seconds = 0.0,
 			float chill_speed_multiplier = 1.0F, float chill_damage_multiplier = 1.0F,
 			float orbit_angular_speed = 0.0F, uint64_t reaction_chain_id = 0,
-			uint32_t reaction_budget = 1, bool critical_hit = false);
+			uint32_t reaction_budget = 1, bool critical_hit = false,
+			float homing_turn_rate = 0.0F, float homing_radius = 0.0F);
 	EntityId spawn_xp_orb(float x, float y, float xp_value);
 	void attract_xp_orbs(float target_x, float target_y, float radius, float acceleration,
 			float max_speed, double delta_seconds);

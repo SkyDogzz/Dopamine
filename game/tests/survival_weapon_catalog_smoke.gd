@@ -106,6 +106,9 @@ func _run() -> void:
 	if not await _sawblades_ricochet_between_targets():
 		_fail("Sawblades should hit their first target and ricochet to another target")
 		return
+	if not await _magnetic_coil_homing_is_limited_to_level_five():
+		_fail("Magnetic Coil should apply its proposed light homing only at relic level 5 and stay inside visible weapon range")
+		return
 	if not await _meteor_staff_targets_groups_and_starfall_fragments():
 		_fail("Meteor Staff should hit a group and Starfall should fragment toward nearby enemies")
 		return
@@ -1567,6 +1570,54 @@ func _sawblades_ricochet_between_targets() -> bool:
 		if int(session.simulation.snapshot()["metrics"]["collision_count"]) >= before_hits + 2:
 			session.queue_free()
 			return true
+	session.queue_free()
+	return false
+
+func _magnetic_coil_homing_is_limited_to_level_five() -> bool:
+	var session: Node2D = load("res://scenes/survival_session.tscn").instantiate()
+	session.spawn_initial_enemy = false
+	session.wave_spawning_enabled = false
+	session.weapon_enabled = false
+	session.skip_starting_weapon_choice = true
+	session.sawblades_cooldown = 1000.0
+	session._next_sawblades_time = 1000.0
+	root.add_child(session)
+	await process_frame
+	if not session.loadout.apply_offer("weapon:sawblades"):
+		session.queue_free()
+		return false
+	for _level in range(4):
+		if not session.loadout.apply_offer("relic:magnetic_coil"):
+			session.queue_free()
+			return false
+	if session.loadout.relic_level("magnetic_coil") != 4 or session._magnetic_coil_homing_turn_rate() != 0.0:
+		session.queue_free()
+		return false
+	if not session.loadout.apply_offer("relic:magnetic_coil"):
+		session.queue_free()
+		return false
+	session._entities = [{"id": {"index": 81, "generation": 1}, "components": {
+		"Health": {"current": 100.0},
+		"Transform2D": {"x": session.player.global_position.x + 100.0, "y": session.player.global_position.y + 20.0},
+	}}]
+	session.weapon_enabled = true
+	session._next_sawblades_time = 0.0
+	var active_time: float = float(session.simulation.snapshot()["simulation_time"])
+	session._fire_sawblades(active_time, false)
+	var expected_turn_rate: float = session.magnetic_coil_level_five_homing_turn_rate
+	var expected_radius: float = session.SURVIVAL_TARGETING.visible_range(session.magnetic_coil_level_five_homing_radius)
+	var deadline := Time.get_ticks_msec() + 2000
+	while Time.get_ticks_msec() < deadline:
+		await process_frame
+		for entity in session.simulation.snapshot()["entities"]:
+			var components: Dictionary = entity["components"]
+			if str(components.get("EnemyType", "")) not in ["sawblades", "razorstorm"]:
+				continue
+			var projectile: Dictionary = components.get("Projectile", {})
+			var valid := is_equal_approx(float(projectile.get("homing_turn_rate", 0.0)), expected_turn_rate) and \
+				is_equal_approx(float(projectile.get("homing_radius", 0.0)), expected_radius)
+			session.queue_free()
+			return valid
 	session.queue_free()
 	return false
 

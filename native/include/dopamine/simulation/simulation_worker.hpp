@@ -80,6 +80,8 @@ struct SimulationCommand {
 	float projectile_chill_speed_multiplier = 1.0F;
 	float projectile_chill_damage_multiplier = 1.0F;
 	float projectile_orbit_angular_speed = 0.0F;
+	float projectile_homing_turn_rate = 0.0F;
+	float projectile_homing_radius = 0.0F;
 	uint64_t projectile_reaction_chain_id = 0;
 	uint32_t projectile_reaction_budget = 1;
 	bool projectile_critical_hit = false;

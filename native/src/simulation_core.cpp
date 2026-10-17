@@ -150,7 +150,8 @@ EntityId SimulationCore::spawn_projectile(std::string type, float x, float y, fl
 		float explosion_damage_multiplier, uint32_t ricochets, float attraction_radius,
 		float attraction_speed, bool pierces_targets, double chill_duration_seconds,
 		float chill_speed_multiplier, float chill_damage_multiplier, float orbit_angular_speed,
-		uint64_t reaction_chain_id, uint32_t reaction_budget, bool critical_hit) {
+		uint64_t reaction_chain_id, uint32_t reaction_budget, bool critical_hit,
+		float homing_turn_rate, float homing_radius) {
 	if (!std::isfinite(damage) || damage <= 0.0F || !std::isfinite(radius) || radius < 0.0F ||
 			!std::isfinite(lifetime_seconds) || lifetime_seconds <= 0.0 || type.empty() ||
 			ricochets > 64 ||
@@ -164,6 +165,9 @@ EntityId SimulationCore::spawn_projectile(std::string type, float x, float y, fl
 			((chill_duration_seconds > 0.0) != (chill_speed_multiplier < 1.0F)) ||
 			!std::isfinite(chill_damage_multiplier) || chill_damage_multiplier < 1.0F ||
 			!std::isfinite(orbit_angular_speed) || orbit_angular_speed < 0.0F ||
+			!std::isfinite(homing_turn_rate) || homing_turn_rate < 0.0F ||
+			!std::isfinite(homing_radius) || homing_radius < 0.0F ||
+			((homing_turn_rate > 0.0F) != (homing_radius > 0.0F)) ||
 			!std::isfinite(explosion_damage_multiplier) || explosion_damage_multiplier < 0.0F || reaction_budget > 64 ||
 			!std::isfinite(damage * explosion_damage_multiplier)) {
 		throw std::invalid_argument("invalid projectile");
@@ -191,6 +195,8 @@ EntityId SimulationCore::spawn_projectile(std::string type, float x, float y, fl
 	projectile.ricochets_remaining = ricochets;
 	projectile.attraction_radius = attraction_radius;
 	projectile.attraction_speed = attraction_speed;
+	projectile.homing_turn_rate = homing_turn_rate;
+	projectile.homing_radius = homing_radius;
 	projectile.pierces_targets = pierces_targets;
 	if (type == "crimson_dagger" || type == "bloodstorm_dagger") {
 		projectile.pierces_targets = true;
@@ -876,6 +882,47 @@ std::vector<CombatEvent> SimulationCore::advance(double delta_seconds) {
 					static_cast<float>(std::cos(projectile.orbit_angle)) * projectile.orbit_radius * projectile.orbit_angular_speed,
 				};
 			} else {
+				if (projectile.homing_turn_rate > 0.0F && projectile.homing_radius > 0.0F && travel_seconds > 0.0) {
+					const float speed = std::hypot(velocities_[projectile_index].x, velocities_[projectile_index].y);
+					if (speed > 0.0F) {
+						uint32_t nearest_target = std::numeric_limits<uint32_t>::max();
+						float nearest_distance_squared = projectile.homing_radius * projectile.homing_radius;
+						for (uint32_t target_index : query_spatial_index(spatial_index,
+								projectile_start.x, projectile_start.y, projectile.homing_radius, {})) {
+							if (!slots_[target_index].active || projectile_flags_[target_index] || xp_orb_flags_[target_index] ||
+									health_[target_index].current <= 0.0F) {
+								continue;
+							}
+							const EntityId target_id{target_index, slots_[target_index].generation};
+							if (std::find(projectile.hit_targets.begin(), projectile.hit_targets.end(), target_id) !=
+									projectile.hit_targets.end()) {
+								continue;
+							}
+							const float dx = transforms_[target_index].x - projectile_start.x;
+							const float dy = transforms_[target_index].y - projectile_start.y;
+							const float distance_squared = dx * dx + dy * dy;
+							if (distance_squared < nearest_distance_squared) {
+								nearest_distance_squared = distance_squared;
+								nearest_target = target_index;
+							}
+						}
+						if (nearest_target != std::numeric_limits<uint32_t>::max()) {
+							const double desired_angle = std::atan2(
+									transforms_[nearest_target].y - projectile_start.y,
+									transforms_[nearest_target].x - projectile_start.x);
+							const double current_angle = std::atan2(velocities_[projectile_index].y,
+									velocities_[projectile_index].x);
+							const double angle_delta = std::atan2(std::sin(desired_angle - current_angle),
+									std::cos(desired_angle - current_angle));
+							const double max_turn = projectile.homing_turn_rate * travel_seconds;
+							const double angle = current_angle + std::clamp(angle_delta, -max_turn, max_turn);
+							velocities_[projectile_index] = {
+									static_cast<float>(std::cos(angle) * speed),
+									static_cast<float>(std::sin(angle) * speed),
+							};
+						}
+					}
+				}
 				projectile_end = {
 					projectile_start.x + velocities_[projectile_index].x * static_cast<float>(travel_seconds),
 					projectile_start.y + velocities_[projectile_index].y * static_cast<float>(travel_seconds),

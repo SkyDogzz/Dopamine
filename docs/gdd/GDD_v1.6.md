@@ -441,6 +441,8 @@ Ces valeurs sont des hypothèses de balancing, pas des valeurs définitives.
 
 Ces effets et chiffres restent à valider.
 
+Le prototype applique le « Homing léger » de Magnetic Coil au projectile Sawblades/Razorstorm seulement lorsque la relique atteint le niveau 5. Le projectile corrige sa trajectoire à 1 radian/s vers une cible vivante non encore touchée, située dans un rayon de ciblage visible (valeur initiale `SURVIVAL_TARGETING.SAWBLADES_RANGE`, limitée par le plafond de portée à l’écran). La vitesse est conservée. Ces paramètres sont **[PROPOSÉS]**, configurables et à calibrer; l’effet n’est pas déclaré équilibré.
+
 ### Nouvelle relique : Magnet Heart
 
 **Statut : ajout validé au GDD v1.6.**

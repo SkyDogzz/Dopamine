@@ -53,10 +53,10 @@ void CombatSimulation::_bind_methods() {
 			&CombatSimulation::spawn, DEFVAL(1.0));
 	ClassDB::bind_method(D_METHOD("spawn_enemy", "enemy_type", "count", "position", "velocity", "hp_multiplier", "affix", "movement_speed_multiplier"),
 			&CombatSimulation::spawn_enemy, DEFVAL(1.0), DEFVAL(String()), DEFVAL(1.0));
-	ClassDB::bind_method(D_METHOD("spawn_projectile", "projectile_type", "position", "velocity", "damage", "radius", "lifetime_seconds", "burn_damage_per_tick", "burn_interval_seconds", "burn_duration_seconds", "explosion_radius", "explosion_damage_multiplier", "ricochets", "attraction_radius", "attraction_speed", "pierces_targets", "chill_duration_seconds", "chill_speed_multiplier", "chill_damage_multiplier", "orbit_angular_speed", "reaction_chain_id", "reaction_budget", "critical_hit"),
-			&CombatSimulation::spawn_projectile, DEFVAL(2.0), DEFVAL(0.5), DEFVAL(2.0), DEFVAL(0.0), DEFVAL(0.0), DEFVAL(0), DEFVAL(0.0), DEFVAL(0.0), DEFVAL(false), DEFVAL(0.0), DEFVAL(1.0), DEFVAL(1.0), DEFVAL(0.0), DEFVAL(0), DEFVAL(1), DEFVAL(false));
-	ClassDB::bind_method(D_METHOD("spawn_status_projectile", "projectile_type", "position", "velocity", "damage", "radius", "lifetime_seconds", "status_damage_per_tick", "status_interval_seconds", "status_duration_seconds", "explosion_radius", "explosion_damage_multiplier", "ricochets", "attraction_radius", "attraction_speed", "pierces_targets", "chill_duration_seconds", "chill_speed_multiplier", "chill_damage_multiplier", "orbit_angular_speed", "reaction_chain_id", "reaction_budget", "critical_hit"),
-			&CombatSimulation::spawn_status_projectile, DEFVAL(2.0), DEFVAL(0.5), DEFVAL(2.0), DEFVAL(0.0), DEFVAL(0.0), DEFVAL(0), DEFVAL(0.0), DEFVAL(0.0), DEFVAL(false), DEFVAL(0.0), DEFVAL(1.0), DEFVAL(1.0), DEFVAL(0.0), DEFVAL(0), DEFVAL(1), DEFVAL(false));
+	ClassDB::bind_method(D_METHOD("spawn_projectile", "projectile_type", "position", "velocity", "damage", "radius", "lifetime_seconds", "burn_damage_per_tick", "burn_interval_seconds", "burn_duration_seconds", "explosion_radius", "explosion_damage_multiplier", "ricochets", "attraction_radius", "attraction_speed", "pierces_targets", "chill_duration_seconds", "chill_speed_multiplier", "chill_damage_multiplier", "orbit_angular_speed", "reaction_chain_id", "reaction_budget", "critical_hit", "homing_turn_rate", "homing_radius"),
+			&CombatSimulation::spawn_projectile, DEFVAL(2.0), DEFVAL(0.5), DEFVAL(2.0), DEFVAL(0.0), DEFVAL(0.0), DEFVAL(0), DEFVAL(0.0), DEFVAL(0.0), DEFVAL(false), DEFVAL(0.0), DEFVAL(1.0), DEFVAL(1.0), DEFVAL(0.0), DEFVAL(0), DEFVAL(1), DEFVAL(false), DEFVAL(0.0), DEFVAL(0.0));
+	ClassDB::bind_method(D_METHOD("spawn_status_projectile", "projectile_type", "position", "velocity", "damage", "radius", "lifetime_seconds", "status_damage_per_tick", "status_interval_seconds", "status_duration_seconds", "explosion_radius", "explosion_damage_multiplier", "ricochets", "attraction_radius", "attraction_speed", "pierces_targets", "chill_duration_seconds", "chill_speed_multiplier", "chill_damage_multiplier", "orbit_angular_speed", "reaction_chain_id", "reaction_budget", "critical_hit", "homing_turn_rate", "homing_radius"),
+			&CombatSimulation::spawn_status_projectile, DEFVAL(2.0), DEFVAL(0.5), DEFVAL(2.0), DEFVAL(0.0), DEFVAL(0.0), DEFVAL(0), DEFVAL(0.0), DEFVAL(0.0), DEFVAL(false), DEFVAL(0.0), DEFVAL(1.0), DEFVAL(1.0), DEFVAL(0.0), DEFVAL(0), DEFVAL(1), DEFVAL(false), DEFVAL(0.0), DEFVAL(0.0));
 	ClassDB::bind_method(D_METHOD("spawn_xp_orb", "position", "xp_value"), &CombatSimulation::spawn_xp_orb);
 	ClassDB::bind_method(D_METHOD("attract_xp_orbs", "target", "radius", "acceleration", "max_speed", "delta_seconds"),
 			&CombatSimulation::attract_xp_orbs);
@@ -174,7 +174,8 @@ int64_t CombatSimulation::spawn_projectile(String projectile_type, Vector2 posit
 		float explosion_damage_multiplier, int64_t ricochets, float attraction_radius,
 		float attraction_speed, bool pierces_targets, double chill_duration_seconds,
 		float chill_speed_multiplier, float chill_damage_multiplier, float orbit_angular_speed,
-		int64_t reaction_chain_id, int64_t reaction_budget, bool critical_hit) {
+		int64_t reaction_chain_id, int64_t reaction_budget, bool critical_hit,
+		float homing_turn_rate, float homing_radius) {
 	if (ricochets < 0 || ricochets > 64 || reaction_chain_id < 0 || reaction_budget < 0 || reaction_budget > 64) {
 		return 0;
 	}
@@ -182,7 +183,8 @@ int64_t CombatSimulation::spawn_projectile(String projectile_type, Vector2 posit
 			burn_damage_per_tick, burn_interval_seconds, burn_duration_seconds,
 			explosion_radius, explosion_damage_multiplier, ricochets, attraction_radius,
 			attraction_speed, pierces_targets, chill_duration_seconds, chill_speed_multiplier,
-			chill_damage_multiplier, orbit_angular_speed, reaction_chain_id, reaction_budget, critical_hit);
+			chill_damage_multiplier, orbit_angular_speed, reaction_chain_id, reaction_budget, critical_hit,
+			homing_turn_rate, homing_radius);
 }
 
 int64_t CombatSimulation::spawn_status_projectile(String projectile_type, Vector2 position, Vector2 velocity,
@@ -191,7 +193,8 @@ int64_t CombatSimulation::spawn_status_projectile(String projectile_type, Vector
 		float explosion_damage_multiplier, int64_t ricochets, float attraction_radius,
 		float attraction_speed, bool pierces_targets, double chill_duration_seconds,
 		float chill_speed_multiplier, float chill_damage_multiplier, float orbit_angular_speed,
-		int64_t reaction_chain_id, int64_t reaction_budget, bool critical_hit) {
+		int64_t reaction_chain_id, int64_t reaction_budget, bool critical_hit,
+		float homing_turn_rate, float homing_radius) {
 	const std::string type = projectile_type.utf8().get_data();
 	const bool applies_damage_over_time = type == "inferno_sprayer" || type == "bloodstorm_dagger" ||
 			type == "wildfire_sprayer" || type == "toxic_cloud" || type == "pandemic_cloud";
@@ -209,6 +212,9 @@ int64_t CombatSimulation::spawn_status_projectile(String projectile_type, Vector
 			((chill_duration_seconds > 0.0) != (chill_speed_multiplier < 1.0F)) ||
 			!std::isfinite(chill_damage_multiplier) || chill_damage_multiplier < 1.0F ||
 			!std::isfinite(orbit_angular_speed) || orbit_angular_speed < 0.0F ||
+			!std::isfinite(homing_turn_rate) || homing_turn_rate < 0.0F ||
+			!std::isfinite(homing_radius) || homing_radius < 0.0F ||
+			((homing_turn_rate > 0.0F) != (homing_radius > 0.0F)) ||
 			ricochets < 0 || ricochets > 64 || reaction_chain_id < 0 || reaction_budget < 0 || reaction_budget > 64 ||
 			!std::isfinite(damage * explosion_damage_multiplier)) {
 		return 0;
@@ -241,6 +247,8 @@ int64_t CombatSimulation::spawn_status_projectile(String projectile_type, Vector
 	command.projectile_chill_speed_multiplier = chill_speed_multiplier;
 	command.projectile_chill_damage_multiplier = chill_damage_multiplier;
 	command.projectile_orbit_angular_speed = orbit_angular_speed;
+	command.projectile_homing_turn_rate = homing_turn_rate;
+	command.projectile_homing_radius = homing_radius;
 	command.projectile_reaction_chain_id = static_cast<uint64_t>(reaction_chain_id);
 	command.projectile_reaction_budget = static_cast<uint32_t>(reaction_budget);
 	command.projectile_critical_hit = critical_hit;
@@ -586,6 +594,8 @@ Dictionary CombatSimulation::snapshot() const {
 			projectile["area_radius"] = entity.projectile.explosion_radius;
 			projectile["attraction_radius"] = entity.projectile.attraction_radius;
 			projectile["attraction_speed"] = entity.projectile.attraction_speed;
+			projectile["homing_turn_rate"] = entity.projectile.homing_turn_rate;
+			projectile["homing_radius"] = entity.projectile.homing_radius;
 			projectile["pierces_targets"] = entity.projectile.pierces_targets;
 			projectile["chill_duration_seconds"] = entity.projectile.chill_duration_seconds;
 			projectile["chill_speed_multiplier"] = entity.projectile.chill_speed_multiplier;

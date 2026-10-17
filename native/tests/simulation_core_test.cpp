@@ -400,6 +400,26 @@ int main() {
 			std::abs(std::hypot(restored_dagger->transform.x, restored_dagger->transform.y) - 30.0F) < 0.01F,
 			"Bloodstorm orbit state should survive a native simulation snapshot restore");
 
+	SimulationCore homing_sawblade;
+	const auto homing_target = homing_sawblade.spawn("chaser", 50.0F, 20.0F, 100.0F, 0.0F, 0.0F);
+	const auto homing_projectile = homing_sawblade.spawn_projectile("razorstorm", 0.0F, 0.0F,
+			5.0F, 2.0F, 2.0, 100.0F, 0.0F, 2.0F, 0.5, 2.0, 0.0F, 0.0F, 1,
+			0.0F, 0.0F, false, 0.0, 1.0F, 1.0F, 0.0F, 0, 1, false, 1.0F, 180.0F);
+	const auto unsteered_sawblade = homing_sawblade.entity(homing_projectile);
+	require(unsteered_sawblade.has_value(), "homing projectile should exist before simulation advances");
+	const float homing_speed_before = std::hypot(unsteered_sawblade->velocity.x, unsteered_sawblade->velocity.y);
+	const auto homing_state = homing_sawblade.capture_state();
+	SimulationCore restored_homing_sawblade;
+	restored_homing_sawblade.restore_state(homing_state);
+	restored_homing_sawblade.advance(0.1);
+	const auto steered_sawblade = restored_homing_sawblade.entity(homing_projectile);
+	require(steered_sawblade && steered_sawblade->projectile.homing_turn_rate == 1.0F &&
+			steered_sawblade->transform.y > 0.0F && steered_sawblade->velocity.y > 0.0F &&
+			std::atan2(steered_sawblade->velocity.y, steered_sawblade->velocity.x) <= 0.101 &&
+			std::abs(std::hypot(steered_sawblade->velocity.x, steered_sawblade->velocity.y) - homing_speed_before) < 0.01F &&
+			homing_sawblade.entity(homing_target).has_value(),
+			"Magnetic Coil homing should steer gently toward a living target, preserve speed, and survive snapshots");
+
 	SimulationCore frost_nova;
 	const auto chilled_target = frost_nova.spawn("chaser", 50.0F, 0.0F, 100.0F, 0.0F, 0.0F, 1.0F, 75.0F);
 	const auto outside_target = frost_nova.spawn("chaser", 90.0F, 0.0F, 100.0F, 0.0F, 0.0F, 1.0F, 75.0F);

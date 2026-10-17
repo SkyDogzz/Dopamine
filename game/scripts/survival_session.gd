@@ -257,6 +257,8 @@ var sandbox_health_decay_multiplier := 1.0
 @export var sawblades_projectile_radius: float = 7.0
 @export var sawblades_projectile_lifetime: float = 2.5
 @export_range(0.0, 1.0) var magnetic_coil_projectile_speed_per_level: float = 0.04
+@export_range(0.0, 8.0, 0.1) var magnetic_coil_level_five_homing_turn_rate: float = 1.0
+@export_range(0.0, 620.0, 1.0) var magnetic_coil_level_five_homing_radius: float = SURVIVAL_TARGETING.SAWBLADES_RANGE
 @export_group("Prototype Meteor Staff — proposed tuning")
 @export var meteor_staff_cooldown: float = 2.8
 @export var meteor_staff_damage: float = 12.0
@@ -2974,13 +2976,15 @@ func _fire_sawblades(active_time: float, paused: bool) -> void:
 	var damage_multiplier := _weapon_level_multiplier("sawblades", "damage_multiplier", level)
 	var ricochets := 1 + _weapon_level_addition("sawblades", "ricochet_add", level) + (1 if evolved else 0)
 	var projectile_speed := sawblades_projectile_speed * _weapon_level_multiplier("sawblades", "projectile_speed_multiplier", level)
+	var homing_turn_rate := _magnetic_coil_homing_turn_rate()
+	var homing_radius := SURVIVAL_TARGETING.visible_range(magnetic_coil_level_five_homing_radius) if homing_turn_rate > 0.0 else 0.0
 	var sequence: int = simulation.spawn_projectile("razorstorm" if evolved else "sawblades",
 			player.global_position + direction * 14.0,
 		direction * _equipment_projectile_speed(projectile_speed),
 		sawblades_damage * damage_multiplier * _weapon_combo_damage_multiplier("sawblades") * _persistent_damage_multiplier() * _roll_equipment_critical_multiplier(),
 		_equipment_area(sawblades_projectile_radius), sawblades_projectile_lifetime,
 		2.0, 0.5, 2.0, 0.0, 0.0, ricochets, 0.0, 0.0, false, 0.0, 1.0, 1.0, 0.0, 0, 1,
-		_last_attack_critical_hit)
+		_last_attack_critical_hit, homing_turn_rate, homing_radius)
 	if sequence > 0:
 		Sfx.play("weapon_sweep")
 		_next_sawblades_time = active_time + _effective_weapon_cooldown(sawblades_cooldown)
@@ -3161,6 +3165,13 @@ func _sawblades_cluster_target() -> Dictionary:
 	return SURVIVAL_TARGETING.select_dense_cluster_target(
 		_entities, player.global_position, SURVIVAL_TARGETING.visible_range(sawblades_range),
 		SURVIVAL_TARGETING.visible_range(sawblades_cluster_radius), true)
+
+func _magnetic_coil_homing_turn_rate() -> float:
+	if loadout.relic_level("magnetic_coil") < loadout.MAX_LEVEL or \
+			not is_finite(magnetic_coil_level_five_homing_turn_rate) or magnetic_coil_level_five_homing_turn_rate <= 0.0 or \
+			not is_finite(magnetic_coil_level_five_homing_radius) or magnetic_coil_level_five_homing_radius <= 0.0:
+		return 0.0
+	return magnetic_coil_level_five_homing_turn_rate
 
 func _spawn_starfall_fragments(origin: Vector2, primary_target: Dictionary, entities: Array) -> void:
 	var candidates: Array[Dictionary] = []
