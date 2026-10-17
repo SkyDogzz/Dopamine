@@ -12,7 +12,7 @@ func _run() -> void:
 		"description": "A bounded test preset",
 		"base_mode": "survival",
 		"seed": 12345,
-		"overrides": {"enemy_hp": 2.0, "enemy_speed": 2.0, "contact_damage_per_hit": 5.0},
+		"overrides": {"enemy_hp": 2.0, "enemy_speed": 2.0, "spawn_count": 25, "contact_damage_per_hit": 5.0},
 		"flags": {"god_mode": false},
 		"initial_build": {"weapons": [{"id": "lightning_conductor", "level": 2}]},
 	}
@@ -105,6 +105,16 @@ func _run() -> void:
 	too_slow_enemy_speed["overrides"]["enemy_speed"] = 0.05
 	if preset_service.validate_preset(too_slow_enemy_speed).get("ok", false):
 		_fail("Enemy speed multiplier should respect its hard lower bound")
+		return
+	var excessive_spawn_count := preset.duplicate(true)
+	excessive_spawn_count["overrides"]["spawn_count"] = 501
+	if preset_service.validate_preset(excessive_spawn_count).get("ok", false):
+		_fail("Spawn count should respect the native per-command cap")
+		return
+	var fractional_spawn_count := preset.duplicate(true)
+	fractional_spawn_count["overrides"]["spawn_count"] = 2.5
+	if preset_service.validate_preset(fractional_spawn_count).get("ok", false):
+		_fail("Spawn count should reject fractional enemy counts")
 		return
 	var invalid_contact_damage := preset.duplicate(true)
 	invalid_contact_damage["overrides"]["contact_damage_per_hit"] = -0.1

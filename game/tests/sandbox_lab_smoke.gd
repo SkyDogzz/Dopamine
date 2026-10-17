@@ -37,6 +37,17 @@ func _run() -> void:
 			lab.context.session.loadout.relic_level("storm_core") != 1:
 		_fail("The default Lab preset build should be applied to the real combat loadout")
 		return
+	var spawn_count: SpinBox = lab.get_node_or_null("Root/Body/Side/Sections/EnemyConfig/SpawnCount")
+	if spawn_count == null or spawn_count.value != 10.0 or \
+			not lab._can_spawn_batch(2490) or lab._can_spawn_batch(2491) or lab._can_spawn_batch(2500):
+		_fail("The default spawn count should fit exactly within the native 2500-entity limit")
+		return
+	spawn_count.value = 500.0
+	if not lab._can_spawn_batch(2000) or lab._can_spawn_batch(2001) or \
+			lab._can_spawn_batch(0, 0) or lab._can_spawn_batch(0, 501):
+		_fail("The configurable spawn count should respect native per-command and total entity caps")
+		return
+	spawn_count.value = 10.0
 	if not lab._can_spawn_batch(2490) or lab._can_spawn_batch(2491) or lab._can_spawn_batch(2500):
 		_fail("The Lab spawn batch should stop exactly at the native 2500-entity capacity")
 		return
@@ -74,12 +85,12 @@ func _run() -> void:
 			relic_level == null or add_relic == null or stat_select == null or stat_value == null or \
 			add_stat == null or apply_build == null or import_profile == null or equipment_slot == null or equipment_stat == null or \
 			equipment_value == null or add_equipment == null or live_stat == null or live_value == null or \
-			apply_live_stat == null or enemy_hp_override == null or enemy_speed_override == null or \
+			apply_live_stat == null or enemy_hp_override == null or enemy_speed_override == null or spawn_count == null or \
 			contact_damage == null or seed_control == null or \
 			restore_hp_button == null:
 		_fail("Sandbox Lab should provide profile import, visual build controls and typed combat configuration")
 		return
-	if not is_equal_approx(seed_control.value, 1.0):
+	if not is_equal_approx(seed_control.value, 1.0) or spawn_count.value != 10.0:
 		_fail("The default Sandbox preset should expose seed 1")
 		return
 	seed_control.value = 42.0
@@ -113,15 +124,19 @@ func _run() -> void:
 			not is_equal_approx(float(lab.context.active_preset["overrides"]["enemy_speed"]), 2.0):
 		_fail("Changing the LIVE Lab control should update the active preset")
 		return
+	spawn_count.value = 3.0
+	if int(lab.context.active_preset["overrides"].get("spawn_count", 0)) != 3:
+		_fail("The spawn count control should persist as a bounded Sandbox preset override")
+		return
 	var previous_spawn_sequence := int(lab.context.simulation.snapshot()["last_sequence"])
 	lab._spawn_enemies()
 	while int(lab.context.simulation.snapshot()["last_sequence"]) <= previous_spawn_sequence:
 		await process_frame
 	var spawned_enemy_state: Dictionary = lab.context.simulation.snapshot()
-	if spawned_enemy_state["entities"].size() != 10 or \
+	if spawned_enemy_state["entities"].size() != 3 or \
 			float(spawned_enemy_state["entities"][0]["components"]["Health"]["maximum"]) != 40.0 or \
 			float(spawned_enemy_state["entities"][0]["components"]["MoveSpeed"]) != 150.0:
-		_fail("The configured enemy HP and speed multipliers should reach each Lab spawn command")
+		_fail("The configured batch size, enemy HP and speed multipliers should reach each Lab spawn command")
 		return
 	contact_damage.value = 5.0
 	if not is_equal_approx(float(lab.context.session.contact_damage_per_hit), 5.0) or \
@@ -352,13 +367,14 @@ func _run() -> void:
 			int(saved_preset["preset"]["seed"]) != 42 or \
 			float(saved_preset["preset"]["overrides"].get("enemy_hp", 0.0)) != 2.0 or \
 			float(saved_preset["preset"]["overrides"].get("enemy_speed", 0.0)) != 2.0 or \
+			int(saved_preset["preset"]["overrides"].get("spawn_count", 0)) != 3 or \
 			float(saved_preset["preset"]["overrides"].get("contact_damage_per_hit", 0.0)) != 5.0:
 		_fail("The Lab UI should save a valid preset in the isolated Sandbox store")
 		return
 	var imported_path := directory.path_join("imported.json")
 	var imported_preset: Dictionary = lab._default_preset()
 	imported_preset["preset_id"] = "file_import"
-	imported_preset["overrides"] = {"enemy_hp": 3.0, "enemy_speed": 3.0, "contact_damage_per_hit": 7.0}
+	imported_preset["overrides"] = {"enemy_hp": 3.0, "enemy_speed": 3.0, "spawn_count": 4, "contact_damage_per_hit": 7.0}
 	var imported_file := FileAccess.open(imported_path, FileAccess.WRITE)
 	imported_file.store_string(JSON.stringify(imported_preset))
 	imported_file.close()
@@ -366,7 +382,7 @@ func _run() -> void:
 	await lab._import_preset_file(imported_path)
 	if lab.context.active_preset.get("preset_id", "") != "file_import" or lab.context.session._health_locked or \
 			float(enemy_hp_override.value) != 3.0 or float(contact_damage.value) != 7.0 or \
-			float(enemy_speed_override.value) != 3.0 or \
+			float(enemy_speed_override.value) != 3.0 or int(spawn_count.value) != 4 or \
 			not is_equal_approx(float(lab.context.session.contact_damage_per_hit), 7.0):
 		_fail("A valid JSON file should import and apply to the isolated Lab: status=%s error=%s" % [
 			lab.get_node("Root/Body/Side/Sections/Status").text,
@@ -387,7 +403,7 @@ func _run() -> void:
 		_fail("The Lab simulation should pause before deterministic spawn checks")
 		return
 	lab.get_node("Root/Body/Left/Controls/SpawnButton").pressed.emit()
-	if not await _wait_for_entities(lab.context.simulation, 10):
+	if not await _wait_for_entities(lab.context.simulation, 4):
 		_fail("The Lab spawn control should add enemies to its native simulation")
 		return
 	if float(lab.context.simulation.snapshot()["entities"][0]["components"]["Health"]["maximum"]) != 60.0:

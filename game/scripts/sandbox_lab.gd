@@ -10,6 +10,7 @@ const PROGRESSION_SCRIPT := preload("res://scripts/progression_service.gd")
 const MAX_DPS_SAMPLES := 4096
 const MAX_SIMULATION_ENTITIES := 2500
 const SPAWN_BATCH_SIZE := 10
+const MAX_ENEMIES_PER_SPAWN := 500
 
 @onready var _view: Control = $Root/Body/Left/SimulationView
 @onready var _status: Label = $Root/Body/Side/Sections/Status
@@ -19,6 +20,7 @@ const SPAWN_BATCH_SIZE := 10
 @onready var _enemy_select: OptionButton = $Root/Body/Side/Sections/EnemySelect
 @onready var _metrics: Label = $Root/Body/Side/Sections/Metrics
 @onready var _pause_button: Button = $Root/Body/Left/Controls/PauseButton
+@onready var _spawn_button: Button = $Root/Body/Left/Controls/SpawnButton
 @onready var _speed_select: OptionButton = $Root/Body/Left/Controls/SpeedSelect
 @onready var _wave_spin: SpinBox = $Root/Body/Left/WaveControls/WaveSpin
 @onready var _dps_summary: Label = $Root/Body/Side/Sections/Diagnostics/DpsSummary
@@ -37,6 +39,7 @@ const SPAWN_BATCH_SIZE := 10
 @onready var _live_stat_value: SpinBox = $Root/Body/Side/Sections/LiveOverride/StatValue
 @onready var _enemy_hp_multiplier: SpinBox = $Root/Body/Side/Sections/EnemyConfig/EnemyHpMultiplier
 @onready var _enemy_speed_multiplier: SpinBox = $Root/Body/Side/Sections/EnemyConfig/EnemySpeedMultiplier
+@onready var _spawn_count: SpinBox = $Root/Body/Side/Sections/EnemyConfig/SpawnCount
 @onready var _contact_damage: SpinBox = $Root/Body/Side/Sections/EnemyConfig/ContactDamage
 @onready var _seed_control: SpinBox = $Root/Body/Side/Sections/EnemyConfig/Seed
 @onready var _capture_snapshot_button: Button = $Root/Body/Left/SnapshotControls/CaptureButton
@@ -85,6 +88,7 @@ func _ready() -> void:
 	$Root/Body/Side/Sections/LiveOverride/ApplyStat.pressed.connect(_apply_live_stat_override)
 	_enemy_hp_multiplier.value_changed.connect(_set_enemy_hp_override)
 	_enemy_speed_multiplier.value_changed.connect(_set_enemy_speed_override)
+	_spawn_count.value_changed.connect(_set_spawn_count_override)
 	_contact_damage.value_changed.connect(_set_contact_damage_override)
 	_seed_control.value_changed.connect(_set_seed_override)
 	_populate_visual_build_options()
@@ -102,6 +106,7 @@ func _ready() -> void:
 		return
 	_enemy_hp_multiplier.value = float(context.active_preset["overrides"].get("enemy_hp", 1.0))
 	_enemy_speed_multiplier.value = float(context.active_preset["overrides"].get("enemy_speed", 1.0))
+	_spawn_count.value = float(context.active_preset["overrides"].get("spawn_count", SPAWN_BATCH_SIZE))
 	_contact_damage.value = float(context.active_preset["overrides"].get("contact_damage_per_hit", 0.0))
 	_seed_control.value = float(context.active_preset["seed"])
 	_pause_button.grab_focus()
@@ -123,7 +128,7 @@ func _default_preset() -> Dictionary:
 	return {
 		"schema_version": 1, "preset_id": "lab_default", "name": "Lab Default",
 		"description": "Empty isolated combat lab", "base_mode": "survival", "seed": 1,
-		"overrides": {}, "flags": {},
+		"overrides": {"spawn_count": SPAWN_BATCH_SIZE}, "flags": {},
 		"initial_build": {
 			"weapons": [{"id": "lightning_conductor", "level": 1}],
 			"relics": [{"id": "storm_core", "level": 1}], "equipment": [], "stats": {},
@@ -307,14 +312,21 @@ func _restore_player_hp() -> void:
 
 func _spawn_enemies() -> void:
 	var current_count := int(context.simulation.snapshot()["metrics"]["entity_count"])
-	if not _can_spawn_batch(current_count):
+	var spawn_count := int(_spawn_count.value)
+	if not _can_spawn_batch(current_count, spawn_count):
 		_set_status("ENTITY LIMIT %d · REMOVE ENTITIES BEFORE SPAWNING" % MAX_SIMULATION_ENTITIES, true)
 		return
 	var enemy_id := str(_enemy_select.get_item_metadata(_enemy_select.selected))
-	var sequence: int = context.simulation.spawn_enemy(enemy_id, SPAWN_BATCH_SIZE,
+	var sequence: int = context.simulation.spawn_enemy(enemy_id, spawn_count,
 		Vector2(120.0, 0.0), Vector2.ZERO, float(_enemy_hp_multiplier.value), "",
 		float(_enemy_speed_multiplier.value))
 	_set_status("SPAWN QUEUED" if sequence > 0 else "SPAWN REJECTED", sequence <= 0)
+
+func _set_spawn_count_override(value: float) -> void:
+	if context == null or context.active_preset.is_empty():
+		return
+	context.active_preset["overrides"]["spawn_count"] = int(value)
+	_spawn_button.text = "SPAWN x%d" % int(value)
 
 func _set_enemy_hp_override(value: float) -> void:
 	if context == null or context.active_preset.is_empty():
@@ -346,8 +358,10 @@ func _set_seed_override(value: float) -> void:
 	if seed_needs_restart:
 		_set_status("SEED SET · RESET TO APPLY", false)
 
-func _can_spawn_batch(current_count: int) -> bool:
-	return current_count >= 0 and current_count + SPAWN_BATCH_SIZE <= MAX_SIMULATION_ENTITIES
+func _can_spawn_batch(current_count: int, requested_count: int = -1) -> bool:
+	var count := int(_spawn_count.value) if requested_count < 0 else requested_count
+	return current_count >= 0 and count >= 1 and count <= MAX_ENEMIES_PER_SPAWN and \
+		current_count + count <= MAX_SIMULATION_ENTITIES
 
 func _kill_all() -> void:
 	var sequence: int = context.simulation.kill_all()
@@ -390,6 +404,7 @@ func _restore_snapshot() -> void:
 		return
 	_enemy_hp_multiplier.value = float(context.active_preset["overrides"].get("enemy_hp", 1.0))
 	_enemy_speed_multiplier.value = float(context.active_preset["overrides"].get("enemy_speed", 1.0))
+	_spawn_count.value = float(context.active_preset["overrides"].get("spawn_count", SPAWN_BATCH_SIZE))
 	_contact_damage.value = float(context.active_preset["overrides"].get("contact_damage_per_hit", 0.0))
 	_seed_control.value = float(context.seed)
 	var stat_id := str(_live_stat_select.get_item_metadata(_live_stat_select.selected))
@@ -544,6 +559,7 @@ func _preset_from_editor() -> Dictionary:
 	preset["initial_build"] = parser.data
 	preset["overrides"]["enemy_hp"] = _enemy_hp_multiplier.value
 	preset["overrides"]["enemy_speed"] = _enemy_speed_multiplier.value
+	preset["overrides"]["spawn_count"] = int(_spawn_count.value)
 	preset["overrides"]["contact_damage_per_hit"] = _contact_damage.value
 	var checked: Dictionary = preset_service.validate_preset(preset)
 	var build = load("res://scripts/sandbox_build.gd").new()
@@ -567,6 +583,7 @@ func _apply_preset(preset: Dictionary) -> void:
 	_build_json.text = JSON.stringify(preset["initial_build"], "  ")
 	_enemy_hp_multiplier.value = float(preset["overrides"].get("enemy_hp", 1.0))
 	_enemy_speed_multiplier.value = float(preset["overrides"].get("enemy_speed", 1.0))
+	_spawn_count.value = float(preset["overrides"].get("spawn_count", SPAWN_BATCH_SIZE))
 	_contact_damage.value = float(preset["overrides"].get("contact_damage_per_hit", 0.0))
 	_seed_control.value = float(preset["seed"])
 	context.live_stat_overrides.clear()

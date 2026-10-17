@@ -378,6 +378,23 @@ max_value = 10.0
 value = 1.0
 step = 0.1
 
+[node name="SpawnCountTitle" type="Label" parent="Root/Body/Side/Sections/EnemyConfig"]
+layout_mode = 2
+theme_type_variation = "PixelHeading"
+theme_override_font_sizes/font_size = 8
+text = "SPAWN COUNT · 1–500 PER COMMAND"
+
+[node name="SpawnCount" type="SpinBox" parent="Root/Body/Side/Sections/EnemyConfig"]
+custom_minimum_size = Vector2(0, 20)
+layout_mode = 2
+focus_mode = 2
+min_value = 1.0
+max_value = 500.0
+value = 10.0
+allow_greater = false
+allow_lesser = false
+step = 1.0
+
 [node name="ContactDamageTitle" type="Label" parent="Root/Body/Side/Sections/EnemyConfig"]
 layout_mode = 2
 theme_type_variation = "PixelHeading"

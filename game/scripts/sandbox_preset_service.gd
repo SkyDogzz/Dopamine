@@ -18,6 +18,7 @@ const OVERRIDE_LIMITS := {
 	"enemy_hp": Vector2(0.1, 1000.0),
 	"enemy_speed": Vector2(0.1, 10.0),
 	"contact_damage_per_hit": Vector2(0.0, 1000.0),
+	"spawn_count": Vector2(1.0, 500.0),
 }
 
 func validate_preset(preset: Variant) -> Dictionary:
@@ -45,6 +46,8 @@ func validate_preset(preset: Variant) -> Dictionary:
 		if typeof(value) not in [TYPE_INT, TYPE_FLOAT] or not is_finite(float(value)) or \
 				float(value) < limits.x or float(value) > limits.y:
 			return _error("invalid_override_%s" % str(override_id))
+		if str(override_id) == "spawn_count" and int(value) != float(value):
+			return _error("invalid_override_spawn_count")
 	for key in ["overrides", "flags", "initial_build"]:
 		if not _valid_tree(preset[key], 0):
 			return _error("payload_limits_exceeded")
