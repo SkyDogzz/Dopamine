@@ -11,6 +11,11 @@
 - [x] `save_service_smoke.gd` et `progression_service_smoke.gd` passent sous Godot 4.7.2 avec deux `XDG_DATA_HOME` temporaires isolés (`/tmp/dopamine-p68-*`). Ils couvrent respectivement l’enveloppe/backup/restauration et migrations/idempotence des récompenses.
 - [x] La vérification ciblée confirme les preuves historiques de migration v1–v8 et d’absence de double attribution après recréation des services; elle ne remplace pas le CTest complet.
 
+## P5.1.14 — Slots et déduplication des effets uniques — 2026-10-17
+
+- [x] Depuis un `git archive` propre du commit `6647f3f`, l’import Godot 4.7.2 puis `survival_loadout_smoke.gd`, `survival_unique_effects_smoke.gd` et `progression_service_smoke.gd` passent avec des `XDG_DATA_HOME` isolés.
+- [x] Les smokes vérifient cinq slots de relique par défaut, l’extension à six armes/reliques par `expanded_loadout`, le refus du septième item et la déduplication d’un même effet unique équipé sur plusieurs pièces. Les chiffres associés restent **[PROPOSÉS]**.
+
 ## Build Linux depuis un répertoire CMake vierge — 2026-10-17
 
 - Inventaire de cet environnement : CMake 3.31.12, GCC 14.2.0, Godot officiel 4.7.2 (`ed1daf0bf`) et `godot-cpp` `b8530af7546a3fcae80cef2477526569fd42ffc2`.

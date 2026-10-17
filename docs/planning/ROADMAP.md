@@ -331,7 +331,7 @@ Travail requis :
   - [x] Vérifier orbe XP et chest séparément : le bonus n'élargit jamais le rayon du chest.
   - [x] Au niveau 5, déclencher périodiquement Magnetic Pulse **[PROPOSÉE]** dans 300 % du rayon XP; le cœur natif accélère progressivement les orbes XP vers le joueur, les collecte seulement dans le rayon XP normal, puis arrête leur mouvement à la fin de l'impulsion. L'anneau, le cycle, le mouvement et la collecte gèlent en pause; aucun chest n'est affecté. Intervalle 20 s, durée 1,5 s, accélération 600 et vitesse max 240 **[PROPOSÉS]** et configurables.
   - [ ] Étendre l'attraction aux soins, ressources, monnaies et bonus temporaires lorsqu'ils existent.
-- [ ] **P5.1.14 — Slots et effets de capacité**
+- [x] **P5.1.14 — Slots et effets de capacité**
   - [x] Vérifier cinq slots de reliques en run normale ; `survival_loadout_smoke.gd` couvre cinq reliques distinctes, refuse une sixième et ne propose plus de nouvel item quand les slots sont pleins.
   - [x] Tester l’extension Legendary/Mythic avec `expanded_loadout` équipé : +1 arme et +1 relique, plafond six, doublons dédupliqués; contrat et valeurs restent **[PROPOSÉS]** dans `EFFETS_UNIQUES_P6.md`. Couvert par `survival_unique_effects_smoke.gd` et `survival_loadout_smoke.gd`.
   - [x] Vérifier l’absence de cumul automatique d’un même effet unique actif ; `progression_service_smoke.gd` équipe deux items Legendary avec `overflow_shield` et vérifie que l’effet n’est exposé qu’une fois.
