@@ -17,6 +17,12 @@
 - Sur Linux, `user://` se trouve dans le répertoire utilisateur Godot `app_userdata/Dopamine Survivor` (sous `$XDG_DATA_HOME/godot/`, ou le répertoire de données Godot par défaut). Le code de sauvegarde du jeu range les slots normaux sous `user://saves/` et les données Sandbox sous `user://sandbox/`.
 - Windows et iGPU de référence ne sont pas couverts.
 
+## Build et lancement depuis un clone Git propre — 2026-10-17
+
+- Clone local neuf du commit `09baf7a`, puis configuration CMake 3.31.12, compilation complète avec GCC 14.2.0, import Godot 4.7.2 et lancement headless de la scène principale : réussis. FetchContent a récupéré le SHA `godot-cpp` verrouillé.
+- Première suite CTest séquentielle : 86/87, échec isolé de `survival_weapon_catalog_smoke`; ce smoke a ensuite passé seul et la suite complète relancée a passé **87/87 en 59,98 s**. La cause de l’échec initial n’a pas été établie, donc ce passage n’est pas présenté comme une preuve d’absence d’intermittence.
+- Le clone provient du dépôt local et utilise le même hôte et les mêmes outils; il valide la reproductibilité depuis un arbre Git propre, pas depuis une machine Linux indépendante.
+
 ## Validation d'isolation Sandbox Lab P8.8 — 2026-10-17
 
 - `sandbox_lab_smoke.gd` écrit un slot normal sentinelle dans son `XDG_DATA_HOME` de test, puis démarre le Lab, applique des builds, lance le combat et effectue Reset; le contenu du slot est comparé octet pour octet à la fin.

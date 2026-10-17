@@ -81,7 +81,7 @@ P6 a déjà du code anticipé, dont la rotation automatique des bonus XP **[VALI
 
 - [ ] **P0.1 — Inventaire Linux**
   - [x] Noter les versions de Godot, CMake, compilateur et dépendance native du build vierge du 2026-10-17 dans `docs/qa/TESTS.md`.
-  - [ ] Vérifier les commandes de clone, configure, build, import et lancement sur un clone propre.
+  - [x] Vérifier clone, configure, build, import, lancement headless et CTest depuis un clone Git neuf; un échec CTest isolé n’a pas reproduit et reste documenté dans `docs/qa/TESTS.md`.
   - [x] Documenter les répertoires de build/runtime et données `user://` Linux dans `docs/qa/TESTS.md`; `.godot/` et les binaires de plateforme sont ignorés.
 - [ ] **P0.2 — Dépendances**
   - [x] Consigner les prérequis Linux (CMake ≥3.21, Git, compilateur C++23, Godot pour import/smokes) et la dépendance `godot-cpp` FetchContent dans `docs/qa/TESTS.md`.
