@@ -1,6 +1,6 @@
 # Contrats prototypes des effets uniques P6
 
-Les effets ci-dessous sont les effets sélectionnables et exécutés en Survival au 2026-10-16. Leurs chiffres et comportements sont **[PROPOSÉS]**, non calibrés; le tableau décrit le prototype courant, pas une validation de balance.
+Les effets ci-dessous sont les effets sélectionnables sur l’équipement permanent. Les valeurs des prototypes restent **[PROPOSÉES]**, non calibrées; le tableau distingue ce statut des règles validées pour `revive_once`.
 
 | ID | Prérequis | Déclencheur | Portée / limite | Feedback actuel | Statut |
 |---|---|---|---|---|---|
@@ -10,10 +10,11 @@ Les effets ci-dessous sont les effets sélectionnables et exécutés en Survival
 | `elite_haste` | Effet équipé | Mort d’un ennemi de type élite | +15% de mobilité du joueur pendant 3 s simulées; une nouvelle élimination rafraîchit l’échéance, sans cumul | Bref message HUD `ELITE HASTE · +15% MOVE` | **[PROPOSÉ]**; couvert par `survival_elite_smoke.gd` |
 | `free_first_chest_reroll` | Effet équipé et premier coffre de récompense de famille arme/relique avec assez d’offres inédites | Action explicite REROLL dans le choix du coffre | Une fois par run; les options déjà affichées sont exclues; la simulation reste en pause | Bouton REROLL dans le panneau de coffre | **[PROPOSÉ]**; couvert par `free_chest_reroll_smoke.gd` |
 | `expanded_loadout` | Effet sur une pièce permanente équipée; session Survival normale | Initialisation de la capacité du loadout | +1 slot d'arme et +1 slot de relique, chacun plafonné à six; les doublons du même effet ne s'empilent pas | L'inventaire décrit l'effet; les offres permettent de remplir les slots supplémentaires | **[PROPOSÉ]**; couvert par `survival_unique_effects_smoke.gd` et `survival_loadout_smoke.gd` |
+| `revive_once` | Effet sur une pièce permanente équipée; run Survival ou Endless standard | Coup fatal, puis confirmation explicite | Une fois par run; rend 50% des PV max et accorde 3 s d’invulnérabilité; exclu d’Endless Armorless et du Sandbox Lab | Dialogue `LAST CHANCE` avec choix REVIVE / ACCEPT DEFEAT | **[VALIDÉ]**; couvert par `survival_revive_smoke.gd`; aucun effet sur les sauvegardes legacy `revive_knockback` |
 
 `equipped_unique_effects()` déduplique un même ID actif porté sur plusieurs pièces. `revive_once` est l’ID validé pour le revive. `revive_knockback` demeure accepté en lecture pour les anciennes saves, mais n'est plus proposé aux nouvelles pièces et n'a pas de comportement de jeu.
 
-Le GDD valide le principe de revives rares. Décisions utilisateur du 2026-10-17, réponses C, B, B, B, A puis B : l’effet `revive_once` équipé accorde un revive, au maximum une fois par run en Survival et Endless standard; au coup fatal, le jeu demande confirmation avant consommation; si le joueur confirme, il revient à 50 % de ses PV max avec 3 secondes d’invulnérabilité. `revive_knockback` reste lisible pour les anciennes saves sans comportement de revive. Endless Armorless et le Sandbox Lab sont exclus; l’effet peut maintenant être implémenté dans ces deux modes normaux.
+Le GDD valide le principe de revives rares. `revive_once` est sélectionnable et exécuté avec les règles validées ci-dessus. `revive_knockback` reste lisible pour les anciennes saves sans comportement de revive. Endless Armorless et le Sandbox Lab sont exclus.
 
 ## Calibration encore ouverte
 

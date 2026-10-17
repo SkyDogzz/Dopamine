@@ -59,9 +59,11 @@ const WEAPON_IMPACT_LIFETIME := 0.22
 const MAX_VISIBLE_WEAPON_IMPACTS := 32
 const CRITICAL_HIT_IMPACT_SCALE := 1.45 # [PROPOSÉ] Critical hits use the same weapon sprite at a larger size; no new color mapping.
 const DAMAGE_NUMBER_FONT: FontFile = preload("res://assets/fonts/PressStart2P-Regular.ttf")
+const UI_THEME: Theme = preload("res://themes/dopamine_ui.tres")
 const DAMAGE_NUMBER_LIFETIME := 0.5 # [PROPOSÉ] Active simulation seconds.
 const DAMAGE_NUMBER_AGGREGATION_WINDOW := 0.12 # [PROPOSÉ] Merge repeated hits on one target.
 const MAX_VISIBLE_DAMAGE_NUMBERS := 48 # [PROPOSÉ] Presentation-only crowding limit.
+const REVIVE_INVULNERABILITY_SECONDS := 3.0
 const STATUS_EFFECT_COLORS := {
 	"burn": Color("#FFD447"), "poison": Color("#48E69B"), "bleed": Color("#FF7181"),
 }
@@ -504,6 +506,10 @@ var _run_stat_hub_dirty := true
 var _next_run_stat_hub_refresh_at := 0.0
 var _health_locked := false
 var _auto_select_first_chest := false
+var _revive_confirmation: ConfirmationDialog
+var _revive_pending := false
+var _revive_used := false
+var _revive_invulnerable_until := 0.0
 
 func _ready() -> void:
 	if _settings_service != null:
@@ -576,6 +582,16 @@ func _ready() -> void:
 	_pause_abandon_button.pressed.connect(_open_abandon_confirmation)
 	_abandon_cancel_button.pressed.connect(_close_abandon_confirmation)
 	_abandon_confirm_button.pressed.connect(_confirm_abandon_run)
+	_revive_confirmation = ConfirmationDialog.new()
+	_revive_confirmation.name = "ReviveConfirmationDialog"
+	_revive_confirmation.theme = UI_THEME
+	_revive_confirmation.title = "LAST CHANCE"
+	_revive_confirmation.dialog_text = "USE REVIVE?\nRestore 50% HP and gain 3 seconds of invulnerability."
+	_revive_confirmation.get_ok_button().text = "REVIVE"
+	_revive_confirmation.get_cancel_button().text = "ACCEPT DEFEAT"
+	_revive_confirmation.confirmed.connect(_confirm_revive)
+	_revive_confirmation.canceled.connect(_decline_revive)
+	add_child(_revive_confirmation)
 	player_max_hp = simulation.initial_player_hp()
 	_base_player_move_speed = player.move_speed
 	if progression_service != null:
@@ -701,7 +717,7 @@ func _unhandled_input(event: InputEvent) -> void:
 		_run_stat_hub.set_detail_open(false)
 		get_viewport().set_input_as_handled()
 		return
-	if simulation == null or run_over or _chest_open or _starting_weapon_choice_open:
+	if simulation == null or run_over or _chest_open or _starting_weapon_choice_open or _revive_pending:
 		return
 	if _abandon_confirmation.visible:
 		_close_abandon_confirmation()
@@ -1011,12 +1027,13 @@ func _process(_delta: float) -> void:
 	_fire_prism_laser(current_simulation_time, state["paused"])
 	_fire_void_orb(current_simulation_time, state["paused"])
 	_fire_frost_nova(current_simulation_time, state["paused"])
-	if player_hp <= 0.0 and not run_over:
+	if player_hp <= 0.0 and not run_over and not _revive_pending:
 		_finish_run(false)
 	if mode_id == "armorless" and not run_over and not _manually_paused and \
 			not _pending_armorless_draft_waves.is_empty():
 		_open_next_armorless_draft()
-	player.controls_enabled = not state["paused"] and not run_over and not _chest_open and not _starting_weapon_choice_open
+	player.controls_enabled = not state["paused"] and not run_over and not _chest_open and \
+			not _starting_weapon_choice_open and not _revive_pending
 	_refresh_hud(state)
 	queue_redraw()
 
@@ -1471,11 +1488,43 @@ func _apply_pending_lifesteal(elapsed_active_time: float) -> void:
 		_shield_expires_at = player_active_time + 5.0
 
 func _take_player_damage(amount: float) -> void:
-	if _health_locked:
+	if _health_locked or _revive_pending or amount <= 0.0 or \
+			player_active_time < _revive_invulnerable_until:
 		return
 	var absorbed := minf(player_shield, amount)
 	player_shield -= absorbed
 	player_hp = maxf(0.0, player_hp - (amount - absorbed))
+	if player_hp <= 0.0 and _can_offer_revive():
+		_revive_pending = true
+		if player != null:
+			player.controls_enabled = false
+		if simulation != null:
+			simulation.pause()
+		_revive_confirmation.popup_centered()
+
+func _can_offer_revive() -> bool:
+	return mode_id in ["survival", "endless"] and not _revive_used and not sandbox_diagnostics_enabled and \
+		_has_unique_effect("revive_once") and progression_service != null and \
+		progression_service.has_method("can_save_profile") and progression_service.can_save_profile()
+
+func _confirm_revive() -> void:
+	if not _revive_pending or run_over:
+		return
+	_revive_confirmation.hide()
+	_revive_pending = false
+	_revive_used = true
+	player_hp = player_max_hp * 0.5
+	_revive_invulnerable_until = player_active_time + REVIVE_INVULNERABILITY_SECONDS
+	if simulation != null:
+		simulation.resume()
+	_show_effect_feedback("REVIVE  ·  50% HP")
+
+func _decline_revive() -> void:
+	if not _revive_pending or run_over:
+		return
+	_revive_confirmation.hide()
+	_revive_pending = false
+	_finish_run(false)
 
 func _player_health_decay_amount(active_time_seconds: float, delta_seconds: float) -> float:
 	var amount: float = simulation.health_decay_amount(active_time_seconds, delta_seconds)
@@ -2103,6 +2152,8 @@ func _continue_as_endless_standard() -> void:
 		return
 	mode_id = "endless"
 	_run_id = Crypto.new().generate_random_bytes(16).hex_encode()
+	_revive_used = false
+	_revive_invulnerable_until = 0.0
 	_run_active_time_baseline = player_active_time
 	kill_count = 0
 	_enemy_kills_by_type.clear()

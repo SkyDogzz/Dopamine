@@ -656,6 +656,17 @@ func _run() -> void:
 		service.equipped_unique_effects().has("revive_knockback"):
 		_fail("A stored unsupported effect should remain loadable but must not activate or be newly selectable")
 		return
+	legacy_effect_profile["equipment_inventory"][0]["unique_effect_id"] = "pending_choice"
+	if not save_service.save_slot("0", legacy_effect_profile):
+		_fail("The legacy fixture should reset to a pending unique effect choice")
+		return
+	var selected_revive: Dictionary = service.choose_unique_effect(
+		str(legacy_effect_profile["equipment_inventory"][0]["instance_id"]), "revive_once"
+	)
+	if not selected_revive.get("ok", false) or \
+		selected_revive["profile"]["equipment_inventory"][0]["unique_effect_id"] != "revive_once":
+		_fail("Legendary equipment should persist the validated revive_once effect")
+		return
 	var recovery_baseline: Dictionary = service.load_profile()["profile"]
 	var newer_profile := recovery_baseline.duplicate(true)
 	newer_profile["resources"]["essence"] = int(newer_profile["resources"]["essence"]) + 1
@@ -700,7 +711,7 @@ func _valid_equipment_instance(equipment: Dictionary) -> bool:
 	return ["helmet", "armor", "gloves", "boots", "amulet", "ring"].has(equipment["slot"]) and \
 			line_counts.has(rarity) and equipment["stat_lines"].size() == line_counts[rarity] and \
 		equipment.get("equipped") is bool and \
-			(not rarity in ["legendary", "mythic"] or equipment["unique_effect_id"] in ["pending_choice", "overflow_shield"])
+			(not rarity in ["legendary", "mythic"] or equipment["unique_effect_id"] in ["pending_choice", "overflow_shield", "revive_once"])
 
 func _capacity_migration_item(instance_id: String) -> Dictionary:
 	return {

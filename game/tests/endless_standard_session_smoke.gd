@@ -75,6 +75,7 @@ func _run() -> void:
 	_session.wave_director.wave = 24
 	_session.wave_director.state = WAVE_DIRECTOR.State.VICTORY
 	_session.player_hp = 42.0
+	_session._revive_used = true
 	_session._weapon_kills_by_id["lightning_conductor"] = 7
 	_session._weapon_damage_by_id["lightning_conductor"] = 450.0
 	_session._enemy_kills_by_type["chaser"] = 3
@@ -88,7 +89,8 @@ func _run() -> void:
 		_fail("A Survival final-boss victory should grant its rewards and offer Endless continuation")
 		return
 	continuation_button.pressed.emit()
-	if _session.mode_id != "endless" or _session.run_over or _session.wave_director.wave != 25 or \
+	if _session.mode_id != "endless" or _session.run_over or _session._revive_used or \
+		_session.wave_director.wave != 25 or \
 		_session.wave_director.state != WAVE_DIRECTOR.State.WAVE or \
 		not _session.wave_director.endless_standard or _session.player_hp != 42.0 or \
 		_session.kill_count != 0 or not is_zero_approx(_session._run_active_time()) or \

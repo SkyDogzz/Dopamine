@@ -869,10 +869,12 @@
 
 - [x] CTest séquentiel sur le checkout courant : **112/112 tests passent en 75,70 s** sous Godot 4.7.2, après extension de `equipment_economy_smoke.gd` aux yields de démantèlement des cinq raretés.
 
-## P6.5 — Arbitrage partiel du revive — 2026-10-17
+## P6.5 — Revive unique — 2026-10-17
 
 - [x] Décisions utilisateur, réponses C, B, B, B, A puis B : l’effet `revive_once` équipé accorde au plus un revive par run en Survival et Endless standard; au coup fatal, un dialogue demande confirmation; l’utilisation restaure 50 % des PV max et accorde 3 s d’invulnérabilité. Endless Armorless et Sandbox Lab sont exclus. `revive_knockback` demeure lisible pour les anciennes sauvegardes sans effet gameplay.
-- [ ] Implémenter et vérifier le revive dans Survival et Endless standard, avec une seule consommation par run; vérifier l’exclusion d’Endless Armorless et du Sandbox Lab.
+- [x] `survival_revive_smoke.gd` charge l’effet via une vraie pièce équipée, vérifie le dialogue fatal, le refus, la confirmation, les PV restaurés, le blocage puis le retour des dégâts, le plafond d’une utilisation, Endless standard, Armorless et le Sandbox diagnostique.
+- [x] `survival_inventory_smoke.gd`, `progression_service_smoke.gd`, `endless_standard_session_smoke.gd`, `sandbox_preset_smoke.gd`, `sandbox_lab_smoke.gd` et `survival_run_result_smoke.gd` passent sous Godot 4.7.2; import headless de l’éditeur réussi.
+- [i] Les smokes de session affichent à l’arrêt des avertissements ObjectDB et de ressources audio Ogg encore référencées; les tests retournent le code 0. CMake/CTest ne sont pas disponibles localement pour régénérer et exécuter le manifeste après l’ajout du test.
 
 ## P6.5 — Effet Elite Haste — 2026-10-16
 

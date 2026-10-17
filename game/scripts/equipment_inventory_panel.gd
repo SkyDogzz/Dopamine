@@ -43,7 +43,7 @@ const PROGRESSION_SERVICE_SCRIPT := preload("res://scripts/progression_service.g
 const EQUIPMENT_GENERATOR_SCRIPT := preload("res://scripts/equipment_generator.gd")
 const UNIQUE_EFFECTS := [
 	"lightning_burst", "overflow_shield", "evolution_shockwave",
-	"elite_haste", "free_first_chest_reroll", "expanded_loadout",
+	"elite_haste", "free_first_chest_reroll", "expanded_loadout", "revive_once",
 ]
 const DISMANTLE_POWDER := {
 	"normal": "1 BASIC", "magic": "3 BASIC", "mystic": "1 REFINED",
@@ -193,12 +193,15 @@ func _create_item_row(equipment: Dictionary, resources: Dictionary) -> Control:
 		status.text += "\nUnique effect choice pending"
 	elif str(equipment.get("unique_effect_id", "")) != "":
 		var effect_id := str(equipment["unique_effect_id"])
-		var effect_status := "PROPOSED ACTIVE" if equipment.get("equipped", false) and effect_id in [
+		var effect_status := "VALIDATED ACTIVE" if equipment.get("equipped", false) and effect_id == "revive_once" else \
+				"PROPOSED ACTIVE" if equipment.get("equipped", false) and effect_id in [
 			"lightning_burst", "overflow_shield", "evolution_shockwave", "elite_haste", "free_first_chest_reroll", "expanded_loadout",
 		] else "NO GAMEPLAY EFFECT YET"
 		status.text += "\nUNIQUE: %s — %s" % [effect_id.replace("_", " ").to_upper(), effect_status]
 		if effect_id == "expanded_loadout" and equipment.get("equipped", false):
 			status.text += "\nPROPOSED: +1 WEAPON +1 RELIC SLOT (MAX 6)"
+		elif effect_id == "revive_once" and equipment.get("equipped", false):
+			status.text += "\nONE REVIVE PER RUN IN SURVIVAL / ENDLESS"
 	content.add_child(status)
 	if equipment.get("unique_effect_id") == "pending_choice":
 		var effect_row := HBoxContainer.new()

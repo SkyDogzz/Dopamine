@@ -59,12 +59,19 @@ func _run() -> void:
 		return
 	var effect_select := item_content.get_child(5).get_child(0) as OptionButton
 	if effect_select.item_count != progression.PROPOSED_UNIQUE_EFFECTS.size():
-		_fail("The hub should not offer unique effects without gameplay behavior")
+		_fail("The hub should offer the available unique effect choices")
 		return
 	for option_index in range(effect_select.item_count):
 		if effect_select.get_item_metadata(option_index) == "revive_knockback":
-			_fail("Revive Knockback should stay unavailable until a resurrection contract exists")
+			_fail("The legacy revive_knockback ID should not be selectable on new equipment")
 			return
+	var revive_once_offered := false
+	for option_index in range(effect_select.item_count):
+		if effect_select.get_item_metadata(option_index) == "revive_once":
+			revive_once_offered = true
+	if not revive_once_offered:
+		_fail("Legendary equipment should offer the validated revive_once effect")
+		return
 	effect_select.select(1)
 	choose_effect_button.pressed.emit()
 	if progression.load_profile()["profile"]["equipment_inventory"][0]["unique_effect_id"] == "pending_choice":
