@@ -819,7 +819,8 @@ std::vector<CombatEvent> SimulationCore::advance(double delta_seconds) {
 				continue;
 			}
 			ProjectileData &projectile = projectiles_[projectile_index];
-			if (enemy_types_[projectile_index].id == "gravity_collapse") {
+			if (enemy_types_[projectile_index].id == "gravity_collapse" ||
+					enemy_types_[projectile_index].id == "overcharge") {
 				for (uint32_t target_index : query_spatial_index(spatial_index,
 						transforms_[projectile_index].x, transforms_[projectile_index].y,
 						projectile.explosion_radius, {})) {

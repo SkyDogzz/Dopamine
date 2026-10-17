@@ -4,6 +4,9 @@ func _initialize() -> void:
 	call_deferred("_run")
 
 func _run() -> void:
+	if not await _overcharge_triggers_on_repeated_electric_hits_only():
+		_fail("Direct electric hits should apply one-second Shock and trigger one non-chaining Overcharge on a repeated hit")
+		return
 	if not await _hemorrhage_adds_one_bleed_tick_without_refreshing_duration():
 		_fail("A direct critical hit on a bleeding enemy should add one Bleed tick without refreshing its duration, while DoT and non-critical hits do nothing")
 		return
@@ -120,6 +123,63 @@ func _run() -> void:
 		return
 	print("Survival weapon catalog smoke passed")
 	quit()
+
+func _overcharge_triggers_on_repeated_electric_hits_only() -> bool:
+	var session: Node2D = load("res://scenes/survival_session.tscn").instantiate()
+	session.spawn_initial_enemy = false
+	session.wave_spawning_enabled = false
+	session.skip_starting_weapon_choice = true
+	session.weapon_enabled = false
+	session.contact_damage_per_hit = 0.0
+	root.add_child(session)
+	await process_frame
+	session.simulation.pause()
+	var pause_deadline := Time.get_ticks_msec() + 2500
+	while Time.get_ticks_msec() < pause_deadline and not bool(session.simulation.snapshot().get("paused", false)):
+		await process_frame
+	if not bool(session.simulation.snapshot().get("paused", false)):
+		session.queue_free()
+		return false
+	var positions: Array[Vector2] = [Vector2(100.0, 100.0), Vector2(150.0, 100.0), Vector2(170.0, 100.0)]
+	for position in positions:
+		session.simulation.spawn("test_target", 1, position, 100.0, Vector2.ZERO)
+	var targets: Array = await _wait_for_targets(session, positions.size())
+	if targets.size() != positions.size():
+		session.queue_free()
+		return false
+	var target_id: Dictionary = targets[0]["id"]
+	var event := {"source_type": "infinite_circuit_branch", "target": target_id,
+		"is_damage_over_time": false, "amount": 20.0, "remaining_health": 80.0,
+		"sequence": 100, "reaction_budget": 1, "position": {"x": 100.0, "y": 100.0}}
+	var first_hit := int(session.call("_try_overcharge", event, 0.0))
+	var second_electric_hit := event.duplicate(true)
+	second_electric_hit["source_type"] = "lightning_arc:test"
+	var second_hit := int(session.call("_try_overcharge", second_electric_hit, 0.5))
+	var cooldown_hit := int(session.call("_try_overcharge", event, 0.75))
+	var non_electric := event.duplicate(true)
+	non_electric["source_type"] = "minigun"
+	var rejected_non_electric := int(session.call("_try_overcharge", non_electric, 1.6))
+	var expired_hit := int(session.call("_try_overcharge", event, 2.0))
+	session.simulation.resume()
+	var deadline := Time.get_ticks_msec() + 2500
+	while Time.get_ticks_msec() < deadline and _health_for(session, target_id) > 95.0:
+		await process_frame
+	var primary_health := _health_for(session, target_id)
+	var nearby_health := _health_for(session, targets[1]["id"])
+	var outside_health := _health_for(session, targets[2]["id"])
+	var valid := first_hit == 0 and second_hit > 0 and \
+			cooldown_hit == 0 and rejected_non_electric == 0 and expired_hit == 0 and \
+			is_equal_approx(primary_health, 90.0) and is_equal_approx(nearby_health, 90.0) and \
+			is_equal_approx(outside_health, 100.0)
+	session.queue_free()
+	return valid
+
+func _health_for(session: Node2D, entity_id: Dictionary) -> float:
+	for entity in session.simulation.snapshot().get("entities", []):
+		if entity.get("id", {}) == entity_id:
+			return float(entity.get("components", {}).get("Health", {}).get("current", -1.0))
+	return -1.0
+
 
 func _hemorrhage_adds_one_bleed_tick_without_refreshing_duration() -> bool:
 	var session: Node2D = load("res://scenes/survival_session.tscn").instantiate()

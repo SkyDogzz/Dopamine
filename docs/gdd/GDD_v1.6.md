@@ -482,7 +482,7 @@ Synergies proposées :
 
 ### Réactions élémentaires
 
-Les statuts de décision sont indiqués par réaction dans le tableau ci-dessous. Overcharge impliquant un statut conducteur supplémentaire reste **[OUVERTE]**.
+Les statuts de décision sont indiqués par réaction dans le tableau ci-dessous. Shock est appliqué une seconde sur toute cible touchée directement par une source électrique **[VALIDÉ, 2026-10-17]**.
 
 ### Évolutions proposées
 
@@ -511,7 +511,7 @@ Les statuts de décision sont indiqués par réaction dans le tableau ci-dessous
 
 Les combinaisons marquées **[PROPOSÉ]** n’ont pas encore été validées.
 
-**Décision utilisateur [VALIDÉE, 2026-10-17] — Overcharge :** Shock est le statut requis. Une attaque directe qui applique Shock à une cible déjà affectée par Shock déclenche une décharge de zone, sans chaîne. Les paramètres du prototype — dégâts égaux à 50 % du coup déclencheur, rayon de 60 px, cible affectée incluse une fois, cooldown local d’une seconde — restent **[PROPOSÉS]** et configurables. Le contrat d’application et de durée de Shock est encore **[OUVERT]** : le runtime ne conserve pas actuellement ce statut.
+**Décision utilisateur [VALIDÉE, 2026-10-17] — Overcharge :** Shock est le statut requis. Une attaque directe qui applique Shock à une cible déjà affectée par Shock déclenche une décharge de zone, sans chaîne. Shock est appliqué pendant une seconde après tout coup direct électrique **[VALIDÉ, 2026-10-17]**. Les paramètres du prototype — dégâts égaux à 50 % du coup déclencheur, rayon de 60 px, cible affectée incluse une fois, cooldown local d’une seconde — restent **[PROPOSÉS]** et configurables.
 
 **Décisions utilisateur [VALIDÉES, 2026-10-16] — Toxic Ignition :** déclencher une explosion immédiate quand un coup direct applique Burn à une cible déjà empoisonnée ou Poison à une cible déjà brûlée. Les DoT Poison et Burn coexistent sur la cible et infligent leurs ticks selon leurs horloges indépendantes; réappliquer un même DoT le remplace sans effacer l’autre. L’explosion inflige 50 % des dégâts du coup direct déclencheur, dans un rayon de 60 px. Les deux statuts restent actifs après l’explosion. Une cible ne peut déclencher cette réaction qu’une fois par seconde. L’explosion n’applique pas de statut, donc ses dégâts ne déclenchent pas récursivement Toxic Ignition. Cette coexistence validée ne définit pas l’empilement d’autres paires de DoT, qui reste **[OUVERT]**.
 

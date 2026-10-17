@@ -26,7 +26,7 @@ const WEAPON_IMPACT_TYPES := {
 	"meteor_staff": 6, "starfall": 6, "starfall_fragment": 6,
 	"prism_laser": 7, "spectrum_collapse": 7, "prism_secondary": 7,
 	"void_orb": 8, "event_horizon": 8,
-	"gravity_collapse": 8,
+	"gravity_collapse": 8, "overcharge": 0,
 	"frost_nova": 9, "absolute_zero": 9, "thermal_shock": 9, "shatter_impact": 9, "shatter_fragment": 9,
 }
 const WEAPON_IMPACT_SOURCE_IDS := {
@@ -38,7 +38,7 @@ const WEAPON_IMPACT_SOURCE_IDS := {
 	"meteor_staff": "meteor_staff", "starfall": "meteor_staff", "starfall_fragment": "meteor_staff",
 	"prism_laser": "prism_laser", "spectrum_collapse": "prism_laser", "prism_secondary": "prism_laser",
 	"void_orb": "void_orb", "event_horizon": "void_orb", "frost_nova": "frost_nova",
-	"gravity_collapse": "void_orb",
+	"gravity_collapse": "void_orb", "overcharge": "lightning_conductor",
 	"absolute_zero": "frost_nova", "thermal_shock": "frost_nova", "shatter_impact": "frost_nova",
 	"shatter_fragment": "frost_nova",
 }
@@ -46,6 +46,7 @@ const SHATTER_IMPACT_SOURCE_TYPES := ["crimson_dagger", "bloodstorm_dagger", "mi
 		"sawblades", "razorstorm", "meteor_staff", "starfall", "starfall_fragment", "void_orb", "event_horizon"]
 const ELECTROPLAGUE_SHOCK_SOURCE_TYPES := ["lightning_primary", "lightning_arc", "lightning_conductor",
 		"infinite_circuit_branch", "unique_lightning_burst"]
+const OVERCHARGE_SHOCK_DURATION_SECONDS := 1.0
 const ELECTROPLAGUE_SPREAD_RADIUS := 60.0
 const GRAVITY_COLLAPSE_IMPACT_SOURCE_TYPES := ["lightning_primary", "lightning_arc", "lightning_conductor",
 		"unique_lightning_burst", "infinite_circuit_branch", "inferno_sprayer", "wildfire_sprayer",
@@ -309,6 +310,10 @@ var sandbox_health_decay_multiplier := 1.0
 @export_range(0.0, 2.0, 0.05) var thermal_shock_damage_multiplier: float = 0.5
 @export_range(0.0, 10.0, 0.1) var thermal_shock_target_cooldown_seconds: float = 1.0
 @export_range(0.0, 64.0, 0.5) var thermal_shock_projectile_radius: float = 6.0
+@export_group("Prototype Overcharge — proposed tuning")
+@export_range(0.0, 2.0, 0.05) var overcharge_damage_multiplier: float = 0.5
+@export_range(0.0, 240.0, 1.0) var overcharge_radius: float = 60.0
+@export_range(0.0, 10.0, 0.1) var overcharge_target_cooldown_seconds: float = 1.0
 const TOXIC_IGNITION_DAMAGE_MULTIPLIER := 0.5
 const TOXIC_IGNITION_RADIUS := 60.0
 const TOXIC_IGNITION_TARGET_COOLDOWN_SECONDS := 1.0
@@ -393,6 +398,8 @@ var _pandemic_spread_targets: Dictionary = {}
 var _pandemic_bursts: Array[Dictionary] = []
 var _thermal_shock_next_at: Dictionary = {}
 var _toxic_ignition_next_at: Dictionary = {}
+var _overcharge_shock_expires_at: Dictionary = {}
+var _overcharge_next_at: Dictionary = {}
 var _weapon_impacts: Array[Dictionary] = []
 var _enemy_death_pixels: Array[Dictionary] = []
 var _starfall_fragments_spawned: Dictionary = {}
@@ -802,6 +809,12 @@ func _process(_delta: float) -> void:
 	for target_key in _thermal_shock_next_at.keys():
 		if current_simulation_time >= float(_thermal_shock_next_at[target_key]):
 			_thermal_shock_next_at.erase(target_key)
+	for target_key in _overcharge_shock_expires_at.keys():
+		if current_simulation_time >= float(_overcharge_shock_expires_at[target_key]):
+			_overcharge_shock_expires_at.erase(target_key)
+	for target_key in _overcharge_next_at.keys():
+		if current_simulation_time >= float(_overcharge_next_at[target_key]):
+			_overcharge_next_at.erase(target_key)
 	for index in range(_pandemic_bursts.size() - 1, -1, -1):
 		_pandemic_bursts[index]["remaining"] = float(_pandemic_bursts[index]["remaining"]) - elapsed_active_time
 		if float(_pandemic_bursts[index]["remaining"]) <= 0.0:
@@ -849,6 +862,7 @@ func _process(_delta: float) -> void:
 				_try_toxic_ignition(event, current_simulation_time)
 				_try_electroplague(event, state["entities"])
 				_try_gravity_collapse(event, state["entities"])
+				_try_overcharge(event, current_simulation_time)
 				_try_hemorrhage(event)
 				_try_shatter(event, state["entities"])
 				_add_weapon_impact(source_type, Vector2(float(event["position"]["x"]), float(event["position"]["y"])),
@@ -2574,6 +2588,36 @@ func _try_hemorrhage(event: Dictionary) -> int:
 	return simulation.tick_damage_over_time(int(target.get("index", -1)),
 			int(target.get("generation", -1)), "bleed")
 
+func _try_overcharge(event: Dictionary, active_time: float) -> int:
+	var source_type := str(event.get("source_type", "")).get_slice(":", 0)
+	if bool(event.get("is_damage_over_time", false)) or not ELECTROPLAGUE_SHOCK_SOURCE_TYPES.has(source_type) or \
+			float(event.get("amount", 0.0)) <= 0.0 or float(event.get("remaining_health", 0.0)) <= 0.0:
+		return 0
+	var target_id: Dictionary = event.get("target", {})
+	var position: Dictionary = event.get("position", {})
+	if target_id.is_empty() or position.is_empty():
+		return 0
+	var target_key := _entity_key(int(target_id.get("index", -1)), int(target_id.get("generation", -1)))
+	var was_shocked := active_time < float(_overcharge_shock_expires_at.get(target_key, 0.0))
+	_overcharge_shock_expires_at[target_key] = active_time + OVERCHARGE_SHOCK_DURATION_SECONDS
+	if not was_shocked or active_time < float(_overcharge_next_at.get(target_key, 0.0)) or \
+			int(event.get("reaction_budget", 1)) <= 0:
+		return 0
+	var reaction_chain_id := int(event.get("reaction_chain_id", 0))
+	if reaction_chain_id <= 0:
+		reaction_chain_id = int(event.get("sequence", 0))
+	if reaction_chain_id <= 0:
+		return 0
+	var sequence: int = simulation.spawn_projectile("overcharge",
+			Vector2(float(position["x"]), float(position["y"])), Vector2.ZERO,
+			float(event["amount"]) * overcharge_damage_multiplier,
+			0.0, 0.15, 0.0, 0.0, 0.0, overcharge_radius, 1.0,
+			0, 0.0, 0.0, false, 0.0, 1.0, 1.0, 0.0, reaction_chain_id,
+			int(event.get("reaction_budget", 1)) - 1)
+	if sequence > 0:
+		_overcharge_next_at[target_key] = active_time + overcharge_target_cooldown_seconds
+	return sequence
+
 func _advance_lightning_chain(event: Dictionary, entities: Array, active_time: float) -> void:
 	var source_parts := str(event.get("source_type", "")).split(":", false, 1)
 	if source_parts.size() != 2 or not ["lightning_primary", "lightning_arc"].has(source_parts[0]):
@@ -3567,6 +3611,13 @@ func _draw() -> void:
 				var status: Dictionary = statuses[status_index]
 				var status_color := _status_effect_color(str(status.get("status_type", "generic")))
 				draw_arc(status_center, 14.0 + float(status_index) * 3.0, 0.0, TAU, 24, status_color, 2.0, true)
+		if not components.get("IsProjectile", false):
+			var entity_id: Dictionary = entity.get("id", {})
+			var shock_key := _entity_key(int(entity_id.get("index", -1)), int(entity_id.get("generation", -1)))
+			if _last_simulation_time < float(_overcharge_shock_expires_at.get(shock_key, 0.0)):
+				var shock_transform: Dictionary = components["Transform2D"]
+				var shock_center := Vector2(float(shock_transform["x"]), float(shock_transform["y"]))
+				draw_arc(shock_center, 19.0, 0.0, TAU, 24, Color(0.28, 0.83, 1.0, 0.9), 2.0, true)
 	for beam in _prism_beams:
 		var beam_color := Color(0.55, 0.95, 1.0, 0.78) if bool(beam["secondary"]) else Color(1.0, 0.92, 0.55, 0.9)
 		draw_line(beam["from"], beam["to"], beam_color, 5.0 if not beam["secondary"] else 3.0, true)
