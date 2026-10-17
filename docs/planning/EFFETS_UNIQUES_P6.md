@@ -13,7 +13,7 @@ Les effets ci-dessous sont les effets sélectionnables et exécutés en Survival
 
 `equipped_unique_effects()` déduplique un même ID actif porté sur plusieurs pièces. `revive_knockback` demeure accepté en lecture pour les anciennes saves, mais n'est plus proposé aux nouvelles pièces et n'a pas de comportement de jeu.
 
-Le GDD valide le principe de revives rares mais ne définit pas leur contrat. Le déclencheur, la source, la fréquence/plafond par run, les PV et protections après reprise, et les modes concernés sont **[OUVERTS]** dans `DECISIONS_RESTANTES.md`; l'effet legacy reste désactivé jusqu’à cet arbitrage.
+Le GDD valide le principe de revives rares. Décision utilisateur du 2026-10-17, réponse C : un effet unique d’équipement accorde un revive, au maximum une fois par run. Le déclencheur exact, l’ID (dont réutilisation éventuelle de `revive_knockback`), les PV et protections après reprise et les modes concernés restent **[OUVERTS]** dans `DECISIONS_RESTANTES.md`; l’effet reste désactivé jusque-là.
 
 ## Calibration encore ouverte
 

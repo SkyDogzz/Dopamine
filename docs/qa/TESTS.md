@@ -869,6 +869,11 @@
 
 - [x] CTest séquentiel sur le checkout courant : **112/112 tests passent en 75,70 s** sous Godot 4.7.2, après extension de `equipment_economy_smoke.gd` aux yields de démantèlement des cinq raretés.
 
+## P6.5 — Arbitrage partiel du revive — 2026-10-17
+
+- [x] Décision utilisateur, réponse C : un effet unique d’équipement accorde au plus un revive par run. Choix documenté dans le GDD et le registre.
+- [ ] Le déclencheur, l’identifiant d’effet, les PV restaurés, la protection après reprise et les modes éligibles restent **[OUVERTS]**; aucun gameplay de revive n’est activé ou revendiqué.
+
 ## P6.5 — Effet Elite Haste — 2026-10-16
 
 - [x] `survival_elite_smoke.gd` équipe `elite_haste` dans un profil temporaire isolé, tue un élite via le pipeline de dégâts natif, puis vérifie le bonus de mobilité de 15 %, son expiration après trois secondes simulées et le feedback HUD. Ces valeurs restent **[PROPOSÉES]**.

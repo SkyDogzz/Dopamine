@@ -67,7 +67,9 @@ Boucle Survival : choisir difficulté et arme initiale → survivre à une vague
 
 [VALIDÉ] Mouvement précis et instantané, sans inertie significative ; pas de dash de base, certains équipements peuvent en accorder un. HP initial = 100. Perte passive de HP initiale = 1,5 HP/s, croissante linéairement avec le temps de combat actif. Les kills soignent selon le niveau de menace des ennemis. Lifesteal sur dégâts avec soft cap. Le délai entre deux dégâts de contact corps à corps est suivi séparément pour chaque ennemi ; il ne bloque pas les projectiles ni les autres attaques. Revives rares.
 
-[OUVERT] Le GDD ne définit pas le déclencheur, la source d’acquisition, la limite par run ni l’état rendu au joueur après un revive. Le prototype `revive_knockback` dépend de ce contrat; ne pas l’activer ni inventer de revive avant arbitrage.
+[VALIDÉ — EXTENSION DU 2026-10-17, réponse C] Un effet unique d’équipement accorde un revive, au maximum une fois par run.
+
+[OUVERT] Le déclencheur exact, l’ID d’effet à utiliser (`revive_knockback` ou autre), les PV rendus, la protection après reprise et les modes concernés restent à définir. Le prototype `revive_knockback` reste désactivé jusque-là.
 
 [PROPOSÉ] Le HP decay s’applique pendant tout le gameplay, y compris hors combat et pendant les boss, mais est suspendu par une vraie pause, dont la sélection d’un chest. D(t) = 1,5 + 0,004 t HP/s (t en secondes actives). Perte exacte sur [t,t+Δt] = 1,5 Δt + 0,002((t+Δt)^2 - t²). Après 60 secondes sans soin : 97,2 HP perdus. Après 720 secondes : 2 116,8 HP perdus. Le timer ne progresse pas pendant les menus en pause, mais progresse pendant les combats de boss.
 
