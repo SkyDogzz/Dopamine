@@ -1056,7 +1056,7 @@ Note de clôture : le blocage historique du smoke `sandbox_ui_smoke.gd` décrit 
 - [x] `sandbox_lab_smoke.gd` vérifie le contrôle et la sauvegarde du multiplicateur 2, puis importe un preset à ×3 et confirme que Spawn produit un Chaser à 60 PV via la commande native (20 PV de base ×3).
 - [x] Le smoke Lab vérifie ×2 sur les nouveaux Chasers (75 → 150 px/s) puis l’import d’un preset à ×3 (75 → 225 px/s); le scénario de profils vérifie ×2 sur un Elite Hasted (100 → 200 px/s). Les smokes preset, scénario et natif rejettent les valeurs sous ×0,1 et au-dessus de ×10.
 - [x] Le même smoke vérifie qu’un changement de dégâts de contact met à jour la session Lab et le preset; `sandbox_preset_smoke.gd` vérifie le chargement de cette valeur et le rejet d’une valeur négative.
-- [x] `sandbox_snapshot_smoke.gd` capture un dégât de contact configuré à 3, le modifie à 9 puis confirme que restaurer le snapshot rétablit l’override, la session et le contrôle à 3.
+- [x] `sandbox_snapshot_smoke.gd` capture un dégât de contact à 3 et une vitesse ennemie à ×2, les modifie puis confirme que la restauration rétablit les contrôles/preset; un lot Spawn ultérieur utilise bien ×2 et les rejets de snapshot invalide laissent les 11 entités intactes.
 - [x] `sandbox_lab_smoke.gd` vérifie que la seed modifiée reste en attente jusqu’au Reset, que la capture de snapshot est refusée pendant ce délai et que le Reset relance l’RNG à la nouvelle seed; le preset sauvegardé conserve cette seed.
 - [x] Le contrôle LIVE est intégré aux presets sauvegardés/partagés; il ne retouche pas les entités existantes et n’est pas transmis à Survival normal. Les bornes sont des limites techniques du Sandbox, pas des valeurs de balance validées.
 

@@ -116,7 +116,9 @@ func _run() -> void:
 	lab_session.wave_director.elapsed_in_wave = 11.25
 	lab_session.player.global_position = Vector2(222.0, 144.0)
 	var contact_damage_control: SpinBox = lab.get_node("Root/Body/Side/Sections/EnemyConfig/ContactDamage")
+	var enemy_speed_control: SpinBox = lab.get_node("Root/Body/Side/Sections/EnemyConfig/EnemySpeedMultiplier")
 	contact_damage_control.value = 3.0
+	enemy_speed_control.value = 2.0
 	lab_context.live_stat_overrides["damage_pct"] = 15.0
 	var capture_button: Button = lab.get_node("Root/Body/Left/SnapshotControls/CaptureButton")
 	var restore_button: Button = lab.get_node("Root/Body/Left/SnapshotControls/RestoreButton")
@@ -135,6 +137,7 @@ func _run() -> void:
 	lab_session.wave_director.elapsed_in_wave = 0.0
 	lab_session.player.global_position = Vector2.ZERO
 	contact_damage_control.value = 9.0
+	enemy_speed_control.value = 4.0
 	lab_context.live_stat_overrides.clear()
 	var clear_sequence: int = lab_context.simulation.kill_all()
 	if clear_sequence <= 0 or not await _wait_for_sequence(lab_context.simulation, clear_sequence):
@@ -148,6 +151,8 @@ func _run() -> void:
 			lab_session.player.global_position != Vector2(222.0, 144.0) or \
 			lab_session.contact_damage_per_hit != 3.0 or contact_damage_control.value != 3.0 or \
 			float(lab_context.active_preset["overrides"].get("contact_damage_per_hit", -1.0)) != 3.0 or \
+			enemy_speed_control.value != 2.0 or \
+			float(lab_context.active_preset["overrides"].get("enemy_speed", -1.0)) != 2.0 or \
 			lab_context.live_stat_overrides.get("damage_pct") != 15.0 or \
 			lab_context.build.to_dictionary()["weapons"].size() != 1 or \
 			int(lab_context.simulation.snapshot()["metrics"]["entity_count"]) != 1:
@@ -163,10 +168,17 @@ func _run() -> void:
 			"status": lab.get_node("Root/Body/Side/Sections/Status").text,
 		}))
 		return
+	var next_lab_sequence := int(lab_context.simulation.snapshot()["last_sequence"]) + 1
+	lab._spawn_enemies()
+	if not await _wait_for_sequence(lab_context.simulation, next_lab_sequence) or \
+			lab_context.simulation.snapshot()["entities"].size() != 11 or \
+			float(lab_context.simulation.snapshot()["entities"][1]["components"]["MoveSpeed"]) != 150.0:
+		_fail("Restored enemy speed override should affect subsequent Lab spawns")
+		return
 	var corrupt_lab_snapshot: Dictionary = lab_context.latest_snapshot.duplicate(true)
 	corrupt_lab_snapshot["format_version"] = 99
 	if lab_context.restore_snapshot(corrupt_lab_snapshot) or lab_session.player_active_time != 12.5 or \
-			int(lab_context.simulation.snapshot()["metrics"]["entity_count"]) != 1:
+			int(lab_context.simulation.snapshot()["metrics"]["entity_count"]) != 11:
 		_fail("Lab must reject incompatible snapshots before changing current state")
 		return
 	var oversized_build_snapshot: Dictionary = lab_context.latest_snapshot.duplicate(true)
@@ -176,7 +188,7 @@ func _run() -> void:
 		oversized_build["weapons"].append({"id": weapon_id, "level": 1})
 	oversized_build_snapshot["build"] = oversized_build
 	if lab_context.restore_snapshot(oversized_build_snapshot) or lab_session.player_active_time != 12.5 or \
-			int(lab_context.simulation.snapshot()["metrics"]["entity_count"]) != 1:
+			int(lab_context.simulation.snapshot()["metrics"]["entity_count"]) != 11:
 		_fail("Lab must reject snapshots whose build exceeds loadout slots without changing the session")
 		return
 	if not FileAccess.file_exists(slot_path) or FileAccess.get_file_as_string(slot_path) != sentinel:
