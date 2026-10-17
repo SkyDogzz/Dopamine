@@ -18,6 +18,7 @@
 12. [Registre des décisions restantes](docs/planning/DECISIONS_RESTANTES.md) — questions à interviewer une par une, choix proposés et validations techniques à distinguer.
 13. [Notices des dépendances et polices](THIRD_PARTY_NOTICES.md) — licences repérées et points de conformité à intégrer au paquet de livraison.
 14. [Checklist de livraison](docs/release/RELEASE_CHECKLIST.md) — preuves disponibles et critères encore ouverts pour P9.8.
+15. [Registre des courbes de progression](docs/planning/COURBES_PROGRESSION.md) — formules centralisées, statuts de validation et références code/GDD.
 
 ## Statuts
 

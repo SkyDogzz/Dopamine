@@ -45,6 +45,8 @@ Quatre expériences : Survival (24 vagues), Endless standard, Endless Armorless 
 
 Légende de statut : [VALIDÉ] décision explicitement retenue ; [PROPOSÉ] paramètre de départ à équilibrer ; [OUVERT] décision restant à prendre. Les valeurs numériques proposées ne doivent pas être considérées comme figées.
 
+Le registre transversal des formules de progression et de leur statut est maintenu dans [`docs/planning/COURBES_PROGRESSION.md`](../planning/COURBES_PROGRESSION.md). En cas de différence, les statuts et règles du présent GDD prévalent.
+
 <a id="2"></a>
 
 ## 02 — Boucle de jeu et commandes
