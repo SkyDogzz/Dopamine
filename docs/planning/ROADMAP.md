@@ -531,6 +531,7 @@ Travail requis :
   - [ ] Cette moyenne ignore défaites, vente d’équipement et temps de jeu; elle ne prouve pas le rythme ressenti et ne remplace pas les parcours réels de P6.9.
   - [ ] Calibrer la puissance réelle des profils débutant/moyen/complet dans P6.9; décider ensuite si le graphe doit s’étendre au-delà de 100 vers la cible éditoriale **[PROPOSÉE]** d’environ 120.
 - [ ] **P6.7 — Achievements**
+  - [x] Décision utilisateur **[VALIDÉE, 2026-10-17] — réponse A** : garder 100 familles au lancement et calibrer conditions/récompenses; différer l’extension proposée vers 120. Métriques, seuils et récompenses restent **[PROPOSÉS]**.
   - [x] Établir le schéma JSON métrique/catégorie/secret/agrégation/paliers/récompenses, aligné sur `AchievementDefinition` du GDD.
   - [x] Remplacer le suivi isolé d’Exterminator par des métriques et paliers génériques; profils version 8 et migration additive v1–v7, vérifiés par fixtures dédiées.
   - [x] Ajouter 83 familles prototypes dans les huit catégories du découpage **[PROPOSÉ]** du GDD, dont douze compteurs de kills par type d’ennemi, dix suivis de dégâts par arme, dix compteurs de kills par arme, onze records de niveau de relique, dix suivis d’évolution par arme, onze compteurs d’équipements récompensés par rareté et slot, et dix suivis de runs/victoires de boss par difficulté. Les compteurs d’équipement et de difficulté sont dérivés par `ProgressionService`, pas injectables par `run_metrics`. Seuils et bonus restent **[PROPOSÉS]**.

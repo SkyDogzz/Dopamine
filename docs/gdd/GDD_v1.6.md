@@ -203,7 +203,7 @@ Douze statistiques candidates : dégâts %, vitesse d'attaque %, chance critique
 
 ## 10 — Achievement Mastery (officiel v1.2)
 
-[VALIDÉ] 100–150 familles d'achievements ; cible éditoriale 120 familles. Quatre paliers Bronze, Silver, Gold, Diamond. Bonus permanents cumulables, statistiques et effets spéciaux. Défis secrets récompensés. Progression conservée entre toutes les runs. Indépendance totale vis-à-vis du respec du skill tree. Budget de puissance totale : +10–15 % équivalent global ; cible proposée +12 %.
+[VALIDÉ] 100–150 familles d'achievements. Quatre paliers Bronze, Silver, Gold, Diamond. Bonus permanents cumulables, statistiques et effets spéciaux. Défis secrets récompensés. Progression conservée entre toutes les runs. Indépendance totale vis-à-vis du respec du skill tree. **[VALIDÉ — EXTENSION DU 2026-10-17, réponse A]** Le lancement conserve les 100 familles actuelles et calibre conditions/récompenses; l’extension vers la cible éditoriale proposée de 120 est différée. Budget de puissance totale : +10–15 % équivalent global ; cible proposée +12 %. Les métriques, seuils et récompenses restent **[PROPOSÉS]**.
 
 [PROPOSÉ] Répartition des 120 familles : Combat 25 ; Survival 15 ; Weapons 20 ; Relics & Evolutions 15 ; Equipment 15 ; Difficulty & Bosses 15 ; Progression 10 ; Secrets 5. Jusqu'à 480 récompenses de palier.
 

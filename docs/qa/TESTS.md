@@ -32,6 +32,10 @@
 
 - [x] Décision utilisateur **[VALIDÉE, réponse A]** : conserver 100 nœuds au lancement et calibrer le budget actuel; différer l’extension proposée vers environ 120. Les valeurs de coûts et bonus restent **[PROPOSÉES]**.
 
+## P6.7 — Périmètre de lancement des achievements — 2026-10-17
+
+- [x] Décision utilisateur **[VALIDÉE, réponse A]** : conserver 100 familles au lancement et calibrer conditions/récompenses; différer l’extension proposée vers 120. Métriques, seuils et récompenses restent **[PROPOSÉS]**.
+
 ## P7B.1 — Compteurs du segment de continuation — 2026-10-17
 
 - [x] `endless_standard_session_smoke.gd` vérifie qu’après la continuation HP/build/niveaux persistent, tandis que durée affichée/enregistrée, kills et compteurs additifs d’achievements repartent pour l’ID Endless. L’horloge interne reste monotone pour conserver les expirations et le rythme de simulation.
