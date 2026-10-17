@@ -8,6 +8,10 @@ const ENHANCEMENT_BASE_COSTS := [10, 15, 22, 32, 46, 65, 90, 125, 175, 250]
 const RARITY_COST_MULTIPLIERS := {"normal": 1.0, "magic": 1.5, "mystic": 2.0, "legendary": 3.0, "mythic": 4.0}
 const PROPOSED_SUCCESS_CHANCE := {"basic": 50.0, "refined": 70.0, "pure": 85.0, "prismatic": 95.0}
 const PROPOSED_CRITICAL_FAILURE_CHANCE := {"basic": 10.0, "refined": 5.0, "pure": 2.0, "prismatic": 0.5}
+const UNIQUE_EFFECT_REROLL_COSTS := {
+	"legendary": {"powder_tier": "pure", "amount": 1},
+	"mythic": {"powder_tier": "prismatic", "amount": 1},
+}
 const KNOWN_UNIQUE_EFFECTS := [
 	"lightning_burst", "overflow_shield", "evolution_shockwave",
 	"elite_haste", "free_first_chest_reroll", "expanded_loadout", "revive_once", "revive_knockback",
@@ -479,6 +483,40 @@ func choose_unique_effect(instance_id: String, effect_id: String) -> Dictionary:
 		if not _save_service.save_slot(_slot_id, profile):
 			return {"ok": false, "error": "save_failed"}
 		return {"ok": true, "profile": profile.duplicate(true)}
+	return {"ok": false, "error": "equipment_not_found"}
+
+func unique_effect_reroll_cost(rarity: String) -> Dictionary:
+	return UNIQUE_EFFECT_REROLL_COSTS.get(rarity, {}).duplicate(true)
+
+func reroll_unique_effect(instance_id: String, effect_id: String) -> Dictionary:
+	if effect_id not in PROPOSED_UNIQUE_EFFECTS:
+		return {"ok": false, "error": "invalid_unique_effect"}
+	var profile_result := load_profile()
+	if not profile_result.get("ok", false):
+		return {"ok": false, "error": str(profile_result.get("error", "load_failed"))}
+	var profile: Dictionary = profile_result["profile"]
+	for equipment in profile["equipment_inventory"]:
+		if equipment["instance_id"] != instance_id:
+			continue
+		var current_effect := str(equipment.get("unique_effect_id", ""))
+		var rarity := str(equipment.get("rarity", ""))
+		var cost: Dictionary = unique_effect_reroll_cost(rarity)
+		if cost.is_empty() or current_effect.is_empty() or current_effect == "pending_choice":
+			return {"ok": false, "error": "unique_effect_reroll_unavailable"}
+		if effect_id == current_effect:
+			return {"ok": false, "error": "same_unique_effect"}
+		var powder_key := "powder_%s" % str(cost["powder_tier"])
+		if int(profile["resources"].get(powder_key, 0)) < int(cost["amount"]):
+			return {"ok": false, "error": "insufficient_powder"}
+		profile["resources"][powder_key] -= int(cost["amount"])
+		equipment["unique_effect_id"] = effect_id
+		if not _save_service.save_slot(_slot_id, profile):
+			return {"ok": false, "error": "save_failed"}
+		return {
+			"ok": true, "effect_id": effect_id, "previous_effect_id": current_effect,
+			"powder_tier": str(cost["powder_tier"]), "powder_spent": int(cost["amount"]),
+			"profile": profile.duplicate(true),
+		}
 	return {"ok": false, "error": "equipment_not_found"}
 
 func dismantle_equipment(instance_id: String) -> Dictionary:

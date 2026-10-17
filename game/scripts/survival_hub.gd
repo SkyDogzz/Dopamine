@@ -67,6 +67,7 @@ func _create_panels() -> void:
 	_equipment_panel.equipment_state_requested.connect(_set_equipment_state)
 	_equipment_panel.enhancement_requested.connect(_enhance_equipment)
 	_equipment_panel.unique_effect_requested.connect(_choose_unique_effect)
+	_equipment_panel.unique_effect_reroll_requested.connect(_reroll_unique_effect)
 	_equipment_panel.dismantle_requested.connect(_dismantle_equipment)
 	_equipment_panel.sell_requested.connect(_sell_equipment)
 	add_child(_equipment_panel)
@@ -247,6 +248,14 @@ func _enhance_equipment(instance_id: String, stat_id: String, powder_tier: Strin
 func _choose_unique_effect(instance_id: String, effect_id: String) -> void:
 	var result: Dictionary = progression_service.choose_unique_effect(instance_id, effect_id)
 	_refresh_equipment(result)
+
+func _reroll_unique_effect(instance_id: String, effect_id: String) -> void:
+	var result: Dictionary = progression_service.reroll_unique_effect(instance_id, effect_id)
+	_refresh_equipment(result)
+	if result.get("ok", false):
+		_equipment_panel.show_feedback("UNIQUE EFFECT REROLLED  •  %d %s POWDER" % [
+			int(result["powder_spent"]), str(result["powder_tier"]).to_upper(),
+		])
 
 func _dismantle_equipment(instance_id: String) -> void:
 	var result: Dictionary = progression_service.dismantle_equipment(instance_id)

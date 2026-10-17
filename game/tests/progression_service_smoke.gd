@@ -118,8 +118,78 @@ func _run() -> void:
 			chosen_effect["profile"]["equipment_inventory"][0]["unique_effect_id"] != "overflow_shield":
 		_fail("Legendary equipment should persist one eligible unique effect choice")
 		return
+	if service.reroll_unique_effect(inventory[0]["instance_id"], "overflow_shield").get("error") != "same_unique_effect":
+		_fail("The selected unique effect should not be eligible as its own reroll result")
+		return
 	profile = chosen_effect["profile"]
 	inventory = profile["equipment_inventory"]
+	if service.unique_effect_reroll_cost("legendary") != {"powder_tier": "pure", "amount": 1} or \
+		service.unique_effect_reroll_cost("mythic") != {"powder_tier": "prismatic", "amount": 1} or \
+		not service.unique_effect_reroll_cost("mystic").is_empty():
+		_fail("Unique effect reroll costs should apply only to Legendary and Mythic equipment")
+		return
+	profile["resources"]["powder_pure"] = 1
+	if not save_service.save_slot("0", profile):
+		_fail("Could not save the unique effect reroll currency fixture")
+		return
+	var rerolled_effect: Dictionary = service.reroll_unique_effect(inventory[0]["instance_id"], "elite_haste")
+	if not rerolled_effect.get("ok", false) or rerolled_effect.get("powder_spent") != 1 or \
+		rerolled_effect["profile"]["resources"]["powder_pure"] != 0 or \
+		rerolled_effect["profile"]["equipment_inventory"][0]["unique_effect_id"] != "elite_haste":
+		_fail("A Legendary effect reroll should let the player select a different effect and spend one Pure Powder")
+		return
+	var insufficient_reroll: Dictionary = service.reroll_unique_effect(inventory[0]["instance_id"], "overflow_shield")
+	if insufficient_reroll.get("error") != "insufficient_powder" or \
+		service.load_profile()["profile"]["equipment_inventory"][0]["unique_effect_id"] != "elite_haste":
+		_fail("An unaffordable effect reroll should leave the selected effect unchanged")
+		return
+	profile = service.load_profile()["profile"]
+	profile["resources"]["powder_pure"] = 1
+	if not save_service.save_slot("0", profile):
+		_fail("Could not restore powder for the equipment activation fixture")
+		return
+	var restored_effect: Dictionary = service.reroll_unique_effect(inventory[0]["instance_id"], "overflow_shield")
+	if not restored_effect.get("ok", false):
+		_fail("A second paid choice should be able to restore another eligible unique effect")
+		return
+	profile = restored_effect["profile"]
+	inventory = profile["equipment_inventory"]
+	var mythic_service = load("res://scripts/progression_service.gd").new(save_service, "mythic_reroll")
+	var mythic_profile: Dictionary = mythic_service.load_profile()["profile"]
+	var mythic_item: Dictionary = inventory[0].duplicate(true)
+	mythic_item["instance_id"] = "mythic-reroll-fixture"
+	mythic_item["rarity"] = "mythic"
+	mythic_item["unique_effect_id"] = "overflow_shield"
+	mythic_item["stat_lines"].append({
+		"stat_id": "xp_pct", "roll_percentile": 0.5,
+		"enhancement_level": 0, "fail_streak": 0,
+	})
+	mythic_profile["equipment_inventory"] = [mythic_item]
+	mythic_profile["resources"]["powder_prismatic"] = 1
+	if not save_service.save_slot("mythic_reroll", mythic_profile):
+		_fail("Could not save the Mythic reroll fixture")
+		return
+	var mythic_reroll: Dictionary = mythic_service.reroll_unique_effect("mythic-reroll-fixture", "revive_once")
+	if not mythic_reroll.get("ok", false) or mythic_reroll.get("powder_tier") != "prismatic" or \
+		mythic_reroll["profile"]["resources"]["powder_prismatic"] != 0 or \
+		mythic_reroll["profile"]["equipment_inventory"][0]["unique_effect_id"] != "revive_once":
+		_fail("A Mythic effect reroll should let the player choose a different effect for one Prismatic Powder")
+		return
+	if mythic_service.reroll_unique_effect("mythic-reroll-fixture", "elite_haste").get("error") != "insufficient_powder":
+		_fail("A Mythic reroll should reject an unaffordable Prismatic Powder cost")
+		return
+	mythic_profile = mythic_service.load_profile()["profile"]
+	var ordinary_item: Dictionary = mythic_item.duplicate(true)
+	ordinary_item["instance_id"] = "ordinary-reroll-fixture"
+	ordinary_item["rarity"] = "normal"
+	ordinary_item["unique_effect_id"] = ""
+	ordinary_item["stat_lines"] = [mythic_item["stat_lines"][0].duplicate(true)]
+	mythic_profile["equipment_inventory"].append(ordinary_item)
+	if not save_service.save_slot("mythic_reroll", mythic_profile) or \
+		mythic_service.reroll_unique_effect("ordinary-reroll-fixture", "lightning_burst").get("error") != \
+		"unique_effect_reroll_unavailable":
+		_fail("Equipment below Legendary should not support unique effect rerolls")
+		return
 	profile["resources"]["powder_basic"] = 100
 	inventory[0]["stat_lines"][0]["fail_streak"] = 9
 	profile["equipment_inventory"] = inventory
@@ -645,7 +715,10 @@ func _run() -> void:
 		var expected_unlocked: String = difficulties.ORDER[mini(index + 1, difficulties.ORDER.size() - 1)]
 		if not result.get("ok", false) or \
 				unlock_service.load_profile()["profile"].get("highest_unlocked_difficulty") != expected_unlocked:
-			_fail("A victory on %s should unlock only its next difficulty" % difficulty_id)
+			_fail("A victory on %s should unlock only %s: result=%s profile=%s" % [
+				difficulty_id, expected_unlocked, str(result),
+				str(unlock_service.load_profile()["profile"].get("highest_unlocked_difficulty")),
+			])
 			return
 		if difficulty_id == "chaos" and (result.get("essence") != 352 or result.get("powder_basic") != 427):
 			_fail("Chaos victory rewards should use their separate proposed multipliers")
@@ -711,7 +784,10 @@ func _valid_equipment_instance(equipment: Dictionary) -> bool:
 	return ["helmet", "armor", "gloves", "boots", "amulet", "ring"].has(equipment["slot"]) and \
 			line_counts.has(rarity) and equipment["stat_lines"].size() == line_counts[rarity] and \
 		equipment.get("equipped") is bool and \
-			(not rarity in ["legendary", "mythic"] or equipment["unique_effect_id"] in ["pending_choice", "overflow_shield", "revive_once"])
+			(not rarity in ["legendary", "mythic"] or equipment["unique_effect_id"] in [
+				"pending_choice", "lightning_burst", "overflow_shield", "evolution_shockwave",
+				"elite_haste", "free_first_chest_reroll", "expanded_loadout", "revive_once",
+			])
 
 func _capacity_migration_item(instance_id: String) -> Dictionary:
 	return {

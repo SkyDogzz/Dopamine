@@ -14,6 +14,8 @@ Les effets ci-dessous sont les effets sélectionnables sur l’équipement perma
 
 `equipped_unique_effects()` déduplique un même ID actif porté sur plusieurs pièces. `revive_once` est l’ID validé pour le revive. `revive_knockback` demeure accepté en lecture pour les anciennes saves, mais n'est plus proposé aux nouvelles pièces et n'a pas de comportement de jeu.
 
+**Reroll d’effet unique [VALIDÉ] :** sur Legendary, payer 1 Powder Pure; sur Mythic, payer 1 Powder Prismatic. Le joueur sélectionne un effet différent dans les effets sélectionnables; l’effet actuel est retiré du menu. Les autres raretés et un choix encore `pending_choice` ne peuvent pas être rerollés.
+
 Le GDD valide le principe de revives rares. `revive_once` est sélectionnable et exécuté avec les règles validées ci-dessus. `revive_knockback` reste lisible pour les anciennes saves sans comportement de revive. Endless Armorless et le Sandbox Lab sont exclus.
 
 ## Calibration encore ouverte

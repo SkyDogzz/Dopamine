@@ -1,5 +1,12 @@
 # Tests d'acceptation et validation
 
+## P6.4 — Reroll payant d’effet unique — 2026-10-17
+
+- [x] Décision utilisateur **[VALIDÉE, réponse A]** : après paiement, le joueur choisit un effet différent; l’effet actuel n’est pas proposé.
+- [x] `progression_service_smoke.gd` vérifie les coûts Legendary/Mythic, le choix persistant, le débit d’une poudre, le refus d’un reroll identique, le manque de poudre et l’inéligibilité des objets sous Legendary.
+- [x] `survival_inventory_smoke.gd` vérifie le sélecteur dans le hub, l’exclusion de l’effet actuel, le coût affiché, la persistance du choix et la désactivation lorsque la poudre manque.
+- [x] Les deux smokes ciblés passent sous Godot 4.7.2; `equipment_panel_visual_smoke.gd` et l’import éditeur passent aussi. Les panneaux signalent des ressources retenues à l’arrêt, sans assertion échouée.
+
 ## P9.8 — Staging Linux Release depuis `8d91079` — 2026-10-17
 
 - [x] `tools/package_linux_staging.sh` reconstruit un `git archive` propre du commit `8d91079560020a140b3a48cb6189fb7da909ec91` avec CMake 3.31.12, GCC 14.2.0, Godot 4.7.2 et `godot-cpp` `b8530af7546a3fcae80cef2477526569fd42ffc2`. Build Release vierge, import, export Linux/X11 filtré, extraction, notices/licences, absence des ressources de développement, `ldd` sans dépendance manquante et lancement headless avec la GDExtension Release adjacente passent.

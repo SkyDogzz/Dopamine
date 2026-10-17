@@ -4,6 +4,7 @@ signal close_requested
 signal equipment_state_requested(instance_id: String, equipped: bool)
 signal enhancement_requested(instance_id: String, stat_id: String, powder_tier: String)
 signal unique_effect_requested(instance_id: String, effect_id: String)
+signal unique_effect_reroll_requested(instance_id: String, effect_id: String)
 signal dismantle_requested(instance_id: String)
 signal sell_requested(instance_id: String)
 
@@ -203,22 +204,41 @@ func _create_item_row(equipment: Dictionary, resources: Dictionary) -> Control:
 		elif effect_id == "revive_once" and equipment.get("equipped", false):
 			status.text += "\nONE REVIVE PER RUN IN SURVIVAL / ENDLESS"
 	content.add_child(status)
-	if equipment.get("unique_effect_id") == "pending_choice":
+	var unique_effect_id := str(equipment.get("unique_effect_id", ""))
+	var reroll_cost: Dictionary = PROGRESSION_SERVICE_SCRIPT.UNIQUE_EFFECT_REROLL_COSTS.get(rarity, {})
+	if unique_effect_id == "pending_choice" or (not reroll_cost.is_empty() and not unique_effect_id.is_empty()):
 		var effect_row := HBoxContainer.new()
 		var effect_choice := OptionButton.new()
 		for effect_id in UNIQUE_EFFECTS:
+			if unique_effect_id != "pending_choice" and effect_id == unique_effect_id:
+				continue
 			effect_choice.add_item(effect_id.replace("_", " ").to_upper())
 			effect_choice.set_item_metadata(effect_choice.item_count - 1, effect_id)
 		effect_row.add_child(effect_choice)
-		var choose_effect := Button.new()
-		choose_effect.text = "CHOOSE EFFECT"
-		choose_effect.pressed.connect(func() -> void:
-			unique_effect_requested.emit(
-				str(equipment.get("instance_id", "")),
-				str(effect_choice.get_item_metadata(effect_choice.selected))
+		var effect_action := Button.new()
+		if unique_effect_id == "pending_choice":
+			effect_action.text = "CHOOSE EFFECT"
+			effect_action.pressed.connect(func() -> void:
+				unique_effect_requested.emit(
+					str(equipment.get("instance_id", "")),
+					str(effect_choice.get_item_metadata(effect_choice.selected))
+				)
 			)
-		)
-		effect_row.add_child(choose_effect)
+		else:
+			var powder_tier := str(reroll_cost["powder_tier"])
+			var powder_amount := int(reroll_cost["amount"])
+			effect_action.text = "REROLL  •  %d %s" % [powder_amount, powder_tier.to_upper()]
+			effect_action.tooltip_text = "Choose a different unique effect for %d %s Powder." % [
+				powder_amount, powder_tier.capitalize(),
+			]
+			effect_action.disabled = int(resources.get("powder_%s" % powder_tier, 0)) < powder_amount
+			effect_action.pressed.connect(func() -> void:
+				unique_effect_reroll_requested.emit(
+					str(equipment.get("instance_id", "")),
+					str(effect_choice.get_item_metadata(effect_choice.selected))
+				)
+			)
+		effect_row.add_child(effect_action)
 		content.add_child(effect_row)
 	var equip_button := Button.new()
 	var is_equipped := bool(equipment.get("equipped", false))

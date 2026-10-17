@@ -33,6 +33,7 @@ func _run() -> void:
 	fixture_profile["equipment_inventory"] = [first_equipment, second_equipment]
 	fixture_profile["equipment_inventory"][1]["slot"] = fixture_profile["equipment_inventory"][0]["slot"]
 	fixture_profile["resources"]["powder_basic"] = 100
+	fixture_profile["resources"]["powder_pure"] = 1
 	fixture_profile["resources"]["essence"] = 200
 	if not save_service.save_slot("0", fixture_profile):
 		_fail("Could not save the same-slot inventory fixture")
@@ -114,6 +115,28 @@ func _run() -> void:
 		return
 	session.queue_free()
 	await process_frame
+	item_content = _equipment_row(items, 0).get_child(0).get_child(1)
+	var reroll_row := item_content.get_child(5) as HBoxContainer
+	var reroll_options := reroll_row.get_child(0) as OptionButton
+	var reroll_button := reroll_row.get_child(1) as Button
+	for option_index in range(reroll_options.item_count):
+		if reroll_options.get_item_metadata(option_index) == "overflow_shield":
+			_fail("A unique effect reroll should not offer the currently selected effect")
+			return
+	if reroll_button.disabled or not reroll_button.text.contains("1 PURE"):
+		_fail("Legendary equipment should expose an affordable one-Pure reroll action")
+		return
+	reroll_options.select(0)
+	reroll_button.pressed.emit()
+	var reroll_profile: Dictionary = progression.load_profile()["profile"]
+	if reroll_profile["equipment_inventory"][0]["unique_effect_id"] == "overflow_shield" or \
+		reroll_profile["resources"]["powder_pure"] != 0:
+		_fail("The hub reroll should persist the chosen replacement effect and consume one Pure Powder")
+		return
+	item_content = _equipment_row(items, 0).get_child(0).get_child(1)
+	if not (item_content.get_child(5).get_child(1) as Button).disabled:
+		_fail("The hub should disable Legendary reroll when no Pure Powder remains")
+		return
 	_find_button(_equipment_row(items, 1).get_child(0).get_child(1), "EQUIP").pressed.emit()
 	var replacement: Dictionary = progression.load_profile()["profile"]
 	if replacement["equipment_inventory"][0]["equipped"] or not replacement["equipment_inventory"][1]["equipped"]:

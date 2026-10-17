@@ -183,6 +183,8 @@ Douze statistiques candidates : dégâts %, vitesse d'attaque %, chance critique
 
 [VALIDÉ — EXTENSION DU 2026-10-17, réponse A] Un reroll d’effet unique coûte 1 Powder Pure pour un équipement Legendary et 1 Powder Prismatic pour un équipement Mythic.
 
+**[VALIDÉ — EXTENSION DU 2026-10-17, réponse A]** Après paiement, le joueur choisit un effet différent parmi les effets uniques sélectionnables. L’effet actuel n’est pas proposé.
+
 [VALIDÉ — EXTENSION DU 2026-10-17, réponse A] La conversion Powder conserve le ratio 10:1 uniquement vers le tier supérieur; aucune conversion inverse ni restitution de Powder n’est permise. Aucune limite supplémentaire ni traçage de provenance n’est ajouté.
 
 [VALIDÉ — EXTENSION DU 2026-10-17] Pour P6.4, conserver les tableaux de coûts, probabilités et rendements proposés comme base de calibration par essais. Cette décision ne valide aucun chiffre : ces paramètres restent **[PROPOSÉS]** jusqu’à ce que des mesures de jeu représentatives justifient leur promotion ou leur ajustement. Le prix du reroll d’effet unique et les règles de conversion sont fixés par les décisions utilisateur du 2026-10-17; coûts/chances d’Enhancement et économie de démantèlement restent à calibrer.
