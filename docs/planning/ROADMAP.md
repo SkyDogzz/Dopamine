@@ -522,8 +522,8 @@ Travail requis :
   - [x] Reconstituer les bonus de tous les tiers au chargement, compter les paliers débloqués une fois par run idempotente et les résumer à l’écran de résultat.
   - [x] Ajouter les métriques de build d’armes, reliques et évolutions au bilan de run, ainsi que le suivi de la pièce d’équipement garantie; les entrées métriques inconnues ou invalides sont refusées avant toute sauvegarde.
   - [x] Atteindre le plancher validé de 100 familles; la cible éditoriale de 120 est **[PROPOSÉE]**. Les métriques, seuils et récompenses restent **[PROPOSÉS]** et nécessitent une calibration.
-- [ ] **P6.8 — Sauvegarde et migrations**
-- [x] `progression_service_smoke.gd` couvre une fixture pour chaque profil supporté v1–v6 et vérifie migration vers v8, données conservées et champs ajoutés; `armorless_records_smoke.gd` couvre en plus la migration du profil v7.
+- [x] **P6.8 — Sauvegarde et migrations**
+  - [x] `progression_service_smoke.gd` couvre une fixture pour chaque profil supporté v1–v6 et vérifie migration vers v8, données conservées et champs ajoutés; `armorless_records_smoke.gd` couvre en plus la migration du profil v7.
   - [x] Vérifier migration, sauvegarde, backup et restauration après corruption : `save_service_smoke.gd` couvre l’enveloppe générique; `progression_service_smoke.gd` récupère maintenant un profil complet via un nouveau SaveService/ProgressionService et valide ses ressources, runs récompensées et équipements.
   - [x] Vérifier idempotence d’un même `run_id` après recréation du service et rechargement du slot, sans nouveau gain de ressources ni pièce d’équipement.
 - [ ] **P6.9 — Calibration**

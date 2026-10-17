@@ -6,6 +6,11 @@
 - Commande : `/tmp/cmake-3.31.12-linux-x86_64/bin/ctest --test-dir build --output-on-failure -j1`, après configuration avec `DOPAMINE_GODOT_EXECUTABLE` pointant sur `tools/local/godot-4.7.2/Godot_v4.7.2-stable_linux.x86_64`.
 - Cette suite vérifie les parcours automatisés sur l’hôte Linux actuel; elle ne remplace ni une run Armorless manuelle complète, ni le profilage sur iGPU cible, ni le build Windows.
 
+## P6.8 — Revalidation sauvegarde et progression — 2026-10-17
+
+- [x] `save_service_smoke.gd` et `progression_service_smoke.gd` passent sous Godot 4.7.2 avec deux `XDG_DATA_HOME` temporaires isolés (`/tmp/dopamine-p68-*`). Ils couvrent respectivement l’enveloppe/backup/restauration et migrations/idempotence des récompenses.
+- [x] La vérification ciblée confirme les preuves historiques de migration v1–v8 et d’absence de double attribution après recréation des services; elle ne remplace pas le CTest complet.
+
 ## Build Linux depuis un répertoire CMake vierge — 2026-10-17
 
 - Inventaire de cet environnement : CMake 3.31.12, GCC 14.2.0, Godot officiel 4.7.2 (`ed1daf0bf`) et `godot-cpp` `b8530af7546a3fcae80cef2477526569fd42ffc2`.
