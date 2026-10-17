@@ -767,7 +767,8 @@ P1 livre le Sandbox développeur et ne remplace pas cette feature produit.
   - [x] Arbitrage utilisateur **[VALIDÉ, 2026-10-17] — réponse A** : remplacer ou exclure avant release les visuels dont les droits et la provenance ne sont pas vérifiables.
   - [x] Inspecter les presets Windows/Linux et le PCK Linux/X11 : 63 visuels inactifs exclus, 102 actifs inclus. Audit initial C2PA : 43 actifs liés à une référence **Trusted**, 58 à une référence **Invalid** pour EKU manquant, 1 généré par le code du dépôt. Le registre détaille les hashes, références et manifestes.
   - [x] Remplacer les 58 PNG actifs dont la référence C2PA était **Invalid** par des formes pixel dessinées par le générateur interne, sans image d’entrée externe; produire les PNG et sources Aseprite et enregistrer le hash du code source dans le registre. Le paquet prévu comprend 43 actifs issus de références **Trusted** et 59 générés dans le dépôt (dont le sol).
-  - [ ] Faire la revue visuelle des 43 références **Trusted** pour les ressemblances/marques tierces et contrôler lisibilité/cohérence des nouveaux sprites. Les références signées prouvent l’origine, pas la propriété légale; appliquer les Conditions d’utilisation et responsabilités d’entrée, voir `docs/art/INVENTAIRE_ASSETS_UI.md`.
+  - [x] Revue visuelle initiale en planche des 43 références **Trusted** (2026-10-17) : aucun logo de tiers ni personnage reconnaissable détecté; ce contrôle ne constitue pas une clearance juridique.
+  - [ ] Vérifier en jeu lisibilité, contraste et cohérence des 58 nouveaux sprites. Les références signées prouvent l’origine, pas la propriété légale; appliquer les Conditions d’utilisation et responsabilités d’entrée, voir `docs/art/INVENTAIRE_ASSETS_UI.md`.
   - [ ] Vérifier contenu, dépendances, licences, sauvegarde et notes de version.
   - [ ] Préparer publication après validation des critères, sans la confondre avec un build local.
 
