@@ -1,0 +1,14 @@
+# Godot 4.7.2; seed base=20261016; difficulty=Easy; movement=kite; simulation speed=4x.
+# Ten fresh-profile Survival runs; normal HP/spawns, no scripted kills, isolated XDG_DATA_HOME.
+# All runs ended by defeat; four produced both families via pity on a qualifying enemy death after 60s.
+tier,difficulty,movement,simulation_speed,replicate,unlocked_nodes,hp_bonus_pct,damage_bonus_pct,speed_bonus_pct,crit_bonus_pct,active_seconds,wall_seconds,path_distance,wave,kills,level,outgoing_damage,outgoing_dps,net_hp_loss,boss_defeated,result,weapon_drops,relic_drops,ordinary_weapon_drops,ordinary_relic_drops,elite_weapon_drops,elite_relic_drops,boss_weapon_drops,boss_relic_drops,pity_weapon_drops,pity_relic_drops
+fresh,easy,kite,4.0,1,0,0.00,0.00,0.00,0.00,84.46,21.13,20399.98,3,14,5,254.42,3.01,100.00,false,defeat,1,1,0,0,0,0,0,0,1,1
+fresh,easy,kite,4.0,2,0,0.00,0.00,0.00,0.00,66.66,16.67,16016.01,3,9,4,205.56,3.08,100.00,false,defeat,0,0,0,0,0,0,0,0,0,0
+fresh,easy,kite,4.0,3,0,0.00,0.00,0.00,0.00,53.93,13.49,12960.00,2,7,3,147.87,2.74,100.00,false,defeat,0,0,0,0,0,0,0,0,0,0
+fresh,easy,kite,4.0,4,0,0.00,0.00,0.00,0.00,31.63,7.91,7600.00,2,3,2,105.69,3.34,100.00,false,defeat,0,0,0,0,0,0,0,0,0,0
+fresh,easy,kite,4.0,5,0,0.00,0.00,0.00,0.00,77.85,19.48,18688.01,3,12,4,215.35,2.77,100.00,false,defeat,1,1,0,0,0,0,0,0,1,1
+fresh,easy,kite,4.0,6,0,0.00,0.00,0.00,0.00,91.27,22.83,21920.01,4,15,5,308.03,3.37,100.00,false,defeat,1,1,0,0,0,0,0,0,1,1
+fresh,easy,kite,4.0,7,0,0.00,0.00,0.00,0.00,42.10,10.53,10112.00,2,10,4,211.44,5.02,100.00,false,defeat,0,0,0,0,0,0,0,0,0,0
+fresh,easy,kite,4.0,8,0,0.00,0.00,0.00,0.00,81.22,20.32,19504.01,3,7,3,214.32,2.64,100.00,false,defeat,1,1,0,0,0,0,0,0,1,1
+fresh,easy,kite,4.0,9,0,0.00,0.00,0.00,0.00,72.70,18.19,17456.01,3,6,3,382.51,5.26,100.00,false,defeat,1,0,1,0,0,0,0,0,0,0
+fresh,easy,kite,4.0,10,0,0.00,0.00,0.00,0.00,58.46,14.62,14048.01,2,7,3,193.80,3.31,100.00,false,defeat,0,0,0,0,0,0,0,0,0,0
