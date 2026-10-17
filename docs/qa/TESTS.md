@@ -28,6 +28,12 @@
 - [x] Les smokes couvrent choix distincts, niveaux/slots pleins, pondération configurable sans suppression d’offres éligibles, ainsi que présentation et focus clavier des options de coffre.
 - [i] Le smoke de présentation a émis un avertissement de ressources au shutdown; les assertions de coffre ont passé. Les coefficients de poids et leur interprétation restent **[PROPOSÉS]** et l’arbitrage P5.3.4 reste **[OUVERT]**.
 
+## P5.3.5 — Collecte — 2026-10-17
+
+- [x] Sous Godot 4.7.2, `survival_chest_smoke.gd` passe : rayon de coffre distinct du rayon XP même avec Magnet Heart, attraction XP jusqu’au niveau 5, placement XP/coffres sans chevauchement complet, collecte à proximité et ouverture du choix. Le test détecte également la récompense quand un seul choix reste éligible.
+- [x] `survival_chest_layout_smoke.gd` passe aux viewports 640×360, 1280×720 et 1920×1080.
+- [i] Le smoke de collecte réussit ses assertions mais Godot signale 8 instances ObjectDB et 4 ressources encore en usage à l’arrêt. La cause de cet avertissement de fermeture reste à diagnostiquer; il ne correspond pas à un échec d’assertion de collecte.
+
 ## Build Linux depuis un répertoire CMake vierge — 2026-10-17
 
 - Inventaire de cet environnement : CMake 3.31.12, GCC 14.2.0, Godot officiel 4.7.2 (`ed1daf0bf`) et `godot-cpp` `b8530af7546a3fcae80cef2477526569fd42ffc2`.

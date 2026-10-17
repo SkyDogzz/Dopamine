@@ -379,7 +379,7 @@ Travail requis :
   - [x] Garder les taux de drop, le filet anti-malchance et les poids d’offres accessibles en configuration; `survival_chest_director_smoke.gd` et `survival_loadout_smoke.gd` couvrent ces paramètres.
   - [x] Intégrer `free_first_chest_reroll` au premier coffre de run via P6.5; le comportement reste **[PROPOSÉ]** et est couvert par `free_chest_reroll_smoke.gd`.
   - [ ] Faire arbitrer les valeurs nécessaires avant leur verrouillage; les coefficients restent **[PROPOSÉS]**.
-- [ ] **P5.3.5 — Collecte**
+- [x] **P5.3.5 — Collecte**
   - [x] Préserver le rayon séparé `chest_collection_radius`.
   - [x] Vérifier par régression qu'un pickup très élevé n'attire pas un chest éloigné.
   - [x] Vérifier la collecte à proximité et l'ouverture du choix ; l'interaction manuelle reste facultative selon le GDD.
