@@ -595,7 +595,7 @@ Travail requis :
 
 P1 livre le Sandbox développeur et ne remplace pas cette feature produit.
 
-- [ ] **P8.1 — Entrée et contexte isolé**
+- [x] **P8.1 — Entrée et contexte isolé**
   - [x] Ajouter l’accès distinct Sandbox Lab au menu avant sélection/création de save; l’entrée `SANDBOX DEV` reste le Sandbox développeur P1.
   - [x] Ajouter `SandboxLabContext` mémoire : il valide le preset, héberge une session Survival sans service de progression/save, désactive vagues/coffres normaux et gèle le HP; il ne crédite aucune progression et remplace un preset seulement en pause.
   - [x] Smoke dédié utilise un `XDG_DATA_HOME` isolé, vérifie le spawn et le stockage local du preset; aucune donnée n’est écrite sous `user://saves`.
@@ -612,7 +612,7 @@ P1 livre le Sandbox développeur et ne remplace pas cette feature produit.
   - [ ] Ajouter les overrides REBUILD/RESTART; niveaux au-delà de 5 restent à implémenter dans le combat.
   - [x] Ajouter des overrides LIVE sélectionnables par statistique; ils restent transitoires et sont effacés lors d’une reconstruction du build.
   - [ ] Ajouter overrides REBUILD/RESTART avec validation atomique.
-- [ ] **P8.3 — Presets et share codes**
+- [x] **P8.3 — Presets et share codes**
   - [x] Ajouter `sandbox_preset_service.gd` : schéma version 1 fermé, exemple minimal et modes Survival/Endless/Armorless.
   - [x] Exporter/importer JSON limité à 1 Mio et refuser champs inconnus, types et métadonnées invalides.
   - [x] Ajouter `DSLAB1:` avec DEFLATE, Base64URL, SHA-256 d’intégrité et décompression plafonnée; smoke de round-trip et corruption.
@@ -620,12 +620,12 @@ P1 livre le Sandbox développeur et ne remplace pas cette feature produit.
   - [x] Ajouter `SandboxPresetStore` pour sauvegarder, lister, charger et supprimer les presets sous `user://sandbox/presets`; noms bornés et écriture temporaire validée.
   - [x] Brancher les actions preset/share code à l’écran Lab; ajouter l’import JSON par sélecteur de fichier avec validation bornée avant application et l’export JSON par sélecteur de destination.
   - [x] Refuser récursivement dans les payloads les champs nommés comme script, commande, chemin système ou donnée d'identité; les codes ne sérialisent que les champs du schéma public v1 et aucun service de save/progression n'est injecté.
-- [ ] **P8.4 — Import de sauvegarde**
+- [x] **P8.4 — Import de sauvegarde**
 - [x] Ajouter `SaveService.read_slot_read_only` : lit et vérifie le slot courant sans migration, restauration de backup ni écriture; le smoke couvre un ancien payload et un slot courant corrompu.
 - [x] Ajouter `IMPORT NORMAL PROFILE · READ ONLY` au Sandbox Lab : lit le slot courant, valide strictement le profil v8 en mémoire et refuse les profils anciens/incomplets sans les migrer.
 - [x] Construire une copie Sandbox modifiable contenant starters, unlocks d'armes/reliques du skill tree, bonus stats d'achievements/skill tree et équipement équipé; les ressources et l'historique de progression ne sont pas copiés.
 - [x] Comparer la sauvegarde source avant/après et tester import courant, profil ancien et profil invalide; le contexte/session Lab ne reçoit toujours aucun service de save/progression.
-- [ ] **P8.5 — Outils de simulation**
+- [x] **P8.5 — Outils de simulation**
   - [x] Ajouter God Mode commutable qui ne verrouille que le HP de la session Lab isolée; Survival normal n’est pas modifié.
   - [x] Première tranche UI ajoute pause, vitesse, spawn d’ennemis, kill all, clear projectiles et reset à la session de combat isolée.
   - [x] Ajouter `RESET COOLDOWNS` au Sandbox Lab; la commande réinitialise les dix horloges d’attaque de la session isolée et ne touche ni la progression ni les sauvegardes normales.
@@ -633,17 +633,17 @@ P1 livre le Sandbox développeur et ne remplace pas cette feature produit.
   - [x] Ajouter `RESTORE HP` pour remplir les PV du joueur Lab sans modifier le bouclier ni avancer simulation/horloges; une session terminée exige Reset. La commande reste un prototype **[PROPOSÉ]** du GDD.
   - [x] Préserver le réglage God Mode lors d’un import de preset qui reconstruit la session; la régression vérifie le cas désactivé.
   - [x] Afficher les DPS 1 s, 10 s et cumulés, ventilés par type de source arme/évolution/effet; afficher un journal RNG contextualisé à seed fixe. Les échantillons DPS sont limités aux dix dernières secondes (4096 maximum) et le journal conserve 256 tirages, dont les six plus récents sont visibles.
-- [ ] **P8.6 — Snapshots**
+- [x] **P8.6 — Snapshots**
   - [x] Inventorier l’état minimal à capturer, y compris RNG, horloges, queues et build; contrat et lacunes actuelles consignés dans [`SANDBOX_SNAPSHOT.md`](SANDBOX_SNAPSHOT.md).
   - [x] Exposer le checkpoint natif et capturer/restaurer sans perte une scène simple; `sandbox_snapshot_smoke.gd` vérifie un ennemi et l’état pause.
   - [x] Vérifier le rejet de version incompatible par l’API Godot, ainsi que commandes en attente et séquences dans `simulation_worker_test`; `sandbox_snapshot_smoke.gd` couvre aussi la barrière Godot→worker, les commandes soumises avant capture et la séquence après restauration.
   - [x] Documenter format opaque en mémoire, état hors worker et limites du déterminisme dans `SANDBOX_SNAPSHOT.md`; le Lab capture/restaure maintenant en mémoire l’état natif, la session Godot (RNG, horloges, joueur, vague), le build et les overrides LIVE.
   - [x] Ajouter `CAPTURE SNAPSHOT` / `RESTORE SNAPSHOT`, disponibles en pause; vérifier la reprise complète et le rejet sans mutation d’une version inconnue ou d’un build dépassant les slots.
-- [ ] **P8.7 — Limites et sécurité**
+- [x] **P8.7 — Limites et sécurité**
   - [x] Mesurer le plafond de 2 500 entités (500 ennemis + 2 000 projectiles) : RSS haut de page 7 960 KiB sur Linux Debug; métriques et limites dans `docs/qa/PERFORMANCE.md`.
   - [x] Pour le quota ECS utilisé par l’outil Spawn, avertir quand un lot ne tient plus et conserver le hard cap natif de 2 500; les limites internes de commandes/événements restent bornées par le worker. Calibration des seuils et politiques de surcharge toujours **[OUVERTES]** sur matériel cible.
   - [x] `sandbox_preset_smoke.gd` rejette clés de script/commande/chemin/données privées, profondeur/collections/taille hors limites et share codes corrompus; les presets ne contiennent que le schéma public fermé et ne déclenchent pas d’action ou d’accès fichier arbitraire.
-- [ ] **P8.8 — Validation d’isolation**
+- [x] **P8.8 — Validation d’isolation**
   - [x] Vérifier l’absence de `ProgressionService` et `SaveService` dans la session/context Lab; aucun crédit Essence/Powder, achievement ou leaderboard n’est raccordé à cette route.
   - [x] Vérifier que preset, build de combat, reset et capture/restauration snapshot préservent octet pour octet un slot normal sentinelle; les tests de partage/import preset et d’import profil read-only couvrent aussi checksum/validation et source inchangée. Les tests tournent avec `XDG_DATA_HOME` isolé.
 
