@@ -499,6 +499,7 @@ Travail requis :
   - [x] Le smoke vérifie la table proposée de coûts pour chaque rareté/niveau, les conversions 10:1 vers le tier suivant et le refus de conversion depuis Prismatic.
   - [x] Prototype d’économie choisi : vente contre Essence seule (5/10/20/40/80 selon rareté), démantèlement contre Powder seule selon `PROPOSITION_P5.md`; la vente demande confirmation et ne rembourse pas les enhancements. Rendements et chances restent **[PROPOSÉS]**, à calibrer.
   - [x] `equipment_economy_smoke.gd` vérifie les ventes par rareté, l’impossibilité de repayer une pièce supprimée et le rejet d’un `fail_streak` supérieur à 9, garde-fou de la tentative garantie.
+  - [x] Vérifier les rendements de démantèlement proposés des cinq raretés, l’accumulation par tier Powder, l’absence de récompense répétée et la suppression de l’objet; les rendements restent **[PROPOSÉS]**.
   - [x] Modéliser l'espérance de tentatives, de Powder et de niveaux perdus pour une ligne +0→+10 avec une chaîne de Markov absorbante; résultats et script dans `docs/qa/TESTS.md` et `game/tests/enhancement_economy_expected_cost.gd`. Cette mesure suit les valeurs **[PROPOSÉES]**, sans calibrer les gains de poudre ni le rythme ressenti.
 - [ ] **P6.5 — Effets uniques**
   - [x] `EFFETS_UNIQUES_P6.md` inventorie les six IDs actifs, leurs prérequis, déclencheurs, portée/limites, feedback et statuts **[PROPOSÉ]**; `revive_knockback` est identifié comme legacy sans gameplay.

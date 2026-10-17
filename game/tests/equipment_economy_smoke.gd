@@ -3,6 +3,11 @@ extends SceneTree
 const TEST_DIRECTORY := "user://equipment_economy_smoke"
 const RARITIES := ["normal", "magic", "mystic", "legendary", "mythic"]
 const ESSENCE_VALUES := {"normal": 5, "magic": 10, "mystic": 20, "legendary": 40, "mythic": 80}
+const POWDER_REWARDS := {
+	"normal": {"powder_basic": 1}, "magic": {"powder_basic": 3},
+	"mystic": {"powder_refined": 1}, "legendary": {"powder_refined": 3},
+	"mythic": {"powder_pure": 1},
+}
 
 func _initialize() -> void:
 	call_deferred("_run")
@@ -52,6 +57,45 @@ func _run() -> void:
 			_fail("A sold item must not be sellable a second time")
 			return
 	profile = service.load_profile()["profile"]
+	profile["equipment_inventory"] = []
+	for resource_key in ["powder_basic", "powder_refined", "powder_pure", "powder_prismatic"]:
+		profile["resources"][resource_key] = 0
+	for rarity in RARITIES:
+		var stat_lines: Array[Dictionary] = []
+		for index in range(generator.STAT_LINE_COUNTS[rarity]):
+			stat_lines.append({
+				"stat_id": generator.STAT_IDS[index], "roll_percentile": 0.5,
+				"enhancement_level": 0, "fail_streak": 0,
+			})
+		profile["equipment_inventory"].append({
+			"instance_id": "dismantle_%s" % rarity, "slot": generator.SLOTS[profile["equipment_inventory"].size()],
+			"rarity": rarity, "stat_lines": stat_lines, "equipped": false,
+			"rolls_calibrated": false,
+			"unique_effect_id": "pending_choice" if rarity in ["legendary", "mythic"] else "",
+			"source_mode": "survival",
+		})
+	if not save_service.save_slot("0", profile):
+		_fail("Could not save dismantle fixtures")
+		return
+	var powder_totals := {"powder_basic": 0, "powder_refined": 0, "powder_pure": 0, "powder_prismatic": 0}
+	for index in range(RARITIES.size()):
+		var rarity: String = RARITIES[index]
+		var reward: Dictionary = POWDER_REWARDS[rarity]
+		for resource_key in reward:
+			powder_totals[resource_key] += int(reward[resource_key])
+		var result: Dictionary = service.dismantle_equipment("dismantle_%s" % rarity)
+		if not result.get("ok", false) or result.get("powder_rewards") != reward or \
+				result["profile"]["equipment_inventory"].size() != RARITIES.size() - index - 1:
+			_fail("Dismantling %s equipment should grant only its proposed Powder yield" % rarity)
+			return
+		for resource_key in powder_totals:
+			if int(result["profile"]["resources"][resource_key]) != powder_totals[resource_key]:
+				_fail("Dismantling %s should accumulate the expected %s Powder" % [rarity, resource_key])
+				return
+		if service.dismantle_equipment("dismantle_%s" % rarity).get("ok", false):
+			_fail("A dismantled item must not grant Powder twice")
+			return
+	profile = service.load_profile()["profile"]
 	profile["equipment_inventory"] = [{
 		"instance_id": "invalid_pity", "slot": "helmet", "rarity": "normal",
 		"stat_lines": [{
@@ -64,7 +108,7 @@ func _run() -> void:
 	if not save_service.save_slot("0", profile) or service.load_profile().get("error") != "invalid_profile":
 		_fail("A saved failure streak above nine must be rejected before it can bypass pity")
 		return
-	print("equipment_economy_smoke: passed rarity sales, no duplicate payout and pity validation")
+	print("equipment_economy_smoke: passed rarity sale/dismantle yields, no duplicate payout and pity validation")
 	quit(0)
 
 func _fail(message: String) -> void:
