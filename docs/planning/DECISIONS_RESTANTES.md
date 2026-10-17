@@ -1,6 +1,6 @@
 # Registre des décisions restantes
 
-Ce registre aide à conduire l’interview avant les changements qui dépendent d’un arbitrage. Il ne modifie aucun statut du GDD : les choix ci-dessous sont des **options de discussion [PROPOSÉES]**, pas des règles adoptées. Les décisions déjà confirmées restent dans le GDD et les ADR.
+Ce registre sert à conduire l’interview avant les changements dépendant d’un arbitrage. Les lignes portant **[DÉCIDÉ, VALIDÉ]** enregistrent les choix explicites de l’utilisateur; les lignes non décidées restent des options **[PROPOSÉES]**, pas des règles adoptées. Le GDD et les ADR restent les références normatives.
 
 ## À trancher avant les fonctions concernées
 
