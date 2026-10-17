@@ -106,6 +106,7 @@ func _run() -> void:
 	var context_start: Dictionary = await context.start(preset)
 	if not context_start.get("ok", false) or context.progression_service != null or \
 			context.normal_save_service != null or context.seed != preset["seed"] or \
+			context.session.sandbox_rng_seed != 12345 or \
 			not is_equal_approx(context.session.contact_damage_per_hit, 5.0):
 		_fail("Sandbox Lab context must start from validated data without normal progression services")
 		return

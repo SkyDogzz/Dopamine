@@ -37,6 +37,7 @@ const SPAWN_BATCH_SIZE := 10
 @onready var _live_stat_value: SpinBox = $Root/Body/Side/Sections/LiveOverride/StatValue
 @onready var _enemy_hp_multiplier: SpinBox = $Root/Body/Side/Sections/EnemyConfig/EnemyHpMultiplier
 @onready var _contact_damage: SpinBox = $Root/Body/Side/Sections/EnemyConfig/ContactDamage
+@onready var _seed_control: SpinBox = $Root/Body/Side/Sections/EnemyConfig/Seed
 @onready var _capture_snapshot_button: Button = $Root/Body/Left/SnapshotControls/CaptureButton
 @onready var _restore_snapshot_button: Button = $Root/Body/Left/SnapshotControls/RestoreButton
 
@@ -81,6 +82,7 @@ func _ready() -> void:
 	$Root/Body/Side/Sections/LiveOverride/ApplyStat.pressed.connect(_apply_live_stat_override)
 	_enemy_hp_multiplier.value_changed.connect(_set_enemy_hp_override)
 	_contact_damage.value_changed.connect(_set_contact_damage_override)
+	_seed_control.value_changed.connect(_set_seed_override)
 	_populate_visual_build_options()
 	for enemy_id in ["chaser", "sprinter", "tank", "shooter", "buffer", "exploder", "shielder", "summoner", "elite"]:
 		_enemy_select.add_item(enemy_id.to_upper())
@@ -96,6 +98,7 @@ func _ready() -> void:
 		return
 	_enemy_hp_multiplier.value = float(context.active_preset["overrides"].get("enemy_hp", 1.0))
 	_contact_damage.value = float(context.active_preset["overrides"].get("contact_damage_per_hit", 0.0))
+	_seed_control.value = float(context.active_preset["seed"])
 	_pause_button.grab_focus()
 	_refresh()
 
@@ -311,6 +314,19 @@ func _set_contact_damage_override(value: float) -> void:
 	if context.session != null:
 		context.session.contact_damage_per_hit = value
 
+func _set_seed_override(value: float) -> void:
+	if context == null or context.active_preset.is_empty():
+		return
+	context.active_preset["seed"] = int(value)
+	var seed_needs_restart: bool = int(value) != context.seed
+	if seed_needs_restart:
+		context.latest_snapshot.clear()
+		_restore_snapshot_button.disabled = true
+	var paused := context.simulation != null and bool(context.simulation.snapshot().get("paused", false))
+	_capture_snapshot_button.disabled = seed_needs_restart or not paused
+	if seed_needs_restart:
+		_set_status("SEED SET · RESET TO APPLY", false)
+
 func _can_spawn_batch(current_count: int) -> bool:
 	return current_count >= 0 and current_count + SPAWN_BATCH_SIZE <= MAX_SIMULATION_ENTITIES
 
@@ -355,6 +371,7 @@ func _restore_snapshot() -> void:
 		return
 	_enemy_hp_multiplier.value = float(context.active_preset["overrides"].get("enemy_hp", 1.0))
 	_contact_damage.value = float(context.active_preset["overrides"].get("contact_damage_per_hit", 0.0))
+	_seed_control.value = float(context.seed)
 	var stat_id := str(_live_stat_select.get_item_metadata(_live_stat_select.selected))
 	_live_stat_value.value = float(context.live_stat_overrides.get(stat_id, 0.0))
 	_refresh()
@@ -503,6 +520,7 @@ func _preset_from_editor() -> Dictionary:
 	var preset: Dictionary = context.active_preset.duplicate(true) if not context.active_preset.is_empty() else _default_preset()
 	preset["preset_id"] = _preset_id.text.strip_edges()
 	preset["name"] = _preset_id.text.strip_edges()
+	preset["seed"] = int(_seed_control.value)
 	preset["initial_build"] = parser.data
 	preset["overrides"]["enemy_hp"] = _enemy_hp_multiplier.value
 	preset["overrides"]["contact_damage_per_hit"] = _contact_damage.value
@@ -528,6 +546,7 @@ func _apply_preset(preset: Dictionary) -> void:
 	_build_json.text = JSON.stringify(preset["initial_build"], "  ")
 	_enemy_hp_multiplier.value = float(preset["overrides"].get("enemy_hp", 1.0))
 	_contact_damage.value = float(preset["overrides"].get("contact_damage_per_hit", 0.0))
+	_seed_control.value = float(preset["seed"])
 	context.live_stat_overrides.clear()
 	_restore_snapshot_button.disabled = true
 	_live_stat_value.value = 0.0

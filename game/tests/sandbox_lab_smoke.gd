@@ -67,12 +67,29 @@ func _run() -> void:
 	var apply_live_stat: Button = lab.get_node_or_null("Root/Body/Side/Sections/LiveOverride/ApplyStat")
 	var enemy_hp_override: SpinBox = lab.get_node_or_null("Root/Body/Side/Sections/EnemyConfig/EnemyHpMultiplier")
 	var contact_damage: SpinBox = lab.get_node_or_null("Root/Body/Side/Sections/EnemyConfig/ContactDamage")
+	var seed_control: SpinBox = lab.get_node_or_null("Root/Body/Side/Sections/EnemyConfig/Seed")
 	if weapon_select == null or weapon_level == null or add_weapon == null or relic_select == null or \
 			relic_level == null or add_relic == null or stat_select == null or stat_value == null or \
 			add_stat == null or apply_build == null or import_profile == null or equipment_slot == null or equipment_stat == null or \
 			equipment_value == null or add_equipment == null or live_stat == null or live_value == null or \
-			apply_live_stat == null or enemy_hp_override == null or contact_damage == null:
+			apply_live_stat == null or enemy_hp_override == null or contact_damage == null or seed_control == null:
 		_fail("Sandbox Lab should provide profile import, visual build controls and typed combat configuration")
+		return
+	if not is_equal_approx(seed_control.value, 1.0):
+		_fail("The default Sandbox preset should expose seed 1")
+		return
+	seed_control.value = 42.0
+	if int(lab.context.active_preset["seed"]) != 42 or lab.context.seed != 1:
+		_fail("Changing seed should stage a RESTART override without changing the current RNG stream")
+		return
+	var pending_seed_snapshot: Dictionary = lab.context.capture_snapshot()
+	if pending_seed_snapshot.get("ok", false) or pending_seed_snapshot.get("error", "") != "restart_pending":
+		_fail("Snapshots should be refused until a staged seed is applied by reset")
+		return
+	await lab._reset()
+	if lab.context.seed != 42 or lab.context.session.sandbox_rng_seed != 42 or \
+			lab.get_node("Root/Body/Side/Sections/Status").text != "LAB RESET FROM PRESET":
+		_fail("Reset should restart the isolated session from the staged seed")
 		return
 	if not is_equal_approx(float(enemy_hp_override.value), 1.0):
 		_fail("A preset without an enemy HP override should use the neutral multiplier")
@@ -236,7 +253,7 @@ func _run() -> void:
 	if diagnostics == null or dps_summary == null or dps_sources == null:
 		_fail("Sandbox Lab should expose RNG and source DPS diagnostics")
 		return
-	if lab.context.session.sandbox_rng_seed != 1 or not lab.context.session.sandbox_diagnostics_enabled:
+	if lab.context.session.sandbox_rng_seed != 42 or not lab.context.session.sandbox_diagnostics_enabled:
 		_fail("Sandbox diagnostics should use the active preset seed and remain disabled outside Lab")
 		return
 	var reset_cooldowns: Button = lab.get_node_or_null("Root/Body/Left/ProjectileControls/ResetCooldownsButton")
@@ -276,12 +293,12 @@ func _run() -> void:
 		_fail("Sandbox wave decisions should record their seeded RNG draws with a purpose")
 		return
 	var expected_rng := RandomNumberGenerator.new()
-	expected_rng.seed = 1
+	expected_rng.seed = 42
 	if not is_equal_approx(float(lab.context.session._sandbox_rng_log[0]["value"]), expected_rng.randf()):
 		_fail("Sandbox RNG draws should be reproducible from the active preset seed")
 		return
 	lab._refresh()
-	if not diagnostics.text.contains("SEED 1") or not diagnostics.text.contains("wave_enemy_"):
+	if not diagnostics.text.contains("SEED 42") or not diagnostics.text.contains("wave_enemy_"):
 		_fail("The Lab RNG panel should show the preset seed and contextual draw log")
 		return
 	for _index in range(300):
@@ -316,6 +333,7 @@ func _run() -> void:
 	lab._save_preset()
 	var saved_preset: Dictionary = lab.preset_store.load_preset("smoke_build")
 	if not saved_preset.get("ok", false) or \
+			int(saved_preset["preset"]["seed"]) != 42 or \
 			float(saved_preset["preset"]["overrides"].get("enemy_hp", 0.0)) != 2.0 or \
 			float(saved_preset["preset"]["overrides"].get("contact_damage_per_hit", 0.0)) != 5.0:
 		_fail("The Lab UI should save a valid preset in the isolated Sandbox store")

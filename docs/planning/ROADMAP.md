@@ -604,6 +604,7 @@ P1 livre le Sandbox développeur et ne remplace pas cette feature produit.
   - [x] Ajouter l’édition d’un équipement de test par slot/stat et des overrides LIVE isolés pour les statistiques existantes; `sandbox_lab_smoke.gd` vérifie l’effet en combat des 12 statistiques, y compris l’isolation du rayon XP et du rayon de coffre, avec actualisation dédiée des dégâts, vitesse et HP maximum.
   - [x] Ajouter l’override LIVE typé `enemy_hp` (×0,1–×1000) au preset et au Lab : il ne change que les HP des ennemis créés ensuite par Spawn; les clés sans contrat runtime et les valeurs hors bornes sont rejetées.
   - [x] Ajouter l’override LIVE typé `contact_damage_per_hit` (0–1000) au preset et au Lab; il s’applique à la prochaine collision de la session isolée et vaut zéro par défaut.
+  - [x] Exposer la seed du preset comme réglage RESTART; elle s’applique au Reset, est persistée, et invalide/refuse un snapshot tant que le redémarrage n’a pas eu lieu.
   - [ ] Compléter les overrides de configuration LIVE/REBUILD/RESTART et les limites de contenu avancées, après définition de leur contrat.
   - [x] Ajouter `SandboxBuild` comme modèle isolé : armes/reliques, évolutions appariées, stats personnalisées finies et équipements de test; validation atomique avant remplacement.
   - [x] Ajouter un éditeur JSON initial et appliquer armes/reliques (niveaux 1–5), évolutions appariées, équipements et stats personnalisées à la session de combat existante.

@@ -70,6 +70,8 @@ func start(preset: Variant) -> Dictionary:
 func capture_snapshot() -> Dictionary:
 	if session == null or simulation == null or build == null:
 		return {"ok": false, "error": "lab_unavailable"}
+	if int(active_preset.get("seed", seed)) != seed:
+		return {"ok": false, "error": "restart_pending"}
 	if not bool(simulation.snapshot().get("paused", false)):
 		return {"ok": false, "error": "pause_required"}
 	if session._chest_open or session._starting_weapon_choice_open or session.run_over:
