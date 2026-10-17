@@ -379,9 +379,10 @@ Travail requis :
 - [ ] **P5.3.4 — Probabilités**
   - [x] Garder les taux de drop, le filet anti-malchance et les poids d’offres accessibles en configuration; `survival_chest_director_smoke.gd` vérifie désormais aussi, sur 40 000 tirages seedés, les fréquences ordinaires/élites et l’indépendance des deux familles; `survival_loadout_smoke.gd` couvre les poids d’offres.
   - [x] Instrumenter `progression_balance_survey.gd` pour enregistrer les drops réels par famille et distinguer tirages ordinaires, élites, boss et filet; les trois parcours initiaux, dix runs Easy ×1, dix Easy ×4 en kite et dix Easy ×4 avec profil complet sont archivés sous `docs/qa/data/progression_balance_chest_*_20261017.csv`. Le profil complet atteint 454 kills, deux drops ordinaires d’arme et aucun drop ordinaire relique; les cohortes observent aussi le filet. Dispersion du bot et faible nombre de drops ordinaires : les taux ne sont pas calibrés.
-  - [x] **[VALIDÉ, 2026-10-17]** Porter le drop ordinaire de chaque famille à 0,75 %; les valeurs d’offres deviennent ×1,25 / ×1,5 / ×1,25 / ×1,125, plafond combiné ×2 selon `(x−1)/2+1`. Le test seedé vérifie 40 000 tirages par famille; les défauts élite 15 % et filet 60 s restent **[PROPOSÉS]**.
+  - [x] **[VALIDÉ, 2026-10-17]** Porter le drop ordinaire de chaque famille à 0,75 %; les valeurs d’offres deviennent ×1,25 / ×1,5 / ×1,25 / ×1,125, plafond combiné ×2 selon `(x−1)/2+1`.
+  - [x] **[VALIDÉ, 2026-10-17]** Régler les élites à 30 % par famille, conserver un coffre garanti par famille éligible sur chaque boss, et valider le filet de 60 s/famille appliqué à la prochaine mort ennemie. Le smoke seedé couvre 40 000 tirages ordinaires et élites ainsi que les garanties boss et filet.
   - [x] Intégrer `free_first_chest_reroll` au premier coffre de run via P6.5; le comportement reste **[PROPOSÉ]** et est couvert par `free_chest_reroll_smoke.gd`.
-  - [ ] Calibrer les taux avec des runs représentatives avant leur verrouillage; 0,75 % ordinaire et les poids d’offres sont **[VALIDÉS]**, tandis que les 15 % élite, la garantie boss et le filet 60 s restent **[PROPOSÉS]**.
+  - [ ] Mesurer les taux sur des runs représentatives; cela sert à l’équilibrage et ne rouvre pas les décisions utilisateur validées.
 - [x] **P5.3.5 — Collecte**
   - [x] Préserver le rayon séparé `chest_collection_radius`.
   - [x] Vérifier par régression qu'un pickup très élevé n'attire pas un chest éloigné.

@@ -47,8 +47,8 @@ func _initialize() -> void:
 		return
 	var elite_sample = director_script.new(44018)
 	elite_sample.guarantee_interval_seconds = 0.0
-	if not is_equal_approx(elite_sample.elite_drop_chance, 0.15):
-		_fail("The proposed elite family drop chance should default to 15%")
+	if not is_equal_approx(elite_sample.elite_drop_chance, 0.30):
+		_fail("The validated elite family drop chance should default to 30%")
 		return
 	var elite_weapon_drops := 0
 	var elite_relic_drops := 0
@@ -58,9 +58,9 @@ func _initialize() -> void:
 		elite_weapon_drops += int(drops.has("weapon"))
 		elite_relic_drops += int(drops.has("relic"))
 		elite_double_drops += int(drops.has("weapon") and drops.has("relic"))
-	if elite_weapon_drops not in range(5700, 6301) or elite_relic_drops not in range(5700, 6301) or \
-			elite_double_drops not in range(750, 1051):
-		_fail("Elite family drops should follow independent configured 15% chances: %d/%d/%d" % [
+	if elite_weapon_drops not in range(11400, 12601) or elite_relic_drops not in range(11400, 12601) or \
+			elite_double_drops not in range(3300, 3901):
+		_fail("Elite family drops should follow independent configured 30% chances: %d/%d/%d" % [
 			elite_weapon_drops, elite_relic_drops, elite_double_drops,
 		])
 		return

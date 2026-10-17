@@ -162,7 +162,7 @@ var sandbox_health_decay_multiplier := 1.0
 @export_range(1.0, 3.0, 0.05) var chaos_support_spawn_chance_multiplier: float = 1.5
 @export_group("Chest drop rates")
 @export var ordinary_chest_drop_chance: float = 0.0075
-@export var elite_chest_drop_chance: float = 0.15
+@export var elite_chest_drop_chance: float = 0.30
 @export var chest_guarantee_interval_seconds: float = 60.0
 @export var chest_collection_radius: float = 36.0
 @export_group("Chest offer weights")
