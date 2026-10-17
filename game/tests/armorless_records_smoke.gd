@@ -105,10 +105,50 @@ func _run() -> void:
 		after_duplicate["equipment_inventory"].size() != equipment_count_before_run:
 		_fail("Repeating an Armorless run reward must not grant resources or achievements twice")
 		return
+	if not _check_proposed_reward_formula(directory):
+		return
 	session.queue_free()
 	await process_frame
 	print("armorless_records_smoke: passed difficulty-separated ranking and reward isolation")
 	quit(0)
+
+func _check_proposed_reward_formula(directory: String) -> bool:
+	var formula_directory := directory.path_join("reward_formula")
+	DirAccess.make_dir_recursive_absolute(formula_directory)
+	var formula_saves = SAVE_SERVICE.new(formula_directory)
+	var formula_progression = PROGRESSION.new(formula_saves, "0")
+	var profile: Dictionary = formula_progression.load_profile()["profile"]
+	profile["highest_unlocked_difficulty"] = "chaos"
+	if not formula_saves.save_slot("0", profile):
+		return _fail_formula("Could not prepare isolated difficulty profile")
+	var expected := {
+		"easy": [[44, 64], [46, 67]],
+		"normal": [[63, 92], [65, 95]],
+		"hard": [[101, 138], [104, 143]],
+		"nightmare": [[158, 212], [163, 218]],
+		"chaos": [[252, 322], [260, 333]],
+	}
+	for difficulty in ["easy", "normal", "hard", "nightmare", "chaos"]:
+		for wave_index in range(2):
+			var wave := 24 + wave_index
+			var before: Dictionary = formula_progression.load_profile()["profile"]["resources"].duplicate()
+			var result: Dictionary = formula_progression.award_armorless_run(
+				"formula-%s-%d" % [difficulty, wave], wave, 0, difficulty, {}
+			)
+			var after: Dictionary = formula_progression.load_profile()["profile"]["resources"]
+			var expected_reward: Array = expected[difficulty][wave_index]
+			if not result.get("ok", false) or \
+				int(after["essence"]) - int(before["essence"]) != expected_reward[0] or \
+				int(after["powder_basic"]) - int(before["powder_basic"]) != expected_reward[1]:
+				return _fail_formula("Proposed Armorless reward formula changed for %s wave %d: expected %s, got %s" % [
+					difficulty, wave, expected_reward,
+					[int(after["essence"]) - int(before["essence"]), int(after["powder_basic"]) - int(before["powder_basic"])],
+				])
+	return true
+
+func _fail_formula(message: String) -> bool:
+	_fail(message)
+	return false
 
 func _fail(message: String) -> void:
 	push_error(message)

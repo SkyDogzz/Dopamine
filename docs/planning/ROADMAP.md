@@ -573,6 +573,7 @@ Travail requis :
   - [x] Appliquer les récompenses et métriques d’achievements avec l’anti-double-attribution partagé; Armorless conserve ses records par difficulté et n’incrémente pas les métriques d’équipement permanent.
   - [x] Afficher ressources, achievements et record dans le résultat de run sans ligne d’équipement.
   - [x] Vérifier qu’un run au-delà de la vague 24 garde sa vague complète pour achievements et calcul de récompenses, sans bonus de boss final ni déblocage de difficulté.
+  - [x] Étendre `armorless_records_smoke.gd` pour verrouiller les récompenses **[PROPOSÉES]** aux vagues 24 et 25 sur Easy–Chaos, sans traiter ces valeurs comme calibrées.
   - [x] Vérifier que l’équipement temporaire et le Flux restent supprimés à la fin de run.
   - [ ] Calibrer la formule d’Essence/Powder **[PROPOSÉE]** pour le mode sans fin; elle est linéaire après la vague 24.
 - [ ] **P7A.6 — Validation**

@@ -434,6 +434,12 @@
 - [x] `armorless_session_cycle_smoke.gd` rapporte à la fermeture 4 objets ObjectDB et 2 ressources encore référencés après réussite; le résultat du scénario est vert.
 - [ ] Ce parcours accéléré ne remplace pas une session Armorless complète à durée de production, ni la calibration de la progression à long terme.
 
+## P7A.5 — Contrat de récompense Armorless — 2026-10-17
+
+- [x] `armorless_records_smoke.gd` vérifie les montants des formules **[PROPOSÉES]** aux vagues 24 et 25 sur Easy, Normal, Hard, Nightmare et Chaos. Les dix cas confirment que la vague 25 continue la formule sans bonus de victoire du boss final; ils ne valident pas le rythme ressenti ni l’économie.
+- [x] Montants Essence/Powder de référence aux vagues 24 → 25 : Easy 44/64 → 46/67; Normal 63/92 → 65/95; Hard 101/138 → 104/143; Nightmare 158/212 → 163/218; Chaos 252/322 → 260/333.
+- [ ] Les coefficients restent **[PROPOSÉS]**. Leur calibration demande encore une longue run Armorless sans assistance et une comparaison du rythme de progression des ressources.
+
 ## P8.4 — Base de lecture de sauvegarde en Sandbox — 2026-10-16
 
 - [x] `save_service_smoke.gd` vérifie que la lecture seule renvoie un ancien payload sans migration/écriture et refuse un slot courant corrompu même si un backup existe, sans restaurer ni modifier la source. Le chargement normal continue ensuite à récupérer le backup.
