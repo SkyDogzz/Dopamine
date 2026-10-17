@@ -444,6 +444,7 @@ Travail requis :
   - [x] Relancer la suite CTest complète : 66/66 passent en séquentiel le 2026-10-16 après correction du redémarrage de run. Le benchmark natif sur 500 ennemis/2 000 projectiles mesure la rafale d’impacts avant/après optimisation; résultats et limites consignés dans `docs/qa/TESTS.md`.
   - [x] Corriger l’arc Lightning qui retouchait sa source à courte distance; smoke natif ciblé et catalogue vérifiés, 10 répétitions consécutives puis CTest complet 67/67.
   - [x] Corriger le travail de zone devenu inutile après saturation du budget d’explosions et committer ce checkpoint documenté.
+  - [x] Après P5.2.4, recompiler avec CMake et exécuter CTest en séquentiel : 86/86 passent sous Godot 4.7.2; cela vérifie aussi les snapshots format 15 et les dix scénarios Sandbox d’armes.
   - [ ] Faire le parcours sans assistance de P5.V3 et réaliser les scénarios d’armes dans le Sandbox avant de clore le jalon.
 
 **Critère de sortie :** dix armes, onze reliques, leurs évolutions, 8–12 familles, élites et boss utilisables dans une run complète ; Sandbox et progression séparés. Après P5, poursuivre P6–P9 selon le goal principal actif.
