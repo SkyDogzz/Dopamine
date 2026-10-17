@@ -171,6 +171,11 @@ var sandbox_health_decay_multiplier := 1.0
 @export var contact_damage_per_hit: float = 10.0
 @export var body_contact_cooldown_seconds: float = 0.35
 @export var player_contact_radius: float = 16.0
+@export_group("Prototype screen shake — proposed tuning")
+@export_range(0.0, 0.1, 0.005) var screen_shake_pixels_per_damage := 0.02
+@export_range(0.0, 6.0, 0.25) var screen_shake_max_offset := 3.0
+@export_range(0.03, 0.3, 0.01) var screen_shake_duration_seconds := 0.12
+@export_group("Enemy steering")
 @export var enemy_separation_radius: float = 18.0
 @export_range(0.0, 1.0) var enemy_separation_weight: float = 0.5
 @export_group("Prototype shooter attacks — proposed tuning")
@@ -382,6 +387,10 @@ var _sandbox_rng := RandomNumberGenerator.new()
 var _sandbox_rng_log: Array[Dictionary] = []
 var _last_target := Vector2(INF, INF)
 var _last_simulation_time := 0.0
+var _game_camera: Camera2D
+var _camera_base_offset := Vector2.ZERO
+var _camera_shake_strength := 0.0
+var _camera_shake_elapsed := 0.0
 var _last_combat_event_sequence := 0
 var _next_weapon_time := 0.0
 var _next_inferno_time := 0.0
@@ -514,6 +523,9 @@ func _ready() -> void:
 	player = PLAYER_SCENE.instantiate()
 	player.name = "Player"
 	add_child(player)
+	_game_camera = player.get_node_or_null("Camera2D") as Camera2D
+	if _game_camera != null:
+		_camera_base_offset = _game_camera.offset
 	player.controls_enabled = false
 	loadout = LOADOUT_SCRIPT.new()
 	if progression_service != null and progression_service.has_method("unlocked_weapon_ids") and \
@@ -821,6 +833,7 @@ func _process(_delta: float) -> void:
 	var state: Dictionary = simulation.snapshot()
 	var current_simulation_time: float = float(state["simulation_time"])
 	var elapsed_active_time := current_simulation_time - _last_simulation_time
+	_update_screen_shake(elapsed_active_time)
 	for chain_id in _lightning_chain_states.keys():
 		if current_simulation_time > float(_lightning_chain_states[chain_id]["expires_at"]):
 			_lightning_chain_states.erase(chain_id)
@@ -874,6 +887,7 @@ func _process(_delta: float) -> void:
 				_record_weapon_damage(source_type, float(event["amount"]))
 				if not bool(event.get("is_damage_over_time", false)):
 					var target_type := str(event.get("target_type", ""))
+					_start_screen_shake(float(event["amount"]))
 					Sfx.play("hit_heavy" if target_type in ["mid_boss", "final_boss"] else "hit_light")
 				_advance_lightning_chain(event, state["entities"], current_simulation_time)
 				_try_thermal_shock(event, state["entities"], current_simulation_time)
@@ -3827,11 +3841,41 @@ func _visual_effects_reduced() -> bool:
 
 func _on_settings_changed() -> void:
 	if _visual_effects_reduced():
+		_clear_screen_shake()
 		_weapon_impacts.clear()
 		_enemy_death_pixels.clear()
 		_lightning_arcs.clear()
 		_pandemic_bursts.clear()
 	queue_redraw()
+
+func _start_screen_shake(damage_amount: float) -> void:
+	if _visual_effects_reduced() or _game_camera == null or not is_finite(damage_amount):
+		return
+	var strength := clampf(damage_amount * screen_shake_pixels_per_damage, 0.0, screen_shake_max_offset)
+	if strength <= _camera_shake_strength:
+		return
+	_camera_shake_strength = strength
+	_camera_shake_elapsed = 0.0
+
+func _update_screen_shake(elapsed_active_time: float) -> void:
+	if _camera_shake_strength <= 0.0 or _game_camera == null:
+		return
+	if _visual_effects_reduced():
+		_clear_screen_shake()
+		return
+	_camera_shake_elapsed += maxf(elapsed_active_time, 0.0)
+	if _camera_shake_elapsed >= screen_shake_duration_seconds:
+		_clear_screen_shake()
+		return
+	var fade := 1.0 - _camera_shake_elapsed / screen_shake_duration_seconds
+	var phase := _camera_shake_elapsed * 90.0
+	_game_camera.offset = _camera_base_offset + Vector2(sin(phase), sin(phase * 1.31 + 0.9)) * _camera_shake_strength * fade
+
+func _clear_screen_shake() -> void:
+	_camera_shake_strength = 0.0
+	_camera_shake_elapsed = 0.0
+	if _game_camera != null:
+		_game_camera.offset = _camera_base_offset
 
 func _status_effect_color(status_type: String) -> Color:
 	return STATUS_EFFECT_COLORS.get(status_type, GENERIC_STATUS_COLOR)

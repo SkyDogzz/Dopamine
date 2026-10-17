@@ -43,11 +43,43 @@ func _run() -> void:
 	if projectile_sequence <= 0 or not await _wait_for_critical_impact(session):
 		_fail("A native critical projectile should produce a critical weapon impact")
 		return
+	var camera := session.player.get_node("Camera2D") as Camera2D
+	if session._camera_shake_strength <= 0.0:
+		_fail("A native direct damage event should trigger visual camera shake")
+		return
+	await process_frame
+	if camera.offset.is_zero_approx():
+		_fail("The direct damage camera shake should reach the active Camera2D")
+		return
 	await create_timer(0.15).timeout
 	session._weapon_impacts.clear()
 	session.simulation.pause()
 	session.set_process(false)
 	await process_frame
+	var shake_state_before: Dictionary = session.simulation.snapshot()
+	session._start_screen_shake(100.0)
+	session._update_screen_shake(0.03)
+	if not is_equal_approx(session._camera_shake_strength, 2.0) or camera.offset.is_zero_approx():
+		_fail("A powerful direct impact should produce bounded visual camera shake")
+		return
+	_settings.set_reduced_visual_effects_enabled(true)
+	if not camera.offset.is_zero_approx() or session._camera_shake_strength != 0.0:
+		_fail("Reduced visual effects should clear camera shake immediately")
+		return
+	_settings.set_reduced_visual_effects_enabled(false)
+	session._start_screen_shake(1000.0)
+	if session._camera_shake_strength > session.screen_shake_max_offset:
+		_fail("Camera shake must stay within its configured maximum offset")
+		return
+	session._update_screen_shake(session.screen_shake_duration_seconds)
+	if not camera.offset.is_zero_approx() or session._camera_shake_strength != 0.0:
+		_fail("Camera shake should return to its base offset when its active duration expires")
+		return
+	var shake_state_after: Dictionary = session.simulation.snapshot()
+	if shake_state_after["entities"] != shake_state_before["entities"] or \
+		int(shake_state_after["last_sequence"]) != int(shake_state_before["last_sequence"]):
+		_fail("Screen shake must not change combat entities or simulation sequence")
+		return
 	var state_before: Dictionary = session.simulation.snapshot()
 	if "--capture" in OS.get_cmdline_user_args() and not await _verify_impact_capture(session):
 		return

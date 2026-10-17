@@ -51,6 +51,12 @@
 - [x] Le même smoke vérifie que les visuels réduits ne changent pas le flux aléatoire ni l'état de simulation en pause; les parcours headless et rendu Xvfb passent sous Godot 4.7.2.
 - [i] L'échelle 1,45× est **[PROPOSÉE]** et n'ajoute pas de couleur dédiée. La vérification est automatisée sous rendu logiciel/headless et ne valide pas encore la lisibilité sur le GPU cible.
 
+## P9.3 — Screen shake sur impacts directs — 2026-10-17
+
+- [x] Prototype caméra **[PROPOSÉ]** : intensité `0,02 px` par dégât direct, plafond `3 px`, retour amorti en `0,12 s` de simulation. Les attaques DoT ne le déclenchent pas; le mouvement utilise l’offset de la Camera2D, sans modifier positions, RNG ou simulation.
+- [x] `survival_visual_effects_smoke.gd` vérifie l’intensité, le plafond, le retour à l’offset de base, la suppression immédiate avec effets réduits et l’invariance des entités/séquence de combat. CTest ciblé : **2/2 réussis** (import Godot + smoke); capture Xvfb du smoke visuel existant passe sous Mesa llvmpipe.
+- [i] La durée/intensité restent **[PROPOSÉES]** en attendant la revue du ressenti sur matériel réel; l’option effets réduits supprime le shake.
+
 ## Checkpoint CTest rendu impacts/statuts — 2026-10-17
 
 - [x] Après reconfiguration CMake, la suite séquentielle passe **98/98 tests en 67,56 s** avec `/tmp/cmake-3.31.12-linux-x86_64/bin/ctest --test-dir build --output-on-failure -j1`.
