@@ -35,6 +35,10 @@ Cause : `resolve_enemy_body_collisions` reconstruisait l’index spatial et parc
 
 La rafale concentrée reste très au-dessus de 16,67 ms/frame. Elle regroupe toutes les cibles et tous les impacts au même point; elle est extrême et ne représente pas une vague Survival. Ce résultat ne valide pas la cible globale à 60 FPS sur iGPU; une charge représentative avec steering et rendu Godot reste requise.
 
+### Recontrôle Debug — 2026-10-17
+
+Une exécution fraîche de `build/simulation_benchmark` sur le même hôte EPYC-Milan virtualisé et le même build Debug a donné : sans impact, moyenne 1,264 ms, P50 1,269 ms, P95 1,362 ms, P99 1,485 ms, maximum 1,771 ms; rafale Wildfire, moyenne 71,603 ms, P50 70,793 ms, P95 75,546 ms, P99 85,252 ms, maximum 96,886 ms. C’est une nouvelle mesure ponctuelle, proche des répétitions après sortie anticipée ci-dessus; elle ne remplace pas la référence Release et ne permet aucune extrapolation au matériel cible.
+
 ## Limite de l’environnement de travail — 2026-10-17
 
 L’environnement utilisé pour la reprise expose 8 vCPU AMD EPYC-Milan sous KVM, sans `DISPLAY` et sans `perf`. Il ne permet donc pas de profiler le rendu Godot sur le GPU iGPU de référence. Les essais Xvfb précédents utilisent `llvmpipe` et ne remplacent pas cette mesure. Le profilage représentatif CPU/GPU doit être exécuté sur la machine de référence; ne pas extrapoler les chiffres du CPU virtualisé à cette cible.
