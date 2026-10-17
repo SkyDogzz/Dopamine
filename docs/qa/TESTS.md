@@ -61,6 +61,11 @@
 - Le smoke visuel est enregistré dans CTest. La première exécution révélait 5 instances ObjectDB et 2 ressources retenues à la fermeture; libérer explicitement le panneau supprime ces avertissements. L’exécution directe après correction passe sans message de fuite.
 - Les entrées sont synthétiques; la navigation sur une manette physique et le parcours complet de l’inventaire restent à vérifier.
 
+## P9.4 — Contrôles clavier/manette des Options — 2026-10-17
+
+- `ui_settings_smoke.gd` vérifie les flèches sur le slider de volume, Espace puis A sur le plein écran et Échap puis B pour fermer. La réouverture relit les valeurs persistées, puis le smoke remet le plein écran et le volume à leurs valeurs initiales.
+- Le smoke passe directement sous Godot 4.7.2 headless et reste déjà enregistré dans CTest. Ces événements synthétiques ne valident pas un parcours avec périphérique physique.
+
 ## Revalidation CTest après ajout des smokes UI — 2026-10-17
 
 - CTest séquentiel : **89/89 tests passent en 61,02 s**, y compris les nouveaux parcours d’entrée arbre de compétences et inventaire d’équipement.

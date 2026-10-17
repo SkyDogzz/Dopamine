@@ -78,10 +78,19 @@ func _run() -> void:
 	if _settings.master_volume_percent != 42.0 or volume_value.text != "42%":
 		_fail("Volume slider should update Settings and show its percentage")
 		return
-	fullscreen_toggle.toggled.emit(true)
-	await process_frame
+	volume_slider.grab_focus()
+	await _send_key(KEY_RIGHT)
+	if _settings.master_volume_percent != 43.0 or volume_value.text != "43%":
+		_fail("The focused volume slider should respond to keyboard arrows")
+		return
+	fullscreen_toggle.grab_focus()
+	await _send_key(KEY_SPACE)
 	if not _settings.fullscreen_enabled:
-		_fail("Fullscreen toggle should update Settings")
+		_fail("Space should toggle fullscreen through the focused CheckButton")
+		return
+	await _send_gamepad_button(JOY_BUTTON_A)
+	if _settings.fullscreen_enabled:
+		_fail("Gamepad A should toggle fullscreen through the focused CheckButton")
 		return
 	for action_name in ["ui_accept", "ui_cancel", "ui_up", "ui_down", "ui_left", "ui_right"]:
 		if not InputMap.has_action(action_name):
@@ -129,12 +138,16 @@ func _run() -> void:
 	if close_requests[0] != 2:
 		_fail("Gamepad B should request closure from its owner")
 		return
+	await _send_key(KEY_ESCAPE)
+	if close_requests[0] != 3:
+		_fail("Escape should request closure from its owner")
+		return
 	var reopened_panel := packed_scene.instantiate() as Control
 	root.add_child(reopened_panel)
 	await process_frame
 	var reopened_toggle := reopened_panel.get_node("Content/Center/OptionsCard/OptionsContent/FullscreenToggle") as CheckButton
 	var reopened_slider := reopened_panel.get_node("Content/Center/OptionsCard/OptionsContent/VolumeRow/VolumeSlider") as HSlider
-	if not reopened_toggle.button_pressed or reopened_slider.value != 42.0:
+	if reopened_toggle.button_pressed or reopened_slider.value != 43.0:
 		_fail("Reopened Options panel should reflect the latest stored preferences")
 		return
 	_settings.set_fullscreen_enabled(false)
@@ -146,3 +159,24 @@ func _run() -> void:
 func _fail(message: String) -> void:
 	push_error(message)
 	quit(1)
+
+func _send_key(keycode: Key) -> void:
+	var event := InputEventKey.new()
+	event.keycode = keycode
+	event.pressed = true
+	Input.parse_input_event(event)
+	await process_frame
+	event.pressed = false
+	Input.parse_input_event(event)
+	await process_frame
+
+func _send_gamepad_button(button_index: JoyButton) -> void:
+	var event := InputEventJoypadButton.new()
+	event.device = 0
+	event.button_index = button_index
+	event.pressed = true
+	Input.parse_input_event(event)
+	await process_frame
+	event.pressed = false
+	Input.parse_input_event(event)
+	await process_frame
