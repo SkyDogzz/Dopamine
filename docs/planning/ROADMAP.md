@@ -368,10 +368,10 @@ Travail requis :
   - [x] Ajouter la préférence synergie comme poids multiplicatifs et tirage pondéré sans remise; tous les poids restent strictement positifs et aucune offre éligible n’est supprimée.
   - [x] Vérifier objets niveau max, slots pleins et arme niveau 5 sans relique. La relique garde ses offres même lorsque l’arme est niveau 5.
   - Les poids par défaut du GDD (**[PROPOSÉS]**) sont configurables dans Survival : amélioration possédée ×1,5, relique liée à une arme possédée ×2, arme liée à une relique possédée ×1,5, évolution prête/proche ×1,25, plafond combiné ×3. « Proche » signifie ici que le choix amène les deux membres d’une paire non évoluée au niveau 4 ou plus; cette interprétation reste **[PROPOSÉE]**.
-- [ ] **P5.3.2 — Pause et reprise**
+- [x] **P5.3.2 — Pause et reprise**
   - [x] Suspendre la simulation et vérifier que ses horloges ne progressent pas pendant le modal; `survival_chest_smoke.gd` contrôle aussi l’horloge active affichée.
   - [x] Vérifier la reprise après sélection et le rejet d’une liste/sélection invalide dans `survival_chest_smoke.gd`; un choix invalide conserve le modal et la pause. `survival_pause_inventory_smoke.gd` confirme le retour vers le menu Pause, le focus et la simulation toujours figée.
-- [ ] **P5.3.3 — Évolution post-choix**
+- [x] **P5.3.3 — Évolution post-choix**
   - [x] Pour les dix paires, vérifier qu’une arme nouvellement acquise au niveau 1 n’offre pas l’évolution même si sa relique est déjà niveau 5; l’offre apparaît au niveau 5 de l’arme.
   - [x] Vérifier l’offre après chaque chemin de niveaux de l’arme, et après acquisition/amélioration de la relique jusqu’au niveau 5.
   - [x] Ouvrir un vrai coffre d’arme, afficher l’unique évolution devenue éligible et la collecter; `survival_weapon_catalog_smoke.gd` vérifie que le combo s’active après cette collecte.

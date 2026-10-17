@@ -1,10 +1,13 @@
 extends SceneTree
 
+var _session: Node2D
+
 func _initialize() -> void:
 	call_deferred("_run")
 
 func _run() -> void:
 	var session: Node2D = load("res://scenes/survival_session.tscn").instantiate()
+	_session = session
 	if not session.has_method("open_chest_family"):
 		_fail("Survival session script should load")
 		return
@@ -245,6 +248,7 @@ func _run() -> void:
 	if choice.size() != 2 or session.loadout.weapon_level(choice[1]) == 0:
 		_fail("Chest selection should update the run's weapon loadout")
 		return
+	await _cleanup_session()
 	print("Survival chest smoke passed")
 	quit()
 
@@ -267,4 +271,15 @@ func _find_entity_position(entities: Array, entity_index: int) -> Vector2:
 
 func _fail(message: String) -> void:
 	push_error(message)
+	await _cleanup_session()
 	quit(1)
+
+func _cleanup_session() -> void:
+	if not is_instance_valid(_session):
+		return
+	if _session.is_inside_tree():
+		_session.queue_free()
+		await process_frame
+	else:
+		_session.free()
+	_session = null

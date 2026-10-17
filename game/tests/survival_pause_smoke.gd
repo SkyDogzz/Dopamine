@@ -1,10 +1,13 @@
 extends SceneTree
 
+var _session: Node2D
+
 func _initialize() -> void:
 	call_deferred("_run")
 
 func _run() -> void:
 	var session: Node2D = load("res://scenes/survival_session.tscn").instantiate()
+	_session = session
 	session.skip_starting_weapon_choice = true
 	session.spawn_initial_enemy = false
 	session.wave_spawning_enabled = false
@@ -171,6 +174,7 @@ func _run() -> void:
 		_fail("Auto-select should choose the first offered chest option and resume: expected=%s actual=%s" % [expected_first_id, chosen_ids[0]])
 		return
 
+	await _cleanup_session()
 	print("Survival pause smoke passed")
 	quit()
 
@@ -223,4 +227,15 @@ func _enemy_position(state: Dictionary) -> Vector2:
 
 func _fail(message: String) -> void:
 	push_error(message)
+	await _cleanup_session()
 	quit(1)
+
+func _cleanup_session() -> void:
+	if not is_instance_valid(_session):
+		return
+	if _session.is_inside_tree():
+		_session.queue_free()
+		await process_frame
+	else:
+		_session.free()
+	_session = null

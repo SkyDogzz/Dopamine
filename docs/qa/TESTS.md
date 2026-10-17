@@ -16,6 +16,12 @@
 - [x] Depuis un `git archive` propre du commit `6647f3f`, l’import Godot 4.7.2 puis `survival_loadout_smoke.gd`, `survival_unique_effects_smoke.gd` et `progression_service_smoke.gd` passent avec des `XDG_DATA_HOME` isolés.
 - [x] Les smokes vérifient cinq slots de relique par défaut, l’extension à six armes/reliques par `expanded_loadout`, le refus du septième item et la déduplication d’un même effet unique équipé sur plusieurs pièces. Les chiffres associés restent **[PROPOSÉS]**.
 
+## P5.3.2/P5.3.3 — Pause, coffres et évolution — 2026-10-17
+
+- [x] Depuis un `git archive` propre du commit `efed6e9`, l’import Godot 4.7.2 et les smokes `survival_chest_smoke.gd`, `survival_pause_inventory_smoke.gd`, `survival_pause_smoke.gd` et `survival_weapon_catalog_smoke.gd` passent avec des profils `XDG_DATA_HOME` isolés.
+- [x] Les vérifications couvrent les horloges figées pendant un coffre et une pause, le rejet d’un choix invalide sans reprise, la reprise après choix, le retour de l’inventaire en lecture seule vers Pause et la disponibilité/collecte de l’évolution après les deux niveaux 5.
+- [x] `survival_chest_smoke.gd` et `survival_pause_smoke.gd` libèrent désormais leur `SurvivalSession` sur succès comme sur échec. Les logs Godot signalent encore des références `AudioStreamWAV` (`chest_open.wav`, `chest_reward.wav`) pendant l’arrêt du smoke Pause; ce reliquat du service SFX ne bloque pas ces assertions et reste à traiter par son propriétaire audio.
+
 ## Build Linux depuis un répertoire CMake vierge — 2026-10-17
 
 - Inventaire de cet environnement : CMake 3.31.12, GCC 14.2.0, Godot officiel 4.7.2 (`ed1daf0bf`) et `godot-cpp` `b8530af7546a3fcae80cef2477526569fd42ffc2`.
