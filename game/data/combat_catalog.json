@@ -10,7 +10,7 @@
     {"id": "meteor_staff", "name": "Meteor Staff", "behavior": "Targets an enemy group and explodes on impact; Celestial Eye unlocks Starfall.", "relic_id": "celestial_eye", "evolution_id": "starfall", "available_in_survival": true},
     {"id": "sawblades", "name": "Sawblades", "behavior": "Fires a sawblade that ricochets between enemies; Magnetic Coil unlocks Razorstorm.", "relic_id": "magnetic_coil", "evolution_id": "razorstorm", "available_in_survival": true},
     {"id": "toxic_cloud", "name": "Toxic Cloud", "behavior": "Creates a poison cloud on impact that damages and poisons nearby enemies.", "relic_id": "plague_mask", "evolution_id": "pandemic", "available_in_survival": true},
-    {"id": "prism_laser", "name": "Prism Laser", "behavior": "Fires rapid beams at the nearest target; Prism Crystal unlocks splitting beams at level 5.", "relic_id": "prism_crystal", "evolution_id": "spectrum_collapse", "available_in_survival": true}
+    {"id": "prism_laser", "name": "Prism Laser", "behavior": "Prioritizes the highest-health enemy in a dense cluster; Prism Crystal unlocks secondary beams at level 5.", "relic_id": "prism_crystal", "evolution_id": "spectrum_collapse", "available_in_survival": true}
   ],
   "relics": [
     {"id": "storm_core", "name": "Storm Core", "behavior": "+5% global damage per level; collect Infinite Circuit when both it and Lightning Conductor reach level 5.", "global_stat": "damage_pct", "global_bonus_per_level": 5, "weapon_id": "lightning_conductor", "available_in_survival": true},
