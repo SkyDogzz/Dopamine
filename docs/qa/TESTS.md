@@ -69,6 +69,12 @@
 - [x] Les nouveaux gates imposent la correspondance PNG/source avec les seules exceptions documentées et le contraste minimum configuré de 4,5:1 pour les six libellés du HUD Survival.
 - [i] Exécuté sur le commit `dd27f55` avec le même diff local préexistant dans `survival_session.gd`; l’hôte Linux logiciel ne valide toujours pas le matériel de rendu, les contrôles physiques ou les runs de calibration.
 
+## CTest intègre les smokes de pause, coffres, UI et assets — 2026-10-17
+
+- [x] `CMakeLists.txt` intègre 12 smokes auparavant absents : scène visuelle joueur, lot asset pilote, Signal Prism, panneau Pause, abandon confirmé/annulé, choix/layout des coffres, méta HUD, contrôle de vitesse, fondations UI, layout multi-viewport et cycle Armorless accéléré.
+- [x] Reconfiguration avec Godot 4.7.2 puis suite CTest séquentielle : **112/112 tests en 74,65 s**. Le soak multi-modes de 600 s simulées, dont le timeout va jusqu’à 420 s murales, reste un checkpoint dédié et n’est pas ajouté à chaque suite standard.
+- [i] Suite exécutée sur le commit `ee92171` avec le diff local préexistant dans `survival_session.gd`; les tests accélérés et les smokes synthétiques ne remplacent pas les parcours de jeu réels, ni le rendu/contrôles physiques.
+
 ## P9.8 — Revalidation staging Linux du Pulse Warden — 2026-10-17
 
 - [x] Depuis le commit `78f37e46d3773307d822dfe89f808cc3575b4e70`, `tools/package_linux_staging.sh` a compilé un checkout `git archive` propre en Release (Linux x86_64, GCC 14.2.0, CMake 3.31.12, Godot 4.7.2, `godot-cpp` `b8530af7546a3fcae80cef2477526569fd42ffc2`) et exporté Linux/X11 avec le sprite du Pulse Warden.
