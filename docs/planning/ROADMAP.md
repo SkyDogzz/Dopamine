@@ -760,6 +760,7 @@ P1 livre le Sandbox développeur et ne remplace pas cette feature produit.
   - [x] Vérifier un paquet Linux staging non versionné avec notices, extraction propre et démarrage headless; ce n’est pas l’artefact final. Détails dans `docs/qa/TESTS.md`.
   - [x] Reconstruire et vérifier un nouveau staging depuis le commit `86351b6` avec CMake vierge : Release, archive filtrée, notices/licences, dépendances, SHA-256 et démarrage extrait passent. Ce paquet reste non versionné et non distribuable.
   - [x] Refaire le staging depuis `8d91079` après le correctif des compteurs Endless; build Release vierge, inventaire filtré, extraction, dépendances et démarrage vérifiés. Archive/SHA-256 et limites dans `docs/qa/TESTS.md`; toujours non distribuable.
+  - [x] Refaire le staging depuis le commit courant `4965876` avec `git archive`, CMake Release vierge, export Linux/X11 filtré, extraction, contrôle `ldd`, démarrage headless et chargement de la GDExtension adjacente. Archive de 35 711 839 octets, SHA-256 `6e420e0736e4905360c13e839a7fc40ec03a9441a5fe7a50690ea3ffc9f4b09d`; reste non versionnée et non distribuable. Détails dans `docs/qa/TESTS.md`.
   - [ ] Vérifier contenu, dépendances, licences, sauvegarde et notes de version.
   - [ ] Préparer publication après validation des critères, sans la confondre avec un build local.
 
