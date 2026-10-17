@@ -152,6 +152,13 @@
 - [x] Trois sessions Survival réelles du harness, sans invincibilité, XP et coffres accessibles automatiquement : 47,07 / 67,88 / 66,18 secondes simulées; 9 / 12 / 10 kills; vague 2 / 3 / 3; DPS sortant 4,05 / 4,10 / 4,84; distance 11 440 / 16 288 / 15 888 unités. Chaque run finit par défaite, sans récompense persistée.
 - [ ] Échantillon limité à un profil, une difficulté et une politique de mouvement carrée sans évitement. Il établit la dispersion de ce protocole seulement; aucun paramètre **[PROPOSÉ]** n’est ajusté et P6.9 reste ouvert.
 
+### Parcours adaptatif kite — profil neuf, Easy — 2026-10-17
+
+- [x] Le survey accepte `--movement=kite`. Toutes les 0,5 s simulées, il choisit une direction combinant recul et tangente à l’ennemi vivant le plus proche, via les actions clavier réelles. Il ne modifie ni les dégâts, ni les PV, ni les drops; les choix de coffre restent automatiques comme dans les autres parcours.
+- [x] Reproduction : `tools/run_godot_test.sh tools/local/godot-4.7.2/Godot_v4.7.2-stable_linux.x86_64 --headless --path game --script res://tests/progression_balance_survey.gd -- --tier=fresh --difficulty=easy --movement=kite --replicates=3`.
+- [x] Trois seeds indépendants sous Godot 4.7.2 headless, sans invincibilité : survie 34,05 / 46,46 / 44,15 s; vagues atteintes 2 / 2 / 2; éliminations 3 / 6 / 11; DPS sortant 4,24 / 4,09 / 7,36; distance 8 304 / 11 168 / 10 608 unités. Les trois runs finissent par défaite, sans récompense persistée.
+- [ ] Il s’agit d’un contrôleur déterministe simplifié, pas d’un parcours humain ou d’un évitement complet. Trois runs Easy sur un profil ne suffisent pas au calibrage; aucune valeur **[PROPOSÉE]** n’a été modifiée et P6.9 reste ouvert.
+
 ## P6.3 — Portée de ramassage équipement et XP — 2026-10-16
 
 - [x] `equipment_stats_smoke.gd` charge un seul bonus d’équipement par profil et lance une session Survival séparée par stat; vérifie HP, mobilité, dégâts, cadence, chance et dégâts critiques, soin par élimination, aire, cooldown, XP, portée de collecte et vitesse projectile.

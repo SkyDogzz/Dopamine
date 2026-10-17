@@ -9,6 +9,12 @@ const SURVEY_ROOT := "user://progression_balance_survey"
 const MAX_ACTIVE_SECONDS := 720.0
 const MAX_WALL_SECONDS := 180.0
 const MOVEMENT_ACTIONS := ["move_right", "move_down", "move_left", "move_up"]
+const MOVEMENT_VECTORS := {
+	"move_right": Vector2.RIGHT,
+	"move_down": Vector2.DOWN,
+	"move_left": Vector2.LEFT,
+	"move_up": Vector2.UP,
+}
 
 class SurveyProgression:
 	extends RefCounted
@@ -39,7 +45,7 @@ class DamageMonitor:
 				total_damage += float(event.get("amount", 0.0))
 
 var _case_failed := false
-var _pressed_movement_action := ""
+var _pressed_movement_actions: Array[String] = []
 
 func _initialize() -> void:
 	call_deferred("_run")
@@ -56,7 +62,7 @@ func _run() -> void:
 	if selected_difficulty != "all" and selected_difficulty not in DIFFICULTY.ORDER:
 		_fail("Unknown difficulty: %s" % selected_difficulty)
 		return
-	if movement_pattern not in ["still", "square"]:
+	if movement_pattern not in ["still", "square", "kite"]:
 		_fail("Unknown movement pattern: %s" % movement_pattern)
 		return
 
@@ -149,10 +155,14 @@ func _run_case(tier: String, difficulty_id: String, replicate: int, progression:
 	var started_at := Time.get_ticks_msec()
 	var previous_position: Vector2 = session.player.global_position
 	var path_distance := 0.0
+	var next_movement_update: float = session.player_active_time
 	while not session.run_over and session.player_active_time < MAX_ACTIVE_SECONDS and \
 		Time.get_ticks_msec() - started_at < MAX_WALL_SECONDS * 1000.0:
 		if movement_pattern == "square":
 			_set_movement_action(posmod(floori(session.player_active_time / 3.0), MOVEMENT_ACTIONS.size()))
+		elif movement_pattern == "kite" and session.player_active_time >= next_movement_update:
+			_set_kite_movement(session, replicate)
+			next_movement_update = session.player_active_time + 0.5
 		await process_frame
 		var current_position: Vector2 = session.player.global_position
 		path_distance += previous_position.distance_to(current_position)
@@ -207,16 +217,50 @@ func _arguments() -> Dictionary:
 
 func _set_movement_action(action_index: int) -> void:
 	var action: String = MOVEMENT_ACTIONS[action_index]
-	if action == _pressed_movement_action:
+	_set_movement_vector(MOVEMENT_VECTORS[action])
+
+func _set_kite_movement(session: Node2D, replicate: int) -> void:
+	var nearest_offset := Vector2.ZERO
+	var nearest_distance_squared := INF
+	for entity in session.simulation.snapshot()["entities"]:
+		var components: Dictionary = entity["components"]
+		if components.get("IsProjectile", false) or components.get("IsXpOrb", false):
+			continue
+		if float(components.get("Health", {}).get("current", 0.0)) <= 0.0:
+			continue
+		var transform: Dictionary = components.get("Transform2D", {})
+		var enemy_position := Vector2(float(transform.get("x", 0.0)), float(transform.get("y", 0.0)))
+		var offset: Vector2 = session.player.global_position - enemy_position
+		var distance_squared: float = offset.length_squared()
+		if distance_squared < nearest_distance_squared:
+			nearest_distance_squared = distance_squared
+			nearest_offset = offset
+	var orbit_direction := 1.0 if replicate % 2 == 0 else -1.0
+	var away := nearest_offset.normalized() if nearest_distance_squared > 0.0 and nearest_distance_squared < INF else Vector2.UP
+	var tangent := Vector2(-away.y, away.x) * orbit_direction
+	_set_movement_vector((away * 0.8 + tangent * 0.6).normalized())
+
+func _set_movement_vector(direction: Vector2) -> void:
+	var next_actions: Array[String] = []
+	if direction.x < -0.35:
+		next_actions.append("move_left")
+	elif direction.x > 0.35:
+		next_actions.append("move_right")
+	if direction.y < -0.35:
+		next_actions.append("move_up")
+	elif direction.y > 0.35:
+		next_actions.append("move_down")
+	if next_actions == _pressed_movement_actions:
 		return
 	_clear_movement_actions()
-	_pressed_movement_action = action
-	Input.action_press(action)
+	_pressed_movement_actions = next_actions
+	for action in _pressed_movement_actions:
+		Input.action_press(action)
 
 func _clear_movement_actions() -> void:
-	if not _pressed_movement_action.is_empty():
-		Input.action_release(_pressed_movement_action)
-		_pressed_movement_action = ""
+	for action in _pressed_movement_actions:
+		Input.action_release(action)
+	_pressed_movement_actions.clear()
 
 func _fail(message: String) -> void:
 	_case_failed = true
