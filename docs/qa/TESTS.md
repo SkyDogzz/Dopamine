@@ -1708,3 +1708,9 @@ Note de clôture : le blocage historique du smoke `sandbox_ui_smoke.gd` décrit 
 
 - [x] `survival_wave_director_smoke.gd` vérifie le prototype **[PROPOSÉ]** : après la vague 24, les cycles continuent sans victoire et un mid-boss revient aux vagues 24 et 36.
 - [i] Difficultés Easy–Chaos et multiplicateurs existants sont réutilisés par défaut; lancement, transition, récompenses, sortie et records restent à arbitrer/implémenter. Les valeurs de scaling ne sont pas validées.
+
+## P9.8 — Staging Linux Release depuis `adefcc9` — 2026-10-17
+
+- [x] `tools/package_linux_staging.sh` a reconstruit un checkout Git archivé du commit `adefcc9e55fadef0fb3fdd3b4e2b7420918416ad` avec CMake 3.31.12, GCC 14.2.0, Godot 4.7.2 et `godot-cpp` verrouillé. La compilation Release native, l’import propre, l’export Linux/X11 filtré, l’extraction, la présence des exécutables/notices/licences, l’absence de ressources de développement, la résolution des bibliothèques et le lancement headless de l’exécutable avec la GDExtension Release adjacente passent.
+- [x] Archive : `DopamineSurvivor-linux-adefcc9-staging.tar.gz`, 31 979 129 octets, SHA-256 `b57429acb8e802711714093298fd2f8e12244bc21dd5b4f529a10e25c9f899a9`; manifeste SHA-256 généré à côté dans `build/linux/staging/`.
+- [i] Staging Linux x86_64 non versionné et non distribuable; aucune version de jeu n’est assignée. Cette preuve ne couvre ni installation machine distincte, GPU physique, sauvegardes interactives, provenance complète des assets/audio, Windows, autres plateformes ni notes de version.

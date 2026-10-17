@@ -16,7 +16,7 @@
 - [x] Refaire la reconstruction complète depuis `7b20dd485f1078bce51531839554d0e6b9fadfc9`; archive `DopamineSurvivor-linux-7b20dd4-staging.tar.gz` (31 974 354 octets), SHA-256 `c4530505fe31fbe2bfa9122c3a37aa5f9ff290ede7814c562b35d19563b83393`, extraction, dépendances et démarrage headless avec GDExtension Release vérifiés. Le paquet inclut Endless standard dans le Sandbox Lab; il reste non distribuable.
 - [x] Refaire le staging depuis `78f37e46d3773307d822dfe89f808cc3575b4e70`; archive `DopamineSurvivor-linux-78f37e4-staging.tar.gz` (31 977 842 octets), SHA-256 `4616c25c2cae69b1e0db9ad118b1c60ed2a0823fe3544f904e630d3e1b792bfc`, extraction, bibliothèques et démarrage headless avec GDExtension Release vérifiés. Inclut le sprite prototype du Pulse Warden; toujours non distribuable.
 - [x] Renforcer le vérificateur d’archive : après extraction, exiger les exécutables et notices référencées et refuser les ressources de développement. Vérifié par un staging propre depuis `fa64298`, archive `DopamineSurvivor-linux-fa64298-staging.tar.gz` (31 977 821 octets), SHA-256 `8bcf9259bd6f987840f76afd6577607d39c97d7ecbd028aaa7382eeb5d21985c`; les détails figurent dans [`../qa/TESTS.md`](../qa/TESTS.md). Cette validation n’en fait pas une release distribuable.
-- [x] Rebuild propre depuis `86351b6` avec compilation Release vierge, export, extraction, contrôle des bibliothèques/notices et démarrage headless : `DopamineSurvivor-linux-86351b6-staging.tar.gz` (31 977 826 octets), SHA-256 `1ed5f60ae063a42af7da0f0142aee3ede57ccd9b90c8e784b111f388e2057d59`. Toujours non versionné et non distribuable; voir [`../qa/TESTS.md`](../qa/TESTS.md).
+- [x] Rebuild propre depuis `adefcc9` avec compilation Release vierge, export, extraction, contrôle des bibliothèques/notices et démarrage headless : `DopamineSurvivor-linux-adefcc9-staging.tar.gz` (31 979 129 octets), SHA-256 `b57429acb8e802711714093298fd2f8e12244bc21dd5b4f529a10e25c9f899a9`. Toujours non versionné et non distribuable; voir [`../qa/TESTS.md`](../qa/TESTS.md).
 
 ## Contenu et critères d’acceptation
 
@@ -48,4 +48,4 @@
 
 - P9.6 — stabilité/sauvegardes : cochée dans la roadmap, avec limite explicite pour l’interruption réelle au niveau système de fichiers.
 - P9.7 — plateformes : export Linux x86_64 et parcours logiciel vérifiés sur l’hôte courant; validation machine propre, matériel réel et Windows restent ouvertes.
-- P9.8 — staging Linux filtré reconstruit depuis `fa64298`; contenu extrait, dépendances et démarrage vérifiés. Version d’artefact, audit de provenance des assets/audio, validation des sauvegardes, autres plateformes et notes de version restent ouverts.
+- P9.8 — staging Linux filtré reconstruit depuis `adefcc9`; contenu extrait, dépendances et démarrage vérifiés. Version d’artefact, audit de provenance des assets/audio, validation des sauvegardes, autres plateformes et notes de version restent ouverts.
