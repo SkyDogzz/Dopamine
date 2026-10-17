@@ -40,6 +40,13 @@
 - [x] Les smokes couvrent difficulté transmise à la run, victoire/défaite et déblocage séquentiel, multiplicateurs Easy/Normal/Chaos distincts, cadence du suivi Chaos après deux attaques normales pour les deux boss, télégraphes et pause.
 - [i] Les multiplicateurs restent **[PROPOSÉS]** et la run Chaos représentative reste à valider dans P9. Le smoke boss affiche un avertissement ObjectDB/ressource à l’arrêt sans échec d’assertion.
 
+## P5.4.1–5 — Roster, interactions, élites et boss — 2026-10-17
+
+- [x] Depuis un snapshot propre de `7221c57`, passent sous Godot 4.7.2 : `survival_support_enemy_smoke.gd`, `survival_shielder_smoke.gd`, `survival_summoner_smoke.gd`, `survival_exploder_smoke.gd`, `survival_elite_smoke.gd`, `survival_wave_director_smoke.gd`, `survival_boss_attack_smoke.gd` et `survival_final_boss_loot_smoke.gd`.
+- [x] `survival_combat_visual_smoke.gd` passe sous Xvfb/llvmpipe; il capture les neuf familles d’ennemis, les projectiles, impacts, XP et coffre dans le viewport logique.
+- [x] Les vérifications couvrent les auras et leur retrait à la mort, les invocations bornées, les six affixes élite, les huit familles générées en Survival, les patterns/télégraphes des deux boss, leur comportement en pause, et les coffres garantis du boss final avant victoire.
+- [i] Les paramètres de profils, affixes, patterns, dégâts, rayons, délais, plafonds et probabilités de spawn restent **[PROPOSÉS]**. Plusieurs smokes signalent des instances/ressources encore en usage à l’arrêt; leurs assertions passent. La représentativité et le calibrage restent ouverts pour P9.
+
 ## Build Linux depuis un répertoire CMake vierge — 2026-10-17
 
 - Inventaire de cet environnement : CMake 3.31.12, GCC 14.2.0, Godot officiel 4.7.2 (`ed1daf0bf`) et `godot-cpp` `b8530af7546a3fcae80cef2477526569fd42ffc2`.

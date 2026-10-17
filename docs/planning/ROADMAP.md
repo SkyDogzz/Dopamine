@@ -389,30 +389,30 @@ Travail requis :
 
 **Avancement :** le roster de vague comprend huit familles : Chaser, Sprinter, Tank, Shooter, Buffer, Exploder, Shielder et Summoner. Shooter télégraphie ses tirs ; Buffer augmente de 20 % la vitesse alliée dans son aura de 150 ; Shielder réduit à 65 % les dégâts reçus par les alliés couverts par son aura de 150 ; les deux auras cessent à la mort de leur source. Summoner (42 HP, vitesse 42, menace 2,5) annonce une position de spawn, puis invoque des adds (12 HP, vitesse 90, menace 0,5), avec trois invocations actives globalement au maximum. Les élites génériques (50 HP, menace 3) tirent désormais l’un de six affixes **[PROPOSÉS]** : Hasted (100 px/s), Armored (75 px/s, 65 % des dégâts reçus), Regenerating (1 % des PV max régénéré par seconde simulée), Volatile (explosion de 18 dégâts, rayon 82, sans chaîne), Shielded (anneau visible, 50 % des dégâts reçus) ou Split-on-Death (deux adds soumis à la limite globale). L’affixe est publié dans le snapshot. Le directeur les fait apparaître selon un cooldown, un plafond actif et un budget égal à la population de la vague ; le coût de menace est 3. Il utilise le chemin de récompense élite existant. Le profil **Exploder** (30 HP, vitesse 60, menace 2) s’approche, déclenche un fuse de 0,8 s dans un rayon de 110 et inflige 18 dégâts dans un rayon de 82 ; le cercle de souffle est visible, la pause fige le fuse, et sortir du rayon esquive le souffle. Le Pulse Warden et le Dopamine Core possèdent chacun un prototype d’attaques en trois phases; le Core a un sprite dédié. La charge mobile télégraphiée du Warden est implémentée en phases 2 et 3 et vérifiée par `survival_boss_attack_smoke.gd`. Les valeurs, rayons, délais, plafonds et chances de spawn de ces prototypes restent **[PROPOSÉS]**.
 
-- [ ] **P5.4.1 — Familles ennemies**
+- [x] **P5.4.1 — Familles ennemies**
   - [x] Valider les profils Sandbox Chaser (mêlée), Sprinter (rapide, faible HP) et Tank par spawn et snapshots; `simulation_core_test` vérifie steering à la vitesse du profil et mort typée pour chacun. `survival_combat_visual_smoke.gd` vérifie les trois routes de sprites dédiées. Les profils, valeurs et contre-jeu de l’archétype rapide restent **[PROPOSÉS]**.
   - [x] Ajouter une famille distance avec projectile télégraphié.
   - [x] Ajouter un profil de soutien Buffer avec aura de vitesse visible et bornée.
   - [x] Ajouter le prototype Exploder avec fuse et souffle esquivables **[PROPOSÉS]**.
   - [x] Compléter le roster à huit familles et vérifier les profils par scénario Sandbox.
   - [x] Smoke Survival seedé : la vague 20 génère les huit familles du roster avec le chemin de spawn de run et la simulation native; le test vérifie leur présence, pas les probabilités d’équilibrage **[PROPOSÉES]**.
-- [ ] **P5.4.2 — Interactions ennemies**
+- [x] **P5.4.2 — Interactions ennemies**
   - [x] Ajouter un buff de soutien visible et borné.
   - [x] Ajouter Shielder : réduction de dégâts bornée dans une aura et retirée à sa mort **[PROPOSÉ]**.
   - [x] Ajouter Summoner avec position télégraphiée et maximum global de trois adds actifs **[PROPOSÉ]**.
   - [x] Tester destruction du soutien et fin de son effet.
-- [ ] **P5.4.3 — Élites**
+- [x] **P5.4.3 — Élites**
   - [x] Définir la compatibilité du prototype : `elite` accepte Hasted, Armored, Regenerating, Volatile, Shielded et Split-on-Death; les familles ordinaires et les affixes non implémentés sont refusés.
   - [x] Implémenter la sélection aléatoire entre Hasted, Armored, Regenerating, Volatile, Shielded et Split-on-Death sur l’unique famille élite; Hasted passe à 100 px/s, Armored se déplace à 75 px/s et reçoit 65 % des dégâts, Regenerating récupère 1 % de ses PV max par seconde simulée et Volatile explose à sa mort (18 dégâts, rayon 82, sans chaîne), Shielded réduit les dégâts reçus à 50 % avec un anneau visible et Split-on-Death demande deux adds dans la limite globale **[PROPOSÉS]**.
   - [x] Générer le prototype Hasted avec plafond actif et cooldown **[PROPOSÉS]**.
   - [x] Appliquer le budget proposé : somme des menaces actives + coût élite ≤ population cible de la vague.
   - [x] Vérifier affixe visible, profil de vitesse, mort et récompense élite.
-- [ ] **P5.4.4 — Mid-boss**
+- [x] **P5.4.4 — Mid-boss**
   - [x] Définir les phases proposées et rendre leurs transitions visibles dans le HUD/télégraphes.
   - [x] Implémenter les attaques de phase en tranches testables, dont la charge mobile télégraphiée de phase 3.
   - [x] Vérifier timer de vague suspendu pendant le boss, decay actif, puis reprise des spawns réguliers après la vague 12.
   - Prototype Pulse Warden : phases affichées selon les PV (seuils 66 % / 33 % **[PROPOSÉS]**), salve radiale annoncée en phase 1, alternance tir ciblé/charge avec invocation bornée en phase 2, puis alternance salve radiale/charge en phase 3. La charge trace sa trajectoire, déplace l’entité sous steering natif pendant 0,28 s et reprend ensuite le steering joueur. Les smokes vérifient télégraphie, gel en pause, transitions, invocation, charges des phases 2–3, gel du timer de vague durant les boss, maintien du decay et reprise des spawns réguliers après le mid-boss; patterns et valeurs demeurent **[PROPOSÉS]**.
-- [ ] **P5.4.5 — Boss final**
+- [x] **P5.4.5 — Boss final**
   - [x] Définir et implémenter trois phases selon les PV : rayon puis zone esquivable, spirale tirée en salves successives avec invocation en phase 2, puis rayon/zone combinés avec spirale ; télégraphes et HUD de phase vérifiés. Motifs, seuils, dégâts et cadence **[PROPOSÉS]**.
   - [x] Smoke boss : les phases 2 et 3 saturent le plafond global d’invocations proposé à trois, rejettent les suivantes et réutilisent une place après la mort d’un add.
 - [x] Le run accéléré `survival_wave_director_smoke.gd` observe et traite les deux familles de boss jusqu’à la victoire; ce parcours reste assisté et ne ferme pas P5.V3.
