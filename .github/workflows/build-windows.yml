@@ -50,9 +50,11 @@ jobs:
       - name: Launch exported Windows game headless
         shell: pwsh
         run: |
-          $launchOutput = & "build/windows/export/DopamineSurvivor.exe" --headless --quit-after 3 2>&1
+          $exportedGame = (Resolve-Path -LiteralPath "build/windows/export/DopamineSurvivor.exe").Path
+          $launchOutput = & $exportedGame --verbose --headless --quit-after 3 2>&1
+          $launchExitCode = $LASTEXITCODE
           $launchOutput | Write-Output
-          if ($LASTEXITCODE -ne 0) { throw "Exported Windows game failed with exit code $LASTEXITCODE" }
+          if ($launchExitCode -ne 0) { throw "Exported Windows game failed with exit code ${launchExitCode}: $exportedGame" }
           if ($launchOutput -match "GDExtension.*(not found|failed|unavailable)|Cannot get class 'CombatSimulation'") {
             throw "Exported game did not load its GDExtension"
           }
