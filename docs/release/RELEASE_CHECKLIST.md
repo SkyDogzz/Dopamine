@@ -1,0 +1,40 @@
+# Checklist de livraison
+
+État de préparation fondé sur le dépôt au 2026-10-17. Ce document suit les critères P9.8 sans déclarer le jeu prêt à publier. Les statuts de conception restent ceux du GDD : **[VALIDÉ]**, **[PROPOSÉ]**, **[OUVERT]**.
+
+## Identité et artefacts
+
+- [x] Produit Godot identifié comme `Dopamine Survivor`; moteur ciblé Godot 4.7.2 stable, natif C++23 et `godot-cpp` verrouillé à `b8530af7546a3fcae80cef2477526569fd42ffc2`.
+- [x] Une exportation locale Linux/X11 x86_64 existe et démarre le menu puis une run Survival; le binaire et la GDExtension côte à côte démarrent aussi après relocation locale. Les limites sont consignées dans [`../qa/TESTS.md`](../qa/TESTS.md).
+- [ ] **[OUVERT]** Fixer la version du jeu et la convention de version des artefacts. `game/project.godot` ne définit actuellement aucune `config/version`; ne pas déduire une version de release du numéro de Godot ni d’un hash Git.
+- [ ] Construire depuis un checkout propre reproductible pour chaque plateforme de release; distinguer les exports vérifiés localement des artefacts réellement distribuables.
+- [ ] Pour chaque artefact retenu, consigner plateforme/architecture, commit source, versions de Godot/templates/toolchain, commandes, taille et SHA-256.
+
+## Contenu et critères d’acceptation
+
+- [ ] Faire l’audit final de contenu contre les critères du GDD v1.6 et de la roadmap P5–P9; les prototypes présents ne prouvent pas à eux seuls que les jalons de contenu, calibration et run complète sont achevés.
+- [x] Vérifications automatisées de stabilité et d’isolation Sandbox consignées : CTest 91/91 sur le checkout courant, soak Survival/Sandbox et fingerprints des sauvegardes normales. Les limites de cette preuve sont dans [`../qa/TESTS.md`](../qa/TESTS.md).
+- [ ] Vérifier sur une installation de release la création, migration, backup et restauration des sauvegardes, puis confirmer qu’une partie temporaire/Sandbox ne modifie aucune sauvegarde normale.
+- [ ] Parcourir le jeu exporté à la souris, au clavier et à la manette sur chaque plateforme retenue; vérifier focus, lisibilité, rendu et sortie audio sur matériel.
+- [ ] Relire le contenu de l’artefact exporté pour confirmer que scènes, données, polices, sprites, sons et GDExtension nécessaires y sont présents et que fichiers de développement/tests ne sont pas inclus inutilement.
+
+## Dépendances, licences et provenance
+
+- [x] Inventaire de départ disponible dans [`../../THIRD_PARTY_NOTICES.md`](../../THIRD_PARTY_NOTICES.md) : Godot/godot-cpp et polices embarquées y sont identifiés; textes de licences des polices conservés dans `game/assets/fonts/`.
+- [x] Archives d’informations de copyright et de licences Godot 4.7.2 disponibles dans `licenses/`.
+- [ ] Comparer l’information de licences à celle du template Godot réellement utilisé pour chaque export, puis placer les notices requises avec les artefacts distribués. L’archive actuelle recense les composants du runtime officiel, pas une vérification exacte du template d’export.
+- [ ] Vérifier la provenance et les droits de chaque asset livré, y compris les fichiers générés, les sources éditables et toute attribution requise; les inventaires artistiques ne valent pas clearance complète.
+- [ ] **[OUVERT]** Confirmer avec le responsable audio l’inventaire, la provenance et les notices des sons effectivement livrés. Ne pas considérer les fichiers de prévisualisation ou les recettes de génération comme preuve que le mix du jeu est terminé.
+
+## Distribution et communication
+
+- [ ] Préparer un paquet autonome par plateforme avec exécutable, GDExtension et notices requises; vérifier son démarrage depuis un répertoire fraîchement extrait.
+- [ ] Produire les sommes de contrôle et conserver les artefacts correspondant au commit de release.
+- [ ] Rédiger les notes de version depuis les changements livrés, avec les prérequis, contrôles et emplacement des sauvegardes.
+- [ ] Ne publier qu’après résolution des critères de livraison requis et revue finale des preuves. Aucune publication n’est effectuée par cette checklist.
+
+## État connu
+
+- P9.6 — stabilité/sauvegardes : cochée dans la roadmap, avec limite explicite pour l’interruption réelle au niveau système de fichiers.
+- P9.7 — plateformes : export Linux x86_64 et parcours logiciel vérifiés sur l’hôte courant; validation machine propre, matériel réel et Windows restent ouvertes.
+- P9.8 — checklist créée; version d’artefact, audit exact des licences/assets, paquet et notes de version restent ouverts.

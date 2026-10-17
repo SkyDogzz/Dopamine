@@ -704,7 +704,7 @@ P1 livre le Sandbox développeur et ne remplace pas cette feature produit.
   - [x] Copier l’exécutable et son sidecar GDExtension vers un répertoire extérieur au dépôt, démarrer avec un `XDG_DATA_HOME` vierge et quitter proprement. Cette relocation vérifie l’absence de dépendance aux chemins du checkout, mais reste sur le même hôte.
   - [ ] Refaire le parcours clavier/contrôleur et le rendu sur un poste Linux avec matériel réel; le contrôle courant utilise Xvfb/Mesa llvmpipe.
 - [ ] **P9.8 — Préparation de livraison**
-  - [ ] Établir checklist release et versions d’artefacts.
+  - [x] Établir [`docs/release/RELEASE_CHECKLIST.md`](../release/RELEASE_CHECKLIST.md); le choix de version d’artefact reste **[OUVERT]** et n’est pas inventé.
   - [ ] Vérifier contenu, dépendances, licences, sauvegarde et notes de version.
   - [ ] Préparer publication après validation des critères, sans la confondre avec un build local.
 

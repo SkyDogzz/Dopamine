@@ -17,6 +17,7 @@
 11. [Goal principal de livraison complète](docs/planning/GOAL_PRINCIPAL.md) — objectif conservé et état de pause.
 12. [Registre des décisions restantes](docs/planning/DECISIONS_RESTANTES.md) — questions à interviewer une par une, choix proposés et validations techniques à distinguer.
 13. [Notices des dépendances et polices](THIRD_PARTY_NOTICES.md) — licences repérées et points de conformité à intégrer au paquet de livraison.
+14. [Checklist de livraison](docs/release/RELEASE_CHECKLIST.md) — preuves disponibles et critères encore ouverts pour P9.8.
 
 ## Statuts
 
