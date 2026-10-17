@@ -3,13 +3,36 @@
 #include <godot_cpp/core/class_db.hpp>
 #include <godot_cpp/variant/array.hpp>
 
+#include <algorithm>
 #include <cmath>
 #include <limits>
 #include <string>
+#include <vector>
 
 using namespace godot;
 using dopamine::sim::CommandType;
 using dopamine::sim::SimulationCommand;
+
+namespace {
+
+std::vector<std::string> split_affixes(const std::string &value) {
+	std::vector<std::string> result;
+	if (value.empty() || value.front() == '+' || value.back() == '+') return result;
+	std::size_t start = 0;
+	while (start < value.size()) {
+		const std::size_t separator = value.find('+', start);
+		result.push_back(value.substr(start, separator == std::string::npos ? separator : separator - start));
+		if (separator == std::string::npos) break;
+		start = separator + 1;
+	}
+	return result;
+}
+
+bool has_affix(const std::vector<std::string> &affixes, const std::string &affix) {
+	return std::find(affixes.begin(), affixes.end(), affix) != affixes.end();
+}
+
+} // namespace
 
 void CombatSimulationSnapshot::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("get_format_version"), &CombatSimulationSnapshot::get_format_version);
@@ -107,6 +130,7 @@ int64_t CombatSimulation::spawn_enemy(String enemy_type, int64_t count, Vector2 
 	command.type = CommandType::Spawn;
 	command.entity_type = std::string(profile->id);
 	command.enemy_affix = affix.utf8().get_data();
+	std::vector<std::string> affixes;
 	command.count = static_cast<uint32_t>(count);
 	command.x = static_cast<float>(position.x);
 	command.y = static_cast<float>(position.y);
@@ -115,25 +139,23 @@ int64_t CombatSimulation::spawn_enemy(String enemy_type, int64_t count, Vector2 
 	command.enemy_move_speed = profile->speed;
 	if (type == "elite") {
 		if (command.enemy_affix.empty()) command.enemy_affix = "Hasted";
-		if (command.enemy_affix == "Hasted") {
-			command.enemy_move_speed = 100.0F;
-		} else if (command.enemy_affix == "Armored") {
-			command.enemy_move_speed = 75.0F;
-			command.enemy_damage_taken_multiplier = 0.65F;
-		} else if (command.enemy_affix == "Regenerating") {
-			command.enemy_move_speed = 75.0F;
-			command.enemy_health_regen_per_second = command.hp * 0.01F;
-		} else if (command.enemy_affix == "Volatile") {
-			command.enemy_move_speed = 75.0F;
+		affixes = split_affixes(command.enemy_affix);
+		const std::vector<std::string> supported_affixes = {
+				"Hasted", "Armored", "Regenerating", "Volatile", "Shielded", "Split-on-Death"};
+		if (affixes.empty() || affixes.size() > 2 || std::any_of(affixes.begin(), affixes.end(),
+				[&](const std::string &entry) {
+					return !has_affix(supported_affixes, entry) ||
+							std::count(affixes.begin(), affixes.end(), entry) != 1;
+				})) {
+			return 0;
+		}
+		command.enemy_move_speed = has_affix(affixes, "Hasted") ? 100.0F : 75.0F;
+		if (has_affix(affixes, "Armored")) command.enemy_damage_taken_multiplier *= 0.65F;
+		if (has_affix(affixes, "Shielded")) command.enemy_damage_taken_multiplier *= 0.5F;
+		if (has_affix(affixes, "Regenerating")) command.enemy_health_regen_per_second = command.hp * 0.01F;
+		if (has_affix(affixes, "Volatile")) {
 			command.enemy_death_explosion_radius = 82.0F;
 			command.enemy_death_explosion_damage = 18.0F;
-		} else if (command.enemy_affix == "Shielded") {
-			command.enemy_move_speed = 75.0F;
-			command.enemy_damage_taken_multiplier = 0.5F;
-		} else if (command.enemy_affix == "Split-on-Death") {
-			command.enemy_move_speed = 75.0F;
-		} else {
-			return 0;
 		}
 	} else if (!command.enemy_affix.empty()) {
 		return 0;
@@ -494,13 +516,19 @@ Dictionary CombatSimulation::snapshot() const {
 		components["MoveSpeed"] = entity.type.move_speed;
 		if (!entity.type.affix.empty()) {
 			components["Affix"] = String(entity.type.affix.c_str());
+			Array affixes;
+			for (const std::string &affix : split_affixes(entity.type.affix)) {
+				affixes.append(String(affix.c_str()));
+			}
+			components["Affixes"] = affixes;
 		}
 		components["DamageTakenMultiplier"] = entity.type.damage_taken_multiplier;
 		components["HealthRegenPerSecond"] = entity.type.health_regen_per_second;
 		components["DeathExplosionRadius"] = entity.type.death_explosion_radius;
 		components["DeathExplosionDamage"] = entity.type.death_explosion_damage;
 		components["Supported"] = entity.type.supported;
-		components["Shielded"] = entity.type.shielded || entity.type.affix == "Shielded";
+		components["Shielded"] = entity.type.shielded ||
+				entity.type.affix.find("Shielded") != std::string::npos;
 		if (entity.type.support_radius > 0.0F) {
 			components["SupportRadius"] = entity.type.support_radius;
 			components["SupportSpeedMultiplier"] = entity.type.support_speed_multiplier;

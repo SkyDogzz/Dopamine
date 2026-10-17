@@ -156,7 +156,7 @@ func draw_enemy_feedback(canvas: CanvasItem, entities: Array, origin: Vector2 = 
 			canvas.draw_arc(center, shield_radius, 0.0, TAU, 64, Color(0.68, 0.61, 1.0, 0.5), 2.0, true)
 		elif components.get("Shielded", false):
 			canvas.draw_arc(center, 15.0, 0.0, TAU, 24, Color(0.55, 0.85, 1.0, 0.9), 2.0, true)
-		if components.get("Affix", "") == "Hasted":
+		if str(components.get("Affix", "")).split("+").has("Hasted"):
 			canvas.draw_arc(center, 18.0, 0.0, TAU, 32, Color(1.0, 0.36, 0.25, 0.95), 2.5, true)
 
 func multimesh_for(sprite_id: String) -> MultiMesh:

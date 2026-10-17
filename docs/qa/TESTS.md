@@ -397,7 +397,8 @@
 
 - [x] Sous Godot 4.7.2 avec données utilisateur isolées, `survival_boss_attack_smoke.gd`, `survival_elite_smoke.gd`, `survival_exploder_smoke.gd`, `survival_difficulty_profile_smoke.gd` et `survival_difficulty_unlock_smoke.gd` passent séquentiellement.
 - [x] `survival_elite_smoke.gd` affiche des avertissements ObjectDB/ressources encore référencées à la fermeture après réussite; aucun échec de scénario observé.
-- [ ] Ces smokes ne valident pas les autres mutations Chaos **[OUVERTES]**, le balancing, ni une victoire jouée sans harness (P5.V3). La séquence de boss Chaos validée est couverte séparément ci-dessous.
+- [x] Les trois mutations Chaos sont couvertes : multiplicateur de chance de soutien, sélection de deux affixes distincts et composition de leurs effets, et patterns de boss distincts consécutifs; smokes ciblés d’élite, de spawn et de boss.
+- [ ] L’équilibrage de ces mutations et une victoire jouée sans harness restent à valider en run représentative (P5.V3).
 
 ## P5 — Séquence télégraphiée des boss en Chaos — 2026-10-16
 

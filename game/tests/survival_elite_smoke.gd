@@ -32,6 +32,37 @@ func _run() -> void:
 			session._elite_affix_for_roll(0.75) != "Shielded" or session._elite_affix_for_roll(0.9) != "Split-on-Death":
 		_fail("Elite roll should select all six supported affixes at their thresholds")
 		return
+	if not is_equal_approx(session._support_enemy_spawn_chance(0.10), 0.10):
+		_fail("Non-Chaos difficulties should preserve existing support spawn chances")
+		return
+	session.difficulty_id = "chaos"
+	var chaos_affixes: PackedStringArray = session._elite_affixes_for_rolls(0.1, 0.1)
+	if not is_equal_approx(session._support_enemy_spawn_chance(0.10), 0.15) or chaos_affixes.size() != 2 or \
+			chaos_affixes[0] == chaos_affixes[1]:
+		_fail("Chaos should increase support spawn chances and select two distinct elite affixes")
+		return
+	session.difficulty_id = "easy"
+	var combo_simulation = ClassDB.instantiate("CombatSimulation")
+	var combo_sequence: int = combo_simulation.spawn_enemy("elite", 1, Vector2.ZERO, Vector2.ZERO,
+		1.0, "Armored+Shielded")
+	if combo_sequence <= 0 or not await _wait_until(func() -> bool:
+		return int(combo_simulation.snapshot()["last_sequence"]) >= combo_sequence
+	):
+		_fail("A two-affix elite should be accepted by the combat simulation")
+		return
+	var combined_affix_entity: Dictionary = combo_simulation.snapshot()["entities"][0]
+	var combined_affixes: Array = combined_affix_entity["components"].get("Affixes", [])
+	if combined_affixes != ["Armored", "Shielded"] or \
+			str(combined_affix_entity["components"].get("Affix", "")) != "Armored+Shielded" or \
+			not bool(combined_affix_entity["components"].get("Shielded", false)) or \
+			not is_equal_approx(float(combined_affix_entity["components"]["DamageTakenMultiplier"]), 0.325):
+		_fail("Distinct elite affix effects should coexist and multiply damage reduction")
+		return
+	if combo_simulation.spawn_enemy("elite", 1, Vector2.ZERO, Vector2.ZERO, 1.0, "Armored+Armored") != 0 or \
+			combo_simulation.spawn_enemy("elite", 1, Vector2.ZERO, Vector2.ZERO, 1.0, "Armored+") != 0:
+		_fail("Elite affix combinations should reject duplicate or malformed affixes")
+		return
+	combo_simulation = null
 	session.spawn_initial_enemy = false
 	session.wave_spawning_enabled = true
 	session.skip_starting_weapon_choice = true
@@ -159,6 +190,13 @@ func _run() -> void:
 			saved_achievement_metrics.get("elite_affix_types_defeated", 0) != 1 or \
 			saved_achievement_metrics.get("max_weapon_level_lightning_conductor", 0) != 1:
 		_fail("The actual Easy run result should persist its elite affix kill and account-wide affix variety: %s / %s / %s" % [affix, str(session._elite_affix_kills), str(saved_achievement_metrics)])
+		return
+	var armored_kills_before := int(session._elite_affix_kills.get("armored", 0))
+	var shielded_kills_before := int(session._elite_affix_kills.get("shielded", 0))
+	session._record_enemy_kill("elite", "Armored+Shielded")
+	if int(session._elite_affix_kills.get("armored", 0)) != armored_kills_before + 1 or \
+			int(session._elite_affix_kills.get("shielded", 0)) != shielded_kills_before + 1:
+		_fail("A Chaos elite kill should count progress for both of its affixes")
 		return
 	var split_session: Node2D = load("res://scenes/survival_session.tscn").instantiate()
 	split_session.spawn_initial_enemy = false

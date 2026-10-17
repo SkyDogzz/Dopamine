@@ -154,6 +154,7 @@ var sandbox_health_decay_multiplier := 1.0
 @export var elite_spawn_interval_seconds: float = 45.0
 @export_range(0.0, 1.0) var elite_spawn_chance: float = 0.35
 @export_range(1, 5) var elite_max_active: int = 1
+@export_range(1.0, 3.0, 0.05) var chaos_support_spawn_chance_multiplier: float = 1.5
 @export_group("Prototype loot — proposed rates")
 @export var ordinary_chest_drop_chance: float = 0.005
 @export var elite_chest_drop_chance: float = 0.15
@@ -888,7 +889,7 @@ func _process(_delta: float) -> void:
 				var death_position := Vector2(float(event["position"]["x"]), float(event["position"]["y"]))
 				Sfx.play("boss_defeat" if dead_enemy_type in ["mid_boss", "final_boss"] else "enemy_kill")
 				_add_enemy_death_pixels(dead_enemy_type, death_position)
-				if dead_enemy_type == "elite" and dead_enemy_affix == "Split-on-Death":
+				if dead_enemy_type == "elite" and dead_enemy_affix.split("+").has("Split-on-Death"):
 					_spawn_split_summons(death_position, state)
 				if bool(event.get("target_was_chilled", false)) and loadout.is_evolved("frost_nova") and str(event.get("source_type", "")) != "absolute_zero":
 					simulation.spawn_projectile("absolute_zero", death_position, Vector2.ZERO,
@@ -1194,7 +1195,7 @@ func _update_pulse_warden_attacks(current_simulation_time: float, paused: bool) 
 					pulse_warden_telegraph_seconds)
 		elif current_simulation_time >= float(attack["next_attack_at"]):
 			var pattern_index: int = int(attack["pattern_index"])
-			if _schedule_chaos_followup(attack, ["radial", "aimed", "charge"]):
+			if _schedule_chaos_attack_pattern(attack, ["radial", "aimed", "charge"]):
 				pass
 			elif phase == 1:
 				attack["pattern"] = "radial"
@@ -1210,16 +1211,17 @@ func _update_pulse_warden_attacks(current_simulation_time: float, paused: bool) 
 		if not active_wardens.has(key):
 			_pulse_warden_attacks.erase(key)
 
-func _schedule_chaos_followup(attack: Dictionary, patterns: Array) -> bool:
-	if difficulty_id != "chaos" or not bool(attack.get("chaos_followup_pending", false)):
+func _schedule_chaos_attack_pattern(attack: Dictionary, patterns: Array) -> bool:
+	if difficulty_id != "chaos":
 		attack["is_chaos_followup"] = false
 		return false
-	var previous_pattern_index := patterns.find(str(attack.get("last_normal_pattern", "")))
-	var followup_index := (previous_pattern_index + 1 + int(attack.get("chaos_followup_count", 0))) % patterns.size()
-	attack["pattern"] = patterns[followup_index]
-	attack["chaos_followup_count"] = int(attack.get("chaos_followup_count", 0)) + 1
-	attack["chaos_followup_pending"] = false
-	attack["is_chaos_followup"] = true
+	var is_followup := bool(attack.get("chaos_followup_pending", false))
+	var previous_pattern_index := patterns.find(str(attack.get("last_attack_pattern", "")))
+	attack["pattern"] = patterns[(previous_pattern_index + 1) % patterns.size()]
+	if is_followup:
+		attack["chaos_followup_count"] = int(attack.get("chaos_followup_count", 0)) + 1
+		attack["chaos_followup_pending"] = false
+	attack["is_chaos_followup"] = is_followup
 	return true
 
 func _finish_boss_attack(attack: Dictionary, current_simulation_time: float,
@@ -1227,6 +1229,7 @@ func _finish_boss_attack(attack: Dictionary, current_simulation_time: float,
 	var was_chaos_followup := bool(attack.get("is_chaos_followup", false))
 	attack["stage"] = "waiting"
 	attack["is_chaos_followup"] = false
+	attack["last_attack_pattern"] = str(attack.get("pattern", ""))
 	if was_chaos_followup:
 		attack["next_attack_at"] = current_simulation_time + maxf(0.1, attack_interval)
 		return
@@ -1333,7 +1336,7 @@ func _update_dopamine_core_attacks(current_simulation_time: float, paused: bool)
 		elif current_simulation_time >= float(attack["next_attack_at"]):
 			var pattern_index: int = int(attack["pattern_index"])
 			var pattern := "ray" if pattern_index % 2 == 0 else "zone"
-			if _schedule_chaos_followup(attack, ["ray", "zone", "spiral"]):
+			if _schedule_chaos_attack_pattern(attack, ["ray", "zone", "spiral", "combined"]):
 				pattern = str(attack["pattern"])
 			elif phase == 2:
 				pattern = "spiral"
@@ -2013,9 +2016,11 @@ func _run_achievement_metrics() -> Dictionary:
 func _record_enemy_kill(enemy_type: String, affix: String = "") -> void:
 	if enemy_type in ENEMY_DEATH_TYPES:
 		_enemy_kills_by_type[enemy_type] = int(_enemy_kills_by_type.get(enemy_type, 0)) + 1
-	if enemy_type == "elite" and ELITE_AFFIX_ACHIEVEMENT_IDS.has(affix):
-		var affix_id: String = ELITE_AFFIX_ACHIEVEMENT_IDS[affix]
-		_elite_affix_kills[affix_id] = int(_elite_affix_kills.get(affix_id, 0)) + 1
+	if enemy_type == "elite":
+		for affix_id in affix.split("+"):
+			if ELITE_AFFIX_ACHIEVEMENT_IDS.has(affix_id):
+				var metric_id: String = ELITE_AFFIX_ACHIEVEMENT_IDS[affix_id]
+				_elite_affix_kills[metric_id] = int(_elite_affix_kills.get(metric_id, 0)) + 1
 
 func _record_weapon_damage(source_type: String, amount: float) -> void:
 	if not is_finite(amount) or amount <= 0.0:
@@ -2179,16 +2184,21 @@ func _spawn_wave_enemy() -> void:
 		enemy_type = "tank"
 	if wave_director.wave >= 10 and _random_float("wave_enemy_shooter_roll") < 0.15:
 		enemy_type = "shooter"
-	if wave_director.wave >= 6 and _random_float("wave_enemy_buffer_roll") < 0.10:
+	if wave_director.wave >= 6 and _random_float("wave_enemy_buffer_roll") < _support_enemy_spawn_chance(0.10):
 		enemy_type = "buffer"
 	if wave_director.wave >= 8 and _random_float("wave_enemy_exploder_roll") < 0.12:
 		enemy_type = "exploder"
-	if wave_director.wave >= 10 and _random_float("wave_enemy_shielder_roll") < 0.10:
+	if wave_director.wave >= 10 and _random_float("wave_enemy_shielder_roll") < _support_enemy_spawn_chance(0.10):
 		enemy_type = "shielder"
-	if wave_director.wave >= 12 and _random_float("wave_enemy_summoner_roll") < 0.08:
+	if wave_director.wave >= 12 and _random_float("wave_enemy_summoner_roll") < _support_enemy_spawn_chance(0.08):
 		enemy_type = "summoner"
 	var hp_multiplier := _enemy_hp_multiplier(wave_director.wave)
 	simulation.spawn_enemy(enemy_type, 1, spawn_position, Vector2.ZERO, hp_multiplier)
+
+func _support_enemy_spawn_chance(base_chance: float) -> float:
+	if difficulty_id != "chaos":
+		return base_chance
+	return clampf(base_chance * chaos_support_spawn_chance_multiplier, 0.0, 1.0)
 
 func _try_spawn_elite() -> void:
 	if wave_director == null or wave_director.state != WAVE_DIRECTOR_SCRIPT.State.WAVE or \
@@ -2215,8 +2225,20 @@ func _try_spawn_elite() -> void:
 		return
 	var spawn_position := player.global_position + Vector2.from_angle(_random_float("elite_spawn_angle") * TAU) * enemy_spawn_radius
 	var hp_multiplier := _enemy_hp_multiplier(wave_director.wave)
-	var affix := _elite_affix_for_roll(_random_float("elite_affix_roll"))
-	simulation.spawn_enemy("elite", 1, spawn_position, Vector2.ZERO, hp_multiplier, affix)
+	var second_affix_roll := _random_float("chaos_second_elite_affix_roll") if difficulty_id == "chaos" else 0.0
+	var affixes := _elite_affixes_for_rolls(_random_float("elite_affix_roll"), second_affix_roll)
+	simulation.spawn_enemy("elite", 1, spawn_position, Vector2.ZERO, hp_multiplier, "+".join(affixes))
+
+func _elite_affixes_for_rolls(first_roll: float, second_roll: float) -> PackedStringArray:
+	var affixes := PackedStringArray([_elite_affix_for_roll(first_roll)])
+	if difficulty_id != "chaos":
+		return affixes
+	var second_affix := _elite_affix_for_roll(second_roll)
+	if second_affix == affixes[0]:
+		var affix_order := ["Hasted", "Armored", "Regenerating", "Volatile", "Shielded", "Split-on-Death"]
+		second_affix = affix_order[(affix_order.find(second_affix) + 1) % affix_order.size()]
+	affixes.append(second_affix)
+	return affixes
 
 func _elite_affix_for_roll(roll: float) -> String:
 	if roll < 1.0 / 6.0:

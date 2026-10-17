@@ -341,8 +341,8 @@ func _verify_chaos_boss_cadence() -> bool:
 				return false
 			for patterns in [["radial", "aimed", "charge"], ["ray", "zone", "spiral"]]:
 				attack["chaos_followup_pending"] = true
-				attack["last_normal_pattern"] = str(patterns[0])
-				if not session._schedule_chaos_followup(attack, patterns) or \
+				attack["last_attack_pattern"] = str(patterns[0])
+				if not session._schedule_chaos_attack_pattern(attack, patterns) or \
 						not patterns.has(str(attack["pattern"])) or \
 						str(attack["pattern"]) == str(patterns[0]):
 					session.queue_free()
@@ -397,7 +397,7 @@ func _verify_chaos_attack_integration(session: Node2D, boss_type: String) -> boo
 		return false
 	update_boss.call(float(attack["next_attack_at"]), false)
 	attack = attacks[boss_key]
-	var expected_followup := "aimed" if boss_type == "mid_boss" else "spiral"
+	var expected_followup := "charge" if boss_type == "mid_boss" else "spiral"
 	if str(attack["stage"]) != "telegraph" or str(attack["pattern"]) != expected_followup:
 		return false
 	var stage_before_pause := str(attack["stage"])

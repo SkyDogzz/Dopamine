@@ -81,13 +81,15 @@ Boucle Survival : choisir difficulté et arme initiale → survivre à une vague
 
 [VALIDÉ — 2026-10-16] En Chaos, après deux attaques normales télégraphiées, chaque boss enchaîne une attaque supplémentaire télégraphiée choisie parmi ses patterns existants. Easy à Nightmare gardent leur cadence actuelle; dégâts, vitesse et plafond global d'invocations ne sont pas modifiés par cette règle.
 
+[VALIDÉ — 2026-10-17] Trois mutations Chaos supplémentaires sont retenues : les ennemis de soutien existants apparaissent plus souvent dans les vagues; les élites portent deux affixes existants distincts; chaque attaque télégraphiée d’un boss Chaos utilise un pattern différent de son attaque précédente. La cadence d’un follow-up après deux attaques normales et les limites validées de dégâts, vitesse et invocations restent en vigueur. Les affixes s’appliquent ensemble; lorsqu’ils modifient une même statistique, les multiplicateurs se composent, et Hasted conserve sa vitesse propre. La fréquence initiale des ennemis de soutien est multipliée par 1,5 **[PROPOSÉ]**; les valeurs d’équilibrage des combinaisons d’affixes et le ressenti restent à mesurer.
+
 [VALIDÉ] Pendant une vague, les ennemis ordinaires continuent d’apparaître à la cadence de spawn sans plafond sur leur nombre vivant. Une élimination trop lente peut ainsi accumuler les ennemis et submerger le joueur. La densité de difficulté agit sur cette cadence ; ses multiplicateurs numériques restent **[PROPOSÉS]**.
 
 [PROPOSÉ] Archétypes initiaux : Chaser (20 HP, 75 px/s), Sprinter (12 HP, 125 px/s), Tank (80 HP, 45 px/s), Shooter (25 HP, 65 px/s). Multiplicateur HP de vague en Survival : min(1,12^(vague−1), 12). Budget de menace élite : round(10+390*((vague−1)/23)^1,5), de ~10 à ~400; il ne limite pas le nombre d’ennemis ordinaires vivants.
 
 [PROPOSÉ] Multiplicateurs par difficulté (HP / dégâts / densité / Essence / Powder) : Easy 0,75 / 0,70 / 0,80 / 0,70 / 0,70 ; Normal 1 / 1 / 1 / 1 / 1 ; Hard 1,5 / 1,3 / 1,2 / 1,6 / 1,5 ; Nightmare 2,2 / 1,7 / 1,5 / 2,5 / 2,3 ; Chaos 3,2 / 2,3 / 1,8 / 4 / 3,5.
 
-[OUVERT] Catalogue détaillé des patterns des boss, compositions de vagues, autres mutations Chaos, seuils d'élites et budget de simulation. Les valeurs et le ressenti de l'enchaînement Chaos validé restent à vérifier sur une run représentative.
+[OUVERT] Catalogue détaillé des patterns des boss, compositions de vagues, seuils d'élites et budget de simulation. Les trois mutations Chaos validées, leurs valeurs et leur ressenti restent à vérifier et équilibrer sur des runs représentatives.
 
 <a id="5"></a>
 
@@ -561,7 +563,7 @@ Synergies proposées entre reliques :
 9. Summoners : invocations limitées.
 10. Phasers : déplacements intermittents.
 
-Affixes proposés : Armored, Hasted, Volatile, Regenerating, Shielded, Split-on-Death. Prototypes Survival **[PROPOSÉS]** : Hasted (vitesse 100 px/s), Armored (75 px/s, 65 % des dégâts reçus), Regenerating (1 % des PV max/s), Volatile (explosion de 18 dégâts, rayon 82, sans chaîne), Shielded (anneau visible, 50 % des dégâts reçus) et Split-on-Death (deux adds si la limite globale le permet). Le directeur choisit l’un de ces six affixes pour les élites; leur compatibilité avec les familles reste à implémenter/arbitrer.
+Affixes proposés : Armored, Hasted, Volatile, Regenerating, Shielded, Split-on-Death. Prototypes Survival **[PROPOSÉS]** : Hasted (vitesse 100 px/s), Armored (75 px/s, 65 % des dégâts reçus), Regenerating (1 % des PV max/s), Volatile (explosion de 18 dégâts, rayon 82, sans chaîne), Shielded (anneau visible, 50 % des dégâts reçus) et Split-on-Death (deux adds si la limite globale le permet). En difficulté normale, le directeur choisit un affixe; en Chaos, il en choisit deux distincts qui s’appliquent ensemble. Les effets superposés sont combinés selon la règle validée au §4; les valeurs de ces combinaisons restent **[PROPOSÉES]** à calibrer.
 
 Proposition : Threat Director distribuant un budget de menace entre les familles d'ennemis, avec règles de compatibilité des affixes et prévention des combinaisons impossibles à esquiver.
 
