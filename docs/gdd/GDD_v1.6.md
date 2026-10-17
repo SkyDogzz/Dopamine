@@ -217,13 +217,13 @@ Données : AchievementDefinition {id, category, secret, metric, aggregation, tie
 
 [VALIDÉ] Mode principal : 24 vagues de 30 secondes, mid-boss 12, boss final 24 ; fin victorieuse ou mort. Équipement permanent actif, bonus de skill tree et achievements actifs. Armes et reliques reconstruits à chaque run via chests. Une pièce d'équipement permanente garantie par run, y compris défaite. Difficulté choisie parmi celles débloquées.
 
-[PROPOSÉ] Prototype retenu sous délégation utilisateur : après victoire, proposer de poursuivre en Endless standard sans perdre le build; débloquer aussi l’accès au Endless depuis le hub après une victoire Survival. Cette décision de prototype et ses règles restent **[PROPOSÉES]**, non validées.
+[VALIDÉ — EXTENSION DU 2026-10-17] Une victoire Survival débloque Endless standard dans le hub et permet de proposer une continuation immédiate après le boss final.
 
 <a id="12"></a>
 
 ## 12 — Endless standard (conception provisoire)
 
-[PROPOSÉ — NON ENCORE VALIDÉ PAR LE JOUEUR] Prototype retenu sous délégation utilisateur : débloquer Endless après une victoire Survival, le lancer depuis le hub ou choisir de continuer immédiatement après le boss. Depuis le hub, progression permanente et équipement actif, mais armes/reliques recommencent au niveau 1. En continuation, conserver le build, les niveaux et les HP de la run Survival; créditer sa victoire avant de démarrer un nouvel ID de run Endless. Difficultés Easy à Chaos.
+[PROPOSÉ — NON ENCORE VALIDÉ PAR LE JOUEUR] Depuis le hub, progression permanente et équipement actif, mais armes/reliques recommencent au niveau 1. En continuation, conserver le build, les niveaux et les HP de la run Survival; créditer sa victoire avant de démarrer un nouvel ID de run Endless. Difficultés Easy à Chaos.
 
 [PROPOSÉ] Cycles après vague 24 : ennemis plus puissants, élites et mutations, boss récurrents ; maîtrise répétable temporaire avec rendements décroissants après max des objets. Le prototype réutilise le scaling actuel jusqu'à la vague 24 puis augmente les PV ennemis de 5,5 % par vague; il déclenche un mid-boss toutes les 12 vagues, dont 24, 36, etc. Records locaux séparés par difficulté, classés par vague, temps puis kills.
 

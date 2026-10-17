@@ -613,6 +613,11 @@
 - [x] Montants Essence/Powder de référence aux vagues 24 → 25 : Easy 44/64 → 46/67; Normal 63/92 → 65/95; Hard 101/138 → 104/143; Nightmare 158/212 → 163/218; Chaos 252/322 → 260/333.
 - [ ] Les coefficients restent **[PROPOSÉS]**. Leur calibration demande encore une longue run Armorless sans assistance et une comparaison du rythme de progression des ressources.
 
+## P7B.1 — Déblocage et entrées Endless standard — 2026-10-17
+
+- [x] L’utilisateur valide le déblocage après une victoire Survival, l’accès depuis le hub et la proposition d’une continuation optionnelle après le boss final. Les autres règles de transition et valeurs Endless restent à arbitrer/calibrer.
+- [x] Les parcours de hub et continuation sont couverts par `survival_hub_smoke.gd` et `endless_standard_session_smoke.gd`; aucune règle d’état du build n’est promue par cette décision.
+
 ## P8.4 — Base de lecture de sauvegarde en Sandbox — 2026-10-16
 
 - [x] `save_service_smoke.gd` vérifie que la lecture seule renvoie un ancien payload sans migration/écriture et refuse un slot courant corrompu même si un backup existe, sans restaurer ni modifier la source. Le chargement normal continue ensuite à récupérer le backup.
