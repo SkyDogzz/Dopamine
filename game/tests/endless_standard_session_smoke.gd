@@ -92,6 +92,7 @@ func _run() -> void:
 		_session.wave_director.state != WAVE_DIRECTOR.State.WAVE or \
 		not _session.wave_director.endless_standard or _session.player_hp != 42.0 or \
 		_session.kill_count != 0 or not is_zero_approx(_session._run_active_time()) or \
+		_session.get_node("HUD/MetaPanel/MetaRow/TimeValue").text != "00:00" or \
 		not _session._weapon_kills_by_id.is_empty() or not _session._weapon_damage_by_id.is_empty() or \
 		not _session._enemy_kills_by_type.is_empty() or \
 		_session.loadout.owned_weapons() != carried_weapons or _session.loadout.owned_relics() != carried_relics or \
