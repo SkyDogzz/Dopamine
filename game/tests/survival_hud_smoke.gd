@@ -56,6 +56,28 @@ func _run() -> void:
 		if _contrast_ratio(text_color, hud_background.bg_color) < 4.5:
 			_fail("HUD text %s should keep at least 4.5:1 contrast against its panel" % label.name)
 			return
+	var scene_colors := [Color("#080B18"), Color("#C83B62"), Color("#37E8F5"), Color("#FFD447")]
+	var composite_checks := [
+		{"panel": session.get_node("HUD/RunPanel") as PanelContainer, "labels": hud_labels.slice(0, 3)},
+		{"panel": session.get_node("HUD/MetaPanel") as PanelContainer, "labels": hud_labels.slice(3, 6)},
+	]
+	for check in composite_checks:
+		var panel_style := check["panel"].get_theme_stylebox("panel") as StyleBoxFlat
+		for scene_color in scene_colors:
+			var composite_background := _composite(panel_style.bg_color, scene_color)
+			for label in check["labels"]:
+				var ratio := _contrast_ratio(label.get_theme_color("font_color"), composite_background)
+				if ratio < 4.5:
+					_fail("HUD text %s should keep 4.5:1 composite contrast over scene color %s (got %.2f:1)" % [label.name, scene_color.to_html(false), ratio])
+					return
+	var badge: PanelContainer = session.get_node("HUD/MetaPanel/MetaRow/RunStateBadge")
+	var badge_style := badge.get_theme_stylebox("panel") as StyleBoxFlat
+	var badge_label: Label = session.get_node("HUD/MetaPanel/MetaRow/RunStateBadge/RunState")
+	for scene_color in scene_colors:
+		var badge_background := _composite(badge_style.bg_color, scene_color)
+		if _contrast_ratio(badge_label.get_theme_color("font_color"), badge_background) < 4.5:
+			_fail("HUD run-state badge should keep 4.5:1 composite contrast over scene color %s" % scene_color.to_html(false))
+			return
 	session._manually_paused = true
 	session._refresh_hud({"paused": true})
 	if run_state.text != "PAUSED · ESC" or run_state_style.border_color.to_html(false) != "ffd447":
@@ -149,6 +171,14 @@ func _contrast_ratio(first: Color, second: Color) -> float:
 	var second_luminance := _relative_luminance(second)
 	return (maxf(first_luminance, second_luminance) + 0.05) / \
 		(minf(first_luminance, second_luminance) + 0.05)
+
+func _composite(foreground: Color, background: Color) -> Color:
+	return Color(
+		foreground.r * foreground.a + background.r * (1.0 - foreground.a),
+		foreground.g * foreground.a + background.g * (1.0 - foreground.a),
+		foreground.b * foreground.a + background.b * (1.0 - foreground.a),
+		1.0
+	)
 
 func _relative_luminance(color: Color) -> float:
 	var channels := [color.r, color.g, color.b]

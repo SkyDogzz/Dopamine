@@ -698,7 +698,8 @@ P1 livre le Sandbox développeur et ne remplace pas cette feature produit.
   - [x] Parcourir les mêmes écrans au D-pad/A/B avec focus visible vérifié dans `gamepad_menu_journey_smoke.gd`; la validation d’une manette physique et du rendu sur écran réel reste en P9.7.
   - [x] Contrôler le contraste des labels `InactiveButton`, `Button` désactivé et `OptionButton` désactivé; `survival_hub_smoke.gd` impose 4,5:1 minimum. Les valeurs utilisent maintenant `#A5AEC3` de la palette ART_BIBLE, avec 6,94:1 sur le fond `#1B2340`.
   - [x] Vérifier le contraste configuré des libellés de santé, XP, équipement, temps, vague et difficulté du HUD; `survival_hud_smoke.gd` impose 4,5:1 contre le fond CompactPanel.
-  - [ ] Vérifier le contraste composite du HUD sur plusieurs scènes, sa taille/hiérarchie et les réglages d’effets sur écran réel.
+  - [x] Vérifier le contraste composite du HUD santé/XP/loadout, méta et badge contre les quatre fonds de scène de la palette ART_BIBLE; `survival_hud_smoke.gd` compose la couleur des panneaux puis exige 4,5:1 pour chaque libellé.
+  - [ ] Vérifier la taille/hiérarchie du HUD et les réglages d’effets sur écran réel.
 - [ ] **P9.5 — Performance**
   - [ ] Fixer le matériel iGPU de référence et la scène de charge.
   - [ ] Mesurer frame-time CPU/GPU, mémoire, P50/P95/P99.

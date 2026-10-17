@@ -1688,8 +1688,9 @@ Note de clôture : le blocage historique du smoke `sandbox_ui_smoke.gd` décrit 
 ## P9.4 — Contraste des libellés du HUD Survival — 2026-10-17
 
 - [x] `survival_hud_smoke.gd` calcule le contraste des six libellés de santé, XP, équipement, temps, vague et difficulté contre le fond `CompactPanel` et exige un ratio minimal de 4,5:1.
+- [x] Le même smoke compose ces panneaux sur quatre fonds de scène de la palette ART_BIBLE (ombre, rouge, cyan, jaune) et exige 4,5:1 pour chaque libellé, y compris le badge d’état. Le contraste est calculé à partir des couleurs et de l’alpha du panneau; ce n’est pas une mesure par capture de chaque scène complète.
 - [x] Le smoke passe directement sous Godot 4.7.2 headless avec un `XDG_DATA_HOME` isolé.
-- [i] Ce contrôle automatisé couvre les couleurs configurées et le fond déclaré du panneau, pas le contraste composite du HUD sur tous les arrière-plans, la taille perçue des textes, ni le rendu sur écran/GPU réel.
+- [i] La couverture de fonds s’appuie sur la composition des couleurs de la palette, pas sur chaque arrière-plan de gameplay rendu. La taille perçue des textes, la hiérarchie, et le rendu sur écran/GPU réel restent à vérifier.
 
 ## P5.1.5 — Homing léger Magnetic Coil — 2026-10-17
 
