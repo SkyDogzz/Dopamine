@@ -72,6 +72,13 @@
 - [i] L’import éditeur de ce snapshot a signalé l’absence de la bibliothèque debug parce que la configuration a compilé uniquement `template_release`. L’export release et le probe natif exporté ont réussi; aucun binaire debug n’a été inclus dans le paquet.
 - [ ] Source propre et CMake vierge, mais même hôte KVM; ce contrôle ne valide pas une machine Linux distincte, une cible iGPU réelle, Windows, une version produit, ni les autres gates de release.
 
+## P9.7 — Export Linux filtré depuis le commit propre — 2026-10-17
+
+- [x] À partir du snapshot `git archive` du commit `43248d0`, un build CMake vierge `template_release` et un export autonome Godot 4.7.2 Linux/X11 ont été produits. Le probe `sandbox_smoke.gd`, lancé avec cette GDExtension Release, passe et affiche `Sandbox simulation bridge checks passed`.
+- [x] Le filtre `tests/**`, `tools/**` et `assets/source/**` a été appliqué au preset Linux de ce snapshot. Le journal d’export ne contient aucun chemin de ces répertoires; l’exécutable filtré démarre avec `--headless --audio-driver Dummy --quit-after 3` et code 0. Le preset Windows n’a pas été modifié.
+- [x] La version filtrée mesure 76 882 240 octets contre 106 103 688 octets avant filtre (29 221 448 octets de moins). SHA-256 : exécutable `19cfba86d61e3b8f7d37e191068846cdee4ec3181923d7c21b803ab86372a4ad`; GDExtension `2b6810ad2e66b56fb3202da350e666f4ef3ce3a159a601b92e0fcf663aa6206d`.
+- [ ] Vérification sur une machine Linux distincte, iGPU réelle, contrôleur physique et plateformes hors Linux toujours ouvertes; ce résultat est un build staging de validation, pas une release produit.
+
 ## P9.1 — Relevé exploratoire DPS des dix armes — 2026-10-17
 
 - [x] Les 90 cas ont terminé sous Godot 4.7.2 sans erreur avec `--seed=20261017`. Chaque formation a été lancée par `XDG_DATA_HOME=/tmp/dopamine-seeded-<formation> tools/local/godot-4.7.2/Godot_v4.7.2-stable_linux.x86_64 --headless --audio-driver Dummy --path game --script res://tests/combat_weapon_balance_survey.gd -- --formation=<formation> --seed=20261017`. Chaque cas utilise vitesse ×4 et 18 secondes de simulation active. Les nombres sont le DPS observé en dégâts totaux / temps actif :
