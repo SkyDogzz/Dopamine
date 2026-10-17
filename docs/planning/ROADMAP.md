@@ -681,6 +681,7 @@ P1 livre le Sandbox développeur et ne remplace pas cette feature produit.
   - [x] Vérifier dans `ui_settings_smoke.gd` les flèches du volume, Espace/A du plein écran et Échap/B pour fermer les Options; les préférences du smoke sont réinitialisées.
   - [x] Vérifier dans `run_result_panel_smoke.gd` la reprise au clavier, le déplacement D-pad vers quitter puis A, et la fermeture par B; seuls les signaux de navigation sont déclenchés.
   - [x] Vérifier dans `survival_pause_smoke.gd` flèche bas/Entrée pour ouvrir Options, A pour ses contrôles, Échap/B pour revenir/reprendre, et Espace/A pour les réglages de pause; les horloges et positions sont assertées gelées.
+  - [x] Vérifier dans `survival_pause_inventory_smoke.gd` Entrée pour ouvrir l’inventaire, flèche/D-pad pour parcourir les objets et B pour fermer; A sur un objet en lecture seule ne change pas le loadout.
   - [ ] Parcourir menus et choix uniquement au clavier.
   - [ ] Parcourir les mêmes écrans à la manette avec focus visible.
   - [ ] Vérifier contraste, taille/hiérarchie HUD et réglages d’effets.

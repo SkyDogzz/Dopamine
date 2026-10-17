@@ -33,7 +33,8 @@ func _run() -> void:
 	if inventory_button == null:
 		_fail("Pause should provide access to the run inventory")
 		return
-	inventory_button.pressed.emit()
+	inventory_button.grab_focus()
+	await _send_key(KEY_ENTER)
 	await process_frame
 	var inventory: Control = session.get_node_or_null("HUD/RunInventoryPanel")
 	if inventory == null or not inventory.visible:
@@ -69,6 +70,14 @@ func _run() -> void:
 		_fail("Focusing an offscreen item should scroll it into view")
 		return
 	(items.get_child(1) as Control).grab_focus()
+	await _send_gamepad_button(JOY_BUTTON_DPAD_DOWN)
+	if root.gui_get_focus_owner() != items.get_child(2):
+		_fail("Gamepad navigation should focus the next read-only inventory item")
+		return
+	await _send_gamepad_button(JOY_BUTTON_A)
+	if root.gui_get_focus_owner() != items.get_child(2):
+		_fail("Confirming a read-only inventory item should leave the list focused")
+		return
 	if (items.get_child(0) as Label).theme_type_variation != "PixelHeading" or \
 			(items.get_child(3) as Label).theme_type_variation != "PixelHeading":
 		_fail("Run inventory section labels should use the Art Bible pixel heading font")
@@ -157,9 +166,22 @@ func _send_escape() -> void:
 	await process_frame
 
 func _send_gamepad_cancel() -> void:
+	await _send_gamepad_button(JOY_BUTTON_B)
+
+func _send_key(keycode: Key) -> void:
+	var event := InputEventKey.new()
+	event.keycode = keycode
+	event.pressed = true
+	Input.parse_input_event(event)
+	await process_frame
+	event.pressed = false
+	Input.parse_input_event(event)
+	await process_frame
+
+func _send_gamepad_button(button_index: JoyButton) -> void:
 	var event := InputEventJoypadButton.new()
 	event.device = 0
-	event.button_index = JOY_BUTTON_B
+	event.button_index = button_index
 	event.pressed = true
 	Input.parse_input_event(event)
 	await process_frame
