@@ -142,6 +142,64 @@ func _run() -> void:
 	if not is_equal_approx(lab.context.session.player_max_hp, 117.5):
 		_fail("Live max HP should update the player's health ceiling immediately")
 		return
+	var session = lab.context.session
+	live_stat.select(_option_index_for(live_stat, "attack_speed_pct"))
+	live_value.value = 25.0
+	apply_live_stat.pressed.emit()
+	if not session._effective_weapon_cooldown(2.0) < 2.0:
+		_fail("Live attack speed should shorten weapon cooldowns immediately")
+		return
+	live_stat.select(_option_index_for(live_stat, "cooldown_reduction_pct"))
+	live_value.value = 20.0
+	apply_live_stat.pressed.emit()
+	if not session._effective_weapon_cooldown(2.0) < 1.6:
+		_fail("Live cooldown reduction should stack with attack speed in weapon cadence")
+		return
+	live_stat.select(_option_index_for(live_stat, "critical_chance_pct"))
+	live_value.value = 100.0
+	apply_live_stat.pressed.emit()
+	live_stat.select(_option_index_for(live_stat, "critical_damage_pct"))
+	live_value.value = 50.0
+	apply_live_stat.pressed.emit()
+	if not is_equal_approx(session._roll_equipment_critical_multiplier(), 2.0):
+		_fail("Live critical damage should change the multiplier used by critical hits")
+		return
+	live_stat.select(_option_index_for(live_stat, "kill_healing_pct"))
+	live_value.value = 40.0
+	apply_live_stat.pressed.emit()
+	if not is_equal_approx(session._equipment_kill_healing(10.0), 14.0):
+		_fail("Live kill healing should change healing immediately")
+		return
+	live_stat.select(_option_index_for(live_stat, "area_pct"))
+	live_value.value = 25.0
+	apply_live_stat.pressed.emit()
+	if not is_equal_approx(session._equipment_area(100.0), 125.0):
+		_fail("Live area should change weapon area immediately")
+		return
+	var base_xp: float = session._equipment_xp_value(100.0)
+	live_stat.select(_option_index_for(live_stat, "xp_pct"))
+	live_value.value = 30.0
+	apply_live_stat.pressed.emit()
+	if not is_equal_approx(session._equipment_xp_value(100.0), base_xp * 1.3):
+		_fail("Live XP bonus should change XP pickup value immediately")
+		return
+	var base_pickup_radius: float = session._xp_pickup_radius(0.0)
+	live_stat.select(_option_index_for(live_stat, "pickup_radius_pct"))
+	live_value.value = 50.0
+	apply_live_stat.pressed.emit()
+	if not is_equal_approx(session._xp_pickup_radius(0.0), base_pickup_radius + session.xp_collection_radius * 0.5) or \
+			not is_equal_approx(session.chest_collection_radius, 36.0):
+		_fail("Live pickup radius should affect XP only and preserve the chest radius (base=%.2f, actual=%.2f, chest=%.2f)" % [
+			base_pickup_radius, session._xp_pickup_radius(0.0), session.chest_collection_radius,
+		])
+		return
+	var base_projectile_speed: float = session._equipment_projectile_speed(100.0)
+	live_stat.select(_option_index_for(live_stat, "projectile_speed_pct"))
+	live_value.value = 20.0
+	apply_live_stat.pressed.emit()
+	if not is_equal_approx(session._equipment_projectile_speed(100.0), base_projectile_speed * 1.2):
+		_fail("Live projectile speed should change projectile velocity immediately")
+		return
 	await lab._apply_visual_build()
 	if not lab.context.live_stat_overrides.is_empty() or \
 			not is_equal_approx(lab.context.session._critical_chance(), 0.0) or \

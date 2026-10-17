@@ -601,7 +601,7 @@ P1 livre le Sandbox développeur et ne remplace pas cette feature produit.
   - [x] Smoke dédié utilise un `XDG_DATA_HOME` isolé, vérifie le spawn et le stockage local du preset; aucune donnée n’est écrite sous `user://saves`.
 - [ ] **P8.2 — Build et configuration**
   - [x] Ajouter des contrôles visuels au Lab pour sélectionner une arme/relique et son niveau, ajouter une stat, puis appliquer le build à la session isolée en pause. Les valeurs restent des outils expérimentaux **[PROPOSÉES]**.
-  - [x] Ajouter l’édition d’un équipement de test par slot/stat et des overrides LIVE isolés pour les statistiques existantes; les 12 statistiques du catalogue sont prises en charge, avec actualisation dédiée des dégâts, vitesse et HP maximum.
+  - [x] Ajouter l’édition d’un équipement de test par slot/stat et des overrides LIVE isolés pour les statistiques existantes; `sandbox_lab_smoke.gd` vérifie l’effet en combat des 12 statistiques, y compris l’isolation du rayon XP et du rayon de coffre, avec actualisation dédiée des dégâts, vitesse et HP maximum.
   - [ ] Compléter les overrides de configuration LIVE/REBUILD/RESTART et les limites de contenu avancées, après définition de leur contrat.
   - [x] Ajouter `SandboxBuild` comme modèle isolé : armes/reliques, évolutions appariées, stats personnalisées finies et équipements de test; validation atomique avant remplacement.
   - [x] Ajouter un éditeur JSON initial et appliquer armes/reliques (niveaux 1–5), évolutions appariées, équipements et stats personnalisées à la session de combat existante.
