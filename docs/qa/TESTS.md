@@ -1587,7 +1587,9 @@ Note de clôture : le blocage historique du smoke `sandbox_ui_smoke.gd` décrit 
 ## P9.4 — Ouverture clavier des panneaux du hub — 2026-10-17
 
 - [x] `survival_hub_smoke.gd` envoie Entrée sur Équipements puis Arbre de compétences, et Échap pour les fermer; chaque fermeture doit rendre le focus à son bouton d’origine. Le smoke dédié passe sous Godot 4.7.2 headless.
-- [ ] Ce test ciblé ne remplace pas un parcours humain de tous les menus et choix au clavier; ce critère P9.4 reste ouvert.
+- [x] `keyboard_menu_journey_smoke.gd` parcourt avec de vrais événements clavier synthétiques l’accueil, Options, le hub, le choix de l’arme de départ, un coffre d’arme, Pause, Options depuis Pause, l’inventaire de run et la reprise. Il vérifie le focus des contrôles clés, l’objet choisi, l’état de pause et l’horloge immobile pendant Options; la run n’est pas terminée et les données utilisateur sont isolées par `XDG_DATA_HOME` dans CTest.
+- [x] Vérification ciblée sous Godot 4.7.2 headless : `Keyboard launch-to-run journey passed`; le processus signale encore des instances ObjectDB/ressources à l’arrêt, également observées par des smokes Survival existants. Cette vérification synthétique ne remplace pas la validation de rendu et de périphériques physiques, suivie en P9.7.
+- [x] Suite complète après ajout du parcours et de son isolement CTest : **96/96 tests passent en 66,11 s** sous Godot 4.7.2 et CMake 3.31.12.
 
 ## P9.4 — Contraste des contrôles inactifs — 2026-10-17
 
