@@ -12,11 +12,6 @@ game/assets/sprites/dopamine_atlas_source.png
   It has no layered Aseprite source; active catalog/roster exports use their
   individual sources under game/assets/source/.
 
-game/assets/sprites/weapon_impacts_pixel.png
-  Derived horizontal atlas assembled by game/tools/build_catalog_icon_assets.gd
-  from the ten impact PNG exports. Editable sources for those cells are
-  game/assets/source/vfx/impact_*.aseprite.
-
 The PNG references inside game/assets/source/ are builder inputs, not final
 sprites; their absence of same-stem Aseprite files is therefore not counted as
 an output-source mismatch. SVG assets are their own editable vector sources and

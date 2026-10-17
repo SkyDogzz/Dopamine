@@ -9,7 +9,6 @@ const PROJECTILES := ["projectile_lightning", "projectile_inferno", "projectile_
 const SOURCELESS_PNG_EXCEPTIONS := [
 	"res://assets/icons/progression_atlas_source.png",
 	"res://assets/sprites/dopamine_atlas_source.png",
-	"res://assets/sprites/weapon_impacts_pixel.png",
 ]
 
 func _initialize() -> void:
@@ -140,6 +139,9 @@ func _check_icon(asset_name: String) -> bool:
 	var source_family := "ui" if is_ui_icon else "roster" if is_roster else "vfx" if is_vfx else "projectiles" if is_projectile else "relics" if asset_name.begins_with("relic_") else "weapons"
 	var source_folder := source_family if is_roster or is_vfx or is_projectile else "catalog_" + source_family
 	var ase_path := "res://assets/source/%s/%s.aseprite" % [source_folder, asset_name]
+	var generated_ase_path := "res://assets/source/original_procedural/%s.aseprite" % asset_name
+	if FileAccess.file_exists(generated_ase_path):
+		ase_path = generated_ase_path
 	if not FileAccess.file_exists(png_path) or not FileAccess.file_exists(ase_path):
 		push_error("Missing PNG or Aseprite source for %s" % asset_name)
 		return false
@@ -149,7 +151,7 @@ func _check_icon(asset_name: String) -> bool:
 		push_error("Catalog icon has unexpected dimensions: %s" % asset_name)
 		return false
 	if asset_name.begins_with("boss_") and (image.get_pixel(0, 0).a > 0.0 or image.get_pixel(48, 48).a <= 0.0):
-		push_error("Boss sprites should keep transparent margins around their opaque silhouette")
+		push_error("Boss sprite should keep transparent margins around its opaque silhouette: %s" % asset_name)
 		return false
 	var colors := {}
 	for y in range(image.get_height()):
