@@ -449,7 +449,7 @@ Travail requis :
   - [x] Après l’optimisation du résolveur de collisions, recompiler la GDExtension Linux et relancer CTest le 2026-10-17 : 86/86 passent en 60,45 s sous Godot 4.7.2.
   - [x] Enregistrer la confirmation utilisateur de P5.V3 (run de victoire, coffre, récompenses et relance) ; voir `docs/qa/TESTS.md`.
   - [x] Le créateur confirme le 2026-10-17 avoir terminé les vérifications manuelles demandées et que tout est bon; aucun détail par arme/build/difficulté/plateforme n’a été fourni (voir `docs/qa/TESTS.md`).
-  - [x] Ajouter une comparaison reproductible de DPS pour les dix armes au niveau 1, niveau 5 + relique 5, et évoluées, dans une grappe contrôlée; données et limites dans `docs/qa/PERFORMANCE.md`. Cette mesure de laboratoire ne valide pas le tuning.
+  - [x] Ajouter une comparaison reproductible de DPS pour les dix armes au niveau 1, niveau 5 + relique 5, et évoluées, sur cible unique, grappe fixe et Chasers mobiles; données et limites dans `docs/qa/PERFORMANCE.md`. Cette mesure de laboratoire ne valide pas le tuning.
   - [ ] Effectuer un profilage représentatif CPU/GPU et des armes avant de clore le jalon.
   - [x] Investiguer l’écart du benchmark natif Debug : le résolveur spatial parcourait les collisions de corps quand aucun ennemi ne bougeait. Sortie anticipée, tests core/worker 2/2; la rafale revient à 73,0–73,8 ms. Résultats et limites dans `docs/qa/PERFORMANCE.md`.
 

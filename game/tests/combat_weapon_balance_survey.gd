@@ -27,7 +27,7 @@ func _run() -> void:
 		push_error("Unknown weapon filter: %s" % _weapon_filter)
 		quit(1)
 		return
-	if _formation_filter not in ["single", "cluster"]:
+	if _formation_filter not in ["single", "cluster", "approach"]:
 		push_error("Unknown formation filter: %s" % _formation_filter)
 		quit(1)
 		return
@@ -85,12 +85,24 @@ func _measure(weapon_id: String, build: Dictionary) -> bool:
 	session.loadout = loadout
 
 	var player_position: Vector2 = session.player.global_position
-	var target_count := 1 if _formation_filter == "single" else TARGET_COUNT
+	var target_count := TARGET_COUNT
+	if _formation_filter == "single":
+		target_count = 1
+	elif _formation_filter == "approach":
+		target_count = 8
 	for index in range(target_count):
-		var angle := 0.0 if _formation_filter == "single" else TAU * float(index) / float(TARGET_COUNT)
-		var radius := 80.0 if _formation_filter == "single" else (58.0 if index % 2 == 0 else 112.0)
+		var angle := TAU * float(index) / float(target_count)
+		var radius := 58.0 if index % 2 == 0 else 112.0
+		if _formation_filter == "single":
+			angle = 0.0
+			radius = 26.0
+		elif _formation_filter == "approach":
+			radius = 220.0
 		var position := player_position + Vector2.from_angle(angle) * radius
-		session.simulation.spawn("test_target", 1, position, TARGET_HP, Vector2.ZERO)
+		if _formation_filter == "approach":
+			session.simulation.spawn_enemy("chaser", 1, position, Vector2.ZERO, 10000.0)
+		else:
+			session.simulation.spawn("test_target", 1, position, TARGET_HP, Vector2.ZERO)
 	var targets: Array = await _wait_for_targets(session, target_count)
 	if targets.size() != target_count:
 		push_error("Expected %d targets for %s, got %d" % [target_count, weapon_id, targets.size()])
@@ -99,8 +111,11 @@ func _measure(weapon_id: String, build: Dictionary) -> bool:
 	session.simulation.set_speed(4.0)
 	Engine.time_scale = 4.0
 	session.weapon_enabled = true
+	var starting_collision_count := int(session.simulation.snapshot()["metrics"]["collision_count"])
 	var loop_interval_ms: Array[float] = []
 	var previous_frame_us := Time.get_ticks_usec()
+	var previous_dagger_fire_at := float(session._next_daggers_time)
+	var dagger_volley_count := 0
 	var start_active := float(session.player_active_time)
 	var deadline := Time.get_ticks_msec() + 30000
 	while float(session.player_active_time) - start_active < ACTIVE_SECONDS and \
@@ -109,8 +124,13 @@ func _measure(weapon_id: String, build: Dictionary) -> bool:
 		var now_us := Time.get_ticks_usec()
 		loop_interval_ms.append(float(now_us - previous_frame_us) / 1000.0)
 		previous_frame_us = now_us
+		var dagger_fire_at := float(session._next_daggers_time)
+		if dagger_fire_at > previous_dagger_fire_at:
+			dagger_volley_count += 1
+			previous_dagger_fire_at = dagger_fire_at
 	var elapsed := float(session.player_active_time) - start_active
 	var damage := float(session._weapon_damage_by_id.get(weapon_id, 0.0))
+	var collision_count := int(session.simulation.snapshot()["metrics"]["collision_count"]) - starting_collision_count
 	Engine.time_scale = 1.0
 	session.weapon_enabled = false
 	if elapsed < ACTIVE_SECONDS * 0.95 or damage <= 0.0 or loop_interval_ms.is_empty():
@@ -127,6 +147,10 @@ func _measure(weapon_id: String, build: Dictionary) -> bool:
 		weapon_id, _formation_filter, build["name"], weapon_level, relic_level, str(build["evolved"]), elapsed,
 		damage, damage / elapsed, loop_interval_ms[p95_index], max_loop_interval_ms,
 	])
+	if weapon_id == "crimson_daggers":
+		print("# Crimson volleys=%d (expected approx %.0f); native collisions=%d at %.2fs cooldown" % [
+			dagger_volley_count, elapsed / session.daggers_cooldown, collision_count, session.daggers_cooldown,
+		])
 	session.queue_free()
 	await process_frame
 	return true

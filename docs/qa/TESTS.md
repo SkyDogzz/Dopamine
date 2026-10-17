@@ -916,8 +916,9 @@ Note de clôture : le blocage historique du smoke `sandbox_ui_smoke.gd` décrit 
 
 ## P5 — Comparaison contrôlée des armes — 2026-10-17
 
-- [x] `combat_weapon_balance_survey.gd` exécute les dix armes dans trois configurations chacune via `SurvivalSession`: niveau 1, niveau 5 avec relique niveau 5 sans évolution, et build évolué. Les 30 scénarios groupés de 18 secondes simulées passent; un contrôle `Inferno Sprayer` en cible unique passe aussi dans les trois configurations. Les DPS observés et la commande reproductible sont consignés dans `PERFORMANCE.md`.
-- [ ] Ces cibles immobiles, sans mouvement ni progression, servent de comparaison de laboratoire uniquement. Elles ne ferment pas le calibrage sur runs représentatives ni le profilage GPU sur matériel de référence.
+- [x] `combat_weapon_balance_survey.gd` exécute les dix armes dans trois configurations chacune via `SurvivalSession`: niveau 1, niveau 5 avec relique niveau 5 sans évolution, et build évolué. Les 30 scénarios de chacune des trois formations (cibles groupées, cible unique, huit Chasers mobiles) passent sur 18 secondes simulées; les commandes reproductibles et DPS observés sont consignés dans `PERFORMANCE.md`.
+- [x] Le survey confirme 21 volleys Crimson par scénario de 18 s et 174/314/585 collisions selon le build dans la formation d’approche; cible fixe et vague mobile produisent des résultats très différents. Cela illustre la limite des cibles immobiles, sans conclure sur l’équilibre global.
+- [ ] Ces formations synthétiques omettent mouvement du joueur, autres archétypes, drops et choix de niveau; elles ne ferment pas le calibrage sur runs représentatives ni le profilage GPU sur matériel de référence.
 
 ## P5/P6 — Revalidation coffre et effets uniques — 2026-10-16
 

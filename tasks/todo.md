@@ -67,7 +67,7 @@ Roadmap détaillée et audit GDD/code : [`docs/planning/ROADMAP.md`](../docs/pla
   - [x] Le créateur confirme une run complète sans assistance, le choix manuel d’un coffre et les récompenses persistées sans doublon après relance (2026-10-17 ; détails non fournis).
   - [x] Exécuter la batterie CTest complète après l’optimisation du cœur : 86/86 passent en séquentiel sous Godot 4.7.2 le 2026-10-17.
   - [ ] Effectuer un profilage représentatif CPU/GPU et des armes; le stress test concentré documenté n’est pas représentatif d’une vague.
-  - [x] Produire un survey de comparaison des dix armes en scénario contrôlé; ses chiffres bruts sont publiés dans `docs/qa/PERFORMANCE.md` et ne ferment pas le calibrage représentatif.
+  - [x] Produire un survey de comparaison des dix armes sur cible unique, grappe fixe et ennemis en approche; ses chiffres bruts sont publiés dans `docs/qa/PERFORMANCE.md` et ne ferment pas le calibrage représentatif.
   - [ ] Mettre à jour GDD/interfaces/ADR selon les seules décisions confirmées.
   - [ ] Committer le jalon puis poursuivre P6–P9 selon le goal principal actif.
 

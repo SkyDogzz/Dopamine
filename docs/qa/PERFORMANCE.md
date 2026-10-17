@@ -52,7 +52,9 @@ DOPAMINE_TEST_TIMEOUT=300s tools/run_godot_test.sh tools/local/godot-4.7.2/Godot
   --headless --path game --script res://tests/combat_weapon_balance_survey.gd
 ```
 
-Le défaut `--formation=cluster` utilise les 24 cibles décrites ci-dessus; `--formation=single` place une cible à 80 unités pour isoler les attaques monocibles. Pour ne relever qu’une arme, ajouter `-- --weapon=lightning_conductor --formation=single` (ID remplaçable par l’un des dix IDs du catalogue). Résultats de la formation groupée, en dégâts/s :
+Le défaut `--formation=cluster` utilise les 24 cibles décrites ci-dessus; `--formation=single` place une cible à 26 unités; `--formation=approach` fait converger huit Chasers vers le joueur depuis 220 unités, avec HP ×10 000 pour qu’ils restent en vie pendant la fenêtre. Pour ne relever qu’une arme, ajouter `-- --weapon=lightning_conductor --formation=approach` (ID remplaçable par l’un des dix IDs du catalogue). Les tableaux suivants donnent les dégâts/s par arme et formation :
+
+#### Formation cluster
 
 | Arme | Niveau 1 | Niveau 5 + relique 5 | Évoluée |
 |---|---:|---:|---:|
@@ -67,7 +69,41 @@ Le défaut `--formation=cluster` utilise les 24 cibles décrites ci-dessus; `--f
 | Void Orb | 15,14 | 44,26 | 83,56 |
 | Frost Nova | 46,09 | 95,31 | 118,62 |
 
-Le cas groupé favorise particulièrement les attaques capables de toucher plusieurs cibles. Contrôle supplémentaire Inferno en formation single : 11,09 DPS au niveau 1, 16,53 au niveau 5 avec relique 5, et 20,66 évolué; le dernier rapport au précédent est proche du multiplicateur d’évolution configuré de 1,25. Le rapport de 190,16 DPS en formation groupée reflète donc l’explosion Wildfire touchant plusieurs cibles, pas un double comptage de l’attribution. Cela confirme l’explication technique de l’écart, sans déterminer si l’équilibre de cette explosion est satisfaisant. Ces valeurs décrivent des scénarios synthétiques, ne comparent pas des armes dans des runs représentatives et ne valident aucun chiffre proposé. Elles ne justifient pas seules un changement de tuning. Les champs `loop_interval_*` imprimés par le script sont l’espacement mural entre reprises de `process_frame` en headless, pas du temps CPU de frame ni un profil GPU. La calibration comparative en runs représentatives et le profilage CPU/GPU sur matériel de référence restent **[OUVERTS]**.
+#### Formation single
+
+| Arme | Niveau 1 | Niveau 5 + relique 5 | Évoluée |
+|---|---:|---:|---:|
+| Lightning Conductor | 21,97 | 51,23 | 64,04 |
+| Inferno Sprayer | 11,09 | 16,53 | 21,28 |
+| Crimson Daggers | 0,78 | 1,75 | 2,18 |
+| Minigun | 19,30 | 43,38 | 54,23 |
+| Toxic Cloud | 2,16 | 2,70 | 3,38 |
+| Sawblades | 4,44 | 6,66 | 8,32 |
+| Meteor Staff | 4,66 | 8,29 | 10,36 |
+| Prism Laser | 18,12 | 27,18 | 33,98 |
+| Void Orb | 3,10 | 5,82 | 5,10 |
+| Frost Nova | 2,66 | 4,25 | 5,33 |
+
+#### Formation approach
+
+| Arme | Niveau 1 | Niveau 5 + relique 5 | Évoluée |
+|---|---:|---:|---:|
+| Lightning Conductor | 35,59 | 100,63 | 163,82 |
+| Inferno Sprayer | 10,64 | 15,96 | 82,46 |
+| Crimson Daggers | 67,46 | 183,09 | 314,85 |
+| Minigun | 18,66 | 41,46 | 52,23 |
+| Toxic Cloud | 7,99 | 9,89 | 12,50 |
+| Sawblades | 8,87 | 19,98 | 33,27 |
+| Meteor Staff | 20,05 | 37,49 | 52,03 |
+| Prism Laser | 17,64 | 26,46 | 72,50 |
+| Void Orb | 8,54 | 26,16 | 32,71 |
+| Frost Nova | 21,27 | 29,78 | 37,23 |
+
+Chaque cellule du tableau représente un seul essai. Trois exécutions ciblées de Crimson en formation d’approche ont varié de 65,23 à 68,66 DPS au niveau 1, de 179,31 à 188,92 au niveau 5, et de 298,09 à 314,85 en évolué; l’ordre reste stable mais les valeurs ne sont pas une calibration statistique.
+
+La formation single révèle le DPS sur une seule cible immobile, pas le potentiel de vague : Crimson Daggers touche chaque cible au plus une fois par projectile et sa géométrie d’orbite affecte les collisions. En formation d’approche, l’essai principal tire 21 volleys en 18 s et le cœur natif rapporte 174/314/585 collisions pour les trois builds; il inflige respectivement 67,46/183,09/314,85 DPS. Cette formation explique mieux le rendement de l’orbite contre une vague qui se rapproche, sans reproduire les mouvements du joueur, les autres familles d’ennemis, les drops ou les choix d’amélioration.
+
+Le cas cluster favorise particulièrement les attaques de zone. Inferno en cible unique fait 11,09/16,53/21,28 DPS, proche du facteur d’évolution 1,25 entre les deux derniers builds; ses 190,16 DPS en grappe viennent de l’explosion Wildfire touchant plusieurs cibles, pas d’un double comptage de l’attribution. Ces mesures synthétiques ne valident aucun chiffre proposé et ne suffisent pas à modifier le tuning. Les champs `loop_interval_*` imprimés par le script sont l’espacement mural entre reprises de `process_frame` en headless, pas du temps CPU de frame ni un profil GPU. Le calibrage en runs représentatives et le profilage CPU/GPU sur matériel de référence restent **[OUVERTS]**.
 
 ## Smoke rendu Godot sous Xvfb
 
