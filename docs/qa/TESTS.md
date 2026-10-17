@@ -33,6 +33,7 @@
 
 - [x] `XDG_DATA_HOME=/tmp/dopamine-goal-sandbox-isolation tools/run_godot_test.sh tools/local/godot-4.7.2/Godot_v4.7.2-stable_linux.x86_64 --headless --audio-driver Dummy --path game --script res://tests/sandbox_lab_smoke.gd` passe : le Lab démarre sans services de progression/sauvegarde, son reset reste isolé et le slot normal sentinelle est préservé. Exécuté pendant la reprise du goal le 2026-10-17.
 - [x] `sandbox_preset_smoke.gd`, `sandbox_snapshot_smoke.gd` et `sandbox_profile_build_smoke.gd` repassent sous Godot 4.7.2, chacun avec un `XDG_DATA_HOME` distinct (`/tmp/dopamine-goal-sandbox-preset`, `-snapshot` et `-profile`). Le round-trip preset, les snapshots et l’import read-only n’altèrent pas le slot normal. Le smoke snapshot termine avec code 0 mais signale encore 2 instances ObjectDB et 1 ressource à la fermeture; ces avertissements connus ne sont pas masqués.
+- [x] CTest séquentiel complet sur ce checkout : **87/87 passent en 61,67 s** avec `/tmp/cmake-3.31.12-linux-x86_64/bin/ctest --test-dir build --output-on-failure -j1`. Cela revalide l’import Godot, les rendus sous Xvfb, les smokes Survival et progression, le Sandbox Lab et les dix scénarios d’armes. Ce résultat ne remplace pas le profilage sur le matériel iGPU cible ni les validations manuelles de P9.
 
 ## Revue visuelle ciblée Pause et inventaire — 2026-10-17
 
