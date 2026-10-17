@@ -72,6 +72,12 @@
 - Le smoke est ajouté à CTest; l’exécution directe passe mais conserve 4 avertissements ObjectDB et 2 ressources encore référencées à la fermeture.
 - La preuve est synthétique et headless; le parcours physique complet reste à vérifier.
 
+## P9.4 — Commandes du menu Pause — 2026-10-17
+
+- `survival_pause_smoke.gd` vérifie le parcours flèche bas/Entrée vers Options, Échap/B pour fermer Options, A pour ouvrir Options, B pour pause/reprise, A pour le verrouillage de vie, et Espace pour l’auto-sélection du coffre. Les horloges, la vague et les positions sont toujours comparées pendant les pauses.
+- Le smoke ciblé passe sous Godot 4.7.2 headless. Il signale à la fermeture 14 instances ObjectDB et 6 ressources encore référencées; ces avertissements restent visibles.
+- Les événements sont synthétiques et ne remplacent pas un essai avec contrôleur physique.
+
 ## Revalidation CTest après ajout des smokes UI — 2026-10-17
 
 - CTest séquentiel : **89/89 tests passent en 61,02 s**, y compris les nouveaux parcours d’entrée arbre de compétences et inventaire d’équipement.

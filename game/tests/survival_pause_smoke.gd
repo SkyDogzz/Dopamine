@@ -42,14 +42,18 @@ func _run() -> void:
 		return
 	session.player_hp = 50.0
 	session.player_shield = 5.0
-	health_lock.set_pressed_no_signal(true)
-	health_lock.toggled.emit(true)
+	await _activate_gamepad_button(health_lock)
+	if not session._health_locked:
+		_fail("Gamepad A should toggle the focused health lock")
+		return
 	session._take_player_damage(7.0)
 	if not is_equal_approx(session.player_hp, 50.0) or not is_equal_approx(session.player_shield, 5.0):
 		_fail("Health lock should block damage without consuming shield")
 		return
-	health_lock.set_pressed_no_signal(false)
-	health_lock.toggled.emit(false)
+	await _activate_gamepad_button(health_lock)
+	if session._health_locked:
+		_fail("Gamepad A should turn the health lock back off")
+		return
 	session._take_player_damage(7.0)
 	if not is_equal_approx(session.player_hp, 48.0) or not is_zero_approx(session.player_shield):
 		_fail("Disabling health lock should restore normal shield and HP damage")
@@ -75,7 +79,12 @@ func _run() -> void:
 			return
 	root.size = original_size
 	var options_button: Button = pause_menu.get_node("Center/Panel/Content/OptionsButton")
-	options_button.pressed.emit()
+	resume_button.grab_focus()
+	await _send_input(_key_event(KEY_DOWN))
+	if root.gui_get_focus_owner() != options_button:
+		_fail("Down arrow should navigate from Resume to Options")
+		return
+	await _send_input(_key_event(KEY_ENTER))
 	await process_frame
 	var options_panel: Control = session.get_node_or_null("HUD/OptionsPanel")
 	if options_panel == null or not options_panel.visible:
@@ -91,15 +100,15 @@ func _run() -> void:
 		session.player.global_position != paused_player_position:
 		_fail("Simulation clocks and player position should stay frozen with Options open")
 		return
-	var back_button: Button = options_panel.get_node("Content/Center/OptionsCard/OptionsContent/BackButton")
-	back_button.pressed.emit()
+	await _send_input(_key_event(KEY_ESCAPE))
 	await process_frame
 	await process_frame
 	if session.get_node_or_null("HUD/OptionsPanel") != null or not pause_menu.visible or \
 		root.gui_get_focus_owner() != options_button or not bool(session.simulation.snapshot()["paused"]):
 		_fail("Closing Options should return to Pause, restore focus and keep the run paused")
 		return
-	options_button.pressed.emit()
+	options_button.grab_focus()
+	await _send_gamepad_button(JOY_BUTTON_A)
 	await process_frame
 	options_panel = session.get_node("HUD/OptionsPanel")
 	await _send_gamepad_button(JOY_BUTTON_B)
@@ -141,8 +150,11 @@ func _run() -> void:
 		_fail("Escape should resume the same run after a gamepad pause")
 		return
 	await _send_input(_escape_event())
-	auto_select_chest.button_pressed = true
-	auto_select_chest.toggled.emit(true)
+	auto_select_chest.grab_focus()
+	await _send_input(_key_event(KEY_SPACE))
+	if not session._auto_select_first_chest:
+		_fail("Space should toggle auto-select from the focused pause control")
+		return
 	var chosen_ids := [""]
 	session.chest_option_chosen.connect(func(option_id: String) -> void: chosen_ids[0] = option_id)
 	if not session.open_chest_family("weapon"):
@@ -177,6 +189,12 @@ func _escape_event() -> InputEventKey:
 	event.pressed = true
 	return event
 
+func _key_event(keycode: Key) -> InputEventKey:
+	var event := InputEventKey.new()
+	event.keycode = keycode
+	event.pressed = true
+	return event
+
 func _send_input(event: InputEventKey) -> void:
 	Input.parse_input_event(event)
 	await process_frame
@@ -194,6 +212,10 @@ func _send_gamepad_button(button_index: JoyButton) -> void:
 	event.pressed = false
 	Input.parse_input_event(event)
 	await process_frame
+
+func _activate_gamepad_button(button: Button) -> void:
+	button.grab_focus()
+	await _send_gamepad_button(JOY_BUTTON_A)
 
 func _enemy_position(state: Dictionary) -> Vector2:
 	var transform: Dictionary = state["entities"][0]["components"]["Transform2D"]
