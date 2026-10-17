@@ -14,6 +14,7 @@
 - [x] Refaire la reconstruction complète depuis `379b9aad23bb9d6284722b485e2f094fd5d7c15d`; archive `DopamineSurvivor-linux-379b9aa-staging.tar.gz` (31 966 641 octets), SHA-256 `bbfb3f2d20ecd143005c588c7d1419c54e5c48cd3a434a181a7279094e73790c`, extraction et démarrage headless de l’exécutable avec sa GDExtension Release vérifiés. Détails dans [`../qa/TESTS.md`](../qa/TESTS.md); toujours non distribuable.
 - [x] Refaire la reconstruction complète depuis `f80690965b76b8d58c033b1c36a71af98ecccf88`; archive `DopamineSurvivor-linux-f806909-staging.tar.gz` (31 968 166 octets), SHA-256 `f2da78adb6398e82f4547441d57f19d919935966e21840cfc2f90195ffe6edc9`, extraction, vérification des bibliothèques et démarrage headless avec sa GDExtension Release vérifiés. Détails dans [`../qa/TESTS.md`](../qa/TESTS.md); toujours non distribuable.
 - [x] Refaire la reconstruction complète depuis `7b20dd485f1078bce51531839554d0e6b9fadfc9`; archive `DopamineSurvivor-linux-7b20dd4-staging.tar.gz` (31 974 354 octets), SHA-256 `c4530505fe31fbe2bfa9122c3a37aa5f9ff290ede7814c562b35d19563b83393`, extraction, dépendances et démarrage headless avec GDExtension Release vérifiés. Le paquet inclut Endless standard dans le Sandbox Lab; il reste non distribuable.
+- [x] Refaire le staging depuis `78f37e46d3773307d822dfe89f808cc3575b4e70`; archive `DopamineSurvivor-linux-78f37e4-staging.tar.gz` (31 977 842 octets), SHA-256 `4616c25c2cae69b1e0db9ad118b1c60ed2a0823fe3544f904e630d3e1b792bfc`, extraction, bibliothèques et démarrage headless avec GDExtension Release vérifiés. Inclut le sprite prototype du Pulse Warden; toujours non distribuable.
 
 ## Contenu et critères d’acceptation
 
@@ -45,4 +46,4 @@
 
 - P9.6 — stabilité/sauvegardes : cochée dans la roadmap, avec limite explicite pour l’interruption réelle au niveau système de fichiers.
 - P9.7 — plateformes : export Linux x86_64 et parcours logiciel vérifiés sur l’hôte courant; validation machine propre, matériel réel et Windows restent ouvertes.
-- P9.8 — staging Linux filtré reconstruit depuis `7b20dd4` et démarré après extraction; version d’artefact, audit de provenance des assets/audio, validation des sauvegardes, autres plateformes et notes de version restent ouverts.
+- P9.8 — staging Linux filtré reconstruit depuis `78f37e4` et démarré après extraction; version d’artefact, audit de provenance des assets/audio, validation des sauvegardes, autres plateformes et notes de version restent ouverts.
