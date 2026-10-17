@@ -1,7 +1,7 @@
 # Godot 4.7.2; seed base=20261016 + difficulty_index*100 + zero-based replicate index; difficulty=all; movement=loot.
 # 45 real Survival sessions: fresh/mid/full profile × Easy/Normal/Hard/Nightmare/Chaos × three replicates.
 # ×4 engine/simulation, ordinary HP, normal XP/chest collection radii, no scripted kills, first chest option auto-selected.
-# XDG_DATA_HOME was isolated; no run reward was persisted. Repeated runs with the same nominal seed vary with frame/input cadence.
+# XDG_DATA_HOME was isolated; no run reward was persisted. Historical protocol seeded the global RNG only; see the X1 repeatability check.
 tier,difficulty,movement,replicate,unlocked_nodes,hp_bonus_pct,damage_bonus_pct,speed_bonus_pct,crit_bonus_pct,active_seconds,wall_seconds,path_distance,wave,kills,level,outgoing_damage,outgoing_dps,net_hp_loss,boss_defeated,result
 fresh,easy,loot,1,0,0.00,0.00,0.00,0.00,18.53,4.64,4384.00,1,16,5,208.83,11.27,100.00,false,defeat
 fresh,easy,loot,2,0,0.00,0.00,0.00,0.00,19.58,4.90,4704.00,1,16,5,275.25,14.06,100.00,false,defeat

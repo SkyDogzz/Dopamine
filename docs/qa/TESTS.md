@@ -529,6 +529,14 @@
 - [i] Le profil complet améliore le DPS médian, mais pas la survie de façon uniforme. Les 45 runs perdent avant la deuxième vague; ces contrôles ne représentent toujours pas une navigation humaine ou une run complète. Un deuxième relevé Easy avec les seeds nominaux appariés a donné des résultats différents du pilote précédent, ce qui confirme la sensibilité au cadencement des frames et des choix auto. Aucun réglage **[PROPOSÉ]** n’est modifié; cette matrice ne clôt pas P6.9.
 - [x] Godot retourne le code 0; il signale à l’arrêt six instances ObjectDB et trois ressources encore référencées par le harness.
 
+### Vérification des graines à ×1 — 2026-10-17
+
+- [x] Le survey seed maintenant les RNG de la session, du loadout et du directeur de coffres avant de réactiver le traitement de la session; le profil `loot` s’exécute à vitesse réelle ×1 et imprime cette vitesse dans son CSV.
+- [x] Reproduction : `XDG_DATA_HOME="$(mktemp -d)" tools/run_godot_test.sh tools/local/godot-4.7.2/Godot_v4.7.2-stable_linux.x86_64 --headless --audio-driver Dummy --path game --script res://tests/progression_balance_survey.gd -- --tier=fresh --difficulty=easy --movement=loot --replicates=1`, exécutée deux fois avec le même seed `20261016` et le même XDG temporaire.
+- [x] Les deux runs atteignent le niveau 6 et perdent en vague 1, mais diffèrent : 23,56 s / 24 kills / 13,21 DPS contre 26,41 s / 26 kills / 16,26 DPS. Valeurs brutes : [`data/progression_balance_loot_repeatability_seed_20261017.csv`](data/progression_balance_loot_repeatability_seed_20261017.csv).
+- [i] Les seeds sont fixes, mais le replay ne l’est pas encore. Cette comparaison ne permet pas d’attribuer l’écart à l’ordonnancement du worker ou au cadencement des frames; la cause reste à isoler. Les anciennes matrices ×4 demeurent des échantillons exploratoires et aucun paramètre **[PROPOSÉ]** n’est modifié.
+- [x] Les deux exécutions retournent le code 0; les avertissements de ressources référencées à la fermeture varient d’un run à l’autre.
+
 ## P6.3 — Portée de ramassage équipement et XP — 2026-10-16
 
 - [x] `equipment_stats_smoke.gd` charge un seul bonus d’équipement par profil et lance une session Survival séparée par stat; vérifie HP, mobilité, dégâts, cadence, chance et dégâts critiques, soin par élimination, aire, cooldown, XP, portée de collecte et vitesse projectile.

@@ -66,7 +66,8 @@ func _run() -> void:
 		_fail("Unknown movement pattern: %s" % movement_pattern)
 		return
 
-	print("tier,difficulty,movement,replicate,unlocked_nodes,hp_bonus_pct,damage_bonus_pct,speed_bonus_pct,crit_bonus_pct,active_seconds,wall_seconds,path_distance,wave,kills,level,outgoing_damage,outgoing_dps,net_hp_loss,boss_defeated,result")
+	print("# simulation_speed=%.1fx,rng_streams=seeded" % _survey_speed(movement_pattern))
+	print("tier,difficulty,movement,simulation_speed,replicate,unlocked_nodes,hp_bonus_pct,damage_bonus_pct,speed_bonus_pct,crit_bonus_pct,active_seconds,wall_seconds,path_distance,wave,kills,level,outgoing_damage,outgoing_dps,net_hp_loss,boss_defeated,result")
 	for tier in TIERS:
 		if selected_tier != "all" and tier != selected_tier:
 			continue
@@ -131,7 +132,8 @@ func _build_profile(tier: String) -> RefCounted:
 	return SurveyProgression.new(service)
 
 func _run_case(tier: String, difficulty_id: String, replicate: int, progression: RefCounted, movement_pattern: String) -> void:
-	seed(20261016 + DIFFICULTY.ORDER.find(difficulty_id) * 100 + replicate)
+	var case_seed := 20261016 + DIFFICULTY.ORDER.find(difficulty_id) * 100 + replicate
+	seed(case_seed)
 	var monitor := DamageMonitor.new()
 	monitor.process_priority = -1
 	root.add_child(monitor)
@@ -139,19 +141,26 @@ func _run_case(tier: String, difficulty_id: String, replicate: int, progression:
 	session.process_priority = 10
 	session.progression_service = progression
 	session.difficulty_id = difficulty_id
+	session.sandbox_diagnostics_enabled = true
+	session.sandbox_rng_seed = case_seed
 	session.skip_starting_weapon_choice = true
+	session.process_mode = Node.PROCESS_MODE_DISABLED
 	if movement_pattern != "loot":
 		session.xp_collection_radius = 10000.0
 		session.chest_collection_radius = 10000.0
+	var survey_speed := _survey_speed(movement_pattern)
 	root.add_child(session)
 	monitor.session = session
 	await process_frame
 	if session.simulation == null:
 		_fail("Survival session failed to initialize for %s/%s" % [tier, difficulty_id])
 		return
+	session.loadout._rng.seed = case_seed ^ 0x4c4f4144
+	session._chest_director._rng.seed = case_seed ^ 0x43484553
 	session._auto_select_first_chest = true
-	session.simulation.set_speed(4.0)
-	Engine.time_scale = 4.0
+	session.simulation.set_speed(survey_speed)
+	Engine.time_scale = survey_speed
+	session.process_mode = Node.PROCESS_MODE_INHERIT
 	var initial_hp: float = session.player_max_hp
 	var started_at := Time.get_ticks_msec()
 	var previous_position: Vector2 = session.player.global_position
@@ -188,8 +197,8 @@ func _run_case(tier: String, difficulty_id: String, replicate: int, progression:
 	var outgoing_damage := monitor.total_damage
 	var outgoing_dps := outgoing_damage / active_seconds if active_seconds > 0.0 else 0.0
 	var net_hp_loss: float = initial_hp - session.player_hp
-	print("%s,%s,%s,%d,%d,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f,%d,%d,%d,%.2f,%.2f,%.2f,%s,%s" % [
-		tier, difficulty_id, movement_pattern, replicate + 1, unlocked_count, hp_bonus, damage_bonus, speed_bonus, crit_bonus,
+	print("%s,%s,%s,%.1f,%d,%d,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f,%d,%d,%d,%.2f,%.2f,%.2f,%s,%s" % [
+		tier, difficulty_id, movement_pattern, survey_speed, replicate + 1, unlocked_count, hp_bonus, damage_bonus, speed_bonus, crit_bonus,
 		active_seconds, elapsed_wall, path_distance, session.wave_director.wave, session.kill_count,
 		session.player_level, outgoing_damage, outgoing_dps, net_hp_loss, boss_defeated, result,
 	])
@@ -222,6 +231,9 @@ func _arguments() -> Dictionary:
 		elif argument.begins_with("--movement="):
 			result["movement"] = argument.trim_prefix("--movement=")
 	return result
+
+func _survey_speed(movement_pattern: String) -> float:
+	return 1.0 if movement_pattern == "loot" else 4.0
 
 func _set_movement_action(action_index: int) -> void:
 	var action: String = MOVEMENT_ACTIONS[action_index]

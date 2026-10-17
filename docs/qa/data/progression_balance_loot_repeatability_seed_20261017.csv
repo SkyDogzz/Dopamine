@@ -1,0 +1,6 @@
+# Godot 4.7.2; seed=20261016; fresh profile; Easy; movement=loot; simulation and Engine.time_scale=1x.
+# Same isolated XDG_DATA_HOME and same nominal replicate, run twice with SurvivalSession, loadout and chest RNGs seeded before processing.
+# This check follows the earlier 4x survey; the simulation worker and frame-driven controller still produce different outcomes.
+attempt,seed,tier,difficulty,movement,simulation_speed,replicate,unlocked_nodes,hp_bonus_pct,damage_bonus_pct,speed_bonus_pct,crit_bonus_pct,active_seconds,wall_seconds,path_distance,wave,kills,level,outgoing_damage,outgoing_dps,net_hp_loss,boss_defeated,result
+1,20261016,fresh,easy,loot,1.0,1,0,0.00,0.00,0.00,0.00,23.56,23.57,5588.00,1,24,6,311.12,13.21,100.00,false,defeat
+2,20261016,fresh,easy,loot,1.0,1,0,0.00,0.00,0.00,0.00,26.41,26.42,6272.00,1,26,6,429.54,16.26,100.00,false,defeat

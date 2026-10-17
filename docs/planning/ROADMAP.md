@@ -532,6 +532,7 @@ Travail requis :
   - [x] Ajouter un protocole `kite` au survey : à intervalles simulés réguliers, le contrôleur réel recule et décrit une tangente autour de l’ennemi vivant le plus proche. Trois seeds frais Easy ont produit des runs mobiles sans assistance; ce premier échantillon reste exploratoire.
   - [x] Étendre le survey à 45 runs mobiles appariés (3 profils × 5 difficultés × 3 seeds) sans invincibilité ni kills scriptés; médianes et limites sont consignées dans `docs/qa/TESTS.md`. Aucun tuning **[PROPOSÉ]** n’est modifié.
   - [x] Ajouter un contrôle `loot` au survey : il vise l’orbe XP ou le coffre le plus proche, garde les rayons de collecte normaux et esquive les ennemis proches; le pilote Easy puis les 45 runs appariées (3 profils × 5 difficultés × 3 seeds) sont archivés dans `docs/qa/data/` et leurs limites sont consignées dans `docs/qa/TESTS.md`.
+  - [x] Seed explicitement les RNG de la session, du loadout et du coffre avant de démarrer le survey; `loot` s’exécute à ×1 et sa vitesse est inscrite dans le CSV. La répétabilité du contrôleur piloté par frames reste ouverte (voir `progression_balance_loot_repeatability_seed_20261017.csv`).
   - [ ] Collecter des parcours représentatifs avec déplacement joueur et plusieurs seeds; le parcours carré n’est pas un modèle de navigation/évitement humain et le baseline immobile ne mesure pas la durée d’une run complète.
   - [ ] Ajuster uniquement les paramètres dont le statut autorise l’équilibrage.
 
