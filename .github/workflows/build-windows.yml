@@ -27,7 +27,11 @@ jobs:
           $destination = Join-Path $env:RUNNER_TEMP "godot-windows"
           Invoke-WebRequest "https://github.com/godotengine/godot/releases/download/4.7.2-stable/Godot_v4.7.2-stable_win64.exe.zip" -OutFile $archive
           Expand-Archive -Path $archive -DestinationPath $destination
-          "GODOT_EXE=$destination/Godot_v4.7.2-stable_win64.exe" >> $env:GITHUB_ENV
+          $godotConsole = Join-Path $destination "Godot_v4.7.2-stable_win64_console.exe"
+          if (-not (Test-Path -LiteralPath $godotConsole -PathType Leaf)) {
+            throw "Godot console executable was not found in the official Windows archive: $godotConsole"
+          }
+          "GODOT_EXE=$godotConsole" >> $env:GITHUB_ENV
 
           $templatesArchive = Join-Path $env:RUNNER_TEMP "godot-templates.tpz"
           $templatesExtracted = Join-Path $env:RUNNER_TEMP "godot-templates"

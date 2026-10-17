@@ -62,10 +62,10 @@ Le script archive le commit, donc les changements non commités ne sont pas incl
 
 ## Lancer sous Windows
 
-Prérequis : Godot 4.7.2 standard pour Windows x86_64 avec ses export templates 4.7.2, Visual Studio 2022 avec la charge de travail **Desktop development with C++**, CMake 3.21+ et Git dans le `PATH`. Depuis PowerShell à la racine du dépôt :
+Prérequis : Godot 4.7.2 standard pour Windows x86_64 avec son exécutable console (`Godot_v4.7.2-stable_win64_console.exe`) et ses export templates 4.7.2, Visual Studio 2022 avec la charge de travail **Desktop development with C++**, CMake 3.21+ et Git dans le `PATH`. Depuis PowerShell à la racine du dépôt :
 
 ```powershell
-.\tools\build_windows.ps1 -GodotExecutable "C:\Godot\Godot_v4.7.2-stable_win64.exe" -Export
+.\tools\build_windows.ps1 -GodotExecutable "C:\Godot\Godot_v4.7.2-stable_win64_console.exe" -Export
 ```
 
 Le script configure le build MSVC x64, compile les GDExtensions debug et release dans `game/bin/windows`, importe le projet et exécute un smoke qui instancie la simulation native. Avec `-Export` et les export templates 4.7.2 installés, il crée `build/windows/export/DopamineSurvivor.exe` puis lance le jeu exporté. Sans `-Export`, il ouvre le projet dans Godot. Pour seulement compiler et vérifier, ajouter `-NoLaunch`. Si CMake signale un arbre Git `godot-cpp` incomplet (« unable to read tree »), le script supprime uniquement le clone FetchContent généré et retente la configuration. Le workflow [GitHub Actions Windows](.github/workflows/build-windows.yml) installe les templates, exporte puis lance un smoke headless de l’exécutable, et publie le jeu comme artefact `dopamine-survivor-windows-x86_64`. Le build Debug et la run Windows du créateur sont consignés dans [`docs/qa/TESTS.md`](docs/qa/TESTS.md); le checkout propre et l’export Release autonome restent à valider par la CI.
