@@ -43,6 +43,12 @@
 - Les deux CTest ciblés passent avec l’import projet : `survival_starting_weapon_smoke` 2/2 et `chest_choice_smoke` 2/2. `git diff --check` passe.
 - Ces événements Godot synthétiques confirment les chemins logiciels; ils ne constituent pas un essai de souris/manette physique. La navigation manette complète de l’arme de départ et celle de tous les menus restent à parcourir sur matériel.
 
+## Revalidation complète de la suite — 2026-10-17
+
+- CTest séquentiel sur le checkout courant : **87/87 tests passent en 60,64 s**, dont import Godot, rendus Xvfb, armes, boss, progression, Armorless, Sandbox Lab et scénarios Sandbox des dix armes.
+- Commande : `/tmp/cmake-3.31.12-linux-x86_64/bin/ctest --test-dir build --output-on-failure -j1`.
+- Le checkout contenait aussi un diff local non commité de `game/scripts/survival_session.gd`; le résultat atteste l’état combiné du checkout, mais ne peut pas être attribué exclusivement au commit `26cd944`. Ce test ne couvre toujours pas le GPU cible ni les interactions physiques.
+
 ## Build et lancement depuis un clone Git propre — 2026-10-17
 
 - Clone local neuf du commit `09baf7a`, puis configuration CMake 3.31.12, compilation complète avec GCC 14.2.0, import Godot 4.7.2 et lancement headless de la scène principale : réussis. FetchContent a récupéré le SHA `godot-cpp` verrouillé.
