@@ -114,9 +114,9 @@ P6 a déjà du code anticipé, dont la rotation automatique des bonus XP **[VALI
 ### Travaux/critères de maintien
 
 - [ ] **P1.1 — Contrat des commandes**
-  - [ ] Répertorier les commandes Sandbox exposées et leurs paramètres.
+  - [x] Répertorier les méthodes `CombatSimulation` et leurs paramètres principaux dans `docs/architecture/INTERFACES.md`.
   - [ ] Pour chaque commande, vérifier une entrée valide et une entrée invalide.
-  - [ ] Vérifier qu’un rejet ne modifie pas partiellement l’état.
+  - [x] Vérifier sur les entrées invalides typées que le rejet ne modifie ni séquence, ni métriques, ni temps, ni configuration; `sandbox_smoke.gd` couvre le pont GDExtension.
 - [ ] **P1.2 — Observable par défaut**
   - [ ] Vérifier que spawn, dégât, mort, pause, step, vitesse et reset apparaissent dans les métriques/logs utiles.
   - [ ] Vérifier l’inspecteur après sélection, despawn et réutilisation d’un handle.

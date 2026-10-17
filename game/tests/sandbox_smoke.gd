@@ -16,6 +16,30 @@ func _run() -> void:
 			"GDExtension kill heal rule should clamp to the proposed maximum threat")
 	assert(is_equal_approx(simulation.initial_player_hp(), 100.0),
 			"GDExtension should expose the GDD-validated initial player HP")
+	var before_invalid_commands: Dictionary = simulation.snapshot()
+	assert(simulation.spawn("", 1, Vector2.ZERO, 10.0, Vector2.ZERO) == 0)
+	assert(simulation.spawn_enemy("not_an_enemy", 1, Vector2.ZERO, Vector2.ZERO) == 0)
+	assert(simulation.spawn_projectile("", Vector2.ZERO, Vector2.ZERO, 1.0, 1.0, 1.0) == 0)
+	assert(simulation.spawn_status_projectile("inferno_sprayer", Vector2(INF, 0.0), Vector2.ZERO,
+		1.0, 1.0, 1.0) == 0)
+	assert(simulation.spawn_xp_orb(Vector2.ZERO, INF) == 0)
+	assert(simulation.attract_xp_orbs(Vector2.ZERO, 0.0, 1.0, 10.0, 0.1) == 0)
+	assert(simulation.collect_xp_orb(-1, 0) == 0)
+	assert(simulation.apply_damage_over_time(-1, 0, 1.0, 1.0, 1.0) == 0)
+	assert(simulation.tick_damage_over_time(-1, 0, "unknown") == 0)
+	assert(simulation.despawn(-1, 0) == 0)
+	assert(simulation.step(0.0) == 0)
+	assert(simulation.set_speed(10.0) == 0)
+	assert(simulation.apply_sandbox_overrides({"max_speed": 42.0}) == 0)
+	assert(simulation.set_steering_target(Vector2(INF, 0.0), 10.0, 5.0, 0.5) == 0)
+	assert(simulation.dash_entity(-1, 0, Vector2.ZERO, 1.0) == 0)
+	assert(simulation.acknowledge_events(-1) == 0)
+	var after_invalid_commands: Dictionary = simulation.snapshot()
+	assert(after_invalid_commands["last_sequence"] == before_invalid_commands["last_sequence"] and
+		after_invalid_commands["metrics"] == before_invalid_commands["metrics"] and
+		after_invalid_commands["simulation_time"] == before_invalid_commands["simulation_time"] and
+		after_invalid_commands["sandbox_overrides"] == before_invalid_commands["sandbox_overrides"],
+		"Rejected commands should not enqueue work or partially mutate the simulation")
 	assert(simulation.spawn_enemy("not_an_enemy", 1, Vector2.ZERO, Vector2.ZERO) == 0,
 			"GDExtension should reject unknown enemy profiles")
 	var profile_sequence: int = simulation.spawn_enemy("chaser", 1, Vector2.ZERO, Vector2(0.0, 1.0))

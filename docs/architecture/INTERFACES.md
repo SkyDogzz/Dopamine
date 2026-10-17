@@ -56,6 +56,20 @@ var checkpoint: Dictionary = simulation.capture_state()
 simulation.restore_state(checkpoint)
 ```
 
+Les commandes GDExtension exposées sont :
+
+| Famille | Méthodes | Paramètres principaux |
+|---|---|---|
+| Entités | `spawn`, `spawn_enemy`, `despawn`, `kill_all` | type/profil, nombre, position, PV/vitesse/menace; despawn prend l’ID index+génération |
+| Projectiles | `spawn_projectile`, `spawn_status_projectile` | type, position/vitesse, dégâts, rayon, durée; options DoT, explosion, ricochet, attraction, Chill, orbite, chaîne et critique |
+| XP | `spawn_xp_orb`, `attract_xp_orbs`, `stop_xp_orb_attraction`, `collect_xp_orb` | position/valeur; cible/rayon/accélération/vitesse max/delta; collecte par ID index+génération |
+| Statuts | `apply_damage_over_time`, `tick_damage_over_time` | cible index+génération, type de statut, dégâts et horloges pour l’application |
+| Contrôle | `pause`, `resume`, `step`, `set_speed`, `reset` | delta de Step; multiplicateur de vitesse |
+| Steering | `set_steering_target`, `dash_entity`, `apply_sandbox_overrides` | position, vitesse, séparation; cible et durée de dash; transaction des quatre paramètres de steering |
+| Événements/état | `acknowledge_events`, `snapshot`, `capture_state`, `restore_state` | séquence d’événement; checkpoint opaque versionné |
+
+Les fonctions de lecture `health_decay_amount`, `kill_heal_amount` et `initial_player_hp` ne soumettent pas de commande. Une commande soumise renvoie sa séquence positive; une entrée invalide, une file pleine ou un worker arrêté renvoie `0`. Les commandes typées rejettent avant l’enqueue les IDs/références invalides, valeurs non finies, durées ou nombres hors bornes; les commandes de spawn au Sandbox ont une limite de 500 entités par appel. `sandbox_smoke.gd` vérifie les cas invalides typés et que leur rejet ne change ni la séquence, ni les métriques, ni le temps, ni les paramètres de steering. Les chemins valides sont couverts par ce smoke et `sandbox_combat_smoke.gd`, `survival_chest_smoke.gd`, `survival_weapon_catalog_smoke.gd` et les tests natifs.
+
 `capture_state()` renvoie un checkpoint natif opaque en mémoire `{format_version: 17, native_state: CombatSimulationSnapshot}`; une capture échouée renvoie un dictionnaire vide. `restore_state(checkpoint)` accepte seulement ces deux champs, le format 17 et un objet natif valide. Il arrête le worker, restaure son état complet puis le redémarre. Une version incompatible est refusée avant l’arrêt et ne change donc pas la simulation. Ce contrat GDExtension couvre le worker, pas les horloges/RNG/build de `SurvivalSession` ni une sérialisation persistante du Lab.
 
 Le snapshot contient l'état `paused`, `speed_multiplier`, `simulation_time`, `last_sequence`, `rejected_commands`, une liste `entities` (ID index/génération et composants `Transform2D`, `Velocity2D`, `Health`, `EnemyType`). Il publie `CollisionRadius` (12 unités pour les mobs 24 px, 26 pour les boss 52 px), utilisé à la fois par le rendu et les tests de contact/projectiles. Le cercle est une approximation de la silhouette carrée des sprites (**[PROPOSÉ]**). Les cibles affectées exposent `DamageOverTime` avec `status_type` (`generic`, `burn`, `poison`, `bleed`), dégâts par tick, durée restante et horloge de tick; Chill reste un composant distinct. Une charge temporaire expose aussi `MovementOverride` avec vitesse et temps restant; elle est intégrée à l’horloge de simulation, survit à un snapshot/restauration et suspend sa durée en pause. Les Buffers exposent `SupportRadius` et `SupportSpeedMultiplier`; les alliés dans une aura active exposent `Supported`; les élites exposent leur `Affix`. Godot reçoit des valeurs copiées ; aucune référence mutable du worker n'est exposée. `CombatSimulation` n'a pas accès au service de sauvegarde.
