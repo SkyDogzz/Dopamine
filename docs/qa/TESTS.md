@@ -1635,6 +1635,12 @@ Note de clôture : le blocage historique du smoke `sandbox_ui_smoke.gd` décrit 
 - [x] CTest complet après le changement partagé de Theme : **91/91 tests passent en 64,76 s** avec `/tmp/cmake-3.31.12-linux-x86_64/bin/ctest --test-dir build --output-on-failure -j1`.
 - [ ] Ce contrôle couvre seulement les trois variations citées; le contraste des autres composants, la hiérarchie HUD, les options de réduction des effets et les écrans sur matériel réel restent à vérifier.
 
+## P9.4 — Contraste des libellés du HUD Survival — 2026-10-17
+
+- [x] `survival_hud_smoke.gd` calcule le contraste des six libellés de santé, XP, équipement, temps, vague et difficulté contre le fond `CompactPanel` et exige un ratio minimal de 4,5:1.
+- [x] Le smoke passe directement sous Godot 4.7.2 headless avec un `XDG_DATA_HOME` isolé.
+- [i] Ce contrôle automatisé couvre les couleurs configurées et le fond déclaré du panneau, pas le contraste composite du HUD sur tous les arrière-plans, la taille perçue des textes, ni le rendu sur écran/GPU réel.
+
 ## P5.1.5 — Homing léger Magnetic Coil — 2026-10-17
 
 - [x] Le test natif `simulation_core_test.cpp` vérifie la correction d’angle bornée par le temps simulé, la conservation de vitesse et la sauvegarde/restauration du projectile; il échouait avant l’ajout des champs de homing.

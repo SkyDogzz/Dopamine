@@ -42,6 +42,20 @@ func _run() -> void:
 		session.get_node("HUD/RunPanel/RunInfo/StatusRow/XPRow/XPBar").value != 5.0:
 		_fail("The run HUD should display current health, XP, time, wave and weapon state")
 		return
+	var hud_background := (session.get_node("HUD/RunPanel") as PanelContainer).get_theme_stylebox("panel") as StyleBoxFlat
+	var hud_labels := [
+		session.get_node("HUD/RunPanel/RunInfo/StatusRow/HPRow/HPValue") as Label,
+		session.get_node("HUD/RunPanel/RunInfo/StatusRow/XPRow/XPValue") as Label,
+		session.get_node("HUD/RunPanel/RunInfo/LoadoutRow/LoadoutLabel") as Label,
+		session.get_node("HUD/MetaPanel/MetaRow/TimeValue") as Label,
+		session.get_node("HUD/MetaPanel/MetaRow/WaveValue") as Label,
+		session.get_node("HUD/MetaPanel/MetaRow/DifficultyValue") as Label,
+	]
+	for label in hud_labels:
+		var text_color: Color = label.get_theme_color("font_color")
+		if _contrast_ratio(text_color, hud_background.bg_color) < 4.5:
+			_fail("HUD text %s should keep at least 4.5:1 contrast against its panel" % label.name)
+			return
 	session._manually_paused = true
 	session._refresh_hud({"paused": true})
 	if run_state.text != "PAUSED · ESC" or run_state_style.border_color.to_html(false) != "ffd447":
@@ -129,3 +143,16 @@ func _run() -> void:
 func _fail(message: String) -> void:
 	push_error(message)
 	quit(1)
+
+func _contrast_ratio(first: Color, second: Color) -> float:
+	var first_luminance := _relative_luminance(first)
+	var second_luminance := _relative_luminance(second)
+	return (maxf(first_luminance, second_luminance) + 0.05) / \
+		(minf(first_luminance, second_luminance) + 0.05)
+
+func _relative_luminance(color: Color) -> float:
+	var channels := [color.r, color.g, color.b]
+	for index in range(channels.size()):
+		var channel: float = channels[index]
+		channels[index] = channel / 12.92 if channel <= 0.04045 else pow((channel + 0.055) / 1.055, 2.4)
+	return 0.2126 * channels[0] + 0.7152 * channels[1] + 0.0722 * channels[2]

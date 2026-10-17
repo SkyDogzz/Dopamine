@@ -696,7 +696,8 @@ P1 livre le Sandbox développeur et ne remplace pas cette feature produit.
   - [x] Parcourir le flux clavier accueil → Options → hub → choix de l’arme de départ → coffre → pause → Options → inventaire de run → reprise dans `keyboard_menu_journey_smoke.gd`; les panneaux Équipements et Arbre de compétences sont couverts par `survival_hub_smoke.gd`. Cette preuve synthétique ne valide pas encore le rendu ni les périphériques sur matériel réel (P9.7).
   - [x] Parcourir les mêmes écrans au D-pad/A/B avec focus visible vérifié dans `gamepad_menu_journey_smoke.gd`; la validation d’une manette physique et du rendu sur écran réel reste en P9.7.
   - [x] Contrôler le contraste des labels `InactiveButton`, `Button` désactivé et `OptionButton` désactivé; `survival_hub_smoke.gd` impose 4,5:1 minimum. Les valeurs utilisent maintenant `#A5AEC3` de la palette ART_BIBLE, avec 6,94:1 sur le fond `#1B2340`.
-  - [ ] Vérifier contraste, taille/hiérarchie HUD et réglages d’effets.
+  - [x] Vérifier le contraste configuré des libellés de santé, XP, équipement, temps, vague et difficulté du HUD; `survival_hud_smoke.gd` impose 4,5:1 contre le fond CompactPanel.
+  - [ ] Vérifier le contraste composite du HUD sur plusieurs scènes, sa taille/hiérarchie et les réglages d’effets sur écran réel.
 - [ ] **P9.5 — Performance**
   - [ ] Fixer le matériel iGPU de référence et la scène de charge.
   - [ ] Mesurer frame-time CPU/GPU, mémoire, P50/P95/P99.
