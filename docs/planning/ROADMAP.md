@@ -18,7 +18,7 @@ L’audit initial était statique. Les tranches Minigun, Toxic Cloud, Sawblades 
 
 | Jalon | État du code constaté | Ce qui manque pour le fermer |
 |---|---|---|
-| P0 Fondations | **Présent, Linux documenté** | Reproductibilité sur installation propre et build/chargement Windows. |
+| P0 Fondations | **Présent; build Windows Release CI vérifié** | Installation Linux distincte et usage Windows interactif sur matériel. |
 | P1 Sandbox développeur MVP | **Présent et bien couvert historiquement** | Continuer d’exposer les nouveaux systèmes et maintenir l’isolation au fil des intégrations. |
 | P2 Simulation/combat | **Fondation présente, couverture partielle** | Diversité des IA, règles complètes d’ennemis/boss, instrumentation et performance iGPU. |
 | P3 Prototype de combat | **Dix paires et dix évolutions de prototype présentes** | Contrats génériques, retours visuels par niveau, ciblage fidèle, mesures DPS détaillées. |
@@ -27,7 +27,7 @@ L’audit initial était statique. Les tranches Minigun, Toxic Cloud, Sawblades 
 | P6 Progression permanente | **Boucle fonctionnelle implémentée; calibration incomplète** | Équipement, économie prototype, 100 nodes, 100 familles d’achievements, récompenses et migrations sont implémentés et couverts par smokes. Les périmètres et règles économiques arbitrés sont documentés; tables proposées et profils/budgets de puissance restent à calibrer en runs représentatives. |
 | P7 Modes Endless | **Prototypes Armorless et Endless standard fonctionnels; validation incomplète** | Armorless possède drafts, Flux, récompenses et records; une run complète non assistée et la calibration des formules proposées restent requises. Endless standard est jouable depuis le hub et après une victoire Survival; ses paramètres restent **[PROPOSÉS]**, à calibrer, et sa validation de run représentative reste à faire. |
 | P8 Sandbox Lab joueur | **P8.1–P8.8 implémentés** | Builds, trois modes (Survival, Endless standard et Armorless), presets/import/export, import de profil en lecture seule, snapshots et contrôles de simulation sont couverts par des smokes d’isolation. Endless s’exécute dans le contexte isolé sans service de progression/sauvegarde normale. |
-| P9 Qualité et livraison | **Partiel** | Performance sur vrai iGPU, accessibilité/VFX/audio, soak graphique sur matériel cible et Windows. |
+| P9 Qualité et livraison | **Partiel** | Performance sur vrai iGPU, écoute audio et contrôles/rendu sur matériel; autres critères P9 ouverts. |
 
 ### Lecture rapide : livré, prototype ou survolé
 
@@ -35,7 +35,7 @@ L’audit initial était statique. Les tranches Minigun, Toxic Cloud, Sawblades 
 
 **Fonctionnel mais non calibré :** boss et leurs patterns, probabilités de loot, dix évolutions et effets uniques; équipement/enhancement et économie, arbre à 100 nœuds, 100 familles d’achievements et récompenses de run; mode Armorless et Sandbox Lab isolé. Les paramètres restent souvent **[PROPOSÉS]** et les validations de run complète ou de matériel cible ne sont pas remplacées par les smokes.
 
-**Survolé, ouvert ou non validé :** pickups de soin/ressources/monnaies non encore définis; équilibrage des armes, boss, loot et progression; équilibrage des réactions dont les paramètres Overcharge restent **[PROPOSÉS]**; partie Armorless complète sans assistance; validation représentative d’Endless standard et calibration de ses paramètres **[PROPOSÉS]**; validation CPU/GPU sur iGPU cible et livraison Windows. Le lancement garde 100 nœuds et 100 familles d’achievements; les extensions vers 120 sont différées. Le Sandbox Lab joueur n’est plus à faire : ses critères P8.1–P8.8 sont cochés et ses smokes ciblés sont consignés dans la QA.
+**Survolé, ouvert ou non validé :** pickups de soin/ressources/monnaies non encore définis; équilibrage des armes, boss, loot et progression; équilibrage des réactions dont les paramètres Overcharge restent **[PROPOSÉS]**; partie Armorless complète sans assistance; validation représentative d’Endless standard et calibration de ses paramètres **[PROPOSÉS]**; validation CPU/GPU sur iGPU cible et parcours interactifs sur matériel. L’export Windows Release CI et le démarrage après extraction sont vérifiés, mais ne remplacent pas la validation Windows interactive. Le lancement garde 100 nœuds et 100 familles d’achievements; les extensions vers 120 sont différées. Le Sandbox Lab joueur n’est plus à faire : ses critères P8.1–P8.8 sont cochés et ses smokes ciblés sont consignés dans la QA.
 
 ## Dépendances principales
 
@@ -91,7 +91,7 @@ P6 a déjà du code anticipé, dont la rotation automatique des bonus XP **[VALI
   - [x] Vérifier l’index Git après le build/import frais : aucun artefact généré n’est suivi; des UID Godot non suivis peuvent être produits et restent hors commit.
 - [ ] **P0.4 — Compatibilité Windows**
   - [x] Ajouter `tools/build_windows.ps1`, les entrées Windows debug/release du `.gdextension`, le preset x86_64 et `.github/workflows/build-windows.yml` pour build MSVC et export autonome.
-  - [ ] Exécuter le workflow sur un runner Windows et vérifier son artefact; le poste actuel est Linux et n’a pas MSVC/PowerShell.
+  - [x] Exécuter le workflow sur un runner `windows-2022` et vérifier l’export après archive/extraction; run `39070143031`, commit `a6c8636`, détails et artefact dans `docs/qa/TESTS.md`.
   - [ ] Confirmer le chargement interactif de la GDExtension sous Windows.
   - [ ] Consigner les écarts au build Linux sans changer la cible plateforme implicitement.
 - [ ] **P0.5 — Automatisation éventuelle**
@@ -743,7 +743,7 @@ P1 livre le Sandbox développeur et ne remplace pas cette feature produit.
   - [ ] Refaire build Linux et parcours sur une machine distincte; l’hôte de validation courant est virtualisé.
   - [x] Ajouter un preset Linux/X11 et une route `linux.release.x86_64` pour la GDExtension; le PCK 4.7.2 s’exporte sans warning, se charge avec le runtime Linux et l’extension debug, et les quatre checks import/Sandbox/catalogue passent. C’est une validation de pack et de chargement sur l’hôte courant, pas un export autonome.
   - [x] Compiler le build Debug Windows avec MSVC et lancer une run Easy complète avec la GDExtension; les 108 tests CTest passent sur ce checkout Windows. La preuve et ses limites sont consignées dans `docs/qa/TESTS.md` et `docs/qa/PERFORMANCE.md`.
-  - [ ] Refaire le build Windows depuis un checkout propre, produire un export Release et le vérifier après extraction.
+  - [x] Refaire le build Windows sur checkout CI propre, produire un export Release, l’archiver, l’extraire et lancer le jeu extrait; run `39070143031` sur `windows-2022`, artefact publié. Voir `docs/qa/TESTS.md`.
   - [ ] Tester contrôles, chemins et rendu sur les deux plateformes.
   - [x] Vérifier le SHA-512 officiel des templates Godot 4.7.2, installer le template Linux release x86_64, exporter `build/linux/export/DopamineSurvivor.x86_64` et lancer le menu trois frames en headless; détails dans `docs/qa/TESTS.md`.
   - [x] Confirmer que le processus autonome mappe `libdopamine.linux.template_release.x86_64.so`. La vérification directe d’instanciation de `CombatSimulation`, d’abord restée ouverte après ce seul contrôle de chargement, a ensuite été réalisée dans une session reconstruite avec le même template release et la même extension; voir la preuve du snapshot propre ci-dessus et `docs/qa/TESTS.md`.

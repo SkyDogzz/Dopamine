@@ -42,7 +42,7 @@ Ce registre sert à conduire l’interview avant les changements dépendant d’
 - Profilage CPU/GPU représentatif sur l’iGPU cible; l’environnement courant n’expose pas le GPU hôte.
 - Run Armorless complète à durée de production, avec drafts, boss et pauses, sans invulnérabilité ni éliminations scriptées.
 - Runs Survival représentatives pour l’équilibrage global des armes, boss, probabilités et progression; les règles Thermal Shock et Magnet Heart sont désormais **[VALIDÉES]**, leurs anciennes mesures exploratoires ne constituent pas une calibration d’ensemble.
-- Validation Windows quand le travail Windows reprendra; les instructions antérieures de suspendre ce travail restent applicables.
+- Validation Windows interactive clavier/manette, chemins de sauvegarde et rendu/audio sur matériel; le build Release, l’export extrait et le smoke headless CI sont maintenant vérifiés dans P9.7.
 
 ## Conduite de l’interview
 
