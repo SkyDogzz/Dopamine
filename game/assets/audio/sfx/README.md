@@ -1,6 +1,6 @@
 # Dopamine Survivor procedural SFX
 
-This is a standalone, listenable first-pass sound library in the **Neon Arcade** direction. It contains 38 deterministic 44.1 kHz mono PCM16 WAVs, editable Bfxr parameter recipes, a machine-readable manifest, and an HTML audition gallery. No existing audio was replaced, and these sounds are not wired into gameplay yet.
+This is a listenable first-pass sound library in the **Neon Arcade** direction. It contains 38 deterministic 44.1 kHz mono PCM16 WAVs, editable Bfxr parameter recipes, a machine-readable manifest, and an HTML audition gallery. The runtime `Sfx` service loads these WAVs and uses them in Survival and UI feedback. The effect library was generated from the in-repository recipes; no third-party recordings or sample files are part of this generation pipeline.
 
 Open [`preview.html`](preview.html) in a browser to audition and compare the effects. The browser can play the WAV files directly; no package installation is needed for listening.
 
@@ -35,7 +35,9 @@ Keep recipe ordering stable if exact seed-to-file mapping matters. The generator
 
 ## Bfxr2 evaluation and limits
 
-The Bfxr2 engine successfully rendered all 38 sounds from parameter files in a few seconds. Its strengths here are compact recipes and a retro game tone. The upstream CLI has a seed-handling bug in parameter-file mode; the included wrapper supplies seeded randomness so outputs remain stable. Bfxr's parameterized synth is intentionally stylized; it offers less direct control over independent attack/body/tail layers, precise filter response, and stereo placement than a lower-level DSP recipe. This first pass therefore uses conservative low-pass settings and short effects. The gallery is the listening review: ear-tuning and in-game mix validation are still needed.
+The Bfxr2 engine successfully rendered all 38 sounds from parameter files in a few seconds. Its strengths here are compact recipes and a retro game tone. The upstream CLI has a seed-handling bug in parameter-file mode; the included wrapper supplies seeded randomness so outputs remain stable. Bfxr's parameterized synth is intentionally stylized; it offers less direct control over independent attack/body/tail layers, precise filter response, and stereo placement than a lower-level DSP recipe. This first pass therefore uses conservative low-pass settings and short effects. The gallery supports listening review, but ear-tuning and in-game mix validation remain open.
+
+The upstream renderer [`osiriswd/bfxr2-cli`](https://github.com/osiriswd/bfxr2-cli), evaluated at commit `73cfde24a3c25c84a3f3c141e7f2a4b3d80c6b64`, is MIT-licensed. It is an authoring-time tool and is not included in runtime exports. The recipes, renderer wrapper, and generated WAVs are in this repository; release mix validation is still required.
 
 ## Mix guidance
 

@@ -37,7 +37,8 @@
 - [x] Faire un contrôle mécanique des sources d’image : les 136 PNG avec correspondance de base et les trois exceptions hors du dossier de références sont décrits dans [`../art/INVENTAIRE_ASSETS_UI.md`](../art/INVENTAIRE_ASSETS_UI.md) et [`../art/asset_exceptions.txt`](../art/asset_exceptions.txt).
 - [ ] Vérifier la provenance et les droits de chaque asset livré, y compris les fichiers générés, les sources éditables et toute attribution requise; les inventaires artistiques ne valent pas clearance complète.
 - [x] Décision utilisateur **[VALIDÉE, 2026-10-17] — réponse A** : garder l’audio actuel comme candidate de release.
-- [ ] Auditer à l’écoute le mix et les niveaux, puis vérifier l’inventaire, les licences et la provenance de tous les sons effectivement livrés. La boucle synthwave est attribuée sous CC0 dans `THIRD_PARTY_NOTICES.md`; cette provenance ne valide pas le mix ni les autres sons.
+- [x] Vérifier mécaniquement les 38 WAV SFX utilisés par `Sfx` contre le manifeste, leurs formats et leurs durées; consigner leurs recettes, le renderer et les licences identifiées dans `THIRD_PARTY_NOTICES.md`.
+- [ ] Auditer à l’écoute le mix et les niveaux des sons effectivement livrés, y compris les priorités en combat dense, sur haut-parleurs/casque réels.
 
 ## Distribution et communication
 

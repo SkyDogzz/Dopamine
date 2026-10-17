@@ -70,7 +70,9 @@
 ## P9.8 — Candidate audio — 2026-10-17
 
 - [x] Décision utilisateur **[VALIDÉE, réponse A]** : garder l’audio livré comme candidate de release.
-- [ ] L’écoute du mix/niveaux et l’audit des sons effectivement livrés restent à faire; la provenance CC0 de la boucle synthwave ne suffit pas à valider les autres assets.
+- [x] Inventaire mécanique du 2026-10-17 : 38 WAV SFX correspondent exactement aux 38 entrées du manifeste; tous sont 44,1 kHz, mono, PCM16 et leurs durées concordent avec le manifeste à 2 ms près. Les recipes de synthèse sont dans `game/assets/audio/sfx/recipes.json`; `Sfx` les charge dans le jeu. Aucun fichier WAV ne manque ni n’est absent du manifeste.
+- [x] Provenance recensée dans `THIRD_PARTY_NOTICES.md` : boucle Space City MintoDog CC0, SHA-256 correspondant au fichier; SFX produits depuis les recettes internes par Bfxr2 CLI MIT (commit référencé), outil de génération non inclus dans l’export. La chaîne documentée ne contient pas d’échantillons tiers identifiés. Voir `game/assets/audio/sfx/README.md`.
+- [ ] Écouter la galerie et le jeu avec effets simultanés, vérifier les niveaux relatifs et la priorité des cues sur haut-parleurs/casque; l’environnement de développement headless ne permet pas cette validation matérielle.
 
 ## P7B.1 — Compteurs du segment de continuation — 2026-10-17
 
