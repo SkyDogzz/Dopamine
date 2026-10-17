@@ -458,7 +458,8 @@ Travail requis :
   - [x] Le créateur confirme aussi avoir vérifié manuellement P5.4 dans sa run complète jusqu’à la victoire du boss final; difficulté et loadout non précisés. L’équilibrage Chaos représentatif reste ouvert.
   - [x] Le créateur confirme le 2026-10-17 avoir terminé les vérifications manuelles demandées et que tout est bon; aucun détail par arme/build/difficulté/plateforme n’a été fourni (voir `docs/qa/TESTS.md`).
   - [x] Ajouter une comparaison reproductible de DPS pour les dix armes au niveau 1, niveau 5 + relique 5, et évoluées, sur cible unique, grappe fixe et Chasers mobiles; données et limites dans `docs/qa/PERFORMANCE.md`. Cette mesure de laboratoire ne valide pas le tuning.
-  - [ ] Effectuer un profilage représentatif CPU/GPU et des armes avant de clore le jalon.
+  - [x] Enregistrer une run Easy complète sous Windows jusqu’à la victoire de la vague 24 puis au début d’Endless vague 25; métriques et limites dans `docs/qa/PERFORMANCE.md` et `docs/qa/data/windows_survival_profile.csv`.
+  - [ ] Compléter l’attribution CPU/GPU et le profil des armes sur l’iGPU cible : la capture automatisée sélectionne la RX 7700S et ne relève ni temps GPU par frame ni loadout.
   - [x] Investiguer l’écart du benchmark natif Debug : le résolveur spatial parcourait les collisions de corps quand aucun ennemi ne bougeait. Sortie anticipée, tests core/worker 2/2; la rafale revient à 73,0–73,8 ms. Résultats et limites dans `docs/qa/PERFORMANCE.md`.
 
 **Critère de sortie :** dix armes, onze reliques, leurs évolutions, 8–12 familles, élites et boss utilisables dans une run complète ; Sandbox et progression séparés. Après P5, poursuivre P6–P9 selon le goal principal actif.
