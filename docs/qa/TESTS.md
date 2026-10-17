@@ -48,6 +48,10 @@
 
 - [x] Décision utilisateur **[VALIDÉE, réponse A]** : garder la direction de l’ART_BIBLE et reporter les choix fins non bloquants à la QA de release. Les couleurs d’éléments/faisceaux, la police, le rythme de clignotement et l’identité du boss placeholder restent à vérifier ou arbitrer.
 
+## P9.8 — Convention de version — 2026-10-17
+
+- [x] Décision utilisateur **[VALIDÉE, réponse A]** : SemVer, première release distribuable `1.0.0` après validation P9. La version ne sera ajoutée au projet et aux artefacts qu’au jalon de release; les paquets staging restent non versionnés.
+
 ## P7B.1 — Compteurs du segment de continuation — 2026-10-17
 
 - [x] `endless_standard_session_smoke.gd` vérifie qu’après la continuation HP/build/niveaux persistent, tandis que durée affichée/enregistrée, kills et compteurs additifs d’achievements repartent pour l’ID Endless. L’horloge interne reste monotone pour conserver les expirations et le rythme de simulation.

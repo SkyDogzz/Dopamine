@@ -746,7 +746,7 @@ P1 livre le Sandbox développeur et ne remplace pas cette feature produit.
   - [x] Copier l’exécutable et son sidecar GDExtension vers un répertoire extérieur au dépôt, démarrer avec un `XDG_DATA_HOME` vierge et quitter proprement. Cette relocation vérifie l’absence de dépendance aux chemins du checkout, mais reste sur le même hôte.
   - [ ] Refaire le parcours clavier/contrôleur et le rendu sur un poste Linux avec matériel réel; le contrôle courant utilise Xvfb/Mesa llvmpipe.
 - [ ] **P9.8 — Préparation de livraison**
-  - [x] Établir [`docs/release/RELEASE_CHECKLIST.md`](../release/RELEASE_CHECKLIST.md); le choix de version d’artefact reste **[OUVERT]** et n’est pas inventé.
+  - [x] Établir [`docs/release/RELEASE_CHECKLIST.md`](../release/RELEASE_CHECKLIST.md); décision utilisateur **[VALIDÉE, 2026-10-17] — réponse A** : SemVer, première release distribuable `1.0.0` après validation P9. Les staging restent non versionnés.
   - [x] Comparer l’inventaire Godot au template Linux release 4.7.2 effectivement utilisé; autres templates et inclusion des notices dans les paquets restent à vérifier.
   - [x] Vérifier un paquet Linux staging non versionné avec notices, extraction propre et démarrage headless; ce n’est pas l’artefact final. Détails dans `docs/qa/TESTS.md`.
   - [x] Reconstruire et vérifier un nouveau staging depuis le commit `86351b6` avec CMake vierge : Release, archive filtrée, notices/licences, dépendances, SHA-256 et démarrage extrait passent. Ce paquet reste non versionné et non distribuable.

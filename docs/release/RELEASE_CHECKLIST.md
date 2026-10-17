@@ -6,7 +6,7 @@
 
 - [x] Produit Godot identifié comme `Dopamine Survivor`; moteur ciblé Godot 4.7.2 stable, natif C++23 et `godot-cpp` verrouillé à `b8530af7546a3fcae80cef2477526569fd42ffc2`.
 - [x] Une exportation locale Linux/X11 x86_64 existe et démarre le menu puis une run Survival; le binaire et la GDExtension côte à côte démarrent aussi après relocation locale. Les limites sont consignées dans [`../qa/TESTS.md`](../qa/TESTS.md).
-- [ ] **[OUVERT]** Fixer la version du jeu et la convention de version des artefacts. `game/project.godot` ne définit actuellement aucune `config/version`; ne pas déduire une version de release du numéro de Godot ni d’un hash Git.
+- [x] Convention **[VALIDÉE, 2026-10-17] — réponse A** : SemVer; première release distribuable `1.0.0` après validation de tous les critères P9. Au jalon de release, ajouter `config/version` au projet et appliquer `1.0.0` aux artefacts distribuables; ne pas versionner les paquets staging comme releases.
 - [ ] Construire depuis un checkout propre reproductible pour chaque plateforme de release; distinguer les exports vérifiés localement des artefacts réellement distribuables.
 - [ ] Pour chaque artefact retenu, consigner plateforme/architecture, commit source, versions de Godot/templates/toolchain, commandes, taille et SHA-256.
 - [x] Vérifier le paquet Linux non versionné de staging (exécutable, GDExtension, notices, licences référencées, extraction et démarrage headless); les sommes et limites sont dans [`../qa/TESTS.md`](../qa/TESTS.md). Ce paquet est explicitement non distribuable.
@@ -49,4 +49,4 @@
 
 - P9.6 — stabilité/sauvegardes : cochée dans la roadmap, avec limite explicite pour l’interruption réelle au niveau système de fichiers.
 - P9.7 — plateformes : export Linux x86_64 vérifié sur l’hôte de développement; build Windows Debug, GDExtension et run Easy complète vérifiés sur le PC Windows du créateur. Export Windows Release après extraction, machine Linux distincte, périphériques physiques et rendu matériel cible restent ouverts.
-- P9.8 — staging Linux filtré reconstruit depuis `65ed8d0`; contenu extrait, dépendances et démarrage vérifiés (SHA-256 `e7a6dd0f9e4947babb6ec20c800a0a213aab9bbce6b193670da2934cc0b6a99d`). Version d’artefact, audit de provenance des assets/audio, validation des sauvegardes, autres plateformes et notes de version restent ouverts. Détails dans [`../qa/TESTS.md`](../qa/TESTS.md).
+- P9.8 — staging Linux filtré reconstruit depuis `65ed8d0`; contenu extrait, dépendances et démarrage vérifiés (SHA-256 `e7a6dd0f9e4947babb6ec20c800a0a213aab9bbce6b193670da2934cc0b6a99d`). La convention SemVer et la première version `1.0.0` après P9 sont **[VALIDÉES]**; le projet ne reçoit pas encore cette version. Audit de provenance des assets/audio, validation des sauvegardes, autres plateformes et notes de version restent ouverts. Détails dans [`../qa/TESTS.md`](../qa/TESTS.md).
