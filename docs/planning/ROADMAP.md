@@ -606,7 +606,7 @@ Travail requis :
   - [x] Réutiliser Easy–Chaos; scaling existant jusqu’à 24 puis +5,5 % HP ennemis par vague; mid-boss toutes les 12 vagues, y compris aux vagues 24 et 36. La croissance HP reste **[PROPOSÉE]**.
 - [x] **P7B.2 — Prototype implémenté**
   - [x] Ajouter un lancement Endless dans le hub, verrouillé avant victoire Survival; l’entrée réutilise le service de progression normal et la difficulté choisie.
-  - [x] Après victoire Survival, proposer `CONTINUE AS ENDLESS`; créditer la victoire, démarrer un nouvel ID de run à la vague 25, conserver HP/build/niveaux, reprendre la simulation et éviter le double crédit Survival. Smoke dans `endless_standard_session_smoke.gd`.
+  - [x] Après victoire Survival, proposer `CONTINUE AS ENDLESS`; créditer la victoire, démarrer un nouvel ID de run à la vague 25, conserver HP/build/niveaux, reprendre la simulation et éviter le double crédit Survival. Le segment Endless repart avec son temps, ses kills et ses compteurs d’achievements propres, sans remettre à zéro l’horloge de simulation. `endless_standard_session_smoke.gd` vérifie les records, récompenses et métriques isolés par segment.
   - [x] Ajouter une smoke de bout en bout pour mort/abandon, résultat, persistance et continuation.
   - [x] Ajouter migration additive du profil v8→v9, records séparés par difficulté et récompenses idempotentes sans équipement garanti; smokes dédiés passent.
   - [x] Ouvrir le mode Endless standard au Sandbox Lab comme troisième mode exécutable; conserver diagnostics, PV verrouillés, coffres normaux désactivés et aucune injection de service de progression/sauvegarde. Les règles de P7B restent **[PROPOSÉES]**.

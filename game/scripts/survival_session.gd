@@ -368,6 +368,7 @@ var player_max_hp := 0.0
 var player_shield := 0.0
 var _shield_expires_at := 0.0
 var player_active_time := 0.0
+var _run_active_time_baseline := 0.0
 var wave_director: RefCounted
 var _next_enemy_spawn_time := 0.0
 var _next_elite_spawn_time := 0.0
@@ -1498,7 +1499,7 @@ func _refresh_hud(state: Dictionary) -> void:
 		_wave_value.text = _wave_status_text()
 	_difficulty_value.text = difficulty_id.to_upper()
 	_refresh_boss_hud()
-	var total_seconds := int(floor(player_active_time))
+	var total_seconds := int(floor(_run_active_time()))
 	_time_value.text = "%02d:%02d" % [total_seconds / 60, total_seconds % 60]
 	var equipped_names: Array[String] = []
 	var short_names := {"lightning_conductor": "LC", "inferno_sprayer": "IS", "crimson_daggers": "CD", "minigun": "MG"}
@@ -2056,13 +2057,14 @@ func _finish_run(victory: bool) -> void:
 	run_over = true
 	simulation.pause()
 	_run_result_overlay.visible = true
+	var run_active_time := _run_active_time()
 	var reward := {}
 	var armorless_record := {}
 	if mode_id == "endless":
 		if progression_service != null and progression_service.can_save_profile():
 			if progression_service.has_method("record_endless_standard_result"):
 				armorless_record = progression_service.record_endless_standard_result(
-					difficulty_id, wave_director.wave, player_active_time, kill_count
+					difficulty_id, wave_director.wave, run_active_time, kill_count
 				)
 			armorless_record["mode_id"] = "endless"
 			if progression_service.has_method("award_endless_standard_run"):
@@ -2073,7 +2075,7 @@ func _finish_run(victory: bool) -> void:
 		if progression_service != null and progression_service.can_save_profile() and \
 			progression_service.has_method("record_armorless_result"):
 			armorless_record = progression_service.record_armorless_result(
-				difficulty_id, wave_director.wave, player_active_time, kill_count
+				difficulty_id, wave_director.wave, run_active_time, kill_count
 			)
 		if progression_service != null and progression_service.can_save_profile() and \
 			progression_service.has_method("award_armorless_run"):
@@ -2086,7 +2088,7 @@ func _finish_run(victory: bool) -> void:
 		reward = progression_service.award_survival_run(
 			_run_id, wave_director.wave, victory, kill_count, difficulty_id, _run_achievement_metrics()
 		)
-	_run_result.show_result(victory, wave_director.wave, player_active_time, kill_count, reward, armorless_record,
+	_run_result.show_result(victory, wave_director.wave, run_active_time, kill_count, reward, armorless_record,
 		victory and mode_id == "survival")
 
 func _continue_as_endless_standard() -> void:
@@ -2094,6 +2096,12 @@ func _continue_as_endless_standard() -> void:
 		return
 	mode_id = "endless"
 	_run_id = Crypto.new().generate_random_bytes(16).hex_encode()
+	_run_active_time_baseline = player_active_time
+	kill_count = 0
+	_enemy_kills_by_type.clear()
+	_elite_affix_kills.clear()
+	_weapon_damage_by_id.clear()
+	_weapon_kills_by_id.clear()
 	wave_director.endless_standard = true
 	wave_director.wave = 25
 	wave_director.elapsed_in_wave = 0.0
@@ -2106,6 +2114,9 @@ func _continue_as_endless_standard() -> void:
 	get_viewport().gui_release_focus()
 	simulation.resume()
 	_refresh_hud(simulation.snapshot())
+
+func _run_active_time() -> float:
+	return maxf(0.0, player_active_time - _run_active_time_baseline)
 
 func _run_achievement_metrics() -> Dictionary:
 	var evolved_weapons := 0

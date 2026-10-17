@@ -75,6 +75,9 @@ func _run() -> void:
 	_session.wave_director.wave = 24
 	_session.wave_director.state = WAVE_DIRECTOR.State.VICTORY
 	_session.player_hp = 42.0
+	_session._weapon_kills_by_id["lightning_conductor"] = 7
+	_session._weapon_damage_by_id["lightning_conductor"] = 450.0
+	_session._enemy_kills_by_type["chaser"] = 3
 	var survival_run_id: String = _session._run_id
 	var carried_weapons: Array = _session.loadout.owned_weapons()
 	var carried_relics: Array = _session.loadout.owned_relics()
@@ -88,21 +91,37 @@ func _run() -> void:
 	if _session.mode_id != "endless" or _session.run_over or _session.wave_director.wave != 25 or \
 		_session.wave_director.state != WAVE_DIRECTOR.State.WAVE or \
 		not _session.wave_director.endless_standard or _session.player_hp != 42.0 or \
+		_session.kill_count != 0 or not is_zero_approx(_session._run_active_time()) or \
+		not _session._weapon_kills_by_id.is_empty() or not _session._weapon_damage_by_id.is_empty() or \
+		not _session._enemy_kills_by_type.is_empty() or \
 		_session.loadout.owned_weapons() != carried_weapons or _session.loadout.owned_relics() != carried_relics or \
 		_session.get_node("HUD/RunResultOverlay").visible or root.gui_get_focus_owner() != null or \
 		bool(_session.simulation.snapshot()["paused"]) or \
 		_session._enemy_hp_multiplier(25) <= _session._enemy_hp_multiplier(24):
-		_fail("Continuation should start wave 25 as Endless while preserving build and HP")
+		_fail("Continuation should preserve HP/build while resetting new-run elapsed time, kills and achievement counters")
 		return
+	var metrics_after_survival: Dictionary = progression.load_profile()["profile"]["achievement_progress"]["metrics"]
 	var endless_run_id: String = _session._run_id
+	_session.player_active_time += 30.0
 	_session.kill_count = 9
+	_session._weapon_kills_by_id["lightning_conductor"] = 2
+	_session._weapon_damage_by_id["lightning_conductor"] = 125.0
+	_session._enemy_kills_by_type["chaser"] = 1
 	_session._finish_run(false)
 	var continued_profile: Dictionary = progression.load_profile()["profile"]
 	if continued_profile["endless_standard_records"]["easy"]["wave"] != 25 or \
+		continued_profile["endless_standard_records"]["easy"]["kills"] != 9 or \
+		continued_profile["endless_standard_records"]["easy"]["survival_time_seconds"] != 30.0 or \
+		continued_profile["achievement_progress"]["metrics"]["weapon_kills_lightning_conductor"] != \
+		float(metrics_after_survival["weapon_kills_lightning_conductor"]) + 2.0 or \
+		continued_profile["achievement_progress"]["metrics"]["weapon_damage_lightning_conductor"] != \
+		float(metrics_after_survival["weapon_damage_lightning_conductor"]) + 125.0 or \
+		continued_profile["achievement_progress"]["metrics"]["enemy_kills_chaser"] != \
+		float(metrics_after_survival["enemy_kills_chaser"]) + 1.0 or \
 		continued_profile["equipment_inventory"].size() != equipment_before_continuation + 1 or \
 		not continued_profile["rewarded_survival_runs"].has(survival_run_id) or \
 		not continued_profile["rewarded_survival_runs"].has(endless_run_id):
-		_fail("The continued Endless run should get its own reward record without a second equipment drop")
+		_fail("The continued Endless run should record only its own duration/kills and achievement metrics")
 		return
 	await _cleanup_session()
 	print("Endless standard session smoke passed")

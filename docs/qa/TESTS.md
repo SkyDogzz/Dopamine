@@ -6,6 +6,12 @@
 - [x] `endless_standard_session_smoke.gd` couvre le transfert d’état et l’absence de double crédit; l’entrée depuis le hub suit son profil distinct, encore **[PROPOSÉ]**.
 - [i] La validation automatique couvre le contrat implémenté, pas la calibration du mode Endless ni une run représentative.
 
+## P7B.1 — Compteurs du segment de continuation — 2026-10-17
+
+- [x] `endless_standard_session_smoke.gd` vérifie qu’après la continuation HP/build/niveaux persistent, tandis que durée affichée/enregistrée, kills et compteurs additifs d’achievements repartent pour l’ID Endless. L’horloge interne reste monotone pour conserver les expirations et le rythme de simulation.
+- [x] `progression_service_smoke`, `endless_standard_progression_smoke` et `endless_standard_session_smoke` passent : **4/4 tests CTest**, y compris `godot_project_import`, en 4,05 s.
+- [i] Le smoke affiche à la fermeture des avertissements Godot ObjectDB/ressource encore référencés; ils ne font pas échouer ces tests et restent à diagnostiquer séparément.
+
 ## P7B/P8 — Endless standard dans le Sandbox Lab — 2026-10-17
 
 - [x] `sandbox_preset_smoke.gd` démarre successivement Survival, Armorless puis Endless standard dans le même `SandboxLabContext`; le changement de preset reste transactionnel et exige la pause.
