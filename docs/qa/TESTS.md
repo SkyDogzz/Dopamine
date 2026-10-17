@@ -140,6 +140,13 @@
 - [x] Archive staging non distribuable : `build/linux/staging/DopamineSurvivor-linux-379b9aa-staging.tar.gz`, 31 966 641 octets, SHA-256 `bbfb3f2d20ecd143005c588c7d1419c54e5c48cd3a434a181a7279094e73790c`. `sha256sum -c` passe.
 - [i] Cette vérification headless valide l’assemblage et le démarrage, pas une partie jouée, la persistance en usage, l’installation sur une machine distincte, le GPU réel ou les autres plateformes. Le paquet reste un staging sans version de jeu.
 
+## P9.8 — Revalidation staging Linux depuis f806909 — 2026-10-17
+
+- [x] Depuis le commit `f80690965b76b8d58c033b1c36a71af98ecccf88`, `tools/package_linux_staging.sh` reconstruit le snapshot `git archive` en Release, exporte Linux/X11 avec Godot 4.7.2 et filtre les ressources de développement. L’environnement courant ne fournit pas CMake dans `PATH`; le build a utilisé `/tmp/cmake-3.31.12-linux-x86_64/bin`.
+- [x] L’archive a été extraite, les bibliothèques vérifiées avec `ldd`, puis l’exécutable lancé headless depuis le dossier extrait avec un répertoire XDG vierge. La GDExtension Release adjacente est chargée et aucune erreur de démarrage n’est signalée.
+- [x] Archive staging non distribuable : `build/linux/staging/DopamineSurvivor-linux-f806909-staging.tar.gz`, 31 968 166 octets, SHA-256 `f2da78adb6398e82f4547441d57f19d919935966e21840cfc2f90195ffe6edc9`. `sha256sum -c` passe.
+- [i] Cette vérification valide l’assemblage et le démarrage headless; elle ne valide pas une partie jouée, une installation sur une machine distincte, le GPU réel ou les autres plateformes. Le paquet reste un staging sans version de jeu.
+
 ## P9.1 — Relevé exploratoire DPS des dix armes — 2026-10-17
 
 - [x] Les 90 cas ont terminé sous Godot 4.7.2 sans erreur avec `--seed=20261017`. Chaque formation a été lancée par `XDG_DATA_HOME=/tmp/dopamine-seeded-<formation> tools/local/godot-4.7.2/Godot_v4.7.2-stable_linux.x86_64 --headless --audio-driver Dummy --path game --script res://tests/combat_weapon_balance_survey.gd -- --formation=<formation> --seed=20261017`. Chaque cas utilise vitesse ×4 et 18 secondes de simulation active. Les nombres sont le DPS observé en dégâts totaux / temps actif :
