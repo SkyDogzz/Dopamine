@@ -72,24 +72,24 @@
 - [i] L’import éditeur de ce snapshot a signalé l’absence de la bibliothèque debug parce que la configuration a compilé uniquement `template_release`. L’export release et le probe natif exporté ont réussi; aucun binaire debug n’a été inclus dans le paquet.
 - [ ] Source propre et CMake vierge, mais même hôte KVM; ce contrôle ne valide pas une machine Linux distincte, une cible iGPU réelle, Windows, une version produit, ni les autres gates de release.
 
-## P9.1 — Premier relevé DPS des dix armes — 2026-10-17
+## P9.1 — Relevé exploratoire DPS des dix armes — 2026-10-17
 
-- [x] Commande : `XDG_DATA_HOME=/tmp/dopamine-balance-survey tools/local/godot-4.7.2/Godot_v4.7.2-stable_linux.x86_64 --headless --audio-driver Dummy --path game --script res://tests/combat_weapon_balance_survey.gd -- --formation=cluster`. Les 30 cas ont terminé avec succès sous Godot 4.7.2, avec 24 cibles statiques de 1 000 000 PV, vitesse de jeu ×4 et 18 secondes de simulation active par cas. Les colonnes sont DPS observé en dégâts totaux / temps actif :
+- [x] Les 60 cas ont terminé sous Godot 4.7.2 sans erreur. Commande cluster : `XDG_DATA_HOME=/tmp/dopamine-balance-survey tools/local/godot-4.7.2/Godot_v4.7.2-stable_linux.x86_64 --headless --audio-driver Dummy --path game --script res://tests/combat_weapon_balance_survey.gd -- --formation=cluster`; commande approche : `XDG_DATA_HOME=/tmp/dopamine-balance-approach tools/local/godot-4.7.2/Godot_v4.7.2-stable_linux.x86_64 --headless --audio-driver Dummy --path game --script res://tests/combat_weapon_balance_survey.gd -- --formation=approach`. Chaque cas utilise vitesse ×4 et 18 secondes de simulation active. Les nombres sont le DPS observé en dégâts totaux / temps actif :
 
-  | Arme | Niveau 1 | Niveau 5 + relique 5 | Évolution |
-  |---|---:|---:|---:|
-  | Lightning Conductor | 40,77 | 115,53 | 182,47 |
-  | Inferno Sprayer | 11,07 | 16,51 | 193,44 |
-  | Crimson Daggers | 110,81 | 311,86 | 628,50 |
-  | Minigun | 19,27 | 43,32 | 54,23 |
-  | Toxic Cloud | 17,54 | 24,65 | 31,24 |
-  | Sawblades | 8,88 | 19,95 | 33,22 |
-  | Meteor Staff | 57,63 | 110,09 | 179,20 |
-  | Prism Laser | 18,12 | 27,18 | 78,98 |
-  | Void Orb | 17,08 | 39,58 | 80,72 |
-  | Frost Nova | 46,07 | 94,24 | 118,58 |
+  | Arme | Cluster N1 | Cluster N5+R5 | Cluster EVO | Approche N1 | Approche N5+R5 | Approche EVO |
+  |---|---:|---:|---:|---:|---:|---:|
+  | Lightning Conductor | 40,77 | 115,53 | 182,47 | 35,58 | 100,64 | 163,56 |
+  | Inferno Sprayer | 11,07 | 16,51 | 193,44 | 10,65 | 15,98 | 82,59 |
+  | Crimson Daggers | 110,81 | 311,86 | 628,50 | 72,19 | 175,23 | 307,80 |
+  | Minigun | 19,27 | 43,32 | 54,23 | 18,66 | 41,45 | 52,23 |
+  | Toxic Cloud | 17,54 | 24,65 | 31,24 | 8,72 | 10,00 | 12,48 |
+  | Sawblades | 8,88 | 19,95 | 33,22 | 8,89 | 19,94 | 33,30 |
+  | Meteor Staff | 57,63 | 110,09 | 179,20 | 20,07 | 37,42 | 58,98 |
+  | Prism Laser | 18,12 | 27,18 | 78,98 | 17,64 | 26,46 | 73,71 |
+  | Void Orb | 17,08 | 39,58 | 80,72 | 9,71 | 19,25 | 35,71 |
+  | Frost Nova | 46,07 | 94,24 | 118,58 | 21,27 | 29,85 | 37,30 |
 
-- [i] Ces nombres sont exploratoires et propres à une formation cluster de cibles immobiles; portées, nombre de cibles effectivement touchées, géométrie et synergies rendent le classement brut impropre à décider un équilibrage. Le profil de cadence d’itération observé est proche de 7 ms au P95 par cas, sans constituer un profilage GPU. Le script verrouille la vie du joueur et ne mesure pas sa survie, les archétypes ennemis, les critiques séparément ni une run représentative. Les valeurs de balance restent **[PROPOSÉES]**.
+- [i] Cluster utilise 24 cibles statiques de 1 000 000 PV; approche utilise huit ennemis chaser qui avancent depuis 220 px. Les mesures sont propres à ces formations; portée, nombre de cibles effectivement touchées, géométrie, déplacements et synergies rendent le classement brut impropre à décider un équilibrage. Le profil de cadence d’itération observé est proche de 7 ms au P95 par cas, sans constituer un profilage GPU. Le script verrouille la vie du joueur et ne mesure pas sa survie, d’autres archétypes ennemis, les critiques séparément ni une run représentative. Les valeurs de balance restent **[PROPOSÉES]**.
 - [i] La collecte a été exécutée sur le checkout local avec une modification non commitée de `game/scripts/survival_session.gd` appartenant au travail audio en cours; cette scène n’avait ni boss ni lecture audio dans ce scénario. Une répétition sur un commit propre reste souhaitable avant de figer une baseline.
 
 ## Revalidation de la suite après export Linux — 2026-10-17
