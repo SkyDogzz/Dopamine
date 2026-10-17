@@ -12,6 +12,7 @@ const ACTIVE_SECONDS := 18.0
 const TARGET_COUNT := 24
 const TARGET_HP := 1000000.0
 var _weapon_filter := ""
+var _formation_filter := "cluster"
 
 func _initialize() -> void:
 	call_deferred("_run")
@@ -20,11 +21,17 @@ func _run() -> void:
 	for argument in OS.get_cmdline_user_args():
 		if argument.begins_with("--weapon="):
 			_weapon_filter = argument.trim_prefix("--weapon=")
+		elif argument.begins_with("--formation="):
+			_formation_filter = argument.trim_prefix("--formation=")
 	if not _weapon_filter.is_empty() and _weapon_filter not in WEAPON_IDS:
 		push_error("Unknown weapon filter: %s" % _weapon_filter)
 		quit(1)
 		return
-	print("weapon,build,weapon_level,relic_level,evolved,active_seconds,damage,dps,loop_interval_p95_ms,loop_interval_max_ms")
+	if _formation_filter not in ["single", "cluster"]:
+		push_error("Unknown formation filter: %s" % _formation_filter)
+		quit(1)
+		return
+	print("weapon,formation,build,weapon_level,relic_level,evolved,active_seconds,damage,dps,loop_interval_p95_ms,loop_interval_max_ms")
 	for weapon_id in WEAPON_IDS:
 		if not _weapon_filter.is_empty() and weapon_id != _weapon_filter:
 			continue
@@ -78,14 +85,15 @@ func _measure(weapon_id: String, build: Dictionary) -> bool:
 	session.loadout = loadout
 
 	var player_position: Vector2 = session.player.global_position
-	for index in range(TARGET_COUNT):
-		var angle := TAU * float(index) / float(TARGET_COUNT)
-		var radius := 58.0 if index % 2 == 0 else 112.0
+	var target_count := 1 if _formation_filter == "single" else TARGET_COUNT
+	for index in range(target_count):
+		var angle := 0.0 if _formation_filter == "single" else TAU * float(index) / float(TARGET_COUNT)
+		var radius := 80.0 if _formation_filter == "single" else (58.0 if index % 2 == 0 else 112.0)
 		var position := player_position + Vector2.from_angle(angle) * radius
 		session.simulation.spawn("test_target", 1, position, TARGET_HP, Vector2.ZERO)
-	var targets: Array = await _wait_for_targets(session, TARGET_COUNT)
-	if targets.size() != TARGET_COUNT:
-		push_error("Expected %d targets for %s, got %d" % [TARGET_COUNT, weapon_id, targets.size()])
+	var targets: Array = await _wait_for_targets(session, target_count)
+	if targets.size() != target_count:
+		push_error("Expected %d targets for %s, got %d" % [target_count, weapon_id, targets.size()])
 		session.queue_free()
 		return false
 	session.simulation.set_speed(4.0)
@@ -115,8 +123,8 @@ func _measure(weapon_id: String, build: Dictionary) -> bool:
 	var p95_index := mini(loop_interval_ms.size() - 1,
 			int(floor(float(loop_interval_ms.size() - 1) * 0.95)))
 	var max_loop_interval_ms := loop_interval_ms[loop_interval_ms.size() - 1]
-	print("%s,%s,%d,%d,%s,%.2f,%.2f,%.2f,%.3f,%.3f" % [
-		weapon_id, build["name"], weapon_level, relic_level, str(build["evolved"]), elapsed,
+	print("%s,%s,%s,%d,%d,%s,%.2f,%.2f,%.2f,%.3f,%.3f" % [
+		weapon_id, _formation_filter, build["name"], weapon_level, relic_level, str(build["evolved"]), elapsed,
 		damage, damage / elapsed, loop_interval_ms[p95_index], max_loop_interval_ms,
 	])
 	session.queue_free()

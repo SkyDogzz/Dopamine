@@ -916,7 +916,7 @@ Note de clôture : le blocage historique du smoke `sandbox_ui_smoke.gd` décrit 
 
 ## P5 — Comparaison contrôlée des armes — 2026-10-17
 
-- [x] `combat_weapon_balance_survey.gd` exécute les dix armes dans trois configurations chacune via `SurvivalSession`: niveau 1, niveau 5 avec relique niveau 5 sans évolution, et build évolué. Les 30 scénarios de 18 secondes simulées passent; les DPS observés et la commande reproductible sont consignés dans `PERFORMANCE.md`.
+- [x] `combat_weapon_balance_survey.gd` exécute les dix armes dans trois configurations chacune via `SurvivalSession`: niveau 1, niveau 5 avec relique niveau 5 sans évolution, et build évolué. Les 30 scénarios groupés de 18 secondes simulées passent; un contrôle `Inferno Sprayer` en cible unique passe aussi dans les trois configurations. Les DPS observés et la commande reproductible sont consignés dans `PERFORMANCE.md`.
 - [ ] Ces cibles immobiles, sans mouvement ni progression, servent de comparaison de laboratoire uniquement. Elles ne ferment pas le calibrage sur runs représentatives ni le profilage GPU sur matériel de référence.
 
 ## P5/P6 — Revalidation coffre et effets uniques — 2026-10-16

@@ -52,7 +52,7 @@ DOPAMINE_TEST_TIMEOUT=300s tools/run_godot_test.sh tools/local/godot-4.7.2/Godot
   --headless --path game --script res://tests/combat_weapon_balance_survey.gd
 ```
 
-Pour un seul prototype, ajouter `-- --weapon=lightning_conductor` (ID remplaçable par l’un des dix IDs du catalogue). Résultats observés, en dégâts/s :
+Le défaut `--formation=cluster` utilise les 24 cibles décrites ci-dessus; `--formation=single` place une cible à 80 unités pour isoler les attaques monocibles. Pour ne relever qu’une arme, ajouter `-- --weapon=lightning_conductor --formation=single` (ID remplaçable par l’un des dix IDs du catalogue). Résultats de la formation groupée, en dégâts/s :
 
 | Arme | Niveau 1 | Niveau 5 + relique 5 | Évoluée |
 |---|---:|---:|---:|
@@ -67,7 +67,7 @@ Pour un seul prototype, ajouter `-- --weapon=lightning_conductor` (ID remplaçab
 | Void Orb | 15,14 | 44,26 | 83,56 |
 | Frost Nova | 46,09 | 95,31 | 118,62 |
 
-Le cas groupé favorise particulièrement les attaques capables de toucher plusieurs cibles; l’évolution d’Inferno en est un signal net. Ces valeurs décrivent ce scénario synthétique, ne comparent pas des armes dans des runs représentatives et ne valident aucun chiffre proposé. Elles ne justifient pas seules un changement de tuning. Les champs `loop_interval_*` imprimés par le script sont l’espacement mural entre reprises de `process_frame` en headless, pas du temps CPU de frame ni un profil GPU. La calibration comparative en runs représentatives et le profilage CPU/GPU sur matériel de référence restent **[OUVERTS]**.
+Le cas groupé favorise particulièrement les attaques capables de toucher plusieurs cibles. Contrôle supplémentaire Inferno en formation single : 11,09 DPS au niveau 1, 16,53 au niveau 5 avec relique 5, et 20,66 évolué; le dernier rapport au précédent est proche du multiplicateur d’évolution configuré de 1,25. Le rapport de 190,16 DPS en formation groupée reflète donc l’explosion Wildfire touchant plusieurs cibles, pas un double comptage de l’attribution. Cela confirme l’explication technique de l’écart, sans déterminer si l’équilibre de cette explosion est satisfaisant. Ces valeurs décrivent des scénarios synthétiques, ne comparent pas des armes dans des runs représentatives et ne valident aucun chiffre proposé. Elles ne justifient pas seules un changement de tuning. Les champs `loop_interval_*` imprimés par le script sont l’espacement mural entre reprises de `process_frame` en headless, pas du temps CPU de frame ni un profil GPU. La calibration comparative en runs représentatives et le profilage CPU/GPU sur matériel de référence restent **[OUVERTS]**.
 
 ## Smoke rendu Godot sous Xvfb
 
