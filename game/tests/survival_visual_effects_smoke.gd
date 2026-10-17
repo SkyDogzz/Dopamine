@@ -23,11 +23,17 @@ func _run() -> void:
 	await process_frame
 	var state_before: Dictionary = session.simulation.snapshot()
 	session._add_weapon_impact("inferno_sprayer", Vector2.ZERO, false)
+	session._add_weapon_impact("inferno_sprayer", Vector2.RIGHT * 20.0, false, true)
 	session._add_enemy_death_pixels("chaser", Vector2.ZERO)
 	session._add_lightning_arc(Vector2.ZERO, Vector2.RIGHT * 20.0)
-	if session._weapon_impacts.size() != 1 or session._enemy_death_pixels.size() != 8 or \
+	if session._weapon_impacts.size() != 2 or \
+		bool(session._weapon_impacts[0].get("critical_hit", true)) or \
+		bool(session._weapon_impacts[1].get("critical_hit", false)) != true or \
+		float(session._weapon_impacts[1].get("emphasis_scale", 1.0)) <= \
+		float(session._weapon_impacts[0].get("emphasis_scale", 1.0)) or \
+		session._enemy_death_pixels.size() != 8 or \
 		session._lightning_arcs.size() != 1:
-		_fail("Standard visual effects should remain enabled by default")
+		_fail("Critical direct hits should retain metadata and receive visible size emphasis")
 		return
 	var normal_impact_next_random := _next_impact_random(session, false)
 	var reduced_impact_next_random := _next_impact_random(session, true)

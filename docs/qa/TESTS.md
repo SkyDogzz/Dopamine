@@ -31,6 +31,12 @@
 - [x] CTest ciblé avec son fixture d’import Godot : **2/2 réussis en 3,12 s**.
 - [i] Cette vérification valide le rendu superposé, pas la lisibilité sur le GPU cible ni la calibration des couleurs/durées **[PROPOSÉES]**.
 
+## P9.3 — Accent visuel des impacts critiques — 2026-10-17
+
+- [x] `survival_visual_effects_smoke.gd` confirme qu'un impact normal garde l'échelle de base et qu'un impact marqué critique conserve ce drapeau et reçoit une échelle supérieure; le rendu consomme cette échelle lors du dessin du sprite d'impact de l'arme.
+- [x] Le même smoke vérifie que les visuels réduits ne changent pas le flux aléatoire ni l'état de simulation en pause; smoke ciblé Godot 4.7.2 : **1/1 réussi**.
+- [i] L'échelle 1,45× est **[PROPOSÉE]** et n'ajoute pas de couleur dédiée. La vérification est automatisée sous rendu logiciel/headless et ne valide pas encore la lisibilité sur le GPU cible.
+
 ## P5.1.14 — Slots et déduplication des effets uniques — 2026-10-17
 
 - [x] Depuis un `git archive` propre du commit `6647f3f`, l’import Godot 4.7.2 puis `survival_loadout_smoke.gd`, `survival_unique_effects_smoke.gd` et `progression_service_smoke.gd` passent avec des `XDG_DATA_HOME` isolés.

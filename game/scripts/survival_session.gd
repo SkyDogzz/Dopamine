@@ -57,6 +57,7 @@ const GRAVITY_COLLAPSE_RADIUS := 60.0
 const GRAVITY_COLLAPSE_DAMAGE_MULTIPLIER := 0.5
 const WEAPON_IMPACT_LIFETIME := 0.22
 const MAX_VISIBLE_WEAPON_IMPACTS := 32
+const CRITICAL_HIT_IMPACT_SCALE := 1.45 # [PROPOSÉ] Critical hits use the same weapon sprite at a larger size; no new color mapping.
 const STATUS_EFFECT_COLORS := {
 	"burn": Color("#FFD447"), "poison": Color("#48E69B"), "bleed": Color("#FF7181"),
 }
@@ -883,7 +884,7 @@ func _process(_delta: float) -> void:
 				_try_hemorrhage(event)
 				_try_shatter(event, state["entities"])
 				_add_weapon_impact(source_type, Vector2(float(event["position"]["x"]), float(event["position"]["y"])),
-						bool(event.get("is_damage_over_time", false)))
+						bool(event.get("is_damage_over_time", false)), bool(event.get("critical_hit", false)))
 				if source_type == "pandemic_cloud":
 					_pandemic_poisoned_targets[target_key] = true
 				elif source_type == "starfall":
@@ -3767,7 +3768,8 @@ func _draw() -> void:
 			var fade := clampf(remaining / WEAPON_IMPACT_LIFETIME, 0.0, 1.0)
 			var scale := 0.7 + 0.5 * (1.0 - fade)
 			draw_set_transform(impact["position"], float(impact["rotation"]),
-					Vector2.ONE * scale * _weapon_impact_level_scale(int(impact.get("level", 1))))
+					Vector2.ONE * scale * _weapon_impact_level_scale(int(impact.get("level", 1))) *
+					float(impact.get("emphasis_scale", 1.0)))
 			draw_texture_rect_region(WEAPON_IMPACTS_TEXTURE, Rect2(-32.0, -32.0, 64.0, 64.0),
 				Rect2(float(impact["type"]) * 64.0, 0.0, 64.0, 64.0), Color(1.0, 1.0, 1.0, fade))
 			draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
@@ -3793,7 +3795,8 @@ func _add_enemy_death_pixels(enemy_type: String, position: Vector2) -> void:
 	while _enemy_death_pixels.size() > MAX_ENEMY_DEATH_PIXELS:
 		_enemy_death_pixels.pop_front()
 
-func _add_weapon_impact(source_type: String, position: Vector2, is_damage_over_time: bool) -> void:
+func _add_weapon_impact(source_type: String, position: Vector2, is_damage_over_time: bool,
+		critical_hit: bool = false) -> void:
 	var impact_type := source_type.get_slice(":", 0)
 	if impact_type in ["lightning_primary", "lightning_arc"]:
 		impact_type = "lightning_conductor"
@@ -3811,6 +3814,8 @@ func _add_weapon_impact(source_type: String, position: Vector2, is_damage_over_t
 		"position": position,
 		"rotation": rotation,
 		"level": level,
+		"critical_hit": critical_hit,
+		"emphasis_scale": CRITICAL_HIT_IMPACT_SCALE if critical_hit else 1.0,
 		"remaining": WEAPON_IMPACT_LIFETIME,
 	})
 

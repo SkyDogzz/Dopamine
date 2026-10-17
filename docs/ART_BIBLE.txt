@@ -104,6 +104,10 @@ particules et intensité des récompenses.
 d'une durée fixe en millisecondes ? Une durée fixe est recommandée.
 [À CONFIRMER] Règles de transformation de chaque arme à l'évolution.
 [À CONFIRMER] Animations et couleurs des dégâts critiques, soins et statuts.
+[PROPOSÉ] Les impacts critiques réutilisent le sprite d'impact de l'arme avec
+une échelle de 1,45×, sans introduire de nouvelle couleur. La différence est
+visible sans confondre le code couleur des dégâts par élément; animation et
+couleur spécifiques restent à confirmer.
 
 ======================================================================
 5. INTERFACE ET BOUTONS — PHASE 2 [VALIDÉ]
