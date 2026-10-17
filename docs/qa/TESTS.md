@@ -26,8 +26,15 @@
 ## Validation d'isolation Sandbox Lab P8.8 — 2026-10-17
 
 - `sandbox_lab_smoke.gd` écrit un slot normal sentinelle dans son `XDG_DATA_HOME` de test, puis démarre le Lab, applique des builds, lance le combat et effectue Reset; le contenu du slot est comparé octet pour octet à la fin.
-- `sandbox_snapshot_smoke.gd` utilise un `XDG_DATA_HOME` séparé et vérifie la même sentinelle après capture, restauration, rejet de version et rejet de build invalide. `sandbox_preset_smoke.gd` couvre le round-trip share code et les payloads hostiles; `sandbox_profile_build_smoke.gd` compare les profils source avant/après import read-only et refuse les anciens profils sans migration.
+- `sandbox_snapshot_smoke.gd` utilise un `XDG_DATA_HOME` séparé et vérifie la même sentinelle après capture, restauration, rejet de version, build dépassant les slots et évolution avant niveau 5 sur l’arme et la relique appariée. `sandbox_preset_smoke.gd` couvre le round-trip share code et les payloads hostiles; `sandbox_profile_build_smoke.gd` compare les profils source avant/après import read-only et refuse les anciens profils sans migration.
 - Résultats Godot 4.7.2 headless : les quatre smokes passent. `SandboxLabContext` conserve ses références `progression_service` et `normal_save_service` nulles; aucune route de récompense ou leaderboard n’est fournie au Lab.
+
+## P8.6 — Validation atomique des évolutions en snapshot — 2026-10-17
+
+- [x] Régression rouge d’abord : `sandbox_snapshot_smoke.gd` a révélé qu’un snapshot assortissant un `evolution_id` valide à une arme/relique sous le niveau 5 pouvait restaurer l’état natif avant le rejet du build et laisser le loadout partiellement remplacé.
+- [x] `SandboxBuild` rejette désormais atomiquement toute évolution si l’arme ou sa relique appariée n’est pas niveau 5. `SandboxLabContext.restore_snapshot()` valide donc cette condition avant de toucher à la simulation active.
+- [x] `sandbox_snapshot_smoke.gd` vérifie le rejet et préserve les quatre entités, l’horloge de run et le niveau de Storm Core; `sandbox_preset_smoke.gd` confirme qu’une évolution valide au niveau 5 reste acceptée. Les deux passent sous Godot 4.7.2.
+- [ ] Le smoke snapshot émet toujours des avertissements ObjectDB/ressources à la fermeture; la gestion SFX est suivie séparément.
 
 ## Revalidation P5 après reprise — 2026-10-17
 

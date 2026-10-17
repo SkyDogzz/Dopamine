@@ -134,6 +134,14 @@ func _validate(build: Variant) -> Dictionary:
 			candidate["weapon_count"] = entries.size()
 		if family == "relics":
 			candidate["relic_count"] = entries.size()
+	for weapon_id in candidate["weapons"]:
+		var weapon: Dictionary = candidate["weapons"][weapon_id]
+		if str(weapon.get("evolution_id", "")).is_empty():
+			continue
+		var relic_id := str(catalog.weapons[weapon_id]["relic_id"])
+		if int(weapon["level"]) != LEVEL_CAP or \
+				int(candidate["relics"].get(relic_id, {}).get("level", 0)) != LEVEL_CAP:
+			return _error("invalid_evolution")
 	var equipment_entries = build.get("equipment", [])
 	if not equipment_entries is Array or equipment_entries.size() > 128:
 		return _error("invalid_equipment")

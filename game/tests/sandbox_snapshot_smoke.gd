@@ -229,6 +229,14 @@ func _run() -> void:
 			int(lab_context.simulation.snapshot()["metrics"]["entity_count"]) != 4:
 		_fail("Lab must reject snapshots whose build exceeds loadout slots without changing the session")
 		return
+	var locked_evolution_snapshot: Dictionary = lab_context.latest_snapshot.duplicate(true)
+	locked_evolution_snapshot["build"]["weapons"][0]["evolution_id"] = "infinite_circuit"
+	locked_evolution_snapshot["active_preset"]["initial_build"]["weapons"][0]["evolution_id"] = "infinite_circuit"
+	if lab_context.restore_snapshot(locked_evolution_snapshot) or lab_session.player_active_time != 12.5 or \
+			int(lab_context.simulation.snapshot()["metrics"]["entity_count"]) != 4 or \
+			lab_session.loadout.relic_level("storm_core") != 1:
+		_fail("Lab must reject an unavailable evolution before mutating the session or native snapshot")
+		return
 	var final_boss_index := _enemy_type_index(enemy_select, "final_boss")
 	var chaser_index := _enemy_type_index(enemy_select, "chaser")
 	enemy_select.select(final_boss_index)

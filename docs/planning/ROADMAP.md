@@ -646,7 +646,7 @@ P1 livre le Sandbox développeur et ne remplace pas cette feature produit.
   - [x] Exposer le checkpoint natif et capturer/restaurer sans perte une scène simple; `sandbox_snapshot_smoke.gd` vérifie un ennemi et l’état pause.
   - [x] Vérifier le rejet de version incompatible par l’API Godot, ainsi que commandes en attente et séquences dans `simulation_worker_test`; `sandbox_snapshot_smoke.gd` couvre aussi la barrière Godot→worker, les commandes soumises avant capture et la séquence après restauration.
   - [x] Documenter format opaque en mémoire, état hors worker et limites du déterminisme dans `SANDBOX_SNAPSHOT.md`; le Lab capture/restaure maintenant en mémoire l’état natif, la session Godot (RNG, horloges, joueur, vague), le build et les overrides LIVE.
-  - [x] Ajouter `CAPTURE SNAPSHOT` / `RESTORE SNAPSHOT`, disponibles en pause; vérifier la reprise complète et le rejet sans mutation d’une version inconnue ou d’un build dépassant les slots.
+  - [x] Ajouter `CAPTURE SNAPSHOT` / `RESTORE SNAPSHOT`, disponibles en pause; vérifier la reprise complète et le rejet sans mutation d’une version inconnue, d’un build dépassant les slots ou d’une évolution avant que l’arme et sa relique soient toutes deux niveau 5.
 - [x] **P8.7 — Limites et sécurité**
   - [x] Mesurer le plafond de 2 500 entités (500 ennemis + 2 000 projectiles) : RSS haut de page 7 960 KiB sur Linux Debug; métriques et limites dans `docs/qa/PERFORMANCE.md`.
   - [x] Pour le quota ECS utilisé par l’outil Spawn, avertir quand un lot ne tient plus et conserver le hard cap natif de 2 500; les limites internes de commandes/événements restent bornées par le worker. Calibration des seuils et politiques de surcharge toujours **[OUVERTES]** sur matériel cible.

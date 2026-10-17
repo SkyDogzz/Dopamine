@@ -6,7 +6,7 @@ Statut : snapshot de session Lab en mémoire, version 1. Il ne change ni le form
 
 Un snapshot représente une session du Sandbox Lab à un instant donné. Il ne capture jamais `SaveService`, `ProgressionService`, les récompenses d’une run normale ou un slot utilisateur. Les presets restent des configurations de départ partageables; un snapshot doit reprendre une simulation en cours.
 
-Le snapshot doit être validé complètement avant restauration. Une version inconnue, un champ manquant/inattendu, une valeur non finie ou une référence d’entité invalide doit provoquer un refus sans modifier la session active.
+Le snapshot doit être validé complètement avant restauration. Une version inconnue, un champ manquant/inattendu, une valeur non finie, une référence d’entité invalide, un build dépassant les slots ou une évolution dont l’arme et la relique ne sont pas toutes deux au niveau 5 doit provoquer un refus sans modifier la session active.
 
 ## État à capturer
 
@@ -22,7 +22,7 @@ Les éléments de rendu dérivés (batches de sprites, particules/transitions vi
 
 ## Couverture existante et écart
 
-`simulation_core_test` et `simulation_worker_test` vérifient les copies natives, leur restauration, le rejet d’une version de worker incompatible, ainsi que la conservation et la validation des commandes en attente. `CombatSimulation.capture_state()` et `restore_state()` exposent cette couche native à Godot. Le smoke `sandbox_snapshot_smoke.gd` vérifie la barrière Godot→worker en soumettant deux spawns et une pause sans attendre leurs séquences avant capture; après restauration, une nouvelle commande poursuit la numérotation et l’état contient les trois entités. Le smoke couvre aussi la capture et la reprise d’une session Lab complète : build, RNG, horloges, position joueur, état natif et overrides LIVE. Il vérifie le rejet d’une version incompatible et d’un build dépassant les slots, sans altérer la session.
+`simulation_core_test` et `simulation_worker_test` vérifient les copies natives, leur restauration, le rejet d’une version de worker incompatible, ainsi que la conservation et la validation des commandes en attente. `CombatSimulation.capture_state()` et `restore_state()` exposent cette couche native à Godot. Le smoke `sandbox_snapshot_smoke.gd` vérifie la barrière Godot→worker en soumettant deux spawns et une pause sans attendre leurs séquences avant capture; après restauration, une nouvelle commande poursuit la numérotation et l’état contient les trois entités. Le smoke couvre aussi la capture et la reprise d’une session Lab complète : build, RNG, horloges, position joueur, état natif et overrides LIVE. Il vérifie le rejet d’une version incompatible, d’un build dépassant les slots et d’une évolution prématurée, sans altérer la session ni son état natif.
 
 Le Lab expose `CAPTURE SNAPSHOT` et `RESTORE SNAPSHOT`; un seul checkpoint est conservé en mémoire jusqu’au changement de preset ou à la fermeture du Lab. Les actions sont désactivées hors pause et refusées en présence d’un choix modal ou d’un état terminal. Le checkpoint n’est ni exportable ni persistant. Les saves normales, la progression et les récompenses ne sont jamais capturées ou modifiées. Les commandes en attente sont couvertes par `simulation_worker_test`; le bouton de capture s’appuie sur la barrière native.
 
