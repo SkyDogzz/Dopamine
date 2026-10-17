@@ -188,6 +188,12 @@
 - [i] Le passage a été exécuté sur le checkout de travail qui contenait aussi le diff local SFX et rayon du boss dans `game/scripts/survival_session.gd`; les tests n’ont pas atteint le boss. Ce diff n’est pas inclus dans le commit de soak.
 - [i] Le checkout de ce CTest contenait un diff local non commité de `game/scripts/survival_session.gd`; ces résultats décrivent cet état de travail, pas le commit seul. Ce diff n’a pas été inclus dans le changement du soak.
 
+## P9.6 — Cible CMake pour le soak multi-modes — 2026-10-17
+
+- [x] Ajouter la cible opt-in `stability_soak`, hors CTest standard, qui lance `stability_soak_smoke.gd` avec `XDG_DATA_HOME` isolé sous `build/stability_soak_data/`.
+- [x] Commande : `/tmp/cmake-3.31.12-linux-x86_64/bin/cmake --build build --target stability_soak`. Godot 4.7.2 rapporte **46 sessions Survival / 600,4 s simulées**, **10 sessions Endless / 129,2 s**, **10 Armorless / 130,2 s** et **600,1 s Sandbox / 40 lots d’ennemis**; le smoke passe et confirme l’absence de mutation des sauvegardes normales.
+- [i] Exécution sur l’hôte Linux courant avec un diff local non commité dans `survival_session.gd`; l’isolation est vérifiée par empreintes locales, pas sur un profil de joueur réel. Cette cible n’est pas lancée par le CTest rapide.
+
 ## P9.6 — Écritures interrompues et fermeture du worker — 2026-10-17
 
 - [x] `save_service_smoke.gd` place un JSON temporaire partiel alors qu’un slot valide existe, puis simule l’intervalle de remplacement où le slot manque et seul le backup valide demeure. Le chargement garde la version courante dans le premier cas, récupère le backup dans le second, et un enregistrement ultérieur enlève le temporaire incomplet.

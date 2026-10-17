@@ -153,6 +153,17 @@ if(BUILD_TESTING)
             set_tests_properties(sandbox_weapon_${weapon_id}_scenario PROPERTIES
                 FIXTURES_REQUIRED godot_project_ready TIMEOUT 15)
         endforeach()
+
+        add_custom_target(stability_soak
+            COMMAND "${CMAKE_COMMAND}" -E env
+                "XDG_DATA_HOME=${CMAKE_CURRENT_BINARY_DIR}/stability_soak_data"
+                "${DOPAMINE_GODOT_EXECUTABLE}" --headless --audio-driver Dummy
+                    --path "${PROJECT_SOURCE_DIR}/game"
+                    --script res://tests/stability_soak_smoke.gd
+            COMMENT "Running the opt-in multi-mode stability soak"
+            USES_TERMINAL
+            VERBATIM
+        )
     endif()
 endif()
 

@@ -703,7 +703,7 @@ P1 livre le Sandbox développeur et ne remplace pas cette feature produit.
   - [ ] Mesurer frame-time CPU/GPU, mémoire, P50/P95/P99.
   - [ ] Refaire les mesures après optimisations et archiver la configuration.
 - [x] **P9.6 — Stabilité/saves**
-  - [x] Faire un soak test Survival/Sandbox : 612,4 s simulées réparties sur 30 sessions sans verrou de vie/progression, puis 600,1 s Sandbox et 40 lots d’ennemis, sans écriture dans `user://saves`; étendre ensuite à Endless standard (128,1 s / 10 sessions) et Armorless (128,1 s / 4 sessions), mêmes PV normaux et contrôle d’isolation; détails/limites dans `docs/qa/TESTS.md`.
+  - [x] Ajouter et exécuter `cmake --build build --target stability_soak`, cible opt-in hors CTest rapide : 600,4 s Survival/46 sessions, 129,2 s Endless/10, 130,2 s Armorless/10 et 600,1 s Sandbox/40 lots d’ennemis, sans mutation détectée de `user://saves`; détail et limites dans `docs/qa/TESTS.md`.
   - [x] Tester un fichier temporaire de sauvegarde partiellement écrit, un slot absent avec backup valide, la restauration, le nettoyage au prochain enregistrement et les migrations; limites du scénario dans `docs/qa/TESTS.md`.
   - [x] Vérifier l’idempotence des récompenses après redémarrage du service et l’arrêt/join du worker, y compris sous soumission concurrente; `progression_service_smoke.gd` et `simulation_worker` couvrent ces chemins.
 - [ ] **P9.7 — Plateformes**
