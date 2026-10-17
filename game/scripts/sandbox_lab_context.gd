@@ -22,6 +22,9 @@ func start(preset: Variant) -> Dictionary:
 	var checked: Dictionary = preset_service.validate_preset(preset)
 	if not checked.get("ok", false):
 		return checked
+	var base_mode := str(checked["preset"]["base_mode"])
+	if base_mode == "endless":
+		return {"ok": false, "error": "mode_unavailable"}
 	var build_script = load("res://scripts/sandbox_build.gd")
 	var candidate_build = build_script.new()
 	var build_result: Dictionary = candidate_build.load_build(checked["preset"]["initial_build"])
@@ -33,6 +36,7 @@ func start(preset: Variant) -> Dictionary:
 	candidate_session.progression_service = null
 	candidate_session.sandbox_diagnostics_enabled = true
 	candidate_session.sandbox_rng_seed = int(checked["preset"]["seed"])
+	candidate_session.mode_id = base_mode
 	candidate_session.difficulty_id = "normal"
 	candidate_session.skip_starting_weapon_choice = true
 	var wave_spawning_enabled: bool = bool(checked["preset"]["overrides"].get("wave_spawning_enabled", false))

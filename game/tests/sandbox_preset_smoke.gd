@@ -210,6 +210,27 @@ func _run() -> void:
 	if (await context.apply_preset(mismatched_evolution)).get("ok", false):
 		_fail("A weapon must reject an evolution belonging to a different catalog pair")
 		return
+	var armorless_preset := preset.duplicate(true)
+	armorless_preset["base_mode"] = "armorless"
+	context.simulation.pause()
+	var armorless_result: Dictionary = await context.apply_preset(armorless_preset)
+	if not armorless_result.get("ok", false) or context.session.mode_id != "armorless" or \
+			not context.session.wave_director.endless_armorless or \
+			context.session.armorless_run_state == null or not context.session.armorless_run_state.is_active() or \
+			context.session.progression_service != null or context.progression_service != null or \
+			context.normal_save_service != null:
+		_fail("An Armorless preset should start the validated mode inside the isolated Lab context")
+		return
+	var active_lab_session: Node2D = context.session
+	var active_lab_preset_id := str(context.active_preset["preset_id"])
+	var endless_preset := preset.duplicate(true)
+	endless_preset["base_mode"] = "endless"
+	context.simulation.pause()
+	var unsupported_endless: Dictionary = await context.apply_preset(endless_preset)
+	if unsupported_endless.get("ok", false) or unsupported_endless.get("error", "") != "mode_unavailable" or \
+			context.session != active_lab_session or str(context.active_preset["preset_id"]) != active_lab_preset_id:
+		_fail("An open Endless preset must be rejected without replacing the active isolated Lab session")
+		return
 	context.stop()
 	context.queue_free()
 	print("Sandbox preset smoke passed")

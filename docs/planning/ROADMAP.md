@@ -599,7 +599,7 @@ P1 livre le Sandbox développeur et ne remplace pas cette feature produit.
 
 - [x] **P8.1 — Entrée et contexte isolé**
   - [x] Ajouter l’accès distinct Sandbox Lab au menu avant sélection/création de save; l’entrée `SANDBOX DEV` reste le Sandbox développeur P1.
-  - [x] Ajouter `SandboxLabContext` mémoire : il valide le preset, héberge une session Survival sans service de progression/save, désactive vagues/coffres normaux et gèle le HP; il ne crédite aucune progression et remplace un preset seulement en pause.
+  - [x] Ajouter `SandboxLabContext` mémoire : il valide le preset, héberge une session Survival ou Armorless sans service de progression/save, désactive les coffres normaux et gèle le HP; il ne crédite aucune progression et remplace un preset seulement en pause. Le mode Endless standard est refusé explicitement tant que ses règles restent **[OUVERTES]**.
   - [x] Smoke dédié utilise un `XDG_DATA_HOME` isolé, vérifie le spawn et le stockage local du preset; aucune donnée n’est écrite sous `user://saves`.
 - [x] **P8.2 — Build et configuration**
   - [x] Ajouter des contrôles visuels au Lab pour sélectionner une arme/relique et son niveau, ajouter une stat, puis appliquer le build à la session isolée en pause. Les valeurs restent des outils expérimentaux **[PROPOSÉES]**.
@@ -621,7 +621,7 @@ P1 livre le Sandbox développeur et ne remplace pas cette feature produit.
   - [x] Ajouter des overrides LIVE sélectionnables par statistique; ils restent transitoires et sont effacés lors d’une reconstruction du build.
   - [x] Valider atomiquement les champs LIVE, REBUILD et RESTART; les valeurs invalides laissent la session active et son snapshot inchangés.
 - [x] **P8.3 — Presets et share codes**
-  - [x] Ajouter `sandbox_preset_service.gd` : schéma version 1 fermé, exemple minimal et modes Survival/Endless/Armorless.
+  - [x] Ajouter `sandbox_preset_service.gd` : schéma version 1 fermé et modes Survival/Endless/Armorless; le contexte exécute Survival et Armorless, tandis qu’Endless renvoie `mode_unavailable` sans remplacer la session active.
   - [x] Exporter/importer JSON limité à 1 Mio et refuser champs inconnus, types et métadonnées invalides.
   - [x] Ajouter `DSLAB1:` avec DEFLATE, Base64URL, SHA-256 d’intégrité et décompression plafonnée; smoke de round-trip et corruption.
   - [x] Borner récursivement profondeur (16), collections (256 éléments chacune) et types JSON autorisés; tests hostiles ciblés.

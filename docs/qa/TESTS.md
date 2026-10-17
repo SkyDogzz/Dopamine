@@ -29,6 +29,12 @@
 - `sandbox_snapshot_smoke.gd` utilise un `XDG_DATA_HOME` séparé et vérifie la même sentinelle après capture, restauration, rejet de version, build dépassant les slots et évolution avant niveau 5 sur l’arme et la relique appariée. `sandbox_preset_smoke.gd` couvre le round-trip share code et les payloads hostiles; `sandbox_profile_build_smoke.gd` compare les profils source avant/après import read-only et refuse les anciens profils sans migration.
 - Résultats Godot 4.7.2 headless : les quatre smokes passent. `SandboxLabContext` conserve ses références `progression_service` et `normal_save_service` nulles; aucune route de récompense ou leaderboard n’est fournie au Lab.
 
+## P8.1/P8.3 — Mode réellement sélectionné par le preset — 2026-10-17
+
+- [x] Régression rouge d’abord : un preset valide `base_mode=armorless` démarrait silencieusement une session Survival standard.
+- [x] `SandboxLabContext` transmet désormais `base_mode` à la session Armorless; le smoke confirme le directeur endless Armorless, l’état temporaire actif et l’absence de `ProgressionService`/`SaveService`.
+- [x] Un preset `base_mode=endless` renvoie `mode_unavailable` tant que les règles de l’Endless standard restent **[OUVERTES]**; le smoke confirme que le Lab actif n’est pas remplacé. `sandbox_preset_smoke.gd`, `sandbox_lab_smoke.gd`, `sandbox_snapshot_smoke.gd` et `survival_armorless_mode_smoke.gd` passent sous Godot 4.7.2.
+
 ## P8.6 — Validation atomique des évolutions en snapshot — 2026-10-17
 
 - [x] Régression rouge d’abord : `sandbox_snapshot_smoke.gd` a révélé qu’un snapshot assortissant un `evolution_id` valide à une arme/relique sous le niveau 5 pouvait restaurer l’état natif avant le rejet du build et laisser le loadout partiellement remplacé.
