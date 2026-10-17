@@ -61,6 +61,12 @@
 - Le smoke visuel est enregistré dans CTest. La première exécution révélait 5 instances ObjectDB et 2 ressources retenues à la fermeture; libérer explicitement le panneau supprime ces avertissements. L’exécution directe après correction passe sans message de fuite.
 - Les entrées sont synthétiques; la navigation sur une manette physique et le parcours complet de l’inventaire restent à vérifier.
 
+## Revalidation CTest après ajout des smokes UI — 2026-10-17
+
+- CTest séquentiel : **89/89 tests passent en 61,02 s**, y compris les nouveaux parcours d’entrée arbre de compétences et inventaire d’équipement.
+- Commande : `/tmp/cmake-3.31.12-linux-x86_64/bin/ctest --test-dir build --output-on-failure -j1`.
+- Le checkout contient toujours le diff local non commité de `game/scripts/survival_session.gd`; cette passe ne valide ni les périphériques physiques ni le GPU cible.
+
 ## Build et lancement depuis un clone Git propre — 2026-10-17
 
 - Clone local neuf du commit `09baf7a`, puis configuration CMake 3.31.12, compilation complète avec GCC 14.2.0, import Godot 4.7.2 et lancement headless de la scène principale : réussis. FetchContent a récupéré le SHA `godot-cpp` verrouillé.
