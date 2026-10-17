@@ -172,7 +172,7 @@ func _overcharge_triggers_on_repeated_electric_hits_only() -> bool:
 	var outside_health := _health_for(session, targets[2]["id"])
 	var valid := first_hit == 0 and second_hit > 0 and \
 			cooldown_hit == 0 and rejected_non_electric == 0 and expired_hit == 0 and \
-			is_equal_approx(primary_health, 90.0) and is_equal_approx(nearby_health, 90.0) and \
+			is_equal_approx(primary_health, 95.0) and is_equal_approx(nearby_health, 95.0) and \
 			is_equal_approx(outside_health, 100.0)
 	session.queue_free()
 	return valid

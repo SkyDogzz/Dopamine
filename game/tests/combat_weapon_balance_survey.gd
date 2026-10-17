@@ -14,6 +14,7 @@ const TARGET_HP := 1000000.0
 var _weapon_filter := ""
 var _formation_filter := "cluster"
 var _survey_seed := 20261017
+var _overcharge_multiplier := -1.0
 
 func _initialize() -> void:
 	call_deferred("_run")
@@ -26,6 +27,17 @@ func _run() -> void:
 			_formation_filter = argument.trim_prefix("--formation=")
 		elif argument.begins_with("--seed="):
 			_survey_seed = int(argument.trim_prefix("--seed="))
+		elif argument.begins_with("--overcharge-multiplier="):
+			var value_text: String = argument.trim_prefix("--overcharge-multiplier=")
+			if not value_text.is_valid_float():
+				push_error("Overcharge multiplier must be a number from 0 to 2")
+				quit(1)
+				return
+			_overcharge_multiplier = float(value_text)
+			if not is_finite(_overcharge_multiplier) or _overcharge_multiplier < 0.0 or _overcharge_multiplier > 2.0:
+				push_error("Overcharge multiplier must be a number from 0 to 2")
+				quit(1)
+				return
 	if not _weapon_filter.is_empty() and _weapon_filter not in WEAPON_IDS:
 		push_error("Unknown weapon filter: %s" % _weapon_filter)
 		quit(1)
@@ -35,7 +47,8 @@ func _run() -> void:
 		quit(1)
 		return
 	print("# survey_seed=%d" % _survey_seed)
-	print("weapon,formation,build,weapon_level,relic_level,evolved,active_seconds,damage,dps,loop_interval_p95_ms,loop_interval_max_ms")
+	print("# overcharge_multiplier=%s" % ("default" if _overcharge_multiplier < 0.0 else str(_overcharge_multiplier)))
+	print("weapon,formation,build,weapon_level,relic_level,evolved,active_seconds,damage,dps,overcharge_multiplier,loop_interval_p95_ms,loop_interval_max_ms")
 	for weapon_id in WEAPON_IDS:
 		if not _weapon_filter.is_empty() and weapon_id != _weapon_filter:
 			continue
@@ -57,6 +70,8 @@ func _measure(weapon_id: String, build: Dictionary) -> bool:
 	session._health_locked = true
 	session.sandbox_diagnostics_enabled = true
 	session.sandbox_rng_seed = _survey_seed
+	if _overcharge_multiplier >= 0.0:
+		session.overcharge_damage_multiplier = _overcharge_multiplier
 	root.add_child(session)
 	await process_frame
 	if session.simulation == null:
@@ -149,9 +164,10 @@ func _measure(weapon_id: String, build: Dictionary) -> bool:
 	var p95_index := mini(loop_interval_ms.size() - 1,
 			int(floor(float(loop_interval_ms.size() - 1) * 0.95)))
 	var max_loop_interval_ms := loop_interval_ms[loop_interval_ms.size() - 1]
-	print("%s,%s,%s,%d,%d,%s,%.2f,%.2f,%.2f,%.3f,%.3f" % [
+	print("%s,%s,%s,%d,%d,%s,%.2f,%.2f,%.2f,%.2f,%.3f,%.3f" % [
 		weapon_id, _formation_filter, build["name"], weapon_level, relic_level, str(build["evolved"]), elapsed,
-		damage, damage / elapsed, loop_interval_ms[p95_index], max_loop_interval_ms,
+		damage, damage / elapsed,
+		session.overcharge_damage_multiplier, loop_interval_ms[p95_index], max_loop_interval_ms,
 	])
 	if weapon_id == "crimson_daggers":
 		print("# Crimson volleys=%d (expected approx %.0f); native collisions=%d at %.2fs cooldown" % [

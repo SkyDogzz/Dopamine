@@ -324,7 +324,7 @@ var sandbox_health_decay_multiplier := 1.0
 @export_range(0.0, 10.0, 0.1) var thermal_shock_target_cooldown_seconds: float = 1.0
 @export_range(0.0, 64.0, 0.5) var thermal_shock_projectile_radius: float = 6.0
 @export_group("Prototype Overcharge — proposed tuning")
-@export_range(0.0, 2.0, 0.05) var overcharge_damage_multiplier: float = 0.5
+@export_range(0.0, 2.0, 0.05) var overcharge_damage_multiplier: float = 0.25
 @export_range(0.0, 240.0, 1.0) var overcharge_radius: float = 60.0
 @export_range(0.0, 10.0, 0.1) var overcharge_target_cooldown_seconds: float = 1.0
 const TOXIC_IGNITION_DAMAGE_MULTIPLIER := 0.5
