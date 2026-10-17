@@ -629,7 +629,7 @@ P1 livre le Sandbox développeur et ne remplace pas cette feature produit.
   - [x] Préserver le réglage God Mode lors d’un import de preset qui reconstruit la session; la régression vérifie le cas désactivé.
   - [x] Afficher les DPS 1 s, 10 s et cumulés, ventilés par type de source arme/évolution/effet; afficher un journal RNG contextualisé à seed fixe. Les échantillons DPS sont limités aux dix dernières secondes (4096 maximum) et le journal conserve 256 tirages, dont les six plus récents sont visibles.
 - [ ] **P8.6 — Snapshots**
-  - [ ] Lister l’état minimal à capturer, y compris RNG, clocks, queues et build.
+  - [x] Inventorier l’état minimal à capturer, y compris RNG, horloges, queues et build; contrat et lacunes actuelles consignés dans [`SANDBOX_SNAPSHOT.md`](SANDBOX_SNAPSHOT.md).
   - [ ] Capturer puis restaurer sans perte sur une scène simple.
   - [ ] Vérifier reprise avec commandes en attente et version incompatible.
   - [ ] Documenter les limites de déterminisme.
