@@ -12,6 +12,7 @@
 - [x] L’import éditeur passe; `catalog_icon_assets_smoke.gd`, `signal_prism_asset_smoke.gd` et `render_batching_smoke.gd` passent. Le smoke catalogue confirme 140 PNG et deux exceptions documentées.
 - [x] Export PCK Linux/X11 contrôlé après correction du décor : 5 089 644 octets, SHA-256 `4a14a25061b84678df9da14bd240387bab20df35a74a95e09f42b87467977ee9`. Les nouveaux visuels sont présents; le journal ne contient ni `assets/source/original_procedural/` ni `tools/generate_original_visuals.gd`. Le PCK démarre sous Godot headless sans erreur.
 - [x] Le smoke visuel Survival/Ctest passe et la capture `/tmp/dopamine-survival-combat-visual.png` a été inspectée : les nouveaux projectiles/VFX restent visibles dans une scène dense, et les ruines transparentes n’écrasent plus le sol.
+- [x] Revue d’intégration UI sous Xvfb/Mesa : captures du coffre d’armes (Lightning Conductor, Inferno Sprayer), du coffre de reliques (Storm Core, Frozen Crown, Magnet Heart), de l’inventaire, de l’arbre et du résultat de victoire inspectées dans `/tmp`. Les icônes remplacées restent distinctes des libellés et lisibles à 32 px; les smokes CTest coffre, inventaire, arbre, équipement et résultat passent.
 - [i] Ce rendu couvre une sélection, pas chaque sprite et état d’animation. La revue d’intégration complète (lisibilité, cohérence et similitudes) reste une porte P9.8 ouverte.
 
 ## P6.4 — Reroll payant d’effet unique — 2026-10-17
