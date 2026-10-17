@@ -33,15 +33,15 @@
 
 ## P9.3 — Retours visuels des critiques et statuts — 2026-10-17
 
-- [x] `survival_visual_effects_smoke.gd` confirme qu'un impact normal garde l'échelle de base et qu'un impact marqué critique conserve ce drapeau et reçoit une échelle supérieure; le rendu consomme cette échelle lors du dessin du sprite d'impact de l'arme.
-- [x] Le CTest `survival_impact_status_visual_smoke` lance le smoke avec capture sous Xvfb/Mesa llvmpipe et compare chaque rendu à une image de fond sans impact : **385 pixels modifiés** pour l'impact normal, **778** pour le critique; la capture est `/tmp/dopamine-critical-hit-impact.png`.
+- [x] `survival_visual_effects_smoke.gd` touche une vraie cible avec un projectile natif Minigun marqué critique et confirme que l'événement produit un impact critique rendu par la session; le helper conserve aussi le drapeau et l'échelle supérieure au chemin normal.
+- [x] Le CTest `survival_impact_status_visual_smoke` lance le smoke avec capture sous Xvfb/Mesa llvmpipe et compare chaque rendu à une image de fond sans impact : cette exécution compte **384 pixels modifiés** pour l'impact normal et **803** pour le critique; capture `/tmp/dopamine-critical-hit-impact.png`.
 - [x] Le même smoke compare les mêmes sprites avec/sans statut : Burn, Poison et Bleed changent chacun **302 pixels**, Chill **258**, et Shock **420** dans leur zone. Les cinq indicateurs restent visibles quand les effets décoratifs sont réduits; capture `/tmp/dopamine-status-rings.png`.
 - [x] Le même smoke vérifie que les visuels réduits ne changent pas le flux aléatoire ni l'état de simulation en pause; les parcours headless et rendu Xvfb passent sous Godot 4.7.2.
 - [i] L'échelle 1,45× est **[PROPOSÉE]** et n'ajoute pas de couleur dédiée. La vérification est automatisée sous rendu logiciel/headless et ne valide pas encore la lisibilité sur le GPU cible.
 
 ## Checkpoint CTest rendu impacts/statuts — 2026-10-17
 
-- [x] Après reconfiguration CMake, la suite séquentielle passe **98/98 tests en 67,13 s** avec `/tmp/cmake-3.31.12-linux-x86_64/bin/ctest --test-dir build --output-on-failure -j1`.
+- [x] Après reconfiguration CMake, la suite séquentielle passe **98/98 tests en 67,56 s** avec `/tmp/cmake-3.31.12-linux-x86_64/bin/ctest --test-dir build --output-on-failure -j1`.
 - [x] Le checkpoint comprend le `survival_impact_status_visual_smoke` sous Xvfb/Mesa llvmpipe, qui vérifie les pixels des impacts critiques et les anneaux des cinq statuts, le smoke headless correspondant, l’import Godot, les autres tests de rendu, Sandbox, progression, armes, boss, Armorless et Endless.
 - [i] Il s'agit d'une validation automatisée sur l'hôte Linux actuel; elle ne clôt pas les runs représentatives, le GPU de référence ni les validations de plateforme ouvertes dans la roadmap.
 

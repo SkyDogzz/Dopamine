@@ -20,11 +20,31 @@ func _run() -> void:
 	session.skip_starting_weapon_choice = true
 	session.spawn_initial_enemy = false
 	session.wave_spawning_enabled = false
+	session.weapon_enabled = false
 	root.add_child(session)
 	await process_frame
 	if session.simulation == null:
 		_fail("Survival session failed to initialize")
 		return
+	var target_position: Vector2 = session.player.global_position + Vector2(80.0, 0.0)
+	if session.simulation.spawn_enemy("chaser", 1, target_position, Vector2.ZERO, 100.0) <= 0:
+		_fail("Could not spawn a target for the native critical-hit visual check")
+		return
+	var target_deadline := Time.get_ticks_msec() + 3000
+	while session.simulation.snapshot()["entities"].is_empty() and Time.get_ticks_msec() < target_deadline:
+		await process_frame
+	if session.simulation.snapshot()["entities"].is_empty():
+		_fail("The native critical-hit target did not spawn")
+		return
+	var projectile_sequence: int = session.simulation.spawn_projectile(
+		"minigun", target_position - Vector2(30.0, 0.0), Vector2.RIGHT * 2000.0,
+		10.0, 3.0, 1.0, 2.0, 0.5, 2.0, 0.0, 0.0, 0, 0.0, 0.0,
+		false, 0.0, 1.0, 1.0, 0.0, 0, 1, true)
+	if projectile_sequence <= 0 or not await _wait_for_critical_impact(session):
+		_fail("A native critical projectile should produce a critical weapon impact")
+		return
+	await create_timer(0.15).timeout
+	session._weapon_impacts.clear()
 	session.simulation.pause()
 	session.set_process(false)
 	await process_frame
@@ -116,6 +136,15 @@ func _count_changed_pixels(baseline: Image, rendered: Image, center: Vector2) ->
 				continue
 			changed += 1
 	return changed
+
+func _wait_for_critical_impact(session: Node2D) -> bool:
+	var deadline := Time.get_ticks_msec() + 3000
+	while Time.get_ticks_msec() < deadline:
+		await process_frame
+		for impact in session._weapon_impacts:
+			if bool(impact.get("critical_hit", false)):
+				return true
+	return false
 
 func _verify_status_capture(session: Node2D) -> bool:
 	var status_types := ["burn", "poison", "bleed", "chill", "shock"]
