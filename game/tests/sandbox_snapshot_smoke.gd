@@ -59,6 +59,27 @@ func _run() -> void:
 			float(after_rejection["simulation_time"]) != float(restored["simulation_time"]):
 		_fail("Rejecting an incompatible snapshot must leave the live simulation unchanged")
 		return
+	var queued_simulation = ClassDB.instantiate("CombatSimulation")
+	var first_queued_spawn: int = queued_simulation.spawn_enemy("chaser", 1, Vector2(10, 10), Vector2.ZERO)
+	var second_queued_spawn: int = queued_simulation.spawn_enemy("sprinter", 1, Vector2(20, 20), Vector2.ZERO)
+	var queued_pause: int = queued_simulation.pause()
+	var queued_capture: Dictionary = queued_simulation.capture_state()
+	var queued_state: Dictionary = queued_simulation.snapshot()
+	if first_queued_spawn <= 0 or second_queued_spawn <= first_queued_spawn or queued_pause <= second_queued_spawn or \
+			queued_capture.is_empty() or queued_state["entities"].size() != 2 or not queued_state["paused"]:
+		_fail("The GDExtension capture barrier should include accepted queued spawns and pause commands")
+		return
+	if not queued_simulation.restore_state(queued_capture) or \
+			queued_simulation.snapshot()["entities"].size() != 2 or \
+			not queued_simulation.snapshot()["paused"]:
+		_fail("A GDExtension snapshot should restore the queued command results and paused worker")
+		return
+	var resumed_sequence: int = queued_simulation.spawn_enemy("tank", 1, Vector2(30, 30), Vector2.ZERO)
+	if resumed_sequence <= queued_pause or not await _wait_for_sequence(queued_simulation, resumed_sequence) or \
+			queued_simulation.snapshot()["entities"].size() != 3:
+		_fail("The restored GDExtension worker should continue command numbering after queued work")
+		return
+	queued_simulation = null
 	var lab: Control = load("res://scenes/sandbox_lab.tscn").instantiate()
 	root.add_child(lab)
 	var lab_context: Node = lab.context
