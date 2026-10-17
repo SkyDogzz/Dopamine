@@ -101,6 +101,13 @@
 - [x] Le script agrège **612,4 s de simulation Survival sur 30 sessions** (Easy, arme de départ standard, auto-choix des coffres, aucune invulnérabilité ni ProgressionService; maximum observé : 138 entités), puis **600,1 s de simulation Sandbox** avec 40 lots de dix Chasers. Les snapshots gardent leurs séquences et horloges monotones; le test attend l’acquittement de pause et ferme le contexte Sandbox.
 - [x] Le smoke compare les fingerprints des fichiers `user://saves` avant/après; aucun changement n’est détecté. Il ne mesure pas les fuites mémoire à long terme, n’utilise pas de sauvegarde normale réelle et ne remplace pas un soak graphique sur matériel cible.
 - [x] Après ajout du smoke, `/tmp/cmake-3.31.12-linux-x86_64/bin/ctest --test-dir build --output-on-failure -j1` passe **91/91 en 62,13 s**.
+
+## P9.6 — Soak des modes sans fin — 2026-10-17
+
+- [x] `XDG_DATA_HOME=/tmp/dopamine-p96-all-modes DOPAMINE_TEST_TIMEOUT=480s tools/run_godot_test.sh tools/local/godot-4.7.2/Godot_v4.7.2-stable_linux.x86_64 --headless --path game --script res://tests/stability_soak_smoke.gd` passe après extension du smoke.
+- [x] En plus des durées existantes, Endless standard agrège **128,1 s sur 10 sessions** et Armorless **128,1 s sur 4 sessions**, à PV normaux, avec auto-choix des coffres/drafts et sans progression persistante. Les séquences/horloges de snapshots progressent, les sessions se libèrent, et le fingerprint de `user://saves` est identique après les quatre modes.
+- [i] Les nouveaux segments durent 120 s de simulation chacun pour respecter le plafond total de 420 s du smoke; ils testent la stabilité de session, pas une run représentative ni l’équilibrage. Le script garde le soak Survival/Sandbox existant à 600 s chacun.
+- [i] Le passage a été exécuté sur le checkout de travail qui contenait aussi le diff local SFX et rayon du boss dans `game/scripts/survival_session.gd`; les tests n’ont pas atteint le boss. Ce diff n’est pas inclus dans le commit de soak.
 - [i] Le checkout de ce CTest contenait un diff local non commité de `game/scripts/survival_session.gd`; ces résultats décrivent cet état de travail, pas le commit seul. Ce diff n’a pas été inclus dans le changement du soak.
 
 ## P9.6 — Écritures interrompues et fermeture du worker — 2026-10-17

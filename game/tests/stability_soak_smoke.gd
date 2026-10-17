@@ -1,6 +1,7 @@
 extends SceneTree
 
 const TARGET_SIMULATION_SECONDS := 600.0
+const ADDITIONAL_MODE_SIMULATION_SECONDS := 120.0
 const MAX_WALL_SECONDS := 420.0
 const MAX_SURVIVAL_RUNS := 64
 const SOAK_SPEED := 4.0
@@ -62,6 +63,12 @@ func _run() -> void:
 			survival_seconds, TARGET_SIMULATION_SECONDS, survival_runs,
 		])
 		return
+	var endless_result: Dictionary = await _soak_mode("endless", 91000)
+	if not endless_result.get("ok", false):
+		return
+	var armorless_result: Dictionary = await _soak_mode("armorless", 92000)
+	if not armorless_result.get("ok", false):
+		return
 
 	var lab: Control = load("res://scenes/sandbox_lab.tscn").instantiate()
 	root.add_child(lab)
@@ -103,13 +110,68 @@ func _run() -> void:
 	await process_frame
 	Engine.time_scale = 1.0
 	if _fingerprint_directory(save_directory) != save_fingerprints:
-		_fail("Survival and Sandbox soak must not write normal profile saves")
+		_fail("Mode soaks and Sandbox Lab must not write normal profile saves")
 		return
-	print("Stability soak passed: survival_runs=%d survival_seconds=%.1f survival_max_entities=%d sandbox_seconds=%.1f sandbox_spawn_batches=%d" % [
+	print("Stability soak passed: survival_runs=%d survival_seconds=%.1f survival_max_entities=%d endless_runs=%d endless_seconds=%.1f armorless_runs=%d armorless_seconds=%.1f sandbox_seconds=%.1f sandbox_spawn_batches=%d" % [
 		survival_runs, survival_seconds, survival_max_entities,
+		int(endless_result["runs"]), float(endless_result["seconds"]),
+		int(armorless_result["runs"]), float(armorless_result["seconds"]),
 		float(previous_sandbox_snapshot["simulation_time"]), spawn_batches,
 	])
 	quit(0)
+
+func _soak_mode(mode_id: String, seed_offset: int) -> Dictionary:
+	var simulated_seconds := 0.0
+	var runs := 0
+	var max_entities := 0
+	while simulated_seconds < ADDITIONAL_MODE_SIMULATION_SECONDS and runs < MAX_SURVIVAL_RUNS:
+		if not _within_wall_limit():
+			_fail("%s soak exceeded its wall-clock limit" % mode_id)
+			return {}
+		var session: Node2D = load("res://scenes/survival_session.tscn").instantiate()
+		session.mode_id = mode_id
+		session.difficulty_id = "easy"
+		session.skip_starting_weapon_choice = true
+		session.sandbox_diagnostics_enabled = true
+		session.sandbox_rng_seed = seed_offset + runs
+		root.add_child(session)
+		await process_frame
+		if session.simulation == null or session.progression_service != null or session._health_locked or \
+				(mode_id == "armorless" and session.armorless_run_state == null) or \
+				(mode_id == "endless" and not session.wave_director.endless_standard):
+			_fail("%s soak must use a live isolated mode session with ordinary HP" % mode_id)
+			return {}
+		session._auto_select_first_chest = true
+		session.simulation.set_speed(SOAK_SPEED)
+		Engine.time_scale = SOAK_SPEED
+		var previous_snapshot: Dictionary = session.simulation.snapshot()
+		var run_started_at: float = session.player_active_time
+		while not session.run_over and session.player_active_time - run_started_at < 90.0 and _within_wall_limit():
+			await process_frame
+			var snapshot: Dictionary = session.simulation.snapshot()
+			if not _snapshot_advances(previous_snapshot, snapshot):
+				_fail("%s soak snapshot sequence or simulation time regressed" % mode_id)
+				return {}
+			previous_snapshot = snapshot
+			max_entities = maxi(max_entities, int(snapshot.get("metrics", {}).get("entity_count", 0)))
+		var active_seconds: float = session.player_active_time - run_started_at
+		if active_seconds <= 0.0:
+			_fail("%s soak made no active-time progress" % mode_id)
+			return {}
+		simulated_seconds += active_seconds
+		runs += 1
+		Engine.time_scale = 1.0
+		session.queue_free()
+		await process_frame
+		if is_instance_valid(session):
+			_fail("%s session did not release after run teardown" % mode_id)
+			return {}
+	if simulated_seconds < ADDITIONAL_MODE_SIMULATION_SECONDS:
+		_fail("%s stability segment stopped after %.1f of %.1f simulated seconds across %d runs" % [
+			mode_id, simulated_seconds, ADDITIONAL_MODE_SIMULATION_SECONDS, runs,
+		])
+		return {}
+	return {"ok": true, "seconds": simulated_seconds, "runs": runs, "max_entities": max_entities}
 
 func _wait_for_sandbox(lab: Control) -> bool:
 	var deadline := Time.get_ticks_msec() + 10000
