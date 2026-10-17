@@ -1158,27 +1158,20 @@ func _thermal_shock_combines_burn_and_chill_once() -> bool:
 	var reaction_sequence: int = session._try_thermal_shock(reaction_hit, entities, 2.0)
 	var burn_damage := false
 	var frost_damage := false
-	var thermal_damage_events: Array[Dictionary] = []
 	var deadline := Time.get_ticks_msec() + 2500
+	# SurvivalSession acknowledges events itself; assert durable HP state, not its transient event buffer.
 	while Time.get_ticks_msec() < deadline and not (burn_damage and frost_damage):
 		await process_frame
-		for event in session.simulation.snapshot()["events"]:
-			if event.get("type", "") != "damage" or event.get("source_type", "") != "thermal_shock":
-				continue
-			var hit_id: Dictionary = event["target"]
-			thermal_damage_events.append({"target": hit_id, "amount": float(event["amount"])})
-			if hit_id == chilled_target_id and is_equal_approx(float(event["amount"]), 5.0):
-				burn_damage = true
-			elif hit_id == burning_target_id and is_equal_approx(float(event["amount"]), 4.0):
-				frost_damage = true
+		burn_damage = burn_damage or is_equal_approx(_target_health(session, chilled_target_id), 45.0)
+		frost_damage = frost_damage or is_equal_approx(_target_health(session, burning_target_id), 46.0)
 	var valid := burn_sequence > 0 and repeated_sequence == 0 and lethal_sequence == 0 and frost_sequence > 0 and dot_sequence == 0 and \
 		reaction_sequence == 0 and burn_damage and frost_damage
 	if not valid:
-		push_error("Thermal Shock fixture diagnostics: sequences=%s burn_damage=%s frost_damage=%s targets=%s,%s" % [
+		push_error("Thermal Shock fixture diagnostics: sequences=%s burn_damage=%s frost_damage=%s health=%s,%s targets=%s,%s" % [
 			[burn_sequence, repeated_sequence, lethal_sequence, frost_sequence, dot_sequence, reaction_sequence],
-			burn_damage, frost_damage, chilled_target_id, burning_target_id,
+			burn_damage, frost_damage, _target_health(session, chilled_target_id), _target_health(session, burning_target_id),
+			chilled_target_id, burning_target_id,
 		])
-		push_error("Thermal Shock observed damage events: %s" % [thermal_damage_events])
 	session.queue_free()
 	return valid
 

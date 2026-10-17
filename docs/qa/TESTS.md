@@ -26,9 +26,9 @@
 
 ## Revalidation de la suite après export Linux — 2026-10-17
 
-- Première exécution CTest séquentielle sur le checkout courant : **86/87**. `survival_weapon_catalog_smoke` n’a observé qu’un des deux dégâts Thermal Shock attendus (Chill→Burn); le diagnostic montrait les deux commandes acceptées, mais aucun dégât Thermal Shock sur la cible Burn→Chill.
-- Le smoke catalogue a ensuite passé **10/10** répétitions isolées, puis CTest complet a passé **87/87 en 60,26 s**.
-- La cause de l’échec intermittent n’est pas établie. Ne pas considérer la flakiness comme corrigée; surveiller les prochaines suites. Ces résultats ont été obtenus sur un checkout contenant aussi un diff local non commité de `survival_session.gd`, donc ils ne décrivent pas uniquement le commit `9ff5246`.
+- Première exécution CTest séquentielle sur le checkout courant : **86/87**. Le smoke catalogue inspectait le buffer temporaire d’événements alors que `SurvivalSession` acquitte les événements qu’elle consomme; la course pouvait masquer un dégât déjà appliqué.
+- Le smoke vérifie désormais les PV persistants des deux cibles, résultat indépendant de l’acquittement du buffer. Après le changement, `survival_weapon_catalog_smoke` passe **10/10** répétitions et CTest complet **87/87 en 61,48 s**.
+- Les résultats ont été obtenus sur un checkout contenant aussi un diff local non commité de `survival_session.gd`; ils ne décrivent donc pas uniquement le commit `61e6b8e`.
 
 ## Build et lancement depuis un clone Git propre — 2026-10-17
 
