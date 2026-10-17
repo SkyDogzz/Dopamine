@@ -8,8 +8,13 @@ func _run() -> void:
 	root.add_child(overlay)
 	var panel: Control = overlay.get_node("Center/Panel")
 	var confirmation: Control = overlay.get_node("ConfirmationOverlay/Center/Panel")
-	if panel.custom_minimum_size.x < 240 or confirmation.custom_minimum_size.x < 260:
+	if panel.custom_minimum_size.x < 260 or confirmation.custom_minimum_size.x < 280:
 		_fail("Pause and abandon panels should provide room for their labels and controls")
+		return
+	var title := overlay.get_node("Center/Panel/Content/Title") as Label
+	var status := overlay.get_node("Center/Panel/Content/PausedStatus") as Label
+	if title.get_theme_font_size("font_size") < 15 or status.get_theme_font_size("font_size") < 9:
+		_fail("Pause heading and state should remain legible at the logical viewport")
 		return
 	var paused_status := overlay.get_node_or_null("Center/Panel/Content/PausedStatus") as Label
 	if paused_status == null or not paused_status.text.contains("ESC") or \

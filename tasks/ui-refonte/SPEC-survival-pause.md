@@ -16,6 +16,7 @@
 - **[PROPOSÉ]** L’état pause appartient à `survival_session.gd`; le panneau Options existant est réutilisé en superposition et rend le focus à son action d’origine.
 - **[PROPOSÉ]** L’état d’évolution est dérivé du lien arme/relique et de `evolution_id` dans le catalogue, puis du niveau d’arme et du niveau de relique requis. Le catalogue demeure la source canonique; les règles métier ne sont pas recopiées dans les vues.
 - **[OUVERT]** Aucune décision utilisateur ouverte n’empêche de spécifier le flux. Les détails visuels de disposition restent guidés par le thème partagé et seront fixés au plan/revue d’interface.
+- **[PROPOSÉ]** Revue visuelle actuelle : carte Pause 270 px, titre 15 px, corps/contrôles 9 px; carte de confirmation 300 px; inventaire conserve son cadre 420×300 px avec noms à 10 px et détails à 9 px. Les tailles améliorent la lecture à 640×360, mais ne changent pas le flux ni les règles.
 
 ## Objectif
 

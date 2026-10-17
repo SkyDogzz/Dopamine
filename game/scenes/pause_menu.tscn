@@ -31,7 +31,7 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="Panel" type="PanelContainer" parent="Center"]
-custom_minimum_size = Vector2(250, 0)
+custom_minimum_size = Vector2(270, 0)
 layout_mode = 2
 theme_type_variation = "CompactPanel"
 
@@ -43,27 +43,28 @@ theme_override_constants/separation = 6
 layout_mode = 2
 theme_type_variation = "PixelHeading"
 theme_override_colors/font_color = Color(0.215686, 0.909804, 0.960784, 1)
-theme_override_font_sizes/font_size = 14
+theme_override_font_sizes/font_size = 15
 text = "RUN PAUSED"
 horizontal_alignment = 1
 
 [node name="PausedStatus" type="Label" parent="Center/Panel/Content"]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.831373, 0.278431, 1)
-theme_override_font_sizes/font_size = 8
+theme_override_font_sizes/font_size = 9
 text = "SIMULATION FROZEN  ·  ESC TO RESUME"
 horizontal_alignment = 1
 
 [node name="SpeedLabel" type="Label" parent="Center/Panel/Content"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.647059, 0.682353, 0.764706, 1)
-theme_override_font_sizes/font_size = 8
+theme_override_font_sizes/font_size = 9
 text = "SIMULATION SPEED"
 
 [node name="SpeedSelect" type="OptionButton" parent="Center/Panel/Content"]
 custom_minimum_size = Vector2(0, 22)
 layout_mode = 2
 focus_mode = 2
+theme_override_font_sizes/font_size = 9
 item_count = 5
 selected = 2
 popup/item_0/text = "GAME SPEED  ×0.25"
@@ -81,16 +82,18 @@ popup/item_4/id = 4
 custom_minimum_size = Vector2(0, 22)
 layout_mode = 2
 focus_mode = 2
+theme_override_font_sizes/font_size = 9
 text = "LOCK HEALTH"
 
 [node name="AutoSelectChestButton" type="CheckButton" parent="Center/Panel/Content"]
 custom_minimum_size = Vector2(0, 22)
 layout_mode = 2
 focus_mode = 2
+theme_override_font_sizes/font_size = 9
 text = "AUTO PICK FIRST CHEST"
 
 [node name="ResumeButton" type="Button" parent="Center/Panel/Content"]
-custom_minimum_size = Vector2(0, 24)
+custom_minimum_size = Vector2(0, 26)
 layout_mode = 2
 focus_mode = 2
 theme_override_colors/font_color = Color(0.215686, 0.909804, 0.960784, 1)
@@ -98,19 +101,19 @@ theme_override_colors/font_hover_color = Color(0.215686, 0.909804, 0.960784, 1)
 text = "RESUME"
 
 [node name="OptionsButton" type="Button" parent="Center/Panel/Content"]
-custom_minimum_size = Vector2(0, 24)
+custom_minimum_size = Vector2(0, 26)
 layout_mode = 2
 focus_mode = 2
 text = "OPTIONS"
 
 [node name="InventoryButton" type="Button" parent="Center/Panel/Content"]
-custom_minimum_size = Vector2(0, 24)
+custom_minimum_size = Vector2(0, 26)
 layout_mode = 2
 focus_mode = 2
 text = "RUN INVENTORY"
 
 [node name="AbandonButton" type="Button" parent="Center/Panel/Content"]
-custom_minimum_size = Vector2(0, 24)
+custom_minimum_size = Vector2(0, 26)
 layout_mode = 2
 focus_mode = 2
 theme_override_colors/font_color = Color(1, 0.443137, 0.505882, 1)
@@ -145,7 +148,7 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="Panel" type="PanelContainer" parent="ConfirmationOverlay/Center"]
-custom_minimum_size = Vector2(280, 0)
+custom_minimum_size = Vector2(300, 0)
 layout_mode = 2
 theme_type_variation = "CompactPanel"
 
@@ -157,7 +160,7 @@ theme_override_constants/separation = 6
 layout_mode = 2
 theme_type_variation = "PixelHeading"
 theme_override_colors/font_color = Color(1, 0.458824, 0.890196, 1)
-theme_override_font_sizes/font_size = 12
+theme_override_font_sizes/font_size = 13
 text = "ABANDON THIS RUN?"
 horizontal_alignment = 1
 
@@ -166,20 +169,23 @@ custom_minimum_size = Vector2(0, 21)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.964706, 0.968627, 1, 1)
 text = "The run and its unclaimed rewards will be lost."
+theme_override_font_sizes/font_size = 9
 horizontal_alignment = 1
 vertical_alignment = 1
 autowrap_mode = 3
 
 [node name="CancelButton" type="Button" parent="ConfirmationOverlay/Center/Panel/Content"]
-custom_minimum_size = Vector2(0, 24)
+custom_minimum_size = Vector2(0, 26)
 layout_mode = 2
 focus_mode = 2
 text = "KEEP PLAYING"
+theme_override_font_sizes/font_size = 9
 
 [node name="ConfirmButton" type="Button" parent="ConfirmationOverlay/Center/Panel/Content"]
-custom_minimum_size = Vector2(0, 24)
+custom_minimum_size = Vector2(0, 26)
 layout_mode = 2
 focus_mode = 2
 theme_override_colors/font_color = Color(1, 0.443137, 0.505882, 1)
 theme_override_colors/font_hover_color = Color(1, 0.443137, 0.505882, 1)
 text = "ABANDON RUN"
+theme_override_font_sizes/font_size = 9

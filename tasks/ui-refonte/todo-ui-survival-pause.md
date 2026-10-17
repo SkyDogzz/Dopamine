@@ -2,7 +2,7 @@
 
 Plan : [`plan-ui-survival-pause.md`](plan-ui-survival-pause.md) · Spec : [`SPEC-survival-pause.md`](SPEC-survival-pause.md)
 
-**Statut : terminé et poussé.** Tâches 1 à 5 terminées. Le plan principal reste en pause et inchangé.
+**Statut : fonctionnel livré; première passe visuelle relue et poussée.** Les tâches 1 à 5 et l’ajustement typographique proposé sont terminés. Restent la validation physique manette et la revue visuelle dédiée aux tailles agrandies. Le plan principal reste en pause et inchangé.
 
 ## Tâche 1 — Pause manuelle et invariance temporelle
 
@@ -103,3 +103,9 @@ Plan : [`plan-ui-survival-pause.md`](plan-ui-survival-pause.md) · Spec : [`SPEC
 ## Gate d’implémentation
 
 Checklist exécutée selon smoke d’abord → changement minimal → vérification adaptée → commit/push explicite. Le gate a été levé selon la demande de poursuivre sans checkpoints.
+
+## Passe visuelle — lisibilité des cartes Pause/inventaire
+
+- [x] Augmenter légèrement la largeur et la hiérarchie typographique de Pause, confirmation et inventaire, sans changer les actions ni les règles.
+- [x] Revoir les captures 640×360; faire passer les smokes Pause, inventaire, focus/couleurs et bounds 640×360–1920×1080.
+- [ ] Revue souris/manette physique et revue visuelle dédiée aux résolutions agrandies lorsque ce matériel est disponible.

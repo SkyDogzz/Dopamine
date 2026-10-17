@@ -78,7 +78,7 @@ func _add_armorless_equipment(equipment: Array[Dictionary], flux: int) -> void:
 		var title := Label.new()
 		title.text = "%s  ·  %s" % [str(item["rarity"]).to_upper(), str(item["slot"]).to_upper()]
 		title.add_theme_color_override("font_color", Color("#37E8F5"))
-		title.add_theme_font_size_override("font_size", 8)
+		title.add_theme_font_size_override("font_size", 9)
 		details.add_child(title)
 		for line in item["stat_lines"]:
 			var stat_id := str(line["stat_id"])
@@ -90,7 +90,7 @@ func _add_armorless_equipment(equipment: Array[Dictionary], flux: int) -> void:
 			var label := Label.new()
 			label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 			label.text = "%s  ·  +%d/10" % [EQUIPMENT_GENERATOR.stat_label(stat_id, value), level]
-			label.add_theme_font_size_override("font_size", 8)
+			label.add_theme_font_size_override("font_size", 9)
 			label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 			line_row.add_child(label)
 			var cost := ARMORLESS_RUN_STATE.enhancement_cost(str(item["rarity"]), level)
@@ -99,7 +99,7 @@ func _add_armorless_equipment(equipment: Array[Dictionary], flux: int) -> void:
 			button.text = "UPGRADE  ·  %d FLUX" % cost
 			button.disabled = cost <= 0 or cost > flux or level >= 10
 			button.focus_mode = Control.FOCUS_ALL
-			button.add_theme_font_size_override("font_size", 8)
+			button.add_theme_font_size_override("font_size", 9)
 			button.pressed.connect(armorless_enhancement_requested.emit.bind(str(item["instance_id"]), stat_id))
 			line_row.add_child(button)
 			_enhancement_buttons["%s:%s" % [str(item["instance_id"]), stat_id]] = button
@@ -109,7 +109,7 @@ func _add_section(title: String) -> void:
 	label.theme_type_variation = "PixelHeading"
 	label.text = title
 	label.add_theme_color_override("font_color", Color("#37E8F5"))
-	label.add_theme_font_size_override("font_size", 8)
+	label.add_theme_font_size_override("font_size", 9)
 	_items.add_child(label)
 
 func _add_items(items: Array[Dictionary]) -> void:
@@ -141,7 +141,7 @@ func _add_items(items: Array[Dictionary]) -> void:
 		var title := Label.new()
 		title.text = "%s  ·  LV %d" % [str(item["name"]), int(item["level"])]
 		title.add_theme_color_override("font_color", Color("#F6F7FF"))
-		title.add_theme_font_size_override("font_size", 9)
+		title.add_theme_font_size_override("font_size", 10)
 		details.add_child(title)
 		if str(item["family"]) == "weapon":
 			var evolution := Label.new()
@@ -149,13 +149,13 @@ func _add_items(items: Array[Dictionary]) -> void:
 			evolution.add_theme_color_override(
 				"font_color", Color("#FF75E3") if bool(item.get("evolved", false)) else Color("#A6AEC4")
 			)
-			evolution.add_theme_font_size_override("font_size", 8)
+			evolution.add_theme_font_size_override("font_size", 9)
 			details.add_child(evolution)
 		var description := Label.new()
 		description.text = str(item["description"])
 		description.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		description.add_theme_color_override("font_color", Color("#A6AEC4"))
-		description.add_theme_font_size_override("font_size", 8)
+		description.add_theme_font_size_override("font_size", 9)
 		details.add_child(description)
 
 func _evolution_status(item: Dictionary) -> String:

@@ -111,7 +111,7 @@ func _run() -> void:
 	var evolution := first_details.get_child(1) as Label
 	var description := first_details.get_child(2) as Label
 	if item_title.get_theme_color("font_color").to_html(false) != "f6f7ff" or \
-		item_title.get_theme_font_size("font_size") != 9 or \
+		item_title.get_theme_font_size("font_size") != 10 or \
 		evolution.get_theme_color("font_color").to_html(false) != "ff75e3" or \
 		description.get_theme_color("font_color").to_html(false) != "a6aec4" or \
 		description.autowrap_mode != TextServer.AUTOWRAP_WORD_SMART:

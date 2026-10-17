@@ -34,6 +34,12 @@
 - [x] `XDG_DATA_HOME=/tmp/dopamine-goal-sandbox-isolation tools/run_godot_test.sh tools/local/godot-4.7.2/Godot_v4.7.2-stable_linux.x86_64 --headless --audio-driver Dummy --path game --script res://tests/sandbox_lab_smoke.gd` passe : le Lab démarre sans services de progression/sauvegarde, son reset reste isolé et le slot normal sentinelle est préservé. Exécuté pendant la reprise du goal le 2026-10-17.
 - [x] `sandbox_preset_smoke.gd`, `sandbox_snapshot_smoke.gd` et `sandbox_profile_build_smoke.gd` repassent sous Godot 4.7.2, chacun avec un `XDG_DATA_HOME` distinct (`/tmp/dopamine-goal-sandbox-preset`, `-snapshot` et `-profile`). Le round-trip preset, les snapshots et l’import read-only n’altèrent pas le slot normal. Le smoke snapshot termine avec code 0 mais signale encore 2 instances ObjectDB et 1 ressource à la fermeture; ces avertissements connus ne sont pas masqués.
 
+## Revue visuelle ciblée Pause et inventaire — 2026-10-17
+
+- [x] À 640×360 sous Xvfb/Mesa llvmpipe, les captures `/tmp/dopamine-pause.png` et `/tmp/dopamine-run-inventory-current.png` ont été inspectées après une hausse typographique proposée : pause titre 15 px et statut/contrôles 9 px dans une carte 270 px; inventaire noms 10 px et détails 9 px dans sa carte 420×300 px. Les cartes, accents cyan/doré/magenta/rouge, états et scroll suivent le thème partagé pixel art néon.
+- [x] `pause_panel_visual_smoke.gd`, `survival_pause_smoke.gd`, `survival_pause_inventory_smoke.gd` et `ui_viewport_layout_smoke.gd` passent sous Godot 4.7.2; les bounds sont vérifiés en 640×360, 1280×720 et 1920×1080. Les smokes Pause/inventaire signalent encore des objets/ressources référencés à la fermeture.
+- [ ] Le rendu inspecté utilise Mesa llvmpipe; le matériel graphique cible, l’interaction physique à la souris/manette et la revue visuelle aux tailles agrandies ne sont pas couverts par cette passe.
+
 ## P8.1/P8.3 — Mode réellement sélectionné par le preset — 2026-10-17
 
 - [x] Régression rouge d’abord : un preset valide `base_mode=armorless` démarrait silencieusement une session Survival standard.
