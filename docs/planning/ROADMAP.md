@@ -701,6 +701,7 @@ P1 livre le Sandbox développeur et ne remplace pas cette feature produit.
   - [x] Vérifier le SHA-512 officiel des templates Godot 4.7.2, installer le template Linux release x86_64, exporter `build/linux/export/DopamineSurvivor.x86_64` et lancer le menu trois frames en headless; détails dans `docs/qa/TESTS.md`.
   - [x] Confirmer que le processus autonome mappe `libdopamine.linux.template_release.x86_64.so`; la vérification directe d’instanciation de `CombatSimulation` reste ouverte.
   - [x] Naviguer par entrée clavier synthétique depuis l’accueil, passer par le hub et démarrer une run Survival depuis l’exécutable exporté; le HUD `IN RUN` et l’arme de départ s’affichent sans erreur d’indisponibilité de `CombatSimulation`.
+  - [x] Copier l’exécutable et son sidecar GDExtension vers un répertoire extérieur au dépôt, démarrer avec un `XDG_DATA_HOME` vierge et quitter proprement. Cette relocation vérifie l’absence de dépendance aux chemins du checkout, mais reste sur le même hôte.
   - [ ] Refaire le parcours clavier/contrôleur et le rendu sur un poste Linux avec matériel réel; le contrôle courant utilise Xvfb/Mesa llvmpipe.
 - [ ] **P9.8 — Préparation de livraison**
   - [ ] Établir checklist release et versions d’artefacts.
