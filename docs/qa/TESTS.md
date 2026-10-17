@@ -808,6 +808,7 @@
   | Prismatic | 12,425 | 1 126,75 | 4 506,99 | 0,012 |
 
 - [x] Les vingt combinaisons poudre/rareté complètes sont archivées dans [`data/enhancement_expected_cost_20261017.csv`](data/enhancement_expected_cost_20261017.csv); le script peut les régénérer.
+- [x] Recalcul sous Godot 4.7.2 sur le checkout courant : les 20 lignes générées correspondent exactement aux valeurs archivées; le modèle ne modifie aucun profil.
 - [i] L’espérance est une propriété des chiffres proposés et du modèle de code, pas une validation de rythme. Elle ne modélise ni la provenance et le mélange de tiers, ni les récompenses/démantèlements, ni les conversions réellement choisies. Les probabilités, coûts et rendements restent **[PROPOSÉS]**; la calibration joueur demeure ouverte.
 
 ## P6.5 — Effet Elite Haste — 2026-10-16
