@@ -74,46 +74,47 @@
 
 ## P9.1 — Relevé exploratoire DPS des dix armes — 2026-10-17
 
-- [x] Les 60 cas ont terminé sous Godot 4.7.2 sans erreur. Commande cluster : `XDG_DATA_HOME=/tmp/dopamine-balance-survey tools/local/godot-4.7.2/Godot_v4.7.2-stable_linux.x86_64 --headless --audio-driver Dummy --path game --script res://tests/combat_weapon_balance_survey.gd -- --formation=cluster`; commande approche : `XDG_DATA_HOME=/tmp/dopamine-balance-approach tools/local/godot-4.7.2/Godot_v4.7.2-stable_linux.x86_64 --headless --audio-driver Dummy --path game --script res://tests/combat_weapon_balance_survey.gd -- --formation=approach`. Chaque cas utilise vitesse ×4 et 18 secondes de simulation active. Les nombres sont le DPS observé en dégâts totaux / temps actif :
+- [x] Les 90 cas ont terminé sous Godot 4.7.2 sans erreur avec `--seed=20261017`. Chaque formation a été lancée par `XDG_DATA_HOME=/tmp/dopamine-seeded-<formation> tools/local/godot-4.7.2/Godot_v4.7.2-stable_linux.x86_64 --headless --audio-driver Dummy --path game --script res://tests/combat_weapon_balance_survey.gd -- --formation=<formation> --seed=20261017`. Chaque cas utilise vitesse ×4 et 18 secondes de simulation active. Les nombres sont le DPS observé en dégâts totaux / temps actif :
 
   | Arme | Cluster N1 | Cluster N5+R5 | Cluster EVO | Approche N1 | Approche N5+R5 | Approche EVO |
   |---|---:|---:|---:|---:|---:|---:|
-  | Lightning Conductor | 40,77 | 115,53 | 182,47 | 35,58 | 100,64 | 163,56 |
-  | Inferno Sprayer | 11,07 | 16,51 | 193,44 | 10,65 | 15,98 | 82,59 |
-  | Crimson Daggers | 110,81 | 311,86 | 628,50 | 72,19 | 175,23 | 307,80 |
-  | Minigun | 19,27 | 43,32 | 54,23 | 18,66 | 41,45 | 52,23 |
-  | Toxic Cloud | 17,54 | 24,65 | 31,24 | 8,72 | 10,00 | 12,48 |
-  | Sawblades | 8,88 | 19,95 | 33,22 | 8,89 | 19,94 | 33,30 |
-  | Meteor Staff | 57,63 | 110,09 | 179,20 | 20,07 | 37,42 | 58,98 |
-  | Prism Laser | 18,12 | 27,18 | 78,98 | 17,64 | 26,46 | 73,71 |
-  | Void Orb | 17,08 | 39,58 | 80,72 | 9,71 | 19,25 | 35,71 |
-  | Frost Nova | 46,07 | 94,24 | 118,58 | 21,27 | 29,85 | 37,30 |
+  | Lightning Conductor | 40,77 | 115,34 | 182,61 | 35,59 | 100,63 | 163,56 |
+  | Inferno Sprayer | 11,10 | 16,49 | 189,69 | 10,63 | 15,98 | 82,41 |
+  | Crimson Daggers | 119,72 | 318,51 | 581,88 | 75,30 | 199,20 | 301,29 |
+  | Minigun | 19,31 | 43,38 | 54,22 | 18,66 | 41,46 | 52,65 |
+  | Toxic Cloud | 16,38 | 24,61 | 32,42 | 8,00 | 10,92 | 12,48 |
+  | Sawblades | 8,88 | 19,94 | 33,30 | 8,89 | 19,94 | 33,27 |
+  | Meteor Staff | 58,44 | 110,14 | 142,81 | 20,01 | 37,49 | 52,14 |
+  | Prism Laser | 18,12 | 27,18 | 78,86 | 17,44 | 26,16 | 73,00 |
+  | Void Orb | 13,99 | 43,73 | 109,02 | 9,31 | 20,94 | 32,70 |
+  | Frost Nova | 44,44 | 95,24 | 119,36 | 20,88 | 29,77 | 37,26 |
 
 - [x] Même comparaison en formation `single` : une cible statique de 1 000 000 PV à 26 px. Colonnes = niveau 1 / niveau 5 + relique 5 / évolution, en DPS.
 
   | Arme | Single N1 | Single N5+R5 | Single EVO |
   |---|---:|---:|---:|
-  | Lightning Conductor | 21,92 | 51,23 | 64,03 |
-  | Inferno Sprayer | 11,07 | 17,03 | 20,60 |
+  | Lightning Conductor | 22,00 | 51,23 | 64,03 |
+  | Inferno Sprayer | 11,09 | 16,52 | 21,29 |
   | Crimson Daggers | 0,78 | 1,75 | 2,18 |
   | Minigun | 19,31 | 43,38 | 54,23 |
   | Toxic Cloud | 2,16 | 2,70 | 3,38 |
-  | Sawblades | 4,44 | 6,65 | 8,32 |
-  | Meteor Staff | 4,66 | 8,29 | 11,66 |
-  | Prism Laser | 18,12 | 27,18 | 33,98 |
+  | Sawblades | 4,44 | 6,66 | 8,32 |
+  | Meteor Staff | 4,66 | 8,32 | 11,66 |
+  | Prism Laser | 17,97 | 27,18 | 33,98 |
   | Void Orb | 3,11 | 5,82 | 5,09 |
-  | Frost Nova | 2,66 | 4,27 | 5,33 |
+  | Frost Nova | 2,67 | 4,27 | 5,33 |
 
 - [i] Cluster utilise 24 cibles statiques de 1 000 000 PV; approche utilise huit ennemis chaser qui avancent depuis 220 px. Les mesures sont propres à ces formations; portée, nombre de cibles effectivement touchées, géométrie, déplacements et synergies rendent le classement brut impropre à décider un équilibrage. Le profil de cadence d’itération observé est proche de 7 ms au P95 par cas, sans constituer un profilage GPU. Le script verrouille la vie du joueur et ne mesure pas sa survie, d’autres archétypes ennemis, les critiques séparément ni une run représentative. Les valeurs de balance restent **[PROPOSÉES]**.
-- [i] Les trois tableaux de formation ont été collectés avant l’ajout du seed explicite au survey. La formation `single` expose aussi les armes conçues pour des vagues ou cibles mobiles : Crimson Daggers n’a touché la cible que 2/22, 3/22 et 7/22 fois sur ses volleys pour ses trois builds; ce résultat décrit ce placement précis et n’est pas un score général. Deux essais distincts d’Inferno N5 donnent 16,48 et 17,03 DPS; l’essai non seedé ne permet pas d’attribuer l’écart aux jets ou au cadencement.
+- [i] La formation `single` expose aussi les armes conçues pour des vagues ou cibles mobiles : Crimson Daggers n’a touché la cible que 2/22, 3/22 et 7/22 fois sur ses volleys pour ses trois builds; ce résultat décrit ce placement précis et n’est pas un score général. Des essais d’Inferno N5 seedés différemment donnent les mêmes dégâts bruts (297,60); le DPS diffère légèrement avec la durée active mesurée à la frame.
 - [i] La collecte a été exécutée sur le checkout local avec une modification non commitée de `game/scripts/survival_session.gd` appartenant au travail audio en cours; cette scène n’avait ni boss ni lecture audio dans ce scénario. Une répétition sur un commit propre reste souhaitable avant de figer une baseline.
-- [x] Investigation d’Inferno Sprayer, formation `single` (une cible immobile à 26 px) : niveau 1 **11,10**, niveau 5 + relique 5 **16,48**, évolution **20,66 DPS**. Ces valeurs sont proches du cluster pour les deux premiers builds (11,07/16,51), mais le build évolué atteint 193,44 DPS en grappe. Le résultat concorde avec l’explosion de Wildfire ciblée par `_fire_inferno_sprayer` et couverte par `_wildfire_explodes_and_spreads`; il suggère un effet de cibles multiples, pas un multiplicateur équivalent de dégâts monocible. Un essai par configuration ne suffit pas à calibrer cette arme.
+- [x] Investigation d’Inferno Sprayer, formation `single` (une cible immobile à 26 px) : niveau 1 **11,09**, niveau 5 + relique 5 **16,52**, évolution **21,29 DPS**. Le build évolué atteint **189,69 DPS** en grappe et **82,41 DPS** sur huit chasers en approche. Le résultat concorde avec l’explosion de Wildfire ciblée par `_fire_inferno_sprayer` et couverte par `_wildfire_explodes_and_spreads`; il suggère un effet de cibles multiples, pas un multiplicateur équivalent de dégâts monocible. Un essai par configuration ne suffit pas à calibrer cette arme.
 
 ## P9.1 — Reproductibilité des surveys d’armes — 2026-10-17
 
 - [x] `combat_weapon_balance_survey.gd` accepte `--seed=<entier>`, configure le RNG de session via l’interface diagnostique Sandbox et imprime la seed dans sa sortie. Valeur par défaut : `20261017`.
 - [x] Deux exécutions `--weapon=inferno_sprayer --formation=single --seed=42017` donnent les mêmes dégâts bruts aux trois builds (200,00 / 297,60 / 372,00). La durée active varie légèrement entre frames (18,00–18,03 s), donc le DPS affiché varie de quelques centièmes; le seed ne rend pas le chronométrage frame-driven identique.
-- [i] Cette vérification montre la reproductibilité des dégâts bruts pour ces cas et ce seed, pas de toutes les branches aléatoires. Les tableaux précédents restent des relevés exploratoires pré-seed; aucune valeur **[PROPOSÉE]** n’est ajustée.
+- [x] Régénérer les trois formations complètes avec seed `20261017` remplace les tableaux pré-seed; certaines valeurs changent pour les armes à comportements aléatoires. Aucun tuning **[PROPOSÉ]** n’est modifié.
+- [i] Cette vérification montre la reproductibilité des dégâts bruts pour certains cas et seeds, pas une calibration statistique de toutes les branches aléatoires.
 
 ## Revalidation de la suite après export Linux — 2026-10-17
 
