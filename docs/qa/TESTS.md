@@ -37,6 +37,12 @@
 - [x] Le smoke direct sous Godot 4.7.2/Xvfb/Mesa llvmpipe passe; CTest ciblé importe le projet puis réussit `survival_combat_visual_smoke` (**2/2 tests, 3,23 s**).
 - [i] Cela confirme que les faisceaux de gameplay survivent à la réduction des effets décoratifs. Leur couleur reste **[OUVERTE]** selon l’Art Bible; le rendu sur GPU cible reste à vérifier. Le harness signale encore 4 ObjectDB et 2 ressources utilisées à la fermeture.
 
+## P9.3 — Correspondance des PNG avec leurs sources éditables — 2026-10-17
+
+- [x] `catalog_icon_assets_smoke.gd` parcourt récursivement les PNG livrables sous `game/assets/`, exige une source Aseprite de même nom et refuse les nouvelles exceptions non documentées. Il vérifie aussi que les trois exceptions historiques restent présentes et sans source homonyme.
+- [x] Godot 4.7.2 headless : **140 PNG inspectés, 3 exceptions documentées**, puis smoke complet des assets réussi.
+- [i] La correspondance de nom et l’existence d’une source ne prouvent pas l’origine exacte, les droits d’utilisation ni la licence; cet audit de provenance reste ouvert.
+
 ## P9.3 — Retours visuels des critiques et statuts — 2026-10-17
 
 - [x] `survival_visual_effects_smoke.gd` touche une vraie cible avec un projectile natif Minigun marqué critique et confirme que l'événement produit un impact critique rendu par la session; le helper conserve aussi le drapeau et l'échelle supérieure au chemin normal.
