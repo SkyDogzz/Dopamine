@@ -1,5 +1,11 @@
 # Tests d'acceptation et validation
 
+## Revalidation P5 après reprise — 2026-10-17
+
+- [x] Sous Godot 4.7.2, `ctest --test-dir build --output-on-failure -j1` passe 86/86 en 60,61 s. La suite comprend l’import Godot, les tests natifs, les smokes Survival/progression et les scénarios Sandbox des dix armes.
+- [x] Le smoke `survival_weapon_catalog_smoke` passe également dans cette suite : coexistence Burn/Poison et Toxic Ignition restent conformes aux paramètres **[VALIDÉS]**.
+- [ ] Cette suite automatisée ne ferme pas P5.V3 : victoire en run réelle sans assistance, choix de coffre réel et idempotence des récompenses restent à vérifier.
+
 ## Préparation du build Windows — 2026-10-16
 
 - [x] Ajouter `tools/build_windows.ps1` pour configurer MSVC x64, compiler les GDExtensions debug/release, importer le projet et exécuter `sandbox_smoke.gd`.
