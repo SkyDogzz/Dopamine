@@ -1,5 +1,7 @@
 extends SceneTree
 
+const CRITICAL_IMPACT_CAPTURE := "/tmp/dopamine-critical-hit-impact.png"
+
 var _settings: SettingsService
 
 func _initialize() -> void:
@@ -20,8 +22,11 @@ func _run() -> void:
 		_fail("Survival session failed to initialize")
 		return
 	session.simulation.pause()
+	session.set_process(false)
 	await process_frame
 	var state_before: Dictionary = session.simulation.snapshot()
+	if "--capture" in OS.get_cmdline_user_args() and not await _verify_impact_capture(session):
+		return
 	session._add_weapon_impact("inferno_sprayer", Vector2.ZERO, false)
 	session._add_weapon_impact("inferno_sprayer", Vector2.RIGHT * 20.0, false, true)
 	session._add_enemy_death_pixels("chaser", Vector2.ZERO)
@@ -65,6 +70,46 @@ func _run() -> void:
 	await process_frame
 	print("survival_visual_effects_smoke: passed")
 	quit(0)
+
+func _verify_impact_capture(session: Node2D) -> bool:
+	var impact_position := Vector2(180.0, 90.0)
+	var screen_position: Vector2 = session.get_global_transform_with_canvas() * impact_position
+	session._weapon_impacts.clear()
+	session.queue_redraw()
+	await process_frame
+	await RenderingServer.frame_post_draw
+	var baseline: Image = root.get_texture().get_image()
+	session._add_weapon_impact("inferno_sprayer", impact_position, false)
+	session.queue_redraw()
+	await process_frame
+	await RenderingServer.frame_post_draw
+	var normal_image: Image = root.get_texture().get_image()
+	var normal_pixels := _count_changed_pixels(baseline, normal_image, screen_position)
+	session._weapon_impacts.clear()
+	session._add_weapon_impact("inferno_sprayer", impact_position, false, true)
+	session.queue_redraw()
+	await process_frame
+	await RenderingServer.frame_post_draw
+	var critical_image: Image = root.get_texture().get_image()
+	var critical_pixels := _count_changed_pixels(baseline, critical_image, screen_position)
+	if critical_pixels <= normal_pixels or normal_pixels < 8:
+		_fail("Rendered critical impact should visibly cover more pixels than a normal impact")
+		return false
+	print("Critical impact changed pixels: normal=%d critical=%d" % [normal_pixels, critical_pixels])
+	if critical_image.save_png(CRITICAL_IMPACT_CAPTURE) != OK:
+		_fail("Could not save the critical impact visual capture")
+		return false
+	session._weapon_impacts.clear()
+	return true
+
+func _count_changed_pixels(baseline: Image, rendered: Image, center: Vector2) -> int:
+	var changed := 0
+	for y in range(maxi(0, int(center.y) - 40), mini(rendered.get_height(), int(center.y) + 41)):
+		for x in range(maxi(0, int(center.x) - 40), mini(rendered.get_width(), int(center.x) + 41)):
+			if baseline.get_pixel(x, y).is_equal_approx(rendered.get_pixel(x, y)):
+				continue
+			changed += 1
+	return changed
 
 func _next_impact_random(session: Node2D, reduced: bool) -> float:
 	_settings.set_reduced_visual_effects_enabled(reduced)
