@@ -914,6 +914,11 @@ Note de clôture : le blocage historique du smoke `sandbox_ui_smoke.gd` décrit 
 - [x] Le créateur confirme avoir déjà effectué les vérifications manuelles demandées et que tout est bon. Cette confirmation couvre le parcours manuel du catalogue Sandbox demandé pour P5.V4 ainsi que la run de bout en bout, le choix manuel d’un coffre et la persistance sans doublon; aucun détail par arme, build, difficulté ou plateforme n’a été fourni.
 - [ ] Le profilage représentatif CPU/GPU et des armes reste à réaliser avec des mesures reproductibles; la confirmation manuelle ne le remplace pas.
 
+## P5 — Comparaison contrôlée des armes — 2026-10-17
+
+- [x] `combat_weapon_balance_survey.gd` exécute les dix armes dans trois configurations chacune via `SurvivalSession`: niveau 1, niveau 5 avec relique niveau 5 sans évolution, et build évolué. Les 30 scénarios de 18 secondes simulées passent; les DPS observés et la commande reproductible sont consignés dans `PERFORMANCE.md`.
+- [ ] Ces cibles immobiles, sans mouvement ni progression, servent de comparaison de laboratoire uniquement. Elles ne ferment pas le calibrage sur runs représentatives ni le profilage GPU sur matériel de référence.
+
 ## P5/P6 — Revalidation coffre et effets uniques — 2026-10-16
 
 - [x] `free_chest_reroll_smoke.gd` et `survival_unique_effects_smoke.gd` passent sous Godot 4.7.2 après avoir donné à leurs profils fixtures les déblocages qu'ils utilisent réellement.

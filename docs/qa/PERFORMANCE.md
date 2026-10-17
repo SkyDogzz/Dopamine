@@ -41,6 +41,34 @@ L’environnement utilisé pour la reprise expose 8 vCPU AMD EPYC-Milan sous KVM
 
 Recontrôle lors de la reprise du goal : `/dev/dri/card0` et `renderD128` sont présents, mais `lspci` identifie uniquement un adaptateur Virtio 1.0 (`1af4:1050`) sous KVM. Aucun accès à l’identité ou aux compteurs du GPU hôte n’est exposé; ni `DISPLAY`, ni `perf`, `nvidia-smi`, `radeontop` ou `intel_gpu_top` ne sont disponibles. La présence de ces nœuds DRM ne constitue donc pas une mesure de l’iGPU cible. Le profilage GPU de référence reste **[OUVERT]**.
 
+## Comparaison contrôlée des dix armes — 2026-10-17
+
+Le survey `game/tests/combat_weapon_balance_survey.gd` exécute les dix armes via `SurvivalSession`, seules, dans une session sans service de progression ni écriture de sauvegarde. Chaque scénario dure 18 s simulées et utilise 24 cibles immobiles à 58 ou 112 unités du joueur, avec 1 000 000 HP chacune. Le joueur reste immobile et invulnérable; aucun spawn, XP, coffre, bonus permanent ou équipement n’intervient. La simulation et l’horloge Godot sont accélérées à ×4. Pour chaque arme, le script relève le niveau 1 sans relique, le niveau 5 avec sa relique niveau 5 sans collecter l’évolution, puis le même build avec l’évolution collectée. La mesure de sortie est le dommage attribué à l’arme divisé par le temps actif; les dégâts de statut et effets de zone observés par le chemin standard de session sont inclus.
+
+Commande de reproduction complète (30 scénarios; le timeout supérieur est requis par le wrapper) :
+
+```bash
+DOPAMINE_TEST_TIMEOUT=300s tools/run_godot_test.sh tools/local/godot-4.7.2/Godot_v4.7.2-stable_linux.x86_64 \
+  --headless --path game --script res://tests/combat_weapon_balance_survey.gd
+```
+
+Pour un seul prototype, ajouter `-- --weapon=lightning_conductor` (ID remplaçable par l’un des dix IDs du catalogue). Résultats observés, en dégâts/s :
+
+| Arme | Niveau 1 | Niveau 5 + relique 5 | Évoluée |
+|---|---:|---:|---:|
+| Lightning Conductor | 40,77 | 115,27 | 182,29 |
+| Inferno Sprayer | 11,10 | 16,51 | 190,16 |
+| Crimson Daggers | 122,83 | 298,96 | 538,71 |
+| Minigun | 19,27 | 43,46 | 54,32 |
+| Toxic Cloud | 16,99 | 24,86 | 31,83 |
+| Sawblades | 8,89 | 19,93 | 33,27 |
+| Meteor Staff | 58,09 | 110,11 | 142,75 |
+| Prism Laser | 18,12 | 27,18 | 78,78 |
+| Void Orb | 15,14 | 44,26 | 83,56 |
+| Frost Nova | 46,09 | 95,31 | 118,62 |
+
+Le cas groupé favorise particulièrement les attaques capables de toucher plusieurs cibles; l’évolution d’Inferno en est un signal net. Ces valeurs décrivent ce scénario synthétique, ne comparent pas des armes dans des runs représentatives et ne valident aucun chiffre proposé. Elles ne justifient pas seules un changement de tuning. Les champs `loop_interval_*` imprimés par le script sont l’espacement mural entre reprises de `process_frame` en headless, pas du temps CPU de frame ni un profil GPU. La calibration comparative en runs représentatives et le profilage CPU/GPU sur matériel de référence restent **[OUVERTS]**.
+
 ## Smoke rendu Godot sous Xvfb
 
 Le test CTest `render_visual_smoke` ouvre la scène Sandbox en fenêtre 1280×800, alimente la simulation avec 500 ennemis et 2 000 projectiles, puis vérifie le contenu des batches MultiMesh et la couleur d’un pixel ennemi dans l’image rendue. La capture est écrite dans `/tmp/dopamine-render-visual-smoke.png`.
