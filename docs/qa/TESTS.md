@@ -6,6 +6,11 @@
 - [x] Archive non distribuable `DopamineSurvivor-linux-8d91079-staging.tar.gz`, 31 988 718 octets; SHA-256 `d6430957e88c72e3b89f87802ac87836341eb65fdad225a9bbdeaf7123888faa`; manifeste `.sha256` généré à côté dans `build/linux/staging/`.
 - [i] Cette reconstruction inclut le correctif des compteurs Endless à la continuation; elle valide le staging Linux sur le même hôte virtualisé, pas une installation machine distincte, le GPU physique, les sauvegardes en usage, les plateformes autres que Linux ni une version distribuable.
 
+## Checkpoint CTest complet après isolation des runs Endless — 2026-10-17
+
+- [x] `XDG_DATA_HOME=/tmp/dopamine-p7-full-checkpoint DOPAMINE_TEST_TIMEOUT=480s /tmp/cmake-3.31.12-linux-x86_64/bin/ctest --test-dir build --output-on-failure -j1` passe **112/112 tests en 76,56 s**. Le checkpoint comprend import Godot, tests natifs, rendu, Sandbox et ses scénarios d’armes, progression, Armorless, Endless standard, options, parcours clavier/manette et interfaces.
+- [i] Vérification Linux sur l’hôte virtualisé courant; elle ne valide pas la run humaine complète, le GPU physique, un contrôleur physique ni l’export Windows Release.
+
 ## P7B.1 — Arbitrage de l’état en continuation Endless — 2026-10-17
 
 - [x] Décision utilisateur **[VALIDÉE]** : la continuation après victoire conserve HP, build et niveaux de run; elle crédite Survival avant de créer l’ID Endless.
