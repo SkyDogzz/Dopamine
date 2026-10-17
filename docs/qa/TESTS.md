@@ -1070,3 +1070,10 @@ Note de clôture : le blocage historique du smoke `sandbox_ui_smoke.gd` décrit 
 - [x] `sandbox_lab_smoke.gd` réduit les PV, conserve un bouclier de 4,5, déclenche `RESTORE HP` en pause et vérifie les PV max, le bouclier inchangé et le temps de simulation identique.
 - [x] Le contrôle agit sur `SandboxLabContext.session` uniquement; une session terminée doit être redémarrée.
 - [ ] Le comportement est un prototype associé à une commande **[PROPOSÉE]** du GDD, pas une décision de design promue.
+
+## P5 — Fixture Thermal Shock et checkpoint complet — 2026-10-17
+
+- [x] Après un échec de `survival_weapon_catalog_smoke.gd` dans CTest, le smoke a été répété jusqu’à reproduire l’échec : le hit Burn→Chill manquait alors que Chill→Burn passait. Le fixture espaçait ses cibles de seulement 20 px et laissait les armes automatiques actives; ces conditions rendaient les collisions dépendantes du mouvement.
+- [x] Les deux cibles sont maintenant séparées, les armes automatiques désactivées, et les diagnostics d’échec affichent séquences/hits observés. Le smoke catalogue passe 10 fois de suite.
+- [x] CTest séquentiel complet sous Godot 4.7.2 : **87/87 tests passent en 61,40 s**, incluant le smoke catalogue, le Sandbox Lab, les snapshots, les scénarios des dix armes et le rendu sous Xvfb.
+- [ ] Le checkpoint est exécuté sur l’hôte Linux actuel; il ne remplace pas le profilage GPU de référence ou les parcours humains de P5/P6/P7.

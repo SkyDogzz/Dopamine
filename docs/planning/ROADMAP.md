@@ -449,6 +449,7 @@ Travail requis :
   - [x] Corriger le travail de zone devenu inutile après saturation du budget d’explosions et committer ce checkpoint documenté.
   - [x] Après P5.2.4, recompiler avec CMake et exécuter CTest en séquentiel : 86/86 passent sous Godot 4.7.2; cela vérifie aussi les snapshots format 15 et les dix scénarios Sandbox d’armes.
   - [x] Après l’optimisation du résolveur de collisions, recompiler la GDExtension Linux et relancer CTest le 2026-10-17 : 86/86 passent en 60,45 s sous Godot 4.7.2.
+  - [x] Revalider le checkout le 2026-10-17 : CTest passe 87/87 en 61,40 s. La répétition du smoke catalogue a révélé un fixture Thermal Shock intermittent (cibles quasi chevauchées); les cibles sont désormais espacées et les armes du fixture désactivées. Le catalogue passe dix exécutions consécutives.
   - [x] Enregistrer la confirmation utilisateur de P5.V3 (run de victoire, coffre, récompenses et relance) ; voir `docs/qa/TESTS.md`.
   - [x] Le créateur confirme le 2026-10-17 avoir terminé les vérifications manuelles demandées et que tout est bon; aucun détail par arme/build/difficulté/plateforme n’a été fourni (voir `docs/qa/TESTS.md`).
   - [x] Ajouter une comparaison reproductible de DPS pour les dix armes au niveau 1, niveau 5 + relique 5, et évoluées, sur cible unique, grappe fixe et Chasers mobiles; données et limites dans `docs/qa/PERFORMANCE.md`. Cette mesure de laboratoire ne valide pas le tuning.

@@ -1113,10 +1113,11 @@ func _thermal_shock_combines_burn_and_chill_once() -> bool:
 	session.spawn_initial_enemy = false
 	session.wave_spawning_enabled = false
 	session.skip_starting_weapon_choice = true
+	session.weapon_enabled = false
 	root.add_child(session)
 	await process_frame
-	session.simulation.spawn("test_target", 1, Vector2(40.0, 50.0), 50.0, Vector2.ZERO)
-	session.simulation.spawn("test_target", 1, Vector2(60.0, 50.0), 50.0, Vector2.ZERO)
+	session.simulation.spawn("test_target", 1, Vector2(120.0, 80.0), 50.0, Vector2.ZERO)
+	session.simulation.spawn("test_target", 1, Vector2(500.0, 300.0), 50.0, Vector2.ZERO)
 	var targets: Array = await _wait_for_targets(session, 2)
 	if targets.size() != 2:
 		session.queue_free()
@@ -1157,6 +1158,7 @@ func _thermal_shock_combines_burn_and_chill_once() -> bool:
 	var reaction_sequence: int = session._try_thermal_shock(reaction_hit, entities, 2.0)
 	var burn_damage := false
 	var frost_damage := false
+	var thermal_damage_events: Array[Dictionary] = []
 	var deadline := Time.get_ticks_msec() + 2500
 	while Time.get_ticks_msec() < deadline and not (burn_damage and frost_damage):
 		await process_frame
@@ -1164,12 +1166,19 @@ func _thermal_shock_combines_burn_and_chill_once() -> bool:
 			if event.get("type", "") != "damage" or event.get("source_type", "") != "thermal_shock":
 				continue
 			var hit_id: Dictionary = event["target"]
+			thermal_damage_events.append({"target": hit_id, "amount": float(event["amount"])})
 			if hit_id == chilled_target_id and is_equal_approx(float(event["amount"]), 5.0):
 				burn_damage = true
 			elif hit_id == burning_target_id and is_equal_approx(float(event["amount"]), 4.0):
 				frost_damage = true
 	var valid := burn_sequence > 0 and repeated_sequence == 0 and lethal_sequence == 0 and frost_sequence > 0 and dot_sequence == 0 and \
 		reaction_sequence == 0 and burn_damage and frost_damage
+	if not valid:
+		push_error("Thermal Shock fixture diagnostics: sequences=%s burn_damage=%s frost_damage=%s targets=%s,%s" % [
+			[burn_sequence, repeated_sequence, lethal_sequence, frost_sequence, dot_sequence, reaction_sequence],
+			burn_damage, frost_damage, chilled_target_id, burning_target_id,
+		])
+		push_error("Thermal Shock observed damage events: %s" % [thermal_damage_events])
 	session.queue_free()
 	return valid
 
