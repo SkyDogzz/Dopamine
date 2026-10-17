@@ -16,6 +16,9 @@ func _run() -> void:
 	if not await _electroplague_spreads_existing_poison_on_direct_shock():
 		_fail("A direct Shock hit on a poisoned target should copy its Poison to every living enemy within 60 px, without extra damage or reapplying existing Poison")
 		return
+	if not await _gravity_collapse_hits_targets_once_inside_void_orb_fields():
+		_fail("Gravity Collapse should deal 50% direct-hit damage once to each enemy within 60 px of an impacted target in a Void Orb field")
+		return
 	if not await _weapon_progression_config_is_loaded_and_modifiable():
 		_fail("Survival should load validated weapon progression milestones from the JSON config")
 		return
@@ -1253,6 +1256,79 @@ func _electroplague_spreads_existing_poison_on_direct_shock() -> bool:
 				return false
 	var valid := copied_statuses == 5 and preserved_existing and not outside_has_poison and \
 				int(final_state["metrics"]["collision_count"]) == int(existing_state["metrics"]["collision_count"])
+	session.queue_free()
+	return valid
+
+func _gravity_collapse_hits_targets_once_inside_void_orb_fields() -> bool:
+	var session: Node2D = load("res://scenes/survival_session.tscn").instantiate()
+	session.spawn_initial_enemy = false
+	session.wave_spawning_enabled = false
+	session.skip_starting_weapon_choice = true
+	session.weapon_enabled = false
+	session.contact_damage_per_hit = 0.0
+	root.add_child(session)
+	await process_frame
+	session.simulation.pause()
+	var pause_deadline := Time.get_ticks_msec() + 2500
+	while Time.get_ticks_msec() < pause_deadline and not bool(session.simulation.snapshot().get("paused", false)):
+		await process_frame
+	if not bool(session.simulation.snapshot().get("paused", false)):
+		session.queue_free()
+		return false
+	var positions: Array[Vector2] = [Vector2(100.0, 100.0), Vector2(120.0, 100.0),
+		Vector2(160.0, 100.0), Vector2(160.5, 100.0)]
+	for position in positions:
+		session.simulation.spawn("test_target", 1, position, 100.0, Vector2.ZERO)
+	var targets: Array = await _wait_for_targets(session, positions.size())
+	if targets.size() != positions.size():
+		session.queue_free()
+		return false
+	var primary_id: Dictionary = targets[0]["id"]
+	var entities: Array = session.simulation.snapshot()["entities"]
+	entities.append({"id": {"index": 9999, "generation": 1}, "components": {
+		"EnemyType": "void_orb", "IsProjectile": true,
+		"Transform2D": {"x": 100.0, "y": 100.0},
+		"Projectile": {"attraction_radius": 60.0}}})
+	var event := {"type": "damage", "source_type": "minigun", "target": primary_id,
+		"is_damage_over_time": false, "amount": 20.0, "remaining_health": 80.0,
+		"sequence": 1000, "reaction_budget": 1,
+		"position": {"x": 100.0, "y": 100.0}}
+	var triggered: int = int(session.call("_try_gravity_collapse", event, entities))
+	var rejected_dot := event.duplicate(true)
+	rejected_dot["is_damage_over_time"] = true
+	var dot_sequence: int = int(session.call("_try_gravity_collapse", rejected_dot, entities))
+	var rejected_source := event.duplicate(true)
+	rejected_source["source_type"] = "void_orb"
+	var gravity_source_sequence: int = int(session.call("_try_gravity_collapse", rejected_source, entities))
+	var reaction_event := event.duplicate(true)
+	reaction_event["source_type"] = "gravity_collapse"
+	var reaction_sequence: int = int(session.call("_try_gravity_collapse", reaction_event, entities))
+	var entities_without_gravity: Array = entities.duplicate()
+	entities_without_gravity.pop_back()
+	var no_gravity_sequence: int = int(session.call("_try_gravity_collapse", event, entities_without_gravity))
+	var missing_target_event := event.duplicate(true)
+	missing_target_event["target"] = {"index": 9998, "generation": 1}
+	var missing_target_sequence: int = int(session.call("_try_gravity_collapse", missing_target_event, entities))
+	if triggered <= 0 or dot_sequence != 0 or gravity_source_sequence != 0 or \
+		reaction_sequence != 0 or no_gravity_sequence != 0 or missing_target_sequence != 0:
+		session.queue_free()
+		return false
+	session.simulation.resume()
+	var deadline := Time.get_ticks_msec() + 2500
+	var valid := false
+	while Time.get_ticks_msec() < deadline:
+		await process_frame
+		var state: Dictionary = session.simulation.snapshot()
+		var health_by_id: Dictionary = {}
+		for entity in state["entities"]:
+			if entity["components"].get("EnemyType", "") == "test_target":
+				health_by_id[entity["id"].index] = float(entity["components"]["Health"]["current"])
+		if health_by_id.get(primary_id["index"], 100.0) <= 90.0:
+			valid = is_equal_approx(float(health_by_id.get(targets[0]["id"].index, 0.0)), 90.0) and \
+					is_equal_approx(float(health_by_id.get(targets[1]["id"].index, 0.0)), 90.0) and \
+					is_equal_approx(float(health_by_id.get(targets[2]["id"].index, 0.0)), 90.0) and \
+					is_equal_approx(float(health_by_id.get(targets[3]["id"].index, 0.0)), 100.0)
+			break
 	session.queue_free()
 	return valid
 

@@ -26,6 +26,7 @@ const WEAPON_IMPACT_TYPES := {
 	"meteor_staff": 6, "starfall": 6, "starfall_fragment": 6,
 	"prism_laser": 7, "spectrum_collapse": 7, "prism_secondary": 7,
 	"void_orb": 8, "event_horizon": 8,
+	"gravity_collapse": 8,
 	"frost_nova": 9, "absolute_zero": 9, "thermal_shock": 9, "shatter_impact": 9, "shatter_fragment": 9,
 }
 const WEAPON_IMPACT_SOURCE_IDS := {
@@ -37,6 +38,7 @@ const WEAPON_IMPACT_SOURCE_IDS := {
 	"meteor_staff": "meteor_staff", "starfall": "meteor_staff", "starfall_fragment": "meteor_staff",
 	"prism_laser": "prism_laser", "spectrum_collapse": "prism_laser", "prism_secondary": "prism_laser",
 	"void_orb": "void_orb", "event_horizon": "void_orb", "frost_nova": "frost_nova",
+	"gravity_collapse": "void_orb",
 	"absolute_zero": "frost_nova", "thermal_shock": "frost_nova", "shatter_impact": "frost_nova",
 	"shatter_fragment": "frost_nova",
 }
@@ -45,6 +47,13 @@ const SHATTER_IMPACT_SOURCE_TYPES := ["crimson_dagger", "bloodstorm_dagger", "mi
 const ELECTROPLAGUE_SHOCK_SOURCE_TYPES := ["lightning_primary", "lightning_arc", "lightning_conductor",
 		"infinite_circuit_branch", "unique_lightning_burst"]
 const ELECTROPLAGUE_SPREAD_RADIUS := 60.0
+const GRAVITY_COLLAPSE_IMPACT_SOURCE_TYPES := ["lightning_primary", "lightning_arc", "lightning_conductor",
+		"unique_lightning_burst", "infinite_circuit_branch", "inferno_sprayer", "wildfire_sprayer",
+		"crimson_dagger", "bloodstorm_dagger", "minigun", "redline", "toxic_cloud", "pandemic_cloud",
+		"sawblades", "razorstorm", "meteor_staff", "starfall", "starfall_fragment", "prism_laser",
+		"spectrum_collapse", "prism_secondary", "frost_nova", "absolute_zero"]
+const GRAVITY_COLLAPSE_RADIUS := 60.0
+const GRAVITY_COLLAPSE_DAMAGE_MULTIPLIER := 0.5
 const WEAPON_IMPACT_LIFETIME := 0.22
 const MAX_VISIBLE_WEAPON_IMPACTS := 32
 const STATUS_EFFECT_COLORS := {
@@ -828,6 +837,7 @@ func _process(_delta: float) -> void:
 				_try_thermal_shock(event, state["entities"], current_simulation_time)
 				_try_toxic_ignition(event, current_simulation_time)
 				_try_electroplague(event, state["entities"])
+				_try_gravity_collapse(event, state["entities"])
 				_try_shatter(event, state["entities"])
 				_add_weapon_impact(source_type, Vector2(float(event["position"]["x"]), float(event["position"]["y"])),
 						bool(event.get("is_damage_over_time", false)))
@@ -2486,6 +2496,51 @@ func _try_electroplague(event: Dictionary, entities: Array) -> int:
 				float(poison["remaining_seconds"]), "poison") > 0:
 			spread_count += 1
 	return spread_count
+
+func _try_gravity_collapse(event: Dictionary, entities: Array) -> int:
+	if bool(event.get("is_damage_over_time", false)) or float(event.get("amount", 0.0)) <= 0.0 or \
+			float(event.get("remaining_health", 0.0)) <= 0.0 or int(event.get("reaction_budget", 1)) <= 0:
+		return 0
+	if not GRAVITY_COLLAPSE_IMPACT_SOURCE_TYPES.has(str(event.get("source_type", ""))):
+		return 0
+	var target_id: Dictionary = event.get("target", {})
+	var position: Dictionary = event.get("position", {})
+	if target_id.is_empty() or position.is_empty():
+		return 0
+	var target_key := Vector2i(int(target_id.get("index", -1)), int(target_id.get("generation", -1)))
+	var origin := Vector2(float(position.get("x", 0.0)), float(position.get("y", 0.0)))
+	var target_found := false
+	var target_is_gravitated := false
+	for entity in entities:
+		var components: Dictionary = entity.get("components", {})
+		var id: Dictionary = entity.get("id", {})
+		if Vector2i(int(id.get("index", -2)), int(id.get("generation", -2))) == target_key:
+			if not _is_targetable_enemy(components):
+				return 0
+			target_found = true
+			continue
+		if not bool(components.get("IsProjectile", false)) or \
+				str(components.get("EnemyType", "")) not in ["void_orb", "event_horizon"]:
+			continue
+		var field_radius := float(components.get("Projectile", {}).get("attraction_radius", 0.0))
+		if field_radius <= 0.0:
+			continue
+		var transform: Dictionary = components.get("Transform2D", {})
+		var field_position := Vector2(float(transform.get("x", 0.0)), float(transform.get("y", 0.0)))
+		if origin.distance_squared_to(field_position) <= field_radius * field_radius:
+			target_is_gravitated = true
+			break
+	if not target_found or not target_is_gravitated:
+		return 0
+	var reaction_chain_id := int(event.get("reaction_chain_id", 0))
+	if reaction_chain_id <= 0:
+		reaction_chain_id = int(event.get("sequence", 0))
+	if reaction_chain_id <= 0:
+		return 0
+	return simulation.spawn_projectile("gravity_collapse", origin, Vector2.ZERO,
+			float(event["amount"]) * GRAVITY_COLLAPSE_DAMAGE_MULTIPLIER,
+			0.0, 0.15, 0.0, 0.0, 0.0, GRAVITY_COLLAPSE_RADIUS, 1.0,
+			0, 0.0, 0.0, false, 0.0, 1.0, 1.0, 0.0, reaction_chain_id, 0)
 
 func _advance_lightning_chain(event: Dictionary, entities: Array, active_time: float) -> void:
 	var source_parts := str(event.get("source_type", "")).split(":", false, 1)

@@ -802,6 +802,31 @@ std::vector<CombatEvent> SimulationCore::advance(double delta_seconds) {
 				continue;
 			}
 			ProjectileData &projectile = projectiles_[projectile_index];
+			if (enemy_types_[projectile_index].id == "gravity_collapse") {
+				for (uint32_t target_index : query_spatial_index(spatial_index,
+						transforms_[projectile_index].x, transforms_[projectile_index].y,
+						projectile.explosion_radius, {})) {
+					if (explosion_targets_processed >= max_explosion_targets_per_advance) {
+						break;
+					}
+					if (target_index == projectile_index || projectile_flags_[target_index] || xp_orb_flags_[target_index] ||
+							health_[target_index].current <= 0.0F) {
+						continue;
+					}
+					const double dx = static_cast<double>(transforms_[target_index].x) - transforms_[projectile_index].x;
+					const double dy = static_cast<double>(transforms_[target_index].y) - transforms_[projectile_index].y;
+					if (dx * dx + dy * dy > static_cast<double>(projectile.explosion_radius) * projectile.explosion_radius) {
+						continue;
+					}
+					++explosion_targets_processed;
+					const EntityId target{target_index, slots_[target_index].generation};
+					const EntityId source{projectile_index, slots_[projectile_index].generation};
+					apply_damage(source, target, projectile.damage, events, to_despawn,
+							explosion_targets_processed);
+				}
+				to_despawn.push_back({projectile_index, slots_[projectile_index].generation});
+				continue;
+			}
 			if (projectile.persistent_area) {
 				projectile.area_time_to_tick -= delta_seconds;
 				while (projectile.area_time_to_tick <= 1e-12) {

@@ -95,9 +95,11 @@ Boucle Survival : choisir difficulté et arme initiale → survivre à une vague
 
 [VALIDÉ] Les interactions entre armes peuvent émerger des dégâts et statuts. Aucune limite artificielle aux synergies n’est ajoutée pour le seul équilibrage, sous réserve des protections techniques.
 
-[PROPOSÉ] Réactions élémentaires entre statuts ; Shatter et Electroplague sont validées comme indiqué en annexe. Les autres combinaisons restent proposées ou ouvertes.
+[PROPOSÉ] Réactions élémentaires entre statuts ; Shatter, Electroplague et Gravity Collapse sont validées comme indiqué en annexe. Les autres combinaisons restent proposées ou ouvertes.
 
 **Electroplague [VALIDÉE, 2026-10-17] :** un coup direct de Shock sur une cible empoisonnée propage son Poison à toutes les autres cibles ennemies vivantes dans un rayon de 60 px, sans plafond de cibles. La propagation copie les dégâts par tick, l’intervalle et la durée restante du Poison; elle n’inflige aucun dégât direct. Une cible déjà empoisonnée conserve son effet existant. Les ticks de DoT et les effets propagés ne déclenchent pas de propagation en chaîne sans nouveau coup direct de Shock.
+
+**Gravity Collapse [VALIDÉE, 2026-10-17] :** un coup direct d’Impact sur un ennemi vivant dans le champ gravitationnel actif de Void Orb/Event Horizon déclenche immédiatement une explosion centrée sur cet ennemi. L’explosion inflige 50 % des dégâts déclencheurs aux ennemis vivants à portée de 60 px, cible centrale comprise une seule fois; aucun coup direct supplémentaire n’est ajouté et la réaction ne chaîne pas. L’éligibilité du prototype à tous les impacts directs hors Void Orb/Event Horizon et projectiles de réaction reste **[PROPOSÉE]**, à calibrer en run.
 
 **Prototype [PROPOSÉ] — Thermal Shock :** une attaque directe de Burn sur une cible déjà Chill, ou une attaque directe de Chill sur une cible qui porte Burn, ajoute un impact immédiat égal à 50 % de l’attaque déclencheuse. Un cooldown proposé de 1 s par cible borne la répétition; les dégâts sur la durée et les impacts de Thermal Shock ne déclenchent pas la réaction. Ces coefficients restent à équilibrer et la règle n’est pas promue **[VALIDÉE]**.
 
@@ -480,7 +482,7 @@ Synergies proposées :
 
 ### Réactions élémentaires
 
-Les combinaisons et résultats sont proposés et non validés : voir le tableau ci-dessous. Overcharge impliquant un statut conducteur supplémentaire reste ouvert.
+Les statuts de décision sont indiqués par réaction dans le tableau ci-dessous. Overcharge impliquant un statut conducteur supplémentaire reste **[OUVERTE]**.
 
 ### Évolutions proposées
 
@@ -495,18 +497,18 @@ Les combinaisons et résultats sont proposés et non validés : voir le tableau 
 - Pandemic : Poison contagieux et nouveaux nuages.
 - Spectrum Collapse : faisceaux secondaires.
 
-### Réactions élémentaires proposées
+### Réactions élémentaires
 
 | Réaction         | Combinaison           | Résultat                              |
 | ---------------- | --------------------- | ------------------------------------- |
-| Thermal Shock    | Burn + Freeze         | Dégâts immédiats                      |
-| Toxic Ignition   | Poison + Burn         | Explosion chimique                    |
+| Thermal Shock    | Burn + Freeze         | Dégâts immédiats **[PROPOSÉ]**         |
+| Toxic Ignition   | Poison + Burn         | Explosion chimique **[VALIDÉ]**        |
 | Shatter          | Freeze + Impact/Shred | Dégâts bonus et fragments **[VALIDÉ]** |
-| Electroplague    | Poison + Shock        | Propagation de Poison                 |
-| Gravity Collapse | Gravity + Impact      | Dégâts de zone amplifiés              |
-| Hemorrhage       | Bleed + Crit          | Accélération des dégâts de saignement |
+| Electroplague    | Poison + Shock        | Propagation de Poison **[VALIDÉ]**     |
+| Gravity Collapse | Gravity + Impact      | Dégâts de zone **[VALIDÉ]**            |
+| Hemorrhage       | Bleed + Crit          | Accélération du saignement **[PROPOSÉ]** |
 
-Une éventuelle réaction Overcharge nécessitant un statut conducteur supplémentaire reste à définir.
+Les combinaisons marquées **[PROPOSÉ]** n’ont pas encore été validées. Une éventuelle réaction Overcharge nécessitant un statut conducteur supplémentaire reste **[OUVERTE]**.
 
 **Décisions utilisateur [VALIDÉES, 2026-10-16] — Toxic Ignition :** déclencher une explosion immédiate quand un coup direct applique Burn à une cible déjà empoisonnée ou Poison à une cible déjà brûlée. Les DoT Poison et Burn coexistent sur la cible et infligent leurs ticks selon leurs horloges indépendantes; réappliquer un même DoT le remplace sans effacer l’autre. L’explosion inflige 50 % des dégâts du coup direct déclencheur, dans un rayon de 60 px. Les deux statuts restent actifs après l’explosion. Une cible ne peut déclencher cette réaction qu’une fois par seconde. L’explosion n’applique pas de statut, donc ses dégâts ne déclenchent pas récursivement Toxic Ignition. Cette coexistence validée ne définit pas l’empilement d’autres paires de DoT, qui reste **[OUVERT]**.
 
