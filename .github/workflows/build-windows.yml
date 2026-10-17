@@ -50,12 +50,23 @@ jobs:
       - name: Launch exported Windows game headless
         shell: pwsh
         run: |
-          $exportedGame = (Resolve-Path -LiteralPath "build/windows/export/DopamineSurvivor.exe").Path
+          $exportDirectory = (Resolve-Path -LiteralPath "build/windows/export").Path
+          $packageArchive = Join-Path $env:RUNNER_TEMP "dopamine-windows-export.zip"
+          $extractedDirectory = Join-Path $env:RUNNER_TEMP "dopamine-windows-extracted"
+          Compress-Archive -Path (Join-Path $exportDirectory "*") -DestinationPath $packageArchive
+          Expand-Archive -Path $packageArchive -DestinationPath $extractedDirectory
+          $exportedGame = Join-Path $extractedDirectory "DopamineSurvivor.exe"
+          $extension = Join-Path $extractedDirectory "libdopamine.windows.template_release.x86_64.dll"
+          if (-not (Test-Path -LiteralPath $exportedGame -PathType Leaf) -or
+              -not (Test-Path -LiteralPath $extension -PathType Leaf)) {
+            throw "Extracted Windows export is missing its executable or Release GDExtension"
+          }
           $stdoutPath = Join-Path $env:RUNNER_TEMP "dopamine-windows-game.stdout.log"
           $stderrPath = Join-Path $env:RUNNER_TEMP "dopamine-windows-game.stderr.log"
           $gameProcess = Start-Process -FilePath $exportedGame `
             -ArgumentList @("--verbose", "--headless", "--quit-after", "3") `
-            -Wait -PassThru -RedirectStandardOutput $stdoutPath -RedirectStandardError $stderrPath
+            -WorkingDirectory $extractedDirectory -Wait -PassThru `
+            -RedirectStandardOutput $stdoutPath -RedirectStandardError $stderrPath
           $launchExitCode = $gameProcess.ExitCode
           $launchOutput = @()
           foreach ($logPath in @($stdoutPath, $stderrPath)) {
