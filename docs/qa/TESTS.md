@@ -1,5 +1,10 @@
 # Tests d'acceptation et validation
 
+## Régression complète sur le HEAD `41d2c4a` — 2026-10-17
+
+- [x] `/tmp/cmake-3.31.12-linux-x86_64/bin/ctest --test-dir build --output-on-failure` termine en **79,44 s**, **113/113** tests réussis, aucun échec. Cela inclut les imports Godot, Sandbox/Lab, Survival et ses armes/ennemis/boss, l’économie et les sauvegardes, Armorless, Endless standard, les parcours clavier/gamepad synthétiques et les scénarios d’armes Sandbox.
+- [i] Vérification de régression sur cet hôte virtualisé; elle ne clôt pas les validations humaines, les contrôles sur matériel réel ni les calibrations encore ouvertes de P6/P7/P9.
+
 ## P9.7 — Parcours clavier/manette et rendu Linux/X11 — 2026-10-17
 
 - [x] `XDG_DATA_HOME=/tmp/dopamine-p97-linux-interactions ctest --test-dir build --output-on-failure -R '^(keyboard_menu_journey_smoke|gamepad_menu_journey_smoke|render_visual_smoke|pilot_scene_visual_smoke|survival_combat_visual_smoke)$' -j1` passe **6/6** avec le fixture d’import Godot. Les deux parcours utilisent des événements clavier/gamepad synthétiques; les trois smokes visuels tournent sous Xvfb/Mesa.
