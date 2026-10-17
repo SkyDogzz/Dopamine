@@ -687,6 +687,7 @@ P1 livre le Sandbox développeur et ne remplace pas cette feature produit.
   - [x] Ajouter une option VFX persistante dans Options : trails, impacts décoratifs, pixels de mort, arcs Lightning et flashs Pandemic sont masqués; télégraphes et cues de gameplay restent visibles. Le périmètre/default restent **[PROPOSÉS]** et sont couverts par `survival_visual_effects_smoke.gd` et `ui_settings_smoke.gd`.
   - [ ] Régler l’audio par vague/boss.
   - [ ] Remplacer progressivement les assets placeholders, un lot visuel par lot.
+  - [x] Cesser de charger le sprite final placeholder archivé dans les batches runtime; le renderer continue d’afficher le Dopamine Core dédié. `catalog_icon_assets_smoke.gd` vérifie l’absence du placeholder dans les batches et conserve l’audit des fichiers/source archivés.
   - [x] Remplacer le placeholder du Pulse Warden par un prototype non canonique 96×96, palette maître 16 couleurs, source Aseprite éditable et route de renderer vérifiée; l’identité visuelle reste **[OUVERTE]**. Les deux exports placeholder historiques restent archivés mais ne sont pas utilisés en jeu.
 - [ ] **P9.4 — Accessibilité et commandes**
   - [x] Vérifier par événements synthétiques dans `survival_hub_smoke.gd` l’accès clavier/manette à Succès et Bestiaire, leur focus visible et leur inertie à l’activation souris/clavier/manette; les périphériques physiques restent à tester.

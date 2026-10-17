@@ -41,6 +41,7 @@
 
 - [x] `catalog_icon_assets_smoke.gd` parcourt récursivement les PNG livrables sous `game/assets/`, exige une source Aseprite de même nom et refuse les nouvelles exceptions non documentées. Il vérifie aussi que les trois exceptions historiques restent présentes et sans source homonyme.
 - [x] Godot 4.7.2 headless : **140 PNG inspectés, 3 exceptions documentées**, puis smoke complet des assets réussi.
+- [x] Retirer le sprite `boss_final_placeholder` des batches chargés au démarrage, tout en gardant son fichier/source archivé pour audit; le smoke refuse sa présence dans les batches et confirme la route runtime du Dopamine Core. CTest ciblé : `godot_project_import` et `catalog_icon_assets_smoke` passent (2/2) le 2026-10-17.
 - [i] La correspondance de nom et l’existence d’une source ne prouvent pas l’origine exacte, les droits d’utilisation ni la licence; cet audit de provenance reste ouvert.
 
 ## P9.3 — Retours visuels des critiques et statuts — 2026-10-17

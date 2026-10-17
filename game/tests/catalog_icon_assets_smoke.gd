@@ -36,6 +36,10 @@ func _initialize() -> void:
 			quit(1)
 			return
 	var renderer: Variant = (load("res://scripts/sprite_batch_renderer.gd") as Script).new()
+	if renderer._batches.has("boss_final_placeholder"):
+		push_error("Archived final boss placeholder art should not be loaded into the runtime sprite batches")
+		quit(1)
+		return
 	if renderer._sprite_for_entity({"EnemyType": "final_boss"}) != "boss_dopamine_core" or \
 			renderer._batches["boss_dopamine_core"]["texture"] == null:
 		push_error("The final boss should render the dedicated Dopamine Core sprite")

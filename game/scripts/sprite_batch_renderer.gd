@@ -16,7 +16,6 @@ const SPRITE_FILES := {
 	"enemy_summoner": "roster/enemy_summoner",
 	"enemy_summoned": "roster/enemy_summoned",
 	"boss_pulse_warden": "roster/boss_pulse_warden",
-	"boss_final_placeholder": "roster/boss_final_placeholder",
 	"boss_dopamine_core": "roster/boss_dopamine_core",
 	"xp_orb": "rewards/xp_orb",
 	"projectile_lightning": "projectiles/projectile_lightning",
