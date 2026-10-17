@@ -20,6 +20,7 @@ const OVERRIDE_LIMITS := {
 	"enemy_hp": Vector2(0.1, 1000.0),
 	"enemy_speed": Vector2(0.1, 10.0),
 	"contact_damage_per_hit": Vector2(0.0, 1000.0),
+	"health_decay_multiplier": Vector2(0.0, 10.0),
 	"spawn_count": Vector2(1.0, 500.0),
 }
 

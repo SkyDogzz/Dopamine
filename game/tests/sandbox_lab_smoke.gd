@@ -82,6 +82,7 @@ func _run() -> void:
 	var enemy_hp_override: SpinBox = lab.get_node_or_null("Root/Body/Side/Sections/EnemyConfig/EnemyHpMultiplier")
 	var enemy_speed_override: SpinBox = lab.get_node_or_null("Root/Body/Side/Sections/EnemyConfig/EnemySpeedMultiplier")
 	var contact_damage: SpinBox = lab.get_node_or_null("Root/Body/Side/Sections/EnemyConfig/ContactDamage")
+	var health_decay_multiplier: SpinBox = lab.get_node_or_null("Root/Body/Side/Sections/EnemyConfig/HealthDecayMultiplier")
 	var seed_control: SpinBox = lab.get_node_or_null("Root/Body/Side/Sections/EnemyConfig/Seed")
 	var restore_hp_button: Button = lab.get_node_or_null("Root/Body/Left/Controls/RestoreHpButton")
 	if weapon_select == null or weapon_level == null or add_weapon == null or relic_select == null or \
@@ -89,7 +90,7 @@ func _run() -> void:
 			add_stat == null or apply_build == null or import_profile == null or equipment_slot == null or equipment_stat == null or \
 			equipment_value == null or add_equipment == null or live_stat == null or live_value == null or \
 			apply_live_stat == null or enemy_hp_override == null or enemy_speed_override == null or \
-			contact_damage == null or seed_control == null or \
+			contact_damage == null or health_decay_multiplier == null or seed_control == null or \
 			restore_hp_button == null:
 		_fail("Sandbox Lab should provide profile import, visual build controls and typed combat configuration")
 		return
@@ -171,6 +172,18 @@ func _run() -> void:
 			not is_equal_approx(float(lab.context.active_preset["overrides"]["contact_damage_per_hit"]), 5.0):
 		_fail("Changing contact damage should affect the isolated session and active preset immediately")
 		return
+	health_decay_multiplier.value = 2.0
+	var base_decay: float = lab.context.simulation.health_decay_amount(5.0, 1.0)
+	if not is_equal_approx(float(lab.context.session.sandbox_health_decay_multiplier), 2.0) or \
+			not is_equal_approx(float(lab.context.active_preset["overrides"]["health_decay_multiplier"]), 2.0) or \
+			not is_equal_approx(lab.context.session._player_health_decay_amount(5.0, 1.0), base_decay * 2.0):
+		_fail("The Sandbox HP decay override should update the session and scale actual decay")
+		return
+	lab.context.session.sandbox_diagnostics_enabled = false
+	if not is_equal_approx(lab.context.session._player_health_decay_amount(5.0, 1.0), base_decay):
+		_fail("The HP decay override must not affect a non-Sandbox Survival session")
+		return
+	lab.context.session.sandbox_diagnostics_enabled = true
 	weapon_select.select(_option_index_for(weapon_select, "minigun"))
 	weapon_level.value = 2
 	add_weapon.pressed.emit()
@@ -398,6 +411,7 @@ func _run() -> void:
 			int(saved_preset["preset"]["overrides"].get("spawn_count", 0)) != 3 or \
 			str(saved_preset["preset"]["overrides"].get("spawn_enemy_type", "")) != "sprinter" or \
 			str(saved_preset["preset"]["overrides"].get("spawn_enemy_affix", "")) != "Hasted" or \
+			float(saved_preset["preset"]["overrides"].get("health_decay_multiplier", 0.0)) != 2.0 or \
 			float(saved_preset["preset"]["overrides"].get("contact_damage_per_hit", 0.0)) != 5.0:
 		_fail("The Lab UI should save a valid preset in the isolated Sandbox store")
 		return

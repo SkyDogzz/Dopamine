@@ -13,7 +13,8 @@ func _run() -> void:
 		"base_mode": "survival",
 		"seed": 12345,
 		"overrides": {"enemy_hp": 2.0, "enemy_speed": 2.0, "spawn_count": 25,
-			"spawn_enemy_type": "elite", "spawn_enemy_affix": "Hasted", "contact_damage_per_hit": 5.0},
+			"spawn_enemy_type": "elite", "spawn_enemy_affix": "Hasted", "contact_damage_per_hit": 5.0,
+			"health_decay_multiplier": 2.5},
 		"flags": {"god_mode": false},
 		"initial_build": {"weapons": [{"id": "lightning_conductor", "level": 2}]},
 	}
@@ -138,13 +139,24 @@ func _run() -> void:
 	if preset_service.validate_preset(invalid_contact_damage).get("ok", false):
 		_fail("Contact damage should not allow a negative value")
 		return
+	var excessive_health_decay := preset.duplicate(true)
+	excessive_health_decay["overrides"]["health_decay_multiplier"] = 10.1
+	if preset_service.validate_preset(excessive_health_decay).get("ok", false):
+		_fail("Health decay multiplier should respect its technical upper bound")
+		return
+	var negative_health_decay := preset.duplicate(true)
+	negative_health_decay["overrides"]["health_decay_multiplier"] = -0.1
+	if preset_service.validate_preset(negative_health_decay).get("ok", false):
+		_fail("Health decay multiplier should reject negative values")
+		return
 	var context = load("res://scripts/sandbox_lab_context.gd").new(preset_service)
 	root.add_child(context)
 	var context_start: Dictionary = await context.start(preset)
 	if not context_start.get("ok", false) or context.progression_service != null or \
 			context.normal_save_service != null or context.seed != preset["seed"] or \
 			context.session.sandbox_rng_seed != 12345 or \
-			not is_equal_approx(context.session.contact_damage_per_hit, 5.0):
+			not is_equal_approx(context.session.contact_damage_per_hit, 5.0) or \
+			not is_equal_approx(context.session.sandbox_health_decay_multiplier, 2.5):
 		_fail("Sandbox Lab context must start from validated data without normal progression services")
 		return
 	var materialized_weapons: Array = context.build.to_dictionary()["weapons"]

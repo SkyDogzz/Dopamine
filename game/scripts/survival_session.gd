@@ -115,6 +115,7 @@ const SANDBOX_SNAPSHOT_VALUE_TYPES := [
 @export var skip_starting_weapon_choice: bool = false
 var sandbox_diagnostics_enabled := false
 var sandbox_rng_seed := 0
+var sandbox_health_decay_multiplier := 1.0
 @export_group("Prototype wave director — proposed tuning")
 @export var wave_duration_seconds: float = 30.0
 @export var wave_population_scale: float = 1.0
@@ -821,7 +822,7 @@ func _process(_delta: float) -> void:
 	if elapsed_active_time > 0.0 and not run_over:
 		if player_shield > 0.0 and player_active_time >= _shield_expires_at:
 			player_shield = 0.0
-		_take_player_damage(simulation.health_decay_amount(player_active_time, elapsed_active_time))
+		_take_player_damage(_player_health_decay_amount(player_active_time, elapsed_active_time))
 		player_active_time += elapsed_active_time
 	_update_magnet_heart_pulse(state, elapsed_active_time)
 	_refresh_player_move_speed()
@@ -1408,6 +1409,13 @@ func _take_player_damage(amount: float) -> void:
 	var absorbed := minf(player_shield, amount)
 	player_shield -= absorbed
 	player_hp = maxf(0.0, player_hp - (amount - absorbed))
+
+func _player_health_decay_amount(active_time_seconds: float, delta_seconds: float) -> float:
+	var amount: float = simulation.health_decay_amount(active_time_seconds, delta_seconds)
+	if sandbox_diagnostics_enabled:
+		var multiplier := sandbox_health_decay_multiplier if is_finite(sandbox_health_decay_multiplier) else 1.0
+		amount *= clampf(multiplier, 0.0, 10.0)
+	return amount
 
 func _take_enemy_damage(amount: float) -> void:
 	var factors: Dictionary = DIFFICULTY_SCRIPT.DATA.get(difficulty_id, DIFFICULTY_SCRIPT.DATA["normal"])
