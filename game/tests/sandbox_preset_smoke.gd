@@ -42,6 +42,17 @@ func _run() -> void:
 	if not preset_store.save_preset(preset).get("ok", false):
 		_fail("A validated preset should save inside the sandbox preset directory")
 		return
+	var oversized_path := directory.path_join("oversized.json")
+	var oversized_file := FileAccess.open(oversized_path, FileAccess.WRITE)
+	if oversized_file == null:
+		_fail("The oversized preset fixture should be writable")
+		return
+	oversized_file.store_string(" ".repeat(preset_service.MAX_JSON_BYTES + 1))
+	oversized_file.close()
+	var oversized_result: Dictionary = preset_store.load_preset("oversized")
+	if oversized_result.get("ok", false) or oversized_result.get("error") != "too_large":
+		_fail("The preset store should reject oversized files before reading/parsing them")
+		return
 	var listed: Dictionary = preset_store.list_presets()
 	if not listed.get("ok", false) or listed["presets"].size() != 1 or \
 			listed["presets"][0]["preset_id"] != preset["preset_id"]:

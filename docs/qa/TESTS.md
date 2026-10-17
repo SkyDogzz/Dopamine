@@ -1559,6 +1559,12 @@ Note de clôture : le blocage historique du smoke `sandbox_ui_smoke.gd` décrit 
 - [x] `sandbox_preset_smoke.gd` confirme que le code partagé ne sérialise que les champs publics du schéma v1 et rejette récursivement des champs `script`, `command`, chemin système, secret, identifiant et données de profil dans `overrides`, avant validation ou export.
 - [x] Le même smoke vérifie que les IDs de preset ne peuvent pas sortir de `user://sandbox/presets`, que les champs inconnus au niveau racine sont rejetés, et qu’un preset/une construction invalide ne remplace pas le build Sandbox actif. Revalidé sous Godot 4.7.2; `sandbox_lab_smoke.gd` passe aussi avec preset et store.
 - [ ] Les textes name/description sont libres et saisis par l'utilisateur; ils ne sont pas inspectés pour une éventuelle information que l'utilisateur y mettrait lui-même. Aucun service ne collecte ou n'injecte des données de profil dans ces champs.
+
+## P8.7 — Limite de lecture des presets stockés — 2026-10-17
+
+- [x] `sandbox_preset_store.gd` vérifie la taille du fichier avant `get_as_text()`. `sandbox_preset_smoke.gd` écrit un preset local dépassant `MAX_JSON_BYTES`, vérifie le rejet `too_large`, puis confirme que l’index des presets valides l’ignore.
+- [x] Les smokes `sandbox_preset_smoke.gd` et `sandbox_lab_smoke.gd` passent sous Godot 4.7.2 avec `XDG_DATA_HOME` séparés; le second confirme la session isolée, le reset et la préservation des saves normales.
+
 ## Compilation MSVC du benchmark natif — 2026-10-16
 
 - [x] Le premier workflow Windows a atteint la compilation GDExtension, mais le build complet échouait sur `native/benchmarks/simulation_benchmark.cpp` : MSVC ne définit pas `__VERSION__`.

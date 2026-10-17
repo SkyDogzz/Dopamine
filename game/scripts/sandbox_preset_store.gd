@@ -41,7 +41,15 @@ func load_preset(preset_id: String) -> Dictionary:
 	var path := _path_for(preset_id)
 	if not FileAccess.file_exists(path):
 		return _error("not_found")
-	return _preset_service.import_json(FileAccess.get_file_as_string(path))
+	var file := FileAccess.open(path, FileAccess.READ)
+	if file == null:
+		return _error("read_failed")
+	if file.get_length() > _preset_service.MAX_JSON_BYTES:
+		file.close()
+		return _error("too_large")
+	var json := file.get_as_text()
+	file.close()
+	return _preset_service.import_json(json)
 
 func list_presets() -> Dictionary:
 	if DirAccess.make_dir_recursive_absolute(_directory) != OK:

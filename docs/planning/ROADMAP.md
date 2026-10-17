@@ -665,6 +665,7 @@ P1 livre le Sandbox développeur et ne remplace pas cette feature produit.
   - [x] Mesurer le plafond de 2 500 entités (500 ennemis + 2 000 projectiles) : RSS haut de page 7 960 KiB sur Linux Debug; métriques et limites dans `docs/qa/PERFORMANCE.md`.
   - [x] Pour le quota ECS utilisé par l’outil Spawn, avertir quand un lot ne tient plus et conserver le hard cap natif de 2 500; les limites internes de commandes/événements restent bornées par le worker. Calibration des seuils et politiques de surcharge toujours **[OUVERTES]** sur matériel cible.
   - [x] `sandbox_preset_smoke.gd` rejette clés de script/commande/chemin/données privées, profondeur/collections/taille hors limites et share codes corrompus; les presets ne contiennent que le schéma public fermé et ne déclenchent pas d’action ou d’accès fichier arbitraire.
+  - [x] Borner aussi la lecture des presets locaux avant chargement en mémoire; `sandbox_preset_smoke.gd` vérifie le rejet d’un fichier stocké au-delà de `MAX_JSON_BYTES` et que l’index ignore ce fichier.
 - [x] **P8.8 — Validation d’isolation**
   - [x] Vérifier l’absence de `ProgressionService` et `SaveService` dans la session/context Lab; aucun crédit Essence/Powder, achievement ou leaderboard n’est raccordé à cette route.
   - [x] Vérifier que preset, build de combat, reset et capture/restauration snapshot préservent octet pour octet un slot normal sentinelle; les tests de partage/import preset et d’import profil read-only couvrent aussi checksum/validation et source inchangée. Les tests tournent avec `XDG_DATA_HOME` isolé.
