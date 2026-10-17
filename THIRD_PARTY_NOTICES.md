@@ -1,6 +1,6 @@
 # Third-party notices
 
-This file records bundled software and font licenses currently identified in the repository. It is a source-tree notice; release packaging must place it beside desktop builds or otherwise make it available to players. This is a partial inventory, not release clearance: the archived Godot 4.7.2 engine list has not been compared with the actual export template, and the final asset/audio provenance review remains open.
+This file records bundled software and font licenses currently identified in the repository. It is a source-tree notice; release packaging must place it beside desktop builds or otherwise make it available to players. The archived Godot 4.7.2 engine list was compared with the Linux release template and matched; other release templates and the final asset/audio provenance review remain open, so this is not release clearance.
 
 ## Godot Engine 4.7.2
 
