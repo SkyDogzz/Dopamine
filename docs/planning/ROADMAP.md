@@ -690,7 +690,7 @@ P1 livre le Sandbox développeur et ne remplace pas cette feature produit.
   - [ ] Mesurer frame-time CPU/GPU, mémoire, P50/P95/P99.
   - [ ] Refaire les mesures après optimisations et archiver la configuration.
 - [ ] **P9.6 — Stabilité/saves**
-  - [ ] Faire un soak test de run et de Sandbox.
+  - [x] Faire un soak test Survival/Sandbox : 612,4 s simulées réparties sur 30 sessions sans verrou de vie/progression, puis 600,1 s Sandbox et 40 lots d’ennemis, sans écriture dans `user://saves`; détails/limites dans `docs/qa/TESTS.md`.
   - [ ] Tester sauvegarde interrompue, backup, restauration et migrations.
   - [ ] Vérifier double récompense et clôture propre des threads.
 - [ ] **P9.7 — Plateformes**

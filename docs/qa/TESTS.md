@@ -34,6 +34,14 @@
 - [i] Une tentative d’exécuter `res://tests/sandbox_smoke.gd` avec `--script` depuis l’exécutable exporté n’a pas terminé en 30 secondes; le parcours UI ci-dessus fournit le contrôle de runtime à la place. Le film a été coupé pendant la run et Godot a signalé 2 instances ObjectDB et 1 ressource encore référencées à cette fermeture forcée.
 - [ ] Ce contrôle porte sur un export local de l’hôte Linux courant, pas sur une installation vierge ni sur une autre distribution. Les notices tierces et le paquet distribuable restent à vérifier.
 
+## P9.6 — Soak Survival et Sandbox — 2026-10-17
+
+- [x] `XDG_DATA_HOME=/tmp/dopamine-p9-stability-soak-verified DOPAMINE_TEST_TIMEOUT=480s tools/run_godot_test.sh tools/local/godot-4.7.2/Godot_v4.7.2-stable_linux.x86_64 --headless --path game --script res://tests/stability_soak_smoke.gd` passe.
+- [x] Le script agrège **612,4 s de simulation Survival sur 30 sessions** (Easy, arme de départ standard, auto-choix des coffres, aucune invulnérabilité ni ProgressionService; maximum observé : 138 entités), puis **600,1 s de simulation Sandbox** avec 40 lots de dix Chasers. Les snapshots gardent leurs séquences et horloges monotones; le test attend l’acquittement de pause et ferme le contexte Sandbox.
+- [x] Le smoke compare les fingerprints des fichiers `user://saves` avant/après; aucun changement n’est détecté. Il ne mesure pas les fuites mémoire à long terme, n’utilise pas de sauvegarde normale réelle et ne remplace pas un soak graphique sur matériel cible.
+- [x] Après ajout du smoke, `/tmp/cmake-3.31.12-linux-x86_64/bin/ctest --test-dir build --output-on-failure -j1` passe **91/91 en 62,13 s**.
+- [i] Le checkout de ce CTest contenait un diff local non commité de `game/scripts/survival_session.gd`; ces résultats décrivent cet état de travail, pas le commit seul. Ce diff n’a pas été inclus dans le changement du soak.
+
 ## Revalidation de la suite après export Linux — 2026-10-17
 
 - Première exécution CTest séquentielle sur le checkout courant : **86/87**. Le smoke catalogue inspectait le buffer temporaire d’événements alors que `SurvivalSession` acquitte les événements qu’elle consomme; la course pouvait masquer un dégât déjà appliqué.
