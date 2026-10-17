@@ -1546,13 +1546,15 @@ Note de clôture : le blocage historique du smoke `sandbox_ui_smoke.gd` décrit 
 - [x] Revalidation sur le checkout courant, seed 20261018 à vitesse réelle (Engine et simulation ×1) : défaite vague 2 à 49,50 s actives, 9 kills, niveau 3, 11 920 unités parcourues; le script confirme que `user://saves` n’a pas changé. Le seed qui avait donné une autre issue sous fast-forward varie donc aussi avec le cadencement réel. Godot signale 2 instances ObjectDB et 1 ressource encore référencées à la fermeture.
 - [x] Nouvelle répétition sur ce checkout, seed 20261017 à vitesse réelle sous Xvfb/Mesa : défaite vague 2 à 59,32 s actives, 9 kills, niveau 3, 0/100 HP et 14 271,9 unités parcourues; le script confirme à nouveau que `user://saves` n’a pas changé. Les deux passages du même seed produisent encore des trajectoires et résultats différents; cela confirme le caractère exploratoire du bot et ne calibre pas le mode.
 - [x] Ajouter `--movement=stationary` au survey pour comparer le kite à un repère immobile sans modifier le défaut kite. Au seed 20261018, le parcours immobile meurt vague 1 après 11,73 s (7 kills, niveau 3); le kite meurt vague 2 après 43,91 s (5 kills, niveau 1). Une exécution kite précédente du même seed a donné 33,56 s et zéro kill. Les trois parcours terminent sans écrire `user://saves`; les valeurs divergent avec le cadencement et le choix auto des drafts n’est pas une décision humaine. Aucune valeur de combat **[PROPOSÉE]** n’est modifiée.
+- [x] Nouvelle exécution à vitesse réelle, seed `20261020`, avec PV ordinaires, draft auto-choisi, sans kill scripté ni service de progression : défaite vague 2 après 54,44 s actives, 10 kills, niveau 3 et 13 103,9 unités parcourues. Le contrôle du survey ne détecte aucune écriture dans `user://saves`.
+- [i] Comme les essais précédents, ce kite synthétique meurt avant le premier boss et ne remplace pas une run humaine complète; aucun paramètre **[PROPOSÉ]** n’est modifié.
 - [ ] Ces runs meurent avant le premier boss de vague 12; la session complète Armorless de production reste à valider manuellement, avec ses décisions de draft et sans assistance.
 
 
 ## P8.1/P8.3 — Sélecteur de mode Sandbox Lab — 2026-10-17
 
-- [x] `sandbox_lab_smoke.gd` vérifie le sélecteur clavier/manette (OptionButton focusable), ses deux options exécutables, le défaut Survival, la sérialisation du choix Armorless dans un preset et l’application de ce mode à la session isolée.
-- [x] Le Sandbox Lab reste sans `ProgressionService`/`SaveService`; Endless standard n’est pas exposé dans le sélecteur et reste **[OUVERT]** dans le GDD.
+- [x] `sandbox_lab_smoke.gd` vérifie le sélecteur clavier/manette (OptionButton focusable), ses trois options exécutables, le défaut Survival, la sérialisation des modes et l’application à la session isolée.
+- [x] `sandbox_preset_smoke.gd` vérifie que Endless standard s’exécute dans `SandboxLabContext` avec PV verrouillés, sans `ProgressionService`/`SaveService` normaux; les règles de P7B restent **[PROPOSÉES]**.
 - [x] `sandbox_lab_smoke.gd` passe sous Godot 4.7.2 headless.
 
 ## P9.4 — Ouverture clavier des panneaux du hub — 2026-10-17
