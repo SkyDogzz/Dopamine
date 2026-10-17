@@ -663,7 +663,7 @@ P1 livre le Sandbox développeur et ne remplace pas cette feature produit.
 
 - [ ] **P9.1 — Équilibrage combat**
   - [ ] Collecter DPS/survie par arme et archétype sur une configuration documentée.
-  - [ ] Comparer les dix armes et leurs évolutions sur scénarios équivalents.
+  - [x] Comparer les dix armes aux niveaux 1, 5+relique 5 et évolution sur formations `single`, `cluster` et `approach` avec `combat_weapon_balance_survey.gd`; les valeurs brutes et les limites sont consignées dans `docs/qa/TESTS.md`. Une collecte par cas reste exploratoire et ne calibre pas les paramètres proposés.
   - [ ] Ajuster les valeurs proposées via données de balance, pas par changements cachés.
 - [ ] **P9.2 — Économie et durée**
   - [ ] Mesurer durée réelle d’une run et fréquence de choix chest.

@@ -89,7 +89,23 @@
   | Void Orb | 17,08 | 39,58 | 80,72 | 9,71 | 19,25 | 35,71 |
   | Frost Nova | 46,07 | 94,24 | 118,58 | 21,27 | 29,85 | 37,30 |
 
+- [x] Même comparaison en formation `single` : une cible statique de 1 000 000 PV à 26 px. Colonnes = niveau 1 / niveau 5 + relique 5 / évolution, en DPS.
+
+  | Arme | Single N1 | Single N5+R5 | Single EVO |
+  |---|---:|---:|---:|
+  | Lightning Conductor | 21,92 | 51,23 | 64,03 |
+  | Inferno Sprayer | 11,07 | 17,03 | 20,60 |
+  | Crimson Daggers | 0,78 | 1,75 | 2,18 |
+  | Minigun | 19,31 | 43,38 | 54,23 |
+  | Toxic Cloud | 2,16 | 2,70 | 3,38 |
+  | Sawblades | 4,44 | 6,65 | 8,32 |
+  | Meteor Staff | 4,66 | 8,29 | 11,66 |
+  | Prism Laser | 18,12 | 27,18 | 33,98 |
+  | Void Orb | 3,11 | 5,82 | 5,09 |
+  | Frost Nova | 2,66 | 4,27 | 5,33 |
+
 - [i] Cluster utilise 24 cibles statiques de 1 000 000 PV; approche utilise huit ennemis chaser qui avancent depuis 220 px. Les mesures sont propres à ces formations; portée, nombre de cibles effectivement touchées, géométrie, déplacements et synergies rendent le classement brut impropre à décider un équilibrage. Le profil de cadence d’itération observé est proche de 7 ms au P95 par cas, sans constituer un profilage GPU. Le script verrouille la vie du joueur et ne mesure pas sa survie, d’autres archétypes ennemis, les critiques séparément ni une run représentative. Les valeurs de balance restent **[PROPOSÉES]**.
+- [i] La formation `single` expose aussi les armes conçues pour des vagues ou cibles mobiles : Crimson Daggers n’a touché la cible que 2/22, 3/22 et 7/22 fois sur ses volleys pour ses trois builds; ce résultat décrit ce placement précis et n’est pas un score général. Deux essais distincts d’Inferno N5 donnent 16,48 et 17,03 DPS, ce qui est compatible avec des critiques aléatoires; le survey ne fixe pas le RNG des critiques.
 - [i] La collecte a été exécutée sur le checkout local avec une modification non commitée de `game/scripts/survival_session.gd` appartenant au travail audio en cours; cette scène n’avait ni boss ni lecture audio dans ce scénario. Une répétition sur un commit propre reste souhaitable avant de figer une baseline.
 - [x] Investigation d’Inferno Sprayer, formation `single` (une cible immobile à 26 px) : niveau 1 **11,10**, niveau 5 + relique 5 **16,48**, évolution **20,66 DPS**. Ces valeurs sont proches du cluster pour les deux premiers builds (11,07/16,51), mais le build évolué atteint 193,44 DPS en grappe. Le résultat concorde avec l’explosion de Wildfire ciblée par `_fire_inferno_sprayer` et couverte par `_wildfire_explodes_and_spreads`; il suggère un effet de cibles multiples, pas un multiplicateur équivalent de dégâts monocible. Un essai par configuration ne suffit pas à calibrer cette arme.
 
