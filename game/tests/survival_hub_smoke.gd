@@ -338,6 +338,15 @@ func _run() -> void:
 		not current_scene.wave_director.endless_standard:
 		_fail("The unlocked hub action should start an Endless standard session with its endless director")
 		return
+	if current_scene.loadout.weapon_level("lightning_conductor") != 0 or \
+		current_scene.loadout.relic_level("magnet_heart") != 0:
+		_fail("A hub Endless run should start without carrying weapon or relic run levels")
+		return
+	var expected_max_hp: float = current_scene.simulation.initial_player_hp() * \
+		(1.0 + progression.skill_bonus("max_hp_pct")) + progression.equipment_bonus("max_hp")
+	if not is_equal_approx(current_scene.player_max_hp, expected_max_hp):
+		_fail("A hub Endless run should apply the permanent skill and equipment HP bonuses")
+		return
 	print("Survival hub profile, difficulty, panels, inactive actions and focus smoke passed")
 	quit()
 

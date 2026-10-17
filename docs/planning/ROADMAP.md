@@ -605,7 +605,7 @@ Travail requis :
 - [ ] **P7B.1 — Contrat de prototype**
   - [x] Décision utilisateur **[VALIDÉE, 2026-10-17]** : une victoire Survival débloque l’entrée depuis le hub et permet une continuation optionnelle après le boss final.
   - [x] Décision utilisateur **[VALIDÉE, 2026-10-17] — réponse A** : la continuation Survival → Endless conserve HP, build et niveaux; la victoire est créditée avant le nouvel ID Endless.
-  - [ ] Faire arbitrer le profil de départ depuis le hub; le prototype actuel active progression/équipement permanents et recommence armes/reliques au niveau 1, voir `DECISIONS_RESTANTES.md`.
+  - [x] Décision utilisateur **[VALIDÉE, 2026-10-17] — réponse A** : depuis le hub, Endless utilise la progression et l’équipement permanents; armes/reliques de run commencent au niveau 1. Ce profil est distinct de la continuation qui conserve HP/build/niveaux.
   - [x] Réutiliser Easy–Chaos; scaling existant jusqu’à 24 puis +5,5 % HP ennemis par vague; mid-boss toutes les 12 vagues, y compris aux vagues 24 et 36. La croissance HP reste **[PROPOSÉE]**.
 - [x] **P7B.2 — Prototype implémenté**
   - [x] Ajouter un lancement Endless dans le hub, verrouillé avant victoire Survival; l’entrée réutilise le service de progression normal et la difficulté choisie.

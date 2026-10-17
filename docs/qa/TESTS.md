@@ -17,6 +17,13 @@
 - [x] `endless_standard_session_smoke.gd` couvre le transfert d’état et l’absence de double crédit; l’entrée depuis le hub suit son profil distinct, encore **[PROPOSÉ]**.
 - [i] La validation automatique couvre le contrat implémenté, pas la calibration du mode Endless ni une run représentative.
 
+## P7B.1 — Profil de départ Endless depuis le hub — 2026-10-17
+
+- [x] Décision utilisateur **[VALIDÉE, réponse A]** : progression et équipement permanents actifs; niveaux des armes/reliques de run à 1 au lancement depuis le hub. La continuation Survival → Endless garde son état de run séparément.
+- [x] `survival_hub_smoke.gd` vérifie que le lancement Endless conserve le service de progression, applique les bonus HP permanents de compétences/équipement, et ne reprend aucun niveau d’arme/relique de run.
+- [x] `tools/local/godot-4.7.2/Godot_v4.7.2-stable_linux.x86_64 --headless --path game --script res://tests/survival_hub_smoke.gd` passe. Godot signale encore des instances ObjectDB et ressources retenues à l’arrêt, sans assertion échouée.
+- [i] Cette smoke confirme le contrat de démarrage, pas la calibration des bonus ni une run Endless longue.
+
 ## P7B.1 — Compteurs du segment de continuation — 2026-10-17
 
 - [x] `endless_standard_session_smoke.gd` vérifie qu’après la continuation HP/build/niveaux persistent, tandis que durée affichée/enregistrée, kills et compteurs additifs d’achievements repartent pour l’ID Endless. L’horloge interne reste monotone pour conserver les expirations et le rythme de simulation.

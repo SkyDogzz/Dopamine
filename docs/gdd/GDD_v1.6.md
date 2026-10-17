@@ -229,7 +229,7 @@ Données : AchievementDefinition {id, category, secret, metric, aggregation, tie
 
 ## 12 — Endless standard (conception provisoire)
 
-[PROPOSÉ] Depuis le hub, progression permanente et équipement actif, mais armes/reliques recommencent au niveau 1. **[VALIDÉ — EXTENSION DU 2026-10-17]** En continuation, conserver les HP, le build et les niveaux de la run Survival; créditer sa victoire avant de démarrer un nouvel ID de run Endless. Difficultés Easy à Chaos. Les deux parcours n’ont donc pas le même état initial.
+[VALIDÉ — EXTENSION DU 2026-10-17, réponse A] Depuis le hub, progression permanente et équipement actifs; armes/reliques de run commencent au niveau 1. **[VALIDÉ — EXTENSION DU 2026-10-17]** En continuation, conserver les HP, le build et les niveaux de la run Survival; créditer sa victoire avant de démarrer un nouvel ID de run Endless. Difficultés Easy à Chaos. Les deux parcours n’ont donc pas le même état initial.
 
 [PROPOSÉ] Cycles après vague 24 : ennemis plus puissants, élites et mutations, boss récurrents ; maîtrise répétable temporaire avec rendements décroissants après max des objets. Le prototype réutilise le scaling actuel jusqu'à la vague 24 puis augmente les PV ennemis de 5,5 % par vague; il déclenche un mid-boss toutes les 12 vagues, dont 24, 36, etc. Records locaux séparés par difficulté, classés par vague, temps puis kills.
 
@@ -237,7 +237,7 @@ Données : AchievementDefinition {id, category, secret, metric, aggregation, tie
 
 [VALIDÉ] Accès depuis le hub après une victoire Survival et proposition de continuation optionnelle après le boss final. La continuation conserve les HP, le build et les niveaux; crédit de la victoire avant le nouvel ID Endless.
 
-Prototype d’accès depuis le hub, de cadence et de fin **[PROPOSÉ, 2026-10-17]** retenu pour l’implémentation : progression permanente et équipement actifs, armes/reliques niveau 1, défaite ou abandon, records par difficulté et récompenses sans bonus de boss final ni équipement garanti. Réutiliser Easy–Chaos, augmenter les PV ennemis de 5,5 % par vague après la vague 24 et déclencher un mid-boss toutes les 12 vagues, y compris aux vagues 24, 36, 48, etc. Cette sélection suit la demande utilisateur de poursuivre les décisions et l’implémentation sans checkpoint; elle ne transforme pas ces valeurs en décisions **[VALIDÉES]**.
+Prototype d’accès depuis le hub, de cadence et de fin **[PROPOSÉ, 2026-10-17]** retenu pour l’implémentation : progression permanente et équipement actifs, armes/reliques niveau 1, défaite ou abandon, records par difficulté et récompenses sans bonus de boss final ni équipement garanti. Réutiliser Easy–Chaos, augmenter les PV ennemis de 5,5 % par vague après la vague 24 et déclencher un mid-boss toutes les 12 vagues, y compris aux vagues 24, 36, 48, etc. Ces règles restent **[PROPOSÉES]**, sauf le profil hub désormais **[VALIDÉ]** ci-dessus.
 
 [OUVERT] Nature de la maîtrise répétable; valeurs finales de récompense/scaling et équilibrage. Le profil depuis le hub, la cadence, la fin et les records restent **[PROPOSÉS]**; l’accès/déblocage et l’état conservé en continuation sont **[VALIDÉS]**.
 
