@@ -47,6 +47,12 @@
 - [x] Les vérifications couvrent les auras et leur retrait à la mort, les invocations bornées, les six affixes élite, les huit familles générées en Survival, les patterns/télégraphes des deux boss, leur comportement en pause, et les coffres garantis du boss final avant victoire.
 - [i] Les paramètres de profils, affixes, patterns, dégâts, rayons, délais, plafonds et probabilités de spawn restent **[PROPOSÉS]**. Plusieurs smokes signalent des instances/ressources encore en usage à l’arrêt; leurs assertions passent. La représentativité et le calibrage restent ouverts pour P9.
 
+## P5.1.15 — Statut de configuration du balancing — 2026-10-17
+
+- [x] Depuis le snapshot propre `7221c57`, `survival_weapon_catalog_smoke.gd` et `survival_loadout_smoke.gd` passent sous Godot 4.7.2 avec des profils `XDG_DATA_HOME` isolés.
+- [x] Les vérifications confirment que les valeurs par niveau sont chargées depuis `weapon_progression.json`, qu’une modification de configuration affecte le résultat calculé, et que les dix paires/évolutions ainsi que les choix de loadout restent cohérents.
+- [i] Cette vérification atteste le statut documentaire et la configurabilité, pas l’équilibrage : les chiffres restent **[PROPOSÉS]** jusqu’à la calibration représentative.
+
 ## Build Linux depuis un répertoire CMake vierge — 2026-10-17
 
 - Inventaire de cet environnement : CMake 3.31.12, GCC 14.2.0, Godot officiel 4.7.2 (`ed1daf0bf`) et `godot-cpp` `b8530af7546a3fcae80cef2477526569fd42ffc2`.

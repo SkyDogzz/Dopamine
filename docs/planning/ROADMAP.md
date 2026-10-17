@@ -335,7 +335,7 @@ Travail requis :
   - [x] Vérifier cinq slots de reliques en run normale ; `survival_loadout_smoke.gd` couvre cinq reliques distinctes, refuse une sixième et ne propose plus de nouvel item quand les slots sont pleins.
   - [x] Tester l’extension Legendary/Mythic avec `expanded_loadout` équipé : +1 arme et +1 relique, plafond six, doublons dédupliqués; contrat et valeurs restent **[PROPOSÉS]** dans `EFFETS_UNIQUES_P6.md`. Couvert par `survival_unique_effects_smoke.gd` et `survival_loadout_smoke.gd`.
   - [x] Vérifier l’absence de cumul automatique d’un même effet unique actif ; `progression_service_smoke.gd` équipe deux items Legendary avec `overflow_shield` et vérifie que l’effet n’est exposé qu’une fois.
-- [ ] **P5.1.15 — Statut du balancing**
+- [x] **P5.1.15 — Statut du balancing**
   - [x] Charger les multiplicateurs, ajouts et valeurs par palier depuis `game/data/weapon_progression.json`; le chargement valide version, dix IDs, niveaux 1–5 et valeurs finies/positives, et échoue visiblement si la configuration est invalide.
   - [x] Garder les valeurs marquées **[PROPOSÉES]** jusqu’à leur décision formelle; `survival_weapon_catalog_smoke.gd` vérifie aussi qu’une valeur modifiée dans la configuration change le résultat calculé.
 
