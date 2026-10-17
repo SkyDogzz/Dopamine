@@ -698,7 +698,8 @@ P1 livre le Sandbox développeur et ne remplace pas cette feature produit.
   - [x] Ajouter un preset Linux/X11 et une route `linux.release.x86_64` pour la GDExtension; le PCK 4.7.2 s’exporte sans warning, se charge avec le runtime Linux et l’extension debug, et les quatre checks import/Sandbox/catalogue passent. C’est une validation de pack et de chargement sur l’hôte courant, pas un export autonome.
   - [ ] Refaire build Windows propre et lancer la GDExtension.
   - [ ] Tester contrôles, chemins et rendu sur les deux plateformes.
-  - [ ] Installer les templates Linux 4.7.2, produire puis lancer un export autonome; ils ne sont pas présents dans l’environnement courant.
+  - [x] Vérifier le SHA-512 officiel des templates Godot 4.7.2, installer le template Linux release x86_64, exporter `build/linux/export/DopamineSurvivor.x86_64` et lancer le menu trois frames en headless; détails dans `docs/qa/TESTS.md`.
+  - [ ] Confirmer l’instanciation de `CombatSimulation` depuis l’exécutable exporté; le smoke lancé avec `--script res://tests/sandbox_smoke.gd` a dépassé 30 s sans résultat.
 - [ ] **P9.8 — Préparation de livraison**
   - [ ] Établir checklist release et versions d’artefacts.
   - [ ] Vérifier contenu, dépendances, licences, sauvegarde et notes de version.
