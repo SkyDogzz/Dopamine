@@ -1,0 +1,14 @@
+# Godot 4.7.2; seed base=20261016 + replicate index; difficulty=Easy; movement=loot.
+# Nine real Survival sessions: fresh/mid/full profile × three replicates; ×4 engine/simulation, ordinary HP, no scripted kills.
+# XP/chest collection use the session's normal radii; nearest XP orb or chest is targeted, with local steering away from nearby enemies.
+# First eligible chest option is selected automatically; run rewards are not persisted; temporary profile data lives under isolated XDG_DATA_HOME.
+tier,difficulty,movement,replicate,unlocked_nodes,hp_bonus_pct,damage_bonus_pct,speed_bonus_pct,crit_bonus_pct,active_seconds,wall_seconds,path_distance,wave,kills,level,outgoing_damage,outgoing_dps,net_hp_loss,boss_defeated,result
+fresh,easy,loot,1,0,0.00,0.00,0.00,0.00,20.19,5.05,4768.00,1,17,5,278.40,13.79,100.00,false,defeat
+fresh,easy,loot,2,0,0.00,0.00,0.00,0.00,23.68,5.93,5696.00,1,23,6,248.28,10.48,100.00,false,defeat
+fresh,easy,loot,3,0,0.00,0.00,0.00,0.00,19.52,4.88,4688.00,1,15,4,260.22,13.33,100.00,false,defeat
+mid,easy,loot,1,44,8.00,6.00,4.00,2.50,23.50,5.88,5873.92,1,23,6,324.14,13.79,108.00,false,defeat
+mid,easy,loot,2,44,8.00,6.00,4.00,2.50,19.94,4.99,4992.00,1,16,5,269.54,13.52,108.00,false,defeat
+mid,easy,loot,3,44,8.00,6.00,4.00,2.50,21.54,5.39,5391.36,1,18,5,298.38,13.85,108.00,false,defeat
+full,easy,loot,1,100,10.70,9.00,6.00,4.00,22.64,5.66,5766.40,1,20,6,372.68,16.46,110.70,false,defeat
+full,easy,loot,2,100,10.70,9.00,6.00,4.00,20.66,5.17,5257.60,1,18,5,296.85,14.37,110.70,false,defeat
+full,easy,loot,3,100,10.70,9.00,6.00,4.00,53.81,13.46,13776.32,2,71,11,1083.12,20.13,110.70,false,defeat

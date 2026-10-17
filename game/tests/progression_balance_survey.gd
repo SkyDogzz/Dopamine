@@ -62,7 +62,7 @@ func _run() -> void:
 	if selected_difficulty != "all" and selected_difficulty not in DIFFICULTY.ORDER:
 		_fail("Unknown difficulty: %s" % selected_difficulty)
 		return
-	if movement_pattern not in ["still", "square", "kite"]:
+	if movement_pattern not in ["still", "square", "kite", "loot"]:
 		_fail("Unknown movement pattern: %s" % movement_pattern)
 		return
 
@@ -140,8 +140,9 @@ func _run_case(tier: String, difficulty_id: String, replicate: int, progression:
 	session.progression_service = progression
 	session.difficulty_id = difficulty_id
 	session.skip_starting_weapon_choice = true
-	session.xp_collection_radius = 10000.0
-	session.chest_collection_radius = 10000.0
+	if movement_pattern != "loot":
+		session.xp_collection_radius = 10000.0
+		session.chest_collection_radius = 10000.0
 	root.add_child(session)
 	monitor.session = session
 	await process_frame
@@ -163,6 +164,9 @@ func _run_case(tier: String, difficulty_id: String, replicate: int, progression:
 		elif movement_pattern == "kite" and session.player_active_time >= next_movement_update:
 			_set_kite_movement(session, replicate)
 			next_movement_update = session.player_active_time + 0.5
+		elif movement_pattern == "loot" and session.player_active_time >= next_movement_update:
+			_set_loot_movement(session)
+			next_movement_update = session.player_active_time + 0.25
 		await process_frame
 		var current_position: Vector2 = session.player.global_position
 		path_distance += previous_position.distance_to(current_position)
@@ -196,6 +200,10 @@ func _run_case(tier: String, difficulty_id: String, replicate: int, progression:
 	if movement_pattern == "square" and path_distance < 100.0:
 		_case_failed = true
 		_fail("Square movement produced only %.1f units of travel for %s/%s" % [path_distance, tier, difficulty_id])
+		return
+	if movement_pattern == "loot" and path_distance < 100.0:
+		_case_failed = true
+		_fail("Loot movement produced only %.1f units of travel for %s/%s" % [path_distance, tier, difficulty_id])
 		return
 	Engine.time_scale = 1.0
 	session.queue_free()
@@ -239,6 +247,40 @@ func _set_kite_movement(session: Node2D, replicate: int) -> void:
 	var away := nearest_offset.normalized() if nearest_distance_squared > 0.0 and nearest_distance_squared < INF else Vector2.UP
 	var tangent := Vector2(-away.y, away.x) * orbit_direction
 	_set_movement_vector((away * 0.8 + tangent * 0.6).normalized())
+
+func _set_loot_movement(session: Node2D) -> void:
+	var player_position: Vector2 = session.player.global_position
+	var target_offset := Vector2.ZERO
+	var target_distance_squared := INF
+	var nearest_enemy_offset := Vector2.ZERO
+	var nearest_enemy_distance_squared := INF
+	for entity in session.simulation.snapshot()["entities"]:
+		var components: Dictionary = entity["components"]
+		var transform: Dictionary = components.get("Transform2D", {})
+		var position := Vector2(float(transform.get("x", 0.0)), float(transform.get("y", 0.0)))
+		var offset: Vector2 = position - player_position
+		var distance_squared: float = offset.length_squared()
+		if components.get("IsXpOrb", false) and distance_squared < target_distance_squared:
+			target_distance_squared = distance_squared
+			target_offset = offset
+		elif not components.get("IsProjectile", false) and not components.get("IsXpOrb", false) and \
+				float(components.get("Health", {}).get("current", 0.0)) > 0.0 and \
+				distance_squared < nearest_enemy_distance_squared:
+			nearest_enemy_distance_squared = distance_squared
+			nearest_enemy_offset = -offset
+	for chest in session._world_chests:
+		var offset: Vector2 = chest["position"] - player_position
+		var distance_squared: float = offset.length_squared()
+		if distance_squared < target_distance_squared:
+			target_distance_squared = distance_squared
+			target_offset = offset
+	if target_distance_squared == INF:
+		target_offset = -nearest_enemy_offset
+	var direction := target_offset.normalized()
+	if nearest_enemy_distance_squared < 10000.0:
+		var away := nearest_enemy_offset.normalized()
+		direction = (direction + away * (1.0 - sqrt(nearest_enemy_distance_squared) / 100.0) * 2.0).normalized()
+	_set_movement_vector(direction)
 
 func _set_movement_vector(direction: Vector2) -> void:
 	var next_actions: Array[String] = []

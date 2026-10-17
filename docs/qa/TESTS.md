@@ -488,6 +488,21 @@
 - [ ] La durée médiane n’augmente pas systématiquement avec la progression permanente; la politique kite ne ramasse pas assez d’XP pour atteindre un build de run complet et ne modélise pas un joueur humain. Les écarts et les défaites précoces caractérisent ce protocole, pas une preuve d’équilibre ni une autorisation d’ajuster les valeurs **[PROPOSÉES]**. Parcours humains, progression normale durant une longue run et calibration ressentie restent requis pour fermer P6.9.
 - [x] Godot termine avec le code 0; il affiche à l’arrêt des avertissements ObjectDB/ressources encore référencées par le harness, sans échec de session ni récompense enregistrée.
 
+### Pilote collecte d’XP — profils Easy appariés — 2026-10-17
+
+- [x] Le profil `--movement=loot` vise l’orbe XP ou le coffre le plus proche avec les rayons normaux de collecte et s’écarte des ennemis à moins de 100 unités. Le premier choix de coffre est auto-sélectionné. Aucun paramètre de combat ou de pickup n’est modifié.
+- [x] Reproduction avec un `XDG_DATA_HOME` temporaire isolé : `XDG_DATA_HOME="$(mktemp -d)" tools/run_godot_test.sh tools/local/godot-4.7.2/Godot_v4.7.2-stable_linux.x86_64 --headless --audio-driver Dummy --path game --script res://tests/progression_balance_survey.gd -- --tier=all --difficulty=easy --movement=loot --replicates=3`.
+- [x] Les neuf runs sont appariées par seed entre profils, utilisent les bonus réels du ProgressionService, conservent les PV ordinaires et n’exécutent aucun kill scripté. Le niveau XP final varie de 4 à 11. Les médianes sont archivées dans [`data/progression_balance_loot_pilot_seed_20261017.csv`](data/progression_balance_loot_pilot_seed_20261017.csv).
+
+  | Profil | Survie médiane | Kills médians | Niveau XP médian | DPS médian | Résultat médian |
+  |---|---:|---:|---:|---:|---|
+  | Neuf | 20,19 s | 17 | 5 | 13,33 | Défaite, vague 1 |
+  | Intermédiaire | 21,54 s | 18 | 5 | 13,79 | Défaite, vague 1 |
+  | Arbre complet | 22,64 s | 20 | 6 | 16,46 | Défaite, vague 1 |
+
+- [i] Le profil collecte davantage d’XP que `kite`, mais ne permet pas de représenter un joueur : l’itinéraire est synthétique et l’offre de coffre est choisie automatiquement. Une run full-profile a varié jusqu’à 53,81 s, vague 2 et 71 kills; l’échantillon de trois seeds est donc très dispersé. Tous les cas finissent en défaite avant la vague 3. Aucun chiffre **[PROPOSÉ]** n’est recalibré; P6.9 reste ouvert.
+- [x] Godot termine avec code 0; avertissements ObjectDB/ressources référencées à la fermeture, comme sur les autres harness de session.
+
 ## P6.3 — Portée de ramassage équipement et XP — 2026-10-16
 
 - [x] `equipment_stats_smoke.gd` charge un seul bonus d’équipement par profil et lance une session Survival séparée par stat; vérifie HP, mobilité, dégâts, cadence, chance et dégâts critiques, soin par élimination, aire, cooldown, XP, portée de collecte et vitesse projectile.
