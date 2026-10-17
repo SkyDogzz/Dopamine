@@ -216,6 +216,18 @@ func _run() -> void:
 			int(lab_context.simulation.snapshot()["metrics"]["entity_count"]) != 4:
 		_fail("Lab must reject snapshots whose build exceeds loadout slots without changing the session")
 		return
+	var final_boss_index := _enemy_type_index(enemy_select, "final_boss")
+	var chaser_index := _enemy_type_index(enemy_select, "chaser")
+	enemy_select.select(final_boss_index)
+	enemy_select.item_selected.emit(final_boss_index)
+	capture_button.pressed.emit()
+	enemy_select.select(chaser_index)
+	enemy_select.item_selected.emit(chaser_index)
+	restore_button.pressed.emit()
+	if str(lab_context.active_preset["overrides"].get("spawn_enemy_type", "")) != "final_boss" or \
+			str(enemy_select.get_item_metadata(enemy_select.selected)) != "final_boss":
+		_fail("Sandbox snapshot restore should preserve and reselect a boss spawn profile")
+		return
 	if not FileAccess.file_exists(slot_path) or FileAccess.get_file_as_string(slot_path) != sentinel:
 		_fail("Snapshot capture, restore and rejection must preserve a normal save byte-for-byte")
 		return
