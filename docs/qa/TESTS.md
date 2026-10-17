@@ -1060,6 +1060,7 @@ Note de clôture : le blocage historique du smoke `sandbox_ui_smoke.gd` décrit 
 - [x] Le même smoke vérifie qu’un changement de dégâts de contact met à jour la session Lab et le preset; `sandbox_preset_smoke.gd` vérifie le chargement de cette valeur et le rejet d’une valeur négative.
 - [x] `sandbox_snapshot_smoke.gd` capture un dégât de contact à 3, une vitesse ennemie à ×2, un lot Spawn de trois ennemis et le profil Sprinter, les modifie puis confirme que la restauration rétablit les contrôles/preset; le lot suivant reprend les réglages et les rejets de snapshot invalide laissent les quatre entités intactes.
 - [x] `sandbox_lab_smoke.gd` vérifie que la seed modifiée reste en attente jusqu’au Reset, que la capture de snapshot est refusée pendant ce délai et que le Reset relance l’RNG à la nouvelle seed; le preset sauvegardé conserve cette seed.
+- [x] `sandbox_preset_smoke.gd` accepte `mid_boss` et `final_boss` comme profils Spawn; `sandbox_lab_smoke.gd` sélectionne et crée chaque boss individuellement avec le multiplicateur de PV configuré, puis vérifie que Reset les retire. Le profil boss et la limite d’un seul boss sont conservés dans le contexte/preset du Lab.
 - [x] Le contrôle LIVE est intégré aux presets sauvegardés/partagés; il ne retouche pas les entités existantes et n’est pas transmis à Survival normal. Les bornes sont des limites techniques du Sandbox, pas des valeurs de balance validées.
 
 ## P8.5 — Commande Restore HP Sandbox — 2026-10-17

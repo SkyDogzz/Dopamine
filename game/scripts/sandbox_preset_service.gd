@@ -14,7 +14,7 @@ const PRESET_KEYS := [
 	"seed", "overrides", "flags", "initial_build",
 ]
 const VALID_MODES := ["survival", "endless", "armorless"]
-const VALID_SPAWN_ENEMY_TYPES := ["chaser", "sprinter", "tank", "shooter", "buffer", "exploder", "shielder", "summoner", "elite"]
+const VALID_SPAWN_ENEMY_TYPES := ["chaser", "sprinter", "tank", "shooter", "buffer", "exploder", "shielder", "summoner", "elite", "mid_boss", "final_boss"]
 const VALID_ELITE_AFFIXES := ["Hasted", "Armored", "Regenerating", "Volatile", "Shielded", "Split-on-Death"]
 const OVERRIDE_LIMITS := {
 	"enemy_hp": Vector2(0.1, 1000.0),

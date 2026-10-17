@@ -149,6 +149,15 @@ func _run() -> void:
 	if sprinter_index < 0:
 		_fail("The Lab Spawn selector should contain the Sprinter profile")
 		return
+	for boss_id in ["mid_boss", "final_boss"]:
+		var boss_profile_found := false
+		for index in range(enemy_select.item_count):
+			if str(enemy_select.get_item_metadata(index)) == boss_id:
+				boss_profile_found = true
+				break
+		if not boss_profile_found:
+			_fail("The Lab Spawn selector should contain the %s profile" % boss_id)
+			return
 	enemy_select.select(sprinter_index)
 	enemy_select.item_selected.emit(sprinter_index)
 	if str(lab.context.active_preset["overrides"].get("spawn_enemy_type", "")) != "sprinter":
@@ -467,6 +476,43 @@ func _run() -> void:
 			lab.get_node("Root/Body/Side/Sections/Status").text,
 			str(lab.context.simulation.snapshot()["paused"]),
 		])
+		return
+	for boss_id in ["mid_boss", "final_boss"]:
+		var boss_index := -1
+		for index in range(enemy_select.item_count):
+			if str(enemy_select.get_item_metadata(index)) == boss_id:
+				boss_index = index
+				break
+		enemy_select.select(boss_index)
+		enemy_select.item_selected.emit(boss_index)
+		if spawn_count.editable or str(lab.get_node("Root/Body/Left/Controls/SpawnButton").text) != "SPAWN BOSS":
+			_fail("Boss profiles should force single-spawn mode in the Lab")
+			return
+		lab._spawn_enemies()
+		if not await _wait_for_entities(lab.context.simulation, 1):
+			_fail("The Lab should queue a single %s boss" % boss_id)
+			return
+		var boss_found := false
+		for entity in lab.context.simulation.snapshot()["entities"]:
+			var components: Dictionary = entity["components"]
+			if str(components.get("EnemyType", "")) == boss_id:
+				boss_found = is_equal_approx(float(components["Health"]["maximum"]),
+					lab.context.session.boss_placeholder_hp * float(enemy_hp_override.value))
+				break
+		if not boss_found:
+			_fail("The Lab should use the configured boss HP for %s" % boss_id)
+			return
+		if boss_id == "mid_boss":
+			lab.get_node("Root/Body/Left/Controls/ResetButton").pressed.emit()
+			if not await _wait_for_empty_simulation(lab.context):
+				_fail("The Lab should reset cleanly between boss profile checks")
+				return
+	if str(lab.context.active_preset["overrides"].get("spawn_enemy_type", "")) != "final_boss":
+		_fail("The selected boss should remain part of the isolated Lab preset")
+		return
+	lab.get_node("Root/Body/Left/Controls/ResetButton").pressed.emit()
+	if not await _wait_for_empty_simulation(lab.context):
+		_fail("The Lab should clear its final boss when reset")
 		return
 	if not FileAccess.file_exists(slot_path) or FileAccess.get_file_as_string(slot_path) != sentinel:
 		_fail("Sandbox Lab preset, build, combat, and reset operations must preserve the normal save slot byte-for-byte")

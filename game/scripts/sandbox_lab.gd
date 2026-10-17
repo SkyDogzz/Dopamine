@@ -94,7 +94,7 @@ func _ready() -> void:
 	_contact_damage.value_changed.connect(_set_contact_damage_override)
 	_seed_control.value_changed.connect(_set_seed_override)
 	_populate_visual_build_options()
-	for enemy_id in ["chaser", "sprinter", "tank", "shooter", "buffer", "exploder", "shielder", "summoner", "elite"]:
+	for enemy_id in ["chaser", "sprinter", "tank", "shooter", "buffer", "exploder", "shielder", "summoner", "elite", "mid_boss", "final_boss"]:
 		_enemy_select.add_item(enemy_id.to_upper())
 		_enemy_select.set_item_metadata(_enemy_select.item_count - 1, enemy_id)
 	_enemy_select.item_selected.connect(_set_spawn_enemy_type_override)
@@ -322,16 +322,22 @@ func _restore_player_hp() -> void:
 
 func _spawn_enemies() -> void:
 	var current_count := int(context.simulation.snapshot()["metrics"]["entity_count"])
-	var spawn_count := int(_spawn_count.value)
+	var enemy_id := str(_enemy_select.get_item_metadata(_enemy_select.selected))
+	var is_boss := enemy_id in ["mid_boss", "final_boss"]
+	var spawn_count := 1 if is_boss else int(_spawn_count.value)
 	if not _can_spawn_batch(current_count, spawn_count):
 		_set_status("ENTITY LIMIT %d · REMOVE ENTITIES BEFORE SPAWNING" % MAX_SIMULATION_ENTITIES, true)
 		return
-	var enemy_id := str(_enemy_select.get_item_metadata(_enemy_select.selected))
 	var enemy_affix := str(_elite_affix_select.get_item_metadata(_elite_affix_select.selected)) \
 		if enemy_id == "elite" else ""
-	var sequence: int = context.simulation.spawn_enemy(enemy_id, spawn_count,
-		Vector2(120.0, 0.0), Vector2.ZERO, float(_enemy_hp_multiplier.value), enemy_affix,
-		float(_enemy_speed_multiplier.value))
+	var sequence: int
+	if is_boss:
+		sequence = context.simulation.spawn(enemy_id, 1, Vector2(120.0, 0.0),
+			context.session.boss_placeholder_hp * float(_enemy_hp_multiplier.value), Vector2.ZERO, 25.0)
+	else:
+		sequence = context.simulation.spawn_enemy(enemy_id, spawn_count,
+			Vector2(120.0, 0.0), Vector2.ZERO, float(_enemy_hp_multiplier.value), enemy_affix,
+			float(_enemy_speed_multiplier.value))
 	_set_status("SPAWN QUEUED" if sequence > 0 else "SPAWN REJECTED", sequence <= 0)
 
 func _set_spawn_count_override(value: float) -> void:
@@ -352,10 +358,14 @@ func _set_spawn_enemy_affix_override(index: int) -> void:
 	context.active_preset["overrides"]["spawn_enemy_affix"] = str(_elite_affix_select.get_item_metadata(index))
 
 func _refresh_elite_affix_control() -> void:
-	var is_elite := str(_enemy_select.get_item_metadata(_enemy_select.selected)) == "elite"
+	var enemy_id := str(_enemy_select.get_item_metadata(_enemy_select.selected))
+	var is_elite := enemy_id == "elite"
+	var is_boss := enemy_id in ["mid_boss", "final_boss"]
 	_elite_affix_title.visible = is_elite
 	_elite_affix_select.visible = is_elite
 	_elite_affix_select.disabled = not is_elite
+	_spawn_count.editable = not is_boss
+	_spawn_button.text = "SPAWN BOSS" if is_boss else "SPAWN x%d" % int(_spawn_count.value)
 
 func _select_spawn_enemy_type(enemy_id: String) -> void:
 	for index in range(_enemy_select.item_count):

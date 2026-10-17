@@ -97,6 +97,12 @@ func _run() -> void:
 	if preset_service.validate_preset(invalid_spawn_type).get("ok", false):
 		_fail("Presets should reject enemy types outside the Sandbox Lab roster")
 		return
+	for boss_id in ["mid_boss", "final_boss"]:
+		var boss_preset := preset.duplicate(true)
+		boss_preset["overrides"]["spawn_enemy_type"] = boss_id
+		if not preset_service.validate_preset(boss_preset).get("ok", false):
+			_fail("Sandbox presets should accept the supported boss profile: %s" % boss_id)
+			return
 	var invalid_spawn_affix := preset.duplicate(true)
 	invalid_spawn_affix["overrides"]["spawn_enemy_affix"] = "Ghost"
 	if preset_service.validate_preset(invalid_spawn_affix).get("ok", false):
