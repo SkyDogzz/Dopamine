@@ -34,7 +34,7 @@
 ## P9.3 — Accent visuel des impacts critiques — 2026-10-17
 
 - [x] `survival_visual_effects_smoke.gd` confirme qu'un impact normal garde l'échelle de base et qu'un impact marqué critique conserve ce drapeau et reçoit une échelle supérieure; le rendu consomme cette échelle lors du dessin du sprite d'impact de l'arme.
-- [x] Avec `--capture` sous Xvfb/Mesa llvmpipe, le même smoke compare chaque rendu à une image de fond sans impact : **385 pixels modifiés** pour l'impact normal, **778** pour le critique; la capture critique est `/tmp/dopamine-critical-hit-impact.png`.
+- [x] Le CTest `survival_critical_impact_visual_smoke` lance le même smoke avec capture sous Xvfb/Mesa llvmpipe et compare chaque rendu à une image de fond sans impact : **385 pixels modifiés** pour l'impact normal, **778** pour le critique; la capture est `/tmp/dopamine-critical-hit-impact.png`.
 - [x] Le même smoke vérifie que les visuels réduits ne changent pas le flux aléatoire ni l'état de simulation en pause; les parcours headless et rendu Xvfb passent sous Godot 4.7.2.
 - [i] L'échelle 1,45× est **[PROPOSÉE]** et n'ajoute pas de couleur dédiée. La vérification est automatisée sous rendu logiciel/headless et ne valide pas encore la lisibilité sur le GPU cible.
 

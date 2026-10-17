@@ -55,6 +55,12 @@ if(BUILD_TESTING)
                         "${DOPAMINE_GODOT_EXECUTABLE}" --path "${PROJECT_SOURCE_DIR}/game"
                         --audio-driver Dummy --script res://tests/survival_combat_visual_smoke.gd)
                 set_tests_properties(survival_combat_visual_smoke PROPERTIES FIXTURES_REQUIRED godot_project_ready TIMEOUT 45)
+                add_test(NAME survival_critical_impact_visual_smoke
+                    COMMAND "${DOPAMINE_XVFB_RUN_EXECUTABLE}" -a -s "-screen 0 1280x800x24"
+                        "${CMAKE_COMMAND}" -E env LIBGL_ALWAYS_SOFTWARE=1
+                        "${DOPAMINE_GODOT_EXECUTABLE}" --path "${PROJECT_SOURCE_DIR}/game"
+                        --audio-driver Dummy --script res://tests/survival_visual_effects_smoke.gd -- --capture)
+                set_tests_properties(survival_critical_impact_visual_smoke PROPERTIES FIXTURES_REQUIRED godot_project_ready TIMEOUT 45)
             endif()
         endif()
         add_test(NAME godot_project_import
