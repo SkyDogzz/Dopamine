@@ -47,14 +47,58 @@ jobs:
           $quotedGodotExecutable = '"' + $env:GODOT_EXE + '"'
           .\tools\build_windows.ps1 -GodotExecutable $quotedGodotExecutable -NoLaunch -Export
 
-      - name: Launch exported Windows game headless
+      - name: Package and launch exported Windows game headless
         shell: pwsh
         run: |
           $exportDirectory = (Resolve-Path -LiteralPath "build/windows/export").Path
+          $fontLicenseDirectory = Join-Path $exportDirectory "game/assets/fonts"
+          $godotLicenseDirectory = Join-Path $exportDirectory "docs/release/licenses"
+          New-Item -ItemType Directory -Force -Path $fontLicenseDirectory | Out-Null
+          New-Item -ItemType Directory -Force -Path $godotLicenseDirectory | Out-Null
+          Copy-Item -LiteralPath "THIRD_PARTY_NOTICES.md" -Destination $exportDirectory
+          Copy-Item -LiteralPath "docs/release/licenses/godot-4.7.2-copyright-info.json" `
+            -Destination $godotLicenseDirectory
+          Copy-Item -LiteralPath "docs/release/licenses/godot-4.7.2-license-info.json" `
+            -Destination $godotLicenseDirectory
+          Copy-Item -LiteralPath "game/assets/fonts/PRESS-START-2P-OFL.txt" `
+            -Destination $fontLicenseDirectory
+          Copy-Item -LiteralPath "game/assets/fonts/DEJAVU-LICENSE.txt" `
+            -Destination $fontLicenseDirectory
+          $readmeText = @"
+          DOPAMINE SURVIVOR — WINDOWS VALIDATION ARTIFACT
+
+          This is a non-versioned validation build, not a release and not for distribution.
+          Source commit: $env:GITHUB_SHA
+          Platform: Windows x86_64
+          Godot: 4.7.2 stable
+
+          Launch DopamineSurvivor.exe. Keep the GDExtension DLL beside the executable.
+          Third-party notices and referenced Godot/font license files are included here.
+          The game stores persistent data in Godot's per-user application data directory.
+          "@
+          $readmeText | Set-Content -LiteralPath (Join-Path $exportDirectory "README.txt") -Encoding utf8
+          $requiredPackageFiles = @(
+            "THIRD_PARTY_NOTICES.md",
+            "README.txt",
+            "docs/release/licenses/godot-4.7.2-copyright-info.json",
+            "docs/release/licenses/godot-4.7.2-license-info.json",
+            "game/assets/fonts/PRESS-START-2P-OFL.txt",
+            "game/assets/fonts/DEJAVU-LICENSE.txt"
+          )
+          foreach ($relativePath in $requiredPackageFiles) {
+            if (-not (Test-Path -LiteralPath (Join-Path $exportDirectory $relativePath) -PathType Leaf)) {
+              throw "Windows package is missing required notice or license file: $relativePath"
+            }
+          }
           $packageArchive = Join-Path $env:RUNNER_TEMP "dopamine-windows-export.zip"
           $extractedDirectory = Join-Path $env:RUNNER_TEMP "dopamine-windows-extracted"
           Compress-Archive -Path (Join-Path $exportDirectory "*") -DestinationPath $packageArchive
           Expand-Archive -Path $packageArchive -DestinationPath $extractedDirectory
+          foreach ($relativePath in $requiredPackageFiles) {
+            if (-not (Test-Path -LiteralPath (Join-Path $extractedDirectory $relativePath) -PathType Leaf)) {
+              throw "Extracted Windows package is missing required notice or license file: $relativePath"
+            }
+          }
           $exportedGame = Join-Path $extractedDirectory "DopamineSurvivor.exe"
           $extension = Join-Path $extractedDirectory "libdopamine.windows.template_release.x86_64.dll"
           if (-not (Test-Path -LiteralPath $exportedGame -PathType Leaf) -or
