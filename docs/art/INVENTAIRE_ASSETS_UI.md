@@ -22,6 +22,8 @@ Les nouveaux exports comprennent `sprites/catalog/` (10 armes, 10 évolutions, 1
 
 Contrôle mécanique des sources (2026-10-17) : le dépôt contient actuellement 140 PNG hors de `game/assets/source/`; 137 partagent un nom de base avec au moins un fichier Aseprite, et les trois exceptions sont décrites dans [`asset_exceptions.txt`](asset_exceptions.txt). `catalog_icon_assets_smoke.gd` vérifie maintenant qu’aucun nouvel export PNG ne reste sans source ou exception documentée. Le contrôle par nom ne prouve ni le lien exact entre chaque export et sa source, ni la provenance/licence des références. Les 25 SVG sont des sources vectorielles éditables; l’inventaire complet inclut aussi des références générées et des assets historiques inactifs.
 
+Contrôle de métadonnées (2026-10-17) : aucune des images PNG parcourues sous `game/assets/` et `docs/art/source/` ne contient de chunk `tEXt`, `zTXt`, `iTXt` ou `eXIf`. Les références raster et les noms de sources ne permettent donc pas à eux seuls d’établir l’outil de génération, l’auteur, les conditions d’utilisation ou une attribution requise. La provenance et les droits des assets artistiques restent **[OUVERTS]** pour P9.8; ne pas interpréter la présence d’une source Aseprite comme une clearance.
+
 La plupart des PNG historiques découpés ont 64×64 px. Le héros pilote est maintenant 32×32, le chaser 24×24 et le projectile Lightning Conductor 16×16; aucune animation n’est incluse. Les autres images restent un mélange de sprites issus d’atlas, d’illustrations SVG et d’icônes.
 
 ### Sprites de jeu existants
