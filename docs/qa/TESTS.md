@@ -78,11 +78,23 @@
 - Le smoke ciblé passe sous Godot 4.7.2 headless. Il signale à la fermeture 14 instances ObjectDB et 6 ressources encore référencées; ces avertissements restent visibles.
 - Les événements sont synthétiques et ne remplacent pas un essai avec contrôleur physique.
 
+## P9.4 — Navigation de l’inventaire de run — 2026-10-17
+
+- `survival_pause_inventory_smoke.gd` ouvre l’inventaire avec Entrée, parcourt au clavier puis au D-pad, valide avec A un objet purement informatif et ferme avec B. Le loadout exact est comparé ensuite pour confirmer l’absence de mutation.
+- Le smoke ciblé passe sous Godot 4.7.2 et est ajouté à CTest. Il signale à la fermeture 4 instances ObjectDB et 2 ressources encore référencées.
+- Entrées synthétiques seulement; la manette physique reste à essayer.
+
 ## Revalidation complète CTest après extension des parcours UI — 2026-10-17
 
 - CTest séquentiel : **90/90 tests passent en 60,85 s**, comprenant le smoke de résultat désormais enregistré ainsi que les parcours Options, Pause, équipement et arbre de compétences.
 - Commande : `/tmp/cmake-3.31.12-linux-x86_64/bin/ctest --test-dir build --output-on-failure -j1`.
 - Le checkout contient toujours le diff local non commité de `game/scripts/survival_session.gd`; le résultat couvre l’état combiné du checkout. Il ne valide ni les contrôleurs physiques ni le GPU cible.
+
+## Revalidation CTest après ajout de l’inventaire en pause — 2026-10-17
+
+- CTest séquentiel : **91/91 tests passent en 63,20 s**; `survival_pause_inventory_smoke` couvre maintenant aussi la navigation D-pad et l’activation A d’un élément read-only.
+- Commande : `/tmp/cmake-3.31.12-linux-x86_64/bin/ctest --test-dir build --output-on-failure -j1`.
+- Le checkout contient toujours le diff local non commité de `game/scripts/survival_session.gd`; les contrôleurs physiques et le GPU cible restent hors de cette validation.
 
 ## Revalidation CTest après ajout des smokes UI — 2026-10-17
 
