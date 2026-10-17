@@ -1058,3 +1058,9 @@ Note de clôture : le blocage historique du smoke `sandbox_ui_smoke.gd` décrit 
 - [x] `sandbox_snapshot_smoke.gd` capture un dégât de contact configuré à 3, le modifie à 9 puis confirme que restaurer le snapshot rétablit l’override, la session et le contrôle à 3.
 - [x] `sandbox_lab_smoke.gd` vérifie que la seed modifiée reste en attente jusqu’au Reset, que la capture de snapshot est refusée pendant ce délai et que le Reset relance l’RNG à la nouvelle seed; le preset sauvegardé conserve cette seed.
 - [x] Le contrôle LIVE est intégré aux presets sauvegardés/partagés; il ne retouche pas les entités existantes et n’est pas transmis à Survival normal. Les bornes sont des limites techniques du Sandbox, pas des valeurs de balance validées.
+
+## P8.5 — Commande Restore HP Sandbox — 2026-10-17
+
+- [x] `sandbox_lab_smoke.gd` réduit les PV, conserve un bouclier de 4,5, déclenche `RESTORE HP` en pause et vérifie les PV max, le bouclier inchangé et le temps de simulation identique.
+- [x] Le contrôle agit sur `SandboxLabContext.session` uniquement; une session terminée doit être redémarrée.
+- [ ] Le comportement est un prototype associé à une commande **[PROPOSÉE]** du GDD, pas une décision de design promue.

@@ -40,6 +40,7 @@ const SPAWN_BATCH_SIZE := 10
 @onready var _seed_control: SpinBox = $Root/Body/Side/Sections/EnemyConfig/Seed
 @onready var _capture_snapshot_button: Button = $Root/Body/Left/SnapshotControls/CaptureButton
 @onready var _restore_snapshot_button: Button = $Root/Body/Left/SnapshotControls/RestoreButton
+@onready var _restore_hp_button: Button = $Root/Body/Left/Controls/RestoreHpButton
 
 var preset_service: RefCounted
 var preset_store: RefCounted
@@ -61,6 +62,7 @@ func _ready() -> void:
 	$Root/Body/Left/Controls/ResetButton.pressed.connect(_reset)
 	_capture_snapshot_button.pressed.connect(_capture_snapshot)
 	_restore_snapshot_button.pressed.connect(_restore_snapshot)
+	_restore_hp_button.pressed.connect(_restore_player_hp)
 	$Root/Body/Left/ProjectileControls/ClearProjectilesButton.pressed.connect(_clear_projectiles)
 	$Root/Body/Left/ProjectileControls/ResetCooldownsButton.pressed.connect(_reset_cooldowns)
 	$Root/Body/Left/WaveControls/JumpWaveButton.pressed.connect(_jump_to_selected_wave)
@@ -291,6 +293,14 @@ func _toggle_pause() -> void:
 	var state: Dictionary = context.simulation.snapshot()
 	context.simulation.resume() if state["paused"] else context.simulation.pause()
 	_refresh()
+
+func _restore_player_hp() -> void:
+	if context.session == null or context.session.run_over:
+		_set_status("RESET REQUIRED TO RESTORE HP", true)
+		return
+	context.session.player_hp = context.session.player_max_hp
+	context.session._refresh_hud(context.simulation.snapshot())
+	_set_status("PLAYER HP RESTORED", false)
 
 func _spawn_enemies() -> void:
 	var current_count := int(context.simulation.snapshot()["metrics"]["entity_count"])

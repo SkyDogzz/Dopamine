@@ -101,6 +101,12 @@ layout_mode = 2
 focus_mode = 2
 text = "RESET"
 
+[node name="RestoreHpButton" type="Button" parent="Root/Body/Left/Controls"]
+custom_minimum_size = Vector2(66, 20)
+layout_mode = 2
+focus_mode = 2
+text = "RESTORE HP"
+
 [node name="SpeedSelect" type="OptionButton" parent="Root/Body/Left/Controls"]
 custom_minimum_size = Vector2(56, 20)
 layout_mode = 2

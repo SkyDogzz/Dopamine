@@ -68,11 +68,13 @@ func _run() -> void:
 	var enemy_hp_override: SpinBox = lab.get_node_or_null("Root/Body/Side/Sections/EnemyConfig/EnemyHpMultiplier")
 	var contact_damage: SpinBox = lab.get_node_or_null("Root/Body/Side/Sections/EnemyConfig/ContactDamage")
 	var seed_control: SpinBox = lab.get_node_or_null("Root/Body/Side/Sections/EnemyConfig/Seed")
+	var restore_hp_button: Button = lab.get_node_or_null("Root/Body/Left/Controls/RestoreHpButton")
 	if weapon_select == null or weapon_level == null or add_weapon == null or relic_select == null or \
 			relic_level == null or add_relic == null or stat_select == null or stat_value == null or \
 			add_stat == null or apply_build == null or import_profile == null or equipment_slot == null or equipment_stat == null or \
 			equipment_value == null or add_equipment == null or live_stat == null or live_value == null or \
-			apply_live_stat == null or enemy_hp_override == null or contact_damage == null or seed_control == null:
+			apply_live_stat == null or enemy_hp_override == null or contact_damage == null or seed_control == null or \
+			restore_hp_button == null:
 		_fail("Sandbox Lab should provide profile import, visual build controls and typed combat configuration")
 		return
 	if not is_equal_approx(seed_control.value, 1.0):
@@ -90,6 +92,15 @@ func _run() -> void:
 	if lab.context.seed != 42 or lab.context.session.sandbox_rng_seed != 42 or \
 			lab.get_node("Root/Body/Side/Sections/Status").text != "LAB RESET FROM PRESET":
 		_fail("Reset should restart the isolated session from the staged seed")
+		return
+	var lab_session: Node2D = lab.context.session
+	var simulation_time_before_restore := float(lab.context.simulation.snapshot()["simulation_time"])
+	lab_session.player_hp = 12.0
+	lab_session.player_shield = 4.5
+	restore_hp_button.pressed.emit()
+	if lab_session.player_hp != lab_session.player_max_hp or lab_session.player_shield != 4.5 or \
+			float(lab.context.simulation.snapshot()["simulation_time"]) != simulation_time_before_restore:
+		_fail("Restore HP should refill only player HP without advancing time or changing shield")
 		return
 	if not is_equal_approx(float(enemy_hp_override.value), 1.0):
 		_fail("A preset without an enemy HP override should use the neutral multiplier")
