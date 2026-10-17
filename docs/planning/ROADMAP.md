@@ -363,7 +363,7 @@ Travail requis :
 
 ### P5.3 — Coffres et économie de run
 
-- [ ] **P5.3.1 — Éligibilité des offres**
+- [x] **P5.3.1 — Éligibilité des offres**
   - [x] Produire trois choix distincts quand au moins trois choix existent ; test ciblé des armes niveau max, slots pleins et absence de choix éligibles.
   - [x] Ajouter la préférence synergie comme poids multiplicatifs et tirage pondéré sans remise; tous les poids restent strictement positifs et aucune offre éligible n’est supprimée.
   - [x] Vérifier objets niveau max, slots pleins et arme niveau 5 sans relique. La relique garde ses offres même lorsque l’arme est niveau 5.
