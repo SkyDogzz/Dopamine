@@ -106,6 +106,15 @@ func present(profile: Dictionary) -> void:
 			label = "%s · %s" % [label, str(definition.get("display_bonus", ""))]
 		button.text = "%s · %s · %s" % [category_label, label, state_label]
 		button.tooltip_text = "%s · %s · %d ESSENCE · PROPOSED" % [str(definition.get("unlock_name", "")), str(definition.get("display_bonus", "")), cost]
+		if not prerequisites.is_empty():
+			var prerequisite_names: PackedStringArray = []
+			for prerequisite in prerequisites:
+				var prerequisite_definition: Dictionary = progression_service.skill_node_definition(str(prerequisite))
+				var prerequisite_name := str(prerequisite_definition.get("unlock_name", ""))
+				if prerequisite_name.is_empty():
+					prerequisite_name = str(prerequisite).replace("_", " ").to_upper()
+				prerequisite_names.append(prerequisite_name.to_upper())
+			button.tooltip_text += " · REQUIRES %s" % ", ".join(prerequisite_names)
 		button.disabled = unlocked_node or not ready or essence < cost
 	_respec_button.disabled = unlocked.is_empty()
 	visible = true

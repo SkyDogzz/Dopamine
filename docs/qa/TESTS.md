@@ -1472,6 +1472,7 @@ Note de clôture : le blocage historique du smoke `sandbox_ui_smoke.gd` décrit 
 - [x] `progression_service_smoke.gd` achète les 100 nœuds selon leurs prérequis, vérifie le proxy linéaire proposé de 29,7 points, confirme les déblocages et le remboursement total au respec.
 - [x] `survival_armorless_mode_smoke.gd` applique le profil complet à de vraies sessions Survival et Armorless : HP +10,7 %, dégâts +9 %, mobilité +6 %, critique +4 points, dix armes et onze reliques.
 - [x] `skill_tree_panel_visual_smoke.gd` vérifie le rendu des 94 nœuds générés, le focus clavier jusqu’au dernier rang et la capture à 640×360 logique; les trois viewports passent dans `ui_viewport_layout_smoke.gd`.
+- [x] Le même smoke vérifie que les infobulles de rangs de statistiques et de déblocages d’équipement nomment leurs prérequis respectifs; exécution ciblée Godot 4.7.2 réussie le 2026-10-17.
 - [ ] Le proxy linéaire ne remplace pas la calibration d’équivalence de puissance des profils, qui reste dans P6.9.
 
 ## Économie proposée de l’arbre de compétences (2026-10-16)

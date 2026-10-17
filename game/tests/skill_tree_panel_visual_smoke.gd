@@ -57,8 +57,13 @@ func _run() -> void:
 		return
 	var crit_rank_button := _button_for_node(additional_unlocks, "steady_aim_02")
 	if crit_rank_button == null or not crit_rank_button.tooltip_text.contains("+0.15%") or \
-		crit_rank_button.tooltip_text.contains("+0.1%"):
-		_fail("Generated critical chance nodes should disclose their exact proposed increment")
+		crit_rank_button.tooltip_text.contains("+0.1%") or \
+		not crit_rank_button.tooltip_text.contains("REQUIRES STEADY AIM"):
+		_fail("Generated critical chance nodes should disclose their exact proposed increment and prerequisite")
+		return
+	var void_unlock_button := _button_for_node(additional_unlocks, "unlock_void_orb")
+	if void_unlock_button == null or not void_unlock_button.tooltip_text.contains("REQUIRES CRIMSON DAGGERS"):
+		_fail("Equipment unlock tooltips should name the preceding unlocked weapon")
 		return
 	if panel.get_node("Panel/Content/NodeScroll/Rows/UnlockBranch/UnlockWeaponCard/Content/Effect").text != "CRIMSON DAGGERS  •  130 ESSENCE  •  PROPOSED" or \
 		panel.get_node("Panel/Content/NodeScroll/Rows/UnlockBranch/UnlockRelicCard/Content/Effect").text != "BLOOD CHALICE  •  160 ESSENCE  •  PROPOSED":
