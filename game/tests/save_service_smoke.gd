@@ -48,6 +48,40 @@ func _run() -> void:
 			loaded["payload"].get("essence") != 10:
 		_fail("A corrupt current slot should recover the previous backup")
 		return
+	if not service.save_slot("interrupted", {"essence": 10}) or \
+		not service.save_slot("interrupted", {"essence": 20}):
+		_fail("The interrupted-write fixture should save its current and backup versions")
+		return
+	var interrupted_path := directory.path_join("slot_interrupted.json")
+	var interrupted_backup_path := interrupted_path + ".bak"
+	var interrupted_temp_path := interrupted_path + ".tmp"
+	var interrupted_file := FileAccess.open(interrupted_temp_path, FileAccess.WRITE)
+	if interrupted_file == null:
+		_fail("The interrupted-write fixture should create its partial temporary file")
+		return
+	interrupted_file.store_string("{partial")
+	interrupted_file.close()
+	loaded = service.load_slot("interrupted")
+	if not loaded.get("ok", false) or loaded["payload"].get("essence") != 20:
+		_fail("An incomplete temporary write must not override the valid current slot")
+		return
+	if DirAccess.copy_absolute(interrupted_path, interrupted_backup_path) != OK or \
+		DirAccess.remove_absolute(interrupted_path) != OK:
+		_fail("The interrupted replacement fixture should leave only its valid backup")
+		return
+	loaded = service.load_slot("interrupted")
+	if not loaded.get("ok", false) or not loaded.get("recovered", false) or \
+		loaded["payload"].get("essence") != 20:
+		_fail("A missing slot after an interrupted replacement should recover its valid backup")
+		return
+	if not service.save_slot("interrupted", {"essence": 30}):
+		_fail("A new save should succeed after an interrupted replacement")
+		return
+	loaded = service.load_slot("interrupted")
+	if not loaded.get("ok", false) or loaded["payload"].get("essence") != 30 or \
+		FileAccess.file_exists(interrupted_temp_path):
+		_fail("A new save should replace the interrupted temporary file cleanly")
+		return
 	var legacy_path := directory.path_join("slot_legacy.json")
 	var legacy_file := FileAccess.open(legacy_path, FileAccess.WRITE)
 	legacy_file.store_string(JSON.stringify({"essence": 7, "legacy_flag": true}))

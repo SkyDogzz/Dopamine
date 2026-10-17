@@ -27,7 +27,7 @@ L’audit initial était statique. Les tranches Minigun, Toxic Cloud, Sawblades 
 | P6 Progression permanente | **Boucle fonctionnelle implémentée; calibration incomplète** | Équipement, économie prototype, 100 nodes, 100 familles d’achievements, récompenses et migrations sont implémentés et couverts par smokes. Restent les décisions économiques ouvertes et la calibration représentative des profils et budgets de puissance. |
 | P7 Modes Endless | **Armorless fonctionnel; validation longue incomplète** | Armorless possède drafts, Flux, récompenses et records; il reste une run complète non assistée et la calibration des formules proposées. Endless standard attend les arbitrages de P7B. |
 | P8 Sandbox Lab joueur | **P8.1–P8.8 implémentés** | Builds, modes Survival/Armorless, presets/import/export, import de profil en lecture seule, snapshots et contrôles de simulation sont couverts par des smokes d’isolation. Endless standard reste refusé tant que ses règles sont ouvertes. |
-| P9 Qualité et livraison | **Partiel** | Performance sur vrai iGPU, accessibilité/VFX/audio, stabilité prolongée et Windows. |
+| P9 Qualité et livraison | **Partiel** | Performance sur vrai iGPU, accessibilité/VFX/audio, soak graphique sur matériel cible et Windows. |
 
 ### Lecture rapide : livré, prototype ou survolé
 
@@ -689,10 +689,10 @@ P1 livre le Sandbox développeur et ne remplace pas cette feature produit.
   - [ ] Fixer le matériel iGPU de référence et la scène de charge.
   - [ ] Mesurer frame-time CPU/GPU, mémoire, P50/P95/P99.
   - [ ] Refaire les mesures après optimisations et archiver la configuration.
-- [ ] **P9.6 — Stabilité/saves**
+- [x] **P9.6 — Stabilité/saves**
   - [x] Faire un soak test Survival/Sandbox : 612,4 s simulées réparties sur 30 sessions sans verrou de vie/progression, puis 600,1 s Sandbox et 40 lots d’ennemis, sans écriture dans `user://saves`; détails/limites dans `docs/qa/TESTS.md`.
-  - [ ] Tester sauvegarde interrompue, backup, restauration et migrations.
-  - [ ] Vérifier double récompense et clôture propre des threads.
+  - [x] Tester un fichier temporaire de sauvegarde partiellement écrit, un slot absent avec backup valide, la restauration, le nettoyage au prochain enregistrement et les migrations; limites du scénario dans `docs/qa/TESTS.md`.
+  - [x] Vérifier l’idempotence des récompenses après redémarrage du service et l’arrêt/join du worker, y compris sous soumission concurrente; `progression_service_smoke.gd` et `simulation_worker` couvrent ces chemins.
 - [ ] **P9.7 — Plateformes**
   - [ ] Refaire build Linux propre sur machine propre. Un répertoire CMake vierge dans `/tmp` sur l’hôte actuel compile depuis le `godot-cpp` épinglé et passe 87/87 CTest; voir `docs/qa/TESTS.md`. Une machine distincte n’a pas encore été vérifiée.
   - [x] Ajouter un preset Linux/X11 et une route `linux.release.x86_64` pour la GDExtension; le PCK 4.7.2 s’exporte sans warning, se charge avec le runtime Linux et l’extension debug, et les quatre checks import/Sandbox/catalogue passent. C’est une validation de pack et de chargement sur l’hôte courant, pas un export autonome.

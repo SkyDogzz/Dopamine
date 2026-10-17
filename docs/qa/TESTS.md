@@ -43,6 +43,14 @@
 - [x] Après ajout du smoke, `/tmp/cmake-3.31.12-linux-x86_64/bin/ctest --test-dir build --output-on-failure -j1` passe **91/91 en 62,13 s**.
 - [i] Le checkout de ce CTest contenait un diff local non commité de `game/scripts/survival_session.gd`; ces résultats décrivent cet état de travail, pas le commit seul. Ce diff n’a pas été inclus dans le changement du soak.
 
+## P9.6 — Écritures interrompues et fermeture du worker — 2026-10-17
+
+- [x] `save_service_smoke.gd` place un JSON temporaire partiel alors qu’un slot valide existe, puis simule l’intervalle de remplacement où le slot manque et seul le backup valide demeure. Le chargement garde la version courante dans le premier cas, récupère le backup dans le second, et un enregistrement ultérieur enlève le temporaire incomplet.
+- [x] `save_service_smoke.gd`, `progression_service_smoke.gd` et `simulation_worker` couvrent respectivement le backup/checksum/migration, le refus du double crédit d’un `run_id` après recréation du service, et l’arrêt répété/join du worker sous charge concurrente.
+- [x] Vérifications ciblées après ajout du scénario : import Godot + `save_service_smoke` + `progression_service_smoke` **3/3**; `simulation_worker` **1/1**.
+- [x] Suite CTest séquentielle du checkout courant : **91/91 en 62,87 s**. Le checkout contient aussi le diff local non commité de `game/scripts/survival_session.gd`; ce résultat porte sur l’état combiné et ce fichier n’a pas été inclus dans le commit du test.
+- [ ] Le test d’interruption construit les états de fichiers représentatifs dans un processus de test; il ne coupe pas réellement le processus ou l’alimentation pendant un write/flush, et ne simule pas les garanties matérielles du système de fichiers.
+
 ## Revalidation de la suite après export Linux — 2026-10-17
 
 - Première exécution CTest séquentielle sur le checkout courant : **86/87**. Le smoke catalogue inspectait le buffer temporaire d’événements alors que `SurvivalSession` acquitte les événements qu’elle consomme; la course pouvait masquer un dégât déjà appliqué.
