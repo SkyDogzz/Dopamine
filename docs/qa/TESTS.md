@@ -154,6 +154,7 @@
 
 ## P6.7 — Évaluateur générique d’achievements — 2026-10-16
 
+- [x] Revalidation sur le checkout courant : `XDG_DATA_HOME=/tmp/dopamine-goal-progression-idempotence tools/run_godot_test.sh tools/local/godot-4.7.2/Godot_v4.7.2-stable_linux.x86_64 --headless --audio-driver Dummy --path game --script res://tests/progression_service_smoke.gd` passe sous Godot 4.7.2, couvrant les fixtures de migration, récompenses, achievements et refus du double crédit par `run_id`.
 - [x] Revalidation de cette extension sous Godot 4.7.2 : `progression_service_smoke.gd`, `survival_progression_smoke.gd` et `survival_elite_smoke.gd` passent. `ctest` n’est pas installé/détectable dans l’environnement courant, donc la suite complète n’a pas été relancée. Le smoke élite affiche à la fermeture des avertissements de ressources encore référencées, sans échec fonctionnel.
 
 - [x] Le profil v8 stocke les valeurs de métriques, les paliers par ID d’achievement et les records Armorless. `progression_service_smoke.gd` vérifie la migration des profils v1–v6, dont un profil v6 avec progression Exterminator existante, sans perte des kills/paliers/ressources; `armorless_records_smoke.gd` vérifie la migration v7 et le classement local par difficulté.
