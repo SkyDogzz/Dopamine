@@ -45,6 +45,14 @@ L’environnement utilisé pour la reprise expose 8 vCPU AMD EPYC-Milan sous KVM
 
 Recontrôle lors de la reprise du goal : `/dev/dri/card0` et `renderD128` sont présents, mais `lspci` identifie uniquement un adaptateur Virtio 1.0 (`1af4:1050`) sous KVM. Aucun accès à l’identité ou aux compteurs du GPU hôte n’est exposé; ni `DISPLAY`, ni `perf`, `nvidia-smi`, `radeontop` ou `intel_gpu_top` ne sont disponibles. La présence de ces nœuds DRM ne constitue donc pas une mesure de l’iGPU cible. Le profilage GPU de référence reste **[OUVERT]**.
 
+## Ressources au plafond natif — Sandbox P8.7 — 2026-10-17
+
+Le plafond partagé est de 2 500 entités ECS (ennemis, projectiles et orbes XP), avec 500 entités maximum par commande Spawn, 2 048 commandes en attente, 8 192 événements différés et 6 000 événements estimés par pas. `simulation_worker_test` remplit la simulation à 2 500 entités avec 500 Chasers et 2 000 projectiles, vérifie qu’un batch excédentaire de deux est rejeté sans ajout partiel, puis remplit exactement la dernière place.
+
+Mesure Debug fraîche : `./build/simulation_benchmark` traite ce même total de 2 500 entités (500 ennemis immobiles et 2 000 projectiles sans impact) sur 300 pas; la rafale alternative concentre 2 000 impacts par pas. Un relevé Linux de `VmHWM` pendant tout le processus a observé un pic RSS de 7 960 KiB. Le temps du workload sans hit était 1,151 ms moyen (P95 1,227 ms); la rafale extrême était 74,531 ms moyen (P95 85,031 ms). Ce RSS inclut le binaire et son runtime, la mesure utilise un seul environnement de debug et ne représente ni le GPU ni les cibles minimales.
+
+Le Sandbox Lab affiche désormais un avertissement avant d’envoyer son lot fixe de dix ennemis s’il dépasserait la capacité ECS; la simulation native garde l’autorité et rejette aussi toute commande hors capacité. Les plafonds de queue/événements restent internes au worker et leurs politiques de surcharge ne sont pas exposées à l’utilisateur; les seuils de ressources demeurent **[OUVERTS]** à calibration sur matériel cible.
+
 ## Comparaison contrôlée des dix armes — 2026-10-17
 
 Le survey `game/tests/combat_weapon_balance_survey.gd` exécute les dix armes via `SurvivalSession`, seules, dans une session sans service de progression ni écriture de sauvegarde. Chaque scénario dure 18 s simulées et utilise 24 cibles immobiles à 58 ou 112 unités du joueur, avec 1 000 000 HP chacune. Le joueur reste immobile et invulnérable; aucun spawn, XP, coffre, bonus permanent ou équipement n’intervient. La simulation et l’horloge Godot sont accélérées à ×4. Pour chaque arme, le script relève le niveau 1 sans relique, le niveau 5 avec sa relique niveau 5 sans collecter l’évolution, puis le même build avec l’évolution collectée. La mesure de sortie est le dommage attribué à l’arme divisé par le temps actif; les dégâts de statut et effets de zone observés par le chemin standard de session sont inclus.

@@ -8,6 +8,8 @@ const EQUIPMENT_GENERATOR_SCRIPT := preload("res://scripts/equipment_generator.g
 const SAVE_SERVICE_SCRIPT := preload("res://scripts/save_service.gd")
 const PROGRESSION_SCRIPT := preload("res://scripts/progression_service.gd")
 const MAX_DPS_SAMPLES := 4096
+const MAX_SIMULATION_ENTITIES := 2500
+const SPAWN_BATCH_SIZE := 10
 
 @onready var _view: Control = $Root/Body/Left/SimulationView
 @onready var _status: Label = $Root/Body/Side/Sections/Status
@@ -282,9 +284,16 @@ func _toggle_pause() -> void:
 	_refresh()
 
 func _spawn_enemies() -> void:
+	var current_count := int(context.simulation.snapshot()["metrics"]["entity_count"])
+	if not _can_spawn_batch(current_count):
+		_set_status("ENTITY LIMIT %d · REMOVE ENTITIES BEFORE SPAWNING" % MAX_SIMULATION_ENTITIES, true)
+		return
 	var enemy_id := str(_enemy_select.get_item_metadata(_enemy_select.selected))
-	var sequence: int = context.simulation.spawn_enemy(enemy_id, 10, Vector2(120.0, 0.0), Vector2.ZERO)
+	var sequence: int = context.simulation.spawn_enemy(enemy_id, SPAWN_BATCH_SIZE, Vector2(120.0, 0.0), Vector2.ZERO)
 	_set_status("SPAWN QUEUED" if sequence > 0 else "SPAWN REJECTED", sequence <= 0)
+
+func _can_spawn_batch(current_count: int) -> bool:
+	return current_count >= 0 and current_count + SPAWN_BATCH_SIZE <= MAX_SIMULATION_ENTITIES
 
 func _kill_all() -> void:
 	var sequence: int = context.simulation.kill_all()

@@ -635,9 +635,9 @@ P1 livre le Sandbox développeur et ne remplace pas cette feature produit.
   - [x] Documenter format opaque en mémoire, état hors worker et limites du déterminisme dans `SANDBOX_SNAPSHOT.md`; le Lab capture/restaure maintenant en mémoire l’état natif, la session Godot (RNG, horloges, joueur, vague), le build et les overrides LIVE.
   - [x] Ajouter `CAPTURE SNAPSHOT` / `RESTORE SNAPSHOT`, disponibles en pause; vérifier la reprise complète et le rejet sans mutation d’une version inconnue ou d’un build dépassant les slots.
 - [ ] **P8.7 — Limites et sécurité**
-  - [ ] Mesurer les ressources d’une commande extrême.
-  - [ ] Ajouter avertissement puis hard cap pour chaque ressource retenue.
-  - [ ] Tester qu’un preset hostile n’exécute aucune action ni accès fichier arbitraire.
+  - [x] Mesurer le plafond de 2 500 entités (500 ennemis + 2 000 projectiles) : RSS haut de page 7 960 KiB sur Linux Debug; métriques et limites dans `docs/qa/PERFORMANCE.md`.
+  - [x] Pour le quota ECS utilisé par l’outil Spawn, avertir quand un lot ne tient plus et conserver le hard cap natif de 2 500; les limites internes de commandes/événements restent bornées par le worker. Calibration des seuils et politiques de surcharge toujours **[OUVERTES]** sur matériel cible.
+  - [x] `sandbox_preset_smoke.gd` rejette clés de script/commande/chemin/données privées, profondeur/collections/taille hors limites et share codes corrompus; les presets ne contiennent que le schéma public fermé et ne déclenchent pas d’action ou d’accès fichier arbitraire.
 - [ ] **P8.8 — Validation d’isolation**
   - [x] Vérifier l’absence de `ProgressionService` et `SaveService` dans la session/context Lab; aucun crédit Essence/Powder, achievement ou leaderboard n’est raccordé à cette route.
   - [x] Vérifier que preset, build de combat, reset et capture/restauration snapshot préservent octet pour octet un slot normal sentinelle; les tests de partage/import preset et d’import profil read-only couvrent aussi checksum/validation et source inchangée. Les tests tournent avec `XDG_DATA_HOME` isolé.

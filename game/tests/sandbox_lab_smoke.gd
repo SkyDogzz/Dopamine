@@ -1,5 +1,15 @@
 extends SceneTree
 
+class EntityCountSnapshot:
+	extends RefCounted
+	var count: int
+
+	func _init(value: int) -> void:
+		count = value
+
+	func snapshot() -> Dictionary:
+		return {"metrics": {"entity_count": count}}
+
 func _initialize() -> void:
 	call_deferred("_run")
 
@@ -27,6 +37,16 @@ func _run() -> void:
 			lab.context.session.loadout.relic_level("storm_core") != 1:
 		_fail("The default Lab preset build should be applied to the real combat loadout")
 		return
+	if not lab._can_spawn_batch(2490) or lab._can_spawn_batch(2491) or lab._can_spawn_batch(2500):
+		_fail("The Lab spawn batch should stop exactly at the native 2500-entity capacity")
+		return
+	var live_simulation: Object = lab.context.simulation
+	lab.context.simulation = EntityCountSnapshot.new(2491)
+	lab._spawn_enemies()
+	if not str(lab.get_node("Root/Body/Side/Sections/Status").text).contains("ENTITY LIMIT 2500"):
+		_fail("The Lab should warn before queuing a spawn batch that exceeds native capacity")
+		return
+	lab.context.simulation = live_simulation
 	var weapon_select: OptionButton = lab.get_node_or_null("Root/Body/Side/Sections/VisualBuild/WeaponRow/WeaponSelect")
 	var weapon_level: SpinBox = lab.get_node_or_null("Root/Body/Side/Sections/VisualBuild/WeaponRow/WeaponLevel")
 	var add_weapon: Button = lab.get_node_or_null("Root/Body/Side/Sections/VisualBuild/AddWeaponButton")
