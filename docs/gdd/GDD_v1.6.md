@@ -179,7 +179,7 @@ Douze statistiques candidates : dégâts %, vitesse d'attaque %, chance critique
 
 [PROPOSÉ] Succès selon poudre et niveau courant E : Basic 50−3E %, Refined 70−3E %, Pure 85−3E %, Prismatic 95−3E %. Échec critique conditionné à l'échec : 10/5/2/0,5 % respectivement ; le reste est un échec normal. Garantie sur la dixième tentative de la même ligne. Coût de base pour cibles +1 à +10 : 10,15,22,32,46,65,90,125,175,250 ; multiplicateurs de rareté 1 / 1,5 / 2 / 3 / 4.
 
-[OUVERT] Poudres consommables selon niveau et rareté et économie de démantèlement.
+[VALIDÉ — EXTENSION DU 2026-10-17, réponse A] Conserver les tables proposées de coûts, chances et rendements de poudre comme base de calibration par essais; aucun chiffre n’est ainsi validé. Les paramètres et l’économie de démantèlement restent **[PROPOSÉS]** jusqu’à des mesures représentatives.
 
 [VALIDÉ — EXTENSION DU 2026-10-17, réponse A] Un reroll d’effet unique coûte 1 Powder Pure pour un équipement Legendary et 1 Powder Prismatic pour un équipement Mythic.
 

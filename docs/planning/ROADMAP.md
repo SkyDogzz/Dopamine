@@ -532,7 +532,7 @@ Travail requis :
   - [x] La somme linéaire indicative des bonus complets donne 29,7 points (10,7 % HP + 9 % dégâts + 6 % vitesse + 4 points de critique); c’est un proxy **[PROPOSÉ]**, pas une mesure d’équivalence de puissance.
   - [x] Analyse arithmétique des coûts **[PROPOSÉS]** : 15 900 Essence pour 100 nœuds, dont 4 160 pour 17 déblocages équipement; à 88 Essence par victoire normale vague 24, un déblocage équipement coûte en moyenne 2,78 victoires équivalentes. `progression_service_smoke.gd` verrouille ce calcul.
   - [ ] Cette moyenne ignore défaites, vente d’équipement et temps de jeu; elle ne prouve pas le rythme ressenti et ne remplace pas les parcours réels de P6.9.
-  - [ ] Calibrer la puissance réelle des profils débutant/moyen/complet dans P6.9; décider ensuite si le graphe doit s’étendre au-delà de 100 vers la cible éditoriale **[PROPOSÉE]** d’environ 120.
+  - [ ] Calibrer le budget et les résultats des profils débutant/intermédiaire/complet dans P6.9 en conservant le périmètre validé de 100 nœuds; aucune extension vers environ 120 n’est prévue pour le lancement.
 - [ ] **P6.7 — Achievements**
   - [x] Décision utilisateur **[VALIDÉE, 2026-10-17] — réponse A** : garder 100 familles au lancement et calibrer conditions/récompenses; différer l’extension proposée vers 120. Métriques, seuils et récompenses restent **[PROPOSÉS]**.
   - [x] Établir le schéma JSON métrique/catégorie/secret/agrégation/paliers/récompenses, aligné sur `AchievementDefinition` du GDD.
