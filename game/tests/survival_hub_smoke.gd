@@ -100,6 +100,16 @@ func _run() -> void:
 		achievements.get_theme_stylebox("focus") != hub.theme.get_stylebox("focus", "Button"):
 		_fail("Inactive features should look disabled and retain the shared visible focus style")
 		return
+	var inactive_text := achievements.get_theme_color("font_color")
+	if _contrast_ratio(inactive_text, inactive_style.bg_color) < 4.5:
+		_fail("Inactive feature labels should keep at least 4.5:1 contrast against their card")
+		return
+	for variation in ["Button", "OptionButton"]:
+		var disabled_style := hub.theme.get_stylebox("disabled", variation) as StyleBoxFlat
+		var disabled_text := hub.theme.get_color("font_disabled_color", variation)
+		if disabled_style == null or _contrast_ratio(disabled_text, disabled_style.bg_color) < 4.5:
+			_fail("Disabled %s labels should keep at least 4.5:1 contrast against their background" % variation)
+			return
 	equipment_button.grab_focus()
 	await _send_key(KEY_DOWN)
 	if root.gui_get_focus_owner() != skill_button:
@@ -334,6 +344,19 @@ func _send_gamepad_button(button_index: JoyButton) -> void:
 	event.pressed = false
 	Input.parse_input_event(event)
 	await process_frame
+
+func _contrast_ratio(first: Color, second: Color) -> float:
+	var first_luminance := _relative_luminance(first)
+	var second_luminance := _relative_luminance(second)
+	return (maxf(first_luminance, second_luminance) + 0.05) / \
+		(minf(first_luminance, second_luminance) + 0.05)
+
+func _relative_luminance(color: Color) -> float:
+	var channels := [color.r, color.g, color.b]
+	for index in range(channels.size()):
+		var channel: float = channels[index]
+		channels[index] = channel / 12.92 if channel <= 0.04045 else pow((channel + 0.055) / 1.055, 2.4)
+	return 0.2126 * channels[0] + 0.7152 * channels[1] + 0.0722 * channels[2]
 
 func _send_mouse_click(control: Control) -> void:
 	var event := InputEventMouseButton.new()

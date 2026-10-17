@@ -684,6 +684,7 @@ P1 livre le Sandbox développeur et ne remplace pas cette feature produit.
   - [x] Vérifier dans `survival_pause_inventory_smoke.gd` Entrée pour ouvrir l’inventaire, flèche/D-pad pour parcourir les objets et B pour fermer; A sur un objet en lecture seule ne change pas le loadout.
   - [ ] Parcourir menus et choix uniquement au clavier.
   - [ ] Parcourir les mêmes écrans à la manette avec focus visible.
+  - [x] Contrôler le contraste des labels `InactiveButton`, `Button` désactivé et `OptionButton` désactivé; `survival_hub_smoke.gd` impose 4,5:1 minimum. Les valeurs utilisent maintenant `#A5AEC3` de la palette ART_BIBLE, avec 6,94:1 sur le fond `#1B2340`.
   - [ ] Vérifier contraste, taille/hiérarchie HUD et réglages d’effets.
 - [ ] **P9.5 — Performance**
   - [ ] Fixer le matériel iGPU de référence et la scène de charge.

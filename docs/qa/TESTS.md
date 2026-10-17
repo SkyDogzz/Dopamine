@@ -1307,3 +1307,10 @@ Note de clôture : le blocage historique du smoke `sandbox_ui_smoke.gd` décrit 
 
 - [x] `survival_hub_smoke.gd` envoie Entrée sur Équipements puis Arbre de compétences, et Échap pour les fermer; chaque fermeture doit rendre le focus à son bouton d’origine. Le smoke dédié passe sous Godot 4.7.2 headless.
 - [ ] Ce test ciblé ne remplace pas un parcours humain de tous les menus et choix au clavier; ce critère P9.4 reste ouvert.
+
+## P9.4 — Contraste des contrôles inactifs — 2026-10-17
+
+- [x] Un contrôle de contraste ajouté à `survival_hub_smoke.gd` a d’abord échoué sur les couleurs précédentes : le texte `InactiveButton` (#64708C) mesurait 3,11:1 et le texte des `Button`/`OptionButton` désactivés (#586381) 2,58:1, sur leur fond #1B2340.
+- [x] Les trois variations utilisent maintenant #A5AEC3, couleur secondaire validée dans `docs/ART_BIBLE.txt`; le ratio mesuré est 6,94:1. Le test calcule le ratio de luminance pour les trois variations et exige au moins 4,5:1. Le smoke passe sous Godot 4.7.2; la capture `/tmp/dopamine-survival-hub.png` a été inspectée à 640×360 logique sous Xvfb/Mesa llvmpipe.
+- [x] CTest complet après le changement partagé de Theme : **91/91 tests passent en 64,76 s** avec `/tmp/cmake-3.31.12-linux-x86_64/bin/ctest --test-dir build --output-on-failure -j1`.
+- [ ] Ce contrôle couvre seulement les trois variations citées; le contraste des autres composants, la hiérarchie HUD, les options de réduction des effets et les écrans sur matériel réel restent à vérifier.
