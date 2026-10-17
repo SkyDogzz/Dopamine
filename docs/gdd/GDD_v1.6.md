@@ -177,11 +177,13 @@ Douze statistiques candidates : dégâts %, vitesse d'attaque %, chance critique
 
 [PROPOSÉ] Succès selon poudre et niveau courant E : Basic 50−3E %, Refined 70−3E %, Pure 85−3E %, Prismatic 95−3E %. Échec critique conditionné à l'échec : 10/5/2/0,5 % respectivement ; le reste est un échec normal. Garantie sur la dixième tentative de la même ligne. Coût de base pour cibles +1 à +10 : 10,15,22,32,46,65,90,125,175,250 ; multiplicateurs de rareté 1 / 1,5 / 2 / 3 / 4.
 
-[OUVERT] Poudres consommables selon niveau et rareté, économie de démantèlement et prévention des exploits de conversion.
+[OUVERT] Poudres consommables selon niveau et rareté et économie de démantèlement.
 
-[VALIDÉ — EXTENSION DU 2026-10-17, réponse A] Un reroll d’effet unique coûte 1 Powder Pure pour un équipement Legendary et 1 Powder Prismatic pour un équipement Mythic. Le prix est arrêté; le reroll lui-même et les protections contre les abus de conversion restent à implémenter/arbitrer.
+[VALIDÉ — EXTENSION DU 2026-10-17, réponse A] Un reroll d’effet unique coûte 1 Powder Pure pour un équipement Legendary et 1 Powder Prismatic pour un équipement Mythic.
 
-[VALIDÉ — EXTENSION DU 2026-10-17] Pour P6.4, conserver les tableaux de coûts, probabilités et rendements proposés comme base de calibration par essais. Cette décision ne valide aucun chiffre : ces paramètres restent **[PROPOSÉS]** jusqu’à ce que des mesures de jeu représentatives justifient leur promotion ou leur ajustement. Le prix du reroll d’effet unique est fixé par la décision du 2026-10-17; les protections contre les abus de conversion restent **[OUVERTES]**.
+[VALIDÉ — EXTENSION DU 2026-10-17, réponse A] La conversion Powder conserve le ratio 10:1 uniquement vers le tier supérieur; aucune conversion inverse ni restitution de Powder n’est permise. Aucune limite supplémentaire ni traçage de provenance n’est ajouté.
+
+[VALIDÉ — EXTENSION DU 2026-10-17] Pour P6.4, conserver les tableaux de coûts, probabilités et rendements proposés comme base de calibration par essais. Cette décision ne valide aucun chiffre : ces paramètres restent **[PROPOSÉS]** jusqu’à ce que des mesures de jeu représentatives justifient leur promotion ou leur ajustement. Le prix du reroll d’effet unique et les règles de conversion sont fixés par les décisions utilisateur du 2026-10-17; coûts/chances d’Enhancement et économie de démantèlement restent à calibrer.
 
 <a id="9"></a>
 

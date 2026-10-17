@@ -841,7 +841,7 @@
 ## P6.4 — Prix du reroll d’effet unique — 2026-10-17
 
 - [x] Décision utilisateur, réponse A : chaque reroll coûte 1 Powder Pure pour un équipement Legendary ou 1 Powder Prismatic pour un Mythic. La règle est documentée dans le GDD et le registre; le reroll reste à implémenter, donc aucune vérification runtime du débit n’est revendiquée.
-- [ ] Les protections contre les abus de conversion ascendante restent **[OUVERTES]**; aucun contrôle runtime du reroll n’est encore présent.
+- [x] Décision utilisateur, réponse A : garder la conversion 10:1 strictement ascendante, sans restitution ni plafond/provenance supplémentaires. `equipment_enhancement_smoke.gd` couvre le sens ascendant, le refus depuis Prismatic et les conversions 10:1; aucun changement runtime requis pour cette décision.
 
 ## P6.4 — Arbitrage et contrôle statistique Enhancement — 2026-10-17
 
