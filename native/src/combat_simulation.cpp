@@ -11,6 +11,20 @@ using namespace godot;
 using dopamine::sim::CommandType;
 using dopamine::sim::SimulationCommand;
 
+void CombatSimulationSnapshot::_bind_methods() {
+	ClassDB::bind_method(D_METHOD("get_format_version"), &CombatSimulationSnapshot::get_format_version);
+	ClassDB::bind_method(D_METHOD("is_valid"), &CombatSimulationSnapshot::is_valid);
+	ADD_PROPERTY(PropertyInfo(Variant::INT, "format_version"), "", "get_format_version");
+}
+
+uint32_t CombatSimulationSnapshot::get_format_version() const {
+	return format_version_;
+}
+
+bool CombatSimulationSnapshot::is_valid() const {
+	return state_.has_value() && format_version_ == 17;
+}
+
 void CombatSimulation::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("spawn", "entity_type", "count", "position", "hp", "velocity", "threat_level"),
 			&CombatSimulation::spawn, DEFVAL(1.0));
@@ -47,6 +61,8 @@ void CombatSimulation::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("initial_player_hp"), &CombatSimulation::initial_player_hp);
 	ClassDB::bind_method(D_METHOD("reset"), &CombatSimulation::reset);
 	ClassDB::bind_method(D_METHOD("snapshot"), &CombatSimulation::snapshot);
+	ClassDB::bind_method(D_METHOD("capture_state"), &CombatSimulation::capture_state);
+	ClassDB::bind_method(D_METHOD("restore_state", "state"), &CombatSimulation::restore_state);
 }
 
 CombatSimulation::CombatSimulation() {
@@ -602,6 +618,39 @@ Dictionary CombatSimulation::snapshot() const {
 	}
 	result["logs"] = logs;
 	return result;
+}
+
+Dictionary CombatSimulation::capture_state() {
+	const std::optional<dopamine::sim::SimulationWorkerState> captured = worker_.capture_state();
+	if (!captured.has_value()) {
+		return {};
+	}
+	Ref<CombatSimulationSnapshot> native_state;
+	native_state.instantiate();
+	native_state->state_ = *captured;
+	Dictionary result;
+	result["format_version"] = static_cast<int64_t>(native_state->format_version_);
+	result["native_state"] = native_state;
+	return result;
+}
+
+bool CombatSimulation::restore_state(const Dictionary &state) {
+	if (state.size() != 2 || !state.has("format_version") || !state.has("native_state") ||
+			state["format_version"].get_type() != Variant::INT ||
+			static_cast<uint32_t>(static_cast<int64_t>(state["format_version"])) != 17) {
+		return false;
+	}
+	Ref<CombatSimulationSnapshot> native_state = state["native_state"];
+	if (native_state.is_null() || !native_state->is_valid()) {
+		return false;
+	}
+	worker_.stop();
+	if (!worker_.restore_state(*native_state->state_)) {
+		worker_.start();
+		return false;
+	}
+	worker_.start();
+	return true;
 }
 
 int64_t CombatSimulation::submit(SimulationCommand command) {

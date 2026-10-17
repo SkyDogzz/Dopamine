@@ -630,9 +630,9 @@ P1 livre le Sandbox développeur et ne remplace pas cette feature produit.
   - [x] Afficher les DPS 1 s, 10 s et cumulés, ventilés par type de source arme/évolution/effet; afficher un journal RNG contextualisé à seed fixe. Les échantillons DPS sont limités aux dix dernières secondes (4096 maximum) et le journal conserve 256 tirages, dont les six plus récents sont visibles.
 - [ ] **P8.6 — Snapshots**
   - [x] Inventorier l’état minimal à capturer, y compris RNG, horloges, queues et build; contrat et lacunes actuelles consignés dans [`SANDBOX_SNAPSHOT.md`](SANDBOX_SNAPSHOT.md).
-  - [ ] Capturer puis restaurer sans perte sur une scène simple.
-  - [ ] Vérifier reprise avec commandes en attente et version incompatible.
-  - [ ] Documenter les limites de déterminisme.
+  - [x] Exposer le checkpoint natif et capturer/restaurer sans perte une scène simple; `sandbox_snapshot_smoke.gd` vérifie un ennemi et l’état pause.
+  - [x] Vérifier le rejet de version incompatible par l’API Godot, ainsi que commandes en attente et séquences par `simulation_worker_test`; l’intégration Godot→file de commandes reste à couvrir.
+  - [x] Documenter format opaque en mémoire, état hors worker et limites du déterminisme dans `SANDBOX_SNAPSHOT.md`; intégration du RNG/build/horloges au Lab reste requise.
 - [ ] **P8.7 — Limites et sécurité**
   - [ ] Mesurer les ressources d’une commande extrême.
   - [ ] Ajouter avertissement puis hard cap pour chaque ressource retenue.

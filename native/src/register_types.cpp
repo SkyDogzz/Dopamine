@@ -6,6 +6,7 @@ using namespace godot;
 
 void initialize_dopamine(ModuleInitializationLevel level) {
 	if (level == MODULE_INITIALIZATION_LEVEL_SCENE) {
+		GDREGISTER_CLASS(CombatSimulationSnapshot);
 		GDREGISTER_CLASS(CombatSimulation);
 	}
 }

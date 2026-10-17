@@ -22,9 +22,11 @@ Les éléments de rendu dérivés (batches de sprites, particules/transitions vi
 
 ## Couverture existante et écart
 
-`simulation_core_test` et `simulation_worker_test` vérifient déjà les copies natives, leur restauration, le rejet d’une version de worker incompatible, ainsi que la conservation et la validation des commandes en attente. Cette couverture interne ne prouve pas qu’un utilisateur du Sandbox Lab peut capturer ou restaurer une session : `CombatSimulation` n’expose actuellement que `snapshot()` de lecture seule.
+`simulation_core_test` et `simulation_worker_test` vérifient les copies natives, leur restauration, le rejet d’une version de worker incompatible, ainsi que la conservation et la validation des commandes en attente. `CombatSimulation.capture_state()` et `restore_state()` exposent maintenant cette couche native à Godot : le smoke `sandbox_snapshot_smoke.gd` capture un ennemi, le supprime, restaure son état et vérifie qu’une version incompatible est refusée sans altérer la simulation.
 
-La tranche P8.6 reste donc ouverte jusqu’à ce qu’une API de snapshot intégrée capture atomiquement l’état natif et Godot, restaure une session de combat simple, et refuse une version incompatible sans altérer l’état courant. Les smokes doivent aussi comparer les horloges, le RNG, le build et une commande en attente avant/après reprise.
+Cette API native est un checkpoint opaque en mémoire, format 17; elle ne fournit pas un format exportable. La tranche P8.6 reste ouverte jusqu’à son intégration atomique avec l’état Godot (RNG, horloges, build et configuration), le Lab et son test de reprise. Les commandes en attente sont testées dans `simulation_worker_test`; le smoke Godot couvre actuellement la reprise de l’état natif simple, pas l’orchestration d’une file de commandes depuis l’interface.
+
+La reprise déterministe est limitée à l’état capturé : elle ne couvre ni le rendu dérivé, ni l’audio, ni les délais muraux du worker; elle ne promet pas une synchronisation identique des frames entre matériels. Les opérations de gameplay consomment le RNG Godot seedé du Lab; la restauration complète doit remettre son état et l’horloge active en place avec la simulation.
 
 ## Isolation
 

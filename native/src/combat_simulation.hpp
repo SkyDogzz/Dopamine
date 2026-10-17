@@ -3,11 +3,32 @@
 #include "dopamine/simulation/simulation_worker.hpp"
 
 #include <godot_cpp/classes/ref_counted.hpp>
+#include <godot_cpp/classes/ref.hpp>
 #include <godot_cpp/variant/dictionary.hpp>
 #include <godot_cpp/variant/packed_string_array.hpp>
 #include <godot_cpp/variant/vector2.hpp>
 
+#include <optional>
+
 namespace godot {
+
+class CombatSimulation;
+
+class CombatSimulationSnapshot : public RefCounted {
+	GDCLASS(CombatSimulationSnapshot, RefCounted)
+
+protected:
+	static void _bind_methods();
+
+public:
+	uint32_t get_format_version() const;
+	bool is_valid() const;
+
+private:
+	friend class CombatSimulation;
+	std::optional<dopamine::sim::SimulationWorkerState> state_;
+	uint32_t format_version_ = 17;
+};
 
 class CombatSimulation : public RefCounted {
 	GDCLASS(CombatSimulation, RefCounted)
@@ -63,6 +84,8 @@ public:
 	double initial_player_hp() const;
 	int64_t reset();
 	Dictionary snapshot() const;
+	Dictionary capture_state();
+	bool restore_state(const Dictionary &state);
 
 private:
 	int64_t submit(dopamine::sim::SimulationCommand command);

@@ -52,7 +52,11 @@ simulation.apply_sandbox_overrides({
 })
 simulation.reset()
 var state: Dictionary = simulation.snapshot()
+var checkpoint: Dictionary = simulation.capture_state()
+simulation.restore_state(checkpoint)
 ```
+
+`capture_state()` renvoie un checkpoint natif opaque en mémoire `{format_version: 17, native_state: CombatSimulationSnapshot}`; une capture échouée renvoie un dictionnaire vide. `restore_state(checkpoint)` accepte seulement ces deux champs, le format 17 et un objet natif valide. Il arrête le worker, restaure son état complet puis le redémarre. Une version incompatible est refusée avant l’arrêt et ne change donc pas la simulation. Ce contrat GDExtension couvre le worker, pas les horloges/RNG/build de `SurvivalSession` ni une sérialisation persistante du Lab.
 
 Le snapshot contient l'état `paused`, `speed_multiplier`, `simulation_time`, `last_sequence`, `rejected_commands`, une liste `entities` (ID index/génération et composants `Transform2D`, `Velocity2D`, `Health`, `EnemyType`). Il publie `CollisionRadius` (12 unités pour les mobs 24 px, 26 pour les boss 52 px), utilisé à la fois par le rendu et les tests de contact/projectiles. Le cercle est une approximation de la silhouette carrée des sprites (**[PROPOSÉ]**). Les cibles affectées exposent `DamageOverTime` avec `status_type` (`generic`, `burn`, `poison`, `bleed`), dégâts par tick, durée restante et horloge de tick; Chill reste un composant distinct. Une charge temporaire expose aussi `MovementOverride` avec vitesse et temps restant; elle est intégrée à l’horloge de simulation, survit à un snapshot/restauration et suspend sa durée en pause. Les Buffers exposent `SupportRadius` et `SupportSpeedMultiplier`; les alliés dans une aura active exposent `Supported`; les élites exposent leur `Affix`. Godot reçoit des valeurs copiées ; aucune référence mutable du worker n'est exposée. `CombatSimulation` n'a pas accès au service de sauvegarde.
 
@@ -134,7 +138,7 @@ public:
 };
 ```
 
-`SimulationCore.capture_state()` produit une copie native indexée par slots et `restore_state(state)` valide l’ensemble avant de remplacer l’état courant. Elle conserve les générations, les slots libres, les composants ECS, les horloges de simulation/DoT, les projectiles et le prochain numéro d’événement. `SimulationWorker.capture_state()` ajoute une capture cohérente à une barrière de commande : état pause/vitesse/steering, commandes restantes et numéro de séquence, événements, métriques et logs. `restore_state(state)` n’accepte que des états valides et un worker arrêté ; la file restaurée reprend au redémarrage. Ces API sont des copies natives en mémoire, pas une sérialisation fichier. Le build et l’état de gameplay des nœuds Godot ne sont pas inclus ; elles ne constituent donc pas encore un snapshot Sandbox complet.
+`SimulationCore.capture_state()` produit une copie native indexée par slots et `restore_state(state)` valide l’ensemble avant de remplacer l’état courant. Elle conserve les générations, les slots libres, les composants ECS, les horloges de simulation/DoT, les projectiles et le prochain numéro d’événement. `SimulationWorker.capture_state()` ajoute une capture cohérente à une barrière de commande : état pause/vitesse/steering, commandes restantes et numéro de séquence, événements, métriques et logs. `restore_state(state)` n’accepte que des états valides et un worker arrêté ; la file restaurée reprend au redémarrage. Le pont GDExtension expose ces opérations via `capture_state()` et `restore_state()`, couvertes par `sandbox_snapshot_smoke.gd`. Ces API sont des copies natives en mémoire, pas une sérialisation fichier. Le build et l’état de gameplay des nœuds Godot ne sont pas inclus ; elles ne constituent donc pas encore un snapshot Sandbox complet.
 
 ## GDExtension / GDScript
 
