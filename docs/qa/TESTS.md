@@ -1946,7 +1946,13 @@ Note de clôture : le blocage historique du smoke `sandbox_ui_smoke.gd` décrit 
 
 - [x] La recherche textuelle de `assets/source`, `tests/` et `tools/` dans `game/scripts/`, `game/scenes/`, `game/data/` et `game/project.godot` ne trouve aucune référence runtime.
 - [x] Godot 4.7.2 exporte le preset `Windows Desktop` en PCK depuis cet hôte Linux : 552 ressources consignées, 206 enregistrements `.import`, aucune ressource des trois chemins exclus et aucun warning. Le preset Windows exclut maintenant `tests/**`, `tools/**` et `assets/source/**`, comme Linux.
-- [i] Cette commande vérifie le filtre PCK du preset Windows depuis l’éditeur Linux; elle ne produit ni ne lance un exécutable Windows. Le build/export/launch Windows complet reste couvert par les runs CI consignés plus haut et doit être revalidé après ce commit.
+- [i] Cette commande vérifie le filtre PCK du preset Windows depuis l’éditeur Linux; elle ne produit ni ne lance un exécutable Windows.
+
+## P9.7/P9.8 — Revalidation du paquet Windows avec notices — 2026-10-17
+
+- [x] Le run [`39075607404`](https://github.com/SkyDogzz/Dopamine/actions/runs/39075607404), source `271a37bdac4fc55b8137d6397517d639b5fd814cb`, passe sur `windows-2022` : build MSVC, import, GDExtension Release, export Windows filtré, ajout du README de validation et des notices/licences, vérification des six fichiers requis avant et après archive/extraction, lancement headless depuis le dossier extrait, tests natifs et publication de l’artefact.
+- [x] GitHub indique l’artefact non versionné `dopamine-survivor-windows-x86_64`, 44 MB, digest `sha256:08d8d08eb78c84b692e882d37b786a75567f6359bd7e305c5dec6c378a9fcd9`. Le runner a validé les notices et licences dans l’archive extraite avant publication; l’artefact n’a pas été téléchargé localement.
+- [i] La vérification CI établit build/export/extraction/lancement headless sous Windows x86_64; elle ne remplace pas une run interactive sur PC Windows physique ni la validation de contrôles/rendu/audio.
 
 ## P9.8 — Staging Linux Release depuis `4965876` — 2026-10-17
 
