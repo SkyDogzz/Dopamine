@@ -16,6 +16,7 @@
 10. [Art Bible](docs/ART_BIBLE.txt) — direction visuelle validée, palette maître, résolution logique et contrats des assets/UI; [inventaire assets + UI](docs/art/INVENTAIRE_ASSETS_UI.md) — portée confirmée et couverture actuelle.
 11. [Goal principal de livraison complète](docs/planning/GOAL_PRINCIPAL.md) — objectif conservé et état de pause.
 12. [Registre des décisions restantes](docs/planning/DECISIONS_RESTANTES.md) — questions à interviewer une par une, choix proposés et validations techniques à distinguer.
+13. [Notices des dépendances et polices](THIRD_PARTY_NOTICES.md) — licences repérées et points de conformité à intégrer au paquet de livraison.
 
 ## Statuts
 
