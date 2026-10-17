@@ -555,13 +555,15 @@
 
 - [x] Le créateur confirme avoir déjà joué une run complète en interface réelle et que les contrôles demandés sont bons : victoire contre le boss final sans assistance, choix manuel d’un coffre, récompenses visibles et persistées sans doublon après relance.
 - [x] Cette validation est un retour utilisateur direct; la session n’a pas été observée indépendamment. La difficulté, l’arme de départ, la plateforme et les valeurs exactes des récompenses ne sont pas consignées.
+- [x] Le créateur confirme aussi que cette run complète valide manuellement P5.4. La difficulté et le loadout ne sont pas précisés; cette confirmation ne documente donc pas à elle seule une run Chaos représentative ni son équilibrage.
 
 ## P5.4 — Revalidation ciblée des ennemis, boss et difficultés — 2026-10-16
 
 - [x] Sous Godot 4.7.2 avec données utilisateur isolées, `survival_boss_attack_smoke.gd`, `survival_elite_smoke.gd`, `survival_exploder_smoke.gd`, `survival_difficulty_profile_smoke.gd` et `survival_difficulty_unlock_smoke.gd` passent séquentiellement.
 - [x] `survival_elite_smoke.gd` affiche des avertissements ObjectDB/ressources encore référencées à la fermeture après réussite; aucun échec de scénario observé.
 - [x] Les trois mutations Chaos sont couvertes : multiplicateur de chance de soutien, sélection de deux affixes distincts et composition de leurs effets, et patterns de boss distincts consécutifs; smokes ciblés d’élite, de spawn et de boss.
-- [ ] L’équilibrage de ces mutations et une victoire jouée sans harness restent à valider en run représentative (P5.V3).
+- [x] Le créateur confirme avoir vérifié manuellement P5.4 pendant sa run complète jusqu’à la victoire du boss final (voir P5.V3 ci-dessus).
+- [ ] L’équilibrage spécifique de ces mutations reste à valider en run Chaos représentative; la difficulté, les affixes rencontrés et le loadout de la run confirmée ne sont pas consignés.
 
 ## P5 — Séquence télégraphiée des boss en Chaos — 2026-10-16
 

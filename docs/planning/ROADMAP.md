@@ -455,6 +455,7 @@ Travail requis :
   - [x] Après l’optimisation du résolveur de collisions, recompiler la GDExtension Linux et relancer CTest le 2026-10-17 : 86/86 passent en 60,45 s sous Godot 4.7.2.
   - [x] Revalider le checkout le 2026-10-17 : CTest passe 87/87 en 61,40 s. La répétition du smoke catalogue a révélé un fixture Thermal Shock intermittent (cibles quasi chevauchées); les cibles sont désormais espacées et les armes du fixture désactivées. Le catalogue passe dix exécutions consécutives.
   - [x] Enregistrer la confirmation utilisateur de P5.V3 (run de victoire, coffre, récompenses et relance) ; voir `docs/qa/TESTS.md`.
+  - [x] Le créateur confirme aussi avoir vérifié manuellement P5.4 dans sa run complète jusqu’à la victoire du boss final; difficulté et loadout non précisés. L’équilibrage Chaos représentatif reste ouvert.
   - [x] Le créateur confirme le 2026-10-17 avoir terminé les vérifications manuelles demandées et que tout est bon; aucun détail par arme/build/difficulté/plateforme n’a été fourni (voir `docs/qa/TESTS.md`).
   - [x] Ajouter une comparaison reproductible de DPS pour les dix armes au niveau 1, niveau 5 + relique 5, et évoluées, sur cible unique, grappe fixe et Chasers mobiles; données et limites dans `docs/qa/PERFORMANCE.md`. Cette mesure de laboratoire ne valide pas le tuning.
   - [ ] Effectuer un profilage représentatif CPU/GPU et des armes avant de clore le jalon.
