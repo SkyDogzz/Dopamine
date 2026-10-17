@@ -871,7 +871,7 @@
 
 ## P6.5 — Arbitrage partiel du revive — 2026-10-17
 
-- [x] Décision utilisateur, réponse C : un effet unique d’équipement accorde au plus un revive par run. Choix documenté dans le GDD et le registre.
+- [x] Décisions utilisateur, réponses C puis B : un effet unique d’équipement accorde au plus un revive par run; au coup fatal, un dialogue demande confirmation avant consommation. Choix documentés dans le GDD et le registre.
 - [ ] Le déclencheur, l’identifiant d’effet, les PV restaurés, la protection après reprise et les modes éligibles restent **[OUVERTS]**; aucun gameplay de revive n’est activé ou revendiqué.
 
 ## P6.5 — Effet Elite Haste — 2026-10-16
