@@ -1,0 +1,7 @@
+# Godot 4.7.2; 120 active-second exploratory runs; Easy; speed x1; normal HP and enemy spawns; kite input bot.
+# Inferno Sprayer and Frost Nova Lv1 were granted directly to force Burn/Chill overlap; first chest choice auto-selected.
+# damage_events counts observed damage events sourced by thermal_shock, not reaction triggers; no tuning conclusion is implied.
+seed,result,active_seconds,wave,kills,level,burn_weapon_damage,chill_weapon_damage,thermal_shock_damage_events,thermal_shock_damage,hp_current,hp_max
+20261017,timeout,120.00,5,79,8,318.68,153.36,1,4.04,72.0,101.0
+20261018,timeout,120.01,5,42,3,217.84,104.88,4,16.16,24.0,100.0
+20261019,defeat,102.95,4,40,5,250.00,96.88,5,20.20,0.0,100.0

@@ -355,6 +355,8 @@
 
 - [x] `survival_weapon_catalog_smoke.gd` vérifie l’impact de réaction pour Burn direct sur une cible Chill et Chill direct sur une cible Burn, le cooldown par cible, l’exclusion des ticks DoT et des coups létaux, ainsi que l’absence de chaînage depuis `thermal_shock`.
 - [x] Les deux impacts sont appliqués par le worker natif via le projectile de réaction et produisent respectivement 50 % des dégâts déclencheurs (**[PROPOSÉ]**).
+- [x] Trois parcours exploratoires de 120 s simulées maximum avec `thermal_shock_run_survey.gd`, Easy, vitesse ×1, PV ordinaires et spawns normaux. Le bot kite pilote les déplacements; Inferno Sprayer Lv1 et Frost Nova Lv1 sont injectées directement dans le loadout pour garantir les deux statuts; les coffres choisissent leur première offre automatiquement. Les résultats bruts sont dans [`data/thermal_shock_run_survey_20261017.csv`](data/thermal_shock_run_survey_20261017.csv).
+- [i] Observations : 1, 4 et 5 événements de dégâts `thermal_shock` (4,04 / 16,16 / 20,20 dégâts); deux runs atteignent 120 s et une se termine à 102,95 s, vague 4. Les dégâts de réaction correspondent au multiplicateur proposé de 50 %. Les rencontres et trajectoires diffèrent malgré les seeds; le loadout forcé, le bot et l’échantillon de trois runs ne représentent pas un parcours humain ni une calibration.
 - [ ] Le prototype, son cooldown de 1 s et le multiplicateur de 50 % restent **[PROPOSÉS]**; il reste à mesurer leur effet pendant des runs représentatives.
 
 ## P5.2.3 — Toxic Ignition — 2026-10-16
