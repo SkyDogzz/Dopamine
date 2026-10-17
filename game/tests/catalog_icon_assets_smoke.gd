@@ -57,6 +57,11 @@ func _initialize() -> void:
 		if not _check_icon(projectile_name):
 			quit(1)
 			return
+	if not _check_distinct_silhouette("projectile_frost_nova", "projectile_absolute_zero") or \
+			not _check_distinct_silhouette("weapon_frost_nova", "evolution_frost_nova") or \
+			not _check_distinct_silhouette("projectile_lightning", "projectile_razorstorm"):
+		quit(1)
+		return
 	if not _check_ground_candidate():
 		quit(1)
 		return
@@ -165,6 +170,21 @@ func _check_icon(asset_name: String) -> bool:
 	var source := FileAccess.open(ase_path, FileAccess.READ)
 	if source == null or source.get_32() != source.get_length() or source.get_16() != 0xA5E0 or source.get_16() != 1 or source.get_16() != expected_size.x or source.get_16() != expected_size.y:
 		push_error("Invalid editable Aseprite source for %s" % asset_name)
+		return false
+	return true
+
+func _check_distinct_silhouette(first_name: String, second_name: String) -> bool:
+	var first_path := "res://assets/sprites/projectiles/%s.png" % first_name if first_name.begins_with("projectile_") else "res://assets/sprites/catalog/%s.png" % first_name
+	var second_path := "res://assets/sprites/projectiles/%s.png" % second_name if second_name.begins_with("projectile_") else "res://assets/sprites/catalog/%s.png" % second_name
+	var first := (load(first_path) as Texture2D).get_image()
+	var second := (load(second_path) as Texture2D).get_image()
+	var different_alpha_pixels := 0
+	for y in range(first.get_height()):
+		for x in range(first.get_width()):
+			if (first.get_pixel(x, y).a > 0.0) != (second.get_pixel(x, y).a > 0.0):
+				different_alpha_pixels += 1
+	if different_alpha_pixels < 8:
+		push_error("Related catalog sprites should have visibly distinct silhouettes: %s / %s" % [first_name, second_name])
 		return false
 	return true
 

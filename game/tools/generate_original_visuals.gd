@@ -176,6 +176,29 @@ func _draw_semantic(image: Image, name: String, unit: int, shadow: Color, mid: C
 		_diamond(image, cx, cy, 8*s, accent)
 		_line(image, cx, cy - 4*s, cx, cy + 8*s, 2*s, light)
 		for offset in [-9, 9]: _pixel(image, cx + offset*s, cy + 5*s, accent, 2*s)
+	elif name == "projectile_razorstorm":
+		_circle(image, cx, cy, 5*s, accent)
+		_circle(image, cx, cy, 2*s, shadow)
+		for angle in range(4):
+			var a := TAU * float(angle) / 4.0 + PI / 4.0
+			var tip := Vector2i(cx + roundi(cos(a) * 12*s), cy + roundi(sin(a) * 12*s))
+			var base := Vector2i(cx + roundi(cos(a) * 3*s), cy + roundi(sin(a) * 3*s))
+			_line(image, base.x, base.y, tip.x, tip.y, 2*s, light)
+			_pixel(image, tip.x, tip.y, mid, 2*s)
+	elif name == "evolution_frost_nova":
+		_circle(image, cx, cy, 11*s, accent)
+		_circle(image, cx, cy, 7*s, shadow)
+		_diamond(image, cx, cy, 6*s, light)
+		for side in [-1, 1]:
+			_line(image, cx + side*8*s, cy - 9*s, cx + side*5*s, cy - 5*s, s, light)
+			_line(image, cx + side*5*s, cy - 5*s, cx + side*11*s, cy - 5*s, s, mid)
+	elif name == "projectile_absolute_zero":
+		_diamond(image, cx, cy, 10*s, accent)
+		_diamond(image, cx, cy, 6*s, shadow)
+		_pixel(image, cx, cy, light, 2*s)
+		for side in [-1, 1]:
+			_line(image, cx - 10*s, cy + side*10*s, cx - 6*s, cy + side*6*s, s, light)
+			_line(image, cx + 10*s, cy - side*10*s, cx + 6*s, cy - side*6*s, s, light)
 	elif name.contains("lightning") or name.contains("conductor") or name.contains("storm") or name.contains("shock"):
 		_line(image, cx + 3*s, cy - 12*s, cx - 4*s, cy - 2*s, 3*s, light)
 		_line(image, cx - 4*s, cy - 2*s, cx + 2*s, cy - 2*s, 3*s, accent)
