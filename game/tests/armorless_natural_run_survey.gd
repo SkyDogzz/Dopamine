@@ -1,5 +1,7 @@
 extends SceneTree
 
+const ARMORLESS_RUN_STATE := preload("res://scripts/armorless_run_state.gd")
+const EQUIPMENT_GENERATOR := preload("res://scripts/equipment_generator.gd")
 const MAX_WAVE := 60
 const MAX_WALL_SECONDS := 300.0
 
@@ -28,9 +30,17 @@ func _run() -> void:
 			not session.armorless_run_state.is_active():
 		_fail("The natural Armorless survey requires an isolated run with ordinary, unlocked HP")
 		return
+	# The production run id intentionally uses cryptographic randomness. Replace only
+	# the survey's temporary RNG owners so a fixed survey seed also fixes its drafts.
+	session.loadout._rng.seed = run_seed
+	session.armorless_run_state = ARMORLESS_RUN_STATE.new(run_seed ^ 0xA24B)
+	session.armorless_run_state.begin_run()
+	session._armorless_equipment_generator = EQUIPMENT_GENERATOR.new(run_seed ^ 0x24A2)
 	session._auto_select_first_chest = true
-	session.simulation.set_speed(4.0)
-	Engine.time_scale = 4.0
+	# Keep real-time rates here: fast-forwarding the worker changes how often
+	# the frame-driven kite can react, which changes combat behavior.
+	session.simulation.set_speed(1.0)
+	Engine.time_scale = 1.0
 	var started_at := Time.get_ticks_msec()
 	var next_move_at: float = session.player_active_time
 	var direction_seed := 0
