@@ -8,10 +8,14 @@
 
 ## Build Linux depuis un répertoire CMake vierge — 2026-10-17
 
-- Configuration neuve dans `/tmp/dopamine-p9-linux-clean` avec CMake 3.31.12, GCC 14.2.0 et Godot officiel 4.7.2; FetchContent a récupéré le `godot-cpp` épinglé et généré les 2 135 bindings.
+- Inventaire de cet environnement : CMake 3.31.12, GCC 14.2.0, Godot officiel 4.7.2 (`ed1daf0bf`) et `godot-cpp` `b8530af7546a3fcae80cef2477526569fd42ffc2`.
+- Configuration neuve dans `/tmp/dopamine-p9-linux-clean`; FetchContent a récupéré le commit `godot-cpp` épinglé et généré les 2 135 bindings.
 - `cmake --build /tmp/dopamine-p9-linux-clean --parallel 4` a compilé la simulation, `godot-cpp` et `game/bin/linux/libdopamine.linux.template_debug.x86_64.so` depuis les sources.
 - CTest de ce build propre : **87/87 passent en 60,52 s**, incluant l’import Godot et le smoke de rendu.
-- C’est un build neuf dans le même hôte et le même checkout, pas une machine Linux propre. Le binaire runtime dans `game/bin/linux` est généré/ignoré; Windows et iGPU de référence ne sont pas couverts.
+- C’est un build neuf dans le même hôte et le même checkout, pas un clone propre ni une machine Linux propre. Le dépôt requiert CMake ≥3.21, Git et un compilateur C++23; CMake récupère `godot-cpp`, sans autre dépendance tierce native déclarée. Le projet Godot est nécessaire pour les imports/smokes si son exécutable est détecté par CMake.
+- Les sorties locales (`build/`, `.godot/`, `game/bin/linux/`, `game/bin/windows/`) sont ignorées par Git. Le build/import frais n’a modifié aucun fichier généré suivi; les fichiers UID Godot non suivis éventuels restent hors commit.
+- Sur Linux, `user://` se trouve dans le répertoire utilisateur Godot `app_userdata/Dopamine Survivor` (sous `$XDG_DATA_HOME/godot/`, ou le répertoire de données Godot par défaut). Le code de sauvegarde du jeu range les slots normaux sous `user://saves/` et les données Sandbox sous `user://sandbox/`.
+- Windows et iGPU de référence ne sont pas couverts.
 
 ## Validation d'isolation Sandbox Lab P8.8 — 2026-10-17
 

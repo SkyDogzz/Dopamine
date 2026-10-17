@@ -80,15 +80,15 @@ P6 a déjà du code anticipé, dont la rotation automatique des bonus XP **[VALI
 ### Travaux restants
 
 - [ ] **P0.1 — Inventaire Linux**
-  - [ ] Noter les versions de Godot, CMake, compilateur et dépendance native réellement utilisées.
+  - [x] Noter les versions de Godot, CMake, compilateur et dépendance native du build vierge du 2026-10-17 dans `docs/qa/TESTS.md`.
   - [ ] Vérifier les commandes de clone, configure, build, import et lancement sur un clone propre.
-  - [ ] Documenter où vont les binaires locaux et les données `user://`.
+  - [x] Documenter les répertoires de build/runtime et données `user://` Linux dans `docs/qa/TESTS.md`; `.godot/` et les binaires de plateforme sont ignorés.
 - [ ] **P0.2 — Dépendances**
-  - [ ] Lister les paquets système requis et les dépendances récupérées par CMake.
-  - [ ] Vérifier que le commit de `godot-cpp` reste verrouillé et que la config explique les erreurs de téléchargement.
+  - [x] Consigner les prérequis Linux (CMake ≥3.21, Git, compilateur C++23, Godot pour import/smokes) et la dépendance `godot-cpp` FetchContent dans `docs/qa/TESTS.md`.
+  - [x] Vérifier le SHA `b8530af7546a3fcae80cef2477526569fd42ffc2` dans `CMakeLists.txt` et le build vierge; la procédure de récupération après échec est documentée dans le README.
 - [ ] **P0.3 — Artefacts locaux**
-  - [ ] Vérifier `.gitignore` pour les builds CMake, imports Godot et binaires de runtime.
-  - [ ] Vérifier qu’un import/build ne laisse aucun fichier généré suivi par Git.
+  - [x] Vérifier les exclusions `/build/`, `/game/.godot/`, `/game/bin/linux/` et `/game/bin/windows/`.
+  - [x] Vérifier l’index Git après le build/import frais : aucun artefact généré n’est suivi; des UID Godot non suivis peuvent être produits et restent hors commit.
 - [ ] **P0.4 — Compatibilité Windows**
   - [x] Ajouter `tools/build_windows.ps1`, les entrées Windows debug/release du `.gdextension`, le preset x86_64 et `.github/workflows/build-windows.yml` pour build MSVC et export autonome.
   - [ ] Exécuter le workflow sur un runner Windows et vérifier son artefact; le poste actuel est Linux et n’a pas MSVC/PowerShell.
