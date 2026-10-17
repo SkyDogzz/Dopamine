@@ -356,7 +356,7 @@ Travail requis :
   - [x] Electroplague **[VALIDÉE, 2026-10-17]** : un coup direct de Shock sur Poison propage le même effet à toutes les cibles ennemies vivantes dans un rayon de 60 px, sans plafond; aucun dégât direct, remplacement ou chaîne sur DoT. Implémentation et smoke dans `survival_weapon_catalog_smoke.gd`.
   - [x] Gravity Collapse **[VALIDÉE, 2026-10-17]** : un coup direct d’Impact sur une cible vivante dans le champ Void Orb/Event Horizon provoque immédiatement une explosion centrée sur elle; 50 % des dégâts déclencheurs à toutes les cibles vivantes à 60 px, cible centrale incluse une fois, sans coup direct additionnel ni chaîne. Le prototype accepte les impacts directs des armes hors Void Orb/Event Horizon et réactions **[PROPOSÉ]**; implémentation native bornée par le budget technique partagé et smoke catalogue.
   - [x] Hemorrhage **[VALIDÉ, 2026-10-17]** : un coup critique direct sur une cible Bleed provoque un tick supplémentaire immédiat sans changer sa durée ni chaîner. Le signal de critique explicite est porté par les projectiles/événements; le tick natif conserve l’horloge du statut. Testé dans `survival_weapon_catalog_smoke.gd` et les tests natifs.
-  - [x] Garder Overcharge bloquée par son statut **[OUVERT]**.
+  - [ ] Overcharge **[VALIDÉE, 2026-10-17]** : le déclencheur et la décharge de zone sans chaîne sont décidés; les valeurs de prototype restent **[PROPOSÉES]**. Implémentation en attente du contrat d’application/durée de Shock : aucun statut Shock persistant n’existe actuellement dans le runtime.
 - [x] **P5.2.4 — Causalité et dégâts**
   - [x] Toxic Ignition utilise le numéro séquentiel de l’impact déclencheur comme ID de chaîne et consomme son budget unique; le projectile de réaction et ses événements portent le même ID avec un budget restant de zéro. Un budget épuisé refuse tout nouveau déclenchement. Ces champs sont conservés par les snapshots/restaurations. Les réactions proposées ne reçoivent pas de contrat implicite : elles devront suivre cette règle après validation.
   - [x] Vérifier événements directs, DoT létal, lifesteal, mort et attribution XP sans double crédit; `survival_damage_causality_smoke.gd` compte une seule mort/orbe XP par cible directe et DoT, et `survival_lifesteal_smoke.gd` couvre le soin.
@@ -722,7 +722,7 @@ P1 livre le Sandbox développeur et ne remplace pas cette feature produit.
 
 - Les dix armes + Magnet Heart font onze reliques au total : dix reliques associées et une utilitaire. Cinq slots normaux sont une capacité, pas une taille de catalogue.
 - Les exceptions de capacité Legendary/Mythic v1.5 ne s’activent que si l’effet correspondant fonctionne et suit sa règle de non-cumul.
-- Les réactions entre statuts ne sont pas une autorisation d’implémenter les exemples nommés : ces exemples restent **[PROPOSÉS]** ; Overcharge est **[OUVERT]**.
+- Les réactions nommées encore marquées **[PROPOSÉES]** ne sont pas une autorisation implicite de les implémenter. Overcharge est maintenant **[VALIDÉE]** comme règle, avec ses paramètres de prototype toujours **[PROPOSÉS]**.
 - Les valeurs de progression, poids de loot, chances et patterns des boss demeurent proposés/ouverts tant que les docs ne disent pas explicitement le contraire.
 - Le coffre doit rester hors de tout rayon d’attraction et de collecte de pickup ; code actuel sépare rayon chest et XP. Régression à protéger dès qu’un autre collectible apparaît.
 - Le Prototype P6 existant est anticipé : il ne prouve pas que P5 ou P6 est achevé.
