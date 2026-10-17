@@ -446,6 +446,13 @@
 - [i] Sont masqués : trails, impacts décoratifs, pixels de mort, arcs Lightning et flashs Pandemic. Télégraphes, projectiles, champs persistants, statuts et auras restent visibles. Ce périmètre/default reste **[PROPOSÉ]** et attend une vérification en jeu; le smoke ne constitue pas une évaluation sensorielle.
 - [x] Après ajout du smoke, CTest séquentiel complet : **92/92 passent en 63,46 s**. Le checkout inclut toujours des changements locaux non committés de `survival_session.gd` liés à l’audio et à la collision de zone du boss, qui n’ont pas été inclus dans cette tranche.
 
+## P9.3 — Musique adaptative Survival — 2026-10-17
+
+- [x] Ajout de la boucle synthwave `Space City` de MintoDog, publiée sous CC0 sur OpenGameArt; le fichier et son SHA-256 sont consignés dans `THIRD_PARTY_NOTICES.md`.
+- [x] `adaptive_survival_music.gd` boucle la piste et applique un fondu vers la cible : niveau croissant plafonné selon la vague, accent pendant les boss, atténuation en pause, au choix d’arme/coffre, durant les drafts Armorless et à la fin de run. Ces valeurs sont **[PROPOSÉES]**.
+- [x] `adaptive_survival_music_smoke.gd` vérifie le chargement, la boucle, les cibles de volume et le plafonnement; CTest ciblé passe avec `survival_entry_smoke`, `armorless_session_cycle_smoke` et `endless_standard_session_smoke` : **5/5 tests**, import inclus, en 4,72 s.
+- [ ] Le mix n’a pas été écouté sur haut-parleurs/casque ni validé sur les plateformes de livraison; les niveaux restent à régler.
+
 ## P9.4 — Commandes de l’écran de résultat — 2026-10-17
 
 - `run_result_panel_smoke.gd` utilise Entrée sur Recommencer, D-pad pour atteindre Quitter, A pour émettre la demande de navigation, puis B et Échap pour la fermeture. Aucun callback ne redémarre une run ou ne crédite une récompense dans ce test de présentation.

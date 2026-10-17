@@ -491,6 +491,7 @@ var _pending_armorless_draft_waves: Array[int] = []
 @onready var _pause_options_button: Button = $HUD/PauseOverlay/Center/Panel/Content/OptionsButton
 @onready var _pause_inventory_button: Button = $HUD/PauseOverlay/Center/Panel/Content/InventoryButton
 @onready var _settings_service: SettingsService = get_node_or_null("/root/Settings") as SettingsService
+@onready var _adaptive_music: Node = $AdaptiveMusic
 @onready var _pause_abandon_button: Button = $HUD/PauseOverlay/Center/Panel/Content/AbandonButton
 @onready var _abandon_confirmation: Control = $HUD/PauseOverlay/ConfirmationOverlay
 @onready var _abandon_cancel_button: Button = $HUD/PauseOverlay/ConfirmationOverlay/Center/Panel/Content/CancelButton
@@ -833,6 +834,12 @@ func _confirm_abandon_run() -> void:
 func _process(_delta: float) -> void:
 	if simulation == null:
 		return
+	if wave_director != null:
+		var boss_active: bool = wave_director.state in [WAVE_DIRECTOR_SCRIPT.State.MID_BOSS,
+				WAVE_DIRECTOR_SCRIPT.State.FINAL_BOSS]
+		_adaptive_music.set_context(wave_director.wave, boss_active,
+				not run_over and not _manually_paused and not _chest_open and
+				not _starting_weapon_choice_open and _pending_armorless_draft_waves.is_empty())
 	if mode_id == "armorless" and not run_over and not _manually_paused and \
 			not _chest_open and not _pending_armorless_draft_waves.is_empty():
 		_open_next_armorless_draft()

@@ -60,4 +60,6 @@ SOFTWARE.
 
 ## Game assets
 
-The art inventory describes the current sprite, icon, and UI assets and their editable sources in [`docs/art/INVENTAIRE_ASSETS_UI.md`](docs/art/INVENTAIRE_ASSETS_UI.md). That inventory is not a substitute for a final provenance review of every release asset. Audio assets are not audited by this file; merge their owner's notice and provenance record before release.
+- **Space City** — MintoDog, loop synthwave `game/assets/audio/music/space_city_bpm115.ogg`, publié sur [OpenGameArt](https://opengameart.org/content/space-city) sous Creative Commons Zero (CC0); la page source décrit le morceau comme loopable. Empreinte SHA-256 : `6ecb8408cd84b1031425e8f1b941d7a89ab8a850cea2833ac2e005f76544d7a7`. CC0 ne requiert pas d’attribution; cette mention conserve la provenance du fichier.
+
+The art inventory describes the current sprite, icon, and UI assets and their editable sources in [`docs/art/INVENTAIRE_ASSETS_UI.md`](docs/art/INVENTAIRE_ASSETS_UI.md). That inventory is not a substitute for a final provenance review of every release asset. This file records the currently identified music loop; a complete provenance review of every delivered audio asset remains open.

@@ -16,6 +16,8 @@ L’autoload Godot `Settings` (`SettingsService`) expose `fullscreen_enabled`, `
 
 L’autoload `Sfx` expose `play(family: String)` pour les effets courts sous `res://assets/audio/sfx/`. Il fait tourner les variantes d’une famille, limite les répétitions et plafonne la lecture à huit voix; en cas de saturation, une voix de priorité inférieure peut être remplacée par un feedback important. `UIFeedback` joue les retours de focus, validation et annulation. Survival relie armes, impacts, morts, XP, récompenses, niveaux et télégraphes aux mêmes familles; le Sandbox utilise aussi les retours de combat, sans accès ni effet sur la progression ou les sauvegardes normales. Le volume passe par le bus `Master` déjà contrôlé par `Settings`.
 
+`AdaptiveSurvivalMusic` est un enfant local de `SurvivalSession`; il boucle la piste CC0 référencée dans `THIRD_PARTY_NOTICES.md` et expose `set_context(wave: int, boss_active: bool, gameplay_active: bool)`. Le niveau monte doucement avec les vagues, reçoit un accent pendant les combats de boss et descend vers le silence pendant pause, choix de départ/coffre, draft Armorless et fin de run. Les gains et la vitesse de fondu restent **[PROPOSÉS]**, à régler par écoute sur le mix et les plateformes retenues. Le Lab peut jouer cette présentation, mais le service ne lit ni n’écrit aucune sauvegarde et n’est pas raccordé à la progression.
+
 ## Contrat natif P1 implémenté
 
 `SimulationCore` reste indépendant de Godot et appartient exclusivement à `SimulationWorker`. Le worker possède le thread de simulation ; aucun Node ni élément du `SceneTree` n'est accédé depuis ce thread.
