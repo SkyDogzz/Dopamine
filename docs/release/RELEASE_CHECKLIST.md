@@ -40,7 +40,7 @@
 - [x] Décision utilisateur **[VALIDÉE, 2026-10-17] — réponse A** : remplacer ou exclure avant release chaque visuel sans provenance/droits vérifiables. Le registre contient 165 fichiers; inspection du PCK Linux/X11 confirme 63 exclusions inactives et 102 fichiers requis toujours inclus.
 - [x] Remplacer les 58 PNG actifs associés à une source C2PA **Invalid** par des formes pixel générées depuis le code interne, sans image de référence externe. Les sources Aseprite et hashes du générateur sont dans `game/assets/source/original_procedural/` et `docs/art/PROVENANCE_ASSETS.csv`.
 - [x] Faire un premier screening visuel en planche des 43 PNG associés à des sources **Trusted** : aucun logo de tiers ni personnage reconnaissable détecté. Le contrôle ne vaut pas clearance juridique; la base contractuelle d’ownership de sortie et les limites C2PA sont documentées dans [`../art/INVENTAIRE_ASSETS_UI.md`](../art/INVENTAIRE_ASSETS_UI.md).
-- [ ] Vérifier en jeu lisibilité, contraste et cohérence des nouveaux sprites.
+- [ ] Terminer la revue visuelle P9.8 sur les écrans cibles : la revue automatisée Linux logiciel couvre maintenant les planches générées et le combat dense (voir `../qa/TESTS.md`), mais ne vérifie pas tous les écrans/états ni le rendu sur matériel réel.
 - [x] Décision utilisateur **[VALIDÉE, 2026-10-17] — réponse A** : garder l’audio actuel comme candidate de release.
 - [x] Vérifier mécaniquement les 38 WAV SFX utilisés par `Sfx` contre le manifeste, leurs formats et leurs durées; consigner leurs recettes, le renderer et les licences identifiées dans `THIRD_PARTY_NOTICES.md`.
 - [ ] Auditer à l’écoute le mix et les niveaux des sons effectivement livrés, y compris les priorités en combat dense, sur haut-parleurs/casque réels.
