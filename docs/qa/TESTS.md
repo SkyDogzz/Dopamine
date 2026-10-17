@@ -171,6 +171,12 @@
 - [x] Trois seeds indépendants sous Godot 4.7.2 headless, sans invincibilité : survie 34,05 / 46,46 / 44,15 s; vagues atteintes 2 / 2 / 2; éliminations 3 / 6 / 11; DPS sortant 4,24 / 4,09 / 7,36; distance 8 304 / 11 168 / 10 608 unités. Les trois runs finissent par défaite, sans récompense persistée.
 - [ ] Il s’agit d’un contrôleur déterministe simplifié, pas d’un parcours humain ou d’un évitement complet. Trois runs Easy sur un profil ne suffisent pas au calibrage; aucune valeur **[PROPOSÉE]** n’a été modifiée et P6.9 reste ouvert.
 
+### Recontrôle Easy/kite — profil neuf — 2026-10-17
+
+- [x] Nouvelle exécution sous Godot 4.7.2 headless, `XDG_DATA_HOME` isolé, ×4 simulation/moteur, sans invincibilité ni kills scriptés, mêmes paramètres que le parcours kite ci-dessus.
+- [x] Trois répétitions : 73,50 / 43,07 / 52,23 s simulées, vagues 3 / 2 / 2, éliminations 14 / 3 / 12, niveaux XP 5 / 2 / 4, DPS 3,91 / 3,71 / 5,68. Toutes finissent en défaite, `boss_defeated=false`, avec 100 PV de perte cumulée.
+- [x] Un lancement séparé du même replicate 1 a donné 39,76 s, vague 2, 6 kills et 3,80 DPS; les valeurs varient malgré le même scénario nominal. Ensemble avec le relevé précédent (34,05 / 46,46 / 44,15 s), cela confirme une forte dispersion du harness/runtime. Cet échantillon ne modifie aucun paramètre **[PROPOSÉ]** et n’est pas une validation de difficulté par un joueur humain.
+
 ### Matrice multi-profil kite — 2026-10-17
 
 - [x] Reproduction : `DOPAMINE_TEST_TIMEOUT=1800s tools/run_godot_test.sh tools/local/godot-4.7.2/Godot_v4.7.2-stable_linux.x86_64 --headless --path game --script res://tests/progression_balance_survey.gd -- --tier=all --difficulty=all --movement=kite --replicates=3`.
