@@ -406,6 +406,7 @@ var _pending_lifesteal := 0.0
 var _cached_persistent_damage_multiplier := 1.0
 var _cached_skill_move_speed_pct := 0.0
 var _cached_skill_critical_chance_pct := 0.0
+var _last_attack_critical_hit := false
 var _cached_equipment_bonuses: Dictionary = {}
 var _cached_skill_stat_bonuses: Dictionary = {}
 var _cached_achievement_stat_bonuses: Dictionary = {}
@@ -838,6 +839,7 @@ func _process(_delta: float) -> void:
 				_try_toxic_ignition(event, current_simulation_time)
 				_try_electroplague(event, state["entities"])
 				_try_gravity_collapse(event, state["entities"])
+				_try_hemorrhage(event)
 				_try_shatter(event, state["entities"])
 				_add_weapon_impact(source_type, Vector2(float(event["position"]["x"]), float(event["position"]["y"])),
 						bool(event.get("is_damage_over_time", false)))
@@ -2297,12 +2299,15 @@ func _fire_lightning_conductor(active_time: float, paused: bool) -> void:
 		"reserved_ids": [target["id"]],
 		"remaining": chain_count - 1,
 		"next_damage": lightning_damage * damage_multiplier * lightning_chain_damage_multiplier,
+		"critical_hit": _last_attack_critical_hit,
 		"expires_at": active_time + lightning_projectile_lifetime,
 	}
 	var projectile_sequence: int = simulation.spawn_projectile(
 		"lightning_primary:%s" % chain_id, player.global_position + direction * 14.0,
 		direction * _equipment_projectile_speed(lightning_projectile_speed), lightning_damage * damage_multiplier,
-		_equipment_area(lightning_projectile_radius), lightning_projectile_lifetime
+		_equipment_area(lightning_projectile_radius), lightning_projectile_lifetime,
+		2.0, 0.5, 2.0, 0.0, 0.0, 0, 0.0, 0.0, false, 0.0, 1.0, 1.0, 0.0, 0, 1,
+		_last_attack_critical_hit
 	)
 	if projectile_sequence <= 0:
 		_lightning_chain_states.erase(chain_id)
@@ -2542,6 +2547,16 @@ func _try_gravity_collapse(event: Dictionary, entities: Array) -> int:
 			0.0, 0.15, 0.0, 0.0, 0.0, GRAVITY_COLLAPSE_RADIUS, 1.0,
 			0, 0.0, 0.0, false, 0.0, 1.0, 1.0, 0.0, reaction_chain_id, 0)
 
+func _try_hemorrhage(event: Dictionary) -> int:
+	if bool(event.get("is_damage_over_time", false)) or not bool(event.get("critical_hit", false)) or \
+			not bool(event.get("target_had_bleed", false)) or float(event.get("amount", 0.0)) <= 0.0:
+		return 0
+	var target: Dictionary = event.get("target", {})
+	if target.is_empty():
+		return 0
+	return simulation.tick_damage_over_time(int(target.get("index", -1)),
+			int(target.get("generation", -1)), "bleed")
+
 func _advance_lightning_chain(event: Dictionary, entities: Array, active_time: float) -> void:
 	var source_parts := str(event.get("source_type", "")).split(":", false, 1)
 	if source_parts.size() != 2 or not ["lightning_primary", "lightning_arc"].has(source_parts[0]):
@@ -2582,7 +2597,9 @@ func _advance_lightning_chain(event: Dictionary, entities: Array, active_time: f
 	var damage := float(chain["next_damage"])
 	var sequence: int = simulation.spawn_projectile("lightning_arc:%s" % chain_id, arc_origin,
 		direction * _equipment_projectile_speed(lightning_projectile_speed), damage,
-		_equipment_area(lightning_projectile_radius), lightning_projectile_lifetime)
+		_equipment_area(lightning_projectile_radius), lightning_projectile_lifetime,
+		2.0, 0.5, 2.0, 0.0, 0.0, 0, 0.0, 0.0, false, 0.0, 1.0, 1.0, 0.0, 0, 1,
+		bool(chain.get("critical_hit", false)))
 	if sequence <= 0:
 		_lightning_chain_states.erase(chain_id)
 		return
@@ -2618,7 +2635,9 @@ func _fire_infinite_circuit(active_time: float, target_budget: int, damage_multi
 			root_direction = Vector2.RIGHT
 		if simulation.spawn_projectile("lightning_conductor", player.global_position + root_direction * 14.0,
 				root_direction * _equipment_projectile_speed(lightning_projectile_speed), lightning_damage * damage_multiplier,
-				_equipment_area(lightning_projectile_radius), lightning_projectile_lifetime) <= 0:
+				_equipment_area(lightning_projectile_radius), lightning_projectile_lifetime,
+				2.0, 0.5, 2.0, 0.0, 0.0, 0, 0.0, 0.0, false, 0.0, 1.0, 1.0, 0.0, 0, 1,
+				_last_attack_critical_hit) <= 0:
 			continue
 		fired = true
 		target_count += 1
@@ -2637,7 +2656,9 @@ func _fire_infinite_circuit(active_time: float, target_budget: int, damage_multi
 					var branch_offset := minf(4.0, parent_position.distance_to(child["position"]) * 0.25)
 					if simulation.spawn_projectile("infinite_circuit_branch", parent_position + direction * branch_offset,
 							direction * _equipment_projectile_speed(lightning_projectile_speed), lightning_damage * damage_multiplier,
-							_equipment_area(lightning_projectile_radius), lightning_projectile_lifetime) <= 0:
+							_equipment_area(lightning_projectile_radius), lightning_projectile_lifetime,
+							2.0, 0.5, 2.0, 0.0, 0.0, 0, 0.0, 0.0, false, 0.0, 1.0, 1.0, 0.0, 0, 1,
+							_last_attack_critical_hit) <= 0:
 						continue
 					used_ids.append(child["id"])
 					next_frontier.append(child)
@@ -2720,7 +2741,8 @@ func _fire_inferno_sprayer(active_time: float, paused: bool) -> void:
 			direction * _equipment_projectile_speed(inferno_projectile_speed), damage, _equipment_area(projectile_radius),
 			inferno_projectile_lifetime, burn_damage * _weapon_combo_damage_multiplier("inferno_sprayer") * _persistent_damage_multiplier(),
 			inferno_burn_interval_seconds, inferno_burn_duration_seconds,
-			explosion_radius, explosion_multiplier)
+			explosion_radius, explosion_multiplier, 0, 0.0, 0.0, false, 0.0, 1.0, 1.0, 0.0, 0, 1,
+			_last_attack_critical_hit)
 	if projectile_sequence > 0:
 		Sfx.play("weapon_shot")
 		_try_unique_lightning_burst(damage)
@@ -2764,7 +2786,8 @@ func _fire_crimson_daggers(active_time: float, paused: bool) -> void:
 		if simulation.spawn_status_projectile(projectile_type, player.global_position + shot_direction * 14.0,
 				shot_direction * _equipment_projectile_speed(daggers_projectile_speed), damage, _equipment_area(daggers_projectile_radius),
 				projectile_lifetime, status_damage * _persistent_damage_multiplier() * _weapon_combo_damage_multiplier("crimson_daggers"),
-				status_interval, status_duration, 0.0, 0.0, 0, 0.0, 0.0, true, 0.0, 1.0, 1.0, orbit_speed) > 0:
+				status_interval, status_duration, 0.0, 0.0, 0, 0.0, 0.0, true, 0.0, 1.0, 1.0, orbit_speed,
+				0, 1, _last_attack_critical_hit) > 0:
 			fired += 1
 	if fired > 0:
 		Sfx.play("weapon_sweep")
@@ -2802,7 +2825,9 @@ func _fire_minigun(active_time: float, paused: bool) -> void:
 	var projectile_type := "redline" if loadout.is_evolved("minigun") else "minigun"
 	if simulation.spawn_projectile(projectile_type, player.global_position + direction * 14.0,
 			direction * _equipment_projectile_speed(minigun_projectile_speed), damage,
-			_equipment_area(minigun_projectile_radius), minigun_projectile_lifetime) <= 0:
+			_equipment_area(minigun_projectile_radius), minigun_projectile_lifetime,
+			2.0, 0.5, 2.0, 0.0, 0.0, 0, 0.0, 0.0, false, 0.0, 1.0, 1.0, 0.0, 0, 1,
+			_last_attack_critical_hit) <= 0:
 		return
 	Sfx.play("weapon_shot")
 	if loadout.is_evolved("minigun"):
@@ -2833,7 +2858,8 @@ func _fire_toxic_cloud(active_time: float, paused: bool) -> void:
 		toxic_impact_damage * _weapon_combo_damage_multiplier("toxic_cloud") * _persistent_damage_multiplier() * _roll_equipment_critical_multiplier(),
 		_equipment_area(toxic_projectile_radius), toxic_projectile_lifetime,
 		toxic_damage_per_tick * dot_multiplier * _persistent_damage_multiplier(), toxic_tick_interval_seconds, duration,
-		cloud_radius, toxic_splash_damage_multiplier)
+		cloud_radius, toxic_splash_damage_multiplier, 0, 0.0, 0.0, false, 0.0, 1.0, 1.0, 0.0, 0, 1,
+		_last_attack_critical_hit)
 	if sequence > 0:
 		Sfx.play("weapon_zap")
 		_next_toxic_time = active_time + _effective_weapon_cooldown(toxic_cooldown)
@@ -2857,7 +2883,8 @@ func _fire_sawblades(active_time: float, paused: bool) -> void:
 		direction * _equipment_projectile_speed(projectile_speed),
 		sawblades_damage * damage_multiplier * _weapon_combo_damage_multiplier("sawblades") * _persistent_damage_multiplier() * _roll_equipment_critical_multiplier(),
 		_equipment_area(sawblades_projectile_radius), sawblades_projectile_lifetime,
-		2.0, 0.5, 2.0, 0.0, 0.0, ricochets)
+		2.0, 0.5, 2.0, 0.0, 0.0, ricochets, 0.0, 0.0, false, 0.0, 1.0, 1.0, 0.0, 0, 1,
+		_last_attack_critical_hit)
 	if sequence > 0:
 		Sfx.play("weapon_sweep")
 		_next_sawblades_time = active_time + _effective_weapon_cooldown(sawblades_cooldown)
@@ -2883,7 +2910,8 @@ func _fire_meteor_staff(active_time: float, paused: bool) -> void:
 				direction * _equipment_projectile_speed(meteor_staff_projectile_speed),
 				meteor_staff_damage * damage_multiplier * _weapon_combo_damage_multiplier("meteor_staff") * _persistent_damage_multiplier() * _roll_equipment_critical_multiplier(),
 				_equipment_area(meteor_staff_projectile_radius), meteor_staff_projectile_lifetime,
-				2.0, 0.5, 2.0, _equipment_area(blast_radius), meteor_staff_splash_damage_multiplier) > 0:
+				2.0, 0.5, 2.0, _equipment_area(blast_radius), meteor_staff_splash_damage_multiplier,
+				0, 0.0, 0.0, false, 0.0, 1.0, 1.0, 0.0, 0, 1, _last_attack_critical_hit) > 0:
 			fired = true
 	if fired:
 		Sfx.play("weapon_shot")
@@ -2939,7 +2967,9 @@ func _fire_prism_laser(active_time: float, paused: bool) -> void:
 		var prism_sequence: int = simulation.spawn_projectile(projectile_type, player.global_position + direction * 14.0,
 				direction * prism_laser_projectile_speed,
 				prism_laser_damage * damage_multiplier * _persistent_damage_multiplier() * critical * (0.65 if secondary_beam else 1.0),
-				prism_laser_projectile_radius, laser_range / prism_laser_projectile_speed)
+				prism_laser_projectile_radius, laser_range / prism_laser_projectile_speed,
+				2.0, 0.5, 2.0, 0.0, 0.0, 0, 0.0, 0.0, false, 0.0, 1.0, 1.0, 0.0, 0, 1,
+				_last_attack_critical_hit)
 		if prism_sequence > 0:
 			fired = true
 	if fired:
@@ -2967,7 +2997,8 @@ func _fire_void_orb(active_time: float, paused: bool) -> void:
 			direction * _equipment_projectile_speed(void_orb_speed),
 			void_orb_damage * damage_multiplier * _persistent_damage_multiplier() * _roll_equipment_critical_multiplier(),
 			_equipment_area(void_orb_radius), lifetime, 2.0, 0.5, 2.0, 0.0, 0.0, 0,
-			_equipment_area(attraction_radius), attraction_speed, true)
+			_equipment_area(attraction_radius), attraction_speed, true, 0.0, 1.0, 1.0, 0.0, 0, 1,
+			_last_attack_critical_hit)
 	if sequence > 0:
 		Sfx.play("weapon_zap")
 		_next_void_orb_time = active_time + _effective_weapon_cooldown(void_orb_cooldown)
@@ -3056,11 +3087,14 @@ func _spawn_starfall_fragments(origin: Vector2, primary_target: Dictionary, enti
 		var direction: Vector2 = (candidates[index]["position"] - origin).normalized()
 		if direction == Vector2.ZERO:
 			continue
+		var critical_damage := _roll_equipment_critical_multiplier()
 		simulation.spawn_projectile("starfall_fragment", origin + direction * 22.0,
 				direction * _equipment_projectile_speed(meteor_staff_projectile_speed * 1.25),
 				meteor_staff_damage * starfall_fragment_damage_multiplier * _weapon_combo_damage_multiplier("meteor_staff") * _persistent_damage_multiplier() *
-						_roll_equipment_critical_multiplier(), _equipment_area(meteor_staff_projectile_radius * 0.65),
-					meteor_staff_projectile_lifetime)
+						critical_damage, _equipment_area(meteor_staff_projectile_radius * 0.65),
+				meteor_staff_projectile_lifetime,
+				2.0, 0.5, 2.0, 0.0, 0.0, 0, 0.0, 0.0, false, 0.0, 1.0, 1.0, 0.0, 0, 1,
+				_last_attack_critical_hit)
 
 func _spread_pandemic(origin: Vector2, entities: Array) -> void:
 	var status_damage := toxic_damage_per_tick * (1.0 + (0.2 if loadout.weapon_level("toxic_cloud") >= 2 else 0.0) +
@@ -3172,7 +3206,9 @@ func _random_float_range(from: float, to: float, purpose: String) -> float:
 func _roll_equipment_critical_multiplier() -> float:
 	var chance := _critical_chance()
 	if _random_float("critical_hit_roll") * 100.0 < chance:
+		_last_attack_critical_hit = true
 		return 1.5 + (_equipment_bonus("critical_damage_pct") + loadout.global_relic_bonus("critical_damage_pct") + _xp_run_stat_bonus("critical_damage_pct")) / 100.0
+	_last_attack_critical_hit = false
 	return 1.0
 
 func _critical_chance() -> float:

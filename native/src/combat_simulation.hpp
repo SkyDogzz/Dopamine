@@ -30,7 +30,7 @@ public:
 			bool pierces_targets = false, double chill_duration_seconds = 0.0,
 			float chill_speed_multiplier = 1.0F, float chill_damage_multiplier = 1.0F,
 			float orbit_angular_speed = 0.0F, int64_t reaction_chain_id = 0,
-			int64_t reaction_budget = 1);
+			int64_t reaction_budget = 1, bool critical_hit = false);
 	int64_t spawn_status_projectile(String projectile_type, Vector2 position, Vector2 velocity, float damage,
 			float radius, double lifetime_seconds, float status_damage_per_tick = 2.0F,
 			double status_interval_seconds = 0.5, double status_duration_seconds = 2.0,
@@ -39,7 +39,7 @@ public:
 			bool pierces_targets = false, double chill_duration_seconds = 0.0,
 			float chill_speed_multiplier = 1.0F, float chill_damage_multiplier = 1.0F,
 			float orbit_angular_speed = 0.0F, int64_t reaction_chain_id = 0,
-			int64_t reaction_budget = 1);
+			int64_t reaction_budget = 1, bool critical_hit = false);
 	int64_t spawn_xp_orb(Vector2 position, float xp_value);
 	int64_t attract_xp_orbs(Vector2 target, float radius, float acceleration, float max_speed,
 		double delta_seconds);
@@ -47,6 +47,7 @@ public:
 	int64_t collect_xp_orb(int64_t index, int64_t generation);
 	int64_t apply_damage_over_time(int64_t index, int64_t generation, float damage_per_tick,
 			double interval_seconds, double duration_seconds, String status_type = String("generic"));
+	int64_t tick_damage_over_time(int64_t index, int64_t generation, String status_type);
 	int64_t despawn(int64_t index, int64_t generation);
 	int64_t kill_all();
 	int64_t pause();

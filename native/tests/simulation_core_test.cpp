@@ -322,6 +322,21 @@ int main() {
 	require(piercing_events.size() == 2 && piercing_events[0].target == first_orb_target &&
 			piercing_events[1].target == second_orb_target && piercing_orb_state.has_value(),
 			"a piercing Void Orb should damage each target once and remain active after impacts");
+	SimulationCore critical_projectile;
+	const auto critical_target = critical_projectile.spawn("test_target", 0.0F, 0.0F, 30.0F, 0.0F, 0.0F);
+	require(critical_projectile.apply_damage_over_time(critical_target, 2.0F, 1.0, 3.0, "bleed"),
+			"critical metadata test should start with a Bleed effect");
+	const auto critical_projectile_id = critical_projectile.spawn_projectile("test_critical", 0.0F, 0.0F, 4.0F, 1.0F, 1.0,
+			0.0F, 0.0F, 2.0F, 0.5, 2.0, 0.0F, 0.0F, 0, 0.0F, 0.0F,
+			false, 0.0, 1.0F, 1.0F, 0.0F, 0, 1, true);
+	SimulationCore restored_critical_projectile;
+	restored_critical_projectile.restore_state(critical_projectile.capture_state());
+	require(restored_critical_projectile.entity(critical_projectile_id)->projectile.critical_hit,
+			"critical-hit metadata should survive native simulation snapshots");
+	const auto critical_events = critical_projectile.advance(0.01);
+	require(critical_events.size() == 1 && critical_events.front().target == critical_target &&
+			critical_events.front().critical_hit && critical_events.front().target_had_bleed,
+			"direct damage events should preserve explicit critical and Bleed metadata");
 
 	SimulationCore crimson_daggers;
 	const auto crimson_dagger_id = crimson_daggers.spawn_projectile("crimson_dagger", 14.0F, 0.0F,
@@ -347,6 +362,20 @@ int main() {
 	const auto bloodstorm_id = bloodstorm.spawn_projectile("bloodstorm_dagger", 14.0F, 0.0F,
 			5.0F, 2.5F, 2.4, 0.0F, 0.0F, 1.0F, 0.5, 2.0,
 			0.0F, 0.0F, 0, 0.0F, 0.0F, true);
+	SimulationCore hemorrhage_tick;
+	const auto hemorrhage_target = hemorrhage_tick.spawn("test_target", 0.0F, 0.0F, 100.0F, 0.0F, 0.0F);
+	require(hemorrhage_tick.apply_damage_over_time(hemorrhage_target, 4.0F, 1.0, 5.0, "bleed"),
+			"Hemorrhage test should apply an existing Bleed");
+	const auto bleed_before_tick = hemorrhage_tick.entity(hemorrhage_target)->damage_over_time_effects.front();
+	std::vector<dopamine::sim::CombatEvent> hemorrhage_events;
+	require(hemorrhage_tick.tick_damage_over_time(hemorrhage_target, "bleed", hemorrhage_events),
+			"Hemorrhage should apply one immediate tick from an existing Bleed");
+	const auto bleed_after_tick = hemorrhage_tick.entity(hemorrhage_target)->damage_over_time_effects.front();
+	require(hemorrhage_events.size() == 1 && hemorrhage_events.front().is_damage_over_time &&
+			hemorrhage_events.front().status_type == "bleed" && hemorrhage_events.front().amount == 4.0F &&
+			bleed_after_tick.remaining_seconds == bleed_before_tick.remaining_seconds &&
+			bleed_after_tick.time_to_tick == bleed_before_tick.time_to_tick,
+			"an immediate Bleed tick should preserve both its remaining duration and tick clock");
 	bloodstorm.steer_enemies_towards(0.0F, 0.0F);
 	for (int step = 0; step < 16; ++step) {
 		bloodstorm.advance(0.1);

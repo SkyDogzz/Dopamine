@@ -4,6 +4,9 @@ func _initialize() -> void:
 	call_deferred("_run")
 
 func _run() -> void:
+	if not await _hemorrhage_adds_one_bleed_tick_without_refreshing_duration():
+		_fail("A direct critical hit on a bleeding enemy should add one Bleed tick without refreshing its duration, while DoT and non-critical hits do nothing")
+		return
 	if not await _thermal_shock_combines_burn_and_chill_once():
 		_fail("Thermal Shock should trigger from direct Burn/Chill combinations, obey cooldown, and ignore DoT ticks")
 		return
@@ -117,6 +120,63 @@ func _run() -> void:
 		return
 	print("Survival weapon catalog smoke passed")
 	quit()
+
+func _hemorrhage_adds_one_bleed_tick_without_refreshing_duration() -> bool:
+	var session: Node2D = load("res://scenes/survival_session.tscn").instantiate()
+	session.spawn_initial_enemy = false
+	session.wave_spawning_enabled = false
+	session.weapon_enabled = false
+	session.skip_starting_weapon_choice = true
+	session.contact_damage_per_hit = 0.0
+	root.add_child(session)
+	await process_frame
+	session.simulation.pause()
+	session.simulation.spawn("test_target", 1, Vector2(200.0, 0.0), 100.0, Vector2.ZERO)
+	var target_id: Dictionary = {}
+	var deadline := Time.get_ticks_msec() + 2000
+	while Time.get_ticks_msec() < deadline and target_id.is_empty():
+		await process_frame
+		for entity in session.simulation.snapshot()["entities"]:
+			if str(entity["components"].get("EnemyType", "")) == "test_target":
+				target_id = entity["id"]
+				break
+	if target_id.is_empty() or session.simulation.apply_damage_over_time(
+			int(target_id["index"]), int(target_id["generation"]), 3.0, 1.0, 5.0, "bleed") <= 0:
+		session.queue_free()
+		return false
+	if not await _wait_for_status(session, target_id, "bleed"):
+		session.queue_free()
+		return false
+	var before: Dictionary = {}
+	for entity in session.simulation.snapshot()["entities"]:
+		if entity["id"] == target_id:
+			before = entity
+			break
+	var before_health := float(before["components"]["Health"]["current"])
+	var before_bleed: Dictionary = before["components"]["DamageOverTime"]
+	if session._try_hemorrhage({"critical_hit": true, "target_had_bleed": true,
+			"amount": 9.0, "target": target_id, "is_damage_over_time": false}) <= 0:
+		session.queue_free()
+		return false
+	var ticked := false
+	deadline = Time.get_ticks_msec() + 2000
+	while Time.get_ticks_msec() < deadline and not ticked:
+		await process_frame
+		for entity in session.simulation.snapshot()["entities"]:
+			if entity["id"] == target_id:
+				ticked = float(entity["components"]["Health"]["current"]) == before_health - 3.0
+				break
+	var unchanged := false
+	for entity in session.simulation.snapshot()["entities"]:
+		if entity["id"] == target_id:
+			unchanged = entity["components"]["DamageOverTime"] == before_bleed
+			break
+	var rejected_non_crit: int = session._try_hemorrhage({"critical_hit": false,
+		"target_had_bleed": true, "amount": 9.0, "target": target_id})
+	var rejected_dot: int = session._try_hemorrhage({"critical_hit": true,
+		"target_had_bleed": true, "amount": 3.0, "target": target_id, "is_damage_over_time": true})
+	session.queue_free()
+	return ticked and unchanged and rejected_non_crit == 0 and rejected_dot == 0
 
 func _shatter_reacts_to_approved_direct_impacts_only() -> bool:
 	var session: Node2D = load("res://scenes/survival_session.tscn").instantiate()

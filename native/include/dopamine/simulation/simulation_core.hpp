@@ -129,6 +129,7 @@ struct ProjectileData {
 	double orbit_angle = 0.0;
 	uint64_t reaction_chain_id = 0;
 	uint32_t reaction_budget = 1;
+	bool critical_hit = false;
 };
 
 struct DamageOverTime {
@@ -174,8 +175,10 @@ struct CombatEvent {
 	bool target_was_chilled = false;
 	bool target_had_burn = false;
 	bool target_had_poison = false;
+	bool target_had_bleed = false;
 	uint64_t reaction_chain_id = 0;
 	uint32_t reaction_budget = 1;
+	bool critical_hit = false;
 };
 
 struct Entity {
@@ -219,13 +222,14 @@ public:
 			bool pierces_targets = false, double chill_duration_seconds = 0.0,
 			float chill_speed_multiplier = 1.0F, float chill_damage_multiplier = 1.0F,
 			float orbit_angular_speed = 0.0F, uint64_t reaction_chain_id = 0,
-			uint32_t reaction_budget = 1);
+			uint32_t reaction_budget = 1, bool critical_hit = false);
 	EntityId spawn_xp_orb(float x, float y, float xp_value);
 	void attract_xp_orbs(float target_x, float target_y, float radius, float acceleration,
 			float max_speed, double delta_seconds);
 	void stop_xp_orb_attraction();
 	bool apply_damage_over_time(EntityId target, float damage_per_tick, double interval_seconds,
 			double duration_seconds, std::string status_type = "generic");
+	bool tick_damage_over_time(EntityId target, std::string_view status_type, std::vector<CombatEvent> &events);
 	bool apply_chill(EntityId target, double duration_seconds, float speed_multiplier,
 		float damage_taken_multiplier = 1.0F);
 	bool dash_entity(EntityId target, float velocity_x, float velocity_y, double duration_seconds);
@@ -265,7 +269,8 @@ private:
 			float radius, SpatialHashConfig config) const;
 	void apply_damage(EntityId source, EntityId target, float amount,
 			std::vector<CombatEvent> &events, std::vector<EntityId> &deferred_despawns,
-			std::size_t &volatile_targets_remaining, bool allow_volatile_explosion = true);
+			std::size_t &volatile_targets_remaining, bool allow_volatile_explosion = true,
+			bool is_damage_over_time = false, std::string_view status_type = {});
 	void resolve_enemy_body_collisions(const std::vector<Transform2D> &previous_transforms);
 	std::vector<Slot> slots_;
 	std::vector<Transform2D> transforms_;

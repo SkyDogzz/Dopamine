@@ -16,10 +16,10 @@ void CombatSimulation::_bind_methods() {
 			&CombatSimulation::spawn, DEFVAL(1.0));
 	ClassDB::bind_method(D_METHOD("spawn_enemy", "enemy_type", "count", "position", "velocity", "hp_multiplier", "affix"),
 			&CombatSimulation::spawn_enemy, DEFVAL(1.0), DEFVAL(String()));
-	ClassDB::bind_method(D_METHOD("spawn_projectile", "projectile_type", "position", "velocity", "damage", "radius", "lifetime_seconds", "burn_damage_per_tick", "burn_interval_seconds", "burn_duration_seconds", "explosion_radius", "explosion_damage_multiplier", "ricochets", "attraction_radius", "attraction_speed", "pierces_targets", "chill_duration_seconds", "chill_speed_multiplier", "chill_damage_multiplier", "orbit_angular_speed", "reaction_chain_id", "reaction_budget"),
-			&CombatSimulation::spawn_projectile, DEFVAL(2.0), DEFVAL(0.5), DEFVAL(2.0), DEFVAL(0.0), DEFVAL(0.0), DEFVAL(0), DEFVAL(0.0), DEFVAL(0.0), DEFVAL(false), DEFVAL(0.0), DEFVAL(1.0), DEFVAL(1.0), DEFVAL(0.0), DEFVAL(0), DEFVAL(1));
-	ClassDB::bind_method(D_METHOD("spawn_status_projectile", "projectile_type", "position", "velocity", "damage", "radius", "lifetime_seconds", "status_damage_per_tick", "status_interval_seconds", "status_duration_seconds", "explosion_radius", "explosion_damage_multiplier", "ricochets", "attraction_radius", "attraction_speed", "pierces_targets", "chill_duration_seconds", "chill_speed_multiplier", "chill_damage_multiplier", "orbit_angular_speed", "reaction_chain_id", "reaction_budget"),
-			&CombatSimulation::spawn_status_projectile, DEFVAL(2.0), DEFVAL(0.5), DEFVAL(2.0), DEFVAL(0.0), DEFVAL(0.0), DEFVAL(0), DEFVAL(0.0), DEFVAL(0.0), DEFVAL(false), DEFVAL(0.0), DEFVAL(1.0), DEFVAL(1.0), DEFVAL(0.0), DEFVAL(0), DEFVAL(1));
+	ClassDB::bind_method(D_METHOD("spawn_projectile", "projectile_type", "position", "velocity", "damage", "radius", "lifetime_seconds", "burn_damage_per_tick", "burn_interval_seconds", "burn_duration_seconds", "explosion_radius", "explosion_damage_multiplier", "ricochets", "attraction_radius", "attraction_speed", "pierces_targets", "chill_duration_seconds", "chill_speed_multiplier", "chill_damage_multiplier", "orbit_angular_speed", "reaction_chain_id", "reaction_budget", "critical_hit"),
+			&CombatSimulation::spawn_projectile, DEFVAL(2.0), DEFVAL(0.5), DEFVAL(2.0), DEFVAL(0.0), DEFVAL(0.0), DEFVAL(0), DEFVAL(0.0), DEFVAL(0.0), DEFVAL(false), DEFVAL(0.0), DEFVAL(1.0), DEFVAL(1.0), DEFVAL(0.0), DEFVAL(0), DEFVAL(1), DEFVAL(false));
+	ClassDB::bind_method(D_METHOD("spawn_status_projectile", "projectile_type", "position", "velocity", "damage", "radius", "lifetime_seconds", "status_damage_per_tick", "status_interval_seconds", "status_duration_seconds", "explosion_radius", "explosion_damage_multiplier", "ricochets", "attraction_radius", "attraction_speed", "pierces_targets", "chill_duration_seconds", "chill_speed_multiplier", "chill_damage_multiplier", "orbit_angular_speed", "reaction_chain_id", "reaction_budget", "critical_hit"),
+			&CombatSimulation::spawn_status_projectile, DEFVAL(2.0), DEFVAL(0.5), DEFVAL(2.0), DEFVAL(0.0), DEFVAL(0.0), DEFVAL(0), DEFVAL(0.0), DEFVAL(0.0), DEFVAL(false), DEFVAL(0.0), DEFVAL(1.0), DEFVAL(1.0), DEFVAL(0.0), DEFVAL(0), DEFVAL(1), DEFVAL(false));
 	ClassDB::bind_method(D_METHOD("spawn_xp_orb", "position", "xp_value"), &CombatSimulation::spawn_xp_orb);
 	ClassDB::bind_method(D_METHOD("attract_xp_orbs", "target", "radius", "acceleration", "max_speed", "delta_seconds"),
 			&CombatSimulation::attract_xp_orbs);
@@ -27,6 +27,8 @@ void CombatSimulation::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("collect_xp_orb", "index", "generation"), &CombatSimulation::collect_xp_orb);
 	ClassDB::bind_method(D_METHOD("apply_damage_over_time", "index", "generation", "damage_per_tick", "interval_seconds", "duration_seconds", "status_type"),
 			&CombatSimulation::apply_damage_over_time, DEFVAL(String("generic")));
+	ClassDB::bind_method(D_METHOD("tick_damage_over_time", "index", "generation", "status_type"),
+			&CombatSimulation::tick_damage_over_time);
 	ClassDB::bind_method(D_METHOD("despawn", "index", "generation"), &CombatSimulation::despawn);
 	ClassDB::bind_method(D_METHOD("kill_all"), &CombatSimulation::kill_all);
 	ClassDB::bind_method(D_METHOD("pause"), &CombatSimulation::pause);
@@ -131,7 +133,7 @@ int64_t CombatSimulation::spawn_projectile(String projectile_type, Vector2 posit
 		float explosion_damage_multiplier, int64_t ricochets, float attraction_radius,
 		float attraction_speed, bool pierces_targets, double chill_duration_seconds,
 		float chill_speed_multiplier, float chill_damage_multiplier, float orbit_angular_speed,
-		int64_t reaction_chain_id, int64_t reaction_budget) {
+		int64_t reaction_chain_id, int64_t reaction_budget, bool critical_hit) {
 	if (ricochets < 0 || ricochets > 64 || reaction_chain_id < 0 || reaction_budget < 0 || reaction_budget > 64) {
 		return 0;
 	}
@@ -139,7 +141,7 @@ int64_t CombatSimulation::spawn_projectile(String projectile_type, Vector2 posit
 			burn_damage_per_tick, burn_interval_seconds, burn_duration_seconds,
 			explosion_radius, explosion_damage_multiplier, ricochets, attraction_radius,
 			attraction_speed, pierces_targets, chill_duration_seconds, chill_speed_multiplier,
-			chill_damage_multiplier, orbit_angular_speed, reaction_chain_id, reaction_budget);
+			chill_damage_multiplier, orbit_angular_speed, reaction_chain_id, reaction_budget, critical_hit);
 }
 
 int64_t CombatSimulation::spawn_status_projectile(String projectile_type, Vector2 position, Vector2 velocity,
@@ -148,7 +150,7 @@ int64_t CombatSimulation::spawn_status_projectile(String projectile_type, Vector
 		float explosion_damage_multiplier, int64_t ricochets, float attraction_radius,
 		float attraction_speed, bool pierces_targets, double chill_duration_seconds,
 		float chill_speed_multiplier, float chill_damage_multiplier, float orbit_angular_speed,
-		int64_t reaction_chain_id, int64_t reaction_budget) {
+		int64_t reaction_chain_id, int64_t reaction_budget, bool critical_hit) {
 	const std::string type = projectile_type.utf8().get_data();
 	const bool applies_damage_over_time = type == "inferno_sprayer" || type == "bloodstorm_dagger" ||
 			type == "wildfire_sprayer" || type == "toxic_cloud" || type == "pandemic_cloud";
@@ -200,6 +202,7 @@ int64_t CombatSimulation::spawn_status_projectile(String projectile_type, Vector
 	command.projectile_orbit_angular_speed = orbit_angular_speed;
 	command.projectile_reaction_chain_id = static_cast<uint64_t>(reaction_chain_id);
 	command.projectile_reaction_budget = static_cast<uint32_t>(reaction_budget);
+	command.projectile_critical_hit = critical_hit;
 	return submit(std::move(command));
 }
 
@@ -268,6 +271,17 @@ int64_t CombatSimulation::apply_damage_over_time(int64_t index, int64_t generati
 	command.status_interval_seconds = interval_seconds;
 	command.status_duration_seconds = duration_seconds;
 	command.status_type = status_type_value;
+	return submit(std::move(command));
+}
+
+int64_t CombatSimulation::tick_damage_over_time(int64_t index, int64_t generation, String status_type) {
+	if (index < 0 || generation <= 0 || (status_type != "burn" && status_type != "poison" && status_type != "bleed")) {
+		return 0;
+	}
+	SimulationCommand command;
+	command.type = CommandType::TickDamageOverTime;
+	command.entity = {static_cast<uint32_t>(index), static_cast<uint32_t>(generation)};
+	command.status_type = status_type.utf8().get_data();
 	return submit(std::move(command));
 }
 
@@ -532,6 +546,7 @@ Dictionary CombatSimulation::snapshot() const {
 			projectile["orbit_angular_speed"] = entity.projectile.orbit_angular_speed;
 			projectile["reaction_chain_id"] = static_cast<int64_t>(entity.projectile.reaction_chain_id);
 			projectile["reaction_budget"] = entity.projectile.reaction_budget;
+			projectile["critical_hit"] = entity.projectile.critical_hit;
 			components["Projectile"] = projectile;
 		}
 
@@ -553,6 +568,7 @@ Dictionary CombatSimulation::snapshot() const {
 		entry["sequence"] = static_cast<int64_t>(event.sequence);
 		entry["reaction_chain_id"] = static_cast<int64_t>(event.reaction_chain_id);
 		entry["reaction_budget"] = event.reaction_budget;
+		entry["critical_hit"] = event.critical_hit;
 		switch (event.type) {
 			case dopamine::sim::CombatEventType::Damage: entry["type"] = "damage"; break;
 			case dopamine::sim::CombatEventType::Death: entry["type"] = "death"; break;
@@ -566,6 +582,7 @@ Dictionary CombatSimulation::snapshot() const {
 		entry["target_was_chilled"] = event.target_was_chilled;
 		entry["target_had_burn"] = event.target_had_burn;
 		entry["target_had_poison"] = event.target_had_poison;
+		entry["target_had_bleed"] = event.target_had_bleed;
 		entry["remaining_health"] = event.remaining_health;
 		entry["threat_level"] = event.threat_level;
 		entry["target_type"] = event.target_type.c_str();

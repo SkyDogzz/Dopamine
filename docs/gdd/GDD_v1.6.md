@@ -506,7 +506,7 @@ Les statuts de décision sont indiqués par réaction dans le tableau ci-dessous
 | Shatter          | Freeze + Impact/Shred | Dégâts bonus et fragments **[VALIDÉ]** |
 | Electroplague    | Poison + Shock        | Propagation de Poison **[VALIDÉ]**     |
 | Gravity Collapse | Gravity + Impact      | Dégâts de zone **[VALIDÉ]**            |
-| Hemorrhage       | Bleed + Crit          | Accélération du saignement **[PROPOSÉ]** |
+| Hemorrhage       | Bleed + Crit          | Un coup critique direct sur une cible qui saigne provoque immédiatement un tick supplémentaire de Bleed, sans changer sa durée et sans chaîne **[VALIDÉ, 2026-10-17]** |
 
 Les combinaisons marquées **[PROPOSÉ]** n’ont pas encore été validées. Une éventuelle réaction Overcharge nécessitant un statut conducteur supplémentaire reste **[OUVERTE]**.
 

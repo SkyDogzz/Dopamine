@@ -150,7 +150,7 @@ EntityId SimulationCore::spawn_projectile(std::string type, float x, float y, fl
 		float explosion_damage_multiplier, uint32_t ricochets, float attraction_radius,
 		float attraction_speed, bool pierces_targets, double chill_duration_seconds,
 		float chill_speed_multiplier, float chill_damage_multiplier, float orbit_angular_speed,
-		uint64_t reaction_chain_id, uint32_t reaction_budget) {
+		uint64_t reaction_chain_id, uint32_t reaction_budget, bool critical_hit) {
 	if (!std::isfinite(damage) || damage <= 0.0F || !std::isfinite(radius) || radius < 0.0F ||
 			!std::isfinite(lifetime_seconds) || lifetime_seconds <= 0.0 || type.empty() ||
 			ricochets > 64 ||
@@ -204,6 +204,7 @@ EntityId SimulationCore::spawn_projectile(std::string type, float x, float y, fl
 	projectile.chill_damage_multiplier = chill_damage_multiplier;
 	projectile.reaction_chain_id = reaction_chain_id;
 	projectile.reaction_budget = reaction_budget;
+	projectile.critical_hit = critical_hit;
 	if (type.starts_with("lightning_arc:") || type == "infinite_circuit_branch") {
 		float nearest_distance_squared = std::numeric_limits<float>::infinity();
 		for (uint32_t index = 0; index < slots_.size(); ++index) {
@@ -300,6 +301,22 @@ bool SimulationCore::apply_damage_over_time(EntityId target, float damage_per_ti
 			std::move(status_type)};
 	if (existing == effects.end()) effects.push_back(next);
 	else *existing = next;
+	return true;
+}
+
+bool SimulationCore::tick_damage_over_time(EntityId target, std::string_view status_type, std::vector<CombatEvent> &events) {
+	if (target.index >= slots_.size() || !slots_[target.index].active ||
+			slots_[target.index].generation != target.generation || projectile_flags_[target.index] ||
+			xp_orb_flags_[target.index] || health_[target.index].current <= 0.0F) return false;
+	const auto &effects = damage_over_time_[target.index];
+	const auto effect = std::find_if(effects.begin(), effects.end(), [status_type](const DamageOverTime &entry) {
+		return entry.status_type == status_type;
+	});
+	if (effect == effects.end()) return false;
+	std::vector<EntityId> to_despawn;
+	std::size_t volatile_targets_remaining = 0;
+	apply_damage(target, target, effect->damage_per_tick, events, to_despawn,
+			volatile_targets_remaining, false, true, status_type);
 	return true;
 }
 
@@ -1327,7 +1344,8 @@ std::vector<uint32_t> SimulationCore::query_spatial_index(const SpatialIndex &in
 
 void SimulationCore::apply_damage(EntityId source, EntityId target, float amount,
 		std::vector<CombatEvent> &events, std::vector<EntityId> &deferred_despawns,
-		std::size_t &volatile_targets_remaining, bool allow_volatile_explosion) {
+		std::size_t &volatile_targets_remaining, bool allow_volatile_explosion,
+		bool is_damage_over_time, std::string_view status_type) {
 	if (target.index >= slots_.size() || !slots_[target.index].active ||
 			slots_[target.index].generation != target.generation || !std::isfinite(amount) || amount <= 0.0F) {
 		return;
@@ -1364,10 +1382,12 @@ void SimulationCore::apply_damage(EntityId source, EntityId target, float amount
 			slots_[source.index].generation == source.generation ? enemy_types_[source.index].id : std::string{};
 	uint64_t reaction_chain_id = 0;
 	uint32_t reaction_budget = 1;
+	bool critical_hit = false;
 	if (source.index < slots_.size() && slots_[source.index].active &&
 			slots_[source.index].generation == source.generation && projectile_flags_[source.index]) {
 		reaction_chain_id = projectiles_[source.index].reaction_chain_id;
 		reaction_budget = projectiles_[source.index].reaction_budget;
+		critical_hit = projectiles_[source.index].critical_hit;
 	}
 	events.push_back({next_event_sequence_++, CombatEventType::Damage, source, target,
 			amount, target_health.current, enemy_types_[target.index].threat_level,
@@ -1377,9 +1397,13 @@ void SimulationCore::apply_damage(EntityId source, EntityId target, float amount
 	events.back().target_was_chilled = target_was_chilled;
 	events.back().reaction_chain_id = reaction_chain_id;
 	events.back().reaction_budget = reaction_budget;
+	events.back().critical_hit = critical_hit;
+	events.back().is_damage_over_time = is_damage_over_time;
+	events.back().status_type = status_type;
 	for (const DamageOverTime &status : damage_over_time_[target.index]) {
 		events.back().target_had_burn = events.back().target_had_burn || status.status_type == "burn";
 		events.back().target_had_poison = events.back().target_had_poison || status.status_type == "poison";
+		events.back().target_had_bleed = events.back().target_had_bleed || status.status_type == "bleed";
 	}
 	if (target_health.current <= 0.0F) {
 		events.push_back({next_event_sequence_++, CombatEventType::Death, source, target,
@@ -1388,8 +1412,11 @@ void SimulationCore::apply_damage(EntityId source, EntityId target, float amount
 		events.back().source_type = source_type;
 		events.back().target_affix = target_type.affix;
 		events.back().target_was_chilled = target_was_chilled;
+		events.back().is_damage_over_time = is_damage_over_time;
+		events.back().status_type = status_type;
 		events.back().reaction_chain_id = reaction_chain_id;
 		events.back().reaction_budget = reaction_budget;
+		events.back().critical_hit = critical_hit;
 		if (allow_volatile_explosion && target_type.death_explosion_radius > 0.0F &&
 				volatile_targets_remaining > 0) {
 			const Transform2D center = transforms_[target.index];

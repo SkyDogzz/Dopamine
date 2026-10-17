@@ -34,6 +34,7 @@ enum class CommandType {
 	SpawnXpOrb,
 	CollectXpOrb,
 	ApplyDamageOverTime,
+	TickDamageOverTime,
 	AcknowledgeEvents,
 	Reset,
 	CaptureState,
@@ -81,6 +82,7 @@ struct SimulationCommand {
 	float projectile_orbit_angular_speed = 0.0F;
 	uint64_t projectile_reaction_chain_id = 0;
 	uint32_t projectile_reaction_budget = 1;
+	bool projectile_critical_hit = false;
 	float xp_value = 1.0F;
 	float status_damage_per_tick = 0.0F;
 	double status_interval_seconds = 0.0;
@@ -92,7 +94,7 @@ struct SimulationCommand {
 };
 
 struct SimulationWorkerState {
-	uint32_t format_version = 16;
+	uint32_t format_version = 17;
 	SimulationCoreState core_state;
 	bool paused = true;
 	double speed_multiplier = 1.0;

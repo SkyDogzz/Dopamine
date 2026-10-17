@@ -110,7 +110,7 @@ std::optional<SimulationWorkerState> SimulationWorker::capture_state(std::chrono
 }
 
 bool SimulationWorker::restore_state(const SimulationWorkerState &state) {
-	if (state.format_version != 16 || state.next_sequence == 0 ||
+	if (state.format_version != 17 || state.next_sequence == 0 ||
 			state.next_sequence <= state.pending_sequence ||
 			state.pending_commands.size() > max_queued_commands_ ||
 			state.pending_events.size() > max_pending_events_ || state.logs.size() > 100 ||
@@ -407,7 +407,7 @@ void SimulationWorker::apply(const SimulationCommand &command,
 						command.projectile_pierces_targets, command.projectile_chill_duration,
 						command.projectile_chill_speed_multiplier, command.projectile_chill_damage_multiplier,
 						command.projectile_orbit_angular_speed, command.projectile_reaction_chain_id,
-						command.projectile_reaction_budget);
+						command.projectile_reaction_budget, command.projectile_critical_hit);
 				log("spawned projectile " + command.entity_type);
 			} catch (const std::exception &error) {
 				log(std::string("projectile rejected: ") + error.what());
@@ -450,6 +450,16 @@ void SimulationWorker::apply(const SimulationCommand &command,
 				}
 			} catch (const std::exception &error) {
 				log(std::string("damage-over-time rejected: ") + error.what());
+			}
+			break;
+		case CommandType::TickDamageOverTime:
+			if (pending_events_.size() < max_pending_events_) {
+				std::vector<CombatEvent> events;
+				if (simulation_.tick_damage_over_time(command.entity, command.status_type, events)) {
+					append_events(std::move(events));
+				}
+			} else {
+				log("status tick delayed: acknowledge pending events first");
 			}
 			break;
 		case CommandType::AcknowledgeEvents:
