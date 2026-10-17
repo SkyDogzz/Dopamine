@@ -2,7 +2,10 @@ param(
 	[Parameter(Mandatory = $true)]
 	[string] $GodotExecutable,
 	[switch] $NoLaunch,
-	[switch] $Export
+	[switch] $Export,
+	[switch] $DebugOnly,
+	[switch] $SkipProjectChecks,
+	[string] $TestProjectPath
 )
 
 $ErrorActionPreference = "Stop"
@@ -45,32 +48,41 @@ function Invoke-CMakeConfigure([string[]] $Arguments, [string] $BuildDirectory) 
 
 $debugArguments = @(
 	"-S", $repositoryRoot, "-B", $buildPath, "-A", "x64",
-	"-DBUILD_TESTING=ON", "-DGODOTCPP_TARGET=template_debug"
+	"-DBUILD_TESTING=ON", "-DGODOTCPP_TARGET=template_debug",
+	"-DDOPAMINE_GODOT_EXECUTABLE=$godotPath"
 )
+if (-not [string]::IsNullOrWhiteSpace($TestProjectPath)) {
+	$debugArguments += "-DDOPAMINE_GAME_PROJECT_DIR=$([System.IO.Path]::GetFullPath($TestProjectPath))"
+}
 Invoke-CMakeConfigure $debugArguments $buildPath
 
 cmake --build $buildPath --config Debug --parallel 4
 if ($LASTEXITCODE -ne 0) { throw "Windows extension build failed with exit code $LASTEXITCODE" }
 
-$releaseArguments = @(
-	"-S", $repositoryRoot, "-B", $releaseBuildPath, "-A", "x64",
-	"-DBUILD_TESTING=OFF", "-DGODOTCPP_TARGET=template_release"
-)
-Invoke-CMakeConfigure $releaseArguments $releaseBuildPath
-
-cmake --build $releaseBuildPath --config Release --parallel 4
-if ($LASTEXITCODE -ne 0) { throw "Windows release extension build failed with exit code $LASTEXITCODE" }
-
 $extensionPath = Join-Path $projectPath "bin/windows/libdopamine.windows.template_debug.x86_64.dll"
 if (-not (Test-Path $extensionPath)) { throw "Expected GDExtension DLL was not created: $extensionPath" }
-$releaseExtensionPath = Join-Path $projectPath "bin/windows/libdopamine.windows.template_release.x86_64.dll"
-if (-not (Test-Path $releaseExtensionPath)) { throw "Expected release GDExtension DLL was not created: $releaseExtensionPath" }
 
-& $godotPath --headless --editor --path $projectPath --quit
-if ($LASTEXITCODE -ne 0) { throw "Godot project import failed with exit code $LASTEXITCODE" }
+if (-not $DebugOnly) {
+	$releaseArguments = @(
+		"-S", $repositoryRoot, "-B", $releaseBuildPath, "-A", "x64",
+		"-DBUILD_TESTING=OFF", "-DGODOTCPP_TARGET=template_release",
+		"-DDOPAMINE_GODOT_EXECUTABLE=$godotPath"
+	)
+	Invoke-CMakeConfigure $releaseArguments $releaseBuildPath
 
-& $godotPath --headless --path $projectPath --script "res://tests/sandbox_smoke.gd"
-if ($LASTEXITCODE -ne 0) { throw "GDExtension smoke test failed with exit code $LASTEXITCODE" }
+	cmake --build $releaseBuildPath --config Release --parallel 4
+	if ($LASTEXITCODE -ne 0) { throw "Windows release extension build failed with exit code $LASTEXITCODE" }
+	$releaseExtensionPath = Join-Path $projectPath "bin/windows/libdopamine.windows.template_release.x86_64.dll"
+	if (-not (Test-Path $releaseExtensionPath)) { throw "Expected release GDExtension DLL was not created: $releaseExtensionPath" }
+}
+
+if (-not $SkipProjectChecks) {
+	& $godotPath --headless --editor --path $projectPath --quit
+	if ($LASTEXITCODE -ne 0) { throw "Godot project import failed with exit code $LASTEXITCODE" }
+
+	& $godotPath --headless --path $projectPath --script "res://tests/sandbox_smoke.gd"
+	if ($LASTEXITCODE -ne 0) { throw "GDExtension smoke test failed with exit code $LASTEXITCODE" }
+}
 
 if ($Export) {
 	$exportDirectory = Join-Path $buildPath "export"

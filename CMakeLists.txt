@@ -25,6 +25,7 @@ target_compile_features(dopamine_simulation PUBLIC cxx_std_23)
 set_target_properties(dopamine_simulation PROPERTIES POSITION_INDEPENDENT_CODE ON)
 
 if(BUILD_TESTING)
+    set(DOPAMINE_GAME_PROJECT_DIR "${PROJECT_SOURCE_DIR}/game" CACHE PATH "Godot project directory used by automated tests")
     add_executable(simulation_core_tests native/tests/simulation_core_test.cpp)
     target_link_libraries(simulation_core_tests PRIVATE dopamine_simulation)
     add_test(NAME simulation_core COMMAND simulation_core_tests)
@@ -46,43 +47,43 @@ if(BUILD_TESTING)
                 add_test(NAME render_visual_smoke
                     COMMAND "${DOPAMINE_XVFB_RUN_EXECUTABLE}" -a -s "-screen 0 1280x800x24"
                         "${CMAKE_COMMAND}" -E env LIBGL_ALWAYS_SOFTWARE=1
-                        "${DOPAMINE_GODOT_EXECUTABLE}" --path "${PROJECT_SOURCE_DIR}/game"
+                        "${DOPAMINE_GODOT_EXECUTABLE}" --path "${DOPAMINE_GAME_PROJECT_DIR}"
                         --audio-driver Dummy --script res://tests/render_visual_smoke.gd)
                 set_tests_properties(render_visual_smoke PROPERTIES FIXTURES_REQUIRED godot_project_ready TIMEOUT 45)
                 add_test(NAME survival_combat_visual_smoke
                     COMMAND "${DOPAMINE_XVFB_RUN_EXECUTABLE}" -a -s "-screen 0 1280x800x24"
                         "${CMAKE_COMMAND}" -E env LIBGL_ALWAYS_SOFTWARE=1
-                        "${DOPAMINE_GODOT_EXECUTABLE}" --path "${PROJECT_SOURCE_DIR}/game"
+                        "${DOPAMINE_GODOT_EXECUTABLE}" --path "${DOPAMINE_GAME_PROJECT_DIR}"
                         --audio-driver Dummy --script res://tests/survival_combat_visual_smoke.gd)
                 set_tests_properties(survival_combat_visual_smoke PROPERTIES FIXTURES_REQUIRED godot_project_ready TIMEOUT 45)
                 add_test(NAME pilot_scene_visual_smoke
                     COMMAND "${DOPAMINE_XVFB_RUN_EXECUTABLE}" -a -s "-screen 0 1280x800x24"
                         "${CMAKE_COMMAND}" -E env LIBGL_ALWAYS_SOFTWARE=1
-                        "${DOPAMINE_GODOT_EXECUTABLE}" --path "${PROJECT_SOURCE_DIR}/game"
+                        "${DOPAMINE_GODOT_EXECUTABLE}" --path "${DOPAMINE_GAME_PROJECT_DIR}"
                         --audio-driver Dummy --script res://tests/pilot_scene_visual_smoke.gd)
                 set_tests_properties(pilot_scene_visual_smoke PROPERTIES FIXTURES_REQUIRED godot_project_ready TIMEOUT 45)
                 add_test(NAME survival_impact_status_visual_smoke
                     COMMAND "${DOPAMINE_XVFB_RUN_EXECUTABLE}" -a -s "-screen 0 1280x800x24"
                         "${CMAKE_COMMAND}" -E env LIBGL_ALWAYS_SOFTWARE=1
-                        "${DOPAMINE_GODOT_EXECUTABLE}" --path "${PROJECT_SOURCE_DIR}/game"
+                        "${DOPAMINE_GODOT_EXECUTABLE}" --path "${DOPAMINE_GAME_PROJECT_DIR}"
                         --audio-driver Dummy --script res://tests/survival_visual_effects_smoke.gd -- --capture)
                 set_tests_properties(survival_impact_status_visual_smoke PROPERTIES FIXTURES_REQUIRED godot_project_ready TIMEOUT 45)
             endif()
         endif()
         add_test(NAME godot_project_import
-            COMMAND "${DOPAMINE_GODOT_EXECUTABLE}" --headless --editor --path "${PROJECT_SOURCE_DIR}/game" --quit)
+            COMMAND "${DOPAMINE_GODOT_EXECUTABLE}" --headless --editor --path "${DOPAMINE_GAME_PROJECT_DIR}" --quit)
         set_tests_properties(godot_project_import PROPERTIES FIXTURES_SETUP godot_project_ready TIMEOUT 60)
 
         foreach(script_name IN ITEMS sandbox_smoke sandbox_ui_smoke sandbox_combat_smoke sandbox_preset_smoke sandbox_lab_smoke sandbox_snapshot_smoke sandbox_profile_build_smoke scenario_runner_validation_smoke sandbox_weapon_scenario_validation_smoke render_batching_smoke catalog_icon_assets_smoke pilot_asset_batch_smoke signal_prism_asset_smoke pause_panel_visual_smoke survival_abandon_smoke survival_chest_choice_smoke survival_chest_layout_smoke survival_run_meta_access_smoke survival_speed_control_smoke ui_foundation_smoke ui_viewport_layout_smoke armorless_session_cycle_smoke player_controller_smoke survival_entry_smoke survival_steering_smoke survival_weapon_smoke survival_targeting_smoke survival_weapon_catalog_smoke survival_level_feedback_smoke survival_visual_effects_smoke combat_catalog_smoke survival_starting_weapon_smoke survival_run_stat_hub_smoke survival_xp_run_bonuses_smoke survival_hud_smoke survival_run_result_smoke survival_run_restart_smoke survival_final_boss_loot_smoke survival_contact_damage_smoke survival_idle_combat_smoke survival_shooter_smoke survival_support_enemy_smoke survival_elite_smoke survival_unique_effects_smoke survival_exploder_smoke survival_shielder_smoke survival_summoner_smoke survival_boss_attack_smoke survival_lifesteal_smoke survival_magnet_heart_synergy_smoke survival_damage_causality_smoke survival_wave_director_smoke survival_wave_spawn_smoke survival_wave_duration_smoke survival_pause_smoke survival_pause_inventory_smoke chest_choice_smoke free_chest_reroll_smoke survival_chest_director_smoke survival_loadout_smoke survival_chest_smoke save_service_smoke progression_service_smoke survival_progression_smoke survival_difficulty_profile_smoke survival_difficulty_unlock_smoke survival_difficulty_session_smoke survival_inventory_smoke equipment_slots_smoke equipment_rarity_smoke equipment_stats_smoke equipment_enhancement_smoke equipment_economy_smoke armorless_run_state_smoke armorless_equipment_generator_smoke armorless_wave_director_smoke survival_armorless_mode_smoke armorless_records_smoke endless_standard_progression_smoke endless_standard_session_smoke settings_service_smoke ui_settings_smoke launch_navigation_smoke survival_hub_smoke survival_hub_layout_smoke skill_tree_panel_visual_smoke equipment_panel_visual_smoke run_result_panel_smoke)
             add_test(NAME ${script_name}
-                COMMAND "${DOPAMINE_GODOT_EXECUTABLE}" --headless --path "${PROJECT_SOURCE_DIR}/game" --script "res://tests/${script_name}.gd")
+                COMMAND "${DOPAMINE_GODOT_EXECUTABLE}" --headless --path "${DOPAMINE_GAME_PROJECT_DIR}" --script "res://tests/${script_name}.gd")
             set_tests_properties(${script_name} PROPERTIES FIXTURES_REQUIRED godot_project_ready TIMEOUT 15)
         endforeach()
         add_test(NAME keyboard_menu_journey_smoke
-            COMMAND "${DOPAMINE_GODOT_EXECUTABLE}" --headless --path "${PROJECT_SOURCE_DIR}/game"
+            COMMAND "${DOPAMINE_GODOT_EXECUTABLE}" --headless --path "${DOPAMINE_GAME_PROJECT_DIR}"
                 --script res://tests/keyboard_menu_journey_smoke.gd)
         add_test(NAME gamepad_menu_journey_smoke
-            COMMAND "${DOPAMINE_GODOT_EXECUTABLE}" --headless --path "${PROJECT_SOURCE_DIR}/game"
+            COMMAND "${DOPAMINE_GODOT_EXECUTABLE}" --headless --path "${DOPAMINE_GAME_PROJECT_DIR}"
                 --script res://tests/keyboard_menu_journey_smoke.gd -- --gamepad)
         set_tests_properties(keyboard_menu_journey_smoke gamepad_menu_journey_smoke PROPERTIES
             FIXTURES_REQUIRED godot_project_ready TIMEOUT 15)
@@ -110,35 +111,35 @@ if(BUILD_TESTING)
         endif()
 
         add_test(NAME sandbox_scenario
-            COMMAND "${DOPAMINE_GODOT_EXECUTABLE}" --headless --path "${PROJECT_SOURCE_DIR}/game"
+            COMMAND "${DOPAMINE_GODOT_EXECUTABLE}" --headless --path "${DOPAMINE_GAME_PROJECT_DIR}"
                 --script res://scripts/scenario_runner.gd --
                 --scenario=res://scenarios/dev_sandbox.json
                 "--output=${CMAKE_CURRENT_BINARY_DIR}/sandbox_scenario_result.json")
         set_tests_properties(sandbox_scenario PROPERTIES FIXTURES_REQUIRED godot_project_ready TIMEOUT 120)
 
         add_test(NAME sandbox_steering_scenario
-            COMMAND "${DOPAMINE_GODOT_EXECUTABLE}" --headless --path "${PROJECT_SOURCE_DIR}/game"
+            COMMAND "${DOPAMINE_GODOT_EXECUTABLE}" --headless --path "${DOPAMINE_GAME_PROJECT_DIR}"
                 --script res://scripts/scenario_runner.gd --
                 --scenario=res://scenarios/steering_smoke.json
                 "--output=${CMAKE_CURRENT_BINARY_DIR}/sandbox_steering_result.json")
         set_tests_properties(sandbox_steering_scenario PROPERTIES FIXTURES_REQUIRED godot_project_ready TIMEOUT 120)
 
         add_test(NAME sandbox_projectile_scenario
-            COMMAND "${DOPAMINE_GODOT_EXECUTABLE}" --headless --path "${PROJECT_SOURCE_DIR}/game"
+            COMMAND "${DOPAMINE_GODOT_EXECUTABLE}" --headless --path "${DOPAMINE_GAME_PROJECT_DIR}"
                 --script res://scripts/scenario_runner.gd --
                 --scenario=res://scenarios/projectile_swept_smoke.json
                 "--output=${CMAKE_CURRENT_BINARY_DIR}/sandbox_projectile_result.json")
         set_tests_properties(sandbox_projectile_scenario PROPERTIES FIXTURES_REQUIRED godot_project_ready TIMEOUT 120)
 
         add_test(NAME sandbox_enemy_profiles_scenario
-            COMMAND "${DOPAMINE_GODOT_EXECUTABLE}" --headless --path "${PROJECT_SOURCE_DIR}/game"
+            COMMAND "${DOPAMINE_GODOT_EXECUTABLE}" --headless --path "${DOPAMINE_GAME_PROJECT_DIR}"
                 --script res://scripts/scenario_runner.gd --
                 --scenario=res://scenarios/enemy_profiles_smoke.json
                 "--output=${CMAKE_CURRENT_BINARY_DIR}/sandbox_enemy_profiles_result.json")
         set_tests_properties(sandbox_enemy_profiles_scenario PROPERTIES FIXTURES_REQUIRED godot_project_ready TIMEOUT 120)
 
         add_test(NAME sandbox_damage_over_time_scenario
-            COMMAND "${DOPAMINE_GODOT_EXECUTABLE}" --headless --path "${PROJECT_SOURCE_DIR}/game"
+            COMMAND "${DOPAMINE_GODOT_EXECUTABLE}" --headless --path "${DOPAMINE_GAME_PROJECT_DIR}"
                 --script res://scripts/scenario_runner.gd --
                 --scenario=res://scenarios/damage_over_time_smoke.json
                 "--output=${CMAKE_CURRENT_BINARY_DIR}/sandbox_damage_over_time_result.json")
@@ -146,7 +147,7 @@ if(BUILD_TESTING)
 
         foreach(weapon_id IN ITEMS lightning_conductor inferno_sprayer crimson_daggers minigun toxic_cloud sawblades meteor_staff prism_laser void_orb frost_nova)
             add_test(NAME sandbox_weapon_${weapon_id}_scenario
-                COMMAND "${DOPAMINE_GODOT_EXECUTABLE}" --headless --path "${PROJECT_SOURCE_DIR}/game"
+                COMMAND "${DOPAMINE_GODOT_EXECUTABLE}" --headless --path "${DOPAMINE_GAME_PROJECT_DIR}"
                     --script res://scripts/sandbox_weapon_scenario_runner.gd --
                     "--scenario=res://scenarios/weapons/${weapon_id}.json"
                     "--output=${CMAKE_CURRENT_BINARY_DIR}/sandbox_weapon_${weapon_id}_result.json")
@@ -158,7 +159,7 @@ if(BUILD_TESTING)
             COMMAND "${CMAKE_COMMAND}" -E env
                 "XDG_DATA_HOME=${CMAKE_CURRENT_BINARY_DIR}/stability_soak_data"
                 "${DOPAMINE_GODOT_EXECUTABLE}" --headless --audio-driver Dummy
-                    --path "${PROJECT_SOURCE_DIR}/game"
+                    --path "${DOPAMINE_GAME_PROJECT_DIR}"
                     --script res://tests/stability_soak_smoke.gd
             COMMENT "Running the opt-in multi-mode stability soak"
             USES_TERMINAL
