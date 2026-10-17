@@ -87,40 +87,26 @@ func _draw_motif(image: Image, name: String) -> void:
 	var cx := n / 2
 	var cy := n / 2
 	var radius := 5 * unit
-	# Dark stepped silhouette with a bright, category-colored core.
-	for y in range(n):
-		for x in range(n):
-			var dx := absi(x - cx)
-			var dy := absi(y - cy)
-			var d := maxi(dx, dy) + mini(dx, dy) / 2
-			if d <= radius + unit:
-				image.set_pixel(x, y, c0 if d > radius - unit else c1)
-			if d <= radius - 2 * unit:
-				image.set_pixel(x, y, c2)
-	# Distinct silhouette marks, selected by the asset identity.
-	var style := seed % 6
-	match style:
-		0:
-			_line(image, cx, cy - 11 * unit, cx, cy + 11 * unit, unit, white)
-			_line(image, cx - 8 * unit, cy, cx + 8 * unit, cy, unit, c3)
-		1:
-			_diamond(image, cx, cy, 8 * unit, c3)
-			_diamond(image, cx, cy, 4 * unit, white)
-		2:
-			_line(image, cx - 8 * unit, cy + 7 * unit, cx + 8 * unit, cy - 7 * unit, 2 * unit, white)
-			_pixel(image, cx + 8 * unit, cy - 7 * unit, c3)
-		3:
-			_line(image, cx - 8 * unit, cy, cx + 8 * unit, cy, 2 * unit, white)
-			_line(image, cx, cy - 8 * unit, cx, cy + 8 * unit, unit, c3)
-		4:
-			_diamond(image, cx, cy, 9 * unit, c3)
-			_diamond(image, cx, cy, 2 * unit, white)
-		5:
-			_line(image, cx - 8 * unit, cy - 6 * unit, cx + 8 * unit, cy + 6 * unit, 2 * unit, white)
-			_line(image, cx - 8 * unit, cy + 6 * unit, cx + 8 * unit, cy - 6 * unit, unit, c3)
+	if not _has_semantic_shape(name):
+		# Fallback emblem for any future asset without a dedicated motif.
+		for y in range(n):
+			for x in range(n):
+				var dx := absi(x - cx)
+				var dy := absi(y - cy)
+				var d := maxi(dx, dy) + mini(dx, dy) / 2
+				if d <= radius + unit:
+					image.set_pixel(x, y, c0 if d > radius - unit else c1)
+				if d <= radius - 2 * unit:
+					image.set_pixel(x, y, c2)
+		match seed % 6:
+			0: _line(image, cx, cy - 11 * unit, cx, cy + 11 * unit, unit, white)
+			1: _diamond(image, cx, cy, 8 * unit, c3)
+			2: _line(image, cx - 8 * unit, cy + 7 * unit, cx + 8 * unit, cy - 7 * unit, 2 * unit, white)
+			3: _line(image, cx - 8 * unit, cy, cx + 8 * unit, cy, 2 * unit, white)
+			4: _diamond(image, cx, cy, 9 * unit, c3)
+			5: _line(image, cx - 8 * unit, cy - 6 * unit, cx + 8 * unit, cy + 6 * unit, 2 * unit, white)
 	_draw_semantic(image, name, unit, c1, c2, c3, white)
-	# Floating pixel cues make projectiles and impact marks legible in motion.
-	if name.begins_with("projectile_") or name.begins_with("impact_"):
+	if name.begins_with("impact_"):
 		_pixel(image, cx - 11 * unit, cy - 8 * unit, c3)
 		_pixel(image, cx + 11 * unit, cy + 8 * unit, white)
 		_pixel(image, cx - 10 * unit, cy + 9 * unit, c2)
@@ -135,11 +121,62 @@ func _draw_motif(image: Image, name: String) -> void:
 			var a := TAU * float(angle) / 8.0
 			_line(image, cx + roundi(cos(a) * 11 * unit), cy + roundi(sin(a) * 11 * unit), cx + roundi(cos(a) * 15 * unit), cy + roundi(sin(a) * 15 * unit), unit, c3 if angle % 2 == 0 else c2)
 
+func _has_semantic_shape(name: String) -> bool:
+	if name.begins_with("impact_"):
+		return true
+	for token in ["lightning", "conductor", "storm", "shock", "inferno", "fire", "wildfire", "dagger", "crimson", "slash", "blade", "minigun", "bullet", "enemy", "toxic", "plague", "pandemic", "cloud", "meteor", "starfall", "comet", "frost", "nova", "absolute_zero", "prism", "signal", "eye", "chalice", "cup", "crown", "magnet", "coil", "orb", "singularity", "core", "heart", "staff", "prism_laser", "event_horizon", "infinite_circuit", "overdrive_engine", "spectrum_collapse", "shockwave", "bloodstorm"]:
+		if name.contains(token):
+			return true
+	return false
+
 func _draw_semantic(image: Image, name: String, unit: int, shadow: Color, mid: Color, accent: Color, light: Color) -> void:
 	var cx := image.get_width() / 2
 	var cy := image.get_height() / 2
 	var s := maxi(unit, 1)
-	if name.contains("lightning") or name.contains("conductor") or name.contains("storm") or name.contains("shock"):
+	if name.contains("prism_laser") or name == "weapon_prism_laser":
+		_rect(image, cx - 11*s, cy - 3*s, 22*s, 6*s, accent)
+		_rect(image, cx - 11*s, cy - s, 22*s, 2*s, light)
+		_diamond(image, cx + 8*s, cy, 5*s, light)
+	elif name.contains("event_horizon") or name.contains("singularity"):
+		_circle(image, cx, cy, 10*s, accent)
+		_circle(image, cx, cy, 7*s, shadow)
+		_circle(image, cx + 2*s, cy - 2*s, 3*s, mid)
+		for angle in range(4):
+			var a := TAU * angle / 4.0
+			_line(image, cx + roundi(cos(a)*11*s), cy + roundi(sin(a)*11*s), cx + roundi(cos(a)*14*s), cy + roundi(sin(a)*14*s), s, light)
+	elif name.contains("infinite_circuit") or name.contains("overdrive_engine"):
+		_rect(image, cx - 8*s, cy - 8*s, 16*s, 16*s, accent)
+		_rect(image, cx - 5*s, cy - 5*s, 10*s, 10*s, shadow)
+		for offset in [-3, 3]:
+			_line(image, cx - 11*s, cy + offset*s, cx - 8*s, cy + offset*s, s, light)
+			_line(image, cx + 8*s, cy + offset*s, cx + 11*s, cy + offset*s, s, light)
+		_circle(image, cx, cy, 3*s, light)
+	elif name.contains("spectrum_collapse") or name.contains("shockwave") or name.contains("evolution_shockwave"):
+		for radius_value in [4, 8, 12]:
+			for angle in range(8):
+				var a := TAU * angle / 8.0
+				_pixel(image, cx + roundi(cos(a)*radius_value*s), cy + roundi(sin(a)*radius_value*s), light if angle % 2 == 0 else accent, s)
+	elif name.contains("plague_mask"):
+		_diamond(image, cx, cy - 2*s, 8*s, accent)
+		_rect(image, cx - 4*s, cy - 3*s, 3*s, 3*s, light)
+		_rect(image, cx + 2*s, cy - 3*s, 3*s, 3*s, light)
+		_line(image, cx, cy + 2*s, cx - 2*s, cy + 8*s, 2*s, mid)
+		_line(image, cx, cy + 2*s, cx + 2*s, cy + 8*s, 2*s, mid)
+	elif name.contains("magnet_heart"):
+		_diamond(image, cx - 4*s, cy - 3*s, 6*s, accent)
+		_diamond(image, cx + 4*s, cy - 3*s, 6*s, accent)
+		_diamond(image, cx, cy + 3*s, 8*s, accent)
+		_pixel(image, cx, cy, light, 3*s)
+	elif name.contains("storm_core"):
+		_circle(image, cx, cy, 10*s, accent)
+		_circle(image, cx, cy, 7*s, shadow)
+		_line(image, cx, cy - 10*s, cx, cy + 10*s, 2*s, light)
+		_line(image, cx - 10*s, cy, cx + 10*s, cy, 2*s, mid)
+	elif name.contains("bloodstorm"):
+		_diamond(image, cx, cy, 8*s, accent)
+		_line(image, cx, cy - 4*s, cx, cy + 8*s, 2*s, light)
+		for offset in [-9, 9]: _pixel(image, cx + offset*s, cy + 5*s, accent, 2*s)
+	elif name.contains("lightning") or name.contains("conductor") or name.contains("storm") or name.contains("shock"):
 		_line(image, cx + 3*s, cy - 12*s, cx - 4*s, cy - 2*s, 3*s, light)
 		_line(image, cx - 4*s, cy - 2*s, cx + 2*s, cy - 2*s, 3*s, accent)
 		_line(image, cx + 2*s, cy - 2*s, cx - 3*s, cy + 11*s, 3*s, light)
