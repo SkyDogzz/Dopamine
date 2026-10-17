@@ -24,6 +24,10 @@
 - [x] `tools/local/godot-4.7.2/Godot_v4.7.2-stable_linux.x86_64 --headless --path game --script res://tests/survival_hub_smoke.gd` passe. Godot signale encore des instances ObjectDB et ressources retenues à l’arrêt, sans assertion échouée.
 - [i] Cette smoke confirme le contrat de démarrage, pas la calibration des bonus ni une run Endless longue.
 
+## P7B — Maîtrise répétable — 2026-10-17
+
+- [x] Décision utilisateur **[VALIDÉE, réponse A]** : reporter la maîtrise répétable après la livraison; aucune maîtrise répétable n’est requise au lancement. Le prototype garde ses records et récompenses documentés séparément.
+
 ## P7B.1 — Compteurs du segment de continuation — 2026-10-17
 
 - [x] `endless_standard_session_smoke.gd` vérifie qu’après la continuation HP/build/niveaux persistent, tandis que durée affichée/enregistrée, kills et compteurs additifs d’achievements repartent pour l’ID Endless. L’horloge interne reste monotone pour conserver les expirations et le rythme de simulation.

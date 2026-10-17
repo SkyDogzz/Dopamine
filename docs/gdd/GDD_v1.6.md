@@ -231,7 +231,7 @@ Données : AchievementDefinition {id, category, secret, metric, aggregation, tie
 
 [VALIDÉ — EXTENSION DU 2026-10-17, réponse A] Depuis le hub, progression permanente et équipement actifs; armes/reliques de run commencent au niveau 1. **[VALIDÉ — EXTENSION DU 2026-10-17]** En continuation, conserver les HP, le build et les niveaux de la run Survival; créditer sa victoire avant de démarrer un nouvel ID de run Endless. Difficultés Easy à Chaos. Les deux parcours n’ont donc pas le même état initial.
 
-[PROPOSÉ] Cycles après vague 24 : ennemis plus puissants, élites et mutations, boss récurrents ; maîtrise répétable temporaire avec rendements décroissants après max des objets. Le prototype réutilise le scaling actuel jusqu'à la vague 24 puis augmente les PV ennemis de 5,5 % par vague; il déclenche un mid-boss toutes les 12 vagues, dont 24, 36, etc. Records locaux séparés par difficulté, classés par vague, temps puis kills.
+[PROPOSÉ] Cycles après vague 24 : ennemis plus puissants, élites et mutations, boss récurrents. Le prototype réutilise le scaling actuel jusqu'à la vague 24 puis augmente les PV ennemis de 5,5 % par vague; il déclenche un mid-boss toutes les 12 vagues, dont 24, 36, etc. Records locaux séparés par difficulté, classés par vague, temps puis kills. **[VALIDÉ — EXTENSION DU 2026-10-17, réponse A]** Reporter la maîtrise répétable après la livraison; elle n’est pas requise au lancement.
 
 [PROPOSÉ] Le mode se termine à la mort ou à l’abandon. Récompenses basées sur la formule Survival sans bonus du boss final et sans équipement permanent garanti; les montants restent à calibrer.
 

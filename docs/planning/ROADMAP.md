@@ -614,7 +614,7 @@ Travail requis :
   - [x] Ajouter migration additive du profil v8→v9, records séparés par difficulté et récompenses idempotentes sans équipement garanti; smokes dédiés passent.
   - [x] Ouvrir le mode Endless standard au Sandbox Lab comme troisième mode exécutable; conserver diagnostics, PV verrouillés, coffres normaux désactivés et aucune injection de service de progression/sauvegarde. Les règles de P7B restent **[PROPOSÉES]**.
 
-**Critère de sortie :** Armorless conforme aux règles validées et propositions clairement paramétrées; Endless standard jouable depuis le hub et en continuation immédiate, vérifié pour mort/abandon et persistance. Calibration et maîtrise répétable restent explicitement ouvertes.
+**Critère de sortie :** Armorless conforme aux règles validées et propositions clairement paramétrées; Endless standard jouable depuis le hub et en continuation immédiate, vérifié pour mort/abandon et persistance. Calibration des propositions restante; la maîtrise répétable est reportée après la livraison par décision utilisateur **[VALIDÉE]**.
 
 ## P8 — Sandbox Lab destiné au joueur
 
