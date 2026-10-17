@@ -503,6 +503,32 @@
 - [i] Le profil collecte davantage d’XP que `kite`, mais ne permet pas de représenter un joueur : l’itinéraire est synthétique et l’offre de coffre est choisie automatiquement. Une run full-profile a varié jusqu’à 53,81 s, vague 2 et 71 kills; l’échantillon de trois seeds est donc très dispersé. Tous les cas finissent en défaite avant la vague 3. Aucun chiffre **[PROPOSÉ]** n’est recalibré; P6.9 reste ouvert.
 - [x] Godot termine avec code 0; avertissements ObjectDB/ressources référencées à la fermeture, comme sur les autres harness de session.
 
+### Matrice multi-profil collecte d’XP — 2026-10-17
+
+- [x] Reproduction : `XDG_DATA_HOME="$(mktemp -d)" DOPAMINE_TEST_TIMEOUT=1800s tools/run_godot_test.sh tools/local/godot-4.7.2/Godot_v4.7.2-stable_linux.x86_64 --headless --audio-driver Dummy --path game --script res://tests/progression_balance_survey.gd -- --tier=all --difficulty=all --movement=loot --replicates=3`.
+- [x] Le relevé couvre 45 sessions (3 profils × 5 difficultés × 3 seeds), sans invulnérabilité, dégâts ou kills artificiels. XP et coffres gardent leurs rayons de production; le contrôleur choisit l’orbe/coffre le plus proche et écarte les ennemis proches. Toutes les sessions finissent en défaite vague 1; aucun boss n’est vaincu. Données brutes : [`data/progression_balance_loot_survey_seed_20261017.csv`](data/progression_balance_loot_survey_seed_20261017.csv).
+
+  | Profil | Difficulté | Survie médiane | Kills médians | Niveau XP médian | DPS médian |
+  |---|---|---:|---:|---:|---:|
+  | Neuf | Easy | 19,58 s | 16 | 5 | 11,27 |
+  | Neuf | Normal | 13,73 s | 10 | 4 | 14,49 |
+  | Neuf | Hard | 8,51 s | 3 | 2 | 11,35 |
+  | Neuf | Nightmare | 4,95 s | 1 | 1 | 7,98 |
+  | Neuf | Chaos | 3,85 s | 0 | 1 | 9,36 |
+  | Intermédiaire | Easy | 20,77 s | 17 | 5 | 14,12 |
+  | Intermédiaire | Normal | 16,77 s | 13 | 4 | 12,81 |
+  | Intermédiaire | Hard | 8,43 s | 3 | 2 | 11,78 |
+  | Intermédiaire | Nightmare | 6,28 s | 2 | 2 | 15,24 |
+  | Intermédiaire | Chaos | 3,93 s | 0 | 1 | 9,78 |
+  | Arbre complet | Easy | 20,61 s | 19 | 5 | 17,45 |
+  | Arbre complet | Normal | 14,92 s | 12 | 4 | 12,82 |
+  | Arbre complet | Hard | 8,93 s | 4 | 2 | 13,64 |
+  | Arbre complet | Nightmare | 6,36 s | 2 | 2 | 13,90 |
+  | Arbre complet | Chaos | 4,51 s | 1 | 1 | 11,60 |
+
+- [i] Le profil complet améliore le DPS médian, mais pas la survie de façon uniforme. Les 45 runs perdent avant la deuxième vague; ces contrôles ne représentent toujours pas une navigation humaine ou une run complète. Un deuxième relevé Easy avec les seeds nominaux appariés a donné des résultats différents du pilote précédent, ce qui confirme la sensibilité au cadencement des frames et des choix auto. Aucun réglage **[PROPOSÉ]** n’est modifié; cette matrice ne clôt pas P6.9.
+- [x] Godot retourne le code 0; il signale à l’arrêt six instances ObjectDB et trois ressources encore référencées par le harness.
+
 ## P6.3 — Portée de ramassage équipement et XP — 2026-10-16
 
 - [x] `equipment_stats_smoke.gd` charge un seul bonus d’équipement par profil et lance une session Survival séparée par stat; vérifie HP, mobilité, dégâts, cadence, chance et dégâts critiques, soin par élimination, aire, cooldown, XP, portée de collecte et vitesse projectile.

@@ -531,7 +531,7 @@ Travail requis :
   - [x] Ajouter un parcours scripté de déplacement carré, piloté par les actions clavier en jeu, et collecter un premier relevé exploratoire sur les trois profils et cinq difficultés. Cette mesure ne constitue pas une simulation de joueur humain.
   - [x] Ajouter un protocole `kite` au survey : à intervalles simulés réguliers, le contrôleur réel recule et décrit une tangente autour de l’ennemi vivant le plus proche. Trois seeds frais Easy ont produit des runs mobiles sans assistance; ce premier échantillon reste exploratoire.
   - [x] Étendre le survey à 45 runs mobiles appariés (3 profils × 5 difficultés × 3 seeds) sans invincibilité ni kills scriptés; médianes et limites sont consignées dans `docs/qa/TESTS.md`. Aucun tuning **[PROPOSÉ]** n’est modifié.
-  - [x] Ajouter un contrôle `loot` au survey : il vise l’orbe XP ou le coffre le plus proche, garde les rayons de collecte normaux et esquive les ennemis proches; neuf runs Easy appariées (3 profils × 3 seeds) atteignent le niveau 4–11 et leurs limites sont consignées dans `docs/qa/TESTS.md`.
+  - [x] Ajouter un contrôle `loot` au survey : il vise l’orbe XP ou le coffre le plus proche, garde les rayons de collecte normaux et esquive les ennemis proches; le pilote Easy puis les 45 runs appariées (3 profils × 5 difficultés × 3 seeds) sont archivés dans `docs/qa/data/` et leurs limites sont consignées dans `docs/qa/TESTS.md`.
   - [ ] Collecter des parcours représentatifs avec déplacement joueur et plusieurs seeds; le parcours carré n’est pas un modèle de navigation/évitement humain et le baseline immobile ne mesure pas la durée d’une run complète.
   - [ ] Ajuster uniquement les paramètres dont le statut autorise l’équilibrage.
 
