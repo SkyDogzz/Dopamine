@@ -12,9 +12,15 @@ func _initialize() -> void:
 
 func _run() -> void:
 	var run_seed := 20261017
+	var movement_mode := "kite"
 	for argument in OS.get_cmdline_user_args():
 		if argument.begins_with("--seed="):
 			run_seed = int(argument.trim_prefix("--seed="))
+		elif argument.begins_with("--movement="):
+			movement_mode = argument.trim_prefix("--movement=")
+	if movement_mode not in ["kite", "stationary"]:
+		_fail("Movement mode must be kite or stationary")
+		return
 	var save_directory := ProjectSettings.globalize_path("user://saves")
 	var save_fingerprints := _save_fingerprints(save_directory)
 	var session: Node2D = load("res://scenes/survival_session.tscn").instantiate()
@@ -48,7 +54,7 @@ func _run() -> void:
 	var previous_position: Vector2 = session.player.global_position
 	while not session.run_over and session.wave_director.wave <= MAX_WAVE and \
 			Time.get_ticks_msec() - started_at < int(MAX_WALL_SECONDS * 1000.0):
-		if session.player_active_time >= next_move_at:
+		if movement_mode == "kite" and session.player_active_time >= next_move_at:
 			_set_kite_movement(session, direction_seed)
 			direction_seed += 1
 			next_move_at = session.player_active_time + 0.5
@@ -64,9 +70,9 @@ func _run() -> void:
 	elif session.wave_director.wave > MAX_WAVE:
 		result = "wave_60_complete"
 	var active_seconds: float = session.player_active_time
-	print("armorless_natural_run,seed=%d,difficulty=easy,result=%s,wave=%d,active_seconds=%.2f,kills=%d,level=%d,hp=%.1f/%.1f,path=%.1f" % [
+	print("armorless_natural_run,seed=%d,difficulty=easy,movement=%s,result=%s,wave=%d,active_seconds=%.2f,kills=%d,level=%d,hp=%.1f/%.1f,path=%.1f" % [
 		run_seed,
-		result, session.wave_director.wave, active_seconds, session.kill_count, session.player_level,
+		movement_mode, result, session.wave_director.wave, active_seconds, session.kill_count, session.player_level,
 		session.player_hp, session.player_max_hp, path_distance,
 	])
 	session.queue_free()
@@ -75,8 +81,8 @@ func _run() -> void:
 	if _save_fingerprints(save_directory) != save_fingerprints:
 		_fail("A natural Armorless run must not create or modify normal save slots")
 		return
-	if active_seconds <= 0.0 or path_distance <= 0.0:
-		_fail("The natural Armorless survey must advance combat and player movement")
+	if active_seconds <= 0.0 or (movement_mode == "kite" and path_distance <= 0.0):
+		_fail("The Armorless survey must advance combat and its selected movement mode")
 		return
 	quit(0)
 
