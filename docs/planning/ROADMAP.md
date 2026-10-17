@@ -703,6 +703,7 @@ P1 livre le Sandbox développeur et ne remplace pas cette feature produit.
 - [ ] **P9.5 — Performance**
   - [ ] Fixer le matériel iGPU de référence et la scène de charge.
   - [ ] Mesurer frame-time CPU/GPU, mémoire, P50/P95/P99.
+  - [x] Refaire trois mesures P50/P95/P99 du cœur natif sur l’hôte KVM courant et consigner leur variabilité dans `docs/qa/PERFORMANCE.md`; cette baseline ne couvre ni une vague représentative ni le GPU de référence.
   - [ ] Refaire les mesures après optimisations et archiver la configuration.
 - [x] **P9.6 — Stabilité/saves**
   - [x] Ajouter et exécuter `cmake --build build --target stability_soak`, cible opt-in hors CTest rapide : 600,4 s Survival/46 sessions, 129,2 s Endless/10, 130,2 s Armorless/10 et 600,1 s Sandbox/40 lots d’ennemis, sans mutation détectée de `user://saves`; détail et limites dans `docs/qa/TESTS.md`.

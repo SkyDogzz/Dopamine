@@ -45,6 +45,21 @@ L’environnement utilisé pour la reprise expose 8 vCPU AMD EPYC-Milan sous KVM
 
 Recontrôle lors de la reprise du goal : `/dev/dri/card0` et `renderD128` sont présents, mais `lspci` identifie uniquement un adaptateur Virtio 1.0 (`1af4:1050`) sous KVM. Aucun accès à l’identité ou aux compteurs du GPU hôte n’est exposé; ni `DISPLAY`, ni `perf`, `nvidia-smi`, `radeontop` ou `intel_gpu_top` ne sont disponibles. La présence de ces nœuds DRM ne constitue donc pas une mesure de l’iGPU cible. Le profilage GPU de référence reste **[OUVERT]**.
 
+## Recontrôle Debug depuis `6f55f2f` — 2026-10-17
+
+Le benchmark a été reconstruit avec CMake 3.31.12 puis lancé trois fois sur Linux x86_64, AMD EPYC-Milan virtualisé sous KVM (8 vCPU), GCC 14.2.0. Chaque répétition mesure 300 pas de `SimulationCore::advance` à 60 Hz : 500 ennemis immobiles et 2 000 projectiles, sans impact, puis 2 000 impacts Wildfire concentrés par pas sur les ennemis regroupés.
+
+| Charge | Répétition | Moyenne | P50 | P95 | P99 | Maximum |
+|---|---:|---:|---:|---:|---:|---:|
+| Sans impact | 1 | 1,224 ms | 1,218 ms | 1,340 ms | 1,402 ms | 1,454 ms |
+| Sans impact | 2 | 1,301 ms | 1,216 ms | 1,855 ms | 1,892 ms | 1,900 ms |
+| Sans impact | 3 | 1,213 ms | 1,216 ms | 1,301 ms | 1,397 ms | 1,472 ms |
+| Rafale Wildfire concentrée | 1 | 72,107 ms | 71,085 ms | 78,694 ms | 86,533 ms | 91,922 ms |
+| Rafale Wildfire concentrée | 2 | 71,611 ms | 70,795 ms | 77,582 ms | 85,213 ms | 94,131 ms |
+| Rafale Wildfire concentrée | 3 | 72,484 ms | 71,406 ms | 78,262 ms | 91,955 ms | 104,533 ms |
+
+Commande : `PATH=/tmp/cmake-3.31.12-linux-x86_64/bin:$PATH cmake --build build --target simulation_benchmark --parallel 4 && ./build/simulation_benchmark`. La charge sans impact reste autour de 1,22 ms P50; la rafale extrême reste autour de 71 ms P50, bien au-delà de 16,67 ms. Elle regroupe volontairement tous les impacts et ne constitue pas une vague représentative. Ces chiffres couvrent seulement `SimulationCore::advance`, pas la GDExtension complète, le worker, le steering ou le rendu; le GPU exposé reste Virtio sous KVM et ne valide pas la cible iGPU.
+
 ## Recontrôle du benchmark natif Debug — 2026-10-17
 
 Sur le commit `d8b5af0`, le benchmark natif a été reconstruit avec `/tmp/cmake-3.31.12-linux-x86_64/bin/cmake --build build --target simulation_benchmark --parallel 4`, puis exécuté sur le même hôte Linux x86_64, AMD EPYC-Milan virtualisé sous KVM (8 vCPU), GCC 14.2.0. La charge mesure 300 pas de `SimulationCore::advance` à 60 Hz : 500 ennemis immobiles et 2 000 projectiles, sans impact, puis la même population avec 2 000 impacts Wildfire concentrés par pas.
