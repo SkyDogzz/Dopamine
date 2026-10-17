@@ -284,16 +284,6 @@ bool SimulationCore::apply_damage_over_time(EntityId target, float damage_per_ti
 		return false;
 	}
 	auto &effects = damage_over_time_[target.index];
-	const bool burn_or_poison = status_type == "burn" || status_type == "poison";
-	const bool complementary_active = burn_or_poison && std::any_of(effects.begin(), effects.end(),
-		[&status_type](const DamageOverTime &effect) {
-			return (status_type == "burn" && effect.status_type == "poison") ||
-					(status_type == "poison" && effect.status_type == "burn");
-		});
-	if (!burn_or_poison || (effects.empty() || (!complementary_active &&
-			std::none_of(effects.begin(), effects.end(), [&status_type](const DamageOverTime &effect) {
-				return effect.status_type == status_type;
-			})))) effects.clear();
 	const auto existing = std::find_if(effects.begin(), effects.end(), [&status_type](const DamageOverTime &effect) {
 		return effect.status_type == status_type;
 	});
@@ -576,11 +566,6 @@ void SimulationCore::restore_state(const SimulationCoreState &state) {
 					throw std::invalid_argument("invalid simulation core damage-over-time state");
 				}
 				status_types.push_back(status.status_type);
-			}
-			if (status_types.size() > 1 && (status_types.size() != 2 ||
-					!((status_types[0] == "burn" && status_types[1] == "poison") ||
-					(status_types[0] == "poison" && status_types[1] == "burn")))) {
-				throw std::invalid_argument("only Burn and Poison may coexist as damage-over-time effects");
 			}
 		}
 		if (entity.chill_effect.has_value()) {

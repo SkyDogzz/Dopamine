@@ -561,18 +561,28 @@ int main() {
 			"reapplication should replace rather than stack or retain old timing");
 	const auto dual_status_target = damage_over_time.spawn("chaser", 0.0F, 0.0F, 30.0F, 0.0F, 0.0F);
 	require(damage_over_time.apply_damage_over_time(dual_status_target, 2.0F, 0.5, 2.0, "burn") &&
-			damage_over_time.apply_damage_over_time(dual_status_target, 3.0F, 1.0, 2.0, "poison"),
-			"Burn and Poison should coexist on the same target");
+			damage_over_time.apply_damage_over_time(dual_status_target, 3.0F, 1.0, 2.0, "poison") &&
+			damage_over_time.apply_damage_over_time(dual_status_target, 4.0F, 0.75, 2.0, "bleed"),
+			"different DoT types should coexist on the same target");
 	const auto dual_status_state = damage_over_time.entity(dual_status_target);
-	require(dual_status_state && dual_status_state->damage_over_time_effects.size() == 2,
-			"snapshots should expose both simultaneously active status effects");
+	require(dual_status_state && dual_status_state->damage_over_time_effects.size() == 3,
+			"snapshots should expose all simultaneously active status effects");
+	require(damage_over_time.apply_damage_over_time(dual_status_target, 5.0F, 1.0, 2.0, "poison"),
+			"reapplying one DoT type should be accepted");
+	const auto refreshed_status_state = damage_over_time.entity(dual_status_target);
+	require(refreshed_status_state && refreshed_status_state->damage_over_time_effects.size() == 3 &&
+			std::any_of(refreshed_status_state->damage_over_time_effects.begin(), refreshed_status_state->damage_over_time_effects.end(),
+					[](const auto &effect) { return effect.status_type == "poison" && effect.damage_per_tick == 5.0F; }),
+			"reapplying one DoT should replace only that type");
 	const auto dual_status_ticks = damage_over_time.advance(1.0);
 	require(std::count_if(dual_status_ticks.begin(), dual_status_ticks.end(), [](const auto &event) {
 			return event.is_damage_over_time && event.status_type == "burn";
 		}) == 2 && std::count_if(dual_status_ticks.begin(), dual_status_ticks.end(), [](const auto &event) {
 			return event.is_damage_over_time && event.status_type == "poison";
-		}) == 1 && damage_over_time.entity(dual_status_target)->health.current == 23.0F,
-			"Burn and Poison should tick on their independent clocks and both damage the target");
+		}) == 1 && std::count_if(dual_status_ticks.begin(), dual_status_ticks.end(), [](const auto &event) {
+			return event.is_damage_over_time && event.status_type == "bleed";
+		}) == 1 && damage_over_time.entity(dual_status_target)->health.current == 17.0F,
+			"distinct DoTs should tick independently and a refresh should replace only its matching type");
 	SimulationCore toxic_ignition_statuses;
 	const auto ignition_source_target = toxic_ignition_statuses.spawn("chaser", 10.0F, 0.0F, 100.0F, 0.0F, 0.0F);
 	const auto ignition_splash_target = toxic_ignition_statuses.spawn("chaser", 20.0F, 0.0F, 100.0F, 0.0F, 0.0F);

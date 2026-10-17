@@ -423,7 +423,7 @@
 - [x] `simulation_core_tests` vérifie que Poison et Burn coexistent, infligent chacun leurs ticks à leurs propres intervalles et survivent à la capture/restauration de simulation. La réapplication conserve le remplacement du statut de même type.
 - [x] `survival_weapon_catalog_smoke.gd` vérifie l’impact direct, les dégâts de zone dans le rayon, l’exclusion d’une cible hors rayon, le cooldown local et l’exclusion des ticks DoT.
 - [x] Le snapshot expose `DamageOverTimeEffects` pour tous les statuts actifs et conserve `DamageOverTime` comme alias du premier statut pour les consommateurs historiques; les anneaux Survival affichent les statuts multiples.
-- [ ] Équilibrer la réaction au cours de runs réelles; les autres combinaisons simultanées de DoT restent **[OUVERTES]**.
+- [ ] Équilibrer la réaction au cours de runs réelles; les DoT distincts coexistent **[VALIDÉ, 2026-10-17]**, et cette tâche concerne uniquement leur calibration en run.
 
 ## P7A.4 — Cycle Armorless intégré — 2026-10-16
 
