@@ -38,6 +38,12 @@
 - [x] Le même smoke vérifie que les visuels réduits ne changent pas le flux aléatoire ni l'état de simulation en pause; les parcours headless et rendu Xvfb passent sous Godot 4.7.2.
 - [i] L'échelle 1,45× est **[PROPOSÉE]** et n'ajoute pas de couleur dédiée. La vérification est automatisée sous rendu logiciel/headless et ne valide pas encore la lisibilité sur le GPU cible.
 
+## Checkpoint CTest après intégration du rendu critique — 2026-10-17
+
+- [x] Après reconfiguration CMake, la suite séquentielle passe **98/98 tests en 67,08 s** avec `/tmp/cmake-3.31.12-linux-x86_64/bin/ctest --test-dir build --output-on-failure -j1`.
+- [x] Le checkpoint comprend le nouveau `survival_critical_impact_visual_smoke` sous Xvfb/Mesa llvmpipe, le smoke headless correspondant, l’import Godot, les autres tests de rendu, Sandbox, progression, armes, boss, Armorless et Endless.
+- [i] Il s'agit d'une validation automatisée sur l'hôte Linux actuel; elle ne clôt pas les runs représentatives, le GPU de référence ni les validations de plateforme ouvertes dans la roadmap.
+
 ## P5.1.14 — Slots et déduplication des effets uniques — 2026-10-17
 
 - [x] Depuis un `git archive` propre du commit `6647f3f`, l’import Godot 4.7.2 puis `survival_loadout_smoke.gd`, `survival_unique_effects_smoke.gd` et `progression_service_smoke.gd` passent avec des `XDG_DATA_HOME` isolés.
