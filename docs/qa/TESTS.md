@@ -1584,12 +1584,13 @@ Note de clôture : le blocage historique du smoke `sandbox_ui_smoke.gd` décrit 
 - [x] `sandbox_preset_smoke.gd` vérifie que Endless standard s’exécute dans `SandboxLabContext` avec PV verrouillés, sans `ProgressionService`/`SaveService` normaux; les règles de P7B restent **[PROPOSÉES]**.
 - [x] `sandbox_lab_smoke.gd` passe sous Godot 4.7.2 headless.
 
-## P9.4 — Ouverture clavier des panneaux du hub — 2026-10-17
+## P9.4 — Parcours clavier et manette synthétique — 2026-10-17
 
 - [x] `survival_hub_smoke.gd` envoie Entrée sur Équipements puis Arbre de compétences, et Échap pour les fermer; chaque fermeture doit rendre le focus à son bouton d’origine. Le smoke dédié passe sous Godot 4.7.2 headless.
 - [x] `keyboard_menu_journey_smoke.gd` parcourt avec de vrais événements clavier synthétiques l’accueil, Options, le hub, le choix de l’arme de départ, un coffre d’arme, Pause, Options depuis Pause, l’inventaire de run et la reprise. Il vérifie le focus des contrôles clés, l’objet choisi, l’état de pause et l’horloge immobile pendant Options; la run n’est pas terminée et les données utilisateur sont isolées par `XDG_DATA_HOME` dans CTest.
-- [x] Vérification ciblée sous Godot 4.7.2 headless : `Keyboard launch-to-run journey passed`; le processus signale encore des instances ObjectDB/ressources à l’arrêt, également observées par des smokes Survival existants. Cette vérification synthétique ne remplace pas la validation de rendu et de périphériques physiques, suivie en P9.7.
-- [x] Suite complète après ajout du parcours et de son isolement CTest : **96/96 tests passent en 66,11 s** sous Godot 4.7.2 et CMake 3.31.12.
+- [x] Le même parcours au D-pad/A/B synthétiques vérifie que le style de focus non vide et bordé est présent sur le choix d’arme et du coffre. CTest lance séparément clavier et manette simulée, chacun avec son `XDG_DATA_HOME` dédié; aucun périphérique physique n’est utilisé.
+- [x] Les deux vérifications ciblées passent sous Godot 4.7.2 headless. Des instances ObjectDB/ressources restent signalées à l’arrêt des sessions, comme dans des smokes Survival existants; aucune assertion n’échoue.
+- [x] Suite complète après ajout des deux parcours et de leur isolement CTest : **97/97 tests passent en 66,36 s en séquentiel** sous Godot 4.7.2 et CMake 3.31.12.
 
 ## P9.4 — Contraste des contrôles inactifs — 2026-10-17
 
