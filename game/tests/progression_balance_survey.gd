@@ -44,6 +44,29 @@ class DamageMonitor:
 			if str(event["type"]) == "damage" and str(event.get("target_type", "")) in ENEMY_TYPES:
 				total_damage += float(event.get("amount", 0.0))
 
+class CountingChestDirector:
+	extends "res://scripts/survival_chest_director.gd"
+	var drop_counts := {
+		"weapon_drops": 0, "relic_drops": 0,
+		"ordinary_weapon_drops": 0, "ordinary_relic_drops": 0,
+		"elite_weapon_drops": 0, "elite_relic_drops": 0,
+		"boss_weapon_drops": 0, "boss_relic_drops": 0,
+		"pity_weapon_drops": 0, "pity_relic_drops": 0,
+	}
+
+	func roll_drops(active_time: float, eligible_families: Array, elite: bool = false, boss: bool = false) -> Array[String]:
+		var pity_families: Array[String] = []
+		for family in ["weapon", "relic"]:
+			if eligible_families.has(family) and guarantee_interval_seconds > 0.0 and \
+					active_time - float(_last_drop_time[family]) >= guarantee_interval_seconds:
+				pity_families.append(family)
+		var drops: Array[String] = super.roll_drops(active_time, eligible_families, elite, boss)
+		for family in drops:
+			drop_counts["%s_drops" % family] += 1
+			var source := "boss" if boss else "pity" if family in pity_families else "elite" if elite else "ordinary"
+			drop_counts["%s_%s_drops" % [source, family]] += 1
+		return drops
+
 var _case_failed := false
 var _pressed_movement_actions: Array[String] = []
 
@@ -67,7 +90,7 @@ func _run() -> void:
 		return
 
 	print("# simulation_speed=%.1fx,rng_streams=seeded" % _survey_speed(movement_pattern))
-	print("tier,difficulty,movement,simulation_speed,replicate,unlocked_nodes,hp_bonus_pct,damage_bonus_pct,speed_bonus_pct,crit_bonus_pct,active_seconds,wall_seconds,path_distance,wave,kills,level,outgoing_damage,outgoing_dps,net_hp_loss,boss_defeated,result")
+	print("tier,difficulty,movement,simulation_speed,replicate,unlocked_nodes,hp_bonus_pct,damage_bonus_pct,speed_bonus_pct,crit_bonus_pct,active_seconds,wall_seconds,path_distance,wave,kills,level,outgoing_damage,outgoing_dps,net_hp_loss,boss_defeated,result,weapon_drops,relic_drops,ordinary_weapon_drops,ordinary_relic_drops,elite_weapon_drops,elite_relic_drops,boss_weapon_drops,boss_relic_drops,pity_weapon_drops,pity_relic_drops")
 	for tier in TIERS:
 		if selected_tier != "all" and tier != selected_tier:
 			continue
@@ -156,7 +179,12 @@ func _run_case(tier: String, difficulty_id: String, replicate: int, progression:
 		_fail("Survival session failed to initialize for %s/%s" % [tier, difficulty_id])
 		return
 	session.loadout._rng.seed = case_seed ^ 0x4c4f4144
-	session._chest_director._rng.seed = case_seed ^ 0x43484553
+	var chest_director := CountingChestDirector.new()
+	chest_director.ordinary_drop_chance = session.ordinary_chest_drop_chance
+	chest_director.elite_drop_chance = session.elite_chest_drop_chance
+	chest_director.guarantee_interval_seconds = session.chest_guarantee_interval_seconds
+	chest_director._rng.seed = case_seed ^ 0x43484553
+	session._chest_director = chest_director
 	session._auto_select_first_chest = true
 	session.simulation.set_speed(survey_speed)
 	Engine.time_scale = survey_speed
@@ -197,10 +225,25 @@ func _run_case(tier: String, difficulty_id: String, replicate: int, progression:
 	var outgoing_damage := monitor.total_damage
 	var outgoing_dps := outgoing_damage / active_seconds if active_seconds > 0.0 else 0.0
 	var net_hp_loss: float = initial_hp - session.player_hp
-	print("%s,%s,%s,%.1f,%d,%d,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f,%d,%d,%d,%.2f,%.2f,%.2f,%s,%s" % [
+	for family in ["weapon", "relic"]:
+		var attributed_drops := 0
+		for source in ["ordinary", "elite", "boss", "pity"]:
+			attributed_drops += int(chest_director.drop_counts["%s_%s_drops" % [source, family]])
+		if attributed_drops != int(chest_director.drop_counts["%s_drops" % family]):
+			_case_failed = true
+			_fail("Chest drop attribution mismatch for %s: total=%d attributed=%d" % [
+				family, int(chest_director.drop_counts["%s_drops" % family]), attributed_drops,
+			])
+			return
+	print("%s,%s,%s,%.1f,%d,%d,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f,%d,%d,%d,%.2f,%.2f,%.2f,%s,%s,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d" % [
 		tier, difficulty_id, movement_pattern, survey_speed, replicate + 1, unlocked_count, hp_bonus, damage_bonus, speed_bonus, crit_bonus,
 		active_seconds, elapsed_wall, path_distance, session.wave_director.wave, session.kill_count,
 		session.player_level, outgoing_damage, outgoing_dps, net_hp_loss, boss_defeated, result,
+		chest_director.drop_counts["weapon_drops"], chest_director.drop_counts["relic_drops"],
+		chest_director.drop_counts["ordinary_weapon_drops"], chest_director.drop_counts["ordinary_relic_drops"],
+		chest_director.drop_counts["elite_weapon_drops"], chest_director.drop_counts["elite_relic_drops"],
+		chest_director.drop_counts["boss_weapon_drops"], chest_director.drop_counts["boss_relic_drops"],
+		chest_director.drop_counts["pity_weapon_drops"], chest_director.drop_counts["pity_relic_drops"],
 	])
 	if active_seconds <= 0.0 or monitor.last_sequence <= 0:
 		_case_failed = true

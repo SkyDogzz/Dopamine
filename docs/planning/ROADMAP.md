@@ -378,6 +378,7 @@ Travail requis :
   - [x] Ouvrir un vrai coffre d’arme, afficher l’unique évolution devenue éligible et la collecter; `survival_weapon_catalog_smoke.gd` vérifie que le combo s’active après cette collecte.
 - [ ] **P5.3.4 — Probabilités**
   - [x] Garder les taux de drop, le filet anti-malchance et les poids d’offres accessibles en configuration; `survival_chest_director_smoke.gd` vérifie désormais aussi, sur 40 000 tirages seedés, les fréquences ordinaires/élites et l’indépendance des deux familles; `survival_loadout_smoke.gd` couvre les poids d’offres.
+  - [x] Instrumenter `progression_balance_survey.gd` pour enregistrer les drops réels par famille et distinguer tirages ordinaires, élites, boss et filet; trois parcours exploratoires Easy sont archivés dans `docs/qa/data/progression_balance_chest_metrics_20261017.csv`. Cette mesure ne calibre pas les taux.
   - [x] Intégrer `free_first_chest_reroll` au premier coffre de run via P6.5; le comportement reste **[PROPOSÉ]** et est couvert par `free_chest_reroll_smoke.gd`.
   - [ ] Faire arbitrer les valeurs nécessaires avant leur verrouillage; les coefficients restent **[PROPOSÉS]**.
 - [x] **P5.3.5 — Collecte**

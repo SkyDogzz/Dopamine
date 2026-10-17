@@ -1,0 +1,7 @@
+# Godot 4.7.2; seed base=20261016; difficulty=Easy; movement=loot; simulation speed=1x.
+# Three fresh-profile Survival runs; normal HP, ordinary spawns, no scripted kills, XDG_DATA_HOME isolated.
+# Counts are actual director drops. These short runs do not reach the 60s pity interval or a boss/elite drop.
+tier,difficulty,movement,simulation_speed,replicate,unlocked_nodes,hp_bonus_pct,damage_bonus_pct,speed_bonus_pct,crit_bonus_pct,active_seconds,wall_seconds,path_distance,wave,kills,level,outgoing_damage,outgoing_dps,net_hp_loss,boss_defeated,result,weapon_drops,relic_drops,ordinary_weapon_drops,ordinary_relic_drops,elite_weapon_drops,elite_relic_drops,boss_weapon_drops,boss_relic_drops,pity_weapon_drops,pity_relic_drops
+fresh,easy,loot,1.0,1,0,0.00,0.00,0.00,0.00,22.26,22.27,5280.00,1,20,6,386.87,17.38,100.00,false,defeat,1,0,1,0,0,0,0,0,0,0
+fresh,easy,loot,1.0,2,0,0.00,0.00,0.00,0.00,22.69,22.70,5380.00,1,22,6,308.82,13.61,100.00,false,defeat,0,0,0,0,0,0,0,0,0,0
+fresh,easy,loot,1.0,3,0,0.00,0.00,0.00,0.00,22.23,22.23,5268.00,1,23,6,287.73,12.95,100.00,false,defeat,0,0,0,0,0,0,0,0,0,0
