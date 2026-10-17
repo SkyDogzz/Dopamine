@@ -2055,7 +2055,7 @@ func _finish_run(victory: bool) -> void:
 			)
 		armorless_run_state.end_run()
 		_pending_armorless_draft_waves.clear()
-	elif progression_service != null and progression_service.can_save_profile():
+	elif mode_id != "endless" and progression_service != null and progression_service.can_save_profile():
 		reward = progression_service.award_survival_run(
 			_run_id, wave_director.wave, victory, kill_count, difficulty_id, _run_achievement_metrics()
 		)
