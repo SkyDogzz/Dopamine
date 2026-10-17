@@ -45,6 +45,17 @@ L’environnement utilisé pour la reprise expose 8 vCPU AMD EPYC-Milan sous KVM
 
 Recontrôle lors de la reprise du goal : `/dev/dri/card0` et `renderD128` sont présents, mais `lspci` identifie uniquement un adaptateur Virtio 1.0 (`1af4:1050`) sous KVM. Aucun accès à l’identité ou aux compteurs du GPU hôte n’est exposé; ni `DISPLAY`, ni `perf`, `nvidia-smi`, `radeontop` ou `intel_gpu_top` ne sont disponibles. La présence de ces nœuds DRM ne constitue donc pas une mesure de l’iGPU cible. Le profilage GPU de référence reste **[OUVERT]**.
 
+## Recontrôle du benchmark natif Debug — 2026-10-17
+
+Sur le commit `d8b5af0`, le benchmark natif a été reconstruit avec `/tmp/cmake-3.31.12-linux-x86_64/bin/cmake --build build --target simulation_benchmark --parallel 4`, puis exécuté sur le même hôte Linux x86_64, AMD EPYC-Milan virtualisé sous KVM (8 vCPU), GCC 14.2.0. La charge mesure 300 pas de `SimulationCore::advance` à 60 Hz : 500 ennemis immobiles et 2 000 projectiles, sans impact, puis la même population avec 2 000 impacts Wildfire concentrés par pas.
+
+| Charge | Moyenne | P50 | P95 | P99 | Maximum |
+|---|---:|---:|---:|---:|---:|
+| Sans impact | 1,215 ms | 1,184 ms | 1,585 ms | 1,686 ms | 1,705 ms |
+| Rafale Wildfire | 74,167 ms | 73,536 ms | 79,471 ms | 92,148 ms | 98,903 ms |
+
+Commande : `build/simulation_benchmark`. Cette nouvelle mesure ponctuelle remplace les chiffres Debug précédents comme dernier relevé de cet hôte. Elle couvre uniquement le cœur natif, pas le rendu, la GDExtension, le worker ou le steering; l’environnement n’expose pas le GPU hôte. La rafale concentrée n’est pas une vague représentative et les chiffres ne prouvent pas l’objectif 60 FPS sur iGPU.
+
 ## Ressources au plafond natif — Sandbox P8.7 — 2026-10-17
 
 Le plafond partagé est de 2 500 entités ECS (ennemis, projectiles et orbes XP), avec 500 entités maximum par commande Spawn, 2 048 commandes en attente, 8 192 événements différés et 6 000 événements estimés par pas. `simulation_worker_test` remplit la simulation à 2 500 entités avec 500 Chasers et 2 000 projectiles, vérifie qu’un batch excédentaire de deux est rejeté sans ajout partiel, puis remplit exactement la dernière place.

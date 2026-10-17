@@ -171,9 +171,9 @@ P6 a déjà du code anticipé, dont la rotation automatique des bonus XP **[VALI
   - [ ] Couvrir expiration et plusieurs ticks dus dans un même pas.
   - [ ] Vérifier refus atomique quand le budget d’événements est dépassé.
 - [ ] **P2.7 — Profilage**
-  - [ ] Relancer le benchmark natif sur une configuration enregistrée.
+  - [x] Reconstruire et relancer le benchmark natif sur la configuration Linux Debug enregistrée; mesures et limites virtualisées dans [`docs/qa/PERFORMANCE.md`](../qa/PERFORMANCE.md).
   - [ ] Mesurer CPU, GPU et frame-time dans Godot sur la machine iGPU de référence.
-  - [ ] Consigner P50/P95/P99, charge et limites matérielles.
+  - [x] Consigner P50/P95/P99 du cœur natif, charge et limites de l’hôte virtualisé dans [`docs/qa/PERFORMANCE.md`](../qa/PERFORMANCE.md); le profil iGPU reste séparément ouvert.
 
 **Critère de sortie :** les comportements réellement retenus sont inspectables, bornés, cohérents avec leur horloge et testés sous différents pas de simulation.
 
