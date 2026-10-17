@@ -62,9 +62,9 @@ func _run() -> void:
 		selected[0] = option_id
 		selection_count[0] += 1
 	)
-	first.pressed.emit()
+	await _send_mouse_click(first)
 	if choice.visible or selected[0] != "weapon:lightning_conductor" or selection_count[0] != 1:
-		_fail("Selecting a chest card should emit its existing offer id once and close the panel")
+		_fail("A mouse click on a chest card should emit its offer id once and close the panel")
 		return
 	if choice.present(options.slice(0, 2), 3, "INVALID CHEST"):
 		_fail("A chest with an incomplete offer set should not open")
@@ -81,9 +81,14 @@ func _run() -> void:
 	if title.get_theme_color("font_color") != Color("#FF75E3"):
 		_fail("Relic chests should use the relic-family magenta accent")
 		return
-	(buttons.get_child(0) as Button).pressed.emit()
-	if choice.visible or selected[0] != "relic:storm_core" or selection_count[0] != 2:
-		_fail("Selecting a relic should return its existing offer id once")
+	await _send_gamepad_button(JOY_BUTTON_DPAD_DOWN)
+	var focused_relic := root.gui_get_focus_owner() as Button
+	if focused_relic != buttons.get_child(1):
+		_fail("The gamepad D-pad should move focus to the second relic offer")
+		return
+	await _send_gamepad_button(JOY_BUTTON_A)
+	if choice.visible or selected[0] != "relic:infernal_heart" or selection_count[0] != 2:
+		_fail("Gamepad A should select the focused relic and return its offer id once")
 		return
 	choice.queue_free()
 	await process_frame
@@ -93,3 +98,26 @@ func _run() -> void:
 func _fail(message: String) -> void:
 	push_error(message)
 	quit(1)
+
+func _send_gamepad_button(button_index: JoyButton) -> void:
+	var event := InputEventJoypadButton.new()
+	event.device = 0
+	event.button_index = button_index
+	event.pressed = true
+	Input.parse_input_event(event)
+	await process_frame
+	event.pressed = false
+	Input.parse_input_event(event)
+	await process_frame
+
+func _send_mouse_click(control: Control) -> void:
+	var event := InputEventMouseButton.new()
+	event.position = control.get_global_rect().get_center()
+	event.global_position = event.position
+	event.button_index = MOUSE_BUTTON_LEFT
+	event.pressed = true
+	Input.parse_input_event(event)
+	await process_frame
+	event.pressed = false
+	Input.parse_input_event(event)
+	await process_frame

@@ -36,6 +36,13 @@
 - Le smoke ciblé passe sous Godot 4.7.2 : import projet et hub, **2/2**.
 - Les interactions sur vraie souris/manette et le parcours physique complet du menu restent à vérifier sur matériel.
 
+## P4.1 / P9.4 — Entrée d’arme et choix de coffre — 2026-10-17
+
+- `survival_starting_weapon_smoke.gd` vérifie le focus initial, la navigation par flèche bas, la validation Entrée, la pause durant le choix, l’arme réellement équipée et son abréviation dans le HUD.
+- `survival_chest_choice_smoke.gd` sélectionne la première offre par clic souris synthétique, puis parcourt une offre de relique au D-pad et la valide avec A; les identifiants de sélection et le nombre de callbacks sont vérifiés.
+- Les deux CTest ciblés passent avec l’import projet : `survival_starting_weapon_smoke` 2/2 et `chest_choice_smoke` 2/2. `git diff --check` passe.
+- Ces événements Godot synthétiques confirment les chemins logiciels; ils ne constituent pas un essai de souris/manette physique. La navigation manette complète de l’arme de départ et celle de tous les menus restent à parcourir sur matériel.
+
 ## Build et lancement depuis un clone Git propre — 2026-10-17
 
 - Clone local neuf du commit `09baf7a`, puis configuration CMake 3.31.12, compilation complète avec GCC 14.2.0, import Godot 4.7.2 et lancement headless de la scène principale : réussis. FetchContent a récupéré le SHA `godot-cpp` verrouillé.

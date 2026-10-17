@@ -33,7 +33,18 @@ func _run() -> void:
 	if inferno_choice == null:
 		_fail("The starting weapon options should include Inferno Sprayer")
 		return
-	inferno_choice.emit_signal("pressed")
+	var first_choice := choice.get_node("Content/Options").get_child(0) as Button
+	if root.gui_get_focus_owner() != first_choice:
+		_fail("The first starting weapon should receive initial focus")
+		return
+	await _send_key(KEY_DOWN)
+	var selected_choice := root.gui_get_focus_owner() as Button
+	if selected_choice == null or selected_choice == first_choice:
+		_fail("Down arrow should move focus to the other starting weapon")
+		return
+	var selected_title: String = selected_choice.get_node("ContentMargin/OfferRow/OfferDetails/OfferTitle").text
+	var selected_weapon_id := selected_title.to_snake_case()
+	await _send_key(KEY_ENTER)
 	var deadline := Time.get_ticks_msec() + 1000
 	while Time.get_ticks_msec() < deadline:
 		state = session.simulation.snapshot()
@@ -41,15 +52,31 @@ func _run() -> void:
 				session.player_active_time > paused_active_time:
 			break
 		await process_frame
+	var other_weapon_id := "inferno_sprayer" if selected_weapon_id == "lightning_conductor" else "lightning_conductor"
 	if state["paused"] or float(state["simulation_time"]) <= paused_simulation_time or \
-			session.loadout.weapon_level("inferno_sprayer") != 1 or session.loadout.weapon_level("lightning_conductor") != 0:
-		_fail("Selecting Inferno Sprayer should equip it and start the run")
+		session.loadout.weapon_level(selected_weapon_id) != 1 or session.loadout.weapon_level(other_weapon_id) != 0:
+		_fail("The keyboard-selected starting weapon should be equipped and start the run")
 		return
 	if session.player_active_time <= paused_active_time or session.player_hp >= paused_hp:
 		_fail("Simulation time and HP decay should resume after the starting choice")
 		return
+	var hud_weapon_text: String = session.get_node("HUD/RunPanel/RunInfo/LoadoutRow/LoadoutLabel").text
+	var expected_hud_label := "LC Lv1" if selected_weapon_id == "lightning_conductor" else "IS Lv1"
+	if not hud_weapon_text.contains(expected_hud_label):
+		_fail("The run HUD should show the keyboard-selected weapon: %s" % hud_weapon_text)
+		return
 	print("Survival starting weapon smoke passed")
 	quit()
+
+func _send_key(keycode: Key) -> void:
+	var event := InputEventKey.new()
+	event.keycode = keycode
+	event.pressed = true
+	Input.parse_input_event(event)
+	await process_frame
+	event.pressed = false
+	Input.parse_input_event(event)
+	await process_frame
 
 func _fail(message: String) -> void:
 	push_error(message)

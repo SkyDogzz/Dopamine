@@ -238,9 +238,9 @@ P6 a déjà du code anticipé, dont la rotation automatique des bonus XP **[VALI
 ### Travaux
 
 - [ ] **P4.1 — Démarrage de run**
-  - [ ] Vérifier l’entrée Survival et le choix entre les deux armes affichées.
+  - [x] Vérifier l’entrée Survival et le choix entre les deux armes affichées; smoke automatisé vérifie le modal et l’équipement de l’offre effectivement sélectionnée.
   - [ ] Parcourir choix et validation au clavier, flèches et manette.
-  - [ ] Confirmer le loadout et le HUD au début de run.
+  - [x] Confirmer le loadout et le HUD au début de run après sélection clavier; le smoke confirme que seule l’arme choisie est équipée et que son abréviation apparaît dans le HUD.
 - [ ] **P4.2 — Boucle d’une vague**
   - [ ] Jouer une vague sans harness et vérifier le timer de 30 secondes simulées.
   - [ ] Vérifier spawn, déplacement ennemi, dégâts, XP, soins et mort du joueur.
