@@ -1593,6 +1593,12 @@ Note de clôture : le blocage historique du smoke `sandbox_ui_smoke.gd` décrit 
 - [x] Le créateur confirme avoir déjà effectué les vérifications manuelles demandées et que tout est bon. Cette confirmation couvre le parcours manuel du catalogue Sandbox demandé pour P5.V4 ainsi que la run de bout en bout, le choix manuel d’un coffre et la persistance sans doublon; aucun détail par arme, build, difficulté ou plateforme n’a été fourni.
 - [ ] Le profilage représentatif CPU/GPU et des armes reste à réaliser avec des mesures reproductibles; la confirmation manuelle ne le remplace pas.
 
+## P5.V4 — Revue et checkpoint — 2026-10-17
+
+- [x] Revue des références GDD/ADR/architecture et de l’état P5 : catalogue, règles de coffres, réactions, ennemis/boss et parcours Sandbox sont couverts par les smokes ciblés consignés ci-dessus; les statuts **[PROPOSÉ]** des valeurs de combat restent inchangés.
+- [x] Depuis le checkout courant, `/tmp/cmake-3.31.12-linux-x86_64/bin/ctest --test-dir build --output-on-failure -j1` passe **112/112 tests en 76,25 s** sous Godot 4.7.2, dont Sandbox, Survival, les dix scénarios d’armes, progression, Armorless et Endless standard.
+- [i] Ce checkpoint valide l’intégration et non l’équilibrage. Restent au registre P9 les runs représentatives, l’équilibrage Chaos, la complétion Armorless sans assistance et le profilage sur iGPU cible.
+
 ## P5 — Comparaison contrôlée des armes — 2026-10-17
 
 - [x] `combat_weapon_balance_survey.gd` exécute les dix armes dans trois configurations chacune via `SurvivalSession`: niveau 1, niveau 5 avec relique niveau 5 sans évolution, et build évolué. Les 30 scénarios de chacune des trois formations (cibles groupées, cible unique, huit Chasers mobiles) passent sur 18 secondes simulées; les commandes reproductibles et DPS observés sont consignés dans `PERFORMANCE.md`.

@@ -446,7 +446,7 @@ Travail requis :
 - [x] **P5.V3 — Run de bout en bout**
   - [x] Défaite en interface réelle, Easy avec Lightning Conductor, profil `XDG_DATA_HOME` isolé, verrouillage de vie et choix auto désactivés : écran RUN OVER à la vague 2 après 00:45 et 14 éliminations; le panneau a affiché +13 Essence et +18 Basic Powder.
   - [x] Le créateur confirme le 2026-10-17 une victoire en interface réelle sans assistance, un choix manuel de coffre, et les récompenses persistées sans duplication après relance. Rapport utilisateur consigné dans `docs/qa/TESTS.md`; difficulté, arme, plateforme et montants ne sont pas précisés.
-- [ ] **P5.V4 — Revue et checkpoint**
+- [x] **P5.V4 — Revue et checkpoint**
   - [x] Consigner les validations et les limites sans changer les statuts de décision du GDD.
   - [x] Relancer la suite CTest complète : 66/66 passent en séquentiel le 2026-10-16 après correction du redémarrage de run. Le benchmark natif sur 500 ennemis/2 000 projectiles mesure la rafale d’impacts avant/après optimisation; résultats et limites consignés dans `docs/qa/TESTS.md`.
   - [x] Corriger l’arc Lightning qui retouchait sa source à courte distance; smoke natif ciblé et catalogue vérifiés, 10 répétitions consécutives puis CTest complet 67/67.
@@ -456,6 +456,7 @@ Travail requis :
   - [x] Revalider le checkout le 2026-10-17 : CTest passe 87/87 en 61,40 s. La répétition du smoke catalogue a révélé un fixture Thermal Shock intermittent (cibles quasi chevauchées); les cibles sont désormais espacées et les armes du fixture désactivées. Le catalogue passe dix exécutions consécutives.
   - [x] Enregistrer la confirmation utilisateur de P5.V3 (run de victoire, coffre, récompenses et relance) ; voir `docs/qa/TESTS.md`.
   - [x] Le créateur confirme aussi avoir vérifié manuellement P5.4 dans sa run complète jusqu’à la victoire du boss final; difficulté et loadout non précisés. L’équilibrage Chaos représentatif reste ouvert.
+  - [x] Revue du checkpoint et suite CTest séquentielle le 2026-10-17 : **112/112 tests passent en 76,25 s** avec Godot 4.7.2. Aucun changement de code n’était requis; les limites de calibration et validation matériel restent ouvertes pour P9.
   - [x] Le créateur confirme le 2026-10-17 avoir terminé les vérifications manuelles demandées et que tout est bon; aucun détail par arme/build/difficulté/plateforme n’a été fourni (voir `docs/qa/TESTS.md`).
   - [x] Ajouter une comparaison reproductible de DPS pour les dix armes au niveau 1, niveau 5 + relique 5, et évoluées, sur cible unique, grappe fixe et Chasers mobiles; données et limites dans `docs/qa/PERFORMANCE.md`. Cette mesure de laboratoire ne valide pas le tuning.
   - [x] Enregistrer une run Easy complète sous Windows jusqu’à la victoire de la vague 24 puis au début d’Endless vague 25; métriques et limites dans `docs/qa/PERFORMANCE.md` et `docs/qa/data/windows_survival_profile.csv`.
