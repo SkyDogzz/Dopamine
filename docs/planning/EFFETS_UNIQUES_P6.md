@@ -13,7 +13,7 @@ Les effets ci-dessous sont les effets sélectionnables et exécutés en Survival
 
 `equipped_unique_effects()` déduplique un même ID actif porté sur plusieurs pièces. `revive_once` est l’ID validé pour le revive. `revive_knockback` demeure accepté en lecture pour les anciennes saves, mais n'est plus proposé aux nouvelles pièces et n'a pas de comportement de jeu.
 
-Le GDD valide le principe de revives rares. Décisions utilisateur du 2026-10-17, réponses C, B, B, B puis A : l’effet `revive_once` équipé accorde un revive, au maximum une fois par run; au coup fatal, le jeu demande confirmation avant consommation; si le joueur confirme, il revient à 50 % de ses PV max avec 3 secondes d’invulnérabilité. `revive_knockback` reste lisible pour les anciennes saves sans comportement de revive. Les modes concernés restent **[OUVERTS]** dans `DECISIONS_RESTANTES.md`; l’effet reste désactivé jusque-là.
+Le GDD valide le principe de revives rares. Décisions utilisateur du 2026-10-17, réponses C, B, B, B, A puis B : l’effet `revive_once` équipé accorde un revive, au maximum une fois par run en Survival et Endless standard; au coup fatal, le jeu demande confirmation avant consommation; si le joueur confirme, il revient à 50 % de ses PV max avec 3 secondes d’invulnérabilité. `revive_knockback` reste lisible pour les anciennes saves sans comportement de revive. Endless Armorless et le Sandbox Lab sont exclus; l’effet peut maintenant être implémenté dans ces deux modes normaux.
 
 ## Calibration encore ouverte
 
