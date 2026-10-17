@@ -1,6 +1,6 @@
 # Third-party notices
 
-This file records bundled software and font licenses currently identified in the repository. It is a source-tree notice; release packaging must place it beside desktop builds or otherwise make it available to players. This is a partial inventory, not release clearance: the final asset and audio provenance review and the packaged Godot engine's third-party copyright list remain to be merged before P9.8 can close.
+This file records bundled software and font licenses currently identified in the repository. It is a source-tree notice; release packaging must place it beside desktop builds or otherwise make it available to players. This is a partial inventory, not release clearance: the archived Godot 4.7.2 engine list has not been compared with the actual export template, and the final asset/audio provenance review remains open.
 
 ## Godot Engine 4.7.2
 
@@ -27,7 +27,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
-For the engine's bundled third-party components, use the `COPYRIGHT.txt` matching the exact export template used for release: [Godot license guidance](https://godotengine.org/license) and [official license-compliance documentation](https://docs.godotengine.org/en/stable/about/complying_with_licenses.html).
+The official Godot 4.7.2 runtime binary's `Engine.get_copyright_info()` and `Engine.get_license_info()` outputs are archived as [`godot-4.7.2-copyright-info.json`](docs/release/licenses/godot-4.7.2-copyright-info.json) and [`godot-4.7.2-license-info.json`](docs/release/licenses/godot-4.7.2-license-info.json). They list 102 components and 19 license texts. The export templates are not installed in this workspace, so this archive is not claimed as an exact-template verification. For release, compare it with, or regenerate it using, the actual export template: [Godot license guidance](https://godotengine.org/license) and [official license-compliance documentation](https://docs.godotengine.org/en/stable/about/complying_with_licenses.html).
 
 ## godot-cpp
 
