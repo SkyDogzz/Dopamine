@@ -34,6 +34,12 @@
 - [x] `survival_chest_layout_smoke.gd` passe aux viewports 640×360, 1280×720 et 1920×1080.
 - [i] Le smoke de collecte réussit ses assertions mais Godot signale 8 instances ObjectDB et 4 ressources encore en usage à l’arrêt. La cause de cet avertissement de fermeture reste à diagnostiquer; il ne correspond pas à un échec d’assertion de collecte.
 
+## P5.4.6 — Difficultés et cadence Chaos — 2026-10-17
+
+- [x] Depuis un snapshot propre de `7221c57`, `survival_difficulty_profile_smoke.gd`, `survival_difficulty_unlock_smoke.gd`, `survival_difficulty_session_smoke.gd` et `survival_boss_attack_smoke.gd` passent sous Godot 4.7.2 avec des profils `XDG_DATA_HOME` isolés.
+- [x] Les smokes couvrent difficulté transmise à la run, victoire/défaite et déblocage séquentiel, multiplicateurs Easy/Normal/Chaos distincts, cadence du suivi Chaos après deux attaques normales pour les deux boss, télégraphes et pause.
+- [i] Les multiplicateurs restent **[PROPOSÉS]** et la run Chaos représentative reste à valider dans P9. Le smoke boss affiche un avertissement ObjectDB/ressource à l’arrêt sans échec d’assertion.
+
 ## Build Linux depuis un répertoire CMake vierge — 2026-10-17
 
 - Inventaire de cet environnement : CMake 3.31.12, GCC 14.2.0, Godot officiel 4.7.2 (`ed1daf0bf`) et `godot-cpp` `b8530af7546a3fcae80cef2477526569fd42ffc2`.

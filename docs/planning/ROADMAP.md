@@ -419,7 +419,7 @@ Travail requis :
   - [x] Remplacer l’apparence placeholder du Core par le sprite dédié `boss_dopamine_core` et vérifier sa route dans le renderer ainsi que PNG/source Aseprite, dimensions et palette.
   - [x] Vérifier par `survival_final_boss_loot_smoke.gd` la défaite du Core, les deux coffres garantis configurables consommés l’un après l’autre, puis l’écran de victoire; la validation en run sans harness reste dans P5.V3.
   - Prototype en cours : le Dopamine Core dispose de trois phases, de rayons/zones télégraphiés et esquivables, d’une spirale en tirs successifs et d’invocations en phases 2–3. Le smoke confirme le plafond d’invocations partagé en phases 2–3 ; son identité visuelle est un prototype dédié, sans validation de canon. Tous ces patterns et nombres restent **[PROPOSÉS]**.
-- [ ] **P5.4.6 — Difficultés**
+- [x] **P5.4.6 — Difficultés**
   - [x] Persister la difficulté maximale débloquée (Easy initialement) et transmettre la difficulté choisie du hub à la run.
   - [x] Après une victoire contre le boss de vague 24, débloquer uniquement la difficulté suivante; refuser les récompenses d’une difficulté verrouillée avec `difficulty_locked`. Une défaite ne débloque rien.
   - [x] Vérifier que HP, dégâts ennemis, densité et récompenses utilisent leurs multiplicateurs séparés; les résultats Easy, Normal et Chaos ont un test dédié.
