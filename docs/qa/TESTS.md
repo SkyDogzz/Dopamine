@@ -29,6 +29,10 @@
 - `sandbox_snapshot_smoke.gd` utilise un `XDG_DATA_HOME` séparé et vérifie la même sentinelle après capture, restauration, rejet de version, build dépassant les slots et évolution avant niveau 5 sur l’arme et la relique appariée. `sandbox_preset_smoke.gd` couvre le round-trip share code et les payloads hostiles; `sandbox_profile_build_smoke.gd` compare les profils source avant/après import read-only et refuse les anciens profils sans migration.
 - Résultats Godot 4.7.2 headless : les quatre smokes passent. `SandboxLabContext` conserve ses références `progression_service` et `normal_save_service` nulles; aucune route de récompense ou leaderboard n’est fournie au Lab.
 
+### Revalidation sur le checkout courant
+
+- [x] `XDG_DATA_HOME=/tmp/dopamine-goal-sandbox-isolation tools/run_godot_test.sh tools/local/godot-4.7.2/Godot_v4.7.2-stable_linux.x86_64 --headless --audio-driver Dummy --path game --script res://tests/sandbox_lab_smoke.gd` passe : le Lab démarre sans services de progression/sauvegarde, son reset reste isolé et le slot normal sentinelle est préservé. Exécuté pendant la reprise du goal le 2026-10-17.
+
 ## P8.1/P8.3 — Mode réellement sélectionné par le preset — 2026-10-17
 
 - [x] Régression rouge d’abord : un preset valide `base_mode=armorless` démarrait silencieusement une session Survival standard.
