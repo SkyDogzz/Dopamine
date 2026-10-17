@@ -967,7 +967,8 @@ Note de clôture : le blocage historique du smoke `sandbox_ui_smoke.gd` décrit 
 - [x] Les overrides LIVE sont vérifiés sur dégâts, chance critique, vitesse et HP max, puis leur effacement est contrôlé après reconstruction; le build applique aussi dégâts, vitesse et HP max au combat.
 - [x] `survival_run_stat_hub_smoke.gd` vérifie le résumé transparent en lignes verticales icône + valeur et les détails avec libellé au-dessus, icône et total en dessous; navigation Tab et horloges de run continuent de fonctionner.
 - [x] `ui_viewport_layout_smoke.gd` passe à 640×360, 1280×720 et 1920×1080; les deux smokes ciblés passent avec Godot 4.7.2.
-- [ ] Ce slice ne ferme pas P8.2 : les overrides de configuration au-delà des stats de combat, les modes REBUILD/RESTART et les limites de contenu restent à traiter. Les valeurs Sandbox ne sont pas des paramètres de balance validés.
+- [x] Le contrat LIVE/REBUILD/RESTART et ses bornes sont définis dans `docs/architecture/INTERFACES.md`. `sandbox_lab_smoke.gd` vérifie le build REBUILD en pause, l’effacement des overrides LIVE transitoires et le seed RESTART appliqué seulement au Reset; `sandbox_preset_smoke.gd` vérifie le rejet transactionnel d’un preset/build invalide; `sandbox_snapshot_smoke.gd` vérifie le refus d’un snapshot invalide sans mutation. Les valeurs Sandbox restent des outils d’essai, pas des paramètres de balance validés.
+- [x] Le maximum de cinq niveaux suit le contrat du GDD; les builds et spawns gardent leurs bornes de contenu explicites (64 armes/128 reliques dans le schéma, 5 slots par famille en session, 500 ennemis par commande, 2 500 entités simultanées). Aucun niveau >5 n’est ajouté au combat.
 
 ## P8.3 — Validation des champs importés/partagés (2026-10-16)
 

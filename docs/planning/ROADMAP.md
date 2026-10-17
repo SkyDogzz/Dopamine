@@ -601,7 +601,7 @@ P1 livre le Sandbox développeur et ne remplace pas cette feature produit.
   - [x] Ajouter l’accès distinct Sandbox Lab au menu avant sélection/création de save; l’entrée `SANDBOX DEV` reste le Sandbox développeur P1.
   - [x] Ajouter `SandboxLabContext` mémoire : il valide le preset, héberge une session Survival sans service de progression/save, désactive vagues/coffres normaux et gèle le HP; il ne crédite aucune progression et remplace un preset seulement en pause.
   - [x] Smoke dédié utilise un `XDG_DATA_HOME` isolé, vérifie le spawn et le stockage local du preset; aucune donnée n’est écrite sous `user://saves`.
-- [ ] **P8.2 — Build et configuration**
+- [x] **P8.2 — Build et configuration**
   - [x] Ajouter des contrôles visuels au Lab pour sélectionner une arme/relique et son niveau, ajouter une stat, puis appliquer le build à la session isolée en pause. Les valeurs restent des outils expérimentaux **[PROPOSÉES]**.
   - [x] Ajouter l’édition d’un équipement de test par slot/stat et des overrides LIVE isolés pour les statistiques existantes; `sandbox_lab_smoke.gd` vérifie l’effet en combat des 12 statistiques, y compris l’isolation du rayon XP et du rayon de coffre, avec actualisation dédiée des dégâts, vitesse et HP maximum.
   - [x] Ajouter l’override LIVE typé `enemy_hp` (×0,1–×1000) au preset et au Lab : il ne change que les HP des ennemis créés ensuite par Spawn; les clés sans contrat runtime et les valeurs hors bornes sont rejetées.
@@ -614,12 +614,12 @@ P1 livre le Sandbox développeur et ne remplace pas cette feature produit.
   - [x] Ajouter l’override LIVE `health_decay_multiplier` (×0–×10) au preset et au Lab; il modifie le decay HP uniquement lorsque les diagnostics Sandbox sont activés. Valeur par défaut ×1, limite technique de l’outil.
   - [x] Ajouter `wave_spawning_enabled` (booléen, défaut faux) au preset et au Lab; l’activer réutilise le directeur de vagues Survival uniquement dans la session Sandbox isolée, et snapshots/restauration conservent le réglage.
   - [x] Exposer la seed du preset comme réglage RESTART; elle s’applique au Reset, est persistée, et invalide/refuse un snapshot tant que le redémarrage n’a pas eu lieu.
-  - [ ] Compléter les overrides de configuration LIVE/REBUILD/RESTART et les limites de contenu avancées, après définition de leur contrat.
+  - [x] Définir et documenter les cycles LIVE/REBUILD/RESTART et leurs limites de contenu dans `docs/architecture/INTERFACES.md`; les smokes Lab, preset et snapshot vérifient leur validation et leur application atomique. Les niveaux >5 ne sont pas pris en charge car le GDD fixe le niveau maximum à cinq.
   - [x] Ajouter `SandboxBuild` comme modèle isolé : armes/reliques, évolutions appariées, stats personnalisées finies et équipements de test; validation atomique avant remplacement.
   - [x] Ajouter un éditeur JSON initial et appliquer armes/reliques (niveaux 1–5), évolutions appariées, équipements et stats personnalisées à la session de combat existante.
-  - [ ] Ajouter les overrides REBUILD/RESTART; niveaux au-delà de 5 restent à implémenter dans le combat.
+  - [x] Implémenter REBUILD par application en pause du champ `initial_build` et RESTART par seed en attente jusqu’au Reset; le combat conserve le maximum validé de cinq niveaux.
   - [x] Ajouter des overrides LIVE sélectionnables par statistique; ils restent transitoires et sont effacés lors d’une reconstruction du build.
-  - [ ] Ajouter overrides REBUILD/RESTART avec validation atomique.
+  - [x] Valider atomiquement les champs LIVE, REBUILD et RESTART; les valeurs invalides laissent la session active et son snapshot inchangés.
 - [x] **P8.3 — Presets et share codes**
   - [x] Ajouter `sandbox_preset_service.gd` : schéma version 1 fermé, exemple minimal et modes Survival/Endless/Armorless.
   - [x] Exporter/importer JSON limité à 1 Mio et refuser champs inconnus, types et métadonnées invalides.
