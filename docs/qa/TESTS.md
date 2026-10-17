@@ -66,6 +66,12 @@
 - `ui_settings_smoke.gd` vérifie les flèches sur le slider de volume, Espace puis A sur le plein écran et Échap puis B pour fermer. La réouverture relit les valeurs persistées, puis le smoke remet le plein écran et le volume à leurs valeurs initiales.
 - Le smoke passe directement sous Godot 4.7.2 headless et reste déjà enregistré dans CTest. Ces événements synthétiques ne valident pas un parcours avec périphérique physique.
 
+## P9.4 — Commandes de l’écran de résultat — 2026-10-17
+
+- `run_result_panel_smoke.gd` utilise Entrée sur Recommencer, D-pad pour atteindre Quitter, A pour émettre la demande de navigation, puis B et Échap pour la fermeture. Aucun callback ne redémarre une run ou ne crédite une récompense dans ce test de présentation.
+- Le smoke est ajouté à CTest; l’exécution directe passe mais conserve 4 avertissements ObjectDB et 2 ressources encore référencées à la fermeture.
+- La preuve est synthétique et headless; le parcours physique complet reste à vérifier.
+
 ## Revalidation CTest après ajout des smokes UI — 2026-10-17
 
 - CTest séquentiel : **89/89 tests passent en 61,02 s**, y compris les nouveaux parcours d’entrée arbre de compétences et inventaire d’équipement.

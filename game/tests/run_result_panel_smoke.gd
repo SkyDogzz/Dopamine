@@ -30,11 +30,21 @@ func _run() -> void:
 	if root.gui_get_focus_owner() != restart:
 		_fail("The result action should receive visible keyboard/gamepad focus")
 		return
+	var restart_requests := [0]
+	panel.restart_requested.connect(func() -> void: restart_requests[0] += 1)
+	await _send_key(KEY_ENTER)
+	if restart_requests[0] != 1:
+		_fail("Enter should activate the focused restart request")
+		return
 	var quit_requested := [false]
 	panel.quit_requested.connect(func() -> void: quit_requested[0] = true)
-	quit.emit_signal("pressed")
+	await _send_gamepad_button(JOY_BUTTON_DPAD_DOWN)
+	if root.gui_get_focus_owner() != quit:
+		_fail("The gamepad D-pad should move focus from restart to quit")
+		return
+	await _send_gamepad_button(JOY_BUTTON_A)
 	if not quit_requested[0]:
-		_fail("Quit to menu should emit its navigation request")
+		_fail("Gamepad A should activate the focused quit request")
 		return
 	var success_reward := {
 		"ok": true,
@@ -138,9 +148,32 @@ func _run() -> void:
 		return
 	panel.queue_free()
 	await process_frame
+	host.queue_free()
+	await process_frame
 	print("Run result panel states, focus and layout smoke passed")
 	quit()
 
 func _fail(message: String) -> void:
 	push_error(message)
 	quit(1)
+
+func _send_key(keycode: Key) -> void:
+	var event := InputEventKey.new()
+	event.keycode = keycode
+	event.pressed = true
+	Input.parse_input_event(event)
+	await process_frame
+	event.pressed = false
+	Input.parse_input_event(event)
+	await process_frame
+
+func _send_gamepad_button(button_index: JoyButton) -> void:
+	var event := InputEventJoypadButton.new()
+	event.device = 0
+	event.button_index = button_index
+	event.pressed = true
+	Input.parse_input_event(event)
+	await process_frame
+	event.pressed = false
+	Input.parse_input_event(event)
+	await process_frame
