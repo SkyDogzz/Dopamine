@@ -811,6 +811,10 @@
 - [x] Recalcul sous Godot 4.7.2 sur le checkout courant : les 20 lignes générées correspondent exactement aux valeurs archivées; le modèle ne modifie aucun profil.
 - [i] L’espérance est une propriété des chiffres proposés et du modèle de code, pas une validation de rythme. Elle ne modélise ni la provenance et le mélange de tiers, ni les récompenses/démantèlements, ni les conversions réellement choisies. Les probabilités, coûts et rendements restent **[PROPOSÉS]**; la calibration joueur demeure ouverte.
 
+## P6 — CTest après couverture des démantèlements — 2026-10-17
+
+- [x] CTest séquentiel sur le checkout courant : **112/112 tests passent en 75,70 s** sous Godot 4.7.2, après extension de `equipment_economy_smoke.gd` aux yields de démantèlement des cinq raretés.
+
 ## P6.5 — Effet Elite Haste — 2026-10-16
 
 - [x] `survival_elite_smoke.gd` équipe `elite_haste` dans un profil temporaire isolé, tue un élite via le pipeline de dégâts natif, puis vérifie le bonus de mobilité de 15 %, son expiration après trois secondes simulées et le feedback HUD. Ces valeurs restent **[PROPOSÉES]**.
