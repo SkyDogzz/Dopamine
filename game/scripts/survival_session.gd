@@ -546,6 +546,7 @@ func _ready() -> void:
 	_chest_choice.reroll_requested.connect(_reroll_first_chest)
 	_run_result.restart_requested.connect(_restart_run)
 	_run_result.quit_requested.connect(_quit_after_run)
+	_run_result.continue_endless_requested.connect(_continue_as_endless_standard)
 	_pause_resume_button.pressed.connect(_resume_manually_paused_run)
 	_pause_speed_select.item_selected.connect(_on_pause_speed_selected)
 	_pause_health_lock_button.toggled.connect(_on_pause_health_lock_toggled)
@@ -2059,7 +2060,26 @@ func _finish_run(victory: bool) -> void:
 		reward = progression_service.award_survival_run(
 			_run_id, wave_director.wave, victory, kill_count, difficulty_id, _run_achievement_metrics()
 		)
-	_run_result.show_result(victory, wave_director.wave, player_active_time, kill_count, reward, armorless_record)
+	_run_result.show_result(victory, wave_director.wave, player_active_time, kill_count, reward, armorless_record,
+		victory and mode_id == "survival")
+
+func _continue_as_endless_standard() -> void:
+	if not run_over or mode_id != "survival" or wave_director.state != WAVE_DIRECTOR_SCRIPT.State.VICTORY:
+		return
+	mode_id = "endless"
+	_run_id = Crypto.new().generate_random_bytes(16).hex_encode()
+	wave_director.endless_standard = true
+	wave_director.wave = 25
+	wave_director.elapsed_in_wave = 0.0
+	wave_director.state = WAVE_DIRECTOR_SCRIPT.State.WAVE
+	_next_enemy_spawn_time = player_active_time + _wave_enemy_spawn_interval()
+	_next_elite_spawn_time = player_active_time + maxf(0.05, elite_spawn_interval_seconds)
+	_victory_pending = false
+	run_over = false
+	_run_result_overlay.hide()
+	get_viewport().gui_release_focus()
+	simulation.resume()
+	_refresh_hud(simulation.snapshot())
 
 func _run_achievement_metrics() -> Dictionary:
 	var evolved_weapons := 0
@@ -2379,6 +2399,8 @@ func _wave_enemy_spawn_interval() -> float:
 
 func _enemy_hp_multiplier(wave_number: int) -> float:
 	var wave_factor := minf(pow(WAVE_HP_GROWTH, float(wave_number - 1)), WAVE_HP_CAP)
+	if mode_id == "endless" and wave_number > 24:
+		wave_factor = WAVE_HP_CAP * pow(1.055, float(wave_number - 24))
 	var difficulty_factor: float = DIFFICULTY_SCRIPT.DATA.get(difficulty_id, DIFFICULTY_SCRIPT.DATA["normal"])["enemy_hp"]
 	return wave_factor * difficulty_factor
 

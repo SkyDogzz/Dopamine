@@ -589,14 +589,15 @@ Travail requis :
 ### P7B — Endless standard (prototype fonctionnel, réglages proposés)
 
 - [ ] **P7B.1 — Contrat de prototype**
-  - [x] Prototype **[PROPOSÉ]** choisi sous délégation : déblocage après victoire Survival, lancement hub uniquement, armes/reliques au niveau 1, mort ou abandon, records par difficulté et récompenses Survival sans bonus de boss final/équipement garanti. Continuation après vague 24 reste ouverte.
-  - [x] Réutiliser Easy–Chaos et les multiplicateurs existants; mid-boss toutes les 12 vagues, y compris aux vagues 24 et 36. `survival_wave_director_smoke.gd` confirme ces transitions et l’absence de victoire forcée.
+  - [x] Prototype **[PROPOSÉ]** choisi sous délégation : déblocage après victoire Survival, lancement depuis le hub ou continuation après le boss, armes/reliques niveau 1 depuis le hub et build/HP conservés en continuation; mort/abandon, records par difficulté, récompenses sans bonus de boss final/équipement garanti.
+  - [x] Réutiliser Easy–Chaos; scaling existant jusqu’à 24 puis +5,5 % HP ennemis par vague; mid-boss toutes les 12 vagues, y compris aux vagues 24 et 36. La croissance HP reste **[PROPOSÉE]**.
 - [ ] **P7B.2 — Implémentation post-décision**
   - [x] Ajouter un lancement Endless dans le hub, verrouillé avant victoire Survival; l’entrée réutilise le service de progression normal et la difficulté choisie.
-  - [x] Ajouter une smoke de bout en bout pour mort/abandon, résultat et persistance; la transition Survival→Endless immédiate reste ouverte.
+  - [x] Après victoire Survival, proposer `CONTINUE AS ENDLESS`; créditer la victoire, démarrer un nouvel ID de run à la vague 25, conserver HP/build/niveaux, reprendre la simulation et éviter le double crédit Survival. Smoke dans `endless_standard_session_smoke.gd`.
+  - [x] Ajouter une smoke de bout en bout pour mort/abandon, résultat, persistance et continuation.
   - [x] Ajouter migration additive du profil v8→v9, records séparés par difficulté et récompenses idempotentes sans équipement garanti; smokes dédiés passent.
 
-**Critère de sortie :** Armorless conforme aux règles validées et propositions clairement paramétrées; Endless standard jouable via le hub, vérifié pour mort/abandon et persistance, avec continuation et calibration toujours explicitement ouvertes.
+**Critère de sortie :** Armorless conforme aux règles validées et propositions clairement paramétrées; Endless standard jouable depuis le hub et en continuation immédiate, vérifié pour mort/abandon et persistance. Calibration et maîtrise répétable restent explicitement ouvertes.
 
 ## P8 — Sandbox Lab destiné au joueur
 

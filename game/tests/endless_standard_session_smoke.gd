@@ -2,6 +2,7 @@ extends SceneTree
 
 const SAVE_SERVICE := preload("res://scripts/save_service.gd")
 const PROGRESSION := preload("res://scripts/progression_service.gd")
+const WAVE_DIRECTOR := preload("res://scripts/survival_wave_director.gd")
 const TEST_DIRECTORY := "user://endless_standard_session_smoke"
 
 var _session: Node2D
@@ -67,13 +68,50 @@ func _run() -> void:
 		_fail("Death should save the Endless result and proposed reward without permanent equipment")
 		return
 	await _cleanup_session()
+	_session = await _create_session(progression, "survival")
+	if _session == null:
+		_fail("Could not start the Survival victory fixture")
+		return
+	_session.wave_director.wave = 24
+	_session.wave_director.state = WAVE_DIRECTOR.State.VICTORY
+	_session.player_hp = 42.0
+	var survival_run_id: String = _session._run_id
+	var carried_weapons: Array = _session.loadout.owned_weapons()
+	var carried_relics: Array = _session.loadout.owned_relics()
+	var equipment_before_continuation: int = progression.load_profile()["profile"]["equipment_inventory"].size()
+	_session._finish_run(true)
+	var continuation_button: Button = _session.get_node("HUD/RunResultOverlay/RunResultPanel/Content/ContinueEndlessButton")
+	if not continuation_button.visible or not progression.load_profile()["profile"]["endless_standard_unlocked"]:
+		_fail("A Survival final-boss victory should grant its rewards and offer Endless continuation")
+		return
+	continuation_button.pressed.emit()
+	if _session.mode_id != "endless" or _session.run_over or _session.wave_director.wave != 25 or \
+		_session.wave_director.state != WAVE_DIRECTOR.State.WAVE or \
+		not _session.wave_director.endless_standard or _session.player_hp != 42.0 or \
+		_session.loadout.owned_weapons() != carried_weapons or _session.loadout.owned_relics() != carried_relics or \
+		_session.get_node("HUD/RunResultOverlay").visible or root.gui_get_focus_owner() != null or \
+		bool(_session.simulation.snapshot()["paused"]) or \
+		_session._enemy_hp_multiplier(25) <= _session._enemy_hp_multiplier(24):
+		_fail("Continuation should start wave 25 as Endless while preserving build and HP")
+		return
+	var endless_run_id: String = _session._run_id
+	_session.kill_count = 9
+	_session._finish_run(false)
+	var continued_profile: Dictionary = progression.load_profile()["profile"]
+	if continued_profile["endless_standard_records"]["easy"]["wave"] != 25 or \
+		continued_profile["equipment_inventory"].size() != equipment_before_continuation + 1 or \
+		not continued_profile["rewarded_survival_runs"].has(survival_run_id) or \
+		not continued_profile["rewarded_survival_runs"].has(endless_run_id):
+		_fail("The continued Endless run should get its own reward record without a second equipment drop")
+		return
+	await _cleanup_session()
 	print("Endless standard session smoke passed")
 	quit()
 
-func _create_session(progression: RefCounted) -> Node2D:
+func _create_session(progression: RefCounted, requested_mode: String = "endless") -> Node2D:
 	var session: Node2D = load("res://scenes/survival_session.tscn").instantiate()
 	session.progression_service = progression
-	session.mode_id = "endless"
+	session.mode_id = requested_mode
 	session.difficulty_id = "easy"
 	session.skip_starting_weapon_choice = true
 	session.spawn_initial_enemy = false

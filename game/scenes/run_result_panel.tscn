@@ -65,6 +65,13 @@ text = ""
 autowrap_mode = 3
 horizontal_alignment = 1
 
+[node name="ContinueEndlessButton" type="Button" parent="Content"]
+custom_minimum_size = Vector2(0, 27)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.215686, 0.909804, 0.960784, 1)
+text = "CONTINUE AS ENDLESS  →"
+visible = false
+
 [node name="RestartButton" type="Button" parent="Content"]
 custom_minimum_size = Vector2(0, 27)
 layout_mode = 2

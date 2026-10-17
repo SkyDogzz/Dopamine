@@ -13,6 +13,20 @@ func _run() -> void:
 	if panel.theme == null:
 		_fail("Run result should use the shared UI theme")
 		return
+	var continue_button: Button = panel.get_node_or_null("Content/ContinueEndlessButton")
+	if continue_button == null:
+		_fail("A Survival victory result should offer an immediate Endless continuation action")
+		return
+	var continuation_requests := [0]
+	panel.continue_endless_requested.connect(func() -> void: continuation_requests[0] += 1)
+	panel.show_result(true, 24, 720.0, 100, {"ok": true, "essence": 0, "powder_basic": 0}, {}, true)
+	if not continue_button.visible or root.gui_get_focus_owner() != continue_button:
+		_fail("A Survival victory should show and focus its optional Endless continuation")
+		return
+	await _send_key(KEY_ENTER)
+	if continuation_requests[0] != 1:
+		_fail("Keyboard activation should request the Endless continuation")
+		return
 	var summary: Label = panel.get_node("Content/Summary")
 	var rewards: Label = panel.get_node("Content/Rewards")
 	var equipment: Label = panel.get_node("Content/Equipment")
@@ -106,6 +120,10 @@ func _run() -> void:
 	if rewards.get_theme_color("font_color").to_html(false) != "37e8f5":
 		_fail("A later reward result should restore the normal rewards color after a save error")
 		return
+	panel.show_result(true, 24, 605.0, 90, success_reward, {}, true)
+	if not continue_button.visible:
+		_fail("The continuation option should stay visible on a Survival victory screen")
+		return
 	panel.show_result(false, 30, 1200.0, 450, {
 		"ok": true, "duplicate": false, "essence": 75, "powder_basic": 110,
 		"new_achievement_tier_count": 2,
@@ -121,6 +139,10 @@ func _run() -> void:
 	})
 	if not panel.get_node("Content/Record").text.contains("ENDLESS NEW PERSONAL BEST"):
 		_fail("Endless standard results should identify their record separately from Armorless")
+		return
+	panel.show_result(true, 24, 605.0, 90, success_reward, {}, true)
+	if not continue_button.visible:
+		_fail("The continuation button should fit on the victory panel at every supported viewport")
 		return
 	var original_size: Vector2i = root.size
 	for size in [Vector2i(640, 360), Vector2i(960, 600), Vector2i(1280, 720), Vector2i(1600, 900), Vector2i(1920, 1080)]:

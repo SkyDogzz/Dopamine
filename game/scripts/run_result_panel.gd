@@ -2,6 +2,7 @@ extends PanelContainer
 
 signal restart_requested
 signal quit_requested
+signal continue_endless_requested
 
 @onready var _title: Label = $Content/Title
 @onready var _summary: Label = $Content/Summary
@@ -10,6 +11,7 @@ signal quit_requested
 @onready var _achievement: Label = $Content/Achievement
 @onready var _record: Label = $Content/Record
 @onready var _restart_button: Button = $Content/RestartButton
+@onready var _continue_endless_button: Button = $Content/ContinueEndlessButton
 
 const RESOURCE_ICONS := [
 	"res://assets/icons/catalog/resource_essence.png",
@@ -20,6 +22,7 @@ const ACHIEVEMENT_ICON := "res://assets/icons/catalog/achievement_medal.png"
 func _ready() -> void:
 	$Content/RestartButton.pressed.connect(_on_restart_pressed)
 	$Content/QuitButton.pressed.connect(_on_quit_pressed)
+	_continue_endless_button.pressed.connect(_on_continue_endless_pressed)
 	visible = false
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -29,7 +32,7 @@ func _unhandled_input(event: InputEvent) -> void:
 			get_viewport().set_input_as_handled()
 
 func show_result(victory: bool, wave_number: int, active_seconds: float, kills: int, reward: Dictionary = {},
-		armorless_record: Dictionary = {}) -> void:
+		armorless_record: Dictionary = {}, endless_continuation_available: bool = false) -> void:
 	for row_name in ["RewardIcons", "AchievementIcon", "EquipmentIcon"]:
 		var row := $Content.get_node_or_null(row_name)
 		if row != null:
@@ -40,6 +43,7 @@ func show_result(victory: bool, wave_number: int, active_seconds: float, kills: 
 	_equipment.text = ""
 	_achievement.text = ""
 	_record.text = ""
+	_continue_endless_button.visible = victory and endless_continuation_available
 	_title.text = "VICTORY" if victory else "RUN OVER"
 	var result_color := Color("#48E69B") if victory else Color("#FF7181")
 	_title.add_theme_color_override("font_color", result_color)
@@ -95,7 +99,7 @@ func show_result(victory: bool, wave_number: int, active_seconds: float, kills: 
 		_rewards.text = "PROGRESSION SAVE FAILED"
 		_rewards.add_theme_color_override("font_color", Color("#FF7181"))
 	visible = true
-	_restart_button.grab_focus()
+	_continue_endless_button.grab_focus() if _continue_endless_button.visible else _restart_button.grab_focus()
 
 func _add_icon_row(row_name: String, anchor: Control, paths: Array) -> void:
 	var content: VBoxContainer = $Content
@@ -125,3 +129,6 @@ func _on_restart_pressed() -> void:
 
 func _on_quit_pressed() -> void:
 	quit_requested.emit()
+
+func _on_continue_endless_pressed() -> void:
+	continue_endless_requested.emit()
