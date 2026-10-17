@@ -40,10 +40,15 @@ func _run() -> void:
 	var spawn_count: SpinBox = lab.get_node_or_null("Root/Body/Side/Sections/EnemyConfig/SpawnCount")
 	var enemy_select: OptionButton = lab.get_node_or_null("Root/Body/Side/Sections/EnemySelect")
 	var elite_affix_select: OptionButton = lab.get_node_or_null("Root/Body/Side/Sections/EnemyConfig/EliteAffixSelect")
-	if spawn_count == null or enemy_select == null or elite_affix_select == null or \
+	var base_mode_select: OptionButton = lab.get_node_or_null("Root/Body/Side/Sections/BaseModeRow/BaseModeSelect")
+	if spawn_count == null or enemy_select == null or elite_affix_select == null or base_mode_select == null or \
 			spawn_count.value != 10.0 or not elite_affix_select.disabled or \
 			not lab._can_spawn_batch(2490) or lab._can_spawn_batch(2491) or lab._can_spawn_batch(2500):
-		_fail("The default spawn count should fit exactly within the native 2500-entity limit")
+		_fail("The Lab should expose base-mode selection and keep the default spawn count within the native cap")
+		return
+	if base_mode_select.item_count != 2 or \
+			str(base_mode_select.get_item_metadata(base_mode_select.selected)) != "survival":
+		_fail("The Lab should expose only executable Survival and Armorless modes, defaulting to Survival")
 		return
 	spawn_count.value = 500.0
 	if not lab._can_spawn_batch(2000) or lab._can_spawn_batch(2001) or \
@@ -550,6 +555,22 @@ func _run() -> void:
 	lab.get_node("Root/Body/Left/Controls/ResetButton").pressed.emit()
 	if not await _wait_for_empty_simulation(lab.context):
 		_fail("The Lab should clear its final boss when reset")
+		return
+	var armorless_index := -1
+	for index in range(base_mode_select.item_count):
+		if str(base_mode_select.get_item_metadata(index)) == "armorless":
+			armorless_index = index
+	if armorless_index < 0:
+		_fail("The Lab should expose Armorless as an executable base mode")
+		return
+	base_mode_select.select(armorless_index)
+	if str(lab._preset_from_editor().get("base_mode", "")) != "armorless":
+		_fail("The Lab should persist its selected base mode into preset data")
+		return
+	await lab._apply_visual_build()
+	if lab.context.active_preset["base_mode"] != "armorless" or lab.context.session.mode_id != "armorless" or \
+			lab.context.session.armorless_run_state == null or not lab.context.session.armorless_run_state.is_active():
+		_fail("Selecting Armorless in the Lab should rebuild the isolated session in that mode")
 		return
 	if not FileAccess.file_exists(slot_path) or FileAccess.get_file_as_string(slot_path) != sentinel:
 		_fail("Sandbox Lab preset, build, combat, and reset operations must preserve the normal save slot byte-for-byte")

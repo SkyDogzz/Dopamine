@@ -189,6 +189,24 @@ theme_type_variation = "PixelHeading"
 theme_override_font_sizes/font_size = 8
 text = "PRESET / BUILD"
 
+[node name="BaseModeRow" type="HBoxContainer" parent="Root/Body/Side/Sections"]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="BaseModeTitle" type="Label" parent="Root/Body/Side/Sections/BaseModeRow"]
+custom_minimum_size = Vector2(54, 20)
+layout_mode = 2
+text = "BASE MODE"
+vertical_alignment = 1
+
+[node name="BaseModeSelect" type="OptionButton" parent="Root/Body/Side/Sections/BaseModeRow"]
+custom_minimum_size = Vector2(120, 20)
+size_flags_horizontal = 3
+layout_mode = 2
+focus_mode = 2
+tooltip_text = "Run Survival or Armorless. Standard Endless rules are still open."
+item_count = 0
+
 [node name="PresetId" type="LineEdit" parent="Root/Body/Side/Sections"]
 custom_minimum_size = Vector2(0, 20)
 layout_mode = 2

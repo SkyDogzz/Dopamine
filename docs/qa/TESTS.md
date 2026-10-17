@@ -1098,3 +1098,10 @@ Note de clôture : le blocage historique du smoke `sandbox_ui_smoke.gd` décrit 
 - [x] Trois essais accélérés ×4 (Engine et simulation) : seed 20261017, défaite vague 2 à 51,54 s actives, 14 kills, niveau 3; seed 20261018, défaite vague 2 à 50,75 s, 6 kills, niveau 2; seed 20261019, défaite vague 4 à 108,21 s, 46 kills, niveau 2. Ces mesures ont été écartées du relevé à vitesse réelle, car le contrôleur frame-driven réagit différemment sous fast-forward.
 - [x] Deux essais à vitesse réelle du seed 20261017 : défaite vague 2 à 50,29 s actives (20 kills, niveau 3), puis défaite vague 1 à 23,96 s (7 kills, niveau 2). Malgré RNG de gameplay et de drafts seedés, le pilotage synthétique via Input dépend du cadencement de frames; les résultats ne sont pas statistiquement reproductibles et ne représentent pas un parcours humain. Aucun paramètre **[PROPOSÉ]** n’est modifié.
 - [ ] Ces runs meurent avant le premier boss de vague 12; la session complète Armorless de production reste à valider manuellement, avec ses décisions de draft et sans assistance.
+
+
+## P8.1/P8.3 — Sélecteur de mode Sandbox Lab — 2026-10-17
+
+- [x] `sandbox_lab_smoke.gd` vérifie le sélecteur clavier/manette (OptionButton focusable), ses deux options exécutables, le défaut Survival, la sérialisation du choix Armorless dans un preset et l’application de ce mode à la session isolée.
+- [x] Le Sandbox Lab reste sans `ProgressionService`/`SaveService`; Endless standard n’est pas exposé dans le sélecteur et reste **[OUVERT]** dans le GDD.
+- [x] `sandbox_lab_smoke.gd` passe sous Godot 4.7.2 headless.

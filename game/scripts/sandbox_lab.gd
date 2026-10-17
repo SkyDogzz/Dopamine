@@ -15,6 +15,7 @@ const MAX_ENEMIES_PER_SPAWN := 500
 @onready var _view: Control = $Root/Body/Left/SimulationView
 @onready var _status: Label = $Root/Body/Side/Sections/Status
 @onready var _preset_id: LineEdit = $Root/Body/Side/Sections/PresetId
+@onready var _base_mode_select: OptionButton = $Root/Body/Side/Sections/BaseModeRow/BaseModeSelect
 @onready var _build_json: TextEdit = $Root/Body/Side/Sections/BuildJson
 @onready var _share_code: LineEdit = $Root/Body/Side/Sections/ShareCode
 @onready var _enemy_select: OptionButton = $Root/Body/Side/Sections/EnemySelect
@@ -98,6 +99,9 @@ func _ready() -> void:
 	_wave_spawning_toggle.toggled.connect(_set_wave_spawning_override)
 	_seed_control.value_changed.connect(_set_seed_override)
 	_populate_visual_build_options()
+	for base_mode in ["survival", "armorless"]:
+		_base_mode_select.add_item(str(base_mode).to_upper())
+		_base_mode_select.set_item_metadata(_base_mode_select.item_count - 1, base_mode)
 	for enemy_id in ["chaser", "sprinter", "tank", "shooter", "buffer", "exploder", "shielder", "summoner", "elite", "mid_boss", "final_boss"]:
 		_enemy_select.add_item(enemy_id.to_upper())
 		_enemy_select.set_item_metadata(_enemy_select.item_count - 1, enemy_id)
@@ -115,6 +119,7 @@ func _ready() -> void:
 	if not started.get("ok", false):
 		_set_status("LAB INIT FAILED: %s" % str(started.get("error", "unknown")), true)
 		return
+	_select_base_mode(str(context.active_preset["base_mode"]))
 	_enemy_hp_multiplier.value = float(context.active_preset["overrides"].get("enemy_hp", 1.0))
 	_enemy_speed_multiplier.value = float(context.active_preset["overrides"].get("enemy_speed", 1.0))
 	_spawn_count.value = float(context.active_preset["overrides"].get("spawn_count", SPAWN_BATCH_SIZE))
@@ -637,6 +642,7 @@ func _preset_from_editor() -> Dictionary:
 	preset["preset_id"] = _preset_id.text.strip_edges()
 	preset["name"] = _preset_id.text.strip_edges()
 	preset["seed"] = int(_seed_control.value)
+	preset["base_mode"] = str(_base_mode_select.get_item_metadata(_base_mode_select.selected))
 	preset["initial_build"] = parser.data
 	preset["overrides"]["enemy_hp"] = _enemy_hp_multiplier.value
 	preset["overrides"]["enemy_speed"] = _enemy_speed_multiplier.value
@@ -664,6 +670,7 @@ func _apply_preset(preset: Dictionary) -> void:
 	if not result.get("ok", false):
 		_set_status("APPLY FAILED: %s" % str(result.get("error", "unknown")), true)
 		return
+	_select_base_mode(str(preset["base_mode"]))
 	_preset_id.text = str(preset["preset_id"])
 	_build_json.text = JSON.stringify(preset["initial_build"], "  ")
 	_enemy_hp_multiplier.value = float(preset["overrides"].get("enemy_hp", 1.0))
@@ -679,6 +686,12 @@ func _apply_preset(preset: Dictionary) -> void:
 	_restore_snapshot_button.disabled = true
 	_live_stat_value.value = 0.0
 	_set_status("PRESET APPLIED TO COMBAT", false)
+
+func _select_base_mode(base_mode: String) -> void:
+	for index in range(_base_mode_select.item_count):
+		if str(_base_mode_select.get_item_metadata(index)) == base_mode:
+			_base_mode_select.select(index)
+			return
 
 func _refresh() -> void:
 	var state: Dictionary = context.simulation.snapshot()

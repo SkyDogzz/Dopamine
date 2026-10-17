@@ -615,6 +615,7 @@ P1 livre le Sandbox développeur et ne remplace pas cette feature produit.
   - [x] Ajouter `wave_spawning_enabled` (booléen, défaut faux) au preset et au Lab; l’activer réutilise le directeur de vagues Survival uniquement dans la session Sandbox isolée, et snapshots/restauration conservent le réglage.
   - [x] Exposer la seed du preset comme réglage RESTART; elle s’applique au Reset, est persistée, et invalide/refuse un snapshot tant que le redémarrage n’a pas eu lieu.
   - [x] Définir et documenter les cycles LIVE/REBUILD/RESTART et leurs limites de contenu dans `docs/architecture/INTERFACES.md`; les smokes Lab, preset et snapshot vérifient leur validation et leur application atomique. Les niveaux >5 ne sont pas pris en charge car le GDD fixe le niveau maximum à cinq.
+  - [x] Ajouter un sélecteur visible et navigable clavier/manette pour les modes exécutables Survival et Armorless; le mode choisi est intégré aux presets appliqués/exportés. Endless standard reste refusé tant que ses règles sont **[OUVERTES]**.
   - [x] Ajouter `SandboxBuild` comme modèle isolé : armes/reliques, évolutions appariées, stats personnalisées finies et équipements de test; validation atomique avant remplacement.
   - [x] Ajouter un éditeur JSON initial et appliquer armes/reliques (niveaux 1–5), évolutions appariées, équipements et stats personnalisées à la session de combat existante.
   - [x] Implémenter REBUILD par application en pause du champ `initial_build` et RESTART par seed en attente jusqu’au Reset; le combat conserve le maximum validé de cinq niveaux.
