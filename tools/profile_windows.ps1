@@ -14,7 +14,8 @@ if (-not (Test-Path -LiteralPath $godotExecutableInput -PathType Leaf)) {
 }
 $godotPath = (Resolve-Path -LiteralPath $godotExecutableInput).Path
 $testProjectName = "Dopamine Survivor Tests $([Guid]::NewGuid().ToString('N'))"
-$testProjectPath = Join-Path $buildPath "profiling-test-project"
+$testWorkspacePath = Join-Path $buildPath "profiling-test-workspace"
+$testProjectPath = Join-Path $testWorkspacePath "game"
 
 Write-Host "Building the Windows Debug extension and test executables."
 & (Join-Path $repositoryRoot "tools/build_windows.ps1") `
@@ -22,13 +23,18 @@ Write-Host "Building the Windows Debug extension and test executables."
 if ($LASTEXITCODE -ne 0) { throw "Windows Debug build failed with exit code $LASTEXITCODE" }
 
 Write-Host "Preparing an isolated Godot project for the test suite."
-if (Test-Path -LiteralPath $testProjectPath) {
-	Remove-Item -LiteralPath $testProjectPath -Recurse -Force
+if (Test-Path -LiteralPath $testWorkspacePath) {
+	Remove-Item -LiteralPath $testWorkspacePath -Recurse -Force
 }
+New-Item -ItemType Directory -Force -Path $testWorkspacePath | Out-Null
 $excludedGodotCache = Join-Path $projectPath ".godot"
 & robocopy $projectPath $testProjectPath /E /XD $excludedGodotCache /NFL /NDL /NJH /NJS /NP
 $copyExitCode = $LASTEXITCODE
 if ($copyExitCode -ge 8) { throw "Could not prepare the isolated test project (robocopy exit code $copyExitCode)." }
+$testDocsPath = Join-Path $testWorkspacePath "docs"
+& robocopy (Join-Path $repositoryRoot "docs") $testDocsPath /E /NFL /NDL /NJH /NJS /NP
+$copyExitCode = $LASTEXITCODE
+if ($copyExitCode -ge 8) { throw "Could not copy reference docs for the isolated test workspace (robocopy exit code $copyExitCode)." }
 $testProjectFile = Join-Path $testProjectPath "project.godot"
 $projectConfig = [System.IO.File]::ReadAllText($testProjectFile)
 $originalName = 'config/name="Dopamine Survivor"'
@@ -42,9 +48,9 @@ try {
 	& ctest --test-dir $buildPath -C Debug --output-on-failure -j1
 	$testExitCode = $LASTEXITCODE
 } finally {
-	$testUserDataPath = Join-Path $env:APPDATA ("Godot/app_userdata/" + $testProjectName)
-	if (Test-Path -LiteralPath $testUserDataPath) {
-		Remove-Item -LiteralPath $testUserDataPath -Recurse -Force
+	$testDataPath = Join-Path $buildPath "test_appdata"
+	if (Test-Path -LiteralPath $testDataPath) {
+		Remove-Item -LiteralPath $testDataPath -Recurse -Force
 	}
 }
 if ($testExitCode -ne 0) { throw "CTest failed with exit code $testExitCode; profiling was not started." }
