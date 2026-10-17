@@ -47,6 +47,8 @@ Depuis l’accueil, `JOUER` ouvre le hub de préparation et lance une run Surviv
 En Survival, le HUD garde un aperçu des statistiques à gauche; Tab ouvre leur détail sans interrompre la run, et Échap le ferme avant d'ouvrir la pause. Le menu de pause propose une vitesse de run de ×0,25 à ×4, le verrouillage des dégâts et la sélection automatique de la première option des coffres. La simulation de combat et le temps Godot suivent ce multiplicateur; le jeu revient à ×1 à la sortie de la run.
 Le hub propose aussi `RUN TEMPORAIRE · SANS SAUVEGARDE` : cette partie démarre avec un profil vide en mémoire, en difficulté Easy, et ses récompenses de fin sont abandonnées sans modifier la sauvegarde normale.
 
+Le preset `Linux/X11` permet d’exporter les données du projet en PCK avec `godot --headless --path game --export-pack "Linux/X11" ../build/linux/DopamineSurvivor.pck`. Ce PCK n’est pas un exécutable autonome. Pour compiler l’extension native release dans un répertoire distinct du build Debug, utilisez `cmake -S . -B build/linux-release -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTING=OFF -DGODOTCPP_TARGET=template_release`, puis `cmake --build build/linux-release --parallel 4`. L’export complet nécessite aussi les templates Linux 4.7.2; il n’a pas encore été vérifié dans cet environnement.
+
 ## Lancer sous Windows
 
 Prérequis : Godot 4.7.2 standard pour Windows x86_64 avec ses export templates 4.7.2, Visual Studio 2022 avec la charge de travail **Desktop development with C++**, CMake 3.21+ et Git dans le `PATH`. Depuis PowerShell à la racine du dépôt :

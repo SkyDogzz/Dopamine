@@ -687,8 +687,10 @@ P1 livre le Sandbox développeur et ne remplace pas cette feature produit.
   - [ ] Vérifier double récompense et clôture propre des threads.
 - [ ] **P9.7 — Plateformes**
   - [ ] Refaire build Linux propre sur machine propre. Un répertoire CMake vierge dans `/tmp` sur l’hôte actuel compile depuis le `godot-cpp` épinglé et passe 87/87 CTest; voir `docs/qa/TESTS.md`. Une machine distincte n’a pas encore été vérifiée.
+  - [x] Ajouter un preset Linux/X11 et une route `linux.release.x86_64` pour la GDExtension; le PCK 4.7.2 s’exporte sans warning, se charge avec le runtime Linux et l’extension debug, et les quatre checks import/Sandbox/catalogue passent. C’est une validation de pack et de chargement sur l’hôte courant, pas un export autonome.
   - [ ] Refaire build Windows propre et lancer la GDExtension.
   - [ ] Tester contrôles, chemins et rendu sur les deux plateformes.
+  - [ ] Installer les templates Linux 4.7.2, produire puis lancer un export autonome; ils ne sont pas présents dans l’environnement courant.
 - [ ] **P9.8 — Préparation de livraison**
   - [ ] Établir checklist release et versions d’artefacts.
   - [ ] Vérifier contenu, dépendances, licences, sauvegarde et notes de version.

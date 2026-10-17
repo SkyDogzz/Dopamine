@@ -17,6 +17,13 @@
 - Sur Linux, `user://` se trouve dans le répertoire utilisateur Godot `app_userdata/Dopamine Survivor` (sous `$XDG_DATA_HOME/godot/`, ou le répertoire de données Godot par défaut). Le code de sauvegarde du jeu range les slots normaux sous `user://saves/` et les données Sandbox sous `user://sandbox/`.
 - Windows et iGPU de référence ne sont pas couverts.
 
+## Preset et PCK Linux — 2026-10-17
+
+- [x] Le preset Godot `Linux/X11` exporte les données du projet en PCK sans warning. Après compilation séparée de `template_release`, le manifeste GDExtension possède les routes Linux debug et release; la route Windows existante reste inchangée.
+- [x] Le PCK exporté (32 Mo) démarre avec le binaire Linux Godot 4.7.2 via `--main-pack`, lorsqu’on place à côté du PCK la GDExtension debug sélectionnée par le runtime de développement. Aucun message d’échec de chargement GDExtension n’est émis.
+- [x] `godot_project_import`, `sandbox_smoke`, `sandbox_combat_smoke` et `combat_catalog_smoke` passent : 4/4.
+- [ ] Les templates Linux 4.7.2 ne sont pas installés. Le test n’est donc pas un export autonome, et ne valide pas le lancement par `linux_release.x86_64` ni la distribution des notices dans un dossier d’installation.
+
 ## Build et lancement depuis un clone Git propre — 2026-10-17
 
 - Clone local neuf du commit `09baf7a`, puis configuration CMake 3.31.12, compilation complète avec GCC 14.2.0, import Godot 4.7.2 et lancement headless de la scène principale : réussis. FetchContent a récupéré le SHA `godot-cpp` verrouillé.
