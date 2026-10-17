@@ -57,6 +57,13 @@
 - [x] Les données du runtime du template correspondent exactement aux archives suivies `docs/release/licenses/godot-4.7.2-copyright-info.json` et `godot-4.7.2-license-info.json` : **102 composants** et **19 textes de licence**. Le script/projet de probe était temporaire et n’est pas dans le jeu.
 - [ ] Cette vérification ne couvre pas de templates Windows/macOS/Linux supplémentaires ni la présence des notices dans un paquet distribué.
 
+## P9.8 — Paquet Linux de validation — 2026-10-17
+
+- [x] Création d’une archive staging non versionnée avec l’export autonome existant, sa GDExtension, `THIRD_PARTY_NOTICES.md`, les deux archives Godot et les notices de licences des polices aux chemins référencés. Le `README.txt` de l’archive indique explicitement qu’elle est pré-release et non distribuable.
+- [x] Extraction dans un répertoire neuf, puis lancement de `DopamineSurvivor.x86_64 --headless --audio-driver Dummy --quit-after 3` avec un `XDG_DATA_HOME` vierge : code 0.
+- [x] SHA-256 de l’archive staging : `2de45351244927208d0379f342a2f0a1abcab11c9af03ed101f268ae9c017ec4`. Exécutable : `d67e0588395d072d446dcee4a6f8fe14506fb193852b2687a44608565198e647`; GDExtension : `a6d148c988fcb78476b3e43fb721869a0b2fddc1251e78ed1033231690b05dfa`.
+- [ ] L’archive utilise un export local existant sans manifeste du commit source; elle n’a pas de version de jeu assignée et n’est pas un artefact de release. Recréer un paquet versionné depuis un commit approuvé après fermeture des gates de contenu et provenance.
+
 ## Revalidation de la suite après export Linux — 2026-10-17
 
 - Première exécution CTest séquentielle sur le checkout courant : **86/87**. Le smoke catalogue inspectait le buffer temporaire d’événements alors que `SurvivalSession` acquitte les événements qu’elle consomme; la course pouvait masquer un dégât déjà appliqué.

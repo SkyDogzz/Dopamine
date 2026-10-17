@@ -9,6 +9,7 @@
 - [ ] **[OUVERT]** Fixer la version du jeu et la convention de version des artefacts. `game/project.godot` ne définit actuellement aucune `config/version`; ne pas déduire une version de release du numéro de Godot ni d’un hash Git.
 - [ ] Construire depuis un checkout propre reproductible pour chaque plateforme de release; distinguer les exports vérifiés localement des artefacts réellement distribuables.
 - [ ] Pour chaque artefact retenu, consigner plateforme/architecture, commit source, versions de Godot/templates/toolchain, commandes, taille et SHA-256.
+- [x] Vérifier le paquet Linux non versionné de staging (exécutable, GDExtension, notices, licences référencées, extraction et démarrage headless); les sommes et limites sont dans [`../qa/TESTS.md`](../qa/TESTS.md). Ce paquet est explicitement non distribuable.
 
 ## Contenu et critères d’acceptation
 
@@ -23,7 +24,8 @@
 - [x] Inventaire de départ disponible dans [`../../THIRD_PARTY_NOTICES.md`](../../THIRD_PARTY_NOTICES.md) : Godot/godot-cpp et polices embarquées y sont identifiés; textes de licences des polices conservés dans `game/assets/fonts/`.
 - [x] Archives d’informations de copyright et de licences Godot 4.7.2 disponibles dans `licenses/`.
 - [x] Comparer les deux archives Godot au retour du template Linux release 4.7.2 : 102 composants et 19 textes correspondent exactement; la méthode et la portée Linux seule sont consignées dans [`../../THIRD_PARTY_NOTICES.md`](../../THIRD_PARTY_NOTICES.md).
-- [ ] Répéter la comparaison pour chaque autre template distribué, puis placer les notices requises avec les artefacts.
+- [x] Inclure les notices et textes de polices/Godot dans le paquet Linux de staging, en conservant les chemins référencés.
+- [ ] Répéter la comparaison pour chaque autre template distribué et inclure ses notices dans le paquet versionné correspondant.
 - [x] Faire un contrôle mécanique des sources d’image : les 136 PNG avec correspondance de base et les trois exceptions hors du dossier de références sont décrits dans [`../art/INVENTAIRE_ASSETS_UI.md`](../art/INVENTAIRE_ASSETS_UI.md) et [`../art/asset_exceptions.txt`](../art/asset_exceptions.txt).
 - [ ] Vérifier la provenance et les droits de chaque asset livré, y compris les fichiers générés, les sources éditables et toute attribution requise; les inventaires artistiques ne valent pas clearance complète.
 - [ ] **[OUVERT]** Confirmer avec le responsable audio l’inventaire, la provenance et les notices des sons effectivement livrés. Ne pas considérer les fichiers de prévisualisation ou les recettes de génération comme preuve que le mix du jeu est terminé.
