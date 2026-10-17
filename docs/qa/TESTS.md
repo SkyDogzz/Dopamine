@@ -31,6 +31,12 @@
 - [x] CTest ciblé avec son fixture d’import Godot : **2/2 réussis en 3,12 s**.
 - [i] Cette vérification valide le rendu superposé, pas la lisibilité sur le GPU cible ni la calibration des couleurs/durées **[PROPOSÉES]**.
 
+## P9.3 — Faisceaux Prism avec effets réduits — 2026-10-17
+
+- [x] `survival_combat_visual_smoke.gd` rend le faisceau primaire et un faisceau secondaire Prism dans la capture de combat dense, puis vérifie leurs pixels centraux avant et après activation des effets visuels réduits.
+- [x] Le smoke direct sous Godot 4.7.2/Xvfb/Mesa llvmpipe passe; CTest ciblé importe le projet puis réussit `survival_combat_visual_smoke` (**2/2 tests, 3,23 s**).
+- [i] Cela confirme que les faisceaux de gameplay survivent à la réduction des effets décoratifs. Leur couleur reste **[OUVERTE]** selon l’Art Bible; le rendu sur GPU cible reste à vérifier. Le harness signale encore 4 ObjectDB et 2 ressources utilisées à la fermeture.
+
 ## P9.3 — Retours visuels des critiques et statuts — 2026-10-17
 
 - [x] `survival_visual_effects_smoke.gd` touche une vraie cible avec un projectile natif Minigun marqué critique et confirme que l'événement produit un impact critique rendu par la session; le helper conserve aussi le drapeau et l'échelle supérieure au chemin normal.

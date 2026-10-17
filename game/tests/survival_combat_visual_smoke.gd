@@ -75,6 +75,9 @@ func _run() -> void:
 		"origin": Vector2(260.0, -100.0),
 		"aim": Vector2(260.0, 100.0),
 	}
+	session._prism_beams.clear()
+	session._prism_beams.append({"from": Vector2(190.0, -90.0), "to": Vector2(190.0, 90.0), "secondary": false})
+	session._prism_beams.append({"from": Vector2(-190.0, -90.0), "to": Vector2(-190.0, 90.0), "secondary": true})
 	session.queue_redraw()
 	var camera: Camera2D = session.player.get_node("Camera2D")
 	camera.zoom = Vector2.ONE
@@ -93,6 +96,15 @@ func _run() -> void:
 	):
 		_fail("A boss charge telegraph should remain visible among dense combat visuals")
 		return
+	var primary_beam_pixel: Vector2 = session.get_global_transform_with_canvas() * Vector2(190.0, 0.0)
+	var secondary_beam_pixel: Vector2 = session.get_global_transform_with_canvas() * Vector2(-190.0, 0.0)
+	if not _contains_color(image, primary_beam_pixel, func(color: Color) -> bool:
+		return color.r > 0.75 and color.g > 0.75 and color.b > 0.75
+	) or not _contains_color(image, secondary_beam_pixel, func(color: Color) -> bool:
+		return color.r > 0.75 and color.g > 0.75 and color.b > 0.75
+	):
+		_fail("Primary and secondary Prism beams should both remain visible in the combat capture")
+		return
 	var settings := root.get_node("Settings") as SettingsService
 	settings.set_reduced_visual_effects_enabled(true)
 	session.queue_redraw()
@@ -105,6 +117,14 @@ func _run() -> void:
 	):
 		settings.set_reduced_visual_effects_enabled(false)
 		_fail("Reduced decorative effects must preserve the boss charge telegraph")
+		return
+	if not _contains_color(reduced_image, primary_beam_pixel, func(color: Color) -> bool:
+		return color.r > 0.75 and color.g > 0.75 and color.b > 0.75
+	) or not _contains_color(reduced_image, secondary_beam_pixel, func(color: Color) -> bool:
+		return color.r > 0.75 and color.g > 0.75 and color.b > 0.75
+	):
+		settings.set_reduced_visual_effects_enabled(false)
+		_fail("Reduced decorative effects must preserve both gameplay-critical Prism beams")
 		return
 	settings.set_reduced_visual_effects_enabled(false)
 	print("Survival combat visual capture: %s" % SCREENSHOT)
