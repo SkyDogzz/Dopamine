@@ -1,0 +1,12 @@
+# Godot 4.7.2; exploratory matched-seed runs on Chaos and Normal, speed x1, normal HP and enemy spawns.
+# Inferno Sprayer and Frost Nova Lv1 were granted directly; the harness auto-selected the first chest and drove a kite bot.
+# All runs ended in defeat before wave 3; this is not representative human-play calibration.
+difficulty,seed,result,active_seconds,wave,kills,level,burn_weapon_damage,chill_weapon_damage,thermal_shock_damage_events,thermal_shock_damage,hp_current,hp_max
+chaos,20261026,defeat,16.96,1,0,1,40.00,40.00,2,8.00,0.0,100.0
+normal,20261026,defeat,26.32,1,11,3,88.80,40.24,3,12.04,0.0,100.0
+chaos,20261027,defeat,20.14,1,0,1,72.00,40.00,5,20.00,0.0,100.0
+normal,20261027,defeat,55.02,2,25,3,193.52,112.72,7,28.16,0.0,100.0
+chaos,20261028,defeat,6.85,1,0,1,16.00,8.00,0,0.00,0.0,100.0
+normal,20261028,defeat,74.34,3,25,4,274.48,72.56,6,24.16,0.0,100.0
+chaos,20261029,defeat,6.94,1,0,1,8.00,8.00,1,4.00,0.0,100.0
+normal,20261029,defeat,59.45,2,16,2,144.96,64.48,5,20.16,0.0,100.0

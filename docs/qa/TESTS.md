@@ -433,6 +433,13 @@
 - [i] Les six runs Easy ont produit 0–5 événements `thermal_shock` chacune; les trois runs Normal en produisent 4–6 et 16,12–24,16 dégâts de réaction chacune. Ces résultats restent cohérents avec le multiplicateur proposé de 50 %, sans valider sa balance. Les runs restent courtes, avec loadout forcé et bot kite; elles ne représentent pas un parcours humain et ne suffisent pas à calibrer.
 - [ ] Le prototype, son cooldown de 1 s et le multiplicateur de 50 % restent **[PROPOSÉS]**; il reste à mesurer leur effet pendant des runs représentatives.
 
+## P5.4.6 — Comparaison exploratoire Chaos/Normal — 2026-10-17
+
+- [x] Quatre paires de runs seedées avec `thermal_shock_run_survey.gd`, Godot 4.7.2, vitesse ×1, PV ordinaires et spawns normaux. Le harness impose Inferno Sprayer Lv1 + Frost Nova Lv1, auto-sélectionne le premier coffre et pilote un bot kite. Les résultats bruts sont dans [`data/thermal_shock_chaos_vs_normal_20261017.csv`](data/thermal_shock_chaos_vs_normal_20261017.csv).
+- [x] En Chaos, les quatre essais meurent vague 1 en 6,85–20,14 s, avec zéro élimination; Thermal Shock produit 0–5 événements et 0–20 dégâts. En Normal, les essais meurent vague 1–3 en 26,32–74,34 s, avec 11–25 éliminations et 3–7 événements de réaction (12,04–28,16 dégâts).
+- [ ] Ces échantillons révèlent surtout les limites du bot et la forte pression du Chaos; le build forcé, les choix automatiques et l’échec avant vague 3 ne permettent pas de calibrer le multiplicateur Chaos ni Thermal Shock. Garder les chiffres **[PROPOSÉS]** et le critère de run représentative ouvert.
+- [x] Chaque exécution a quitté avec code 0, mais Godot a signalé 1–3 ressources et 2–6 instances ObjectDB encore référencées à la fermeture; leur origine n’a pas été isolée et reste à analyser séparément des résultats de gameplay.
+
 ## P5.2.3 — Toxic Ignition — 2026-10-16
 
 - [x] Décisions utilisateur **[VALIDÉES]** : explosion immédiate à l’application directe de Burn sur Poison ou Poison sur Burn; dégâts égaux à 50 % du coup déclencheur, rayon 60 px, statuts conservés, une explosion par cible et par seconde.
