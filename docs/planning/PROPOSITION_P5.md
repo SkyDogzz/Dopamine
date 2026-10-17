@@ -37,7 +37,7 @@ Le coût de tentative d'amélioration déjà proposé au GDD reste inchangé. Po
 | Legendary | 3 Refined |
 | Mythic | 1 Pure |
 
-La conversion ascendante demeure 10:1 comme au GDD. Aucun rendement direct en Prismatic : ce tier reste rare et provient de conversions. La recommandation initiale de ne pas ajouter de vente n'est pas retenue dans le prototype courant : le GDD prévoit vente et démantèlement comme actions distinctes. La vente crédite uniquement de l'Essence et affiche une confirmation; ses montants par rareté (5/10/20/40/80) restent **[PROPOSÉS]** et non calibrés. Le démantèlement reste la sortie Powder. Le prix de reroll d'effet reste `[OUVERT]`; le geler à zéro tant que le reroll n'est pas implémenté évite de débiter une ressource pour une action indisponible.
+La conversion ascendante demeure 10:1 comme au GDD. Aucun rendement direct en Prismatic : ce tier reste rare et provient de conversions. La recommandation initiale de ne pas ajouter de vente n'est pas retenue dans le prototype courant : le GDD prévoit vente et démantèlement comme actions distinctes. La vente crédite uniquement de l'Essence et affiche une confirmation; ses montants par rareté (5/10/20/40/80) restent **[PROPOSÉS]** et non calibrés. Le démantèlement reste la sortie Powder. Le prix du reroll d’effet est **[VALIDÉ]** : 1 Powder Pure pour Legendary, 1 Powder Prismatic pour Mythic (décision utilisateur du 2026-10-17). Tant que le reroll n’est pas implémenté, aucune ressource ne doit être débitée pour cette action indisponible.
 
 ## 3. Effets uniques — comportements de prototype
 

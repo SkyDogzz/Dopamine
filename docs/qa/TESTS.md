@@ -838,6 +838,11 @@
 - [x] Revalidation ciblée sous Godot 4.7.2 le 2026-10-17 : `equipment_enhancement_smoke.gd` passe après l’ajout de la sonde d’espérance; les branches de réussite/échec sont toujours couvertes par le service réel.
 - [x] Le 2026-10-17, `equipment_economy_smoke.gd` revalide les ventes et couvre aussi le démantèlement des cinq raretés : yields Basic/Refined/Pure attendus, soldes cumulés par tier, suppression de chaque pièce et refus d’un second crédit. Les rendements restent **[PROPOSÉS]**.
 
+## P6.4 — Prix du reroll d’effet unique — 2026-10-17
+
+- [x] Décision utilisateur, réponse A : chaque reroll coûte 1 Powder Pure pour un équipement Legendary ou 1 Powder Prismatic pour un Mythic. La règle est documentée dans le GDD et le registre; le reroll reste à implémenter, donc aucune vérification runtime du débit n’est revendiquée.
+- [ ] Les protections contre les abus de conversion ascendante restent **[OUVERTES]**; aucun contrôle runtime du reroll n’est encore présent.
+
 ## P6.4 — Arbitrage et contrôle statistique Enhancement — 2026-10-17
 
 - [x] L’utilisateur valide l’option A : garder les tables de coûts, chances et démantèlement proposées comme base à calibrer par essais; cela ne valide aucun chiffre. Voir le GDD §8 et `docs/planning/DECISIONS_RESTANTES.md`.

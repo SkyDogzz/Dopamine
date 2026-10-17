@@ -495,7 +495,8 @@ Travail requis :
   - [x] `equipment_stats_smoke.gd` équipe une seule stat par profil et ouvre une vraie session Survival pour vérifier l’effet de HP, mobilité, dégâts, cadence, critiques, soin, aire, cooldown, XP, rayon de ramassage et vitesse projectile.
   - [x] `survival_chest_smoke.gd` vérifie l’application du rayon de ramassage aux XP, dont l’impulsion Magnet Heart, puis confirme qu’un grand rayon ne collecte jamais un coffre hors de sa portée dédiée.
 - [ ] **P6.4 — Enhancement**
-  - [x] Arbitrage utilisateur **[VALIDÉ, 2026-10-17] — option A** : garder les tables proposées comme base et les calibrer par essais; les chiffres restent **[PROPOSÉS]** jusqu’à mesure représentative. Le reroll d’effet unique et les protections de conversion restent **[OUVERTS]**.
+  - [x] Arbitrage utilisateur **[VALIDÉ, 2026-10-17] — option A** : garder les tables proposées comme base et les calibrer par essais; les chiffres restent **[PROPOSÉS]** jusqu’à mesure représentative. Le prix du reroll d’effet unique est maintenant **[VALIDÉ]** (1 Pure sur Legendary, 1 Prismatic sur Mythic); les protections de conversion restent **[OUVERTES]**.
+  - [x] Décision utilisateur **[VALIDÉE, 2026-10-17] — réponse A** : un reroll d’effet unique coûte 1 Powder Pure sur Legendary ou 1 Powder Prismatic sur Mythic. Le reroll reste à implémenter; les protections de conversion restent à arbitrer.
   - [x] `equipment_enhancement_smoke.gd` vérifie une ligne +0..+10 avec Basic, Refined, Pure et Prismatic, y compris le +8 % par niveau.
   - [x] Le smoke vérifie réussite, échec normal, échec critique avec protection au niveau 0, et réussite garantie après neuf échecs.
   - [x] Le smoke vérifie la table proposée de coûts pour chaque rareté/niveau, les conversions 10:1 vers le tier suivant et le refus de conversion depuis Prismatic.
