@@ -45,16 +45,20 @@ func _run() -> void:
 		_fail("Singularity should reach level 5")
 		return
 	var player_position: Vector2 = session.player.global_position
-	var void_orb_position := player_position + Vector2(200.0, 0.0)
-	var void_orb_sequence: int = session.simulation.spawn_projectile("void_orb", void_orb_position,
+	var event_horizon_position := player_position + Vector2(200.0, 0.0)
+	var event_horizon_sequence: int = session.simulation.spawn_projectile("event_horizon", event_horizon_position,
 		Vector2.ZERO, 5.0, 8.0, 20.0, 2.0, 0.5, 2.0, 0.0, 0.0, 0, 80.0, 20.0)
+	var void_orb_sequence: int = session.simulation.spawn_projectile("void_orb",
+		player_position + Vector2(-500.0, 0.0), Vector2.ZERO, 5.0, 8.0, 20.0,
+		2.0, 0.5, 2.0, 0.0, 0.0, 0, 80.0, 20.0)
 	var xp_sequence: int = session.simulation.spawn_xp_orb(player_position + Vector2(220.0, 0.0), 1.0)
-	if void_orb_sequence <= 0 or xp_sequence <= 0 or not await _wait_for_sequence(session, xp_sequence):
+	if event_horizon_sequence <= 0 or void_orb_sequence <= 0 or xp_sequence <= 0 or \
+			not await _wait_for_sequence(session, xp_sequence):
 		_fail("Gravity synergy fixtures should enter the native simulation")
 		return
 	session._entities = session.simulation.snapshot()["entities"]
-	if session._magnet_heart_singularity_fields().size() != 1:
-		_fail("Max-level Singularity should expose its active Void Orb field to Magnet Heart")
+	if session._magnet_heart_singularity_fields().size() != 2:
+		_fail("Max-level Singularity should expose both active gravity field types to Magnet Heart")
 		return
 	var xp_orb_id := -1
 	for entity in session.simulation.snapshot()["entities"]:
@@ -74,10 +78,10 @@ func _run() -> void:
 		_fail("The magnetic pulse gravity step should be acknowledged")
 		return
 	var end_position := _find_entity_position(session.simulation.snapshot()["entities"], xp_orb_id)
-	var closer_to_gravity := end_position.distance_to(void_orb_position) < start_position.distance_to(void_orb_position)
+	var closer_to_gravity := end_position.distance_to(event_horizon_position) < start_position.distance_to(event_horizon_position)
 	session.queue_free()
 	if not closer_to_gravity:
-		_fail("Magnet Heart + Singularity should pull XP toward the active Void Orb field")
+		_fail("Magnet Heart + Singularity should pull XP toward Event Horizon while a distant Void Orb is also active")
 		return
 	print("Survival Magnet Heart synergy smoke passed")
 	quit()

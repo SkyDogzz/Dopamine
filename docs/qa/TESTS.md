@@ -1567,6 +1567,6 @@ Note de clôture : le blocage historique du smoke `sandbox_ui_smoke.gd` décrit 
 
 ## P5.1.13 — Synergies Magnet Heart — 2026-10-17
 
-- [x] `survival_magnet_heart_synergy_smoke.gd` vérifie que chaque effet attend le niveau 5 des deux reliques; Magnetic Coil accroît la vitesse maximale du pulse, Celestial Eye en étend le rayon, et Singularity déplace les orbes XP vers le champ Void Orb/Event Horizon actif pendant le pulse.
+- [x] `survival_magnet_heart_synergy_smoke.gd` vérifie que chaque effet attend le niveau 5 des deux reliques; Magnetic Coil accroît la vitesse maximale du pulse, Celestial Eye en étend le rayon, et Singularity déplace les orbes XP vers Event Horizon pendant qu’un Void Orb distant est actif. Le smoke confirme la découverte des deux types de champ.
 - [x] Les orbes XP restent hors de l’attraction native Void Orb sans la synergie Magnet Heart + Singularity; un test cœur natif conserve cette séparation. Les coffres restent exclus de toute attraction.
 - [i] L’existence des trois synergies est **[VALIDÉE]** par l’utilisateur (« les 3 »); leurs conditions de niveau, leur déclenchement pendant Magnetic Pulse et les multiplicateurs ×1,5 restent **[PROPOSÉS]** et à calibrer.
