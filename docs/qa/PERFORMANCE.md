@@ -45,6 +45,18 @@ L’environnement utilisé pour la reprise expose 8 vCPU AMD EPYC-Milan sous KVM
 
 Recontrôle lors de la reprise du goal : `/dev/dri/card0` et `renderD128` sont présents, mais `lspci` identifie uniquement un adaptateur Virtio 1.0 (`1af4:1050`) sous KVM. Aucun accès à l’identité ou aux compteurs du GPU hôte n’est exposé; ni `DISPLAY`, ni `perf`, `nvidia-smi`, `radeontop` ou `intel_gpu_top` ne sont disponibles. La présence de ces nœuds DRM ne constitue donc pas une mesure de l’iGPU cible. Le profilage GPU de référence reste **[OUVERT]**.
 
+## Profil Linux automatisé — CSV par run
+
+Sur la machine Linux de référence, avec Godot 4.7.2, CMake 3.21+, un compilateur C++23 et `ctest` disponibles dans le `PATH` :
+
+```bash
+tools/profile_linux.sh tools/local/godot-4.7.2/Godot_v4.7.2-stable_linux.x86_64
+```
+
+Le script configure un build Debug dédié sous `build/linux-profiling`, compile la GDExtension et les tests natifs, puis exécute tout CTest séquentiellement. Les répertoires XDG `data`, `config`, `cache` et `state` des tests et de la run mesurée sont distincts, temporaires et supprimés à la fermeture; le profil normal n’est pas utilisé. La run démarre depuis un profil vide. Le CSV par défaut est `docs/qa/data/linux_survival_profile.csv`; un second argument peut le déplacer.
+
+Jouer 30–60 secondes de combat actif, idéalement à une vague chargée avec mid-boss, en difficulté Normal et vitesse ×1, puis fermer le jeu. Le collecteur consigne une ligne par seconde : frame/physique (moyenne, P95, maximum), FPS, appels de dessin, primitives, mémoire vidéo estimée, objets, OS, CPU, adaptateur GPU, renderer, résolution et état Survival. Il ne mesure pas le temps GPU par frame et ne remplace pas le Profiler/Visual Profiler pour attribuer les coûts. Une exécution headless/Xvfb sert uniquement à vérifier le pipeline et ne constitue pas une mesure de performance représentative.
+
 ## Profil Windows automatisé — CSV par run
 
 Depuis PowerShell à la racine du clone Windows, démarre le jeu et le collecteur avec :

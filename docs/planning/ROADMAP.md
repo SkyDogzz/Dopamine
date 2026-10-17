@@ -736,6 +736,7 @@ P1 livre le Sandbox développeur et ne remplace pas cette feature produit.
 - [ ] **P9.5 — Performance**
   - [ ] Fixer le matériel iGPU de référence et la scène de charge.
   - [ ] Mesurer frame-time CPU/GPU, mémoire, P50/P95/P99.
+  - [x] Ajouter `tools/profile_linux.sh`, pendant Linux de `profile_windows.ps1` : build Debug dédié, CTest séquentiel et capture interactive sous profil XDG temporaire séparé des tests et des données normales. Le pipeline a été vérifié sous Godot 4.7.2; le run headless n’est pas une mesure de performance. La capture représentative sur l’iGPU reste ouverte.
   - [x] Refaire trois mesures P50/P95/P99 du cœur natif sur l’hôte KVM courant et consigner leur variabilité dans `docs/qa/PERFORMANCE.md`; cette baseline ne couvre ni une vague représentative ni le GPU de référence.
   - [ ] Refaire les mesures après optimisations et archiver la configuration.
 - [x] **P9.6 — Stabilité/saves**

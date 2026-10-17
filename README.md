@@ -51,6 +51,8 @@ Le hub propose aussi `RUN TEMPORAIRE · SANS SAUVEGARDE` : cette partie démarre
 
 Le preset `Linux/X11` permet d’exporter les données du projet en PCK avec `godot --headless --path game --export-pack "Linux/X11" ../build/linux/DopamineSurvivor.pck`. Ce PCK n’est pas un exécutable autonome. Pour compiler l’extension native release dans un répertoire distinct du build Debug, utilisez `cmake -S . -B build/linux-release -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTING=OFF -DGODOTCPP_TARGET=template_release`, puis `cmake --build build/linux-release --parallel 4`. Avec les templates Linux 4.7.2 installés, l’export autonome `Linux/X11` a été produit; le parcours clavier sous Xvfb démarre une run Survival et charge la GDExtension release. Le rendu sur matériel réel, les contrôleurs physiques et une installation vierge restent à vérifier (voir `docs/qa/TESTS.md`).
 
+Pour profiler une run Linux sur la machine de référence, lancez `tools/profile_linux.sh [GodotExecutable] [OutputPath]`. Le script compile l’extension Debug, exécute CTest, puis ouvre le jeu avec un profil Godot temporaire isolé; à la fin, ce profil est supprimé. Le CSV est écrit par défaut dans `docs/qa/data/linux_survival_profile.csv`. Gardez la fenêtre et le renderer constants pendant 30–60 secondes de combat actif, à vitesse ×1; les compteurs ne mesurent pas le temps GPU par frame. Détails et limites : [`docs/qa/PERFORMANCE.md`](docs/qa/PERFORMANCE.md).
+
 Pour refaire le paquet de validation staging depuis le commit `HEAD` (build CMake Release vierge, export Linux filtré, notices, archive et smoke après extraction), avec Godot 4.7.2 et ses templates Linux installés :
 
 ```bash

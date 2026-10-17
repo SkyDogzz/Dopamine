@@ -1,5 +1,13 @@
 # Tests d'acceptation et validation
 
+## P9.5 — Outil de capture Linux — 2026-10-17
+
+- [x] Ajouter `tools/profile_linux.sh`, qui configure un build Debug dédié, construit l’extension/tests, lance CTest en série, puis ouvre le collecteur `PerformanceCapture`. Les répertoires XDG de CTest et de la run sont distincts et temporaires; aucun profil normal n’est utilisé.
+- [x] Vérification du script avec des commandes factices : chemins d’exécutable et de sortie contenant des espaces, arguments transmis, CSV exigé, profils XDG distincts et nettoyage du temporaire.
+- [x] Vérification réelle avec CMake 3.31.12 et Godot 4.7.2 : build Debug propre et **114/114** tests CTest réussis en **77,14 s**. Le CMake reconfiguré inclut `survival_revive_smoke`, absent de l’ancien build local qui annonçait 113 tests.
+- [x] Smoke du collecteur avec le vrai Godot headless limité à 240 frames : sortie CSV valide avec deux lignes d’échantillon; cette étape vérifie seulement le lancement et l’écriture.
+- [i] Une capture interactive de 30–60 s en combat sur iGPU de référence, avec profil CPU/GPU dans l’éditeur, reste nécessaire. Le smoke headless ne fournit aucune mesure de performance exploitable.
+
 ## Régression complète sur le HEAD `41d2c4a` — 2026-10-17
 
 - [x] `/tmp/cmake-3.31.12-linux-x86_64/bin/ctest --test-dir build --output-on-failure` termine en **79,44 s**, **113/113** tests réussis, aucun échec. Cela inclut les imports Godot, Sandbox/Lab, Survival et ses armes/ennemis/boss, l’économie et les sauvegardes, Armorless, Endless standard, les parcours clavier/gamepad synthétiques et les scénarios d’armes Sandbox.
