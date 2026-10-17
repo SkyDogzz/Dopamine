@@ -391,7 +391,7 @@
 
 - [x] Régression rouge d’abord : un preset valide `base_mode=armorless` démarrait silencieusement une session Survival standard.
 - [x] `SandboxLabContext` transmet désormais `base_mode` à la session Armorless; le smoke confirme le directeur endless Armorless, l’état temporaire actif et l’absence de `ProgressionService`/`SaveService`.
-- [x] Un preset `base_mode=endless` renvoie `mode_unavailable` tant que les règles de l’Endless standard restent **[OUVERTES]**; le smoke confirme que le Lab actif n’est pas remplacé. `sandbox_preset_smoke.gd`, `sandbox_lab_smoke.gd`, `sandbox_snapshot_smoke.gd` et `survival_armorless_mode_smoke.gd` passent sous Godot 4.7.2.
+- [x] **État historique, remplacé le 2026-10-17 par P8.1/P8.3 ci-dessous :** à cette date, un preset `base_mode=endless` renvoyait `mode_unavailable`, et le Lab actif était conservé.
 
 ## P8.6 — Validation atomique des évolutions en snapshot — 2026-10-17
 
@@ -1087,7 +1087,7 @@ Pour le catalogue, la validation JSON et des références a aussi été vérifi�
 - [x] Progression Survival : gains d’Essence/Powder selon la formule **[PROPOSÉE]** Normal, cumul sur plusieurs runs, défaite récompensée et `run_id` idempotent ; injection du service uniquement par l’entrée Survival et smoke avec slot temporaire isolé.
 - [x] Idempotence après redémarrage : `progression_service_smoke.gd` crée un nouveau `ProgressionService`, recharge le même slot, rejoue un `run_id` déjà récompensé et vérifie l’absence de ressources et équipement supplémentaires.
 - [x] Récupération de profil après corruption : `progression_service_smoke.gd` corrompt le slot courant, recrée `SaveService` et `ProgressionService`, puis vérifie que le backup précédent est relu et validé sans perdre runs récompensées ni équipement; `save_service_smoke.gd` couvre les contrôles génériques de checksum et JSON.
-- [ ] Le mode Endless standard reste à finaliser avant ses tests de validation.
+- [x] **État historique, remplacé par les validations P7B et P8.1/P8.3 du 2026-10-17 :** le mode Endless standard n’était pas encore implémenté à la date de cette entrée.
 
 ## Runner headless (CLI P1 implémentée)
 

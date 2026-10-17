@@ -53,7 +53,7 @@ Légende de statut : [VALIDÉ] décision explicitement retenue ; [PROPOSÉ] para
 
 Boucle Survival : choisir difficulté et arme initiale → survivre à une vague de 30 secondes → tuer pour se soigner et gagner XP → ramasser chests → améliorer armes/reliques → vaincre le mid-boss vague 12 → vaincre le boss final vague 24 → récompenses permanentes → recommencer.
 
-[VALIDÉ] La durée de base est de 24 × 30 secondes = 12 minutes de combat actif, plus les pauses de boss et les choix. Objectif d'une run : 10–15 minutes. Le timer de vague s’arrête durant les boss ; le HP decay continue pendant le gameplay et se suspend durant les vraies pauses, notamment les choix de coffre. La possibilité de poursuivre en Endless après la victoire finale reste une proposition ; les règles d’accès exactes d’Endless standard sont [OUVERTES].
+[VALIDÉ] La durée de base est de 24 × 30 secondes = 12 minutes de combat actif, plus les pauses de boss et les choix. Objectif d'une run : 10–15 minutes. Le timer de vague s’arrête durant les boss ; le HP decay continue pendant le gameplay et se suspend durant les vraies pauses, notamment les choix de coffre. La poursuite après victoire et l’accès au mode Endless standard ont un prototype choisi **[PROPOSÉ]**; ses règles ne sont pas encore validées.
 
 [VALIDÉ — EXTENSION DU 2026-10-16] Chaque montée de niveau d'XP accorde automatiquement un bonus, à partir du passage du niveau 1 au niveau 2. Une rotation fixe, commune aux runs, suit cet ordre puis recommence : dégâts %, vitesse d'attaque %, chance critique %, dégâts critiques %, PV maximum, vitesse de déplacement %, soin par élimination %, zone %, réduction de cooldown %, gain d'XP %, rayon de collecte XP % et vitesse projectile %. Chaque stat en pourcentage gagne 1 point de pourcentage à son tour ; le PV maximum est multiplié par 1,01 à son tour et les PV actuels sont ajustés pour conserver leur ratio. Ces bonus ne persistent pas entre les runs. Aucun choix ni retour ponctuel n'accompagne le gain ; les contributions sont consultables dans les statistiques de run.
 
@@ -209,7 +209,7 @@ Données : AchievementDefinition {id, category, secret, metric, aggregation, tie
 
 [VALIDÉ] Mode principal : 24 vagues de 30 secondes, mid-boss 12, boss final 24 ; fin victorieuse ou mort. Équipement permanent actif, bonus de skill tree et achievements actifs. Armes et reliques reconstruits à chaque run via chests. Une pièce d'équipement permanente garantie par run, y compris défaite. Difficulté choisie parmi celles débloquées.
 
-[PROPOSÉ] Après victoire, proposition de poursuivre en Endless standard sans perdre le build. [OUVERT] Décision finale sur l'accès au Endless depuis le menu et sa condition de déblocage.
+[PROPOSÉ] Prototype retenu sous délégation utilisateur : après victoire, proposer de poursuivre en Endless standard sans perdre le build; débloquer aussi l’accès au Endless depuis le hub après une victoire Survival. Cette décision de prototype et ses règles restent **[PROPOSÉES]**, non validées.
 
 <a id="12"></a>
 
