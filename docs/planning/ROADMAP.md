@@ -705,6 +705,7 @@ P1 livre le Sandbox développeur et ne remplace pas cette feature produit.
   - [ ] Refaire le parcours clavier/contrôleur et le rendu sur un poste Linux avec matériel réel; le contrôle courant utilise Xvfb/Mesa llvmpipe.
 - [ ] **P9.8 — Préparation de livraison**
   - [x] Établir [`docs/release/RELEASE_CHECKLIST.md`](../release/RELEASE_CHECKLIST.md); le choix de version d’artefact reste **[OUVERT]** et n’est pas inventé.
+  - [x] Comparer l’inventaire Godot au template Linux release 4.7.2 effectivement utilisé; autres templates et inclusion des notices dans les paquets restent à vérifier.
   - [ ] Vérifier contenu, dépendances, licences, sauvegarde et notes de version.
   - [ ] Préparer publication après validation des critères, sans la confondre avec un build local.
 

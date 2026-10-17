@@ -51,6 +51,12 @@
 - [x] Suite CTest séquentielle du checkout courant : **91/91 en 62,87 s**. Le checkout contient aussi le diff local non commité de `game/scripts/survival_session.gd`; ce résultat porte sur l’état combiné et ce fichier n’a pas été inclus dans le commit du test.
 - [ ] Le test d’interruption construit les états de fichiers représentatifs dans un processus de test; il ne coupe pas réellement le processus ou l’alimentation pendant un write/flush, et ne simule pas les garanties matérielles du système de fichiers.
 
+## P9.8 — Licences du template Linux release — 2026-10-17
+
+- [x] Un projet Godot minimal a été exporté avec le template installé `linux_release.x86_64`, puis lancé en headless. Le runtime du template a produit `Engine.get_copyright_info()` et `Engine.get_license_info()`.
+- [x] Les données du runtime du template correspondent exactement aux archives suivies `docs/release/licenses/godot-4.7.2-copyright-info.json` et `godot-4.7.2-license-info.json` : **102 composants** et **19 textes de licence**. Le script/projet de probe était temporaire et n’est pas dans le jeu.
+- [ ] Cette vérification ne couvre pas de templates Windows/macOS/Linux supplémentaires ni la présence des notices dans un paquet distribué.
+
 ## Revalidation de la suite après export Linux — 2026-10-17
 
 - Première exécution CTest séquentielle sur le checkout courant : **86/87**. Le smoke catalogue inspectait le buffer temporaire d’événements alors que `SurvivalSession` acquitte les événements qu’elle consomme; la course pouvait masquer un dégât déjà appliqué.

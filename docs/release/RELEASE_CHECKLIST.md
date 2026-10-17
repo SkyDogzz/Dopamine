@@ -22,7 +22,8 @@
 
 - [x] Inventaire de départ disponible dans [`../../THIRD_PARTY_NOTICES.md`](../../THIRD_PARTY_NOTICES.md) : Godot/godot-cpp et polices embarquées y sont identifiés; textes de licences des polices conservés dans `game/assets/fonts/`.
 - [x] Archives d’informations de copyright et de licences Godot 4.7.2 disponibles dans `licenses/`.
-- [ ] Comparer l’information de licences à celle du template Godot réellement utilisé pour chaque export, puis placer les notices requises avec les artefacts distribués. L’archive actuelle recense les composants du runtime officiel, pas une vérification exacte du template d’export.
+- [x] Comparer les deux archives Godot au retour du template Linux release 4.7.2 : 102 composants et 19 textes correspondent exactement; la méthode et la portée Linux seule sont consignées dans [`../../THIRD_PARTY_NOTICES.md`](../../THIRD_PARTY_NOTICES.md).
+- [ ] Répéter la comparaison pour chaque autre template distribué, puis placer les notices requises avec les artefacts.
 - [ ] Vérifier la provenance et les droits de chaque asset livré, y compris les fichiers générés, les sources éditables et toute attribution requise; les inventaires artistiques ne valent pas clearance complète.
 - [ ] **[OUVERT]** Confirmer avec le responsable audio l’inventaire, la provenance et les notices des sons effectivement livrés. Ne pas considérer les fichiers de prévisualisation ou les recettes de génération comme preuve que le mix du jeu est terminé.
 
