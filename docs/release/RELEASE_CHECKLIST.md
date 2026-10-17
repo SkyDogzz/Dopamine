@@ -10,7 +10,7 @@
 - [ ] Construire depuis un checkout propre reproductible pour chaque plateforme de release; distinguer les exports vérifiés localement des artefacts réellement distribuables.
 - [ ] Pour chaque artefact retenu, consigner plateforme/architecture, commit source, versions de Godot/templates/toolchain, commandes, taille et SHA-256.
 - [x] Vérifier le paquet Linux non versionné de staging (exécutable, GDExtension, notices, licences référencées, extraction et démarrage headless); les sommes et limites sont dans [`../qa/TESTS.md`](../qa/TESTS.md). Ce paquet est explicitement non distribuable.
-- [x] Refaire un paquet staging depuis le snapshot propre `90a1fdabded9acc03b93ca14d5ab7364c7478d33`; le hash et les versions de toolchain sont consignés dans la QA. Le binaire du paquet instancie la session de probe; la version commerciale reste **[OUVERTE]**.
+- [x] Refaire un paquet staging filtré depuis le snapshot propre `c90a2c6`; compilation Release CMake vierge, inventaire du contenu, notices, extraction et démarrage avec profil Godot vierge sont consignés dans la QA. La version commerciale reste **[OUVERTE]**.
 
 ## Contenu et critères d’acceptation
 
@@ -18,7 +18,7 @@
 - [x] Vérifications automatisées de stabilité et d’isolation Sandbox consignées : CTest 91/91 sur le checkout courant, soak Survival/Sandbox et fingerprints des sauvegardes normales. Les limites de cette preuve sont dans [`../qa/TESTS.md`](../qa/TESTS.md).
 - [ ] Vérifier sur une installation de release la création, migration, backup et restauration des sauvegardes, puis confirmer qu’une partie temporaire/Sandbox ne modifie aucune sauvegarde normale.
 - [ ] Parcourir le jeu exporté à la souris, au clavier et à la manette sur chaque plateforme retenue; vérifier focus, lisibilité, rendu et sortie audio sur matériel.
-- [ ] Relire le contenu de l’artefact exporté pour confirmer que scènes, données, polices, sprites, sons et GDExtension nécessaires y sont présents et que fichiers de développement/tests ne sont pas inclus inutilement.
+- [x] Relire le contenu du staging Linux `c90a2c6` : journal d’export avec scènes, scripts, données, polices, sprites, audio et extension; les ressources `tests/`, `tools/` et `assets/source/` sont exclues. La portée et les limites sont consignées dans [`../qa/TESTS.md`](../qa/TESTS.md).
 
 ## Dépendances, licences et provenance
 
@@ -42,4 +42,4 @@
 
 - P9.6 — stabilité/sauvegardes : cochée dans la roadmap, avec limite explicite pour l’interruption réelle au niveau système de fichiers.
 - P9.7 — plateformes : export Linux x86_64 et parcours logiciel vérifiés sur l’hôte courant; validation machine propre, matériel réel et Windows restent ouvertes.
-- P9.8 — checklist créée; version d’artefact, audit exact des licences/assets, paquet et notes de version restent ouverts.
+- P9.8 — staging Linux filtré reconstruit depuis `c90a2c6` et démarré après extraction; version d’artefact, audit de provenance des assets/audio, validation des sauvegardes, autres plateformes et notes de version restent ouverts.

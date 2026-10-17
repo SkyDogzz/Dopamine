@@ -64,10 +64,11 @@
 
 ## P9.8 — Paquet Linux de validation — 2026-10-17
 
-- [x] Création d’une archive staging non versionnée avec l’export autonome existant, sa GDExtension, `THIRD_PARTY_NOTICES.md`, les deux archives Godot et les notices de licences des polices aux chemins référencés. Le `README.txt` de l’archive indique explicitement qu’elle est pré-release et non distribuable.
-- [x] Extraction dans un répertoire neuf, puis lancement de `DopamineSurvivor.x86_64 --headless --audio-driver Dummy --quit-after 3` avec un `XDG_DATA_HOME` vierge : code 0.
-- [x] SHA-256 de l’archive staging : `2de45351244927208d0379f342a2f0a1abcab11c9af03ed101f268ae9c017ec4`. Exécutable : `d67e0588395d072d446dcee4a6f8fe14506fb193852b2687a44608565198e647`; GDExtension : `a6d148c988fcb78476b3e43fb721869a0b2fddc1251e78ed1033231690b05dfa`.
-- [ ] L’archive utilise un export local existant sans manifeste du commit source; elle n’a pas de version de jeu assignée et n’est pas un artefact de release. Recréer un paquet versionné depuis un commit approuvé après fermeture des gates de contenu et provenance.
+- [x] Depuis `git archive c90a2c6` et un répertoire CMake vierge, compilation Release Linux x86_64 avec GCC 14.2.0/CMake 3.31.12, `godot-cpp` verrouillé à `b8530af7546a3fcae80cef2477526569fd42ffc2`, puis export Godot 4.7.2 `Linux/X11`. Le preset exclut `tests/**`, `tools/**` et `assets/source/**`.
+- [x] L’export inclut des ressources `scenes/`, `scripts/`, `data/`, `assets/sprites/`, `assets/fonts/` et `assets/audio/`; son journal ne contient aucune ressource de `tests/`, `tools/` ou `assets/source/`. Le binaire autonome mesure 76 882 240 octets; son sidecar Release mesure 1 140 440 octets.
+- [x] Archive staging de huit fichiers : exécutable, GDExtension, `README.txt` pré-release, `THIRD_PARTY_NOTICES.md`, deux archives JSON de licences Godot et les deux licences de polices aux chemins référencés. L’archive fait 31 963 913 octets, SHA-256 `12f24605dd8fa5b90186fe493de0a9d3cf1c2ab90f66ff0aca04467fdced6adf`; exécutable `23ffbe464c859354bfaabcdf6dfe1473061c913c764ec72578a2c03ed302a1ab`; GDExtension `5952c98e39fa0732f62967cf7a088c4376e136c848e7a431db24d4bb792c67ba`.
+- [x] Extraction dans un répertoire neuf puis lancement headless avec un `XDG_DATA_HOME` vierge : code 0; `LD_DEBUG` confirme le chargement de la GDExtension côte à côte et `ldd` ne signale aucune dépendance manquante. Le dossier `user://` créé au menu ne contient qu’un journal, aucune sauvegarde.
+- [i] Ce staging est rattaché au commit source mais n’a pas de version de jeu assignée et n’est pas distribuable. Le parcours ne valide ni les écritures de sauvegarde en jeu, ni une installation sur une machine distincte; ces gates et la clearance de provenance restent ouvertes.
 
 ## P9.7/P9.8 — Export Linux depuis un snapshot propre — 2026-10-17
 
