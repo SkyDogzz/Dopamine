@@ -322,6 +322,8 @@ const TOXIC_IGNITION_TARGET_COOLDOWN_SECONDS := 1.0
 @export var bloodstorm_bleed_damage_per_tick: float = 2.0
 @export var bloodstorm_bleed_interval_seconds: float = 0.5
 @export var bloodstorm_bleed_duration_seconds: float = 2.0
+@export_group("Prototype Lifesteal — proposed tuning")
+@export_range(0.0, 25.0, 0.5) var base_lifesteal_pct: float = 5.0
 @export_group("Prototype relic bonuses — proposed tuning")
 @export_range(0.0, 1.0) var blood_chalice_heal_per_level: float = 0.10
 @export_range(0.1, 120.0, 0.1) var magnet_heart_level_five_pulse_interval_seconds: float = 20.0
@@ -878,7 +880,7 @@ func _process(_delta: float) -> void:
 						_starfall_fragments_spawned[source_key] = true
 						_spawn_starfall_fragments(Vector2(float(event["position"]["x"]), float(event["position"]["y"])),
 								damage_target, state["entities"])
-				var damage_lifesteal: float = float(event["amount"]) * (loadout.global_relic_bonus("lifesteal_pct") + _equipment_bonus("lifesteal_pct")) / 100.0
+				var damage_lifesteal: float = float(event["amount"]) * (base_lifesteal_pct + loadout.global_relic_bonus("lifesteal_pct") + _equipment_bonus("lifesteal_pct")) / 100.0
 				if bool(event.get("is_damage_over_time", false)):
 					damage_lifesteal *= 0.25
 				_pending_lifesteal += damage_lifesteal
@@ -1507,6 +1509,13 @@ func _run_stat_breakdown() -> Dictionary:
 		var source_text := _percentage_source_text(run_value, equipment_value, achievement_value, skill_value)
 		var label := str(stat_id).trim_suffix("_pct").replace("_", " ").to_upper()
 		match stat_id:
+			"lifesteal_pct":
+				run_value += base_lifesteal_pct
+				total_value += base_lifesteal_pct
+				total_text = "%+.1f%%" % total_value
+				compact = total_text
+				label = "LIFESTEAL"
+				source_text["run"] = "%+.1f%%" % run_value
 			"damage_pct":
 				var damage_multiplier: float = (1.0 + skill_value / 100.0 + achievement_value / 100.0 + equipment_value / 100.0) * (1.0 + run_value / 100.0)
 				total_value = damage_multiplier * 100.0

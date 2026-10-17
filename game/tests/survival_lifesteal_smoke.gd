@@ -12,8 +12,29 @@ func _run() -> void:
 	session.contact_damage_per_hit = 0.0
 	session.ordinary_chest_drop_chance = 0.0
 	session.xp_collection_radius = 0.0
+	session.sandbox_health_decay_multiplier = 0.0
 	root.add_child(session)
 	await process_frame
+	if session.loadout.relic_level("blood_chalice") != 0:
+		_fail("A fresh run should test the general lifesteal rate without Blood Chalice")
+		return
+	session.player_hp = 50.0
+	session.simulation.set_speed(0.25)
+	session.simulation.spawn("test_target", 1, Vector2(60.0, 0.0), 100.0, Vector2.ZERO, 1.0)
+	session.simulation.spawn_projectile("test_weapon", Vector2.ZERO, Vector2(1000.0, 0.0), 40.0, 3.0, 1.0)
+	if not await _wait_until(func() -> bool: return session.player_hp > 50.2):
+		_fail("Direct weapon damage should heal through the proposed general lifesteal rate without Blood Chalice")
+		return
+	if session.player_hp > 52.01:
+		_fail("A 5% proposed base rate should heal at most 2 HP from 40 direct damage")
+		return
+	var lifesteal_stats: Dictionary = session._run_stat_breakdown()["lifesteal_pct"]
+	if not is_equal_approx(float(lifesteal_stats["run"]), 5.0) or \
+			not is_equal_approx(float(lifesteal_stats["total"]), 5.0):
+		_fail("Run stat details should expose the proposed base lifesteal rate")
+		return
+	session.simulation.kill_all()
+	session.player_hp = 50.0
 	if not session.loadout.apply_offer("relic:blood_chalice"):
 		_fail("Blood Chalice should be equipable")
 		return
@@ -26,6 +47,10 @@ func _run() -> void:
 		if not is_equal_approx(session._equipment_kill_healing(base_kill_healing), expected_kill_healing):
 			_fail("Blood Chalice level %d should apply its configured global kill-healing bonus" % level)
 			return
+	var relic_lifesteal: Dictionary = session._run_stat_breakdown()["lifesteal_pct"]
+	if not is_equal_approx(float(relic_lifesteal["run"]), session.base_lifesteal_pct + 25.0):
+		_fail("Blood Chalice should add its five levels of lifesteal to the proposed global base rate")
+		return
 	session.player_hp = 50.0
 	session.simulation.set_speed(0.25)
 	session.simulation.spawn("test_target", 1, Vector2(60.0, 0.0), 100.0, Vector2.ZERO, 1.0)

@@ -42,6 +42,18 @@ func _run() -> void:
 				not is_equal_approx(float(damage["total"]), 141.75):
 		_fail("Damage should expose each contribution and the same combined multiplier as combat: %s" % damage)
 		return
+	var lifesteal: Dictionary = stats["lifesteal_pct"]
+	if not is_equal_approx(float(lifesteal["run"]), session.base_lifesteal_pct) or \
+			not is_equal_approx(float(lifesteal["total"]), session.base_lifesteal_pct):
+		_fail("Run stat details should include the proposed base lifesteal rate")
+		return
+	var lifesteal_row: VBoxContainer = session._run_stat_hub._stat_row(lifesteal)
+	var lifesteal_icon: TextureRect = lifesteal_row.get_child(1).get_child(0)
+	if lifesteal["label"] != "LIFESTEAL" or lifesteal_icon.texture == null or \
+			lifesteal_icon.texture.resource_path != "res://assets/sprites/catalog/relic_blood_chalice.png":
+		_fail("Lifesteal should have a matching relic icon in the detailed run stats")
+		return
+	lifesteal_row.free()
 	if not hub.visible or hub.detail_open:
 		_fail("The compact hub should be visible while its detail is closed")
 		return

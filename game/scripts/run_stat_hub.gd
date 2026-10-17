@@ -19,6 +19,7 @@ const STAT_ICONS := {
 	"max_hp": "res://assets/sprites/catalog/relic_storm_core.png",
 	"pickup_radius_pct": "res://assets/sprites/catalog/relic_magnet_heart.png",
 	"cooldown_reduction_pct": "res://assets/sprites/catalog/relic_overdrive_engine.png",
+	"lifesteal_pct": "res://assets/sprites/catalog/relic_blood_chalice.png",
 }
 const SOURCE_ICONS := {
 	"run": "res://assets/icons/catalog/run_record.png",
@@ -165,6 +166,7 @@ func _stat_row(stat: Dictionary) -> Control:
 		"DAMAGE": "damage_pct", "MOVE SPEED": "move_speed_pct",
 		"CRIT CHANCE": "critical_chance_pct", "MAX HP": "max_hp",
 		"XP PICKUP RADIUS": "pickup_radius_pct", "COOLDOWN REDUCTION": "cooldown_reduction_pct",
+		"LIFESTEAL": "lifesteal_pct",
 	}
 	var icon_path := str(STAT_ICONS.get(stat_id_by_label.get(str(stat.get("label", "")), ""), ""))
 	if not icon_path.is_empty():

@@ -120,7 +120,8 @@ Paires de contenu validées :
 10. Prism Laser + Prism Crystal → Spectrum Collapse : faisceaux secondaires.
 
 [PROPOSÉ] Valeurs actuellement utilisées par le prototype pour les bonus globaux par niveau : Storm Core +5 % dégâts, Infernal Heart +5 % cadence, Blood Chalice +5 % lifesteal et +10 % de soin par élimination, Singularity +5 % réduction de cooldown, Frozen Crown +5 % zone, Overdrive Engine +4 % cadence, Celestial Eye +3 % zone, Magnetic Coil +4 % vitesse de projectile, Plague Mask +5 % dégâts, Prism Crystal +3 % dégâts critiques et Magnet Heart +25 % rayon de ramassage XP. Ces valeurs restent à équilibrer. Le lifesteal reste soumis au soft cap décrit en section 03.
-[OUVERT] Le taux de lifesteal général indépendant de Blood Chalice n'est pas défini.
+[VALIDÉ — décision utilisateur B, 2026-10-17] Le lifesteal sur les dégâts s’applique avec un taux global de base, même sans Blood Chalice; les niveaux de Blood Chalice ajoutent leur bonus de stat globale.
+[PROPOSÉ] Taux global de base du lifesteal : 5 %, configurable dans Survival. Les dégâts directs utilisent le taux complet; les dégâts sur la durée utilisent 25 % du taux théorique. Le soft cap proposé de 10 HP/s puis 25 % d’efficacité au-delà s’applique au soin total. La valeur du taux de base et la calibration du soin restent à mesurer.
 
 [PROPOSÉ] Les valeurs chiffrées de progression des dix armes (niveaux 2–5) figurent dans l’annexe v1.6 ci-dessous et restent des hypothèses de balancing. Les nombres précis des reliques et le calibrage des armes restent à confirmer.
 
