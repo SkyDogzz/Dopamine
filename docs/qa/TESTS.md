@@ -175,6 +175,17 @@
 - [x] CTest séquentiel : **91/91 tests passent en 62,70 s** avec `/tmp/cmake-3.31.12-linux-x86_64/bin/ctest --test-dir build --output-on-failure -j1`. Cela revalide les smokes natifs, l’import/rendu Godot, les parcours Sandbox, Survival, progression, Armorless et les dix scénarios d’armes.
 - [i] Le checkout comprend toujours le diff local non commité de `game/scripts/survival_session.gd` appartenant au travail audio; aucune modification audio n’a été incluse dans cette étape. Les tests automatisés ne couvrent pas les périphériques physiques, le GPU cible ni une partie complète non assistée.
 
+## P7A/P9.2 — Parcours naturels Armorless exploratoires — 2026-10-17
+
+- [x] Deux lancements de `armorless_natural_run_survey.gd` en Easy, mode kite, seed `20261017`, vitesse ×1, PV ordinaires et sans éliminations scriptées. La sonde sélectionne automatiquement le premier coffre et vérifie que les fichiers de sauvegarde normale gardent les mêmes empreintes.
+
+  | Résultat | Temps simulé | Kills | Niveau | Parcours |
+  |---|---:|---:|---:|---:|
+  | Défaite vague 2 | 37,94 s | 12 | 2 | 9 144 px |
+  | Défaite vague 2 | 39,84 s | 18 | 3 | 9 600 px |
+
+- [i] Le même seed produit des résultats différents, car le contrôleur kite dépend du rythme des frames et la sonde laisse la simulation à vitesse réelle. Ces deux échantillons exploratoires ne constituent ni une run complète, ni un modèle de joueur humain, et ne valident pas les multiplicateurs **[PROPOSÉS]** d’Armorless. Les deux processus finissent avec les mêmes avertissements : 2 instances ObjectDB et 1 ressource encore référencées. Le contrôle d’empreintes de sauvegarde normale réussit.
+
 ## Build et lancement depuis un clone Git propre — 2026-10-17
 
 - Clone local neuf du commit `09baf7a`, puis configuration CMake 3.31.12, compilation complète avec GCC 14.2.0, import Godot 4.7.2 et lancement headless de la scène principale : réussis. FetchContent a récupéré le SHA `godot-cpp` verrouillé.
