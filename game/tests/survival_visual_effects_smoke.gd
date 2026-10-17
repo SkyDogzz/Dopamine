@@ -1,6 +1,10 @@
 extends SceneTree
 
 const CRITICAL_IMPACT_CAPTURE := "/tmp/dopamine-critical-hit-impact.png"
+const STATUS_RING_ANNULI := {
+	"burn": Vector2(12.0, 18.0), "poison": Vector2(12.0, 18.0), "bleed": Vector2(12.0, 18.0),
+	"chill": Vector2(8.0, 15.0), "shock": Vector2(16.0, 22.0),
+}
 
 var _settings: SettingsService
 
@@ -114,10 +118,12 @@ func _count_changed_pixels(baseline: Image, rendered: Image, center: Vector2) ->
 	return changed
 
 func _verify_status_capture(session: Node2D) -> bool:
-	var status_types := ["burn", "poison", "bleed"]
-	var positions := [Vector2(-190.0, 55.0), Vector2.ZERO + Vector2(0.0, 55.0), Vector2(190.0, 55.0)]
+	var status_types := ["burn", "poison", "bleed", "chill", "shock"]
+	var positions := [Vector2(-220.0, 70.0), Vector2(-110.0, 70.0), Vector2(0.0, 70.0),
+		Vector2(110.0, 70.0), Vector2(220.0, 70.0)]
 	var screen_positions: Array[Vector2] = []
 	var entities: Array = []
+	session._overcharge_shock_expires_at.clear()
 	for index in status_types.size():
 		var position: Vector2 = positions[index]
 		screen_positions.append(session.get_global_transform_with_canvas() * position)
@@ -135,7 +141,17 @@ func _verify_status_capture(session: Node2D) -> bool:
 	await RenderingServer.frame_post_draw
 	var baseline: Image = root.get_texture().get_image()
 	for index in entities.size():
-		entities[index]["components"]["DamageOverTimeEffects"] = [{"status_type": status_types[index]}]
+		var components: Dictionary = entities[index]["components"]
+		match status_types[index]:
+			"burn", "poison", "bleed":
+				components["DamageOverTimeEffects"] = [{"status_type": status_types[index]}]
+			"chill":
+				components["Chill"] = {}
+			"shock":
+				var entity_id: Dictionary = entities[index]["id"]
+				session._overcharge_shock_expires_at[
+					session._entity_key(int(entity_id["index"]), int(entity_id["generation"]))
+				] = session._last_simulation_time + 1.0
 	session._entities = entities
 	session._sprite_renderer.set_entities(entities)
 	session.queue_redraw()
@@ -143,7 +159,9 @@ func _verify_status_capture(session: Node2D) -> bool:
 	await RenderingServer.frame_post_draw
 	var status_image: Image = root.get_texture().get_image()
 	for index in status_types.size():
-		var pixels := _count_annulus_differences(baseline, status_image, screen_positions[index], 12.0, 18.0)
+		var annulus: Vector2 = STATUS_RING_ANNULI[status_types[index]]
+		var pixels := _count_annulus_differences(
+				baseline, status_image, screen_positions[index], annulus.x, annulus.y)
 		if pixels < 8:
 			_fail("The %s status ring should render outside the enemy sprite" % status_types[index])
 			return false
@@ -157,7 +175,9 @@ func _verify_status_capture(session: Node2D) -> bool:
 	await RenderingServer.frame_post_draw
 	var reduced_image: Image = root.get_texture().get_image()
 	for index in status_types.size():
-		if _count_annulus_differences(baseline, reduced_image, screen_positions[index], 12.0, 18.0) < 8:
+		var annulus: Vector2 = STATUS_RING_ANNULI[status_types[index]]
+		if _count_annulus_differences(
+				baseline, reduced_image, screen_positions[index], annulus.x, annulus.y) < 8:
 			_settings.set_reduced_visual_effects_enabled(false)
 			_fail("Reduced decorative effects should preserve the %s status ring" % status_types[index])
 			return false
