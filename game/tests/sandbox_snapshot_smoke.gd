@@ -4,6 +4,18 @@ func _initialize() -> void:
 	call_deferred("_run")
 
 func _run() -> void:
+	const slot_path := "user://saves/slot_0.json"
+	const sentinel := "{\"schema_version\":1,\"fixture\":\"sandbox-snapshot-must-preserve-this-slot\"}"
+	var save_directory := ProjectSettings.globalize_path("user://saves")
+	if DirAccess.make_dir_recursive_absolute(save_directory) != OK:
+		_fail("Could not prepare an isolated save sentinel for snapshot isolation")
+		return
+	var sentinel_file := FileAccess.open(slot_path, FileAccess.WRITE)
+	if sentinel_file == null:
+		_fail("Could not write an isolated save sentinel for snapshot isolation")
+		return
+	sentinel_file.store_string(sentinel)
+	sentinel_file.close()
 	var simulation = ClassDB.instantiate("CombatSimulation")
 	if simulation == null or not simulation.has_method("capture_state") or \
 			not simulation.has_method("restore_state"):
@@ -140,6 +152,9 @@ func _run() -> void:
 	if lab_context.restore_snapshot(oversized_build_snapshot) or lab_session.player_active_time != 12.5 or \
 			int(lab_context.simulation.snapshot()["metrics"]["entity_count"]) != 1:
 		_fail("Lab must reject snapshots whose build exceeds loadout slots without changing the session")
+		return
+	if not FileAccess.file_exists(slot_path) or FileAccess.get_file_as_string(slot_path) != sentinel:
+		_fail("Snapshot capture, restore and rejection must preserve a normal save byte-for-byte")
 		return
 	lab_context.stop()
 	lab.queue_free()

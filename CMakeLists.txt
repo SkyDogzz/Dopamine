@@ -69,6 +69,8 @@ if(BUILD_TESTING)
         if(UNIX AND NOT APPLE)
             set_tests_properties(sandbox_lab_smoke PROPERTIES
                 ENVIRONMENT "XDG_DATA_HOME=${CMAKE_CURRENT_BINARY_DIR}/sandbox_lab_test_data")
+            set_tests_properties(sandbox_snapshot_smoke PROPERTIES
+                ENVIRONMENT "XDG_DATA_HOME=${CMAKE_CURRENT_BINARY_DIR}/sandbox_snapshot_test_data")
             set_tests_properties(sandbox_ui_smoke PROPERTIES
                 ENVIRONMENT "XDG_DATA_HOME=${CMAKE_CURRENT_BINARY_DIR}/sandbox_ui_test_data")
             set_tests_properties(settings_service_smoke PROPERTIES

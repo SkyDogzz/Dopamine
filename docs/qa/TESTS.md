@@ -1,5 +1,11 @@
 # Tests d'acceptation et validation
 
+## Validation d'isolation Sandbox Lab P8.8 — 2026-10-17
+
+- `sandbox_lab_smoke.gd` écrit un slot normal sentinelle dans son `XDG_DATA_HOME` de test, puis démarre le Lab, applique des builds, lance le combat et effectue Reset; le contenu du slot est comparé octet pour octet à la fin.
+- `sandbox_snapshot_smoke.gd` utilise un `XDG_DATA_HOME` séparé et vérifie la même sentinelle après capture, restauration, rejet de version et rejet de build invalide. `sandbox_preset_smoke.gd` couvre le round-trip share code et les payloads hostiles; `sandbox_profile_build_smoke.gd` compare les profils source avant/après import read-only et refuse les anciens profils sans migration.
+- Résultats Godot 4.7.2 headless : les quatre smokes passent. `SandboxLabContext` conserve ses références `progression_service` et `normal_save_service` nulles; aucune route de récompense ou leaderboard n’est fournie au Lab.
+
 ## Revalidation P5 après reprise — 2026-10-17
 
 - [x] L’arbitrage utilisateur **[VALIDÉ, 2026-10-17]** fixe Electroplague à 60 px, sans plafond de cibles : un coup direct de Shock sur Poison copie les paramètres et la durée restante du statut aux ennemis vivants à portée; aucun dégât direct, remplacement d’un Poison présent ni propagation depuis les ticks DoT. Le smoke `survival_weapon_catalog_smoke.gd` couvre la frontière du rayon, cinq cibles sans cap, les exclusions et l’absence de dégâts/collisions.

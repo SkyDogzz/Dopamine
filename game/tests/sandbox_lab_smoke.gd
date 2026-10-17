@@ -4,6 +4,18 @@ func _initialize() -> void:
 	call_deferred("_run")
 
 func _run() -> void:
+	const slot_path := "user://saves/slot_0.json"
+	const sentinel := "{\"schema_version\":1,\"fixture\":\"sandbox-lab-must-preserve-this-slot\"}"
+	var save_directory := ProjectSettings.globalize_path("user://saves")
+	if DirAccess.make_dir_recursive_absolute(save_directory) != OK:
+		_fail("Could not prepare an isolated normal-save sentinel")
+		return
+	var sentinel_file := FileAccess.open(slot_path, FileAccess.WRITE)
+	if sentinel_file == null:
+		_fail("Could not write an isolated normal-save sentinel")
+		return
+	sentinel_file.store_string(sentinel)
+	sentinel_file.close()
 	var lab: Control = load("res://scenes/sandbox_lab.tscn").instantiate()
 	root.add_child(lab)
 	await process_frame
@@ -263,14 +275,13 @@ func _run() -> void:
 			str(lab.context.simulation.snapshot()["paused"]),
 		])
 		return
-	var normal_saves := ProjectSettings.globalize_path("user://saves")
-	if DirAccess.dir_exists_absolute(normal_saves) and not DirAccess.get_files_at(normal_saves).is_empty():
-		_fail("The Lab smoke should not create or modify normal save slots")
+	if not FileAccess.file_exists(slot_path) or FileAccess.get_file_as_string(slot_path) != sentinel:
+		_fail("Sandbox Lab preset, build, combat, and reset operations must preserve the normal save slot byte-for-byte")
 		return
 	lab.context.stop()
 	lab.queue_free()
 	await process_frame
-	print("Sandbox Lab smoke passed isolated startup, preset save and native spawn")
+	print("Sandbox Lab smoke passed isolated session, reset and normal-save preservation")
 	quit()
 
 func _wait_for_entities(simulation: Object, expected_count: int) -> bool:

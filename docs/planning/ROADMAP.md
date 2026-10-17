@@ -639,8 +639,8 @@ P1 livre le Sandbox développeur et ne remplace pas cette feature produit.
   - [ ] Ajouter avertissement puis hard cap pour chaque ressource retenue.
   - [ ] Tester qu’un preset hostile n’exécute aucune action ni accès fichier arbitraire.
 - [ ] **P8.8 — Validation d’isolation**
-  - [ ] Vérifier absence d’Essence/Powder, achievements officiels et leaderboard.
-  - [ ] Tester import, partage, snapshot et reset sans modifier une save normale.
+  - [x] Vérifier l’absence de `ProgressionService` et `SaveService` dans la session/context Lab; aucun crédit Essence/Powder, achievement ou leaderboard n’est raccordé à cette route.
+  - [x] Vérifier que preset, build de combat, reset et capture/restauration snapshot préservent octet pour octet un slot normal sentinelle; les tests de partage/import preset et d’import profil read-only couvrent aussi checksum/validation et source inchangée. Les tests tournent avec `XDG_DATA_HOME` isolé.
 
 **Critère de sortie :** expérimentations librement configurables, persistables/partageables et isolées de la progression normale.
 
