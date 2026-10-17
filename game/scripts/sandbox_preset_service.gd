@@ -14,7 +14,10 @@ const PRESET_KEYS := [
 	"seed", "overrides", "flags", "initial_build",
 ]
 const VALID_MODES := ["survival", "endless", "armorless"]
-const OVERRIDE_LIMITS := {"enemy_hp": Vector2(0.1, 1000.0)}
+const OVERRIDE_LIMITS := {
+	"enemy_hp": Vector2(0.1, 1000.0),
+	"contact_damage_per_hit": Vector2(0.0, 1000.0),
+}
 
 func validate_preset(preset: Variant) -> Dictionary:
 	if not preset is Dictionary or preset.size() != PRESET_KEYS.size():

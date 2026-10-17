@@ -357,6 +357,21 @@ max_value = 1000.0
 value = 1.0
 step = 0.1
 
+[node name="ContactDamageTitle" type="Label" parent="Root/Body/Side/Sections/EnemyConfig"]
+layout_mode = 2
+theme_type_variation = "PixelHeading"
+theme_override_font_sizes/font_size = 8
+text = "BODY CONTACT DAMAGE · LIVE"
+
+[node name="ContactDamage" type="SpinBox" parent="Root/Body/Side/Sections/EnemyConfig"]
+custom_minimum_size = Vector2(0, 20)
+layout_mode = 2
+focus_mode = 2
+min_value = 0.0
+max_value = 1000.0
+value = 0.0
+step = 0.5
+
 [node name="LiveOverride" type="VBoxContainer" parent="Root/Body/Side/Sections"]
 layout_mode = 2
 theme_override_constants/separation = 2

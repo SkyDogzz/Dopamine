@@ -1053,5 +1053,7 @@ Note de clôture : le blocage historique du smoke `sandbox_ui_smoke.gd` décrit 
 ## P8.2 — Override typé des PV ennemis Sandbox — 2026-10-17
 
 - [x] `sandbox_preset_smoke.gd` vérifie l’acceptation de `enemy_hp` valide et le rejet des autres clés d’override et d’un multiplicateur au-delà de 1000.
-- [x] `sandbox_lab_smoke.gd` vérifie que le preset charge le multiplicateur 2, que le contrôle expose cette valeur, et que Spawn produit un Chaser à 40 PV via la commande native (20 PV de base ×2).
+- [x] `sandbox_lab_smoke.gd` vérifie le contrôle et la sauvegarde du multiplicateur 2, puis importe un preset à ×3 et confirme que Spawn produit un Chaser à 60 PV via la commande native (20 PV de base ×3).
+- [x] Le même smoke vérifie qu’un changement de dégâts de contact met à jour la session Lab et le preset; `sandbox_preset_smoke.gd` vérifie le chargement de cette valeur et le rejet d’une valeur négative.
+- [x] `sandbox_snapshot_smoke.gd` capture un dégât de contact configuré à 3, le modifie à 9 puis confirme que restaurer le snapshot rétablit l’override, la session et le contrôle à 3.
 - [x] Le contrôle LIVE est intégré aux presets sauvegardés/partagés; il ne retouche pas les entités existantes et n’est pas transmis à Survival normal. Les bornes sont des limites techniques du Sandbox, pas des valeurs de balance validées.

@@ -41,7 +41,7 @@ func start(preset: Variant) -> Dictionary:
 	candidate_session.ordinary_chest_drop_chance = 0.0
 	candidate_session.elite_chest_drop_chance = 0.0
 	candidate_session.chest_guarantee_interval_seconds = 0.0
-	candidate_session.contact_damage_per_hit = 0.0
+	candidate_session.contact_damage_per_hit = float(checked["preset"]["overrides"].get("contact_damage_per_hit", 0.0))
 	candidate_session.visible = false
 	add_child(candidate_session)
 	await Engine.get_main_loop().process_frame

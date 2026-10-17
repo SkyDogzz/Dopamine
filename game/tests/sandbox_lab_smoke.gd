@@ -66,12 +66,13 @@ func _run() -> void:
 	var live_value: SpinBox = lab.get_node_or_null("Root/Body/Side/Sections/LiveOverride/StatValue")
 	var apply_live_stat: Button = lab.get_node_or_null("Root/Body/Side/Sections/LiveOverride/ApplyStat")
 	var enemy_hp_override: SpinBox = lab.get_node_or_null("Root/Body/Side/Sections/EnemyConfig/EnemyHpMultiplier")
+	var contact_damage: SpinBox = lab.get_node_or_null("Root/Body/Side/Sections/EnemyConfig/ContactDamage")
 	if weapon_select == null or weapon_level == null or add_weapon == null or relic_select == null or \
 			relic_level == null or add_relic == null or stat_select == null or stat_value == null or \
 			add_stat == null or apply_build == null or import_profile == null or equipment_slot == null or equipment_stat == null or \
 			equipment_value == null or add_equipment == null or live_stat == null or live_value == null or \
-			apply_live_stat == null or enemy_hp_override == null:
-		_fail("Sandbox Lab should provide profile import, visual build controls and typed enemy HP configuration")
+			apply_live_stat == null or enemy_hp_override == null or contact_damage == null:
+		_fail("Sandbox Lab should provide profile import, visual build controls and typed combat configuration")
 		return
 	if not is_equal_approx(float(enemy_hp_override.value), 1.0):
 		_fail("A preset without an enemy HP override should use the neutral multiplier")
@@ -88,6 +89,11 @@ func _run() -> void:
 	if spawned_enemy_state["entities"].size() != 10 or \
 			float(spawned_enemy_state["entities"][0]["components"]["Health"]["maximum"]) != 40.0:
 		_fail("The configured enemy HP multiplier should reach each Lab spawn command")
+		return
+	contact_damage.value = 5.0
+	if not is_equal_approx(float(lab.context.session.contact_damage_per_hit), 5.0) or \
+			not is_equal_approx(float(lab.context.active_preset["overrides"]["contact_damage_per_hit"]), 5.0):
+		_fail("Changing contact damage should affect the isolated session and active preset immediately")
 		return
 	weapon_select.select(_option_index_for(weapon_select, "minigun"))
 	weapon_level.value = 2
@@ -310,18 +316,22 @@ func _run() -> void:
 	lab._save_preset()
 	var saved_preset: Dictionary = lab.preset_store.load_preset("smoke_build")
 	if not saved_preset.get("ok", false) or \
-			float(saved_preset["preset"]["overrides"].get("enemy_hp", 0.0)) != 2.0:
+			float(saved_preset["preset"]["overrides"].get("enemy_hp", 0.0)) != 2.0 or \
+			float(saved_preset["preset"]["overrides"].get("contact_damage_per_hit", 0.0)) != 5.0:
 		_fail("The Lab UI should save a valid preset in the isolated Sandbox store")
 		return
 	var imported_path := directory.path_join("imported.json")
 	var imported_preset: Dictionary = lab._default_preset()
 	imported_preset["preset_id"] = "file_import"
+	imported_preset["overrides"] = {"enemy_hp": 3.0, "contact_damage_per_hit": 7.0}
 	var imported_file := FileAccess.open(imported_path, FileAccess.WRITE)
 	imported_file.store_string(JSON.stringify(imported_preset))
 	imported_file.close()
 	god_mode.button_pressed = false
 	await lab._import_preset_file(imported_path)
-	if lab.context.active_preset.get("preset_id", "") != "file_import" or lab.context.session._health_locked:
+	if lab.context.active_preset.get("preset_id", "") != "file_import" or lab.context.session._health_locked or \
+			float(enemy_hp_override.value) != 3.0 or float(contact_damage.value) != 7.0 or \
+			not is_equal_approx(float(lab.context.session.contact_damage_per_hit), 7.0):
 		_fail("A valid JSON file should import and apply to the isolated Lab: status=%s error=%s" % [
 			lab.get_node("Root/Body/Side/Sections/Status").text,
 			str(lab.preset_service.import_json(FileAccess.get_file_as_string(imported_path))),
@@ -343,6 +353,9 @@ func _run() -> void:
 	lab.get_node("Root/Body/Left/Controls/SpawnButton").pressed.emit()
 	if not await _wait_for_entities(lab.context.simulation, 10):
 		_fail("The Lab spawn control should add enemies to its native simulation")
+		return
+	if float(lab.context.simulation.snapshot()["entities"][0]["components"]["Health"]["maximum"]) != 60.0:
+		_fail("Imported enemy HP configuration should affect the Lab spawn command")
 		return
 	lab.context.simulation.resume()
 	if not await _wait_for_projectiles(lab.context.simulation):

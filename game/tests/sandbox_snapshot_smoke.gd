@@ -115,6 +115,8 @@ func _run() -> void:
 	lab_session.wave_director.wave = 4
 	lab_session.wave_director.elapsed_in_wave = 11.25
 	lab_session.player.global_position = Vector2(222.0, 144.0)
+	var contact_damage_control: SpinBox = lab.get_node("Root/Body/Side/Sections/EnemyConfig/ContactDamage")
+	contact_damage_control.value = 3.0
 	lab_context.live_stat_overrides["damage_pct"] = 15.0
 	var capture_button: Button = lab.get_node("Root/Body/Left/SnapshotControls/CaptureButton")
 	var restore_button: Button = lab.get_node("Root/Body/Left/SnapshotControls/RestoreButton")
@@ -132,6 +134,7 @@ func _run() -> void:
 	lab_session.wave_director.wave = 1
 	lab_session.wave_director.elapsed_in_wave = 0.0
 	lab_session.player.global_position = Vector2.ZERO
+	contact_damage_control.value = 9.0
 	lab_context.live_stat_overrides.clear()
 	var clear_sequence: int = lab_context.simulation.kill_all()
 	if clear_sequence <= 0 or not await _wait_for_sequence(lab_context.simulation, clear_sequence):
@@ -143,6 +146,8 @@ func _run() -> void:
 			lab_session.loadout._rng.state != 87654321 or lab_session._chest_director._rng.state != 123987 or \
 			lab_session.wave_director.wave != 4 or lab_session.wave_director.elapsed_in_wave != 11.25 or \
 			lab_session.player.global_position != Vector2(222.0, 144.0) or \
+			lab_session.contact_damage_per_hit != 3.0 or contact_damage_control.value != 3.0 or \
+			float(lab_context.active_preset["overrides"].get("contact_damage_per_hit", -1.0)) != 3.0 or \
 			lab_context.live_stat_overrides.get("damage_pct") != 15.0 or \
 			lab_context.build.to_dictionary()["weapons"].size() != 1 or \
 			int(lab_context.simulation.snapshot()["metrics"]["entity_count"]) != 1:
