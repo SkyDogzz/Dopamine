@@ -82,6 +82,28 @@ func _run() -> void:
 	if dismantle_button.text != "DISMANTLE  •  3 REFINED" or not dismantle_button.tooltip_text.contains("3 REFINED POWDER"):
 		_fail("The dismantle action should fit on its button and keep its full proposed yield in the tooltip")
 		return
+	var input_requests: Array[String] = []
+	panel.equipment_state_requested.connect(func(instance_id: String, equipped: bool) -> void:
+		input_requests.append("%s:%s" % [instance_id, str(equipped)])
+	)
+	var equip_button := actions.get_child(0) as Button
+	equip_button.grab_focus()
+	await _send_key(KEY_ENTER)
+	if input_requests != ["visual-fixture:false"]:
+		_fail("Enter should request the focused equipment action without applying it")
+		return
+	dismantle_button.grab_focus()
+	await _send_gamepad_button(JOY_BUTTON_DPAD_LEFT)
+	var gamepad_target := root.gui_get_focus_owner() as Button
+	if gamepad_target == null or gamepad_target == dismantle_button:
+		_fail("The gamepad D-pad should move focus to another equipment control")
+		return
+	input_requests.clear()
+	equip_button.grab_focus()
+	await _send_gamepad_button(JOY_BUTTON_A)
+	if input_requests != ["visual-fixture:false"]:
+		_fail("Gamepad A should activate the focused equipment action without applying it")
+		return
 	if sell_button == null or sell_button.text != "SELL  •  40 ESSENCE" or \
 			sell_button.get_theme_color("font_color").to_html(false) != "ffd447":
 		_fail("The sale action should show its proposed Essence value with a distinct visual treatment")
@@ -126,3 +148,24 @@ func _run() -> void:
 func _fail(message: String) -> void:
 	push_error(message)
 	quit(1)
+
+func _send_key(keycode: Key) -> void:
+	var event := InputEventKey.new()
+	event.keycode = keycode
+	event.pressed = true
+	Input.parse_input_event(event)
+	await process_frame
+	event.pressed = false
+	Input.parse_input_event(event)
+	await process_frame
+
+func _send_gamepad_button(button_index: JoyButton) -> void:
+	var event := InputEventJoypadButton.new()
+	event.device = 0
+	event.button_index = button_index
+	event.pressed = true
+	Input.parse_input_event(event)
+	await process_frame
+	event.pressed = false
+	Input.parse_input_event(event)
+	await process_frame

@@ -677,6 +677,7 @@ P1 livre le Sandbox développeur et ne remplace pas cette feature produit.
 - [ ] **P9.4 — Accessibilité et commandes**
   - [x] Vérifier par événements synthétiques dans `survival_hub_smoke.gd` l’accès clavier/manette à Succès et Bestiaire, leur focus visible et leur inertie à l’activation souris/clavier/manette; les périphériques physiques restent à tester.
   - [x] Vérifier dans `skill_tree_panel_visual_smoke.gd` une navigation à la flèche et au D-pad, puis l’activation Entrée/A d’un nœud avec son ID stable; le test observe le signal sans acheter le nœud ni modifier un profil.
+  - [x] Vérifier dans `equipment_panel_visual_smoke.gd` l’activation clavier/manette d’une action et le déplacement du focus au D-pad; seuls les signaux sont observés, sans équiper ni démanteler l’objet.
   - [ ] Parcourir menus et choix uniquement au clavier.
   - [ ] Parcourir les mêmes écrans à la manette avec focus visible.
   - [ ] Vérifier contraste, taille/hiérarchie HUD et réglages d’effets.
