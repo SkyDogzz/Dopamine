@@ -43,6 +43,7 @@ Préparer le remplacement complet des assets graphiques et audio du jeu avec un 
 ## Structure et contrats
 
 - Garder les exports référencés par le projet sous `game/assets/` et les sources éditables organisées par famille sous `game/assets/source/`.
+- Pour cette initiative, aucune image, police, son, recette ni source antérieure n’est une entrée de génération : les remplacements sont créés indépendamment. Retirer les anciens fichiers uniquement après migration et audit des consommateurs; garder leurs hashes dans les registres historiques.
 - Inventorier chaque référence d’asset dans scènes, scripts, données, audio bus et exports. Aucun asset actif ne doit être supprimé avant migration de toutes ses références.
 - Préserver PNG + source Aseprite pour les sprites selon l’Art Bible. Pour l’audio original, conserver le script de synthèse et les manifestes; le runtime des candidats actuels est PCM16 mono WAV 44,1 kHz, choix encore **[PROPOSÉ]** jusqu’à revue de mix.
 - Les contrats validés de l’Art Bible sont obligatoires : pixel art strict, palette maître 32 couleurs, 16 couleurs maximum pour un sprite 32×32, glow uniquement en VFX, résolution logique 640×360, PNG + source Aseprite.
@@ -78,3 +79,9 @@ Les scripts d’outillage suivent le style GDScript existant : constantes en maj
 - Format source éditable; le format runtime PCM16 mono WAV 44,1 kHz reste **[PROPOSÉ]** jusqu’à revue audio. Les droits/provenances sont consignés dans les notices et registres d’assets.
 - Outil exact de production Aseprite/audio et format des métadonnées.
 - Les choix ouverts de la section 10 de l’Art Bible qui deviennent bloquants au premier asset concerné.
+
+## Avancement (2026-10-18)
+
+- **[VALIDÉ]** Snapshot initial immuable de 425 fichiers et registre courant de 274 fichiers hors `.import`; migrations et retraits conservent les hashes. Les anciennes sources Aseprite, recettes visuelles et polices confirmées obsolètes ont été retirées après contrôles ciblés.
+- **[VALIDÉ — CONTRÔLE DE PAQUET]** L’export PCK Linux/X11 de contrôle inclut les deux fontes originales, exclut les anciennes fontes, les outils/sources et les placeholders génériques. Export : `/tmp/dopamine-audit/final.pck` (validation locale non versionnée).
+- **[OUVERT]** Vérification exhaustive des consommateurs dynamiques pour toutes les familles restantes et export final après fin de revue. Les preuves de rendu et captures sont sous `docs/art/evidence/2026-10-18/`; l’écoute humaine de l’audio et revue GPU restent requises.
