@@ -2163,3 +2163,7 @@ Note de clôture : le blocage historique du smoke `sandbox_ui_smoke.gd` décrit 
 - [x] `survival_hub_smoke.gd` ouvre les détails d’une vraie pièce de son profil isolé, rend l’entrée persistée obsolète puis actionne son bouton ÉQUIPER; le vrai `ProgressionService.set_equipped` échoue, le hub garde l’écran ouvert et affiche l’erreur. Les captures Xvfb/Mesa de ces états ont été inspectées et leurs hashes consignés dans `docs/art/evidence/2026-10-18/README.md`.
 - [x] `equipment_panel_visual_smoke.gd` parcourt helmet, armor, gloves, boots, amulet et ring, et vérifie pour chacun le nombre d’items affichés après filtrage.
 - [x] CTest `godot_project_import`, `survival_hub_smoke`, `equipment_panel_visual_smoke` : **3/3**.
+
+## Suite complète après couverture équipement — 2026-10-18
+
+- [x] `XDG_DATA_HOME=/tmp/dopamine-final-ui-regression DOPAMINE_TEST_TIMEOUT=480s PATH=/tmp/cmake-3.31.12-linux-x86_64/bin:$PATH ctest --test-dir build --output-on-failure -j1` : **118/118 tests réussis en 80,05 s** après l’ajout des scénarios de slot sans compatible, action obsolète et filtre des six slots.
