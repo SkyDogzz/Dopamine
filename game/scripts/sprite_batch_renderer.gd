@@ -311,11 +311,18 @@ func _get_animation_batch(role_id: String, state: String, animation_name: String
 		return {}
 	var frame_image: Image
 	if texture is AtlasTexture:
-		frame_image = texture.get_image()
-		if frame_image.is_empty():
+		var atlas_frame := texture as AtlasTexture
+		var atlas_image := atlas_frame.atlas.get_image()
+		var frame_region := Rect2i(atlas_frame.region)
+		if atlas_image.is_empty() or frame_region.size.x <= 0 or frame_region.size.y <= 0 or \
+				frame_region.position.x < 0 or frame_region.position.y < 0 or \
+				frame_region.end.x > atlas_image.get_width() or frame_region.end.y > atlas_image.get_height():
 			return {}
+		frame_image = atlas_image.get_region(frame_region)
 	else:
 		frame_image = texture.get_image()
+	if frame_image.is_empty():
+		return {}
 	if role_id == "xp_orb":
 		frame_image.flip_y()
 	if flip_x:

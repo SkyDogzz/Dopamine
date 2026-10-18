@@ -93,6 +93,12 @@ func _run() -> void:
 		assert(projectile_frames.get_animation_loop(animation_name) and
 				projectile_frames.get_frame_count(animation_name) > 1,
 				"Projectile %s should have a repeating multi-frame animation" % sprite_id)
+		var runtime_animation: Dictionary = view._sprite_renderer._animation_for_projectile(str(sprite_id), 0.1)
+		var runtime_frame: Dictionary = view._sprite_renderer._get_animation_batch(
+			runtime_animation["role"], runtime_animation["state"], runtime_animation["name"],
+			int(runtime_animation["frame"]))
+		assert(runtime_frame["texture"].get_size() == Vector2(32.0, 32.0),
+				"Projectile %s must render one 32x32 animation cell, not its full strip" % sprite_id)
 	var chaser_instances := 0
 	for animation_key in view._sprite_renderer._animated_batches:
 		if str(animation_key).begins_with("enemy_chaser_idle_"):
@@ -159,6 +165,23 @@ func _run() -> void:
 	}])
 	assert(view._sprite_renderer.animated_multimesh_for("weapon_minigun_fire_vfx", 1).instance_count == 1,
 			"Transient weapon fire VFX should render on its authored second frame")
+	var minigun_impact_frames: SpriteFrames = view._sprite_renderer._role_animation_sets["weapon_minigun"]["impact_vfx"]
+	var impact_animation: String = minigun_impact_frames.get_animation_names()[0]
+	var impact_texture: Texture2D = minigun_impact_frames.get_frame_texture(impact_animation, 2)
+	var impact_batch: Dictionary = view._sprite_renderer._get_animation_batch(
+		"weapon_minigun", "impact_vfx", impact_animation, 2)
+	assert(impact_batch["texture"].get_size() == Vector2(32.0, 32.0),
+			"Weapon impact VFX must render one 32x32 animation cell, not the full strip")
+	var impact_source := (impact_texture as AtlasTexture).atlas.get_image().get_region(
+		Rect2i((impact_texture as AtlasTexture).region))
+	assert(impact_batch["texture"].get_image().get_data() == impact_source.get_data(),
+			"Weapon impact VFX batch must contain only its selected atlas region")
+	view._sprite_renderer.set_entities([], Vector2.ZERO, 0.2, {}, [{
+		"role": "weapon_minigun", "state": "impact_vfx", "position": Vector2(20, 30),
+		"size": 28.0, "direction": Vector2.ZERO, "started_at": 0.0,
+	}])
+	assert(view._sprite_renderer.animated_multimesh_for(impact_animation, 2).instance_count == 1,
+			"Weapon impact VFX should reach the cropped atlas frame in its runtime batch")
 	view._sprite_renderer.set_entities([], Vector2.ZERO, 0.1, {}, [{
 		"role": "xp_orb", "state": "collect", "position": Vector2(40, 50),
 		"size": 14.0, "direction": Vector2.ZERO, "started_at": 0.0,
