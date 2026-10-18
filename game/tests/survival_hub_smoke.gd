@@ -181,6 +181,25 @@ func _run() -> void:
 	if equipment_panel.visible or root.gui_get_focus_owner() != equipment_button:
 		_fail("Keyboard Escape should close equipment and restore hub focus")
 		return
+	equipment_button.pressed.emit()
+	await process_frame
+	hub._set_equipment_state("missing-equipment-id", true)
+	await process_frame
+	var equipment_feedback: Label = equipment_panel.get_node("Panel/Content/Feedback")
+	if not equipment_panel.visible or not equipment_feedback.visible or \
+			not equipment_feedback.text.begins_with("ACTION FAILED:"):
+		_fail("A failed equipment service action should retain the panel and show its error feedback")
+		return
+	if "--capture-equipment-error" in OS.get_cmdline_user_args():
+		await RenderingServer.frame_post_draw
+		var evidence_path := ProjectSettings.globalize_path(
+			"res://../docs/art/evidence/2026-10-18/states/equipment-action-failed.png"
+		)
+		if root.get_texture().get_image().save_png(evidence_path) != OK:
+			_fail("Could not save integrated equipment error evidence")
+			return
+		print("Equipment action error evidence capture: %s" % evidence_path)
+	hub._close_equipment()
 	skill_button.grab_focus()
 	await _send_key(KEY_ENTER)
 	if not skill_panel.visible:

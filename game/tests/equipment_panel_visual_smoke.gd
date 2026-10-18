@@ -13,6 +13,7 @@ const EQUIPMENT := [
 	{"instance_id": "ring-new", "slot": "ring", "rarity": "magic", "equipped": false,
 		"stat_lines": [{"stat_id": "critical_chance_pct", "roll_percentile": 0.5, "enhancement_level": 0}]},
 ]
+const EVIDENCE_DIR := "res://../docs/art/evidence/2026-10-18/states"
 
 func _initialize() -> void:
 	call_deferred("_run")
@@ -131,10 +132,37 @@ func _run() -> void:
 	if empty.visible or not error.visible:
 		_fail("The equipment error state should be distinct")
 		return
+	panel.present({"equipment_inventory": [EQUIPMENT[0]], "resources": {}})
+	panel.set_selected_slot("boots")
+	await process_frame
+	if not empty.visible or error.visible or \
+			panel.get_node("Panel/Content/Columns/RightColumn/Compare/Comparison/CompareBody").text != "No item fits this slot.":
+		_fail("A slot without compatible inventory should show an explicit empty result and no-change preview")
+		return
+	if "--capture-states" in OS.get_cmdline_user_args():
+		if not await _save_evidence("equipment-no-compatible"):
+			return
+	error.visible = false
+	panel.show_feedback("ACTION FAILED: profile unavailable")
+	var feedback: Label = panel.get_node("Panel/Content/Feedback")
+	if not feedback.visible or feedback.text != "ACTION FAILED: profile unavailable":
+		_fail("Equipment action failures should use the visible feedback banner")
+		return
 	panel.queue_free()
 	await process_frame
 	print("Equipment loadout visual smoke passed")
 	quit()
+
+func _save_evidence(evidence_id: String) -> bool:
+	await RenderingServer.frame_post_draw
+	var output_dir := ProjectSettings.globalize_path(EVIDENCE_DIR)
+	DirAccess.make_dir_recursive_absolute(output_dir)
+	var path := output_dir.path_join("%s.png" % evidence_id)
+	if root.get_texture().get_image().save_png(path) != OK:
+		_fail("Could not save equipment state evidence: %s" % path)
+		return false
+	print("Equipment state evidence capture: %s" % path)
+	return true
 
 func _fail(message: String) -> void:
 	push_error(message)

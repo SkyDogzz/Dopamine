@@ -2156,3 +2156,9 @@ Note de clôture : le blocage historique du smoke `sandbox_ui_smoke.gd` décrit 
 
 - [x] `XDG_DATA_HOME=/tmp/dopamine-ui-dialog-full-rerun DOPAMINE_TEST_TIMEOUT=480s PATH=/tmp/cmake-3.31.12-linux-x86_64/bin:$PATH ctest --test-dir build --output-on-failure -j1` : **118/118 tests réussis en 81,44 s**, comprenant Sandbox, combat, assets, équipement, navigation clavier/manette synthétique, parcours existants et import Godot.
 - [i] Suite exécutée sur le build local déjà configuré; ce résultat ne valide ni matériel physique, ni écoute humaine. L’écoute audio en contexte reste **[OUVERTE]** à la demande de l’utilisateur de poursuivre sans retour audio; identité des boss/biome, contenu canonique de l’arbre et revue exhaustive des états UI restent également ouverts.
+
+## États limites de l’écran équipement — 2026-10-18
+
+- [x] `equipment_panel_visual_smoke.gd` vérifie l’inventaire contenant uniquement un anneau lorsque les bottes sont sélectionnées : aucun item compatible, message explicite et aperçu sans changement. Il vérifie également la bannière de feedback d’échec.
+- [x] `survival_hub_smoke.gd` appelle le vrai `ProgressionService.set_equipped` avec un identifiant absent; le hub garde l’écran ouvert et affiche l’erreur. Les captures Xvfb/Mesa de ces états ont été inspectées et leurs hashes consignés dans `docs/art/evidence/2026-10-18/README.md`.
+- [x] CTest `godot_project_import`, `survival_hub_smoke`, `equipment_panel_visual_smoke` : **3/3**.
