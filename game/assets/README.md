@@ -1,8 +1,8 @@
 # Art assets
 
-The current generated pixel art is a visual prototype for the first playable. The source atlases are kept beside the individual PNGs; `tools/slice_sprite_atlas.gd` trims transparent margins, preserves nearest-neighbor pixel edges, and writes 64×64 sprites/icons.
+The active game assets are organized by family. Legacy flattened atlases and their slicer have been retired after verifying that runtime consumers use the family-specific exports instead.
 
-- The first visual pilot introduced `sprites/player_cyan.png` (32×32) and `sprites/enemy_chaser.png` (24×24). The static hero remains a reference; active player rendering now uses `sprites/player_idle.png` and `sprites/player_walk.png` (4×4 sheets of 32×32 frames) with Aseprite sources in `source/pilot/`. Its original Lightning projectile export remains a visual reference; the active renderer uses the dedicated projectile set below.
+- Player rendering uses newly drawn `sprites/player_idle.png` and `sprites/player_walk.png` sheets (4×4 frames of 32×32 pixels) with editable Aseprite sources in `source/pilot/`. Their visual design remains **[PROPOSÉ]** while exact outfit details are open. The old static pilot/chaser/projectile exports and reference sheets were retired; active chaser and Lightning projectile consumers use `sprites/roster/` and `sprites/projectiles/`.
 - The earlier moss-and-stone ground candidate and 256×256 floor were excluded after visual review; the active floor is the quieter 16×16 tile `sprites/environment/survival_ground_tile.png` described below.
 
 - The active title skyline is an original code-generated 640×360 indexed PNG using 16 colors from the validated 32-color Art Bible palette. Its editable source is `source/backgrounds/title_skyline.aseprite`; provenance and old/new hashes are recorded in `../../docs/art/title_skyline_migration.json` and `../../docs/art/ASSET_MIGRATIONS.csv`.
@@ -17,11 +17,13 @@ The current generated pixel art is a visual prototype for the first playable. Th
 - `sprites/rewards/chest_closed.png` (32×32) and `xp_orb.png` (16×16): dedicated pixel-art sprites for the existing chest and XP pickup. Their PNG/Aseprite references are in `source/rewards/`; no pickup or reward behavior changed.
 - `backgrounds/title_skyline.png` (640×360) and `source/backgrounds/title_skyline.aseprite`: the pixelized neon city backdrop and its indexed editable Aseprite source. `tools/generate_original_title_skyline.py` rebuilds the indexed PNG directly from `../../docs/art/palette_master.gpl`; LibreSprite batch can regenerate the `.aseprite` source from that PNG.
 - `../scripts/title_skyline_lights.gd` overlays three restrained, code-drawn blinking signs on the launch skyline. Their 1.4–2.2 second periods are proposed; the exact timing remains open.
-- `sprites/`: player, enemy archetypes and bosses, XP, chest, and legacy relic artwork. The catalog icons above are the active presentation icons for equipment and choices.
+- The atlas-derived root-level sprite and icon exports were retired after searches confirmed that current runtime consumers load the family-specific `sprites/roster/`, `sprites/projectiles/`, `sprites/rewards/`, `sprites/catalog/` and `icons/catalog/` assets.
 - `sprites/survival_ground.svg` remains a non-active visual reference. The previous SVG ruins overlay is also non-active.
 - `sprites/weapon_impacts_pixel.png` is a ten-cell pixel impact atlas used for brief direct-hit flashes across every catalog weapon family; its ten current PNG/Aseprite sources and atlas source are in `source/original_procedural/`. Enemy deaths emit a restrained, code-drawn pixel burst from the Art Bible palette. Damage-over-time ticks do not spawn extra flashes. The older color-coded SVG remains as a non-active reference while element/color mapping stays open.
 - 58 active visuals whose former signed references did not pass the C2PA trust check are now drawn from original primitives by `tools/generate_original_visuals.gd`; no reference image is read. The tool writes their PNGs and editable Aseprite sources under `source/original_procedural/`, including the Signal Prism, catalog sprites, projectiles, impacts, Dopamine Core, and ruins layer. The source and remaining visual-review gates are documented in `../../docs/art/INVENTAIRE_ASSETS_UI.md`.
 - Moving projectiles receive a short cyan/deep-blue code-drawn trail beneath their sprite in both Survival and the developer Sandbox. The 256 simultaneous-trail cap remains proposed; per-element colors remain open.
-- `icons/`: equipment slots, resource rewards, rarity markers, plus skill/achievement/run-record placeholders for future UI.
+- `icons/catalog/`: equipment slots, resource rewards, rarity markers, plus skill/achievement/run-record placeholders for future UI.
+
+The flattened sprite/icon atlas files and their slice recipe are retired. Every family-specific runtime export has its own source or an explicit source exception; the current exception list is empty.
 
 Gameplay visuals use separate textures where the renderer batches by visual type. These assets do not establish or change gameplay rules, balance, or the still-proposed progression contracts.

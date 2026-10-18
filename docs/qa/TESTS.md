@@ -1548,7 +1548,7 @@ Note de clôture : le blocage historique du smoke `sandbox_ui_smoke.gd` décrit 
 ## Pilote visuel — scène de combat (2026-10-16)
 
 - [x] Premier lot : joueur cyan 32×32, chaser 24×24 et projectile Lightning Conductor 16×16, dans la palette validée avec au plus 16 couleurs chacun. Chaque PNG dispose d’une source `.aseprite` éditable à un calque; les animations joueur restent à produire.
-- [x] `pilot_asset_batch_smoke.gd` vérifie la présence, les dimensions, le plafond de couleurs et la concordance en-tête/dimensions PNG↔Aseprite.
+- [x] `player_animation_assets_smoke.gd` vérifie chaque frame des feuilles idle/walk, la palette permise et les dimensions des sources Aseprite.
 - [x] `survival_entry_smoke.gd`, `survival_hud_smoke.gd` et `survival_weapon_smoke.gd` passent sous Godot 4.7.2 headless. Import éditeur headless réussi.
 - [x] `pilot_scene_visual_smoke.gd` sous Xvfb/Mesa rend et sauvegarde la scène Survival à 1280×800; inspection confirme la lecture des sprites au centre de l’arène. Aucun service Sandbox/progression ni règle de combat n’a changé.
 - [x] Le tile de sol généré a été écarté de la scène après inspection, sa répétition créant un bruit visuel trop dense; le sol actuel reste actif.
@@ -1641,7 +1641,7 @@ Note de clôture : le blocage historique du smoke `sandbox_ui_smoke.gd` décrit 
 - [x] `survival_wave_duration_smoke.gd` compare la durée de vague au temps de simulation déjà traité par `SurvivalSession`, en tenant compte du temps écoulé avant le début de la mesure; le contrôle a passé trois exécutions de suite.
 - [x] `survival_chest_smoke.gd` vérifie Magnetic Pulse niveau 5 : l’orbe accélère progressivement dans 300 % du rayon, ne se téléporte pas et n’est collectée qu’à la portée normale; le rayon de coffre reste indépendant. Le smoke contrôle aussi le gel du timer et du mouvement en pause. Intervalle 20 s, durée 1,5 s, accélération 600 et vitesse max 240 sont **[VALIDÉS, 2026-10-17]**.
 - [x] Après ces changements, build natif Debug et suite CTest complète sous Godot 4.7.2 avec `XDG_DATA_HOME` isolé : 44/44 passent. Les smokes `survival_weapon_catalog_smoke`, `survival_run_result_smoke` et `survival_wave_director_smoke` ont également passé plusieurs exécutions ciblées.
-- [x] `pilot_asset_batch_smoke.gd` passe pour les exports animés du joueur et leurs sources; `signal_prism_asset_smoke.gd` passe pour l’emblème et son intégration à l’accueil.
+- [x] `player_animation_assets_smoke.gd` et `player_controller_smoke.gd` passent pour les nouvelles feuilles et les quatre directions; `signal_prism_asset_smoke.gd` passe pour l’emblème et son intégration à l’accueil.
 - [x] L’audit de références runtime ne trouve plus d’asset SVG parmi les visuels chargés par les scènes/scripts; les anciens SVG restants sont des références inactives, sauf une référence historique dans `combat_catalog_smoke.gd`.
 
 ## Repères visuels de l’équipement (2026-10-16)

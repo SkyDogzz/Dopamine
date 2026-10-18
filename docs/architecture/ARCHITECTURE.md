@@ -84,7 +84,7 @@ La règle de HP decay est une fonction pure du temps actif fourni par le mode et
 ## Rendu
 
 - Les scènes Sandbox et Survival utilisent des sprites pixel art RGBA pour le joueur, les profils ennemis, le prototype visuel non canonique du Pulse Warden, le Dopamine Core à sprite dédié, les projectiles des armes jouables, les orbes XP et les chests. Le Buffer, l’Exploder et le Shielder possèdent des sprites dédiés ; leurs effets, les alliés buffés/protégés et le Hasted des élites sont signalés dans les deux vues. Les icônes des armes/reliques apparaissent aussi dans les choix.
-- `SpriteBatchRenderer` regroupe les entités en MultiMesh par sprite afin de garder un lot par type visuel ; la planche source est découpée en tuiles 64×64 avec `game/tools/slice_sprite_atlas.gd`.
+- `SpriteBatchRenderer` regroupe les entités en MultiMesh par sprite afin de garder un lot par type visuel ; les textures actives sont chargées par famille depuis `game/assets/sprites/`, chacune avec sa source éditable. Les anciens atlases aplatis et leur découpeur ont été retirés.
 - Animation par shader et index de frame d'atlas ; shaders 2D, glow mesuré, particules GPU.
 - Résolution logique pixel art fixe, upscale entier lorsque l'affichage le permet.
 - Réduire le nombre de draw calls et le coût de transfert des buffers ; mesurer CPU et GPU séparément.

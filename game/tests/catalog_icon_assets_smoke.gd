@@ -6,10 +6,7 @@ const UI_ICONS := ["equipment_helmet", "equipment_armor", "equipment_gloves", "e
 const ROSTER := ["enemy_chaser", "enemy_sprinter", "enemy_tank", "enemy_shooter", "enemy_buffer", "enemy_exploder", "enemy_shielder", "enemy_summoner", "enemy_summoned", "elite_sprinter", "boss_pulse_warden", "boss_final_placeholder", "boss_dopamine_core"]
 const IMPACTS := ["impact_spark", "impact_star", "impact_slash", "impact_pop", "impact_ring", "impact_burst", "impact_shards", "impact_shock_ring", "impact_angular", "impact_evolved"]
 const PROJECTILES := ["projectile_lightning", "projectile_inferno", "projectile_crimson", "projectile_enemy", "projectile_minigun", "projectile_toxic_cloud", "projectile_sawblades", "projectile_meteor", "projectile_starfall_fragment", "projectile_prism_laser", "projectile_prism_secondary", "projectile_void_orb", "projectile_frost_nova", "projectile_infinite_circuit", "projectile_wildfire", "projectile_bloodstorm", "projectile_event_horizon", "projectile_absolute_zero", "projectile_pandemic", "projectile_razorstorm", "projectile_starfall", "projectile_spectrum_collapse", "projectile_unique_lightning_burst", "projectile_evolution_shockwave"]
-const SOURCELESS_PNG_EXCEPTIONS := [
-	"res://assets/icons/progression_atlas_source.png",
-	"res://assets/sprites/dopamine_atlas_source.png",
-]
+const SOURCELESS_PNG_EXCEPTIONS: Array[String] = []
 
 func _initialize() -> void:
 	var icon_builder := FileAccess.get_file_as_string("res://tools/build_catalog_icon_assets.gd")
@@ -102,13 +99,12 @@ func _check_exported_png_sources() -> bool:
 			continue
 		missing_sources.append(png_path)
 		var documented_path: String = png_path.trim_prefix("res://").insert(0, "game/")
-		if not SOURCELESS_PNG_EXCEPTIONS.has(png_path) or not exception_document.contains(documented_path):
+		if not SOURCELESS_PNG_EXCEPTIONS.has(png_path):
 			push_error("PNG without a matching Aseprite source must be documented as an exception: %s" % png_path)
 			return false
 	for exception_path in SOURCELESS_PNG_EXCEPTIONS:
 		var documented_path: String = exception_path.trim_prefix("res://").insert(0, "game/")
-		if not png_paths.has(exception_path) or source_stems.has(exception_path.get_file().get_basename()) or \
-			not exception_document.contains(documented_path):
+		if not png_paths.has(exception_path) or source_stems.has(exception_path.get_file().get_basename()):
 			push_error("The documented source-format exception should remain present and source-less: %s" % exception_path)
 			return false
 	print("Asset source audit passed: %d PNGs, %d documented source-format exceptions" % [png_paths.size(), missing_sources.size()])

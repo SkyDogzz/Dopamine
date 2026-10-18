@@ -1,16 +1,7 @@
 # PNG files without a same-stem Aseprite source
-# Inventory performed 2026-10-17. These are technical source-format exceptions,
-# not a license or provenance clearance.
-
-game/assets/icons/progression_atlas_source.png
-  Historical flattened atlas consumed by game/tools/slice_sprite_atlas.gd.
-  It has no layered Aseprite source; generated catalog icons now have their
-  individual sources under game/assets/source/catalog_ui/.
-
-game/assets/sprites/dopamine_atlas_source.png
-  Historical flattened sprite atlas consumed by game/tools/slice_sprite_atlas.gd.
-  It has no layered Aseprite source; active catalog/roster exports use their
-  individual sources under game/assets/source/.
+# No active output-source exceptions are currently accepted.
+# Historical flattened atlases and their slicer were retired after confirming
+# the runtime loads family-specific assets with editable sources.
 
 The PNG references inside game/assets/source/ are builder inputs, not final
 sprites; their absence of same-stem Aseprite files is therefore not counted as

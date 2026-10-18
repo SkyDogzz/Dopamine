@@ -27,7 +27,7 @@ Le registre détaille les 425 fichiers sous `game/assets` hors `.import` : 165 v
 
 | Famille | Références connues | Consommateurs / rôle |
 |---|---|---|
-| Joueur | `sprites/player_idle.png`, `sprites/player_walk.png`; `player_cyan.png` est une référence supplémentaire | `player.tscn`, `player_controller.gd`; feuilles dans le rendu Survival/Sandbox. |
+| Joueur | `sprites/player_idle.png`, `sprites/player_walk.png` — feuilles originales 4×4 de 32×32 remplaçant les exports antérieurs | `player.tscn`, `player_controller.gd`; feuilles dans le rendu Survival/Sandbox. `player_cyan.png`, références et recettes antérieures retirés après vérification des consommateurs; provenance/hash avant-après dans `ASSET_MIGRATIONS.csv`. Le design de la tenue reste **[OUVERT]**; le contrat de rangées actuel est **[PROPOSÉ]**. |
 | Ennemis et boss | `sprites/roster/*.png`; quelques anciens `sprites/enemy_*.png`/`.svg` et placeholders | `sprite_batch_renderer.gd`, aperçu du hub, Sandbox et données de combat. Boss canoniques et premier biome restent ouverts; garder les prototypes de rôle jusqu'à décision. |
 | Armes, reliques, évolutions | `sprites/catalog/weapon_*.png`, `relic_*.png`, `evolution_*.png` | `survival_session.gd`, `survival_loadout.gd`, `run_stat_hub.gd`, coffre, inventaire et résultats. Le catalogue actif est `game/data/combat_catalog.json`. |
 | Projectiles, impacts, VFX | `sprites/projectiles/*.png`, `sprites/vfx/*.png`, `weapon_impacts_pixel.png`; anciennes variantes PNG/SVG | `sprite_batch_renderer.gd`, `survival_session.gd`, familles d'armes et événements de combat. |

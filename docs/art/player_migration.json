@@ -1,0 +1,70 @@
+{
+  "date": "2026-10-18",
+  "status": "[PROPOSÉ] replacement active; player outfit details [OUVERT]",
+  "contract": {
+    "sheet_pixels": [
+      128,
+      128
+    ],
+    "frame_pixels": [
+      32,
+      32
+    ],
+    "grid": [
+      4,
+      4
+    ],
+    "runtime_row_order": [
+      "down",
+      "left",
+      "right",
+      "up"
+    ],
+    "row_order_status": "[PROPOSÉ] preserves current runtime contract; Art Bible canonical order [OUVERT]",
+    "palette": "16-color subset of docs/art/palette_master.gpl"
+  },
+  "replacement": {
+    "idle_png": "game/assets/sprites/player_idle.png",
+    "idle_png_sha256": "e87c1c94679a83b2821d7ef863f25a2e4ca84f58086d69455ba5844e69ca4888",
+    "idle_aseprite": "game/assets/source/pilot/player_idle.aseprite",
+    "idle_aseprite_sha256": "e728b20dad8672a131e5a0fe348e283caed887c8a30fb7f5447fee6a210cba4e",
+    "walk_png": "game/assets/sprites/player_walk.png",
+    "walk_png_sha256": "59b73d3f2f345d21ebe164cb22df1830311d311000bdf774f18791c5e9f8236b",
+    "walk_aseprite": "game/assets/source/pilot/player_walk.aseprite",
+    "walk_aseprite_sha256": "8f624edb79b852d4bdda7f102faea4f27fda55a9d1770eb9a4283dfcfa9b13e3",
+    "generator": "game/tools/generate_original_player_sheets.py",
+    "generator_sha256": "432c047883062f3e7f46cebc510974de1cb6745ac4c9445e435e0511d56919e0",
+    "method": "Drawn from pixel primitives; generator reads only the Art Bible palette. No existing image, source, or recipe was read."
+  },
+  "retired": {
+    "idle_png_sha256": "c11abbcee7f9eae7d34eac9b298ee1ead4e4f915450cae3ef9bb96bf437bc436",
+    "idle_aseprite_sha256": "173e31586cf8192c24a50a0f68c150956b292da54387f0a1ba13677cc3f27b44",
+    "idle_reference_sha256": "8c8966737499a47281a6b8d21ae0630ee5fe740e310cd6eed5eec777bd82a7cd",
+    "walk_png_sha256": "ed0ecc4678d381bcf0a620fac5a2fdf61dbbfb43f9e1323b117fec93b7a48327",
+    "walk_aseprite_sha256": "a539df20e069238d4d5515d1c1dec560d3c89218c3182fe28d396dd87ccd9ebd",
+    "walk_reference_sha256": "1fbb51e709d1b53f7c2bfebc9802d782c6718e8b3352d7f0ae3d84fe19734006",
+    "legacy_pipeline": [
+      "game/tools/build_player_animation_sheets.gd",
+      "game/tools/build_pilot_asset_batch.gd"
+    ],
+    "retirement_check": "Full tracked-source search found no runtime references to retired root static pilot/chaser/projectile exports or legacy sheet references; player scenes/controller reference only replacement sheets. Chaser/projectile runtime families are separate nested assets."
+  },
+  "verification": {
+    "godot_import": "Godot 4.7.2 headless editor import passed after retirement cleanup.",
+    "tests": [
+      "player_animation_assets_smoke.gd",
+      "player_controller_smoke.gd",
+      "catalog_icon_assets_smoke.gd"
+    ],
+    "in_game_capture": "/tmp/dopamine-survival-combat-visual.png",
+    "capture_sha256": "pending (environment-generated /tmp evidence is not committed)",
+    "review": "Xvfb combat capture visually reviewed; player remains discernible in the center. Other asset families and UI in this capture are still legacy and are not approved by this review.",
+    "known_runtime_exit_warnings": "ObjectDB/resource-leak warnings from existing smoke teardown; tests exit successfully.",
+    "pck": {
+      "path": "/tmp/dopamine-player-migration.pck",
+      "replacement_sheets_present": true,
+      "retired_pilot_and_atlas_names_absent": true,
+      "method": "Godot 4.7.2 Linux/X11 export-pack; binary path scan"
+    }
+  }
+}
