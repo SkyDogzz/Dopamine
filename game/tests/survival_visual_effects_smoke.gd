@@ -177,30 +177,39 @@ func _verify_impact_capture(session: Node2D) -> bool:
 	await process_frame
 	await RenderingServer.frame_post_draw
 	var baseline: Image = root.get_texture().get_image()
-	session._add_weapon_impact("inferno_sprayer", impact_position, false)
-	await process_frame
-	session.queue_redraw()
-	await process_frame
-	await RenderingServer.frame_post_draw
-	var normal_image: Image = root.get_texture().get_image()
-	var normal_pixels := _count_changed_pixels(baseline, normal_image, screen_position)
+	var started_at: float = float(session.simulation.snapshot().get("simulation_time", 0.0)) - 0.25
+	var current_time: float = float(session.simulation.snapshot().get("simulation_time", 0.0))
+	var normal_pixels := 0
+	for impact_index in range(2):
+		var size: float = 28.0 if impact_index == 0 else 28.0 * session.CRITICAL_HIT_IMPACT_SCALE
+		session._weapon_transient_animations.clear()
+		session._weapon_transient_animations.append({
+			"role": "weapon_inferno_sprayer", "state": "impact_vfx", "position": impact_position,
+			"direction": Vector2.ZERO, "started_at": started_at, "expires_at": started_at + 1.0,
+			"size": size, "rotation": 0.0,
+		})
+		session._sprite_renderer.set_entities(session._entities, Vector2.ZERO, current_time,
+				session._enemy_attack_animation_overrides(current_time), session._weapon_transient_animations)
+		session.queue_redraw()
+		await process_frame
+		await RenderingServer.frame_post_draw
+		var rendered: Image = root.get_texture().get_image()
+		var changed := _count_changed_pixels(baseline, rendered, screen_position)
+		if impact_index == 0:
+			normal_pixels = changed
+			if normal_pixels < 8:
+				_fail("Normal animated impacts should render visible pixels")
+				return false
+		else:
+			if changed <= normal_pixels:
+				_fail("Rendered critical impact should visibly cover more pixels than a normal impact")
+				return false
+			print("Critical impact changed pixels: normal=%d critical=%d" % [normal_pixels, changed])
+			if rendered.save_png(CRITICAL_IMPACT_CAPTURE) != OK:
+				_fail("Could not save the critical impact visual capture")
+				return false
 	session._weapon_impacts.clear()
 	session._weapon_transient_animations.clear()
-	session._add_weapon_impact("inferno_sprayer", impact_position, false, true)
-	await process_frame
-	session.queue_redraw()
-	await process_frame
-	await RenderingServer.frame_post_draw
-	var critical_image: Image = root.get_texture().get_image()
-	var critical_pixels := _count_changed_pixels(baseline, critical_image, screen_position)
-	if critical_pixels <= normal_pixels or normal_pixels < 8:
-		_fail("Rendered critical impact should visibly cover more pixels than a normal impact")
-		return false
-	print("Critical impact changed pixels: normal=%d critical=%d" % [normal_pixels, critical_pixels])
-	if critical_image.save_png(CRITICAL_IMPACT_CAPTURE) != OK:
-		_fail("Could not save the critical impact visual capture")
-		return false
-	session._weapon_impacts.clear()
 	return true
 
 func _verify_damage_number_capture(session: Node2D) -> bool:
