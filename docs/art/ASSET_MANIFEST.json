@@ -9655,16 +9655,17 @@
       "qa_report_path": "build/assets/candidates/title-art/qa-report.json",
       "generation_status": "candidate",
       "validation_status": "passed",
-      "human_review_status": "pending",
+      "human_review_status": "approved",
       "integration_status": "integrated",
       "blockers": [],
       "requirement_source": "GDD v1.6 + Godot runtime contracts",
       "candidate_export_path": "build/assets/candidates/title-art/backgrounds/title_skyline.png",
       "candidate_source_path": "build/assets/candidates/title-art/source/backgrounds/title_skyline.aseprite",
-      "acceptance_status": "accepted_for_provisional_production",
-      "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
+      "acceptance_status": "accepted",
+      "acceptance_basis": "Owner explicitly approved title_skyline in chat on 2026-10-18.",
       "integrated_path": "game/assets/backgrounds/title_skyline.png",
-      "integrated_source_path": "game/assets/source/backgrounds/title_skyline.aseprite"
+      "integrated_source_path": "game/assets/source/backgrounds/title_skyline.aseprite",
+      "acceptance_note": "Owner confirmed the title skyline visual is approved."
     },
     {
       "asset_id": "weapon_impacts_atlas",
