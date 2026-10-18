@@ -22,6 +22,20 @@ Les captures ont été régénérées après import des exports graphiques renou
 
 Les sept captures `states/*.png` ont été générées par `game/tests/ui_states_evidence_smoke.gd` sous Godot 4.7.2/Xvfb/Mesa llvmpipe. Le smoke construit chaque scène avec des exemples visuels temporaires; il ne modifie aucun profil. Les panneaux coffre et résultat sont centrés par le conteneur parent utilisé à l’intégration. Ces captures étendent la revue aux états secondaires, mais ne prouvent pas toutes les erreurs, branches de focus, tailles ni contrôles physiques.
 
+## Parcours du paquet Linux/X11 Release — build du 2026-10-18
+
+Le binaire exporté depuis `565b177` et son sidecar GDExtension ont été copiés dans un dossier temporaire vide, puis démarrés avec un `XDG_DATA_HOME` neuf : code 0, aucune erreur ni bibliothèque manquante. Le parcours sous Xvfb/Mesa llvmpipe utilise des touches clavier synthétiques via XTest et suit menu → hub → choix d’arme → combat → pause. Les cinq captures 1280×720 sont dans `release-linux/`; elles ont été inspectées et montrent le rendu du paquet exporté. Le pilote audio était `Dummy`, aucun contrôleur physique ni sortie audio n’a été essayé.
+
+| Capture | SHA-256 |
+|---|---|
+| `release-linux/dopamine-release-menu.png` | `4deda85c9002ee309cfb3c7739128551f66624d8fc92e58695e40253ec4275fd` |
+| `release-linux/dopamine-release-hub.png` | `bd18454012fe598bb2adc7107ef1a0cccb9d4b9e4ab1285614e018adb0eb938b` |
+| `release-linux/dopamine-release-weapon-choice.png` | `fa56c34614f39fdf0de320025765ef7e13ac1a654da00476481d840375e1db0c` |
+| `release-linux/dopamine-release-combat.png` | `d867cf457068a92f3c4b8be91876a6d60799cc826f84acdd76f3d83c4bc9dd9d` |
+| `release-linux/dopamine-release-pause-final.png` | `f39ea87f425f6c7089647e275cfffb2be59da38977576c87199d6fd4f6ac8020` |
+
+Hashes du paquet : exécutable 75 113 712 octets, SHA-256 `a529f38c3d6cb292422d6539d9a3929e7464b7375174cb1808fd878a3a093004`; GDExtension 1 140 440 octets, SHA-256 `a6d148c988fcb78476b3e43fb721869a0b2fddc1251e78ed1033231690b05dfa`. C’est une preuve de lancement relocalisé sur l’hôte Debian courant; pas une installation sur machine distincte ni une validation matérielle.
+
 ## Audio
 
 `adaptive-music-transition.wav` est un extrait stéréo de 30 secondes préparé pour écoute humaine. Il rejoue les cinq stems en boucle avec les courbes de gain et les vitesses de fondu du contrôleur runtime, et superpose des SFX de combat représentatifs. Un gain maître unique sert seulement à rendre l’extrait audible; le niveau final en jeu reste **[PROPOSÉ]**. Source reproductible : `python3 game/tools/render_adaptive_audio_preview.py`. SHA-256 : `e6c35273bf80e3a8385b09d83a1715c4c31ae2b003672c94360e789388520766`.
