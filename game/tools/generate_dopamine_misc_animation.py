@@ -113,7 +113,8 @@ def main():
         elif cat == "weapon_animation":
             name=aid.removesuffix("_attack")
             aliases={"infinite_circuit":"lightning_conductor","wildfire":"inferno_sprayer","bloodstorm":"crimson_daggers","redline":"minigun","pandemic":"toxic_cloud","razorstorm":"sawblades","starfall":"meteor_staff","spectrum_collapse":"prism_laser","event_horizon":"void_orb","absolute_zero":"frost_nova"}
-            base_id=next((f"weapon_{base}" for evo,base in aliases.items() if name.endswith(evo)),name)
+            evolved_base=next((base for evo,base in aliases.items() if name.endswith(evo)),None)
+            base_id=f"evolution_{evolved_base}" if evolved_base else name
             effect = "weapon"
         elif cat == "weapon_vfx_animation":
             weapon=aid.removeprefix("weapon_").removesuffix("_fire_vfx").removesuffix("_impact_vfx")

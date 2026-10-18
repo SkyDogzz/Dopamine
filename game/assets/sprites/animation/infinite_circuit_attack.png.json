@@ -3,10 +3,10 @@
   "status": "provisionally_integrated",
   "skill": "dopamine-animation",
   "generator": "game/tools/generate_dopamine_misc_animation.py",
-  "generator_version": "1",
+  "generator_version": "4",
   "seed": 20261018,
   "seed_policy": "fixed geometry and staged source; seed recorded but not consumed",
-  "identity_source": "build/assets/candidates/pixel-art-complete/sprites/catalog/weapon_lightning_conductor.png",
+  "identity_source": "build/assets/candidates/pixel-art-complete/sprites/catalog/evolution_lightning_conductor.png",
   "frame_size": [
     32,
     32
@@ -27,15 +27,17 @@
   "parameters": {
     "effect": "weapon",
     "category": "weapon_animation",
-    "source_path": "build/assets/candidates/pixel-art-complete/sprites/catalog/weapon_lightning_conductor.png"
+    "source_path": "build/assets/candidates/pixel-art-complete/sprites/catalog/evolution_lightning_conductor.png",
+    "native_source_dimensions_preserved": false,
+    "direction_rotation_quarter_turns": null
   },
   "source_path": "source/animation/weapon_infinite_circuit_attack.aseprite",
   "export_path": "sprites/animation/infinite_circuit_attack.png",
-  "source_sha256": "9e816fa8bc8d40c854560a582e9ceb2eeaf577b48aad4066307933fe9944ed86",
-  "export_sha256": "782cffe310a1e7a25dfa354849d9101ae5a3277a6a344d72c27cc69d55ebeab6",
+  "source_sha256": "e66dc283b58ed6209512a4d7f12ec61854e410e13fd82f779320f8d89bf03d3f",
+  "export_sha256": "de558242ec19589a11649d7ed5cc85ddf04c0efb7598c1aa8a29ec7e81d8da9d",
   "acceptance_status": "accepted_for_provisional_production",
   "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
   "human_review_status": "pending",
-  "candidate_export_path": "build/assets/candidates/misc-animation/sprites/animation/weapon_infinite_circuit_attack.png",
+  "candidate_export_path": "build/assets/candidates/evolved-weapon-animation/sprites/animation/weapon_infinite_circuit_attack.png",
   "integrated_export_path": "game/assets/sprites/animation/infinite_circuit_attack.png"
 }

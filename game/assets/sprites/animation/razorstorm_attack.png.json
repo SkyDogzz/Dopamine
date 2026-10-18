@@ -3,10 +3,10 @@
   "status": "provisionally_integrated",
   "skill": "dopamine-animation",
   "generator": "game/tools/generate_dopamine_misc_animation.py",
-  "generator_version": "1",
+  "generator_version": "4",
   "seed": 20261018,
   "seed_policy": "fixed geometry and staged source; seed recorded but not consumed",
-  "identity_source": "build/assets/candidates/pixel-art-complete/sprites/catalog/weapon_sawblades.png",
+  "identity_source": "build/assets/candidates/pixel-art-complete/sprites/catalog/evolution_sawblades.png",
   "frame_size": [
     32,
     32
@@ -27,15 +27,17 @@
   "parameters": {
     "effect": "weapon",
     "category": "weapon_animation",
-    "source_path": "build/assets/candidates/pixel-art-complete/sprites/catalog/weapon_sawblades.png"
+    "source_path": "build/assets/candidates/pixel-art-complete/sprites/catalog/evolution_sawblades.png",
+    "native_source_dimensions_preserved": false,
+    "direction_rotation_quarter_turns": null
   },
   "source_path": "source/animation/weapon_razorstorm_attack.aseprite",
   "export_path": "sprites/animation/razorstorm_attack.png",
-  "source_sha256": "ebe4323833975b8390d1deaccfcd8bc17e77d892ccbcec4d3e4e0d701068a8fa",
-  "export_sha256": "d3e18eebb1f7ce57223ea94975a3c05ce87ded2fe95c824b5f6e760a0f0b7c65",
+  "source_sha256": "b9a9f42182b6cc60ae39b3b0e9f8027afd8f84f9f3c092d7a45e0893f6d63f4f",
+  "export_sha256": "8e207f7f7aa80bf4ec05c7b5db43fb3bc0b8a4c2f446990346195784f5ae1d2e",
   "acceptance_status": "accepted_for_provisional_production",
   "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
   "human_review_status": "pending",
-  "candidate_export_path": "build/assets/candidates/misc-animation/sprites/animation/weapon_razorstorm_attack.png",
+  "candidate_export_path": "build/assets/candidates/evolved-weapon-animation/sprites/animation/weapon_razorstorm_attack.png",
   "integrated_export_path": "game/assets/sprites/animation/razorstorm_attack.png"
 }

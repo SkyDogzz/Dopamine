@@ -3,10 +3,10 @@
   "status": "provisionally_integrated",
   "skill": "dopamine-animation",
   "generator": "game/tools/generate_dopamine_misc_animation.py",
-  "generator_version": "1",
+  "generator_version": "4",
   "seed": 20261018,
   "seed_policy": "fixed geometry and staged source; seed recorded but not consumed",
-  "identity_source": "build/assets/candidates/pixel-art-complete/sprites/catalog/weapon_frost_nova.png",
+  "identity_source": "build/assets/candidates/pixel-art-complete/sprites/catalog/evolution_frost_nova.png",
   "frame_size": [
     32,
     32
@@ -27,15 +27,17 @@
   "parameters": {
     "effect": "weapon",
     "category": "weapon_animation",
-    "source_path": "build/assets/candidates/pixel-art-complete/sprites/catalog/weapon_frost_nova.png"
+    "source_path": "build/assets/candidates/pixel-art-complete/sprites/catalog/evolution_frost_nova.png",
+    "native_source_dimensions_preserved": false,
+    "direction_rotation_quarter_turns": null
   },
   "source_path": "source/animation/weapon_absolute_zero_attack.aseprite",
   "export_path": "sprites/animation/absolute_zero_attack.png",
-  "source_sha256": "5172045a01dd78bb28653002b8ceca993aede7fee3b878b30ed54217f64f35bf",
-  "export_sha256": "65fbed6dcfe28f397f4e4a89862977d4983b920e69acbc79c19e0a11bd4b83ab",
+  "source_sha256": "1f15a6ace6259b92259d33a4eeb94dc127b5048cd5957dc41f1078fa73202463",
+  "export_sha256": "216e27a90fbcfe560e98d8f927c36280935f3011bfff1f85560ebd9abb1fed21",
   "acceptance_status": "accepted_for_provisional_production",
   "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
   "human_review_status": "pending",
-  "candidate_export_path": "build/assets/candidates/misc-animation/sprites/animation/weapon_absolute_zero_attack.png",
+  "candidate_export_path": "build/assets/candidates/evolved-weapon-animation/sprites/animation/weapon_absolute_zero_attack.png",
   "integrated_export_path": "game/assets/sprites/animation/absolute_zero_attack.png"
 }

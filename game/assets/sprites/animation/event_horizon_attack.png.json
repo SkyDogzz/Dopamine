@@ -3,10 +3,10 @@
   "status": "provisionally_integrated",
   "skill": "dopamine-animation",
   "generator": "game/tools/generate_dopamine_misc_animation.py",
-  "generator_version": "1",
+  "generator_version": "4",
   "seed": 20261018,
   "seed_policy": "fixed geometry and staged source; seed recorded but not consumed",
-  "identity_source": "build/assets/candidates/pixel-art-complete/sprites/catalog/weapon_void_orb.png",
+  "identity_source": "build/assets/candidates/pixel-art-complete/sprites/catalog/evolution_void_orb.png",
   "frame_size": [
     32,
     32
@@ -27,15 +27,17 @@
   "parameters": {
     "effect": "weapon",
     "category": "weapon_animation",
-    "source_path": "build/assets/candidates/pixel-art-complete/sprites/catalog/weapon_void_orb.png"
+    "source_path": "build/assets/candidates/pixel-art-complete/sprites/catalog/evolution_void_orb.png",
+    "native_source_dimensions_preserved": false,
+    "direction_rotation_quarter_turns": null
   },
   "source_path": "source/animation/weapon_event_horizon_attack.aseprite",
   "export_path": "sprites/animation/event_horizon_attack.png",
-  "source_sha256": "88fc592641f8e4127e2b457f2b8401bf8adf72b3da9eefe0863ecdce10c7a29d",
-  "export_sha256": "46ceeaf4ab03efc1fca86053c9b02f7f8d3ba452e9215baaeb22f0a6de21e1e9",
+  "source_sha256": "151feb1912cd87b5dc9825caf5059f2c72e99eb322df44f0414e7699e1942849",
+  "export_sha256": "744e0ba668d49d0a0f84413ebb137ab511f1418eaf0f4c06ea594f2dfa201e25",
   "acceptance_status": "accepted_for_provisional_production",
   "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
   "human_review_status": "pending",
-  "candidate_export_path": "build/assets/candidates/misc-animation/sprites/animation/weapon_event_horizon_attack.png",
+  "candidate_export_path": "build/assets/candidates/evolved-weapon-animation/sprites/animation/weapon_event_horizon_attack.png",
   "integrated_export_path": "game/assets/sprites/animation/event_horizon_attack.png"
 }

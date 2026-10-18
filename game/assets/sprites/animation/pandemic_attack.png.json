@@ -3,10 +3,10 @@
   "status": "provisionally_integrated",
   "skill": "dopamine-animation",
   "generator": "game/tools/generate_dopamine_misc_animation.py",
-  "generator_version": "1",
+  "generator_version": "4",
   "seed": 20261018,
   "seed_policy": "fixed geometry and staged source; seed recorded but not consumed",
-  "identity_source": "build/assets/candidates/pixel-art-complete/sprites/catalog/weapon_toxic_cloud.png",
+  "identity_source": "build/assets/candidates/pixel-art-complete/sprites/catalog/evolution_toxic_cloud.png",
   "frame_size": [
     32,
     32
@@ -27,15 +27,17 @@
   "parameters": {
     "effect": "weapon",
     "category": "weapon_animation",
-    "source_path": "build/assets/candidates/pixel-art-complete/sprites/catalog/weapon_toxic_cloud.png"
+    "source_path": "build/assets/candidates/pixel-art-complete/sprites/catalog/evolution_toxic_cloud.png",
+    "native_source_dimensions_preserved": false,
+    "direction_rotation_quarter_turns": null
   },
   "source_path": "source/animation/weapon_pandemic_attack.aseprite",
   "export_path": "sprites/animation/pandemic_attack.png",
-  "source_sha256": "82a0000728a24f92d0ca0e24331c34f6003eab1d98a857dfb8a1a03b66e57cff",
-  "export_sha256": "c602094954ca5cac205bf2b1c4822d5c5894e5b2c2c5c34a9aec56c2d19f9017",
+  "source_sha256": "af7c64f98afbb83b8440977a4cea22ffefcdd4b0b5c6eabc9366e29a01ecda90",
+  "export_sha256": "d5552867f5b336c2fddf1ea5224c6d245f2f6231bad0d0e4651f50d38e2ffede",
   "acceptance_status": "accepted_for_provisional_production",
   "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
   "human_review_status": "pending",
-  "candidate_export_path": "build/assets/candidates/misc-animation/sprites/animation/weapon_pandemic_attack.png",
+  "candidate_export_path": "build/assets/candidates/evolved-weapon-animation/sprites/animation/weapon_pandemic_attack.png",
   "integrated_export_path": "game/assets/sprites/animation/pandemic_attack.png"
 }
