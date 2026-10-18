@@ -63,6 +63,7 @@ const GRAVITY_COLLAPSE_RADIUS := 60.0
 const GRAVITY_COLLAPSE_DAMAGE_MULTIPLIER := 0.5
 const WEAPON_IMPACT_LIFETIME := 0.22
 const MAX_VISIBLE_WEAPON_IMPACTS := 32
+const WEAPON_IMPACT_DISPLAY_SCALE := 0.5
 const CRITICAL_HIT_IMPACT_SCALE := 1.45 # [PROPOSÉ] Critical hits use the same weapon sprite at a larger size; no new color mapping.
 static var DAMAGE_NUMBER_FONT: Font = load("res://assets/fonts/NeonArcadePixel.ttf") as Font if ResourceLoader.exists("res://assets/fonts/NeonArcadePixel.ttf") else ThemeDB.fallback_font
 const DAMAGE_NUMBER_LIFETIME := 0.5 # [PROPOSÉ] Active simulation seconds.
@@ -4008,10 +4009,10 @@ func _draw() -> void:
 		for impact in _weapon_impacts:
 			var remaining: float = float(impact["remaining"])
 			var fade := clampf(remaining / WEAPON_IMPACT_LIFETIME, 0.0, 1.0)
-			var scale := 0.7 + 0.5 * (1.0 - fade)
-			draw_set_transform(impact["position"], float(impact["rotation"]),
-					Vector2.ONE * scale * _weapon_impact_level_scale(int(impact.get("level", 1))) *
+			var scale := _weapon_impact_render_scale(remaining, int(impact.get("level", 1)),
 					float(impact.get("emphasis_scale", 1.0)))
+			draw_set_transform(impact["position"], float(impact["rotation"]),
+					Vector2.ONE * scale)
 			if WEAPON_IMPACTS_TEXTURE != null:
 				draw_texture_rect_region(WEAPON_IMPACTS_TEXTURE, Rect2(-32.0, -32.0, 64.0, 64.0),
 					Rect2(float(impact["type"]) * 64.0, 0.0, 64.0, 64.0), Color(1.0, 1.0, 1.0, fade))
@@ -4145,6 +4146,11 @@ func _add_weapon_impact(source_type: String, position: Vector2, is_damage_over_t
 
 func _weapon_impact_level_scale(level: int) -> float:
 	return 1.0 + 0.06 * float(clampi(level - 1, 0, 4)) # [PROPOSED] visual-only emphasis per weapon level.
+
+func _weapon_impact_render_scale(remaining: float, level: int, emphasis: float) -> float:
+	var fade := clampf(remaining / WEAPON_IMPACT_LIFETIME, 0.0, 1.0)
+	return (0.7 + 0.5 * (1.0 - fade)) * WEAPON_IMPACT_DISPLAY_SCALE * \
+			_weapon_impact_level_scale(level) * emphasis
 
 func _visual_effects_reduced() -> bool:
 	return _settings_service != null and _settings_service.reduced_visual_effects_enabled

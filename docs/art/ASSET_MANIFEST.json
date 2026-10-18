@@ -4060,7 +4060,7 @@
       "qa_report_path": "build/assets/candidates/misc-animation/qa-report.json",
       "generation_status": "candidate",
       "validation_status": "passed",
-      "human_review_status": "pending",
+      "human_review_status": "approved",
       "integration_status": "integrated",
       "blockers": [
         "specific impact color/intensity and animation timing are open"
@@ -4068,8 +4068,8 @@
       "requirement_source": "GDD v1.6 + Godot runtime contracts",
       "candidate_export_path": "build/assets/candidates/misc-animation/sprites/animation/weapon_lightning_conductor_impact_vfx.png",
       "candidate_source_path": "build/assets/candidates/misc-animation/source/animation/weapon_lightning_conductor_impact_vfx.aseprite",
-      "acceptance_status": "accepted_for_provisional_production",
-      "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
+      "acceptance_status": "accepted",
+      "acceptance_basis": "Owner approved the weapon impact artwork in chat on 2026-10-18, with the runtime impact display scaled to half its previous size.",
       "godot_animation_resource": "game/assets/sprites/animation/lightning_conductor_impact.tres",
       "integrated_path": "game/assets/sprites/animation/lightning_conductor_impact.png",
       "integrated_source_path": "game/assets/source/animation/weapon_lightning_conductor_impact_vfx.aseprite"
@@ -4322,7 +4322,7 @@
       "qa_report_path": "build/assets/candidates/misc-animation/qa-report.json",
       "generation_status": "candidate",
       "validation_status": "passed",
-      "human_review_status": "pending",
+      "human_review_status": "approved",
       "integration_status": "integrated",
       "blockers": [
         "specific impact color/intensity and animation timing are open"
@@ -4330,8 +4330,8 @@
       "requirement_source": "GDD v1.6 + Godot runtime contracts",
       "candidate_export_path": "build/assets/candidates/misc-animation/sprites/animation/weapon_inferno_sprayer_impact_vfx.png",
       "candidate_source_path": "build/assets/candidates/misc-animation/source/animation/weapon_inferno_sprayer_impact_vfx.aseprite",
-      "acceptance_status": "accepted_for_provisional_production",
-      "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
+      "acceptance_status": "accepted",
+      "acceptance_basis": "Owner approved the weapon impact artwork in chat on 2026-10-18, with the runtime impact display scaled to half its previous size.",
       "godot_animation_resource": "game/assets/sprites/animation/inferno_sprayer_impact.tres",
       "integrated_path": "game/assets/sprites/animation/inferno_sprayer_impact.png",
       "integrated_source_path": "game/assets/source/animation/weapon_inferno_sprayer_impact_vfx.aseprite"
@@ -4584,7 +4584,7 @@
       "qa_report_path": "build/assets/candidates/misc-animation/qa-report.json",
       "generation_status": "candidate",
       "validation_status": "passed",
-      "human_review_status": "pending",
+      "human_review_status": "approved",
       "integration_status": "integrated",
       "blockers": [
         "specific impact color/intensity and animation timing are open"
@@ -4592,8 +4592,8 @@
       "requirement_source": "GDD v1.6 + Godot runtime contracts",
       "candidate_export_path": "build/assets/candidates/misc-animation/sprites/animation/weapon_crimson_daggers_impact_vfx.png",
       "candidate_source_path": "build/assets/candidates/misc-animation/source/animation/weapon_crimson_daggers_impact_vfx.aseprite",
-      "acceptance_status": "accepted_for_provisional_production",
-      "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
+      "acceptance_status": "accepted",
+      "acceptance_basis": "Owner approved the weapon impact artwork in chat on 2026-10-18, with the runtime impact display scaled to half its previous size.",
       "godot_animation_resource": "game/assets/sprites/animation/crimson_daggers_impact.tres",
       "integrated_path": "game/assets/sprites/animation/crimson_daggers_impact.png",
       "integrated_source_path": "game/assets/source/animation/weapon_crimson_daggers_impact_vfx.aseprite"
@@ -4846,7 +4846,7 @@
       "qa_report_path": "build/assets/candidates/misc-animation/qa-report.json",
       "generation_status": "candidate",
       "validation_status": "passed",
-      "human_review_status": "pending",
+      "human_review_status": "approved",
       "integration_status": "integrated",
       "blockers": [
         "specific impact color/intensity and animation timing are open"
@@ -4854,8 +4854,8 @@
       "requirement_source": "GDD v1.6 + Godot runtime contracts",
       "candidate_export_path": "build/assets/candidates/misc-animation/sprites/animation/weapon_minigun_impact_vfx.png",
       "candidate_source_path": "build/assets/candidates/misc-animation/source/animation/weapon_minigun_impact_vfx.aseprite",
-      "acceptance_status": "accepted_for_provisional_production",
-      "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
+      "acceptance_status": "accepted",
+      "acceptance_basis": "Owner approved the weapon impact artwork in chat on 2026-10-18, with the runtime impact display scaled to half its previous size.",
       "godot_animation_resource": "game/assets/sprites/animation/minigun_impact.tres",
       "integrated_path": "game/assets/sprites/animation/minigun_impact.png",
       "integrated_source_path": "game/assets/source/animation/weapon_minigun_impact_vfx.aseprite"
@@ -5108,7 +5108,7 @@
       "qa_report_path": "build/assets/candidates/misc-animation/qa-report.json",
       "generation_status": "candidate",
       "validation_status": "passed",
-      "human_review_status": "pending",
+      "human_review_status": "approved",
       "integration_status": "integrated",
       "blockers": [
         "specific impact color/intensity and animation timing are open"
@@ -5116,8 +5116,8 @@
       "requirement_source": "GDD v1.6 + Godot runtime contracts",
       "candidate_export_path": "build/assets/candidates/misc-animation/sprites/animation/weapon_toxic_cloud_impact_vfx.png",
       "candidate_source_path": "build/assets/candidates/misc-animation/source/animation/weapon_toxic_cloud_impact_vfx.aseprite",
-      "acceptance_status": "accepted_for_provisional_production",
-      "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
+      "acceptance_status": "accepted",
+      "acceptance_basis": "Owner approved the weapon impact artwork in chat on 2026-10-18, with the runtime impact display scaled to half its previous size.",
       "godot_animation_resource": "game/assets/sprites/animation/toxic_cloud_impact.tres",
       "integrated_path": "game/assets/sprites/animation/toxic_cloud_impact.png",
       "integrated_source_path": "game/assets/source/animation/weapon_toxic_cloud_impact_vfx.aseprite"
@@ -5370,7 +5370,7 @@
       "qa_report_path": "build/assets/candidates/misc-animation/qa-report.json",
       "generation_status": "candidate",
       "validation_status": "passed",
-      "human_review_status": "pending",
+      "human_review_status": "approved",
       "integration_status": "integrated",
       "blockers": [
         "specific impact color/intensity and animation timing are open"
@@ -5378,8 +5378,8 @@
       "requirement_source": "GDD v1.6 + Godot runtime contracts",
       "candidate_export_path": "build/assets/candidates/misc-animation/sprites/animation/weapon_sawblades_impact_vfx.png",
       "candidate_source_path": "build/assets/candidates/misc-animation/source/animation/weapon_sawblades_impact_vfx.aseprite",
-      "acceptance_status": "accepted_for_provisional_production",
-      "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
+      "acceptance_status": "accepted",
+      "acceptance_basis": "Owner approved the weapon impact artwork in chat on 2026-10-18, with the runtime impact display scaled to half its previous size.",
       "godot_animation_resource": "game/assets/sprites/animation/sawblades_impact.tres",
       "integrated_path": "game/assets/sprites/animation/sawblades_impact.png",
       "integrated_source_path": "game/assets/source/animation/weapon_sawblades_impact_vfx.aseprite"
@@ -5632,7 +5632,7 @@
       "qa_report_path": "build/assets/candidates/misc-animation/qa-report.json",
       "generation_status": "candidate",
       "validation_status": "passed",
-      "human_review_status": "pending",
+      "human_review_status": "approved",
       "integration_status": "integrated",
       "blockers": [
         "specific impact color/intensity and animation timing are open"
@@ -5640,8 +5640,8 @@
       "requirement_source": "GDD v1.6 + Godot runtime contracts",
       "candidate_export_path": "build/assets/candidates/misc-animation/sprites/animation/weapon_meteor_staff_impact_vfx.png",
       "candidate_source_path": "build/assets/candidates/misc-animation/source/animation/weapon_meteor_staff_impact_vfx.aseprite",
-      "acceptance_status": "accepted_for_provisional_production",
-      "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
+      "acceptance_status": "accepted",
+      "acceptance_basis": "Owner approved the weapon impact artwork in chat on 2026-10-18, with the runtime impact display scaled to half its previous size.",
       "godot_animation_resource": "game/assets/sprites/animation/meteor_staff_impact.tres",
       "integrated_path": "game/assets/sprites/animation/meteor_staff_impact.png",
       "integrated_source_path": "game/assets/source/animation/weapon_meteor_staff_impact_vfx.aseprite"
@@ -5894,7 +5894,7 @@
       "qa_report_path": "build/assets/candidates/misc-animation/qa-report.json",
       "generation_status": "candidate",
       "validation_status": "passed",
-      "human_review_status": "pending",
+      "human_review_status": "approved",
       "integration_status": "integrated",
       "blockers": [
         "specific impact color/intensity and animation timing are open"
@@ -5902,8 +5902,8 @@
       "requirement_source": "GDD v1.6 + Godot runtime contracts",
       "candidate_export_path": "build/assets/candidates/misc-animation/sprites/animation/weapon_prism_laser_impact_vfx.png",
       "candidate_source_path": "build/assets/candidates/misc-animation/source/animation/weapon_prism_laser_impact_vfx.aseprite",
-      "acceptance_status": "accepted_for_provisional_production",
-      "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
+      "acceptance_status": "accepted",
+      "acceptance_basis": "Owner approved the weapon impact artwork in chat on 2026-10-18, with the runtime impact display scaled to half its previous size.",
       "godot_animation_resource": "game/assets/sprites/animation/prism_laser_impact.tres",
       "integrated_path": "game/assets/sprites/animation/prism_laser_impact.png",
       "integrated_source_path": "game/assets/source/animation/weapon_prism_laser_impact_vfx.aseprite"
@@ -6156,7 +6156,7 @@
       "qa_report_path": "build/assets/candidates/misc-animation/qa-report.json",
       "generation_status": "candidate",
       "validation_status": "passed",
-      "human_review_status": "pending",
+      "human_review_status": "approved",
       "integration_status": "integrated",
       "blockers": [
         "specific impact color/intensity and animation timing are open"
@@ -6164,8 +6164,8 @@
       "requirement_source": "GDD v1.6 + Godot runtime contracts",
       "candidate_export_path": "build/assets/candidates/misc-animation/sprites/animation/weapon_void_orb_impact_vfx.png",
       "candidate_source_path": "build/assets/candidates/misc-animation/source/animation/weapon_void_orb_impact_vfx.aseprite",
-      "acceptance_status": "accepted_for_provisional_production",
-      "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
+      "acceptance_status": "accepted",
+      "acceptance_basis": "Owner approved the weapon impact artwork in chat on 2026-10-18, with the runtime impact display scaled to half its previous size.",
       "godot_animation_resource": "game/assets/sprites/animation/void_orb_impact.tres",
       "integrated_path": "game/assets/sprites/animation/void_orb_impact.png",
       "integrated_source_path": "game/assets/source/animation/weapon_void_orb_impact_vfx.aseprite"
@@ -6418,7 +6418,7 @@
       "qa_report_path": "build/assets/candidates/misc-animation/qa-report.json",
       "generation_status": "candidate",
       "validation_status": "passed",
-      "human_review_status": "pending",
+      "human_review_status": "approved",
       "integration_status": "integrated",
       "blockers": [
         "specific impact color/intensity and animation timing are open"
@@ -6426,8 +6426,8 @@
       "requirement_source": "GDD v1.6 + Godot runtime contracts",
       "candidate_export_path": "build/assets/candidates/misc-animation/sprites/animation/weapon_frost_nova_impact_vfx.png",
       "candidate_source_path": "build/assets/candidates/misc-animation/source/animation/weapon_frost_nova_impact_vfx.aseprite",
-      "acceptance_status": "accepted_for_provisional_production",
-      "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
+      "acceptance_status": "accepted",
+      "acceptance_basis": "Owner approved the weapon impact artwork in chat on 2026-10-18, with the runtime impact display scaled to half its previous size.",
       "godot_animation_resource": "game/assets/sprites/animation/frost_nova_impact.tres",
       "integrated_path": "game/assets/sprites/animation/frost_nova_impact.png",
       "integrated_source_path": "game/assets/source/animation/weapon_frost_nova_impact_vfx.aseprite"
@@ -9687,14 +9687,14 @@
       "qa_report_path": "build/assets/candidates/pixel-art-complete/qa-report.json",
       "generation_status": "candidate",
       "validation_status": "passed",
-      "human_review_status": "pending",
+      "human_review_status": "approved",
       "integration_status": "integrated",
       "blockers": [],
       "requirement_source": "GDD v1.6 + Godot runtime contracts",
       "candidate_export_path": "build/assets/candidates/pixel-art-complete/sprites/weapon_impacts_pixel.png",
       "candidate_source_path": "build/assets/candidates/pixel-art-complete/source/original_procedural/weapon_impacts_pixel.aseprite",
-      "acceptance_status": "accepted_for_provisional_production",
-      "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
+      "acceptance_status": "accepted",
+      "acceptance_basis": "Owner approved the weapon impact artwork in chat on 2026-10-18, with the runtime impact display scaled to half its previous size.",
       "integrated_path": "game/assets/sprites/weapon_impacts_pixel.png",
       "integrated_source_path": "game/assets/source/original_procedural/weapon_impacts_pixel.aseprite"
     },

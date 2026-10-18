@@ -146,6 +146,10 @@ func _run() -> void:
 		session._lightning_arcs.size() != 1:
 		_fail("Critical direct hits should retain metadata and receive visible size emphasis")
 		return
+	if not is_equal_approx(session._weapon_impact_render_scale(session.WEAPON_IMPACT_LIFETIME, 1, 1.0), 0.35) or \
+		not is_equal_approx(session._weapon_impact_render_scale(0.0, 1, 1.0), 0.6):
+		_fail("Weapon impact atlas cells should render at half their previous size")
+		return
 	var normal_impact_next_random := _next_impact_random(session, false)
 	var reduced_impact_next_random := _next_impact_random(session, true)
 	var normal_arc_next_random := _next_arc_random(session, false)
