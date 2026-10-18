@@ -89,7 +89,7 @@ func _run() -> void:
 	var tab := InputEventKey.new()
 	tab.keycode = KEY_TAB
 	tab.pressed = true
-	session._unhandled_input(tab)
+	session._input(tab)
 	if not hub.detail_open or root.gui_get_focus_owner() != hub.get_node("Detail/Content/Header/CloseButton"):
 		_fail("Tab should open the read-only detail and place keyboard/gamepad focus on Close")
 		return
@@ -118,11 +118,11 @@ func _run() -> void:
 		return
 	if "--capture" in OS.get_cmdline_user_args() and not await _capture_detail(session):
 		return
-	session._unhandled_input(tab)
+	session._input(tab)
 	if hub.detail_open or not compact_panel.visible:
 		_fail("Pressing Tab again should collapse details back into the compact panel")
 		return
-	session._unhandled_input(tab)
+	session._input(tab)
 	var cancel := InputEventKey.new()
 	cancel.keycode = KEY_ESCAPE
 	cancel.pressed = true

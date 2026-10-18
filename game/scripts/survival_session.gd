@@ -705,13 +705,14 @@ func _on_pause_auto_select_chest_toggled(enabled: bool) -> void:
 func _physics_process(_delta: float) -> void:
 	_publish_player_target()
 
-func _unhandled_input(event: InputEvent) -> void:
+func _input(event: InputEvent) -> void:
 	if event is InputEventKey and event.pressed and not event.echo and event.keycode == KEY_TAB:
 		if simulation == null or run_over or _chest_open or _starting_weapon_choice_open or _manually_paused or _revive_pending:
 			return
 		_run_stat_hub.toggle_detail()
 		get_viewport().set_input_as_handled()
-		return
+
+func _unhandled_input(event: InputEvent) -> void:
 	if not event.is_action_pressed("ui_cancel"):
 		return
 	if _revive_pending:
