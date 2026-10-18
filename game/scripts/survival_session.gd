@@ -911,7 +911,12 @@ func _process(_delta: float) -> void:
 				if not bool(event.get("is_damage_over_time", false)):
 					var target_type := str(event.get("target_type", ""))
 					_start_screen_shake(float(event["amount"]))
-					Sfx.play("hit_heavy" if target_type in ["mid_boss", "final_boss"] else "hit_light")
+					var hit_family := "hit_heavy" if target_type in ["mid_boss", "final_boss"] else "hit_light"
+					var source_weapon := _weapon_id_for_source_type(source_type)
+					if source_weapon.is_empty():
+						Sfx.play(hit_family)
+					else:
+						Sfx.play_weapon_impact(source_weapon, hit_family)
 				if str(event.get("target_type", "")) not in ["player", "player_projectile"]:
 					_add_damage_number(float(event["amount"]),
 							Vector2(float(event["position"]["x"]), float(event["position"]["y"])), target_key,
@@ -973,7 +978,10 @@ func _process(_delta: float) -> void:
 				_roll_enemy_chests(dead_enemy_type, death_position)
 				if not run_over:
 					var healing: float = _equipment_kill_healing(float(simulation.kill_heal_amount(float(event["threat_level"]))))
-					player_hp = minf(player_max_hp, player_hp + healing)
+					var applied_healing := minf(healing, player_max_hp - player_hp)
+					player_hp += applied_healing
+					if applied_healing > 0.0:
+						Sfx.play_named("healing")
 					_spawn_xp_drop(
 						death_position,
 						_equipment_xp_value(xp_per_enemy)
@@ -1138,6 +1146,7 @@ func _update_exploder_attacks(current_simulation_time: float, paused: bool) -> v
 		if current_simulation_time < float(attack["detonate_at"]):
 			continue
 		var blast_origin: Vector2 = attack["origin"]
+		Sfx.play_named("explosion")
 		var blast_distance := player_contact_radius + exploder_blast_radius
 		if player.global_position.distance_squared_to(blast_origin) <= blast_distance * blast_distance:
 			_take_enemy_damage(exploder_damage)
@@ -1148,7 +1157,10 @@ func _update_exploder_attacks(current_simulation_time: float, paused: bool) -> v
 		_roll_enemy_chests("exploder", blast_origin)
 		if not run_over:
 			var healing: float = _equipment_kill_healing(float(simulation.kill_heal_amount(float(components.get("ThreatLevel", 2.0)))))
-			player_hp = minf(player_max_hp, player_hp + healing)
+			var applied_healing := minf(healing, player_max_hp - player_hp)
+			player_hp += applied_healing
+			if applied_healing > 0.0:
+				Sfx.play_named("healing")
 			_spawn_xp_drop(blast_origin, _equipment_xp_value(xp_per_enemy))
 	for exploder_key in _exploder_attacks.keys():
 		if not active_exploders.has(exploder_key):
@@ -1475,6 +1487,8 @@ func _apply_pending_lifesteal(elapsed_active_time: float) -> void:
 	_pending_lifesteal = 0.0
 	var applied_healing := minf(healing, player_max_hp - player_hp)
 	player_hp += applied_healing
+	if applied_healing > 0.0:
+		Sfx.play_named("healing")
 	if _has_unique_effect("overflow_shield") and healing > applied_healing:
 		player_shield = minf(player_max_hp * 0.1, player_shield + (healing - applied_healing) * 0.5)
 		_shield_expires_at = player_active_time + 5.0
@@ -1483,6 +1497,7 @@ func _take_player_damage(amount: float) -> void:
 	if _health_locked or _revive_pending or amount <= 0.0 or \
 			player_active_time < _revive_invulnerable_until:
 		return
+	Sfx.play_named("damage_taken", "hit_heavy", "hit_heavy")
 	var absorbed := minf(player_shield, amount)
 	player_shield -= absorbed
 	player_hp = maxf(0.0, player_hp - (amount - absorbed))
@@ -2109,6 +2124,7 @@ func _finish_run(victory: bool) -> void:
 	if run_over:
 		return
 	run_over = true
+	Sfx.play_named("victory" if victory else "defeat", "", "boss_defeat")
 	simulation.pause()
 	_run_result_overlay.visible = true
 	var run_active_time := _run_active_time()
@@ -2558,7 +2574,7 @@ func _fire_lightning_conductor(active_time: float, paused: bool) -> void:
 	if projectile_sequence <= 0:
 		_lightning_chain_states.erase(chain_id)
 		return
-	Sfx.play("weapon_zap")
+	Sfx.play_weapon_fire("lightning_conductor", "weapon_zap")
 	_try_unique_lightning_burst(lightning_damage * damage_multiplier)
 	_try_evolution_shockwave(lightning_damage * damage_multiplier)
 	_next_weapon_time = active_time + _effective_weapon_cooldown(cooldown)
@@ -2948,7 +2964,7 @@ func _fire_infinite_circuit(active_time: float, target_budget: int, damage_multi
 					break
 			frontier = next_frontier
 	if fired:
-		Sfx.play("weapon_zap")
+		Sfx.play_weapon_fire("lightning_conductor", "weapon_zap")
 		_try_unique_lightning_burst(lightning_damage * damage_multiplier)
 		_next_weapon_time = active_time + _effective_weapon_cooldown(cooldown)
 
@@ -3023,7 +3039,7 @@ func _fire_inferno_sprayer(active_time: float, paused: bool) -> void:
 			explosion_radius, explosion_multiplier, 0, 0.0, 0.0, false, 0.0, 1.0, 1.0, 0.0, 0, 1,
 			_last_attack_critical_hit)
 	if projectile_sequence > 0:
-		Sfx.play("weapon_shot")
+		Sfx.play_weapon_fire("inferno_sprayer", "weapon_shot")
 		_try_unique_lightning_burst(damage)
 		_try_evolution_shockwave(damage)
 		_next_inferno_time = active_time + _effective_weapon_cooldown(inferno_cooldown)
@@ -3069,7 +3085,7 @@ func _fire_crimson_daggers(active_time: float, paused: bool) -> void:
 				0, 1, _last_attack_critical_hit) > 0:
 			fired += 1
 	if fired > 0:
-		Sfx.play("weapon_sweep")
+		Sfx.play_weapon_fire("crimson_daggers", "weapon_sweep")
 		_try_unique_lightning_burst(damage)
 		_try_evolution_shockwave(damage)
 		_next_daggers_time = active_time + _effective_weapon_cooldown(daggers_cooldown)
@@ -3108,7 +3124,7 @@ func _fire_minigun(active_time: float, paused: bool) -> void:
 			2.0, 0.5, 2.0, 0.0, 0.0, 0, 0.0, 0.0, false, 0.0, 1.0, 1.0, 0.0, 0, 1,
 			_last_attack_critical_hit) <= 0:
 		return
-	Sfx.play("weapon_shot")
+	Sfx.play_weapon_fire("minigun", "weapon_shot")
 	if loadout.is_evolved("minigun"):
 		var ramp := clampf((active_time - _redline_fire_time) / maxf(redline_ramp_seconds, 0.01), 0.0, 1.0)
 		cadence_multiplier *= 1.0 + redline_max_cadence_bonus * ramp
@@ -3140,7 +3156,7 @@ func _fire_toxic_cloud(active_time: float, paused: bool) -> void:
 		cloud_radius, toxic_splash_damage_multiplier, 0, 0.0, 0.0, false, 0.0, 1.0, 1.0, 0.0, 0, 1,
 		_last_attack_critical_hit)
 	if sequence > 0:
-		Sfx.play("weapon_zap")
+		Sfx.play_weapon_fire("toxic_cloud", "weapon_zap")
 		_next_toxic_time = active_time + _effective_weapon_cooldown(toxic_cooldown)
 
 func _fire_sawblades(active_time: float, paused: bool) -> void:
@@ -3167,7 +3183,7 @@ func _fire_sawblades(active_time: float, paused: bool) -> void:
 		2.0, 0.5, 2.0, 0.0, 0.0, ricochets, 0.0, 0.0, false, 0.0, 1.0, 1.0, 0.0, 0, 1,
 		_last_attack_critical_hit, homing_turn_rate, homing_radius)
 	if sequence > 0:
-		Sfx.play("weapon_sweep")
+		Sfx.play_weapon_fire("sawblades", "weapon_sweep")
 		_next_sawblades_time = active_time + _effective_weapon_cooldown(sawblades_cooldown)
 
 func _fire_meteor_staff(active_time: float, paused: bool) -> void:
@@ -3195,7 +3211,7 @@ func _fire_meteor_staff(active_time: float, paused: bool) -> void:
 				0, 0.0, 0.0, false, 0.0, 1.0, 1.0, 0.0, 0, 1, _last_attack_critical_hit) > 0:
 			fired = true
 	if fired:
-		Sfx.play("weapon_shot")
+		Sfx.play_weapon_fire("meteor_staff", "weapon_shot")
 		var cooldown_multiplier := _weapon_level_multiplier("meteor_staff", "cooldown_multiplier", level)
 		_next_meteor_time = active_time + _effective_weapon_cooldown(meteor_staff_cooldown * cooldown_multiplier)
 
@@ -3254,7 +3270,7 @@ func _fire_prism_laser(active_time: float, paused: bool) -> void:
 		if prism_sequence > 0:
 			fired = true
 	if fired:
-		Sfx.play("weapon_zap")
+		Sfx.play_weapon_fire("prism_laser", "weapon_zap")
 		_next_prism_time = active_time + _effective_weapon_cooldown(prism_laser_cooldown)
 
 func _fire_void_orb(active_time: float, paused: bool) -> void:
@@ -3281,7 +3297,7 @@ func _fire_void_orb(active_time: float, paused: bool) -> void:
 			_equipment_area(attraction_radius), attraction_speed, true, 0.0, 1.0, 1.0, 0.0, 0, 1,
 			_last_attack_critical_hit)
 	if sequence > 0:
-		Sfx.play("weapon_zap")
+		Sfx.play_weapon_fire("void_orb", "weapon_zap")
 		_next_void_orb_time = active_time + _effective_weapon_cooldown(void_orb_cooldown)
 
 func _fire_frost_nova(active_time: float, paused: bool) -> void:
@@ -3310,7 +3326,7 @@ func _fire_frost_nova(active_time: float, paused: bool) -> void:
 	if simulation.spawn_projectile(projectile_type, player.global_position, Vector2.ZERO, damage,
 			radius, frost_nova_duration_seconds, 2.0, 0.5, 2.0, 0.0, 0.0, 0, 0.0, 0.0,
 			true, duration, frost_chill_speed_multiplier, vulnerability) > 0:
-		Sfx.play("weapon_zap")
+		Sfx.play_weapon_fire("frost_nova", "weapon_zap")
 		_next_frost_nova_time = active_time + _effective_weapon_cooldown(frost_nova_cooldown * _weapon_level_multiplier("frost_nova", "cooldown_multiplier", level))
 
 func _nearest_enemy_excluding(origin: Vector2, max_range: float, excluded: Array[Vector2i]) -> Dictionary:

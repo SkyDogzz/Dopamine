@@ -85,8 +85,11 @@
   "limitations": [
     "Candidates were generated locally by deterministic primitive/oscillator recipes; a passing technical validator does not establish production artistic quality.",
     "Many non-player animation frames are procedural identity-preserving role prototypes, not bespoke animation art.",
-    "Per-weapon SFX IDs are generated, but runtime event mapping needs gameplay integration.",
-    "Music tempo/key/arrangements and final gain balance remain proposed."
+    "Music tempo/key/arrangements and final gain balance remain proposed.",
+    "Technical candidates are staged under ignored build/ and remain human_review_status=pending; no runtime assets have been accepted or integrated.",
+    "Headless audio cannot replace auditory review; local review page includes playback controls.",
+    "Full trial import passed, but complete candidate-loaded CTest has unresolved UI layout/render timeouts and asset path contracts requiring repair.",
+    "Global provenance audit currently reports pre-purge registered assets missing, consistent with intentional runtime purge; registry refresh is still required before production acceptance."
   ],
   "review_pack": {
     "local_index": "build/assets/candidates/review/index.html",
@@ -110,5 +113,20 @@
     "godot_project_setting": "rendering/textures/canvas_textures/default_texture_filter",
     "value": 1,
     "evidence": "Godot 4.7.2 setting inspection; project scenes and smoke checks use texture_filter=1 as nearest"
+  },
+  "latest_validation": {
+    "candidate_count": 308,
+    "manifest": "passed",
+    "candidate_batches_qa": "passed",
+    "godot_candidate_import": "passed",
+    "integration_dry_run": "passed",
+    "focused_candidate_smokes": "catalog, roster, player, Signal Prism, Art Bible and SFX targeted tests pass in the isolated candidate copy",
+    "runtime_assets_integrated": 0,
+    "runtime_godot_import": "passed",
+    "empty_asset_root_smoke": "passed",
+    "sfx_service_smoke": "passed",
+    "sfx_specific_event_smoke": "passed",
+    "survival_weapon_catalog_smoke": "passed",
+    "adaptive_music_smoke": "fails with empty runtime stem paths until acceptance/integration"
   }
 }

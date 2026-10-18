@@ -35,6 +35,20 @@ def make_sprite_frames(meta: dict, texture_path: str) -> str | None:
             "[resource]\n" + f"animations = [{', '.join(frames)}]\n")
 
 
+def source_destination(source: Path | None, asset_id: str = "") -> Path | None:
+    if source is None:
+        return None
+    parts = source.relative_to(ROOT).parts
+    try:
+        marker = parts.index("source")
+    except ValueError:
+        return ROOT / "game/assets/source/accepted" / source.name
+    relative = Path(*parts[marker + 1:])
+    if relative.parts[:1] == ("animation",) and source.stem != Path(asset_id).stem:
+        relative = relative.with_name(Path(asset_id).name + relative.suffix)
+    return ROOT / "game/assets/source" / relative
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--ids", nargs="+", required=True, help="Exact manifest asset IDs to integrate")
@@ -49,6 +63,7 @@ def main() -> None:
     errors = []
     plan = []
     destinations = set()
+    source_destinations = set()
     for item in selected:
         if item["validation_status"] != "passed":
             errors.append(f"{item['asset_id']}: validation_status is not passed")
@@ -72,12 +87,18 @@ def main() -> None:
         if target.exists() and sha256(target) != actual_hash:
             errors.append(f"{item['asset_id']}: target exists with different bytes; refusing overwrite: {target}")
         source = ROOT / item["candidate_source_path"] if item.get("candidate_source_path") else None
+        if source is not None and not source.is_file():
+            errors.append(f"{item['asset_id']}: authoring source missing: {source}")
         meta_path = src.with_suffix(".json")
         metadata = json.loads(meta_path.read_text()) if meta_path.exists() else {}
         sidecar_target = target.with_suffix(target.suffix + ".json")
         if sidecar_target.exists() and meta_path.exists() and sha256(sidecar_target) != sha256(meta_path):
             errors.append(f"{item['asset_id']}: sidecar exists with different bytes; refusing overwrite: {sidecar_target}")
-        source_target = ROOT / "game/assets/source/accepted" / f"{item['asset_id']}{source.suffix}" if source else None
+        source_target = source_destination(source, item["asset_id"])
+        if source_target and source_target in source_destinations:
+            errors.append(f"{item['asset_id']}: authoring source destination collision at {source_target}")
+        if source_target:
+            source_destinations.add(source_target)
         if source_target and source_target.exists() and source and sha256(source_target) != sha256(source):
             errors.append(f"{item['asset_id']}: authoring source exists with different bytes; refusing overwrite: {source_target}")
         sprite_frames = make_sprite_frames(metadata, destination)
@@ -100,7 +121,13 @@ def main() -> None:
             shutil.copy2(src, target)
         sidecar = target.with_suffix(target.suffix + ".json")
         if metadata_path.is_file():
-            shutil.copy2(metadata_path, sidecar)
+            accepted_metadata = metadata.copy()
+            accepted_metadata["candidate_export_path"] = str(src.relative_to(ROOT))
+            accepted_metadata["integrated_export_path"] = str(target.relative_to(ROOT))
+            accepted_metadata["export_path"] = str(target.relative_to(ROOT / "game/assets"))
+            if source_target:
+                accepted_metadata["source_path"] = str(source_target.relative_to(ROOT / "game/assets"))
+            sidecar.write_text(json.dumps(accepted_metadata, indent=2, ensure_ascii=False) + "\n")
         if source and source.is_file():
             source_target.parent.mkdir(parents=True, exist_ok=True)
             if not source_target.exists():
@@ -111,6 +138,8 @@ def main() -> None:
             item["godot_animation_resource"] = str(resource_target.relative_to(ROOT))
         item["integration_status"] = "integrated"
         item["integrated_path"] = str(target.relative_to(ROOT))
+        if source_target:
+            item["integrated_source_path"] = str(source_target.relative_to(ROOT))
     MANIFEST.write_text(json.dumps(manifest, indent=2, ensure_ascii=False) + "\n")
 
 

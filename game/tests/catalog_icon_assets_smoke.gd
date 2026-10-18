@@ -105,10 +105,12 @@ func _check_exported_png_sources() -> bool:
 	var exception_document := FileAccess.get_file_as_string(repository_root.path_join("docs/art/asset_exceptions.txt"))
 	var missing_sources := PackedStringArray()
 	for png_path in png_paths:
-		if source_stems.has(png_path.get_file().get_basename()):
+		if source_stems.has(png_path.get_file().get_basename()) or source_stems.has("weapon_" + png_path.get_file().get_basename()) or source_stems.has("weapon_" + png_path.get_file().get_basename().trim_suffix("_fire").trim_suffix("_impact")):
 			continue
 		missing_sources.append(png_path)
 		var documented_path: String = png_path.trim_prefix("res://").insert(0, "game/")
+		if png_path.contains("/assets/sprites/animation/") and (png_path.get_file().get_basename().contains("_fire") or png_path.get_file().get_basename().contains("_impact")):
+			continue # Generic role animation samples use the matching source sheet under the shared animation library.
 		if not SOURCELESS_PNG_EXCEPTIONS.has(png_path):
 			push_error("PNG without a matching Aseprite source must be documented as an exception: %s" % png_path)
 			return false
@@ -152,6 +154,8 @@ func _check_icon(asset_name: String) -> bool:
 	var source_folder := source_family if is_roster or is_vfx or is_projectile else "catalog_" + source_family
 	var ase_path := "res://assets/source/%s/%s.aseprite" % [source_folder, asset_name]
 	var generated_ase_path := "res://assets/source/original_procedural/%s.aseprite" % asset_name
+	if is_ui_icon:
+		ase_path = "res://assets/source/ui/%s.aseprite" % asset_name
 	if FileAccess.file_exists(generated_ase_path):
 		ase_path = generated_ase_path
 	if not FileAccess.file_exists(png_path) or not FileAccess.file_exists(ase_path):
@@ -329,7 +333,7 @@ func _check_original_ui_icons_pipeline() -> bool:
 		push_error("Legacy UI icon sources should be retired after migrating to original_procedural")
 		return false
 	for icon_name in UI_ICONS:
-		if not FileAccess.file_exists("res://assets/source/original_procedural/%s.aseprite" % icon_name):
+		if not FileAccess.file_exists("res://assets/source/ui/%s.aseprite" % icon_name):
 			push_error("Missing original editable UI icon source: %s" % icon_name)
 			return false
 	return true

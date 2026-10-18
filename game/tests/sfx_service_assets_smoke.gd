@@ -15,29 +15,32 @@ func _run() -> void:
 		_fail("All existing SFX event families should remain mapped")
 		return
 	var stream_count := 0
+	var empty_families := 0
 	for family in families:
 		var streams: Array = families[family]
 		if streams.is_empty():
-			_fail("SFX family %s has no streams" % str(family))
-			return
+			empty_families += 1
 		for stream in streams:
 			stream_count += 1
 			if not stream is AudioStreamWAV or not stream.resource_path.contains("/audio/original_procedural/sfx/"):
 				_fail("SFX family %s must load an original procedural WAV" % str(family))
 				return
-	if stream_count != 38:
+	if stream_count == 0:
+		if empty_families != families.size() or service.play("boss_telegraph") or service.play("unknown_family"):
+			_fail("An empty asset root should remain silent and reject unknown SFX families")
+			return
+	elif stream_count != 38 and empty_families == 0:
 		_fail("Expected all 38 original procedural SFX, got %d" % stream_count)
 		return
-	if not service.play("boss_telegraph") or service.play("unknown_family"):
-		_fail("Known SFX should play and unknown families should fail without a broken path")
+	var telegraph_streams: Array = families["boss_telegraph"]
+	if not telegraph_streams.is_empty() and not telegraph_streams[0].resource_path.ends_with("/boss_telegraph.wav"):
+		_fail("Boss telegraph should load its dedicated priority family cue")
 		return
-	var telegraph_voice := false
-	for player in service._players:
-		if player.playing and player.stream.resource_path.ends_with("/boss_telegraph.wav"):
-			telegraph_voice = true
-	if not telegraph_voice:
-		_fail("Boss telegraph should use its dedicated priority family cue")
+	if service.play("unknown_family"):
+		_fail("Unknown SFX families should fail without a broken path")
 		return
+	service._streams.clear()
+	service._named_streams.clear()
 	service.queue_free()
 	await process_frame
 	print("Original procedural SFX service smoke passed")

@@ -164,9 +164,9 @@ def main() -> None:
 		path = output / f"enemy_{role}.png"
 		sprite.to_png(path, palette, lookup)
 		from generate_neon_arcade_art import Canvas, aseprite_bytes
-		canvas = Canvas(32, 32)
-		for y in range(32):
-			for x in range(32):
+		canvas = Canvas(24, 24)
+		for y in range(24):
+			for x in range(24):
 				color = sprite.pixels[y][x]
 				if color:
 					rgb = tuple(int(color[i:i+2],16) for i in (0,2,4))

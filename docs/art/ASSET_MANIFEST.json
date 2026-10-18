@@ -32,13 +32,15 @@
       },
       "assigned_generation_skill": "dopamine-animation",
       "godot_destination": "res://assets/sprites/player_idle.png",
-      "authoring_source_or_recipe": "game/tools/generate_original_player_sheets.py",
+      "authoring_source_or_recipe": "game/tools/generate_original_player_sheets.py; provisional direction/timing decisions",
       "generator_version": "2",
-      "generation_seed": 20261018,
-      "generation_parameters": {},
+      "generation_seed": 1024,
+      "generation_parameters": {
+        "source_batch": "player-animation-refresh"
+      },
       "source_sha256": "715afa871f31e32e2652c75e08bd6d81b11268f54631f0f435eec0901c9e4ee3",
       "export_sha256": "7666f0610be4d0541005e72f32dd93b3a3898cf9b5b015cdbb851aa28dc8dcd5",
-      "qa_report_path": "build/assets/candidates/player-animation/qa-report.json",
+      "qa_report_path": "build/assets/candidates/player-animation-refresh/qa-report.json",
       "generation_status": "candidate",
       "validation_status": "passed",
       "human_review_status": "pending",
@@ -48,7 +50,7 @@
       ],
       "requirement_source": "GDD v1.6 + Godot runtime contracts",
       "candidate_export_path": "build/assets/candidates/player-animation/sprites/player/player_idle.png",
-      "candidate_source_path": "build/assets/candidates/player-animation/source/animation/player_idle.aseprite"
+      "candidate_source_path": "build/assets/candidates/player-animation/source/pilot/player_idle.aseprite"
     },
     {
       "asset_id": "player_walk",
@@ -67,13 +69,15 @@
       },
       "assigned_generation_skill": "dopamine-animation",
       "godot_destination": "res://assets/sprites/player_walk.png",
-      "authoring_source_or_recipe": "game/tools/generate_original_player_sheets.py",
+      "authoring_source_or_recipe": "game/tools/generate_original_player_sheets.py; provisional direction/timing decisions",
       "generator_version": "2",
-      "generation_seed": 20261018,
-      "generation_parameters": {},
+      "generation_seed": 1024,
+      "generation_parameters": {
+        "source_batch": "player-animation-refresh"
+      },
       "source_sha256": "5192b5076fe9a2589620a19a57ed9ad5de9d17552853fba496fa9941618e13f2",
       "export_sha256": "71c88373800651feb48d7a52ae66fd26670d97d9574d12faaec8628d99eacef3",
-      "qa_report_path": "build/assets/candidates/player-animation/qa-report.json",
+      "qa_report_path": "build/assets/candidates/player-animation-refresh/qa-report.json",
       "generation_status": "candidate",
       "validation_status": "passed",
       "human_review_status": "pending",
@@ -83,7 +87,7 @@
       ],
       "requirement_source": "GDD v1.6 + Godot runtime contracts",
       "candidate_export_path": "build/assets/candidates/player-animation/sprites/player/player_walk.png",
-      "candidate_source_path": "build/assets/candidates/player-animation/source/animation/player_walk.aseprite"
+      "candidate_source_path": "build/assets/candidates/player-animation/source/pilot/player_walk.aseprite"
     },
     {
       "asset_id": "player_attack",
@@ -170,16 +174,16 @@
       },
       "assigned_generation_skill": "dopamine-pixel-art",
       "godot_destination": "res://assets/sprites/roster/enemy_chaser.png",
-      "authoring_source_or_recipe": "game/tools/generate_original_roster.py",
+      "authoring_source_or_recipe": "game/tools/generate_original_roster.py; 24x24 source repair",
       "generator_version": "2",
-      "generation_seed": 20261018,
+      "generation_seed": 7302,
       "generation_parameters": {
         "width": 24,
         "height": 24
       },
-      "source_sha256": "94866efb24bcf6008954bcb6530adad0a4be1098a2a1840fe41eefe63506b80f",
+      "source_sha256": "6803f246a91acecc62693fab30bcba36ac3c375d326c1ec2134cb42b2ad2fdc3",
       "export_sha256": "e68e9b87745af7827375bac3fb6c20edc729c6a52999d9427ec487a8ee97410a",
-      "qa_report_path": "build/assets/candidates/roster/qa-report.json",
+      "qa_report_path": "build/assets/candidates/roster-repair/qa-report.json",
       "generation_status": "candidate",
       "validation_status": "passed",
       "human_review_status": "pending",
@@ -188,8 +192,8 @@
         "enemy outfit/identity details and final roster art brief are open"
       ],
       "requirement_source": "GDD v1.6 + Godot runtime contracts",
-      "candidate_export_path": "build/assets/candidates/roster/sprites/roster/enemy_chaser.png",
-      "candidate_source_path": "build/assets/candidates/roster/source/roster/enemy_chaser.aseprite"
+      "candidate_export_path": "build/assets/candidates/roster-repair/sprites/roster/enemy_chaser.png",
+      "candidate_source_path": "build/assets/candidates/roster-repair/source/roster/enemy_chaser.aseprite"
     },
     {
       "asset_id": "enemy_chaser_idle",
@@ -438,16 +442,16 @@
       },
       "assigned_generation_skill": "dopamine-pixel-art",
       "godot_destination": "res://assets/sprites/roster/enemy_sprinter.png",
-      "authoring_source_or_recipe": "game/tools/generate_original_roster.py",
+      "authoring_source_or_recipe": "game/tools/generate_original_roster.py; 24x24 source repair",
       "generator_version": "2",
-      "generation_seed": 20261018,
+      "generation_seed": 7302,
       "generation_parameters": {
         "width": 24,
         "height": 24
       },
-      "source_sha256": "e2e562299e023e2b5dbb4f412d455af49c02f441793fd370ee6e32910d3a51b3",
+      "source_sha256": "4b42f851e38af38b9d0bad13a1f7bc3fde92024b59317636fefea62b0e076a02",
       "export_sha256": "46926f320e6cdbad9f551c3dcd81f0c5bb41f5112fd8763ed0550907f68f2acc",
-      "qa_report_path": "build/assets/candidates/roster/qa-report.json",
+      "qa_report_path": "build/assets/candidates/roster-repair/qa-report.json",
       "generation_status": "candidate",
       "validation_status": "passed",
       "human_review_status": "pending",
@@ -456,8 +460,8 @@
         "enemy outfit/identity details and final roster art brief are open"
       ],
       "requirement_source": "GDD v1.6 + Godot runtime contracts",
-      "candidate_export_path": "build/assets/candidates/roster/sprites/roster/enemy_sprinter.png",
-      "candidate_source_path": "build/assets/candidates/roster/source/roster/enemy_sprinter.aseprite"
+      "candidate_export_path": "build/assets/candidates/roster-repair/sprites/roster/enemy_sprinter.png",
+      "candidate_source_path": "build/assets/candidates/roster-repair/source/roster/enemy_sprinter.aseprite"
     },
     {
       "asset_id": "enemy_sprinter_idle",
@@ -706,16 +710,16 @@
       },
       "assigned_generation_skill": "dopamine-pixel-art",
       "godot_destination": "res://assets/sprites/roster/enemy_tank.png",
-      "authoring_source_or_recipe": "game/tools/generate_original_roster.py",
+      "authoring_source_or_recipe": "game/tools/generate_original_roster.py; 24x24 source repair",
       "generator_version": "2",
-      "generation_seed": 20261018,
+      "generation_seed": 7302,
       "generation_parameters": {
         "width": 24,
         "height": 24
       },
-      "source_sha256": "466fb3d2fc7117dba2b3246dcfcd8e2afe5b9999df60baee5265995e464c9d1b",
+      "source_sha256": "00608942f835d231585346ad521ccd17efce326456899762f8ead2322623d867",
       "export_sha256": "f621451ffeddf5d2780d2f1d9a218d2fa4ce056d58d280dc980f07e02135d6d1",
-      "qa_report_path": "build/assets/candidates/roster/qa-report.json",
+      "qa_report_path": "build/assets/candidates/roster-repair/qa-report.json",
       "generation_status": "candidate",
       "validation_status": "passed",
       "human_review_status": "pending",
@@ -724,8 +728,8 @@
         "enemy outfit/identity details and final roster art brief are open"
       ],
       "requirement_source": "GDD v1.6 + Godot runtime contracts",
-      "candidate_export_path": "build/assets/candidates/roster/sprites/roster/enemy_tank.png",
-      "candidate_source_path": "build/assets/candidates/roster/source/roster/enemy_tank.aseprite"
+      "candidate_export_path": "build/assets/candidates/roster-repair/sprites/roster/enemy_tank.png",
+      "candidate_source_path": "build/assets/candidates/roster-repair/source/roster/enemy_tank.aseprite"
     },
     {
       "asset_id": "enemy_tank_idle",
@@ -974,16 +978,16 @@
       },
       "assigned_generation_skill": "dopamine-pixel-art",
       "godot_destination": "res://assets/sprites/roster/enemy_shooter.png",
-      "authoring_source_or_recipe": "game/tools/generate_original_roster.py",
+      "authoring_source_or_recipe": "game/tools/generate_original_roster.py; 24x24 source repair",
       "generator_version": "2",
-      "generation_seed": 20261018,
+      "generation_seed": 7302,
       "generation_parameters": {
         "width": 24,
         "height": 24
       },
-      "source_sha256": "af75086e6951243cb99d34852ff5b94529f63c85378890862d39c136a8cb49c1",
+      "source_sha256": "3ae3a90c0f65ca788a95c14e76f1d92b39ef2ee8e96c3508f4184b1714b67b39",
       "export_sha256": "386dcf6eb46830aa31721513fc0b1005782e533ebb1d31888a07ddacf9421293",
-      "qa_report_path": "build/assets/candidates/roster/qa-report.json",
+      "qa_report_path": "build/assets/candidates/roster-repair/qa-report.json",
       "generation_status": "candidate",
       "validation_status": "passed",
       "human_review_status": "pending",
@@ -992,8 +996,8 @@
         "enemy outfit/identity details and final roster art brief are open"
       ],
       "requirement_source": "GDD v1.6 + Godot runtime contracts",
-      "candidate_export_path": "build/assets/candidates/roster/sprites/roster/enemy_shooter.png",
-      "candidate_source_path": "build/assets/candidates/roster/source/roster/enemy_shooter.aseprite"
+      "candidate_export_path": "build/assets/candidates/roster-repair/sprites/roster/enemy_shooter.png",
+      "candidate_source_path": "build/assets/candidates/roster-repair/source/roster/enemy_shooter.aseprite"
     },
     {
       "asset_id": "enemy_shooter_idle",
@@ -1242,16 +1246,16 @@
       },
       "assigned_generation_skill": "dopamine-pixel-art",
       "godot_destination": "res://assets/sprites/roster/enemy_buffer.png",
-      "authoring_source_or_recipe": "game/tools/generate_original_roster.py",
+      "authoring_source_or_recipe": "game/tools/generate_original_roster.py; 24x24 source repair",
       "generator_version": "2",
-      "generation_seed": 20261018,
+      "generation_seed": 7302,
       "generation_parameters": {
         "width": 24,
         "height": 24
       },
-      "source_sha256": "030bfc0857618dbd787cc338d63c294b0b14c92857e88e02d16249d79c714165",
+      "source_sha256": "c2e59fdc5eb2d61ddded2b69f9ab689fe959efcf84666fb7d61aa308340e7210",
       "export_sha256": "ab9b36be2f74e80884644651c12109654edf29f0c2cdfc04b1a09c849a7bebfd",
-      "qa_report_path": "build/assets/candidates/roster/qa-report.json",
+      "qa_report_path": "build/assets/candidates/roster-repair/qa-report.json",
       "generation_status": "candidate",
       "validation_status": "passed",
       "human_review_status": "pending",
@@ -1260,8 +1264,8 @@
         "enemy outfit/identity details and final roster art brief are open"
       ],
       "requirement_source": "GDD v1.6 + Godot runtime contracts",
-      "candidate_export_path": "build/assets/candidates/roster/sprites/roster/enemy_buffer.png",
-      "candidate_source_path": "build/assets/candidates/roster/source/roster/enemy_buffer.aseprite"
+      "candidate_export_path": "build/assets/candidates/roster-repair/sprites/roster/enemy_buffer.png",
+      "candidate_source_path": "build/assets/candidates/roster-repair/source/roster/enemy_buffer.aseprite"
     },
     {
       "asset_id": "enemy_buffer_idle",
@@ -1510,16 +1514,16 @@
       },
       "assigned_generation_skill": "dopamine-pixel-art",
       "godot_destination": "res://assets/sprites/roster/enemy_exploder.png",
-      "authoring_source_or_recipe": "game/tools/generate_original_roster.py",
+      "authoring_source_or_recipe": "game/tools/generate_original_roster.py; 24x24 source repair",
       "generator_version": "2",
-      "generation_seed": 20261018,
+      "generation_seed": 7302,
       "generation_parameters": {
         "width": 24,
         "height": 24
       },
-      "source_sha256": "6a70830279a95c14eeaaa4293369b59362db8fe073c2a3bd0b53c4525b5c9fa2",
+      "source_sha256": "7829f0ef0e7d0527e3cccd29b0a4a85a738383235d874e7252b1dd28efcf2e1c",
       "export_sha256": "f683b079c80b12524eb6c1c51f1d240f7e672447b7b7de5beec2dd4c311b83ee",
-      "qa_report_path": "build/assets/candidates/roster/qa-report.json",
+      "qa_report_path": "build/assets/candidates/roster-repair/qa-report.json",
       "generation_status": "candidate",
       "validation_status": "passed",
       "human_review_status": "pending",
@@ -1528,8 +1532,8 @@
         "enemy outfit/identity details and final roster art brief are open"
       ],
       "requirement_source": "GDD v1.6 + Godot runtime contracts",
-      "candidate_export_path": "build/assets/candidates/roster/sprites/roster/enemy_exploder.png",
-      "candidate_source_path": "build/assets/candidates/roster/source/roster/enemy_exploder.aseprite"
+      "candidate_export_path": "build/assets/candidates/roster-repair/sprites/roster/enemy_exploder.png",
+      "candidate_source_path": "build/assets/candidates/roster-repair/source/roster/enemy_exploder.aseprite"
     },
     {
       "asset_id": "enemy_exploder_idle",
@@ -1778,16 +1782,16 @@
       },
       "assigned_generation_skill": "dopamine-pixel-art",
       "godot_destination": "res://assets/sprites/roster/enemy_shielder.png",
-      "authoring_source_or_recipe": "game/tools/generate_original_roster.py",
+      "authoring_source_or_recipe": "game/tools/generate_original_roster.py; 24x24 source repair",
       "generator_version": "2",
-      "generation_seed": 20261018,
+      "generation_seed": 7302,
       "generation_parameters": {
         "width": 24,
         "height": 24
       },
-      "source_sha256": "9d1f524571ce80e26ea90f84bb6e38cddbc3707c945cd189cd5acffcedc4a9d1",
+      "source_sha256": "39876e8a600525ac4363d1eed937648596b0ea2191e0946ddc8fbda654fcaf64",
       "export_sha256": "2e263789a4ddce7999882ff1c33cd57b65e997752b88012a5b388f6d53394e64",
-      "qa_report_path": "build/assets/candidates/roster/qa-report.json",
+      "qa_report_path": "build/assets/candidates/roster-repair/qa-report.json",
       "generation_status": "candidate",
       "validation_status": "passed",
       "human_review_status": "pending",
@@ -1796,8 +1800,8 @@
         "enemy outfit/identity details and final roster art brief are open"
       ],
       "requirement_source": "GDD v1.6 + Godot runtime contracts",
-      "candidate_export_path": "build/assets/candidates/roster/sprites/roster/enemy_shielder.png",
-      "candidate_source_path": "build/assets/candidates/roster/source/roster/enemy_shielder.aseprite"
+      "candidate_export_path": "build/assets/candidates/roster-repair/sprites/roster/enemy_shielder.png",
+      "candidate_source_path": "build/assets/candidates/roster-repair/source/roster/enemy_shielder.aseprite"
     },
     {
       "asset_id": "enemy_shielder_idle",
@@ -2046,16 +2050,16 @@
       },
       "assigned_generation_skill": "dopamine-pixel-art",
       "godot_destination": "res://assets/sprites/roster/enemy_summoner.png",
-      "authoring_source_or_recipe": "game/tools/generate_original_roster.py",
+      "authoring_source_or_recipe": "game/tools/generate_original_roster.py; 24x24 source repair",
       "generator_version": "2",
-      "generation_seed": 20261018,
+      "generation_seed": 7302,
       "generation_parameters": {
         "width": 24,
         "height": 24
       },
-      "source_sha256": "b3c8c90a5313bcb460bde17fa11cf5a36ee6b8b283c547725e384f566a7e1d40",
+      "source_sha256": "63707b051c3459c09611de55e708185d171dfc33acae8f02fa23fc0d62ee31dc",
       "export_sha256": "0858c780147b9cfc15310de1fc43f39425997edae176d601c9e638f42904e8c7",
-      "qa_report_path": "build/assets/candidates/roster/qa-report.json",
+      "qa_report_path": "build/assets/candidates/roster-repair/qa-report.json",
       "generation_status": "candidate",
       "validation_status": "passed",
       "human_review_status": "pending",
@@ -2064,8 +2068,8 @@
         "enemy outfit/identity details and final roster art brief are open"
       ],
       "requirement_source": "GDD v1.6 + Godot runtime contracts",
-      "candidate_export_path": "build/assets/candidates/roster/sprites/roster/enemy_summoner.png",
-      "candidate_source_path": "build/assets/candidates/roster/source/roster/enemy_summoner.aseprite"
+      "candidate_export_path": "build/assets/candidates/roster-repair/sprites/roster/enemy_summoner.png",
+      "candidate_source_path": "build/assets/candidates/roster-repair/source/roster/enemy_summoner.aseprite"
     },
     {
       "asset_id": "enemy_summoner_idle",
@@ -2314,16 +2318,16 @@
       },
       "assigned_generation_skill": "dopamine-pixel-art",
       "godot_destination": "res://assets/sprites/roster/enemy_summoned.png",
-      "authoring_source_or_recipe": "game/tools/generate_original_roster.py",
+      "authoring_source_or_recipe": "game/tools/generate_original_roster.py; 24x24 source repair",
       "generator_version": "2",
-      "generation_seed": 20261018,
+      "generation_seed": 7302,
       "generation_parameters": {
         "width": 24,
         "height": 24
       },
-      "source_sha256": "dfd8d5edb36813b54aea9d3220282a8b972d2043b4871ead70835fdfe0fbfe5b",
+      "source_sha256": "c601852966a9d867c06df45d59c2df51a29432f3ac35d5f287520f794ef4421e",
       "export_sha256": "4d6a57919d6d895762cb6f0d306baa6b8e3930cb4f57d7851ef88b0b3a334cd9",
-      "qa_report_path": "build/assets/candidates/roster/qa-report.json",
+      "qa_report_path": "build/assets/candidates/roster-repair/qa-report.json",
       "generation_status": "candidate",
       "validation_status": "passed",
       "human_review_status": "pending",
@@ -2332,8 +2336,8 @@
         "enemy outfit/identity details and final roster art brief are open"
       ],
       "requirement_source": "GDD v1.6 + Godot runtime contracts",
-      "candidate_export_path": "build/assets/candidates/roster/sprites/roster/enemy_summoned.png",
-      "candidate_source_path": "build/assets/candidates/roster/source/roster/enemy_summoned.aseprite"
+      "candidate_export_path": "build/assets/candidates/roster-repair/sprites/roster/enemy_summoned.png",
+      "candidate_source_path": "build/assets/candidates/roster-repair/source/roster/enemy_summoned.aseprite"
     },
     {
       "asset_id": "enemy_summoned_idle",
@@ -5885,7 +5889,7 @@
       "godot_destination": "res://assets/sprites/catalog/relic_magnetic_coil.png",
       "authoring_source_or_recipe": "game/tools/generate_neon_arcade_art.py",
       "generator_version": "2",
-      "generation_seed": 20261018,
+      "generation_seed": 7301,
       "generation_parameters": {
         "width": 32,
         "height": 32
@@ -8795,10 +8799,11 @@
       "godot_destination": "res://assets/icons/catalog/equipment_helmet.png",
       "authoring_source_or_recipe": "game/tools/generate_neon_arcade_art.py",
       "generator_version": "2",
-      "generation_seed": 0,
+      "generation_seed": 7301,
       "generation_parameters": {
         "width": 32,
-        "height": 32
+        "height": 32,
+        "repair_batch_seed": 7301
       },
       "source_sha256": "b2ba196bde4f6a459d2ba7657c9f212b5c78b34353241f3e0f0fc20d141e4e86",
       "export_sha256": "8c9dcdb1f73a6bec7b63ba6645b666688f074627f3b226b514a2cff656b46ed9",
@@ -8829,10 +8834,11 @@
       "godot_destination": "res://assets/icons/catalog/equipment_armor.png",
       "authoring_source_or_recipe": "game/tools/generate_neon_arcade_art.py",
       "generator_version": "2",
-      "generation_seed": 0,
+      "generation_seed": 7301,
       "generation_parameters": {
         "width": 32,
-        "height": 32
+        "height": 32,
+        "repair_batch_seed": 7301
       },
       "source_sha256": "7c09d31dee4a8485f15c61b5278998fc09b59f282e3e36bffaf8c3d7e5441463",
       "export_sha256": "3ece1db3727f70bfc5f04fa7cc8b20b863c06552295b4cff2f0b140e3cc956e0",
@@ -8863,10 +8869,11 @@
       "godot_destination": "res://assets/icons/catalog/equipment_gloves.png",
       "authoring_source_or_recipe": "game/tools/generate_neon_arcade_art.py",
       "generator_version": "2",
-      "generation_seed": 0,
+      "generation_seed": 7301,
       "generation_parameters": {
         "width": 32,
-        "height": 32
+        "height": 32,
+        "repair_batch_seed": 7301
       },
       "source_sha256": "b432476c649dd206fc1dd4a468d2d4e4f6a304eb2055c804ca6deacc094cddee",
       "export_sha256": "2cb258f25b49b84f7a141689ffa1d6e9ff72db06aa4cdc02e0ea9228eae520a1",
@@ -8897,10 +8904,11 @@
       "godot_destination": "res://assets/icons/catalog/equipment_boots.png",
       "authoring_source_or_recipe": "game/tools/generate_neon_arcade_art.py",
       "generator_version": "2",
-      "generation_seed": 0,
+      "generation_seed": 7301,
       "generation_parameters": {
         "width": 32,
-        "height": 32
+        "height": 32,
+        "repair_batch_seed": 7301
       },
       "source_sha256": "acc2ec137d0c36cf3ffc9e73ad530f1234b5d47ef1196597691d32a3b92533b8",
       "export_sha256": "bf65f7247e7ac7e9eea4a9f1692e24a744f4eca69354f9fd1f1634198ff61bc0",
@@ -8931,10 +8939,11 @@
       "godot_destination": "res://assets/icons/catalog/equipment_amulet.png",
       "authoring_source_or_recipe": "game/tools/generate_neon_arcade_art.py",
       "generator_version": "2",
-      "generation_seed": 0,
+      "generation_seed": 7301,
       "generation_parameters": {
         "width": 32,
-        "height": 32
+        "height": 32,
+        "repair_batch_seed": 7301
       },
       "source_sha256": "dad6a491760fb1b3fb376e3fe6084485be193c59f9844a12bf768b8b4b91aa3a",
       "export_sha256": "221859b8c10bdb982b40c23aa5b2a6e5c8843d5925fbeabae06d1105d74a3229",
@@ -8965,10 +8974,11 @@
       "godot_destination": "res://assets/icons/catalog/equipment_ring.png",
       "authoring_source_or_recipe": "game/tools/generate_neon_arcade_art.py",
       "generator_version": "2",
-      "generation_seed": 0,
+      "generation_seed": 7301,
       "generation_parameters": {
         "width": 32,
-        "height": 32
+        "height": 32,
+        "repair_batch_seed": 7301
       },
       "source_sha256": "182ebfaeace798c61e4204ab8ac2b605efa30da5a76d25b592a0ab5818fd8b3f",
       "export_sha256": "f88ca6abfd3d57c5297a0c21178b2181f28b6ce8bc50432ba87849a330492836",
@@ -8999,10 +9009,11 @@
       "godot_destination": "res://assets/icons/catalog/rarity_normal.png",
       "authoring_source_or_recipe": "game/tools/generate_neon_arcade_art.py",
       "generator_version": "2",
-      "generation_seed": 0,
+      "generation_seed": 7301,
       "generation_parameters": {
         "width": 32,
-        "height": 32
+        "height": 32,
+        "repair_batch_seed": 7301
       },
       "source_sha256": "9169e406560cc00adaac36e51d82da7dde6d7123230b07d317a92741f1fa4a21",
       "export_sha256": "eba00dd453d7c14cbce09ae16ae66331601babf45024b1359415144f012c56f4",
@@ -9033,10 +9044,11 @@
       "godot_destination": "res://assets/icons/catalog/rarity_magic.png",
       "authoring_source_or_recipe": "game/tools/generate_neon_arcade_art.py",
       "generator_version": "2",
-      "generation_seed": 0,
+      "generation_seed": 7301,
       "generation_parameters": {
         "width": 32,
-        "height": 32
+        "height": 32,
+        "repair_batch_seed": 7301
       },
       "source_sha256": "885593c4ab6fc059e962bf28fd399fb1ccf6cfb00d7f2452cb1f1cef97441caa",
       "export_sha256": "5ad1bd0cb0f0f8a71216fbab72932e730bb7aeb125e428c9d7cdbdc5a7756c61",
@@ -9067,10 +9079,11 @@
       "godot_destination": "res://assets/icons/catalog/rarity_mystic.png",
       "authoring_source_or_recipe": "game/tools/generate_neon_arcade_art.py",
       "generator_version": "2",
-      "generation_seed": 0,
+      "generation_seed": 7301,
       "generation_parameters": {
         "width": 32,
-        "height": 32
+        "height": 32,
+        "repair_batch_seed": 7301
       },
       "source_sha256": "6b3b26645a63017d2c1dd912c577719536ab7916278c21d9f53086be40225cc7",
       "export_sha256": "ede89a8f203b9acfb6eb332fa67380ac8e6fe0806edc3cbbd6b3f4ec91239be5",
@@ -9101,10 +9114,11 @@
       "godot_destination": "res://assets/icons/catalog/rarity_legendary.png",
       "authoring_source_or_recipe": "game/tools/generate_neon_arcade_art.py",
       "generator_version": "2",
-      "generation_seed": 0,
+      "generation_seed": 7301,
       "generation_parameters": {
         "width": 32,
-        "height": 32
+        "height": 32,
+        "repair_batch_seed": 7301
       },
       "source_sha256": "b6bc0d3f88e795b4eeadcd452dfbb4200b2aebb6bbd34c1622d03f77973b8d7f",
       "export_sha256": "764412b6a403962fc75d87c027936ec21328f4fceeeb6e9ee1dab9b9cf7c6735",
@@ -9135,10 +9149,11 @@
       "godot_destination": "res://assets/icons/catalog/rarity_mythic.png",
       "authoring_source_or_recipe": "game/tools/generate_neon_arcade_art.py",
       "generator_version": "2",
-      "generation_seed": 0,
+      "generation_seed": 7301,
       "generation_parameters": {
         "width": 32,
-        "height": 32
+        "height": 32,
+        "repair_batch_seed": 7301
       },
       "source_sha256": "04aa03f22b458673dd673711c10abd0fbfc14c1a4918b42c3dbb1894c14ed6db",
       "export_sha256": "9127371a71945a9fbe4edff7f8636b39dc605e907090fa4ac02f81e1c21b5442",
@@ -9169,10 +9184,11 @@
       "godot_destination": "res://assets/icons/catalog/resource_essence.png",
       "authoring_source_or_recipe": "game/tools/generate_neon_arcade_art.py",
       "generator_version": "2",
-      "generation_seed": 0,
+      "generation_seed": 7301,
       "generation_parameters": {
         "width": 32,
-        "height": 32
+        "height": 32,
+        "repair_batch_seed": 7301
       },
       "source_sha256": "37f40f6a59b6dcf83cd4f72969b0fcc1db008e3967b33b2a205361dc4731dae6",
       "export_sha256": "1e6ba82b50a2506ba8067ce2feefd02a9e3a21e7593a254060d282dc0cad7c0a",
@@ -9203,10 +9219,11 @@
       "godot_destination": "res://assets/icons/catalog/resource_powder.png",
       "authoring_source_or_recipe": "game/tools/generate_neon_arcade_art.py",
       "generator_version": "2",
-      "generation_seed": 0,
+      "generation_seed": 7301,
       "generation_parameters": {
         "width": 32,
-        "height": 32
+        "height": 32,
+        "repair_batch_seed": 7301
       },
       "source_sha256": "3791bd83340731ddf24376c2263838401122ed882ad93d0d6f9382141bfe739e",
       "export_sha256": "cd387b26e7235da01921a84098d7b7176311fadc53248f435c2ddd4ba2f407aa",
@@ -9237,10 +9254,11 @@
       "godot_destination": "res://assets/icons/catalog/skill_node.png",
       "authoring_source_or_recipe": "game/tools/generate_neon_arcade_art.py",
       "generator_version": "2",
-      "generation_seed": 0,
+      "generation_seed": 7301,
       "generation_parameters": {
         "width": 32,
-        "height": 32
+        "height": 32,
+        "repair_batch_seed": 7301
       },
       "source_sha256": "bdef88c7254fbb59d1afacb44b8ae2f8b03a058c93026a841c46b70dc4ee6e7a",
       "export_sha256": "ee35dc250295079dc2af8baabdac521f899b7331234481d3c9a8ad262e79dd1d",
@@ -9271,10 +9289,11 @@
       "godot_destination": "res://assets/icons/catalog/achievement_medal.png",
       "authoring_source_or_recipe": "game/tools/generate_neon_arcade_art.py",
       "generator_version": "2",
-      "generation_seed": 0,
+      "generation_seed": 7301,
       "generation_parameters": {
         "width": 32,
-        "height": 32
+        "height": 32,
+        "repair_batch_seed": 7301
       },
       "source_sha256": "c844c7605c8f30705ed93017131f1d0817f4b22eb658fa371571ec2b231bbf1e",
       "export_sha256": "d61bc2e361a595ddd8929782a14b2ea9a2b2b598a1bebf2d90deb7b598bca085",
@@ -9305,10 +9324,11 @@
       "godot_destination": "res://assets/icons/catalog/run_record.png",
       "authoring_source_or_recipe": "game/tools/generate_neon_arcade_art.py",
       "generator_version": "2",
-      "generation_seed": 0,
+      "generation_seed": 7301,
       "generation_parameters": {
         "width": 32,
-        "height": 32
+        "height": 32,
+        "repair_batch_seed": 7301
       },
       "source_sha256": "7444ee6031fae78d96a3934331089e5df3ff163b6171c31e7b5dd1c164b44086",
       "export_sha256": "f634ab0a10036918e58ce68d3e9bbd65a8fe7928fda989fa4759d57a12243f8f",
@@ -9339,7 +9359,7 @@
       "godot_destination": "res://assets/icons/ui/signal_prism.png",
       "authoring_source_or_recipe": "game/tools/generate_neon_arcade_art.py",
       "generator_version": "2",
-      "generation_seed": 0,
+      "generation_seed": 7301,
       "generation_parameters": {
         "width": 32,
         "height": 32
