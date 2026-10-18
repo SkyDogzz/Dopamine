@@ -69,10 +69,12 @@ Le registre contient 140 assets dont une référence de chemin littérale a ét�
 
 - Le contenu des 100 nœuds et leurs effets/coûts sont **[PROPOSÉS]** dans `progression_service.gd`; seule la cible de 100 nœuds au lancement est **[VALIDÉE]**. L'arbre peut être affiché à partir des données implémentées sans inventer leur sens. Si une nouvelle définition de contenu est nécessaire, demander une validation précise.
 - L'identité canonique des boss et du premier biome reste **[OUVERTE]**. Remplacer les assets à rôle égal sans fabriquer une identité de lore ou de mécanique.
-- La police exacte reste **[OUVERTE]**. La spécification audio laisse ouverts le format source/runtime, l'outil et la méthode d'arrangement adaptatif; la licence et l'inventaire des assets existants, eux, sont maintenant relevés ci-dessus.
+- La police exacte reste **[OUVERTE]**. La spécification audio laisse ouverts le format source éditable, les gains finaux et l'approbation de la composition; le format runtime PCM16 mono WAV 44,1 kHz est **[PROPOSÉ]**. Les assets historiques, provenances et migrations sont relevés ci-dessus et dans les registres.
 - Garder les parcours validés et le Sandbox isolé de toute progression/sauvegarde normale pendant chaque tranche.
 
 ## Étape suivante
+
+**Visuel :** achever les familles restantes (élites, prototypes boss sans identité canonique, environnement, terrain, pickups et VFX), puis captures/revue en contexte, export PCK final et audit exhaustif des références. **Interface :** poursuivre l’overhaul et sa revue écran par écran, y compris les contrôles réels. **Audio :** fournir une écoute humaine du mix et des transitions; la revue doit couvrir run, boss, pause et cues de danger.
 
 **[VALIDÉ]** La production audio emploie une synthèse procédurale originale; les fichiers antérieurs ont été supprimés après migration et vérification des références. Les 38 SFX et les cinq stems sont intégrés au runtime, mais restent **[PROPOSÉS]** comme contenu de production jusqu’à la revue auditive. La validation numérique est reproductible avec `game/tools/validate_original_audio.py`; l’écoute humaine et l’écoute en run restent **[OUVERTES]**, car aucun périphérique de sortie audio n’est disponible dans cet environnement. Format source et gains finaux restent **[OUVERTS]**.
 
