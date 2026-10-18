@@ -85,6 +85,13 @@ func _run() -> void:
 	assert(view._sprite_renderer._batches["projectile_redline"]["texture"].resource_path.ends_with("projectiles/projectile_minigun.png"), "Redline should retain the Minigun bolt silhouette")
 	assert(view._sprite_renderer.SPRITE_COLORS["projectile_redline"] == Color("#FF7181"), "Redline bolts should use the established neon red tint")
 	assert(view._sprite_renderer._batches["enemy_chaser"]["texture"].resource_path.ends_with("enemy_chaser.png"), "Chaser batch should load its pixel-art sprite")
+	var shooter := _entity(2600, "shooter", 0, 0)
+	shooter["components"]["Velocity2D"] = {"x": 80.0, "y": 0.0}
+	view._sprite_renderer.set_entities([shooter], Vector2.ZERO, 0.2, {
+		"2600:1": {"state": "attack", "started_at": 0.0},
+	})
+	assert(view._sprite_renderer.animated_multimesh_for("enemy_shooter_attack_right", 2).instance_count == 1,
+			"Attack phase overrides should play the directional, correctly timed shooter attack frame")
 	view.set_selected_entity(10, 1)
 	assert(view._selected_entity_found, "Selecting an enemy should preserve its overlay above the batches")
 	if view._selected_point != Vector2(200, 160):

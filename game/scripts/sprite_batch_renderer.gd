@@ -79,12 +79,13 @@ func _init() -> void:
 		}
 	for role_id in ANIMATED_ROLE_IDS:
 		_role_animation_sets[role_id] = {}
-		for state in ["idle", "move"]:
+		for state in ["idle", "move", "attack"]:
 			var resource_path := "res://assets/sprites/animation/%s_%s.tres" % [role_id, state]
 			if ResourceLoader.exists(resource_path):
 				_role_animation_sets[role_id][state] = load(resource_path) as SpriteFrames
 
-func set_entities(entities: Array, origin: Vector2 = Vector2.ZERO, animation_time: float = 0.0) -> void:
+func set_entities(entities: Array, origin: Vector2 = Vector2.ZERO, animation_time: float = 0.0,
+		animation_overrides: Dictionary = {}) -> void:
 	var instances_by_sprite: Dictionary = {}
 	var instances_by_animation: Dictionary = {}
 	_projectile_trails.clear()
@@ -99,7 +100,14 @@ func set_entities(entities: Array, origin: Vector2 = Vector2.ZERO, animation_tim
 		var transform: Dictionary = components["Transform2D"]
 		var point := origin + Vector2(float(transform["x"]), float(transform["y"]))
 		var size := _size_for_entity(sprite_id, components)
-		var animation := _animation_for_entity(components, animation_time)
+		var id: Dictionary = entity["id"]
+		var entity_key := "%d:%d" % [int(id["index"]), int(id["generation"])]
+		var override: Variant = animation_overrides.get(entity_key, {})
+		var override_state := str(override.get("state", "")) if override is Dictionary else str(override)
+		var entity_animation_time := animation_time
+		if override is Dictionary and override.has("started_at"):
+			entity_animation_time = maxf(0.0, animation_time - float(override["started_at"]))
+		var animation := _animation_for_entity(components, entity_animation_time, override_state)
 		if not animation.is_empty():
 			var animation_key := "%s:%d" % [animation["name"], animation["frame"]]
 			var animation_batch := _get_animation_batch(animation["role"], animation["state"],
@@ -108,7 +116,6 @@ func set_entities(entities: Array, origin: Vector2 = Vector2.ZERO, animation_tim
 				if not instances_by_animation.has(animation_key):
 					instances_by_animation[animation_key] = []
 				instances_by_animation[animation_key].append({"point": point, "size": size, "rotation": 0.0})
-				var id: Dictionary = entity["id"]
 				if int(id["index"]) == _selected_index and int(id["generation"]) == _selected_generation:
 					selected_point = point
 					selected_entity_found = true
@@ -127,7 +134,6 @@ func set_entities(entities: Array, origin: Vector2 = Vector2.ZERO, animation_tim
 					})
 		instances_by_sprite[sprite_id].append({"point": point, "size": size, "rotation": rotation})
 		instances_by_sprite[sprite_id][-1]["color"] = SPRITE_COLORS.get(sprite_id, Color.WHITE)
-		var id: Dictionary = entity["id"]
 		if int(id["index"]) == _selected_index and int(id["generation"]) == _selected_generation:
 			selected_point = point
 			selected_entity_found = not sprite_id.begins_with("projectile_") and sprite_id != "xp_orb"
@@ -166,7 +172,7 @@ func animated_instance_count_for_role(role_id: String) -> int:
 			total += (_animated_batches[animation_key]["multimesh"] as MultiMesh).instance_count
 	return total
 
-func _animation_for_entity(components: Dictionary, animation_time: float) -> Dictionary:
+func _animation_for_entity(components: Dictionary, animation_time: float, state_override: String = "") -> Dictionary:
 	if components.get("IsProjectile", false) or components.get("IsXpOrb", false):
 		return {}
 	var enemy_type := str(components.get("EnemyType", "chaser"))
@@ -180,7 +186,8 @@ func _animation_for_entity(components: Dictionary, animation_time: float) -> Dic
 		return {}
 	var velocity: Dictionary = components.get("Velocity2D", {})
 	var direction := Vector2(float(velocity.get("x", 0.0)), float(velocity.get("y", 0.0)))
-	var state := "move" if direction.length_squared() > 1.0 else "idle"
+	var state := state_override if state_override in ["attack", "death", "special"] else \
+			("move" if direction.length_squared() > 1.0 else "idle")
 	var sprite_frames: SpriteFrames = _role_animation_sets[role_id].get(state)
 	if sprite_frames == null:
 		return {}
@@ -201,6 +208,8 @@ func _animation_for_entity(components: Dictionary, animation_time: float) -> Dic
 		return {}
 	var fps := sprite_frames.get_animation_speed(animation_name)
 	var frame := posmod(floori(animation_time * fps), frame_count)
+	if not sprite_frames.get_animation_loop(animation_name):
+		frame = mini(floori(animation_time * fps), frame_count - 1)
 	return {"role": role_id, "state": state, "name": animation_name, "frame": frame}
 
 func _get_animation_batch(role_id: String, state: String, animation_name: String, frame: int) -> Dictionary:

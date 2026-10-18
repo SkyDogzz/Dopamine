@@ -25,6 +25,12 @@ func _run() -> void:
 		_fail("Shooter should telegraph its aimed shot before firing")
 		return
 	var fire_at: float = session._shooter_attacks[key]["fire_at"]
+	var render_time: float = fire_at - session.shooter_telegraph_seconds + 0.25
+	session._sprite_renderer.set_entities(session._entities, Vector2.ZERO, render_time,
+			session._enemy_attack_animation_overrides(render_time))
+	if session._sprite_renderer.animated_instance_count_for_role("enemy_shooter_attack") != 1:
+		_fail("Shooter telegraph should render its matching attack animation")
+		return
 	session._update_shooter_attacks(fire_at + 1.0, true)
 	if session._shooter_attacks[key]["fire_at"] != fire_at:
 		_fail("Shooter attacks should stop while the simulation is paused")

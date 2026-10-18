@@ -1006,7 +1006,6 @@ func _process(_delta: float) -> void:
 		if not active_projectiles.has(projectile_key):
 			_starfall_fragments_spawned.erase(projectile_key)
 	_entities = state["entities"]
-	_sprite_renderer.set_entities(_entities, Vector2.ZERO, current_simulation_time)
 	_advance_wave_director(elapsed_active_time, state["paused"])
 	_apply_contact_damage(state, current_simulation_time)
 	_update_shooter_attacks(current_simulation_time, bool(state["paused"]))
@@ -1014,6 +1013,8 @@ func _process(_delta: float) -> void:
 	_update_summoner_attacks(current_simulation_time, bool(state["paused"]))
 	_update_pulse_warden_attacks(current_simulation_time, bool(state["paused"]))
 	_update_dopamine_core_attacks(current_simulation_time, bool(state["paused"]))
+	_sprite_renderer.set_entities(_entities, Vector2.ZERO, current_simulation_time,
+				_enemy_attack_animation_overrides(current_simulation_time))
 	_collect_nearby_xp_orbs(state)
 	_collect_nearby_chests(state)
 	_complete_pending_victory()
@@ -1421,6 +1422,30 @@ func _update_dopamine_core_attacks(current_simulation_time: float, paused: bool)
 	for key in _dopamine_core_attacks.keys():
 		if not active_cores.has(key):
 			_dopamine_core_attacks.erase(key)
+
+func _enemy_attack_animation_overrides(current_simulation_time: float) -> Dictionary:
+	var overrides: Dictionary = {}
+	for key in _shooter_attacks:
+		var attack: Dictionary = _shooter_attacks[key]
+		if str(attack.get("phase", "")) == "telegraph":
+			overrides[key] = {"state": "attack",
+				"started_at": float(attack["fire_at"]) - shooter_telegraph_seconds}
+	for key in _exploder_attacks:
+		var attack: Dictionary = _exploder_attacks[key]
+		if attack.has("detonate_at") and str(attack.get("phase", "")) != "detonated":
+			overrides[key] = {"state": "attack",
+				"started_at": float(attack["detonate_at"]) - maxf(0.05, exploder_fuse_seconds)}
+	for key in _pulse_warden_attacks:
+		var attack: Dictionary = _pulse_warden_attacks[key]
+		if str(attack.get("stage", "")) in ["telegraph", "charging"]:
+			overrides[key] = {"state": "attack",
+				"started_at": float(attack.get("fire_at", current_simulation_time)) - pulse_warden_telegraph_seconds}
+	for key in _dopamine_core_attacks:
+		var attack: Dictionary = _dopamine_core_attacks[key]
+		if str(attack.get("stage", "")) == "telegraph":
+			overrides[key] = {"state": "attack",
+				"started_at": float(attack.get("fire_at", current_simulation_time)) - final_boss_telegraph_seconds}
+	return overrides
 
 func _fire_dopamine_core_attack(attack: Dictionary) -> void:
 	var origin: Vector2 = attack["origin"]
