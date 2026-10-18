@@ -24,7 +24,7 @@ func _run() -> void:
 						var expected_image := atlas_frame.atlas.get_image().get_region(Rect2i(atlas_frame.region))
 						assert(batch["texture"].get_image().get_data() == expected_image.get_data(),
 							"%s:%d should contain the selected atlas region pixels" % [animation_name, frame])
-						if animation_name.ends_with("_down"):
+						if animation_name.ends_with("_up"):
 							var flipped_batch: Dictionary = view._sprite_renderer._get_animation_batch(
 								role_id, state, animation_name, frame, true)
 							expected_image.flip_x()
@@ -104,17 +104,17 @@ func _run() -> void:
 	assert(view._sprite_renderer._batches["xp_orb"]["texture"].resource_path.ends_with("rewards/xp_orb.png"), "XP should load its dedicated pixel-art reward sprite")
 	var tank_idle_instances := 0
 	for animation_key in view._sprite_renderer._animated_batches:
-		if str(animation_key).begins_with("enemy_tank_idle_down:"):
+		if str(animation_key).begins_with("enemy_tank_idle_up:"):
 			tank_idle_instances += view._sprite_renderer._animated_batches[animation_key]["multimesh"].instance_count
 	assert(tank_idle_instances == 1, "Idle enemies should render from their directional animation frames")
 	var moving_tank: Dictionary = view._sprite_renderer._animation_for_entity({"EnemyType": "tank", "Velocity2D": {"x": 80.0, "y": 0.0}}, 0.0)
-	assert(moving_tank["name"] == "enemy_tank_move_down" and not moving_tank["flip_x"] and moving_tank["frame"] == 0,
-			"Right-facing enemies should use the upright base row")
+	assert(moving_tank["name"] == "enemy_tank_move_up" and not moving_tank["flip_x"] and moving_tank["frame"] == 0,
+			"Enemies should use the corrected up row for their upright base pose")
 	var test_facing: String = view._sprite_renderer._horizontal_facing_for_entity("test:1", {"Velocity2D": {"x": -80.0, "y": 0.0}})
 	test_facing = view._sprite_renderer._horizontal_facing_for_entity("test:1", {"Velocity2D": {"x": 0.0, "y": -80.0}})
 	var vertical_tank: Dictionary = view._sprite_renderer._animation_for_entity(
 		{"EnemyType": "tank", "Velocity2D": {"x": 0.0, "y": -80.0}}, 0.0, "", test_facing)
-	assert(test_facing == "left" and vertical_tank["name"] == "enemy_tank_move_down" and vertical_tank["flip_x"],
+	assert(test_facing == "left" and vertical_tank["name"] == "enemy_tank_move_up" and vertical_tank["flip_x"],
 			"Vertical movement must preserve an upright left-facing frame")
 	assert(is_equal_approx(view._sprite_renderer._size_for_entity("enemy_chaser", {"CollisionRadius": 12.0}), 24.0), "Mob sprite diameter should match its shared collision radius")
 	assert(is_equal_approx(view._sprite_renderer._size_for_entity("boss_dopamine_core", {"CollisionRadius": 26.0}), 52.0), "Boss sprite diameter should match its shared collision radius")
@@ -174,13 +174,13 @@ func _run() -> void:
 	view._sprite_renderer.set_entities([shooter], Vector2.ZERO, 0.2, {
 		"2600:1": {"state": "attack", "started_at": 0.0},
 	})
-	assert(view._sprite_renderer.animated_multimesh_for("enemy_shooter_attack_down", 2).instance_count == 1,
+	assert(view._sprite_renderer.animated_multimesh_for("enemy_shooter_attack_up", 2).instance_count == 1,
 			"Attack phase overrides should play the upright shooter attack frame")
 	view._sprite_renderer.set_entities([], Vector2.ZERO, 0.15, {}, [{
 		"role": "enemy_shooter", "state": "death", "position": Vector2(20, 30),
 		"size": 24.0, "direction": Vector2.LEFT, "started_at": 0.0,
 	}])
-	assert(view._sprite_renderer.animated_multimesh_for("enemy_shooter_death_down", 1, true).instance_count == 1,
+	assert(view._sprite_renderer.animated_multimesh_for("enemy_shooter_death_up", 1, true).instance_count == 1,
 			"Transient deaths should preserve upright horizontal facing after despawn")
 	view.set_selected_entity(10, 1)
 	assert(view._selected_entity_found, "Selecting an enemy should preserve its overlay above the batches")

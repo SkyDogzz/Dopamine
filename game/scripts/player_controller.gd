@@ -124,4 +124,4 @@ func _update_sprite_animation(direction: Vector2, delta: float) -> void:
 
 func _update_facing(direction: Vector2) -> void:
 	if absf(direction.x) > absf(direction.y) and absf(direction.x) > 0.001:
-		_facing_left = direction.x < 0.0
+		_facing_left = direction.x > 0.0

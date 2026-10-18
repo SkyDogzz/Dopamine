@@ -270,7 +270,7 @@ func _animation_for_entity(components: Dictionary, animation_time: float, state_
 	if sprite_frames == null:
 		return {}
 	var base_name := "%s_%s" % [role_id, state]
-	var animation_name := base_name + "_down" if sprite_frames.has_animation(base_name + "_down") else base_name
+	var animation_name := base_name + "_up" if sprite_frames.has_animation(base_name + "_up") else base_name
 	if not sprite_frames.has_animation(animation_name):
 		return {}
 	var frame_count := sprite_frames.get_frame_count(animation_name)
@@ -348,7 +348,7 @@ func _append_transient_animation(instances_by_animation: Dictionary, transient: 
 		return
 	var direction: Vector2 = transient.get("direction", Vector2.DOWN)
 	var base_name := "%s_%s" % [role_id, state]
-	var animation_name := base_name + "_down" if sprite_frames.has_animation(base_name + "_down") else base_name
+	var animation_name := base_name + "_up" if sprite_frames.has_animation(base_name + "_up") else base_name
 	var flip_x := absf(direction.x) > absf(direction.y) and direction.x < 0.0
 	if not sprite_frames.has_animation(animation_name):
 		return
