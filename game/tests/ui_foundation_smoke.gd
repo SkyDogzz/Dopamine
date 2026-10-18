@@ -69,6 +69,11 @@ func _run() -> void:
 	if not shared_theme.has_stylebox("panel", "PanelContainer"):
 		_fail("Shared Theme is missing PanelContainer surface style")
 		return
+	for panel_type in ["PanelContainer", "CompactPanel"]:
+		var panel_surface := shared_theme.get_stylebox("panel", panel_type) as StyleBoxFlat
+		if panel_surface == null or panel_surface.bg_color.a != 1.0:
+			_fail("%s panels should use the opaque bordered Art Bible surface" % panel_type)
+			return
 	for scrollbar_type in ["VScrollBar", "HScrollBar"]:
 		for style_name in ["scroll", "grabber", "grabber_highlight", "grabber_pressed"]:
 			if not shared_theme.has_stylebox(style_name, scrollbar_type):
