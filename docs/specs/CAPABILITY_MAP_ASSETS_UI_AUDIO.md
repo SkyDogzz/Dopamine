@@ -1,0 +1,37 @@
+# Capability Map: Refonte des assets, de l’interface et de l’audio
+
+## Objectif
+
+Remplacer les assets graphiques et audio du jeu et refaire l’interface dans le style Neon Arcade de `docs/ART_BIBLE.txt`. La refonte inclut un véritable arbre de compétences ramifié et un écran d’équipement avec aperçu des changements de statistiques.
+
+## Carte des capacités
+
+| ID | Responsabilité | Dépend de |
+|---|---|---|
+| `asset-pipeline` | Inventorier les assets à remplacer, établir les sources/export PNG et critères de conformité visuelle et sonore, et intégrer les assets sans casser les références du jeu. | — |
+| `visual-assets` | Remplacer les assets de gameplay, environnements, récompenses, catalogue, effets et identité visuelle selon l’Art Bible. | `asset-pipeline` |
+| `interface-overhaul` | Refaire tous les écrans et composants UI existants en conservant les parcours validés, l’accessibilité et l’isolation Sandbox. | `asset-pipeline`, `visual-assets` |
+| `skill-tree` | Concevoir et réaliser une page de compétences présentant un arbre ramifié et ses états/actions. Les règles de progression non validées restent à définir avant implémentation. | `interface-overhaul` |
+| `equipment-screen` | Réaliser la page d’équipement avec personnage et six slots à gauche, équipements équipés, liste équipable à droite, actions d’équipement/remplacement et aperçu avant/après des statistiques. | `interface-overhaul` |
+| `adaptive-audio` | Remplacer musique et effets sonores par une direction arcade synthwave néon, avec une base EDM qui suit la progression de run et évolue par transitions fluides lors des événements, notamment les boss. | `asset-pipeline` |
+
+## Ordre de réalisation proposé
+
+`asset-pipeline` → `visual-assets` → `interface-overhaul` → `skill-tree` et `equipment-screen` ; `adaptive-audio` peut avancer après `asset-pipeline` en parallèle des capacités visuelles.
+
+## Contraintes déjà confirmées
+
+- Style Neon Arcade, pixel art strict pour les sources, VFX modernes et contextuels, lisibilité prioritaire.
+- Respecter la palette maître de 32 couleurs, la résolution logique 640×360, les sprites 32×32 limités à 16 couleurs, et le livrable PNG + source Aseprite décrits dans l’Art Bible.
+- Refaire tous les assets graphiques et audio ainsi que l’interface, en conservant les fonctionnalités/parcours validés sauf les deux pages explicitement étendues.
+- Musique arcade synthwave néon sur une base EDM, intensité liée à la progression du jeu, transitions musicales fluides plutôt qu’un changement brutal au spawn d’un boss.
+- Équipement : six emplacements, aperçu des statistiques modifiées avant confirmation de l’équipement.
+- Architecture Sandbox-first et séparation stricte du Sandbox et de la progression normale.
+
+## Points ouverts à préserver dans les specs
+
+- L’Art Bible laisse ouverts plusieurs détails du héros, des boss, du biome, des timings d’animation, des pivots et des conventions de métadonnées.
+- Le graphe complet et les règles du skill tree ne sont pas définis par le seul objectif GDD de 120 nœuds ; ne pas inventer silencieusement son contenu ni ses effets.
+- Vérifier les contrats existants d’équipement et de calcul de statistiques avant de définir les changements requis.
+- La méthode de transition audio (couches, stems, snapshots, ou autre) et les seuils de progression restent des choix de conception technique à préciser dans la spec, sans imposer un changement de morceau au spawn d’un boss.
+- Le périmètre des assets protégés par des licences tierces et les exigences de livraison des sources audio devront être inventoriés avant suppression/remplacement.
