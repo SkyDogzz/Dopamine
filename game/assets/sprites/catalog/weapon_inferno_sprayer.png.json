@@ -3,10 +3,16 @@
   "status": "provisionally_integrated",
   "skill": "dopamine-pixel-art",
   "generator": "game/tools/generate_neon_arcade_art.py",
-  "generator_version": "2",
-  "seed": 0,
+  "generator_version": "3",
+  "seed": 20261018,
   "seed_policy": "fixed procedural geometry; seed is recorded but not consumed",
-  "brief": "Procedural pixel art using only docs/art/palette_master.gpl",
+  "brief": "Distinct role silhouette pixel art using only docs/art/palette_master.gpl",
+  "parameters": {
+    "drawing_method": "deterministic role primitives",
+    "asset_name": "weapon_inferno_sprayer",
+    "palette_source": "docs/art/palette_master.gpl",
+    "seed_consumed": false
+  },
   "dimensions": {
     "width": 32,
     "height": 32
@@ -41,15 +47,21 @@
       247,
       255,
       255
+    ],
+    [
+      255,
+      212,
+      71,
+      255
     ]
   ],
   "source_path": "source/original_procedural/weapon_inferno_sprayer.aseprite",
   "export_path": "sprites/catalog/weapon_inferno_sprayer.png",
-  "source_sha256": "7db6e2d665e4393f231ba38ed770c005f120eab526c56a983c50ecc377d6889f",
-  "export_sha256": "8981a9d6b6b6ee2b84f5eff9eddbc747aa41e4f638e180f094e374ac84ab0674",
+  "source_sha256": "7f4977f4544458f583690125c956f86a8a188f76932a04f3162d5f4adaff9a45",
+  "export_sha256": "ea3e7247794d67f59e4de36e47c31e37e3e95426625d26f287dbed49add923a0",
   "acceptance_status": "accepted_for_provisional_production",
   "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
   "human_review_status": "pending",
-  "candidate_export_path": "build/assets/candidates/pixel-art-complete/sprites/catalog/weapon_inferno_sprayer.png",
+  "candidate_export_path": "build/assets/candidates/pixel-art/sprites/catalog/weapon_inferno_sprayer.png",
   "integrated_export_path": "game/assets/sprites/catalog/weapon_inferno_sprayer.png"
 }

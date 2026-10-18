@@ -3,10 +3,16 @@
   "status": "provisionally_integrated",
   "skill": "dopamine-pixel-art",
   "generator": "game/tools/generate_neon_arcade_art.py",
-  "generator_version": "2",
-  "seed": 0,
+  "generator_version": "3",
+  "seed": 20261018,
   "seed_policy": "fixed procedural geometry; seed is recorded but not consumed",
-  "brief": "Procedural pixel art using only docs/art/palette_master.gpl",
+  "brief": "Distinct role silhouette pixel art using only docs/art/palette_master.gpl",
+  "parameters": {
+    "drawing_method": "deterministic role primitives",
+    "asset_name": "evolution_minigun",
+    "palette_source": "docs/art/palette_master.gpl",
+    "seed_consumed": false
+  },
   "dimensions": {
     "width": 32,
     "height": 32
@@ -25,15 +31,15 @@
       255
     ],
     [
-      14,
-      184,
-      212,
-      255
-    ],
-    [
       27,
       35,
       64,
+      255
+    ],
+    [
+      200,
+      59,
+      98,
       255
     ],
     [
@@ -41,15 +47,21 @@
       247,
       255,
       255
+    ],
+    [
+      255,
+      212,
+      71,
+      255
     ]
   ],
   "source_path": "source/original_procedural/evolution_minigun.aseprite",
   "export_path": "sprites/catalog/evolution_minigun.png",
-  "source_sha256": "677970d4884769df5330f8b1c58107565d602b33c65e175deb2ce846e44e5eb1",
-  "export_sha256": "69db661d22026813295439f73cce961f9399c088e6aaf15bb2ef37c8a9971f63",
+  "source_sha256": "d5a7b648b40a53d6f3f556b7a39caca19b8a282d6a2255709b699caf845395bf",
+  "export_sha256": "c148d251a857f94f07d23c095b9250dfdfa6e1ed5e1dee91038a448ac6062979",
   "acceptance_status": "accepted_for_provisional_production",
   "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
   "human_review_status": "pending",
-  "candidate_export_path": "build/assets/candidates/pixel-art-complete/sprites/catalog/evolution_minigun.png",
+  "candidate_export_path": "build/assets/candidates/pixel-art/sprites/catalog/evolution_minigun.png",
   "integrated_export_path": "game/assets/sprites/catalog/evolution_minigun.png"
 }

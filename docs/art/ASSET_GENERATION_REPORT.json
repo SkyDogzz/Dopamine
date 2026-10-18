@@ -35,7 +35,7 @@
     "project_copy": "build/assets/candidates/godot-final-import-check/project",
     "log": "build/assets/candidates/godot-final-import-check/import.log"
   },
-  "artistic_review": "Internal pixel-level review corrected a four-direction orientation defect in the player sheets. The static catalog remains geometric and non-player animation is still procedural role work; these are provisionally integrated prototypes, not a human-approved production art pass. A targeted rework of the 31 weapon/evolution/relic catalog icons was staged and checked; it remained too generic/inconsistent at native size, so it was not integrated. The existing accepted icon set remains unchanged, and catalog readability stays a human-review concern.",
+  "artistic_review": "Internal pixel-level review corrected a four-direction orientation defect in the player sheets. The static catalog remains geometric and non-player animation is still procedural role work; these are provisionally integrated prototypes, not a human-approved production art pass. A redesigned batch of 31 role-specific weapon/evolution/relic catalog icons passed palette, dimensions, color-count, source/export hash, and Godot smoke checks and replaced only those explicitly authorized managed IDs. Catalog readability and the provisional shapes/colors still need owner review.",
   "game_assets_files": [
     {
       "path": "game/assets/README.md",
@@ -91,7 +91,6 @@
     "Audio hardware is unavailable in this session, so numeric QA and Godot playback/import tests do not substitute for listening.",
     "Some boss, biome, font and detailed animation conventions remain open in the GDD and stay explicitly provisional.",
     "One earlier full CTest run had a transient Toxic Ignition assertion failure; six targeted reruns and subsequent complete runs (119/119, then 120/120) passed. Keep monitoring this gameplay test for intermittent behavior.",
-    "Targeted catalog icon redesign passed palette/dimension/hash QA but failed internal perceptual acceptance; candidates remain isolated under build/assets/candidates/pixel-art and did not replace integrated assets.",
     "The survival_adaptive.wav and boss_intensity.wav full mixes are listening/reference renders; runtime music is composed from the synchronized stems. Their use is recorded in the asset manifest."
   ],
   "review_pack": {
@@ -127,7 +126,7 @@
     "runtime_assets_integrated": 308,
     "godot_test_suite": "full CTest: 120/121 passed, survival_revive_smoke failed once with its known intermittent result-panel assertion; that test passed 6/6 immediate targeted repetitions, all SFX/music tests passed.",
     "asset_provenance_registry": "passed; 308 current creative assets and 417 historical assets audited",
-    "remaining_review": "Owner visual/art direction review and auditory review; static icon simplicity remains an internal quality concern, and no playback hardware is available in this session",
+    "remaining_review": "Owner visual/art direction review and auditory review; the 31 redesigned catalog icons are still provisional, and no playback hardware is available in this session",
     "specific_weapon_sfx": "passed for fire and impact on all 10 weapons; registered in CTest",
     "player_animation_batch": "passed: four generated sheets, per-batch animation QA, Godot import, player/art/combat smokes 5/5",
     "legacy_hash_reuse": "passed; 982 packaged/current checked files have no exact match in initial 425-file register",
@@ -135,14 +134,16 @@
     "sfx_runtime_event_mapping": "passed: 20 weapon-specific cues are loaded and invoked by gameplay; 7 generated event families are exposed; weapon_family_fire/impact are fallback paths if a specific cue is missing; targeted SFX tests passed.",
     "music_runtime_cues": "passed: menu theme loops on the Music bus in launch_menu; victory/defeat cues are selected at run completion and load on the Music bus; launch_navigation_smoke and survival_result_music_smoke passed",
     "godot_pck_export": "passed after SFX family fallback change; required menu/result music and weapon family fallback paths verified in PCK",
-    "music_format_audit": "passed: manifest now records all five integrated music mixes/cues as mono PCM16 44.1 kHz, matching WAV headers"
+    "music_format_audit": "passed: manifest now records all five integrated music mixes/cues as mono PCM16 44.1 kHz, matching WAV headers",
+    "catalog_icon_redesign": "passed: all 31 explicit managed IDs regenerated from dopamine-pixel-art v3, validated with dopamine-asset-qa, integrated, and covered by catalog icon, Art Bible, Godot import, and replacement-scope smoke checks; owner art review remains pending",
+    "godot_test_suite_targeted": "passed: catalog_icon_assets_smoke, art_bible_asset_audit, godot_project_import, asset_integration_scope_smoke (4/4)"
   },
   "godot_pck_export": {
     "status": "passed",
     "preset": "Linux/X11",
     "path": "build/assets/DopamineSurvivor.pck",
-    "bytes": 3078756,
-    "sha256": "dacab1fb06e6c6144c9dbc8ca0d8ece03a3f1946104505839514d21237b84919",
+    "bytes": 3084884,
+    "sha256": "8c04c917fe6ecfc95b1b52af6e5461aef01214d07b3acd4a544e5d5ebae838c2",
     "music_runtime_paths": [
       "menu_theme.wav",
       "victory_cue.wav",
@@ -152,7 +153,7 @@
       "weapon_family_fire.wav",
       "weapon_family_impact.wav"
     ],
-    "verified": "PCK contains menu/result music and generic weapon family fallback assets."
+    "verified": "PCK contains menu/result music and generic weapon family fallback assets; regenerated after the 31 catalog icon replacements."
   },
   "review_findings": [
     {
@@ -176,11 +177,11 @@
       "assets": [
         "weapon/evolution/relic catalog icons (31 candidates)"
       ],
-      "finding": "A targeted redesign removed the shared badge silhouette but still left inconsistent semantic silhouettes and theme color cues at native size.",
-      "action": "Kept the candidates outside Godot integration; preserved current integrated assets and recorded the limitation.",
+      "finding": "The first redesigned candidate pass removed the shared badge silhouette but still left inconsistent semantic silhouettes and theme color cues at native size.",
+      "action": "A second role-specific design pass replaced the first candidates. It uses distinct item silhouettes and documented provisional palette cues, and is now integrated for owner review.",
       "skill": "dopamine-pixel-art and dopamine-asset-qa",
-      "qa": "31 candidate PNG/Aseprite pairs passed palette, dimensions, color limit and hash checks; visual review not accepted.",
-      "integration": "not integrated",
+      "qa": "31 PNG/Aseprite pairs passed palette, dimensions, color limit, metadata, source/export hash checks, plus catalog icon, Art Bible, Godot import, and exact-ID replacement scope checks.",
+      "integration": "31 explicit managed IDs replaced; PCK export rebuilt and hashed.",
       "human_review_status": "pending"
     }
   ],

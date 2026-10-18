@@ -3,10 +3,16 @@
   "status": "provisionally_integrated",
   "skill": "dopamine-pixel-art",
   "generator": "game/tools/generate_neon_arcade_art.py",
-  "generator_version": "2",
-  "seed": 0,
+  "generator_version": "3",
+  "seed": 20261018,
   "seed_policy": "fixed procedural geometry; seed is recorded but not consumed",
-  "brief": "Procedural pixel art using only docs/art/palette_master.gpl",
+  "brief": "Distinct role silhouette pixel art using only docs/art/palette_master.gpl",
+  "parameters": {
+    "drawing_method": "deterministic role primitives",
+    "asset_name": "weapon_lightning_conductor",
+    "palette_source": "docs/art/palette_master.gpl",
+    "seed_consumed": false
+  },
   "dimensions": {
     "width": 32,
     "height": 32
@@ -31,25 +37,25 @@
       255
     ],
     [
-      27,
-      35,
-      64,
-      255
-    ],
-    [
       246,
       247,
       255,
+      255
+    ],
+    [
+      255,
+      212,
+      71,
       255
     ]
   ],
   "source_path": "source/original_procedural/weapon_lightning_conductor.aseprite",
   "export_path": "sprites/catalog/weapon_lightning_conductor.png",
-  "source_sha256": "6307c33b0b5d3be2cd00ccbe67e69615cfc9aa3b0f076c96c6c65d6fdd721cc6",
-  "export_sha256": "f35c6312c41346996a59d05d0766545e2c4dbec76bdfba01d4a4a4bc2f4a67f7",
+  "source_sha256": "95d081a3e5ba84e38c6217ee5b61c05f259410826a44df6a647d3d91a4fe7c4f",
+  "export_sha256": "ccfa6afd6dc2c02d10ad50d4acb323cfd30f043e4509c075ba3328b9f85fa15f",
   "acceptance_status": "accepted_for_provisional_production",
   "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
   "human_review_status": "pending",
-  "candidate_export_path": "build/assets/candidates/pixel-art-complete/sprites/catalog/weapon_lightning_conductor.png",
+  "candidate_export_path": "build/assets/candidates/pixel-art/sprites/catalog/weapon_lightning_conductor.png",
   "integrated_export_path": "game/assets/sprites/catalog/weapon_lightning_conductor.png"
 }

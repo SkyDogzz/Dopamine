@@ -3,10 +3,16 @@
   "status": "provisionally_integrated",
   "skill": "dopamine-pixel-art",
   "generator": "game/tools/generate_neon_arcade_art.py",
-  "generator_version": "2",
-  "seed": 0,
+  "generator_version": "3",
+  "seed": 20261018,
   "seed_policy": "fixed procedural geometry; seed is recorded but not consumed",
-  "brief": "Procedural pixel art using only docs/art/palette_master.gpl",
+  "brief": "Distinct role silhouette pixel art using only docs/art/palette_master.gpl",
+  "parameters": {
+    "drawing_method": "deterministic role primitives",
+    "asset_name": "evolution_toxic_cloud",
+    "palette_source": "docs/art/palette_master.gpl",
+    "seed_consumed": false
+  },
   "dimensions": {
     "width": 32,
     "height": 32
@@ -25,31 +31,25 @@
       255
     ],
     [
-      27,
-      35,
-      64,
-      255
-    ],
-    [
       72,
       230,
       155,
       255
     ],
     [
-      246,
-      247,
       255,
+      212,
+      71,
       255
     ]
   ],
   "source_path": "source/original_procedural/evolution_toxic_cloud.aseprite",
   "export_path": "sprites/catalog/evolution_toxic_cloud.png",
-  "source_sha256": "375a16d6d0c85ad40fe36a55df788ffc00c1fff2c08f5b34edf0b34b63ccc2a6",
-  "export_sha256": "256fe48999c25dd0e75a82ccafc77536fdaed6b7cf6bc9461e85bc180645d8b8",
+  "source_sha256": "e0c47fa7f516e1e78dbb069678f279e6cc8b8ed6ce4c322efc3ac6db9ac394c2",
+  "export_sha256": "1cbf323f3dc964660a9b5a39dcf26b48012faf62d5dac4c3c042074e7b672e8e",
   "acceptance_status": "accepted_for_provisional_production",
   "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
   "human_review_status": "pending",
-  "candidate_export_path": "build/assets/candidates/pixel-art-complete/sprites/catalog/evolution_toxic_cloud.png",
+  "candidate_export_path": "build/assets/candidates/pixel-art/sprites/catalog/evolution_toxic_cloud.png",
   "integrated_export_path": "game/assets/sprites/catalog/evolution_toxic_cloud.png"
 }

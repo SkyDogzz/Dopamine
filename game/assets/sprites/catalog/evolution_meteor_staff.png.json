@@ -3,10 +3,16 @@
   "status": "provisionally_integrated",
   "skill": "dopamine-pixel-art",
   "generator": "game/tools/generate_neon_arcade_art.py",
-  "generator_version": "2",
-  "seed": 0,
+  "generator_version": "3",
+  "seed": 20261018,
   "seed_policy": "fixed procedural geometry; seed is recorded but not consumed",
-  "brief": "Procedural pixel art using only docs/art/palette_master.gpl",
+  "brief": "Distinct role silhouette pixel art using only docs/art/palette_master.gpl",
+  "parameters": {
+    "drawing_method": "deterministic role primitives",
+    "asset_name": "evolution_meteor_staff",
+    "palette_source": "docs/art/palette_master.gpl",
+    "seed_consumed": false
+  },
   "dimensions": {
     "width": 32,
     "height": 32
@@ -25,9 +31,9 @@
       255
     ],
     [
-      27,
-      35,
-      64,
+      225,
+      58,
+      203,
       255
     ],
     [
@@ -45,11 +51,11 @@
   ],
   "source_path": "source/original_procedural/evolution_meteor_staff.aseprite",
   "export_path": "sprites/catalog/evolution_meteor_staff.png",
-  "source_sha256": "e2167ce3466075d4bff1f975cc6af916213b471754510de4a9d3f82e9c9cf5c5",
-  "export_sha256": "b91065b3201324698a1da3ca666d86b2e4e0e6a44d869d8a43df55456780aa6e",
+  "source_sha256": "8d67aac1c1e1c51f63f948b7985ce28a1cb2df563c17cbc8679df6de910c21f6",
+  "export_sha256": "d20780fb531e08b69f2bc4167c8eadb8cbb870653f080053451d274f417916be",
   "acceptance_status": "accepted_for_provisional_production",
   "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
   "human_review_status": "pending",
-  "candidate_export_path": "build/assets/candidates/pixel-art-complete/sprites/catalog/evolution_meteor_staff.png",
+  "candidate_export_path": "build/assets/candidates/pixel-art/sprites/catalog/evolution_meteor_staff.png",
   "integrated_export_path": "game/assets/sprites/catalog/evolution_meteor_staff.png"
 }

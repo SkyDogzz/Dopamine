@@ -3,10 +3,16 @@
   "status": "provisionally_integrated",
   "skill": "dopamine-pixel-art",
   "generator": "game/tools/generate_neon_arcade_art.py",
-  "generator_version": "2",
-  "seed": 0,
+  "generator_version": "3",
+  "seed": 20261018,
   "seed_policy": "fixed procedural geometry; seed is recorded but not consumed",
-  "brief": "Procedural pixel art using only docs/art/palette_master.gpl",
+  "brief": "Distinct role silhouette pixel art using only docs/art/palette_master.gpl",
+  "parameters": {
+    "drawing_method": "deterministic role primitives",
+    "asset_name": "evolution_crimson_daggers",
+    "palette_source": "docs/art/palette_master.gpl",
+    "seed_consumed": false
+  },
   "dimensions": {
     "width": 32,
     "height": 32
@@ -25,12 +31,6 @@
       255
     ],
     [
-      27,
-      35,
-      64,
-      255
-    ],
-    [
       200,
       59,
       98,
@@ -41,15 +41,21 @@
       247,
       255,
       255
+    ],
+    [
+      255,
+      212,
+      71,
+      255
     ]
   ],
   "source_path": "source/original_procedural/evolution_crimson_daggers.aseprite",
   "export_path": "sprites/catalog/evolution_crimson_daggers.png",
-  "source_sha256": "eb5f835ce790e373450b1b3bd97e5316b975bc00eff73d57c3369a373912e56b",
-  "export_sha256": "ffb6fee0d3ee9181edb011b464f184e2768e66f3e1735becc5a159d5175ac058",
+  "source_sha256": "68fed673059c055d3e1e30033216cfd511936ed020437f2211cf95554f0c842a",
+  "export_sha256": "b660729fa9e38d9dc005dbc87b2a25e608f59c80189d4ab7f20f0ea9c27e3023",
   "acceptance_status": "accepted_for_provisional_production",
   "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
   "human_review_status": "pending",
-  "candidate_export_path": "build/assets/candidates/pixel-art-complete/sprites/catalog/evolution_crimson_daggers.png",
+  "candidate_export_path": "build/assets/candidates/pixel-art/sprites/catalog/evolution_crimson_daggers.png",
   "integrated_export_path": "game/assets/sprites/catalog/evolution_crimson_daggers.png"
 }

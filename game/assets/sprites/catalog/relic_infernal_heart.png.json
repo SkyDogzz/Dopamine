@@ -3,10 +3,16 @@
   "status": "provisionally_integrated",
   "skill": "dopamine-pixel-art",
   "generator": "game/tools/generate_neon_arcade_art.py",
-  "generator_version": "2",
+  "generator_version": "3",
   "seed": 20261018,
   "seed_policy": "fixed procedural geometry; seed is recorded but not consumed",
-  "brief": "Procedural pixel art using only docs/art/palette_master.gpl",
+  "brief": "Distinct role silhouette pixel art using only docs/art/palette_master.gpl",
+  "parameters": {
+    "drawing_method": "deterministic role primitives",
+    "asset_name": "relic_infernal_heart",
+    "palette_source": "docs/art/palette_master.gpl",
+    "seed_consumed": false
+  },
   "dimensions": {
     "width": 32,
     "height": 32
@@ -25,15 +31,9 @@
       255
     ],
     [
-      14,
-      184,
-      212,
-      255
-    ],
-    [
-      27,
-      35,
-      64,
+      200,
+      59,
+      98,
       255
     ],
     [
@@ -41,15 +41,21 @@
       247,
       255,
       255
+    ],
+    [
+      255,
+      212,
+      71,
+      255
     ]
   ],
   "source_path": "source/original_procedural/relic_infernal_heart.aseprite",
   "export_path": "sprites/catalog/relic_infernal_heart.png",
-  "source_sha256": "9248382d7c5f64e999831c3d5b6f730c9a27583ec5b14b41c67ea845afad0f25",
-  "export_sha256": "4bdff6f5865a8e98e5d320bf66d07206505860508fa7c53323ccb11976641811",
+  "source_sha256": "ee43f5b50cd34adbc3bbff5c673fa9eae6034833b95849319aea4730bae7676e",
+  "export_sha256": "a3fbadf59732037e4c13bcb452ce7a7d474276de14abd76a4e8c5f67de51b310",
   "acceptance_status": "accepted_for_provisional_production",
   "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
   "human_review_status": "pending",
-  "candidate_export_path": "build/assets/candidates/pixel-art-complete/sprites/catalog/relic_infernal_heart.png",
+  "candidate_export_path": "build/assets/candidates/pixel-art/sprites/catalog/relic_infernal_heart.png",
   "integrated_export_path": "game/assets/sprites/catalog/relic_infernal_heart.png"
 }

@@ -3,10 +3,16 @@
   "status": "provisionally_integrated",
   "skill": "dopamine-pixel-art",
   "generator": "game/tools/generate_neon_arcade_art.py",
-  "generator_version": "2",
-  "seed": 0,
+  "generator_version": "3",
+  "seed": 20261018,
   "seed_policy": "fixed procedural geometry; seed is recorded but not consumed",
-  "brief": "Procedural pixel art using only docs/art/palette_master.gpl",
+  "brief": "Distinct role silhouette pixel art using only docs/art/palette_master.gpl",
+  "parameters": {
+    "drawing_method": "deterministic role primitives",
+    "asset_name": "evolution_prism_laser",
+    "palette_source": "docs/art/palette_master.gpl",
+    "seed_consumed": false
+  },
   "dimensions": {
     "width": 32,
     "height": 32
@@ -31,9 +37,15 @@
       255
     ],
     [
-      27,
-      35,
-      64,
+      200,
+      59,
+      98,
+      255
+    ],
+    [
+      225,
+      58,
+      203,
       255
     ],
     [
@@ -41,15 +53,21 @@
       247,
       255,
       255
+    ],
+    [
+      255,
+      212,
+      71,
+      255
     ]
   ],
   "source_path": "source/original_procedural/evolution_prism_laser.aseprite",
   "export_path": "sprites/catalog/evolution_prism_laser.png",
-  "source_sha256": "98d4583d44fdd127aab94543b240cee2018538a6d475ea405a0cfdd8ce212f85",
-  "export_sha256": "eac8a9ce8dfc85db3db789fd61b3cd2556af76f69f1e81bd857437ab3873ba31",
+  "source_sha256": "1d249dc3de77a15a96901e59f2c7cfcab993b07a3f1e87d61a9e0675331a6d94",
+  "export_sha256": "71033c0fbdd839e1177b8373fd6d26a8a25c483d56ce43670473937d18360dbf",
   "acceptance_status": "accepted_for_provisional_production",
   "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
   "human_review_status": "pending",
-  "candidate_export_path": "build/assets/candidates/pixel-art-complete/sprites/catalog/evolution_prism_laser.png",
+  "candidate_export_path": "build/assets/candidates/pixel-art/sprites/catalog/evolution_prism_laser.png",
   "integrated_export_path": "game/assets/sprites/catalog/evolution_prism_laser.png"
 }

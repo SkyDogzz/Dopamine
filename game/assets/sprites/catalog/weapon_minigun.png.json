@@ -3,10 +3,16 @@
   "status": "provisionally_integrated",
   "skill": "dopamine-pixel-art",
   "generator": "game/tools/generate_neon_arcade_art.py",
-  "generator_version": "2",
-  "seed": 0,
+  "generator_version": "3",
+  "seed": 20261018,
   "seed_policy": "fixed procedural geometry; seed is recorded but not consumed",
-  "brief": "Procedural pixel art using only docs/art/palette_master.gpl",
+  "brief": "Distinct role silhouette pixel art using only docs/art/palette_master.gpl",
+  "parameters": {
+    "drawing_method": "deterministic role primitives",
+    "asset_name": "weapon_minigun",
+    "palette_source": "docs/art/palette_master.gpl",
+    "seed_consumed": false
+  },
   "dimensions": {
     "width": 32,
     "height": 32
@@ -41,15 +47,21 @@
       247,
       255,
       255
+    ],
+    [
+      255,
+      212,
+      71,
+      255
     ]
   ],
   "source_path": "source/original_procedural/weapon_minigun.aseprite",
   "export_path": "sprites/catalog/weapon_minigun.png",
-  "source_sha256": "6a9ce0b5a012178d86029569a1a4605d8863bd03655998fd406c258d836dfaef",
-  "export_sha256": "93e961047601dc2c9bdf6ac167916e81feda445f97d090e7d998873726dea4e2",
+  "source_sha256": "4c41a37f79f9820a53bdfcce07784634a1aae37c1572918fc8ac4b8bdca20b3a",
+  "export_sha256": "60321021cc4a4d2ccdb2c09c81c686261fab97c4696ddebe2f8bbb25d9f960d6",
   "acceptance_status": "accepted_for_provisional_production",
   "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
   "human_review_status": "pending",
-  "candidate_export_path": "build/assets/candidates/pixel-art-complete/sprites/catalog/weapon_minigun.png",
+  "candidate_export_path": "build/assets/candidates/pixel-art/sprites/catalog/weapon_minigun.png",
   "integrated_export_path": "game/assets/sprites/catalog/weapon_minigun.png"
 }

@@ -3,10 +3,16 @@
   "status": "provisionally_integrated",
   "skill": "dopamine-pixel-art",
   "generator": "game/tools/generate_neon_arcade_art.py",
-  "generator_version": "2",
-  "seed": 0,
+  "generator_version": "3",
+  "seed": 20261018,
   "seed_policy": "fixed procedural geometry; seed is recorded but not consumed",
-  "brief": "Procedural pixel art using only docs/art/palette_master.gpl",
+  "brief": "Distinct role silhouette pixel art using only docs/art/palette_master.gpl",
+  "parameters": {
+    "drawing_method": "deterministic role primitives",
+    "asset_name": "evolution_lightning_conductor",
+    "palette_source": "docs/art/palette_master.gpl",
+    "seed_consumed": false
+  },
   "dimensions": {
     "width": 32,
     "height": 32
@@ -31,25 +37,25 @@
       255
     ],
     [
-      27,
-      35,
-      64,
+      225,
+      58,
+      203,
       255
     ],
     [
-      246,
-      247,
       255,
+      212,
+      71,
       255
     ]
   ],
   "source_path": "source/original_procedural/evolution_lightning_conductor.aseprite",
   "export_path": "sprites/catalog/evolution_lightning_conductor.png",
-  "source_sha256": "d548a8d6c59100d239a2d9645b95d435ef85019ea24e8223054cbae39182b2b6",
-  "export_sha256": "1a0b3a0640b2605b1afd45817a0d2e2f81d20575e249534c764cad05ee6537c8",
+  "source_sha256": "e11a35c7319568ef8316781463807ec6a9b8b7b77e07a6fdeb8fb573e76c4872",
+  "export_sha256": "d8051ca5473d15e7faf76ae4b0b929c4f6236754d5279c8c41c1f4c69aa6a5b9",
   "acceptance_status": "accepted_for_provisional_production",
   "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
   "human_review_status": "pending",
-  "candidate_export_path": "build/assets/candidates/pixel-art-complete/sprites/catalog/evolution_lightning_conductor.png",
+  "candidate_export_path": "build/assets/candidates/pixel-art/sprites/catalog/evolution_lightning_conductor.png",
   "integrated_export_path": "game/assets/sprites/catalog/evolution_lightning_conductor.png"
 }

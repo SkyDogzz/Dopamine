@@ -3,10 +3,16 @@
   "status": "provisionally_integrated",
   "skill": "dopamine-pixel-art",
   "generator": "game/tools/generate_neon_arcade_art.py",
-  "generator_version": "2",
+  "generator_version": "3",
   "seed": 20261018,
   "seed_policy": "fixed procedural geometry; seed is recorded but not consumed",
-  "brief": "Procedural pixel art using only docs/art/palette_master.gpl",
+  "brief": "Distinct role silhouette pixel art using only docs/art/palette_master.gpl",
+  "parameters": {
+    "drawing_method": "deterministic role primitives",
+    "asset_name": "relic_magnet_heart",
+    "palette_source": "docs/art/palette_master.gpl",
+    "seed_consumed": false
+  },
   "dimensions": {
     "width": 32,
     "height": 32
@@ -31,9 +37,9 @@
       255
     ],
     [
-      27,
-      35,
-      64,
+      225,
+      58,
+      203,
       255
     ],
     [
@@ -41,15 +47,21 @@
       247,
       255,
       255
+    ],
+    [
+      255,
+      212,
+      71,
+      255
     ]
   ],
   "source_path": "source/original_procedural/relic_magnet_heart.aseprite",
   "export_path": "sprites/catalog/relic_magnet_heart.png",
-  "source_sha256": "7977133282091d1cb590479a46efbccd9f157e2698f2868f6278a2707a07b8d0",
-  "export_sha256": "498fa734f1c3720550c78b8528a067c38255ecea0b70d846942a781d5a53d90a",
+  "source_sha256": "f01f305dc34a8fdce5ad910d5c5d56ed075cd67366467ad3cc4b1c1415882a6b",
+  "export_sha256": "3cbd40460bc99f0a35541bc403f7bc0616b9bb0cfc5332e2327d66f45395bc00",
   "acceptance_status": "accepted_for_provisional_production",
   "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
   "human_review_status": "pending",
-  "candidate_export_path": "build/assets/candidates/pixel-art-complete/sprites/catalog/relic_magnet_heart.png",
+  "candidate_export_path": "build/assets/candidates/pixel-art/sprites/catalog/relic_magnet_heart.png",
   "integrated_export_path": "game/assets/sprites/catalog/relic_magnet_heart.png"
 }

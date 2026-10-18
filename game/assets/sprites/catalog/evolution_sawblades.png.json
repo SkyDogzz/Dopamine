@@ -3,10 +3,16 @@
   "status": "provisionally_integrated",
   "skill": "dopamine-pixel-art",
   "generator": "game/tools/generate_neon_arcade_art.py",
-  "generator_version": "2",
-  "seed": 0,
+  "generator_version": "3",
+  "seed": 20261018,
   "seed_policy": "fixed procedural geometry; seed is recorded but not consumed",
-  "brief": "Procedural pixel art using only docs/art/palette_master.gpl",
+  "brief": "Distinct role silhouette pixel art using only docs/art/palette_master.gpl",
+  "parameters": {
+    "drawing_method": "deterministic role primitives",
+    "asset_name": "evolution_sawblades",
+    "palette_source": "docs/art/palette_master.gpl",
+    "seed_consumed": false
+  },
   "dimensions": {
     "width": 32,
     "height": 32
@@ -37,19 +43,31 @@
       255
     ],
     [
+      200,
+      59,
+      98,
+      255
+    ],
+    [
       246,
       247,
       255,
+      255
+    ],
+    [
+      255,
+      212,
+      71,
       255
     ]
   ],
   "source_path": "source/original_procedural/evolution_sawblades.aseprite",
   "export_path": "sprites/catalog/evolution_sawblades.png",
-  "source_sha256": "f6461da63fabdd53ddb1667ae30a50d788b3812005d1def9cd5055306853d89d",
-  "export_sha256": "a8979cc65f9985dbcb4001b716f0d9d1f92f48cae2a24b02cac77b2085223c21",
+  "source_sha256": "0a495634422b0fe8ff6f1b4c917c86c1eef1555f2a0b6ef1b8e224730d772a00",
+  "export_sha256": "db81668a3bc20fc02c81c6be37ca215bcf0969ad994f93023ffb99ed60766ac7",
   "acceptance_status": "accepted_for_provisional_production",
   "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
   "human_review_status": "pending",
-  "candidate_export_path": "build/assets/candidates/pixel-art-complete/sprites/catalog/evolution_sawblades.png",
+  "candidate_export_path": "build/assets/candidates/pixel-art/sprites/catalog/evolution_sawblades.png",
   "integrated_export_path": "game/assets/sprites/catalog/evolution_sawblades.png"
 }

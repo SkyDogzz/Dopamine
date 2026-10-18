@@ -184,9 +184,11 @@ def save(name: str, output: pathlib.Path, source: pathlib.Path, image: Canvas):
         asset_id = f"weapon_{EVOLUTION_ROLES[name]}_icon"
     metadata = {
         "asset_id": asset_id, "status": "candidate_not_approved", "skill": "dopamine-pixel-art",
-        "generator": "game/tools/generate_neon_arcade_art.py", "generator_version": "2",
+        "generator": "game/tools/generate_neon_arcade_art.py", "generator_version": "3",
         "seed": GENERATION_SEED, "seed_policy": "fixed procedural geometry; seed is recorded but not consumed",
-        "brief": "Procedural pixel art using only docs/art/palette_master.gpl",
+        "brief": "Distinct role silhouette pixel art using only docs/art/palette_master.gpl",
+        "parameters": {"drawing_method": "deterministic role primitives", "asset_name": name,
+                       "palette_source": "docs/art/palette_master.gpl", "seed_consumed": False},
         "dimensions": {"width": image.width, "height": image.height},
         "palette_rgba": [list(color) for color in colors],
         "source_path": str(source.relative_to(ASSETS)), "export_path": str(output.relative_to(ASSETS)),
@@ -198,9 +200,9 @@ def save(name: str, output: pathlib.Path, source: pathlib.Path, image: Canvas):
 def colors_for(name: str, palette):
     low = EVOLUTION_ROLES.get(name, name).lower()
     accent = palette["accent_3"] if any(k in low for k in ("blood", "inferno", "wildfire", "crimson")) else \
-             palette["yellow_3"] if any(k in low for k in ("star", "meteor", "celestial", "sun")) else \
+             palette["yellow_3"] if any(k in low for k in ("star", "meteor", "celestial", "sun", "redline", "overdrive")) else \
              palette["accent_2"] if any(k in low for k in ("toxic", "plague", "pandemic")) else \
-             palette["magenta_3"] if any(k in low for k in ("void", "singularity", "horizon", "prism")) else \
+             palette["magenta_3"] if any(k in low for k in ("void", "singularity", "horizon", "prism", "storm", "circuit")) else \
              palette["cyan_3"]
     return palette["shadow_1"], palette["shadow_3"], accent, palette["neutral_2"]
 
@@ -209,67 +211,205 @@ def draw_catalog(name: str, palette) -> Canvas:
     c = Canvas(32, 32)
     shadow, edge, accent, light = colors_for(name, palette)
     low = EVOLUTION_ROLES.get(name, name).lower()
-    cx = cy = 16
-    # Each category uses a new centered badge silhouette with a role-specific mark.
-    c.diamond(cx, cy, 14, edge)
-    c.diamond(cx, cy, 11, shadow)
-    c.diamond(cx, cy, 8, accent)
-    c.diamond(cx, cy, 5, edge)
-    c.diamond(cx, cy, 3, light)
-    if "dagger" in low or "razor" in low:
-        c.line(7, 22, 20, 9, light, 3); c.line(12, 26, 25, 13, accent, 3)
-        c.line(5, 19, 10, 24, edge, 2); c.line(15, 23, 23, 15, shadow, 1)
-    elif "staff" in low or "scepter" in low:
-        c.line(9, 25, 23, 7, light, 3); c.disc(23, 7, 4, accent); c.disc(23, 7, 2, light)
-    elif "minigun" in low or "overdrive" in low or "circuit" in low or "coil" in low:
-        c.rect(8, 13, 16, 8, edge); c.rect(6, 14, 4, 6, light)
-        for y in (14, 17, 20): c.rect(22, y, 6, 2, accent)
-        c.line(10, 11, 10, 23, light, 1)
-    elif "laser" in low or "prism" in low:
-        c.diamond(13, 16, 7, light); c.line(18, 16, 29, 16, accent, 2)
-        c.line(19, 13, 28, 8, light, 1); c.line(19, 19, 28, 24, light, 1)
-    elif "orb" in low or "core" in low or "heart" in low or "horizon" in low or "singularity" in low:
-        c.ring(16, 16, 9, 5, light); c.disc(16, 16, 4, edge); c.disc(16, 16, 2, shadow)
-        c.line(5, 16, 9, 16, accent, 2); c.line(23, 16, 27, 16, accent, 2)
-    elif "crown" in low or "mask" in low or "helmet" in low:
-        c.line(7, 21, 7, 11, light, 2); c.line(7, 11, 13, 17, accent, 2)
-        c.line(13, 17, 18, 9, light, 2); c.line(18, 9, 25, 20, accent, 2)
-        c.line(7, 22, 25, 22, light, 2)
-    elif "chalice" in low or "bottle" in low or "sprayer" in low:
-        c.line(9, 9, 23, 9, light, 2); c.line(10, 10, 12, 21, accent, 2)
-        c.line(22, 10, 20, 21, accent, 2); c.line(12, 21, 20, 21, light, 2)
-        c.rect(14, 22, 4, 5, edge); c.rect(10, 27, 12, 2, light)
-    elif "saw" in low or "gear" in low:
-        c.ring(16, 16, 9, 5, light); c.disc(16, 16, 3, edge)
-        for x, y in ((16, 5), (16, 27), (5, 16), (27, 16), (8, 8), (24, 24)):
-            c.rect(x - 1, y - 1, 3, 3, accent)
-    elif "magnet" in low:
-        c.line(10, 8, 10, 18, light, 3); c.line(10, 18, 16, 25, accent, 3)
-        c.line(16, 25, 22, 18, light, 3); c.line(22, 18, 22, 8, accent, 3)
-        c.rect(7, 6, 6, 4, edge); c.rect(19, 6, 6, 4, edge)
-    elif "eye" in low:
-        c.line(6, 16, 12, 10, light, 2); c.line(12, 10, 20, 10, light, 2)
-        c.line(20, 10, 26, 16, light, 2); c.line(26, 16, 20, 22, accent, 2)
-        c.line(20, 22, 12, 22, accent, 2); c.line(12, 22, 6, 16, accent, 2)
-        c.disc(16, 16, 4, edge); c.disc(16, 16, 2, light)
+    dark = palette["shadow_1"]
+    mid = palette["shadow_3"]
+    cyan = palette["cyan_3"]
+    magenta = palette["magenta_3"]
+    yellow = palette["yellow_3"]
+    green = palette["accent_2"]
+    red = palette["accent_3"]
+    evolved = name.startswith("evolution_")
+
+    def bolt(color, width):
+        c.line(19, 3, 9, 15, dark, width + 2)
+        c.line(9, 15, 18, 15, dark, width + 2)
+        c.line(18, 15, 11, 29, dark, width + 2)
+        c.line(19, 3, 9, 15, color, width)
+        c.line(9, 15, 18, 15, color, width)
+        c.line(18, 15, 11, 29, color, width)
+
+    if "storm_core" in low:
+        c.ring(16, 16, 12, 9, dark); c.ring(16, 16, 10, 7, cyan)
+        c.disc(16, 16, 6, mid); bolt(yellow, 2)
+    elif "infinite_circuit" in low:
+        c.ring(16, 16, 13, 10, dark); c.ring(16, 16, 11, 9, cyan)
+        c.line(6, 16, 11, 16, magenta, 2); c.line(21, 16, 26, 16, magenta, 2)
+        bolt(yellow, 2)
+    elif "lightning" in low:
+        bolt(light, 3)
+        for x, y in ((6, 8), (24, 23), (24, 7)):
+            c.disc(x, y, 2, yellow if x == 24 else cyan)
+    elif "wildfire" in low:
+        c.rect(7, 17, 13, 8, dark); c.rect(9, 18, 9, 5, red)
+        c.line(19, 19, 25, 7, dark, 5); c.line(19, 19, 25, 7, yellow, 2)
+        c.line(21, 20, 29, 12, dark, 4); c.line(21, 20, 29, 12, red, 2)
+        c.line(18, 21, 26, 26, dark, 4); c.line(18, 21, 26, 26, yellow, 2)
+    elif "inferno" in low or "sprayer" in low:
+        c.rect(5, 12, 17, 10, dark); c.rect(7, 14, 13, 6, edge)
+        c.rect(3, 15, 5, 4, light); c.rect(10, 22, 5, 6, dark); c.rect(11, 23, 3, 4, red)
+        c.line(22, 12, 29, 8, yellow, 3); c.line(22, 16, 30, 16, red, 3); c.line(22, 20, 29, 24, yellow, 3)
+    elif "bloodstorm" in low:
+        for a, b, color in ((6, 24, red), (10, 27, light), (9, 7, light), (13, 11, red)):
+            c.line(a, 24 if a < 8 else 27, a + 13, 8 if a < 8 else 11, dark, 5)
+            c.line(a, 24 if a < 8 else 27, a + 13, 8 if a < 8 else 11, color, 2)
+        c.pixel(7, 9, red); c.pixel(24, 23, red)
+    elif "crimson" in low or "dagger" in low:
+        c.line(5, 24, 23, 6, dark, 6); c.line(5, 24, 23, 6, light, 2)
+        c.line(3, 22, 10, 27, red, 3); c.line(10, 27, 13, 24, dark, 2)
+        c.line(10, 28, 28, 10, dark, 6); c.line(10, 28, 28, 10, red, 2)
+        c.line(8, 26, 15, 30, light, 2)
+    elif "redline" in low:
+        c.rect(6, 12, 19, 9, dark); c.rect(8, 13, 14, 6, edge)
+        c.rect(4, 14, 5, 4, light); c.rect(11, 21, 5, 7, dark); c.rect(12, 22, 3, 5, yellow)
+        c.line(24, 12, 31, 12, red, 2); c.line(24, 16, 31, 16, yellow, 2); c.line(24, 20, 31, 20, red, 2)
+    elif "minigun" in low:
+        c.rect(6, 11, 20, 11, dark); c.rect(8, 13, 14, 6, edge)
+        c.rect(3, 14, 6, 4, light); c.rect(10, 22, 5, 6, dark); c.rect(11, 23, 3, 4, accent)
+        c.rect(22, 12, 8, 2, cyan); c.rect(22, 16, 8, 2, cyan); c.rect(22, 20, 8, 2, cyan)
+        c.pixel(12, 14, yellow); c.pixel(17, 14, yellow)
+    elif "pandemic" in low:
+        for x, y, r in ((8, 17, 5), (15, 12, 6), (23, 17, 5), (15, 21, 4)):
+            c.disc(x, y, r + 1, dark); c.disc(x, y, r - 1, green)
+        c.disc(15, 16, 2, yellow)
+        for x, y in ((5, 7), (26, 8), (27, 25), (4, 24)):
+            c.pixel(x, y, green)
+    elif "toxic" in low:
+        c.disc(9, 18, 6, dark); c.disc(16, 12, 7, dark); c.disc(23, 18, 6, dark)
+        c.disc(9, 17, 4, green); c.disc(16, 11, 5, green); c.disc(23, 17, 4, green)
+        c.rect(8, 18, 16, 7, mid); c.pixel(12, 18, yellow); c.pixel(20, 18, yellow)
+    elif "razorstorm" in low:
+        c.star(16, 16, 11, dark, 5, 12); c.ring(16, 16, 8, 5, light)
+        c.disc(16, 16, 3, edge); c.disc(16, 16, 1, red)
+        c.star(7, 8, 4, red, 2, 8); c.star(25, 24, 4, cyan, 2, 8)
+    elif "saw" in low:
+        c.star(16, 16, 12, dark, 5, 12); c.ring(16, 16, 8, 5, light)
+        c.disc(16, 16, 4, edge); c.disc(16, 16, 2, accent)
+    elif "starfall" in low:
+        c.star(18, 11, 8, dark, 5, 4); c.star(18, 11, 7, yellow, 2, 4)
+        c.line(13, 17, 5, 25, dark, 5); c.line(13, 17, 5, 25, magenta, 2)
+        c.line(17, 18, 12, 27, dark, 4); c.line(17, 18, 12, 27, light, 1)
+    elif "meteor" in low or "staff" in low:
+        c.line(7, 27, 22, 7, dark, 5); c.line(7, 27, 22, 7, edge, 2)
+        c.line(8, 25, 21, 8, light, 1); c.star(23, 7, 5, dark, 4, 4)
+        c.star(23, 7, 4, yellow, 2, 4); c.pixel(23, 7, light)
+    elif "spectrum_collapse" in low:
+        c.diamond(12, 16, 9, dark); c.diamond(12, 16, 6, magenta); c.diamond(12, 16, 3, light)
+        c.line(19, 16, 30, 16, dark, 5); c.line(20, 16, 30, 16, cyan, 2)
+        c.line(18, 13, 27, 7, yellow, 1); c.line(18, 19, 27, 25, red, 1)
+    elif "prism_laser" in low or ("prism" in low and "crystal" not in low):
+        c.diamond(10, 16, 7, dark); c.diamond(10, 16, 5, light); c.pixel(10, 16, magenta)
+        c.line(17, 16, 30, 16, dark, 5); c.line(18, 16, 30, 16, cyan, 2)
+        c.line(19, 13, 27, 8, yellow, 1); c.line(19, 19, 27, 24, magenta, 1)
+    elif "event_horizon" in low:
+        c.disc(16, 16, 7, dark); c.ring(16, 16, 12, 9, magenta)
+        c.ring(16, 16, 14, 13, cyan); c.line(4, 16, 7, 16, yellow, 2); c.line(25, 16, 28, 16, yellow, 2)
+    elif "void_orb" in low:
+        c.ring(16, 16, 12, 9, dark); c.disc(16, 16, 8, magenta); c.disc(16, 16, 5, dark)
+        c.pixel(14, 12, light); c.pixel(18, 20, cyan)
     elif "absolute_zero" in low:
-        c.star(16, 16, 11, light, 2, 6)
-        c.line(6, 6, 26, 26, accent, 2); c.line(26, 6, 6, 26, accent, 2)
-        c.diamond(16, 16, 3, edge)
-    elif "nova" in low or "frost" in low or "zero" in low:
-        c.star(16, 16, 11, light, 2, 4); c.star(16, 16, 7, accent, 1, 8)
-    elif "meteor" in low or "starfall" in low:
-        c.star(17, 14, 8, light, 2, 4); c.line(9, 19, 4, 25, accent, 2); c.line(13, 20, 10, 27, edge, 1)
-    elif "toxic" in low or "plague" in low or "pandemic" in low:
-        c.disc(11, 17, 5, light); c.disc(17, 12, 6, accent); c.disc(22, 18, 5, edge)
-        c.rect(10, 18, 12, 5, shadow); c.line(13, 17, 13, 21, light, 1); c.line(19, 16, 19, 21, light, 1)
+        c.star(16, 16, 13, dark, 5, 6); c.star(16, 16, 11, cyan, 2, 6)
+        c.star(16, 16, 6, light, 1, 6); c.disc(16, 16, 2, yellow)
+    elif "frost_nova" in low:
+        c.star(16, 16, 12, dark, 5, 4); c.star(16, 16, 10, cyan, 2, 4)
+        c.star(16, 16, 7, light, 1, 8); c.disc(16, 16, 3, yellow)
+    elif "frozen_crown" in low:
+        c.line(5, 22, 5, 10, dark, 4); c.line(5, 10, 12, 17, dark, 4)
+        c.line(12, 17, 17, 7, dark, 4); c.line(17, 7, 27, 21, dark, 4)
+        c.line(6, 20, 6, 11, cyan, 2); c.line(6, 11, 12, 17, light, 2)
+        c.line(12, 17, 17, 8, cyan, 2); c.line(17, 8, 26, 20, light, 2)
+        c.line(5, 22, 27, 22, yellow, 3); c.pixel(17, 8, light)
+    elif "prism_crystal" in low:
+        c.diamond(16, 16, 12, dark); c.diamond(16, 16, 9, light); c.diamond(16, 16, 5, magenta)
+        c.line(16, 5, 16, 27, cyan, 1); c.line(8, 12, 24, 20, yellow, 1); c.line(24, 12, 8, 20, edge, 1)
+    elif "celestial_eye" in low:
+        c.line(4, 16, 11, 9, dark, 4); c.line(11, 9, 21, 9, dark, 4); c.line(21, 9, 28, 16, dark, 4)
+        c.line(28, 16, 21, 23, dark, 4); c.line(21, 23, 11, 23, dark, 4); c.line(11, 23, 4, 16, dark, 4)
+        c.line(5, 16, 11, 11, light, 1); c.line(11, 11, 21, 11, cyan, 2); c.line(21, 11, 27, 16, light, 1)
+        c.line(27, 16, 21, 21, magenta, 1); c.line(21, 21, 11, 21, light, 1); c.line(11, 21, 5, 16, magenta, 1)
+        c.disc(16, 16, 4, yellow); c.disc(16, 16, 2, dark)
+    elif "plague_mask" in low:
+        c.rect(7, 10, 18, 14, dark); c.rect(9, 12, 14, 10, green)
+        c.rect(10, 15, 4, 3, light); c.rect(18, 15, 4, 3, light)
+        c.line(12, 21, 16, 18, dark, 2); c.line(16, 18, 20, 21, dark, 2)
+        c.pixel(6, 14, magenta); c.pixel(26, 14, magenta)
+    elif "blood_chalice" in low:
+        c.line(7, 9, 25, 9, dark, 4); c.line(9, 10, 12, 19, dark, 4); c.line(23, 10, 20, 19, dark, 4)
+        c.line(9, 10, 12, 18, red, 2); c.line(23, 10, 20, 18, red, 2); c.line(12, 19, 20, 19, light, 2)
+        c.rect(14, 20, 4, 5, dark); c.rect(10, 26, 12, 3, edge); c.pixel(16, 13, yellow)
+    elif "infernal_heart" in low or "magnet_heart" in low:
+        heart = red if "infernal" in low else cyan
+        c.disc(11, 13, 5, dark); c.disc(21, 13, 5, dark); c.line(7, 15, 16, 26, dark, 5); c.line(25, 15, 16, 26, dark, 5)
+        c.disc(11, 12, 4, heart); c.disc(21, 12, 4, heart); c.line(8, 14, 16, 24, heart, 3); c.line(24, 14, 16, 24, heart, 3)
+        c.pixel(15, 13, light); c.pixel(17, 13, yellow if "infernal" in low else magenta)
+        if "magnet" in low:
+            c.rect(7, 5, 5, 3, magenta); c.rect(20, 5, 5, 3, yellow)
+    elif "overdrive_engine" in low:
+        c.star(16, 16, 12, dark, 5, 8); c.ring(16, 16, 9, 5, yellow)
+        c.disc(16, 16, 4, edge); c.disc(16, 16, 2, cyan)
+        for x, y in ((16, 4), (26, 16), (16, 26), (6, 16)):
+            c.rect(x - 1, y - 1, 3, 3, light)
+    elif "magnetic_coil" in low:
+        c.line(9, 6, 9, 17, dark, 6); c.line(9, 17, 16, 25, dark, 6)
+        c.line(16, 25, 23, 17, dark, 6); c.line(23, 17, 23, 6, dark, 6)
+        c.line(9, 7, 9, 17, cyan, 2); c.line(9, 17, 16, 24, magenta, 2)
+        c.line(16, 24, 23, 17, cyan, 2); c.line(23, 17, 23, 7, magenta, 2)
+        c.rect(6, 4, 7, 4, yellow); c.rect(20, 4, 7, 4, yellow)
+    elif "frozen" in low or "crown" in low:
+        c.line(5, 23, 5, 11, dark, 4); c.line(5, 11, 12, 17, dark, 4)
+        c.line(12, 17, 17, 8, dark, 4); c.line(17, 8, 27, 22, dark, 4)
+        c.line(6, 21, 6, 12, light, 1); c.line(6, 12, 12, 17, cyan, 2)
+        c.line(12, 17, 17, 9, light, 1); c.line(17, 9, 26, 21, cyan, 2); c.line(5, 22, 27, 22, yellow, 3)
+    elif "singularity" in low:
+        c.disc(16, 16, 8, dark); c.ring(16, 16, 12, 9, magenta)
+        c.line(5, 7, 13, 14, cyan, 2); c.line(27, 7, 19, 14, cyan, 2)
+        c.line(5, 25, 13, 18, cyan, 2); c.line(27, 25, 19, 18, cyan, 2)
+        c.pixel(7, 8, yellow); c.pixel(25, 8, light); c.pixel(7, 24, light); c.pixel(25, 24, yellow)
+    elif "void" in low or "orb" in low or "horizon" in low:
+        c.disc(16, 16, 8, dark); c.ring(16, 16, 12, 9, magenta); c.ring(16, 16, 14, 13, cyan)
+        c.pixel(13, 12, light); c.pixel(19, 20, yellow)
+    elif "eye" in low:
+        c.line(4, 16, 11, 9, dark, 4); c.line(11, 9, 21, 9, dark, 4); c.line(21, 9, 28, 16, dark, 4)
+        c.line(28, 16, 21, 23, dark, 4); c.line(21, 23, 11, 23, dark, 4); c.line(11, 23, 4, 16, dark, 4)
+        c.line(5, 16, 11, 11, light, 1); c.line(11, 11, 21, 11, accent, 2); c.line(21, 11, 27, 16, light, 1)
+        c.disc(16, 16, 4, edge); c.disc(16, 16, 2, yellow)
+    elif "heart" in low:
+        c.disc(11, 13, 5, dark); c.disc(21, 13, 5, dark); c.line(7, 15, 16, 26, dark, 5); c.line(25, 15, 16, 26, dark, 5)
+        c.disc(11, 12, 4, accent); c.disc(21, 12, 4, accent); c.line(8, 14, 16, 24, accent, 3); c.line(24, 14, 16, 24, accent, 3)
+        c.pixel(15, 12, light)
+    elif "crown" in low:
+        c.line(5, 22, 5, 10, dark, 4); c.line(5, 10, 12, 17, dark, 4)
+        c.line(12, 17, 17, 7, dark, 4); c.line(17, 7, 27, 21, dark, 4)
+        c.line(6, 20, 6, 11, light, 1); c.line(6, 11, 12, 17, accent, 2)
+        c.line(12, 17, 17, 8, light, 1); c.line(17, 8, 26, 20, accent, 2); c.line(5, 22, 27, 22, yellow, 3)
+    elif "mask" in low:
+        c.rect(7, 10, 18, 14, dark); c.rect(9, 12, 14, 10, edge)
+        c.rect(10, 14, 4, 3, accent); c.rect(18, 14, 4, 3, accent)
+        c.line(12, 20, 16, 18, light, 2); c.line(16, 18, 20, 20, light, 2); c.rect(15, 20, 2, 2, yellow)
+    elif "chalice" in low:
+        c.line(7, 9, 25, 9, dark, 4); c.line(9, 10, 12, 19, dark, 4); c.line(23, 10, 20, 19, dark, 4)
+        c.line(9, 10, 12, 18, accent, 2); c.line(23, 10, 20, 18, accent, 2); c.line(12, 19, 20, 19, light, 2)
+        c.rect(14, 20, 4, 5, edge); c.rect(10, 26, 12, 3, light); c.pixel(16, 13, yellow)
+    elif "magnet" in low or "coil" in low:
+        c.line(9, 7, 9, 17, dark, 6); c.line(9, 17, 16, 25, dark, 6); c.line(16, 25, 23, 17, dark, 6); c.line(23, 17, 23, 7, dark, 6)
+        c.line(9, 8, 9, 17, light, 2); c.line(9, 17, 16, 24, accent, 2); c.line(16, 24, 23, 17, light, 2); c.line(23, 17, 23, 8, accent, 2)
+        c.rect(6, 5, 7, 4, yellow); c.rect(20, 5, 7, 4, magenta)
+    elif "frost" in low or "nova" in low or "zero" in low:
+        c.star(16, 16, 12, dark, 5, 6); c.star(16, 16, 10, light, 2, 6)
+        c.star(16, 16, 6, accent, 1, 6); c.disc(16, 16, 2, yellow)
+    elif "meteor" in low or "star" in low:
+        c.star(17, 13, 8, dark, 5, 4); c.star(17, 13, 7, yellow, 2, 4)
+        c.line(12, 19, 5, 26, dark, 5); c.line(12, 19, 5, 26, accent, 2)
+    elif "laser" in low or "prism" in low or "crystal" in low:
+        c.diamond(12, 16, 9, dark); c.diamond(12, 16, 6, light); c.diamond(12, 16, 3, accent)
+        c.line(19, 16, 30, 16, dark, 5); c.line(20, 16, 30, 16, cyan, 2)
+        c.line(19, 13, 27, 8, yellow, 1); c.line(19, 19, 27, 24, magenta, 1)
+    elif "overdrive" in low or "engine" in low:
+        c.star(16, 16, 12, dark, 5, 8); c.ring(16, 16, 9, 5, yellow); c.disc(16, 16, 3, edge)
+        c.pixel(16, 6, cyan); c.pixel(25, 16, light); c.pixel(16, 25, magenta); c.pixel(7, 16, light)
     else:
-        c.star(16, 16, 10, light, 2, 6); c.disc(16, 16, 3, accent)
-    # Four offset status pixels make the new family legible at thumbnail size.
-    token = hashlib.sha256(name.encode()).digest()
-    for i in range(3):
-        x, y = 4 + token[i] % 4, 5 + token[i + 3] % 5
-        c.pixel(x, y, light)
+        c.star(16, 16, 10, dark, 5, 6); c.star(16, 16, 8, accent, 2, 6); c.disc(16, 16, 3, light)
+    if evolved and "lightning" not in low and "circuit" not in low:
+        c.pixel(16, 4, yellow)
     return c
 
 

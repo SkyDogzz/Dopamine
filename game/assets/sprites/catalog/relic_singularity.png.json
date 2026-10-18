@@ -3,10 +3,16 @@
   "status": "provisionally_integrated",
   "skill": "dopamine-pixel-art",
   "generator": "game/tools/generate_neon_arcade_art.py",
-  "generator_version": "2",
+  "generator_version": "3",
   "seed": 20261018,
   "seed_policy": "fixed procedural geometry; seed is recorded but not consumed",
-  "brief": "Procedural pixel art using only docs/art/palette_master.gpl",
+  "brief": "Distinct role silhouette pixel art using only docs/art/palette_master.gpl",
+  "parameters": {
+    "drawing_method": "deterministic role primitives",
+    "asset_name": "relic_singularity",
+    "palette_source": "docs/art/palette_master.gpl",
+    "seed_consumed": false
+  },
   "dimensions": {
     "width": 32,
     "height": 32
@@ -25,9 +31,9 @@
       255
     ],
     [
-      27,
-      35,
-      64,
+      14,
+      184,
+      212,
       255
     ],
     [
@@ -41,15 +47,21 @@
       247,
       255,
       255
+    ],
+    [
+      255,
+      212,
+      71,
+      255
     ]
   ],
   "source_path": "source/original_procedural/relic_singularity.aseprite",
   "export_path": "sprites/catalog/relic_singularity.png",
-  "source_sha256": "fda4f69307ff0607e203deb5b2d1418c4b3b43ba3e2f51ab3270b07bc2af4940",
-  "export_sha256": "e341d11dd9b5cb5ef4e44b2a268f030f3d018c4b51dead42616019f9dcbaaa17",
+  "source_sha256": "e7af6ebfe1e84202102644231baca7968b0a5b5a472771d00105e1390b64bdcf",
+  "export_sha256": "46f04a975005e3b7b746554bdbbe99a6ec3f8ef05cd32023c73aceb0bd25a32c",
   "acceptance_status": "accepted_for_provisional_production",
   "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
   "human_review_status": "pending",
-  "candidate_export_path": "build/assets/candidates/pixel-art-complete/sprites/catalog/relic_singularity.png",
+  "candidate_export_path": "build/assets/candidates/pixel-art/sprites/catalog/relic_singularity.png",
   "integrated_export_path": "game/assets/sprites/catalog/relic_singularity.png"
 }

@@ -3,10 +3,16 @@
   "status": "provisionally_integrated",
   "skill": "dopamine-pixel-art",
   "generator": "game/tools/generate_neon_arcade_art.py",
-  "generator_version": "2",
+  "generator_version": "3",
   "seed": 20261018,
   "seed_policy": "fixed procedural geometry; seed is recorded but not consumed",
-  "brief": "Procedural pixel art using only docs/art/palette_master.gpl",
+  "brief": "Distinct role silhouette pixel art using only docs/art/palette_master.gpl",
+  "parameters": {
+    "drawing_method": "deterministic role primitives",
+    "asset_name": "relic_storm_core",
+    "palette_source": "docs/art/palette_master.gpl",
+    "seed_consumed": false
+  },
   "dimensions": {
     "width": 32,
     "height": 32
@@ -37,19 +43,19 @@
       255
     ],
     [
-      246,
-      247,
       255,
+      212,
+      71,
       255
     ]
   ],
   "source_path": "source/original_procedural/relic_storm_core.aseprite",
   "export_path": "sprites/catalog/relic_storm_core.png",
-  "source_sha256": "d670ae9bf389c4c32e32d3804218dd0ebcbb1fddbb838c856074d9b85be6a403",
-  "export_sha256": "17ee0ec2efa5f1ba724ff11925ba0eff61f4957a26dd42213797249987542dd3",
+  "source_sha256": "5bb70b06c7b9e1e5c9a5d34d05a77027c3507369bca675b8c4ae23afb88d7dea",
+  "export_sha256": "04f4433a36374f0f554bf283cedd2148542aa2935d8833cfed15441f863399fc",
   "acceptance_status": "accepted_for_provisional_production",
   "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
   "human_review_status": "pending",
-  "candidate_export_path": "build/assets/candidates/pixel-art-complete/sprites/catalog/relic_storm_core.png",
+  "candidate_export_path": "build/assets/candidates/pixel-art/sprites/catalog/relic_storm_core.png",
   "integrated_export_path": "game/assets/sprites/catalog/relic_storm_core.png"
 }

@@ -3,10 +3,16 @@
   "status": "provisionally_integrated",
   "skill": "dopamine-pixel-art",
   "generator": "game/tools/generate_neon_arcade_art.py",
-  "generator_version": "2",
-  "seed": 0,
+  "generator_version": "3",
+  "seed": 20261018,
   "seed_policy": "fixed procedural geometry; seed is recorded but not consumed",
-  "brief": "Procedural pixel art using only docs/art/palette_master.gpl",
+  "brief": "Distinct role silhouette pixel art using only docs/art/palette_master.gpl",
+  "parameters": {
+    "drawing_method": "deterministic role primitives",
+    "asset_name": "weapon_void_orb",
+    "palette_source": "docs/art/palette_master.gpl",
+    "seed_consumed": false
+  },
   "dimensions": {
     "width": 32,
     "height": 32
@@ -25,9 +31,9 @@
       255
     ],
     [
-      27,
-      35,
-      64,
+      14,
+      184,
+      212,
       255
     ],
     [
@@ -45,11 +51,11 @@
   ],
   "source_path": "source/original_procedural/weapon_void_orb.aseprite",
   "export_path": "sprites/catalog/weapon_void_orb.png",
-  "source_sha256": "d6a6f20db97441482f076e4499701173832ba732725f1d1d2014575633dbec0b",
-  "export_sha256": "a2be6e4ed62502ad60a6a278838bc70a2addbb230e976f5bfacb897ec494551b",
+  "source_sha256": "eb5ee965f7383eb37f8eb7f263bc1763d6f318ac6058b722c1adda6798e51972",
+  "export_sha256": "e9d5bf1684c4d6c70974ce433d713237a748b1c68bc50cd657915e89e668854c",
   "acceptance_status": "accepted_for_provisional_production",
   "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
   "human_review_status": "pending",
-  "candidate_export_path": "build/assets/candidates/pixel-art-complete/sprites/catalog/weapon_void_orb.png",
+  "candidate_export_path": "build/assets/candidates/pixel-art/sprites/catalog/weapon_void_orb.png",
   "integrated_export_path": "game/assets/sprites/catalog/weapon_void_orb.png"
 }

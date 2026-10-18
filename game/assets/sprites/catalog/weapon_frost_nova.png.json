@@ -3,10 +3,16 @@
   "status": "provisionally_integrated",
   "skill": "dopamine-pixel-art",
   "generator": "game/tools/generate_neon_arcade_art.py",
-  "generator_version": "2",
-  "seed": 0,
+  "generator_version": "3",
+  "seed": 20261018,
   "seed_policy": "fixed procedural geometry; seed is recorded but not consumed",
-  "brief": "Procedural pixel art using only docs/art/palette_master.gpl",
+  "brief": "Distinct role silhouette pixel art using only docs/art/palette_master.gpl",
+  "parameters": {
+    "drawing_method": "deterministic role primitives",
+    "asset_name": "weapon_frost_nova",
+    "palette_source": "docs/art/palette_master.gpl",
+    "seed_consumed": false
+  },
   "dimensions": {
     "width": 32,
     "height": 32
@@ -31,25 +37,25 @@
       255
     ],
     [
-      27,
-      35,
-      64,
-      255
-    ],
-    [
       246,
       247,
       255,
+      255
+    ],
+    [
+      255,
+      212,
+      71,
       255
     ]
   ],
   "source_path": "source/original_procedural/weapon_frost_nova.aseprite",
   "export_path": "sprites/catalog/weapon_frost_nova.png",
-  "source_sha256": "e41cee2a095bcca9f889fe3a7b1ce84c002753e51d9dfc997d54cd69129a8c9d",
-  "export_sha256": "613db94a738ecba8f9c4eaa8023aa62be8b39054b5a6ad066c6de7d8df73583e",
+  "source_sha256": "aa99b59a32e845ef5f306e1d8b5019ae0344d107b03a69957793aa6e80edb3fe",
+  "export_sha256": "d3f23b82d0489afd813eed9f9b2b5da240e1cbc2e60caeb752a19e481e970374",
   "acceptance_status": "accepted_for_provisional_production",
   "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
   "human_review_status": "pending",
-  "candidate_export_path": "build/assets/candidates/pixel-art-complete/sprites/catalog/weapon_frost_nova.png",
+  "candidate_export_path": "build/assets/candidates/pixel-art/sprites/catalog/weapon_frost_nova.png",
   "integrated_export_path": "game/assets/sprites/catalog/weapon_frost_nova.png"
 }

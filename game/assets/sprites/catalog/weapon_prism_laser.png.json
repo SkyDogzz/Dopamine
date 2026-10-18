@@ -3,10 +3,16 @@
   "status": "provisionally_integrated",
   "skill": "dopamine-pixel-art",
   "generator": "game/tools/generate_neon_arcade_art.py",
-  "generator_version": "2",
-  "seed": 0,
+  "generator_version": "3",
+  "seed": 20261018,
   "seed_policy": "fixed procedural geometry; seed is recorded but not consumed",
-  "brief": "Procedural pixel art using only docs/art/palette_master.gpl",
+  "brief": "Distinct role silhouette pixel art using only docs/art/palette_master.gpl",
+  "parameters": {
+    "drawing_method": "deterministic role primitives",
+    "asset_name": "weapon_prism_laser",
+    "palette_source": "docs/art/palette_master.gpl",
+    "seed_consumed": false
+  },
   "dimensions": {
     "width": 32,
     "height": 32
@@ -25,9 +31,9 @@
       255
     ],
     [
-      27,
-      35,
-      64,
+      14,
+      184,
+      212,
       255
     ],
     [
@@ -41,15 +47,21 @@
       247,
       255,
       255
+    ],
+    [
+      255,
+      212,
+      71,
+      255
     ]
   ],
   "source_path": "source/original_procedural/weapon_prism_laser.aseprite",
   "export_path": "sprites/catalog/weapon_prism_laser.png",
-  "source_sha256": "6abdce9264628558bdbc4c9668485b000e19dec6c7f1697317d28d2da895aaaa",
-  "export_sha256": "95f8445547debeaca7797dc6a02cc0ffec590dc64a7a524625e8e3d57cd5b3fe",
+  "source_sha256": "57a53c7ab7c132863181edd4f544d46d58ded925e3a4cde5f751da697d3de41f",
+  "export_sha256": "a25c8fa61ad6b4678747816540db9aa93ec19605cae8e2b5688d93320e2c1ef8",
   "acceptance_status": "accepted_for_provisional_production",
   "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
   "human_review_status": "pending",
-  "candidate_export_path": "build/assets/candidates/pixel-art-complete/sprites/catalog/weapon_prism_laser.png",
+  "candidate_export_path": "build/assets/candidates/pixel-art/sprites/catalog/weapon_prism_laser.png",
   "integrated_export_path": "game/assets/sprites/catalog/weapon_prism_laser.png"
 }

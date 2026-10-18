@@ -3,10 +3,16 @@
   "status": "provisionally_integrated",
   "skill": "dopamine-pixel-art",
   "generator": "game/tools/generate_neon_arcade_art.py",
-  "generator_version": "2",
-  "seed": 0,
+  "generator_version": "3",
+  "seed": 20261018,
   "seed_policy": "fixed procedural geometry; seed is recorded but not consumed",
-  "brief": "Procedural pixel art using only docs/art/palette_master.gpl",
+  "brief": "Distinct role silhouette pixel art using only docs/art/palette_master.gpl",
+  "parameters": {
+    "drawing_method": "deterministic role primitives",
+    "asset_name": "weapon_sawblades",
+    "palette_source": "docs/art/palette_master.gpl",
+    "seed_consumed": false
+  },
   "dimensions": {
     "width": 32,
     "height": 32
@@ -45,11 +51,11 @@
   ],
   "source_path": "source/original_procedural/weapon_sawblades.aseprite",
   "export_path": "sprites/catalog/weapon_sawblades.png",
-  "source_sha256": "f17f547cfe4088cc8532e52e5fbe60fe7dfe71e0452fa61b1b0741a3f5ce26ba",
-  "export_sha256": "c738165de84b4870c4c3f9144017c5a657242863cf4dd7f00305e4672409e7ea",
+  "source_sha256": "09b865af79278ff709884c92a521042da92c052b21b7d51ce06ad539077998cf",
+  "export_sha256": "7d76bac1fef1e224eb7472ebf25ed71c502b0c3c7b79a38e7cd3977aa87c5d32",
   "acceptance_status": "accepted_for_provisional_production",
   "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
   "human_review_status": "pending",
-  "candidate_export_path": "build/assets/candidates/pixel-art-complete/sprites/catalog/weapon_sawblades.png",
+  "candidate_export_path": "build/assets/candidates/pixel-art/sprites/catalog/weapon_sawblades.png",
   "integrated_export_path": "game/assets/sprites/catalog/weapon_sawblades.png"
 }
