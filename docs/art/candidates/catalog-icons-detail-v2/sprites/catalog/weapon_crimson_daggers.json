@@ -1,0 +1,99 @@
+{
+  "asset_id": "weapon_crimson_daggers_icon",
+  "status": "candidate_not_approved",
+  "skill": "dopamine-pixel-art",
+  "generator": "game/tools/generate_catalog_icon_detail_candidates.py",
+  "generator_version": "4",
+  "seed": 4801,
+  "seed_policy": "fixed procedural geometry; seed is recorded but not consumed",
+  "brief": "Owner-requested detailed catalog icon pass; readable layered pixel art using only the Art Bible master palette",
+  "parameters": {
+    "drawing_method": "deterministic role primitives",
+    "asset_name": "weapon_crimson_daggers",
+    "palette_source": "docs/art/palette_master.gpl",
+    "seed_consumed": false,
+    "detail_pass": "catalog_icon_detail_v1"
+  },
+  "dimensions": {
+    "width": 32,
+    "height": 32
+  },
+  "palette_rgba": [
+    [
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      8,
+      11,
+      24,
+      255
+    ],
+    [
+      27,
+      35,
+      64,
+      255
+    ],
+    [
+      41,
+      51,
+      84,
+      255
+    ],
+    [
+      61,
+      72,
+      104,
+      255
+    ],
+    [
+      72,
+      230,
+      155,
+      255
+    ],
+    [
+      165,
+      174,
+      195,
+      255
+    ],
+    [
+      200,
+      59,
+      98,
+      255
+    ],
+    [
+      212,
+      217,
+      232,
+      255
+    ],
+    [
+      246,
+      247,
+      255,
+      255
+    ],
+    [
+      255,
+      113,
+      129,
+      255
+    ],
+    [
+      255,
+      241,
+      154,
+      255
+    ]
+  ],
+  "source_path": "source/original_procedural/weapon_crimson_daggers.aseprite",
+  "export_path": "sprites/catalog/weapon_crimson_daggers.png",
+  "source_sha256": "e847bcf1b380f22b6f15844c8e49072efb083216e66cee586910d97b52d727aa",
+  "export_sha256": "fde18b6236b786ca472408c05ee022f7827c6a1fd8ba5996f6b4d59b68fcbfb7"
+}

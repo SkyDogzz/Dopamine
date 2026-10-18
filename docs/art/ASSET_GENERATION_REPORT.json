@@ -6,24 +6,28 @@
   "runtime_integration": "356/356 creative assets provisionally integrated under game/assets. Player idle/walk and idle/move SpriteFrames for all nine common enemy roles, the elite prototype and both boss roles play from simulation time. Attack frames play during shooter/exploder fuses and boss telegraph/charge phases. Boss special animations now play for Warden charges and Core spiral/combined abilities. All projectile sprite roles now loop their authored SpriteFrames while retaining movement rotation, trails and per-instance tint. All 20 base/evolved weapon attack sheets and 20 family fire/impact sheets are loaded; attack and fire VFX play on successful shots, and animated impacts replace the static impact when available. The 64-entry transient animation cap bounds dense fire and impact scenes. XP collection plays its authored four-frame animation after orb despawn; world reward chests and newly acquired relics play their authored reveal animations, including while the choice UI pauses simulation. Death animations survive ECS despawn and play for their metadata-defined duration. Generated SFX families and menu/result/adaptive music remain connected. Signal Prism now renders in the launch menu and NeonArcadeUI is the shared theme font. Human visual and auditory review remains pending. Two reference mixes without runtime consumers were retired from game/assets; their local generation recipes still emit staging-only previews. Each of ten weapons now has four deterministic fire variations and four impact variations; SfxService rotates the four files for each frequent event. The ten evolved weapon attack sheets now use their corresponding evolution illustrations as identity sources, so all ten base/evolution attack-sheet pairs are distinct. The nine common enemy move sheets now have a distinct alternating stride cycle; their role primitives and directional layout are preserved.",
   "asset_counts": {
     "dopamine-animation": {
-      "count": 141,
-      "qa_passed": 141,
-      "human_review_pending": 141
+      "count": 131,
+      "qa_passed": 131,
+      "human_review_pending": 131,
+      "human_review_changes_requested": 0
     },
     "dopamine-pixel-art": {
-      "count": 82,
-      "qa_passed": 82,
-      "human_review_pending": 82
+      "count": 92,
+      "qa_passed": 92,
+      "human_review_pending": 44,
+      "human_review_changes_requested": 48
     },
     "dopamine-sfx": {
       "count": 125,
       "qa_passed": 125,
-      "human_review_pending": 125
+      "human_review_pending": 125,
+      "human_review_changes_requested": 0
     },
     "dopamine-music": {
       "count": 8,
       "qa_passed": 8,
-      "human_review_pending": 8
+      "human_review_pending": 8,
+      "human_review_changes_requested": 0
     }
   },
   "total_assets": 356,
@@ -35,7 +39,7 @@
     "project_copy": "build/assets/candidates/godot-final-import-check/project",
     "log": "build/assets/candidates/godot-final-import-check/import.log"
   },
-  "artistic_review": "Internal pixel-level review corrected a four-direction orientation defect in the player sheets. The static catalog remains geometric and non-player animation is still procedural role work; these are provisionally integrated prototypes, not a human-approved production art pass. A redesigned batch of 31 role-specific weapon/evolution/relic catalog icons passed palette, dimensions, color-count, source/export hash, and Godot smoke checks and replaced only those explicitly authorized managed IDs. Catalog readability and the provisional shapes/colors still need owner review. A technical audit found that the generated SpriteFrames resources stored atlas regions as unsupported frame fields, so Godot treated full sheets as every frame. All 131 animation resources now use per-frame AtlasTexture subresources and pass a manifest-driven Godot smoke; boss/elite animation sheets were regenerated at native 96x96/24x24 cel dimensions. Runtime now plays idle/move frames for all 12 enemy/elite/boss roles from simulation time, plus attack frames during shooter/exploder fuses and boss telegraph/charge phases. Boss special sheets now play during Warden charges and Core spiral/combined attacks. All weapon attack/fire/impact animation sheets are now connected to their corresponding successful-fire and direct-hit events; XP collection, chest-open and relic-acquisition animations are connected; projectile loop animation is connected using existing frames; death cadence follows authored provisional metadata. Human art review remains pending.",
+  "artistic_review": "Internal pixel-level review corrected a four-direction orientation defect in the player sheets. The static catalog remains geometric and non-player animation is still procedural role work; these are provisionally integrated prototypes, not a human-approved production art pass. A redesigned batch of 31 role-specific weapon/evolution/relic catalog icons passed palette, dimensions, color-count, source/export hash, and Godot smoke checks and replaced only those explicitly authorized managed IDs. Catalog readability and the provisional shapes/colors still need owner review. A technical audit found that the generated SpriteFrames resources stored atlas regions as unsupported frame fields, so Godot treated full sheets as every frame. All 131 animation resources now use per-frame AtlasTexture subresources and pass a manifest-driven Godot smoke; boss/elite animation sheets were regenerated at native 96x96/24x24 cel dimensions. Runtime now plays idle/move frames for all 12 enemy/elite/boss roles from simulation time, plus attack frames during shooter/exploder fuses and boss telegraph/charge phases. Boss special sheets now play during Warden charges and Core spiral/combined attacks. All weapon attack/fire/impact animation sheets are now connected to their corresponding successful-fire and direct-hit events; XP collection, chest-open and relic-acquisition animations are connected; projectile loop animation is connected using existing frames; death cadence follows authored provisional metadata. Human art review remains pending. Owner reviewed the 48 icons on the Catalog icons sheet and requested more detail. A new 48-ID v2 set is staged for review; none of the active exports has been replaced.",
   "game_assets_files": [
     {
       "path": "game/assets/README.md",
@@ -5971,6 +5975,67 @@
       "qa": "Nine-sheet candidate batch passed animation QA; source/export hashes and manifest passed validation; all nine idle/move pairs are byte-distinct.",
       "integration": "Nine explicit managed IDs replaced; full CTest 121/121 and PCK launch passed.",
       "human_review_status": "pending"
+    },
+    {
+      "date": "2026-10-18",
+      "assets": [
+        "weapon_lightning_conductor_icon",
+        "weapon_infinite_circuit_icon",
+        "weapon_inferno_sprayer_icon",
+        "weapon_wildfire_icon",
+        "weapon_crimson_daggers_icon",
+        "weapon_bloodstorm_icon",
+        "weapon_minigun_icon",
+        "weapon_redline_icon",
+        "weapon_toxic_cloud_icon",
+        "weapon_pandemic_icon",
+        "weapon_sawblades_icon",
+        "weapon_razorstorm_icon",
+        "weapon_meteor_staff_icon",
+        "weapon_starfall_icon",
+        "weapon_prism_laser_icon",
+        "weapon_spectrum_collapse_icon",
+        "weapon_void_orb_icon",
+        "weapon_event_horizon_icon",
+        "weapon_frost_nova_icon",
+        "weapon_absolute_zero_icon",
+        "relic_storm_core_icon",
+        "relic_infernal_heart_icon",
+        "relic_blood_chalice_icon",
+        "relic_overdrive_engine_icon",
+        "relic_plague_mask_icon",
+        "relic_magnetic_coil_icon",
+        "relic_celestial_eye_icon",
+        "relic_magnet_heart_icon",
+        "relic_frozen_crown_icon",
+        "relic_prism_crystal_icon",
+        "relic_singularity_icon",
+        "ui_equipment_helmet",
+        "ui_equipment_armor",
+        "ui_equipment_gloves",
+        "ui_equipment_boots",
+        "ui_equipment_amulet",
+        "ui_equipment_ring",
+        "ui_rarity_normal",
+        "ui_rarity_magic",
+        "ui_rarity_mystic",
+        "ui_rarity_legendary",
+        "ui_rarity_mythic",
+        "ui_resource_essence",
+        "ui_resource_powder",
+        "ui_skill_node",
+        "ui_achievement_medal",
+        "ui_run_record",
+        "signal_prism"
+      ],
+      "finding": "Owner feedback: all 48 icons represented by the Catalog icons sheet are not detailed enough.",
+      "action": "Generated a new role-specific detail pass from the existing local pixel-art generator using palette-derived faceting, material construction marks and item-specific internal details. The prior runtime exports remain untouched.",
+      "skill": "dopamine-pixel-art",
+      "generator": "game/tools/generate_catalog_icon_detail_candidates.py v4; catalog_icon_detail_v1; seed 4801",
+      "candidate_root": "docs/art/candidates/catalog-icons-detail-v2",
+      "qa": "48/48 passed PNG decode, 32x32 dimensions, opaque alpha, exact master-palette membership, 8-16 colors, Aseprite signatures and source/export hashes.",
+      "integration": "not integrated; awaiting owner visual approval. Existing runtime icons remain active.",
+      "human_review_status": "changes_requested"
     }
   ],
   "music_runtime_roles": {
@@ -5981,7 +6046,7 @@
     "defeat_cue": "run-result one-shot",
     "stems": "runtime synchronized adaptive Survival arrangement"
   },
-  "remaining_review": "Owner visual/art direction review and auditory review remain pending. Detailed animation timings and directions remain provisional where the GDD leaves them open. No audio playback hardware is available in this session; local review page includes playback controls.",
+  "remaining_review": "Owner visual review of the 48 detailed catalog/UI icon candidates and remaining provisional art, plus human listening review of SFX/music, remain open. Open canonical choices stay provisional; detailed animation timings/directions remain as specified in the manifest.",
   "technical_qa_summary": {
     "asset_manifest": "passed: 356/356 unique assets; export/source hashes, Godot paths, generation recipes, QA and integration states verified",
     "asset_provenance": "passed: 356 current creative exports and 417 initial assets have migration/retirement records",
@@ -5990,8 +6055,8 @@
     "launcher_capture": "docs/art/evidence/2026-10-18/launch-menu.png; SHA-256 0a15362bdd87b12fac2d28471af1041ffb46929df42b467c6e6e039a7e441527",
     "godot_pck_export": "passed: Linux/X11 PCK rebuilt; 3339232 bytes, SHA-256 e4cfe6e83732e13326c6ebe3ba432c85b54a64f5d3099c8889d5e04a9060d2c3",
     "full_ctest": "passed: 121/121 tests (2026-10-18); import, asset QA smoke, visual/runtime, audio, menus, progression and Sandbox scenarios included",
-    "candidate_batch_qa": "passed: all 12 QA roots referenced by current manifest were rerun; each report status=passed",
-    "human_review": "pending: owner visual and auditory acceptance remains separate from technical QA; this environment has no PCM output device",
+    "candidate_batch_qa": "passed: all 12 QA roots referenced by current manifest were rerun; each report status=passed; catalog icon v2 candidates: 48/48 pass at docs/art/candidates/catalog-icons-detail-v2/qa-report.json; not integrated pending owner approval.",
+    "human_review": "changes_requested: owner says all 48 catalog/UI icons lack detail; v2 candidate set awaits review. Other visual acceptance and audio listening remain pending.",
     "integration_dry_run": "passed: current 356/356 IDs, 356 unique destinations, zero conflicts or collisions; report build/assets/candidates/review/integration-dry-run-356.json",
     "review_pack_links": "passed: 847 local HTML/CSS references and contact/audio inventory source paths resolve; zero missing targets"
   },
@@ -6000,7 +6065,8 @@
     "visual_contact_sheets": "docs/art/evidence/2026-10-18/contact-sheets/ (9 PNG sheets: 90 static images and 131 animation sheets, grouped by asset family)",
     "animation_previews": "build/assets/candidates/review/index.html (131 inline CSS sprite previews; regenerate with game/tools/create_asset_review_pack.py)",
     "audio_inventory": "docs/art/ASSET_AUDIO_INVENTORY.json (133 SFX/music files with source, recipe, seed, parameters and technical metadata)",
-    "interactive_review_gallery": "build/assets/candidates/review/index.html (90 static cards, 131 animation previews, 2 font samples and 133 audio players)"
+    "interactive_review_gallery": "build/assets/candidates/review/index.html (90 static cards, 131 animation previews, 2 font samples and 133 audio players)",
+    "catalog_icon_revision_review": "docs/art/candidates/catalog-icons-detail-v2/index.html (48 side-by-side current/candidate cards, IDs, source links and color counts; no runtime integration)"
   },
   "candidate_batch_qa": {
     "build/assets/candidates/animation-directional/qa-report.json": {
@@ -6050,6 +6116,14 @@
     "build/assets/candidates/title-art/qa-report.json": {
       "status": "passed",
       "kind": "pixel-art"
+    },
+    "docs/art/candidates/catalog-icons-detail-v2/qa-report.json": {
+      "status": "passed",
+      "kind": "pixel-art",
+      "asset_count": 48,
+      "integration_status": "not_integrated",
+      "human_review_status": "pending",
+      "legacy_hash_reuse_check": "passed: 48 candidate PNG hashes, zero exact matches in the initial 425-file register"
     }
   }
 }

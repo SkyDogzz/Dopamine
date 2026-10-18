@@ -1,0 +1,123 @@
+{
+  "asset_id": "weapon_starfall_icon",
+  "status": "candidate_not_approved",
+  "skill": "dopamine-pixel-art",
+  "generator": "game/tools/generate_catalog_icon_detail_candidates.py",
+  "generator_version": "4",
+  "seed": 4801,
+  "seed_policy": "fixed procedural geometry; seed is recorded but not consumed",
+  "brief": "Owner-requested detailed catalog icon pass; readable layered pixel art using only the Art Bible master palette",
+  "parameters": {
+    "drawing_method": "deterministic role primitives",
+    "asset_name": "evolution_meteor_staff",
+    "palette_source": "docs/art/palette_master.gpl",
+    "seed_consumed": false,
+    "detail_pass": "catalog_icon_detail_v1"
+  },
+  "dimensions": {
+    "width": 32,
+    "height": 32
+  },
+  "palette_rgba": [
+    [
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      8,
+      11,
+      24,
+      255
+    ],
+    [
+      27,
+      35,
+      64,
+      255
+    ],
+    [
+      41,
+      51,
+      84,
+      255
+    ],
+    [
+      55,
+      232,
+      245,
+      255
+    ],
+    [
+      61,
+      72,
+      104,
+      255
+    ],
+    [
+      88,
+      99,
+      129,
+      255
+    ],
+    [
+      165,
+      45,
+      202,
+      255
+    ],
+    [
+      165,
+      174,
+      195,
+      255
+    ],
+    [
+      212,
+      217,
+      232,
+      255
+    ],
+    [
+      225,
+      58,
+      203,
+      255
+    ],
+    [
+      230,
+      152,
+      37,
+      255
+    ],
+    [
+      246,
+      247,
+      255,
+      255
+    ],
+    [
+      255,
+      117,
+      227,
+      255
+    ],
+    [
+      255,
+      212,
+      71,
+      255
+    ],
+    [
+      255,
+      241,
+      154,
+      255
+    ]
+  ],
+  "source_path": "source/original_procedural/evolution_meteor_staff.aseprite",
+  "export_path": "sprites/catalog/evolution_meteor_staff.png",
+  "source_sha256": "382cab97dc98a2cb5952b72aaf3d6bc14ef10277911c69c34359eb4a28110418",
+  "export_sha256": "143d18db775f885024ff76df9226368c3749095130cd15d16bd98443a788a03a"
+}

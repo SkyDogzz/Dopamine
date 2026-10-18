@@ -1,0 +1,81 @@
+{
+  "asset_id": "ui_rarity_normal",
+  "status": "candidate_not_approved",
+  "skill": "dopamine-pixel-art",
+  "generator": "game/tools/generate_catalog_icon_detail_candidates.py",
+  "generator_version": "4",
+  "seed": 4801,
+  "seed_policy": "fixed procedural geometry; seed is recorded but not consumed",
+  "brief": "Owner-requested detailed catalog icon pass; readable layered pixel art using only the Art Bible master palette",
+  "parameters": {
+    "drawing_method": "deterministic role primitives",
+    "asset_name": "ui_rarity_normal",
+    "palette_source": "docs/art/palette_master.gpl",
+    "seed_consumed": false,
+    "detail_pass": "catalog_icon_detail_v1"
+  },
+  "dimensions": {
+    "width": 32,
+    "height": 32
+  },
+  "palette_rgba": [
+    [
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      8,
+      11,
+      24,
+      255
+    ],
+    [
+      16,
+      21,
+      43,
+      255
+    ],
+    [
+      27,
+      35,
+      64,
+      255
+    ],
+    [
+      41,
+      51,
+      84,
+      255
+    ],
+    [
+      165,
+      174,
+      195,
+      255
+    ],
+    [
+      212,
+      217,
+      232,
+      255
+    ],
+    [
+      246,
+      247,
+      255,
+      255
+    ],
+    [
+      255,
+      241,
+      154,
+      255
+    ]
+  ],
+  "source_path": "source/ui/rarity_normal.aseprite",
+  "export_path": "icons/catalog/rarity_normal.png",
+  "source_sha256": "5b4fbed37f7bcc25fac05d5a82d30a0244edc542050cd777c7025cd5423a8690",
+  "export_sha256": "e856808adfbe576204db8374431f556358653436775147b10cdaca948ec394c5"
+}

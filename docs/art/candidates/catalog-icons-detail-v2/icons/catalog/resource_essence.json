@@ -1,0 +1,93 @@
+{
+  "asset_id": "ui_resource_essence",
+  "status": "candidate_not_approved",
+  "skill": "dopamine-pixel-art",
+  "generator": "game/tools/generate_catalog_icon_detail_candidates.py",
+  "generator_version": "4",
+  "seed": 4801,
+  "seed_policy": "fixed procedural geometry; seed is recorded but not consumed",
+  "brief": "Owner-requested detailed catalog icon pass; readable layered pixel art using only the Art Bible master palette",
+  "parameters": {
+    "drawing_method": "deterministic role primitives",
+    "asset_name": "ui_resource_essence",
+    "palette_source": "docs/art/palette_master.gpl",
+    "seed_consumed": false,
+    "detail_pass": "catalog_icon_detail_v1"
+  },
+  "dimensions": {
+    "width": 32,
+    "height": 32
+  },
+  "palette_rgba": [
+    [
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      8,
+      127,
+      178,
+      255
+    ],
+    [
+      14,
+      184,
+      212,
+      255
+    ],
+    [
+      16,
+      21,
+      43,
+      255
+    ],
+    [
+      27,
+      35,
+      64,
+      255
+    ],
+    [
+      41,
+      51,
+      84,
+      255
+    ],
+    [
+      55,
+      232,
+      245,
+      255
+    ],
+    [
+      165,
+      174,
+      195,
+      255
+    ],
+    [
+      212,
+      217,
+      232,
+      255
+    ],
+    [
+      246,
+      247,
+      255,
+      255
+    ],
+    [
+      255,
+      241,
+      154,
+      255
+    ]
+  ],
+  "source_path": "source/ui/resource_essence.aseprite",
+  "export_path": "icons/catalog/resource_essence.png",
+  "source_sha256": "6cee0dca93c7882c51e4ac3417d5886486043f05b95ee000410307ac9711e2d3",
+  "export_sha256": "8aa492a895e6ab5f7863c0ee0b241a1e7faea29beb15d25fb8cefc1e93f792a2"
+}

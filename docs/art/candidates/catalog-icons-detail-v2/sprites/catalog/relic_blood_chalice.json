@@ -1,0 +1,117 @@
+{
+  "asset_id": "relic_blood_chalice_icon",
+  "status": "candidate_not_approved",
+  "skill": "dopamine-pixel-art",
+  "generator": "game/tools/generate_catalog_icon_detail_candidates.py",
+  "generator_version": "4",
+  "seed": 4801,
+  "seed_policy": "fixed procedural geometry; seed is recorded but not consumed",
+  "brief": "Owner-requested detailed catalog icon pass; readable layered pixel art using only the Art Bible master palette",
+  "parameters": {
+    "drawing_method": "deterministic role primitives",
+    "asset_name": "relic_blood_chalice",
+    "palette_source": "docs/art/palette_master.gpl",
+    "seed_consumed": false,
+    "detail_pass": "catalog_icon_detail_v1"
+  },
+  "dimensions": {
+    "width": 32,
+    "height": 32
+  },
+  "palette_rgba": [
+    [
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      8,
+      11,
+      24,
+      255
+    ],
+    [
+      16,
+      21,
+      43,
+      255
+    ],
+    [
+      27,
+      35,
+      64,
+      255
+    ],
+    [
+      41,
+      51,
+      84,
+      255
+    ],
+    [
+      61,
+      72,
+      104,
+      255
+    ],
+    [
+      72,
+      230,
+      155,
+      255
+    ],
+    [
+      88,
+      99,
+      129,
+      255
+    ],
+    [
+      165,
+      174,
+      195,
+      255
+    ],
+    [
+      200,
+      59,
+      98,
+      255
+    ],
+    [
+      212,
+      217,
+      232,
+      255
+    ],
+    [
+      246,
+      247,
+      255,
+      255
+    ],
+    [
+      255,
+      113,
+      129,
+      255
+    ],
+    [
+      255,
+      212,
+      71,
+      255
+    ],
+    [
+      255,
+      241,
+      154,
+      255
+    ]
+  ],
+  "source_path": "source/original_procedural/relic_blood_chalice.aseprite",
+  "export_path": "sprites/catalog/relic_blood_chalice.png",
+  "source_sha256": "91ecbbfc89a6f97d5a36d140f110bc25786d156b61a9be6cd2a8745daac05eb6",
+  "export_sha256": "807bfb7e60ab875c25d92a2bb7c139d82f351d35e7b56ee8206c4ebce6b9ae6e"
+}

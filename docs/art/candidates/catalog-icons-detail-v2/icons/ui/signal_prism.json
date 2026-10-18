@@ -1,0 +1,111 @@
+{
+  "asset_id": "signal_prism",
+  "status": "candidate_not_approved",
+  "skill": "dopamine-pixel-art",
+  "generator": "game/tools/generate_catalog_icon_detail_candidates.py",
+  "generator_version": "4",
+  "seed": 4801,
+  "seed_policy": "fixed procedural geometry; seed is recorded but not consumed",
+  "brief": "Owner-requested detailed catalog icon pass; readable layered pixel art using only the Art Bible master palette",
+  "parameters": {
+    "drawing_method": "deterministic role primitives",
+    "asset_name": "signal_prism",
+    "palette_source": "docs/art/palette_master.gpl",
+    "seed_consumed": false,
+    "detail_pass": "catalog_icon_detail_v1"
+  },
+  "dimensions": {
+    "width": 32,
+    "height": 32
+  },
+  "palette_rgba": [
+    [
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      8,
+      11,
+      24,
+      255
+    ],
+    [
+      16,
+      21,
+      43,
+      255
+    ],
+    [
+      27,
+      35,
+      64,
+      255
+    ],
+    [
+      41,
+      51,
+      84,
+      255
+    ],
+    [
+      55,
+      232,
+      245,
+      255
+    ],
+    [
+      165,
+      45,
+      202,
+      255
+    ],
+    [
+      165,
+      174,
+      195,
+      255
+    ],
+    [
+      212,
+      217,
+      232,
+      255
+    ],
+    [
+      225,
+      58,
+      203,
+      255
+    ],
+    [
+      246,
+      247,
+      255,
+      255
+    ],
+    [
+      255,
+      117,
+      227,
+      255
+    ],
+    [
+      255,
+      212,
+      71,
+      255
+    ],
+    [
+      255,
+      241,
+      154,
+      255
+    ]
+  ],
+  "source_path": "source/original_procedural/signal_prism.aseprite",
+  "export_path": "icons/ui/signal_prism.png",
+  "source_sha256": "e753a7b515611b0079cbb242ef8c6fc77e5ac15d06b63e47b93b6d633fbdb96b",
+  "export_sha256": "7a114a5eb1693851d3dc07d98368d3438fb71a833a17403c10617b4c77f16359"
+}

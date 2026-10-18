@@ -1,0 +1,117 @@
+{
+  "asset_id": "weapon_infinite_circuit_icon",
+  "status": "candidate_not_approved",
+  "skill": "dopamine-pixel-art",
+  "generator": "game/tools/generate_catalog_icon_detail_candidates.py",
+  "generator_version": "4",
+  "seed": 4801,
+  "seed_policy": "fixed procedural geometry; seed is recorded but not consumed",
+  "brief": "Owner-requested detailed catalog icon pass; readable layered pixel art using only the Art Bible master palette",
+  "parameters": {
+    "drawing_method": "deterministic role primitives",
+    "asset_name": "evolution_lightning_conductor",
+    "palette_source": "docs/art/palette_master.gpl",
+    "seed_consumed": false,
+    "detail_pass": "catalog_icon_detail_v1"
+  },
+  "dimensions": {
+    "width": 32,
+    "height": 32
+  },
+  "palette_rgba": [
+    [
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      8,
+      11,
+      24,
+      255
+    ],
+    [
+      8,
+      127,
+      178,
+      255
+    ],
+    [
+      14,
+      184,
+      212,
+      255
+    ],
+    [
+      27,
+      35,
+      64,
+      255
+    ],
+    [
+      41,
+      51,
+      84,
+      255
+    ],
+    [
+      55,
+      232,
+      245,
+      255
+    ],
+    [
+      61,
+      72,
+      104,
+      255
+    ],
+    [
+      165,
+      45,
+      202,
+      255
+    ],
+    [
+      212,
+      217,
+      232,
+      255
+    ],
+    [
+      225,
+      58,
+      203,
+      255
+    ],
+    [
+      230,
+      152,
+      37,
+      255
+    ],
+    [
+      255,
+      117,
+      227,
+      255
+    ],
+    [
+      255,
+      212,
+      71,
+      255
+    ],
+    [
+      255,
+      241,
+      154,
+      255
+    ]
+  ],
+  "source_path": "source/original_procedural/evolution_lightning_conductor.aseprite",
+  "export_path": "sprites/catalog/evolution_lightning_conductor.png",
+  "source_sha256": "4486240dfe4ed009dab63d8177e4d21b875965751f890b6d2c360b5b74dbfd21",
+  "export_sha256": "2a317280ae4b4dbec31ef8d410ba3b695d74d816e1e92755b34b5b47f2ba4974"
+}

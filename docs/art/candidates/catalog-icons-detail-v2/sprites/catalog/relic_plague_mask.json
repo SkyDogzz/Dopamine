@@ -1,0 +1,111 @@
+{
+  "asset_id": "relic_plague_mask_icon",
+  "status": "candidate_not_approved",
+  "skill": "dopamine-pixel-art",
+  "generator": "game/tools/generate_catalog_icon_detail_candidates.py",
+  "generator_version": "4",
+  "seed": 4801,
+  "seed_policy": "fixed procedural geometry; seed is recorded but not consumed",
+  "brief": "Owner-requested detailed catalog icon pass; readable layered pixel art using only the Art Bible master palette",
+  "parameters": {
+    "drawing_method": "deterministic role primitives",
+    "asset_name": "relic_plague_mask",
+    "palette_source": "docs/art/palette_master.gpl",
+    "seed_consumed": false,
+    "detail_pass": "catalog_icon_detail_v1"
+  },
+  "dimensions": {
+    "width": 32,
+    "height": 32
+  },
+  "palette_rgba": [
+    [
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      8,
+      11,
+      24,
+      255
+    ],
+    [
+      21,
+      140,
+      98,
+      255
+    ],
+    [
+      27,
+      35,
+      64,
+      255
+    ],
+    [
+      41,
+      51,
+      84,
+      255
+    ],
+    [
+      55,
+      232,
+      245,
+      255
+    ],
+    [
+      61,
+      72,
+      104,
+      255
+    ],
+    [
+      72,
+      230,
+      155,
+      255
+    ],
+    [
+      165,
+      174,
+      195,
+      255
+    ],
+    [
+      212,
+      217,
+      232,
+      255
+    ],
+    [
+      225,
+      58,
+      203,
+      255
+    ],
+    [
+      246,
+      247,
+      255,
+      255
+    ],
+    [
+      255,
+      113,
+      129,
+      255
+    ],
+    [
+      255,
+      241,
+      154,
+      255
+    ]
+  ],
+  "source_path": "source/original_procedural/relic_plague_mask.aseprite",
+  "export_path": "sprites/catalog/relic_plague_mask.png",
+  "source_sha256": "7313ed33d377a5052e5b925629b389ddcebce57a0ef7f05621c894ab95c1ae9b",
+  "export_sha256": "685d8ea68b57fef67739a1c19492cc4df1e55596b6cad538591ceafcff533324"
+}

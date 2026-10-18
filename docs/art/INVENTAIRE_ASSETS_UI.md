@@ -4,6 +4,8 @@
 
 Le checkpoint de revalidation des exports intégrés, de leur provenance et des revues restantes est consigné dans [`AUDIT_REMPLACEMENTS_ASSETS.md`](AUDIT_REMPLACEMENTS_ASSETS.md).
 
+**Retour propriétaire — icônes catalogue :** les 48 icônes de la planche catalogue (armes/évolutions, reliques et pictogrammes UI) ont été jugées insuffisamment détaillées. Les actifs courants sont préservés et marqués `changes_requested`; le lot détaillé v2 et ses sources Aseprite sont en revue sous [`candidates/catalog-icons-detail-v2/`](candidates/catalog-icons-detail-v2/index.html). Ils restent hors runtime jusqu’à acceptation.
+
 Les 20 événements de tir et d’impact des dix armes ont chacun quatre variantes SFX déterministes et distinctes; `SfxService` les fait tourner. Elles ont été générées par `dopamine-sfx`, passées au QA numérique et vérifiées dans Godot. La galerie locale `build/assets/candidates/review/index.html` contient actuellement 90 cartes visuelles légendées, 131 aperçus d’animation et 133 lecteurs audio. L’écoute et la revue artistique du propriétaire restent requises.
 
 Les animations d’élite et des deux boss ont été corrigées pour suivre la règle directionnelle de l’Art Bible : leurs 14 sheets ont quatre rangées bas/gauche/droite/haut et leurs 56 animations Godot correspondantes sont chargées. Les effets, armes, reliques, projectiles et ramassages non directionnels restent sur une rangée `forward`.

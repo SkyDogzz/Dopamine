@@ -1,0 +1,582 @@
+{
+  "status": "passed",
+  "root": "docs/art/candidates/catalog-icons-detail-v2",
+  "assets": [
+    {
+      "asset_id": "ui_achievement_medal",
+      "png": "docs/art/candidates/catalog-icons-detail-v2/icons/catalog/achievement_medal.png",
+      "source": "docs/art/candidates/catalog-icons-detail-v2/source/ui/achievement_medal.aseprite",
+      "dimensions": [
+        32,
+        32
+      ],
+      "colors": 11,
+      "palette_pass": true,
+      "hashes_pass": true
+    },
+    {
+      "asset_id": "ui_equipment_amulet",
+      "png": "docs/art/candidates/catalog-icons-detail-v2/icons/catalog/equipment_amulet.png",
+      "source": "docs/art/candidates/catalog-icons-detail-v2/source/ui/equipment_amulet.aseprite",
+      "dimensions": [
+        32,
+        32
+      ],
+      "colors": 11,
+      "palette_pass": true,
+      "hashes_pass": true
+    },
+    {
+      "asset_id": "ui_equipment_armor",
+      "png": "docs/art/candidates/catalog-icons-detail-v2/icons/catalog/equipment_armor.png",
+      "source": "docs/art/candidates/catalog-icons-detail-v2/source/ui/equipment_armor.aseprite",
+      "dimensions": [
+        32,
+        32
+      ],
+      "colors": 13,
+      "palette_pass": true,
+      "hashes_pass": true
+    },
+    {
+      "asset_id": "ui_equipment_boots",
+      "png": "docs/art/candidates/catalog-icons-detail-v2/icons/catalog/equipment_boots.png",
+      "source": "docs/art/candidates/catalog-icons-detail-v2/source/ui/equipment_boots.aseprite",
+      "dimensions": [
+        32,
+        32
+      ],
+      "colors": 11,
+      "palette_pass": true,
+      "hashes_pass": true
+    },
+    {
+      "asset_id": "ui_equipment_gloves",
+      "png": "docs/art/candidates/catalog-icons-detail-v2/icons/catalog/equipment_gloves.png",
+      "source": "docs/art/candidates/catalog-icons-detail-v2/source/ui/equipment_gloves.aseprite",
+      "dimensions": [
+        32,
+        32
+      ],
+      "colors": 11,
+      "palette_pass": true,
+      "hashes_pass": true
+    },
+    {
+      "asset_id": "ui_equipment_helmet",
+      "png": "docs/art/candidates/catalog-icons-detail-v2/icons/catalog/equipment_helmet.png",
+      "source": "docs/art/candidates/catalog-icons-detail-v2/source/ui/equipment_helmet.aseprite",
+      "dimensions": [
+        32,
+        32
+      ],
+      "colors": 13,
+      "palette_pass": true,
+      "hashes_pass": true
+    },
+    {
+      "asset_id": "ui_equipment_ring",
+      "png": "docs/art/candidates/catalog-icons-detail-v2/icons/catalog/equipment_ring.png",
+      "source": "docs/art/candidates/catalog-icons-detail-v2/source/ui/equipment_ring.aseprite",
+      "dimensions": [
+        32,
+        32
+      ],
+      "colors": 11,
+      "palette_pass": true,
+      "hashes_pass": true
+    },
+    {
+      "asset_id": "ui_rarity_legendary",
+      "png": "docs/art/candidates/catalog-icons-detail-v2/icons/catalog/rarity_legendary.png",
+      "source": "docs/art/candidates/catalog-icons-detail-v2/source/ui/rarity_legendary.aseprite",
+      "dimensions": [
+        32,
+        32
+      ],
+      "colors": 10,
+      "palette_pass": true,
+      "hashes_pass": true
+    },
+    {
+      "asset_id": "ui_rarity_magic",
+      "png": "docs/art/candidates/catalog-icons-detail-v2/icons/catalog/rarity_magic.png",
+      "source": "docs/art/candidates/catalog-icons-detail-v2/source/ui/rarity_magic.aseprite",
+      "dimensions": [
+        32,
+        32
+      ],
+      "colors": 11,
+      "palette_pass": true,
+      "hashes_pass": true
+    },
+    {
+      "asset_id": "ui_rarity_mystic",
+      "png": "docs/art/candidates/catalog-icons-detail-v2/icons/catalog/rarity_mystic.png",
+      "source": "docs/art/candidates/catalog-icons-detail-v2/source/ui/rarity_mystic.aseprite",
+      "dimensions": [
+        32,
+        32
+      ],
+      "colors": 11,
+      "palette_pass": true,
+      "hashes_pass": true
+    },
+    {
+      "asset_id": "ui_rarity_mythic",
+      "png": "docs/art/candidates/catalog-icons-detail-v2/icons/catalog/rarity_mythic.png",
+      "source": "docs/art/candidates/catalog-icons-detail-v2/source/ui/rarity_mythic.aseprite",
+      "dimensions": [
+        32,
+        32
+      ],
+      "colors": 10,
+      "palette_pass": true,
+      "hashes_pass": true
+    },
+    {
+      "asset_id": "ui_rarity_normal",
+      "png": "docs/art/candidates/catalog-icons-detail-v2/icons/catalog/rarity_normal.png",
+      "source": "docs/art/candidates/catalog-icons-detail-v2/source/ui/rarity_normal.aseprite",
+      "dimensions": [
+        32,
+        32
+      ],
+      "colors": 8,
+      "palette_pass": true,
+      "hashes_pass": true
+    },
+    {
+      "asset_id": "ui_resource_essence",
+      "png": "docs/art/candidates/catalog-icons-detail-v2/icons/catalog/resource_essence.png",
+      "source": "docs/art/candidates/catalog-icons-detail-v2/source/ui/resource_essence.aseprite",
+      "dimensions": [
+        32,
+        32
+      ],
+      "colors": 10,
+      "palette_pass": true,
+      "hashes_pass": true
+    },
+    {
+      "asset_id": "ui_resource_powder",
+      "png": "docs/art/candidates/catalog-icons-detail-v2/icons/catalog/resource_powder.png",
+      "source": "docs/art/candidates/catalog-icons-detail-v2/source/ui/resource_powder.aseprite",
+      "dimensions": [
+        32,
+        32
+      ],
+      "colors": 10,
+      "palette_pass": true,
+      "hashes_pass": true
+    },
+    {
+      "asset_id": "ui_run_record",
+      "png": "docs/art/candidates/catalog-icons-detail-v2/icons/catalog/run_record.png",
+      "source": "docs/art/candidates/catalog-icons-detail-v2/source/ui/run_record.aseprite",
+      "dimensions": [
+        32,
+        32
+      ],
+      "colors": 13,
+      "palette_pass": true,
+      "hashes_pass": true
+    },
+    {
+      "asset_id": "ui_skill_node",
+      "png": "docs/art/candidates/catalog-icons-detail-v2/icons/catalog/skill_node.png",
+      "source": "docs/art/candidates/catalog-icons-detail-v2/source/ui/skill_node.aseprite",
+      "dimensions": [
+        32,
+        32
+      ],
+      "colors": 11,
+      "palette_pass": true,
+      "hashes_pass": true
+    },
+    {
+      "asset_id": "signal_prism",
+      "png": "docs/art/candidates/catalog-icons-detail-v2/icons/ui/signal_prism.png",
+      "source": "docs/art/candidates/catalog-icons-detail-v2/source/original_procedural/signal_prism.aseprite",
+      "dimensions": [
+        32,
+        32
+      ],
+      "colors": 13,
+      "palette_pass": true,
+      "hashes_pass": true
+    },
+    {
+      "asset_id": "weapon_bloodstorm_icon",
+      "png": "docs/art/candidates/catalog-icons-detail-v2/sprites/catalog/evolution_crimson_daggers.png",
+      "source": "docs/art/candidates/catalog-icons-detail-v2/source/original_procedural/evolution_crimson_daggers.aseprite",
+      "dimensions": [
+        32,
+        32
+      ],
+      "colors": 12,
+      "palette_pass": true,
+      "hashes_pass": true
+    },
+    {
+      "asset_id": "weapon_absolute_zero_icon",
+      "png": "docs/art/candidates/catalog-icons-detail-v2/sprites/catalog/evolution_frost_nova.png",
+      "source": "docs/art/candidates/catalog-icons-detail-v2/source/original_procedural/evolution_frost_nova.aseprite",
+      "dimensions": [
+        32,
+        32
+      ],
+      "colors": 11,
+      "palette_pass": true,
+      "hashes_pass": true
+    },
+    {
+      "asset_id": "weapon_wildfire_icon",
+      "png": "docs/art/candidates/catalog-icons-detail-v2/sprites/catalog/evolution_inferno_sprayer.png",
+      "source": "docs/art/candidates/catalog-icons-detail-v2/source/original_procedural/evolution_inferno_sprayer.aseprite",
+      "dimensions": [
+        32,
+        32
+      ],
+      "colors": 13,
+      "palette_pass": true,
+      "hashes_pass": true
+    },
+    {
+      "asset_id": "weapon_infinite_circuit_icon",
+      "png": "docs/art/candidates/catalog-icons-detail-v2/sprites/catalog/evolution_lightning_conductor.png",
+      "source": "docs/art/candidates/catalog-icons-detail-v2/source/original_procedural/evolution_lightning_conductor.aseprite",
+      "dimensions": [
+        32,
+        32
+      ],
+      "colors": 14,
+      "palette_pass": true,
+      "hashes_pass": true
+    },
+    {
+      "asset_id": "weapon_starfall_icon",
+      "png": "docs/art/candidates/catalog-icons-detail-v2/sprites/catalog/evolution_meteor_staff.png",
+      "source": "docs/art/candidates/catalog-icons-detail-v2/source/original_procedural/evolution_meteor_staff.aseprite",
+      "dimensions": [
+        32,
+        32
+      ],
+      "colors": 15,
+      "palette_pass": true,
+      "hashes_pass": true
+    },
+    {
+      "asset_id": "weapon_redline_icon",
+      "png": "docs/art/candidates/catalog-icons-detail-v2/sprites/catalog/evolution_minigun.png",
+      "source": "docs/art/candidates/catalog-icons-detail-v2/source/original_procedural/evolution_minigun.aseprite",
+      "dimensions": [
+        32,
+        32
+      ],
+      "colors": 14,
+      "palette_pass": true,
+      "hashes_pass": true
+    },
+    {
+      "asset_id": "weapon_spectrum_collapse_icon",
+      "png": "docs/art/candidates/catalog-icons-detail-v2/sprites/catalog/evolution_prism_laser.png",
+      "source": "docs/art/candidates/catalog-icons-detail-v2/source/original_procedural/evolution_prism_laser.aseprite",
+      "dimensions": [
+        32,
+        32
+      ],
+      "colors": 15,
+      "palette_pass": true,
+      "hashes_pass": true
+    },
+    {
+      "asset_id": "weapon_razorstorm_icon",
+      "png": "docs/art/candidates/catalog-icons-detail-v2/sprites/catalog/evolution_sawblades.png",
+      "source": "docs/art/candidates/catalog-icons-detail-v2/source/original_procedural/evolution_sawblades.aseprite",
+      "dimensions": [
+        32,
+        32
+      ],
+      "colors": 15,
+      "palette_pass": true,
+      "hashes_pass": true
+    },
+    {
+      "asset_id": "weapon_pandemic_icon",
+      "png": "docs/art/candidates/catalog-icons-detail-v2/sprites/catalog/evolution_toxic_cloud.png",
+      "source": "docs/art/candidates/catalog-icons-detail-v2/source/original_procedural/evolution_toxic_cloud.aseprite",
+      "dimensions": [
+        32,
+        32
+      ],
+      "colors": 11,
+      "palette_pass": true,
+      "hashes_pass": true
+    },
+    {
+      "asset_id": "weapon_event_horizon_icon",
+      "png": "docs/art/candidates/catalog-icons-detail-v2/sprites/catalog/evolution_void_orb.png",
+      "source": "docs/art/candidates/catalog-icons-detail-v2/source/original_procedural/evolution_void_orb.aseprite",
+      "dimensions": [
+        32,
+        32
+      ],
+      "colors": 14,
+      "palette_pass": true,
+      "hashes_pass": true
+    },
+    {
+      "asset_id": "relic_blood_chalice_icon",
+      "png": "docs/art/candidates/catalog-icons-detail-v2/sprites/catalog/relic_blood_chalice.png",
+      "source": "docs/art/candidates/catalog-icons-detail-v2/source/original_procedural/relic_blood_chalice.aseprite",
+      "dimensions": [
+        32,
+        32
+      ],
+      "colors": 14,
+      "palette_pass": true,
+      "hashes_pass": true
+    },
+    {
+      "asset_id": "relic_celestial_eye_icon",
+      "png": "docs/art/candidates/catalog-icons-detail-v2/sprites/catalog/relic_celestial_eye.png",
+      "source": "docs/art/candidates/catalog-icons-detail-v2/source/original_procedural/relic_celestial_eye.aseprite",
+      "dimensions": [
+        32,
+        32
+      ],
+      "colors": 15,
+      "palette_pass": true,
+      "hashes_pass": true
+    },
+    {
+      "asset_id": "relic_frozen_crown_icon",
+      "png": "docs/art/candidates/catalog-icons-detail-v2/sprites/catalog/relic_frozen_crown.png",
+      "source": "docs/art/candidates/catalog-icons-detail-v2/source/original_procedural/relic_frozen_crown.aseprite",
+      "dimensions": [
+        32,
+        32
+      ],
+      "colors": 14,
+      "palette_pass": true,
+      "hashes_pass": true
+    },
+    {
+      "asset_id": "relic_infernal_heart_icon",
+      "png": "docs/art/candidates/catalog-icons-detail-v2/sprites/catalog/relic_infernal_heart.png",
+      "source": "docs/art/candidates/catalog-icons-detail-v2/source/original_procedural/relic_infernal_heart.aseprite",
+      "dimensions": [
+        32,
+        32
+      ],
+      "colors": 10,
+      "palette_pass": true,
+      "hashes_pass": true
+    },
+    {
+      "asset_id": "relic_magnet_heart_icon",
+      "png": "docs/art/candidates/catalog-icons-detail-v2/sprites/catalog/relic_magnet_heart.png",
+      "source": "docs/art/candidates/catalog-icons-detail-v2/source/original_procedural/relic_magnet_heart.aseprite",
+      "dimensions": [
+        32,
+        32
+      ],
+      "colors": 14,
+      "palette_pass": true,
+      "hashes_pass": true
+    },
+    {
+      "asset_id": "relic_magnetic_coil_icon",
+      "png": "docs/art/candidates/catalog-icons-detail-v2/sprites/catalog/relic_magnetic_coil.png",
+      "source": "docs/art/candidates/catalog-icons-detail-v2/source/original_procedural/relic_magnetic_coil.aseprite",
+      "dimensions": [
+        32,
+        32
+      ],
+      "colors": 14,
+      "palette_pass": true,
+      "hashes_pass": true
+    },
+    {
+      "asset_id": "relic_overdrive_engine_icon",
+      "png": "docs/art/candidates/catalog-icons-detail-v2/sprites/catalog/relic_overdrive_engine.png",
+      "source": "docs/art/candidates/catalog-icons-detail-v2/source/original_procedural/relic_overdrive_engine.aseprite",
+      "dimensions": [
+        32,
+        32
+      ],
+      "colors": 13,
+      "palette_pass": true,
+      "hashes_pass": true
+    },
+    {
+      "asset_id": "relic_plague_mask_icon",
+      "png": "docs/art/candidates/catalog-icons-detail-v2/sprites/catalog/relic_plague_mask.png",
+      "source": "docs/art/candidates/catalog-icons-detail-v2/source/original_procedural/relic_plague_mask.aseprite",
+      "dimensions": [
+        32,
+        32
+      ],
+      "colors": 13,
+      "palette_pass": true,
+      "hashes_pass": true
+    },
+    {
+      "asset_id": "relic_prism_crystal_icon",
+      "png": "docs/art/candidates/catalog-icons-detail-v2/sprites/catalog/relic_prism_crystal.png",
+      "source": "docs/art/candidates/catalog-icons-detail-v2/source/original_procedural/relic_prism_crystal.aseprite",
+      "dimensions": [
+        32,
+        32
+      ],
+      "colors": 15,
+      "palette_pass": true,
+      "hashes_pass": true
+    },
+    {
+      "asset_id": "relic_singularity_icon",
+      "png": "docs/art/candidates/catalog-icons-detail-v2/sprites/catalog/relic_singularity.png",
+      "source": "docs/art/candidates/catalog-icons-detail-v2/source/original_procedural/relic_singularity.aseprite",
+      "dimensions": [
+        32,
+        32
+      ],
+      "colors": 14,
+      "palette_pass": true,
+      "hashes_pass": true
+    },
+    {
+      "asset_id": "relic_storm_core_icon",
+      "png": "docs/art/candidates/catalog-icons-detail-v2/sprites/catalog/relic_storm_core.png",
+      "source": "docs/art/candidates/catalog-icons-detail-v2/source/original_procedural/relic_storm_core.aseprite",
+      "dimensions": [
+        32,
+        32
+      ],
+      "colors": 13,
+      "palette_pass": true,
+      "hashes_pass": true
+    },
+    {
+      "asset_id": "weapon_crimson_daggers_icon",
+      "png": "docs/art/candidates/catalog-icons-detail-v2/sprites/catalog/weapon_crimson_daggers.png",
+      "source": "docs/art/candidates/catalog-icons-detail-v2/source/original_procedural/weapon_crimson_daggers.aseprite",
+      "dimensions": [
+        32,
+        32
+      ],
+      "colors": 11,
+      "palette_pass": true,
+      "hashes_pass": true
+    },
+    {
+      "asset_id": "weapon_frost_nova_icon",
+      "png": "docs/art/candidates/catalog-icons-detail-v2/sprites/catalog/weapon_frost_nova.png",
+      "source": "docs/art/candidates/catalog-icons-detail-v2/source/original_procedural/weapon_frost_nova.aseprite",
+      "dimensions": [
+        32,
+        32
+      ],
+      "colors": 11,
+      "palette_pass": true,
+      "hashes_pass": true
+    },
+    {
+      "asset_id": "weapon_inferno_sprayer_icon",
+      "png": "docs/art/candidates/catalog-icons-detail-v2/sprites/catalog/weapon_inferno_sprayer.png",
+      "source": "docs/art/candidates/catalog-icons-detail-v2/source/original_procedural/weapon_inferno_sprayer.aseprite",
+      "dimensions": [
+        32,
+        32
+      ],
+      "colors": 15,
+      "palette_pass": true,
+      "hashes_pass": true
+    },
+    {
+      "asset_id": "weapon_lightning_conductor_icon",
+      "png": "docs/art/candidates/catalog-icons-detail-v2/sprites/catalog/weapon_lightning_conductor.png",
+      "source": "docs/art/candidates/catalog-icons-detail-v2/source/original_procedural/weapon_lightning_conductor.aseprite",
+      "dimensions": [
+        32,
+        32
+      ],
+      "colors": 12,
+      "palette_pass": true,
+      "hashes_pass": true
+    },
+    {
+      "asset_id": "weapon_meteor_staff_icon",
+      "png": "docs/art/candidates/catalog-icons-detail-v2/sprites/catalog/weapon_meteor_staff.png",
+      "source": "docs/art/candidates/catalog-icons-detail-v2/source/original_procedural/weapon_meteor_staff.aseprite",
+      "dimensions": [
+        32,
+        32
+      ],
+      "colors": 12,
+      "palette_pass": true,
+      "hashes_pass": true
+    },
+    {
+      "asset_id": "weapon_minigun_icon",
+      "png": "docs/art/candidates/catalog-icons-detail-v2/sprites/catalog/weapon_minigun.png",
+      "source": "docs/art/candidates/catalog-icons-detail-v2/source/original_procedural/weapon_minigun.aseprite",
+      "dimensions": [
+        32,
+        32
+      ],
+      "colors": 14,
+      "palette_pass": true,
+      "hashes_pass": true
+    },
+    {
+      "asset_id": "weapon_prism_laser_icon",
+      "png": "docs/art/candidates/catalog-icons-detail-v2/sprites/catalog/weapon_prism_laser.png",
+      "source": "docs/art/candidates/catalog-icons-detail-v2/source/original_procedural/weapon_prism_laser.aseprite",
+      "dimensions": [
+        32,
+        32
+      ],
+      "colors": 15,
+      "palette_pass": true,
+      "hashes_pass": true
+    },
+    {
+      "asset_id": "weapon_sawblades_icon",
+      "png": "docs/art/candidates/catalog-icons-detail-v2/sprites/catalog/weapon_sawblades.png",
+      "source": "docs/art/candidates/catalog-icons-detail-v2/source/original_procedural/weapon_sawblades.aseprite",
+      "dimensions": [
+        32,
+        32
+      ],
+      "colors": 11,
+      "palette_pass": true,
+      "hashes_pass": true
+    },
+    {
+      "asset_id": "weapon_toxic_cloud_icon",
+      "png": "docs/art/candidates/catalog-icons-detail-v2/sprites/catalog/weapon_toxic_cloud.png",
+      "source": "docs/art/candidates/catalog-icons-detail-v2/source/original_procedural/weapon_toxic_cloud.aseprite",
+      "dimensions": [
+        32,
+        32
+      ],
+      "colors": 11,
+      "palette_pass": true,
+      "hashes_pass": true
+    },
+    {
+      "asset_id": "weapon_void_orb_icon",
+      "png": "docs/art/candidates/catalog-icons-detail-v2/sprites/catalog/weapon_void_orb.png",
+      "source": "docs/art/candidates/catalog-icons-detail-v2/source/original_procedural/weapon_void_orb.aseprite",
+      "dimensions": [
+        32,
+        32
+      ],
+      "colors": 10,
+      "palette_pass": true,
+      "hashes_pass": true
+    }
+  ]
+}

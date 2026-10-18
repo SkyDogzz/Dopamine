@@ -2,6 +2,12 @@
 
 **Date : 2026-10-18.** Point de reprise du goal de remplacement ciblé. Cet audit distingue le remplacement et le QA technique de l’acceptation artistique et auditive.
 
+## Retour propriétaire — révision des 48 icônes catalogue
+
+Le propriétaire a jugé insuffisamment détaillées les 48 icônes de la planche « Catalog icons » : 20 armes/évolutions, 11 reliques et 17 icônes UI, dont Signal Prism. Les 48 entrées correspondantes du manifeste portent `human_review_status=changes_requested` et le blocker associé. Les fichiers runtime et leurs hashes restent inchangés jusqu’à acceptation des remplacements.
+
+Un lot candidat v2 avec sources Aseprite est conservé sous [`candidates/catalog-icons-detail-v2/`](candidates/catalog-icons-detail-v2/). La [galerie comparative](candidates/catalog-icons-detail-v2/index.html) montre l’actif actuel à gauche et le candidat à droite. Les 48 candidats font 32×32, utilisent chacun 8–16 couleurs de la palette maître et passent la validation dimensions/palette/alpha/source/export. Ils ne sont pas intégrés et attendent une revue du propriétaire.
+
 ## Mise à jour de suivi — revue humaine non reçue
 
 Le 2026-10-18, les registres courants et l’environnement de revue ont été revérifiés. Les 356 entrées du manifeste sont toujours intégrées (`integrated`), validées techniquement (`passed`) et acceptées uniquement pour la production provisoire (`accepted_for_provisional_production`); les 356 ont `human_review_status=pending`. Les captures et planches archivées permettent une inspection visuelle représentative, mais ne constituent pas l’acceptation globale du propriétaire. L’environnement ne possède pas de sortie PCM (`/dev/snd` expose seulement `seq` et `timer`), donc aucun son ne peut être approuvé à l’écoute depuis cet environnement.
@@ -36,6 +42,7 @@ Godot 4.7.2 a été lancé depuis `/tmp`; la GDExtension Debug a été compilée
 - Revue visuelle du propriétaire sur les planches/captures et les animations en jeu; les validations mécaniques ne prouvent pas la lisibilité ou la cohérence perçue.
 - Écoute humaine des SFX, de la musique et des transitions en contexte; cet environnement n’a pas de sortie audio PCM.
 - Toute correction issue de ces revues doit cibler seulement les IDs signalés; préserver les autres exports validés.
+- Pour le lot d’icônes révisé, conserver les candidats v2 séparés et ne remplacer les exports actifs qu’après approbation visuelle explicite.
 
 - Demande de revue envoyée; aucun choix d’acceptation ni IDs à corriger reçu à la date de cette mise à jour.
 
