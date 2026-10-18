@@ -2217,6 +2217,8 @@ func _finish_run(victory: bool) -> void:
 	if run_over:
 		return
 	run_over = true
+	if not victory and player != null and player.has_method("play_death"):
+		player.play_death()
 	_play_run_result_music(victory)
 	Sfx.play_named("victory" if victory else "defeat", "", "boss_defeat")
 	simulation.pause()
@@ -4095,6 +4097,8 @@ func _queue_transient_animation(weapon_role: String, state: String, position: Ve
 	return true
 
 func _queue_weapon_fire_visual(weapon_id: String, active_time: float) -> void:
+	if player != null and player.has_method("play_attack"):
+		player.play_attack(_weapon_target_direction())
 	var weapon_variant := weapon_id
 	if loadout != null and loadout.is_evolved(weapon_id):
 		weapon_variant = str(WEAPON_EVOLUTION_IDS.get(weapon_id, weapon_id))
@@ -4103,6 +4107,21 @@ func _queue_weapon_fire_visual(weapon_id: String, active_time: float) -> void:
 			active_time, 22.0)
 	_queue_transient_animation("weapon_%s" % weapon_id, "fire_vfx", position, Vector2.ZERO,
 			active_time, 28.0)
+
+func _weapon_target_direction() -> Vector2:
+	if player == null:
+		return Vector2.ZERO
+	var nearest_distance_squared := INF
+	var target_direction := Vector2.ZERO
+	for entity in _entities:
+		if str(entity.get("type", "")) in ["xp_orb", "chest"]:
+			continue
+		var direction: Vector2 = entity.get("position", player.global_position) - player.global_position
+		var distance_squared := direction.length_squared()
+		if distance_squared < nearest_distance_squared:
+			nearest_distance_squared = distance_squared
+			target_direction = direction
+	return target_direction
 
 func _add_weapon_impact(source_type: String, position: Vector2, is_damage_over_time: bool,
 		critical_hit: bool = false) -> void:

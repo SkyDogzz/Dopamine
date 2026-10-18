@@ -3,6 +3,8 @@ extends SceneTree
 const SHEETS := {
 	"idle": "res://assets/sprites/player_idle.png",
 	"walk": "res://assets/sprites/player_walk.png",
+	"attack": "res://assets/sprites/player_attack.png",
+	"death": "res://assets/sprites/player_death.png",
 }
 const ALLOWED_COLORS := {
 	"080b18": true, "10152b": true, "1b2340": true, "293354": true,
@@ -16,12 +18,13 @@ func _initialize() -> void:
 		if not _check_sheet(animation, SHEETS[animation]):
 			quit(1)
 			return
-	print("Original player idle/walk sheets and editable sources passed")
+	print("Original player animation sheets and editable sources passed")
 	quit()
 
 func _check_sheet(animation: String, png_path: String) -> bool:
 	var texture := load(png_path) as Texture2D
-	var source_path := "res://assets/source/pilot/player_%s.aseprite" % animation
+	var source_directory := "animation" if animation in ["attack", "death"] else "pilot"
+	var source_path := "res://assets/source/%s/player_%s.aseprite" % [source_directory, animation]
 	if texture == null or texture.get_size() != Vector2(128, 128) or not FileAccess.file_exists(source_path):
 		push_error("Player %s needs a 4x4 32x32 sheet and editable Aseprite source" % animation)
 		return false

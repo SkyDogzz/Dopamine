@@ -22,10 +22,24 @@ func _run() -> void:
 	if sprite.texture.resource_path.get_file() != "player_walk.png" or sprite.region_rect != Rect2(32, 64, 32, 32):
 		_fail("Rightward movement should select the right-facing walk frame")
 		return
+	player.play_attack(Vector2.LEFT)
+	if sprite.texture.resource_path.get_file() != "player_attack.png" or sprite.region_rect.position.y != 32.0:
+		_fail("Player attacks should use the matching directional attack sheet row")
+		return
+	player._update_sprite_animation(Vector2.ZERO, 0.5)
+	if sprite.texture.resource_path.get_file() != "player_idle.png":
+		_fail("A completed attack should return to the idle sheet")
+		return
 	player._update_sprite_animation(Vector2.ZERO, 0.0)
-	if sprite.texture.resource_path.get_file() != "player_idle.png" or sprite.region_rect != Rect2(0, 64, 32, 32):
+	if sprite.texture.resource_path.get_file() != "player_idle.png" or sprite.region_rect.position.y != 32.0:
 		_fail("Stopping should return to idle while preserving the last facing direction")
 		return
+	player.play_death()
+	if sprite.texture.resource_path.get_file() != "player_death.png" or player.controls_enabled:
+		_fail("Player death should display its sheet and disable movement")
+		return
+	player._one_shot_state = ""
+	player.controls_enabled = true
 	Input.parse_input_event(_key_event(KEY_D, true))
 	await physics_frame
 	await physics_frame
