@@ -187,7 +187,7 @@
 
 - [x] `catalog_icon_assets_smoke.gd` parcourt récursivement les PNG livrables sous `game/assets/`, exige une source Aseprite de même nom et refuse les nouvelles exceptions non documentées. Il vérifie aussi que les trois exceptions historiques restent présentes et sans source homonyme.
 - [x] Godot 4.7.2 headless : **140 PNG inspectés, 3 exceptions documentées**, puis smoke complet des assets réussi.
-- [x] Retirer le sprite `boss_final_placeholder` des batches chargés au démarrage, tout en gardant son fichier/source archivé pour audit; le smoke refuse sa présence dans les batches et confirme la route runtime du Dopamine Core. CTest ciblé : `godot_project_import` et `catalog_icon_assets_smoke` passent (2/2) le 2026-10-17.
+- [x] Retirer le sprite `boss_final_placeholder` des batches chargés au démarrage, tout en gardant son fichier/source archivé pour audit **[HISTORIQUE — fichier ensuite supprimé après audit sans consommateur]**; le smoke refuse sa présence dans les batches et confirme la route runtime du Dopamine Core. CTest ciblé : `godot_project_import` et `catalog_icon_assets_smoke` passent (2/2) le 2026-10-17.
 - [i] La correspondance de nom et l’existence d’une source ne prouvent pas l’origine exacte, les droits d’utilisation ni la licence; cet audit de provenance reste ouvert.
 
 ## P9.3 — Retours visuels des critiques et statuts — 2026-10-17
@@ -2056,7 +2056,7 @@ Note de clôture : le blocage historique du smoke `sandbox_ui_smoke.gd` décrit 
 
 ## Remplacement graphique après contrôle des empreintes initiales — 2026-10-18
 
-- [x] Comparaison des SHA-256 des 262 assets courants avec l’inventaire initial immuable de 425 fichiers : zéro correspondance exacte. Commande reproductible : `python3 game/tools/validate_no_legacy_asset_hash_reuse.py`.
+- [x] Comparaison des SHA-256 des 258 assets courants avec l’inventaire initial immuable de 425 fichiers : zéro correspondance exacte. Commande reproductible : `python3 game/tools/validate_no_legacy_asset_hash_reuse.py`.
 - [x] 90 sources Aseprite concernées s’ouvrent et s’exportent via LibreSprite 1.3 batch. `catalog_icon_assets_smoke.gd`, `render_batching_smoke.gd`, `survival_combat_visual_smoke.gd` et `equipment_slots_smoke.gd` passent; la capture combat 640×360 a été inspectée et confirme la lecture des projectiles/impacts. L’utilisateur confirme séparément la lisibilité du hub/équipement.
 - [x] `sandbox_lab_smoke.gd` passe en session isolée et confirme que le reset n’atteint pas la progression normale; `progression_service_smoke.gd` passe. Le Sandbox signale des objets/ressources retenus à l’arrêt, sans assertion échouée.
 - [x] Godot 4.7.2 réexporte le PCK Linux/X11 de contrôle (1 594 240 octets) avant la régénération finale des rôles; chemins runtime de catalogue/projectiles/atlas d’impacts/ruines/boss présents, sources éditables, cellules VFX de travail, previews et manifests audio exclus. Cette valeur d’export est **[HISTORIQUE]**; voir le checkpoint après rôles ci-dessous.
@@ -2065,8 +2065,8 @@ Note de clôture : le blocage historique du smoke `sandbox_ui_smoke.gd` décrit 
 
 ## Complétude du registre courant de provenance — 2026-10-18
 
-- [x] `PROVENANCE_ASSETS.csv` suit désormais les 150 exports créatifs courants (104 PNG, 2 TTF, 44 WAV dont la prévisualisation), ainsi que 17 anciens chemins absents conservés pour l’historique. Les familles graphiques et audio indiquent leurs scripts de génération, hashes courants et sources/manifestes. Le validateur vérifie également que les 417 entrées créatives du snapshot initial ont une migration ou un retrait tracé.
-- [x] `python3 game/tools/validate_asset_provenance_registry.py` vérifie les hashes du registre courant et de provenance, l’existence des sources éditables/candidates et la présence des lignes pour chaque asset créatif : 150/150 passent.
+- [x] `PROVENANCE_ASSETS.csv` suit désormais les 148 exports créatifs courants (102 PNG, 2 TTF, 44 WAV dont la prévisualisation), ainsi que les chemins historiques retirés conservés pour l’historique. Les familles graphiques et audio indiquent leurs scripts de génération, hashes courants et sources/manifestes. Le validateur vérifie également que les 417 entrées créatives du snapshot initial ont une migration ou un retrait tracé.
+- [x] `python3 game/tools/validate_asset_provenance_registry.py` vérifie les hashes du registre courant et de provenance, l’existence des sources éditables/candidates et la présence des lignes pour chaque asset créatif : 148/148 passent.
 - [ ] Les statuts de droits/provenance interne n’impliquent pas l’approbation artistique ou auditive; écoute de l’audio, revue globale de l’UI et contrôle matériel restent ouverts.
 
 ## Remplacement des sorties visuelles résiduelles — 2026-10-18
@@ -2074,7 +2074,21 @@ Note de clôture : le blocage historique du smoke `sandbox_ui_smoke.gd` décrit 
 - [x] Les derniers PNG générés par `generate_original_visuals.gd` (Signal Prism, Elite Sprinter et trois placeholders de boss) et leurs sources Aseprite ont été renouvelés par `python3 game/tools/generate_neon_arcade_art.py ui roles`; l’ancien générateur est retiré. Les identités placeholder restent **[OUVERTES]** et ne deviennent pas des identités canoniques.
 - [x] Après réimport éditeur, `godot_project_import`, `catalog_icon_assets_smoke`, `original_roster_assets_smoke`, `signal_prism_asset_smoke`, `render_batching_smoke` et `survival_combat_visual_smoke` passent (6/6). La capture combat 640×360 a été régénérée et examinée.
 - [x] L’export PCK Linux/X11 final de cette tranche fait 1 594 240 octets, SHA-256 `042fecd856697aa52ec39e2a77c82c124624e88310c91a693d29c3d416ee1b49`; il contient les PNG runtime Signal Prism, Pulse Warden et Elite Sprinter et n’embarque pas les sources Aseprite ni l’ancien générateur. Le PCK est exporté, mais son exécution n’a pas été rejouée dans cette tranche.
-- [x] Les validateurs passent : 262/262 chemins courants sans hash initial identique; 150 exports créatifs avec hash/source cohérents et 417 entrées créatives initiales migrées/retirées; 44 WAV conformes aux contrôles numériques.
+- [x] Les validateurs passent : 258/258 chemins courants sans hash initial identique; 148 exports créatifs avec hash/source cohérents et 417 entrées créatives initiales migrées/retirées; 44 WAV conformes aux contrôles numériques.
+
+## Retrait des placeholders boss sans consommateur — 2026-10-18
+
+- [x] Recherche plein dépôt/runtime : `boss_final_placeholder` et `boss_mid_placeholder` n’avaient aucun consommateur hors smoke, générateur et filtre d’export. Les PNG, sources Aseprite et `.import` ont été supprimés; hashes complets et audit d’usage ajoutés à `ASSET_RETIREMENTS.csv`. Les prototypes runtime `boss_dopamine_core` et `boss_pulse_warden` restent génériques; aucune identité de boss n’est ajoutée.
+- [x] `godot_project_import`, `catalog_icon_assets_smoke`, `original_roster_assets_smoke`, `render_batching_smoke` et `survival_combat_visual_smoke` passent (5/5). Le smoke roster échoue désormais si les chemins de placeholder réapparaissent.
+- [x] PCK Linux/X11 de contrôle : 1 594 288 octets, SHA-256 `91ecb2346c3abfd16cf8d86f9d255b762fda4d5a1b2e08a59cf755e1ab92ad05`; les deux images de boss runtime et leurs imports compilés sont présents, aucun placeholder n’est référencé.
+- [x] Registre courant réduit à 258 fichiers; 148 assets créatifs ont leurs hashes/sources courants cohérents; 417 hashes d’assets créatifs initiaux restent migrés/retirés. Zéro hash initial parmi les 258 actifs; validateur audio 44/44 inchangé.
+- [x] Checkpoint complet après retrait : `XDG_DATA_HOME=/tmp/dopamine-placeholder-full DOPAMINE_TEST_TIMEOUT=480s /tmp/cmake-3.31.12-linux-x86_64/bin/ctest --test-dir build --output-on-failure -j1` : **115/115 tests passés en 77,64 s**.
+
+## Captures des états UI secondaires — 2026-10-18
+
+- [x] `xvfb-run -a tools/local/godot-4.7.2/Godot_v4.7.2-stable_linux.x86_64 --path game --script res://tests/ui_states_evidence_smoke.gd --audio-driver Dummy` génère 7 captures à 640×360 sous `docs/art/evidence/2026-10-18/states/`: options, pause, coffre, inventaire run, résultat, records Armorless et Sandbox.
+- [x] Les images ont été inspectées; le smoke place les scènes de coffre/résultat dans un `CenterContainer`, conforme au contexte parent de jeu. Chaque scène est construite isolément avec données de présentation temporaires; le Sandbox est rendu depuis `main.tscn` avec `PAUSED / NO SAVE`.
+- [i] Cette extension de revue documente un état principal par écran secondaire et le rendu logiciel seulement; elle ne couvre pas toutes les branches d’erreur/focus, la run entière, l’audio ou le matériel physique. Les hashes sont dans `docs/art/evidence/2026-10-18/README.md`.
 
 
 ## Suite complète après remplacement des assets graphiques — 2026-10-18

@@ -364,13 +364,6 @@ def draw_generic_boss_role(name: str, palette) -> Canvas:
         c.diamond(cx, cy, 8, shadow)
         for x, y in ((48, 5), (48, 91), (5, 48), (91, 48)):
             c.disc(x, y, 3, light)
-    elif name == "boss_mid_placeholder":
-        c.diamond(cx, cy, 38, edge)
-        c.diamond(cx, cy, 29, shadow)
-        c.diamond(cx, cy, 20, accent)
-        c.line(21, 48, 75, 48, light, 3)
-        c.line(48, 21, 48, 75, light, 3)
-        c.disc(cx, cy, 8, shadow)
     else:
         c.ring(cx, cy, 40, 34, accent)
         c.ring(cx, cy, 27, 21, edge)
@@ -438,7 +431,7 @@ def generate(families: set[str], palette):
     if "ui" in families:
         output_pair("signal_prism", ASSETS / "icons/ui/signal_prism.png", source_dir / "signal_prism.aseprite", draw_signal_prism(palette))
     if "roles" in families:
-        for name in ("elite_sprinter", "boss_pulse_warden", "boss_mid_placeholder", "boss_final_placeholder"):
+        for name in ("elite_sprinter", "boss_pulse_warden"):
             image = draw_elite_role(palette) if name == "elite_sprinter" else draw_generic_boss_role(name, palette)
             output_pair(name, ASSETS / "sprites/roster" / f"{name}.png", source_dir / f"{name}.aseprite", image)
 

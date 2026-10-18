@@ -3,7 +3,7 @@ extends SceneTree
 const WEAPONS := ["lightning_conductor", "inferno_sprayer", "crimson_daggers", "minigun", "toxic_cloud", "sawblades", "meteor_staff", "prism_laser", "void_orb", "frost_nova"]
 const RELICS := ["storm_core", "infernal_heart", "blood_chalice", "celestial_eye", "frozen_crown", "magnet_heart", "magnetic_coil", "overdrive_engine", "plague_mask", "prism_crystal", "singularity"]
 const UI_ICONS := ["equipment_helmet", "equipment_armor", "equipment_gloves", "equipment_boots", "equipment_amulet", "equipment_ring", "rarity_normal", "rarity_magic", "rarity_mystic", "rarity_legendary", "rarity_mythic", "resource_essence", "resource_powder", "skill_node", "achievement_medal", "run_record"]
-const ROSTER := ["enemy_chaser", "enemy_sprinter", "enemy_tank", "enemy_shooter", "enemy_buffer", "enemy_exploder", "enemy_shielder", "enemy_summoner", "enemy_summoned", "elite_sprinter", "boss_pulse_warden", "boss_final_placeholder", "boss_dopamine_core"]
+const ROSTER := ["enemy_chaser", "enemy_sprinter", "enemy_tank", "enemy_shooter", "enemy_buffer", "enemy_exploder", "enemy_shielder", "enemy_summoner", "enemy_summoned", "elite_sprinter", "boss_pulse_warden", "boss_dopamine_core"]
 const IMPACTS := ["impact_spark", "impact_star", "impact_slash", "impact_pop", "impact_ring", "impact_burst", "impact_shards", "impact_shock_ring", "impact_angular", "impact_evolved"]
 const PROJECTILES := ["projectile_lightning", "projectile_inferno", "projectile_crimson", "projectile_enemy", "projectile_minigun", "projectile_toxic_cloud", "projectile_sawblades", "projectile_meteor", "projectile_starfall_fragment", "projectile_prism_laser", "projectile_prism_secondary", "projectile_void_orb", "projectile_frost_nova", "projectile_infinite_circuit", "projectile_wildfire", "projectile_bloodstorm", "projectile_event_horizon", "projectile_absolute_zero", "projectile_pandemic", "projectile_razorstorm", "projectile_starfall", "projectile_spectrum_collapse", "projectile_unique_lightning_burst", "projectile_evolution_shockwave"]
 const SOURCELESS_PNG_EXCEPTIONS: Array[String] = []
@@ -26,10 +26,11 @@ func _initialize() -> void:
 			quit(1)
 			return
 	var renderer: Variant = (load("res://scripts/sprite_batch_renderer.gd") as Script).new()
-	if renderer._batches.has("boss_final_placeholder"):
-		push_error("Archived final boss placeholder art should not be loaded into the runtime sprite batches")
-		quit(1)
-		return
+	for obsolete_placeholder in ["boss_final_placeholder", "boss_mid_placeholder"]:
+		if ResourceLoader.exists("res://assets/sprites/roster/%s.png" % obsolete_placeholder):
+			push_error("Unused boss placeholder art should be retired: %s" % obsolete_placeholder)
+			quit(1)
+			return
 	if renderer._sprite_for_entity({"EnemyType": "final_boss"}) != "boss_dopamine_core" or \
 			renderer._batches["boss_dopamine_core"]["texture"] == null:
 		push_error("The final boss should render the dedicated Dopamine Core sprite")

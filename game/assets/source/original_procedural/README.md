@@ -8,4 +8,4 @@ Pour reconstruire toutes les familles prises en charge :
 python3 game/tools/generate_neon_arcade_art.py
 ```
 
-Pour une famille ciblée, préciser `catalog`, `projectiles`, `vfx`, `environment`, `boss`, `ui` ou `roles`. Les prototypes de boss restent génériques et ne définissent pas leur identité canonique.
+Pour une famille ciblée, préciser `catalog`, `projectiles`, `vfx`, `environment`, `boss`, `ui` ou `roles`. Les prototypes de boss chargés par le jeu restent génériques et ne définissent pas leur identité canonique.
