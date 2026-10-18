@@ -5785,7 +5785,7 @@
     "asset_integration_scope_smoke": "passed; verifies exact-ID replacement opt-in, managed-asset ownership, dry-run non-mutation and mismatched-owner refusal",
     "sfx_runtime_event_mapping": "passed: 20 weapon-specific cues are loaded and invoked by gameplay; 7 generated event families are exposed; weapon_family_fire/impact are fallback paths if a specific cue is missing; targeted SFX tests passed.",
     "music_runtime_cues": "passed: menu theme loops on the Music bus; five synchronized stems drive Survival and boss intensity; victory/defeat cues load on the Music bus. The two unused reference mixes are staging-only and not in game/assets.",
-    "godot_pck_export": "passed: rebuilt current Linux/X11 PCK, 3341584 bytes, SHA-256 6d8bbe0188eaac0ec42eb2a199fcdaada4f217b543882f601e9e453997ef9b38; headless launch through --main-pack exited successfully.",
+    "godot_pck_export": "passed: current Linux/X11 PCK is 3341584 bytes (SHA-256 6d8bbe0188eaac0ec42eb2a199fcdaada4f217b543882f601e9e453997ef9b38); Godot --main-pack launch passed; internal directory has all 356/356 manifest destinations and excludes all 223 authoring source paths.",
     "music_format_audit": "passed: three integrated music cues and five synchronized stems are PCM16 mono 44.1 kHz, matching WAV headers",
     "catalog_icon_redesign": "passed: all 31 explicit managed IDs regenerated from dopamine-pixel-art v3, validated with dopamine-asset-qa, integrated, and covered by catalog icon, Art Bible, Godot import, and replacement-scope smoke checks; owner art review remains pending",
     "godot_test_suite_targeted": "Passed: player controller, animation source, weapons, result reveal ordering, revive decline, Survival progression rewards, Armorless records, Endless abandonment, Sandbox isolation, and adaptive music; full 121/121 CTest passed.",
@@ -5815,7 +5815,7 @@
     "path": "build/assets/DopamineSurvivor.pck",
     "bytes": 3341584,
     "sha256": "6d8bbe0188eaac0ec42eb2a199fcdaada4f217b543882f601e9e453997ef9b38",
-    "notes": "Rebuilt after player attack/death runtime wiring and defeat-result reveal ordering; Godot launched this PCK headlessly with --main-pack. Authoring sources are excluded by preset."
+    "notes": "Rebuilt after player attack/death runtime wiring and defeat-result reveal ordering; headless --main-pack launch passed. Binary PCK directory check found all 356/356 manifest destinations and 0/223 editable-source paths; authoring sources are excluded by preset."
   },
   "review_findings": [
     {

@@ -2356,3 +2356,4 @@ Note de clôture : le blocage historique du smoke `sandbox_ui_smoke.gd` décrit 
 
 - [x] Export Godot 4.7.2 `Linux/X11` vers `build/assets/DopamineSurvivor.pck` terminé; taille **3 341 584 octets**, SHA-256 `6d8bbe0188eaac0ec42eb2a199fcdaada4f217b543882f601e9e453997ef9b38`.
 - [x] Démarrage headless du pack avec `--main-pack` et `--quit-after 5` terminé. Godot signale seulement ses avertissements habituels de ressources retenues à la fermeture headless.
+- [x] Inventaire binaire du PCK : les **356/356** chemins d’export du manifeste sont présents et les **223/223** chemins de sources éditables sont absents, conformément aux exclusions du preset.
