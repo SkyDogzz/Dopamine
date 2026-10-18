@@ -175,7 +175,9 @@ func set_entities(entities: Array, origin: Vector2 = Vector2.ZERO, animation_tim
 		var entity_animation_time := animation_time
 		if override is Dictionary and override.has("started_at"):
 			entity_animation_time = maxf(0.0, animation_time - float(override["started_at"]))
-		var animation := _animation_for_projectile(sprite_id, animation_time) if sprite_id.begins_with("projectile_") else \
+		# Use the dedicated single-sprite projectile art at runtime. The provisional
+		# projectile strips contain several bolts in each cell and read as a burst.
+		var animation := {} if sprite_id.begins_with("projectile_") else \
 				_animation_for_entity(components, entity_animation_time, override_state, facing_direction)
 		if not animation.is_empty():
 			var flip_x := bool(animation.get("flip_x", false))

@@ -93,18 +93,15 @@ func _run() -> void:
 		assert(projectile_frames.get_animation_loop(animation_name) and
 				projectile_frames.get_frame_count(animation_name) > 1,
 				"Projectile %s should have a repeating multi-frame animation" % sprite_id)
-		var runtime_animation: Dictionary = view._sprite_renderer._animation_for_projectile(str(sprite_id), 0.1)
-		var runtime_frame: Dictionary = view._sprite_renderer._get_animation_batch(
-			runtime_animation["role"], runtime_animation["state"], runtime_animation["name"],
-			int(runtime_animation["frame"]))
-		assert(runtime_frame["texture"].get_size() == Vector2(32.0, 32.0),
-				"Projectile %s must render one 32x32 animation cell, not its full strip" % sprite_id)
+		assert(view._sprite_renderer._batches[sprite_id]["texture"].get_size() == Vector2(16.0, 16.0),
+				"Projectile %s must use its standalone single-sprite art in gameplay" % sprite_id)
 	var chaser_instances := 0
 	for animation_key in view._sprite_renderer._animated_batches:
 		if str(animation_key).begins_with("enemy_chaser_idle_"):
 			chaser_instances += view._sprite_renderer._animated_batches[animation_key]["multimesh"].instance_count
 	assert(chaser_instances == 500, "500 enemies should remain batched by their current animation frame")
-	assert(view._sprite_renderer.animated_instance_count_for_role("projectile_lightning") == 2000, "2,000 common projectiles should fit the animated projectile batch")
+	assert(view._sprite_renderer.multimesh_for("projectile_lightning").instance_count == 2000,
+			"2,000 common projectiles should use their standalone sprite batch")
 	assert(view._sprite_renderer._projectile_trails.size() == view._sprite_renderer.MAX_PROJECTILE_TRAILS, "Projectile trails should use a fixed visual budget under load")
 	assert(view._sprite_renderer._projectile_trails[0]["start"].x < view._sprite_renderer._projectile_trails[0]["end"].x, "A right-moving projectile should trail behind its current position")
 	assert(is_equal_approx(view._sprite_renderer._projectile_trails[0]["start"].distance_to(view._sprite_renderer._projectile_trails[0]["end"]), 12.0), "Projectile trails should keep the proposed 12-pixel length")
@@ -129,16 +126,16 @@ func _run() -> void:
 			"Vertical movement must preserve an upright left-facing frame")
 	assert(is_equal_approx(view._sprite_renderer._size_for_entity("enemy_chaser", {"CollisionRadius": 12.0}), 24.0), "Mob sprite diameter should match its shared collision radius")
 	assert(is_equal_approx(view._sprite_renderer._size_for_entity("boss_dopamine_core", {"CollisionRadius": 26.0}), 52.0), "Boss sprite diameter should match its shared collision radius")
-	assert(view._sprite_renderer.animated_instance_count_for_role("projectile_inferno") == 1, "Weapon projectile art should remain distinct")
-	assert(view._sprite_renderer.animated_instance_count_for_role("projectile_minigun") == 2, "Minigun should use its own projectile art")
+	assert(view._sprite_renderer.multimesh_for("projectile_inferno").instance_count == 1, "Weapon projectile art should remain distinct")
+	assert(view._sprite_renderer.multimesh_for("projectile_minigun").instance_count == 1, "Minigun should use its own projectile art")
 	assert(view._sprite_renderer._batches["projectile_minigun"]["texture"].resource_path.ends_with("projectiles/projectile_minigun.png"), "Minigun batch should load its distinct pixel-art sprite")
-	assert(view._sprite_renderer.animated_instance_count_for_role("projectile_toxic_cloud") == 1, "Toxic Cloud should use its own projectile art")
-	assert(view._sprite_renderer.animated_instance_count_for_role("projectile_sawblades") == 1, "Sawblades should use their own projectile art")
-	assert(view._sprite_renderer.animated_instance_count_for_role("projectile_meteor") == 1, "Meteor Staff should use dedicated meteor art")
-	assert(view._sprite_renderer.animated_instance_count_for_role("projectile_starfall_fragment") == 1, "Starfall fragments should use separate art")
-	assert(view._sprite_renderer.animated_instance_count_for_role("projectile_absolute_zero") == 3,
-			"Absolute Zero and both Shatter roles should share the dedicated frost animation")
-	assert(view._sprite_renderer.animated_instance_count_for_role("projectile_void_orb") == 1, "Void Orb and Event Horizon should use dedicated art")
+	assert(view._sprite_renderer.multimesh_for("projectile_toxic_cloud").instance_count == 1, "Toxic Cloud should use its own projectile art")
+	assert(view._sprite_renderer.multimesh_for("projectile_sawblades").instance_count == 1, "Sawblades should use their own projectile art")
+	assert(view._sprite_renderer.multimesh_for("projectile_meteor").instance_count == 1, "Meteor Staff should use dedicated meteor art")
+	assert(view._sprite_renderer.multimesh_for("projectile_starfall_fragment").instance_count == 1, "Starfall fragments should use separate art")
+	assert(view._sprite_renderer.multimesh_for("projectile_absolute_zero").instance_count == 1,
+			"Absolute Zero should use the dedicated frost sprite")
+	assert(view._sprite_renderer.multimesh_for("projectile_void_orb").instance_count == 1, "Void Orb should use dedicated art")
 	var first_ripple: float = view._sprite_renderer.persistent_area_ripple_radius(0.9, 48.0)
 	var next_ripple: float = view._sprite_renderer.persistent_area_ripple_radius(0.6, 48.0)
 	assert(first_ripple > 0.0 and first_ripple < 48.0 and not is_equal_approx(first_ripple, next_ripple), "Pandemic field ripple should travel inside the field as simulation time advances")
@@ -153,9 +150,9 @@ func _run() -> void:
 	assert(view._sprite_renderer._batches["projectile_toxic_cloud"]["texture"].resource_path.ends_with("projectiles/projectile_toxic_cloud.png"), "Toxic Cloud batch should load its distinct pixel-art sprite")
 	for projectile_name in ["infinite_circuit", "wildfire", "bloodstorm", "event_horizon", "absolute_zero", "pandemic", "razorstorm", "starfall", "spectrum_collapse"]:
 		var batch_name: String = "projectile_" + projectile_name
-		var expected_instances := 2 if projectile_name == "pandemic" else 3 if projectile_name == "absolute_zero" else 1
-		assert(view._sprite_renderer.animated_instance_count_for_role(batch_name) == expected_instances, "Evolved projectile %s should use its own batch" % projectile_name)
-	assert(view._sprite_renderer.animated_instance_count_for_role("projectile_minigun") == 2, "Redline should render in its own evolved projectile batch")
+		var expected_instances := 2 if projectile_name == "pandemic" else 1
+		assert(view._sprite_renderer.multimesh_for(batch_name).instance_count == expected_instances, "Evolved projectile %s should use its own batch" % projectile_name)
+	assert(view._sprite_renderer.multimesh_for("projectile_redline").instance_count == 1, "Redline should render in its own evolved projectile batch")
 	assert(view._sprite_renderer._batches["projectile_redline"]["texture"].resource_path.ends_with("projectiles/projectile_minigun.png"), "Redline should retain the Minigun bolt silhouette")
 	assert(view._sprite_renderer.SPRITE_COLORS["projectile_redline"] == Color("#FF7181"), "Redline bolts should use the established neon red tint")
 	assert(view._sprite_renderer._batches["enemy_chaser"]["texture"].resource_path.ends_with("enemy_chaser.png"), "Chaser batch should load its pixel-art sprite")

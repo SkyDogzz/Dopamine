@@ -74,9 +74,9 @@ func _run() -> void:
 			chaser_animation_instances += count
 		elif str(animation_key).begins_with("elite_sprinter_"):
 			elite_animation_instances += count
-	var projectile_animation_instances: int = view._sprite_renderer.animated_instance_count_for_role("projectile_lightning")
-	if chaser_animation_instances != 499 or projectile_animation_instances != 2000 or elite_animation_instances != 1:
-		_fail("Animated MultiMesh batches do not contain the target load and elite sprite")
+	var projectile_instances: int = view._sprite_renderer.multimesh_for("projectile_lightning").instance_count
+	if chaser_animation_instances != 499 or projectile_instances != 2000 or elite_animation_instances != 1:
+		_fail("MultiMesh batches do not contain the target load and elite sprite")
 		return
 	await process_frame
 	await RenderingServer.frame_post_draw

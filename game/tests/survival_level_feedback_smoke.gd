@@ -35,7 +35,7 @@ func _run() -> void:
 			session._weapon_impacts.clear()
 			session._weapon_transient_animations.clear()
 			session._add_weapon_impact(IMPACT_SOURCES[weapon_id], Vector2.ZERO, false)
-			var impact: Dictionary = session._weapon_transient_animations.back()
+			var impact: Dictionary = session._weapon_impacts.back()
 			var impact_scale: float = session._weapon_impact_level_scale(int(impact.get("level", 0)))
 			if int(impact.get("level", 0)) != expected_level or impact_scale <= previous_impact_scale:
 				_fail("%s level %d should produce a stronger weapon-specific impact visual" % [weapon_id, expected_level])

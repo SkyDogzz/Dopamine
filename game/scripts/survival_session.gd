@@ -4109,8 +4109,6 @@ func _queue_weapon_fire_visual(weapon_id: String, active_time: float) -> void:
 	var position: Vector2 = player.global_position if player != null else Vector2.ZERO
 	_queue_transient_animation("weapon_%s" % weapon_variant, "attack", position, Vector2.ZERO,
 			active_time, 22.0)
-	_queue_transient_animation("weapon_%s" % weapon_id, "fire_vfx", position, Vector2.ZERO,
-			active_time, 28.0)
 
 func _weapon_target_direction() -> Vector2:
 	if player == null:
@@ -4139,13 +4137,6 @@ func _add_weapon_impact(source_type: String, position: Vector2, is_damage_over_t
 		return
 	var weapon_id: String = WEAPON_IMPACT_SOURCE_IDS.get(impact_type, "")
 	var level: int = loadout.weapon_level(weapon_id) if not weapon_id.is_empty() else 1
-	if not weapon_id.is_empty() and _queue_transient_animation("weapon_%s" % weapon_id, "impact_vfx",
-			position, Vector2.ZERO, _last_simulation_time,
-			28.0 * _weapon_impact_level_scale(level) * (CRITICAL_HIT_IMPACT_SCALE if critical_hit else 1.0),
-			rotation, critical_hit):
-		_weapon_transient_animations.back()["level"] = level
-		_weapon_transient_animations.back()["emphasis_scale"] = CRITICAL_HIT_IMPACT_SCALE if critical_hit else 1.0
-		return
 	if _weapon_impacts.size() >= MAX_VISIBLE_WEAPON_IMPACTS:
 		_weapon_impacts.pop_front()
 	_weapon_impacts.append({
