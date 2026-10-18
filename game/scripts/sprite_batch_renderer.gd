@@ -47,6 +47,11 @@ const SPRITE_FILES := {
 	"projectile_evolution_shockwave": "projectiles/projectile_evolution_shockwave",
 }
 const SPRITE_COLORS := {"projectile_redline": Color("#FF7181")}
+const PROJECTILE_ANIMATION_ALIASES := {
+	"projectile_redline": "projectile_minigun",
+	"projectile_shatter_impact": "projectile_absolute_zero",
+	"projectile_shatter_fragment": "projectile_absolute_zero",
+}
 const ANIMATED_ROLE_IDS := [
 	"enemy_chaser", "enemy_sprinter", "enemy_tank", "enemy_shooter", "enemy_buffer",
 	"enemy_exploder", "enemy_shielder", "enemy_summoner", "enemy_summoned",
@@ -83,6 +88,13 @@ func _init() -> void:
 			var resource_path := "res://assets/sprites/animation/%s_%s.tres" % [role_id, state]
 			if ResourceLoader.exists(resource_path):
 				_role_animation_sets[role_id][state] = load(resource_path) as SpriteFrames
+	for sprite_id in SPRITE_FILES:
+		if not sprite_id.begins_with("projectile_"):
+			continue
+		var animation_id: String = PROJECTILE_ANIMATION_ALIASES.get(sprite_id, sprite_id)
+		var resource_path := "res://assets/sprites/animation/%s.tres" % animation_id
+		if ResourceLoader.exists(resource_path):
+			_role_animation_sets[sprite_id] = {"projectile": load(resource_path) as SpriteFrames}
 
 func set_entities(entities: Array, origin: Vector2 = Vector2.ZERO, animation_time: float = 0.0,
 		animation_overrides: Dictionary = {}, transient_animations: Array = []) -> void:
@@ -100,26 +112,6 @@ func set_entities(entities: Array, origin: Vector2 = Vector2.ZERO, animation_tim
 		var transform: Dictionary = components["Transform2D"]
 		var point := origin + Vector2(float(transform["x"]), float(transform["y"]))
 		var size := _size_for_entity(sprite_id, components)
-		var id: Dictionary = entity["id"]
-		var entity_key := "%d:%d" % [int(id["index"]), int(id["generation"])]
-		var override: Variant = animation_overrides.get(entity_key, {})
-		var override_state := str(override.get("state", "")) if override is Dictionary else str(override)
-		var entity_animation_time := animation_time
-		if override is Dictionary and override.has("started_at"):
-			entity_animation_time = maxf(0.0, animation_time - float(override["started_at"]))
-		var animation := _animation_for_entity(components, entity_animation_time, override_state)
-		if not animation.is_empty():
-			var animation_key := "%s:%d" % [animation["name"], animation["frame"]]
-			var animation_batch := _get_animation_batch(animation["role"], animation["state"],
-					animation["name"], int(animation["frame"]))
-			if not animation_batch.is_empty():
-				if not instances_by_animation.has(animation_key):
-					instances_by_animation[animation_key] = []
-				instances_by_animation[animation_key].append({"point": point, "size": size, "rotation": 0.0})
-				if int(id["index"]) == _selected_index and int(id["generation"]) == _selected_generation:
-					selected_point = point
-					selected_entity_found = true
-				continue
 		var rotation := 0.0
 		if sprite_id.begins_with("projectile_"):
 			var velocity: Dictionary = components.get("Velocity2D", {})
@@ -132,6 +124,30 @@ func set_entities(entities: Array, origin: Vector2 = Vector2.ZERO, animation_tim
 						"start": (point - direction.normalized() * PROJECTILE_TRAIL_LENGTH).round(),
 						"end": trail_end,
 					})
+		var id: Dictionary = entity["id"]
+		var entity_key := "%d:%d" % [int(id["index"]), int(id["generation"])]
+		var override: Variant = animation_overrides.get(entity_key, {})
+		var override_state := str(override.get("state", "")) if override is Dictionary else str(override)
+		var entity_animation_time := animation_time
+		if override is Dictionary and override.has("started_at"):
+			entity_animation_time = maxf(0.0, animation_time - float(override["started_at"]))
+		var animation := _animation_for_projectile(sprite_id, animation_time) if sprite_id.begins_with("projectile_") else \
+				_animation_for_entity(components, entity_animation_time, override_state)
+		if not animation.is_empty():
+			var animation_key := "%s:%d" % [animation["name"], animation["frame"]]
+			var animation_batch := _get_animation_batch(animation["role"], animation["state"],
+					animation["name"], int(animation["frame"]))
+			if not animation_batch.is_empty():
+				if not instances_by_animation.has(animation_key):
+					instances_by_animation[animation_key] = []
+				instances_by_animation[animation_key].append({
+					"point": point, "size": size, "rotation": rotation,
+					"color": SPRITE_COLORS.get(sprite_id, Color.WHITE),
+				})
+				if int(id["index"]) == _selected_index and int(id["generation"]) == _selected_generation:
+					selected_point = point
+					selected_entity_found = not sprite_id.begins_with("projectile_") and sprite_id != "xp_orb"
+				continue
 		instances_by_sprite[sprite_id].append({"point": point, "size": size, "rotation": rotation})
 		instances_by_sprite[sprite_id][-1]["color"] = SPRITE_COLORS.get(sprite_id, Color.WHITE)
 		if int(id["index"]) == _selected_index and int(id["generation"]) == _selected_generation:
@@ -169,10 +185,29 @@ func animated_multimesh_for(animation_name: String, frame: int) -> MultiMesh:
 
 func animated_instance_count_for_role(role_id: String) -> int:
 	var total := 0
-	for animation_key in _animated_batches:
-		if str(animation_key).begins_with(role_id + "_"):
-			total += (_animated_batches[animation_key]["multimesh"] as MultiMesh).instance_count
+	for state in _role_animation_sets.get(role_id, {}).values():
+		var sprite_frames: SpriteFrames = state
+		for animation_name in sprite_frames.get_animation_names():
+			var key_prefix := "%s:" % animation_name
+			for animation_key in _animated_batches:
+				if str(animation_key).begins_with(key_prefix):
+					total += (_animated_batches[animation_key]["multimesh"] as MultiMesh).instance_count
 	return total
+
+func _animation_for_projectile(sprite_id: String, animation_time: float) -> Dictionary:
+	var sprite_frames: SpriteFrames = _role_animation_sets.get(sprite_id, {}).get("projectile")
+	if sprite_frames == null:
+		return {}
+	var names := sprite_frames.get_animation_names()
+	if names.is_empty():
+		return {}
+	var animation_name: String = names[0]
+	var frame_count := sprite_frames.get_frame_count(animation_name)
+	var fps := sprite_frames.get_animation_speed(animation_name)
+	if frame_count <= 0 or fps <= 0.0:
+		return {}
+	var frame := posmod(floori(animation_time * fps), frame_count)
+	return {"role": sprite_id, "state": "projectile", "name": animation_name, "frame": frame}
 
 func _animation_for_entity(components: Dictionary, animation_time: float, state_override: String = "") -> Dictionary:
 	if components.get("IsProjectile", false) or components.get("IsXpOrb", false):

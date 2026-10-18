@@ -28,7 +28,7 @@ func _run() -> void:
 	var render_time: float = fire_at - session.shooter_telegraph_seconds + 0.25
 	session._sprite_renderer.set_entities(session._entities, Vector2.ZERO, render_time,
 			session._enemy_attack_animation_overrides(render_time))
-	if session._sprite_renderer.animated_instance_count_for_role("enemy_shooter_attack") != 1:
+	if session._sprite_renderer.animated_instance_count_for_role("enemy_shooter") != 1:
 		_fail("Shooter telegraph should render its matching attack animation")
 		return
 	session._queue_enemy_death_animation({"index": 900, "generation": 1}, "shooter", Vector2(200, 0), render_time)
