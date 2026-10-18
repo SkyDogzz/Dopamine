@@ -8,7 +8,7 @@ signal unique_effect_reroll_requested(instance_id: String, effect_id: String)
 signal dismantle_requested(instance_id: String)
 signal sell_requested(instance_id: String)
 
-@onready var _items: VBoxContainer = $Panel/Content/Columns/RightColumn/Scroll/Items
+@onready var _items: GridContainer = $Panel/Content/Columns/RightColumn/Scroll/Items
 @onready var _empty_state: Label = $Panel/Content/Columns/RightColumn/Scroll/Items/EmptyState
 @onready var _error_state: Label = $Panel/Content/Columns/RightColumn/Scroll/Items/ErrorState
 @onready var _close_button: Button = $Panel/Content/CloseButton
@@ -18,8 +18,10 @@ signal sell_requested(instance_id: String)
 @onready var _compare_body: Label = $Panel/Content/Columns/RightColumn/Compare/Comparison/CompareBody
 @onready var _item_title: Label = $Panel/Content/Columns/RightColumn/ItemHeader/ItemTitle
 @onready var _management_button: Button = $Panel/Content/Columns/RightColumn/ItemHeader/ManagementButton
-@onready var _portrait: TextureRect = $Panel/Content/Columns/Loadout/Body/Character/Portrait
-@onready var _slots: VBoxContainer = $Panel/Content/Columns/Loadout/Body/Slots
+@onready var _portrait: TextureRect = $Panel/Content/Columns/Loadout/Body/Slots/Portrait
+@onready var _character_label: Label = $Panel/Content/Columns/Loadout/Body/CharacterLabel
+@onready var _slots: HBoxContainer = $Panel/Content/Columns/Loadout/Body/Slots
+@onready var _total_stats: GridContainer = $Panel/Content/Columns/Loadout/Body/TotalStats/StatsBody/StatsGrid
 
 var progression_service: RefCounted
 
@@ -48,8 +50,11 @@ const RARITY_COLORS := {
 const POWDER_TIERS := ["basic", "refined", "pure", "prismatic"]
 const PROGRESSION_SERVICE_SCRIPT := preload("res://scripts/progression_service.gd")
 const EQUIPMENT_GENERATOR_SCRIPT := preload("res://scripts/equipment_generator.gd")
+const PLAYER_IDLE_TEXTURE_PATH := "res://assets/sprites/player_idle.png"
 const SLOTS := ["helmet", "armor", "gloves", "boots", "amulet", "ring"]
 const SLOT_NAMES := {"helmet": "HELMET", "armor": "ARMOR", "gloves": "GLOVES", "boots": "BOOTS", "amulet": "AMULET", "ring": "RING"}
+const SLOT_NODE_NAMES := {"helmet": "SlotHelmet", "armor": "SlotArmor", "gloves": "SlotGloves", "boots": "SlotBoots", "amulet": "SlotAmulet", "ring": "SlotRing"}
+const LOADOUT_SUMMARY_STATS := ["max_hp", "damage_pct", "attack_speed_pct", "move_speed_pct", "critical_chance_pct", "pickup_radius_pct"]
 const STAT_NAMES := {
 	"damage_pct": "DAMAGE", "attack_speed_pct": "ATTACK SPEED", "critical_chance_pct": "CRIT CHANCE",
 	"critical_damage_pct": "CRIT DAMAGE", "max_hp": "MAX HP", "move_speed_pct": "MOVE SPEED",
@@ -79,10 +84,13 @@ func _ready() -> void:
 	visible = false
 	_close_button.pressed.connect(_close)
 	_management_button.pressed.connect(_toggle_management_mode)
-	for index in range(SLOTS.size()):
-		var button := _slots.get_child(index) as Button
-		var slot: String = SLOTS[index]
+	for slot in SLOTS:
+		var button := _slots.find_child(SLOT_NODE_NAMES[slot], true, false) as Button
 		_slot_buttons[slot] = button
+		button.icon = load(SLOT_ICONS[slot]) as Texture2D if ResourceLoader.exists(SLOT_ICONS[slot]) else null
+		button.expand_icon = true
+		button.icon_max_width = 13
+		button.add_theme_font_size_override("font_size", 6)
 		button.pressed.connect(func() -> void: _select_slot(slot))
 	_sell_confirmation = load("res://scenes/sell_confirmation.tscn").instantiate()
 	_sell_description = _sell_confirmation.get_node("Center/Panel/Content/Description")
@@ -114,7 +122,14 @@ func present(profile: Dictionary) -> void:
 			break
 	var resources: Dictionary = profile.get("resources", {})
 	_resources.text = "ESSENCE %d" % int(resources.get("essence", 0))
-	_portrait.texture = (load(SLOT_ICONS["armor"]) as Texture2D if ResourceLoader.exists(SLOT_ICONS["armor"]) else null)
+	var player_sheet := load(PLAYER_IDLE_TEXTURE_PATH) as Texture2D if ResourceLoader.exists(PLAYER_IDLE_TEXTURE_PATH) else null
+	if player_sheet != null:
+		var player_frame := AtlasTexture.new()
+		player_frame.atlas = player_sheet
+		player_frame.region = Rect2(0, 0, 32, 32)
+		_portrait.texture = player_frame
+	else:
+		_portrait.texture = null
 	_refresh_slots()
 	_rebuild_inventory(inventory, resources)
 	visible = true
@@ -153,20 +168,56 @@ func _select_slot(slot: String) -> void:
 	_rebuild_inventory(_profile.get("equipment_inventory", []), _profile.get("resources", {}))
 
 func _refresh_slots() -> void:
+	var equipped_count := 0
+	var totals: Dictionary = {}
+	for stat_id in LOADOUT_SUMMARY_STATS:
+		totals[stat_id] = 0.0
 	for slot in SLOTS:
 		var equipped: Dictionary = {}
 		for equipment in _profile.get("equipment_inventory", []):
 			if equipment.get("slot", "") == slot and equipment.get("equipped", false):
 				equipped = equipment
+				equipped_count += 1
+				for line in equipment.get("stat_lines", []):
+					var stat_id := str(line.get("stat_id", ""))
+					if totals.has(stat_id):
+						totals[stat_id] += EQUIPMENT_GENERATOR_SCRIPT.stat_value(
+							stat_id, float(line.get("roll_percentile", 0.0)), int(line.get("enhancement_level", 0))
+						)
 				break
 		var button: Button = _slot_buttons[slot]
-		button.text = "%s  ·  %s" % [SLOT_NAMES[slot], str(equipped.get("rarity", "EMPTY")).to_upper()]
+		var rarity := str(equipped.get("rarity", ""))
+		button.text = "%s\n%s" % [SLOT_NAMES[slot], rarity.to_upper() if not rarity.is_empty() else "EMPTY"]
 		button.button_pressed = slot == _selected_slot
 		button.toggle_mode = true
 		button.tooltip_text = str(equipped.get("instance_id", "No item equipped"))
+		var accent: Color = RARITY_COLORS.get(rarity, Color("#39486B"))
+		var normal := StyleBoxFlat.new()
+		normal.bg_color = Color("#10172B")
+		normal.border_color = accent if not rarity.is_empty() else Color("#39486B")
+		normal.set_border_width_all(1)
+		normal.content_margin_left = 3.0
+		normal.content_margin_right = 3.0
+		normal.content_margin_top = 2.0
+		normal.content_margin_bottom = 2.0
+		button.add_theme_stylebox_override("normal", normal)
+		var pressed := normal.duplicate() as StyleBoxFlat
+		pressed.bg_color = Color("#1A2A43")
+		pressed.border_color = Color("#37E8F5") if slot == _selected_slot else accent
+		button.add_theme_stylebox_override("pressed", pressed)
+	_character_label.text = "LOADOUT  ·  %d / %d SLOTS FILLED" % [equipped_count, SLOTS.size()]
+	for child in _total_stats.get_children():
+		child.queue_free()
+	for stat_id in LOADOUT_SUMMARY_STATS:
+		var stat := Label.new()
+		stat.text = "%s  %s" % [STAT_NAMES.get(stat_id, stat_id.to_upper()), EQUIPMENT_GENERATOR_SCRIPT.stat_label(stat_id, float(totals[stat_id]))]
+		stat.add_theme_font_size_override("font_size", 7)
+		stat.add_theme_color_override("font_color", Color("#37E8F5") if float(totals[stat_id]) > 0.0 else Color("#A6AEC4"))
+		_total_stats.add_child(stat)
 
 func _rebuild_inventory(inventory: Array, resources: Dictionary) -> void:
 	_clear_items()
+	_items.columns = 1 if _management_mode else 2
 	var compatible: Array[Dictionary] = []
 	for equipment in inventory:
 		if str(equipment.get("slot", "")) == _selected_slot:
@@ -442,30 +493,63 @@ func _create_loadout_item_row(equipment: Dictionary) -> Control:
 	style.bg_color = Color("#10172B")
 	style.border_color = RARITY_COLORS.get(str(equipment.get("rarity", "normal")), Color("#A6AEC4"))
 	style.border_width_left = 3
+	style.border_width_top = 1
+	style.border_width_right = 1
+	style.border_width_bottom = 1
+	style.bg_color = Color("#17223A") if str(equipment.get("instance_id", "")) == _selected_instance_id else Color("#10172B")
 	style.content_margin_left = 5.0
-	style.content_margin_top = 3.0
+	style.content_margin_top = 4.0
 	style.content_margin_right = 5.0
-	style.content_margin_bottom = 3.0
+	style.content_margin_bottom = 4.0
 	row.add_theme_stylebox_override("panel", style)
+	row.custom_minimum_size = Vector2(0, 58)
+	var content := VBoxContainer.new()
+	content.add_theme_constant_override("separation", 2)
+	row.add_child(content)
 	var line := HBoxContainer.new()
 	line.name = "ItemRow"
-	line.add_theme_constant_override("separation", 4)
-	row.add_child(line)
+	line.add_theme_constant_override("separation", 3)
+	content.add_child(line)
+	var rarity := str(equipment.get("rarity", "normal"))
+	var rarity_icon_path: String = RARITY_ICONS.get(rarity, "")
+	if not rarity_icon_path.is_empty() and ResourceLoader.exists(rarity_icon_path):
+		var rarity_icon := TextureRect.new()
+		rarity_icon.custom_minimum_size = Vector2(16, 16)
+		rarity_icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		rarity_icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		rarity_icon.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+		rarity_icon.texture = load(rarity_icon_path) as Texture2D
+		line.add_child(rarity_icon)
 	var summary := Label.new()
 	summary.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	summary.text = "%s  ·  %s%s" % [str(equipment.get("rarity", "")).to_upper(), SLOT_NAMES[_selected_slot], "  ·  EQUIPPED" if equipment.get("equipped", false) else ""]
+	summary.text = "%s%s\n%s" % [rarity.to_upper(), "  ·  EQUIPPED" if equipment.get("equipped", false) else "", SLOT_NAMES[_selected_slot]]
 	summary.add_theme_font_size_override("font_size", 7)
 	line.add_child(summary)
 	var preview := Button.new()
 	preview.name = "Preview"
-	preview.text = "PREVIEW"
+	preview.text = "VIEW" if str(equipment.get("instance_id", "")) != _selected_instance_id else "SELECTED"
 	preview.focus_mode = Control.FOCUS_ALL
+	preview.add_theme_font_size_override("font_size", 7)
 	preview.pressed.connect(func() -> void:
 		_selected_instance_id = str(equipment.get("instance_id", ""))
 		_update_comparison()
 		_rebuild_inventory(_profile.get("equipment_inventory", []), _profile.get("resources", {}))
 	)
 	line.add_child(preview)
+	var stats := PackedStringArray()
+	for stat_line in equipment.get("stat_lines", []):
+		var stat_id := str(stat_line.get("stat_id", ""))
+		var value := EQUIPMENT_GENERATOR_SCRIPT.stat_value(
+			stat_id, float(stat_line.get("roll_percentile", 0.0)), int(stat_line.get("enhancement_level", 0))
+		)
+		stats.append("%s %s" % [STAT_NAMES.get(stat_id, stat_id.to_upper()), EQUIPMENT_GENERATOR_SCRIPT.stat_label(stat_id, value)])
+	var stat_preview := Label.new()
+	stat_preview.name = "StatPreview"
+	stat_preview.text = "  ·  ".join(stats)
+	stat_preview.add_theme_font_size_override("font_size", 7)
+	stat_preview.add_theme_color_override("font_color", RARITY_COLORS.get(rarity, Color("#A6AEC4")))
+	stat_preview.clip_text = true
+	content.add_child(stat_preview)
 	return row
 
 func _close() -> void:

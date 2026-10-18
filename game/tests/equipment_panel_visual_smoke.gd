@@ -24,11 +24,11 @@ func _run() -> void:
 	panel.present({"equipment_inventory": EQUIPMENT, "resources": {"essence": 12}})
 	await process_frame
 	var panel_frame: Control = panel.get_node("Panel")
-	var slots: VBoxContainer = panel.get_node("Panel/Content/Columns/Loadout/Body/Slots")
-	var portrait: TextureRect = panel.get_node("Panel/Content/Columns/Loadout/Body/Character/Portrait")
-	var items: VBoxContainer = panel.get_node("Panel/Content/Columns/RightColumn/Scroll/Items")
+	var slots: HBoxContainer = panel.get_node("Panel/Content/Columns/Loadout/Body/Slots")
+	var portrait: TextureRect = panel.get_node("Panel/Content/Columns/Loadout/Body/Slots/Portrait")
+	var items: GridContainer = panel.get_node("Panel/Content/Columns/RightColumn/Scroll/Items")
 	var compare: Label = panel.get_node("Panel/Content/Columns/RightColumn/Compare/Comparison/CompareBody")
-	var equipped_ring: Button = panel.get_node("Panel/Content/Columns/Loadout/Body/Slots/SlotRing")
+	var equipped_ring: Button = panel.get_node("Panel/Content/Columns/Loadout/Body/Slots/RightSlots/SlotRing")
 	if root.gui_get_focus_owner() != equipped_ring or equipped_ring.get_theme_stylebox("focus") == null:
 		_fail("Equipment should focus the equipped slot with the visible Neon focus treatment")
 		return
@@ -42,8 +42,8 @@ func _run() -> void:
 	if gamepad_focus == keyboard_focus or gamepad_focus == null:
 		_fail("Gamepad D-pad should move focus across equipment slots")
 		return
-	if slots.get_child_count() != 6 or portrait.texture == null or panel_frame.custom_minimum_size != Vector2(600, 326):
-		_fail("Equipment screen should show a schematic character and all six slots")
+	if slots.find_children("*", "Button", true, false).size() != 6 or portrait.texture == null or panel_frame.custom_minimum_size != Vector2(600, 326):
+		_fail("Equipment screen should show a central character with six surrounding equipment slots")
 		return
 	if panel.inventory_item_count() != 2:
 		_fail("The selected slot should show only its two compatible items (got %d)" % panel.inventory_item_count())

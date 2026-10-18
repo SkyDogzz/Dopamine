@@ -73,16 +73,66 @@ theme_type_variation = "InsetPanel"
 layout_mode = 2
 theme_override_constants/separation = 4
 
-[node name="Character" type="CenterContainer" parent="Panel/Content/Columns/Loadout/Body"]
-custom_minimum_size = Vector2(0, 58)
+[node name="Slots" type="HBoxContainer" parent="Panel/Content/Columns/Loadout/Body"]
+custom_minimum_size = Vector2(0, 104)
 layout_mode = 2
+alignment = 1
+theme_override_constants/separation = 3
 
-[node name="Portrait" type="TextureRect" parent="Panel/Content/Columns/Loadout/Body/Character"]
-custom_minimum_size = Vector2(40, 40)
+[node name="LeftSlots" type="VBoxContainer" parent="Panel/Content/Columns/Loadout/Body/Slots"]
+custom_minimum_size = Vector2(58, 0)
+layout_mode = 2
+alignment = 1
+theme_override_constants/separation = 2
+
+[node name="SlotHelmet" type="Button" parent="Panel/Content/Columns/Loadout/Body/Slots/LeftSlots"]
+custom_minimum_size = Vector2(58, 30)
+layout_mode = 2
+text = "HELMET\nEMPTY"
+focus_mode = 2
+
+[node name="SlotArmor" type="Button" parent="Panel/Content/Columns/Loadout/Body/Slots/LeftSlots"]
+custom_minimum_size = Vector2(58, 30)
+layout_mode = 2
+text = "ARMOR\nEMPTY"
+focus_mode = 2
+
+[node name="SlotGloves" type="Button" parent="Panel/Content/Columns/Loadout/Body/Slots/LeftSlots"]
+custom_minimum_size = Vector2(58, 30)
+layout_mode = 2
+text = "GLOVES\nEMPTY"
+focus_mode = 2
+
+[node name="Portrait" type="TextureRect" parent="Panel/Content/Columns/Loadout/Body/Slots"]
+custom_minimum_size = Vector2(54, 88)
 layout_mode = 2
 expand_mode = 1
 stretch_mode = 5
 texture_filter = 1
+
+[node name="RightSlots" type="VBoxContainer" parent="Panel/Content/Columns/Loadout/Body/Slots"]
+custom_minimum_size = Vector2(58, 0)
+layout_mode = 2
+alignment = 1
+theme_override_constants/separation = 2
+
+[node name="SlotAmulet" type="Button" parent="Panel/Content/Columns/Loadout/Body/Slots/RightSlots"]
+custom_minimum_size = Vector2(58, 30)
+layout_mode = 2
+text = "AMULET\nEMPTY"
+focus_mode = 2
+
+[node name="SlotRing" type="Button" parent="Panel/Content/Columns/Loadout/Body/Slots/RightSlots"]
+custom_minimum_size = Vector2(58, 30)
+layout_mode = 2
+text = "RING\nEMPTY"
+focus_mode = 2
+
+[node name="SlotBoots" type="Button" parent="Panel/Content/Columns/Loadout/Body/Slots/RightSlots"]
+custom_minimum_size = Vector2(58, 30)
+layout_mode = 2
+text = "BOOTS\nEMPTY"
+focus_mode = 2
 
 [node name="CharacterLabel" type="Label" parent="Panel/Content/Columns/Loadout/Body"]
 layout_mode = 2
@@ -91,46 +141,25 @@ theme_override_font_sizes/font_size = 7
 text = "CURRENT SURVIVOR"
 horizontal_alignment = 1
 
-[node name="Slots" type="VBoxContainer" parent="Panel/Content/Columns/Loadout/Body"]
+[node name="TotalStats" type="PanelContainer" parent="Panel/Content/Columns/Loadout/Body"]
 layout_mode = 2
-size_flags_vertical = 3
+theme_type_variation = "InsetPanel"
+
+[node name="StatsBody" type="VBoxContainer" parent="Panel/Content/Columns/Loadout/Body/TotalStats"]
+layout_mode = 2
 theme_override_constants/separation = 2
 
-[node name="SlotHelmet" type="Button" parent="Panel/Content/Columns/Loadout/Body/Slots"]
-custom_minimum_size = Vector2(0, 22)
+[node name="StatsTitle" type="Label" parent="Panel/Content/Columns/Loadout/Body/TotalStats/StatsBody"]
 layout_mode = 2
-text = "HELMET  ·  EMPTY"
-focus_mode = 2
+theme_override_colors/font_color = Color(0.215686, 0.909804, 0.960784, 1)
+theme_override_font_sizes/font_size = 8
+text = "TOTAL STATS"
 
-[node name="SlotArmor" type="Button" parent="Panel/Content/Columns/Loadout/Body/Slots"]
-custom_minimum_size = Vector2(0, 22)
+[node name="StatsGrid" type="GridContainer" parent="Panel/Content/Columns/Loadout/Body/TotalStats/StatsBody"]
 layout_mode = 2
-text = "ARMOR  ·  EMPTY"
-focus_mode = 2
-
-[node name="SlotGloves" type="Button" parent="Panel/Content/Columns/Loadout/Body/Slots"]
-custom_minimum_size = Vector2(0, 22)
-layout_mode = 2
-text = "GLOVES  ·  EMPTY"
-focus_mode = 2
-
-[node name="SlotBoots" type="Button" parent="Panel/Content/Columns/Loadout/Body/Slots"]
-custom_minimum_size = Vector2(0, 22)
-layout_mode = 2
-text = "BOOTS  ·  EMPTY"
-focus_mode = 2
-
-[node name="SlotAmulet" type="Button" parent="Panel/Content/Columns/Loadout/Body/Slots"]
-custom_minimum_size = Vector2(0, 22)
-layout_mode = 2
-text = "AMULET  ·  EMPTY"
-focus_mode = 2
-
-[node name="SlotRing" type="Button" parent="Panel/Content/Columns/Loadout/Body/Slots"]
-custom_minimum_size = Vector2(0, 22)
-layout_mode = 2
-text = "RING  ·  EMPTY"
-focus_mode = 2
+columns = 2
+theme_override_constants/h_separation = 4
+theme_override_constants/v_separation = 1
 
 [node name="RightColumn" type="VBoxContainer" parent="Panel/Content/Columns"]
 layout_mode = 2
@@ -179,10 +208,12 @@ layout_mode = 2
 size_flags_vertical = 3
 horizontal_scroll_mode = 0
 
-[node name="Items" type="VBoxContainer" parent="Panel/Content/Columns/RightColumn/Scroll"]
+[node name="Items" type="GridContainer" parent="Panel/Content/Columns/RightColumn/Scroll"]
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_constants/separation = 3
+columns = 2
+theme_override_constants/h_separation = 4
+theme_override_constants/v_separation = 4
 
 [node name="EmptyState" type="Label" parent="Panel/Content/Columns/RightColumn/Scroll/Items"]
 custom_minimum_size = Vector2(0, 52)
