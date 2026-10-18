@@ -57,6 +57,18 @@ func _run() -> void:
 	if boot_buttons.size() != 2 or not items.has_node("Equipment_boots-old") or not items.has_node("Equipment_boots-new") or items.has_node("Equipment_ring-equipped"):
 		_fail("The loadout list should filter incompatible slots: %s" % str(items.get_children().map(func(child: Node) -> String: return child.name)))
 		return
+	for slot in ["helmet", "armor", "gloves", "boots", "amulet", "ring"]:
+		panel.set_selected_slot(slot)
+		await process_frame
+		var expected_count := 0
+		for equipment in EQUIPMENT:
+			if str(equipment["slot"]) == slot:
+				expected_count += 1
+		if panel.inventory_item_count() != expected_count:
+			_fail("The %s slot should show only its %d compatible items" % [slot, expected_count])
+			return
+	panel.set_selected_slot("boots")
+	await process_frame
 	var old_button: Button = items.get_node("Equipment_boots-old/ItemRow/Preview")
 	old_button.pressed.emit()
 	await process_frame
