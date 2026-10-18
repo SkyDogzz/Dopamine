@@ -4016,7 +4016,7 @@
       "qa_report_path": "build/assets/candidates/misc-animation/qa-report.json",
       "generation_status": "candidate",
       "validation_status": "passed",
-      "human_review_status": "pending",
+      "human_review_status": "approved",
       "integration_status": "integrated",
       "blockers": [
         "specific impact color/intensity and animation timing are open"
@@ -4024,8 +4024,8 @@
       "requirement_source": "GDD v1.6 + Godot runtime contracts",
       "candidate_export_path": "build/assets/candidates/misc-animation/sprites/animation/weapon_lightning_conductor_fire_vfx.png",
       "candidate_source_path": "build/assets/candidates/misc-animation/source/animation/weapon_lightning_conductor_fire_vfx.aseprite",
-      "acceptance_status": "accepted_for_provisional_production",
-      "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
+      "acceptance_status": "accepted",
+      "acceptance_basis": "Owner explicitly approved all ten weapon fire VFX animations in chat on 2026-10-18.",
       "godot_animation_resource": "game/assets/sprites/animation/lightning_conductor_fire.tres",
       "integrated_path": "game/assets/sprites/animation/lightning_conductor_fire.png",
       "integrated_source_path": "game/assets/source/animation/weapon_lightning_conductor_fire_vfx.aseprite"
@@ -4278,7 +4278,7 @@
       "qa_report_path": "build/assets/candidates/misc-animation/qa-report.json",
       "generation_status": "candidate",
       "validation_status": "passed",
-      "human_review_status": "pending",
+      "human_review_status": "approved",
       "integration_status": "integrated",
       "blockers": [
         "specific impact color/intensity and animation timing are open"
@@ -4286,8 +4286,8 @@
       "requirement_source": "GDD v1.6 + Godot runtime contracts",
       "candidate_export_path": "build/assets/candidates/misc-animation/sprites/animation/weapon_inferno_sprayer_fire_vfx.png",
       "candidate_source_path": "build/assets/candidates/misc-animation/source/animation/weapon_inferno_sprayer_fire_vfx.aseprite",
-      "acceptance_status": "accepted_for_provisional_production",
-      "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
+      "acceptance_status": "accepted",
+      "acceptance_basis": "Owner explicitly approved all ten weapon fire VFX animations in chat on 2026-10-18.",
       "godot_animation_resource": "game/assets/sprites/animation/inferno_sprayer_fire.tres",
       "integrated_path": "game/assets/sprites/animation/inferno_sprayer_fire.png",
       "integrated_source_path": "game/assets/source/animation/weapon_inferno_sprayer_fire_vfx.aseprite"
@@ -4540,7 +4540,7 @@
       "qa_report_path": "build/assets/candidates/misc-animation/qa-report.json",
       "generation_status": "candidate",
       "validation_status": "passed",
-      "human_review_status": "pending",
+      "human_review_status": "approved",
       "integration_status": "integrated",
       "blockers": [
         "specific impact color/intensity and animation timing are open"
@@ -4548,8 +4548,8 @@
       "requirement_source": "GDD v1.6 + Godot runtime contracts",
       "candidate_export_path": "build/assets/candidates/misc-animation/sprites/animation/weapon_crimson_daggers_fire_vfx.png",
       "candidate_source_path": "build/assets/candidates/misc-animation/source/animation/weapon_crimson_daggers_fire_vfx.aseprite",
-      "acceptance_status": "accepted_for_provisional_production",
-      "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
+      "acceptance_status": "accepted",
+      "acceptance_basis": "Owner explicitly approved all ten weapon fire VFX animations in chat on 2026-10-18.",
       "godot_animation_resource": "game/assets/sprites/animation/crimson_daggers_fire.tres",
       "integrated_path": "game/assets/sprites/animation/crimson_daggers_fire.png",
       "integrated_source_path": "game/assets/source/animation/weapon_crimson_daggers_fire_vfx.aseprite"
@@ -4802,7 +4802,7 @@
       "qa_report_path": "build/assets/candidates/misc-animation/qa-report.json",
       "generation_status": "candidate",
       "validation_status": "passed",
-      "human_review_status": "pending",
+      "human_review_status": "approved",
       "integration_status": "integrated",
       "blockers": [
         "specific impact color/intensity and animation timing are open"
@@ -4810,8 +4810,8 @@
       "requirement_source": "GDD v1.6 + Godot runtime contracts",
       "candidate_export_path": "build/assets/candidates/misc-animation/sprites/animation/weapon_minigun_fire_vfx.png",
       "candidate_source_path": "build/assets/candidates/misc-animation/source/animation/weapon_minigun_fire_vfx.aseprite",
-      "acceptance_status": "accepted_for_provisional_production",
-      "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
+      "acceptance_status": "accepted",
+      "acceptance_basis": "Owner explicitly approved all ten weapon fire VFX animations in chat on 2026-10-18.",
       "godot_animation_resource": "game/assets/sprites/animation/minigun_fire.tres",
       "integrated_path": "game/assets/sprites/animation/minigun_fire.png",
       "integrated_source_path": "game/assets/source/animation/weapon_minigun_fire_vfx.aseprite"
@@ -5064,7 +5064,7 @@
       "qa_report_path": "build/assets/candidates/misc-animation/qa-report.json",
       "generation_status": "candidate",
       "validation_status": "passed",
-      "human_review_status": "pending",
+      "human_review_status": "approved",
       "integration_status": "integrated",
       "blockers": [
         "specific impact color/intensity and animation timing are open"
@@ -5072,8 +5072,8 @@
       "requirement_source": "GDD v1.6 + Godot runtime contracts",
       "candidate_export_path": "build/assets/candidates/misc-animation/sprites/animation/weapon_toxic_cloud_fire_vfx.png",
       "candidate_source_path": "build/assets/candidates/misc-animation/source/animation/weapon_toxic_cloud_fire_vfx.aseprite",
-      "acceptance_status": "accepted_for_provisional_production",
-      "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
+      "acceptance_status": "accepted",
+      "acceptance_basis": "Owner explicitly approved all ten weapon fire VFX animations in chat on 2026-10-18.",
       "godot_animation_resource": "game/assets/sprites/animation/toxic_cloud_fire.tres",
       "integrated_path": "game/assets/sprites/animation/toxic_cloud_fire.png",
       "integrated_source_path": "game/assets/source/animation/weapon_toxic_cloud_fire_vfx.aseprite"
@@ -5326,7 +5326,7 @@
       "qa_report_path": "build/assets/candidates/misc-animation/qa-report.json",
       "generation_status": "candidate",
       "validation_status": "passed",
-      "human_review_status": "pending",
+      "human_review_status": "approved",
       "integration_status": "integrated",
       "blockers": [
         "specific impact color/intensity and animation timing are open"
@@ -5334,8 +5334,8 @@
       "requirement_source": "GDD v1.6 + Godot runtime contracts",
       "candidate_export_path": "build/assets/candidates/misc-animation/sprites/animation/weapon_sawblades_fire_vfx.png",
       "candidate_source_path": "build/assets/candidates/misc-animation/source/animation/weapon_sawblades_fire_vfx.aseprite",
-      "acceptance_status": "accepted_for_provisional_production",
-      "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
+      "acceptance_status": "accepted",
+      "acceptance_basis": "Owner explicitly approved all ten weapon fire VFX animations in chat on 2026-10-18.",
       "godot_animation_resource": "game/assets/sprites/animation/sawblades_fire.tres",
       "integrated_path": "game/assets/sprites/animation/sawblades_fire.png",
       "integrated_source_path": "game/assets/source/animation/weapon_sawblades_fire_vfx.aseprite"
@@ -5588,7 +5588,7 @@
       "qa_report_path": "build/assets/candidates/misc-animation/qa-report.json",
       "generation_status": "candidate",
       "validation_status": "passed",
-      "human_review_status": "pending",
+      "human_review_status": "approved",
       "integration_status": "integrated",
       "blockers": [
         "specific impact color/intensity and animation timing are open"
@@ -5596,8 +5596,8 @@
       "requirement_source": "GDD v1.6 + Godot runtime contracts",
       "candidate_export_path": "build/assets/candidates/misc-animation/sprites/animation/weapon_meteor_staff_fire_vfx.png",
       "candidate_source_path": "build/assets/candidates/misc-animation/source/animation/weapon_meteor_staff_fire_vfx.aseprite",
-      "acceptance_status": "accepted_for_provisional_production",
-      "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
+      "acceptance_status": "accepted",
+      "acceptance_basis": "Owner explicitly approved all ten weapon fire VFX animations in chat on 2026-10-18.",
       "godot_animation_resource": "game/assets/sprites/animation/meteor_staff_fire.tres",
       "integrated_path": "game/assets/sprites/animation/meteor_staff_fire.png",
       "integrated_source_path": "game/assets/source/animation/weapon_meteor_staff_fire_vfx.aseprite"
@@ -5850,7 +5850,7 @@
       "qa_report_path": "build/assets/candidates/misc-animation/qa-report.json",
       "generation_status": "candidate",
       "validation_status": "passed",
-      "human_review_status": "pending",
+      "human_review_status": "approved",
       "integration_status": "integrated",
       "blockers": [
         "specific impact color/intensity and animation timing are open"
@@ -5858,8 +5858,8 @@
       "requirement_source": "GDD v1.6 + Godot runtime contracts",
       "candidate_export_path": "build/assets/candidates/misc-animation/sprites/animation/weapon_prism_laser_fire_vfx.png",
       "candidate_source_path": "build/assets/candidates/misc-animation/source/animation/weapon_prism_laser_fire_vfx.aseprite",
-      "acceptance_status": "accepted_for_provisional_production",
-      "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
+      "acceptance_status": "accepted",
+      "acceptance_basis": "Owner explicitly approved all ten weapon fire VFX animations in chat on 2026-10-18.",
       "godot_animation_resource": "game/assets/sprites/animation/prism_laser_fire.tres",
       "integrated_path": "game/assets/sprites/animation/prism_laser_fire.png",
       "integrated_source_path": "game/assets/source/animation/weapon_prism_laser_fire_vfx.aseprite"
@@ -6112,7 +6112,7 @@
       "qa_report_path": "build/assets/candidates/misc-animation/qa-report.json",
       "generation_status": "candidate",
       "validation_status": "passed",
-      "human_review_status": "pending",
+      "human_review_status": "approved",
       "integration_status": "integrated",
       "blockers": [
         "specific impact color/intensity and animation timing are open"
@@ -6120,8 +6120,8 @@
       "requirement_source": "GDD v1.6 + Godot runtime contracts",
       "candidate_export_path": "build/assets/candidates/misc-animation/sprites/animation/weapon_void_orb_fire_vfx.png",
       "candidate_source_path": "build/assets/candidates/misc-animation/source/animation/weapon_void_orb_fire_vfx.aseprite",
-      "acceptance_status": "accepted_for_provisional_production",
-      "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
+      "acceptance_status": "accepted",
+      "acceptance_basis": "Owner explicitly approved all ten weapon fire VFX animations in chat on 2026-10-18.",
       "godot_animation_resource": "game/assets/sprites/animation/void_orb_fire.tres",
       "integrated_path": "game/assets/sprites/animation/void_orb_fire.png",
       "integrated_source_path": "game/assets/source/animation/weapon_void_orb_fire_vfx.aseprite"
@@ -6374,7 +6374,7 @@
       "qa_report_path": "build/assets/candidates/misc-animation/qa-report.json",
       "generation_status": "candidate",
       "validation_status": "passed",
-      "human_review_status": "pending",
+      "human_review_status": "approved",
       "integration_status": "integrated",
       "blockers": [
         "specific impact color/intensity and animation timing are open"
@@ -6382,8 +6382,8 @@
       "requirement_source": "GDD v1.6 + Godot runtime contracts",
       "candidate_export_path": "build/assets/candidates/misc-animation/sprites/animation/weapon_frost_nova_fire_vfx.png",
       "candidate_source_path": "build/assets/candidates/misc-animation/source/animation/weapon_frost_nova_fire_vfx.aseprite",
-      "acceptance_status": "accepted_for_provisional_production",
-      "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
+      "acceptance_status": "accepted",
+      "acceptance_basis": "Owner explicitly approved all ten weapon fire VFX animations in chat on 2026-10-18.",
       "godot_animation_resource": "game/assets/sprites/animation/frost_nova_fire.tres",
       "integrated_path": "game/assets/sprites/animation/frost_nova_fire.png",
       "integrated_source_path": "game/assets/source/animation/weapon_frost_nova_fire_vfx.aseprite"
