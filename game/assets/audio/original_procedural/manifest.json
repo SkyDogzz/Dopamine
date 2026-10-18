@@ -14,5 +14,6 @@
       "crest_factor_db": 8.568
     }
   ],
-  "sfx_candidate_count": 38
+  "sfx_candidate_count": 38,
+  "music_manifest": "music/manifest.json"
 }
