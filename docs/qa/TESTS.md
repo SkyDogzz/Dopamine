@@ -5,6 +5,12 @@
 - [x] `skill_tree_panel_visual_smoke.gd` vérifie maintenant que le cadre du graphe reste dans les viewports logiques/rendus 640×360, 1280×720 et 1920×1080; `godot_project_import` et le smoke ciblé passent (**2/2**).
 - [i] Le contrôle porte sur les bornes du cadre, pas sur la lisibilité de chaque nœud à chaque taille. La capture inspectée reste 640×360; le focus manette synthétique passe, mais aucun appareil physique n’a été essayé.
 
+## Scène Options — confinement du contenu et capture d’état initial — 2026-10-18
+
+- [x] `ui_settings_smoke.gd` vérifie maintenant que chaque contrôle visible de la carte Options reste dans son contenu aux viewports 640×360, 1280×720 et 1920×1080.
+- [x] Le smoke peut capturer l’état initial à 640×360 avant toute mutation de réglage; la capture `states/options.png` a été régénérée et inspectée, son SHA-256 reste `7777bc770de2b71396314d98d19a0a45384e15b91cf8f65de0bd59f531745fe2`.
+- [i] Le focus visible et le confinement des contrôles sont couverts par rendu logiciel; cela ne valide ni matériel physique ni toutes les branches d’erreur/focus de la page.
+
 ## Migration des récompenses visuelles — 2026-10-18
 
 - [x] Le coffre 32×32 et l’orbe XP 16×16 sont redessinés par primitives originales, avec PNG indexés limités à la palette maître et sources Aseprite éditables. La capture de contrôle agrandie nearest-neighbor a été examinée; silhouette du coffre et forme facettée de l’orbe restent lisibles.

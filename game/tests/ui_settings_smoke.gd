@@ -78,6 +78,12 @@ func _run() -> void:
 	if root.gui_get_focus_owner() != fullscreen_toggle:
 		_fail("Fullscreen setting should receive initial focus")
 		return
+	if "--capture" in OS.get_cmdline_user_args():
+		await RenderingServer.frame_post_draw
+		var evidence_path := ProjectSettings.globalize_path("res://../docs/art/evidence/2026-10-18/states/options.png")
+		if root.get_texture().get_image().save_png(evidence_path) != OK:
+			_fail("Could not capture the initial 640x360 Options panel")
+			return
 	volume_slider.value = 42.0
 	await process_frame
 	if _settings.master_volume_percent != 42.0 or volume_value.text != "42%":
@@ -128,6 +134,11 @@ func _run() -> void:
 		if card_rect.position.x < 0.0 or card_rect.position.y < 0.0 or card_rect.end.x > viewport_size.x or card_rect.end.y > viewport_size.y:
 			_fail("Options card should fit inside viewport %s" % viewport_size)
 			return
+		var content_rect := options_content.get_global_rect()
+		for child in options_content.get_children():
+			if child is Control and child.visible and not content_rect.encloses((child as Control).get_global_rect()):
+				_fail("Options content '%s' should fit inside the card at %s" % [child.name, viewport_size])
+				return
 	var close_signal_found := false
 	for signal_info in panel.get_signal_list():
 		if signal_info.name == "close_requested":
