@@ -19,20 +19,20 @@ func _run() -> void:
 		_fail("Player should render a 32x32 region from the 4x4 animation sheet")
 		return
 	player._update_sprite_animation(Vector2.RIGHT, 0.125)
-	if sprite.texture.resource_path.get_file() != "player_walk.png" or sprite.region_rect != Rect2(32, 64, 32, 32):
-		_fail("Rightward movement should select the right-facing walk frame")
+	if sprite.texture.resource_path.get_file() != "player_walk.png" or sprite.region_rect != Rect2(32, 0, 32, 32) or sprite.flip_h:
+		_fail("Rightward movement should keep the upright base walk frame unflipped")
 		return
 	player.play_attack(Vector2.LEFT)
-	if sprite.texture.resource_path.get_file() != "player_attack.png" or sprite.region_rect.position.y != 32.0:
-		_fail("Player attacks should use the matching directional attack sheet row")
+	if sprite.texture.resource_path.get_file() != "player_attack.png" or sprite.region_rect.position.y != 0.0 or not sprite.flip_h:
+		_fail("Left-facing attacks should flip the upright base attack frame horizontally")
 		return
 	player._update_sprite_animation(Vector2.ZERO, 0.5)
 	if sprite.texture.resource_path.get_file() != "player_idle.png":
 		_fail("A completed attack should return to the idle sheet")
 		return
 	player._update_sprite_animation(Vector2.ZERO, 0.0)
-	if sprite.texture.resource_path.get_file() != "player_idle.png" or sprite.region_rect.position.y != 32.0:
-		_fail("Stopping should return to idle while preserving the last facing direction")
+	if sprite.texture.resource_path.get_file() != "player_idle.png" or sprite.region_rect.position.y != 0.0 or not sprite.flip_h:
+		_fail("Stopping should keep the upright idle frame and preserve horizontal facing")
 		return
 	player.play_death()
 	if sprite.texture.resource_path.get_file() != "player_death.png" or player.controls_enabled:
@@ -51,7 +51,7 @@ func _run() -> void:
 	if player.position.x <= 0.0:
 		_fail("Player should move from the right input action")
 		return
-	if sprite.region_rect.position.y != 64.0:
+	if sprite.region_rect.position.y != 0.0 or sprite.flip_h:
 		_fail("Right input should keep the player facing right")
 		return
 	for action_and_key in [["move_left", KEY_LEFT], ["move_right", KEY_RIGHT], ["move_up", KEY_UP], ["move_down", KEY_DOWN]]:
@@ -74,7 +74,7 @@ func _run() -> void:
 	if player.position.x >= before_left:
 		_fail("The left arrow should move the player through the left input action")
 		return
-	if sprite.region_rect.position.y != 32.0:
+	if sprite.region_rect.position.y != 0.0 or not sprite.flip_h:
 		_fail("Left input should keep the player facing left")
 		return
 	var before_up := player.position.y
@@ -85,8 +85,8 @@ func _run() -> void:
 	if player.position.y >= before_up:
 		_fail("The up arrow should move the player through the up input action")
 		return
-	if sprite.region_rect.position.y != 96.0:
-		_fail("Up input should keep the player facing up")
+	if sprite.region_rect.position.y != 0.0 or not sprite.flip_h:
+		_fail("Up input should preserve the last left/right facing direction")
 		return
 	var before_down := player.position.y
 	Input.action_press("move_down")
@@ -96,8 +96,8 @@ func _run() -> void:
 	if player.position.y <= before_down:
 		_fail("The down arrow should move the player through the down input action")
 		return
-	if sprite.region_rect.position.y != 0.0:
-		_fail("Down input should keep the player facing down")
+	if sprite.region_rect.position.y != 0.0 or not sprite.flip_h:
+		_fail("Down input should preserve the last left/right facing direction")
 		return
 	Input.parse_input_event(_key_event(KEY_D, true))
 	Input.parse_input_event(_key_event(KEY_S, true))

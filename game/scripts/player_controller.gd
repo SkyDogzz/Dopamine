@@ -12,7 +12,7 @@ const IDLE_FRAME_RATE := 3.0
 const WALK_FRAME_RATE := 8.0
 const ATTACK_FRAME_RATE := 10.0
 const DEATH_FRAME_RATE := 10.0
-var _facing_row := 0
+var _facing_left := false
 var _animation_elapsed := 0.0
 var _is_walking := false
 var _idle_texture: Texture2D
@@ -60,11 +60,11 @@ func _physics_process(delta: float) -> void:
 func play_attack(direction: Vector2) -> void:
 	if _attack_texture == null or _one_shot_state == "death" or _one_shot_state == "attack":
 		return
-	_facing_row = _direction_row(direction) if direction.length_squared() > 0.0001 else _facing_row
+	_update_facing(direction)
 	_one_shot_state = "attack"
 	_one_shot_elapsed = 0.0
 	_one_shot_frame = 0
-	_show_frame(_attack_texture, _one_shot_frame, _facing_row)
+	_show_frame(_attack_texture, _one_shot_frame)
 
 func play_death() -> void:
 	controls_enabled = false
@@ -74,7 +74,7 @@ func play_death() -> void:
 	_one_shot_state = "death"
 	_one_shot_elapsed = 0.0
 	_one_shot_frame = 0
-	_show_frame(_death_texture, _one_shot_frame, _facing_row)
+	_show_frame(_death_texture, _one_shot_frame)
 
 func death_animation_duration() -> float:
 	return 4.0 / DEATH_FRAME_RATE
@@ -89,18 +89,19 @@ func _advance_one_shot(delta: float) -> void:
 	if next_frame != _one_shot_frame:
 		_one_shot_frame = next_frame
 		_show_frame(_death_texture if _one_shot_state == "death" else _attack_texture,
-				_one_shot_frame, _facing_row)
+				_one_shot_frame)
 	if _one_shot_elapsed >= 4.0 / frame_rate and _one_shot_state == "attack":
 		_one_shot_state = ""
 		_animation_elapsed = 0.0
-		_show_frame(_walk_texture if _is_walking else _idle_texture, 0, _facing_row)
+		_show_frame(_walk_texture if _is_walking else _idle_texture, 0)
 
-func _show_frame(texture: Texture2D, frame: int, row: int) -> void:
+func _show_frame(texture: Texture2D, frame: int) -> void:
 	if texture == null:
 		return
 	_sprite.texture = texture
 	_sprite.region_enabled = true
-	_sprite.region_rect = Rect2(frame * FRAME_SIZE, row * FRAME_SIZE, FRAME_SIZE, FRAME_SIZE)
+	_sprite.region_rect = Rect2(frame * FRAME_SIZE, 0, FRAME_SIZE, FRAME_SIZE)
+	_sprite.flip_h = _facing_left
 
 func _update_sprite_animation(direction: Vector2, delta: float) -> void:
 	if _one_shot_state == "attack" or _one_shot_state == "death":
@@ -109,8 +110,7 @@ func _update_sprite_animation(direction: Vector2, delta: float) -> void:
 			_update_sprite_animation(direction, 0.0)
 		return
 	var moving := direction.length_squared() > 0.0001
-	if moving:
-		_facing_row = _direction_row(direction)
+	_update_facing(direction)
 	if moving != _is_walking:
 		_is_walking = moving
 		_animation_elapsed = 0.0
@@ -120,9 +120,8 @@ func _update_sprite_animation(direction: Vector2, delta: float) -> void:
 	var texture := _walk_texture if moving else _idle_texture
 	if texture == null:
 		return
-	_show_frame(texture, frame, _facing_row)
+	_show_frame(texture, frame)
 
-func _direction_row(direction: Vector2) -> int:
-	if absf(direction.x) > absf(direction.y):
-		return 2 if direction.x > 0.0 else 1
-	return 0 if direction.y > 0.0 else 3
+func _update_facing(direction: Vector2) -> void:
+	if absf(direction.x) > absf(direction.y) and absf(direction.x) > 0.001:
+		_facing_left = direction.x < 0.0

@@ -15,7 +15,7 @@
     "Open canon, font and detailed animation choices remain explicitly provisional; human_review_status remains pending until visual and auditory review.",
     "Sources, seeds, recipes, metadata, exports and Godot resources are preserved; integration is ID-scoped and hash guarded.",
     "The ten 64x64 impact components are represented by cells in the integrated weapon_impacts_atlas; duplicate standalone PNGs were retired after a full reference audit.",
-    "Owner feedback: the 48 icons in the Catalog icons sheet lack sufficient detail. A v2 candidate set with editable sources is staged under docs/art/candidates/catalog-icons-detail-v2; active runtime exports are preserved until visual approval."
+    "Owner approved all 48 detailed catalog/UI icon v2 candidates; they are integrated at their existing Godot destinations with editable sources under docs/art/candidates/catalog-icons-detail-v2."
   ],
   "assets": [
     {

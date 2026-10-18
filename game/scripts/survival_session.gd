@@ -1495,17 +1495,15 @@ func _queue_enemy_death_animation(target_id: Dictionary, enemy_type: String,
 	var size: float = _sprite_renderer._size_for_entity(role_id, components)
 	if not components.has("CollisionRadius") and role_id.begins_with("boss_"):
 		size = 52.0
-	var direction_name := "down"
-	if absf(direction.x) > absf(direction.y):
-		direction_name = "right" if direction.x > 0.0 else "left"
-	else:
-		direction_name = "down" if direction.y > 0.0 else "up"
-	var duration: float = _sprite_renderer.animation_duration(role_id, "death", direction_name)
+	var entity_key := "%d:%d" % [target_index, target_generation]
+	var facing_direction: String = _sprite_renderer._horizontal_facing_for_entity(entity_key, components)
+	var duration: float = _sprite_renderer.animation_duration(role_id, "death", "down")
 	if duration <= 0.0:
 		return
 	_enemy_death_animations.append({
 		"role": role_id, "state": "death", "position": position, "size": size,
-		"direction": direction, "started_at": current_simulation_time,
+		"direction": Vector2.LEFT if facing_direction == "left" else Vector2.RIGHT,
+		"started_at": current_simulation_time,
 		"expires_at": current_simulation_time + duration,
 	})
 	while _enemy_death_animations.size() > MAX_ENEMY_DEATH_ANIMATIONS:

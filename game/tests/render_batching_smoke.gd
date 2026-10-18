@@ -9,6 +9,27 @@ func _run() -> void:
 	view.size = Vector2(640, 460)
 	root.add_child(view)
 	await process_frame
+	for role_id in view._sprite_renderer._role_animation_sets:
+		for state in view._sprite_renderer._role_animation_sets[role_id]:
+			var sprite_frames: SpriteFrames = view._sprite_renderer._role_animation_sets[role_id][state]
+			for animation_name in sprite_frames.get_animation_names():
+				for frame in range(sprite_frames.get_frame_count(animation_name)):
+					var frame_texture: Texture2D = sprite_frames.get_frame_texture(animation_name, frame)
+					var batch: Dictionary = view._sprite_renderer._get_animation_batch(role_id, state, animation_name, frame)
+					var expected_size := (frame_texture as AtlasTexture).region.size if frame_texture is AtlasTexture else frame_texture.get_size()
+					assert(batch["texture"].get_size() == expected_size,
+							"%s:%d should render one cropped frame, not its full source atlas" % [animation_name, frame])
+					if frame_texture is AtlasTexture:
+						var atlas_frame := frame_texture as AtlasTexture
+						var expected_image := atlas_frame.atlas.get_image().get_region(Rect2i(atlas_frame.region))
+						assert(batch["texture"].get_image().get_data() == expected_image.get_data(),
+							"%s:%d should contain the selected atlas region pixels" % [animation_name, frame])
+						if animation_name.ends_with("_down"):
+							var flipped_batch: Dictionary = view._sprite_renderer._get_animation_batch(
+								role_id, state, animation_name, frame, true)
+							expected_image.flip_x()
+							assert(flipped_batch["texture"].get_image().get_data() == expected_image.get_data(),
+								"%s:%d left-facing frame should be an upright horizontal flip" % [animation_name, frame])
 	var entities: Array[Dictionary] = []
 	for index in range(500):
 		entities.append(_entity(index, "chaser", float(index % 40) * 12.0 - 240.0, float(index / 40) * 12.0 - 70.0))
@@ -87,7 +108,14 @@ func _run() -> void:
 			tank_idle_instances += view._sprite_renderer._animated_batches[animation_key]["multimesh"].instance_count
 	assert(tank_idle_instances == 1, "Idle enemies should render from their directional animation frames")
 	var moving_tank: Dictionary = view._sprite_renderer._animation_for_entity({"EnemyType": "tank", "Velocity2D": {"x": 80.0, "y": 0.0}}, 0.0)
-	assert(moving_tank["name"] == "enemy_tank_move_right" and moving_tank["frame"] == 0, "Moving enemies should select the matching directional movement animation")
+	assert(moving_tank["name"] == "enemy_tank_move_down" and not moving_tank["flip_x"] and moving_tank["frame"] == 0,
+			"Right-facing enemies should use the upright base row")
+	var test_facing: String = view._sprite_renderer._horizontal_facing_for_entity("test:1", {"Velocity2D": {"x": -80.0, "y": 0.0}})
+	test_facing = view._sprite_renderer._horizontal_facing_for_entity("test:1", {"Velocity2D": {"x": 0.0, "y": -80.0}})
+	var vertical_tank: Dictionary = view._sprite_renderer._animation_for_entity(
+		{"EnemyType": "tank", "Velocity2D": {"x": 0.0, "y": -80.0}}, 0.0, "", test_facing)
+	assert(test_facing == "left" and vertical_tank["name"] == "enemy_tank_move_down" and vertical_tank["flip_x"],
+			"Vertical movement must preserve an upright left-facing frame")
 	assert(is_equal_approx(view._sprite_renderer._size_for_entity("enemy_chaser", {"CollisionRadius": 12.0}), 24.0), "Mob sprite diameter should match its shared collision radius")
 	assert(is_equal_approx(view._sprite_renderer._size_for_entity("boss_dopamine_core", {"CollisionRadius": 26.0}), 52.0), "Boss sprite diameter should match its shared collision radius")
 	assert(view._sprite_renderer.animated_instance_count_for_role("projectile_inferno") == 1, "Weapon projectile art should remain distinct")
@@ -146,14 +174,14 @@ func _run() -> void:
 	view._sprite_renderer.set_entities([shooter], Vector2.ZERO, 0.2, {
 		"2600:1": {"state": "attack", "started_at": 0.0},
 	})
-	assert(view._sprite_renderer.animated_multimesh_for("enemy_shooter_attack_right", 2).instance_count == 1,
-			"Attack phase overrides should play the directional, correctly timed shooter attack frame")
+	assert(view._sprite_renderer.animated_multimesh_for("enemy_shooter_attack_down", 2).instance_count == 1,
+			"Attack phase overrides should play the upright shooter attack frame")
 	view._sprite_renderer.set_entities([], Vector2.ZERO, 0.15, {}, [{
 		"role": "enemy_shooter", "state": "death", "position": Vector2(20, 30),
 		"size": 24.0, "direction": Vector2.LEFT, "started_at": 0.0,
 	}])
-	assert(view._sprite_renderer.animated_multimesh_for("enemy_shooter_death_left", 1).instance_count == 1,
-			"Transient deaths should render independently after the ECS entity has been removed")
+	assert(view._sprite_renderer.animated_multimesh_for("enemy_shooter_death_down", 1, true).instance_count == 1,
+			"Transient deaths should preserve upright horizontal facing after despawn")
 	view.set_selected_entity(10, 1)
 	assert(view._selected_entity_found, "Selecting an enemy should preserve its overlay above the batches")
 	if view._selected_point != Vector2(200, 160):

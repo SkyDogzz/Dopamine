@@ -78,6 +78,7 @@ var _animated_batches: Dictionary = {}
 var _projectile_trails: Array[Dictionary] = []
 var _selected_index := -1
 var _selected_generation := -1
+var _entity_facing_directions: Dictionary = {}
 var selected_point := Vector2.ZERO
 var selected_entity_found := false
 
@@ -161,17 +162,21 @@ func set_entities(entities: Array, origin: Vector2 = Vector2.ZERO, animation_tim
 					})
 		var id: Dictionary = entity["id"]
 		var entity_key := "%d:%d" % [int(id["index"]), int(id["generation"])]
+		var facing_direction := "right"
+		if not sprite_id.begins_with("projectile_") and sprite_id != "xp_orb":
+			facing_direction = _horizontal_facing_for_entity(entity_key, components)
 		var override: Variant = animation_overrides.get(entity_key, {})
 		var override_state := str(override.get("state", "")) if override is Dictionary else str(override)
 		var entity_animation_time := animation_time
 		if override is Dictionary and override.has("started_at"):
 			entity_animation_time = maxf(0.0, animation_time - float(override["started_at"]))
 		var animation := _animation_for_projectile(sprite_id, animation_time) if sprite_id.begins_with("projectile_") else \
-				_animation_for_entity(components, entity_animation_time, override_state)
+				_animation_for_entity(components, entity_animation_time, override_state, facing_direction)
 		if not animation.is_empty():
-			var animation_key := "%s:%d" % [animation["name"], animation["frame"]]
+			var flip_x := bool(animation.get("flip_x", false))
+			var animation_key := _animation_batch_key(animation["name"], int(animation["frame"]), flip_x)
 			var animation_batch := _get_animation_batch(animation["role"], animation["state"],
-					animation["name"], int(animation["frame"]))
+					animation["name"], int(animation["frame"]), flip_x)
 			if not animation_batch.is_empty():
 				if not instances_by_animation.has(animation_key):
 					instances_by_animation[animation_key] = []
@@ -212,8 +217,8 @@ func draw_batches(canvas: CanvasItem) -> void:
 		if multimesh.instance_count > 0 and batch["texture"] != null:
 			canvas.draw_multimesh(multimesh, batch["texture"])
 
-func animated_multimesh_for(animation_name: String, frame: int) -> MultiMesh:
-	var key := "%s:%d" % [animation_name, frame]
+func animated_multimesh_for(animation_name: String, frame: int, flip_x: bool = false) -> MultiMesh:
+	var key := _animation_batch_key(animation_name, frame, flip_x)
 	if not _animated_batches.has(key):
 		return null
 	return _animated_batches[key]["multimesh"]
@@ -244,7 +249,8 @@ func _animation_for_projectile(sprite_id: String, animation_time: float) -> Dict
 	var frame := posmod(floori(animation_time * fps), frame_count)
 	return {"role": sprite_id, "state": "projectile", "name": animation_name, "frame": frame}
 
-func _animation_for_entity(components: Dictionary, animation_time: float, state_override: String = "") -> Dictionary:
+func _animation_for_entity(components: Dictionary, animation_time: float, state_override: String = "",
+		facing_direction: String = "right") -> Dictionary:
 	if components.get("IsProjectile", false) or components.get("IsXpOrb", false):
 		return {}
 	var enemy_type := str(components.get("EnemyType", "chaser"))
@@ -264,15 +270,7 @@ func _animation_for_entity(components: Dictionary, animation_time: float, state_
 	if sprite_frames == null:
 		return {}
 	var base_name := "%s_%s" % [role_id, state]
-	var animation_name := base_name
-	if sprite_frames.has_animation(base_name + "_down"):
-		var direction_name := "down"
-		if direction.length_squared() > 0.001:
-			if absf(direction.x) > absf(direction.y):
-				direction_name = "right" if direction.x > 0.0 else "left"
-			else:
-				direction_name = "down" if direction.y > 0.0 else "up"
-		animation_name = base_name + "_" + direction_name
+	var animation_name := base_name + "_down" if sprite_frames.has_animation(base_name + "_down") else base_name
 	if not sprite_frames.has_animation(animation_name):
 		return {}
 	var frame_count := sprite_frames.get_frame_count(animation_name)
@@ -282,10 +280,22 @@ func _animation_for_entity(components: Dictionary, animation_time: float, state_
 	var frame := posmod(floori(animation_time * fps), frame_count)
 	if not sprite_frames.get_animation_loop(animation_name):
 		frame = mini(floori(animation_time * fps), frame_count - 1)
-	return {"role": role_id, "state": state, "name": animation_name, "frame": frame}
+	return {"role": role_id, "state": state, "name": animation_name, "frame": frame,
+		"flip_x": facing_direction == "left"}
 
-func _get_animation_batch(role_id: String, state: String, animation_name: String, frame: int) -> Dictionary:
-	var key := "%s:%d" % [animation_name, frame]
+func _horizontal_facing_for_entity(entity_key: String, components: Dictionary) -> String:
+	var velocity: Dictionary = components.get("Velocity2D", {})
+	var direction := Vector2(float(velocity.get("x", 0.0)), float(velocity.get("y", 0.0)))
+	if absf(direction.x) > absf(direction.y) and absf(direction.x) > 0.001:
+		_entity_facing_directions[entity_key] = "right" if direction.x > 0.0 else "left"
+	return str(_entity_facing_directions.get(entity_key, "right"))
+
+func _animation_batch_key(animation_name: String, frame: int, flip_x: bool) -> String:
+	return "%s:%d%s" % [animation_name, frame, ":flip_x" if flip_x else ""]
+
+func _get_animation_batch(role_id: String, state: String, animation_name: String, frame: int,
+		flip_x: bool = false) -> Dictionary:
+	var key := _animation_batch_key(animation_name, frame, flip_x)
 	if _animated_batches.has(key):
 		return _animated_batches[key]
 	var sprite_frames: SpriteFrames = _role_animation_sets.get(role_id, {}).get(state)
@@ -294,11 +304,16 @@ func _get_animation_batch(role_id: String, state: String, animation_name: String
 	var texture := sprite_frames.get_frame_texture(animation_name, frame)
 	if texture == null:
 		return {}
+	var frame_image: Image
 	if texture is AtlasTexture:
-		var frame_image := texture.get_image()
+		frame_image = texture.get_image()
 		if frame_image.is_empty():
 			return {}
-		texture = ImageTexture.create_from_image(frame_image)
+	else:
+		frame_image = texture.get_image()
+	if flip_x:
+		frame_image.flip_x()
+	texture = ImageTexture.create_from_image(frame_image)
 	var multimesh := MultiMesh.new()
 	multimesh.transform_format = MultiMesh.TRANSFORM_2D
 	var quad := QuadMesh.new()
@@ -332,14 +347,9 @@ func _append_transient_animation(instances_by_animation: Dictionary, transient: 
 	if elapsed < 0.0:
 		return
 	var direction: Vector2 = transient.get("direction", Vector2.DOWN)
-	var direction_name := "down"
-	if direction.length_squared() > 0.001:
-		if absf(direction.x) > absf(direction.y):
-			direction_name = "right" if direction.x > 0.0 else "left"
-		else:
-			direction_name = "down" if direction.y > 0.0 else "up"
 	var base_name := "%s_%s" % [role_id, state]
-	var animation_name := base_name + "_" + direction_name if sprite_frames.has_animation(base_name + "_" + direction_name) else base_name
+	var animation_name := base_name + "_down" if sprite_frames.has_animation(base_name + "_down") else base_name
+	var flip_x := absf(direction.x) > absf(direction.y) and direction.x < 0.0
 	if not sprite_frames.has_animation(animation_name):
 		return
 	var frame_count := sprite_frames.get_frame_count(animation_name)
@@ -347,8 +357,8 @@ func _append_transient_animation(instances_by_animation: Dictionary, transient: 
 	if frame_count <= 0 or fps <= 0.0:
 		return
 	var frame := mini(floori(elapsed * fps), frame_count - 1)
-	var key := "%s:%d" % [animation_name, frame]
-	if _get_animation_batch(role_id, state, animation_name, frame).is_empty():
+	var key := _animation_batch_key(animation_name, frame, flip_x)
+	if _get_animation_batch(role_id, state, animation_name, frame, flip_x).is_empty():
 		return
 	if not instances_by_animation.has(key):
 		instances_by_animation[key] = []
