@@ -1,5 +1,13 @@
 # Tests d'acceptation et validation
 
+## Migration des récompenses visuelles — 2026-10-18
+
+- [x] Le coffre 32×32 et l’orbe XP 16×16 sont redessinés par primitives originales, avec PNG indexés limités à la palette maître et sources Aseprite éditables. La capture de contrôle agrandie nearest-neighbor a été examinée; silhouette du coffre et forme facettée de l’orbe restent lisibles.
+- [x] Le builder historique ne lit plus ni n’écrit les récompenses; `catalog_icon_assets_smoke.gd` vérifie aussi l’absence de dépendance aux anciennes planches et l’appartenance de chaque pixel visible à la palette maître.
+- [x] Recherche de références terminée avant retrait : les deux planches et leurs `.import`, ainsi que les exports dupliqués à la racine, n’avaient aucun consommateur runtime. Les sources Aseprite homonymes ont été remplacées avec LibreSprite; chemins et comportements actifs inchangés.
+- [x] Import Godot, `catalog_icon_assets_smoke.gd`, `survival_hud_smoke.gd` et `survival_chest_smoke.gd` passent dans CTest (4/4). La capture de combat 640×360 `/tmp/dopamine-survival-combat-visual.png` a été revue : coffre et orbe restent lisibles au milieu des projectiles, ennemis, HUD et zones d’effets.
+- [x] Le PCK Linux/X11 de contrôle contient `sprites/rewards/chest_closed.png` et `sprites/rewards/xp_orb.png`, sans les planches retirées ni les anciens doublons racine. Les transitions audio ne sont pas couvertes par cette tranche.
+
 ## Migration du roster commun — 2026-10-18
 
 - [x] `original_roster_assets_smoke.gd` vérifie les neuf silhouettes 24×24, la palette maître, la limite 16 couleurs, les sources Aseprite éditables et l'interdiction pour l'ancien builder d'écraser les chemins migrés.

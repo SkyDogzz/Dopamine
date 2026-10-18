@@ -69,6 +69,9 @@ func _initialize() -> void:
 		if not _check_reward(reward_name):
 			quit(1)
 			return
+	if not _check_original_rewards_pipeline():
+		quit(1)
+		return
 	if not _check_title_skyline():
 		quit(1)
 		return
@@ -286,6 +289,36 @@ func _check_reward(reward_name: String) -> bool:
 		push_error("Invalid editable Aseprite source for %s" % reward_name)
 		return false
 	return true
+
+func _check_original_rewards_pipeline() -> bool:
+	var generator := FileAccess.get_file_as_string("res://tools/generate_original_rewards.py")
+	var legacy_builder := FileAccess.get_file_as_string("res://tools/build_catalog_icon_assets.gd")
+	if generator.contains("chest_reference") or generator.contains("xp_orb_reference") or \
+			legacy_builder.contains("chest_reference") or legacy_builder.contains("xp_orb_reference"):
+		push_error("Reward sprites must not reuse or be overwritten from retired reference sheets")
+		return false
+	for reward_name in ["chest_closed", "xp_orb"]:
+		var image := (load("res://assets/sprites/rewards/%s.png" % reward_name) as Texture2D).get_image()
+		for y in range(image.get_height()):
+			for x in range(image.get_width()):
+				var pixel := image.get_pixel(x, y)
+				if pixel.a > 0.0 and not _master_palette_has(pixel):
+					push_error("Original reward %s uses a color outside the master palette" % reward_name)
+					return false
+	return true
+
+func _master_palette_has(pixel: Color) -> bool:
+	var path := ProjectSettings.globalize_path("res://../docs/art/palette_master.gpl")
+	var file := FileAccess.open(path, FileAccess.READ)
+	if file == null:
+		return false
+	var expected := pixel.to_html(false)
+	for line in file.get_as_text().split("\n"):
+		var fields := line.strip_edges().split(" ", false)
+		if fields.size() >= 3 and fields[0].is_valid_int() and fields[1].is_valid_int() and fields[2].is_valid_int():
+			if Color8(int(fields[0]), int(fields[1]), int(fields[2])).to_html(false) == expected:
+				return true
+	return false
 
 func _check_title_skyline() -> bool:
 	var png_path := "res://assets/backgrounds/title_skyline.png"

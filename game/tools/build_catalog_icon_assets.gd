@@ -44,6 +44,7 @@ const UI_SOURCE_DIR := "res://assets/source/catalog_ui"
 const UI_ICONS := ["equipment_helmet", "equipment_armor", "equipment_gloves", "equipment_boots", "equipment_amulet", "equipment_ring", "rarity_normal", "rarity_magic", "rarity_mystic", "rarity_legendary", "rarity_mythic", "resource_essence", "resource_powder", "skill_node", "achievement_medal", "run_record"]
 const ROSTER_REFERENCE := "res://assets/source/roster/generated_reference.png"
 const ROSTER_NAMES := ["enemy_chaser", "enemy_sprinter", "enemy_tank", "enemy_shooter", "enemy_buffer", "enemy_exploder", "enemy_shielder", "enemy_summoner", "enemy_summoned", "elite_sprinter", "boss_mid_placeholder", "boss_final_placeholder"]
+const RETIRED_ROSTER_COUNT := 9
 const VFX_REFERENCE := "res://assets/source/vfx/weapon_impacts_reference.png"
 const IMPACT_NAMES := ["impact_spark", "impact_star", "impact_slash", "impact_pop", "impact_ring", "impact_burst", "impact_shards", "impact_shock_ring", "impact_angular", "impact_evolved"]
 const PROJECTILE_REFERENCE := "res://assets/source/projectiles/generated_reference.png"
@@ -55,10 +56,6 @@ const PROJECTILE_NAMES := [
 ]
 const GROUND_REFERENCE := "res://assets/source/environment/ground_candidate_reference.png"
 const RUINS_REFERENCE := "res://assets/source/environment/ruins_candidate_reference.png"
-const CHEST_REFERENCE := "res://assets/source/rewards/chest_reference.png"
-const XP_REFERENCE := "res://assets/source/rewards/xp_orb_reference.png"
-const CHEST_PALETTE := ["#080B18", "#10152B", "#1B2340", "#293354", "#3D4868", "#586381", "#D4D9E8", "#F6F7FF", "#A85B19", "#E69825", "#FFD447", "#FFF19A", "#075A80", "#087FB2", "#0EB8D4", "#37E8F5"]
-const XP_PALETTE := ["#080B18", "#10152B", "#1B2340", "#293354", "#3D4868", "#586381", "#D4D9E8", "#F6F7FF", "#075A80", "#087FB2", "#0EB8D4", "#37E8F5", "#7623A8", "#A52DCA", "#E13ACB", "#FF75E3"]
 const WEAPONS := [
 	"lightning_conductor", "inferno_sprayer", "crimson_daggers", "minigun", "toxic_cloud",
 	"sawblades", "meteor_staff", "prism_laser", "void_orb", "frost_nova",
@@ -129,10 +126,7 @@ func _initialize() -> void:
 	var roster_source := roster_texture.get_image()
 	var roster_cell_width := roster_source.get_width() / 4
 	var roster_cell_height := roster_source.get_height() / 3
-	# The active common enemy family has migrated to original role drawings.
-	# Keep the legacy source builder available only for the remaining prototypes;
-	# never regenerate migrated runtime paths from the old reference sheet.
-	for index in range(9, ROSTER_NAMES.size()):
+	for index in range(RETIRED_ROSTER_COUNT, ROSTER_NAMES.size()):
 		var rect := Rect2i((index % 4) * roster_cell_width, floori(float(index) / 4.0) * roster_cell_height, roster_cell_width, roster_cell_height)
 		var background := roster_source.get_pixel(rect.position.x + 4, rect.position.y + 4)
 		var sprite_size := 96 if ROSTER_NAMES[index].begins_with("boss_") else 24
@@ -208,13 +202,7 @@ func _initialize() -> void:
 		push_error("Could not save the palette-limited ruins candidate")
 		quit(1)
 		return
-	var chest_reference := load(CHEST_REFERENCE) as Texture2D
-	var xp_reference := load(XP_REFERENCE) as Texture2D
-	if chest_reference == null or xp_reference == null or not _export_transparent(chest_reference.get_image(), "chest_closed", 32, CHEST_PALETTE) or not _export_transparent(xp_reference.get_image(), "xp_orb", 16, XP_PALETTE):
-		push_error("Could not export the Survival chest and XP pickup references")
-		quit(1)
-		return
-	print("Built catalog/UI/roster icons, VFX, projectiles, environment and reward sprites with editable Aseprite sources")
+	print("Built catalog/UI/roster icons, VFX, projectiles and environment assets with editable Aseprite sources")
 	quit()
 
 func _export_cell(source: Image, rect: Rect2i, name: String) -> bool:
