@@ -2,11 +2,18 @@
   "asset_id": "ui_rarity_magic",
   "status": "provisionally_integrated",
   "skill": "dopamine-pixel-art",
-  "generator": "game/tools/generate_neon_arcade_art.py",
-  "generator_version": "2",
-  "seed": 7301,
+  "generator": "game/tools/generate_catalog_icon_detail_candidates.py",
+  "generator_version": "4",
+  "seed": 4801,
   "seed_policy": "fixed procedural geometry; seed is recorded but not consumed",
-  "brief": "Procedural pixel art using only docs/art/palette_master.gpl",
+  "brief": "Owner-requested detailed catalog icon pass; readable layered pixel art using only the Art Bible master palette",
+  "parameters": {
+    "drawing_method": "deterministic role primitives",
+    "asset_name": "ui_rarity_magic",
+    "palette_source": "docs/art/palette_master.gpl",
+    "seed_consumed": false,
+    "detail_pass": "catalog_icon_detail_v1"
+  },
   "dimensions": {
     "width": 32,
     "height": 32
@@ -19,9 +26,27 @@
       0
     ],
     [
+      8,
+      11,
+      24,
+      255
+    ],
+    [
+      8,
+      127,
+      178,
+      255
+    ],
+    [
       14,
       184,
       212,
+      255
+    ],
+    [
+      16,
+      21,
+      43,
       255
     ],
     [
@@ -31,19 +56,49 @@
       255
     ],
     [
+      41,
+      51,
+      84,
+      255
+    ],
+    [
+      55,
+      232,
+      245,
+      255
+    ],
+    [
+      165,
+      174,
+      195,
+      255
+    ],
+    [
+      212,
+      217,
+      232,
+      255
+    ],
+    [
       246,
       247,
       255,
+      255
+    ],
+    [
+      255,
+      241,
+      154,
       255
     ]
   ],
   "source_path": "source/ui/rarity_magic.aseprite",
   "export_path": "icons/catalog/rarity_magic.png",
-  "source_sha256": "885593c4ab6fc059e962bf28fd399fb1ccf6cfb00d7f2452cb1f1cef97441caa",
-  "export_sha256": "5ad1bd0cb0f0f8a71216fbab72932e730bb7aeb125e428c9d7cdbdc5a7756c61",
-  "acceptance_status": "accepted_for_provisional_production",
-  "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
-  "human_review_status": "pending",
-  "candidate_export_path": "build/assets/candidates/pixel-art-complete/icons/catalog/rarity_magic.png",
+  "source_sha256": "9ace5b8a9e2ced49feaa3f88ec4ce7c6c2d80e483f0de1990a4c1f99449207ee",
+  "export_sha256": "9dbe964ee8129dec2895dac8529c48c66c412f8a36dbb96b6f6614b5ca1bb774",
+  "acceptance_status": "accepted",
+  "acceptance_basis": "Owner explicitly approved all 48 detailed catalog icon v2 candidates in chat.",
+  "human_review_status": "approved",
+  "candidate_export_path": "docs/art/candidates/catalog-icons-detail-v2/icons/catalog/rarity_magic.png",
   "integrated_export_path": "game/assets/icons/catalog/rarity_magic.png"
 }

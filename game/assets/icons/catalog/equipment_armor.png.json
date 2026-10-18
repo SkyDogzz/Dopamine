@@ -2,11 +2,18 @@
   "asset_id": "ui_equipment_armor",
   "status": "provisionally_integrated",
   "skill": "dopamine-pixel-art",
-  "generator": "game/tools/generate_neon_arcade_art.py",
-  "generator_version": "2",
-  "seed": 7301,
+  "generator": "game/tools/generate_catalog_icon_detail_candidates.py",
+  "generator_version": "4",
+  "seed": 4801,
   "seed_policy": "fixed procedural geometry; seed is recorded but not consumed",
-  "brief": "Procedural pixel art using only docs/art/palette_master.gpl",
+  "brief": "Owner-requested detailed catalog icon pass; readable layered pixel art using only the Art Bible master palette",
+  "parameters": {
+    "drawing_method": "deterministic role primitives",
+    "asset_name": "ui_equipment_armor",
+    "palette_source": "docs/art/palette_master.gpl",
+    "seed_consumed": false,
+    "detail_pass": "catalog_icon_detail_v1"
+  },
   "dimensions": {
     "width": 32,
     "height": 32
@@ -25,9 +32,21 @@
       255
     ],
     [
+      8,
+      127,
+      178,
+      255
+    ],
+    [
       14,
       184,
       212,
+      255
+    ],
+    [
+      16,
+      21,
+      43,
       255
     ],
     [
@@ -37,19 +56,61 @@
       255
     ],
     [
+      41,
+      51,
+      84,
+      255
+    ],
+    [
+      55,
+      232,
+      245,
+      255
+    ],
+    [
+      61,
+      72,
+      104,
+      255
+    ],
+    [
+      165,
+      174,
+      195,
+      255
+    ],
+    [
+      212,
+      217,
+      232,
+      255
+    ],
+    [
       246,
       247,
       255,
+      255
+    ],
+    [
+      255,
+      117,
+      227,
+      255
+    ],
+    [
+      255,
+      241,
+      154,
       255
     ]
   ],
   "source_path": "source/ui/equipment_armor.aseprite",
   "export_path": "icons/catalog/equipment_armor.png",
-  "source_sha256": "7c09d31dee4a8485f15c61b5278998fc09b59f282e3e36bffaf8c3d7e5441463",
-  "export_sha256": "3ece1db3727f70bfc5f04fa7cc8b20b863c06552295b4cff2f0b140e3cc956e0",
-  "acceptance_status": "accepted_for_provisional_production",
-  "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
-  "human_review_status": "pending",
-  "candidate_export_path": "build/assets/candidates/pixel-art-complete/icons/catalog/equipment_armor.png",
+  "source_sha256": "988fb63edbd8f72042cee5f3a23b94751d73922a64a9f555eccf9f96b73ee95b",
+  "export_sha256": "309b52c06aaf9a86c171211e086c10eb87ea1b6cb74d9d820c18b1557c5f49e5",
+  "acceptance_status": "accepted",
+  "acceptance_basis": "Owner explicitly approved all 48 detailed catalog icon v2 candidates in chat.",
+  "human_review_status": "approved",
+  "candidate_export_path": "docs/art/candidates/catalog-icons-detail-v2/icons/catalog/equipment_armor.png",
   "integrated_export_path": "game/assets/icons/catalog/equipment_armor.png"
 }

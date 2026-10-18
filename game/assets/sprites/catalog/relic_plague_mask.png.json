@@ -2,16 +2,17 @@
   "asset_id": "relic_plague_mask_icon",
   "status": "provisionally_integrated",
   "skill": "dopamine-pixel-art",
-  "generator": "game/tools/generate_neon_arcade_art.py",
-  "generator_version": "3",
-  "seed": 20261018,
+  "generator": "game/tools/generate_catalog_icon_detail_candidates.py",
+  "generator_version": "4",
+  "seed": 4801,
   "seed_policy": "fixed procedural geometry; seed is recorded but not consumed",
-  "brief": "Distinct role silhouette pixel art using only docs/art/palette_master.gpl",
+  "brief": "Owner-requested detailed catalog icon pass; readable layered pixel art using only the Art Bible master palette",
   "parameters": {
     "drawing_method": "deterministic role primitives",
     "asset_name": "relic_plague_mask",
     "palette_source": "docs/art/palette_master.gpl",
-    "seed_consumed": false
+    "seed_consumed": false,
+    "detail_pass": "catalog_icon_detail_v1"
   },
   "dimensions": {
     "width": 32,
@@ -31,9 +32,51 @@
       255
     ],
     [
+      21,
+      140,
+      98,
+      255
+    ],
+    [
+      27,
+      35,
+      64,
+      255
+    ],
+    [
+      41,
+      51,
+      84,
+      255
+    ],
+    [
+      55,
+      232,
+      245,
+      255
+    ],
+    [
+      61,
+      72,
+      104,
+      255
+    ],
+    [
       72,
       230,
       155,
+      255
+    ],
+    [
+      165,
+      174,
+      195,
+      255
+    ],
+    [
+      212,
+      217,
+      232,
       255
     ],
     [
@@ -47,15 +90,27 @@
       247,
       255,
       255
+    ],
+    [
+      255,
+      113,
+      129,
+      255
+    ],
+    [
+      255,
+      241,
+      154,
+      255
     ]
   ],
   "source_path": "source/original_procedural/relic_plague_mask.aseprite",
   "export_path": "sprites/catalog/relic_plague_mask.png",
-  "source_sha256": "b811b20aad955857743b23e3e59a9b48b1f3a96e1bdd0b00f830ced1743e41a4",
-  "export_sha256": "909a4ffd313183e8aeb82524ba22298548e4b89e23688e6e0876240be5caf119",
-  "acceptance_status": "accepted_for_provisional_production",
-  "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
-  "human_review_status": "pending",
-  "candidate_export_path": "build/assets/candidates/pixel-art/sprites/catalog/relic_plague_mask.png",
+  "source_sha256": "7313ed33d377a5052e5b925629b389ddcebce57a0ef7f05621c894ab95c1ae9b",
+  "export_sha256": "685d8ea68b57fef67739a1c19492cc4df1e55596b6cad538591ceafcff533324",
+  "acceptance_status": "accepted",
+  "acceptance_basis": "Owner explicitly approved all 48 detailed catalog icon v2 candidates in chat.",
+  "human_review_status": "approved",
+  "candidate_export_path": "docs/art/candidates/catalog-icons-detail-v2/sprites/catalog/relic_plague_mask.png",
   "integrated_export_path": "game/assets/sprites/catalog/relic_plague_mask.png"
 }

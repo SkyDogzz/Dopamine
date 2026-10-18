@@ -2,16 +2,17 @@
   "asset_id": "weapon_frost_nova_icon",
   "status": "provisionally_integrated",
   "skill": "dopamine-pixel-art",
-  "generator": "game/tools/generate_neon_arcade_art.py",
-  "generator_version": "3",
-  "seed": 20261018,
+  "generator": "game/tools/generate_catalog_icon_detail_candidates.py",
+  "generator_version": "4",
+  "seed": 4801,
   "seed_policy": "fixed procedural geometry; seed is recorded but not consumed",
-  "brief": "Distinct role silhouette pixel art using only docs/art/palette_master.gpl",
+  "brief": "Owner-requested detailed catalog icon pass; readable layered pixel art using only the Art Bible master palette",
   "parameters": {
     "drawing_method": "deterministic role primitives",
     "asset_name": "weapon_frost_nova",
     "palette_source": "docs/art/palette_master.gpl",
-    "seed_consumed": false
+    "seed_consumed": false,
+    "detail_pass": "catalog_icon_detail_v1"
   },
   "dimensions": {
     "width": 32,
@@ -31,9 +32,45 @@
       255
     ],
     [
+      8,
+      127,
+      178,
+      255
+    ],
+    [
       14,
       184,
       212,
+      255
+    ],
+    [
+      55,
+      232,
+      245,
+      255
+    ],
+    [
+      61,
+      72,
+      104,
+      255
+    ],
+    [
+      165,
+      174,
+      195,
+      255
+    ],
+    [
+      212,
+      217,
+      232,
+      255
+    ],
+    [
+      230,
+      152,
+      37,
       255
     ],
     [
@@ -47,15 +84,21 @@
       212,
       71,
       255
+    ],
+    [
+      255,
+      241,
+      154,
+      255
     ]
   ],
   "source_path": "source/original_procedural/weapon_frost_nova.aseprite",
   "export_path": "sprites/catalog/weapon_frost_nova.png",
-  "source_sha256": "aa99b59a32e845ef5f306e1d8b5019ae0344d107b03a69957793aa6e80edb3fe",
-  "export_sha256": "d3f23b82d0489afd813eed9f9b2b5da240e1cbc2e60caeb752a19e481e970374",
-  "acceptance_status": "accepted_for_provisional_production",
-  "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
-  "human_review_status": "pending",
-  "candidate_export_path": "build/assets/candidates/pixel-art/sprites/catalog/weapon_frost_nova.png",
+  "source_sha256": "ce5b44df4ccaaa30550418a07d768860d6ed0598a67064cbb835202016272c53",
+  "export_sha256": "d2695b8eebdb66e194462148c534e77b143479f2f0f89f2d5ca3d9604326dd85",
+  "acceptance_status": "accepted",
+  "acceptance_basis": "Owner explicitly approved all 48 detailed catalog icon v2 candidates in chat.",
+  "human_review_status": "approved",
+  "candidate_export_path": "docs/art/candidates/catalog-icons-detail-v2/sprites/catalog/weapon_frost_nova.png",
   "integrated_export_path": "game/assets/sprites/catalog/weapon_frost_nova.png"
 }

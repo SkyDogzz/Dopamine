@@ -6046,7 +6046,7 @@
     "defeat_cue": "run-result one-shot",
     "stems": "runtime synchronized adaptive Survival arrangement"
   },
-  "remaining_review": "Owner visual review of the 48 detailed catalog/UI icon candidates and remaining provisional art, plus human listening review of SFX/music, remain open. Open canonical choices stay provisional; detailed animation timings/directions remain as specified in the manifest.",
+  "remaining_review": "Remaining provisional visual acceptance outside the 48 approved catalog/UI icons, plus human listening review of SFX/music; open canonical choices stay provisional and detailed animation timings/directions remain as specified in the manifest.",
   "technical_qa_summary": {
     "asset_manifest": "passed: 356/356 unique assets; export/source hashes, Godot paths, generation recipes, QA and integration states verified",
     "asset_provenance": "passed: 356 current creative exports and 417 initial assets have migration/retirement records",
@@ -6125,5 +6125,8 @@
       "human_review_status": "pending",
       "legacy_hash_reuse_check": "passed: 48 candidate PNG hashes, zero exact matches in the initial 425-file register"
     }
-  }
+  },
+  "catalog_icon_revision_review": "Owner approved all 48 detailed v2 candidates; integrated into their existing Godot destinations with editable sources. See docs/art/candidates/catalog-icons-detail-v2/index.html.",
+  "catalog_icon_revision_integration": "48/48 integrated following explicit owner approval; manifest and provenance registry updated; catalog icon Godot smoke passed.",
+  "human_review": "Owner approved all 48 detailed catalog/UI icon v2 candidates. Remaining visual acceptance and audio listening review are pending; open canonical choices remain provisional."
 }

@@ -2,11 +2,18 @@
   "asset_id": "ui_skill_node",
   "status": "provisionally_integrated",
   "skill": "dopamine-pixel-art",
-  "generator": "game/tools/generate_neon_arcade_art.py",
-  "generator_version": "2",
-  "seed": 7301,
+  "generator": "game/tools/generate_catalog_icon_detail_candidates.py",
+  "generator_version": "4",
+  "seed": 4801,
   "seed_policy": "fixed procedural geometry; seed is recorded but not consumed",
-  "brief": "Procedural pixel art using only docs/art/palette_master.gpl",
+  "brief": "Owner-requested detailed catalog icon pass; readable layered pixel art using only the Art Bible master palette",
+  "parameters": {
+    "drawing_method": "deterministic role primitives",
+    "asset_name": "ui_skill_node",
+    "palette_source": "docs/art/palette_master.gpl",
+    "seed_consumed": false,
+    "detail_pass": "catalog_icon_detail_v1"
+  },
   "dimensions": {
     "width": 32,
     "height": 32
@@ -19,9 +26,21 @@
       0
     ],
     [
+      8,
+      127,
+      178,
+      255
+    ],
+    [
       14,
       184,
       212,
+      255
+    ],
+    [
+      16,
+      21,
+      43,
       255
     ],
     [
@@ -31,19 +50,55 @@
       255
     ],
     [
+      41,
+      51,
+      84,
+      255
+    ],
+    [
+      55,
+      232,
+      245,
+      255
+    ],
+    [
+      165,
+      174,
+      195,
+      255
+    ],
+    [
+      212,
+      217,
+      232,
+      255
+    ],
+    [
       246,
       247,
       255,
+      255
+    ],
+    [
+      255,
+      117,
+      227,
+      255
+    ],
+    [
+      255,
+      241,
+      154,
       255
     ]
   ],
   "source_path": "source/ui/skill_node.aseprite",
   "export_path": "icons/catalog/skill_node.png",
-  "source_sha256": "bdef88c7254fbb59d1afacb44b8ae2f8b03a058c93026a841c46b70dc4ee6e7a",
-  "export_sha256": "ee35dc250295079dc2af8baabdac521f899b7331234481d3c9a8ad262e79dd1d",
-  "acceptance_status": "accepted_for_provisional_production",
-  "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
-  "human_review_status": "pending",
-  "candidate_export_path": "build/assets/candidates/pixel-art-complete/icons/catalog/skill_node.png",
+  "source_sha256": "9879ceb49a72d2f2cd5de8e096c6a04c38f6329a73c5114189a12a3e8e88925b",
+  "export_sha256": "8fe4453da2b5b7efa168579fe0662997b2ab14a01da8de236a33d6572894fce4",
+  "acceptance_status": "accepted",
+  "acceptance_basis": "Owner explicitly approved all 48 detailed catalog icon v2 candidates in chat.",
+  "human_review_status": "approved",
+  "candidate_export_path": "docs/art/candidates/catalog-icons-detail-v2/icons/catalog/skill_node.png",
   "integrated_export_path": "game/assets/icons/catalog/skill_node.png"
 }

@@ -2,16 +2,17 @@
   "asset_id": "weapon_absolute_zero_icon",
   "status": "provisionally_integrated",
   "skill": "dopamine-pixel-art",
-  "generator": "game/tools/generate_neon_arcade_art.py",
-  "generator_version": "3",
-  "seed": 20261018,
+  "generator": "game/tools/generate_catalog_icon_detail_candidates.py",
+  "generator_version": "4",
+  "seed": 4801,
   "seed_policy": "fixed procedural geometry; seed is recorded but not consumed",
-  "brief": "Distinct role silhouette pixel art using only docs/art/palette_master.gpl",
+  "brief": "Owner-requested detailed catalog icon pass; readable layered pixel art using only the Art Bible master palette",
   "parameters": {
     "drawing_method": "deterministic role primitives",
     "asset_name": "evolution_frost_nova",
     "palette_source": "docs/art/palette_master.gpl",
-    "seed_consumed": false
+    "seed_consumed": false,
+    "detail_pass": "catalog_icon_detail_v1"
   },
   "dimensions": {
     "width": 32,
@@ -31,9 +32,45 @@
       255
     ],
     [
+      8,
+      127,
+      178,
+      255
+    ],
+    [
       14,
       184,
       212,
+      255
+    ],
+    [
+      55,
+      232,
+      245,
+      255
+    ],
+    [
+      61,
+      72,
+      104,
+      255
+    ],
+    [
+      165,
+      174,
+      195,
+      255
+    ],
+    [
+      212,
+      217,
+      232,
+      255
+    ],
+    [
+      230,
+      152,
+      37,
       255
     ],
     [
@@ -47,15 +84,21 @@
       212,
       71,
       255
+    ],
+    [
+      255,
+      241,
+      154,
+      255
     ]
   ],
   "source_path": "source/original_procedural/evolution_frost_nova.aseprite",
   "export_path": "sprites/catalog/evolution_frost_nova.png",
-  "source_sha256": "c291e6f8cd863eea5db9febc2a04911b37fc10a47f46dc9519997dc41bcd7c02",
-  "export_sha256": "fb2ad692ac00f7d81f42af7c904863f1f9ba270a294598ade98919d1442b5311",
-  "acceptance_status": "accepted_for_provisional_production",
-  "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
-  "human_review_status": "pending",
-  "candidate_export_path": "build/assets/candidates/pixel-art/sprites/catalog/evolution_frost_nova.png",
+  "source_sha256": "db732831a794b2df2219a2d8a75bf384479fae24d184d5ef1437608f5034bb63",
+  "export_sha256": "f5e48213931e22a1117bce196c63a38405757039bc1ae5df02b9551cecaaaa13",
+  "acceptance_status": "accepted",
+  "acceptance_basis": "Owner explicitly approved all 48 detailed catalog icon v2 candidates in chat.",
+  "human_review_status": "approved",
+  "candidate_export_path": "docs/art/candidates/catalog-icons-detail-v2/sprites/catalog/evolution_frost_nova.png",
   "integrated_export_path": "game/assets/sprites/catalog/evolution_frost_nova.png"
 }

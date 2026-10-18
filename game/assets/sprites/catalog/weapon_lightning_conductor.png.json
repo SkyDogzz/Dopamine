@@ -2,16 +2,17 @@
   "asset_id": "weapon_lightning_conductor_icon",
   "status": "provisionally_integrated",
   "skill": "dopamine-pixel-art",
-  "generator": "game/tools/generate_neon_arcade_art.py",
-  "generator_version": "3",
-  "seed": 20261018,
+  "generator": "game/tools/generate_catalog_icon_detail_candidates.py",
+  "generator_version": "4",
+  "seed": 4801,
   "seed_policy": "fixed procedural geometry; seed is recorded but not consumed",
-  "brief": "Distinct role silhouette pixel art using only docs/art/palette_master.gpl",
+  "brief": "Owner-requested detailed catalog icon pass; readable layered pixel art using only the Art Bible master palette",
   "parameters": {
     "drawing_method": "deterministic role primitives",
     "asset_name": "weapon_lightning_conductor",
     "palette_source": "docs/art/palette_master.gpl",
-    "seed_consumed": false
+    "seed_consumed": false,
+    "detail_pass": "catalog_icon_detail_v1"
   },
   "dimensions": {
     "width": 32,
@@ -31,9 +32,45 @@
       255
     ],
     [
+      8,
+      127,
+      178,
+      255
+    ],
+    [
       14,
       184,
       212,
+      255
+    ],
+    [
+      55,
+      232,
+      245,
+      255
+    ],
+    [
+      61,
+      72,
+      104,
+      255
+    ],
+    [
+      165,
+      174,
+      195,
+      255
+    ],
+    [
+      212,
+      217,
+      232,
+      255
+    ],
+    [
+      230,
+      152,
+      37,
       255
     ],
     [
@@ -44,18 +81,30 @@
     ],
     [
       255,
+      117,
+      227,
+      255
+    ],
+    [
+      255,
       212,
       71,
+      255
+    ],
+    [
+      255,
+      241,
+      154,
       255
     ]
   ],
   "source_path": "source/original_procedural/weapon_lightning_conductor.aseprite",
   "export_path": "sprites/catalog/weapon_lightning_conductor.png",
-  "source_sha256": "95d081a3e5ba84e38c6217ee5b61c05f259410826a44df6a647d3d91a4fe7c4f",
-  "export_sha256": "ccfa6afd6dc2c02d10ad50d4acb323cfd30f043e4509c075ba3328b9f85fa15f",
-  "acceptance_status": "accepted_for_provisional_production",
-  "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
-  "human_review_status": "pending",
-  "candidate_export_path": "build/assets/candidates/pixel-art/sprites/catalog/weapon_lightning_conductor.png",
+  "source_sha256": "29b4236587739bd1605df000a626596a33df081837adcc2dd4af0221c7632ea9",
+  "export_sha256": "4fdcb6b64654d893632e7ce74aaddb745d980fc4bd62df13906f1a630a991c94",
+  "acceptance_status": "accepted",
+  "acceptance_basis": "Owner explicitly approved all 48 detailed catalog icon v2 candidates in chat.",
+  "human_review_status": "approved",
+  "candidate_export_path": "docs/art/candidates/catalog-icons-detail-v2/sprites/catalog/weapon_lightning_conductor.png",
   "integrated_export_path": "game/assets/sprites/catalog/weapon_lightning_conductor.png"
 }

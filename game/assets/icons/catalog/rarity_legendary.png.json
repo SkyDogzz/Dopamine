@@ -2,11 +2,18 @@
   "asset_id": "ui_rarity_legendary",
   "status": "provisionally_integrated",
   "skill": "dopamine-pixel-art",
-  "generator": "game/tools/generate_neon_arcade_art.py",
-  "generator_version": "2",
-  "seed": 7301,
+  "generator": "game/tools/generate_catalog_icon_detail_candidates.py",
+  "generator_version": "4",
+  "seed": 4801,
   "seed_policy": "fixed procedural geometry; seed is recorded but not consumed",
-  "brief": "Procedural pixel art using only docs/art/palette_master.gpl",
+  "brief": "Owner-requested detailed catalog icon pass; readable layered pixel art using only the Art Bible master palette",
+  "parameters": {
+    "drawing_method": "deterministic role primitives",
+    "asset_name": "ui_rarity_legendary",
+    "palette_source": "docs/art/palette_master.gpl",
+    "seed_consumed": false,
+    "detail_pass": "catalog_icon_detail_v1"
+  },
   "dimensions": {
     "width": 32,
     "height": 32
@@ -19,9 +26,45 @@
       0
     ],
     [
+      8,
+      11,
+      24,
+      255
+    ],
+    [
+      16,
+      21,
+      43,
+      255
+    ],
+    [
       27,
       35,
       64,
+      255
+    ],
+    [
+      41,
+      51,
+      84,
+      255
+    ],
+    [
+      165,
+      174,
+      195,
+      255
+    ],
+    [
+      212,
+      217,
+      232,
+      255
+    ],
+    [
+      230,
+      152,
+      37,
       255
     ],
     [
@@ -35,15 +78,21 @@
       212,
       71,
       255
+    ],
+    [
+      255,
+      241,
+      154,
+      255
     ]
   ],
   "source_path": "source/ui/rarity_legendary.aseprite",
   "export_path": "icons/catalog/rarity_legendary.png",
-  "source_sha256": "b6bc0d3f88e795b4eeadcd452dfbb4200b2aebb6bbd34c1622d03f77973b8d7f",
-  "export_sha256": "764412b6a403962fc75d87c027936ec21328f4fceeeb6e9ee1dab9b9cf7c6735",
-  "acceptance_status": "accepted_for_provisional_production",
-  "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
-  "human_review_status": "pending",
-  "candidate_export_path": "build/assets/candidates/pixel-art-complete/icons/catalog/rarity_legendary.png",
+  "source_sha256": "096503b6347d48b0d9ac451f0d494b575cc33f49f169c08ec4547c93a1dfe80d",
+  "export_sha256": "ca12d37d8978b21258091ae7861aa3fa254cae85bf2348c94d518d2a70542e80",
+  "acceptance_status": "accepted",
+  "acceptance_basis": "Owner explicitly approved all 48 detailed catalog icon v2 candidates in chat.",
+  "human_review_status": "approved",
+  "candidate_export_path": "docs/art/candidates/catalog-icons-detail-v2/icons/catalog/rarity_legendary.png",
   "integrated_export_path": "game/assets/icons/catalog/rarity_legendary.png"
 }

@@ -2,16 +2,17 @@
   "asset_id": "relic_storm_core_icon",
   "status": "provisionally_integrated",
   "skill": "dopamine-pixel-art",
-  "generator": "game/tools/generate_neon_arcade_art.py",
-  "generator_version": "3",
-  "seed": 20261018,
+  "generator": "game/tools/generate_catalog_icon_detail_candidates.py",
+  "generator_version": "4",
+  "seed": 4801,
   "seed_policy": "fixed procedural geometry; seed is recorded but not consumed",
-  "brief": "Distinct role silhouette pixel art using only docs/art/palette_master.gpl",
+  "brief": "Owner-requested detailed catalog icon pass; readable layered pixel art using only the Art Bible master palette",
   "parameters": {
     "drawing_method": "deterministic role primitives",
     "asset_name": "relic_storm_core",
     "palette_source": "docs/art/palette_master.gpl",
-    "seed_consumed": false
+    "seed_consumed": false,
+    "detail_pass": "catalog_icon_detail_v1"
   },
   "dimensions": {
     "width": 32,
@@ -31,9 +32,21 @@
       255
     ],
     [
+      8,
+      127,
+      178,
+      255
+    ],
+    [
       14,
       184,
       212,
+      255
+    ],
+    [
+      16,
+      21,
+      43,
       255
     ],
     [
@@ -43,19 +56,61 @@
       255
     ],
     [
+      41,
+      51,
+      84,
+      255
+    ],
+    [
+      55,
+      232,
+      245,
+      255
+    ],
+    [
+      61,
+      72,
+      104,
+      255
+    ],
+    [
+      212,
+      217,
+      232,
+      255
+    ],
+    [
+      230,
+      152,
+      37,
+      255
+    ],
+    [
+      255,
+      117,
+      227,
+      255
+    ],
+    [
       255,
       212,
       71,
+      255
+    ],
+    [
+      255,
+      241,
+      154,
       255
     ]
   ],
   "source_path": "source/original_procedural/relic_storm_core.aseprite",
   "export_path": "sprites/catalog/relic_storm_core.png",
-  "source_sha256": "5bb70b06c7b9e1e5c9a5d34d05a77027c3507369bca675b8c4ae23afb88d7dea",
-  "export_sha256": "04f4433a36374f0f554bf283cedd2148542aa2935d8833cfed15441f863399fc",
-  "acceptance_status": "accepted_for_provisional_production",
-  "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
-  "human_review_status": "pending",
-  "candidate_export_path": "build/assets/candidates/pixel-art/sprites/catalog/relic_storm_core.png",
+  "source_sha256": "51852c91079cb2046ca7bb7579baad856ed0a69b796115e826258f3a614216b5",
+  "export_sha256": "d782e5183d128399c9d5f15f72149b1664fb5fdc82b58eb317c04935f4539140",
+  "acceptance_status": "accepted",
+  "acceptance_basis": "Owner explicitly approved all 48 detailed catalog icon v2 candidates in chat.",
+  "human_review_status": "approved",
+  "candidate_export_path": "docs/art/candidates/catalog-icons-detail-v2/sprites/catalog/relic_storm_core.png",
   "integrated_export_path": "game/assets/sprites/catalog/relic_storm_core.png"
 }
