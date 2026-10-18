@@ -1,0 +1,43 @@
+{
+  "asset_id": "impact_pop",
+  "status": "provisionally_integrated",
+  "skill": "dopamine-pixel-art",
+  "generator": "game/tools/generate_neon_arcade_art.py",
+  "generator_version": "2",
+  "seed": 0,
+  "seed_policy": "fixed procedural geometry; seed is recorded but not consumed",
+  "brief": "Procedural pixel art using only docs/art/palette_master.gpl",
+  "dimensions": {
+    "width": 64,
+    "height": 64
+  },
+  "palette_rgba": [
+    [
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      14,
+      184,
+      212,
+      255
+    ],
+    [
+      246,
+      247,
+      255,
+      255
+    ]
+  ],
+  "source_path": "source/original_procedural/impact_pop.aseprite",
+  "export_path": "sprites/vfx/impact_pop.png",
+  "source_sha256": "205cb9752dc87a9f19a1a863ca87770b7c8f2eb97452452b46d0d2b765bb5be5",
+  "export_sha256": "0379c546137d8a02907154375c9e973d6c9b8884fdf4985cd2a59e2d4ebd2bd6",
+  "acceptance_status": "accepted_for_provisional_production",
+  "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
+  "human_review_status": "pending",
+  "candidate_export_path": "build/assets/candidates/pixel-art-complete/sprites/vfx/impact_pop.png",
+  "integrated_export_path": "game/assets/sprites/vfx/impact_pop.png"
+}

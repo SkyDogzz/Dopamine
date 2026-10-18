@@ -1,0 +1,41 @@
+{
+  "asset_id": "relic_plague_mask_acquisition",
+  "status": "provisionally_integrated",
+  "skill": "dopamine-animation",
+  "generator": "game/tools/generate_dopamine_misc_animation.py",
+  "generator_version": "1",
+  "seed": 20261018,
+  "seed_policy": "fixed geometry and staged source; seed recorded but not consumed",
+  "identity_source": "build/assets/candidates/pixel-art-complete/sprites/catalog/relic_plague_mask.png",
+  "frame_size": [
+    32,
+    32
+  ],
+  "grid": [
+    4,
+    1
+  ],
+  "directions": [
+    "forward"
+  ],
+  "fps_proposed": 8,
+  "frame_duration_seconds_proposed": 0.125,
+  "pivot": [
+    16,
+    16
+  ],
+  "parameters": {
+    "effect": "reveal",
+    "category": "relic_animation",
+    "source_path": "build/assets/candidates/pixel-art-complete/sprites/catalog/relic_plague_mask.png"
+  },
+  "source_path": "source/animation/relic_plague_mask_acquisition.aseprite",
+  "export_path": "sprites/animation/relic_plague_mask_acquisition.png",
+  "source_sha256": "eeb5e96d8ef531b5f6c6a56998b53754eab5cc3bfb4c17311bc7fbd49434970a",
+  "export_sha256": "10953b32f91fd8a308f42760851a033891f9a9fe0fbcff2c674cec6ec906452a",
+  "acceptance_status": "accepted_for_provisional_production",
+  "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
+  "human_review_status": "pending",
+  "candidate_export_path": "build/assets/candidates/misc-animation/sprites/animation/relic_plague_mask_acquisition.png",
+  "integrated_export_path": "game/assets/sprites/animation/relic_plague_mask_acquisition.png"
+}

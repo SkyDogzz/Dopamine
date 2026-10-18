@@ -1,0 +1,49 @@
+{
+  "asset_id": "ui_equipment_ring",
+  "status": "provisionally_integrated",
+  "skill": "dopamine-pixel-art",
+  "generator": "game/tools/generate_neon_arcade_art.py",
+  "generator_version": "2",
+  "seed": 7301,
+  "seed_policy": "fixed procedural geometry; seed is recorded but not consumed",
+  "brief": "Procedural pixel art using only docs/art/palette_master.gpl",
+  "dimensions": {
+    "width": 32,
+    "height": 32
+  },
+  "palette_rgba": [
+    [
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      14,
+      184,
+      212,
+      255
+    ],
+    [
+      27,
+      35,
+      64,
+      255
+    ],
+    [
+      246,
+      247,
+      255,
+      255
+    ]
+  ],
+  "source_path": "source/ui/equipment_ring.aseprite",
+  "export_path": "icons/catalog/equipment_ring.png",
+  "source_sha256": "182ebfaeace798c61e4204ab8ac2b605efa30da5a76d25b592a0ab5818fd8b3f",
+  "export_sha256": "f88ca6abfd3d57c5297a0c21178b2181f28b6ce8bc50432ba87849a330492836",
+  "acceptance_status": "accepted_for_provisional_production",
+  "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
+  "human_review_status": "pending",
+  "candidate_export_path": "build/assets/candidates/pixel-art-complete/icons/catalog/equipment_ring.png",
+  "integrated_export_path": "game/assets/icons/catalog/equipment_ring.png"
+}

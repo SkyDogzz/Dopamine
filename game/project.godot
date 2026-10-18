@@ -51,6 +51,9 @@ move_down={
 "events": [Object(InputEventKey,"physical_keycode":83), Object(InputEventKey,"physical_keycode":4194322), Object(InputEventJoypadMotion,"axis":1,"axis_value":1.0)]
 }
 
+[audio]
+default_bus_layout="res://default_bus_layout.tres"
+
 [rendering]
 
 renderer/rendering_method="gl_compatibility"

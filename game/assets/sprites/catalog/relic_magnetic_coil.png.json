@@ -1,0 +1,55 @@
+{
+  "asset_id": "relic_magnetic_coil_icon",
+  "status": "provisionally_integrated",
+  "skill": "dopamine-pixel-art",
+  "generator": "game/tools/generate_neon_arcade_art.py",
+  "generator_version": "2",
+  "seed": 7301,
+  "seed_policy": "fixed procedural geometry; seed is recorded but not consumed",
+  "brief": "Procedural pixel art using only docs/art/palette_master.gpl",
+  "dimensions": {
+    "width": 32,
+    "height": 32
+  },
+  "palette_rgba": [
+    [
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      8,
+      11,
+      24,
+      255
+    ],
+    [
+      14,
+      184,
+      212,
+      255
+    ],
+    [
+      27,
+      35,
+      64,
+      255
+    ],
+    [
+      246,
+      247,
+      255,
+      255
+    ]
+  ],
+  "source_path": "source/original_procedural/relic_magnetic_coil.aseprite",
+  "export_path": "sprites/catalog/relic_magnetic_coil.png",
+  "source_sha256": "7f661a059036076e0a621a211a845d78f8093df2cdeb1f5d593d3c16fdecb85b",
+  "export_sha256": "ddba6e09fcc69fafa45ee105fc0a54c847335cf092193cf955328acb7037b931",
+  "acceptance_status": "accepted_for_provisional_production",
+  "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
+  "human_review_status": "pending",
+  "candidate_export_path": "build/assets/candidates/pixel-art-complete/sprites/catalog/relic_magnetic_coil.png",
+  "integrated_export_path": "game/assets/sprites/catalog/relic_magnetic_coil.png"
+}

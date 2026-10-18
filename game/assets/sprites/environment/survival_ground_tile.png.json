@@ -1,0 +1,43 @@
+{
+  "asset_id": "survival_ground_tile",
+  "status": "provisionally_integrated",
+  "skill": "dopamine-pixel-art",
+  "generator": "game/tools/generate_neon_arcade_art.py",
+  "generator_version": "2",
+  "seed": 0,
+  "seed_policy": "fixed procedural geometry; seed is recorded but not consumed",
+  "brief": "Procedural pixel art using only docs/art/palette_master.gpl",
+  "dimensions": {
+    "width": 16,
+    "height": 16
+  },
+  "palette_rgba": [
+    [
+      16,
+      21,
+      43,
+      255
+    ],
+    [
+      27,
+      35,
+      64,
+      255
+    ],
+    [
+      41,
+      51,
+      84,
+      255
+    ]
+  ],
+  "source_path": "source/environment/survival_ground_tile.aseprite",
+  "export_path": "sprites/environment/survival_ground_tile.png",
+  "source_sha256": "5390292db2e421399a4c7d7f168cc4c045677c363d521ebba8732e80cba14e9d",
+  "export_sha256": "adddc28c22cdb72275d0a72b935542528bb66c025cfe6f728ca218541daa456a",
+  "acceptance_status": "accepted_for_provisional_production",
+  "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
+  "human_review_status": "pending",
+  "candidate_export_path": "build/assets/candidates/pixel-art-complete/sprites/environment/survival_ground_tile.png",
+  "integrated_export_path": "game/assets/sprites/environment/survival_ground_tile.png"
+}

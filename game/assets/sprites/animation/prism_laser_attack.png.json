@@ -1,0 +1,41 @@
+{
+  "asset_id": "weapon_prism_laser_attack",
+  "status": "provisionally_integrated",
+  "skill": "dopamine-animation",
+  "generator": "game/tools/generate_dopamine_misc_animation.py",
+  "generator_version": "1",
+  "seed": 20261018,
+  "seed_policy": "fixed geometry and staged source; seed recorded but not consumed",
+  "identity_source": "build/assets/candidates/pixel-art-complete/sprites/catalog/weapon_prism_laser.png",
+  "frame_size": [
+    32,
+    32
+  ],
+  "grid": [
+    4,
+    1
+  ],
+  "directions": [
+    "forward"
+  ],
+  "fps_proposed": 8,
+  "frame_duration_seconds_proposed": 0.125,
+  "pivot": [
+    16,
+    16
+  ],
+  "parameters": {
+    "effect": "weapon",
+    "category": "weapon_animation",
+    "source_path": "build/assets/candidates/pixel-art-complete/sprites/catalog/weapon_prism_laser.png"
+  },
+  "source_path": "source/animation/weapon_prism_laser_attack.aseprite",
+  "export_path": "sprites/animation/prism_laser_attack.png",
+  "source_sha256": "f9c1652c6e49ad8e1fc0f6ee2b8b7ee02352257cc9d1be4b59d0461ed77dff0e",
+  "export_sha256": "bdb19f64802fc2c47426cbf898b1b5490a95265550d44b0c0f5db93ce2d67375",
+  "acceptance_status": "accepted_for_provisional_production",
+  "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
+  "human_review_status": "pending",
+  "candidate_export_path": "build/assets/candidates/misc-animation/sprites/animation/weapon_prism_laser_attack.png",
+  "integrated_export_path": "game/assets/sprites/animation/prism_laser_attack.png"
+}

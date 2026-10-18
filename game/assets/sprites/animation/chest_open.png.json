@@ -1,0 +1,41 @@
+{
+  "asset_id": "chest_open",
+  "status": "provisionally_integrated",
+  "skill": "dopamine-animation",
+  "generator": "game/tools/generate_dopamine_misc_animation.py",
+  "generator_version": "1",
+  "seed": 20261018,
+  "seed_policy": "fixed geometry and staged source; seed recorded but not consumed",
+  "identity_source": "build/assets/candidates/rewards/sprites/rewards/chest_closed.png",
+  "frame_size": [
+    32,
+    32
+  ],
+  "grid": [
+    4,
+    1
+  ],
+  "directions": [
+    "forward"
+  ],
+  "fps_proposed": 12,
+  "frame_duration_seconds_proposed": 0.08333333333333333,
+  "pivot": [
+    16,
+    16
+  ],
+  "parameters": {
+    "effect": "reveal",
+    "category": "pickup_animation",
+    "source_path": "build/assets/candidates/rewards/sprites/rewards/chest_closed.png"
+  },
+  "source_path": "source/animation/chest_open.aseprite",
+  "export_path": "sprites/animation/chest_open.png",
+  "source_sha256": "f3f68d6b5e116c3e1657e4c9e6ff27e52c9a8c44f8423656ec07a6777897dbe5",
+  "export_sha256": "fdfef0969dd6b7edc3497fc9e969ad78a71d1aae0cf2ede4f6466f3f4afe064b",
+  "acceptance_status": "accepted_for_provisional_production",
+  "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
+  "human_review_status": "pending",
+  "candidate_export_path": "build/assets/candidates/misc-animation/sprites/animation/chest_open.png",
+  "integrated_export_path": "game/assets/sprites/animation/chest_open.png"
+}

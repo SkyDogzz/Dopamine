@@ -1,0 +1,40 @@
+{
+  "asset_id": "defeat_cue",
+  "kind": "music",
+  "status": "provisionally_integrated",
+  "skill": "dopamine-music",
+  "generator": "game/tools/generate_original_audio.py",
+  "generator_version": "2",
+  "source_sha256": "7e870ecbe7a3b2f270c1e329f10831d2a17c37066425aca64ac40594e1dec1b9",
+  "seed": 90210,
+  "parameters": {
+    "sample_rate_hz": 44100,
+    "channels": 1,
+    "encoding": "PCM16 WAV",
+    "method": "synchronized synthesized stem with 12 ms edge fade"
+  },
+  "export": {
+    "file": "defeat_cue.wav",
+    "sha256": "cef156bd131309e2bd3d279fc507fe5a2d40ad2505732406a1d67fc873cc695f",
+    "sample_rate_hz": 44100,
+    "channels": 1,
+    "duration_seconds": 1.28,
+    "peak_dbfs": -8.047,
+    "rms_dbfs": -15.358,
+    "crest_factor_db": 7.31
+  },
+  "loop": false,
+  "notes_hz": [
+    440.0,
+    349.23,
+    261.63,
+    220.0
+  ],
+  "note_seconds": 0.32,
+  "acceptance_status": "accepted_for_provisional_production",
+  "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
+  "human_review_status": "pending",
+  "candidate_export_path": "build/assets/candidates/audio-complete/music/cues/defeat_cue.wav",
+  "integrated_export_path": "game/assets/audio/music/defeat_cue.wav",
+  "export_path": "audio/music/defeat_cue.wav"
+}

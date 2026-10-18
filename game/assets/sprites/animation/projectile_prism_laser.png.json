@@ -1,0 +1,41 @@
+{
+  "asset_id": "projectile_prism_laser_animation",
+  "status": "provisionally_integrated",
+  "skill": "dopamine-animation",
+  "generator": "game/tools/generate_dopamine_misc_animation.py",
+  "generator_version": "1",
+  "seed": 20261018,
+  "seed_policy": "fixed geometry and staged source; seed recorded but not consumed",
+  "identity_source": "build/assets/candidates/pixel-art-complete/sprites/projectiles/projectile_prism_laser.png",
+  "frame_size": [
+    32,
+    32
+  ],
+  "grid": [
+    4,
+    1
+  ],
+  "directions": [
+    "forward"
+  ],
+  "fps_proposed": 12,
+  "frame_duration_seconds_proposed": 0.08333333333333333,
+  "pivot": [
+    16,
+    16
+  ],
+  "parameters": {
+    "effect": "orbit",
+    "category": "projectile_animation",
+    "source_path": "build/assets/candidates/pixel-art-complete/sprites/projectiles/projectile_prism_laser.png"
+  },
+  "source_path": "source/animation/projectile_prism_laser_animation.aseprite",
+  "export_path": "sprites/animation/projectile_prism_laser.png",
+  "source_sha256": "a56e65c2bc385d6d372a12283034ebaf19855ffb6b362f04c9a394665e6cd1d9",
+  "export_sha256": "e8c519e85ec03aa4c6aefbdce9129b33e0d1ede881f6b9d97baff2964e7a56c7",
+  "acceptance_status": "accepted_for_provisional_production",
+  "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
+  "human_review_status": "pending",
+  "candidate_export_path": "build/assets/candidates/misc-animation/sprites/animation/projectile_prism_laser_animation.png",
+  "integrated_export_path": "game/assets/sprites/animation/projectile_prism_laser.png"
+}

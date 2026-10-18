@@ -1,0 +1,41 @@
+{
+  "asset_id": "weapon_wildfire_attack",
+  "status": "provisionally_integrated",
+  "skill": "dopamine-animation",
+  "generator": "game/tools/generate_dopamine_misc_animation.py",
+  "generator_version": "1",
+  "seed": 20261018,
+  "seed_policy": "fixed geometry and staged source; seed recorded but not consumed",
+  "identity_source": "build/assets/candidates/pixel-art-complete/sprites/catalog/weapon_inferno_sprayer.png",
+  "frame_size": [
+    32,
+    32
+  ],
+  "grid": [
+    4,
+    1
+  ],
+  "directions": [
+    "forward"
+  ],
+  "fps_proposed": 8,
+  "frame_duration_seconds_proposed": 0.125,
+  "pivot": [
+    16,
+    16
+  ],
+  "parameters": {
+    "effect": "weapon",
+    "category": "weapon_animation",
+    "source_path": "build/assets/candidates/pixel-art-complete/sprites/catalog/weapon_inferno_sprayer.png"
+  },
+  "source_path": "source/animation/weapon_wildfire_attack.aseprite",
+  "export_path": "sprites/animation/wildfire_attack.png",
+  "source_sha256": "dd0210cec7ff28e27875a748d5dbb5b0ef7a48989ecea588c7edcefd3f30c09a",
+  "export_sha256": "f0ed8d5d85d0cc1e5edde57eaae4bc6b22b42ac37dff377845a8781c72ad59c4",
+  "acceptance_status": "accepted_for_provisional_production",
+  "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
+  "human_review_status": "pending",
+  "candidate_export_path": "build/assets/candidates/misc-animation/sprites/animation/weapon_wildfire_attack.png",
+  "integrated_export_path": "game/assets/sprites/animation/wildfire_attack.png"
+}

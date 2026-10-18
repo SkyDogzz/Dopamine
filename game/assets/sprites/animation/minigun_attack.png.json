@@ -1,0 +1,41 @@
+{
+  "asset_id": "weapon_minigun_attack",
+  "status": "provisionally_integrated",
+  "skill": "dopamine-animation",
+  "generator": "game/tools/generate_dopamine_misc_animation.py",
+  "generator_version": "1",
+  "seed": 20261018,
+  "seed_policy": "fixed geometry and staged source; seed recorded but not consumed",
+  "identity_source": "build/assets/candidates/pixel-art-complete/sprites/catalog/weapon_minigun.png",
+  "frame_size": [
+    32,
+    32
+  ],
+  "grid": [
+    4,
+    1
+  ],
+  "directions": [
+    "forward"
+  ],
+  "fps_proposed": 8,
+  "frame_duration_seconds_proposed": 0.125,
+  "pivot": [
+    16,
+    16
+  ],
+  "parameters": {
+    "effect": "weapon",
+    "category": "weapon_animation",
+    "source_path": "build/assets/candidates/pixel-art-complete/sprites/catalog/weapon_minigun.png"
+  },
+  "source_path": "source/animation/weapon_minigun_attack.aseprite",
+  "export_path": "sprites/animation/minigun_attack.png",
+  "source_sha256": "c4d64184ad01ddbfcd93b7e6b951bdd7275d3689eead4d4c3c17a14062f9d36e",
+  "export_sha256": "df168f5143676ad561f282f768402de62c966f0789239e6a9126dfecd3b61500",
+  "acceptance_status": "accepted_for_provisional_production",
+  "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
+  "human_review_status": "pending",
+  "candidate_export_path": "build/assets/candidates/misc-animation/sprites/animation/weapon_minigun_attack.png",
+  "integrated_export_path": "game/assets/sprites/animation/minigun_attack.png"
+}

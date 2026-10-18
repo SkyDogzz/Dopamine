@@ -1,0 +1,41 @@
+{
+  "asset_id": "weapon_crimson_daggers_attack",
+  "status": "provisionally_integrated",
+  "skill": "dopamine-animation",
+  "generator": "game/tools/generate_dopamine_misc_animation.py",
+  "generator_version": "1",
+  "seed": 20261018,
+  "seed_policy": "fixed geometry and staged source; seed recorded but not consumed",
+  "identity_source": "build/assets/candidates/pixel-art-complete/sprites/catalog/weapon_crimson_daggers.png",
+  "frame_size": [
+    32,
+    32
+  ],
+  "grid": [
+    4,
+    1
+  ],
+  "directions": [
+    "forward"
+  ],
+  "fps_proposed": 8,
+  "frame_duration_seconds_proposed": 0.125,
+  "pivot": [
+    16,
+    16
+  ],
+  "parameters": {
+    "effect": "weapon",
+    "category": "weapon_animation",
+    "source_path": "build/assets/candidates/pixel-art-complete/sprites/catalog/weapon_crimson_daggers.png"
+  },
+  "source_path": "source/animation/weapon_crimson_daggers_attack.aseprite",
+  "export_path": "sprites/animation/crimson_daggers_attack.png",
+  "source_sha256": "e500eb7cfd31a9873665bea17e1ec7b2c645a3258a0c9d3ca9828528c6fbdaa9",
+  "export_sha256": "9ee942be7c4a8088e34e5b60aa53689e37e6a95801875a4df3709de0175b46bb",
+  "acceptance_status": "accepted_for_provisional_production",
+  "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
+  "human_review_status": "pending",
+  "candidate_export_path": "build/assets/candidates/misc-animation/sprites/animation/weapon_crimson_daggers_attack.png",
+  "integrated_export_path": "game/assets/sprites/animation/crimson_daggers_attack.png"
+}

@@ -73,6 +73,7 @@ func _ready() -> void:
 	for index in range(VOICE_COUNT):
 		var player := AudioStreamPlayer.new()
 		player.name = "Voice%d" % index
+		player.bus = "SFX"
 		add_child(player)
 		player.finished.connect(_on_voice_finished.bind(index))
 		_players.append(player)

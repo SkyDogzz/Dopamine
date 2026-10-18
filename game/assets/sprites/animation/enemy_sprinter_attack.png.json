@@ -1,0 +1,68 @@
+{
+  "identity_source": "enemy_sprinter_sprite",
+  "frame_size": [
+    24,
+    24
+  ],
+  "grid": [
+    4,
+    4
+  ],
+  "directions": [
+    "down",
+    "left",
+    "right",
+    "up"
+  ],
+  "fps_proposed": 10,
+  "frame_duration_seconds_proposed": 0.1,
+  "pivot": [
+    12,
+    12
+  ],
+  "conventions": "non-canonical sample; four directions and four frames per row are provisional",
+  "asset_id": "enemy_sprinter_attack",
+  "status": "provisionally_integrated",
+  "skill": "dopamine-animation",
+  "generator": "game/tools/generate_dopamine_enemy_animation.py",
+  "generator_version": "1",
+  "seed": 815413644,
+  "seed_policy": "fixed role primitives; seed recorded but not consumed",
+  "parameters": {
+    "identity_source": "enemy_sprinter_sprite",
+    "frame_size": [
+      24,
+      24
+    ],
+    "grid": [
+      4,
+      4
+    ],
+    "directions": [
+      "down",
+      "left",
+      "right",
+      "up"
+    ],
+    "fps_proposed": 10,
+    "frame_duration_seconds_proposed": 0.1,
+    "pivot": [
+      12,
+      12
+    ],
+    "conventions": "non-canonical sample; four directions and four frames per row are provisional"
+  },
+  "dimensions": [
+    96,
+    96
+  ],
+  "source_path": "source/animation/enemy_sprinter_attack.aseprite",
+  "export_path": "sprites/animation/enemy_sprinter_attack.png",
+  "source_sha256": "30603757ab7efdafe9cfb6613360a00a1aebe4b4102f908d04d600aaf5f1aa45",
+  "export_sha256": "e4eeec5819c59d89dfcce09e319d1956d6971c1930db2c252e618b95cf06637d",
+  "acceptance_status": "accepted_for_provisional_production",
+  "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
+  "human_review_status": "pending",
+  "candidate_export_path": "build/assets/candidates/enemy-animation-complete/sprites/enemies/enemy_sprinter_attack.png",
+  "integrated_export_path": "game/assets/sprites/animation/enemy_sprinter_attack.png"
+}

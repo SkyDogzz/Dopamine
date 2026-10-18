@@ -1,0 +1,41 @@
+{
+  "asset_id": "projectile_frost_nova_animation",
+  "status": "provisionally_integrated",
+  "skill": "dopamine-animation",
+  "generator": "game/tools/generate_dopamine_misc_animation.py",
+  "generator_version": "1",
+  "seed": 20261018,
+  "seed_policy": "fixed geometry and staged source; seed recorded but not consumed",
+  "identity_source": "build/assets/candidates/pixel-art-complete/sprites/projectiles/projectile_frost_nova.png",
+  "frame_size": [
+    32,
+    32
+  ],
+  "grid": [
+    4,
+    1
+  ],
+  "directions": [
+    "forward"
+  ],
+  "fps_proposed": 12,
+  "frame_duration_seconds_proposed": 0.08333333333333333,
+  "pivot": [
+    16,
+    16
+  ],
+  "parameters": {
+    "effect": "orbit",
+    "category": "projectile_animation",
+    "source_path": "build/assets/candidates/pixel-art-complete/sprites/projectiles/projectile_frost_nova.png"
+  },
+  "source_path": "source/animation/projectile_frost_nova_animation.aseprite",
+  "export_path": "sprites/animation/projectile_frost_nova.png",
+  "source_sha256": "7aff7d47fac91ca45d88987147a1e4168fc5f3467392ea983d8ee3f8dc578e57",
+  "export_sha256": "7d310101792f58a3e4182bfa97bb7aa0da56aebdc98da738b2264ac88edace89",
+  "acceptance_status": "accepted_for_provisional_production",
+  "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
+  "human_review_status": "pending",
+  "candidate_export_path": "build/assets/candidates/misc-animation/sprites/animation/projectile_frost_nova_animation.png",
+  "integrated_export_path": "game/assets/sprites/animation/projectile_frost_nova.png"
+}

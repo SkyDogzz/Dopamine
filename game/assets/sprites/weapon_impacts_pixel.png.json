@@ -1,0 +1,55 @@
+{
+  "asset_id": "weapon_impacts_atlas",
+  "status": "provisionally_integrated",
+  "skill": "dopamine-pixel-art",
+  "generator": "game/tools/generate_neon_arcade_art.py",
+  "generator_version": "2",
+  "seed": 0,
+  "seed_policy": "fixed procedural geometry; seed is recorded but not consumed",
+  "brief": "Procedural pixel art using only docs/art/palette_master.gpl",
+  "dimensions": {
+    "width": 640,
+    "height": 64
+  },
+  "palette_rgba": [
+    [
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      14,
+      184,
+      212,
+      255
+    ],
+    [
+      27,
+      35,
+      64,
+      255
+    ],
+    [
+      246,
+      247,
+      255,
+      255
+    ],
+    [
+      255,
+      212,
+      71,
+      255
+    ]
+  ],
+  "source_path": "source/original_procedural/weapon_impacts_pixel.aseprite",
+  "export_path": "sprites/weapon_impacts_pixel.png",
+  "source_sha256": "c07c24ae4f6573183ab5f80c27e7fac69e0f42cd31cb1e2a3cf0e1ca88d938d2",
+  "export_sha256": "2c58b6652e3b9b572d9492380e7730e3e67be5536c45e20c601f220920815492",
+  "acceptance_status": "accepted_for_provisional_production",
+  "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
+  "human_review_status": "pending",
+  "candidate_export_path": "build/assets/candidates/pixel-art-complete/sprites/weapon_impacts_pixel.png",
+  "integrated_export_path": "game/assets/sprites/weapon_impacts_pixel.png"
+}

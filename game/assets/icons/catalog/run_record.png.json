@@ -1,0 +1,55 @@
+{
+  "asset_id": "ui_run_record",
+  "status": "provisionally_integrated",
+  "skill": "dopamine-pixel-art",
+  "generator": "game/tools/generate_neon_arcade_art.py",
+  "generator_version": "2",
+  "seed": 7301,
+  "seed_policy": "fixed procedural geometry; seed is recorded but not consumed",
+  "brief": "Procedural pixel art using only docs/art/palette_master.gpl",
+  "dimensions": {
+    "width": 32,
+    "height": 32
+  },
+  "palette_rgba": [
+    [
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      8,
+      11,
+      24,
+      255
+    ],
+    [
+      14,
+      184,
+      212,
+      255
+    ],
+    [
+      27,
+      35,
+      64,
+      255
+    ],
+    [
+      246,
+      247,
+      255,
+      255
+    ]
+  ],
+  "source_path": "source/ui/run_record.aseprite",
+  "export_path": "icons/catalog/run_record.png",
+  "source_sha256": "7444ee6031fae78d96a3934331089e5df3ff163b6171c31e7b5dd1c164b44086",
+  "export_sha256": "f634ab0a10036918e58ce68d3e9bbd65a8fe7928fda989fa4759d57a12243f8f",
+  "acceptance_status": "accepted_for_provisional_production",
+  "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
+  "human_review_status": "pending",
+  "candidate_export_path": "build/assets/candidates/pixel-art-complete/icons/catalog/run_record.png",
+  "integrated_export_path": "game/assets/icons/catalog/run_record.png"
+}

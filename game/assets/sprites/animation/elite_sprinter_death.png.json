@@ -1,0 +1,41 @@
+{
+  "asset_id": "elite_sprinter_death",
+  "status": "provisionally_integrated",
+  "skill": "dopamine-animation",
+  "generator": "game/tools/generate_dopamine_misc_animation.py",
+  "generator_version": "1",
+  "seed": 20261018,
+  "seed_policy": "fixed geometry and staged source; seed recorded but not consumed",
+  "identity_source": "build/assets/candidates/pixel-art-complete/sprites/roster/elite_sprinter.png",
+  "frame_size": [
+    32,
+    32
+  ],
+  "grid": [
+    4,
+    1
+  ],
+  "directions": [
+    "forward"
+  ],
+  "fps_proposed": 8,
+  "frame_duration_seconds_proposed": 0.125,
+  "pivot": [
+    16,
+    16
+  ],
+  "parameters": {
+    "effect": "pulse",
+    "category": "elite_animation",
+    "source_path": "build/assets/candidates/pixel-art-complete/sprites/roster/elite_sprinter.png"
+  },
+  "source_path": "source/animation/elite_sprinter_death.aseprite",
+  "export_path": "sprites/animation/elite_sprinter_death.png",
+  "source_sha256": "50d7bc86f90767119c9188454c9ebf984dc120d4ece4c1e4f8b375d8da189fc1",
+  "export_sha256": "d65754edd6c8c464d0e7caf7e5af10c265fbc11114c4405ae52f295f7dbd8224",
+  "acceptance_status": "accepted_for_provisional_production",
+  "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
+  "human_review_status": "pending",
+  "candidate_export_path": "build/assets/candidates/misc-animation/sprites/animation/elite_sprinter_death.png",
+  "integrated_export_path": "game/assets/sprites/animation/elite_sprinter_death.png"
+}

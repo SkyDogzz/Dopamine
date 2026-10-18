@@ -1,0 +1,55 @@
+{
+  "asset_id": "elite_sprinter_sprite",
+  "status": "provisionally_integrated",
+  "skill": "dopamine-pixel-art",
+  "generator": "game/tools/generate_neon_arcade_art.py",
+  "generator_version": "2",
+  "seed": 0,
+  "seed_policy": "fixed procedural geometry; seed is recorded but not consumed",
+  "brief": "Procedural pixel art using only docs/art/palette_master.gpl",
+  "dimensions": {
+    "width": 24,
+    "height": 24
+  },
+  "palette_rgba": [
+    [
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      8,
+      11,
+      24,
+      255
+    ],
+    [
+      14,
+      184,
+      212,
+      255
+    ],
+    [
+      27,
+      35,
+      64,
+      255
+    ],
+    [
+      246,
+      247,
+      255,
+      255
+    ]
+  ],
+  "source_path": "source/original_procedural/elite_sprinter.aseprite",
+  "export_path": "sprites/roster/elite_sprinter.png",
+  "source_sha256": "1907f493b6f9eeea91df9affa85fbe611bc0e764b70dec7f34a733d82d270354",
+  "export_sha256": "f118f85977c1e36b59f78a5994832d8f5c623aed2b820d715d10ef9af238b250",
+  "acceptance_status": "accepted_for_provisional_production",
+  "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
+  "human_review_status": "pending",
+  "candidate_export_path": "build/assets/candidates/pixel-art-complete/sprites/roster/elite_sprinter.png",
+  "integrated_export_path": "game/assets/sprites/roster/elite_sprinter.png"
+}

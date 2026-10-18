@@ -1,0 +1,41 @@
+{
+  "asset_id": "relic_blood_chalice_acquisition",
+  "status": "provisionally_integrated",
+  "skill": "dopamine-animation",
+  "generator": "game/tools/generate_dopamine_misc_animation.py",
+  "generator_version": "1",
+  "seed": 20261018,
+  "seed_policy": "fixed geometry and staged source; seed recorded but not consumed",
+  "identity_source": "build/assets/candidates/pixel-art-complete/sprites/catalog/relic_blood_chalice.png",
+  "frame_size": [
+    32,
+    32
+  ],
+  "grid": [
+    4,
+    1
+  ],
+  "directions": [
+    "forward"
+  ],
+  "fps_proposed": 8,
+  "frame_duration_seconds_proposed": 0.125,
+  "pivot": [
+    16,
+    16
+  ],
+  "parameters": {
+    "effect": "reveal",
+    "category": "relic_animation",
+    "source_path": "build/assets/candidates/pixel-art-complete/sprites/catalog/relic_blood_chalice.png"
+  },
+  "source_path": "source/animation/relic_blood_chalice_acquisition.aseprite",
+  "export_path": "sprites/animation/relic_blood_chalice_acquisition.png",
+  "source_sha256": "32525c08ae2f602defa21e5104bbf44a674611b5030aaeed3822a6f58781d47b",
+  "export_sha256": "84f0630f0148d3532dbfe1622f89530ef172a3fe4eac25c95f1515f622cd3c16",
+  "acceptance_status": "accepted_for_provisional_production",
+  "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
+  "human_review_status": "pending",
+  "candidate_export_path": "build/assets/candidates/misc-animation/sprites/animation/relic_blood_chalice_acquisition.png",
+  "integrated_export_path": "game/assets/sprites/animation/relic_blood_chalice_acquisition.png"
+}

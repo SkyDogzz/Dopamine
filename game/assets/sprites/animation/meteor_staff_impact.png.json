@@ -1,0 +1,41 @@
+{
+  "asset_id": "weapon_meteor_staff_impact_vfx",
+  "status": "provisionally_integrated",
+  "skill": "dopamine-animation",
+  "generator": "game/tools/generate_dopamine_misc_animation.py",
+  "generator_version": "1",
+  "seed": 20261018,
+  "seed_policy": "fixed geometry and staged source; seed recorded but not consumed",
+  "identity_source": "build/assets/candidates/pixel-art-complete/sprites/vfx/impact_spark.png",
+  "frame_size": [
+    32,
+    32
+  ],
+  "grid": [
+    4,
+    1
+  ],
+  "directions": [
+    "forward"
+  ],
+  "fps_proposed": 12,
+  "frame_duration_seconds_proposed": 0.08333333333333333,
+  "pivot": [
+    16,
+    16
+  ],
+  "parameters": {
+    "effect": "burst",
+    "category": "weapon_vfx_animation",
+    "source_path": "build/assets/candidates/pixel-art-complete/sprites/vfx/impact_spark.png"
+  },
+  "source_path": "source/animation/weapon_meteor_staff_impact_vfx.aseprite",
+  "export_path": "sprites/animation/meteor_staff_impact.png",
+  "source_sha256": "39e1fa31446d4940c1741ac150838ade20672736cdafd1a89e239c11a254c046",
+  "export_sha256": "074812de48803425f0086fb9568e627b3b906833e65781978514e409e21915da",
+  "acceptance_status": "accepted_for_provisional_production",
+  "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
+  "human_review_status": "pending",
+  "candidate_export_path": "build/assets/candidates/misc-animation/sprites/animation/weapon_meteor_staff_impact_vfx.png",
+  "integrated_export_path": "game/assets/sprites/animation/meteor_staff_impact.png"
+}

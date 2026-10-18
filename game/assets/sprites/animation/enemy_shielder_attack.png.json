@@ -1,0 +1,68 @@
+{
+  "identity_source": "enemy_shielder_sprite",
+  "frame_size": [
+    24,
+    24
+  ],
+  "grid": [
+    4,
+    4
+  ],
+  "directions": [
+    "down",
+    "left",
+    "right",
+    "up"
+  ],
+  "fps_proposed": 10,
+  "frame_duration_seconds_proposed": 0.1,
+  "pivot": [
+    12,
+    12
+  ],
+  "conventions": "non-canonical sample; four directions and four frames per row are provisional",
+  "asset_id": "enemy_shielder_attack",
+  "status": "provisionally_integrated",
+  "skill": "dopamine-animation",
+  "generator": "game/tools/generate_dopamine_enemy_animation.py",
+  "generator_version": "1",
+  "seed": 1797727425,
+  "seed_policy": "fixed role primitives; seed recorded but not consumed",
+  "parameters": {
+    "identity_source": "enemy_shielder_sprite",
+    "frame_size": [
+      24,
+      24
+    ],
+    "grid": [
+      4,
+      4
+    ],
+    "directions": [
+      "down",
+      "left",
+      "right",
+      "up"
+    ],
+    "fps_proposed": 10,
+    "frame_duration_seconds_proposed": 0.1,
+    "pivot": [
+      12,
+      12
+    ],
+    "conventions": "non-canonical sample; four directions and four frames per row are provisional"
+  },
+  "dimensions": [
+    96,
+    96
+  ],
+  "source_path": "source/animation/enemy_shielder_attack.aseprite",
+  "export_path": "sprites/animation/enemy_shielder_attack.png",
+  "source_sha256": "5f138bdcfaa044231369b95094360bec7c69456de8d116f2cf56ca3b8370ca77",
+  "export_sha256": "c8b14be81c2bc8b41b6a88f19a168a44b82a5e814e4778141c9c4b32b498ec3e",
+  "acceptance_status": "accepted_for_provisional_production",
+  "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
+  "human_review_status": "pending",
+  "candidate_export_path": "build/assets/candidates/enemy-animation-complete/sprites/enemies/enemy_shielder_attack.png",
+  "integrated_export_path": "game/assets/sprites/animation/enemy_shielder_attack.png"
+}

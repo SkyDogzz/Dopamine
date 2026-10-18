@@ -1,0 +1,49 @@
+{
+  "asset_id": "projectile_inferno",
+  "status": "provisionally_integrated",
+  "skill": "dopamine-pixel-art",
+  "generator": "game/tools/generate_neon_arcade_art.py",
+  "generator_version": "2",
+  "seed": 0,
+  "seed_policy": "fixed procedural geometry; seed is recorded but not consumed",
+  "brief": "Procedural pixel art using only docs/art/palette_master.gpl",
+  "dimensions": {
+    "width": 16,
+    "height": 16
+  },
+  "palette_rgba": [
+    [
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      27,
+      35,
+      64,
+      255
+    ],
+    [
+      200,
+      59,
+      98,
+      255
+    ],
+    [
+      246,
+      247,
+      255,
+      255
+    ]
+  ],
+  "source_path": "source/original_procedural/projectile_inferno.aseprite",
+  "export_path": "sprites/projectiles/projectile_inferno.png",
+  "source_sha256": "69f25f4a09de20cbaf8050ebfeb74cc0e2a17c61d5326d1dbd4d84f019f7b0e5",
+  "export_sha256": "c68881a474b8754373bb992a362a4b2feaaf966fb629c16ec88b3351f316dce4",
+  "acceptance_status": "accepted_for_provisional_production",
+  "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
+  "human_review_status": "pending",
+  "candidate_export_path": "build/assets/candidates/pixel-art-complete/sprites/projectiles/projectile_inferno.png",
+  "integrated_export_path": "game/assets/sprites/projectiles/projectile_inferno.png"
+}

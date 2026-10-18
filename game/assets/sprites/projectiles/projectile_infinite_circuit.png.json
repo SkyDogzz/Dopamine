@@ -1,0 +1,49 @@
+{
+  "asset_id": "projectile_infinite_circuit",
+  "status": "provisionally_integrated",
+  "skill": "dopamine-pixel-art",
+  "generator": "game/tools/generate_neon_arcade_art.py",
+  "generator_version": "2",
+  "seed": 0,
+  "seed_policy": "fixed procedural geometry; seed is recorded but not consumed",
+  "brief": "Procedural pixel art using only docs/art/palette_master.gpl",
+  "dimensions": {
+    "width": 16,
+    "height": 16
+  },
+  "palette_rgba": [
+    [
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      14,
+      184,
+      212,
+      255
+    ],
+    [
+      27,
+      35,
+      64,
+      255
+    ],
+    [
+      246,
+      247,
+      255,
+      255
+    ]
+  ],
+  "source_path": "source/original_procedural/projectile_infinite_circuit.aseprite",
+  "export_path": "sprites/projectiles/projectile_infinite_circuit.png",
+  "source_sha256": "0eeedccba9cfcb952461c21795c35e1f49e5452312ee3f8ba451c0448fd4b984",
+  "export_sha256": "9c065efbb198f8b5ba76aa93985a5c913e853efd7dcb8ff2e1be87502e83fd2a",
+  "acceptance_status": "accepted_for_provisional_production",
+  "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
+  "human_review_status": "pending",
+  "candidate_export_path": "build/assets/candidates/pixel-art-complete/sprites/projectiles/projectile_infinite_circuit.png",
+  "integrated_export_path": "game/assets/sprites/projectiles/projectile_infinite_circuit.png"
+}

@@ -1,0 +1,49 @@
+{
+  "asset_id": "projectile_frost_nova",
+  "status": "provisionally_integrated",
+  "skill": "dopamine-pixel-art",
+  "generator": "game/tools/generate_neon_arcade_art.py",
+  "generator_version": "2",
+  "seed": 0,
+  "seed_policy": "fixed procedural geometry; seed is recorded but not consumed",
+  "brief": "Procedural pixel art using only docs/art/palette_master.gpl",
+  "dimensions": {
+    "width": 16,
+    "height": 16
+  },
+  "palette_rgba": [
+    [
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      14,
+      184,
+      212,
+      255
+    ],
+    [
+      27,
+      35,
+      64,
+      255
+    ],
+    [
+      246,
+      247,
+      255,
+      255
+    ]
+  ],
+  "source_path": "source/original_procedural/projectile_frost_nova.aseprite",
+  "export_path": "sprites/projectiles/projectile_frost_nova.png",
+  "source_sha256": "e8ac103118e376f9697e971e5ebf4b957c78ab9d3582602bd8bacf7e31670f00",
+  "export_sha256": "61149250fc66e2b8475450b7e586e3b6bc3487b247535cb15466d304c546169c",
+  "acceptance_status": "accepted_for_provisional_production",
+  "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
+  "human_review_status": "pending",
+  "candidate_export_path": "build/assets/candidates/pixel-art-complete/sprites/projectiles/projectile_frost_nova.png",
+  "integrated_export_path": "game/assets/sprites/projectiles/projectile_frost_nova.png"
+}

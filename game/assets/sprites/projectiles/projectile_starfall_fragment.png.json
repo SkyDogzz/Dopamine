@@ -1,0 +1,49 @@
+{
+  "asset_id": "projectile_starfall_fragment",
+  "status": "provisionally_integrated",
+  "skill": "dopamine-pixel-art",
+  "generator": "game/tools/generate_neon_arcade_art.py",
+  "generator_version": "2",
+  "seed": 0,
+  "seed_policy": "fixed procedural geometry; seed is recorded but not consumed",
+  "brief": "Procedural pixel art using only docs/art/palette_master.gpl",
+  "dimensions": {
+    "width": 16,
+    "height": 16
+  },
+  "palette_rgba": [
+    [
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      27,
+      35,
+      64,
+      255
+    ],
+    [
+      246,
+      247,
+      255,
+      255
+    ],
+    [
+      255,
+      212,
+      71,
+      255
+    ]
+  ],
+  "source_path": "source/original_procedural/projectile_starfall_fragment.aseprite",
+  "export_path": "sprites/projectiles/projectile_starfall_fragment.png",
+  "source_sha256": "cc6d2251b62a07f8016e34032aa0d3269e08a328f3de919b16ed748181cdb8ee",
+  "export_sha256": "b164b590692a20d0579e437b219cd3b3defac87321986482e55807df6f971747",
+  "acceptance_status": "accepted_for_provisional_production",
+  "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
+  "human_review_status": "pending",
+  "candidate_export_path": "build/assets/candidates/pixel-art-complete/sprites/projectiles/projectile_starfall_fragment.png",
+  "integrated_export_path": "game/assets/sprites/projectiles/projectile_starfall_fragment.png"
+}

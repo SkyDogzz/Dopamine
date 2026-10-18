@@ -1,0 +1,43 @@
+{
+  "asset_id": "projectile_toxic_cloud",
+  "status": "provisionally_integrated",
+  "skill": "dopamine-pixel-art",
+  "generator": "game/tools/generate_neon_arcade_art.py",
+  "generator_version": "2",
+  "seed": 0,
+  "seed_policy": "fixed procedural geometry; seed is recorded but not consumed",
+  "brief": "Procedural pixel art using only docs/art/palette_master.gpl",
+  "dimensions": {
+    "width": 16,
+    "height": 16
+  },
+  "palette_rgba": [
+    [
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      72,
+      230,
+      155,
+      255
+    ],
+    [
+      246,
+      247,
+      255,
+      255
+    ]
+  ],
+  "source_path": "source/original_procedural/projectile_toxic_cloud.aseprite",
+  "export_path": "sprites/projectiles/projectile_toxic_cloud.png",
+  "source_sha256": "81d602a2753dbbaf33b5d5e509c227338e39bbef3dc64e55087d8219185332d8",
+  "export_sha256": "90be1ec565d6e11b3a07338f365c0012d594324b421cf32d294464d5ed486acd",
+  "acceptance_status": "accepted_for_provisional_production",
+  "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
+  "human_review_status": "pending",
+  "candidate_export_path": "build/assets/candidates/pixel-art-complete/sprites/projectiles/projectile_toxic_cloud.png",
+  "integrated_export_path": "game/assets/sprites/projectiles/projectile_toxic_cloud.png"
+}

@@ -1,0 +1,41 @@
+{
+  "asset_id": "weapon_void_orb_fire_vfx",
+  "status": "provisionally_integrated",
+  "skill": "dopamine-animation",
+  "generator": "game/tools/generate_dopamine_misc_animation.py",
+  "generator_version": "1",
+  "seed": 20261018,
+  "seed_policy": "fixed geometry and staged source; seed recorded but not consumed",
+  "identity_source": "build/assets/candidates/pixel-art-complete/sprites/projectiles/projectile_void_orb.png",
+  "frame_size": [
+    32,
+    32
+  ],
+  "grid": [
+    4,
+    1
+  ],
+  "directions": [
+    "forward"
+  ],
+  "fps_proposed": 12,
+  "frame_duration_seconds_proposed": 0.08333333333333333,
+  "pivot": [
+    16,
+    16
+  ],
+  "parameters": {
+    "effect": "burst",
+    "category": "weapon_vfx_animation",
+    "source_path": "build/assets/candidates/pixel-art-complete/sprites/projectiles/projectile_void_orb.png"
+  },
+  "source_path": "source/animation/weapon_void_orb_fire_vfx.aseprite",
+  "export_path": "sprites/animation/void_orb_fire.png",
+  "source_sha256": "e2eabcc53735d3665dfeff10a6d9a34d7bb1fa2921839ab593aa48c0f09f5b2a",
+  "export_sha256": "2a3315a81f1e4c7c7619d26de382b519dc6b04ed497c290280cd134b5adc46dc",
+  "acceptance_status": "accepted_for_provisional_production",
+  "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
+  "human_review_status": "pending",
+  "candidate_export_path": "build/assets/candidates/misc-animation/sprites/animation/weapon_void_orb_fire_vfx.png",
+  "integrated_export_path": "game/assets/sprites/animation/void_orb_fire.png"
+}

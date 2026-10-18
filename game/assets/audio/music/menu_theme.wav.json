@@ -1,0 +1,45 @@
+{
+  "asset_id": "menu_theme",
+  "kind": "music",
+  "status": "provisionally_integrated",
+  "skill": "dopamine-music",
+  "generator": "game/tools/generate_original_audio.py",
+  "generator_version": "2",
+  "source_sha256": "7e870ecbe7a3b2f270c1e329f10831d2a17c37066425aca64ac40594e1dec1b9",
+  "seed": 90210,
+  "parameters": {
+    "sample_rate_hz": 44100,
+    "channels": 1,
+    "encoding": "PCM16 WAV",
+    "method": "synchronized synthesized stem with 12 ms edge fade"
+  },
+  "export": {
+    "file": "menu_theme.wav",
+    "sha256": "5072ad85e44e0bd75c81e82fff8f7e018770e91b232042a873ae837b896929c9",
+    "sample_rate_hz": 44100,
+    "channels": 1,
+    "duration_seconds": 8.347823,
+    "peak_dbfs": -10.725,
+    "rms_dbfs": -24.263,
+    "crest_factor_db": 13.538
+  },
+  "tempo_bpm": 115,
+  "meter": "4/4",
+  "bars": 4,
+  "loop": true,
+  "loop_start_sample": 0,
+  "loop_end_sample": 368139,
+  "mix_gains_linear_proposed": {
+    "rhythm": 0.2,
+    "bass": 0.22,
+    "pad": 0.38,
+    "arp": 0.12,
+    "boss": 0.04
+  },
+  "acceptance_status": "accepted_for_provisional_production",
+  "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
+  "human_review_status": "pending",
+  "candidate_export_path": "build/assets/candidates/audio-complete/music/cues/menu_theme.wav",
+  "integrated_export_path": "game/assets/audio/music/menu_theme.wav",
+  "export_path": "audio/music/menu_theme.wav"
+}

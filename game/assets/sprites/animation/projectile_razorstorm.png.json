@@ -1,0 +1,41 @@
+{
+  "asset_id": "projectile_razorstorm_animation",
+  "status": "provisionally_integrated",
+  "skill": "dopamine-animation",
+  "generator": "game/tools/generate_dopamine_misc_animation.py",
+  "generator_version": "1",
+  "seed": 20261018,
+  "seed_policy": "fixed geometry and staged source; seed recorded but not consumed",
+  "identity_source": "build/assets/candidates/pixel-art-complete/sprites/projectiles/projectile_razorstorm.png",
+  "frame_size": [
+    32,
+    32
+  ],
+  "grid": [
+    4,
+    1
+  ],
+  "directions": [
+    "forward"
+  ],
+  "fps_proposed": 12,
+  "frame_duration_seconds_proposed": 0.08333333333333333,
+  "pivot": [
+    16,
+    16
+  ],
+  "parameters": {
+    "effect": "orbit",
+    "category": "projectile_animation",
+    "source_path": "build/assets/candidates/pixel-art-complete/sprites/projectiles/projectile_razorstorm.png"
+  },
+  "source_path": "source/animation/projectile_razorstorm_animation.aseprite",
+  "export_path": "sprites/animation/projectile_razorstorm.png",
+  "source_sha256": "a562294aa11834fa32d47ff97a1794c71632c7c47876d6a4117c201d3ab926c4",
+  "export_sha256": "f17f374571b3d58f8b2970c40c204ed3999fe5d73bd57c57e2a72a985863b16c",
+  "acceptance_status": "accepted_for_provisional_production",
+  "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
+  "human_review_status": "pending",
+  "candidate_export_path": "build/assets/candidates/misc-animation/sprites/animation/projectile_razorstorm_animation.png",
+  "integrated_export_path": "game/assets/sprites/animation/projectile_razorstorm.png"
+}

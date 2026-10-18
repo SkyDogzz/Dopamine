@@ -49,6 +49,7 @@ func _ready() -> void:
 		_synchronized_stream.set_sync_stream_volume(index, _current_stem_volumes_db[index])
 	_player = AudioStreamPlayer.new()
 	_player.name = "AdaptiveMusicPlayer"
+	_player.bus = "Music"
 	_player.stream = _synchronized_stream
 	_player.volume_db = SILENT_VOLUME_DB
 	add_child(_player)

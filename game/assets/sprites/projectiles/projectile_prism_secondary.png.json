@@ -1,0 +1,49 @@
+{
+  "asset_id": "projectile_prism_secondary",
+  "status": "provisionally_integrated",
+  "skill": "dopamine-pixel-art",
+  "generator": "game/tools/generate_neon_arcade_art.py",
+  "generator_version": "2",
+  "seed": 0,
+  "seed_policy": "fixed procedural geometry; seed is recorded but not consumed",
+  "brief": "Procedural pixel art using only docs/art/palette_master.gpl",
+  "dimensions": {
+    "width": 16,
+    "height": 16
+  },
+  "palette_rgba": [
+    [
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      27,
+      35,
+      64,
+      255
+    ],
+    [
+      225,
+      58,
+      203,
+      255
+    ],
+    [
+      246,
+      247,
+      255,
+      255
+    ]
+  ],
+  "source_path": "source/original_procedural/projectile_prism_secondary.aseprite",
+  "export_path": "sprites/projectiles/projectile_prism_secondary.png",
+  "source_sha256": "12f95a8b9bd80f7723759dcc50b9fc82f4f21005134cf2db766add6663370ca7",
+  "export_sha256": "f6f13c071cbf671a5f3c020258438f56c6bad3125b0476dd1ed585e4fcb2e08c",
+  "acceptance_status": "accepted_for_provisional_production",
+  "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
+  "human_review_status": "pending",
+  "candidate_export_path": "build/assets/candidates/pixel-art-complete/sprites/projectiles/projectile_prism_secondary.png",
+  "integrated_export_path": "game/assets/sprites/projectiles/projectile_prism_secondary.png"
+}

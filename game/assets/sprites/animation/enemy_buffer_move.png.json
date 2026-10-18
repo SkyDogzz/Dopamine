@@ -1,0 +1,68 @@
+{
+  "identity_source": "enemy_buffer_sprite",
+  "frame_size": [
+    24,
+    24
+  ],
+  "grid": [
+    4,
+    4
+  ],
+  "directions": [
+    "down",
+    "left",
+    "right",
+    "up"
+  ],
+  "fps_proposed": 8,
+  "frame_duration_seconds_proposed": 0.125,
+  "pivot": [
+    12,
+    12
+  ],
+  "conventions": "non-canonical sample; four directions and four frames per row are provisional",
+  "asset_id": "enemy_buffer_move",
+  "status": "provisionally_integrated",
+  "skill": "dopamine-animation",
+  "generator": "game/tools/generate_dopamine_enemy_animation.py",
+  "generator_version": "1",
+  "seed": 1559499031,
+  "seed_policy": "fixed role primitives; seed recorded but not consumed",
+  "parameters": {
+    "identity_source": "enemy_buffer_sprite",
+    "frame_size": [
+      24,
+      24
+    ],
+    "grid": [
+      4,
+      4
+    ],
+    "directions": [
+      "down",
+      "left",
+      "right",
+      "up"
+    ],
+    "fps_proposed": 8,
+    "frame_duration_seconds_proposed": 0.125,
+    "pivot": [
+      12,
+      12
+    ],
+    "conventions": "non-canonical sample; four directions and four frames per row are provisional"
+  },
+  "dimensions": [
+    96,
+    96
+  ],
+  "source_path": "source/animation/enemy_buffer_move.aseprite",
+  "export_path": "sprites/animation/enemy_buffer_move.png",
+  "source_sha256": "52e21707a50f219e516628a5b704cac0eca4204c5f885596990ee4ae546000ba",
+  "export_sha256": "7f7807eb299ad5ec34908ef3c92d034dd5b4ea8ac93faae4d55e3df4537561db",
+  "acceptance_status": "accepted_for_provisional_production",
+  "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
+  "human_review_status": "pending",
+  "candidate_export_path": "build/assets/candidates/enemy-animation-complete/sprites/enemies/enemy_buffer_move.png",
+  "integrated_export_path": "game/assets/sprites/animation/enemy_buffer_move.png"
+}

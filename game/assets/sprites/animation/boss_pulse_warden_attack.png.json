@@ -1,0 +1,41 @@
+{
+  "asset_id": "boss_pulse_warden_attack",
+  "status": "provisionally_integrated",
+  "skill": "dopamine-animation",
+  "generator": "game/tools/generate_dopamine_misc_animation.py",
+  "generator_version": "1",
+  "seed": 20261018,
+  "seed_policy": "fixed geometry and staged source; seed recorded but not consumed",
+  "identity_source": "build/assets/candidates/pixel-art-complete/sprites/roster/boss_pulse_warden.png",
+  "frame_size": [
+    32,
+    32
+  ],
+  "grid": [
+    4,
+    1
+  ],
+  "directions": [
+    "forward"
+  ],
+  "fps_proposed": 8,
+  "frame_duration_seconds_proposed": 0.125,
+  "pivot": [
+    16,
+    16
+  ],
+  "parameters": {
+    "effect": "pulse",
+    "category": "boss_animation",
+    "source_path": "build/assets/candidates/pixel-art-complete/sprites/roster/boss_pulse_warden.png"
+  },
+  "source_path": "source/animation/boss_pulse_warden_attack.aseprite",
+  "export_path": "sprites/animation/boss_pulse_warden_attack.png",
+  "source_sha256": "1ab5568cde4b8f9b1e44a7db6386ffb99dbf6fe1ad5a6920954a02c371277b59",
+  "export_sha256": "5178ed874efe1826e55eac9ba9bb8095a9336cedc908384a2bcea80a440769da",
+  "acceptance_status": "accepted_for_provisional_production",
+  "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
+  "human_review_status": "pending",
+  "candidate_export_path": "build/assets/candidates/misc-animation/sprites/animation/boss_pulse_warden_attack.png",
+  "integrated_export_path": "game/assets/sprites/animation/boss_pulse_warden_attack.png"
+}

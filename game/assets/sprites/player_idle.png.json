@@ -1,0 +1,41 @@
+{
+  "asset_id": "player_idle",
+  "status": "provisionally_integrated",
+  "skill": "dopamine-animation",
+  "generator": "game/tools/generate_original_player_sheets.py",
+  "generator_version": "2",
+  "seed": 1024,
+  "seed_policy": "fixed procedural geometry; seed recorded but not consumed",
+  "brief": "User-approved provisional midnight-blue/cyan armor, cyan visor, magenta/yellow accents",
+  "frame_size": [
+    32,
+    32
+  ],
+  "grid": [
+    4,
+    4
+  ],
+  "directions": [
+    "down",
+    "left",
+    "right",
+    "up"
+  ],
+  "frame_order": "columns are sequential frames per direction row",
+  "frame_duration_seconds_proposed": 0.3333333333333333,
+  "fps_proposed": 3,
+  "pivot": [
+    16,
+    16
+  ],
+  "source_representation": "editable single-layer Aseprite sprite sheet; one sheet per animation",
+  "source_path": "source/pilot/player_idle.aseprite",
+  "export_path": "sprites/player_idle.png",
+  "source_sha256": "715afa871f31e32e2652c75e08bd6d81b11268f54631f0f435eec0901c9e4ee3",
+  "export_sha256": "7666f0610be4d0541005e72f32dd93b3a3898cf9b5b015cdbb851aa28dc8dcd5",
+  "acceptance_status": "accepted_for_provisional_production",
+  "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
+  "human_review_status": "pending",
+  "candidate_export_path": "build/assets/candidates/player-animation/sprites/player/player_idle.png",
+  "integrated_export_path": "game/assets/sprites/player_idle.png"
+}

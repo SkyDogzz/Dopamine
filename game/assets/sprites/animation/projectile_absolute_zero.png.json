@@ -1,0 +1,41 @@
+{
+  "asset_id": "projectile_absolute_zero_animation",
+  "status": "provisionally_integrated",
+  "skill": "dopamine-animation",
+  "generator": "game/tools/generate_dopamine_misc_animation.py",
+  "generator_version": "1",
+  "seed": 20261018,
+  "seed_policy": "fixed geometry and staged source; seed recorded but not consumed",
+  "identity_source": "build/assets/candidates/pixel-art-complete/sprites/projectiles/projectile_absolute_zero.png",
+  "frame_size": [
+    32,
+    32
+  ],
+  "grid": [
+    4,
+    1
+  ],
+  "directions": [
+    "forward"
+  ],
+  "fps_proposed": 12,
+  "frame_duration_seconds_proposed": 0.08333333333333333,
+  "pivot": [
+    16,
+    16
+  ],
+  "parameters": {
+    "effect": "orbit",
+    "category": "projectile_animation",
+    "source_path": "build/assets/candidates/pixel-art-complete/sprites/projectiles/projectile_absolute_zero.png"
+  },
+  "source_path": "source/animation/projectile_absolute_zero_animation.aseprite",
+  "export_path": "sprites/animation/projectile_absolute_zero.png",
+  "source_sha256": "4a7fb0cfb0d8ea9f0ce83499cd74afb92cced6788d61b4cd04f30d24a6b59fff",
+  "export_sha256": "6bd739199d9a2655e696f483893c7c9471fdcb7aebe4d9db1b77ac997c08195a",
+  "acceptance_status": "accepted_for_provisional_production",
+  "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
+  "human_review_status": "pending",
+  "candidate_export_path": "build/assets/candidates/misc-animation/sprites/animation/projectile_absolute_zero_animation.png",
+  "integrated_export_path": "game/assets/sprites/animation/projectile_absolute_zero.png"
+}

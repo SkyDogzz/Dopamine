@@ -28,6 +28,7 @@ func _run() -> void:
 	await process_frame
 	var player := music.get_node_or_null("AdaptiveMusicPlayer") as AudioStreamPlayer
 	var synchronized := player.stream as AudioStreamSynchronized if player != null else null
+	_check(player != null and player.bus == "Music", "the synchronized arrangement routes through the Music bus")
 	_check(player != null and player.playing, "the synchronized loop starts in the music player")
 	_check(synchronized != null and synchronized.stream_count == 5,
 			"the loop contains five synchronized stems")

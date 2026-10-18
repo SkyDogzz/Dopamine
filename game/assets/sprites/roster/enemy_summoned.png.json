@@ -1,0 +1,22 @@
+{
+  "asset_id": "enemy_summoned_sprite",
+  "status": "provisionally_integrated",
+  "skill": "dopamine-pixel-art",
+  "generator": "game/tools/generate_original_roster.py",
+  "generator_version": "2",
+  "seed": 7302,
+  "seed_policy": "role primitives are deterministic; seed recorded but not consumed",
+  "dimensions": {
+    "width": 24,
+    "height": 24
+  },
+  "source_path": "source/roster/enemy_summoned.aseprite",
+  "export_path": "sprites/roster/enemy_summoned.png",
+  "source_sha256": "c601852966a9d867c06df45d59c2df51a29432f3ac35d5f287520f794ef4421e",
+  "export_sha256": "4d6a57919d6d895762cb6f0d306baa6b8e3930cb4f57d7851ef88b0b3a334cd9",
+  "acceptance_status": "accepted_for_provisional_production",
+  "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
+  "human_review_status": "pending",
+  "candidate_export_path": "build/assets/candidates/roster-repair/sprites/roster/enemy_summoned.png",
+  "integrated_export_path": "game/assets/sprites/roster/enemy_summoned.png"
+}

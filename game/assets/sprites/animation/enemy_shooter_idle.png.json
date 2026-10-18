@@ -1,0 +1,68 @@
+{
+  "identity_source": "enemy_shooter_sprite",
+  "frame_size": [
+    24,
+    24
+  ],
+  "grid": [
+    4,
+    4
+  ],
+  "directions": [
+    "down",
+    "left",
+    "right",
+    "up"
+  ],
+  "fps_proposed": 4,
+  "frame_duration_seconds_proposed": 0.25,
+  "pivot": [
+    12,
+    12
+  ],
+  "conventions": "non-canonical sample; four directions and four frames per row are provisional",
+  "asset_id": "enemy_shooter_idle",
+  "status": "provisionally_integrated",
+  "skill": "dopamine-animation",
+  "generator": "game/tools/generate_dopamine_enemy_animation.py",
+  "generator_version": "1",
+  "seed": 4115904099,
+  "seed_policy": "fixed role primitives; seed recorded but not consumed",
+  "parameters": {
+    "identity_source": "enemy_shooter_sprite",
+    "frame_size": [
+      24,
+      24
+    ],
+    "grid": [
+      4,
+      4
+    ],
+    "directions": [
+      "down",
+      "left",
+      "right",
+      "up"
+    ],
+    "fps_proposed": 4,
+    "frame_duration_seconds_proposed": 0.25,
+    "pivot": [
+      12,
+      12
+    ],
+    "conventions": "non-canonical sample; four directions and four frames per row are provisional"
+  },
+  "dimensions": [
+    96,
+    96
+  ],
+  "source_path": "source/animation/enemy_shooter_idle.aseprite",
+  "export_path": "sprites/animation/enemy_shooter_idle.png",
+  "source_sha256": "65e1f6632ef9d34d69a0d23eb7f062316194f93724ab0d0ca69fbfee75b315f3",
+  "export_sha256": "a593e424c50b0347136c5769ac288090f0d1ab5b25af616d02ca7dc2660e9d89",
+  "acceptance_status": "accepted_for_provisional_production",
+  "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
+  "human_review_status": "pending",
+  "candidate_export_path": "build/assets/candidates/enemy-animation-complete/sprites/enemies/enemy_shooter_idle.png",
+  "integrated_export_path": "game/assets/sprites/animation/enemy_shooter_idle.png"
+}

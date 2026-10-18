@@ -1,0 +1,32 @@
+{
+  "asset_id": "xp_pickup_03",
+  "kind": "sfx",
+  "status": "provisionally_integrated",
+  "skill": "dopamine-sfx",
+  "generator": "game/tools/generate_original_audio.py",
+  "generator_version": "2",
+  "source_sha256": "7e870ecbe7a3b2f270c1e329f10831d2a17c37066425aca64ac40594e1dec1b9",
+  "seed": 2718184553,
+  "parameters": {
+    "sample_rate_hz": 44100,
+    "channels": 1,
+    "encoding": "PCM16 WAV",
+    "method": "role-specific oscillator/noise layers with analytic envelopes"
+  },
+  "export": {
+    "file": "xp_pickup_03.wav",
+    "sha256": "83d0751cb9bec472538ad7c9e85eaba1fe34368f3afb16657fd71910ff7d6b37",
+    "sample_rate_hz": 44100,
+    "channels": 1,
+    "duration_seconds": 0.13,
+    "peak_dbfs": -2.853,
+    "rms_dbfs": -16.193,
+    "crest_factor_db": 13.339
+  },
+  "acceptance_status": "accepted_for_provisional_production",
+  "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
+  "human_review_status": "pending",
+  "candidate_export_path": "build/assets/candidates/audio-complete/sfx/xp_pickup_03.wav",
+  "integrated_export_path": "game/assets/audio/original_procedural/sfx/xp_pickup_03.wav",
+  "export_path": "audio/original_procedural/sfx/xp_pickup_03.wav"
+}

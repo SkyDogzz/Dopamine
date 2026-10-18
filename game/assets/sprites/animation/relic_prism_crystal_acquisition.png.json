@@ -1,0 +1,41 @@
+{
+  "asset_id": "relic_prism_crystal_acquisition",
+  "status": "provisionally_integrated",
+  "skill": "dopamine-animation",
+  "generator": "game/tools/generate_dopamine_misc_animation.py",
+  "generator_version": "1",
+  "seed": 20261018,
+  "seed_policy": "fixed geometry and staged source; seed recorded but not consumed",
+  "identity_source": "build/assets/candidates/pixel-art-complete/sprites/catalog/relic_prism_crystal.png",
+  "frame_size": [
+    32,
+    32
+  ],
+  "grid": [
+    4,
+    1
+  ],
+  "directions": [
+    "forward"
+  ],
+  "fps_proposed": 8,
+  "frame_duration_seconds_proposed": 0.125,
+  "pivot": [
+    16,
+    16
+  ],
+  "parameters": {
+    "effect": "reveal",
+    "category": "relic_animation",
+    "source_path": "build/assets/candidates/pixel-art-complete/sprites/catalog/relic_prism_crystal.png"
+  },
+  "source_path": "source/animation/relic_prism_crystal_acquisition.aseprite",
+  "export_path": "sprites/animation/relic_prism_crystal_acquisition.png",
+  "source_sha256": "88872a7b22020ad8a5114b4aa4329d1301599709dca0db0accc0ad738f073dbc",
+  "export_sha256": "51c7436a9344440777ef6653c288858e5580901f50ef4114723c00f3cf1a8a70",
+  "acceptance_status": "accepted_for_provisional_production",
+  "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
+  "human_review_status": "pending",
+  "candidate_export_path": "build/assets/candidates/misc-animation/sprites/animation/relic_prism_crystal_acquisition.png",
+  "integrated_export_path": "game/assets/sprites/animation/relic_prism_crystal_acquisition.png"
+}

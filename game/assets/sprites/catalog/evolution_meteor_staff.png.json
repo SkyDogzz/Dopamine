@@ -1,0 +1,55 @@
+{
+  "asset_id": "weapon_starfall_icon",
+  "status": "provisionally_integrated",
+  "skill": "dopamine-pixel-art",
+  "generator": "game/tools/generate_neon_arcade_art.py",
+  "generator_version": "2",
+  "seed": 0,
+  "seed_policy": "fixed procedural geometry; seed is recorded but not consumed",
+  "brief": "Procedural pixel art using only docs/art/palette_master.gpl",
+  "dimensions": {
+    "width": 32,
+    "height": 32
+  },
+  "palette_rgba": [
+    [
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      8,
+      11,
+      24,
+      255
+    ],
+    [
+      27,
+      35,
+      64,
+      255
+    ],
+    [
+      246,
+      247,
+      255,
+      255
+    ],
+    [
+      255,
+      212,
+      71,
+      255
+    ]
+  ],
+  "source_path": "source/original_procedural/evolution_meteor_staff.aseprite",
+  "export_path": "sprites/catalog/evolution_meteor_staff.png",
+  "source_sha256": "e2167ce3466075d4bff1f975cc6af916213b471754510de4a9d3f82e9c9cf5c5",
+  "export_sha256": "b91065b3201324698a1da3ca666d86b2e4e0e6a44d869d8a43df55456780aa6e",
+  "acceptance_status": "accepted_for_provisional_production",
+  "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
+  "human_review_status": "pending",
+  "candidate_export_path": "build/assets/candidates/pixel-art-complete/sprites/catalog/evolution_meteor_staff.png",
+  "integrated_export_path": "game/assets/sprites/catalog/evolution_meteor_staff.png"
+}

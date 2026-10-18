@@ -1,0 +1,68 @@
+{
+  "identity_source": "enemy_summoned_sprite",
+  "frame_size": [
+    24,
+    24
+  ],
+  "grid": [
+    4,
+    4
+  ],
+  "directions": [
+    "down",
+    "left",
+    "right",
+    "up"
+  ],
+  "fps_proposed": 4,
+  "frame_duration_seconds_proposed": 0.25,
+  "pivot": [
+    12,
+    12
+  ],
+  "conventions": "non-canonical sample; four directions and four frames per row are provisional",
+  "asset_id": "enemy_summoned_idle",
+  "status": "provisionally_integrated",
+  "skill": "dopamine-animation",
+  "generator": "game/tools/generate_dopamine_enemy_animation.py",
+  "generator_version": "1",
+  "seed": 4248156177,
+  "seed_policy": "fixed role primitives; seed recorded but not consumed",
+  "parameters": {
+    "identity_source": "enemy_summoned_sprite",
+    "frame_size": [
+      24,
+      24
+    ],
+    "grid": [
+      4,
+      4
+    ],
+    "directions": [
+      "down",
+      "left",
+      "right",
+      "up"
+    ],
+    "fps_proposed": 4,
+    "frame_duration_seconds_proposed": 0.25,
+    "pivot": [
+      12,
+      12
+    ],
+    "conventions": "non-canonical sample; four directions and four frames per row are provisional"
+  },
+  "dimensions": [
+    96,
+    96
+  ],
+  "source_path": "source/animation/enemy_summoned_idle.aseprite",
+  "export_path": "sprites/animation/enemy_summoned_idle.png",
+  "source_sha256": "5aaad2aa8212d0913575457a4f23f64dff4a6f5fae657f5a1d209cb64161209b",
+  "export_sha256": "6b846b0d0c44e138605b9f885958bc98d13cd4f996b1d8fe42f38df29a3388bf",
+  "acceptance_status": "accepted_for_provisional_production",
+  "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
+  "human_review_status": "pending",
+  "candidate_export_path": "build/assets/candidates/enemy-animation-complete/sprites/enemies/enemy_summoned_idle.png",
+  "integrated_export_path": "game/assets/sprites/animation/enemy_summoned_idle.png"
+}

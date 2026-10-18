@@ -1,5 +1,5 @@
-# Sources créatives — dossier vide au démarrage
+# Sources créatives procédurales
 
-Les sources graphiques et leurs exports ont été purgés pour reconstruire les assets depuis zéro, conformément à la demande du propriétaire du projet. Ce dossier est réservé aux sources éditables des futurs assets acceptés; aucun asset actif n’est présent actuellement.
+Les sources éditables `.aseprite` et les recettes des exports actifs sont conservées dans les sous-dossiers de `game/assets/source/`. Les générateurs restent sous `game/tools/`, et les seeds/paramètres/hashes sont tracés dans les sidecars et `docs/art/ASSET_MANIFEST.json`.
 
-Les générateurs restent sous `game/tools/` et doivent lire les règles dans `docs/ART_BIBLE.txt`. Générer vers staging, valider avec `dopamine-asset-qa`, puis importer seulement les assets acceptés.
+La bibliothèque runtime actuelle est une intégration provisoire fondée sur le périmètre prototype autorisé; `human_review_status=pending` jusqu’à la revue visuelle et à l’écoute. Les identités de boss/biome, mapping éléments et conventions non validées restent non canoniques.

@@ -1,0 +1,38 @@
+{
+  "asset_id": "gameplay_loop_rhythm",
+  "kind": "music",
+  "status": "provisionally_integrated",
+  "skill": "dopamine-music",
+  "generator": "game/tools/generate_original_audio.py",
+  "generator_version": "2",
+  "source_sha256": "7e870ecbe7a3b2f270c1e329f10831d2a17c37066425aca64ac40594e1dec1b9",
+  "seed": 90210,
+  "parameters": {
+    "sample_rate_hz": 44100,
+    "channels": 1,
+    "encoding": "PCM16 WAV",
+    "method": "synchronized synthesized stem with 12 ms edge fade"
+  },
+  "export": {
+    "file": "rhythm.wav",
+    "sha256": "5c00fa5c8045861205487a22b6df6e1e99041b1b92cde4066e002377a53f82b3",
+    "sample_rate_hz": 44100,
+    "channels": 1,
+    "duration_seconds": 8.347823,
+    "peak_dbfs": -0.904,
+    "rms_dbfs": -18.174,
+    "crest_factor_db": 17.269
+  },
+  "tempo_bpm": 115,
+  "meter": "4/4",
+  "bars": 4,
+  "loop_start_sample": 0,
+  "loop_end_sample": 368139,
+  "mix_gain_linear_proposed": 0.38,
+  "acceptance_status": "accepted_for_provisional_production",
+  "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
+  "human_review_status": "pending",
+  "candidate_export_path": "build/assets/candidates/audio-complete/music/rhythm.wav",
+  "integrated_export_path": "game/assets/audio/original_procedural/music/rhythm.wav",
+  "export_path": "audio/original_procedural/music/rhythm.wav"
+}

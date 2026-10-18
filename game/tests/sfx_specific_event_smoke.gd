@@ -11,7 +11,13 @@ func _run() -> void:
 	root.add_child(service)
 	await process_frame
 	if not service._named_streams.is_empty():
-		for sound_id in ["weapon_lightning_conductor_fire", "weapon_lightning_conductor_impact", "damage_taken", "healing", "explosion", "victory", "defeat"]:
+		for weapon_id in service.WEAPON_IDS:
+			for event in ["fire", "impact"]:
+				var weapon_sound_id := "weapon_%s_%s" % [weapon_id, event]
+				if not service._named_streams.has(weapon_sound_id):
+					_fail("Integrated named SFX should load %s" % weapon_sound_id)
+					return
+		for sound_id in ["damage_taken", "healing", "explosion", "victory", "defeat"]:
 			if not service._named_streams.has(sound_id):
 				_fail("Integrated named SFX should load %s" % sound_id)
 				return

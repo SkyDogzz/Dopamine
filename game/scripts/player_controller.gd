@@ -24,6 +24,10 @@ func _ready() -> void:
 	if _idle_texture == null or _walk_texture == null:
 		_sprite.region_enabled = false
 		_sprite.texture = null
+	else:
+		_sprite.region_enabled = true
+		_sprite.texture = _idle_texture
+		_sprite.region_rect = Rect2(0, 0, FRAME_SIZE, FRAME_SIZE)
 
 func _physics_process(delta: float) -> void:
 	if not controls_enabled:

@@ -1,0 +1,41 @@
+{
+  "asset_id": "relic_infernal_heart_acquisition",
+  "status": "provisionally_integrated",
+  "skill": "dopamine-animation",
+  "generator": "game/tools/generate_dopamine_misc_animation.py",
+  "generator_version": "1",
+  "seed": 20261018,
+  "seed_policy": "fixed geometry and staged source; seed recorded but not consumed",
+  "identity_source": "build/assets/candidates/pixel-art-complete/sprites/catalog/relic_infernal_heart.png",
+  "frame_size": [
+    32,
+    32
+  ],
+  "grid": [
+    4,
+    1
+  ],
+  "directions": [
+    "forward"
+  ],
+  "fps_proposed": 8,
+  "frame_duration_seconds_proposed": 0.125,
+  "pivot": [
+    16,
+    16
+  ],
+  "parameters": {
+    "effect": "reveal",
+    "category": "relic_animation",
+    "source_path": "build/assets/candidates/pixel-art-complete/sprites/catalog/relic_infernal_heart.png"
+  },
+  "source_path": "source/animation/relic_infernal_heart_acquisition.aseprite",
+  "export_path": "sprites/animation/relic_infernal_heart_acquisition.png",
+  "source_sha256": "949af934975f5dd23d0b54e46c333221ec4261820724cf1a332887804571942c",
+  "export_sha256": "779edda24998ac6f819f608805277b75bf68f63e8e0fc13c276dc626cbc7e829",
+  "acceptance_status": "accepted_for_provisional_production",
+  "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
+  "human_review_status": "pending",
+  "candidate_export_path": "build/assets/candidates/misc-animation/sprites/animation/relic_infernal_heart_acquisition.png",
+  "integrated_export_path": "game/assets/sprites/animation/relic_infernal_heart_acquisition.png"
+}

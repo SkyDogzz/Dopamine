@@ -1,0 +1,41 @@
+{
+  "asset_id": "relic_storm_core_acquisition",
+  "status": "provisionally_integrated",
+  "skill": "dopamine-animation",
+  "generator": "game/tools/generate_dopamine_misc_animation.py",
+  "generator_version": "1",
+  "seed": 20261018,
+  "seed_policy": "fixed geometry and staged source; seed recorded but not consumed",
+  "identity_source": "build/assets/candidates/pixel-art-complete/sprites/catalog/relic_storm_core.png",
+  "frame_size": [
+    32,
+    32
+  ],
+  "grid": [
+    4,
+    1
+  ],
+  "directions": [
+    "forward"
+  ],
+  "fps_proposed": 8,
+  "frame_duration_seconds_proposed": 0.125,
+  "pivot": [
+    16,
+    16
+  ],
+  "parameters": {
+    "effect": "reveal",
+    "category": "relic_animation",
+    "source_path": "build/assets/candidates/pixel-art-complete/sprites/catalog/relic_storm_core.png"
+  },
+  "source_path": "source/animation/relic_storm_core_acquisition.aseprite",
+  "export_path": "sprites/animation/relic_storm_core_acquisition.png",
+  "source_sha256": "1c1e8f08619994c7b2eb558f615018b629081b2e921567387aa1f6edaa8571e2",
+  "export_sha256": "1e31b6a3002ae4aa2836b99d4cf4db89c2656e5157b667149fd9b43b47b64772",
+  "acceptance_status": "accepted_for_provisional_production",
+  "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
+  "human_review_status": "pending",
+  "candidate_export_path": "build/assets/candidates/misc-animation/sprites/animation/relic_storm_core_acquisition.png",
+  "integrated_export_path": "game/assets/sprites/animation/relic_storm_core_acquisition.png"
+}

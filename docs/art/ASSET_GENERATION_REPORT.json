@@ -1,9 +1,9 @@
 {
-  "status": "candidate_library_built",
+  "status": "provisional_library_integrated",
   "generated_at": "2026-10-18",
   "manifest": "docs/art/ASSET_MANIFEST.json",
   "candidate_root": "build/assets/candidates",
-  "runtime_integration": "deferred pending human/artistic acceptance; runtime game/assets intentionally remains empty except notices",
+  "runtime_integration": "308/308 assets integrated into game/assets at manifest destinations; acceptance basis is user-authorized prototype scope; detailed human visual and audio review remains pending",
   "asset_counts": {
     "dopamine-animation": {
       "count": 141,
@@ -86,10 +86,10 @@
     "Candidates were generated locally by deterministic primitive/oscillator recipes; a passing technical validator does not establish production artistic quality.",
     "Many non-player animation frames are procedural identity-preserving role prototypes, not bespoke animation art.",
     "Music tempo/key/arrangements and final gain balance remain proposed.",
-    "Technical candidates are staged under ignored build/ and remain human_review_status=pending; no runtime assets have been accepted or integrated.",
     "Headless audio cannot replace auditory review; local review page includes playback controls.",
-    "Full trial import passed, but complete candidate-loaded CTest has unresolved UI layout/render timeouts and asset path contracts requiring repair.",
-    "Global provenance audit currently reports pre-purge registered assets missing, consistent with intentional runtime purge; registry refresh is still required before production acceptance."
+    "Human visual and auditory acceptance remains pending; current integration is provisional per the user-authorized non-canonical prototype scope.",
+    "Audio hardware is unavailable in this session, so numeric QA and Godot playback/import tests do not substitute for listening.",
+    "Some boss, biome, font and detailed animation conventions remain open in the GDD and stay explicitly provisional."
   ],
   "review_pack": {
     "local_index": "build/assets/candidates/review/index.html",
@@ -107,7 +107,7 @@
     "destination_collisions": 0,
     "overwrite_conflicts": 0,
     "spriteframes_resources_loaded": 131,
-    "runtime_copies": "none; candidates are pending explicit acceptance"
+    "runtime_copies": "308 exports provisionally integrated; 308 source and resource records integrated"
   },
   "pixel_filtering": {
     "godot_project_setting": "rendering/textures/canvas_textures/default_texture_filter",
@@ -118,15 +118,11 @@
     "candidate_count": 308,
     "manifest": "passed",
     "candidate_batches_qa": "passed",
-    "godot_candidate_import": "passed",
-    "integration_dry_run": "passed",
-    "focused_candidate_smokes": "catalog, roster, player, Signal Prism, Art Bible and SFX targeted tests pass in the isolated candidate copy",
-    "runtime_assets_integrated": 0,
-    "runtime_godot_import": "passed",
-    "empty_asset_root_smoke": "passed",
-    "sfx_service_smoke": "passed",
-    "sfx_specific_event_smoke": "passed",
-    "survival_weapon_catalog_smoke": "passed",
-    "adaptive_music_smoke": "fails with empty runtime stem paths until acceptance/integration"
+    "godot_import": "passed (308 resource imports)",
+    "integration_dry_run": "passed 308/308; zero collisions/overwrites; exports and source hashes passed",
+    "runtime_assets_integrated": 308,
+    "godot_test_suite": "118/118 passed",
+    "asset_provenance_registry": "passed; 308 current creative assets and 417 historic assets audited",
+    "remaining_review": "visual quality spot-checks and audio listening; no playback hardware exposed in this session"
   }
 }

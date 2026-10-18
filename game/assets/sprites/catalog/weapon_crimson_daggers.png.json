@@ -1,0 +1,55 @@
+{
+  "asset_id": "weapon_crimson_daggers_icon",
+  "status": "provisionally_integrated",
+  "skill": "dopamine-pixel-art",
+  "generator": "game/tools/generate_neon_arcade_art.py",
+  "generator_version": "2",
+  "seed": 0,
+  "seed_policy": "fixed procedural geometry; seed is recorded but not consumed",
+  "brief": "Procedural pixel art using only docs/art/palette_master.gpl",
+  "dimensions": {
+    "width": 32,
+    "height": 32
+  },
+  "palette_rgba": [
+    [
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      8,
+      11,
+      24,
+      255
+    ],
+    [
+      27,
+      35,
+      64,
+      255
+    ],
+    [
+      200,
+      59,
+      98,
+      255
+    ],
+    [
+      246,
+      247,
+      255,
+      255
+    ]
+  ],
+  "source_path": "source/original_procedural/weapon_crimson_daggers.aseprite",
+  "export_path": "sprites/catalog/weapon_crimson_daggers.png",
+  "source_sha256": "f55271c67fa7ec8a348ccf4c7ce3302f1c8ff0c47cfe69f0429637834b93ef09",
+  "export_sha256": "a4f33ac1e7360f32c66f45717ce971e41853a5eb7d771f691c4e00402ce48b14",
+  "acceptance_status": "accepted_for_provisional_production",
+  "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
+  "human_review_status": "pending",
+  "candidate_export_path": "build/assets/candidates/pixel-art-complete/sprites/catalog/weapon_crimson_daggers.png",
+  "integrated_export_path": "game/assets/sprites/catalog/weapon_crimson_daggers.png"
+}

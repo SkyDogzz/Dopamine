@@ -1,0 +1,32 @@
+{
+  "asset_id": "weapon_void_orb_impact",
+  "kind": "sfx",
+  "status": "provisionally_integrated",
+  "skill": "dopamine-sfx",
+  "generator": "game/tools/generate_original_audio.py",
+  "generator_version": "2",
+  "source_sha256": "7e870ecbe7a3b2f270c1e329f10831d2a17c37066425aca64ac40594e1dec1b9",
+  "seed": 902928538,
+  "parameters": {
+    "sample_rate_hz": 44100,
+    "channels": 1,
+    "encoding": "PCM16 WAV",
+    "method": "role-specific oscillator/noise layers with analytic envelopes"
+  },
+  "export": {
+    "file": "weapon_void_orb_impact.wav",
+    "sha256": "37554d48a2ec1f6b5df8ed7eb667664f9b10c36a9c4c4b3a5108fe6348863a87",
+    "sample_rate_hz": 44100,
+    "channels": 1,
+    "duration_seconds": 0.095011,
+    "peak_dbfs": -2.853,
+    "rms_dbfs": -16.438,
+    "crest_factor_db": 13.585
+  },
+  "acceptance_status": "accepted_for_provisional_production",
+  "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
+  "human_review_status": "pending",
+  "candidate_export_path": "build/assets/candidates/audio-complete/sfx/weapon_void_orb_impact.wav",
+  "integrated_export_path": "game/assets/audio/original_procedural/sfx/weapon_void_orb_impact.wav",
+  "export_path": "audio/original_procedural/sfx/weapon_void_orb_impact.wav"
+}

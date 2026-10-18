@@ -1,0 +1,55 @@
+{
+  "asset_id": "boss_pulse_warden_sprite",
+  "status": "provisionally_integrated",
+  "skill": "dopamine-pixel-art",
+  "generator": "game/tools/generate_neon_arcade_art.py",
+  "generator_version": "2",
+  "seed": 0,
+  "seed_policy": "fixed procedural geometry; seed is recorded but not consumed",
+  "brief": "Procedural pixel art using only docs/art/palette_master.gpl",
+  "dimensions": {
+    "width": 96,
+    "height": 96
+  },
+  "palette_rgba": [
+    [
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      8,
+      11,
+      24,
+      255
+    ],
+    [
+      14,
+      184,
+      212,
+      255
+    ],
+    [
+      27,
+      35,
+      64,
+      255
+    ],
+    [
+      246,
+      247,
+      255,
+      255
+    ]
+  ],
+  "source_path": "source/original_procedural/boss_pulse_warden.aseprite",
+  "export_path": "sprites/roster/boss_pulse_warden.png",
+  "source_sha256": "295f0daa1a25c58365020b0f22fc80f383268e99fc1d71798462cf42d1fc31fa",
+  "export_sha256": "626cf5d6dfd63e99fefc18a34b48a0a5cb5a21be527a0e9858f8ddb77079637c",
+  "acceptance_status": "accepted_for_provisional_production",
+  "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
+  "human_review_status": "pending",
+  "candidate_export_path": "build/assets/candidates/pixel-art-complete/sprites/roster/boss_pulse_warden.png",
+  "integrated_export_path": "game/assets/sprites/roster/boss_pulse_warden.png"
+}

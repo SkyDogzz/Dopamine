@@ -1,0 +1,49 @@
+{
+  "asset_id": "ui_skill_node",
+  "status": "provisionally_integrated",
+  "skill": "dopamine-pixel-art",
+  "generator": "game/tools/generate_neon_arcade_art.py",
+  "generator_version": "2",
+  "seed": 7301,
+  "seed_policy": "fixed procedural geometry; seed is recorded but not consumed",
+  "brief": "Procedural pixel art using only docs/art/palette_master.gpl",
+  "dimensions": {
+    "width": 32,
+    "height": 32
+  },
+  "palette_rgba": [
+    [
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      14,
+      184,
+      212,
+      255
+    ],
+    [
+      27,
+      35,
+      64,
+      255
+    ],
+    [
+      246,
+      247,
+      255,
+      255
+    ]
+  ],
+  "source_path": "source/ui/skill_node.aseprite",
+  "export_path": "icons/catalog/skill_node.png",
+  "source_sha256": "bdef88c7254fbb59d1afacb44b8ae2f8b03a058c93026a841c46b70dc4ee6e7a",
+  "export_sha256": "ee35dc250295079dc2af8baabdac521f899b7331234481d3c9a8ad262e79dd1d",
+  "acceptance_status": "accepted_for_provisional_production",
+  "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
+  "human_review_status": "pending",
+  "candidate_export_path": "build/assets/candidates/pixel-art-complete/icons/catalog/skill_node.png",
+  "integrated_export_path": "game/assets/icons/catalog/skill_node.png"
+}

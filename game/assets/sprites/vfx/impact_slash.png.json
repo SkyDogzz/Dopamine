@@ -1,0 +1,49 @@
+{
+  "asset_id": "impact_slash",
+  "status": "provisionally_integrated",
+  "skill": "dopamine-pixel-art",
+  "generator": "game/tools/generate_neon_arcade_art.py",
+  "generator_version": "2",
+  "seed": 0,
+  "seed_policy": "fixed procedural geometry; seed is recorded but not consumed",
+  "brief": "Procedural pixel art using only docs/art/palette_master.gpl",
+  "dimensions": {
+    "width": 64,
+    "height": 64
+  },
+  "palette_rgba": [
+    [
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      14,
+      184,
+      212,
+      255
+    ],
+    [
+      27,
+      35,
+      64,
+      255
+    ],
+    [
+      246,
+      247,
+      255,
+      255
+    ]
+  ],
+  "source_path": "source/original_procedural/impact_slash.aseprite",
+  "export_path": "sprites/vfx/impact_slash.png",
+  "source_sha256": "83ffd035cec723a563b00c4fb05155534eb2ab201491982c69770ed9fcc7a184",
+  "export_sha256": "3c932d7a822223e8895561e4820c09356102a09457fe73be1c756d1bc4b3d1e4",
+  "acceptance_status": "accepted_for_provisional_production",
+  "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
+  "human_review_status": "pending",
+  "candidate_export_path": "build/assets/candidates/pixel-art-complete/sprites/vfx/impact_slash.png",
+  "integrated_export_path": "game/assets/sprites/vfx/impact_slash.png"
+}

@@ -1,9 +1,7 @@
-# Assets — démarrage à vide
+# Assets — bibliothèque provisoire intégrée
 
-Les exports visuels, sources graphiques, fontes et fichiers audio ont été purgés pour reconstruire le jeu depuis zéro.
+Les assets de jeu sont générés localement par les cinq skills Dopamine puis importés ici aux destinations du manifeste `docs/art/ASSET_MANIFEST.json`. Les 308 exports actuels ont passé leur QA technique et sont intégrés sous portée prototype provisoire autorisée par le propriétaire. Ils restent non canoniques quand le GDD ou l’Art Bible laisse un choix ouvert.
 
-Une référence runtime vers un asset absent signifie que cet asset n’a pas encore été généré. Le jeu doit rester lançable sans ressources créatives; les systèmes visuels utilisent des placeholders dessinés par code et l’audio reste silencieux jusqu’à intégration d’un asset passé par la QA.
+Les sources éditables et métadonnées par asset sont conservées sous `game/assets/source/` et à côté des exports. Seeds, paramètres, recettes et états d’acceptation sont tracés dans le manifeste et les sidecars JSON. L’index de revue visuelle/audio local est généré sous `build/assets/candidates/review/index.html` (dossier de build ignoré par Git).
 
-Les générateurs sont conservés dans `game/tools/`. Les règles visuelles et audio sont dans `docs/ART_BIBLE.txt` et `docs/specs/SPEC-local-asset-generation.md`; les registres historiques de hashes/provenance restent dans `docs/art/`.
-
-Après génération, garder sources, paramètres, seed et métadonnées dans le dépôt. Importer un asset dans ce répertoire seulement après validation et acceptation.
+`human_review_status=pending` signifie que la revue visuelle/audio reste à faire; les validations techniques ne remplacent pas cette revue. Pour modifier un asset, générer uniquement son ID en staging, lancer `dopamine-asset-qa`, puis utiliser `game/tools/integrate_asset_candidates.py` avec une acceptation explicite et un dry-run. Ne pas écraser les assets non ciblés.

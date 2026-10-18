@@ -1,0 +1,55 @@
+{
+  "asset_id": "relic_frozen_crown_icon",
+  "status": "provisionally_integrated",
+  "skill": "dopamine-pixel-art",
+  "generator": "game/tools/generate_neon_arcade_art.py",
+  "generator_version": "2",
+  "seed": 20261018,
+  "seed_policy": "fixed procedural geometry; seed is recorded but not consumed",
+  "brief": "Procedural pixel art using only docs/art/palette_master.gpl",
+  "dimensions": {
+    "width": 32,
+    "height": 32
+  },
+  "palette_rgba": [
+    [
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      8,
+      11,
+      24,
+      255
+    ],
+    [
+      14,
+      184,
+      212,
+      255
+    ],
+    [
+      27,
+      35,
+      64,
+      255
+    ],
+    [
+      246,
+      247,
+      255,
+      255
+    ]
+  ],
+  "source_path": "source/original_procedural/relic_frozen_crown.aseprite",
+  "export_path": "sprites/catalog/relic_frozen_crown.png",
+  "source_sha256": "7f662795c426f1c7df57587450a7ae655a8bdeb90dbaa41b2aea492b84a64465",
+  "export_sha256": "fb1c9763311773c2616c8087fc42726cca9bf3a9401183b949fd2650a22377d9",
+  "acceptance_status": "accepted_for_provisional_production",
+  "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
+  "human_review_status": "pending",
+  "candidate_export_path": "build/assets/candidates/pixel-art-complete/sprites/catalog/relic_frozen_crown.png",
+  "integrated_export_path": "game/assets/sprites/catalog/relic_frozen_crown.png"
+}

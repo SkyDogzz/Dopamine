@@ -1,0 +1,32 @@
+{
+  "asset_id": "enemy_kill_03",
+  "kind": "sfx",
+  "status": "provisionally_integrated",
+  "skill": "dopamine-sfx",
+  "generator": "game/tools/generate_original_audio.py",
+  "generator_version": "2",
+  "source_sha256": "7e870ecbe7a3b2f270c1e329f10831d2a17c37066425aca64ac40594e1dec1b9",
+  "seed": 1281900797,
+  "parameters": {
+    "sample_rate_hz": 44100,
+    "channels": 1,
+    "encoding": "PCM16 WAV",
+    "method": "role-specific oscillator/noise layers with analytic envelopes"
+  },
+  "export": {
+    "file": "enemy_kill_03.wav",
+    "sha256": "81440c5f24c319f0ed54ce7971dc95595ddb9fcca1298c41d4bfeec7eecbcc01",
+    "sample_rate_hz": 44100,
+    "channels": 1,
+    "duration_seconds": 0.16,
+    "peak_dbfs": -2.853,
+    "rms_dbfs": -15.699,
+    "crest_factor_db": 12.846
+  },
+  "acceptance_status": "accepted_for_provisional_production",
+  "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
+  "human_review_status": "pending",
+  "candidate_export_path": "build/assets/candidates/audio-complete/sfx/enemy_kill_03.wav",
+  "integrated_export_path": "game/assets/audio/original_procedural/sfx/enemy_kill_03.wav",
+  "export_path": "audio/original_procedural/sfx/enemy_kill_03.wav"
+}

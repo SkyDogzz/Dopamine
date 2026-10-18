@@ -1,0 +1,43 @@
+{
+  "asset_id": "impact_star",
+  "status": "provisionally_integrated",
+  "skill": "dopamine-pixel-art",
+  "generator": "game/tools/generate_neon_arcade_art.py",
+  "generator_version": "2",
+  "seed": 0,
+  "seed_policy": "fixed procedural geometry; seed is recorded but not consumed",
+  "brief": "Procedural pixel art using only docs/art/palette_master.gpl",
+  "dimensions": {
+    "width": 64,
+    "height": 64
+  },
+  "palette_rgba": [
+    [
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      246,
+      247,
+      255,
+      255
+    ],
+    [
+      255,
+      212,
+      71,
+      255
+    ]
+  ],
+  "source_path": "source/original_procedural/impact_star.aseprite",
+  "export_path": "sprites/vfx/impact_star.png",
+  "source_sha256": "2a957b0ac88948c52e104cbfb27e17da3b193bf1ef8f082fb2a0aec1e1c04a55",
+  "export_sha256": "5f3b86bded498ce437c64b49eac2be9ed34a20229e08aa92e8fa1017b028473e",
+  "acceptance_status": "accepted_for_provisional_production",
+  "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
+  "human_review_status": "pending",
+  "candidate_export_path": "build/assets/candidates/pixel-art-complete/sprites/vfx/impact_star.png",
+  "integrated_export_path": "game/assets/sprites/vfx/impact_star.png"
+}

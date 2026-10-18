@@ -1,0 +1,49 @@
+{
+  "asset_id": "ui_resource_essence",
+  "status": "provisionally_integrated",
+  "skill": "dopamine-pixel-art",
+  "generator": "game/tools/generate_neon_arcade_art.py",
+  "generator_version": "2",
+  "seed": 7301,
+  "seed_policy": "fixed procedural geometry; seed is recorded but not consumed",
+  "brief": "Procedural pixel art using only docs/art/palette_master.gpl",
+  "dimensions": {
+    "width": 32,
+    "height": 32
+  },
+  "palette_rgba": [
+    [
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      14,
+      184,
+      212,
+      255
+    ],
+    [
+      27,
+      35,
+      64,
+      255
+    ],
+    [
+      246,
+      247,
+      255,
+      255
+    ]
+  ],
+  "source_path": "source/ui/resource_essence.aseprite",
+  "export_path": "icons/catalog/resource_essence.png",
+  "source_sha256": "37f40f6a59b6dcf83cd4f72969b0fcc1db008e3967b33b2a205361dc4731dae6",
+  "export_sha256": "1e6ba82b50a2506ba8067ce2feefd02a9e3a21e7593a254060d282dc0cad7c0a",
+  "acceptance_status": "accepted_for_provisional_production",
+  "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
+  "human_review_status": "pending",
+  "candidate_export_path": "build/assets/candidates/pixel-art-complete/icons/catalog/resource_essence.png",
+  "integrated_export_path": "game/assets/icons/catalog/resource_essence.png"
+}

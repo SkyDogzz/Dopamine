@@ -6,6 +6,9 @@ func _initialize() -> void:
 	call_deferred("_run")
 
 func _run() -> void:
+	if AudioServer.get_bus_index("SFX") < 0 or AudioServer.get_bus_index("Music") < 0:
+		_fail("The project should expose separate SFX and Music buses")
+		return
 	var service := Node.new()
 	service.set_script(SERVICE_SCRIPT)
 	root.add_child(service)
@@ -14,6 +17,10 @@ func _run() -> void:
 	if families.size() != 19:
 		_fail("All existing SFX event families should remain mapped")
 		return
+	for player in service._players:
+		if player.bus != "SFX":
+			_fail("Every procedural effect voice should route through the SFX bus")
+			return
 	var stream_count := 0
 	var empty_families := 0
 	for family in families:

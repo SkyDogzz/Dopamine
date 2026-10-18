@@ -1,0 +1,22 @@
+{
+  "asset_id": "chest_closed",
+  "status": "provisionally_integrated",
+  "skill": "dopamine-pixel-art",
+  "generator": "game/tools/generate_original_rewards.py",
+  "generator_version": "2",
+  "seed": 20261018,
+  "seed_policy": "fixed primitive geometry; seed recorded but not consumed",
+  "dimensions": {
+    "width": 32,
+    "height": 32
+  },
+  "source_path": "source/rewards/chest_closed.aseprite",
+  "export_path": "sprites/rewards/chest_closed.png",
+  "source_sha256": "051550713f5247af956d34c9e149ad1db3e07d1a99957674bcf0d46132c10dc8",
+  "export_sha256": "69fd6b614bf11c87cfe19d02bb76ae456228d252c5e6972f2ce907a7de946535",
+  "acceptance_status": "accepted_for_provisional_production",
+  "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
+  "human_review_status": "pending",
+  "candidate_export_path": "build/assets/candidates/rewards/sprites/rewards/chest_closed.png",
+  "integrated_export_path": "game/assets/sprites/rewards/chest_closed.png"
+}

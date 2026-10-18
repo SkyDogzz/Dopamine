@@ -1,0 +1,41 @@
+{
+  "asset_id": "projectile_bloodstorm_animation",
+  "status": "provisionally_integrated",
+  "skill": "dopamine-animation",
+  "generator": "game/tools/generate_dopamine_misc_animation.py",
+  "generator_version": "1",
+  "seed": 20261018,
+  "seed_policy": "fixed geometry and staged source; seed recorded but not consumed",
+  "identity_source": "build/assets/candidates/pixel-art-complete/sprites/projectiles/projectile_bloodstorm.png",
+  "frame_size": [
+    32,
+    32
+  ],
+  "grid": [
+    4,
+    1
+  ],
+  "directions": [
+    "forward"
+  ],
+  "fps_proposed": 12,
+  "frame_duration_seconds_proposed": 0.08333333333333333,
+  "pivot": [
+    16,
+    16
+  ],
+  "parameters": {
+    "effect": "orbit",
+    "category": "projectile_animation",
+    "source_path": "build/assets/candidates/pixel-art-complete/sprites/projectiles/projectile_bloodstorm.png"
+  },
+  "source_path": "source/animation/projectile_bloodstorm_animation.aseprite",
+  "export_path": "sprites/animation/projectile_bloodstorm.png",
+  "source_sha256": "7b05c19cf56c3e2b8a9a4f8716213d7cdc429740428a0292c489da2a71d4a58d",
+  "export_sha256": "f8b78d5c15b97e592deda441d7885d28525d0afcdd2c0005d1222b287a751d95",
+  "acceptance_status": "accepted_for_provisional_production",
+  "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
+  "human_review_status": "pending",
+  "candidate_export_path": "build/assets/candidates/misc-animation/sprites/animation/projectile_bloodstorm_animation.png",
+  "integrated_export_path": "game/assets/sprites/animation/projectile_bloodstorm.png"
+}

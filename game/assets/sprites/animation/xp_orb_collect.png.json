@@ -1,0 +1,41 @@
+{
+  "asset_id": "xp_orb_collect",
+  "status": "provisionally_integrated",
+  "skill": "dopamine-animation",
+  "generator": "game/tools/generate_dopamine_misc_animation.py",
+  "generator_version": "1",
+  "seed": 20261018,
+  "seed_policy": "fixed geometry and staged source; seed recorded but not consumed",
+  "identity_source": "build/assets/candidates/rewards/sprites/rewards/xp_orb.png",
+  "frame_size": [
+    32,
+    32
+  ],
+  "grid": [
+    4,
+    1
+  ],
+  "directions": [
+    "forward"
+  ],
+  "fps_proposed": 12,
+  "frame_duration_seconds_proposed": 0.08333333333333333,
+  "pivot": [
+    16,
+    16
+  ],
+  "parameters": {
+    "effect": "reveal",
+    "category": "pickup_animation",
+    "source_path": "build/assets/candidates/rewards/sprites/rewards/xp_orb.png"
+  },
+  "source_path": "source/animation/xp_orb_collect.aseprite",
+  "export_path": "sprites/animation/xp_orb_collect.png",
+  "source_sha256": "19a71ab99a4ca13cdabfb536dbe50596ebabf984d1caff389608a26ac1d40650",
+  "export_sha256": "dcae44508e0aa3d08eef57d592c1228165509078a8306562269d0cd32cdd8b23",
+  "acceptance_status": "accepted_for_provisional_production",
+  "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
+  "human_review_status": "pending",
+  "candidate_export_path": "build/assets/candidates/misc-animation/sprites/animation/xp_orb_collect.png",
+  "integrated_export_path": "game/assets/sprites/animation/xp_orb_collect.png"
+}

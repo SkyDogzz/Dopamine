@@ -1,0 +1,41 @@
+{
+  "asset_id": "relic_overdrive_engine_acquisition",
+  "status": "provisionally_integrated",
+  "skill": "dopamine-animation",
+  "generator": "game/tools/generate_dopamine_misc_animation.py",
+  "generator_version": "1",
+  "seed": 20261018,
+  "seed_policy": "fixed geometry and staged source; seed recorded but not consumed",
+  "identity_source": "build/assets/candidates/pixel-art-complete/sprites/catalog/relic_overdrive_engine.png",
+  "frame_size": [
+    32,
+    32
+  ],
+  "grid": [
+    4,
+    1
+  ],
+  "directions": [
+    "forward"
+  ],
+  "fps_proposed": 8,
+  "frame_duration_seconds_proposed": 0.125,
+  "pivot": [
+    16,
+    16
+  ],
+  "parameters": {
+    "effect": "reveal",
+    "category": "relic_animation",
+    "source_path": "build/assets/candidates/pixel-art-complete/sprites/catalog/relic_overdrive_engine.png"
+  },
+  "source_path": "source/animation/relic_overdrive_engine_acquisition.aseprite",
+  "export_path": "sprites/animation/relic_overdrive_engine_acquisition.png",
+  "source_sha256": "26cf3f1be18ffd69daad5ec9f8236a1be325b4a9cd479bf63fd192b9fd2a8f27",
+  "export_sha256": "013a0a62a31847f729409f5142f311b1925d9e7ece8c8f223e373a43a51080b4",
+  "acceptance_status": "accepted_for_provisional_production",
+  "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
+  "human_review_status": "pending",
+  "candidate_export_path": "build/assets/candidates/misc-animation/sprites/animation/relic_overdrive_engine_acquisition.png",
+  "integrated_export_path": "game/assets/sprites/animation/relic_overdrive_engine_acquisition.png"
+}

@@ -1,0 +1,32 @@
+{
+  "asset_id": "hit_light_02",
+  "kind": "sfx",
+  "status": "provisionally_integrated",
+  "skill": "dopamine-sfx",
+  "generator": "game/tools/generate_original_audio.py",
+  "generator_version": "2",
+  "source_sha256": "7e870ecbe7a3b2f270c1e329f10831d2a17c37066425aca64ac40594e1dec1b9",
+  "seed": 3226246328,
+  "parameters": {
+    "sample_rate_hz": 44100,
+    "channels": 1,
+    "encoding": "PCM16 WAV",
+    "method": "role-specific oscillator/noise layers with analytic envelopes"
+  },
+  "export": {
+    "file": "hit_light_02.wav",
+    "sha256": "f634d464c29002d9fad75965553d6d3172ad38951b14cbae523948b8263be5fd",
+    "sample_rate_hz": 44100,
+    "channels": 1,
+    "duration_seconds": 0.095011,
+    "peak_dbfs": -2.853,
+    "rms_dbfs": -17.0,
+    "crest_factor_db": 14.147
+  },
+  "acceptance_status": "accepted_for_provisional_production",
+  "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
+  "human_review_status": "pending",
+  "candidate_export_path": "build/assets/candidates/audio-complete/sfx/hit_light_02.wav",
+  "integrated_export_path": "game/assets/audio/original_procedural/sfx/hit_light_02.wav",
+  "export_path": "audio/original_procedural/sfx/hit_light_02.wav"
+}

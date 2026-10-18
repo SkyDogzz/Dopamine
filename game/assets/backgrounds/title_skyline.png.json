@@ -1,0 +1,22 @@
+{
+  "asset_id": "title_skyline",
+  "status": "provisionally_integrated",
+  "skill": "dopamine-pixel-art",
+  "generator": "game/tools/generate_original_title_skyline.py",
+  "generator_version": "2",
+  "seed": 20261018,
+  "parameters": {
+    "width": 640,
+    "height": 360,
+    "palette_source": "docs/art/palette_master.gpl"
+  },
+  "source_path": "source/backgrounds/title_skyline.aseprite",
+  "export_path": "backgrounds/title_skyline.png",
+  "source_sha256": "eac1045cb0ba043fd0ebd09e4f3b9a7db87069b9474b0c39ecd9ba420afb6ff3",
+  "export_sha256": "261177a64c41ba5270729b43c324297efa71ebfbf109c6c1e825f17048c3ac26",
+  "acceptance_status": "accepted_for_provisional_production",
+  "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
+  "human_review_status": "pending",
+  "candidate_export_path": "build/assets/candidates/title-art/backgrounds/title_skyline.png",
+  "integrated_export_path": "game/assets/backgrounds/title_skyline.png"
+}

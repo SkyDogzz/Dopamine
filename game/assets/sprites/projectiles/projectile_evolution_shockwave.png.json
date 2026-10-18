@@ -1,0 +1,49 @@
+{
+  "asset_id": "projectile_evolution_shockwave",
+  "status": "provisionally_integrated",
+  "skill": "dopamine-pixel-art",
+  "generator": "game/tools/generate_neon_arcade_art.py",
+  "generator_version": "2",
+  "seed": 0,
+  "seed_policy": "fixed procedural geometry; seed is recorded but not consumed",
+  "brief": "Procedural pixel art using only docs/art/palette_master.gpl",
+  "dimensions": {
+    "width": 16,
+    "height": 16
+  },
+  "palette_rgba": [
+    [
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      14,
+      184,
+      212,
+      255
+    ],
+    [
+      27,
+      35,
+      64,
+      255
+    ],
+    [
+      246,
+      247,
+      255,
+      255
+    ]
+  ],
+  "source_path": "source/original_procedural/projectile_evolution_shockwave.aseprite",
+  "export_path": "sprites/projectiles/projectile_evolution_shockwave.png",
+  "source_sha256": "5dbcfe99cfa9a5f54ff5c1e9d9e20e74701491f0644d8d4979689075f5a97d29",
+  "export_sha256": "61149250fc66e2b8475450b7e586e3b6bc3487b247535cb15466d304c546169c",
+  "acceptance_status": "accepted_for_provisional_production",
+  "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
+  "human_review_status": "pending",
+  "candidate_export_path": "build/assets/candidates/pixel-art-complete/sprites/projectiles/projectile_evolution_shockwave.png",
+  "integrated_export_path": "game/assets/sprites/projectiles/projectile_evolution_shockwave.png"
+}

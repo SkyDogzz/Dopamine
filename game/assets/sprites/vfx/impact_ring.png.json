@@ -1,0 +1,43 @@
+{
+  "asset_id": "impact_ring",
+  "status": "provisionally_integrated",
+  "skill": "dopamine-pixel-art",
+  "generator": "game/tools/generate_neon_arcade_art.py",
+  "generator_version": "2",
+  "seed": 0,
+  "seed_policy": "fixed procedural geometry; seed is recorded but not consumed",
+  "brief": "Procedural pixel art using only docs/art/palette_master.gpl",
+  "dimensions": {
+    "width": 64,
+    "height": 64
+  },
+  "palette_rgba": [
+    [
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      14,
+      184,
+      212,
+      255
+    ],
+    [
+      246,
+      247,
+      255,
+      255
+    ]
+  ],
+  "source_path": "source/original_procedural/impact_ring.aseprite",
+  "export_path": "sprites/vfx/impact_ring.png",
+  "source_sha256": "5bf87bdf412ca5256656c6e48b9369e75edc2d2ac70d3c83a43e8734e8aa658a",
+  "export_sha256": "0379c546137d8a02907154375c9e973d6c9b8884fdf4985cd2a59e2d4ebd2bd6",
+  "acceptance_status": "accepted_for_provisional_production",
+  "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
+  "human_review_status": "pending",
+  "candidate_export_path": "build/assets/candidates/pixel-art-complete/sprites/vfx/impact_ring.png",
+  "integrated_export_path": "game/assets/sprites/vfx/impact_ring.png"
+}

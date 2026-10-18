@@ -1,0 +1,41 @@
+{
+  "asset_id": "player_death",
+  "status": "provisionally_integrated",
+  "skill": "dopamine-animation",
+  "generator": "game/tools/generate_original_player_sheets.py",
+  "generator_version": "2",
+  "seed": 20261018,
+  "seed_policy": "fixed procedural geometry; seed recorded but not consumed",
+  "brief": "User-approved provisional midnight-blue/cyan armor, cyan visor, magenta/yellow accents",
+  "frame_size": [
+    32,
+    32
+  ],
+  "grid": [
+    4,
+    4
+  ],
+  "directions": [
+    "down",
+    "left",
+    "right",
+    "up"
+  ],
+  "frame_order": "columns are sequential frames per direction row",
+  "frame_duration_seconds_proposed": 0.1,
+  "fps_proposed": 10,
+  "pivot": [
+    16,
+    16
+  ],
+  "source_representation": "editable single-layer Aseprite sprite sheet; one sheet per animation",
+  "source_path": "source/animation/player_death.aseprite",
+  "export_path": "sprites/player_death.png",
+  "source_sha256": "9699b3c3f25ca7fe4b706e7c3859d55d07afe3ce42aabb5601044f12298dc202",
+  "export_sha256": "eccd65f69e146bd83d8cb9d85eadab12555f8f847308e6222bea15175854cf03",
+  "acceptance_status": "accepted_for_provisional_production",
+  "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
+  "human_review_status": "pending",
+  "candidate_export_path": "build/assets/candidates/player-animation/sprites/player/player_death.png",
+  "integrated_export_path": "game/assets/sprites/player_death.png"
+}

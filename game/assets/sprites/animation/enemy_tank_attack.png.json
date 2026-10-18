@@ -1,0 +1,68 @@
+{
+  "identity_source": "enemy_tank_sprite",
+  "frame_size": [
+    24,
+    24
+  ],
+  "grid": [
+    4,
+    4
+  ],
+  "directions": [
+    "down",
+    "left",
+    "right",
+    "up"
+  ],
+  "fps_proposed": 10,
+  "frame_duration_seconds_proposed": 0.1,
+  "pivot": [
+    12,
+    12
+  ],
+  "conventions": "non-canonical sample; four directions and four frames per row are provisional",
+  "asset_id": "enemy_tank_attack",
+  "status": "provisionally_integrated",
+  "skill": "dopamine-animation",
+  "generator": "game/tools/generate_dopamine_enemy_animation.py",
+  "generator_version": "1",
+  "seed": 2509753123,
+  "seed_policy": "fixed role primitives; seed recorded but not consumed",
+  "parameters": {
+    "identity_source": "enemy_tank_sprite",
+    "frame_size": [
+      24,
+      24
+    ],
+    "grid": [
+      4,
+      4
+    ],
+    "directions": [
+      "down",
+      "left",
+      "right",
+      "up"
+    ],
+    "fps_proposed": 10,
+    "frame_duration_seconds_proposed": 0.1,
+    "pivot": [
+      12,
+      12
+    ],
+    "conventions": "non-canonical sample; four directions and four frames per row are provisional"
+  },
+  "dimensions": [
+    96,
+    96
+  ],
+  "source_path": "source/animation/enemy_tank_attack.aseprite",
+  "export_path": "sprites/animation/enemy_tank_attack.png",
+  "source_sha256": "9b71e8ae40409061e7e964380d576c6d03042e2881a6129f1b6efe4d362e3b1e",
+  "export_sha256": "7abfc291436bf2593a627389cc15b6fe258ccfe9c70a52be9eb3a7bebf88cc17",
+  "acceptance_status": "accepted_for_provisional_production",
+  "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
+  "human_review_status": "pending",
+  "candidate_export_path": "build/assets/candidates/enemy-animation-complete/sprites/enemies/enemy_tank_attack.png",
+  "integrated_export_path": "game/assets/sprites/animation/enemy_tank_attack.png"
+}

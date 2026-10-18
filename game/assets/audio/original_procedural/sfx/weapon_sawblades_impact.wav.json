@@ -1,0 +1,32 @@
+{
+  "asset_id": "weapon_sawblades_impact",
+  "kind": "sfx",
+  "status": "provisionally_integrated",
+  "skill": "dopamine-sfx",
+  "generator": "game/tools/generate_original_audio.py",
+  "generator_version": "2",
+  "source_sha256": "7e870ecbe7a3b2f270c1e329f10831d2a17c37066425aca64ac40594e1dec1b9",
+  "seed": 1573936608,
+  "parameters": {
+    "sample_rate_hz": 44100,
+    "channels": 1,
+    "encoding": "PCM16 WAV",
+    "method": "role-specific oscillator/noise layers with analytic envelopes"
+  },
+  "export": {
+    "file": "weapon_sawblades_impact.wav",
+    "sha256": "3b2a33a0adc7999bee39e08f26b64523dd5620e1eea85d3e214150fc6617d156",
+    "sample_rate_hz": 44100,
+    "channels": 1,
+    "duration_seconds": 0.095011,
+    "peak_dbfs": -2.853,
+    "rms_dbfs": -15.882,
+    "crest_factor_db": 13.029
+  },
+  "acceptance_status": "accepted_for_provisional_production",
+  "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
+  "human_review_status": "pending",
+  "candidate_export_path": "build/assets/candidates/audio-complete/sfx/weapon_sawblades_impact.wav",
+  "integrated_export_path": "game/assets/audio/original_procedural/sfx/weapon_sawblades_impact.wav",
+  "export_path": "audio/original_procedural/sfx/weapon_sawblades_impact.wav"
+}

@@ -1,0 +1,68 @@
+{
+  "identity_source": "enemy_exploder_sprite",
+  "frame_size": [
+    24,
+    24
+  ],
+  "grid": [
+    4,
+    4
+  ],
+  "directions": [
+    "down",
+    "left",
+    "right",
+    "up"
+  ],
+  "fps_proposed": 4,
+  "frame_duration_seconds_proposed": 0.25,
+  "pivot": [
+    12,
+    12
+  ],
+  "conventions": "non-canonical sample; four directions and four frames per row are provisional",
+  "asset_id": "enemy_exploder_idle",
+  "status": "provisionally_integrated",
+  "skill": "dopamine-animation",
+  "generator": "game/tools/generate_dopamine_enemy_animation.py",
+  "generator_version": "1",
+  "seed": 2974466733,
+  "seed_policy": "fixed role primitives; seed recorded but not consumed",
+  "parameters": {
+    "identity_source": "enemy_exploder_sprite",
+    "frame_size": [
+      24,
+      24
+    ],
+    "grid": [
+      4,
+      4
+    ],
+    "directions": [
+      "down",
+      "left",
+      "right",
+      "up"
+    ],
+    "fps_proposed": 4,
+    "frame_duration_seconds_proposed": 0.25,
+    "pivot": [
+      12,
+      12
+    ],
+    "conventions": "non-canonical sample; four directions and four frames per row are provisional"
+  },
+  "dimensions": [
+    96,
+    96
+  ],
+  "source_path": "source/animation/enemy_exploder_idle.aseprite",
+  "export_path": "sprites/animation/enemy_exploder_idle.png",
+  "source_sha256": "f952f78169cb5269f4fd913eec2885d93228dd144b87a7d807fb1b7ed9fae2f4",
+  "export_sha256": "7b7ceb97f7ba3f93fbad394e22e5883eb641f10aa0e9c1a1cd6ec9d22d44ef55",
+  "acceptance_status": "accepted_for_provisional_production",
+  "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
+  "human_review_status": "pending",
+  "candidate_export_path": "build/assets/candidates/enemy-animation-complete/sprites/enemies/enemy_exploder_idle.png",
+  "integrated_export_path": "game/assets/sprites/animation/enemy_exploder_idle.png"
+}

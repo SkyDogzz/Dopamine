@@ -1,0 +1,68 @@
+{
+  "identity_source": "enemy_exploder_sprite",
+  "frame_size": [
+    24,
+    24
+  ],
+  "grid": [
+    4,
+    4
+  ],
+  "directions": [
+    "down",
+    "left",
+    "right",
+    "up"
+  ],
+  "fps_proposed": 10,
+  "frame_duration_seconds_proposed": 0.1,
+  "pivot": [
+    12,
+    12
+  ],
+  "conventions": "non-canonical sample; four directions and four frames per row are provisional",
+  "asset_id": "enemy_exploder_attack",
+  "status": "provisionally_integrated",
+  "skill": "dopamine-animation",
+  "generator": "game/tools/generate_dopamine_enemy_animation.py",
+  "generator_version": "1",
+  "seed": 2974466733,
+  "seed_policy": "fixed role primitives; seed recorded but not consumed",
+  "parameters": {
+    "identity_source": "enemy_exploder_sprite",
+    "frame_size": [
+      24,
+      24
+    ],
+    "grid": [
+      4,
+      4
+    ],
+    "directions": [
+      "down",
+      "left",
+      "right",
+      "up"
+    ],
+    "fps_proposed": 10,
+    "frame_duration_seconds_proposed": 0.1,
+    "pivot": [
+      12,
+      12
+    ],
+    "conventions": "non-canonical sample; four directions and four frames per row are provisional"
+  },
+  "dimensions": [
+    96,
+    96
+  ],
+  "source_path": "source/animation/enemy_exploder_attack.aseprite",
+  "export_path": "sprites/animation/enemy_exploder_attack.png",
+  "source_sha256": "6f50fe6f49cd30ee965ee03c5f7b213ffc8cf1b5ec2a2053839502bcca9bb12b",
+  "export_sha256": "f6ac841ff5f9a8106765e6f656494729e03ecbff2793e1e19a68a36c6503d9f0",
+  "acceptance_status": "accepted_for_provisional_production",
+  "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
+  "human_review_status": "pending",
+  "candidate_export_path": "build/assets/candidates/enemy-animation-complete/sprites/enemies/enemy_exploder_attack.png",
+  "integrated_export_path": "game/assets/sprites/animation/enemy_exploder_attack.png"
+}

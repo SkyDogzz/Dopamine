@@ -1,0 +1,23 @@
+{
+  "asset_id": "font_neonarcadepixel",
+  "status": "provisionally_integrated",
+  "skill": "dopamine-pixel-art",
+  "generator": "game/tools/generate_original_fonts.py",
+  "generator_version": "2",
+  "seed": 0,
+  "seed_policy": "font outlines are deterministic and do not consume a random seed",
+  "parameters": {
+    "family": "Neon Arcade Pixel",
+    "glyph_count": 124,
+    "format": "TrueType"
+  },
+  "source_path": "source/fonts/NeonArcadePixel.sfd",
+  "export_path": "fonts/NeonArcadePixel.ttf",
+  "source_sha256": "e9857f6614cfdafce9a5342814ffb4aa00b1f78b11173a13c1c74b3da9efae0e",
+  "export_sha256": "ede20ca893be8b8891751e88d07be73282e0c4200c4059303566343527ceebd0",
+  "acceptance_status": "accepted_for_provisional_production",
+  "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
+  "human_review_status": "pending",
+  "candidate_export_path": "build/assets/candidates/font-art/fonts/NeonArcadePixel.ttf",
+  "integrated_export_path": "game/assets/fonts/NeonArcadePixel.ttf"
+}

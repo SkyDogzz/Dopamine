@@ -1,0 +1,41 @@
+{
+  "asset_id": "projectile_starfall_fragment_animation",
+  "status": "provisionally_integrated",
+  "skill": "dopamine-animation",
+  "generator": "game/tools/generate_dopamine_misc_animation.py",
+  "generator_version": "1",
+  "seed": 20261018,
+  "seed_policy": "fixed geometry and staged source; seed recorded but not consumed",
+  "identity_source": "build/assets/candidates/pixel-art-complete/sprites/projectiles/projectile_starfall_fragment.png",
+  "frame_size": [
+    32,
+    32
+  ],
+  "grid": [
+    4,
+    1
+  ],
+  "directions": [
+    "forward"
+  ],
+  "fps_proposed": 12,
+  "frame_duration_seconds_proposed": 0.08333333333333333,
+  "pivot": [
+    16,
+    16
+  ],
+  "parameters": {
+    "effect": "orbit",
+    "category": "projectile_animation",
+    "source_path": "build/assets/candidates/pixel-art-complete/sprites/projectiles/projectile_starfall_fragment.png"
+  },
+  "source_path": "source/animation/projectile_starfall_fragment_animation.aseprite",
+  "export_path": "sprites/animation/projectile_starfall_fragment.png",
+  "source_sha256": "7f1a10619be5e522521d786834da5302a911b0b31f17b02cc5c27165facecc19",
+  "export_sha256": "f993dbc28b89c3e92c0a3f7d4fc357deceab645894d9f47ed56233767e48f224",
+  "acceptance_status": "accepted_for_provisional_production",
+  "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
+  "human_review_status": "pending",
+  "candidate_export_path": "build/assets/candidates/misc-animation/sprites/animation/projectile_starfall_fragment_animation.png",
+  "integrated_export_path": "game/assets/sprites/animation/projectile_starfall_fragment.png"
+}

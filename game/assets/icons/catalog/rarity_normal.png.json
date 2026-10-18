@@ -1,0 +1,43 @@
+{
+  "asset_id": "ui_rarity_normal",
+  "status": "provisionally_integrated",
+  "skill": "dopamine-pixel-art",
+  "generator": "game/tools/generate_neon_arcade_art.py",
+  "generator_version": "2",
+  "seed": 7301,
+  "seed_policy": "fixed procedural geometry; seed is recorded but not consumed",
+  "brief": "Procedural pixel art using only docs/art/palette_master.gpl",
+  "dimensions": {
+    "width": 32,
+    "height": 32
+  },
+  "palette_rgba": [
+    [
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      27,
+      35,
+      64,
+      255
+    ],
+    [
+      246,
+      247,
+      255,
+      255
+    ]
+  ],
+  "source_path": "source/ui/rarity_normal.aseprite",
+  "export_path": "icons/catalog/rarity_normal.png",
+  "source_sha256": "9169e406560cc00adaac36e51d82da7dde6d7123230b07d317a92741f1fa4a21",
+  "export_sha256": "eba00dd453d7c14cbce09ae16ae66331601babf45024b1359415144f012c56f4",
+  "acceptance_status": "accepted_for_provisional_production",
+  "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
+  "human_review_status": "pending",
+  "candidate_export_path": "build/assets/candidates/pixel-art-complete/icons/catalog/rarity_normal.png",
+  "integrated_export_path": "game/assets/icons/catalog/rarity_normal.png"
+}

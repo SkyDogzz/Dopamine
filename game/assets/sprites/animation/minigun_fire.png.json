@@ -1,0 +1,41 @@
+{
+  "asset_id": "weapon_minigun_fire_vfx",
+  "status": "provisionally_integrated",
+  "skill": "dopamine-animation",
+  "generator": "game/tools/generate_dopamine_misc_animation.py",
+  "generator_version": "1",
+  "seed": 20261018,
+  "seed_policy": "fixed geometry and staged source; seed recorded but not consumed",
+  "identity_source": "build/assets/candidates/pixel-art-complete/sprites/projectiles/projectile_minigun.png",
+  "frame_size": [
+    32,
+    32
+  ],
+  "grid": [
+    4,
+    1
+  ],
+  "directions": [
+    "forward"
+  ],
+  "fps_proposed": 12,
+  "frame_duration_seconds_proposed": 0.08333333333333333,
+  "pivot": [
+    16,
+    16
+  ],
+  "parameters": {
+    "effect": "burst",
+    "category": "weapon_vfx_animation",
+    "source_path": "build/assets/candidates/pixel-art-complete/sprites/projectiles/projectile_minigun.png"
+  },
+  "source_path": "source/animation/weapon_minigun_fire_vfx.aseprite",
+  "export_path": "sprites/animation/minigun_fire.png",
+  "source_sha256": "815b3eaf955e17d161b630de225d43c52a71fb5564b2e326ecae0136b9136793",
+  "export_sha256": "a17b7a2c02b1700ff30e40f50817f289aee94499b1799091152da19cd5bf5925",
+  "acceptance_status": "accepted_for_provisional_production",
+  "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
+  "human_review_status": "pending",
+  "candidate_export_path": "build/assets/candidates/misc-animation/sprites/animation/weapon_minigun_fire_vfx.png",
+  "integrated_export_path": "game/assets/sprites/animation/minigun_fire.png"
+}

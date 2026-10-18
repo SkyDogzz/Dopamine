@@ -1,0 +1,41 @@
+{
+  "asset_id": "weapon_meteor_staff_attack",
+  "status": "provisionally_integrated",
+  "skill": "dopamine-animation",
+  "generator": "game/tools/generate_dopamine_misc_animation.py",
+  "generator_version": "1",
+  "seed": 20261018,
+  "seed_policy": "fixed geometry and staged source; seed recorded but not consumed",
+  "identity_source": "build/assets/candidates/pixel-art-complete/sprites/catalog/weapon_meteor_staff.png",
+  "frame_size": [
+    32,
+    32
+  ],
+  "grid": [
+    4,
+    1
+  ],
+  "directions": [
+    "forward"
+  ],
+  "fps_proposed": 8,
+  "frame_duration_seconds_proposed": 0.125,
+  "pivot": [
+    16,
+    16
+  ],
+  "parameters": {
+    "effect": "weapon",
+    "category": "weapon_animation",
+    "source_path": "build/assets/candidates/pixel-art-complete/sprites/catalog/weapon_meteor_staff.png"
+  },
+  "source_path": "source/animation/weapon_meteor_staff_attack.aseprite",
+  "export_path": "sprites/animation/meteor_staff_attack.png",
+  "source_sha256": "d04ebec0a6eeb87fefc5b7349ed5faba04b0ec8b5383b7980c73e825d7213600",
+  "export_sha256": "df7b639ef1bfd0da47c59d76072dceb7881a68b1964ab7bb6bfbdf00fd9c9327",
+  "acceptance_status": "accepted_for_provisional_production",
+  "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
+  "human_review_status": "pending",
+  "candidate_export_path": "build/assets/candidates/misc-animation/sprites/animation/weapon_meteor_staff_attack.png",
+  "integrated_export_path": "game/assets/sprites/animation/meteor_staff_attack.png"
+}

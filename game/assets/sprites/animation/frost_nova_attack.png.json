@@ -1,0 +1,41 @@
+{
+  "asset_id": "weapon_frost_nova_attack",
+  "status": "provisionally_integrated",
+  "skill": "dopamine-animation",
+  "generator": "game/tools/generate_dopamine_misc_animation.py",
+  "generator_version": "1",
+  "seed": 20261018,
+  "seed_policy": "fixed geometry and staged source; seed recorded but not consumed",
+  "identity_source": "build/assets/candidates/pixel-art-complete/sprites/catalog/weapon_frost_nova.png",
+  "frame_size": [
+    32,
+    32
+  ],
+  "grid": [
+    4,
+    1
+  ],
+  "directions": [
+    "forward"
+  ],
+  "fps_proposed": 8,
+  "frame_duration_seconds_proposed": 0.125,
+  "pivot": [
+    16,
+    16
+  ],
+  "parameters": {
+    "effect": "weapon",
+    "category": "weapon_animation",
+    "source_path": "build/assets/candidates/pixel-art-complete/sprites/catalog/weapon_frost_nova.png"
+  },
+  "source_path": "source/animation/weapon_frost_nova_attack.aseprite",
+  "export_path": "sprites/animation/frost_nova_attack.png",
+  "source_sha256": "6af95b3fa05120c7b86e55c167540a654d34fe4020fe015978dde08dcf07404a",
+  "export_sha256": "65fbed6dcfe28f397f4e4a89862977d4983b920e69acbc79c19e0a11bd4b83ab",
+  "acceptance_status": "accepted_for_provisional_production",
+  "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
+  "human_review_status": "pending",
+  "candidate_export_path": "build/assets/candidates/misc-animation/sprites/animation/weapon_frost_nova_attack.png",
+  "integrated_export_path": "game/assets/sprites/animation/frost_nova_attack.png"
+}

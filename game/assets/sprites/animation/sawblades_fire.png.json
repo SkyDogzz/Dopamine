@@ -1,0 +1,41 @@
+{
+  "asset_id": "weapon_sawblades_fire_vfx",
+  "status": "provisionally_integrated",
+  "skill": "dopamine-animation",
+  "generator": "game/tools/generate_dopamine_misc_animation.py",
+  "generator_version": "1",
+  "seed": 20261018,
+  "seed_policy": "fixed geometry and staged source; seed recorded but not consumed",
+  "identity_source": "build/assets/candidates/pixel-art-complete/sprites/projectiles/projectile_sawblades.png",
+  "frame_size": [
+    32,
+    32
+  ],
+  "grid": [
+    4,
+    1
+  ],
+  "directions": [
+    "forward"
+  ],
+  "fps_proposed": 12,
+  "frame_duration_seconds_proposed": 0.08333333333333333,
+  "pivot": [
+    16,
+    16
+  ],
+  "parameters": {
+    "effect": "burst",
+    "category": "weapon_vfx_animation",
+    "source_path": "build/assets/candidates/pixel-art-complete/sprites/projectiles/projectile_sawblades.png"
+  },
+  "source_path": "source/animation/weapon_sawblades_fire_vfx.aseprite",
+  "export_path": "sprites/animation/sawblades_fire.png",
+  "source_sha256": "e21bc459306e37e13310a7d1f9f85b03a3a46a2fb0a8468f5b9cc135db40ac15",
+  "export_sha256": "461a44d2ecbe6dc83d7e38fe7f86d6e73ab353046c8f42430181aef152bc13db",
+  "acceptance_status": "accepted_for_provisional_production",
+  "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
+  "human_review_status": "pending",
+  "candidate_export_path": "build/assets/candidates/misc-animation/sprites/animation/weapon_sawblades_fire_vfx.png",
+  "integrated_export_path": "game/assets/sprites/animation/sawblades_fire.png"
+}

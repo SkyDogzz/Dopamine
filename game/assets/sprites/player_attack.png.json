@@ -1,0 +1,41 @@
+{
+  "asset_id": "player_attack",
+  "status": "provisionally_integrated",
+  "skill": "dopamine-animation",
+  "generator": "game/tools/generate_original_player_sheets.py",
+  "generator_version": "2",
+  "seed": 20261018,
+  "seed_policy": "fixed procedural geometry; seed recorded but not consumed",
+  "brief": "User-approved provisional midnight-blue/cyan armor, cyan visor, magenta/yellow accents",
+  "frame_size": [
+    32,
+    32
+  ],
+  "grid": [
+    4,
+    4
+  ],
+  "directions": [
+    "down",
+    "left",
+    "right",
+    "up"
+  ],
+  "frame_order": "columns are sequential frames per direction row",
+  "frame_duration_seconds_proposed": 0.1,
+  "fps_proposed": 10,
+  "pivot": [
+    16,
+    16
+  ],
+  "source_representation": "editable single-layer Aseprite sprite sheet; one sheet per animation",
+  "source_path": "source/animation/player_attack.aseprite",
+  "export_path": "sprites/player_attack.png",
+  "source_sha256": "8b2fe52700ea34e1a0faacafb450da3e3b90a3756ca867c0f733cb3ed6233019",
+  "export_sha256": "e7afaaea9bebcd6d8e1a197322b0bfb83e7e2af8aef6bc798333b423ff86117e",
+  "acceptance_status": "accepted_for_provisional_production",
+  "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
+  "human_review_status": "pending",
+  "candidate_export_path": "build/assets/candidates/player-animation/sprites/player/player_attack.png",
+  "integrated_export_path": "game/assets/sprites/player_attack.png"
+}

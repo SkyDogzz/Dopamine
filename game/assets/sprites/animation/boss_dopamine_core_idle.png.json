@@ -1,0 +1,41 @@
+{
+  "asset_id": "boss_dopamine_core_idle",
+  "status": "provisionally_integrated",
+  "skill": "dopamine-animation",
+  "generator": "game/tools/generate_dopamine_misc_animation.py",
+  "generator_version": "1",
+  "seed": 20261018,
+  "seed_policy": "fixed geometry and staged source; seed recorded but not consumed",
+  "identity_source": "build/assets/candidates/pixel-art-complete/sprites/roster/boss_dopamine_core.png",
+  "frame_size": [
+    32,
+    32
+  ],
+  "grid": [
+    4,
+    1
+  ],
+  "directions": [
+    "forward"
+  ],
+  "fps_proposed": 8,
+  "frame_duration_seconds_proposed": 0.125,
+  "pivot": [
+    16,
+    16
+  ],
+  "parameters": {
+    "effect": "pulse",
+    "category": "boss_animation",
+    "source_path": "build/assets/candidates/pixel-art-complete/sprites/roster/boss_dopamine_core.png"
+  },
+  "source_path": "source/animation/boss_dopamine_core_idle.aseprite",
+  "export_path": "sprites/animation/boss_dopamine_core_idle.png",
+  "source_sha256": "4a072b3d5d284b7316b4eb4b13630f3934f2c380278794e086d8ef4148ca84b4",
+  "export_sha256": "0a6a15283b3bac71224c5afbdaee978cd36964de693321f3d74c897047441557",
+  "acceptance_status": "accepted_for_provisional_production",
+  "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
+  "human_review_status": "pending",
+  "candidate_export_path": "build/assets/candidates/misc-animation/sprites/animation/boss_dopamine_core_idle.png",
+  "integrated_export_path": "game/assets/sprites/animation/boss_dopamine_core_idle.png"
+}

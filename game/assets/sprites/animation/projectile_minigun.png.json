@@ -1,0 +1,41 @@
+{
+  "asset_id": "projectile_minigun_animation",
+  "status": "provisionally_integrated",
+  "skill": "dopamine-animation",
+  "generator": "game/tools/generate_dopamine_misc_animation.py",
+  "generator_version": "1",
+  "seed": 20261018,
+  "seed_policy": "fixed geometry and staged source; seed recorded but not consumed",
+  "identity_source": "build/assets/candidates/pixel-art-complete/sprites/projectiles/projectile_minigun.png",
+  "frame_size": [
+    32,
+    32
+  ],
+  "grid": [
+    4,
+    1
+  ],
+  "directions": [
+    "forward"
+  ],
+  "fps_proposed": 12,
+  "frame_duration_seconds_proposed": 0.08333333333333333,
+  "pivot": [
+    16,
+    16
+  ],
+  "parameters": {
+    "effect": "orbit",
+    "category": "projectile_animation",
+    "source_path": "build/assets/candidates/pixel-art-complete/sprites/projectiles/projectile_minigun.png"
+  },
+  "source_path": "source/animation/projectile_minigun_animation.aseprite",
+  "export_path": "sprites/animation/projectile_minigun.png",
+  "source_sha256": "782d7a6180d6932f22176abd2b17ebbfd5987bfcb68487bbd67068572aac35c4",
+  "export_sha256": "3dd3edac490b38c5445ba0f273eeaa35180b42f4ee87fddd529a8560f8448ed7",
+  "acceptance_status": "accepted_for_provisional_production",
+  "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
+  "human_review_status": "pending",
+  "candidate_export_path": "build/assets/candidates/misc-animation/sprites/animation/projectile_minigun_animation.png",
+  "integrated_export_path": "game/assets/sprites/animation/projectile_minigun.png"
+}

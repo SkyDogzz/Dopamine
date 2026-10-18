@@ -16,7 +16,7 @@ Fournir une production d’assets visuels et audio entièrement locale, gratuite
 
 Les skills orchestrent les générateurs locaux existants sous `game/tools/`; ils n’embarquent pas un service de génération externe. Python standard est le socle reproductible. Godot 4.7.2 vérifie les imports runtime. LibreSprite/FFmpeg sont des utilitaires facultatifs. Pillow/NumPy/SciPy ne sont pas nécessaires au chemin par défaut.
 
-Chaque asset possède un identifiant stable, une source modifiable ou recette, un export candidat, une seed, des paramètres, une version de générateur, les hashes source/export, un rapport QA et l’état (`candidate`, `accepted`, `retired`). Les candidats sont produits en staging; seuls les assets acceptés sont copiés dans les chemins runtime. Une commande de régénération nomme les IDs cibles et ne réécrit aucun autre asset.
+Chaque asset possède un identifiant stable, une source modifiable ou recette, un export, une seed, des paramètres, une version de générateur, les hashes source/export, un rapport QA et des états distincts : `generation_status`, `validation_status`, `acceptance_status`, `human_review_status` et `integration_status`. Les exports passent en staging puis sont copiés vers les destinations exactes du manifeste seulement avec une acceptation explicite. Une commande de régénération nomme les IDs cibles, vérifie les hashes sources/exports et refuse les collisions ou écrasements non gérés.
 
 ## Purge et redémarrage complet demandés
 
@@ -32,28 +32,30 @@ Avant la purge, on retire les `preload` obligatoires, les ressources de scènes/
 
 La purge complète a été exécutée et vérifiée dans le commit `fd1e4e6`; `game/assets/` ne contient que deux notices. L’import headless et le smoke `res://tests/empty_asset_root_smoke.gd` passent.
 
-## Audit et backlog courant
+## Audit et bibliothèque intégrée
 
-**[ÉTAT AU 2026-10-18 — candidats générés, revue requise]** `docs/art/ASSET_MANIFEST.json` contient 308 IDs uniques issus du GDD, de l’Art Bible et des ressources runtime; 141 entrées couvrent animations et VFX. Tous les 63 chemins littéraux trouvés dans les scripts, scènes, thèmes et données figurent au manifeste. `game/tools/build_asset_manifest.py` reconstruit le backlog et `game/tools/validate_asset_manifest.py` vérifie les IDs, champs, statuts et skills affectés. Les 308 entrées ont été générées en staging et leurs contrôles techniques passent : 92 visuels, 141 animations, 65 SFX et 10 fichiers musique/stems. Le rapport détaillé est `docs/art/ASSET_GENERATION_REPORT.json`; la page de revue locale (`build/assets/candidates/review/index.html`) contient les contact sheets, aperçus et lecteurs audio. Aucun candidat n’a été copié dans `game/assets`: intégration différée jusqu’à revue artistique/écoute, et le runtime garde sa sémantique « chemin absent = asset non recréé ».
+**[ÉTAT AU 2026-10-18 — intégration provisoire]** `docs/art/ASSET_MANIFEST.json` contient 308 IDs uniques : 92 assets pixel art, 141 entrées animation/VFX, 65 SFX et 10 musiques/stems. Les cinq skills locaux ont servi à générer les assets; les validations pixel art, animation et audio ont passé leurs rapports QA. Les sources, exports, sidecars et ressources `SpriteFrames` sont intégrés dans `game/assets/`.
 
-Les cinq skills ont été lus intégralement. Les interfaces locales SFX, musique, art statique et QA disposent désormais d’une sortie staging, d’une sélection ciblée et/ou de rapports par asset. LibreSprite 1.3 ouvre le document Aseprite produit; Python 3.13, FFmpeg 7.1.5, FFplay, Audacity (`/usr/bin/audacity`) et Godot 4.7.2 sont disponibles. Aucun GPU NVIDIA n’est détecté; le travail visuel/audio fonctionne sur CPU. Le conteneur n’a pas de `DISPLAY`; la lecture audio réelle n’a pas encore été vérifiée. Les tests numériques ne remplacent pas l’écoute.
+Le propriétaire a autorisé une portée de prototypes provisoires non canoniques pour l’armure du héros, les ennemis/boss par rôle et l’arène nuit violet/bleu. Les lignes joueur bas/gauche/droite/haut, idle 3 fps et marche 8 fps ont été retenues. L’acceptation technique et l’intégration sont donc séparées de `human_review_status=pending`, qui reste en attente de revue perceptuelle et d’écoute. Les fonts, composition/mix musical et certains détails de biome/boss/éléments sont toujours explicitement provisoires.
 
-**[OUVERT — préproduction visuelle]** La tenue exacte du héros, l’ordre des directions et les timings joueur, les animations d’attaque/mort, l’identité du premier biome, les détails canoniques des boss et le mapping couleur-élément sont laissés ouverts par les références. Le propriétaire a autorisé des choix provisoires: joueur armure bleu nuit/cyan, accents magenta/jaune, lignes bas/gauche/droite/haut, idle 3 fps, marche 8 fps; les animations joueur d’attaque/mort demeurent des propositions. Monde nuit violet/bleu, boss par rôle et couleurs d’éléments sont non canoniques. Pour les animations non-joueur, ordre bas/gauche/droite/haut, pivot centre, idle 4 fps, déplacement 8 fps, attaque/special/mort 10 fps et VFX 12 fps sont documentés comme conventions provisoires.
+La galerie locale `build/assets/candidates/review/index.html` contient planches contact, feuilles d’animation, aperçus et lecteurs WAV. L’environnement courant n’expose pas de périphérique de lecture audio (`/dev/snd` ne contient pas de sortie), donc l’écoute en contexte demeure requise. Python standard, Godot 4.7.2, FFmpeg/FFplay et Audacity sont disponibles; aucun service cloud ni API payante n’est utilisé.
+
+L’import Godot complet et CTest passent (**118/118**). L’export PCK `Linux/X11` a été généré avec succès; le preset inclut les VFX, l’audio et les fonts, mais exclut les sources éditables. Les registres `ASSET_FILE_REGISTER_CURRENT.csv` et `PROVENANCE_ASSETS.csv` ont été rafraîchis; leur vérificateur passe pour 308 assets créatifs actuels et 417 entrées historiques migrées/retirées.
 
 ## État des décisions
 
 - **[VALIDÉ]** Art Bible : pixel art strict, palette maître de 32 couleurs, maximum 16 couleurs par sprite 32x32, joueur 32x32, tiles 16x16, glow uniquement dans les VFX, priorité à la lisibilité.
 - **[VALIDÉ]** GDD : feedback audio avec SFX et musique EDM/synthwave adaptative.
-- **[PROPOSÉ]** Métadonnées JSON par asset, staging candidats, et statuts candidate/accepted/retired.
+- **[VALIDÉ — implémenté]** Métadonnées JSON par asset, staging ciblé, QA, acceptation provisoire distincte de revue humaine, intégration Godot ID-scopée et registre source/hash.
 - **[PROPOSÉ]** Ordre bas/gauche/droite/haut et pivot central pour les prototypes non-joueur; idle 4 fps, déplacement 8 fps, attaque/spécial/mort 10 fps, VFX 12 fps. Ces choix ne sont pas canoniques.
-- **[OUVERT]** Revue artistique/audio et seuils d’acceptation perceptuelle; audio non écouté en contexte dans l’environnement sans DISPLAY.
-- **[OUVERT]** Les choix audio précis (gains, composition, format final) ne deviennent pas validés par l’existence des anciens candidats.
+- **[OUVERT]** Revue artistique/audio et seuils d’acceptation perceptuelle; les captures locales montrent les prototypes, mais l’audio n’a pas pu être écouté dans la session faute de sortie matérielle.
+- **[OUVERT]** Les choix audio précis (gains, composition, format final) restent proposés malgré l’intégration et les validations numériques.
 
 ## Plan d’installation
 
 1. Conserver les cinq skills versionnés dans `.agents/skills/`; dépendances détectées: Python standard, Godot 4.7.2, FontForge, FFmpeg/FFplay, LibreSprite 1.3 et Audacity; pas de dépendance globale Python à installer.
 2. Génération ciblée staging: `generate_neon_arcade_art.py`, `generate_original_audio.py`, `generate_original_player_sheets.py`, `generate_dopamine_enemy_animation.py`, `generate_dopamine_misc_animation.py`, `generate_original_roster.py`, `generate_original_rewards.py`, `generate_original_title_skyline.py`, `generate_original_fonts.py`. Les primitives déterministes enregistrent la seed sans la consommer.
-3. `integrate_asset_candidates.py` fournit un dry-run par IDs, copie seulement des IDs explicitement acceptés dans le manifeste et bloque toute collision de destination ou écrasement de hash; il préserve sources, sidecars JSON et ressources `SpriteFrames`.
+3. `integrate_asset_candidates.py` fournit un dry-run par IDs, vérifie hashes source/export, copie seulement les IDs explicitement acceptés dans le manifeste et bloque toute collision ou écrasement non géré; il préserve sources, sidecars JSON et ressources `SpriteFrames`.
 4. Contrôles installés: `validate_dopamine_pixel_candidates.py`, `validate_dopamine_animation_candidates.py`, `validate_dopamine_audio_candidates.py`; utiliser après chaque lot.
-5. L’import Godot jetable des 376 exports et le chargement de 131 ressources `SpriteFrames` générées ont réussi. L’intégrateur ID-scopé passe en dry-run sur les 308 destinations, préserve les hashes préexistants et bloque toute écriture sans acceptation par ID. L’intégration runtime/références reste à faire après revue.
-6. Exécuter la purge demandée seulement après que le projet fonctionne avec les sorties de remplacement et que le diff de purge a été examiné.
+5. L’import Godot réel couvre les 308 exports; 131 ressources `SpriteFrames` sont chargées, et CTest passe 118/118 avec les assets présents.
+6. L’export PCK Linux/X11 a été créé; le registre de provenance et le rapport complet sont rafraîchis après chaque intégration.

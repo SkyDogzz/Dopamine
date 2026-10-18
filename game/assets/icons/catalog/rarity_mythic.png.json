@@ -1,0 +1,49 @@
+{
+  "asset_id": "ui_rarity_mythic",
+  "status": "provisionally_integrated",
+  "skill": "dopamine-pixel-art",
+  "generator": "game/tools/generate_neon_arcade_art.py",
+  "generator_version": "2",
+  "seed": 7301,
+  "seed_policy": "fixed procedural geometry; seed is recorded but not consumed",
+  "brief": "Procedural pixel art using only docs/art/palette_master.gpl",
+  "dimensions": {
+    "width": 32,
+    "height": 32
+  },
+  "palette_rgba": [
+    [
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      27,
+      35,
+      64,
+      255
+    ],
+    [
+      200,
+      59,
+      98,
+      255
+    ],
+    [
+      246,
+      247,
+      255,
+      255
+    ]
+  ],
+  "source_path": "source/ui/rarity_mythic.aseprite",
+  "export_path": "icons/catalog/rarity_mythic.png",
+  "source_sha256": "04aa03f22b458673dd673711c10abd0fbfc14c1a4918b42c3dbb1894c14ed6db",
+  "export_sha256": "9127371a71945a9fbe4edff7f8636b39dc605e907090fa4ac02f81e1c21b5442",
+  "acceptance_status": "accepted_for_provisional_production",
+  "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
+  "human_review_status": "pending",
+  "candidate_export_path": "build/assets/candidates/pixel-art-complete/icons/catalog/rarity_mythic.png",
+  "integrated_export_path": "game/assets/icons/catalog/rarity_mythic.png"
+}

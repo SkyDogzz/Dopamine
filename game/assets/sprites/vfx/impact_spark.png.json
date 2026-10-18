@@ -1,0 +1,43 @@
+{
+  "asset_id": "impact_spark",
+  "status": "provisionally_integrated",
+  "skill": "dopamine-pixel-art",
+  "generator": "game/tools/generate_neon_arcade_art.py",
+  "generator_version": "2",
+  "seed": 0,
+  "seed_policy": "fixed procedural geometry; seed is recorded but not consumed",
+  "brief": "Procedural pixel art using only docs/art/palette_master.gpl",
+  "dimensions": {
+    "width": 64,
+    "height": 64
+  },
+  "palette_rgba": [
+    [
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      14,
+      184,
+      212,
+      255
+    ],
+    [
+      246,
+      247,
+      255,
+      255
+    ]
+  ],
+  "source_path": "source/original_procedural/impact_spark.aseprite",
+  "export_path": "sprites/vfx/impact_spark.png",
+  "source_sha256": "ce1a0a93faf31c4b6b066cdfc226adabf1e297e153d24c7f77830f00f44bfa1c",
+  "export_sha256": "8819caa2cc6ae5da7aab1ba094f97fa19549d43b8c3c8805270593d8f32cc8e0",
+  "acceptance_status": "accepted_for_provisional_production",
+  "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
+  "human_review_status": "pending",
+  "candidate_export_path": "build/assets/candidates/pixel-art-complete/sprites/vfx/impact_spark.png",
+  "integrated_export_path": "game/assets/sprites/vfx/impact_spark.png"
+}

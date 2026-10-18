@@ -1,0 +1,49 @@
+{
+  "asset_id": "ui_equipment_gloves",
+  "status": "provisionally_integrated",
+  "skill": "dopamine-pixel-art",
+  "generator": "game/tools/generate_neon_arcade_art.py",
+  "generator_version": "2",
+  "seed": 7301,
+  "seed_policy": "fixed procedural geometry; seed is recorded but not consumed",
+  "brief": "Procedural pixel art using only docs/art/palette_master.gpl",
+  "dimensions": {
+    "width": 32,
+    "height": 32
+  },
+  "palette_rgba": [
+    [
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      14,
+      184,
+      212,
+      255
+    ],
+    [
+      27,
+      35,
+      64,
+      255
+    ],
+    [
+      246,
+      247,
+      255,
+      255
+    ]
+  ],
+  "source_path": "source/ui/equipment_gloves.aseprite",
+  "export_path": "icons/catalog/equipment_gloves.png",
+  "source_sha256": "b432476c649dd206fc1dd4a468d2d4e4f6a304eb2055c804ca6deacc094cddee",
+  "export_sha256": "2cb258f25b49b84f7a141689ffa1d6e9ff72db06aa4cdc02e0ea9228eae520a1",
+  "acceptance_status": "accepted_for_provisional_production",
+  "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
+  "human_review_status": "pending",
+  "candidate_export_path": "build/assets/candidates/pixel-art-complete/icons/catalog/equipment_gloves.png",
+  "integrated_export_path": "game/assets/icons/catalog/equipment_gloves.png"
+}

@@ -1,0 +1,22 @@
+{
+  "asset_id": "xp_orb",
+  "status": "provisionally_integrated",
+  "skill": "dopamine-pixel-art",
+  "generator": "game/tools/generate_original_rewards.py",
+  "generator_version": "2",
+  "seed": 20261018,
+  "seed_policy": "fixed primitive geometry; seed recorded but not consumed",
+  "dimensions": {
+    "width": 16,
+    "height": 16
+  },
+  "source_path": "source/rewards/xp_orb.aseprite",
+  "export_path": "sprites/rewards/xp_orb.png",
+  "source_sha256": "e562af32319196c2cf15ea4e2d7b1c8ae168fb6cbec148d507ff522352e112e3",
+  "export_sha256": "7ed545243312e1888a3d0d521131309365e868383a09edf4e6e77f5be9a95bcd",
+  "acceptance_status": "accepted_for_provisional_production",
+  "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
+  "human_review_status": "pending",
+  "candidate_export_path": "build/assets/candidates/rewards/sprites/rewards/xp_orb.png",
+  "integrated_export_path": "game/assets/sprites/rewards/xp_orb.png"
+}

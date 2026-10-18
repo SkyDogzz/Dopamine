@@ -67,8 +67,8 @@ def main() -> None:
     for item in selected:
         if item["validation_status"] != "passed":
             errors.append(f"{item['asset_id']}: validation_status is not passed")
-        if not args.dry_run and item.get("human_review_status") != "accepted":
-            errors.append(f"{item['asset_id']}: requires human_review_status=accepted in the manifest")
+        if not args.dry_run and item.get("acceptance_status") not in ("accepted", "accepted_for_provisional_production"):
+            errors.append(f"{item['asset_id']}: requires explicit acceptance_status in the manifest")
         src = ROOT / item.get("candidate_export_path", "")
         if not src.is_file():
             errors.append(f"{item['asset_id']}: candidate export missing: {src}")
@@ -89,11 +89,22 @@ def main() -> None:
         source = ROOT / item["candidate_source_path"] if item.get("candidate_source_path") else None
         if source is not None and not source.is_file():
             errors.append(f"{item['asset_id']}: authoring source missing: {source}")
+        if source is not None and item.get("source_sha256") and sha256(source) != item["source_sha256"]:
+            errors.append(f"{item['asset_id']}: authoring source hash differs from QA record")
         meta_path = src.with_suffix(".json")
         metadata = json.loads(meta_path.read_text()) if meta_path.exists() else {}
         sidecar_target = target.with_suffix(target.suffix + ".json")
         if sidecar_target.exists() and meta_path.exists() and sha256(sidecar_target) != sha256(meta_path):
-            errors.append(f"{item['asset_id']}: sidecar exists with different bytes; refusing overwrite: {sidecar_target}")
+            try:
+                existing_sidecar = json.loads(sidecar_target.read_text())
+            except (OSError, json.JSONDecodeError):
+                existing_sidecar = {}
+            managed_sidecar = (
+                existing_sidecar.get("candidate_export_path") == str(src.relative_to(ROOT))
+                and existing_sidecar.get("integrated_export_path") == str(target.relative_to(ROOT))
+            )
+            if not managed_sidecar:
+                errors.append(f"{item['asset_id']}: sidecar exists with different bytes and is not managed for this candidate; refusing overwrite: {sidecar_target}")
         source_target = source_destination(source, item["asset_id"])
         if source_target and source_target in source_destinations:
             errors.append(f"{item['asset_id']}: authoring source destination collision at {source_target}")
@@ -122,6 +133,10 @@ def main() -> None:
         sidecar = target.with_suffix(target.suffix + ".json")
         if metadata_path.is_file():
             accepted_metadata = metadata.copy()
+            accepted_metadata["status"] = "provisionally_integrated"
+            accepted_metadata["acceptance_status"] = item.get("acceptance_status")
+            accepted_metadata["acceptance_basis"] = item.get("acceptance_basis", "")
+            accepted_metadata["human_review_status"] = item.get("human_review_status", "pending")
             accepted_metadata["candidate_export_path"] = str(src.relative_to(ROOT))
             accepted_metadata["integrated_export_path"] = str(target.relative_to(ROOT))
             accepted_metadata["export_path"] = str(target.relative_to(ROOT / "game/assets"))

@@ -1,0 +1,41 @@
+{
+  "asset_id": "player_walk",
+  "status": "provisionally_integrated",
+  "skill": "dopamine-animation",
+  "generator": "game/tools/generate_original_player_sheets.py",
+  "generator_version": "2",
+  "seed": 1024,
+  "seed_policy": "fixed procedural geometry; seed recorded but not consumed",
+  "brief": "User-approved provisional midnight-blue/cyan armor, cyan visor, magenta/yellow accents",
+  "frame_size": [
+    32,
+    32
+  ],
+  "grid": [
+    4,
+    4
+  ],
+  "directions": [
+    "down",
+    "left",
+    "right",
+    "up"
+  ],
+  "frame_order": "columns are sequential frames per direction row",
+  "frame_duration_seconds_proposed": 0.125,
+  "fps_proposed": 8,
+  "pivot": [
+    16,
+    16
+  ],
+  "source_representation": "editable single-layer Aseprite sprite sheet; one sheet per animation",
+  "source_path": "source/pilot/player_walk.aseprite",
+  "export_path": "sprites/player_walk.png",
+  "source_sha256": "5192b5076fe9a2589620a19a57ed9ad5de9d17552853fba496fa9941618e13f2",
+  "export_sha256": "71c88373800651feb48d7a52ae66fd26670d97d9574d12faaec8628d99eacef3",
+  "acceptance_status": "accepted_for_provisional_production",
+  "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
+  "human_review_status": "pending",
+  "candidate_export_path": "build/assets/candidates/player-animation/sprites/player/player_walk.png",
+  "integrated_export_path": "game/assets/sprites/player_walk.png"
+}

@@ -1,0 +1,22 @@
+{
+  "asset_id": "enemy_sprinter_sprite",
+  "status": "provisionally_integrated",
+  "skill": "dopamine-pixel-art",
+  "generator": "game/tools/generate_original_roster.py",
+  "generator_version": "2",
+  "seed": 7302,
+  "seed_policy": "role primitives are deterministic; seed recorded but not consumed",
+  "dimensions": {
+    "width": 24,
+    "height": 24
+  },
+  "source_path": "source/roster/enemy_sprinter.aseprite",
+  "export_path": "sprites/roster/enemy_sprinter.png",
+  "source_sha256": "4b42f851e38af38b9d0bad13a1f7bc3fde92024b59317636fefea62b0e076a02",
+  "export_sha256": "46926f320e6cdbad9f551c3dcd81f0c5bb41f5112fd8763ed0550907f68f2acc",
+  "acceptance_status": "accepted_for_provisional_production",
+  "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
+  "human_review_status": "pending",
+  "candidate_export_path": "build/assets/candidates/roster-repair/sprites/roster/enemy_sprinter.png",
+  "integrated_export_path": "game/assets/sprites/roster/enemy_sprinter.png"
+}

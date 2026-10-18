@@ -1,0 +1,22 @@
+{
+  "asset_id": "enemy_chaser_sprite",
+  "status": "provisionally_integrated",
+  "skill": "dopamine-pixel-art",
+  "generator": "game/tools/generate_original_roster.py",
+  "generator_version": "2",
+  "seed": 7302,
+  "seed_policy": "role primitives are deterministic; seed recorded but not consumed",
+  "dimensions": {
+    "width": 24,
+    "height": 24
+  },
+  "source_path": "source/roster/enemy_chaser.aseprite",
+  "export_path": "sprites/roster/enemy_chaser.png",
+  "source_sha256": "6803f246a91acecc62693fab30bcba36ac3c375d326c1ec2134cb42b2ad2fdc3",
+  "export_sha256": "e68e9b87745af7827375bac3fb6c20edc729c6a52999d9427ec487a8ee97410a",
+  "acceptance_status": "accepted_for_provisional_production",
+  "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
+  "human_review_status": "pending",
+  "candidate_export_path": "build/assets/candidates/roster-repair/sprites/roster/enemy_chaser.png",
+  "integrated_export_path": "game/assets/sprites/roster/enemy_chaser.png"
+}

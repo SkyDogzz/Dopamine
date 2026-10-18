@@ -1,0 +1,41 @@
+{
+  "asset_id": "projectile_pandemic_animation",
+  "status": "provisionally_integrated",
+  "skill": "dopamine-animation",
+  "generator": "game/tools/generate_dopamine_misc_animation.py",
+  "generator_version": "1",
+  "seed": 20261018,
+  "seed_policy": "fixed geometry and staged source; seed recorded but not consumed",
+  "identity_source": "build/assets/candidates/pixel-art-complete/sprites/projectiles/projectile_pandemic.png",
+  "frame_size": [
+    32,
+    32
+  ],
+  "grid": [
+    4,
+    1
+  ],
+  "directions": [
+    "forward"
+  ],
+  "fps_proposed": 12,
+  "frame_duration_seconds_proposed": 0.08333333333333333,
+  "pivot": [
+    16,
+    16
+  ],
+  "parameters": {
+    "effect": "orbit",
+    "category": "projectile_animation",
+    "source_path": "build/assets/candidates/pixel-art-complete/sprites/projectiles/projectile_pandemic.png"
+  },
+  "source_path": "source/animation/projectile_pandemic_animation.aseprite",
+  "export_path": "sprites/animation/projectile_pandemic.png",
+  "source_sha256": "ff96490695e5acf668297381d57cbb95bb578c2a68eae017757ae1b5c92dd096",
+  "export_sha256": "e1273cb250628563246520a7ced6cd7511e7d6b6f0ea21af580378b38e5d5d54",
+  "acceptance_status": "accepted_for_provisional_production",
+  "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
+  "human_review_status": "pending",
+  "candidate_export_path": "build/assets/candidates/misc-animation/sprites/animation/projectile_pandemic_animation.png",
+  "integrated_export_path": "game/assets/sprites/animation/projectile_pandemic.png"
+}

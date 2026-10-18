@@ -1,0 +1,41 @@
+{
+  "asset_id": "relic_magnet_heart_acquisition",
+  "status": "provisionally_integrated",
+  "skill": "dopamine-animation",
+  "generator": "game/tools/generate_dopamine_misc_animation.py",
+  "generator_version": "1",
+  "seed": 20261018,
+  "seed_policy": "fixed geometry and staged source; seed recorded but not consumed",
+  "identity_source": "build/assets/candidates/pixel-art-complete/sprites/catalog/relic_magnet_heart.png",
+  "frame_size": [
+    32,
+    32
+  ],
+  "grid": [
+    4,
+    1
+  ],
+  "directions": [
+    "forward"
+  ],
+  "fps_proposed": 8,
+  "frame_duration_seconds_proposed": 0.125,
+  "pivot": [
+    16,
+    16
+  ],
+  "parameters": {
+    "effect": "reveal",
+    "category": "relic_animation",
+    "source_path": "build/assets/candidates/pixel-art-complete/sprites/catalog/relic_magnet_heart.png"
+  },
+  "source_path": "source/animation/relic_magnet_heart_acquisition.aseprite",
+  "export_path": "sprites/animation/relic_magnet_heart_acquisition.png",
+  "source_sha256": "9e5ef41bac945525608c6c28cd6393ec029f5bb76141acb0bab933cb7e716b36",
+  "export_sha256": "282d4c69a3749b6ec93dd56d7b7575dc17095cd4359fe26094143f10b448bb53",
+  "acceptance_status": "accepted_for_provisional_production",
+  "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
+  "human_review_status": "pending",
+  "candidate_export_path": "build/assets/candidates/misc-animation/sprites/animation/relic_magnet_heart_acquisition.png",
+  "integrated_export_path": "game/assets/sprites/animation/relic_magnet_heart_acquisition.png"
+}

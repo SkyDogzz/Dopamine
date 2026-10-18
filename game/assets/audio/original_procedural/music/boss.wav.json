@@ -1,0 +1,38 @@
+{
+  "asset_id": "gameplay_loop_boss",
+  "kind": "music",
+  "status": "provisionally_integrated",
+  "skill": "dopamine-music",
+  "generator": "game/tools/generate_original_audio.py",
+  "generator_version": "2",
+  "source_sha256": "7e870ecbe7a3b2f270c1e329f10831d2a17c37066425aca64ac40594e1dec1b9",
+  "seed": 90210,
+  "parameters": {
+    "sample_rate_hz": 44100,
+    "channels": 1,
+    "encoding": "PCM16 WAV",
+    "method": "synchronized synthesized stem with 12 ms edge fade"
+  },
+  "export": {
+    "file": "boss.wav",
+    "sha256": "a28a4c4fcbdecccef7c2afcbf8d12984a9745262a1d6a40769e5b6a72c28ebdf",
+    "sample_rate_hz": 44100,
+    "channels": 1,
+    "duration_seconds": 8.347823,
+    "peak_dbfs": -15.016,
+    "rms_dbfs": -31.617,
+    "crest_factor_db": 16.601
+  },
+  "tempo_bpm": 115,
+  "meter": "4/4",
+  "bars": 4,
+  "loop_start_sample": 0,
+  "loop_end_sample": 368139,
+  "mix_gain_linear_proposed": 0.2,
+  "acceptance_status": "accepted_for_provisional_production",
+  "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
+  "human_review_status": "pending",
+  "candidate_export_path": "build/assets/candidates/audio-complete/music/boss.wav",
+  "integrated_export_path": "game/assets/audio/original_procedural/music/boss.wav",
+  "export_path": "audio/original_procedural/music/boss.wav"
+}
