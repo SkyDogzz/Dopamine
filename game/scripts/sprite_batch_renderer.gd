@@ -294,6 +294,11 @@ func _get_animation_batch(role_id: String, state: String, animation_name: String
 	var texture := sprite_frames.get_frame_texture(animation_name, frame)
 	if texture == null:
 		return {}
+	if texture is AtlasTexture:
+		var frame_image := texture.get_image()
+		if frame_image.is_empty():
+			return {}
+		texture = ImageTexture.create_from_image(frame_image)
 	var multimesh := MultiMesh.new()
 	multimesh.transform_format = MultiMesh.TRANSFORM_2D
 	var quad := QuadMesh.new()
