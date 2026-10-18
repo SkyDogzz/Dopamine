@@ -25,12 +25,12 @@ Les statuts suivants décrivent le dépôt; ils ne valident aucun choix de conte
 
 | Capacité | Statut | Livré / restant |
 |---|---|---|
-| `asset-pipeline` | **EN COURS** | Registres initiaux, audit et migrations ciblées disponibles. SFX et familles visuelles partielles sont remplacés; sources graphiques restantes et musique doivent être migrées. Un audit exhaustif et un PCK final restent requis. |
+| `asset-pipeline` | **EN COURS** | Registres initiaux, audit et migrations ciblées disponibles. SFX, musique et familles visuelles partielles sont remplacés; familles graphiques restantes doivent être migrées. Un audit exhaustif et un PCK final restent requis. |
 | `visual-assets` | **EN COURS** | Skyline, sprites joueur, neuf rôles communs/supports, 24 projectiles, coffre/orbe XP, 16 icônes UI et 31 icônes catalogue remplacés. Élites/boss, tuiles/environnement/ruines et VFX restent à migrer. Les identités ouvertes de boss et biome restent non décidées. |
 | `interface-overhaul` | **EN COURS** | Fondations, accueil, options, hub, vues Survival/Sandbox et parcours existants ont déjà des changements et smokes antérieurs; capture et revue finale écran par écran, focus et commandes matérielles restent à compléter. L’isolation Sandbox est conservée et couverte par smoke ciblé. |
 | `skill-tree` | **TRANCHE LIVRÉE — CAPACITÉ EN COURS** | Graphe navigable montrant 100 définitions runtime et leurs vrais prérequis; contenu, coûts et effets proposés ne sont pas validés. Commit `15a9071`. |
 | `equipment-screen` | **TRANCHE LIVRÉE — CAPACITÉ EN COURS** | Six slots, filtre, bonus avant/après et actions existantes conservées; overlay du personnage et formules proposées restent ouverts. Commit `5eadb12`. |
-| `adaptive-audio` | **EN COURS** | 38 nouveaux SFX sont branchés sur 19 familles et l’ancien set/recette est retiré; il reste à écouter et mixer en contexte. La piste OGG doit être remplacée; les cinq stems originaux sont encore candidats non intégrés. |
+| `adaptive-audio` | **EN COURS** | 38 SFX branchés sur 19 familles; cinq stems originaux synchronisés suivent les vagues et ajoutent le stem boss par fondu sans redémarrage. L’ancien OGG et les recettes SFX ont été retirés après migration. Mix et gains restent **[PROPOSÉS]**; écoutes humaine et en run restent **[OUVERTES]** faute de périphérique de sortie ici. |
 
 ## Contraintes déjà confirmées
 

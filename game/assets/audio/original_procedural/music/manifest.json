@@ -1,5 +1,5 @@
 {
-  "status": "original procedural loop candidate; not integrated or ear-reviewed in game",
+  "status": "original procedural synchronized music prototype; integrated but not approved or ear-reviewed in game",
   "source": "game/tools/generate_original_audio.py",
   "tempo_bpm": 115,
   "bars": 4,

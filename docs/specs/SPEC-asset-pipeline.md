@@ -8,7 +8,7 @@ Préparer le remplacement complet des assets graphiques et audio du jeu avec un 
 
 - Godot 4.7.2, assets sous `game/assets/`, sources graphiques actuelles en Aseprite et exports PNG.
 - Références : `docs/ART_BIBLE.txt`, `docs/art/INVENTAIRE_ASSETS_UI.md`, `docs/art/PROVENANCE_ASSETS.csv`, `THIRD_PARTY_NOTICES.md`.
-- La production audio originale est écrite dans `game/tools/generate_original_audio.py`; sorties candidates sous `game/assets/audio/original_procedural/`.
+- La production audio originale est écrite dans `game/tools/generate_original_audio.py`; sorties candidates sous `game/assets/audio/original_procedural/`. Les 38 SFX sont actifs sur les familles existantes et cinq stems musique sont intégrés au flux adaptatif; composition, gains et format restent **[PROPOSÉS]**.
 
 ### Avancement de la filière (2026-10-18)
 
@@ -30,7 +30,8 @@ Préparer le remplacement complet des assets graphiques et audio du jeu avec un 
 - **[OUVERT — BLOQUANT POUR LES FAMILLES CONCERNÉES]** L’audit daté de base reste un snapshot; les familles actives non migrées incluent encore le joueur, deux boss/prototypes, élite, ennemis animés, terrain/environnement/ruines, récompenses, pickups et VFX. Aucune suppression correspondante n’est autorisée avant remplacement de tous les consommateurs et validation de l’import/PCK. Les identités définitives des boss/biome ne sont pas inventées; produire des rôles visuels provisoires si cela n’affirme aucune identité canonique.
 
 - **[VALIDÉ]** Les 38 nouveaux SFX procéduraux sont intégrés dans les familles actives de `Sfx`; leurs anciennes sources, recettes, renders et références de runtime sont retirés après migration vérifiée.
-- **[OUVERT]** La piste musicale historique, ses sources/références et l’orchestration adaptative doivent encore être remplacées. Les nouveaux SFX et stems sont des candidats non approuvés jusqu’à la revue auditive; aucune sortie audio n’est disponible dans l’environnement courant.
+- L’ancien OGG et son import sont retirés après migration des références, avec hashes dans les registres. L’orchestration utilise cinq stems synchronisés, évolution graduelle de l’arpège par vague et fondu du stem boss sans redémarrage; le smoke `adaptive_survival_music_smoke.gd` vérifie ces contrats.
+- **[OUVERT]** Les nouveaux SFX et stems restent des candidats non approuvés jusqu’à la revue auditive; aucune sortie audio n’est disponible dans l’environnement courant. L’écoute en situation doit couvrir mix, transitions et priorité des cues.
 
 ## Commandes de vérification
 
@@ -74,6 +75,6 @@ Les scripts d’outillage suivent le style GDScript existant : constantes en maj
 
 ## Questions ouvertes
 
-- Formats source et formats runtime pour musique et effets sonores; droits d’usage et attribution.
+- Format source éditable; le format runtime PCM16 mono WAV 44,1 kHz reste **[PROPOSÉ]** jusqu’à revue audio. Les droits/provenances sont consignés dans les notices et registres d’assets.
 - Outil exact de production Aseprite/audio et format des métadonnées.
 - Les choix ouverts de la section 10 de l’Art Bible qui deviennent bloquants au premier asset concerné.

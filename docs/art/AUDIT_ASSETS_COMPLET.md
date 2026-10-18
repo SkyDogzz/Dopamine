@@ -21,13 +21,15 @@ Comptage vérifié par `rg --files game/assets -g '!*.import'` au 2026-10-18 ava
 | Polices sous `game/assets/fonts/` | 4 fichiers : 2 polices et 2 notices de licence. | Licences OFL 1.1 et Bitstream Vera/DejaVu détaillées dans `THIRD_PARTY_NOTICES.md`. | Remplacer les deux polices runtime; conserver les notices requises jusqu'à ce que les nouvelles licences soient documentées. |
 | Fichiers annexes audio **[SNAPSHOT INITIAL]** | README, manifest, recettes JSON et galerie HTML; générateurs Bfxr dans `game/tools/`. | Sources de synthèse et notice MIT conservées dans le snapshot d’audit. | Retirées après remplacement indépendant; voir les hashes de retrait.
 
-## État audio après migration SFX — 2026-10-18
+## État audio après migration SFX et musique — 2026-10-18
 
 - Les 38 SFX runtime ont été remplacés par les WAV originaux générés par `game/tools/generate_original_audio.py`; l’autoload `Sfx` pointe désormais vers `game/assets/audio/original_procedural/sfx/`. Les usages d’événements et familles restent inchangés.
 - Les 38 WAV antérieurs, leurs fichiers `.import`, les recettes/manifestes/galeries/README et les scripts de production Bfxr ont été retirés après scan des références. Hashes, sources et remplacements figurent dans les CSV de migration et retrait.
-- **[PROPOSÉ / À ÉCOUTER]** Les effets originaux n’ont pas été validés à l’écoute ni en combat sur matériel. Le morceau historique reste actif jusqu’à sa migration musicale.
+- Les cinq stems originaux rythme/basse/pad/arpège/boss sont chargés par `adaptive_survival_music.gd` depuis `audio/original_procedural/music/` dans un flux synchronisé. L’arpège évolue avec les vagues et le stem boss fait un fondu sans redémarrage. Le smoke dédié valide les boucles et le changement de contexte.
+- L’ancien OGG Space City et son `.import` sont retirés après scan des références. Hash de l’ancien morceau, référence adaptative avant migration et correspondance vers les stems consignés dans `ASSET_MIGRATIONS.csv`; retrait dans `ASSET_RETIREMENTS.csv`.
+- **[PROPOSÉ / À ÉCOUTER]** Effets, composition et gains restent candidats : le mix n’a pas été validé à l’écoute ni en combat sur matériel. Aucun périphérique ALSA/PulseAudio n’est disponible dans cet environnement.
 
-Le registre détaille les 425 fichiers sous `game/assets` hors `.import` : 165 visuels, 43 fichiers audio et annexes, 212 sources/références, 4 fichiers de fonte/licence et un README de dossier. Les 165 visuels comprennent exports utilisés et fichiers historiques/inactifs. Le PCK audité précédemment excluait certains doublons/références inactifs, mais les presets utilisent `all_resources`; tout export restant dans un dossier inclus peut donc être empaqueté. Un contrôle PCK doit être refait après migration.
+Le registre initial détaillait 425 fichiers sous `game/assets` hors `.import`; c’est un snapshot historique. Les migrations/retraits ultérieurs sont consignés dans les CSV correspondants. Le PCK audité précédemment excluait certains doublons/références inactifs, mais les presets utilisent `all_resources`; tout export restant dans un dossier inclus peut donc être empaqueté. Un contrôle PCK final doit être refait après migration visuelle complète.
 
 ## Références runtime explicites relevées
 
@@ -41,13 +43,13 @@ Le registre détaille les 425 fichiers sous `game/assets` hors `.import` : 165 v
 | Accueil | `backgrounds/title_skyline.png`, `icons/ui/signal_prism.png` | `launch_menu.tscn`; ambiance validée, emblème exact proposé. |
 | Icônes UI/catalogue | `icons/catalog/equipment_*.png`, `rarity_*.png`, ressources, skill node, médaille, records | Hub, skill tree, équipement, statistiques, résultats. Certains sont seulement des pictogrammes sur des entrées inactives. |
 | Polices et thème | `fonts/PressStart2P-Regular.ttf`, `fonts/DejaVuSans.ttf`; `themes/dopamine_ui.tres` | Thème UI, titres et affichage de dégâts. Fonte exacte pixel encore ouverte dans l'Art Bible. |
-| Musique | `audio/music/space_city_bpm115.ogg` | `adaptive_survival_music.gd`; boucle active. |
+| Musique — état courant | Cinq WAV sous `audio/original_procedural/music/` : rythme, basse, pad, arpège, boss | `adaptive_survival_music.gd`; flux synchronisé avec évolution proposée par vague et fondu boss. Ancien OGG retiré après migration; hashes dans les CSV. |
 | SFX — état après migration 2026-10-18 | 38 WAV sous `audio/original_procedural/sfx/`, 19 familles d’événements | `sfx_service.gd` garde les noms et règles des familles. `generate_original_audio.py`, `sfx/manifest.json` et `sfx_service_assets_smoke.gd` documentent, mesurent et vérifient les candidats originaux; anciens fichiers et recettes retirés, hashes conservés aux registres. |
 
 ## État de provenance et licences
 
 - Les exports PNG/SVG ont une provenance technique consignée dans `PROVENANCE_ASSETS.csv`; l'inventaire précédent indiquait 43 actifs dérivés de références C2PA Trusted et 59 générés par le dépôt. Cette initiative les remplace tous selon la consigne utilisateur, y compris les assets procéduraux internes.
-- La musique actuelle est identifiée comme Space City de MintoDog sous CC0. Ce statut documente l'existant mais ne l'autorise pas à être réutilisé dans les nouveaux livrables.
+- **[HISTORIQUE]** L’ancien morceau était Space City de MintoDog sous CC0; l’OGG a été retiré après remplacement et n’est pas réutilisé. Hash et provenance restent au registre de migration.
 - **[HISTORIQUE]** Les anciens SFX Bfxr venaient de recettes versionnées et d’un renderer MIT; fichiers, recettes et renderer ont été retirés après la migration. **[PROPOSÉ]** Les nouveaux SFX sont synthétisés depuis des rôles et des seeds déterministes, sans lire l’ancien contenu; ils doivent encore être écoutés et approuvés en contexte.
 - Les polices sont sous OFL et Bitstream Vera/DejaVu. À remplacer si incluses dans la portée intégrale demandée.
 - Les fichiers Aseprite et références non listés comme livrables dans le registre de provenance nécessitent encore un inventaire individuel de liens, hashes, créateur et statut actif/inactif avant toute suppression définitive.
@@ -72,7 +74,7 @@ Le registre contient 140 assets dont une référence de chemin littérale a ét�
 
 ## Étape suivante
 
-**[VALIDÉ]** La production audio emploie une synthèse procédurale originale; les sources et recettes existantes ne seront supprimées qu'après migration. Les candidats comprennent 38 SFX et cinq stems musicaux, mais restent non approuvés et non intégrés. La validation technique est reproductible avec `game/tools/validate_original_audio.py`; la lecture a échoué dans l'environnement de travail faute de périphérique audio, donc l'écoute humaine et l'écoute en run restent **[OUVERTES]**. Le format runtime et l'arrangement adaptatif final restent également **[OUVERTS]**.
+**[VALIDÉ]** La production audio emploie une synthèse procédurale originale; les fichiers antérieurs ont été supprimés après migration et vérification des références. Les 38 SFX et les cinq stems sont intégrés au runtime, mais restent **[PROPOSÉS]** comme contenu de production jusqu’à la revue auditive. La validation numérique est reproductible avec `game/tools/validate_original_audio.py`; l’écoute humaine et l’écoute en run restent **[OUVERTES]**, car aucun périphérique de sortie audio n’est disponible dans cet environnement. Format source et gains finaux restent **[OUVERTS]**.
 
 **[PROPOSÉ]** La skyline de titre active a été remplacée par une création 640×360 produite depuis `docs/art/palette_master.gpl`, source des 32 couleurs **[VALIDÉES]** de l'Art Bible. Le nouveau PNG et la source Aseprite sont aux chemins runtime existants; l'ancienne planche de référence et sa recette de traitement ont été retirées après recherche de références. `docs/art/title_skyline_migration.json` garde hashes et provenance avant/après. Dans une copie temporaire, après réimport Godot, la capture du menu à 640×360 a été examinée et le smoke de navigation d'accueil a passé. Cette preuve montre encore des éléments UI existants; elle ne valide pas l'interface finale.
 

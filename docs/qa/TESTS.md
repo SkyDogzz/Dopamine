@@ -129,13 +129,16 @@
 
 - [x] Décision utilisateur **[VALIDÉE, réponse A]** : garder l’audio livré comme candidate de release.
 - [HISTORIQUE — 2026-10-17] Le set Bfxr antérieur avait 38 WAV PCM16 mono et des recettes sous `audio/sfx/`; ce set a été remplacé le 2026-10-18. Hashes avant migration et retrait : `docs/art/ASSET_MIGRATIONS.csv` et `ASSET_RETIREMENTS.csv`.
-- [ ] Le set original procédural actuel comporte 38 SFX sous `game/assets/audio/original_procedural/sfx/`; validation de hashes, format, unicité, durées et niveaux effectuée par `python3 game/tools/validate_original_audio.py`. `Sfx` charge les chemins originaux; l’intégration runtime de la musique reste à vérifier au jalon audio. Aucun contrôle numérique ne remplace l’écoute humaine en contexte, indisponible sans périphérique de sortie.
+- [ ] Le set original procédural actuel comporte 38 SFX sous `game/assets/audio/original_procedural/sfx/`; validation de hashes, format, unicité, durées et niveaux effectuée par `python3 game/tools/validate_original_audio.py`. `Sfx` charge les chemins originaux; cinq stems synchronisés sont intégrés et couverts par un smoke dédié. Aucun contrôle numérique ne remplace l’écoute humaine en contexte, indisponible sans périphérique de sortie.
 - [x] Smoke d’intégration SFX : `sfx_service_assets_smoke.gd` vérifie le chargement des 38 WAV originaux sur les 19 familles d’événements et le cue prioritaire de télégraphe.
 - [x] Export ciblé Linux/X11 `/tmp/dopamine-sfx.pck` (5 997 176 octets) : chemins SFX originaux échantillonnés présents et anciens chemins/recettes SFX absents.
-- [HISTORIQUE — 2026-10-17] La provenance Space City MintoDog CC0 et son hash concernent l’ancien morceau; son remplacement et retrait restent à faire avant la fin de l’initiative.
+- [HISTORIQUE — 2026-10-17] Space City de MintoDog CC0 a été retiré après migration vers cinq stems originaux le 2026-10-18; hashes et provenance historiques sont conservés dans les registres.
 - [x] Revalidation reproductible : manifeste et ensemble de fichiers exacts, 38/38 formats conformes, écart maximal entre durée WAV et manifeste de 0,478 ms; SHA-256 de Space City `6ecb8408cd84b1031425e8f1b941d7a89ab8a850cea2833ac2e005f76544d7a7`.
 - [i] Diagnostic PCM16 mono de la moyenne d’échantillons : 14/38 WAV ont une composante moyenne absolue > 0,03; les plus élevées sont `boss_phase.wav` (−0,08977), `chest_open.wav` (−0,07318), `hit_heavy_03.wav` (−0,06868) et `hit_heavy_01.wav` (−0,06789). Cette mesure indique un décalage DC numérique, mais ne prouve pas qu’il soit audible ni qu’il nuise au mix; conserver comme point d’écoute, sans en déduire une correction automatique.
 - [ ] Écouter la galerie et le jeu avec effets simultanés, vérifier les niveaux relatifs et la priorité des cues sur haut-parleurs/casque; l’environnement de développement headless ne permet pas cette validation matérielle.
+
+- [x] Smoke `adaptive_survival_music_smoke.gd` : cinq WAV synchronisés avec limites de boucle explicites; progression d’arpège, fondu du stem boss sans saut/redémarrage, fade de pause/fin. Validation headless seulement; écoute et priorité des cues restent ouvertes.
+- [x] L’ancien OGG et son import ont été supprimés après vérification de référence; cinq lignes de migration (un remplacement par stem) et lignes de retrait avec hashes ajoutées aux CSV.
 
 ## P7B.1 — Compteurs du segment de continuation — 2026-10-17
 
