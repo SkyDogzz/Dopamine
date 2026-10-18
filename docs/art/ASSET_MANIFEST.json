@@ -13102,7 +13102,7 @@
         "menu_theme"
       ],
       "target_format_and_dimensions": {
-        "format": "WAV PCM16 stereo/runtime import candidate",
+        "format": "WAV PCM16 mono 44.1 kHz; Godot import",
         "pixels": null
       },
       "assigned_generation_skill": "dopamine-music",
@@ -13128,7 +13128,8 @@
       "candidate_export_path": "build/assets/candidates/audio-complete/music/cues/menu_theme.wav",
       "acceptance_status": "accepted_for_provisional_production",
       "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
-      "integrated_path": "game/assets/audio/music/menu_theme.wav"
+      "integrated_path": "game/assets/audio/music/menu_theme.wav",
+      "runtime_use": "Runtime loop in the launch menu scene."
     },
     {
       "asset_id": "music_survival_adaptive",
@@ -13141,7 +13142,7 @@
         "survival_adaptive"
       ],
       "target_format_and_dimensions": {
-        "format": "WAV PCM16 stereo/runtime import candidate",
+        "format": "WAV PCM16 mono 44.1 kHz; Godot import",
         "pixels": null
       },
       "assigned_generation_skill": "dopamine-music",
@@ -13169,7 +13170,8 @@
       "candidate_export_path": "build/assets/candidates/audio-complete/music/cues/survival_adaptive.wav",
       "acceptance_status": "accepted_for_provisional_production",
       "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
-      "integrated_path": "game/assets/audio/music/survival_adaptive.wav"
+      "integrated_path": "game/assets/audio/music/survival_adaptive.wav",
+      "runtime_use": "Listening reference mix of the adaptive stems; the runtime plays synchronized stem resources."
     },
     {
       "asset_id": "music_boss_intensity",
@@ -13182,7 +13184,7 @@
         "boss_intensity"
       ],
       "target_format_and_dimensions": {
-        "format": "WAV PCM16 stereo/runtime import candidate",
+        "format": "WAV PCM16 mono 44.1 kHz; Godot import",
         "pixels": null
       },
       "assigned_generation_skill": "dopamine-music",
@@ -13210,7 +13212,8 @@
       "candidate_export_path": "build/assets/candidates/audio-complete/music/cues/boss_intensity.wav",
       "acceptance_status": "accepted_for_provisional_production",
       "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
-      "integrated_path": "game/assets/audio/music/boss_intensity.wav"
+      "integrated_path": "game/assets/audio/music/boss_intensity.wav",
+      "runtime_use": "Listening reference mix for boss intensity; the runtime raises the synchronized boss stem."
     },
     {
       "asset_id": "music_victory_cue",
@@ -13223,7 +13226,7 @@
         "victory_cue"
       ],
       "target_format_and_dimensions": {
-        "format": "WAV PCM16 stereo/runtime import candidate",
+        "format": "WAV PCM16 mono 44.1 kHz; Godot import",
         "pixels": null
       },
       "assigned_generation_skill": "dopamine-music",
@@ -13249,7 +13252,8 @@
       "candidate_export_path": "build/assets/candidates/audio-complete/music/cues/victory_cue.wav",
       "acceptance_status": "accepted_for_provisional_production",
       "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
-      "integrated_path": "game/assets/audio/music/victory_cue.wav"
+      "integrated_path": "game/assets/audio/music/victory_cue.wav",
+      "runtime_use": "One-shot music cue played when a run ends in victory."
     },
     {
       "asset_id": "music_defeat_cue",
@@ -13262,7 +13266,7 @@
         "defeat_cue"
       ],
       "target_format_and_dimensions": {
-        "format": "WAV PCM16 stereo/runtime import candidate",
+        "format": "WAV PCM16 mono 44.1 kHz; Godot import",
         "pixels": null
       },
       "assigned_generation_skill": "dopamine-music",
@@ -13288,7 +13292,8 @@
       "candidate_export_path": "build/assets/candidates/audio-complete/music/cues/defeat_cue.wav",
       "acceptance_status": "accepted_for_provisional_production",
       "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
-      "integrated_path": "game/assets/audio/music/defeat_cue.wav"
+      "integrated_path": "game/assets/audio/music/defeat_cue.wav",
+      "runtime_use": "One-shot music cue played when a run ends in defeat."
     },
     {
       "asset_id": "music_stem_rhythm",
@@ -13301,7 +13306,7 @@
         "wave/boss intensity"
       ],
       "target_format_and_dimensions": {
-        "format": "WAV PCM16 candidate",
+        "format": "WAV PCM16 mono 44.1 kHz; Godot import",
         "pixels": null
       },
       "assigned_generation_skill": "dopamine-music",
@@ -13329,7 +13334,8 @@
       "candidate_export_path": "build/assets/candidates/audio-complete/music/rhythm.wav",
       "acceptance_status": "accepted_for_provisional_production",
       "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
-      "integrated_path": "game/assets/audio/original_procedural/music/rhythm.wav"
+      "integrated_path": "game/assets/audio/original_procedural/music/rhythm.wav",
+      "runtime_use": "Runtime synchronized adaptive Survival music stem."
     },
     {
       "asset_id": "music_stem_bass",
@@ -13342,7 +13348,7 @@
         "wave/boss intensity"
       ],
       "target_format_and_dimensions": {
-        "format": "WAV PCM16 candidate",
+        "format": "WAV PCM16 mono 44.1 kHz; Godot import",
         "pixels": null
       },
       "assigned_generation_skill": "dopamine-music",
@@ -13370,7 +13376,8 @@
       "candidate_export_path": "build/assets/candidates/audio-complete/music/bass.wav",
       "acceptance_status": "accepted_for_provisional_production",
       "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
-      "integrated_path": "game/assets/audio/original_procedural/music/bass.wav"
+      "integrated_path": "game/assets/audio/original_procedural/music/bass.wav",
+      "runtime_use": "Runtime synchronized adaptive Survival music stem."
     },
     {
       "asset_id": "music_stem_pad",
@@ -13383,7 +13390,7 @@
         "wave/boss intensity"
       ],
       "target_format_and_dimensions": {
-        "format": "WAV PCM16 candidate",
+        "format": "WAV PCM16 mono 44.1 kHz; Godot import",
         "pixels": null
       },
       "assigned_generation_skill": "dopamine-music",
@@ -13411,7 +13418,8 @@
       "candidate_export_path": "build/assets/candidates/audio-complete/music/pad.wav",
       "acceptance_status": "accepted_for_provisional_production",
       "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
-      "integrated_path": "game/assets/audio/original_procedural/music/pad.wav"
+      "integrated_path": "game/assets/audio/original_procedural/music/pad.wav",
+      "runtime_use": "Runtime synchronized adaptive Survival music stem."
     },
     {
       "asset_id": "music_stem_arp",
@@ -13424,7 +13432,7 @@
         "wave/boss intensity"
       ],
       "target_format_and_dimensions": {
-        "format": "WAV PCM16 candidate",
+        "format": "WAV PCM16 mono 44.1 kHz; Godot import",
         "pixels": null
       },
       "assigned_generation_skill": "dopamine-music",
@@ -13452,7 +13460,8 @@
       "candidate_export_path": "build/assets/candidates/audio-complete/music/arp.wav",
       "acceptance_status": "accepted_for_provisional_production",
       "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
-      "integrated_path": "game/assets/audio/original_procedural/music/arp.wav"
+      "integrated_path": "game/assets/audio/original_procedural/music/arp.wav",
+      "runtime_use": "Runtime synchronized adaptive Survival music stem."
     },
     {
       "asset_id": "music_stem_boss",
@@ -13465,7 +13474,7 @@
         "wave/boss intensity"
       ],
       "target_format_and_dimensions": {
-        "format": "WAV PCM16 candidate",
+        "format": "WAV PCM16 mono 44.1 kHz; Godot import",
         "pixels": null
       },
       "assigned_generation_skill": "dopamine-music",
@@ -13493,7 +13502,8 @@
       "candidate_export_path": "build/assets/candidates/audio-complete/music/boss.wav",
       "acceptance_status": "accepted_for_provisional_production",
       "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
-      "integrated_path": "game/assets/audio/original_procedural/music/boss.wav"
+      "integrated_path": "game/assets/audio/original_procedural/music/boss.wav",
+      "runtime_use": "Runtime synchronized boss-intensity stem."
     }
   ]
 }

@@ -91,7 +91,8 @@
     "Audio hardware is unavailable in this session, so numeric QA and Godot playback/import tests do not substitute for listening.",
     "Some boss, biome, font and detailed animation conventions remain open in the GDD and stay explicitly provisional.",
     "One earlier full CTest run had a transient Toxic Ignition assertion failure; six targeted reruns and subsequent complete runs (119/119, then 120/120) passed. Keep monitoring this gameplay test for intermittent behavior.",
-    "Targeted catalog icon redesign passed palette/dimension/hash QA but failed internal perceptual acceptance; candidates remain isolated under build/assets/candidates/pixel-art and did not replace integrated assets."
+    "Targeted catalog icon redesign passed palette/dimension/hash QA but failed internal perceptual acceptance; candidates remain isolated under build/assets/candidates/pixel-art and did not replace integrated assets.",
+    "The survival_adaptive.wav and boss_intensity.wav full mixes are listening/reference renders; runtime music is composed from the synchronized stems. Their use is recorded in the asset manifest."
   ],
   "review_pack": {
     "local_index": "build/assets/candidates/review/index.html",
@@ -133,7 +134,8 @@
     "asset_integration_scope_smoke": "passed; verifies exact-ID replacement opt-in, managed-asset ownership, dry-run non-mutation and mismatched-owner refusal",
     "sfx_runtime_event_mapping": "passed: 20 weapon-specific cues are loaded and invoked by gameplay; 7 generated event families are exposed; weapon_family_fire/impact are fallback paths if a specific cue is missing; targeted SFX tests passed.",
     "music_runtime_cues": "passed: menu theme loops on the Music bus in launch_menu; victory/defeat cues are selected at run completion and load on the Music bus; launch_navigation_smoke and survival_result_music_smoke passed",
-    "godot_pck_export": "passed after SFX family fallback change; required menu/result music and weapon family fallback paths verified in PCK"
+    "godot_pck_export": "passed after SFX family fallback change; required menu/result music and weapon family fallback paths verified in PCK",
+    "music_format_audit": "passed: manifest now records all five integrated music mixes/cues as mono PCM16 44.1 kHz, matching WAV headers"
   },
   "godot_pck_export": {
     "status": "passed",
@@ -181,5 +183,13 @@
       "integration": "not integrated",
       "human_review_status": "pending"
     }
-  ]
+  ],
+  "music_runtime_roles": {
+    "menu_theme": "looping launch-menu track",
+    "survival_adaptive": "reference mix; runtime consumes synchronized stems",
+    "boss_intensity": "reference mix; runtime raises synchronized boss stem",
+    "victory_cue": "run-result one-shot",
+    "defeat_cue": "run-result one-shot",
+    "stems": "runtime synchronized adaptive Survival arrangement"
+  }
 }
