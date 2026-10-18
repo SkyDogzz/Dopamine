@@ -6,12 +6,14 @@ func _initialize() -> void:
 	call_deferred("_run")
 
 func _run() -> void:
-	for evidence_id in ["options", "pause", "chest", "run-inventory", "run-result", "armorless-records", "sandbox", "sandbox-lab"]:
+	for evidence_id in ["options", "pause", "pause-confirmation", "chest", "run-inventory", "run-result", "armorless-records", "sandbox", "sandbox-lab", "equipment-error", "skill-tree-error"]:
 		var scene: Control
 		match evidence_id:
 			"options":
 				scene = load("res://scenes/options_panel.tscn").instantiate()
 			"pause":
+				scene = load("res://scenes/pause_menu.tscn").instantiate()
+			"pause-confirmation":
 				scene = load("res://scenes/pause_menu.tscn").instantiate()
 			"chest":
 				scene = load("res://scenes/chest_choice.tscn").instantiate()
@@ -25,6 +27,10 @@ func _run() -> void:
 				scene = load("res://scenes/main.tscn").instantiate()
 			"sandbox-lab":
 				scene = load("res://scenes/sandbox_lab.tscn").instantiate()
+			"equipment-error":
+				scene = load("res://scenes/equipment_inventory_panel.tscn").instantiate()
+			"skill-tree-error":
+				scene = load("res://scenes/skill_tree_panel.tscn").instantiate()
 		if scene == null:
 			_fail("Could not build evidence scene: %s" % evidence_id)
 			return
@@ -41,6 +47,11 @@ func _run() -> void:
 		match evidence_id:
 			"pause":
 				scene.visible = true
+				scene.get_node("Center/Panel/Content/ResumeButton").grab_focus()
+			"pause-confirmation":
+				scene.visible = true
+				scene.get_node("ConfirmationOverlay").visible = true
+				scene.get_node("ConfirmationOverlay/Center/Panel/Content/CancelButton").grab_focus()
 			"chest":
 				scene.present([
 					{"id": "weapon:visual_probe", "title": "LIGHTNING CONDUCTOR", "description": "CHAIN 4 TARGETS · +18% DAMAGE", "icon": "res://assets/sprites/catalog/weapon_lightning_conductor.png"},
@@ -56,6 +67,10 @@ func _run() -> void:
 				scene.show_result(true, 8, 426.0, 913, {"ok": true, "essence": 42, "powder_basic": 3, "equipment": {"rarity": "legendary", "slot": "boots"}}, {}, true)
 			"armorless-records":
 				scene.present({"easy": {"wave": 14, "survival_time_seconds": 408.0, "kills": 721}})
+			"equipment-error":
+				scene.present_error()
+			"skill-tree-error":
+				scene.present({})
 		await RenderingServer.frame_post_draw
 		var image := root.get_texture().get_image()
 		if image.get_size() != Vector2i(640, 360):

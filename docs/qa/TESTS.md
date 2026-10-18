@@ -2086,8 +2086,8 @@ Note de clôture : le blocage historique du smoke `sandbox_ui_smoke.gd` décrit 
 
 ## Captures des états UI secondaires — 2026-10-18
 
-- [x] `xvfb-run -a tools/local/godot-4.7.2/Godot_v4.7.2-stable_linux.x86_64 --path game --script res://tests/ui_states_evidence_smoke.gd --audio-driver Dummy` génère 7 captures à 640×360 sous `docs/art/evidence/2026-10-18/states/`: options, pause, coffre, inventaire run, résultat, records Armorless et Sandbox.
-- [x] Les images ont été inspectées; le smoke place les scènes de coffre/résultat dans un `CenterContainer`, conforme au contexte parent de jeu. Chaque scène est construite isolément avec données de présentation temporaires; le Sandbox est rendu depuis `main.tscn` avec `PAUSED / NO SAVE`.
+- [x] `xvfb-run -a tools/local/godot-4.7.2/Godot_v4.7.2-stable_linux.x86_64 --path game --script res://tests/ui_states_evidence_smoke.gd --audio-driver Dummy` génère 11 captures à 640×360 sous `docs/art/evidence/2026-10-18/states/`: options, pause/focus, confirmation d’abandon, coffre, inventaire run, résultat, records Armorless, Sandbox dev/Lab et erreurs équipement/arbre.
+- [x] Les images ont été inspectées; le smoke place les scènes de coffre/résultat dans un `CenterContainer`, conforme au contexte parent de jeu. Chaque scène est construite isolément avec données de présentation temporaires; la confirmation et les erreurs capturent un focus réel appliqué au contrôle principal.
 - [i] Cette extension de revue documente un état principal par écran secondaire et le rendu logiciel seulement; elle ne couvre pas toutes les branches d’erreur/focus, la run entière, l’audio ou le matériel physique. Les hashes sont dans `docs/art/evidence/2026-10-18/README.md`.
 
 
