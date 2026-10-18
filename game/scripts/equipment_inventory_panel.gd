@@ -89,7 +89,6 @@ func _ready() -> void:
 		_slot_buttons[slot] = button
 		button.icon = load(SLOT_ICONS[slot]) as Texture2D if ResourceLoader.exists(SLOT_ICONS[slot]) else null
 		button.expand_icon = true
-		button.icon_max_width = 13
 		button.add_theme_font_size_override("font_size", 6)
 		button.pressed.connect(func() -> void: _select_slot(slot))
 	_sell_confirmation = load("res://scenes/sell_confirmation.tscn").instantiate()
@@ -504,6 +503,7 @@ func _create_loadout_item_row(equipment: Dictionary) -> Control:
 	row.add_theme_stylebox_override("panel", style)
 	row.custom_minimum_size = Vector2(0, 58)
 	var content := VBoxContainer.new()
+	content.name = "CardContent"
 	content.add_theme_constant_override("separation", 2)
 	row.add_child(content)
 	var line := HBoxContainer.new()

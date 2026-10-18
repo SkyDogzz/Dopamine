@@ -37,7 +37,7 @@ func _run() -> void:
 	if keyboard_focus == equipped_ring or keyboard_focus == null:
 		_fail("Keyboard navigation should move focus across equipment slots")
 		return
-	await _send_gamepad(JOY_BUTTON_DPAD_UP)
+	await _send_gamepad(JOY_BUTTON_DPAD_DOWN)
 	var gamepad_focus := root.gui_get_focus_owner()
 	if gamepad_focus == keyboard_focus or gamepad_focus == null:
 		_fail("Gamepad D-pad should move focus across equipment slots")
@@ -69,7 +69,7 @@ func _run() -> void:
 			return
 	panel.set_selected_slot("boots")
 	await process_frame
-	var old_button: Button = items.get_node("Equipment_boots-old/ItemRow/Preview")
+	var old_button: Button = items.get_node("Equipment_boots-old/CardContent/ItemRow/Preview")
 	old_button.pressed.emit()
 	await process_frame
 	if not compare.text.contains("CRIT CHANCE") or not compare.text.contains("MOVE SPEED") or \
@@ -91,7 +91,7 @@ func _run() -> void:
 		return
 	panel.set_selected_slot("boots")
 	await process_frame
-	var new_button: Button = items.get_node("Equipment_boots-new/ItemRow/Preview")
+	var new_button: Button = items.get_node("Equipment_boots-new/CardContent/ItemRow/Preview")
 	new_button.pressed.emit()
 	await process_frame
 	if not compare.text.contains("MOVE SPEED") or not compare.text.contains("→") or not compare.text.contains("(+" ):
