@@ -65,3 +65,21 @@ C’est une preuve de lancement relocalisé sur l’hôte Debian courant; pas un
 ## Revue des fontes
 
 L’utilisateur a confirmé le 2026-10-18 que le texte courant et les labels pixel des captures `survival-hub.png` et `equipment.png` sont lisibles à taille normale en 640×360. Cela documente la lisibilité de ces deux vues; la direction typographique finale et les tailles sur tous les états restent **[OUVERTES]**.
+
+## Planches contact de la bibliothèque
+
+Ces planches représentent la bibliothèque intégrée courante après retrait des dix exports d’impact autonomes. Les planches d’animation résument les feuilles complètes; les prévisualisations animées interactives avec leurs contrôles de lecture restent dans la galerie générée `build/assets/candidates/review/index.html`.
+
+| Planche | Contenu | SHA-256 |
+|---|---|---|
+| [`catalog-icons-contact-sheet.png`](contact-sheets/catalog-icons-contact-sheet.png) | 48 icônes catalogue et UI | `1c8f9066daa63cad088e645248f80e5ad7c953b455b21cf6b95d1a2da0b097f7` |
+| [`character-sprites-contact-sheet.png`](contact-sheets/character-sprites-contact-sheet.png) | 12 rôles joueurs, ennemis, élite et boss | `b71857d5db2ee8b8159c8753636ffbbda778d9a8b18deb6b89b95fb472622066` |
+| [`combat-sprites-contact-sheet.png`](contact-sheets/combat-sprites-contact-sheet.png) | 25 projectiles, atlas d’impacts et assets de combat | `ddd01211169092eb1257b98eb68386dc601f9c1e133ec1b90691ad6d8b373bfb` |
+| [`world-art-contact-sheet.png`](contact-sheets/world-art-contact-sheet.png) | 3 assets d’environnement et de fond | `73f8240abaee2d0c447f39a253dd5ff10ef16a1f8b6a2e47512160a00224db7d` |
+| [`rewards-contact-sheet.png`](contact-sheets/rewards-contact-sheet.png) | Coffre et orbe XP | `b5d49796bdc7a45bcf56279dcf42133364cbc008dc67ae0518a9c09ec0bf78eb` |
+| [`characters-animation-contact-sheet.png`](contact-sheets/characters-animation-contact-sheet.png) | 54 feuilles directionnelles de personnages | `44440c315da60277ce4f0211535fb936640aa625717051770f1950f7969a1535` |
+| [`weapons-animation-contact-sheet.png`](contact-sheets/weapons-animation-contact-sheet.png) | 40 feuilles d’attaque, tir et impact | `974c17518c24853bb8744c416d40ae619329c2361c1b585d292db4de21b2b228` |
+| [`projectiles-animation-contact-sheet.png`](contact-sheets/projectiles-animation-contact-sheet.png) | 24 feuilles de projectiles | `2f6cbce88105744561bc4b4939e35f38c7d9b7a9193aafc8b0e11f51639dddb9` |
+| [`rewards-animation-contact-sheet.png`](contact-sheets/rewards-animation-contact-sheet.png) | 13 feuilles de récompenses | `2fe061579222e7efbafb2b281d1366a47be3f24a44e30372963bcfa3a83aaccd` |
+
+L’inventaire détaillé de 133 fichiers audio avec skill, source/recette, paramètres, seed, durée, canaux et fréquence est dans [`ASSET_AUDIO_INVENTORY.json`](../../ASSET_AUDIO_INVENTORY.json). Les 90 cartes statiques et les 131 prévisualisations animées avec détails de provenance/QA sont aussi navigables dans la galerie locale recréable avec `python3 game/tools/create_asset_review_pack.py`.

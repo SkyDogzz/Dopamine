@@ -2323,3 +2323,13 @@ Note de clôture : le blocage historique du smoke `sandbox_ui_smoke.gd` décrit 
 
 - [x] `asset_integration_scope_smoke.py` construit un dépôt temporaire et vérifie qu’un asset différent est refusé sans `--replace-ids`, accepté en dry-run seulement pour le même ID/path géré, qu’aucun fichier n’est écrit en dry-run et qu’un sidecar d’un autre ID bloque le remplacement.
 - [x] Le smoke est enregistré dans CTest; configuration et exécution ciblée passent. Suite complète après ajout : **120/120 en 80,04 s**.
+
+
+## Vérification de la bibliothèque d’assets après retrait de l’atlas (2026-10-18)
+
+- [x] `ctest --test-dir build --output-on-failure` — **121/121** pass, dont import Godot, `catalog_icon_assets_smoke`, Art Bible, animations joueur/roster, SFX, musique adaptative et rendu de combat.
+- [x] `validate_asset_manifest.py`, `validate_asset_provenance_registry.py`, `validate_no_legacy_asset_hash_reuse.py` — 356 IDs intégrés, 356 exports créatifs avec provenance, 417 chemins initiaux migrés/retirés et zéro réutilisation SHA-256 exacte.
+- [x] Le smoke catalogue valide maintenant les dix cellules de l’atlas d’impacts 640×64 et rejette le retour des dix PNG autonomes retirés.
+- [x] Revue visuelle locale des neuf planches contact; archivées avec SHA-256 sous `docs/art/evidence/2026-10-18/contact-sheets/`. Cette inspection interne ne constitue pas une acceptation artistique par le propriétaire.
+- [x] Inventaire audio versionné : `docs/art/ASSET_AUDIO_INVENTORY.json` (133 entrées). Écoute humaine reste ouverte : l’environnement n’a pas de sortie PCM.
+- [x] PCK Linux/X11 reconstruit : 3 339 232 octets, SHA-256 `e4cfe6e83732e13326c6ebe3ba432c85b54a64f5d3099c8889d5e04a9060d2c3`.

@@ -1,0 +1,2692 @@
+{
+  "count": 133,
+  "files": [
+    {
+      "id": "sfx_weapon_shot_01",
+      "category": "sound_effect",
+      "path": "game/assets/audio/original_procedural/sfx/weapon_shot_01.wav",
+      "source": null,
+      "skill": "dopamine-sfx",
+      "generator_or_recipe": "game/tools/generate_original_audio.py",
+      "seed": 334893928,
+      "parameters": {
+        "sample_rate_hz": 44100,
+        "channels": 1,
+        "encoding": "PCM16 WAV",
+        "method": "role-specific oscillator/noise layers with analytic envelopes"
+      },
+      "validation_status": "passed",
+      "duration_seconds": 0.105,
+      "channels": 1,
+      "sample_rate": 44100
+    },
+    {
+      "id": "sfx_weapon_shot_02",
+      "category": "sound_effect",
+      "path": "game/assets/audio/original_procedural/sfx/weapon_shot_02.wav",
+      "source": null,
+      "skill": "dopamine-sfx",
+      "generator_or_recipe": "game/tools/generate_original_audio.py",
+      "seed": 4158234453,
+      "parameters": {
+        "sample_rate_hz": 44100,
+        "channels": 1,
+        "encoding": "PCM16 WAV",
+        "method": "role-specific oscillator/noise layers with analytic envelopes"
+      },
+      "validation_status": "passed",
+      "duration_seconds": 0.105,
+      "channels": 1,
+      "sample_rate": 44100
+    },
+    {
+      "id": "sfx_weapon_shot_03",
+      "category": "sound_effect",
+      "path": "game/assets/audio/original_procedural/sfx/weapon_shot_03.wav",
+      "source": null,
+      "skill": "dopamine-sfx",
+      "generator_or_recipe": "game/tools/generate_original_audio.py",
+      "seed": 1268003968,
+      "parameters": {
+        "sample_rate_hz": 44100,
+        "channels": 1,
+        "encoding": "PCM16 WAV",
+        "method": "role-specific oscillator/noise layers with analytic envelopes"
+      },
+      "validation_status": "passed",
+      "duration_seconds": 0.105,
+      "channels": 1,
+      "sample_rate": 44100
+    },
+    {
+      "id": "sfx_weapon_shot_04",
+      "category": "sound_effect",
+      "path": "game/assets/audio/original_procedural/sfx/weapon_shot_04.wav",
+      "source": null,
+      "skill": "dopamine-sfx",
+      "generator_or_recipe": "game/tools/generate_original_audio.py",
+      "seed": 1660431787,
+      "parameters": {
+        "sample_rate_hz": 44100,
+        "channels": 1,
+        "encoding": "PCM16 WAV",
+        "method": "role-specific oscillator/noise layers with analytic envelopes"
+      },
+      "validation_status": "passed",
+      "duration_seconds": 0.105,
+      "channels": 1,
+      "sample_rate": 44100
+    },
+    {
+      "id": "sfx_weapon_zap_01",
+      "category": "sound_effect",
+      "path": "game/assets/audio/original_procedural/sfx/weapon_zap_01.wav",
+      "source": null,
+      "skill": "dopamine-sfx",
+      "generator_or_recipe": "game/tools/generate_original_audio.py",
+      "seed": 397673986,
+      "parameters": {
+        "sample_rate_hz": 44100,
+        "channels": 1,
+        "encoding": "PCM16 WAV",
+        "method": "role-specific oscillator/noise layers with analytic envelopes"
+      },
+      "validation_status": "passed",
+      "duration_seconds": 0.14,
+      "channels": 1,
+      "sample_rate": 44100
+    },
+    {
+      "id": "sfx_weapon_zap_02",
+      "category": "sound_effect",
+      "path": "game/assets/audio/original_procedural/sfx/weapon_zap_02.wav",
+      "source": null,
+      "skill": "dopamine-sfx",
+      "generator_or_recipe": "game/tools/generate_original_audio.py",
+      "seed": 1648214493,
+      "parameters": {
+        "sample_rate_hz": 44100,
+        "channels": 1,
+        "encoding": "PCM16 WAV",
+        "method": "role-specific oscillator/noise layers with analytic envelopes"
+      },
+      "validation_status": "passed",
+      "duration_seconds": 0.14,
+      "channels": 1,
+      "sample_rate": 44100
+    },
+    {
+      "id": "sfx_weapon_zap_03",
+      "category": "sound_effect",
+      "path": "game/assets/audio/original_procedural/sfx/weapon_zap_03.wav",
+      "source": null,
+      "skill": "dopamine-sfx",
+      "generator_or_recipe": "game/tools/generate_original_audio.py",
+      "seed": 1792114152,
+      "parameters": {
+        "sample_rate_hz": 44100,
+        "channels": 1,
+        "encoding": "PCM16 WAV",
+        "method": "role-specific oscillator/noise layers with analytic envelopes"
+      },
+      "validation_status": "passed",
+      "duration_seconds": 0.14,
+      "channels": 1,
+      "sample_rate": 44100
+    },
+    {
+      "id": "sfx_weapon_zap_04",
+      "category": "sound_effect",
+      "path": "game/assets/audio/original_procedural/sfx/weapon_zap_04.wav",
+      "source": null,
+      "skill": "dopamine-sfx",
+      "generator_or_recipe": "game/tools/generate_original_audio.py",
+      "seed": 2474183592,
+      "parameters": {
+        "sample_rate_hz": 44100,
+        "channels": 1,
+        "encoding": "PCM16 WAV",
+        "method": "role-specific oscillator/noise layers with analytic envelopes"
+      },
+      "validation_status": "passed",
+      "duration_seconds": 0.14,
+      "channels": 1,
+      "sample_rate": 44100
+    },
+    {
+      "id": "sfx_weapon_sweep_01",
+      "category": "sound_effect",
+      "path": "game/assets/audio/original_procedural/sfx/weapon_sweep_01.wav",
+      "source": null,
+      "skill": "dopamine-sfx",
+      "generator_or_recipe": "game/tools/generate_original_audio.py",
+      "seed": 1431105710,
+      "parameters": {
+        "sample_rate_hz": 44100,
+        "channels": 1,
+        "encoding": "PCM16 WAV",
+        "method": "role-specific oscillator/noise layers with analytic envelopes"
+      },
+      "validation_status": "passed",
+      "duration_seconds": 0.2,
+      "channels": 1,
+      "sample_rate": 44100
+    },
+    {
+      "id": "sfx_weapon_sweep_02",
+      "category": "sound_effect",
+      "path": "game/assets/audio/original_procedural/sfx/weapon_sweep_02.wav",
+      "source": null,
+      "skill": "dopamine-sfx",
+      "generator_or_recipe": "game/tools/generate_original_audio.py",
+      "seed": 2030792159,
+      "parameters": {
+        "sample_rate_hz": 44100,
+        "channels": 1,
+        "encoding": "PCM16 WAV",
+        "method": "role-specific oscillator/noise layers with analytic envelopes"
+      },
+      "validation_status": "passed",
+      "duration_seconds": 0.2,
+      "channels": 1,
+      "sample_rate": 44100
+    },
+    {
+      "id": "sfx_weapon_sweep_03",
+      "category": "sound_effect",
+      "path": "game/assets/audio/original_procedural/sfx/weapon_sweep_03.wav",
+      "source": null,
+      "skill": "dopamine-sfx",
+      "generator_or_recipe": "game/tools/generate_original_audio.py",
+      "seed": 4262959451,
+      "parameters": {
+        "sample_rate_hz": 44100,
+        "channels": 1,
+        "encoding": "PCM16 WAV",
+        "method": "role-specific oscillator/noise layers with analytic envelopes"
+      },
+      "validation_status": "passed",
+      "duration_seconds": 0.2,
+      "channels": 1,
+      "sample_rate": 44100
+    },
+    {
+      "id": "sfx_hit_light_01",
+      "category": "sound_effect",
+      "path": "game/assets/audio/original_procedural/sfx/hit_light_01.wav",
+      "source": null,
+      "skill": "dopamine-sfx",
+      "generator_or_recipe": "game/tools/generate_original_audio.py",
+      "seed": 1741091678,
+      "parameters": {
+        "sample_rate_hz": 44100,
+        "channels": 1,
+        "encoding": "PCM16 WAV",
+        "method": "role-specific oscillator/noise layers with analytic envelopes"
+      },
+      "validation_status": "passed",
+      "duration_seconds": 0.095,
+      "channels": 1,
+      "sample_rate": 44100
+    },
+    {
+      "id": "sfx_hit_light_02",
+      "category": "sound_effect",
+      "path": "game/assets/audio/original_procedural/sfx/hit_light_02.wav",
+      "source": null,
+      "skill": "dopamine-sfx",
+      "generator_or_recipe": "game/tools/generate_original_audio.py",
+      "seed": 3226246328,
+      "parameters": {
+        "sample_rate_hz": 44100,
+        "channels": 1,
+        "encoding": "PCM16 WAV",
+        "method": "role-specific oscillator/noise layers with analytic envelopes"
+      },
+      "validation_status": "passed",
+      "duration_seconds": 0.095,
+      "channels": 1,
+      "sample_rate": 44100
+    },
+    {
+      "id": "sfx_hit_light_03",
+      "category": "sound_effect",
+      "path": "game/assets/audio/original_procedural/sfx/hit_light_03.wav",
+      "source": null,
+      "skill": "dopamine-sfx",
+      "generator_or_recipe": "game/tools/generate_original_audio.py",
+      "seed": 2924360433,
+      "parameters": {
+        "sample_rate_hz": 44100,
+        "channels": 1,
+        "encoding": "PCM16 WAV",
+        "method": "role-specific oscillator/noise layers with analytic envelopes"
+      },
+      "validation_status": "passed",
+      "duration_seconds": 0.095,
+      "channels": 1,
+      "sample_rate": 44100
+    },
+    {
+      "id": "sfx_hit_light_04",
+      "category": "sound_effect",
+      "path": "game/assets/audio/original_procedural/sfx/hit_light_04.wav",
+      "source": null,
+      "skill": "dopamine-sfx",
+      "generator_or_recipe": "game/tools/generate_original_audio.py",
+      "seed": 1303638547,
+      "parameters": {
+        "sample_rate_hz": 44100,
+        "channels": 1,
+        "encoding": "PCM16 WAV",
+        "method": "role-specific oscillator/noise layers with analytic envelopes"
+      },
+      "validation_status": "passed",
+      "duration_seconds": 0.095,
+      "channels": 1,
+      "sample_rate": 44100
+    },
+    {
+      "id": "sfx_hit_heavy_01",
+      "category": "sound_effect",
+      "path": "game/assets/audio/original_procedural/sfx/hit_heavy_01.wav",
+      "source": null,
+      "skill": "dopamine-sfx",
+      "generator_or_recipe": "game/tools/generate_original_audio.py",
+      "seed": 4035971483,
+      "parameters": {
+        "sample_rate_hz": 44100,
+        "channels": 1,
+        "encoding": "PCM16 WAV",
+        "method": "role-specific oscillator/noise layers with analytic envelopes"
+      },
+      "validation_status": "passed",
+      "duration_seconds": 0.22,
+      "channels": 1,
+      "sample_rate": 44100
+    },
+    {
+      "id": "sfx_hit_heavy_02",
+      "category": "sound_effect",
+      "path": "game/assets/audio/original_procedural/sfx/hit_heavy_02.wav",
+      "source": null,
+      "skill": "dopamine-sfx",
+      "generator_or_recipe": "game/tools/generate_original_audio.py",
+      "seed": 2809306444,
+      "parameters": {
+        "sample_rate_hz": 44100,
+        "channels": 1,
+        "encoding": "PCM16 WAV",
+        "method": "role-specific oscillator/noise layers with analytic envelopes"
+      },
+      "validation_status": "passed",
+      "duration_seconds": 0.22,
+      "channels": 1,
+      "sample_rate": 44100
+    },
+    {
+      "id": "sfx_hit_heavy_03",
+      "category": "sound_effect",
+      "path": "game/assets/audio/original_procedural/sfx/hit_heavy_03.wav",
+      "source": null,
+      "skill": "dopamine-sfx",
+      "generator_or_recipe": "game/tools/generate_original_audio.py",
+      "seed": 2476937523,
+      "parameters": {
+        "sample_rate_hz": 44100,
+        "channels": 1,
+        "encoding": "PCM16 WAV",
+        "method": "role-specific oscillator/noise layers with analytic envelopes"
+      },
+      "validation_status": "passed",
+      "duration_seconds": 0.22,
+      "channels": 1,
+      "sample_rate": 44100
+    },
+    {
+      "id": "sfx_enemy_kill_01",
+      "category": "sound_effect",
+      "path": "game/assets/audio/original_procedural/sfx/enemy_kill_01.wav",
+      "source": null,
+      "skill": "dopamine-sfx",
+      "generator_or_recipe": "game/tools/generate_original_audio.py",
+      "seed": 2796928364,
+      "parameters": {
+        "sample_rate_hz": 44100,
+        "channels": 1,
+        "encoding": "PCM16 WAV",
+        "method": "role-specific oscillator/noise layers with analytic envelopes"
+      },
+      "validation_status": "passed",
+      "duration_seconds": 0.16,
+      "channels": 1,
+      "sample_rate": 44100
+    },
+    {
+      "id": "sfx_enemy_kill_02",
+      "category": "sound_effect",
+      "path": "game/assets/audio/original_procedural/sfx/enemy_kill_02.wav",
+      "source": null,
+      "skill": "dopamine-sfx",
+      "generator_or_recipe": "game/tools/generate_original_audio.py",
+      "seed": 2262004065,
+      "parameters": {
+        "sample_rate_hz": 44100,
+        "channels": 1,
+        "encoding": "PCM16 WAV",
+        "method": "role-specific oscillator/noise layers with analytic envelopes"
+      },
+      "validation_status": "passed",
+      "duration_seconds": 0.16,
+      "channels": 1,
+      "sample_rate": 44100
+    },
+    {
+      "id": "sfx_enemy_kill_03",
+      "category": "sound_effect",
+      "path": "game/assets/audio/original_procedural/sfx/enemy_kill_03.wav",
+      "source": null,
+      "skill": "dopamine-sfx",
+      "generator_or_recipe": "game/tools/generate_original_audio.py",
+      "seed": 1281900797,
+      "parameters": {
+        "sample_rate_hz": 44100,
+        "channels": 1,
+        "encoding": "PCM16 WAV",
+        "method": "role-specific oscillator/noise layers with analytic envelopes"
+      },
+      "validation_status": "passed",
+      "duration_seconds": 0.16,
+      "channels": 1,
+      "sample_rate": 44100
+    },
+    {
+      "id": "sfx_enemy_kill_04",
+      "category": "sound_effect",
+      "path": "game/assets/audio/original_procedural/sfx/enemy_kill_04.wav",
+      "source": null,
+      "skill": "dopamine-sfx",
+      "generator_or_recipe": "game/tools/generate_original_audio.py",
+      "seed": 77370879,
+      "parameters": {
+        "sample_rate_hz": 44100,
+        "channels": 1,
+        "encoding": "PCM16 WAV",
+        "method": "role-specific oscillator/noise layers with analytic envelopes"
+      },
+      "validation_status": "passed",
+      "duration_seconds": 0.16,
+      "channels": 1,
+      "sample_rate": 44100
+    },
+    {
+      "id": "sfx_xp_pickup_01",
+      "category": "sound_effect",
+      "path": "game/assets/audio/original_procedural/sfx/xp_pickup_01.wav",
+      "source": null,
+      "skill": "dopamine-sfx",
+      "generator_or_recipe": "game/tools/generate_original_audio.py",
+      "seed": 2298690674,
+      "parameters": {
+        "sample_rate_hz": 44100,
+        "channels": 1,
+        "encoding": "PCM16 WAV",
+        "method": "role-specific oscillator/noise layers with analytic envelopes"
+      },
+      "validation_status": "passed",
+      "duration_seconds": 0.13,
+      "channels": 1,
+      "sample_rate": 44100
+    },
+    {
+      "id": "sfx_xp_pickup_02",
+      "category": "sound_effect",
+      "path": "game/assets/audio/original_procedural/sfx/xp_pickup_02.wav",
+      "source": null,
+      "skill": "dopamine-sfx",
+      "generator_or_recipe": "game/tools/generate_original_audio.py",
+      "seed": 2973835681,
+      "parameters": {
+        "sample_rate_hz": 44100,
+        "channels": 1,
+        "encoding": "PCM16 WAV",
+        "method": "role-specific oscillator/noise layers with analytic envelopes"
+      },
+      "validation_status": "passed",
+      "duration_seconds": 0.13,
+      "channels": 1,
+      "sample_rate": 44100
+    },
+    {
+      "id": "sfx_xp_pickup_03",
+      "category": "sound_effect",
+      "path": "game/assets/audio/original_procedural/sfx/xp_pickup_03.wav",
+      "source": null,
+      "skill": "dopamine-sfx",
+      "generator_or_recipe": "game/tools/generate_original_audio.py",
+      "seed": 2718184553,
+      "parameters": {
+        "sample_rate_hz": 44100,
+        "channels": 1,
+        "encoding": "PCM16 WAV",
+        "method": "role-specific oscillator/noise layers with analytic envelopes"
+      },
+      "validation_status": "passed",
+      "duration_seconds": 0.13,
+      "channels": 1,
+      "sample_rate": 44100
+    },
+    {
+      "id": "sfx_xp_pickup_04",
+      "category": "sound_effect",
+      "path": "game/assets/audio/original_procedural/sfx/xp_pickup_04.wav",
+      "source": null,
+      "skill": "dopamine-sfx",
+      "generator_or_recipe": "game/tools/generate_original_audio.py",
+      "seed": 3278868771,
+      "parameters": {
+        "sample_rate_hz": 44100,
+        "channels": 1,
+        "encoding": "PCM16 WAV",
+        "method": "role-specific oscillator/noise layers with analytic envelopes"
+      },
+      "validation_status": "passed",
+      "duration_seconds": 0.13,
+      "channels": 1,
+      "sample_rate": 44100
+    },
+    {
+      "id": "sfx_relic_pickup",
+      "category": "sound_effect",
+      "path": "game/assets/audio/original_procedural/sfx/relic_pickup.wav",
+      "source": null,
+      "skill": "dopamine-sfx",
+      "generator_or_recipe": "game/tools/generate_original_audio.py",
+      "seed": 2374731812,
+      "parameters": {
+        "sample_rate_hz": 44100,
+        "channels": 1,
+        "encoding": "PCM16 WAV",
+        "method": "role-specific oscillator/noise layers with analytic envelopes"
+      },
+      "validation_status": "passed",
+      "duration_seconds": 0.48,
+      "channels": 1,
+      "sample_rate": 44100
+    },
+    {
+      "id": "sfx_chest_open",
+      "category": "sound_effect",
+      "path": "game/assets/audio/original_procedural/sfx/chest_open.wav",
+      "source": null,
+      "skill": "dopamine-sfx",
+      "generator_or_recipe": "game/tools/generate_original_audio.py",
+      "seed": 3263757533,
+      "parameters": {
+        "sample_rate_hz": 44100,
+        "channels": 1,
+        "encoding": "PCM16 WAV",
+        "method": "role-specific oscillator/noise layers with analytic envelopes"
+      },
+      "validation_status": "passed",
+      "duration_seconds": 0.38,
+      "channels": 1,
+      "sample_rate": 44100
+    },
+    {
+      "id": "sfx_chest_reward",
+      "category": "sound_effect",
+      "path": "game/assets/audio/original_procedural/sfx/chest_reward.wav",
+      "source": null,
+      "skill": "dopamine-sfx",
+      "generator_or_recipe": "game/tools/generate_original_audio.py",
+      "seed": 3340607880,
+      "parameters": {
+        "sample_rate_hz": 44100,
+        "channels": 1,
+        "encoding": "PCM16 WAV",
+        "method": "role-specific oscillator/noise layers with analytic envelopes"
+      },
+      "validation_status": "passed",
+      "duration_seconds": 0.32,
+      "channels": 1,
+      "sample_rate": 44100
+    },
+    {
+      "id": "sfx_level_up",
+      "category": "sound_effect",
+      "path": "game/assets/audio/original_procedural/sfx/level_up.wav",
+      "source": null,
+      "skill": "dopamine-sfx",
+      "generator_or_recipe": "game/tools/generate_original_audio.py",
+      "seed": 2560753222,
+      "parameters": {
+        "sample_rate_hz": 44100,
+        "channels": 1,
+        "encoding": "PCM16 WAV",
+        "method": "role-specific oscillator/noise layers with analytic envelopes"
+      },
+      "validation_status": "passed",
+      "duration_seconds": 0.62,
+      "channels": 1,
+      "sample_rate": 44100
+    },
+    {
+      "id": "sfx_boss_telegraph",
+      "category": "sound_effect",
+      "path": "game/assets/audio/original_procedural/sfx/boss_telegraph.wav",
+      "source": null,
+      "skill": "dopamine-sfx",
+      "generator_or_recipe": "game/tools/generate_original_audio.py",
+      "seed": 68553403,
+      "parameters": {
+        "sample_rate_hz": 44100,
+        "channels": 1,
+        "encoding": "PCM16 WAV",
+        "method": "role-specific oscillator/noise layers with analytic envelopes"
+      },
+      "validation_status": "passed",
+      "duration_seconds": 0.36,
+      "channels": 1,
+      "sample_rate": 44100
+    },
+    {
+      "id": "sfx_boss_phase",
+      "category": "sound_effect",
+      "path": "game/assets/audio/original_procedural/sfx/boss_phase.wav",
+      "source": null,
+      "skill": "dopamine-sfx",
+      "generator_or_recipe": "game/tools/generate_original_audio.py",
+      "seed": 1090104100,
+      "parameters": {
+        "sample_rate_hz": 44100,
+        "channels": 1,
+        "encoding": "PCM16 WAV",
+        "method": "role-specific oscillator/noise layers with analytic envelopes"
+      },
+      "validation_status": "passed",
+      "duration_seconds": 0.72,
+      "channels": 1,
+      "sample_rate": 44100
+    },
+    {
+      "id": "sfx_boss_defeat",
+      "category": "sound_effect",
+      "path": "game/assets/audio/original_procedural/sfx/boss_defeat.wav",
+      "source": null,
+      "skill": "dopamine-sfx",
+      "generator_or_recipe": "game/tools/generate_original_audio.py",
+      "seed": 1607876697,
+      "parameters": {
+        "sample_rate_hz": 44100,
+        "channels": 1,
+        "encoding": "PCM16 WAV",
+        "method": "role-specific oscillator/noise layers with analytic envelopes"
+      },
+      "validation_status": "passed",
+      "duration_seconds": 0.95,
+      "channels": 1,
+      "sample_rate": 44100
+    },
+    {
+      "id": "sfx_ui_focus",
+      "category": "sound_effect",
+      "path": "game/assets/audio/original_procedural/sfx/ui_focus.wav",
+      "source": null,
+      "skill": "dopamine-sfx",
+      "generator_or_recipe": "game/tools/generate_original_audio.py",
+      "seed": 1616708360,
+      "parameters": {
+        "sample_rate_hz": 44100,
+        "channels": 1,
+        "encoding": "PCM16 WAV",
+        "method": "role-specific oscillator/noise layers with analytic envelopes"
+      },
+      "validation_status": "passed",
+      "duration_seconds": 0.045,
+      "channels": 1,
+      "sample_rate": 44100
+    },
+    {
+      "id": "sfx_ui_confirm",
+      "category": "sound_effect",
+      "path": "game/assets/audio/original_procedural/sfx/ui_confirm.wav",
+      "source": null,
+      "skill": "dopamine-sfx",
+      "generator_or_recipe": "game/tools/generate_original_audio.py",
+      "seed": 1316089085,
+      "parameters": {
+        "sample_rate_hz": 44100,
+        "channels": 1,
+        "encoding": "PCM16 WAV",
+        "method": "role-specific oscillator/noise layers with analytic envelopes"
+      },
+      "validation_status": "passed",
+      "duration_seconds": 0.13,
+      "channels": 1,
+      "sample_rate": 44100
+    },
+    {
+      "id": "sfx_ui_back",
+      "category": "sound_effect",
+      "path": "game/assets/audio/original_procedural/sfx/ui_back.wav",
+      "source": null,
+      "skill": "dopamine-sfx",
+      "generator_or_recipe": "game/tools/generate_original_audio.py",
+      "seed": 400904841,
+      "parameters": {
+        "sample_rate_hz": 44100,
+        "channels": 1,
+        "encoding": "PCM16 WAV",
+        "method": "role-specific oscillator/noise layers with analytic envelopes"
+      },
+      "validation_status": "passed",
+      "duration_seconds": 0.12,
+      "channels": 1,
+      "sample_rate": 44100
+    },
+    {
+      "id": "sfx_ui_error",
+      "category": "sound_effect",
+      "path": "game/assets/audio/original_procedural/sfx/ui_error.wav",
+      "source": null,
+      "skill": "dopamine-sfx",
+      "generator_or_recipe": "game/tools/generate_original_audio.py",
+      "seed": 3477335550,
+      "parameters": {
+        "sample_rate_hz": 44100,
+        "channels": 1,
+        "encoding": "PCM16 WAV",
+        "method": "role-specific oscillator/noise layers with analytic envelopes"
+      },
+      "validation_status": "passed",
+      "duration_seconds": 0.15,
+      "channels": 1,
+      "sample_rate": 44100
+    },
+    {
+      "id": "sfx_ui_pause",
+      "category": "sound_effect",
+      "path": "game/assets/audio/original_procedural/sfx/ui_pause.wav",
+      "source": null,
+      "skill": "dopamine-sfx",
+      "generator_or_recipe": "game/tools/generate_original_audio.py",
+      "seed": 2924438704,
+      "parameters": {
+        "sample_rate_hz": 44100,
+        "channels": 1,
+        "encoding": "PCM16 WAV",
+        "method": "role-specific oscillator/noise layers with analytic envelopes"
+      },
+      "validation_status": "passed",
+      "duration_seconds": 0.21,
+      "channels": 1,
+      "sample_rate": 44100
+    },
+    {
+      "id": "sfx_weapon_family_fire",
+      "category": "sound_effect",
+      "path": "game/assets/audio/original_procedural/sfx/weapon_family_fire.wav",
+      "source": null,
+      "skill": "dopamine-sfx",
+      "generator_or_recipe": "game/tools/generate_original_audio.py",
+      "seed": 1427454858,
+      "parameters": {
+        "sample_rate_hz": 44100,
+        "channels": 1,
+        "encoding": "PCM16 WAV",
+        "method": "role-specific oscillator/noise layers with analytic envelopes"
+      },
+      "validation_status": "passed",
+      "duration_seconds": 0.14,
+      "channels": 1,
+      "sample_rate": 44100
+    },
+    {
+      "id": "sfx_weapon_family_impact",
+      "category": "sound_effect",
+      "path": "game/assets/audio/original_procedural/sfx/weapon_family_impact.wav",
+      "source": null,
+      "skill": "dopamine-sfx",
+      "generator_or_recipe": "game/tools/generate_original_audio.py",
+      "seed": 2720499681,
+      "parameters": {
+        "sample_rate_hz": 44100,
+        "channels": 1,
+        "encoding": "PCM16 WAV",
+        "method": "role-specific oscillator/noise layers with analytic envelopes"
+      },
+      "validation_status": "passed",
+      "duration_seconds": 0.095,
+      "channels": 1,
+      "sample_rate": 44100
+    },
+    {
+      "id": "sfx_damage_taken",
+      "category": "sound_effect",
+      "path": "game/assets/audio/original_procedural/sfx/damage_taken.wav",
+      "source": null,
+      "skill": "dopamine-sfx",
+      "generator_or_recipe": "game/tools/generate_original_audio.py",
+      "seed": 814322876,
+      "parameters": {
+        "sample_rate_hz": 44100,
+        "channels": 1,
+        "encoding": "PCM16 WAV",
+        "method": "role-specific oscillator/noise layers with analytic envelopes"
+      },
+      "validation_status": "passed",
+      "duration_seconds": 0.22,
+      "channels": 1,
+      "sample_rate": 44100
+    },
+    {
+      "id": "sfx_healing",
+      "category": "sound_effect",
+      "path": "game/assets/audio/original_procedural/sfx/healing.wav",
+      "source": null,
+      "skill": "dopamine-sfx",
+      "generator_or_recipe": "game/tools/generate_original_audio.py",
+      "seed": 1065878761,
+      "parameters": {
+        "sample_rate_hz": 44100,
+        "channels": 1,
+        "encoding": "PCM16 WAV",
+        "method": "role-specific oscillator/noise layers with analytic envelopes"
+      },
+      "validation_status": "passed",
+      "duration_seconds": 0.48,
+      "channels": 1,
+      "sample_rate": 44100
+    },
+    {
+      "id": "sfx_explosion",
+      "category": "sound_effect",
+      "path": "game/assets/audio/original_procedural/sfx/explosion.wav",
+      "source": null,
+      "skill": "dopamine-sfx",
+      "generator_or_recipe": "game/tools/generate_original_audio.py",
+      "seed": 2111124302,
+      "parameters": {
+        "sample_rate_hz": 44100,
+        "channels": 1,
+        "encoding": "PCM16 WAV",
+        "method": "role-specific oscillator/noise layers with analytic envelopes"
+      },
+      "validation_status": "passed",
+      "duration_seconds": 0.22,
+      "channels": 1,
+      "sample_rate": 44100
+    },
+    {
+      "id": "sfx_victory",
+      "category": "sound_effect",
+      "path": "game/assets/audio/original_procedural/sfx/victory.wav",
+      "source": null,
+      "skill": "dopamine-sfx",
+      "generator_or_recipe": "game/tools/generate_original_audio.py",
+      "seed": 2723964449,
+      "parameters": {
+        "sample_rate_hz": 44100,
+        "channels": 1,
+        "encoding": "PCM16 WAV",
+        "method": "role-specific oscillator/noise layers with analytic envelopes"
+      },
+      "validation_status": "passed",
+      "duration_seconds": 0.95,
+      "channels": 1,
+      "sample_rate": 44100
+    },
+    {
+      "id": "sfx_defeat",
+      "category": "sound_effect",
+      "path": "game/assets/audio/original_procedural/sfx/defeat.wav",
+      "source": null,
+      "skill": "dopamine-sfx",
+      "generator_or_recipe": "game/tools/generate_original_audio.py",
+      "seed": 1314651999,
+      "parameters": {
+        "sample_rate_hz": 44100,
+        "channels": 1,
+        "encoding": "PCM16 WAV",
+        "method": "role-specific oscillator/noise layers with analytic envelopes"
+      },
+      "validation_status": "passed",
+      "duration_seconds": 0.72,
+      "channels": 1,
+      "sample_rate": 44100
+    },
+    {
+      "id": "sfx_weapon_lightning_conductor_fire",
+      "category": "sound_effect",
+      "path": "game/assets/audio/original_procedural/sfx/weapon_lightning_conductor_fire.wav",
+      "source": null,
+      "skill": "dopamine-sfx",
+      "generator_or_recipe": "game/tools/generate_original_audio.py",
+      "seed": 3529462400,
+      "parameters": {
+        "sample_rate_hz": 44100,
+        "channels": 1,
+        "encoding": "PCM16 WAV",
+        "method": "role-specific oscillator/noise layers with analytic envelopes",
+        "variation_index": 1,
+        "variation_count": 4
+      },
+      "validation_status": "passed",
+      "duration_seconds": 0.14,
+      "channels": 1,
+      "sample_rate": 44100
+    },
+    {
+      "id": "sfx_weapon_lightning_conductor_fire_02",
+      "category": "sound_effect",
+      "path": "game/assets/audio/original_procedural/sfx/weapon_lightning_conductor_fire_02.wav",
+      "source": null,
+      "skill": "dopamine-sfx",
+      "generator_or_recipe": "game/tools/generate_original_audio.py",
+      "seed": 2505824986,
+      "parameters": {
+        "sample_rate_hz": 44100,
+        "channels": 1,
+        "encoding": "PCM16 WAV",
+        "method": "role-specific oscillator/noise layers with analytic envelopes",
+        "variation_index": 2,
+        "variation_count": 4
+      },
+      "validation_status": "passed",
+      "duration_seconds": 0.14,
+      "channels": 1,
+      "sample_rate": 44100
+    },
+    {
+      "id": "sfx_weapon_lightning_conductor_fire_03",
+      "category": "sound_effect",
+      "path": "game/assets/audio/original_procedural/sfx/weapon_lightning_conductor_fire_03.wav",
+      "source": null,
+      "skill": "dopamine-sfx",
+      "generator_or_recipe": "game/tools/generate_original_audio.py",
+      "seed": 2155752094,
+      "parameters": {
+        "sample_rate_hz": 44100,
+        "channels": 1,
+        "encoding": "PCM16 WAV",
+        "method": "role-specific oscillator/noise layers with analytic envelopes",
+        "variation_index": 3,
+        "variation_count": 4
+      },
+      "validation_status": "passed",
+      "duration_seconds": 0.14,
+      "channels": 1,
+      "sample_rate": 44100
+    },
+    {
+      "id": "sfx_weapon_lightning_conductor_fire_04",
+      "category": "sound_effect",
+      "path": "game/assets/audio/original_procedural/sfx/weapon_lightning_conductor_fire_04.wav",
+      "source": null,
+      "skill": "dopamine-sfx",
+      "generator_or_recipe": "game/tools/generate_original_audio.py",
+      "seed": 1810619935,
+      "parameters": {
+        "sample_rate_hz": 44100,
+        "channels": 1,
+        "encoding": "PCM16 WAV",
+        "method": "role-specific oscillator/noise layers with analytic envelopes",
+        "variation_index": 4,
+        "variation_count": 4
+      },
+      "validation_status": "passed",
+      "duration_seconds": 0.14,
+      "channels": 1,
+      "sample_rate": 44100
+    },
+    {
+      "id": "sfx_weapon_lightning_conductor_impact",
+      "category": "sound_effect",
+      "path": "game/assets/audio/original_procedural/sfx/weapon_lightning_conductor_impact.wav",
+      "source": null,
+      "skill": "dopamine-sfx",
+      "generator_or_recipe": "game/tools/generate_original_audio.py",
+      "seed": 2057817497,
+      "parameters": {
+        "sample_rate_hz": 44100,
+        "channels": 1,
+        "encoding": "PCM16 WAV",
+        "method": "role-specific oscillator/noise layers with analytic envelopes",
+        "variation_index": 1,
+        "variation_count": 4
+      },
+      "validation_status": "passed",
+      "duration_seconds": 0.095,
+      "channels": 1,
+      "sample_rate": 44100
+    },
+    {
+      "id": "sfx_weapon_lightning_conductor_impact_02",
+      "category": "sound_effect",
+      "path": "game/assets/audio/original_procedural/sfx/weapon_lightning_conductor_impact_02.wav",
+      "source": null,
+      "skill": "dopamine-sfx",
+      "generator_or_recipe": "game/tools/generate_original_audio.py",
+      "seed": 2129465026,
+      "parameters": {
+        "sample_rate_hz": 44100,
+        "channels": 1,
+        "encoding": "PCM16 WAV",
+        "method": "role-specific oscillator/noise layers with analytic envelopes",
+        "variation_index": 2,
+        "variation_count": 4
+      },
+      "validation_status": "passed",
+      "duration_seconds": 0.095,
+      "channels": 1,
+      "sample_rate": 44100
+    },
+    {
+      "id": "sfx_weapon_lightning_conductor_impact_03",
+      "category": "sound_effect",
+      "path": "game/assets/audio/original_procedural/sfx/weapon_lightning_conductor_impact_03.wav",
+      "source": null,
+      "skill": "dopamine-sfx",
+      "generator_or_recipe": "game/tools/generate_original_audio.py",
+      "seed": 2914200632,
+      "parameters": {
+        "sample_rate_hz": 44100,
+        "channels": 1,
+        "encoding": "PCM16 WAV",
+        "method": "role-specific oscillator/noise layers with analytic envelopes",
+        "variation_index": 3,
+        "variation_count": 4
+      },
+      "validation_status": "passed",
+      "duration_seconds": 0.095,
+      "channels": 1,
+      "sample_rate": 44100
+    },
+    {
+      "id": "sfx_weapon_lightning_conductor_impact_04",
+      "category": "sound_effect",
+      "path": "game/assets/audio/original_procedural/sfx/weapon_lightning_conductor_impact_04.wav",
+      "source": null,
+      "skill": "dopamine-sfx",
+      "generator_or_recipe": "game/tools/generate_original_audio.py",
+      "seed": 2081872383,
+      "parameters": {
+        "sample_rate_hz": 44100,
+        "channels": 1,
+        "encoding": "PCM16 WAV",
+        "method": "role-specific oscillator/noise layers with analytic envelopes",
+        "variation_index": 4,
+        "variation_count": 4
+      },
+      "validation_status": "passed",
+      "duration_seconds": 0.095,
+      "channels": 1,
+      "sample_rate": 44100
+    },
+    {
+      "id": "sfx_weapon_inferno_sprayer_fire",
+      "category": "sound_effect",
+      "path": "game/assets/audio/original_procedural/sfx/weapon_inferno_sprayer_fire.wav",
+      "source": null,
+      "skill": "dopamine-sfx",
+      "generator_or_recipe": "game/tools/generate_original_audio.py",
+      "seed": 743583096,
+      "parameters": {
+        "sample_rate_hz": 44100,
+        "channels": 1,
+        "encoding": "PCM16 WAV",
+        "method": "role-specific oscillator/noise layers with analytic envelopes",
+        "variation_index": 1,
+        "variation_count": 4
+      },
+      "validation_status": "passed",
+      "duration_seconds": 0.2,
+      "channels": 1,
+      "sample_rate": 44100
+    },
+    {
+      "id": "sfx_weapon_inferno_sprayer_fire_02",
+      "category": "sound_effect",
+      "path": "game/assets/audio/original_procedural/sfx/weapon_inferno_sprayer_fire_02.wav",
+      "source": null,
+      "skill": "dopamine-sfx",
+      "generator_or_recipe": "game/tools/generate_original_audio.py",
+      "seed": 563287683,
+      "parameters": {
+        "sample_rate_hz": 44100,
+        "channels": 1,
+        "encoding": "PCM16 WAV",
+        "method": "role-specific oscillator/noise layers with analytic envelopes",
+        "variation_index": 2,
+        "variation_count": 4
+      },
+      "validation_status": "passed",
+      "duration_seconds": 0.2,
+      "channels": 1,
+      "sample_rate": 44100
+    },
+    {
+      "id": "sfx_weapon_inferno_sprayer_fire_03",
+      "category": "sound_effect",
+      "path": "game/assets/audio/original_procedural/sfx/weapon_inferno_sprayer_fire_03.wav",
+      "source": null,
+      "skill": "dopamine-sfx",
+      "generator_or_recipe": "game/tools/generate_original_audio.py",
+      "seed": 4184185899,
+      "parameters": {
+        "sample_rate_hz": 44100,
+        "channels": 1,
+        "encoding": "PCM16 WAV",
+        "method": "role-specific oscillator/noise layers with analytic envelopes",
+        "variation_index": 3,
+        "variation_count": 4
+      },
+      "validation_status": "passed",
+      "duration_seconds": 0.2,
+      "channels": 1,
+      "sample_rate": 44100
+    },
+    {
+      "id": "sfx_weapon_inferno_sprayer_fire_04",
+      "category": "sound_effect",
+      "path": "game/assets/audio/original_procedural/sfx/weapon_inferno_sprayer_fire_04.wav",
+      "source": null,
+      "skill": "dopamine-sfx",
+      "generator_or_recipe": "game/tools/generate_original_audio.py",
+      "seed": 1904450040,
+      "parameters": {
+        "sample_rate_hz": 44100,
+        "channels": 1,
+        "encoding": "PCM16 WAV",
+        "method": "role-specific oscillator/noise layers with analytic envelopes",
+        "variation_index": 4,
+        "variation_count": 4
+      },
+      "validation_status": "passed",
+      "duration_seconds": 0.2,
+      "channels": 1,
+      "sample_rate": 44100
+    },
+    {
+      "id": "sfx_weapon_inferno_sprayer_impact",
+      "category": "sound_effect",
+      "path": "game/assets/audio/original_procedural/sfx/weapon_inferno_sprayer_impact.wav",
+      "source": null,
+      "skill": "dopamine-sfx",
+      "generator_or_recipe": "game/tools/generate_original_audio.py",
+      "seed": 1661096795,
+      "parameters": {
+        "sample_rate_hz": 44100,
+        "channels": 1,
+        "encoding": "PCM16 WAV",
+        "method": "role-specific oscillator/noise layers with analytic envelopes",
+        "variation_index": 1,
+        "variation_count": 4
+      },
+      "validation_status": "passed",
+      "duration_seconds": 0.095,
+      "channels": 1,
+      "sample_rate": 44100
+    },
+    {
+      "id": "sfx_weapon_inferno_sprayer_impact_02",
+      "category": "sound_effect",
+      "path": "game/assets/audio/original_procedural/sfx/weapon_inferno_sprayer_impact_02.wav",
+      "source": null,
+      "skill": "dopamine-sfx",
+      "generator_or_recipe": "game/tools/generate_original_audio.py",
+      "seed": 2037811268,
+      "parameters": {
+        "sample_rate_hz": 44100,
+        "channels": 1,
+        "encoding": "PCM16 WAV",
+        "method": "role-specific oscillator/noise layers with analytic envelopes",
+        "variation_index": 2,
+        "variation_count": 4
+      },
+      "validation_status": "passed",
+      "duration_seconds": 0.095,
+      "channels": 1,
+      "sample_rate": 44100
+    },
+    {
+      "id": "sfx_weapon_inferno_sprayer_impact_03",
+      "category": "sound_effect",
+      "path": "game/assets/audio/original_procedural/sfx/weapon_inferno_sprayer_impact_03.wav",
+      "source": null,
+      "skill": "dopamine-sfx",
+      "generator_or_recipe": "game/tools/generate_original_audio.py",
+      "seed": 2201259068,
+      "parameters": {
+        "sample_rate_hz": 44100,
+        "channels": 1,
+        "encoding": "PCM16 WAV",
+        "method": "role-specific oscillator/noise layers with analytic envelopes",
+        "variation_index": 3,
+        "variation_count": 4
+      },
+      "validation_status": "passed",
+      "duration_seconds": 0.095,
+      "channels": 1,
+      "sample_rate": 44100
+    },
+    {
+      "id": "sfx_weapon_inferno_sprayer_impact_04",
+      "category": "sound_effect",
+      "path": "game/assets/audio/original_procedural/sfx/weapon_inferno_sprayer_impact_04.wav",
+      "source": null,
+      "skill": "dopamine-sfx",
+      "generator_or_recipe": "game/tools/generate_original_audio.py",
+      "seed": 754092695,
+      "parameters": {
+        "sample_rate_hz": 44100,
+        "channels": 1,
+        "encoding": "PCM16 WAV",
+        "method": "role-specific oscillator/noise layers with analytic envelopes",
+        "variation_index": 4,
+        "variation_count": 4
+      },
+      "validation_status": "passed",
+      "duration_seconds": 0.095,
+      "channels": 1,
+      "sample_rate": 44100
+    },
+    {
+      "id": "sfx_weapon_crimson_daggers_fire",
+      "category": "sound_effect",
+      "path": "game/assets/audio/original_procedural/sfx/weapon_crimson_daggers_fire.wav",
+      "source": null,
+      "skill": "dopamine-sfx",
+      "generator_or_recipe": "game/tools/generate_original_audio.py",
+      "seed": 1767594248,
+      "parameters": {
+        "sample_rate_hz": 44100,
+        "channels": 1,
+        "encoding": "PCM16 WAV",
+        "method": "role-specific oscillator/noise layers with analytic envelopes",
+        "variation_index": 1,
+        "variation_count": 4
+      },
+      "validation_status": "passed",
+      "duration_seconds": 0.2,
+      "channels": 1,
+      "sample_rate": 44100
+    },
+    {
+      "id": "sfx_weapon_crimson_daggers_fire_02",
+      "category": "sound_effect",
+      "path": "game/assets/audio/original_procedural/sfx/weapon_crimson_daggers_fire_02.wav",
+      "source": null,
+      "skill": "dopamine-sfx",
+      "generator_or_recipe": "game/tools/generate_original_audio.py",
+      "seed": 3374534123,
+      "parameters": {
+        "sample_rate_hz": 44100,
+        "channels": 1,
+        "encoding": "PCM16 WAV",
+        "method": "role-specific oscillator/noise layers with analytic envelopes",
+        "variation_index": 2,
+        "variation_count": 4
+      },
+      "validation_status": "passed",
+      "duration_seconds": 0.2,
+      "channels": 1,
+      "sample_rate": 44100
+    },
+    {
+      "id": "sfx_weapon_crimson_daggers_fire_03",
+      "category": "sound_effect",
+      "path": "game/assets/audio/original_procedural/sfx/weapon_crimson_daggers_fire_03.wav",
+      "source": null,
+      "skill": "dopamine-sfx",
+      "generator_or_recipe": "game/tools/generate_original_audio.py",
+      "seed": 1180587599,
+      "parameters": {
+        "sample_rate_hz": 44100,
+        "channels": 1,
+        "encoding": "PCM16 WAV",
+        "method": "role-specific oscillator/noise layers with analytic envelopes",
+        "variation_index": 3,
+        "variation_count": 4
+      },
+      "validation_status": "passed",
+      "duration_seconds": 0.2,
+      "channels": 1,
+      "sample_rate": 44100
+    },
+    {
+      "id": "sfx_weapon_crimson_daggers_fire_04",
+      "category": "sound_effect",
+      "path": "game/assets/audio/original_procedural/sfx/weapon_crimson_daggers_fire_04.wav",
+      "source": null,
+      "skill": "dopamine-sfx",
+      "generator_or_recipe": "game/tools/generate_original_audio.py",
+      "seed": 2189602747,
+      "parameters": {
+        "sample_rate_hz": 44100,
+        "channels": 1,
+        "encoding": "PCM16 WAV",
+        "method": "role-specific oscillator/noise layers with analytic envelopes",
+        "variation_index": 4,
+        "variation_count": 4
+      },
+      "validation_status": "passed",
+      "duration_seconds": 0.2,
+      "channels": 1,
+      "sample_rate": 44100
+    },
+    {
+      "id": "sfx_weapon_crimson_daggers_impact",
+      "category": "sound_effect",
+      "path": "game/assets/audio/original_procedural/sfx/weapon_crimson_daggers_impact.wav",
+      "source": null,
+      "skill": "dopamine-sfx",
+      "generator_or_recipe": "game/tools/generate_original_audio.py",
+      "seed": 3703227529,
+      "parameters": {
+        "sample_rate_hz": 44100,
+        "channels": 1,
+        "encoding": "PCM16 WAV",
+        "method": "role-specific oscillator/noise layers with analytic envelopes",
+        "variation_index": 1,
+        "variation_count": 4
+      },
+      "validation_status": "passed",
+      "duration_seconds": 0.095,
+      "channels": 1,
+      "sample_rate": 44100
+    },
+    {
+      "id": "sfx_weapon_crimson_daggers_impact_02",
+      "category": "sound_effect",
+      "path": "game/assets/audio/original_procedural/sfx/weapon_crimson_daggers_impact_02.wav",
+      "source": null,
+      "skill": "dopamine-sfx",
+      "generator_or_recipe": "game/tools/generate_original_audio.py",
+      "seed": 3966367633,
+      "parameters": {
+        "sample_rate_hz": 44100,
+        "channels": 1,
+        "encoding": "PCM16 WAV",
+        "method": "role-specific oscillator/noise layers with analytic envelopes",
+        "variation_index": 2,
+        "variation_count": 4
+      },
+      "validation_status": "passed",
+      "duration_seconds": 0.095,
+      "channels": 1,
+      "sample_rate": 44100
+    },
+    {
+      "id": "sfx_weapon_crimson_daggers_impact_03",
+      "category": "sound_effect",
+      "path": "game/assets/audio/original_procedural/sfx/weapon_crimson_daggers_impact_03.wav",
+      "source": null,
+      "skill": "dopamine-sfx",
+      "generator_or_recipe": "game/tools/generate_original_audio.py",
+      "seed": 2853257202,
+      "parameters": {
+        "sample_rate_hz": 44100,
+        "channels": 1,
+        "encoding": "PCM16 WAV",
+        "method": "role-specific oscillator/noise layers with analytic envelopes",
+        "variation_index": 3,
+        "variation_count": 4
+      },
+      "validation_status": "passed",
+      "duration_seconds": 0.095,
+      "channels": 1,
+      "sample_rate": 44100
+    },
+    {
+      "id": "sfx_weapon_crimson_daggers_impact_04",
+      "category": "sound_effect",
+      "path": "game/assets/audio/original_procedural/sfx/weapon_crimson_daggers_impact_04.wav",
+      "source": null,
+      "skill": "dopamine-sfx",
+      "generator_or_recipe": "game/tools/generate_original_audio.py",
+      "seed": 3450621940,
+      "parameters": {
+        "sample_rate_hz": 44100,
+        "channels": 1,
+        "encoding": "PCM16 WAV",
+        "method": "role-specific oscillator/noise layers with analytic envelopes",
+        "variation_index": 4,
+        "variation_count": 4
+      },
+      "validation_status": "passed",
+      "duration_seconds": 0.095,
+      "channels": 1,
+      "sample_rate": 44100
+    },
+    {
+      "id": "sfx_weapon_minigun_fire",
+      "category": "sound_effect",
+      "path": "game/assets/audio/original_procedural/sfx/weapon_minigun_fire.wav",
+      "source": null,
+      "skill": "dopamine-sfx",
+      "generator_or_recipe": "game/tools/generate_original_audio.py",
+      "seed": 3522894974,
+      "parameters": {
+        "sample_rate_hz": 44100,
+        "channels": 1,
+        "encoding": "PCM16 WAV",
+        "method": "role-specific oscillator/noise layers with analytic envelopes",
+        "variation_index": 1,
+        "variation_count": 4
+      },
+      "validation_status": "passed",
+      "duration_seconds": 0.105,
+      "channels": 1,
+      "sample_rate": 44100
+    },
+    {
+      "id": "sfx_weapon_minigun_fire_02",
+      "category": "sound_effect",
+      "path": "game/assets/audio/original_procedural/sfx/weapon_minigun_fire_02.wav",
+      "source": null,
+      "skill": "dopamine-sfx",
+      "generator_or_recipe": "game/tools/generate_original_audio.py",
+      "seed": 207727925,
+      "parameters": {
+        "sample_rate_hz": 44100,
+        "channels": 1,
+        "encoding": "PCM16 WAV",
+        "method": "role-specific oscillator/noise layers with analytic envelopes",
+        "variation_index": 2,
+        "variation_count": 4
+      },
+      "validation_status": "passed",
+      "duration_seconds": 0.105,
+      "channels": 1,
+      "sample_rate": 44100
+    },
+    {
+      "id": "sfx_weapon_minigun_fire_03",
+      "category": "sound_effect",
+      "path": "game/assets/audio/original_procedural/sfx/weapon_minigun_fire_03.wav",
+      "source": null,
+      "skill": "dopamine-sfx",
+      "generator_or_recipe": "game/tools/generate_original_audio.py",
+      "seed": 1759123022,
+      "parameters": {
+        "sample_rate_hz": 44100,
+        "channels": 1,
+        "encoding": "PCM16 WAV",
+        "method": "role-specific oscillator/noise layers with analytic envelopes",
+        "variation_index": 3,
+        "variation_count": 4
+      },
+      "validation_status": "passed",
+      "duration_seconds": 0.105,
+      "channels": 1,
+      "sample_rate": 44100
+    },
+    {
+      "id": "sfx_weapon_minigun_fire_04",
+      "category": "sound_effect",
+      "path": "game/assets/audio/original_procedural/sfx/weapon_minigun_fire_04.wav",
+      "source": null,
+      "skill": "dopamine-sfx",
+      "generator_or_recipe": "game/tools/generate_original_audio.py",
+      "seed": 63823048,
+      "parameters": {
+        "sample_rate_hz": 44100,
+        "channels": 1,
+        "encoding": "PCM16 WAV",
+        "method": "role-specific oscillator/noise layers with analytic envelopes",
+        "variation_index": 4,
+        "variation_count": 4
+      },
+      "validation_status": "passed",
+      "duration_seconds": 0.105,
+      "channels": 1,
+      "sample_rate": 44100
+    },
+    {
+      "id": "sfx_weapon_minigun_impact",
+      "category": "sound_effect",
+      "path": "game/assets/audio/original_procedural/sfx/weapon_minigun_impact.wav",
+      "source": null,
+      "skill": "dopamine-sfx",
+      "generator_or_recipe": "game/tools/generate_original_audio.py",
+      "seed": 3308239770,
+      "parameters": {
+        "sample_rate_hz": 44100,
+        "channels": 1,
+        "encoding": "PCM16 WAV",
+        "method": "role-specific oscillator/noise layers with analytic envelopes",
+        "variation_index": 1,
+        "variation_count": 4
+      },
+      "validation_status": "passed",
+      "duration_seconds": 0.095,
+      "channels": 1,
+      "sample_rate": 44100
+    },
+    {
+      "id": "sfx_weapon_minigun_impact_02",
+      "category": "sound_effect",
+      "path": "game/assets/audio/original_procedural/sfx/weapon_minigun_impact_02.wav",
+      "source": null,
+      "skill": "dopamine-sfx",
+      "generator_or_recipe": "game/tools/generate_original_audio.py",
+      "seed": 1531145062,
+      "parameters": {
+        "sample_rate_hz": 44100,
+        "channels": 1,
+        "encoding": "PCM16 WAV",
+        "method": "role-specific oscillator/noise layers with analytic envelopes",
+        "variation_index": 2,
+        "variation_count": 4
+      },
+      "validation_status": "passed",
+      "duration_seconds": 0.095,
+      "channels": 1,
+      "sample_rate": 44100
+    },
+    {
+      "id": "sfx_weapon_minigun_impact_03",
+      "category": "sound_effect",
+      "path": "game/assets/audio/original_procedural/sfx/weapon_minigun_impact_03.wav",
+      "source": null,
+      "skill": "dopamine-sfx",
+      "generator_or_recipe": "game/tools/generate_original_audio.py",
+      "seed": 3732796415,
+      "parameters": {
+        "sample_rate_hz": 44100,
+        "channels": 1,
+        "encoding": "PCM16 WAV",
+        "method": "role-specific oscillator/noise layers with analytic envelopes",
+        "variation_index": 3,
+        "variation_count": 4
+      },
+      "validation_status": "passed",
+      "duration_seconds": 0.095,
+      "channels": 1,
+      "sample_rate": 44100
+    },
+    {
+      "id": "sfx_weapon_minigun_impact_04",
+      "category": "sound_effect",
+      "path": "game/assets/audio/original_procedural/sfx/weapon_minigun_impact_04.wav",
+      "source": null,
+      "skill": "dopamine-sfx",
+      "generator_or_recipe": "game/tools/generate_original_audio.py",
+      "seed": 619859839,
+      "parameters": {
+        "sample_rate_hz": 44100,
+        "channels": 1,
+        "encoding": "PCM16 WAV",
+        "method": "role-specific oscillator/noise layers with analytic envelopes",
+        "variation_index": 4,
+        "variation_count": 4
+      },
+      "validation_status": "passed",
+      "duration_seconds": 0.095,
+      "channels": 1,
+      "sample_rate": 44100
+    },
+    {
+      "id": "sfx_weapon_toxic_cloud_fire",
+      "category": "sound_effect",
+      "path": "game/assets/audio/original_procedural/sfx/weapon_toxic_cloud_fire.wav",
+      "source": null,
+      "skill": "dopamine-sfx",
+      "generator_or_recipe": "game/tools/generate_original_audio.py",
+      "seed": 1452261799,
+      "parameters": {
+        "sample_rate_hz": 44100,
+        "channels": 1,
+        "encoding": "PCM16 WAV",
+        "method": "role-specific oscillator/noise layers with analytic envelopes",
+        "variation_index": 1,
+        "variation_count": 4
+      },
+      "validation_status": "passed",
+      "duration_seconds": 0.2,
+      "channels": 1,
+      "sample_rate": 44100
+    },
+    {
+      "id": "sfx_weapon_toxic_cloud_fire_02",
+      "category": "sound_effect",
+      "path": "game/assets/audio/original_procedural/sfx/weapon_toxic_cloud_fire_02.wav",
+      "source": null,
+      "skill": "dopamine-sfx",
+      "generator_or_recipe": "game/tools/generate_original_audio.py",
+      "seed": 2302948856,
+      "parameters": {
+        "sample_rate_hz": 44100,
+        "channels": 1,
+        "encoding": "PCM16 WAV",
+        "method": "role-specific oscillator/noise layers with analytic envelopes",
+        "variation_index": 2,
+        "variation_count": 4
+      },
+      "validation_status": "passed",
+      "duration_seconds": 0.2,
+      "channels": 1,
+      "sample_rate": 44100
+    },
+    {
+      "id": "sfx_weapon_toxic_cloud_fire_03",
+      "category": "sound_effect",
+      "path": "game/assets/audio/original_procedural/sfx/weapon_toxic_cloud_fire_03.wav",
+      "source": null,
+      "skill": "dopamine-sfx",
+      "generator_or_recipe": "game/tools/generate_original_audio.py",
+      "seed": 3378549772,
+      "parameters": {
+        "sample_rate_hz": 44100,
+        "channels": 1,
+        "encoding": "PCM16 WAV",
+        "method": "role-specific oscillator/noise layers with analytic envelopes",
+        "variation_index": 3,
+        "variation_count": 4
+      },
+      "validation_status": "passed",
+      "duration_seconds": 0.2,
+      "channels": 1,
+      "sample_rate": 44100
+    },
+    {
+      "id": "sfx_weapon_toxic_cloud_fire_04",
+      "category": "sound_effect",
+      "path": "game/assets/audio/original_procedural/sfx/weapon_toxic_cloud_fire_04.wav",
+      "source": null,
+      "skill": "dopamine-sfx",
+      "generator_or_recipe": "game/tools/generate_original_audio.py",
+      "seed": 1937946469,
+      "parameters": {
+        "sample_rate_hz": 44100,
+        "channels": 1,
+        "encoding": "PCM16 WAV",
+        "method": "role-specific oscillator/noise layers with analytic envelopes",
+        "variation_index": 4,
+        "variation_count": 4
+      },
+      "validation_status": "passed",
+      "duration_seconds": 0.2,
+      "channels": 1,
+      "sample_rate": 44100
+    },
+    {
+      "id": "sfx_weapon_toxic_cloud_impact",
+      "category": "sound_effect",
+      "path": "game/assets/audio/original_procedural/sfx/weapon_toxic_cloud_impact.wav",
+      "source": null,
+      "skill": "dopamine-sfx",
+      "generator_or_recipe": "game/tools/generate_original_audio.py",
+      "seed": 547859811,
+      "parameters": {
+        "sample_rate_hz": 44100,
+        "channels": 1,
+        "encoding": "PCM16 WAV",
+        "method": "role-specific oscillator/noise layers with analytic envelopes",
+        "variation_index": 1,
+        "variation_count": 4
+      },
+      "validation_status": "passed",
+      "duration_seconds": 0.095,
+      "channels": 1,
+      "sample_rate": 44100
+    },
+    {
+      "id": "sfx_weapon_toxic_cloud_impact_02",
+      "category": "sound_effect",
+      "path": "game/assets/audio/original_procedural/sfx/weapon_toxic_cloud_impact_02.wav",
+      "source": null,
+      "skill": "dopamine-sfx",
+      "generator_or_recipe": "game/tools/generate_original_audio.py",
+      "seed": 1334018468,
+      "parameters": {
+        "sample_rate_hz": 44100,
+        "channels": 1,
+        "encoding": "PCM16 WAV",
+        "method": "role-specific oscillator/noise layers with analytic envelopes",
+        "variation_index": 2,
+        "variation_count": 4
+      },
+      "validation_status": "passed",
+      "duration_seconds": 0.095,
+      "channels": 1,
+      "sample_rate": 44100
+    },
+    {
+      "id": "sfx_weapon_toxic_cloud_impact_03",
+      "category": "sound_effect",
+      "path": "game/assets/audio/original_procedural/sfx/weapon_toxic_cloud_impact_03.wav",
+      "source": null,
+      "skill": "dopamine-sfx",
+      "generator_or_recipe": "game/tools/generate_original_audio.py",
+      "seed": 1132834640,
+      "parameters": {
+        "sample_rate_hz": 44100,
+        "channels": 1,
+        "encoding": "PCM16 WAV",
+        "method": "role-specific oscillator/noise layers with analytic envelopes",
+        "variation_index": 3,
+        "variation_count": 4
+      },
+      "validation_status": "passed",
+      "duration_seconds": 0.095,
+      "channels": 1,
+      "sample_rate": 44100
+    },
+    {
+      "id": "sfx_weapon_toxic_cloud_impact_04",
+      "category": "sound_effect",
+      "path": "game/assets/audio/original_procedural/sfx/weapon_toxic_cloud_impact_04.wav",
+      "source": null,
+      "skill": "dopamine-sfx",
+      "generator_or_recipe": "game/tools/generate_original_audio.py",
+      "seed": 3442469618,
+      "parameters": {
+        "sample_rate_hz": 44100,
+        "channels": 1,
+        "encoding": "PCM16 WAV",
+        "method": "role-specific oscillator/noise layers with analytic envelopes",
+        "variation_index": 4,
+        "variation_count": 4
+      },
+      "validation_status": "passed",
+      "duration_seconds": 0.095,
+      "channels": 1,
+      "sample_rate": 44100
+    },
+    {
+      "id": "sfx_weapon_sawblades_fire",
+      "category": "sound_effect",
+      "path": "game/assets/audio/original_procedural/sfx/weapon_sawblades_fire.wav",
+      "source": null,
+      "skill": "dopamine-sfx",
+      "generator_or_recipe": "game/tools/generate_original_audio.py",
+      "seed": 3837497983,
+      "parameters": {
+        "sample_rate_hz": 44100,
+        "channels": 1,
+        "encoding": "PCM16 WAV",
+        "method": "role-specific oscillator/noise layers with analytic envelopes",
+        "variation_index": 1,
+        "variation_count": 4
+      },
+      "validation_status": "passed",
+      "duration_seconds": 0.2,
+      "channels": 1,
+      "sample_rate": 44100
+    },
+    {
+      "id": "sfx_weapon_sawblades_fire_02",
+      "category": "sound_effect",
+      "path": "game/assets/audio/original_procedural/sfx/weapon_sawblades_fire_02.wav",
+      "source": null,
+      "skill": "dopamine-sfx",
+      "generator_or_recipe": "game/tools/generate_original_audio.py",
+      "seed": 1706665363,
+      "parameters": {
+        "sample_rate_hz": 44100,
+        "channels": 1,
+        "encoding": "PCM16 WAV",
+        "method": "role-specific oscillator/noise layers with analytic envelopes",
+        "variation_index": 2,
+        "variation_count": 4
+      },
+      "validation_status": "passed",
+      "duration_seconds": 0.2,
+      "channels": 1,
+      "sample_rate": 44100
+    },
+    {
+      "id": "sfx_weapon_sawblades_fire_03",
+      "category": "sound_effect",
+      "path": "game/assets/audio/original_procedural/sfx/weapon_sawblades_fire_03.wav",
+      "source": null,
+      "skill": "dopamine-sfx",
+      "generator_or_recipe": "game/tools/generate_original_audio.py",
+      "seed": 685837326,
+      "parameters": {
+        "sample_rate_hz": 44100,
+        "channels": 1,
+        "encoding": "PCM16 WAV",
+        "method": "role-specific oscillator/noise layers with analytic envelopes",
+        "variation_index": 3,
+        "variation_count": 4
+      },
+      "validation_status": "passed",
+      "duration_seconds": 0.2,
+      "channels": 1,
+      "sample_rate": 44100
+    },
+    {
+      "id": "sfx_weapon_sawblades_fire_04",
+      "category": "sound_effect",
+      "path": "game/assets/audio/original_procedural/sfx/weapon_sawblades_fire_04.wav",
+      "source": null,
+      "skill": "dopamine-sfx",
+      "generator_or_recipe": "game/tools/generate_original_audio.py",
+      "seed": 4052906559,
+      "parameters": {
+        "sample_rate_hz": 44100,
+        "channels": 1,
+        "encoding": "PCM16 WAV",
+        "method": "role-specific oscillator/noise layers with analytic envelopes",
+        "variation_index": 4,
+        "variation_count": 4
+      },
+      "validation_status": "passed",
+      "duration_seconds": 0.2,
+      "channels": 1,
+      "sample_rate": 44100
+    },
+    {
+      "id": "sfx_weapon_sawblades_impact",
+      "category": "sound_effect",
+      "path": "game/assets/audio/original_procedural/sfx/weapon_sawblades_impact.wav",
+      "source": null,
+      "skill": "dopamine-sfx",
+      "generator_or_recipe": "game/tools/generate_original_audio.py",
+      "seed": 1573936608,
+      "parameters": {
+        "sample_rate_hz": 44100,
+        "channels": 1,
+        "encoding": "PCM16 WAV",
+        "method": "role-specific oscillator/noise layers with analytic envelopes",
+        "variation_index": 1,
+        "variation_count": 4
+      },
+      "validation_status": "passed",
+      "duration_seconds": 0.095,
+      "channels": 1,
+      "sample_rate": 44100
+    },
+    {
+      "id": "sfx_weapon_sawblades_impact_02",
+      "category": "sound_effect",
+      "path": "game/assets/audio/original_procedural/sfx/weapon_sawblades_impact_02.wav",
+      "source": null,
+      "skill": "dopamine-sfx",
+      "generator_or_recipe": "game/tools/generate_original_audio.py",
+      "seed": 3441138521,
+      "parameters": {
+        "sample_rate_hz": 44100,
+        "channels": 1,
+        "encoding": "PCM16 WAV",
+        "method": "role-specific oscillator/noise layers with analytic envelopes",
+        "variation_index": 2,
+        "variation_count": 4
+      },
+      "validation_status": "passed",
+      "duration_seconds": 0.095,
+      "channels": 1,
+      "sample_rate": 44100
+    },
+    {
+      "id": "sfx_weapon_sawblades_impact_03",
+      "category": "sound_effect",
+      "path": "game/assets/audio/original_procedural/sfx/weapon_sawblades_impact_03.wav",
+      "source": null,
+      "skill": "dopamine-sfx",
+      "generator_or_recipe": "game/tools/generate_original_audio.py",
+      "seed": 1824903918,
+      "parameters": {
+        "sample_rate_hz": 44100,
+        "channels": 1,
+        "encoding": "PCM16 WAV",
+        "method": "role-specific oscillator/noise layers with analytic envelopes",
+        "variation_index": 3,
+        "variation_count": 4
+      },
+      "validation_status": "passed",
+      "duration_seconds": 0.095,
+      "channels": 1,
+      "sample_rate": 44100
+    },
+    {
+      "id": "sfx_weapon_sawblades_impact_04",
+      "category": "sound_effect",
+      "path": "game/assets/audio/original_procedural/sfx/weapon_sawblades_impact_04.wav",
+      "source": null,
+      "skill": "dopamine-sfx",
+      "generator_or_recipe": "game/tools/generate_original_audio.py",
+      "seed": 1798961028,
+      "parameters": {
+        "sample_rate_hz": 44100,
+        "channels": 1,
+        "encoding": "PCM16 WAV",
+        "method": "role-specific oscillator/noise layers with analytic envelopes",
+        "variation_index": 4,
+        "variation_count": 4
+      },
+      "validation_status": "passed",
+      "duration_seconds": 0.095,
+      "channels": 1,
+      "sample_rate": 44100
+    },
+    {
+      "id": "sfx_weapon_meteor_staff_fire",
+      "category": "sound_effect",
+      "path": "game/assets/audio/original_procedural/sfx/weapon_meteor_staff_fire.wav",
+      "source": null,
+      "skill": "dopamine-sfx",
+      "generator_or_recipe": "game/tools/generate_original_audio.py",
+      "seed": 3690967927,
+      "parameters": {
+        "sample_rate_hz": 44100,
+        "channels": 1,
+        "encoding": "PCM16 WAV",
+        "method": "role-specific oscillator/noise layers with analytic envelopes",
+        "variation_index": 1,
+        "variation_count": 4
+      },
+      "validation_status": "passed",
+      "duration_seconds": 0.105,
+      "channels": 1,
+      "sample_rate": 44100
+    },
+    {
+      "id": "sfx_weapon_meteor_staff_fire_02",
+      "category": "sound_effect",
+      "path": "game/assets/audio/original_procedural/sfx/weapon_meteor_staff_fire_02.wav",
+      "source": null,
+      "skill": "dopamine-sfx",
+      "generator_or_recipe": "game/tools/generate_original_audio.py",
+      "seed": 3107734695,
+      "parameters": {
+        "sample_rate_hz": 44100,
+        "channels": 1,
+        "encoding": "PCM16 WAV",
+        "method": "role-specific oscillator/noise layers with analytic envelopes",
+        "variation_index": 2,
+        "variation_count": 4
+      },
+      "validation_status": "passed",
+      "duration_seconds": 0.105,
+      "channels": 1,
+      "sample_rate": 44100
+    },
+    {
+      "id": "sfx_weapon_meteor_staff_fire_03",
+      "category": "sound_effect",
+      "path": "game/assets/audio/original_procedural/sfx/weapon_meteor_staff_fire_03.wav",
+      "source": null,
+      "skill": "dopamine-sfx",
+      "generator_or_recipe": "game/tools/generate_original_audio.py",
+      "seed": 99414875,
+      "parameters": {
+        "sample_rate_hz": 44100,
+        "channels": 1,
+        "encoding": "PCM16 WAV",
+        "method": "role-specific oscillator/noise layers with analytic envelopes",
+        "variation_index": 3,
+        "variation_count": 4
+      },
+      "validation_status": "passed",
+      "duration_seconds": 0.105,
+      "channels": 1,
+      "sample_rate": 44100
+    },
+    {
+      "id": "sfx_weapon_meteor_staff_fire_04",
+      "category": "sound_effect",
+      "path": "game/assets/audio/original_procedural/sfx/weapon_meteor_staff_fire_04.wav",
+      "source": null,
+      "skill": "dopamine-sfx",
+      "generator_or_recipe": "game/tools/generate_original_audio.py",
+      "seed": 1098981152,
+      "parameters": {
+        "sample_rate_hz": 44100,
+        "channels": 1,
+        "encoding": "PCM16 WAV",
+        "method": "role-specific oscillator/noise layers with analytic envelopes",
+        "variation_index": 4,
+        "variation_count": 4
+      },
+      "validation_status": "passed",
+      "duration_seconds": 0.105,
+      "channels": 1,
+      "sample_rate": 44100
+    },
+    {
+      "id": "sfx_weapon_meteor_staff_impact",
+      "category": "sound_effect",
+      "path": "game/assets/audio/original_procedural/sfx/weapon_meteor_staff_impact.wav",
+      "source": null,
+      "skill": "dopamine-sfx",
+      "generator_or_recipe": "game/tools/generate_original_audio.py",
+      "seed": 2825796527,
+      "parameters": {
+        "sample_rate_hz": 44100,
+        "channels": 1,
+        "encoding": "PCM16 WAV",
+        "method": "role-specific oscillator/noise layers with analytic envelopes",
+        "variation_index": 1,
+        "variation_count": 4
+      },
+      "validation_status": "passed",
+      "duration_seconds": 0.095,
+      "channels": 1,
+      "sample_rate": 44100
+    },
+    {
+      "id": "sfx_weapon_meteor_staff_impact_02",
+      "category": "sound_effect",
+      "path": "game/assets/audio/original_procedural/sfx/weapon_meteor_staff_impact_02.wav",
+      "source": null,
+      "skill": "dopamine-sfx",
+      "generator_or_recipe": "game/tools/generate_original_audio.py",
+      "seed": 4222019065,
+      "parameters": {
+        "sample_rate_hz": 44100,
+        "channels": 1,
+        "encoding": "PCM16 WAV",
+        "method": "role-specific oscillator/noise layers with analytic envelopes",
+        "variation_index": 2,
+        "variation_count": 4
+      },
+      "validation_status": "passed",
+      "duration_seconds": 0.095,
+      "channels": 1,
+      "sample_rate": 44100
+    },
+    {
+      "id": "sfx_weapon_meteor_staff_impact_03",
+      "category": "sound_effect",
+      "path": "game/assets/audio/original_procedural/sfx/weapon_meteor_staff_impact_03.wav",
+      "source": null,
+      "skill": "dopamine-sfx",
+      "generator_or_recipe": "game/tools/generate_original_audio.py",
+      "seed": 3284112848,
+      "parameters": {
+        "sample_rate_hz": 44100,
+        "channels": 1,
+        "encoding": "PCM16 WAV",
+        "method": "role-specific oscillator/noise layers with analytic envelopes",
+        "variation_index": 3,
+        "variation_count": 4
+      },
+      "validation_status": "passed",
+      "duration_seconds": 0.095,
+      "channels": 1,
+      "sample_rate": 44100
+    },
+    {
+      "id": "sfx_weapon_meteor_staff_impact_04",
+      "category": "sound_effect",
+      "path": "game/assets/audio/original_procedural/sfx/weapon_meteor_staff_impact_04.wav",
+      "source": null,
+      "skill": "dopamine-sfx",
+      "generator_or_recipe": "game/tools/generate_original_audio.py",
+      "seed": 4202527928,
+      "parameters": {
+        "sample_rate_hz": 44100,
+        "channels": 1,
+        "encoding": "PCM16 WAV",
+        "method": "role-specific oscillator/noise layers with analytic envelopes",
+        "variation_index": 4,
+        "variation_count": 4
+      },
+      "validation_status": "passed",
+      "duration_seconds": 0.095,
+      "channels": 1,
+      "sample_rate": 44100
+    },
+    {
+      "id": "sfx_weapon_prism_laser_fire",
+      "category": "sound_effect",
+      "path": "game/assets/audio/original_procedural/sfx/weapon_prism_laser_fire.wav",
+      "source": null,
+      "skill": "dopamine-sfx",
+      "generator_or_recipe": "game/tools/generate_original_audio.py",
+      "seed": 221632707,
+      "parameters": {
+        "sample_rate_hz": 44100,
+        "channels": 1,
+        "encoding": "PCM16 WAV",
+        "method": "role-specific oscillator/noise layers with analytic envelopes",
+        "variation_index": 1,
+        "variation_count": 4
+      },
+      "validation_status": "passed",
+      "duration_seconds": 0.14,
+      "channels": 1,
+      "sample_rate": 44100
+    },
+    {
+      "id": "sfx_weapon_prism_laser_fire_02",
+      "category": "sound_effect",
+      "path": "game/assets/audio/original_procedural/sfx/weapon_prism_laser_fire_02.wav",
+      "source": null,
+      "skill": "dopamine-sfx",
+      "generator_or_recipe": "game/tools/generate_original_audio.py",
+      "seed": 1018731311,
+      "parameters": {
+        "sample_rate_hz": 44100,
+        "channels": 1,
+        "encoding": "PCM16 WAV",
+        "method": "role-specific oscillator/noise layers with analytic envelopes",
+        "variation_index": 2,
+        "variation_count": 4
+      },
+      "validation_status": "passed",
+      "duration_seconds": 0.14,
+      "channels": 1,
+      "sample_rate": 44100
+    },
+    {
+      "id": "sfx_weapon_prism_laser_fire_03",
+      "category": "sound_effect",
+      "path": "game/assets/audio/original_procedural/sfx/weapon_prism_laser_fire_03.wav",
+      "source": null,
+      "skill": "dopamine-sfx",
+      "generator_or_recipe": "game/tools/generate_original_audio.py",
+      "seed": 486591064,
+      "parameters": {
+        "sample_rate_hz": 44100,
+        "channels": 1,
+        "encoding": "PCM16 WAV",
+        "method": "role-specific oscillator/noise layers with analytic envelopes",
+        "variation_index": 3,
+        "variation_count": 4
+      },
+      "validation_status": "passed",
+      "duration_seconds": 0.14,
+      "channels": 1,
+      "sample_rate": 44100
+    },
+    {
+      "id": "sfx_weapon_prism_laser_fire_04",
+      "category": "sound_effect",
+      "path": "game/assets/audio/original_procedural/sfx/weapon_prism_laser_fire_04.wav",
+      "source": null,
+      "skill": "dopamine-sfx",
+      "generator_or_recipe": "game/tools/generate_original_audio.py",
+      "seed": 343974564,
+      "parameters": {
+        "sample_rate_hz": 44100,
+        "channels": 1,
+        "encoding": "PCM16 WAV",
+        "method": "role-specific oscillator/noise layers with analytic envelopes",
+        "variation_index": 4,
+        "variation_count": 4
+      },
+      "validation_status": "passed",
+      "duration_seconds": 0.14,
+      "channels": 1,
+      "sample_rate": 44100
+    },
+    {
+      "id": "sfx_weapon_prism_laser_impact",
+      "category": "sound_effect",
+      "path": "game/assets/audio/original_procedural/sfx/weapon_prism_laser_impact.wav",
+      "source": null,
+      "skill": "dopamine-sfx",
+      "generator_or_recipe": "game/tools/generate_original_audio.py",
+      "seed": 2470230064,
+      "parameters": {
+        "sample_rate_hz": 44100,
+        "channels": 1,
+        "encoding": "PCM16 WAV",
+        "method": "role-specific oscillator/noise layers with analytic envelopes",
+        "variation_index": 1,
+        "variation_count": 4
+      },
+      "validation_status": "passed",
+      "duration_seconds": 0.095,
+      "channels": 1,
+      "sample_rate": 44100
+    },
+    {
+      "id": "sfx_weapon_prism_laser_impact_02",
+      "category": "sound_effect",
+      "path": "game/assets/audio/original_procedural/sfx/weapon_prism_laser_impact_02.wav",
+      "source": null,
+      "skill": "dopamine-sfx",
+      "generator_or_recipe": "game/tools/generate_original_audio.py",
+      "seed": 823541111,
+      "parameters": {
+        "sample_rate_hz": 44100,
+        "channels": 1,
+        "encoding": "PCM16 WAV",
+        "method": "role-specific oscillator/noise layers with analytic envelopes",
+        "variation_index": 2,
+        "variation_count": 4
+      },
+      "validation_status": "passed",
+      "duration_seconds": 0.095,
+      "channels": 1,
+      "sample_rate": 44100
+    },
+    {
+      "id": "sfx_weapon_prism_laser_impact_03",
+      "category": "sound_effect",
+      "path": "game/assets/audio/original_procedural/sfx/weapon_prism_laser_impact_03.wav",
+      "source": null,
+      "skill": "dopamine-sfx",
+      "generator_or_recipe": "game/tools/generate_original_audio.py",
+      "seed": 4239116375,
+      "parameters": {
+        "sample_rate_hz": 44100,
+        "channels": 1,
+        "encoding": "PCM16 WAV",
+        "method": "role-specific oscillator/noise layers with analytic envelopes",
+        "variation_index": 3,
+        "variation_count": 4
+      },
+      "validation_status": "passed",
+      "duration_seconds": 0.095,
+      "channels": 1,
+      "sample_rate": 44100
+    },
+    {
+      "id": "sfx_weapon_prism_laser_impact_04",
+      "category": "sound_effect",
+      "path": "game/assets/audio/original_procedural/sfx/weapon_prism_laser_impact_04.wav",
+      "source": null,
+      "skill": "dopamine-sfx",
+      "generator_or_recipe": "game/tools/generate_original_audio.py",
+      "seed": 1056000309,
+      "parameters": {
+        "sample_rate_hz": 44100,
+        "channels": 1,
+        "encoding": "PCM16 WAV",
+        "method": "role-specific oscillator/noise layers with analytic envelopes",
+        "variation_index": 4,
+        "variation_count": 4
+      },
+      "validation_status": "passed",
+      "duration_seconds": 0.095,
+      "channels": 1,
+      "sample_rate": 44100
+    },
+    {
+      "id": "sfx_weapon_void_orb_fire",
+      "category": "sound_effect",
+      "path": "game/assets/audio/original_procedural/sfx/weapon_void_orb_fire.wav",
+      "source": null,
+      "skill": "dopamine-sfx",
+      "generator_or_recipe": "game/tools/generate_original_audio.py",
+      "seed": 3036030780,
+      "parameters": {
+        "sample_rate_hz": 44100,
+        "channels": 1,
+        "encoding": "PCM16 WAV",
+        "method": "role-specific oscillator/noise layers with analytic envelopes",
+        "variation_index": 1,
+        "variation_count": 4
+      },
+      "validation_status": "passed",
+      "duration_seconds": 0.14,
+      "channels": 1,
+      "sample_rate": 44100
+    },
+    {
+      "id": "sfx_weapon_void_orb_fire_02",
+      "category": "sound_effect",
+      "path": "game/assets/audio/original_procedural/sfx/weapon_void_orb_fire_02.wav",
+      "source": null,
+      "skill": "dopamine-sfx",
+      "generator_or_recipe": "game/tools/generate_original_audio.py",
+      "seed": 2661516870,
+      "parameters": {
+        "sample_rate_hz": 44100,
+        "channels": 1,
+        "encoding": "PCM16 WAV",
+        "method": "role-specific oscillator/noise layers with analytic envelopes",
+        "variation_index": 2,
+        "variation_count": 4
+      },
+      "validation_status": "passed",
+      "duration_seconds": 0.14,
+      "channels": 1,
+      "sample_rate": 44100
+    },
+    {
+      "id": "sfx_weapon_void_orb_fire_03",
+      "category": "sound_effect",
+      "path": "game/assets/audio/original_procedural/sfx/weapon_void_orb_fire_03.wav",
+      "source": null,
+      "skill": "dopamine-sfx",
+      "generator_or_recipe": "game/tools/generate_original_audio.py",
+      "seed": 1278190593,
+      "parameters": {
+        "sample_rate_hz": 44100,
+        "channels": 1,
+        "encoding": "PCM16 WAV",
+        "method": "role-specific oscillator/noise layers with analytic envelopes",
+        "variation_index": 3,
+        "variation_count": 4
+      },
+      "validation_status": "passed",
+      "duration_seconds": 0.14,
+      "channels": 1,
+      "sample_rate": 44100
+    },
+    {
+      "id": "sfx_weapon_void_orb_fire_04",
+      "category": "sound_effect",
+      "path": "game/assets/audio/original_procedural/sfx/weapon_void_orb_fire_04.wav",
+      "source": null,
+      "skill": "dopamine-sfx",
+      "generator_or_recipe": "game/tools/generate_original_audio.py",
+      "seed": 3620920502,
+      "parameters": {
+        "sample_rate_hz": 44100,
+        "channels": 1,
+        "encoding": "PCM16 WAV",
+        "method": "role-specific oscillator/noise layers with analytic envelopes",
+        "variation_index": 4,
+        "variation_count": 4
+      },
+      "validation_status": "passed",
+      "duration_seconds": 0.14,
+      "channels": 1,
+      "sample_rate": 44100
+    },
+    {
+      "id": "sfx_weapon_void_orb_impact",
+      "category": "sound_effect",
+      "path": "game/assets/audio/original_procedural/sfx/weapon_void_orb_impact.wav",
+      "source": null,
+      "skill": "dopamine-sfx",
+      "generator_or_recipe": "game/tools/generate_original_audio.py",
+      "seed": 902928538,
+      "parameters": {
+        "sample_rate_hz": 44100,
+        "channels": 1,
+        "encoding": "PCM16 WAV",
+        "method": "role-specific oscillator/noise layers with analytic envelopes",
+        "variation_index": 1,
+        "variation_count": 4
+      },
+      "validation_status": "passed",
+      "duration_seconds": 0.095,
+      "channels": 1,
+      "sample_rate": 44100
+    },
+    {
+      "id": "sfx_weapon_void_orb_impact_02",
+      "category": "sound_effect",
+      "path": "game/assets/audio/original_procedural/sfx/weapon_void_orb_impact_02.wav",
+      "source": null,
+      "skill": "dopamine-sfx",
+      "generator_or_recipe": "game/tools/generate_original_audio.py",
+      "seed": 1017230121,
+      "parameters": {
+        "sample_rate_hz": 44100,
+        "channels": 1,
+        "encoding": "PCM16 WAV",
+        "method": "role-specific oscillator/noise layers with analytic envelopes",
+        "variation_index": 2,
+        "variation_count": 4
+      },
+      "validation_status": "passed",
+      "duration_seconds": 0.095,
+      "channels": 1,
+      "sample_rate": 44100
+    },
+    {
+      "id": "sfx_weapon_void_orb_impact_03",
+      "category": "sound_effect",
+      "path": "game/assets/audio/original_procedural/sfx/weapon_void_orb_impact_03.wav",
+      "source": null,
+      "skill": "dopamine-sfx",
+      "generator_or_recipe": "game/tools/generate_original_audio.py",
+      "seed": 317501771,
+      "parameters": {
+        "sample_rate_hz": 44100,
+        "channels": 1,
+        "encoding": "PCM16 WAV",
+        "method": "role-specific oscillator/noise layers with analytic envelopes",
+        "variation_index": 3,
+        "variation_count": 4
+      },
+      "validation_status": "passed",
+      "duration_seconds": 0.095,
+      "channels": 1,
+      "sample_rate": 44100
+    },
+    {
+      "id": "sfx_weapon_void_orb_impact_04",
+      "category": "sound_effect",
+      "path": "game/assets/audio/original_procedural/sfx/weapon_void_orb_impact_04.wav",
+      "source": null,
+      "skill": "dopamine-sfx",
+      "generator_or_recipe": "game/tools/generate_original_audio.py",
+      "seed": 2445330798,
+      "parameters": {
+        "sample_rate_hz": 44100,
+        "channels": 1,
+        "encoding": "PCM16 WAV",
+        "method": "role-specific oscillator/noise layers with analytic envelopes",
+        "variation_index": 4,
+        "variation_count": 4
+      },
+      "validation_status": "passed",
+      "duration_seconds": 0.095,
+      "channels": 1,
+      "sample_rate": 44100
+    },
+    {
+      "id": "sfx_weapon_frost_nova_fire",
+      "category": "sound_effect",
+      "path": "game/assets/audio/original_procedural/sfx/weapon_frost_nova_fire.wav",
+      "source": null,
+      "skill": "dopamine-sfx",
+      "generator_or_recipe": "game/tools/generate_original_audio.py",
+      "seed": 228888668,
+      "parameters": {
+        "sample_rate_hz": 44100,
+        "channels": 1,
+        "encoding": "PCM16 WAV",
+        "method": "role-specific oscillator/noise layers with analytic envelopes",
+        "variation_index": 1,
+        "variation_count": 4
+      },
+      "validation_status": "passed",
+      "duration_seconds": 0.2,
+      "channels": 1,
+      "sample_rate": 44100
+    },
+    {
+      "id": "sfx_weapon_frost_nova_fire_02",
+      "category": "sound_effect",
+      "path": "game/assets/audio/original_procedural/sfx/weapon_frost_nova_fire_02.wav",
+      "source": null,
+      "skill": "dopamine-sfx",
+      "generator_or_recipe": "game/tools/generate_original_audio.py",
+      "seed": 949362650,
+      "parameters": {
+        "sample_rate_hz": 44100,
+        "channels": 1,
+        "encoding": "PCM16 WAV",
+        "method": "role-specific oscillator/noise layers with analytic envelopes",
+        "variation_index": 2,
+        "variation_count": 4
+      },
+      "validation_status": "passed",
+      "duration_seconds": 0.2,
+      "channels": 1,
+      "sample_rate": 44100
+    },
+    {
+      "id": "sfx_weapon_frost_nova_fire_03",
+      "category": "sound_effect",
+      "path": "game/assets/audio/original_procedural/sfx/weapon_frost_nova_fire_03.wav",
+      "source": null,
+      "skill": "dopamine-sfx",
+      "generator_or_recipe": "game/tools/generate_original_audio.py",
+      "seed": 631470160,
+      "parameters": {
+        "sample_rate_hz": 44100,
+        "channels": 1,
+        "encoding": "PCM16 WAV",
+        "method": "role-specific oscillator/noise layers with analytic envelopes",
+        "variation_index": 3,
+        "variation_count": 4
+      },
+      "validation_status": "passed",
+      "duration_seconds": 0.2,
+      "channels": 1,
+      "sample_rate": 44100
+    },
+    {
+      "id": "sfx_weapon_frost_nova_fire_04",
+      "category": "sound_effect",
+      "path": "game/assets/audio/original_procedural/sfx/weapon_frost_nova_fire_04.wav",
+      "source": null,
+      "skill": "dopamine-sfx",
+      "generator_or_recipe": "game/tools/generate_original_audio.py",
+      "seed": 468405327,
+      "parameters": {
+        "sample_rate_hz": 44100,
+        "channels": 1,
+        "encoding": "PCM16 WAV",
+        "method": "role-specific oscillator/noise layers with analytic envelopes",
+        "variation_index": 4,
+        "variation_count": 4
+      },
+      "validation_status": "passed",
+      "duration_seconds": 0.2,
+      "channels": 1,
+      "sample_rate": 44100
+    },
+    {
+      "id": "sfx_weapon_frost_nova_impact",
+      "category": "sound_effect",
+      "path": "game/assets/audio/original_procedural/sfx/weapon_frost_nova_impact.wav",
+      "source": null,
+      "skill": "dopamine-sfx",
+      "generator_or_recipe": "game/tools/generate_original_audio.py",
+      "seed": 3191546098,
+      "parameters": {
+        "sample_rate_hz": 44100,
+        "channels": 1,
+        "encoding": "PCM16 WAV",
+        "method": "role-specific oscillator/noise layers with analytic envelopes",
+        "variation_index": 1,
+        "variation_count": 4
+      },
+      "validation_status": "passed",
+      "duration_seconds": 0.095,
+      "channels": 1,
+      "sample_rate": 44100
+    },
+    {
+      "id": "sfx_weapon_frost_nova_impact_02",
+      "category": "sound_effect",
+      "path": "game/assets/audio/original_procedural/sfx/weapon_frost_nova_impact_02.wav",
+      "source": null,
+      "skill": "dopamine-sfx",
+      "generator_or_recipe": "game/tools/generate_original_audio.py",
+      "seed": 285967108,
+      "parameters": {
+        "sample_rate_hz": 44100,
+        "channels": 1,
+        "encoding": "PCM16 WAV",
+        "method": "role-specific oscillator/noise layers with analytic envelopes",
+        "variation_index": 2,
+        "variation_count": 4
+      },
+      "validation_status": "passed",
+      "duration_seconds": 0.095,
+      "channels": 1,
+      "sample_rate": 44100
+    },
+    {
+      "id": "sfx_weapon_frost_nova_impact_03",
+      "category": "sound_effect",
+      "path": "game/assets/audio/original_procedural/sfx/weapon_frost_nova_impact_03.wav",
+      "source": null,
+      "skill": "dopamine-sfx",
+      "generator_or_recipe": "game/tools/generate_original_audio.py",
+      "seed": 1631094465,
+      "parameters": {
+        "sample_rate_hz": 44100,
+        "channels": 1,
+        "encoding": "PCM16 WAV",
+        "method": "role-specific oscillator/noise layers with analytic envelopes",
+        "variation_index": 3,
+        "variation_count": 4
+      },
+      "validation_status": "passed",
+      "duration_seconds": 0.095,
+      "channels": 1,
+      "sample_rate": 44100
+    },
+    {
+      "id": "sfx_weapon_frost_nova_impact_04",
+      "category": "sound_effect",
+      "path": "game/assets/audio/original_procedural/sfx/weapon_frost_nova_impact_04.wav",
+      "source": null,
+      "skill": "dopamine-sfx",
+      "generator_or_recipe": "game/tools/generate_original_audio.py",
+      "seed": 2228709563,
+      "parameters": {
+        "sample_rate_hz": 44100,
+        "channels": 1,
+        "encoding": "PCM16 WAV",
+        "method": "role-specific oscillator/noise layers with analytic envelopes",
+        "variation_index": 4,
+        "variation_count": 4
+      },
+      "validation_status": "passed",
+      "duration_seconds": 0.095,
+      "channels": 1,
+      "sample_rate": 44100
+    },
+    {
+      "id": "music_menu_theme",
+      "category": "music",
+      "path": "game/assets/audio/music/menu_theme.wav",
+      "source": null,
+      "skill": "dopamine-music",
+      "generator_or_recipe": "game/tools/generate_original_audio.py",
+      "seed": 90210,
+      "parameters": {
+        "sample_rate_hz": 44100,
+        "channels": 1,
+        "encoding": "PCM16 WAV",
+        "method": "synchronized synthesized stem with 12 ms edge fade"
+      },
+      "validation_status": "passed",
+      "duration_seconds": 8.348,
+      "channels": 1,
+      "sample_rate": 44100
+    },
+    {
+      "id": "music_victory_cue",
+      "category": "music",
+      "path": "game/assets/audio/music/victory_cue.wav",
+      "source": null,
+      "skill": "dopamine-music",
+      "generator_or_recipe": "game/tools/generate_original_audio.py",
+      "seed": 90210,
+      "parameters": {
+        "sample_rate_hz": 44100,
+        "channels": 1,
+        "encoding": "PCM16 WAV",
+        "method": "synchronized synthesized stem with 12 ms edge fade"
+      },
+      "validation_status": "passed",
+      "duration_seconds": 1.28,
+      "channels": 1,
+      "sample_rate": 44100
+    },
+    {
+      "id": "music_defeat_cue",
+      "category": "music",
+      "path": "game/assets/audio/music/defeat_cue.wav",
+      "source": null,
+      "skill": "dopamine-music",
+      "generator_or_recipe": "game/tools/generate_original_audio.py",
+      "seed": 90210,
+      "parameters": {
+        "sample_rate_hz": 44100,
+        "channels": 1,
+        "encoding": "PCM16 WAV",
+        "method": "synchronized synthesized stem with 12 ms edge fade"
+      },
+      "validation_status": "passed",
+      "duration_seconds": 1.28,
+      "channels": 1,
+      "sample_rate": 44100
+    },
+    {
+      "id": "music_stem_rhythm",
+      "category": "music_stem",
+      "path": "game/assets/audio/original_procedural/music/rhythm.wav",
+      "source": null,
+      "skill": "dopamine-music",
+      "generator_or_recipe": "game/tools/generate_original_audio.py",
+      "seed": 90210,
+      "parameters": {
+        "sample_rate_hz": 44100,
+        "channels": 1,
+        "encoding": "PCM16 WAV",
+        "method": "synchronized synthesized stem with 12 ms edge fade"
+      },
+      "validation_status": "passed",
+      "duration_seconds": 8.348,
+      "channels": 1,
+      "sample_rate": 44100
+    },
+    {
+      "id": "music_stem_bass",
+      "category": "music_stem",
+      "path": "game/assets/audio/original_procedural/music/bass.wav",
+      "source": null,
+      "skill": "dopamine-music",
+      "generator_or_recipe": "game/tools/generate_original_audio.py",
+      "seed": 90210,
+      "parameters": {
+        "sample_rate_hz": 44100,
+        "channels": 1,
+        "encoding": "PCM16 WAV",
+        "method": "synchronized synthesized stem with 12 ms edge fade"
+      },
+      "validation_status": "passed",
+      "duration_seconds": 8.348,
+      "channels": 1,
+      "sample_rate": 44100
+    },
+    {
+      "id": "music_stem_pad",
+      "category": "music_stem",
+      "path": "game/assets/audio/original_procedural/music/pad.wav",
+      "source": null,
+      "skill": "dopamine-music",
+      "generator_or_recipe": "game/tools/generate_original_audio.py",
+      "seed": 90210,
+      "parameters": {
+        "sample_rate_hz": 44100,
+        "channels": 1,
+        "encoding": "PCM16 WAV",
+        "method": "synchronized synthesized stem with 12 ms edge fade"
+      },
+      "validation_status": "passed",
+      "duration_seconds": 8.348,
+      "channels": 1,
+      "sample_rate": 44100
+    },
+    {
+      "id": "music_stem_arp",
+      "category": "music_stem",
+      "path": "game/assets/audio/original_procedural/music/arp.wav",
+      "source": null,
+      "skill": "dopamine-music",
+      "generator_or_recipe": "game/tools/generate_original_audio.py",
+      "seed": 90210,
+      "parameters": {
+        "sample_rate_hz": 44100,
+        "channels": 1,
+        "encoding": "PCM16 WAV",
+        "method": "synchronized synthesized stem with 12 ms edge fade"
+      },
+      "validation_status": "passed",
+      "duration_seconds": 8.348,
+      "channels": 1,
+      "sample_rate": 44100
+    },
+    {
+      "id": "music_stem_boss",
+      "category": "music_stem",
+      "path": "game/assets/audio/original_procedural/music/boss.wav",
+      "source": null,
+      "skill": "dopamine-music",
+      "generator_or_recipe": "game/tools/generate_original_audio.py",
+      "seed": 90210,
+      "parameters": {
+        "sample_rate_hz": 44100,
+        "channels": 1,
+        "encoding": "PCM16 WAV",
+        "method": "synchronized synthesized stem with 12 ms edge fade"
+      },
+      "validation_status": "passed",
+      "duration_seconds": 8.348,
+      "channels": 1,
+      "sample_rate": 44100
+    }
+  ]
+}

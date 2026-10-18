@@ -30,7 +30,7 @@ def main() -> None:
         if len(parts) >= 4 and all(value.isdigit() for value in parts[:3]):
             palette.add(tuple(map(int, parts[:3])) + (255,))
     report = {"status": "passed", "root": str(args.root.resolve()), "assets": []}
-    for metadata_path in sorted(path for path in args.root.rglob("*.json") if path.name != "qa-report.json"):
+    for metadata_path in sorted(path for path in args.root.rglob("*.json") if not path.name.startswith("qa-report")):
         metadata = json.loads(metadata_path.read_text())
         if metadata.get("parameters", {}).get("format") == "TrueType":
             export_path = args.root / metadata["export_path"]
