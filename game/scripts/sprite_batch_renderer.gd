@@ -67,7 +67,7 @@ func _init() -> void:
 		if not filename.contains("."):
 			filename += ".png"
 		_batches[sprite_id] = {
-			"texture": load("res://assets/sprites/%s" % filename),
+			"texture": load("res://assets/sprites/%s" % filename) if ResourceLoader.exists("res://assets/sprites/%s" % filename) else null,
 			"multimesh": mesh,
 		}
 
@@ -115,7 +115,7 @@ func draw_batches(canvas: CanvasItem) -> void:
 	for sprite_id in _batches:
 		var batch: Dictionary = _batches[sprite_id]
 		var multimesh: MultiMesh = batch["multimesh"]
-		if multimesh.instance_count > 0:
+		if multimesh.instance_count > 0 and batch["texture"] != null:
 			canvas.draw_multimesh(multimesh, batch["texture"])
 
 func draw_projectile_trails(canvas: CanvasItem) -> void:

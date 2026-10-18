@@ -1,12 +1,7 @@
-[gd_scene load_steps=8 format=3]
+[gd_scene load_steps=3 format=3]
 
 [ext_resource type="Theme" path="res://themes/dopamine_ui.tres" id="1_theme"]
 [ext_resource type="Script" path="res://scripts/survival_hub.gd" id="2_script"]
-[ext_resource type="Texture2D" path="res://assets/icons/catalog/achievement_medal.png" id="3_achievement_icon"]
-[ext_resource type="Texture2D" path="res://assets/sprites/roster/enemy_chaser.png" id="4_bestiary_icon"]
-[ext_resource type="Texture2D" path="res://assets/icons/catalog/equipment_armor.png" id="5_equipment_icon"]
-[ext_resource type="Texture2D" path="res://assets/icons/catalog/skill_node.png" id="6_skill_icon"]
-[ext_resource type="Texture2D" path="res://assets/icons/catalog/run_record.png" id="7_record_icon"]
 
 [node name="SurvivalHub" type="Control"]
 layout_mode = 3
@@ -79,7 +74,6 @@ vertical_alignment = 1
 custom_minimum_size = Vector2(92, 23)
 layout_mode = 2
 focus_mode = 2
-icon = ExtResource("7_record_icon")
 theme_override_constants/icon_max_width = 14
 theme_override_font_sizes/font_size = 8
 texture_filter = 1
@@ -188,7 +182,6 @@ text = "PRÉPARATION PERMANENTE"
 custom_minimum_size = Vector2(0, 24)
 layout_mode = 2
 focus_mode = 2
-icon = ExtResource("5_equipment_icon")
 theme_override_constants/icon_max_width = 16
 texture_filter = 1
 text = "ÉQUIPEMENTS"
@@ -197,7 +190,6 @@ text = "ÉQUIPEMENTS"
 custom_minimum_size = Vector2(0, 24)
 layout_mode = 2
 focus_mode = 2
-icon = ExtResource("6_skill_icon")
 theme_override_constants/icon_max_width = 16
 texture_filter = 1
 text = "ARBRE DE COMPÉTENCES"
@@ -213,7 +205,6 @@ size_flags_horizontal = 3
 focus_mode = 2
 theme_type_variation = "InactiveButton"
 theme_override_font_sizes/font_size = 8
-icon = ExtResource("3_achievement_icon")
 theme_override_constants/icon_max_width = 16
 texture_filter = 1
 text = "SUCCÈS  ·  BIENTÔT"
@@ -225,7 +216,6 @@ size_flags_horizontal = 3
 focus_mode = 2
 theme_type_variation = "InactiveButton"
 theme_override_font_sizes/font_size = 8
-icon = ExtResource("4_bestiary_icon")
 theme_override_constants/icon_max_width = 16
 texture_filter = 1
 text = "BESTIAIRE  ·  BIENTÔT"

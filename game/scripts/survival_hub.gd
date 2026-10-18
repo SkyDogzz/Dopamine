@@ -35,6 +35,14 @@ var _skill_tree_panel: Control
 var _records_panel: Control
 
 func _ready() -> void:
+	for button_and_path in [
+		[$Content/Header/RecordsButton, "res://assets/icons/catalog/run_record.png"],
+		[$Content/Main/PreparationCard/Body/EquipmentButton, "res://assets/icons/catalog/equipment_armor.png"],
+		[$Content/Main/PreparationCard/Body/SkillTreeButton, "res://assets/icons/catalog/skill_node.png"],
+		[$Content/Main/PreparationCard/Body/InactiveFeatures/AchievementsButton, "res://assets/icons/catalog/achievement_medal.png"],
+		[$Content/Main/PreparationCard/Body/InactiveFeatures/BestiaryButton, "res://assets/sprites/roster/enemy_chaser.png"],
+	]:
+		button_and_path[0].icon = load(button_and_path[1]) as Texture2D if ResourceLoader.exists(button_and_path[1]) else null
 	if progression_service == null:
 		progression_service = PROGRESSION_SERVICE_SCRIPT.new(SAVE_SERVICE_SCRIPT.new(), "0")
 	_back_button.pressed.connect(_on_back_pressed)

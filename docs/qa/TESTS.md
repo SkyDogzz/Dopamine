@@ -2279,3 +2279,11 @@ Note de clôture : le blocage historique du smoke `sandbox_ui_smoke.gd` décrit 
 - [x] Le profil équipement illisible, le profil arbre indisponible et l’inventaire sans pièce compatible sont capturés avec le vrai hub Survival visible sous le voile Neon; le rendu gris du viewport par défaut est éliminé pour ces états.
 - [x] Les smokes injectent des services avec un chemin `user://` dédié; ils ne lisent ni n’écrivent la sauvegarde normale. Les captures 640×360 ont été régénérées, inspectées et hashées dans le README des preuves.
 - [x] `equipment_panel_visual_smoke.gd --capture-states` et `ui_states_evidence_smoke.gd` passent; CTest import/equipment slots/stats/hub/panel : **5/5**. Les erreurs restent des états de présentation isolés et les commandes physiques restent **[OUVERTES]**.
+
+
+## Purge complète des assets et démarrage à vide (2026-10-18)
+
+- [x] À la demande du propriétaire, les exports graphiques/audio, sources créatives, fontes et sidecars `.import` existants sous `game/assets/` ont été supprimés; seules les notices README restent. Les générateurs sous `game/tools/`, la palette de référence et les registres historiques de hashes/usages sont conservés.
+- [x] Les chargements de textures/icônes/SFX/musique deviennent facultatifs. Sans asset, les icônes/sprites sont omis, le terrain emploie un fond de couleur codé et l’audio reste silencieux. Les données et la progression ne changent pas.
+- [x] `empty_asset_root_smoke.gd`, `launch_navigation_smoke.gd` et `sandbox_combat_smoke.gd` passent avec `game/assets/` dépourvu d’assets créatifs; import éditeur Godot 4.7.2 réussi.
+- [ ] Le rendu final n’est pas validé : le répertoire est volontairement vide jusqu’à recréation et acceptation de chaque asset.

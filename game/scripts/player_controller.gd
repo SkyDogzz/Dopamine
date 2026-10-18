@@ -3,16 +3,27 @@ extends CharacterBody2D
 # Starting value only; the GDD does not yet specify player movement speed.
 @export var move_speed: float = 240.0
 var controls_enabled := true
-const IDLE_TEXTURE: Texture2D = preload("res://assets/sprites/player_idle.png")
-const WALK_TEXTURE: Texture2D = preload("res://assets/sprites/player_walk.png")
+const IDLE_TEXTURE_PATH := "res://assets/sprites/player_idle.png"
+const WALK_TEXTURE_PATH := "res://assets/sprites/player_walk.png"
 const FRAME_SIZE := 32
 const IDLE_FRAME_RATE := 3.0
 const WALK_FRAME_RATE := 8.0
 var _facing_row := 0
 var _animation_elapsed := 0.0
 var _is_walking := false
+var _idle_texture: Texture2D
+var _walk_texture: Texture2D
 
 @onready var _sprite: Sprite2D = $Sprite
+
+func _ready() -> void:
+	if ResourceLoader.exists(IDLE_TEXTURE_PATH):
+		_idle_texture = load(IDLE_TEXTURE_PATH) as Texture2D
+	if ResourceLoader.exists(WALK_TEXTURE_PATH):
+		_walk_texture = load(WALK_TEXTURE_PATH) as Texture2D
+	if _idle_texture == null or _walk_texture == null:
+		_sprite.region_enabled = false
+		_sprite.texture = null
 
 func _physics_process(delta: float) -> void:
 	if not controls_enabled:
@@ -33,7 +44,9 @@ func _update_sprite_animation(direction: Vector2, delta: float) -> void:
 	_animation_elapsed += delta
 	var frame_rate := WALK_FRAME_RATE if moving else IDLE_FRAME_RATE
 	var frame := floori(_animation_elapsed * frame_rate) % 4
-	var texture := WALK_TEXTURE if moving else IDLE_TEXTURE
+	var texture := _walk_texture if moving else _idle_texture
+	if texture == null:
+		return
 	if _sprite.texture != texture:
 		_sprite.texture = texture
 	_sprite.region_rect = Rect2(frame * FRAME_SIZE, _facing_row * FRAME_SIZE, FRAME_SIZE, FRAME_SIZE)

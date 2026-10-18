@@ -87,7 +87,7 @@ func _build_compact_panel() -> void:
 		content.add_child(row)
 		var icon := TextureRect.new()
 		icon.name = "Icon"
-		icon.texture = load(COMPACT_STAT_ICONS[stat_id])
+		icon.texture = (load(COMPACT_STAT_ICONS[stat_id]) as Texture2D if ResourceLoader.exists(COMPACT_STAT_ICONS[stat_id]) else null)
 		icon.custom_minimum_size = Vector2(12.0, 12.0)
 		icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 		icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
@@ -170,7 +170,7 @@ func _stat_row(stat: Dictionary) -> Control:
 	}
 	var icon_path := str(STAT_ICONS.get(stat_id_by_label.get(str(stat.get("label", "")), ""), ""))
 	if not icon_path.is_empty():
-		icon.texture = load(icon_path)
+		icon.texture = (load(icon_path) as Texture2D if ResourceLoader.exists(icon_path) else null)
 	identity.add_child(icon)
 	var total := _label(str(stat.get("total_text", "—")), 7, CYAN)
 	total.tooltip_text = "%s — TOTAL" % str(stat.get("label", "STAT"))
@@ -184,7 +184,7 @@ func _stat_row(stat: Dictionary) -> Control:
 			continue
 		var source_color: Color = {"run": CYAN, "equipment": MAGENTA, "achievements": YELLOW, "skill_tree": GREEN}[source]
 		var source_icon := TextureRect.new()
-		source_icon.texture = load(SOURCE_ICONS[source])
+		source_icon.texture = (load(SOURCE_ICONS[source]) as Texture2D if ResourceLoader.exists(SOURCE_ICONS[source]) else null)
 		source_icon.custom_minimum_size = Vector2(9.0, 9.0)
 		source_icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 		source_icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED

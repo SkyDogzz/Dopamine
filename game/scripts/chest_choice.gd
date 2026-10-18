@@ -83,7 +83,7 @@ func present(options: Array, required_count: int = 3, heading: String = "CHEST â
 		icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		var icon_path := str(option.get("icon", ""))
 		if not icon_path.is_empty() and ResourceLoader.exists(icon_path):
-			icon.texture = load(icon_path)
+			icon.texture = (load(icon_path) as Texture2D if ResourceLoader.exists(icon_path) else null)
 		else:
 			icon.visible = false
 		offer_row.add_child(icon)

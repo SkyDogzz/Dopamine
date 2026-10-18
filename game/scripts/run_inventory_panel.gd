@@ -133,7 +133,7 @@ func _add_items(items: Array[Dictionary]) -> void:
 		icon.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 		var icon_path := str(item.get("icon", ""))
 		if not icon_path.is_empty() and ResourceLoader.exists(icon_path):
-			icon.texture = load(icon_path)
+			icon.texture = (load(icon_path) as Texture2D if ResourceLoader.exists(icon_path) else null)
 		layout.add_child(icon)
 		var details := VBoxContainer.new()
 		details.size_flags_horizontal = Control.SIZE_EXPAND_FILL

@@ -6,16 +6,16 @@ const PLAYER_SCENE := preload("res://scenes/player.tscn")
 const SURVIVAL_TARGETING := preload("res://scripts/survival_targeting.gd")
 const SPRITE_RENDERER_SCRIPT := preload("res://scripts/sprite_batch_renderer.gd")
 const RUN_STAT_HUB_SCRIPT := preload("res://scripts/run_stat_hub.gd")
-const CHEST_TEXTURE: Texture2D = preload("res://assets/sprites/rewards/chest_closed.png")
+static var CHEST_TEXTURE: Texture2D = load("res://assets/sprites/rewards/chest_closed.png") as Texture2D if ResourceLoader.exists("res://assets/sprites/rewards/chest_closed.png") else null
 const CHEST_SPRITE_SIZE := 32.0
 const XP_SPRITE_SIZE := 16.0
 const PICKUP_SPACING_STEP := 16.0
 const PICKUP_SPACING_DIRECTIONS := [Vector2.RIGHT, Vector2.DOWN, Vector2.LEFT, Vector2.UP,
 		Vector2(0.707107, 0.707107), Vector2(-0.707107, 0.707107),
 		Vector2(-0.707107, -0.707107), Vector2(0.707107, -0.707107)]
-const GROUND_TEXTURE: Texture2D = preload("res://assets/sprites/environment/survival_ground_tile.png")
-const RUINS_TEXTURE: Texture2D = preload("res://assets/sprites/environment/survival_ruins_pixel.png")
-const WEAPON_IMPACTS_TEXTURE: Texture2D = preload("res://assets/sprites/weapon_impacts_pixel.png")
+static var GROUND_TEXTURE: Texture2D = load("res://assets/sprites/environment/survival_ground_tile.png") as Texture2D if ResourceLoader.exists("res://assets/sprites/environment/survival_ground_tile.png") else null
+static var RUINS_TEXTURE: Texture2D = load("res://assets/sprites/environment/survival_ruins_pixel.png") as Texture2D if ResourceLoader.exists("res://assets/sprites/environment/survival_ruins_pixel.png") else null
+static var WEAPON_IMPACTS_TEXTURE: Texture2D = load("res://assets/sprites/weapon_impacts_pixel.png") as Texture2D if ResourceLoader.exists("res://assets/sprites/weapon_impacts_pixel.png") else null
 const WEAPON_IMPACT_TYPES := {
 	"lightning_conductor": 0, "infinite_circuit_branch": 0, "unique_lightning_burst": 0,
 	"inferno_sprayer": 1, "wildfire_sprayer": 1,
@@ -58,8 +58,7 @@ const GRAVITY_COLLAPSE_DAMAGE_MULTIPLIER := 0.5
 const WEAPON_IMPACT_LIFETIME := 0.22
 const MAX_VISIBLE_WEAPON_IMPACTS := 32
 const CRITICAL_HIT_IMPACT_SCALE := 1.45 # [PROPOSÉ] Critical hits use the same weapon sprite at a larger size; no new color mapping.
-const DAMAGE_NUMBER_FONT: FontFile = preload("res://assets/fonts/NeonArcadePixel.ttf")
-const UI_THEME: Theme = preload("res://themes/dopamine_ui.tres")
+static var DAMAGE_NUMBER_FONT: Font = ThemeDB.fallback_font
 const DAMAGE_NUMBER_LIFETIME := 0.5 # [PROPOSÉ] Active simulation seconds.
 const DAMAGE_NUMBER_AGGREGATION_WINDOW := 0.12 # [PROPOSÉ] Merge repeated hits on one target.
 const MAX_VISIBLE_DAMAGE_NUMBERS := 48 # [PROPOSÉ] Presentation-only crowding limit.
@@ -81,16 +80,11 @@ const WEAPON_DAMAGE_IDS := ["lightning_conductor", "inferno_sprayer", "crimson_d
 const RELIC_ACHIEVEMENT_IDS := ["storm_core", "infernal_heart", "blood_chalice", "overdrive_engine", "plague_mask", "magnetic_coil", "celestial_eye", "prism_crystal", "singularity", "frozen_crown", "magnet_heart"]
 const ENEMY_DEATH_PALETTE := [Color("#D4D9E8"), Color("#37E8F5"), Color("#087FB2"), Color("#F6F7FF")]
 const WEAPON_ICONS := {
-	"lightning_conductor": preload("res://assets/sprites/catalog/weapon_lightning_conductor.png"),
-	"inferno_sprayer": preload("res://assets/sprites/catalog/weapon_inferno_sprayer.png"),
-	"crimson_daggers": preload("res://assets/sprites/catalog/weapon_crimson_daggers.png"),
-	"minigun": preload("res://assets/sprites/catalog/weapon_minigun.png"),
-	"toxic_cloud": preload("res://assets/sprites/catalog/weapon_toxic_cloud.png"),
-	"sawblades": preload("res://assets/sprites/catalog/weapon_sawblades.png"),
-	"meteor_staff": preload("res://assets/sprites/catalog/weapon_meteor_staff.png"),
-	"prism_laser": preload("res://assets/sprites/catalog/weapon_prism_laser.png"),
-	"void_orb": preload("res://assets/sprites/catalog/weapon_void_orb.png"),
-	"frost_nova": preload("res://assets/sprites/catalog/weapon_frost_nova.png"),
+	"lightning_conductor": "weapon_lightning_conductor", "inferno_sprayer": "weapon_inferno_sprayer",
+	"crimson_daggers": "weapon_crimson_daggers", "minigun": "weapon_minigun",
+	"toxic_cloud": "weapon_toxic_cloud", "sawblades": "weapon_sawblades",
+	"meteor_staff": "weapon_meteor_staff", "prism_laser": "weapon_prism_laser",
+	"void_orb": "weapon_void_orb", "frost_nova": "weapon_frost_nova",
 }
 const WAVE_DIRECTOR_SCRIPT := preload("res://scripts/survival_wave_director.gd")
 const ARMORLESS_RUN_STATE_SCRIPT := preload("res://scripts/armorless_run_state.gd")
@@ -1562,7 +1556,7 @@ func _refresh_hud(state: Dictionary) -> void:
 	short_names["sawblades"] = "SB"
 	short_names["meteor_staff"] = "MS"
 	var owned_weapons: Array[String] = loadout.owned_weapons()
-	_weapon_icon.texture = WEAPON_ICONS.get(owned_weapons[0]) if not owned_weapons.is_empty() else null
+	_weapon_icon.texture = load("res://assets/sprites/catalog/%s.png" % WEAPON_ICONS[owned_weapons[0]]) as Texture2D if not owned_weapons.is_empty() and WEAPON_ICONS.has(owned_weapons[0]) and ResourceLoader.exists("res://assets/sprites/catalog/%s.png" % WEAPON_ICONS[owned_weapons[0]]) else null
 	for weapon_id in owned_weapons:
 		var label := "%s Lv%d" % [short_names.get(weapon_id, weapon_id), loadout.weapon_level(weapon_id)]
 		if loadout.is_evolved(weapon_id):
@@ -3739,8 +3733,12 @@ func _publish_player_target() -> void:
 
 func _draw() -> void:
 	var reduced_effects := _visual_effects_reduced()
-	draw_texture_rect(GROUND_TEXTURE, Rect2(-8192.0, -8192.0, 16384.0, 16384.0), true)
-	draw_texture_rect(RUINS_TEXTURE, Rect2(-768.0, -768.0, 1536.0, 1536.0), false, Color(1.0, 1.0, 1.0, 0.88))
+	if GROUND_TEXTURE != null:
+		draw_texture_rect(GROUND_TEXTURE, Rect2(-8192.0, -8192.0, 16384.0, 16384.0), true)
+	else:
+		draw_rect(Rect2(-8192.0, -8192.0, 16384.0, 16384.0), Color("#10152B"))
+	if RUINS_TEXTURE != null:
+		draw_texture_rect(RUINS_TEXTURE, Rect2(-768.0, -768.0, 1536.0, 1536.0), false, Color(1.0, 1.0, 1.0, 0.88))
 	if _last_simulation_time < _magnet_heart_impulse_expires_at:
 		var impulse_radius := _magnet_heart_effective_pulse_radius()
 		draw_arc(player.global_position, impulse_radius, 0.0, TAU, 64, Color(0.22, 0.9, 1.0, 0.42), 1.5, true)
@@ -3867,8 +3865,11 @@ func _draw() -> void:
 			var fade := clampf(float(burst["remaining"]) / maxf(pandemic_feedback_seconds, 0.01), 0.0, 1.0)
 			draw_circle(burst["position"], pandemic_spread_radius * (1.0 - fade * 0.35), Color(0.35, 1.0, 0.4, 0.18 * fade))
 	for chest in _world_chests:
-		draw_texture_rect(CHEST_TEXTURE, Rect2(chest["position"] - Vector2.ONE * CHEST_SPRITE_SIZE * 0.5,
-			Vector2.ONE * CHEST_SPRITE_SIZE), false)
+		if CHEST_TEXTURE != null:
+			draw_texture_rect(CHEST_TEXTURE, Rect2(chest["position"] - Vector2.ONE * CHEST_SPRITE_SIZE * 0.5,
+				Vector2.ONE * CHEST_SPRITE_SIZE), false)
+		else:
+			draw_rect(Rect2(chest["position"] - Vector2(6.0, 5.0), Vector2(12.0, 10.0)), Color("#FFD447"), false, 1.0)
 	if not reduced_effects:
 		for impact in _weapon_impacts:
 			var remaining: float = float(impact["remaining"])
@@ -3877,8 +3878,9 @@ func _draw() -> void:
 			draw_set_transform(impact["position"], float(impact["rotation"]),
 					Vector2.ONE * scale * _weapon_impact_level_scale(int(impact.get("level", 1))) *
 					float(impact.get("emphasis_scale", 1.0)))
-			draw_texture_rect_region(WEAPON_IMPACTS_TEXTURE, Rect2(-32.0, -32.0, 64.0, 64.0),
-				Rect2(float(impact["type"]) * 64.0, 0.0, 64.0, 64.0), Color(1.0, 1.0, 1.0, fade))
+			if WEAPON_IMPACTS_TEXTURE != null:
+				draw_texture_rect_region(WEAPON_IMPACTS_TEXTURE, Rect2(-32.0, -32.0, 64.0, 64.0),
+					Rect2(float(impact["type"]) * 64.0, 0.0, 64.0, 64.0), Color(1.0, 1.0, 1.0, fade))
 			draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
 		for pixel in _enemy_death_pixels:
 			var fade := clampf(float(pixel["remaining"]) / ENEMY_DEATH_PIXEL_LIFETIME, 0.0, 1.0)

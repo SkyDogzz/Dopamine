@@ -119,7 +119,7 @@ func _add_icon_row(row_name: String, anchor: Control, paths: Array) -> void:
 		icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 		icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 		icon.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
-		icon.texture = load(path)
+		icon.texture = (load(path) as Texture2D if ResourceLoader.exists(path) else null)
 		row.add_child(icon)
 	content.add_child(row)
 	content.move_child(row, anchor.get_index() + 1)

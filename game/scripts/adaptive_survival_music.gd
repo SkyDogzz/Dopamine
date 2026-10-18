@@ -29,11 +29,16 @@ var _current_stem_volumes_db: Array[float] = []
 func _ready() -> void:
 	_synchronized_stream = AudioStreamSynchronized.new()
 	_synchronized_stream.stream_count = STEM_PATHS.size()
-	for index in range(STEM_PATHS.size()):
-		var stem := load(STEM_PATHS[index]) as AudioStreamWAV
+	var stems: Array[AudioStreamWAV] = []
+	for path in STEM_PATHS:
+		if not ResourceLoader.exists(path):
+			return # Missing music means silence until the complete set is recreated.
+		var stem := load(path) as AudioStreamWAV
 		if stem == null:
-			push_error("Could not load adaptive music stem: %s" % STEM_PATHS[index])
 			return
+		stems.append(stem)
+	for index in range(stems.size()):
+		var stem := stems[index]
 		stem.loop_mode = AudioStreamWAV.LOOP_FORWARD
 		stem.loop_begin = 0
 		stem.loop_end = roundi(stem.get_length() * stem.mix_rate)

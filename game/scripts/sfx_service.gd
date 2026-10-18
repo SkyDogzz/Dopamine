@@ -49,9 +49,11 @@ func _ready() -> void:
 	for sound_family in SOUNDS:
 		var family_streams: Array[AudioStream] = []
 		for sound_id in SOUNDS[sound_family]:
-			var stream := load(SFX_DIR + sound_id + ".wav") as AudioStream
+			var sound_path: String = SFX_DIR + sound_id + ".wav"
+			if not ResourceLoader.exists(sound_path):
+				continue
+			var stream := load(sound_path) as AudioStream
 			if stream == null:
-				push_error("Could not load SFX: %s" % sound_id)
 				continue
 			family_streams.append(stream)
 		_streams[sound_family] = family_streams

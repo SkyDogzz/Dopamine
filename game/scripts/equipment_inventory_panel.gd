@@ -114,7 +114,7 @@ func present(profile: Dictionary) -> void:
 			break
 	var resources: Dictionary = profile.get("resources", {})
 	_resources.text = "ESSENCE %d" % int(resources.get("essence", 0))
-	_portrait.texture = load(SLOT_ICONS["armor"])
+	_portrait.texture = (load(SLOT_ICONS["armor"]) as Texture2D if ResourceLoader.exists(SLOT_ICONS["armor"]) else null)
 	_refresh_slots()
 	_rebuild_inventory(inventory, resources)
 	visible = true
@@ -291,7 +291,7 @@ func _create_item_row(equipment: Dictionary, resources: Dictionary) -> Control:
 		icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 		icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 		icon.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
-		icon.texture = load(icon_path)
+		icon.texture = (load(icon_path) as Texture2D if ResourceLoader.exists(icon_path) else null)
 		icon.tooltip_text = badge_data[2]
 		badges.add_child(icon)
 	layout.add_child(badges)

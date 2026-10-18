@@ -20,6 +20,10 @@
 14. [Checklist de livraison](docs/release/RELEASE_CHECKLIST.md) — preuves disponibles et critères encore ouverts pour P9.8.
 15. [Registre des courbes de progression](docs/planning/COURBES_PROGRESSION.md) — formules centralisées, statuts de validation et références code/GDD.
 
+## Pipeline local d’assets
+
+Les cinq skills locaux et le workflow de reconstruction depuis un répertoire `game/assets` vide sont documentés dans [SPEC-local-asset-generation.md](docs/specs/SPEC-local-asset-generation.md). Les assets créatifs actifs ont été purgés le 2026-10-18 à la demande du propriétaire; les anciens inventaires décrivent désormais un état historique. Une référence absente signifie que l’asset n’a pas encore été recréé. Le test `empty_asset_root_smoke.gd` vérifie cette condition.
+
 ## Statuts
 
 - **ACCEPTÉ** : choix explicitement confirmé par le créateur.

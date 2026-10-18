@@ -25,6 +25,8 @@ func _process(delta: float) -> void:
 		queue_redraw()
 
 func _draw() -> void:
+	if not ResourceLoader.exists("res://assets/backgrounds/title_skyline.png"):
+		return
 	var scale := size / LOGICAL_SIZE
 	for sign in SIGNS:
 		var period := float(sign["period"])

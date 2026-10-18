@@ -1,9 +1,7 @@
-[gd_scene load_steps=5 format=3]
+[gd_scene load_steps=3 format=3]
 
 [ext_resource type="Theme" path="res://themes/dopamine_ui.tres" id="1_theme"]
 [ext_resource type="Script" path="res://scripts/skill_tree_panel.gd" id="2_script"]
-[ext_resource type="Texture2D" path="res://assets/icons/catalog/skill_node.png" id="3_skill_node"]
-[ext_resource type="Texture2D" path="res://assets/icons/catalog/resource_essence.png" id="4_essence"]
 
 [node name="SkillTreePanel" type="CenterContainer"]
 anchors_preset = 15
@@ -56,7 +54,6 @@ theme_override_constants/separation = 4
 [node name="EssenceIcon" type="TextureRect" parent="Panel/Content/EssenceRow"]
 custom_minimum_size = Vector2(16, 16)
 layout_mode = 2
-texture = ExtResource("4_essence")
 texture_filter = 1
 stretch_mode = 5
 
@@ -112,7 +109,6 @@ custom_minimum_size = Vector2(0, 24)
 layout_mode = 2
 size_flags_horizontal = 3
 text = "UNLOCK NODE"
-icon = ExtResource("3_skill_node")
 theme_override_constants/icon_max_width = 12
 texture_filter = 1
 

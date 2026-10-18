@@ -1,7 +1,0 @@
-{
-  "status": "original procedural audio candidates; not yet ear-reviewed in game",
-  "source": "game/tools/generate_original_audio.py",
-  "method": "deterministic oscillators, ID-seeded noise transients, analytic envelopes; five synchronized loop stems",
-  "sfx_candidate_count": 38,
-  "music_manifest": "music/manifest.json"
-}

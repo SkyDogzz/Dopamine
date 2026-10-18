@@ -1,11 +1,5 @@
-# Sources Aseprite originales
+# Sources créatives — dossier vide au démarrage
 
-Les fichiers Aseprite de ce dossier sont les sources éditables des PNG associés, générées par `game/tools/generate_neon_arcade_art.py`. Le générateur lit uniquement la palette maître de l’Art Bible et les rôles inscrits dans son code; il ne charge aucun asset raster préexistant, aucune référence visuelle ni aucune recette historique.
+Les sources graphiques et leurs exports ont été purgés pour reconstruire les assets depuis zéro, conformément à la demande du propriétaire du projet. Ce dossier est réservé aux sources éditables des futurs assets acceptés; aucun asset actif n’est présent actuellement.
 
-Pour reconstruire toutes les familles prises en charge :
-
-```sh
-python3 game/tools/generate_neon_arcade_art.py
-```
-
-Pour une famille ciblée, préciser `catalog`, `projectiles`, `vfx`, `environment`, `boss`, `ui` ou `roles`. Les prototypes de boss chargés par le jeu restent génériques et ne définissent pas leur identité canonique.
+Les générateurs restent sous `game/tools/` et doivent lire les règles dans `docs/ART_BIBLE.txt`. Générer vers staging, valider avec `dopamine-asset-qa`, puis importer seulement les assets acceptés.

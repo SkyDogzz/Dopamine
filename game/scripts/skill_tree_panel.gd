@@ -51,6 +51,12 @@ var _graph_layer: GraphLayer
 var _profile_available := true
 
 func _ready() -> void:
+	var source_icon := get_node_or_null("Panel/Content/Details/DetailContent/SourceIcon") as TextureRect
+	if source_icon != null:
+		source_icon.texture = load(SOURCE_ICON) as Texture2D if ResourceLoader.exists(SOURCE_ICON) else null
+	var essence_icon := get_node_or_null("Panel/Content/EssenceRow/EssenceIcon") as TextureRect
+	if essence_icon != null:
+		essence_icon.texture = load("res://assets/icons/catalog/resource_essence.png") as Texture2D if ResourceLoader.exists("res://assets/icons/catalog/resource_essence.png") else null
 	visible = false
 	_unlock_button.pressed.connect(_request_selected_unlock)
 	_respec_button.pressed.connect(func() -> void: respec_requested.emit())
@@ -127,7 +133,7 @@ func _build_graph() -> void:
 		button.custom_minimum_size = Vector2(NODE_WIDTH, 26)
 		button.position = position
 		button.focus_mode = Control.FOCUS_ALL
-		button.icon = load(SOURCE_ICON)
+		button.icon = load(SOURCE_ICON) as Texture2D if ResourceLoader.exists(SOURCE_ICON) else null
 		button.icon_alignment = HORIZONTAL_ALIGNMENT_LEFT
 		button.expand_icon = false
 		button.add_theme_constant_override("icon_max_width", 10)

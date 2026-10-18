@@ -78,7 +78,8 @@ func _ready() -> void:
 		var icon_file: String = enemy_icons[entity_type]
 		if not icon_file.contains("."):
 			icon_file += ".png"
-		var texture: Texture2D = load("res://assets/sprites/%s" % icon_file)
+		var icon_path := "res://assets/sprites/%s" % icon_file
+		var texture: Texture2D = load(icon_path) as Texture2D if ResourceLoader.exists(icon_path) else null
 		_entity_type.add_icon_item(texture, entity_type.to_upper())
 		_entity_type.set_item_metadata(_entity_type.item_count - 1, entity_type)
 	for speed in [0.25, 0.5, 1.0, 2.0, 4.0]:
