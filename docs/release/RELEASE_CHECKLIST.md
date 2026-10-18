@@ -1,6 +1,6 @@
 # Checklist de livraison
 
-État de préparation fondé sur le dépôt au 2026-10-17. Ce document suit les critères P9.8 sans déclarer le jeu prêt à publier. Les statuts de conception restent ceux du GDD : **[VALIDÉ]**, **[PROPOSÉ]**, **[OUVERT]**.
+État de préparation fondé sur le dépôt au 2026-10-18. Ce document suit les critères P9.8 sans déclarer le jeu prêt à publier. Les statuts de conception restent ceux du GDD : **[VALIDÉ]**, **[PROPOSÉ]**, **[OUVERT]**.
 
 ## Identité et artefacts
 
@@ -10,6 +10,7 @@
 - [ ] Construire depuis un checkout propre reproductible pour chaque plateforme de release; distinguer les exports vérifiés localement des artefacts réellement distribuables.
 - [ ] Pour chaque artefact retenu, consigner plateforme/architecture, commit source, versions de Godot/templates/toolchain, commandes, taille et SHA-256.
 - [x] Vérifier le paquet Linux non versionné de staging (exécutable, GDExtension, notices, licences référencées, extraction et démarrage headless); les sommes et limites sont dans [`../qa/TESTS.md`](../qa/TESTS.md). Ce paquet est explicitement non distribuable.
+- [x] Refaire le staging depuis le commit courant de l’initiative `7363c7e`, après intégration des assets originaux : archive `DopamineSurvivor-linux-7363c7e-staging.tar.gz` (29 876 899 octets), SHA-256 `c7591c6c233c74496ceba3bc1585cb0d015b2b6011eb7039bcd80910c0557607`. Compilation Release vierge, export filtré, extraction, notices/licences, dépendances, lancement headless avec GDExtension adjacente et scan des 137 chemins runtime de l’index sont vérifiés. Toujours non versionné et non distribuable; limites détaillées dans [`../qa/TESTS.md`](../qa/TESTS.md).
 - [x] Reconstruire le staging depuis `2cedc106a18f780a04ec843f21443e5d3bfba8d4`; archive `DopamineSurvivor-linux-2cedc10-staging.tar.gz` (35 711 829 octets), SHA-256 `97f5cd47d7b3896bd776cbbd6fe4db8aaeb47ef2548f3fc1a7676e4da383db92`. Build Release vierge, export filtré, extraction, notices, dépendances et lancement headless vérifiés; staging non distribuable.
 - [x] Automatiser et exécuter `tools/package_linux_staging.sh` depuis le snapshot propre `c318888`; compilation Release CMake vierge, inventaire, notices, extraction, SHA-256 et démarrage sont consignés dans la QA. Les paquets staging demeurent non distribuables; la première version SemVer `1.0.0` s’appliquera après validation P9.
 - [x] Refaire la reconstruction complète depuis `379b9aad23bb9d6284722b485e2f094fd5d7c15d`; archive `DopamineSurvivor-linux-379b9aa-staging.tar.gz` (31 966 641 octets), SHA-256 `bbfb3f2d20ecd143005c588c7d1419c54e5c48cd3a434a181a7279094e73790c`, extraction et démarrage headless de l’exécutable avec sa GDExtension Release vérifiés. Détails dans [`../qa/TESTS.md`](../qa/TESTS.md); toujours non distribuable.

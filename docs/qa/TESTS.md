@@ -1,5 +1,12 @@
 # Tests d'acceptation et validation
 
+## Staging Linux courant après remplacement des assets — 2026-10-18
+
+- [x] `tools/package_linux_staging.sh` reconstruit un checkout `git archive` propre du commit `7363c7e` avec GCC 14.2.0, CMake 3.31.12, Godot 4.7.2 et `godot-cpp` épinglé. Compilation native Release vierge, import, export Linux/X11 filtré, extraction, notices/licences, exclusions des ressources de développement, `ldd` sans dépendance manquante et lancement headless de l’exécutable extrait avec la GDExtension adjacente passent.
+- [x] Archive de contrôle non versionnée `build/linux/staging/DopamineSurvivor-linux-7363c7e-staging.tar.gz` : 29 876 899 octets, SHA-256 `c7591c6c233c74496ceba3bc1585cb0d015b2b6011eb7039bcd80910c0557607`; le fichier `.sha256` passe.
+- [x] Scan `strings -a` de l’exécutable extrait : les 137 chemins `runtime_static`/`runtime_dynamic` de `ASSET_FILE_REGISTER_CURRENT.csv` sont présents (137/137) et aucun chemin `assets/source/` n’est embarqué.
+- [i] Il s’agit d’un staging Linux x86_64 non distribuable, testé sur l’hôte Debian avec pilote audio Dummy. Cela ne couvre pas le rendu/GPU, les contrôles physiques, une installation distincte ni l’écoute audio humaine.
+
 ## Bornes du skill tree aux viewports ciblés — 2026-10-18
 
 - [x] `skill_tree_panel_visual_smoke.gd` vérifie maintenant que le cadre du graphe reste dans les viewports logiques/rendus 640×360, 1280×720 et 1920×1080; `godot_project_import` et le smoke ciblé passent (**2/2**).
