@@ -6,7 +6,7 @@ func _initialize() -> void:
 	call_deferred("_run")
 
 func _run() -> void:
-	for evidence_id in ["options", "pause", "chest", "run-inventory", "run-result", "armorless-records", "sandbox"]:
+	for evidence_id in ["options", "pause", "chest", "run-inventory", "run-result", "armorless-records", "sandbox", "sandbox-lab"]:
 		var scene: Control
 		match evidence_id:
 			"options":
@@ -23,6 +23,8 @@ func _run() -> void:
 				scene = load("res://scenes/armorless_records_panel.tscn").instantiate()
 			"sandbox":
 				scene = load("res://scenes/main.tscn").instantiate()
+			"sandbox-lab":
+				scene = load("res://scenes/sandbox_lab.tscn").instantiate()
 		if scene == null:
 			_fail("Could not build evidence scene: %s" % evidence_id)
 			return

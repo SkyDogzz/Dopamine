@@ -17,10 +17,11 @@ Captures 640×360 générées avec Godot 4.7.2 sous Xvfb/Mesa llvmpipe. Les smok
 | `states/run-result.png` | `430edf770fe9a2ac33c0a206cc99bbb2aeca307016270e55d4fce311f61dcdd4` | Résultat de victoire et actions de continuation/relance/retour; récompenses synthétiques de smoke. |
 | `states/armorless-records.png` | `5fa3a9b21280ddc9aabdf4bbd6a83088ed2ed213900e9c6eabd2dd7b879291c2` | Panneau records Armorless avec une entrée de démonstration. |
 | `states/sandbox.png` | `32d998625488d852d33d30993c6b653c56fb853ca5a5c8955564ff5f3addf80f` | Sandbox isolé avec badge `PAUSED / NO SAVE`; rendu capturé dans le contexte `main.tscn`. |
+| `states/sandbox-lab.png` | `fbe146065ce9bdb6b56ebfcb6e2fa4b0774776b7c532c7c581519184d103999a` | Sandbox Lab à 640×360 : simulation et commandes visibles, configuration accessible par défilement; HUD et caméra de la session masquée isolés. |
 
 Les captures ont été régénérées après import des exports graphiques renouvelés le 2026-10-18 et inspectées. La planche catalogue, le hub et le combat ont changé de hash; les autres captures sont identiques. L’utilisateur a confirmé que le texte courant et les labels pixel du hub et de l’équipement sont lisibles à 640×360. Ces images valident le rendu virtualisé ciblé, pas le GPU matériel ni les contrôles physiques. La revue audio en contexte reste **[OUVERTE]** à la demande de l’utilisateur de poursuivre sans écoute.
 
-Les sept captures `states/*.png` ont été générées par `game/tests/ui_states_evidence_smoke.gd` sous Godot 4.7.2/Xvfb/Mesa llvmpipe. Le smoke construit chaque scène avec des exemples visuels temporaires; il ne modifie aucun profil. Les panneaux coffre et résultat sont centrés par le conteneur parent utilisé à l’intégration. Ces captures étendent la revue aux états secondaires, mais ne prouvent pas toutes les erreurs, branches de focus, tailles ni contrôles physiques.
+Les huit captures `states/*.png` ont été générées par `game/tests/ui_states_evidence_smoke.gd` sous Godot 4.7.2/Xvfb/Mesa llvmpipe. Le smoke construit chaque scène avec des exemples visuels temporaires; il ne modifie aucun profil. Les panneaux coffre et résultat sont centrés par le conteneur parent utilisé à l’intégration. Ces captures étendent la revue aux états secondaires, mais ne prouvent pas toutes les erreurs, branches de focus, tailles ni contrôles physiques.
 
 ## Parcours du paquet Linux/X11 Release — build du 2026-10-18
 

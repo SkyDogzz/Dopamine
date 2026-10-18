@@ -55,6 +55,8 @@ func start(preset: Variant) -> Dictionary:
 	if candidate_session.simulation == null or not _apply_build(candidate_session, candidate_build):
 		candidate_session.queue_free()
 		return {"ok": false, "error": "combat_build_unsupported"}
+	if candidate_session._game_camera != null:
+		candidate_session._game_camera.enabled = false
 	var was_paused := simulation != null and bool(simulation.snapshot().get("paused", false))
 	_clear_simulation()
 	session = candidate_session

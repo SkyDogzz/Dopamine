@@ -36,14 +36,17 @@ func _run() -> void:
 	if lab.context.session.get_node("HUD").visible:
 		_fail("The hidden combat session must not leak its CanvasLayer HUD into the Sandbox Lab")
 		return
+	if lab.context.session._game_camera != null and lab.context.session._game_camera.enabled:
+		_fail("The hidden combat session must not move the Sandbox Lab viewport camera")
+		return
 	if lab.context.session.loadout.weapon_level("lightning_conductor") != 1 or \
 			lab.context.session.loadout.relic_level("storm_core") != 1:
 		_fail("The default Lab preset build should be applied to the real combat loadout")
 		return
-	var spawn_count: SpinBox = lab.get_node_or_null("Root/Body/Side/Sections/EnemyConfig/SpawnCount")
-	var enemy_select: OptionButton = lab.get_node_or_null("Root/Body/Side/Sections/EnemySelect")
-	var elite_affix_select: OptionButton = lab.get_node_or_null("Root/Body/Side/Sections/EnemyConfig/EliteAffixSelect")
-	var base_mode_select: OptionButton = lab.get_node_or_null("Root/Body/Side/Sections/BaseModeRow/BaseModeSelect")
+	var spawn_count: SpinBox = lab.get_node_or_null("Root/Body/Left/Side/Sections/EnemyConfig/SpawnCount")
+	var enemy_select: OptionButton = lab.get_node_or_null("Root/Body/Left/Side/Sections/EnemySelect")
+	var elite_affix_select: OptionButton = lab.get_node_or_null("Root/Body/Left/Side/Sections/EnemyConfig/EliteAffixSelect")
+	var base_mode_select: OptionButton = lab.get_node_or_null("Root/Body/Left/Side/Sections/BaseModeRow/BaseModeSelect")
 	if spawn_count == null or enemy_select == null or elite_affix_select == null or base_mode_select == null or \
 			spawn_count.value != 10.0 or not elite_affix_select.disabled or \
 			not lab._can_spawn_batch(2490) or lab._can_spawn_batch(2491) or lab._can_spawn_batch(2500):
@@ -65,34 +68,34 @@ func _run() -> void:
 	var live_simulation: Object = lab.context.simulation
 	lab.context.simulation = EntityCountSnapshot.new(2491)
 	lab._spawn_enemies()
-	if not str(lab.get_node("Root/Body/Side/Sections/Status").text).contains("ENTITY LIMIT 2500"):
+	if not str(lab.get_node("Root/Body/Left/Side/Sections/Status").text).contains("ENTITY LIMIT 2500"):
 		_fail("The Lab should warn before queuing a spawn batch that exceeds native capacity")
 		return
 	lab.context.simulation = live_simulation
-	var weapon_select: OptionButton = lab.get_node_or_null("Root/Body/Side/Sections/VisualBuild/WeaponRow/WeaponSelect")
-	var weapon_level: SpinBox = lab.get_node_or_null("Root/Body/Side/Sections/VisualBuild/WeaponRow/WeaponLevel")
-	var add_weapon: Button = lab.get_node_or_null("Root/Body/Side/Sections/VisualBuild/AddWeaponButton")
-	var relic_select: OptionButton = lab.get_node_or_null("Root/Body/Side/Sections/VisualBuild/RelicRow/RelicSelect")
-	var relic_level: SpinBox = lab.get_node_or_null("Root/Body/Side/Sections/VisualBuild/RelicRow/RelicLevel")
-	var add_relic: Button = lab.get_node_or_null("Root/Body/Side/Sections/VisualBuild/AddRelicButton")
-	var stat_select: OptionButton = lab.get_node_or_null("Root/Body/Side/Sections/VisualBuild/StatRow/StatSelect")
-	var stat_value: SpinBox = lab.get_node_or_null("Root/Body/Side/Sections/VisualBuild/StatRow/StatValue")
-	var add_stat: Button = lab.get_node_or_null("Root/Body/Side/Sections/VisualBuild/AddStatButton")
-	var apply_build: Button = lab.get_node_or_null("Root/Body/Side/Sections/VisualBuild/ApplyBuildButton")
-	var import_profile: Button = lab.get_node_or_null("Root/Body/Side/Sections/VisualBuild/ImportProfileButton")
-	var equipment_slot: OptionButton = lab.get_node_or_null("Root/Body/Side/Sections/VisualBuild/EquipmentRow/EquipmentSlot")
-	var equipment_stat: OptionButton = lab.get_node_or_null("Root/Body/Side/Sections/VisualBuild/EquipmentRow/EquipmentStat")
-	var equipment_value: SpinBox = lab.get_node_or_null("Root/Body/Side/Sections/VisualBuild/EquipmentRow/EquipmentValue")
-	var add_equipment: Button = lab.get_node_or_null("Root/Body/Side/Sections/VisualBuild/AddEquipmentButton")
-	var live_stat: OptionButton = lab.get_node_or_null("Root/Body/Side/Sections/LiveOverride/StatSelect")
-	var live_value: SpinBox = lab.get_node_or_null("Root/Body/Side/Sections/LiveOverride/StatValue")
-	var apply_live_stat: Button = lab.get_node_or_null("Root/Body/Side/Sections/LiveOverride/ApplyStat")
-	var enemy_hp_override: SpinBox = lab.get_node_or_null("Root/Body/Side/Sections/EnemyConfig/EnemyHpMultiplier")
-	var enemy_speed_override: SpinBox = lab.get_node_or_null("Root/Body/Side/Sections/EnemyConfig/EnemySpeedMultiplier")
-	var contact_damage: SpinBox = lab.get_node_or_null("Root/Body/Side/Sections/EnemyConfig/ContactDamage")
-	var health_decay_multiplier: SpinBox = lab.get_node_or_null("Root/Body/Side/Sections/EnemyConfig/HealthDecayMultiplier")
-	var wave_spawning_toggle: CheckBox = lab.get_node_or_null("Root/Body/Side/Sections/EnemyConfig/WaveSpawningToggle")
-	var seed_control: SpinBox = lab.get_node_or_null("Root/Body/Side/Sections/EnemyConfig/Seed")
+	var weapon_select: OptionButton = lab.get_node_or_null("Root/Body/Left/Side/Sections/VisualBuild/WeaponRow/WeaponSelect")
+	var weapon_level: SpinBox = lab.get_node_or_null("Root/Body/Left/Side/Sections/VisualBuild/WeaponRow/WeaponLevel")
+	var add_weapon: Button = lab.get_node_or_null("Root/Body/Left/Side/Sections/VisualBuild/AddWeaponButton")
+	var relic_select: OptionButton = lab.get_node_or_null("Root/Body/Left/Side/Sections/VisualBuild/RelicRow/RelicSelect")
+	var relic_level: SpinBox = lab.get_node_or_null("Root/Body/Left/Side/Sections/VisualBuild/RelicRow/RelicLevel")
+	var add_relic: Button = lab.get_node_or_null("Root/Body/Left/Side/Sections/VisualBuild/AddRelicButton")
+	var stat_select: OptionButton = lab.get_node_or_null("Root/Body/Left/Side/Sections/VisualBuild/StatRow/StatSelect")
+	var stat_value: SpinBox = lab.get_node_or_null("Root/Body/Left/Side/Sections/VisualBuild/StatRow/StatValue")
+	var add_stat: Button = lab.get_node_or_null("Root/Body/Left/Side/Sections/VisualBuild/AddStatButton")
+	var apply_build: Button = lab.get_node_or_null("Root/Body/Left/Side/Sections/VisualBuild/ApplyBuildButton")
+	var import_profile: Button = lab.get_node_or_null("Root/Body/Left/Side/Sections/VisualBuild/ImportProfileButton")
+	var equipment_slot: OptionButton = lab.get_node_or_null("Root/Body/Left/Side/Sections/VisualBuild/EquipmentRow/EquipmentSlot")
+	var equipment_stat: OptionButton = lab.get_node_or_null("Root/Body/Left/Side/Sections/VisualBuild/EquipmentRow/EquipmentStat")
+	var equipment_value: SpinBox = lab.get_node_or_null("Root/Body/Left/Side/Sections/VisualBuild/EquipmentRow/EquipmentValue")
+	var add_equipment: Button = lab.get_node_or_null("Root/Body/Left/Side/Sections/VisualBuild/AddEquipmentButton")
+	var live_stat: OptionButton = lab.get_node_or_null("Root/Body/Left/Side/Sections/LiveOverride/StatSelect")
+	var live_value: SpinBox = lab.get_node_or_null("Root/Body/Left/Side/Sections/LiveOverride/StatValue")
+	var apply_live_stat: Button = lab.get_node_or_null("Root/Body/Left/Side/Sections/LiveOverride/ApplyStat")
+	var enemy_hp_override: SpinBox = lab.get_node_or_null("Root/Body/Left/Side/Sections/EnemyConfig/EnemyHpMultiplier")
+	var enemy_speed_override: SpinBox = lab.get_node_or_null("Root/Body/Left/Side/Sections/EnemyConfig/EnemySpeedMultiplier")
+	var contact_damage: SpinBox = lab.get_node_or_null("Root/Body/Left/Side/Sections/EnemyConfig/ContactDamage")
+	var health_decay_multiplier: SpinBox = lab.get_node_or_null("Root/Body/Left/Side/Sections/EnemyConfig/HealthDecayMultiplier")
+	var wave_spawning_toggle: CheckBox = lab.get_node_or_null("Root/Body/Left/Side/Sections/EnemyConfig/WaveSpawningToggle")
+	var seed_control: SpinBox = lab.get_node_or_null("Root/Body/Left/Side/Sections/EnemyConfig/Seed")
 	var restore_hp_button: Button = lab.get_node_or_null("Root/Body/Left/Controls/RestoreHpButton")
 	if weapon_select == null or weapon_level == null or add_weapon == null or relic_select == null or \
 			relic_level == null or add_relic == null or stat_select == null or stat_value == null or \
@@ -138,7 +141,7 @@ func _run() -> void:
 		return
 	await lab._reset()
 	if lab.context.seed != 42 or lab.context.session.sandbox_rng_seed != 42 or \
-			lab.get_node("Root/Body/Side/Sections/Status").text != "LAB RESET FROM PRESET":
+			lab.get_node("Root/Body/Left/Side/Sections/Status").text != "LAB RESET FROM PRESET":
 		_fail("Reset should restart the isolated session from the staged seed")
 		return
 	var lab_session: Node2D = lab.context.session
@@ -233,7 +236,7 @@ func _run() -> void:
 	equipment_stat.select(_option_index_for(equipment_stat, "move_speed_pct"))
 	equipment_value.value = 7.5
 	add_equipment.pressed.emit()
-	var visual_build: Dictionary = JSON.parse_string(lab.get_node("Root/Body/Side/Sections/BuildJson").text)
+	var visual_build: Dictionary = JSON.parse_string(lab.get_node("Root/Body/Left/Side/Sections/BuildJson").text)
 	if visual_build["weapons"].size() != 2 or visual_build["weapons"][1]["level"] != 3 or \
 			visual_build["relics"].size() != 2 or visual_build["stats"]["damage_pct"] != 12.5 or \
 			visual_build["equipment"].size() != 1 or \
@@ -350,9 +353,9 @@ func _run() -> void:
 			lab.context.session.player_max_hp != 110.0:
 		_fail("Rebuilding the Lab should clear all transient live stat overrides")
 		return
-	var diagnostics: Label = lab.get_node_or_null("Root/Body/Side/Sections/Diagnostics/RngLog")
-	var dps_summary: Label = lab.get_node_or_null("Root/Body/Side/Sections/Diagnostics/DpsSummary")
-	var dps_sources: Label = lab.get_node_or_null("Root/Body/Side/Sections/Diagnostics/DpsSources")
+	var diagnostics: Label = lab.get_node_or_null("Root/Body/Left/Side/Sections/Diagnostics/RngLog")
+	var dps_summary: Label = lab.get_node_or_null("Root/Body/Left/Side/Sections/Diagnostics/DpsSummary")
+	var dps_sources: Label = lab.get_node_or_null("Root/Body/Left/Side/Sections/Diagnostics/DpsSources")
 	if diagnostics == null or dps_summary == null or dps_sources == null:
 		_fail("Sandbox Lab should expose RNG and source DPS diagnostics")
 		return
@@ -415,10 +418,10 @@ func _run() -> void:
 		return
 	lab._jump_to_wave(0)
 	if lab.context.session.wave_director.wave != 17 or \
-			lab.get_node("Root/Body/Side/Sections/Status").text != "WAVE MUST BE BETWEEN 1 AND 999":
+			lab.get_node("Root/Body/Left/Side/Sections/Status").text != "WAVE MUST BE BETWEEN 1 AND 999":
 		_fail("Jump Wave should reject invalid wave numbers without changing the active wave")
 		return
-	var god_mode: CheckButton = lab.get_node("Root/Body/Side/Sections/GodModeToggle")
+	var god_mode: CheckButton = lab.get_node("Root/Body/Left/Side/Sections/GodModeToggle")
 	if not lab.context.session._health_locked:
 		_fail("Sandbox Lab should begin with its isolated god mode enabled")
 		return
@@ -432,7 +435,7 @@ func _run() -> void:
 	for file_name in DirAccess.get_files_at(directory):
 		DirAccess.remove_absolute(directory.path_join(file_name))
 	lab.preset_store = load("res://scripts/sandbox_preset_store.gd").new(directory, lab.preset_service)
-	lab.get_node("Root/Body/Side/Sections/PresetId").text = "smoke_build"
+	lab.get_node("Root/Body/Left/Side/Sections/PresetId").text = "smoke_build"
 	lab._save_preset()
 	var saved_preset: Dictionary = lab.preset_store.load_preset("smoke_build")
 	if not saved_preset.get("ok", false) or \
@@ -464,7 +467,7 @@ func _run() -> void:
 			elite_affix_select.disabled or \
 			not is_equal_approx(float(lab.context.session.contact_damage_per_hit), 7.0):
 		_fail("A valid JSON file should import and apply to the isolated Lab: status=%s error=%s" % [
-			lab.get_node("Root/Body/Side/Sections/Status").text,
+			lab.get_node("Root/Body/Left/Side/Sections/Status").text,
 			str(lab.preset_service.import_json(FileAccess.get_file_as_string(imported_path))),
 		])
 		return
@@ -514,11 +517,11 @@ func _run() -> void:
 	lab.get_node("Root/Body/Left/Controls/ResetButton").pressed.emit()
 	if not await _wait_for_empty_simulation(lab.context) or \
 			lab.context.session.loadout.weapon_level("lightning_conductor") != 1 or \
-			lab.get_node("Root/Body/Side/Sections/Status").text != "LAB RESET FROM PRESET":
+			lab.get_node("Root/Body/Left/Side/Sections/Status").text != "LAB RESET FROM PRESET":
 		_fail("Reset should rebuild cleanly; count=%d weapon=%d status=%s paused=%s" % [
 			int(lab.context.simulation.snapshot()["metrics"]["entity_count"]),
 			lab.context.session.loadout.weapon_level("lightning_conductor"),
-			lab.get_node("Root/Body/Side/Sections/Status").text,
+			lab.get_node("Root/Body/Left/Side/Sections/Status").text,
 			str(lab.context.simulation.snapshot()["paused"]),
 		])
 		return

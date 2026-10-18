@@ -55,21 +55,19 @@ layout_mode = 2
 focus_mode = 2
 text = "ACCUEIL"
 
-[node name="Body" type="HSplitContainer" parent="Root"]
+[node name="Body" type="ScrollContainer" parent="Root"]
 layout_mode = 2
 size_flags_vertical = 3
-split_offset = 375
+horizontal_scroll_mode = 0
 
 [node name="Left" type="VBoxContainer" parent="Root/Body"]
 layout_mode = 2
 size_flags_horizontal = 3
-size_flags_vertical = 3
 
 [node name="SimulationView" type="Control" parent="Root/Body/Left"]
-custom_minimum_size = Vector2(320, 235)
+custom_minimum_size = Vector2(0, 150)
 layout_mode = 2
 size_flags_horizontal = 3
-size_flags_vertical = 3
 clip_contents = true
 script = ExtResource("3_view")
 
@@ -165,41 +163,39 @@ layout_mode = 2
 focus_mode = 2
 text = "JUMP WAVE"
 
-[node name="Side" type="ScrollContainer" parent="Root/Body"]
-custom_minimum_size = Vector2(235, 0)
+[node name="Side" type="VBoxContainer" parent="Root/Body/Left"]
 layout_mode = 2
-size_flags_horizontal = 3
 size_flags_vertical = 3
-horizontal_scroll_mode = 0
+size_flags_horizontal = 3
 
-[node name="Sections" type="VBoxContainer" parent="Root/Body/Side"]
+[node name="Sections" type="VBoxContainer" parent="Root/Body/Left/Side"]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Status" type="Label" parent="Root/Body/Side/Sections"]
+[node name="Status" type="Label" parent="Root/Body/Left/Side/Sections"]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.831373, 0.278431, 1)
 theme_override_font_sizes/font_size = 8
 text = "SIMULATION READY"
 autowrap_mode = 2
 
-[node name="PresetTitle" type="Label" parent="Root/Body/Side/Sections"]
+[node name="PresetTitle" type="Label" parent="Root/Body/Left/Side/Sections"]
 layout_mode = 2
 theme_type_variation = "PixelHeading"
 theme_override_font_sizes/font_size = 8
 text = "PRESET / BUILD"
 
-[node name="BaseModeRow" type="HBoxContainer" parent="Root/Body/Side/Sections"]
+[node name="BaseModeRow" type="HBoxContainer" parent="Root/Body/Left/Side/Sections"]
 layout_mode = 2
 theme_override_constants/separation = 4
 
-[node name="BaseModeTitle" type="Label" parent="Root/Body/Side/Sections/BaseModeRow"]
+[node name="BaseModeTitle" type="Label" parent="Root/Body/Left/Side/Sections/BaseModeRow"]
 custom_minimum_size = Vector2(54, 20)
 layout_mode = 2
 text = "BASE MODE"
 vertical_alignment = 1
 
-[node name="BaseModeSelect" type="OptionButton" parent="Root/Body/Side/Sections/BaseModeRow"]
+[node name="BaseModeSelect" type="OptionButton" parent="Root/Body/Left/Side/Sections/BaseModeRow"]
 custom_minimum_size = Vector2(120, 20)
 size_flags_horizontal = 3
 layout_mode = 2
@@ -207,54 +203,54 @@ focus_mode = 2
 tooltip_text = "Run Survival or Armorless. Standard Endless rules are still open."
 item_count = 0
 
-[node name="PresetId" type="LineEdit" parent="Root/Body/Side/Sections"]
+[node name="PresetId" type="LineEdit" parent="Root/Body/Left/Side/Sections"]
 custom_minimum_size = Vector2(0, 20)
 layout_mode = 2
 focus_mode = 2
 placeholder_text = "preset id"
 text = "lab_default"
 
-[node name="BuildJson" type="TextEdit" parent="Root/Body/Side/Sections"]
+[node name="BuildJson" type="TextEdit" parent="Root/Body/Left/Side/Sections"]
 custom_minimum_size = Vector2(0, 64)
 layout_mode = 2
 focus_mode = 2
 placeholder_text = "Initial build JSON (weapons/relics/equipment/stats)"
 
-[node name="BuildNote" type="Label" parent="Root/Body/Side/Sections"]
+[node name="BuildNote" type="Label" parent="Root/Body/Left/Side/Sections"]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.831373, 0.278431, 1)
 theme_override_font_sizes/font_size = 7
 text = "WEAPON/RELIC BUILD APPLIED TO COMBAT. LEVELS 1–5; STATS ARE SANDBOX ONLY."
 autowrap_mode = 2
 
-[node name="VisualBuild" type="VBoxContainer" parent="Root/Body/Side/Sections"]
+[node name="VisualBuild" type="VBoxContainer" parent="Root/Body/Left/Side/Sections"]
 layout_mode = 2
 theme_override_constants/separation = 2
 
-[node name="VisualBuildTitle" type="Label" parent="Root/Body/Side/Sections/VisualBuild"]
+[node name="VisualBuildTitle" type="Label" parent="Root/Body/Left/Side/Sections/VisualBuild"]
 layout_mode = 2
 theme_type_variation = "PixelHeading"
 theme_override_font_sizes/font_size = 8
 text = "VISUAL BUILD EDITOR"
 
-[node name="ImportProfileButton" type="Button" parent="Root/Body/Side/Sections/VisualBuild"]
+[node name="ImportProfileButton" type="Button" parent="Root/Body/Left/Side/Sections/VisualBuild"]
 custom_minimum_size = Vector2(0, 20)
 layout_mode = 2
 focus_mode = 2
 text = "IMPORT NORMAL PROFILE · READ ONLY"
 
-[node name="WeaponRow" type="HBoxContainer" parent="Root/Body/Side/Sections/VisualBuild"]
+[node name="WeaponRow" type="HBoxContainer" parent="Root/Body/Left/Side/Sections/VisualBuild"]
 layout_mode = 2
 theme_override_constants/separation = 3
 
-[node name="WeaponSelect" type="OptionButton" parent="Root/Body/Side/Sections/VisualBuild/WeaponRow"]
+[node name="WeaponSelect" type="OptionButton" parent="Root/Body/Left/Side/Sections/VisualBuild/WeaponRow"]
 custom_minimum_size = Vector2(0, 20)
 size_flags_horizontal = 3
 layout_mode = 2
 focus_mode = 2
 item_count = 0
 
-[node name="WeaponLevel" type="SpinBox" parent="Root/Body/Side/Sections/VisualBuild/WeaponRow"]
+[node name="WeaponLevel" type="SpinBox" parent="Root/Body/Left/Side/Sections/VisualBuild/WeaponRow"]
 custom_minimum_size = Vector2(52, 20)
 layout_mode = 2
 focus_mode = 2
@@ -264,24 +260,24 @@ value = 1.0
 step = 1.0
 rounded = true
 
-[node name="AddWeaponButton" type="Button" parent="Root/Body/Side/Sections/VisualBuild"]
+[node name="AddWeaponButton" type="Button" parent="Root/Body/Left/Side/Sections/VisualBuild"]
 custom_minimum_size = Vector2(0, 20)
 layout_mode = 2
 focus_mode = 2
 text = "ADD / UPDATE WEAPON"
 
-[node name="RelicRow" type="HBoxContainer" parent="Root/Body/Side/Sections/VisualBuild"]
+[node name="RelicRow" type="HBoxContainer" parent="Root/Body/Left/Side/Sections/VisualBuild"]
 layout_mode = 2
 theme_override_constants/separation = 3
 
-[node name="RelicSelect" type="OptionButton" parent="Root/Body/Side/Sections/VisualBuild/RelicRow"]
+[node name="RelicSelect" type="OptionButton" parent="Root/Body/Left/Side/Sections/VisualBuild/RelicRow"]
 custom_minimum_size = Vector2(0, 20)
 size_flags_horizontal = 3
 layout_mode = 2
 focus_mode = 2
 item_count = 0
 
-[node name="RelicLevel" type="SpinBox" parent="Root/Body/Side/Sections/VisualBuild/RelicRow"]
+[node name="RelicLevel" type="SpinBox" parent="Root/Body/Left/Side/Sections/VisualBuild/RelicRow"]
 custom_minimum_size = Vector2(52, 20)
 layout_mode = 2
 focus_mode = 2
@@ -291,24 +287,24 @@ value = 1.0
 step = 1.0
 rounded = true
 
-[node name="AddRelicButton" type="Button" parent="Root/Body/Side/Sections/VisualBuild"]
+[node name="AddRelicButton" type="Button" parent="Root/Body/Left/Side/Sections/VisualBuild"]
 custom_minimum_size = Vector2(0, 20)
 layout_mode = 2
 focus_mode = 2
 text = "ADD / UPDATE RELIC"
 
-[node name="StatRow" type="HBoxContainer" parent="Root/Body/Side/Sections/VisualBuild"]
+[node name="StatRow" type="HBoxContainer" parent="Root/Body/Left/Side/Sections/VisualBuild"]
 layout_mode = 2
 theme_override_constants/separation = 3
 
-[node name="StatSelect" type="OptionButton" parent="Root/Body/Side/Sections/VisualBuild/StatRow"]
+[node name="StatSelect" type="OptionButton" parent="Root/Body/Left/Side/Sections/VisualBuild/StatRow"]
 custom_minimum_size = Vector2(0, 20)
 size_flags_horizontal = 3
 layout_mode = 2
 focus_mode = 2
 item_count = 0
 
-[node name="StatValue" type="SpinBox" parent="Root/Body/Side/Sections/VisualBuild/StatRow"]
+[node name="StatValue" type="SpinBox" parent="Root/Body/Left/Side/Sections/VisualBuild/StatRow"]
 custom_minimum_size = Vector2(78, 20)
 layout_mode = 2
 focus_mode = 2
@@ -317,31 +313,31 @@ max_value = 10000.0
 value = 0.0
 step = 0.5
 
-[node name="AddStatButton" type="Button" parent="Root/Body/Side/Sections/VisualBuild"]
+[node name="AddStatButton" type="Button" parent="Root/Body/Left/Side/Sections/VisualBuild"]
 custom_minimum_size = Vector2(0, 20)
 layout_mode = 2
 focus_mode = 2
 text = "ADD / UPDATE STAT"
 
-[node name="EquipmentRow" type="HBoxContainer" parent="Root/Body/Side/Sections/VisualBuild"]
+[node name="EquipmentRow" type="HBoxContainer" parent="Root/Body/Left/Side/Sections/VisualBuild"]
 layout_mode = 2
 theme_override_constants/separation = 3
 
-[node name="EquipmentSlot" type="OptionButton" parent="Root/Body/Side/Sections/VisualBuild/EquipmentRow"]
+[node name="EquipmentSlot" type="OptionButton" parent="Root/Body/Left/Side/Sections/VisualBuild/EquipmentRow"]
 custom_minimum_size = Vector2(0, 20)
 size_flags_horizontal = 3
 layout_mode = 2
 focus_mode = 2
 item_count = 0
 
-[node name="EquipmentStat" type="OptionButton" parent="Root/Body/Side/Sections/VisualBuild/EquipmentRow"]
+[node name="EquipmentStat" type="OptionButton" parent="Root/Body/Left/Side/Sections/VisualBuild/EquipmentRow"]
 custom_minimum_size = Vector2(0, 20)
 size_flags_horizontal = 3
 layout_mode = 2
 focus_mode = 2
 item_count = 0
 
-[node name="EquipmentValue" type="SpinBox" parent="Root/Body/Side/Sections/VisualBuild/EquipmentRow"]
+[node name="EquipmentValue" type="SpinBox" parent="Root/Body/Left/Side/Sections/VisualBuild/EquipmentRow"]
 custom_minimum_size = Vector2(70, 20)
 layout_mode = 2
 focus_mode = 2
@@ -350,29 +346,29 @@ max_value = 10000.0
 value = 5.0
 step = 0.5
 
-[node name="AddEquipmentButton" type="Button" parent="Root/Body/Side/Sections/VisualBuild"]
+[node name="AddEquipmentButton" type="Button" parent="Root/Body/Left/Side/Sections/VisualBuild"]
 custom_minimum_size = Vector2(0, 20)
 layout_mode = 2
 focus_mode = 2
 text = "ADD / UPDATE EQUIPMENT"
 
-[node name="ApplyBuildButton" type="Button" parent="Root/Body/Side/Sections/VisualBuild"]
+[node name="ApplyBuildButton" type="Button" parent="Root/Body/Left/Side/Sections/VisualBuild"]
 custom_minimum_size = Vector2(0, 21)
 layout_mode = 2
 focus_mode = 2
 text = "APPLY BUILD · PAUSE / REBUILD"
 
-[node name="EnemyConfig" type="VBoxContainer" parent="Root/Body/Side/Sections"]
+[node name="EnemyConfig" type="VBoxContainer" parent="Root/Body/Left/Side/Sections"]
 layout_mode = 2
 theme_override_constants/separation = 2
 
-[node name="EnemyHpTitle" type="Label" parent="Root/Body/Side/Sections/EnemyConfig"]
+[node name="EnemyHpTitle" type="Label" parent="Root/Body/Left/Side/Sections/EnemyConfig"]
 layout_mode = 2
 theme_type_variation = "PixelHeading"
 theme_override_font_sizes/font_size = 8
 text = "ENEMY HP · LIVE FOR NEW SPAWNS"
 
-[node name="EnemyHpMultiplier" type="SpinBox" parent="Root/Body/Side/Sections/EnemyConfig"]
+[node name="EnemyHpMultiplier" type="SpinBox" parent="Root/Body/Left/Side/Sections/EnemyConfig"]
 custom_minimum_size = Vector2(0, 20)
 layout_mode = 2
 focus_mode = 2
@@ -381,13 +377,13 @@ max_value = 1000.0
 value = 1.0
 step = 0.1
 
-[node name="EnemySpeedTitle" type="Label" parent="Root/Body/Side/Sections/EnemyConfig"]
+[node name="EnemySpeedTitle" type="Label" parent="Root/Body/Left/Side/Sections/EnemyConfig"]
 layout_mode = 2
 theme_type_variation = "PixelHeading"
 theme_override_font_sizes/font_size = 8
 text = "ENEMY SPEED · LIVE FOR NEW SPAWNS"
 
-[node name="EnemySpeedMultiplier" type="SpinBox" parent="Root/Body/Side/Sections/EnemyConfig"]
+[node name="EnemySpeedMultiplier" type="SpinBox" parent="Root/Body/Left/Side/Sections/EnemyConfig"]
 custom_minimum_size = Vector2(0, 20)
 layout_mode = 2
 focus_mode = 2
@@ -396,13 +392,13 @@ max_value = 10.0
 value = 1.0
 step = 0.1
 
-[node name="SpawnCountTitle" type="Label" parent="Root/Body/Side/Sections/EnemyConfig"]
+[node name="SpawnCountTitle" type="Label" parent="Root/Body/Left/Side/Sections/EnemyConfig"]
 layout_mode = 2
 theme_type_variation = "PixelHeading"
 theme_override_font_sizes/font_size = 8
 text = "SPAWN COUNT · 1–500 PER COMMAND"
 
-[node name="SpawnCount" type="SpinBox" parent="Root/Body/Side/Sections/EnemyConfig"]
+[node name="SpawnCount" type="SpinBox" parent="Root/Body/Left/Side/Sections/EnemyConfig"]
 custom_minimum_size = Vector2(0, 20)
 layout_mode = 2
 focus_mode = 2
@@ -413,25 +409,25 @@ allow_greater = false
 allow_lesser = false
 step = 1.0
 
-[node name="EliteAffixTitle" type="Label" parent="Root/Body/Side/Sections/EnemyConfig"]
+[node name="EliteAffixTitle" type="Label" parent="Root/Body/Left/Side/Sections/EnemyConfig"]
 layout_mode = 2
 theme_type_variation = "PixelHeading"
 theme_override_font_sizes/font_size = 8
 text = "ELITE AFFIX · ELITE PROFILE ONLY"
 
-[node name="EliteAffixSelect" type="OptionButton" parent="Root/Body/Side/Sections/EnemyConfig"]
+[node name="EliteAffixSelect" type="OptionButton" parent="Root/Body/Left/Side/Sections/EnemyConfig"]
 custom_minimum_size = Vector2(0, 20)
 layout_mode = 2
 focus_mode = 2
 item_count = 0
 
-[node name="ContactDamageTitle" type="Label" parent="Root/Body/Side/Sections/EnemyConfig"]
+[node name="ContactDamageTitle" type="Label" parent="Root/Body/Left/Side/Sections/EnemyConfig"]
 layout_mode = 2
 theme_type_variation = "PixelHeading"
 theme_override_font_sizes/font_size = 8
 text = "BODY CONTACT DAMAGE · LIVE"
 
-[node name="ContactDamage" type="SpinBox" parent="Root/Body/Side/Sections/EnemyConfig"]
+[node name="ContactDamage" type="SpinBox" parent="Root/Body/Left/Side/Sections/EnemyConfig"]
 custom_minimum_size = Vector2(0, 20)
 layout_mode = 2
 focus_mode = 2
@@ -440,13 +436,13 @@ max_value = 1000.0
 value = 0.0
 step = 0.5
 
-[node name="HealthDecayTitle" type="Label" parent="Root/Body/Side/Sections/EnemyConfig"]
+[node name="HealthDecayTitle" type="Label" parent="Root/Body/Left/Side/Sections/EnemyConfig"]
 layout_mode = 2
 theme_type_variation = "PixelHeading"
 theme_override_font_sizes/font_size = 8
 text = "HP DECAY · LIVE SANDBOX ONLY"
 
-[node name="HealthDecayMultiplier" type="SpinBox" parent="Root/Body/Side/Sections/EnemyConfig"]
+[node name="HealthDecayMultiplier" type="SpinBox" parent="Root/Body/Left/Side/Sections/EnemyConfig"]
 custom_minimum_size = Vector2(0, 20)
 layout_mode = 2
 focus_mode = 2
@@ -455,19 +451,19 @@ max_value = 10.0
 value = 1.0
 step = 0.1
 
-[node name="WaveSpawningToggle" type="CheckBox" parent="Root/Body/Side/Sections/EnemyConfig"]
+[node name="WaveSpawningToggle" type="CheckBox" parent="Root/Body/Left/Side/Sections/EnemyConfig"]
 custom_minimum_size = Vector2(0, 20)
 layout_mode = 2
 focus_mode = 2
 text = "AUTO WAVE SPAWNING"
 
-[node name="SeedTitle" type="Label" parent="Root/Body/Side/Sections/EnemyConfig"]
+[node name="SeedTitle" type="Label" parent="Root/Body/Left/Side/Sections/EnemyConfig"]
 layout_mode = 2
 theme_type_variation = "PixelHeading"
 theme_override_font_sizes/font_size = 8
 text = "RNG SEED · RESTART TO APPLY"
 
-[node name="Seed" type="SpinBox" parent="Root/Body/Side/Sections/EnemyConfig"]
+[node name="Seed" type="SpinBox" parent="Root/Body/Left/Side/Sections/EnemyConfig"]
 custom_minimum_size = Vector2(0, 20)
 layout_mode = 2
 focus_mode = 2
@@ -476,23 +472,23 @@ max_value = 2147483647.0
 value = 1.0
 step = 1.0
 
-[node name="LiveOverride" type="VBoxContainer" parent="Root/Body/Side/Sections"]
+[node name="LiveOverride" type="VBoxContainer" parent="Root/Body/Left/Side/Sections"]
 layout_mode = 2
 theme_override_constants/separation = 2
 
-[node name="LiveOverrideTitle" type="Label" parent="Root/Body/Side/Sections/LiveOverride"]
+[node name="LiveOverrideTitle" type="Label" parent="Root/Body/Left/Side/Sections/LiveOverride"]
 layout_mode = 2
 theme_type_variation = "PixelHeading"
 theme_override_font_sizes/font_size = 8
 text = "LIVE STAT OVERRIDE"
 
-[node name="StatSelect" type="OptionButton" parent="Root/Body/Side/Sections/LiveOverride"]
+[node name="StatSelect" type="OptionButton" parent="Root/Body/Left/Side/Sections/LiveOverride"]
 custom_minimum_size = Vector2(0, 20)
 layout_mode = 2
 focus_mode = 2
 item_count = 0
 
-[node name="StatValue" type="SpinBox" parent="Root/Body/Side/Sections/LiveOverride"]
+[node name="StatValue" type="SpinBox" parent="Root/Body/Left/Side/Sections/LiveOverride"]
 custom_minimum_size = Vector2(0, 20)
 layout_mode = 2
 focus_mode = 2
@@ -501,110 +497,110 @@ max_value = 10000.0
 value = 0.0
 step = 0.5
 
-[node name="ApplyStat" type="Button" parent="Root/Body/Side/Sections/LiveOverride"]
+[node name="ApplyStat" type="Button" parent="Root/Body/Left/Side/Sections/LiveOverride"]
 custom_minimum_size = Vector2(0, 20)
 layout_mode = 2
 focus_mode = 2
 text = "APPLY LIVE STAT"
 
-[node name="PresetActions" type="HBoxContainer" parent="Root/Body/Side/Sections"]
+[node name="PresetActions" type="HBoxContainer" parent="Root/Body/Left/Side/Sections"]
 layout_mode = 2
 theme_override_constants/separation = 3
 
-[node name="SavePreset" type="Button" parent="Root/Body/Side/Sections/PresetActions"]
+[node name="SavePreset" type="Button" parent="Root/Body/Left/Side/Sections/PresetActions"]
 custom_minimum_size = Vector2(58, 21)
 layout_mode = 2
 focus_mode = 2
 text = "SAVE"
 
-[node name="LoadPreset" type="Button" parent="Root/Body/Side/Sections/PresetActions"]
+[node name="LoadPreset" type="Button" parent="Root/Body/Left/Side/Sections/PresetActions"]
 custom_minimum_size = Vector2(58, 21)
 layout_mode = 2
 focus_mode = 2
 text = "LOAD"
 
-[node name="ExportCode" type="Button" parent="Root/Body/Side/Sections/PresetActions"]
+[node name="ExportCode" type="Button" parent="Root/Body/Left/Side/Sections/PresetActions"]
 custom_minimum_size = Vector2(58, 21)
 layout_mode = 2
 focus_mode = 2
 text = "COPY CODE"
 
-[node name="ImportCode" type="Button" parent="Root/Body/Side/Sections/PresetActions"]
+[node name="ImportCode" type="Button" parent="Root/Body/Left/Side/Sections/PresetActions"]
 custom_minimum_size = Vector2(58, 21)
 layout_mode = 2
 focus_mode = 2
 text = "IMPORT"
 
-[node name="PresetFileActions" type="HBoxContainer" parent="Root/Body/Side/Sections"]
+[node name="PresetFileActions" type="HBoxContainer" parent="Root/Body/Left/Side/Sections"]
 layout_mode = 2
 theme_override_constants/separation = 3
 
-[node name="ImportFile" type="Button" parent="Root/Body/Side/Sections/PresetFileActions"]
+[node name="ImportFile" type="Button" parent="Root/Body/Left/Side/Sections/PresetFileActions"]
 custom_minimum_size = Vector2(58, 21)
 layout_mode = 2
 focus_mode = 2
 text = "OPEN JSON"
 
-[node name="ExportFile" type="Button" parent="Root/Body/Side/Sections/PresetFileActions"]
+[node name="ExportFile" type="Button" parent="Root/Body/Left/Side/Sections/PresetFileActions"]
 custom_minimum_size = Vector2(58, 21)
 layout_mode = 2
 focus_mode = 2
 text = "SAVE JSON"
 
-[node name="ShareCode" type="LineEdit" parent="Root/Body/Side/Sections"]
+[node name="ShareCode" type="LineEdit" parent="Root/Body/Left/Side/Sections"]
 custom_minimum_size = Vector2(0, 20)
 layout_mode = 2
 focus_mode = 2
 placeholder_text = "DSLAB1: share code"
 
-[node name="EnemyTitle" type="Label" parent="Root/Body/Side/Sections"]
+[node name="EnemyTitle" type="Label" parent="Root/Body/Left/Side/Sections"]
 layout_mode = 2
 theme_type_variation = "PixelHeading"
 theme_override_font_sizes/font_size = 8
 text = "ENEMY SPAWN"
 
-[node name="EnemySelect" type="OptionButton" parent="Root/Body/Side/Sections"]
+[node name="EnemySelect" type="OptionButton" parent="Root/Body/Left/Side/Sections"]
 custom_minimum_size = Vector2(0, 21)
 layout_mode = 2
 focus_mode = 2
 item_count = 0
 
-[node name="GodModeToggle" type="CheckButton" parent="Root/Body/Side/Sections"]
+[node name="GodModeToggle" type="CheckButton" parent="Root/Body/Left/Side/Sections"]
 custom_minimum_size = Vector2(0, 21)
 layout_mode = 2
 focus_mode = 2
 button_pressed = true
 text = "GOD MODE"
 
-[node name="Metrics" type="Label" parent="Root/Body/Side/Sections"]
+[node name="Metrics" type="Label" parent="Root/Body/Left/Side/Sections"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 8
 text = "ENTITIES 0\nSIM 0.00 s"
 
-[node name="Diagnostics" type="VBoxContainer" parent="Root/Body/Side/Sections"]
+[node name="Diagnostics" type="VBoxContainer" parent="Root/Body/Left/Side/Sections"]
 layout_mode = 2
 theme_override_constants/separation = 2
 
-[node name="DiagnosticsTitle" type="Label" parent="Root/Body/Side/Sections/Diagnostics"]
+[node name="DiagnosticsTitle" type="Label" parent="Root/Body/Left/Side/Sections/Diagnostics"]
 layout_mode = 2
 theme_type_variation = "PixelHeading"
 theme_override_font_sizes/font_size = 8
 text = "DPS / RNG LOG"
 
-[node name="DpsSummary" type="Label" parent="Root/Body/Side/Sections/Diagnostics"]
+[node name="DpsSummary" type="Label" parent="Root/Body/Left/Side/Sections/Diagnostics"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 7
 text = "DPS 1S 0.0  ·  10S 0.0  ·  RUN 0.0"
 autowrap_mode = 2
 
-[node name="DpsSources" type="Label" parent="Root/Body/Side/Sections/Diagnostics"]
+[node name="DpsSources" type="Label" parent="Root/Body/Left/Side/Sections/Diagnostics"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.215686, 0.909804, 0.960784, 1)
 theme_override_font_sizes/font_size = 7
 text = "NO WEAPON DAMAGE YET"
 autowrap_mode = 2
 
-[node name="RngLog" type="Label" parent="Root/Body/Side/Sections/Diagnostics"]
+[node name="RngLog" type="Label" parent="Root/Body/Left/Side/Sections/Diagnostics"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.647059, 0.682353, 0.764706, 1)
 theme_override_font_sizes/font_size = 7

@@ -115,13 +115,13 @@ func _run() -> void:
 	lab_session.wave_director.wave = 4
 	lab_session.wave_director.elapsed_in_wave = 11.25
 	lab_session.player.global_position = Vector2(222.0, 144.0)
-	var contact_damage_control: SpinBox = lab.get_node("Root/Body/Side/Sections/EnemyConfig/ContactDamage")
-	var health_decay_control: SpinBox = lab.get_node("Root/Body/Side/Sections/EnemyConfig/HealthDecayMultiplier")
-	var wave_spawning_control: CheckBox = lab.get_node("Root/Body/Side/Sections/EnemyConfig/WaveSpawningToggle")
-	var enemy_speed_control: SpinBox = lab.get_node("Root/Body/Side/Sections/EnemyConfig/EnemySpeedMultiplier")
-	var spawn_count_control: SpinBox = lab.get_node("Root/Body/Side/Sections/EnemyConfig/SpawnCount")
-	var enemy_select: OptionButton = lab.get_node("Root/Body/Side/Sections/EnemySelect")
-	var elite_affix_select: OptionButton = lab.get_node("Root/Body/Side/Sections/EnemyConfig/EliteAffixSelect")
+	var contact_damage_control: SpinBox = lab.get_node("Root/Body/Left/Side/Sections/EnemyConfig/ContactDamage")
+	var health_decay_control: SpinBox = lab.get_node("Root/Body/Left/Side/Sections/EnemyConfig/HealthDecayMultiplier")
+	var wave_spawning_control: CheckBox = lab.get_node("Root/Body/Left/Side/Sections/EnemyConfig/WaveSpawningToggle")
+	var enemy_speed_control: SpinBox = lab.get_node("Root/Body/Left/Side/Sections/EnemyConfig/EnemySpeedMultiplier")
+	var spawn_count_control: SpinBox = lab.get_node("Root/Body/Left/Side/Sections/EnemyConfig/SpawnCount")
+	var enemy_select: OptionButton = lab.get_node("Root/Body/Left/Side/Sections/EnemySelect")
+	var elite_affix_select: OptionButton = lab.get_node("Root/Body/Left/Side/Sections/EnemyConfig/EliteAffixSelect")
 	var elite_index := _enemy_type_index(enemy_select, "elite")
 	var tank_index := _enemy_type_index(enemy_select, "tank")
 	var volatile_index := _elite_affix_index(elite_affix_select, "Volatile")
@@ -142,7 +142,7 @@ func _run() -> void:
 	capture_button.pressed.emit()
 	if lab_context.latest_snapshot.is_empty() or restore_button.disabled:
 		_fail("Capture Snapshot should expose a valid in-memory Lab checkpoint (%s)" % \
-			str(lab.get_node("Root/Body/Side/Sections/Status").text))
+			str(lab.get_node("Root/Body/Left/Side/Sections/Status").text))
 		return
 	lab_session.player_active_time = 0.0
 	lab_session.player_hp = 1.0
@@ -202,7 +202,7 @@ func _run() -> void:
 			"overrides": lab_context.live_stat_overrides,
 			"build": lab_context.build.to_dictionary(),
 			"entities": lab_context.simulation.snapshot()["metrics"]["entity_count"],
-			"status": lab.get_node("Root/Body/Side/Sections/Status").text,
+			"status": lab.get_node("Root/Body/Left/Side/Sections/Status").text,
 		}))
 		return
 	var next_lab_sequence := int(lab_context.simulation.snapshot()["last_sequence"]) + 1

@@ -13,40 +13,40 @@ const SPAWN_BATCH_SIZE := 10
 const MAX_ENEMIES_PER_SPAWN := 500
 
 @onready var _view: Control = $Root/Body/Left/SimulationView
-@onready var _status: Label = $Root/Body/Side/Sections/Status
-@onready var _preset_id: LineEdit = $Root/Body/Side/Sections/PresetId
-@onready var _base_mode_select: OptionButton = $Root/Body/Side/Sections/BaseModeRow/BaseModeSelect
-@onready var _build_json: TextEdit = $Root/Body/Side/Sections/BuildJson
-@onready var _share_code: LineEdit = $Root/Body/Side/Sections/ShareCode
-@onready var _enemy_select: OptionButton = $Root/Body/Side/Sections/EnemySelect
-@onready var _elite_affix_title: Label = $Root/Body/Side/Sections/EnemyConfig/EliteAffixTitle
-@onready var _elite_affix_select: OptionButton = $Root/Body/Side/Sections/EnemyConfig/EliteAffixSelect
-@onready var _metrics: Label = $Root/Body/Side/Sections/Metrics
+@onready var _status: Label = $Root/Body/Left/Side/Sections/Status
+@onready var _preset_id: LineEdit = $Root/Body/Left/Side/Sections/PresetId
+@onready var _base_mode_select: OptionButton = $Root/Body/Left/Side/Sections/BaseModeRow/BaseModeSelect
+@onready var _build_json: TextEdit = $Root/Body/Left/Side/Sections/BuildJson
+@onready var _share_code: LineEdit = $Root/Body/Left/Side/Sections/ShareCode
+@onready var _enemy_select: OptionButton = $Root/Body/Left/Side/Sections/EnemySelect
+@onready var _elite_affix_title: Label = $Root/Body/Left/Side/Sections/EnemyConfig/EliteAffixTitle
+@onready var _elite_affix_select: OptionButton = $Root/Body/Left/Side/Sections/EnemyConfig/EliteAffixSelect
+@onready var _metrics: Label = $Root/Body/Left/Side/Sections/Metrics
 @onready var _pause_button: Button = $Root/Body/Left/Controls/PauseButton
 @onready var _spawn_button: Button = $Root/Body/Left/Controls/SpawnButton
 @onready var _speed_select: OptionButton = $Root/Body/Left/Controls/SpeedSelect
 @onready var _wave_spin: SpinBox = $Root/Body/Left/WaveControls/WaveSpin
-@onready var _dps_summary: Label = $Root/Body/Side/Sections/Diagnostics/DpsSummary
-@onready var _dps_sources: Label = $Root/Body/Side/Sections/Diagnostics/DpsSources
-@onready var _rng_log_label: Label = $Root/Body/Side/Sections/Diagnostics/RngLog
-@onready var _weapon_select: OptionButton = $Root/Body/Side/Sections/VisualBuild/WeaponRow/WeaponSelect
-@onready var _weapon_level: SpinBox = $Root/Body/Side/Sections/VisualBuild/WeaponRow/WeaponLevel
-@onready var _relic_select: OptionButton = $Root/Body/Side/Sections/VisualBuild/RelicRow/RelicSelect
-@onready var _relic_level: SpinBox = $Root/Body/Side/Sections/VisualBuild/RelicRow/RelicLevel
-@onready var _stat_select: OptionButton = $Root/Body/Side/Sections/VisualBuild/StatRow/StatSelect
-@onready var _stat_value: SpinBox = $Root/Body/Side/Sections/VisualBuild/StatRow/StatValue
-@onready var _equipment_slot: OptionButton = $Root/Body/Side/Sections/VisualBuild/EquipmentRow/EquipmentSlot
-@onready var _equipment_stat: OptionButton = $Root/Body/Side/Sections/VisualBuild/EquipmentRow/EquipmentStat
-@onready var _equipment_value: SpinBox = $Root/Body/Side/Sections/VisualBuild/EquipmentRow/EquipmentValue
-@onready var _live_stat_select: OptionButton = $Root/Body/Side/Sections/LiveOverride/StatSelect
-@onready var _live_stat_value: SpinBox = $Root/Body/Side/Sections/LiveOverride/StatValue
-@onready var _enemy_hp_multiplier: SpinBox = $Root/Body/Side/Sections/EnemyConfig/EnemyHpMultiplier
-@onready var _enemy_speed_multiplier: SpinBox = $Root/Body/Side/Sections/EnemyConfig/EnemySpeedMultiplier
-@onready var _spawn_count: SpinBox = $Root/Body/Side/Sections/EnemyConfig/SpawnCount
-@onready var _contact_damage: SpinBox = $Root/Body/Side/Sections/EnemyConfig/ContactDamage
-@onready var _health_decay_multiplier: SpinBox = $Root/Body/Side/Sections/EnemyConfig/HealthDecayMultiplier
-@onready var _wave_spawning_toggle: CheckBox = $Root/Body/Side/Sections/EnemyConfig/WaveSpawningToggle
-@onready var _seed_control: SpinBox = $Root/Body/Side/Sections/EnemyConfig/Seed
+@onready var _dps_summary: Label = $Root/Body/Left/Side/Sections/Diagnostics/DpsSummary
+@onready var _dps_sources: Label = $Root/Body/Left/Side/Sections/Diagnostics/DpsSources
+@onready var _rng_log_label: Label = $Root/Body/Left/Side/Sections/Diagnostics/RngLog
+@onready var _weapon_select: OptionButton = $Root/Body/Left/Side/Sections/VisualBuild/WeaponRow/WeaponSelect
+@onready var _weapon_level: SpinBox = $Root/Body/Left/Side/Sections/VisualBuild/WeaponRow/WeaponLevel
+@onready var _relic_select: OptionButton = $Root/Body/Left/Side/Sections/VisualBuild/RelicRow/RelicSelect
+@onready var _relic_level: SpinBox = $Root/Body/Left/Side/Sections/VisualBuild/RelicRow/RelicLevel
+@onready var _stat_select: OptionButton = $Root/Body/Left/Side/Sections/VisualBuild/StatRow/StatSelect
+@onready var _stat_value: SpinBox = $Root/Body/Left/Side/Sections/VisualBuild/StatRow/StatValue
+@onready var _equipment_slot: OptionButton = $Root/Body/Left/Side/Sections/VisualBuild/EquipmentRow/EquipmentSlot
+@onready var _equipment_stat: OptionButton = $Root/Body/Left/Side/Sections/VisualBuild/EquipmentRow/EquipmentStat
+@onready var _equipment_value: SpinBox = $Root/Body/Left/Side/Sections/VisualBuild/EquipmentRow/EquipmentValue
+@onready var _live_stat_select: OptionButton = $Root/Body/Left/Side/Sections/LiveOverride/StatSelect
+@onready var _live_stat_value: SpinBox = $Root/Body/Left/Side/Sections/LiveOverride/StatValue
+@onready var _enemy_hp_multiplier: SpinBox = $Root/Body/Left/Side/Sections/EnemyConfig/EnemyHpMultiplier
+@onready var _enemy_speed_multiplier: SpinBox = $Root/Body/Left/Side/Sections/EnemyConfig/EnemySpeedMultiplier
+@onready var _spawn_count: SpinBox = $Root/Body/Left/Side/Sections/EnemyConfig/SpawnCount
+@onready var _contact_damage: SpinBox = $Root/Body/Left/Side/Sections/EnemyConfig/ContactDamage
+@onready var _health_decay_multiplier: SpinBox = $Root/Body/Left/Side/Sections/EnemyConfig/HealthDecayMultiplier
+@onready var _wave_spawning_toggle: CheckBox = $Root/Body/Left/Side/Sections/EnemyConfig/WaveSpawningToggle
+@onready var _seed_control: SpinBox = $Root/Body/Left/Side/Sections/EnemyConfig/Seed
 @onready var _capture_snapshot_button: Button = $Root/Body/Left/SnapshotControls/CaptureButton
 @onready var _restore_snapshot_button: Button = $Root/Body/Left/SnapshotControls/RestoreButton
 @onready var _restore_hp_button: Button = $Root/Body/Left/Controls/RestoreHpButton
@@ -76,21 +76,21 @@ func _ready() -> void:
 	$Root/Body/Left/ProjectileControls/ResetCooldownsButton.pressed.connect(_reset_cooldowns)
 	$Root/Body/Left/WaveControls/JumpWaveButton.pressed.connect(_jump_to_selected_wave)
 	_speed_select.item_selected.connect(_set_speed)
-	$Root/Body/Side/Sections/PresetActions/SavePreset.pressed.connect(_save_preset)
-	$Root/Body/Side/Sections/PresetActions/LoadPreset.pressed.connect(_load_preset)
-	$Root/Body/Side/Sections/PresetActions/ExportCode.pressed.connect(_copy_share_code)
-	$Root/Body/Side/Sections/PresetActions/ImportCode.pressed.connect(_import_share_code)
-	$Root/Body/Side/Sections/PresetFileActions/ImportFile.pressed.connect(_open_preset_file)
-	$Root/Body/Side/Sections/PresetFileActions/ExportFile.pressed.connect(_save_preset_file)
+	$Root/Body/Left/Side/Sections/PresetActions/SavePreset.pressed.connect(_save_preset)
+	$Root/Body/Left/Side/Sections/PresetActions/LoadPreset.pressed.connect(_load_preset)
+	$Root/Body/Left/Side/Sections/PresetActions/ExportCode.pressed.connect(_copy_share_code)
+	$Root/Body/Left/Side/Sections/PresetActions/ImportCode.pressed.connect(_import_share_code)
+	$Root/Body/Left/Side/Sections/PresetFileActions/ImportFile.pressed.connect(_open_preset_file)
+	$Root/Body/Left/Side/Sections/PresetFileActions/ExportFile.pressed.connect(_save_preset_file)
 	$PresetFileDialog.file_selected.connect(_on_preset_file_selected)
-	$Root/Body/Side/Sections/GodModeToggle.toggled.connect(_set_god_mode)
-	$Root/Body/Side/Sections/VisualBuild/AddWeaponButton.pressed.connect(_add_visual_weapon)
-	$Root/Body/Side/Sections/VisualBuild/AddRelicButton.pressed.connect(_add_visual_relic)
-	$Root/Body/Side/Sections/VisualBuild/AddStatButton.pressed.connect(_add_visual_stat)
-	$Root/Body/Side/Sections/VisualBuild/AddEquipmentButton.pressed.connect(_add_visual_equipment)
-	$Root/Body/Side/Sections/VisualBuild/ApplyBuildButton.pressed.connect(_apply_visual_build)
-	$Root/Body/Side/Sections/VisualBuild/ImportProfileButton.pressed.connect(_import_normal_profile)
-	$Root/Body/Side/Sections/LiveOverride/ApplyStat.pressed.connect(_apply_live_stat_override)
+	$Root/Body/Left/Side/Sections/GodModeToggle.toggled.connect(_set_god_mode)
+	$Root/Body/Left/Side/Sections/VisualBuild/AddWeaponButton.pressed.connect(_add_visual_weapon)
+	$Root/Body/Left/Side/Sections/VisualBuild/AddRelicButton.pressed.connect(_add_visual_relic)
+	$Root/Body/Left/Side/Sections/VisualBuild/AddStatButton.pressed.connect(_add_visual_stat)
+	$Root/Body/Left/Side/Sections/VisualBuild/AddEquipmentButton.pressed.connect(_add_visual_equipment)
+	$Root/Body/Left/Side/Sections/VisualBuild/ApplyBuildButton.pressed.connect(_apply_visual_build)
+	$Root/Body/Left/Side/Sections/VisualBuild/ImportProfileButton.pressed.connect(_import_normal_profile)
+	$Root/Body/Left/Side/Sections/LiveOverride/ApplyStat.pressed.connect(_apply_live_stat_override)
 	_enemy_hp_multiplier.value_changed.connect(_set_enemy_hp_override)
 	_enemy_speed_multiplier.value_changed.connect(_set_enemy_speed_override)
 	_spawn_count.value_changed.connect(_set_spawn_count_override)
