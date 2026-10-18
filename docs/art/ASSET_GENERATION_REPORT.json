@@ -95,12 +95,13 @@
   ],
   "review_pack": {
     "local_index": "build/assets/candidates/review/index.html",
-    "contact_sheets": 5,
-    "animation_previews": 105,
+    "contact_sheets": 9,
+    "animation_previews": 131,
     "audio_inventory": "build/assets/candidates/review/audio-inventory.json",
     "broken_local_references": 0,
-    "static_gallery_items": 106,
-    "note": "Build-local review pack includes the regenerated native-size boss/elite animation batch plus local audio playback controls; artistic/audio acceptance remains pending."
+    "static_gallery_items": 100,
+    "note": "Regenerated directly from ASSET_MANIFEST.json: all 100 static visual assets, all 131 animation sheets with per-row animated HTML previews, source/skill/generator/seed/parameter/QA metadata, two font samples, and 75 integrated WAV players; all 475 checked local file references resolve. Owner visual/audio review remains pending.",
+    "audio_inventory_count": 75
   },
   "godot_integration_preflight": {
     "status": "passed",
@@ -146,7 +147,8 @@
     "projectile_animation_runtime": "passed: every runtime projectile sprite role resolves to a looping multi-frame SpriteFrames resource; high-count 2,000 projectile capture passes. Rotation, trails, Redline tint, and non-selectable projectile behavior are retained.",
     "weapon_animations_runtime": "passed: 20 attack sheets and 20 family fire/impact sheets load; successful shots trigger attack/fire sheets; direct hits trigger animated family impacts; 64 transient VFX cap; reduced-effects setting clears and suppresses them; XP orb collection animation is rendered after despawn; chest opening and relic acquisition are integrated; regression smokes cover animation playback and level-scaled impact emphasis.",
     "reward_animations_runtime": "passed: XP collection, world chest opening and first-time relic acquisition use their authored SpriteFrames; chest/relic reveal timing advances on wall clock during paused reward selection; all 11 relic resources load and final boss loot smoke confirms chest opening is queued.",
-    "dopamine_animation_source_qa": "passed: candidate validator rerun across eight local animation batches; 131 unique manifest animation IDs all covered with geometry, Art Bible palette, per-frame color limits, no duplicate frames per direction, source/export SHA-256 and Aseprite source checks."
+    "dopamine_animation_source_qa": "passed: candidate validator rerun across eight local animation batches; 131 unique manifest animation IDs all covered with geometry, Art Bible palette, per-frame color limits, no duplicate frames per direction, source/export SHA-256 and Aseprite source checks.",
+    "local_review_pack": "passed: regenerated from the current manifest; 9 contact sheets, 100 static visual entries, 131 animated SpriteFrames previews, 2 font samples, 75 integrated audio players and zero broken references across 475 checked local paths."
   },
   "godot_pck_export": {
     "status": "passed",

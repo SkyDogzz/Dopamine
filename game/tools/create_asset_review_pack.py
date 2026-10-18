@@ -49,49 +49,160 @@ def sheet(title, records, target, cell=96, columns=8):
 
 
 def main():
-    visual_roots=[ROOT/"build/assets/candidates/pixel-art-complete",
-                  ROOT/"build/assets/candidates/pixel-art"]
-    animations=[ROOT/"build/assets/candidates/player-animation",ROOT/"build/assets/candidates/enemy-animation-complete",ROOT/"build/assets/candidates/misc-animation",ROOT/"build/assets/candidates/boss-animation-native"]
-    sets=[]
-    files=[]
-    for visual in visual_roots:
-        files.extend(sorted(p for p in visual.rglob("*.png")
-                            if visual.name != "pixel-art" or p.with_suffix(".json").is_file()))
-    files += sorted((ROOT/"build/assets/candidates/roster").rglob("*.png"))
-    files += sorted((ROOT/"build/assets/candidates/rewards").rglob("*.png"))
-    files += sorted((ROOT/"build/assets/candidates/title-art").rglob("*.png"))
-    files=[p for p in files if "preview" not in p.name]
-    sets.append(sheet("Static candidates",[(p.stem,p) for p in files],OUT/"static-contact-sheet.png",columns=10))
-    for group in animations:
-        paths=sorted(group.rglob("*.png"))
-        paths=[p for p in paths if "preview" not in p.name]
-        if paths:
-            sets.append(sheet(group.name,[(p.stem,p) for p in paths],OUT/f"{group.name}-contact-sheet.png",columns=8))
-    audio=ROOT/"build/assets/candidates/audio-complete"
-    wavs=sorted(audio.rglob("*.wav"))
-    inventory={"count":len(wavs),"files":[{"path":str(p.relative_to(ROOT)),"id":p.stem,"duration_seconds":round(__import__('wave').open(str(p)).getnframes()/__import__('wave').open(str(p)).getframerate(),3)} for p in wavs]}
-    (OUT/"audio-inventory.json").write_text(json.dumps(inventory,indent=2)+"\n")
-    cards=[]
-    for group in sets:
-        cards.append(f'<section><h2>{html.escape(group["title"])}</h2><p>{len(group["items"])} sprites · contact sheet <a href="{html.escape(group["path"])}">PNG</a></p><img src="{html.escape(group["path"])}"></section>')
-    gallery=''.join(f'<figure><a href="{html.escape(os.path.relpath(p,OUT))}"><img src="{html.escape(os.path.relpath(p,OUT))}"></a><figcaption>{html.escape(p.stem)}</figcaption></figure>' for p in files)
-    cards.append(f'<section><h2>Static candidate gallery ({len(files)})</h2><div class="gallery">{gallery}</div></section>')
-    for batch in ("player-animation","enemy-animation-complete","misc-animation"):
-        page=ROOT/f"build/assets/candidates/{batch}/qa-report.json"
-        if page.exists():
-            q=json.loads(page.read_text())
-            for a in q.get("animations",[]):
-                p=ROOT/a["export"]
-                if not p.exists(): continue
-                rel=os.path.relpath(p,OUT)
-                cards.append(f'<section><h3>{html.escape(a["asset_id"])}</h3><small>{html.escape(batch)} · {a["dimensions"]} · {a["grid"]}</small><br><img class="anim" src="{html.escape(rel)}"></section>')
-    players=sorted((audio/"sfx").glob("*.wav"))
-    music=sorted((audio/"cues").glob("*.wav"))
-    stems=sorted((audio/"music").glob("*.wav"))
-    audio_html=''.join(f'<li>{html.escape(p.stem)} <audio controls preload="none" src="{html.escape(os.path.relpath(p,OUT))}"></audio></li>' for p in players+music+stems)
-    page='<!doctype html><meta charset="utf-8"><title>Dopamine asset review</title><style>body{font:16px system-ui;background:#080b18;color:#eee;margin:2rem}section{background:#10152b;padding:1rem;margin:1rem 0;border:1px solid #293354}img{max-width:100%;image-rendering:pixelated}.anim{width:512px}.gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:1rem}.gallery figure{margin:0;background:#080b18;padding:.75rem}.gallery img{width:100%;height:120px;object-fit:contain}.gallery figcaption{overflow-wrap:anywhere;font-size:.8rem}audio{vertical-align:middle}small{color:#adc}</style><h1>Dopamine Survivor · provisionally integrated library</h1><p>All 308 assets passed technical QA and are integrated under the user-authorized provisional, non-canonical prototype scope. Human visual and audio review remains pending; do not treat open boss, biome, element, font, or animation details as canon. WAV players below support local listening.</p>'+''.join(cards)+f'<section><h2>Audio inventory ({len(players+music+stems)} files)</h2><ul>'+audio_html+'</ul></section>'
-    (OUT/"index.html").write_text(page)
-    (OUT/"contact-sheets.json").write_text(json.dumps(sets,indent=2)+"\n")
-    print(f"Wrote {len(sets)} contact sheets, {len(q.get('animations',[])) if 'q' in locals() else 0} last-batch animation records and {len(wavs)} audio inventory entries to {OUT}")
+    manifest = json.loads((ROOT / "docs/art/ASSET_MANIFEST.json").read_text())
+    assets = manifest["assets"]
+    OUT.mkdir(parents=True, exist_ok=True)
+    static_groups = {
+        "Catalog icons": {"weapon_icon", "relic_icon", "ui_icon"},
+        "Character sprites": {"enemy_sprite", "elite_sprite", "boss_sprite"},
+        "Combat sprites": {"projectile_sprite", "impact_vfx", "impact_vfx_atlas"},
+        "World art": {"environment_tile", "environment_prop", "background"},
+        "Rewards": {"pickup"},
+    }
+    animation_groups = {
+        "Characters": {"character_animation", "enemy_animation", "elite_animation", "boss_animation"},
+        "Weapons": {"weapon_animation", "weapon_vfx_animation"},
+        "Projectiles": {"projectile_animation"},
+        "Rewards": {"relic_animation", "pickup_animation"},
+    }
+    sheets = []
+    for title, categories in static_groups.items():
+        records = [(a["asset_id"], ROOT / a["integrated_path"]) for a in assets
+                   if a["category"] in categories and a.get("integrated_path")]
+        records = [(name, path) for name, path in records if path.is_file() and path.suffix.lower() == ".png"]
+        if records:
+            slug = title.lower().replace(" ", "-")
+            sheets.append(sheet(title, records, OUT / f"{slug}-contact-sheet.png", columns=8))
 
-if __name__=="__main__": main()
+    animations = []
+    previews = []
+    for title, categories in animation_groups.items():
+        records = [(a["asset_id"], ROOT / a["integrated_path"]) for a in assets
+                   if a["category"] in categories and a.get("integrated_path")]
+        records = [(name, path) for name, path in records if path.is_file() and path.suffix.lower() == ".png"]
+        if records:
+            slug = title.lower()
+            sheets.append(sheet(f"{title} animation sheets", records,
+                                OUT / f"{slug}-animation-contact-sheet.png", columns=8))
+        for asset in assets:
+            if asset["category"] not in categories or not asset.get("integrated_path"):
+                continue
+            image_path = ROOT / asset["integrated_path"]
+            metadata_path = Path(str(image_path) + ".json")
+            if not image_path.is_file() or not metadata_path.is_file():
+                continue
+            metadata = json.loads(metadata_path.read_text())
+            frame_width, frame_height = metadata["frame_size"]
+            columns, rows = metadata["grid"]
+            fps = float(metadata.get("fps_proposed", asset.get("generation_parameters", {}).get("fps_proposed", 8)))
+            fps = max(fps, 0.1)
+            scale = max(1, min(4, 512 // max(frame_width, frame_height)))
+            animation_id = asset["asset_id"]
+            safe_id = "".join(c if c.isalnum() or c == "_" else "_" for c in animation_id)
+            image_url = html.escape(os.path.relpath(image_path, OUT))
+            names = metadata.get("directions", [])
+            row_cards = []
+            for row in range(rows):
+                label = names[row] if row < len(names) else f"row {row + 1}"
+                keyframe = f"{safe_id}_row_{row}"
+                row_cards.append(
+                    f'<div><small>{html.escape(str(label))}</small><div class="sprite-preview" '
+                    f'style="width:{frame_width*scale}px;height:{frame_height*scale}px;'
+                    f'background-image:url(\'{image_url}\');background-size:{frame_width*columns*scale}px '
+                    f'{frame_height*rows*scale}px;background-position-y:-{row*frame_height*scale}px;'
+                    f'animation:{keyframe} {columns/fps:.4f}s steps({columns}) infinite"></div></div>'
+                )
+                previews.append(f'@keyframes {keyframe} {{ from {{ background-position-x:0 }} '
+                                f'to {{ background-position-x:-{frame_width*columns*scale}px }} }}')
+            seed = asset.get("generation_seed")
+            params = html.escape(json.dumps(asset.get("generation_parameters", {}), ensure_ascii=False))
+            source_path = ROOT / str(asset.get("integrated_source_path", ""))
+            source = html.escape(os.path.relpath(source_path, OUT)) if source_path.is_file() else "missing"
+            skill = html.escape(str(asset.get("assigned_generation_skill", "")))
+            generator = html.escape(str(metadata.get("generator", asset.get("authoring_source_or_recipe", ""))))
+            qa = html.escape(str(asset.get("validation_status", "missing")))
+            animations.append(
+                f'<article class="animation-card"><h3>{html.escape(animation_id)}</h3>'
+                f'<div class="rows">{"".join(row_cards)}</div>'
+                f'<details><summary>{skill} · seed {html.escape(str(seed))} · QA {qa}</summary>'
+                f'<p>Generator: {generator}</p><p>Source: <a href="{source}">{source}</a></p>'
+                f'<code>{params}</code></details></article>'
+            )
+
+    audio_assets = [a for a in assets if a["category"] in {"sound_effect", "music", "music_stem"}]
+    font_assets = [a for a in assets if a["category"] == "font" and a.get("integrated_path")]
+    inventory = {"count": len(audio_assets), "files": []}
+    audio_html = []
+    for asset in audio_assets:
+        path = ROOT / asset.get("integrated_path", "")
+        if not path.is_file():
+            continue
+        duration = None
+        channels = rate = None
+        try:
+            import wave
+            with wave.open(str(path)) as wav:
+                duration = round(wav.getnframes() / wav.getframerate(), 3)
+                channels, rate = wav.getnchannels(), wav.getframerate()
+        except (wave.Error, OSError):
+            pass
+        record = {
+            "id": asset["asset_id"], "category": asset["category"],
+            "path": str(path.relative_to(ROOT)), "source": asset.get("integrated_source_path"),
+            "skill": asset.get("assigned_generation_skill"),
+            "generator_or_recipe": asset.get("authoring_source_or_recipe"),
+            "seed": asset.get("generation_seed"), "parameters": asset.get("generation_parameters"),
+            "validation_status": asset.get("validation_status"),
+            "duration_seconds": duration, "channels": channels, "sample_rate": rate,
+        }
+        inventory["files"].append(record)
+        audio_html.append(
+            f'<li><b>{html.escape(asset["asset_id"])}</b> · {html.escape(asset["category"])} · '
+            f'{duration if duration is not None else "unknown"} s '
+            f'<audio controls preload="none" src="{html.escape(os.path.relpath(path, OUT))}"></audio></li>'
+        )
+    assert len(animations) == sum(a["category"] in set().union(*animation_groups.values()) for a in assets)
+    assert len(inventory["files"]) == len(audio_assets)
+    (OUT / "audio-inventory.json").write_text(json.dumps(inventory, ensure_ascii=False, indent=2) + "\n")
+    (OUT / "contact-sheets.json").write_text(json.dumps(sheets, ensure_ascii=False, indent=2) + "\n")
+    sheet_html = "".join(
+        f'<section><h2>{html.escape(item["title"])}</h2><p>{len(item["items"])} assets · '
+        f'<a href="{html.escape(item["path"])}">Contact sheet PNG</a></p>'
+        f'<img src="{html.escape(item["path"])}"></section>' for item in sheets
+    )
+    font_samples = []
+    for asset in font_assets:
+        path = ROOT / asset["integrated_path"]
+        if not path.is_file():
+            continue
+        family = html.escape(asset["asset_id"])
+        url = html.escape(os.path.relpath(path, OUT))
+        font_samples.append("<style>@font-face{font-family:%s;src:url('%s')}</style>" % (family, url))
+        font_samples.append('<p style="font-family:%s;font-size:28px">%s · NEON SURVIVOR 0123456789</p>' %
+                            (family, family))
+    page = (
+        '<!doctype html><meta charset="utf-8"><title>Dopamine asset review</title>'
+        '<style>body{font:16px system-ui;background:#080b18;color:#eee;margin:2rem}'
+        'section,.animation-card{background:#10152b;padding:1rem;margin:1rem 0;border:1px solid #293354}'
+        'img{max-width:100%;image-rendering:pixelated}.rows{display:flex;gap:2rem;flex-wrap:wrap;align-items:center}'
+        '.sprite-preview{image-rendering:pixelated;background-repeat:no-repeat}.animation-grid{display:grid;'
+        'grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:1rem}code{white-space:pre-wrap;overflow-wrap:anywhere}'
+        'audio{vertical-align:middle}li{padding:.45rem}</style>'
+        '<h1>Dopamine Survivor · integrated local asset library</h1>'
+        f'<p>Manifest assets: {len(assets)} · animation previews: {len(animations)} · '
+        f'audio players: {len(inventory["files"])}. Technical QA status is shown per asset; '
+        'visual/audio owner review remains pending where marked.</p>'
+        + sheet_html + '<section><h2>All animation previews</h2><div class="animation-grid">'
+        + "".join(animations) + '</div></section>'
+        + '<section><h2>Font previews</h2>'
+        + "".join(font_samples) + '</section>'
+        + f'<section><h2>Audio inventory ({len(inventory["files"])})</h2><ul>{"".join(audio_html)}</ul></section>'
+        + '<style>' + "".join(previews) + '</style>'
+    )
+    (OUT / "index.html").write_text(page)
+    print(f"Wrote {len(sheets)} contact sheets, {len(animations)} animated previews and "
+          f"{len(inventory['files'])} integrated audio entries to {OUT}")
+
+
+if __name__ == "__main__":
+    main()
