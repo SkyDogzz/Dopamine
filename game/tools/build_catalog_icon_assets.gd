@@ -39,9 +39,6 @@ const DEDICATED_ICON_REFERENCES := {
 const RELIC_REFERENCE := "res://assets/source/catalog_relics/generated_reference.png"
 const RELIC_SOURCE_DIR := "res://assets/source/catalog_relics"
 const RELICS := ["storm_core", "infernal_heart", "blood_chalice", "celestial_eye", "frozen_crown", "magnet_heart", "magnetic_coil", "overdrive_engine", "plague_mask", "prism_crystal", "singularity"]
-const UI_REFERENCE := "res://assets/source/catalog_ui/generated_reference.png"
-const UI_SOURCE_DIR := "res://assets/source/catalog_ui"
-const UI_ICONS := ["equipment_helmet", "equipment_armor", "equipment_gloves", "equipment_boots", "equipment_amulet", "equipment_ring", "rarity_normal", "rarity_magic", "rarity_mystic", "rarity_legendary", "rarity_mythic", "resource_essence", "resource_powder", "skill_node", "achievement_medal", "run_record"]
 const ROSTER_REFERENCE := "res://assets/source/roster/generated_reference.png"
 const ROSTER_NAMES := ["enemy_chaser", "enemy_sprinter", "enemy_tank", "enemy_shooter", "enemy_buffer", "enemy_exploder", "enemy_shielder", "enemy_summoner", "enemy_summoned", "elite_sprinter", "boss_mid_placeholder", "boss_final_placeholder"]
 const RETIRED_ROSTER_COUNT := 9
@@ -94,21 +91,6 @@ func _initialize() -> void:
 			reference_texture.get_image(), icon_name, OUTPUT_SIZE, PALETTE, OUTPUT_DIR, source_dir
 		):
 			push_error("Could not export catalog icon %s from its dedicated reference" % icon_name)
-			quit(1)
-			return
-	var ui_texture := load(UI_REFERENCE) as Texture2D
-	if ui_texture == null:
-		push_error("Missing generated UI reference: %s" % UI_REFERENCE)
-		quit(1)
-		return
-	var ui_source := ui_texture.get_image()
-	var ui_cell_width := ui_source.get_width() / 4
-	var ui_cell_height := ui_source.get_height() / 4
-	for index in range(UI_ICONS.size()):
-		var rect := Rect2i((index % 4) * ui_cell_width, floori(float(index) / 4.0) * ui_cell_height, ui_cell_width, ui_cell_height)
-		var content_rect := Rect2i(rect.position + Vector2i(8, 8), rect.size - Vector2i(16, 16))
-		var background := ui_source.get_pixel(content_rect.position.x + 4, content_rect.position.y + 4)
-		if not _export_crop(ui_source, content_rect, background, UI_ICONS[index], "res://assets/icons/catalog", UI_SOURCE_DIR):
 			quit(1)
 			return
 	var roster_texture := load(ROSTER_REFERENCE) as Texture2D

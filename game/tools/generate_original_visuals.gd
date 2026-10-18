@@ -6,10 +6,19 @@ extends SceneTree
 const REGISTRY := "res://../docs/art/PROVENANCE_ASSETS.csv"
 const OUT_ROOT := "res://assets"
 const SOURCE_ROOT := "res://assets/source/original_procedural"
-const PALETTE := ["#080B18", "#10152B", "#1B2340", "#075A80", "#087FB2", "#0EB8D4", "#37E8F5", "#7623A8", "#A52DCA", "#E13ACB", "#FF75E3", "#A85B19", "#E69825", "#FFD447", "#FFF19A", "#F6F7FF"]
+const PALETTE := ["#080B18", "#10152B", "#1B2340", "#293354", "#3D4868", "#586381", "#7B87A2", "#A5AEC3", "#D4D9E8", "#F6F7FF", "#37314F", "#59476F", "#826999", "#AD91BB", "#D2B9D9", "#EEDCF4", "#075A80", "#087FB2", "#0EB8D4", "#37E8F5", "#7623A8", "#A52DCA", "#E13ACB", "#FF75E3", "#A85B19", "#E69825", "#FFD447", "#FFF19A", "#158C62", "#48E69B", "#C83B62", "#FF7181"]
 const TILE := ["#080B18", "#10152B", "#1B2340", "#293354", "#075A80", "#087FB2"]
+const UI_ICON_NAMES := ["equipment_helmet", "equipment_armor", "equipment_gloves", "equipment_boots", "equipment_amulet", "equipment_ring", "rarity_normal", "rarity_magic", "rarity_mystic", "rarity_legendary", "rarity_mythic", "resource_essence", "resource_powder", "skill_node", "achievement_medal", "run_record"]
 
 func _initialize() -> void:
+	if "--ui-icons-only" in OS.get_cmdline_user_args():
+		for name in UI_ICON_NAMES:
+			if not _build("game/assets/icons/catalog/%s.png" % name):
+				quit(1)
+				return
+		print("Generated original UI icons and editable Aseprite sources")
+		quit()
+		return
 	var file := FileAccess.open(REGISTRY, FileAccess.READ)
 	if file == null:
 		push_error("Cannot read asset provenance registry")
@@ -49,6 +58,8 @@ func _build(path: String) -> bool:
 	var base_size := 256 if size == 1536 else size
 	var image := Image.create(base_size, base_size, false, Image.FORMAT_RGBA8)
 	image.fill(Color.TRANSPARENT)
+	if name.begins_with("equipment_"):
+		image.fill(_color(0))
 	if size == 1536:
 		_draw_ruins(image)
 	else:
@@ -122,6 +133,8 @@ func _draw_motif(image: Image, name: String) -> void:
 			_line(image, cx + roundi(cos(a) * 11 * unit), cy + roundi(sin(a) * 11 * unit), cx + roundi(cos(a) * 15 * unit), cy + roundi(sin(a) * 15 * unit), unit, c3 if angle % 2 == 0 else c2)
 
 func _has_semantic_shape(name: String) -> bool:
+	if name.begins_with("equipment_") or name.begins_with("rarity_") or name.begins_with("resource_") or name in ["skill_node", "achievement_medal", "run_record"]:
+		return true
 	if name.begins_with("impact_"):
 		return true
 	for token in ["lightning", "conductor", "storm", "shock", "inferno", "fire", "wildfire", "dagger", "crimson", "slash", "blade", "minigun", "bullet", "enemy", "toxic", "plague", "pandemic", "cloud", "meteor", "starfall", "comet", "frost", "nova", "absolute_zero", "prism", "signal", "eye", "chalice", "cup", "crown", "magnet", "coil", "orb", "singularity", "core", "heart", "staff", "prism_laser", "event_horizon", "infinite_circuit", "overdrive_engine", "spectrum_collapse", "shockwave", "bloodstorm"]:
@@ -133,7 +146,41 @@ func _draw_semantic(image: Image, name: String, unit: int, shadow: Color, mid: C
 	var cx := image.get_width() / 2
 	var cy := image.get_height() / 2
 	var s := maxi(unit, 1)
-	if name.contains("prism_laser") or name == "weapon_prism_laser":
+	if name.begins_with("equipment_"):
+		_draw_equipment_icon(image, name, cx, cy, shadow, mid, accent, light)
+	elif name.begins_with("rarity_"):
+		_draw_rarity_icon(image, name, cx, cy, shadow, mid, accent, light)
+	elif name == "resource_essence":
+		_diamond(image, cx, cy, 9*s, _color(13))
+		_diamond(image, cx, cy, 6*s, _color(5))
+		_diamond(image, cx, cy, 3*s, light)
+		_pixel(image, cx - 10*s, cy + 8*s, _color(13), 2*s)
+		_pixel(image, cx + 10*s, cy - 8*s, _color(5), 2*s)
+	elif name == "resource_powder":
+		_rect(image, cx - 7*s, cy - 7*s, 14*s, 17*s, shadow)
+		_rect(image, cx - 5*s, cy - 5*s, 10*s, 11*s, _color(8))
+		_rect(image, cx - 9*s, cy - 9*s, 18*s, 3*s, light)
+		_rect(image, cx - 4*s, cy - 13*s, 8*s, 4*s, accent)
+		for offset in [-7, 0, 7]: _pixel(image, cx + offset*s, cy + 8*s, _color(14), 2*s)
+	elif name == "skill_node":
+		_circle(image, cx, cy, 11*s, _color(5))
+		_circle(image, cx, cy, 8*s, shadow)
+		_diamond(image, cx, cy, 5*s, _color(13))
+		for offset in [-12, 12]:
+			_pixel(image, cx + offset*s, cy, light, 2*s)
+			_pixel(image, cx, cy + offset*s, light, 2*s)
+	elif name == "achievement_medal":
+		_rect(image, cx - 8*s, cy + 3*s, 6*s, 12*s, accent)
+		_rect(image, cx + 2*s, cy + 3*s, 6*s, 12*s, _color(8))
+		_circle(image, cx, cy - 3*s, 10*s, _color(13))
+		_circle(image, cx, cy - 3*s, 7*s, shadow)
+		_diamond(image, cx, cy - 3*s, 5*s, light)
+	elif name == "run_record":
+		_rect(image, cx - 9*s, cy - 12*s, 18*s, 24*s, shadow)
+		_rect(image, cx - 6*s, cy - 8*s, 12*s, 2*s, light)
+		for offset in [-3, 2, 7]:
+			_rect(image, cx - 5*s, cy + offset*s, 10*s, s, accent if offset == 2 else mid)
+	elif name.contains("prism_laser") or name == "weapon_prism_laser":
 		_rect(image, cx - 11*s, cy - 3*s, 22*s, 6*s, accent)
 		_rect(image, cx - 11*s, cy - s, 22*s, 2*s, light)
 		_diamond(image, cx + 8*s, cy, 5*s, light)
@@ -269,6 +316,55 @@ func _draw_semantic(image: Image, name: String, unit: int, shadow: Color, mid: C
 			var inner := 3*s if name.contains("ring") else 5*s
 			var outer := 12*s if name.contains("burst") or name.contains("star") else 9*s
 			_line(image, cx + roundi(cos(angle)*inner), cy + roundi(sin(angle)*inner), cx + roundi(cos(angle)*outer), cy + roundi(sin(angle)*outer), 2*s, light if a % 2 == 0 else accent)
+
+func _draw_equipment_icon(image: Image, name: String, cx: int, cy: int, shadow: Color, mid: Color, accent: Color, light: Color) -> void:
+	match name:
+		"equipment_helmet":
+			_rect(image, cx - 7, cy - 11, 14, 4, accent)
+			_rect(image, cx - 10, cy - 7, 20, 12, mid)
+			_rect(image, cx - 7, cy + 5, 14, 5, shadow)
+			_rect(image, cx - 6, cy - 3, 12, 2, light)
+			_rect(image, cx - 1, cy - 4, 2, 9, shadow)
+		"equipment_armor":
+			_rect(image, cx - 8, cy - 10, 16, 4, light)
+			_rect(image, cx - 12, cy - 6, 24, 8, mid)
+			_rect(image, cx - 8, cy + 2, 16, 10, accent)
+			_rect(image, cx - 4, cy - 3, 8, 3, shadow)
+			_rect(image, cx - 2, cy + 2, 4, 8, light)
+		"equipment_gloves":
+			_rect(image, cx - 7, cy - 1, 14, 11, mid)
+			for offset in [-8, -3, 2, 7]: _rect(image, cx + offset, cy - 9, 4, 10, accent)
+			_rect(image, cx - 10, cy + 3, 4, 7, shadow)
+			_rect(image, cx - 5, cy + 3, 10, 2, light)
+		"equipment_boots":
+			_rect(image, cx - 5, cy - 10, 10, 14, mid)
+			_rect(image, cx - 8, cy + 2, 15, 8, accent)
+			_rect(image, cx - 10, cy + 9, 21, 4, shadow)
+			_rect(image, cx - 3, cy - 7, 6, 8, light)
+		"equipment_amulet":
+			_line(image, cx - 9, cy - 9, cx, cy + 2, 2, light)
+			_line(image, cx + 9, cy - 9, cx, cy + 2, 2, light)
+			_diamond(image, cx, cy + 5, 8, accent)
+			_diamond(image, cx, cy + 5, 4, _color(13))
+			_pixel(image, cx, cy + 3, light, 2)
+		"equipment_ring":
+			_circle(image, cx, cy + 2, 9, _color(13))
+			_circle(image, cx, cy + 2, 5, shadow)
+			_diamond(image, cx, cy - 7, 5, light)
+			_diamond(image, cx, cy - 7, 2, accent)
+
+func _draw_rarity_icon(image: Image, name: String, cx: int, cy: int, shadow: Color, mid: Color, accent: Color, light: Color) -> void:
+	var tier_colors := {"normal": _color(2), "magic": _color(5), "mystic": _color(8), "legendary": _color(13), "mythic": _color(10)}
+	var tier := name.trim_prefix("rarity_")
+	var color: Color = tier_colors.get(tier, mid)
+	var count := ["normal", "magic", "mystic", "legendary", "mythic"].find(tier) + 1
+	_diamond(image, cx, cy, 11, shadow)
+	_diamond(image, cx, cy, 8, color)
+	_diamond(image, cx, cy, 4, light)
+	for index in range(count):
+		var offset := index * 4 - (count - 1) * 2
+		_pixel(image, cx + offset, cy - 13, color, 2)
+		_pixel(image, cx - offset, cy + 13, accent, 2)
 
 func _circle(image: Image, cx: int, cy: int, radius: int, color: Color) -> void:
 	for y in range(-radius, radius + 1):

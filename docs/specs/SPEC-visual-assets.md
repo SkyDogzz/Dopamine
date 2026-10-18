@@ -18,6 +18,8 @@ Godot 4.7.2; PNG de runtime sous `game/assets/`; sources graphiques Aseprite sel
 
 - **[PROPOSÉ]** Les 24 projectiles 16×16 utilisent des créations procédurales originales et sources Aseprite sous `source/original_procedural/`; chemins runtime et comportements inchangés. Les sources/atlas historiques et doublons racine ont été retirés après recherche d’usages. Import, smoke catalogue, lots renderer et capture dense passent; le PCK Linux/X11 post-retrait contient les chemins runtime et exclut les anciens fichiers vérifiés.
 
+- **[PROPOSÉ]** Les 16 icônes UI actives (6 slots, 5 raretés, 2 ressources, skill, médaille, record) ont des PNG originaux et des sources Aseprite sous `source/original_procedural/`, dessinés par `generate_original_visuals.gd` depuis les rôles sémantiques et la palette maître. Les chemins runtime sont conservés. La planche, les sources et les doublons racine historiques ont été retirés après audit; voir `ASSET_MIGRATIONS.csv` et `ASSET_RETIREMENTS.csv`. `catalog_icon_assets_smoke.gd` contrôle provenance interne, source, palette et capture de planche. Cette tranche ne définit aucun nœud ou effet du skill tree.
+
 ## Commandes de vérification
 
 - `godot --headless --editor --path game --quit`

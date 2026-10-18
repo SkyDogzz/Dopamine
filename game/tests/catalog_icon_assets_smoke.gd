@@ -75,6 +75,9 @@ func _initialize() -> void:
 	if not _check_projectile_migration_boundary():
 		quit(1)
 		return
+	if not _check_original_ui_icons_pipeline():
+		quit(1)
+		return
 	if not _check_title_skyline():
 		quit(1)
 		return
@@ -82,6 +85,9 @@ func _initialize() -> void:
 		quit(1)
 		return
 	if not _check_exported_png_sources():
+		quit(1)
+		return
+	if "--capture" in OS.get_cmdline_user_args() and not _capture_ui_icon_sheet():
 		quit(1)
 		return
 	var impact_atlas := load("res://assets/sprites/weapon_impacts_pixel.png") as Texture2D
@@ -165,6 +171,9 @@ func _check_icon(asset_name: String) -> bool:
 		for x in range(image.get_width()):
 			var pixel := image.get_pixel(x, y)
 			if pixel.a > 0.0:
+				if is_ui_icon and not _master_palette_has(pixel):
+					push_error("UI icon uses a color outside the Art Bible palette: %s" % asset_name)
+					return false
 				colors[pixel.to_html(false)] = true
 	if colors.size() > 16:
 		push_error("Catalog icon exceeds the palette cap: %s (%d colors)" % [asset_name, colors.size()])
@@ -331,6 +340,37 @@ func _check_projectile_migration_boundary() -> bool:
 	if DirAccess.dir_exists_absolute(ProjectSettings.globalize_path("res://assets/source/projectiles")):
 		push_error("Legacy projectile sources should be retired after migrating to original_procedural")
 		return false
+	return true
+
+func _check_original_ui_icons_pipeline() -> bool:
+	var legacy_builder := FileAccess.get_file_as_string("res://tools/build_catalog_icon_assets.gd")
+	if legacy_builder.contains("catalog_ui/generated_reference"):
+		push_error("Retired UI icon reference sheets must not overwrite original runtime icons")
+		return false
+	if DirAccess.dir_exists_absolute(ProjectSettings.globalize_path("res://assets/source/catalog_ui")):
+		push_error("Legacy UI icon sources should be retired after migrating to original_procedural")
+		return false
+	for icon_name in UI_ICONS:
+		if not FileAccess.file_exists("res://assets/source/original_procedural/%s.aseprite" % icon_name):
+			push_error("Missing original editable UI icon source: %s" % icon_name)
+			return false
+	return true
+
+func _capture_ui_icon_sheet() -> bool:
+	var sheet := Image.create(320, 320, false, Image.FORMAT_RGBA8)
+	sheet.fill(Color("#080B18"))
+	for index in range(UI_ICONS.size()):
+		var icon_name: String = UI_ICONS[index]
+		var texture := load("res://assets/icons/catalog/%s.png" % icon_name) as Texture2D
+		if texture == null:
+			return false
+		var icon := texture.get_image()
+		icon.resize(64, 64, Image.INTERPOLATE_NEAREST)
+		var cell := Vector2i((index % 4) * 80 + 8, floori(float(index) / 4.0) * 80 + 8)
+		sheet.blit_rect(icon, Rect2i(Vector2i.ZERO, icon.get_size()), cell)
+	if sheet.save_png("/tmp/dopamine-ui-icon-contact.png") != OK:
+		return false
+	print("UI icon contact sheet saved to /tmp/dopamine-ui-icon-contact.png; cell order: %s" % ", ".join(UI_ICONS))
 	return true
 
 func _check_title_skyline() -> bool:
