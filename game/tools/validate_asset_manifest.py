@@ -61,7 +61,34 @@ def main() -> None:
 		source_hash = hashlib.sha256(source_file.read_bytes()).hexdigest()
 		assert source_hash == asset["source_sha256"], f"{asset['asset_id']}: stale source_sha256"
 	validate_audio_coverage(assets)
+	validate_directional_character_animations(assets)
 	print(f"Manifest valid: {len(assets)} unique assets; source/export hashes, Godot paths, generators, QA and integration verified.")
+
+
+def validate_directional_character_animations(assets: list[dict]) -> None:
+	directions = ["down", "left", "right", "up"]
+	for asset in assets:
+		if asset["category"] not in {"character_animation", "enemy_animation", "elite_animation", "boss_animation"}:
+			continue
+		metadata_path = ROOT / (asset["integrated_path"] + ".json")
+		assert metadata_path.is_file(), f"{asset['asset_id']}: missing animation metadata"
+		metadata = json.loads(metadata_path.read_text())
+		assert metadata.get("directions") == directions, (
+			f"{asset['asset_id']}: directional character rows must be {directions}"
+		)
+		grid = metadata.get("grid")
+		assert isinstance(grid, list) and len(grid) == 2 and grid[1] == len(directions), (
+			f"{asset['asset_id']}: expected one spritesheet row per direction"
+		)
+		resource_path = asset.get("godot_animation_resource")
+		assert resource_path, f"{asset['asset_id']}: missing Godot SpriteFrames resource"
+		resource = ROOT / resource_path
+		assert resource.is_file(), f"{asset['asset_id']}: missing Godot SpriteFrames resource"
+		resource_text = resource.read_text()
+		for direction in directions:
+			assert f'&"{asset["asset_id"]}_{direction}"' in resource_text, (
+				f"{asset['asset_id']}: Godot resource lacks {direction} animation"
+			)
 
 
 def validate_audio_coverage(assets: list[dict]) -> None:

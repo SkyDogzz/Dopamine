@@ -3,10 +3,16 @@
   "status": "provisionally_integrated",
   "skill": "dopamine-pixel-art",
   "generator": "game/tools/generate_neon_arcade_art.py",
-  "generator_version": "2",
-  "seed": 0,
+  "generator_version": "3",
+  "seed": 20261018,
   "seed_policy": "fixed procedural geometry; seed is recorded but not consumed",
-  "brief": "Procedural pixel art using only docs/art/palette_master.gpl",
+  "brief": "Distinct role silhouette pixel art using only docs/art/palette_master.gpl",
+  "parameters": {
+    "drawing_method": "deterministic role primitives",
+    "asset_name": "elite_sprinter",
+    "palette_source": "docs/art/palette_master.gpl",
+    "seed_consumed": false
+  },
   "dimensions": {
     "width": 24,
     "height": 24
@@ -41,15 +47,21 @@
       247,
       255,
       255
+    ],
+    [
+      255,
+      212,
+      71,
+      255
     ]
   ],
   "source_path": "source/original_procedural/elite_sprinter.aseprite",
   "export_path": "sprites/roster/elite_sprinter.png",
-  "source_sha256": "1907f493b6f9eeea91df9affa85fbe611bc0e764b70dec7f34a733d82d270354",
-  "export_sha256": "f118f85977c1e36b59f78a5994832d8f5c623aed2b820d715d10ef9af238b250",
+  "source_sha256": "3b61406db3df6079ab89e29fbe85ac14e751b268ce4debee5b9e415330bd572c",
+  "export_sha256": "21a2ea7a8726c4b74fdcc508df8b5481194be57d563106a1e2849b41a635db66",
   "acceptance_status": "accepted_for_provisional_production",
   "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
   "human_review_status": "pending",
-  "candidate_export_path": "build/assets/candidates/pixel-art-complete/sprites/roster/elite_sprinter.png",
+  "candidate_export_path": "build/assets/candidates/pixel-art-elite/sprites/roster/elite_sprinter.png",
   "integrated_export_path": "game/assets/sprites/roster/elite_sprinter.png"
 }

@@ -2302,7 +2302,14 @@ Note de clôture : le blocage historique du smoke `sandbox_ui_smoke.gd` décrit 
 - [x] `dopamine-sfx` v4 génère quatre WAV déterministes par événement de tir et d’impact pour chacune des dix armes. Le smoke `sfx_specific_event_smoke.gd` vérifie 80 chemins distincts et la rotation des variantes dans `SfxService`; QA confirme quatre SHA distincts pour chaque groupe.
 - [x] QA numérique passe sur 136 WAV de staging et les 133 exports audio intégrés; les sidecars sont rapprochés des IDs, skills, versions de générateur et hashes du manifeste. Les deux mixes musicaux sans consommateur runtime sont exclus de `game/assets/` et du PCK.
 - [x] Import Godot 4.7.2, export PCK Linux/X11 et suite CTest complète passent après intégration : **121/121 tests**. Un premier lancement complet a eu un échec isolé de `survival_difficulty_unlock_smoke`; cinq relances isolées puis le lancement complet suivant ont tous passé.
-- [i] La galerie locale comprend 9 planches, 100 images statiques légendées, 131 aperçus animés, 2 fontes et 133 lecteurs audio; 835 références sont résolues. Écoute et validation artistique par le propriétaire restent **[OUVERTES]**.
+- [i] La galerie locale comprend 9 planches, 100 images statiques légendées, 131 aperçus animés, 2 fontes et 133 lecteurs audio; 877 références sont résolues. Écoute et validation artistique par le propriétaire restent **[OUVERTES]**.
+
+## Rangées directionnelles des boss et de l’élite — 2026-10-18
+
+- [x] L’audit Art Bible a trouvé une rangée `forward` unique pour l’élite et les deux boss. `generate_dopamine_misc_animation.py` v4 génère leurs 14 feuilles idle/move/attack/special/death depuis le même modèle de rôle en quatre directions bas/gauche/droite/haut, avec cels natifs de 24×24 et 96×96.
+- [x] `dopamine-animation` et `dopamine-asset-qa` : les 14 sheets passent grille 4×4, palette, dimensions, transparence, unicité des frames par rangée, sources Aseprite et hashes. L’intégration a remplacé uniquement les 14 IDs visés et créé les 56 animations directionnelles Godot; le smoke catalogue contrôle les quatre directions et régions de frame.
+- [x] Godot 4.7.2 import, `catalog_icon_assets_smoke`, `art_bible_asset_audit` et suite CTest complète après correction de séquences d’états dupliquées : **121/121**. Après refonte de la silhouette élite et de ses quatre sheets, import + catalogue/Art Bible/élite/boss/combat ciblés : **6/6**. PCK Linux/X11 recréé à 3 361 132 octets, SHA-256 `5377a3e63b917edebade093b0c966acb6f944205a797c39a1c5ed58e04dc4ddc`.
+- [i] Les boss demeurent des prototypes génériques et les timings sont provisoires. Rotation de modèle, captures logicielles et validation de grille ne remplacent pas une revue artistique humaine.
 
 
 ## Correction des rangées directionnelles du joueur — 2026-10-18

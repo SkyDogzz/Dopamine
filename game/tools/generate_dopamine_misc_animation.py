@@ -28,6 +28,14 @@ def get_pixels(canvas):
     return [tuple(canvas.data[i:i+4]) for i in range(0, len(canvas.data), 4)]
 
 
+def rotate_square(pixels, size, turns):
+    """Rotate a square pixel model clockwise without filtering or changing its palette."""
+    result = pixels
+    for _ in range(turns):
+        result = [result[(size - 1 - x) * size + y] for y in range(size) for x in range(size)]
+    return result
+
+
 def animate(base, w, h, effect, frame):
     out = [(0,0,0,0)] * (w*h)
     dx = (0, -1, 0, 1)[frame]
@@ -96,9 +104,12 @@ def main():
         if cat == "boss_animation":
             role="boss_pulse_warden" if "warden" in aid else "boss_dopamine_core"
             base_id = role
-            effect = "burst" if "special" in aid else "dissolve" if aid.endswith("_death") else "pulse"
+            effect = ("dissolve" if aid.endswith("_death") else "orbit" if aid.endswith("_special")
+                      else "burst" if aid.endswith("_attack") else "drift" if aid.endswith("_move") else "pulse")
         elif cat == "elite_animation":
-            base_id, effect = "elite_sprinter", "dissolve" if aid.endswith("_death") else "pulse"
+            base_id = "elite_sprinter"
+            effect = ("dissolve" if aid.endswith("_death") else "burst" if aid.endswith("_attack")
+                      else "drift" if aid.endswith("_move") else "pulse")
         elif cat == "weapon_animation":
             name=aid.removesuffix("_attack")
             aliases={"infinite_circuit":"lightning_conductor","wildfire":"inferno_sprayer","bloodstorm":"crimson_daggers","redline":"minigun","pandemic":"toxic_cloud","razorstorm":"sawblades","starfall":"meteor_staff","spectrum_collapse":"prism_laser","event_horizon":"void_orb","absolute_zero":"frost_nova"}
@@ -153,18 +164,26 @@ def main():
         rgba=[(0,0,0,0)]*(w*h)
         for y in range(nh):
             for x in range(nw): rgba[(y+(h-nh)//2)*w+x+(w-nw)//2]=pixels[min(sh-1,int(y/scale))*sw+min(sw-1,int(x/scale))]
-        frames=[]
-        for f in range(4):
-            frame=animate(rgba,w,h,effect,f)
-            if not any(q[3] for q in frame): frame=rgba[:]
-            frames.extend(frame)
-        sheet=Canvas(w*4,h); sheet.data[:]=bytes(c for q in frames for c in q)
+        directional = cat in ("boss_animation", "elite_animation")
+        directions = ("down", "left", "right", "up")
+        turns_by_direction = (0, 3, 1, 2)
+        rows = []
+        for row in range(4 if directional else 1):
+            oriented = rotate_square(rgba, w, turns_by_direction[row]) if directional else rgba
+            row_pixels = []
+            for f in range(4):
+                frame=animate(oriented,w,h,effect,f)
+                if not any(q[3] for q in frame): frame=oriented[:]
+                row_pixels.extend(frame)
+            rows.extend(row_pixels)
+        sheet=Canvas(w*4,h*(4 if directional else 1)); sheet.data[:]=bytes(c for q in rows for c in q)
         out_png=args.out_root/"sprites/animation"/(aid+".png")
         out_src=args.out_root/"source/animation"/(aid+".aseprite")
         out_png.parent.mkdir(parents=True,exist_ok=True); out_src.parent.mkdir(parents=True,exist_ok=True)
-        png=png_bytes(w*4,h,frames); ase=aseprite_bytes(sheet,aid)
+        png=png_bytes(w*4,h*(4 if directional else 1),rows); ase=aseprite_bytes(sheet,aid)
         out_png.write_bytes(png); out_src.write_bytes(ase)
-        meta={"asset_id":aid,"status":"candidate_not_approved","skill":"dopamine-animation","generator":"game/tools/generate_dopamine_misc_animation.py","generator_version":"3","seed":args.seed,"seed_policy":"fixed geometry and staged source; seed recorded but not consumed","identity_source":str(src.relative_to(ROOT)),"frame_size":[w,h],"grid":[4,1],"directions":["forward"],"fps_proposed":12 if "vfx" in cat or cat in ("projectile_animation","pickup_animation") else 8,"frame_duration_seconds_proposed":1/12 if "vfx" in cat or cat in ("projectile_animation","pickup_animation") else 1/8,"pivot":[w//2,h//2],"parameters":{"effect":effect,"category":cat,"source_path":str(src.relative_to(ROOT)),"native_source_dimensions_preserved":cat in ("boss_animation","elite_animation")},"source_path":str(out_src.relative_to(args.out_root)),"export_path":str(out_png.relative_to(args.out_root)),"source_sha256":hashlib.sha256(ase).hexdigest(),"export_sha256":hashlib.sha256(png).hexdigest()}
+        source_rel = src.resolve().relative_to(ROOT)
+        meta={"asset_id":aid,"status":"candidate_not_approved","skill":"dopamine-animation","generator":"game/tools/generate_dopamine_misc_animation.py","generator_version":"4","seed":args.seed,"seed_policy":"fixed geometry and staged source; seed recorded but not consumed","identity_source":str(source_rel),"frame_size":[w,h],"grid":[4,4 if directional else 1],"directions":list(directions) if directional else ["forward"],"fps_proposed":12 if "vfx" in cat or cat in ("projectile_animation","pickup_animation") else 8,"frame_duration_seconds_proposed":1/12 if "vfx" in cat or cat in ("projectile_animation","pickup_animation") else 1/8,"pivot":[w//2,h//2],"parameters":{"effect":effect,"category":cat,"source_path":str(source_rel),"native_source_dimensions_preserved":cat in ("boss_animation","elite_animation"),"direction_rotation_quarter_turns":list(turns_by_direction) if directional else None},"source_path":str(out_src.relative_to(args.out_root)),"export_path":str(out_png.relative_to(args.out_root)),"source_sha256":hashlib.sha256(ase).hexdigest(),"export_sha256":hashlib.sha256(png).hexdigest()}
         out_png.with_suffix(".json").write_text(json.dumps(meta,indent=2)+"\n")
         output.append(aid)
     print(json.dumps({"generated":output,"count":len(output)},indent=2))

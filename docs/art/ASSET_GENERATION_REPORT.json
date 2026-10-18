@@ -100,7 +100,7 @@
     "audio_inventory": "build/assets/candidates/review/audio-inventory.json",
     "broken_local_references": 0,
     "static_gallery_items": 100,
-    "note": "Regenerated from the current 366-ID manifest: all 100 static visual assets are individually labeled with stable IDs, source links, skill, seed and parameters; all 131 animation sheets have per-row animated previews and provenance/QA metadata; two font samples and 133 integrated WAV players are included. All 835 HTML attribute/CSS references and all contact-sheet source/audio-inventory paths resolve. Owner visual/audio review remains pending.",
+    "note": "Regenerated from the current 366-ID manifest: all 100 static visual assets are individually labeled with stable IDs, source links, skill, seed and parameters; all 131 animation sheets have per-row animated previews and provenance/QA metadata; two font samples and 133 integrated WAV players are included. All 877 local HTML attribute/CSS references and all contact-sheet source/audio-inventory paths resolve. Owner visual/audio review remains pending.",
     "audio_inventory_count": 133
   },
   "godot_integration_preflight": {
@@ -122,10 +122,10 @@
     "candidate_count": 366,
     "manifest": "passed",
     "candidate_batches_qa": "passed",
-    "godot_import": "passed; Godot import and a manifest-driven smoke verified all 131 SpriteFrames animations and frame regions",
+    "godot_import": "passed; latest elite static/animation assets reimported in Godot 4.7.2; targeted renderer, catalog, Art Bible, elite and boss validation passed 6/6.",
     "integration_dry_run": "passed current 366/366 ID-scoped integration dry run; zero collisions or unauthorized overwrites, including the 60 added weapon SFX variations.",
     "runtime_assets_integrated": 366,
-    "godot_test_suite": "After four deterministic fire and impact variants were integrated for each weapon, full CTest passed 121/121 tests (2026-10-18). The first suite run had one isolated survival_difficulty_unlock_smoke failure; five isolated reruns and the subsequent complete suite passed. Godot 4.7.2 import passed.",
+    "godot_test_suite": "Full CTest passed 121/121 after the directional boss/elite rows and distinct animation-state recipes. After the final elite role sprite and its four sheets were regenerated, Godot import and targeted catalog, Art Bible, elite, boss and combat visual checks passed 6/6.",
     "asset_provenance_registry": "passed; 366 current creative assets and 417 historical assets audited; the two unused music mixes remain retired.",
     "remaining_review": "Owner visual/art direction review and auditory review remain pending. Detailed animation timings and directions remain provisional where the GDD leaves them open. No audio playback hardware is available in this session; local review page includes playback controls.",
     "specific_weapon_sfx": "passed: four distinct deterministic fire variants and four impact variants load and rotate for each of all 10 weapons; SfxService smoke checks all 80 named streams.",
@@ -134,12 +134,13 @@
     "asset_integration_scope_smoke": "passed; verifies exact-ID replacement opt-in, managed-asset ownership, dry-run non-mutation and mismatched-owner refusal",
     "sfx_runtime_event_mapping": "passed: 20 weapon-specific cues are loaded and invoked by gameplay; 7 generated event families are exposed; weapon_family_fire/impact are fallback paths if a specific cue is missing; targeted SFX tests passed.",
     "music_runtime_cues": "passed: menu theme loops on the Music bus; five synchronized stems drive Survival and boss intensity; victory/defeat cues load on the Music bus. The two unused reference mixes are staging-only and not in game/assets.",
-    "godot_pck_export": "passed: rebuilt Linux/X11 PCK includes all new weapon variations; 3218908 bytes, SHA-256 9b7dbf372bdd619aa0791a7667c9f1c149a70a473014457b61bb0ea1f2d89be8; retired mix paths absent.",
+    "godot_pck_export": "passed: rebuilt Linux/X11 PCK includes all per-weapon sound variations and latest elite/boss animation sheets; 3361132 bytes, SHA-256 5377a3e63b917edebade093b0c966acb6f944205a797c39a1c5ed58e04dc4ddc; retired mix paths absent.",
     "music_format_audit": "passed: three integrated music cues and five synchronized stems are PCM16 mono 44.1 kHz, matching WAV headers",
     "catalog_icon_redesign": "passed: all 31 explicit managed IDs regenerated from dopamine-pixel-art v3, validated with dopamine-asset-qa, integrated, and covered by catalog icon, Art Bible, Godot import, and replacement-scope smoke checks; owner art review remains pending",
     "godot_test_suite_targeted": "passed after full-suite rerun: relevant renderer, weapon, impact, chest, relic, progression and final-boss checks all pass; full CTest 121/121 supersedes the targeted run.",
     "godot_animation_resources": "passed: all 131 generated SpriteFrames resources load, have the declared row/frame counts, and expose AtlasTexture regions matching metadata",
-    "boss_elite_animation_batch": "passed: 14 boss/elite sheets regenerated by dopamine-animation at native frame sizes (boss 96x96, elite 24x24); animation QA, Aseprite source/export hashes, palette, and Godot resource smoke passed",
+    "boss_elite_animation_batch": "passed: 14 boss/elite sheets regenerated by dopamine-animation v4 at native frame sizes (boss 96x96, elite 24x24), each with four down/left/right/up rows; animation QA, Aseprite source/export hashes, palette, directional Godot resources, and catalog asset smoke passed",
+    "directional_character_sheets": "passed: all 4 player, 36 common-enemy, 4 elite, and 10 boss animation sheets expose down/left/right/up rows; non-directional weapon, projectile, relic, pickup and VFX sheets retain one forward row.",
     "role_animation_runtime": "passed: idle/move frames for all nine enemy roles, elite prototype and both boss prototypes; attack playback is wired to shooter/exploder fuse and boss telegraph/charge phases; boss special playback is connected to charge/spiral/combined abilities, and transient death playback survives despawn using each SpriteFrames resource duration. Playback follows simulation time and freezes when paused.",
     "role_attack_runtime": "passed: directional attack frames selected for shooter and exploder fuse windows and both boss telegraph/charge phases; frame timing derives from simulation time.",
     "role_death_runtime": "passed: death events queue role-specific SpriteFrames at the original position/scale/direction, continue after ECS despawn, and expire at authored frame-count/FPS duration; 64 simultaneous death animations maximum.",
@@ -147,17 +148,18 @@
     "projectile_animation_runtime": "passed: every runtime projectile sprite role resolves to a looping multi-frame SpriteFrames resource; high-count 2,000 projectile capture passes. Rotation, trails, Redline tint, and non-selectable projectile behavior are retained.",
     "weapon_animations_runtime": "passed: 20 attack sheets and 20 family fire/impact sheets load; successful shots trigger attack/fire sheets; direct hits trigger animated family impacts; 64 transient VFX cap; reduced-effects setting clears and suppresses them; XP orb collection animation is rendered after despawn; chest opening and relic acquisition are integrated; regression smokes cover animation playback and level-scaled impact emphasis.",
     "reward_animations_runtime": "passed: XP collection, world chest opening and first-time relic acquisition use their authored SpriteFrames; chest/relic reveal timing advances on wall clock during paused reward selection; all 11 relic resources load and final boss loot smoke confirms chest opening is queued.",
-    "dopamine_animation_source_qa": "passed: candidate validator rerun across eight local animation batches; 131 unique manifest animation IDs all covered with geometry, Art Bible palette, per-frame color limits, no duplicate frames per direction, source/export SHA-256 and Aseprite source checks.",
-    "local_review_pack": "passed: 9 contact sheets, 100 labeled static images, 131 animated previews, 2 font samples and 133 integrated audio players; all 835 HTML/CSS and inventory/contact-sheet references resolve.",
+    "dopamine_animation_source_qa": "passed: candidate validator rerun across nine local animation batches; 131 unique manifest animation IDs all covered with geometry, Art Bible palette, per-frame color limits, no duplicate frames per direction, source/export SHA-256 and Aseprite source checks. The latest 14 boss/elite sheets use four directional rows.",
+    "local_review_pack": "passed: 9 contact sheets, 100 labeled static images, 131 animated previews, 2 font samples and 133 integrated audio players; all 877 local HTML/CSS and inventory/contact-sheet references resolve.",
     "dopamine_audio_numeric_qa": "passed: all 136 staged WAV outputs (125 SFX, 5 music stems, 5 music cues and one preview mix) pass non-silence, clipping, PCM16 mono 44.1 kHz, metadata and loop checks. All 133 integrated audio exports match QA hashes; the 20 weapon fire/impact event groups each contain four distinct WAV hashes.",
-    "audio_manifest_coverage": "passed: 125 SFX assets map to all 65 base SfxService cues plus 60 per-weapon variations; all 133 integrated audio sidecars match manifest IDs, skills, generator versions and hashes; every integrated music file has a runtime consumer."
+    "audio_manifest_coverage": "passed: 125 SFX assets map to all 65 base SfxService cues plus 60 per-weapon variations; all 133 integrated audio sidecars match manifest IDs, skills, generator versions and hashes; every integrated music file has a runtime consumer.",
+    "elite_role_visual": "passed: elite_sprinter_sprite regenerated as a generic armored role with a separate aura ring and rank symbol; palette, 24x24 dimensions, editable source/hash QA and four identity-locked directional animation sheets passed. Artistic review remains pending."
   },
   "godot_pck_export": {
     "status": "passed",
     "preset": "Linux/X11",
     "path": "build/assets/DopamineSurvivor.pck",
-    "bytes": 3218908,
-    "sha256": "9b7dbf372bdd619aa0791a7667c9f1c149a70a473014457b61bb0ea1f2d89be8",
+    "bytes": 3361132,
+    "sha256": "5377a3e63b917edebade093b0c966acb6f944205a797c39a1c5ed58e04dc4ddc",
     "music_runtime_paths": [
       "menu_theme.wav",
       "victory_cue.wav",
@@ -167,7 +169,7 @@
       "weapon_family_fire.wav",
       "weapon_family_impact.wav"
     ],
-    "verified": "Godot 4.7.2 Linux/X11 PCK includes all 80 per-weapon fire/impact variations and 131 SpriteFrames animation resources; retired reference mixes are absent."
+    "verified": "Godot 4.7.2 Linux/X11 PCK includes all 80 per-weapon fire/impact variations, 131 SpriteFrames animation resources and the latest four-row directional elite/boss sheets; retired reference mixes are absent."
   },
   "review_findings": [
     {
@@ -209,9 +211,9 @@
         "boss_dopamine_core_*"
       ],
       "finding": "The generic animation pipeline had reduced boss role sprites to 32x32 cels; generated SpriteFrames frame regions were also serialized as unsupported properties, causing Godot to load whole sheets instead of frames.",
-      "action": "Regenerated 14 boss/elite sheets at native dimensions and rebuilt all 131 SpriteFrames resources with one AtlasTexture subresource per frame. Added manifest-driven frame-region validation.",
+      "action": "Regenerated 14 boss/elite sheets at native dimensions with down/left/right/up rows and rebuilt all 131 SpriteFrames resources with one AtlasTexture subresource per frame. Added manifest-driven frame-region validation.",
       "skill": "dopamine-animation and dopamine-asset-qa",
-      "qa": "14 animation sheets passed palette, grid, duplicate-frame and source/export hash validation; Godot smoke verified declared dimensions and atlas regions for all 131 resources.",
+      "qa": "14 animation sheets passed palette, four-row grid, duplicate-frame and source/export hash validation; Godot catalog smoke verified all four directional animations and declared dimensions; the manifest-driven smoke verifies atlas regions for all 131 resources.",
       "integration": "14 boss/elite IDs replaced with exact-ID authorization; all 131 animation SpriteFrames resources rebuilt; updated Linux/X11 PCK exported.",
       "human_review_status": "pending"
     },
@@ -266,10 +268,26 @@
         "projectile_*_animation"
       ],
       "finding": "Projectile animation SpriteFrames were integrated but entity rendering selected only the static projectile PNG.",
-      "action": "Renderer now selects each projectile role’s authored looping SpriteFrames, preserves rotation/trails and instance tint, and resolves Redline and Shatter aliases to the approved base animation sheets.",
+      "action": "Renderer now selects each projectile role\u2019s authored looping SpriteFrames, preserves rotation/trails and instance tint, and resolves Redline and Shatter aliases to the approved base animation sheets.",
       "skill": "dopamine-animation",
       "qa": "All projectile role resources checked by render_batching_smoke; high-count 2,000 projectile render, combat visual, weapon, boss and Sandbox scenarios pass; full CTest 121/121 plus final targeted checks 4/4.",
       "integration": "Projectile animations play in Survival and Sandbox; static sprites remain fallback only if a SpriteFrames resource is unavailable.",
+      "human_review_status": "pending"
+    },
+    {
+      "date": "2026-10-18",
+      "assets": [
+        "elite_sprinter_sprite",
+        "elite_sprinter_idle",
+        "elite_sprinter_move",
+        "elite_sprinter_attack",
+        "elite_sprinter_death"
+      ],
+      "finding": "The previous elite sprite was a set of diagonal streaks and did not clearly express the Art Bible elite requirement of a body with separate aura and rank symbol.",
+      "action": "Regenerated a generic armored elite role from master-palette primitives and rebuilt its directional animation sheets from that identity-locked model with state-specific motion.",
+      "skill": "dopamine-pixel-art, dopamine-animation and dopamine-asset-qa",
+      "qa": "24x24 sprite and four-direction 4x4 sheets passed palette, dimensions, frame uniqueness, Aseprite source/export hash and Godot checks; targeted CTest passed 6/6.",
+      "integration": "Five exact managed IDs replaced; unrelated assets remained outside the integration scope.",
       "human_review_status": "pending"
     }
   ],

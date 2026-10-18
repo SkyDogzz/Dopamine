@@ -3,20 +3,23 @@
   "status": "provisionally_integrated",
   "skill": "dopamine-animation",
   "generator": "game/tools/generate_dopamine_misc_animation.py",
-  "generator_version": "3",
+  "generator_version": "4",
   "seed": 20261018,
   "seed_policy": "fixed geometry and staged source; seed recorded but not consumed",
-  "identity_source": "build/assets/candidates/pixel-art-complete/sprites/roster/elite_sprinter.png",
+  "identity_source": "build/assets/candidates/pixel-art-elite/sprites/roster/elite_sprinter.png",
   "frame_size": [
     24,
     24
   ],
   "grid": [
     4,
-    1
+    4
   ],
   "directions": [
-    "forward"
+    "down",
+    "left",
+    "right",
+    "up"
   ],
   "fps_proposed": 8,
   "frame_duration_seconds_proposed": 0.125,
@@ -25,18 +28,24 @@
     12
   ],
   "parameters": {
-    "effect": "pulse",
+    "effect": "burst",
     "category": "elite_animation",
-    "source_path": "build/assets/candidates/pixel-art-complete/sprites/roster/elite_sprinter.png",
-    "native_source_dimensions_preserved": true
+    "source_path": "build/assets/candidates/pixel-art-elite/sprites/roster/elite_sprinter.png",
+    "native_source_dimensions_preserved": true,
+    "direction_rotation_quarter_turns": [
+      0,
+      3,
+      1,
+      2
+    ]
   },
   "source_path": "source/animation/elite_sprinter_attack.aseprite",
   "export_path": "sprites/animation/elite_sprinter_attack.png",
-  "source_sha256": "b01c4e91b3be0f3db558cffc0cb4ded1546f86dff7335bc47fa0995890d84ba3",
-  "export_sha256": "a65a0a5bfd18280c15648beeb1fb7d600000c52581df56a547961abe69bd074a",
+  "source_sha256": "1900f7f4257aad2b06efeea9526e89d357a1503cee57b60e0dd8ac9085a7371d",
+  "export_sha256": "228e6c8b0df79fa108675d13f06fa9910aecec01e044eebe24decf1bc122a5f5",
   "acceptance_status": "accepted_for_provisional_production",
   "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
   "human_review_status": "pending",
-  "candidate_export_path": "build/assets/candidates/boss-animation-native/sprites/animation/elite_sprinter_attack.png",
+  "candidate_export_path": "build/assets/candidates/animation-directional/sprites/animation/elite_sprinter_attack.png",
   "integrated_export_path": "game/assets/sprites/animation/elite_sprinter_attack.png"
 }

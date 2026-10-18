@@ -3,7 +3,7 @@
   "status": "provisionally_integrated",
   "skill": "dopamine-animation",
   "generator": "game/tools/generate_dopamine_misc_animation.py",
-  "generator_version": "3",
+  "generator_version": "4",
   "seed": 20261018,
   "seed_policy": "fixed geometry and staged source; seed recorded but not consumed",
   "identity_source": "build/assets/candidates/pixel-art-complete/sprites/roster/boss_dopamine_core.png",
@@ -13,10 +13,13 @@
   ],
   "grid": [
     4,
-    1
+    4
   ],
   "directions": [
-    "forward"
+    "down",
+    "left",
+    "right",
+    "up"
   ],
   "fps_proposed": 8,
   "frame_duration_seconds_proposed": 0.125,
@@ -28,15 +31,21 @@
     "effect": "dissolve",
     "category": "boss_animation",
     "source_path": "build/assets/candidates/pixel-art-complete/sprites/roster/boss_dopamine_core.png",
-    "native_source_dimensions_preserved": true
+    "native_source_dimensions_preserved": true,
+    "direction_rotation_quarter_turns": [
+      0,
+      3,
+      1,
+      2
+    ]
   },
   "source_path": "source/animation/boss_dopamine_core_death.aseprite",
   "export_path": "sprites/animation/boss_dopamine_core_death.png",
-  "source_sha256": "65ca51f4a9d350d16e9ebfcbaa31e43723a365bf0781a34e4a2c95309c321fd5",
-  "export_sha256": "c172a0c6b9858cec35f8a9aeefa1021372a3b3c3635e4d25881d57f0ca69f76a",
+  "source_sha256": "970575bcf5ca99c922d362da481c850ab030036f2863e0e188746d4e22615cf2",
+  "export_sha256": "7ea76b180a8b0f0749de55ed7c2182df1ce4bfe8ab42e76943c73cb70a4a55fb",
   "acceptance_status": "accepted_for_provisional_production",
   "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
   "human_review_status": "pending",
-  "candidate_export_path": "build/assets/candidates/boss-animation-native/sprites/animation/boss_dopamine_core_death.png",
+  "candidate_export_path": "build/assets/candidates/animation-directional/sprites/animation/boss_dopamine_core_death.png",
   "integrated_export_path": "game/assets/sprites/animation/boss_dopamine_core_death.png"
 }

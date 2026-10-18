@@ -3,7 +3,7 @@
   "status": "provisionally_integrated",
   "skill": "dopamine-animation",
   "generator": "game/tools/generate_dopamine_misc_animation.py",
-  "generator_version": "3",
+  "generator_version": "4",
   "seed": 20261018,
   "seed_policy": "fixed geometry and staged source; seed recorded but not consumed",
   "identity_source": "build/assets/candidates/pixel-art-complete/sprites/roster/boss_pulse_warden.png",
@@ -13,10 +13,13 @@
   ],
   "grid": [
     4,
-    1
+    4
   ],
   "directions": [
-    "forward"
+    "down",
+    "left",
+    "right",
+    "up"
   ],
   "fps_proposed": 8,
   "frame_duration_seconds_proposed": 0.125,
@@ -25,18 +28,24 @@
     48
   ],
   "parameters": {
-    "effect": "pulse",
+    "effect": "drift",
     "category": "boss_animation",
     "source_path": "build/assets/candidates/pixel-art-complete/sprites/roster/boss_pulse_warden.png",
-    "native_source_dimensions_preserved": true
+    "native_source_dimensions_preserved": true,
+    "direction_rotation_quarter_turns": [
+      0,
+      3,
+      1,
+      2
+    ]
   },
   "source_path": "source/animation/boss_pulse_warden_move.aseprite",
   "export_path": "sprites/animation/boss_pulse_warden_move.png",
-  "source_sha256": "a87e90880bb1d547430b03d1b8bfd72a3eb866fbb72de648c5208e7fcd4c044c",
-  "export_sha256": "415b19f391e565bdc35d5e0e9ee96ba4cf810c229af0b635fb362261370bdcbe",
+  "source_sha256": "d422c58901a38c1986279edf63e47117c8010e518a7ad1835e58c6097a571ed8",
+  "export_sha256": "5c70cdacd43e4f0f0524c1f30ed784fe9fa395a6bcc7c7f653860913604c6aaa",
   "acceptance_status": "accepted_for_provisional_production",
   "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
   "human_review_status": "pending",
-  "candidate_export_path": "build/assets/candidates/boss-animation-native/sprites/animation/boss_pulse_warden_move.png",
+  "candidate_export_path": "build/assets/candidates/animation-directional/sprites/animation/boss_pulse_warden_move.png",
   "integrated_export_path": "game/assets/sprites/animation/boss_pulse_warden_move.png"
 }

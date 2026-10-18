@@ -2875,14 +2875,16 @@
       "godot_destination": "res://assets/sprites/roster/elite_sprinter.png",
       "authoring_source_or_recipe": "game/tools/generate_neon_arcade_art.py",
       "generator_version": "2",
-      "generation_seed": 0,
+      "generation_seed": 20261018,
       "generation_parameters": {
+        "generator_version": "3",
         "width": 24,
-        "height": 24
+        "height": 24,
+        "brief": "Generic elite sprinter prototype with readable body, separate aura, and rank marker using only the Art Bible palette."
       },
-      "source_sha256": "1907f493b6f9eeea91df9affa85fbe611bc0e764b70dec7f34a733d82d270354",
-      "export_sha256": "f118f85977c1e36b59f78a5994832d8f5c623aed2b820d715d10ef9af238b250",
-      "qa_report_path": "build/assets/candidates/pixel-art-complete/qa-report.json",
+      "source_sha256": "3b61406db3df6079ab89e29fbe85ac14e751b268ce4debee5b9e415330bd572c",
+      "export_sha256": "21a2ea7a8726c4b74fdcc508df8b5481194be57d563106a1e2849b41a635db66",
+      "qa_report_path": "build/assets/candidates/pixel-art-elite/qa-report.json",
       "generation_status": "candidate",
       "validation_status": "passed",
       "human_review_status": "pending",
@@ -2891,8 +2893,8 @@
         "elite visual identity details are not specified"
       ],
       "requirement_source": "GDD v1.6 + Godot runtime contracts",
-      "candidate_export_path": "build/assets/candidates/pixel-art-complete/sprites/roster/elite_sprinter.png",
-      "candidate_source_path": "build/assets/candidates/pixel-art-complete/source/original_procedural/elite_sprinter.aseprite",
+      "candidate_export_path": "build/assets/candidates/pixel-art-elite/sprites/roster/elite_sprinter.png",
+      "candidate_source_path": "build/assets/candidates/pixel-art-elite/source/original_procedural/elite_sprinter.aseprite",
       "acceptance_status": "accepted_for_provisional_production",
       "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
       "integrated_path": "game/assets/sprites/roster/elite_sprinter.png",
@@ -2922,11 +2924,26 @@
         "effect": "pulse",
         "category": "elite_animation",
         "source_path": "build/assets/candidates/pixel-art-complete/sprites/roster/elite_sprinter.png",
-        "native_source_dimensions_preserved": true
+        "native_source_dimensions_preserved": true,
+        "generator_version": "4",
+        "direction_rows": [
+          "down",
+          "left",
+          "right",
+          "up"
+        ],
+        "direction_rotation_quarter_turns": [
+          0,
+          3,
+          1,
+          2
+        ],
+        "source_candidate_batch": "build/assets/candidates/animation-directional",
+        "identity_source": "game/assets/sprites/roster/elite_sprinter.png"
       },
-      "source_sha256": "9cd73aecf5713de39f1e87669b271310dcd9029eb349b0bee1c82c587182f477",
-      "export_sha256": "a65a0a5bfd18280c15648beeb1fb7d600000c52581df56a547961abe69bd074a",
-      "qa_report_path": "build/assets/candidates/boss-animation-native/qa-report.json",
+      "source_sha256": "061fcbce6f69fc91fd2902b0564ddc37f84558b8995730f56454473b2bc72c2b",
+      "export_sha256": "d7685d4ec107c497b597b5bda4aa251eb550f6b9868cc5f7030dad20d4cd852f",
+      "qa_report_path": "build/assets/candidates/animation-directional/qa-report.json",
       "generation_status": "candidate",
       "validation_status": "passed",
       "human_review_status": "pending",
@@ -2935,8 +2952,8 @@
         "idle animation timing/frame count not specified"
       ],
       "requirement_source": "GDD v1.6 + Godot runtime contracts",
-      "candidate_export_path": "build/assets/candidates/boss-animation-native/sprites/animation/elite_sprinter_idle.png",
-      "candidate_source_path": "build/assets/candidates/boss-animation-native/source/animation/elite_sprinter_idle.aseprite",
+      "candidate_export_path": "build/assets/candidates/animation-directional/sprites/animation/elite_sprinter_idle.png",
+      "candidate_source_path": "build/assets/candidates/animation-directional/source/animation/elite_sprinter_idle.aseprite",
       "acceptance_status": "accepted_for_provisional_production",
       "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
       "godot_animation_resource": "game/assets/sprites/animation/elite_sprinter_idle.tres",
@@ -2964,14 +2981,29 @@
       "generator_version": "3",
       "generation_seed": 20261018,
       "generation_parameters": {
-        "effect": "pulse",
+        "effect": "drift",
         "category": "elite_animation",
         "source_path": "build/assets/candidates/pixel-art-complete/sprites/roster/elite_sprinter.png",
-        "native_source_dimensions_preserved": true
+        "native_source_dimensions_preserved": true,
+        "generator_version": "4",
+        "direction_rows": [
+          "down",
+          "left",
+          "right",
+          "up"
+        ],
+        "direction_rotation_quarter_turns": [
+          0,
+          3,
+          1,
+          2
+        ],
+        "source_candidate_batch": "build/assets/candidates/animation-directional",
+        "identity_source": "game/assets/sprites/roster/elite_sprinter.png"
       },
-      "source_sha256": "f1b53a43946c200f288df49bf2e783920bb9b17f91a85cd844cbb77ad3407c32",
-      "export_sha256": "a65a0a5bfd18280c15648beeb1fb7d600000c52581df56a547961abe69bd074a",
-      "qa_report_path": "build/assets/candidates/boss-animation-native/qa-report.json",
+      "source_sha256": "8e54fc612aabae9905e678e397b4c25dd5d91d8594fd676bbdc3164702051f1b",
+      "export_sha256": "d6d5decce3e73474602ed35c677971b0ff93d300ddc3bb4dcb40a7df5dbea6ce",
+      "qa_report_path": "build/assets/candidates/animation-directional/qa-report.json",
       "generation_status": "candidate",
       "validation_status": "passed",
       "human_review_status": "pending",
@@ -2980,8 +3012,8 @@
         "move animation timing/frame count not specified"
       ],
       "requirement_source": "GDD v1.6 + Godot runtime contracts",
-      "candidate_export_path": "build/assets/candidates/boss-animation-native/sprites/animation/elite_sprinter_move.png",
-      "candidate_source_path": "build/assets/candidates/boss-animation-native/source/animation/elite_sprinter_move.aseprite",
+      "candidate_export_path": "build/assets/candidates/animation-directional/sprites/animation/elite_sprinter_move.png",
+      "candidate_source_path": "build/assets/candidates/animation-directional/source/animation/elite_sprinter_move.aseprite",
       "acceptance_status": "accepted_for_provisional_production",
       "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
       "godot_animation_resource": "game/assets/sprites/animation/elite_sprinter_move.tres",
@@ -3009,14 +3041,29 @@
       "generator_version": "3",
       "generation_seed": 20261018,
       "generation_parameters": {
-        "effect": "pulse",
+        "effect": "burst",
         "category": "elite_animation",
         "source_path": "build/assets/candidates/pixel-art-complete/sprites/roster/elite_sprinter.png",
-        "native_source_dimensions_preserved": true
+        "native_source_dimensions_preserved": true,
+        "generator_version": "4",
+        "direction_rows": [
+          "down",
+          "left",
+          "right",
+          "up"
+        ],
+        "direction_rotation_quarter_turns": [
+          0,
+          3,
+          1,
+          2
+        ],
+        "source_candidate_batch": "build/assets/candidates/animation-directional",
+        "identity_source": "game/assets/sprites/roster/elite_sprinter.png"
       },
-      "source_sha256": "b01c4e91b3be0f3db558cffc0cb4ded1546f86dff7335bc47fa0995890d84ba3",
-      "export_sha256": "a65a0a5bfd18280c15648beeb1fb7d600000c52581df56a547961abe69bd074a",
-      "qa_report_path": "build/assets/candidates/boss-animation-native/qa-report.json",
+      "source_sha256": "1900f7f4257aad2b06efeea9526e89d357a1503cee57b60e0dd8ac9085a7371d",
+      "export_sha256": "228e6c8b0df79fa108675d13f06fa9910aecec01e044eebe24decf1bc122a5f5",
+      "qa_report_path": "build/assets/candidates/animation-directional/qa-report.json",
       "generation_status": "candidate",
       "validation_status": "passed",
       "human_review_status": "pending",
@@ -3025,8 +3072,8 @@
         "attack animation timing/frame count not specified"
       ],
       "requirement_source": "GDD v1.6 + Godot runtime contracts",
-      "candidate_export_path": "build/assets/candidates/boss-animation-native/sprites/animation/elite_sprinter_attack.png",
-      "candidate_source_path": "build/assets/candidates/boss-animation-native/source/animation/elite_sprinter_attack.aseprite",
+      "candidate_export_path": "build/assets/candidates/animation-directional/sprites/animation/elite_sprinter_attack.png",
+      "candidate_source_path": "build/assets/candidates/animation-directional/source/animation/elite_sprinter_attack.aseprite",
       "acceptance_status": "accepted_for_provisional_production",
       "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
       "godot_animation_resource": "game/assets/sprites/animation/elite_sprinter_attack.tres",
@@ -3057,11 +3104,26 @@
         "effect": "dissolve",
         "category": "elite_animation",
         "source_path": "build/assets/candidates/pixel-art-complete/sprites/roster/elite_sprinter.png",
-        "native_source_dimensions_preserved": true
+        "native_source_dimensions_preserved": true,
+        "generator_version": "4",
+        "direction_rows": [
+          "down",
+          "left",
+          "right",
+          "up"
+        ],
+        "direction_rotation_quarter_turns": [
+          0,
+          3,
+          1,
+          2
+        ],
+        "source_candidate_batch": "build/assets/candidates/animation-directional",
+        "identity_source": "game/assets/sprites/roster/elite_sprinter.png"
       },
-      "source_sha256": "f5baf870d0b3d480849e5e1ee7821505bfe91188a1c3dec20feda0286ca50442",
-      "export_sha256": "63e34ed38660a175e536850bc2a427ee2f191c3525d1dc0aadfe582648f4f7c4",
-      "qa_report_path": "build/assets/candidates/boss-animation-native/qa-report.json",
+      "source_sha256": "3cc754054ea9ceccb961386f7c4aef8f2abb00cb7919be1b57ac368f4a83c963",
+      "export_sha256": "fc7c45fc00c7a51a331f6775734189150653d8cf54a4c0a7cf1e460bf2b4db49",
+      "qa_report_path": "build/assets/candidates/animation-directional/qa-report.json",
       "generation_status": "candidate",
       "validation_status": "passed",
       "human_review_status": "pending",
@@ -3070,8 +3132,8 @@
         "runtime plays this animation using authored provisional frame timing; canonical timing remains open"
       ],
       "requirement_source": "GDD v1.6 + Godot runtime contracts",
-      "candidate_export_path": "build/assets/candidates/boss-animation-native/sprites/animation/elite_sprinter_death.png",
-      "candidate_source_path": "build/assets/candidates/boss-animation-native/source/animation/elite_sprinter_death.aseprite",
+      "candidate_export_path": "build/assets/candidates/animation-directional/sprites/animation/elite_sprinter_death.png",
+      "candidate_source_path": "build/assets/candidates/animation-directional/source/animation/elite_sprinter_death.aseprite",
       "acceptance_status": "accepted_for_provisional_production",
       "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
       "godot_animation_resource": "game/assets/sprites/animation/elite_sprinter_death.tres",
@@ -3142,11 +3204,25 @@
         "effect": "pulse",
         "category": "boss_animation",
         "source_path": "build/assets/candidates/pixel-art-complete/sprites/roster/boss_pulse_warden.png",
-        "native_source_dimensions_preserved": true
+        "native_source_dimensions_preserved": true,
+        "generator_version": "4",
+        "direction_rows": [
+          "down",
+          "left",
+          "right",
+          "up"
+        ],
+        "direction_rotation_quarter_turns": [
+          0,
+          3,
+          1,
+          2
+        ],
+        "source_candidate_batch": "build/assets/candidates/animation-directional"
       },
-      "source_sha256": "5c39259656b96a62cd86f5d1e2deb70cde3fb6ed66ede2cf38b56365d007261e",
-      "export_sha256": "415b19f391e565bdc35d5e0e9ee96ba4cf810c229af0b635fb362261370bdcbe",
-      "qa_report_path": "build/assets/candidates/boss-animation-native/qa-report.json",
+      "source_sha256": "b32b01740a88a9adcf6cd00048e1996b503b483cd208ca395c69ae76042e1631",
+      "export_sha256": "eb5c64eb58d2519927c2ac3569e89296a8c108ae2a0d019239183bd790d854d9",
+      "qa_report_path": "build/assets/candidates/animation-directional/qa-report.json",
       "generation_status": "candidate",
       "validation_status": "passed",
       "human_review_status": "pending",
@@ -3155,8 +3231,8 @@
         "boss identity/patterns and idle animation timing are open"
       ],
       "requirement_source": "GDD v1.6 + Godot runtime contracts",
-      "candidate_export_path": "build/assets/candidates/boss-animation-native/sprites/animation/boss_pulse_warden_idle.png",
-      "candidate_source_path": "build/assets/candidates/boss-animation-native/source/animation/boss_pulse_warden_idle.aseprite",
+      "candidate_export_path": "build/assets/candidates/animation-directional/sprites/animation/boss_pulse_warden_idle.png",
+      "candidate_source_path": "build/assets/candidates/animation-directional/source/animation/boss_pulse_warden_idle.aseprite",
       "acceptance_status": "accepted_for_provisional_production",
       "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
       "godot_animation_resource": "game/assets/sprites/animation/boss_pulse_warden_idle.tres",
@@ -3184,14 +3260,28 @@
       "generator_version": "3",
       "generation_seed": 20261018,
       "generation_parameters": {
-        "effect": "pulse",
+        "effect": "drift",
         "category": "boss_animation",
         "source_path": "build/assets/candidates/pixel-art-complete/sprites/roster/boss_pulse_warden.png",
-        "native_source_dimensions_preserved": true
+        "native_source_dimensions_preserved": true,
+        "generator_version": "4",
+        "direction_rows": [
+          "down",
+          "left",
+          "right",
+          "up"
+        ],
+        "direction_rotation_quarter_turns": [
+          0,
+          3,
+          1,
+          2
+        ],
+        "source_candidate_batch": "build/assets/candidates/animation-directional"
       },
-      "source_sha256": "a87e90880bb1d547430b03d1b8bfd72a3eb866fbb72de648c5208e7fcd4c044c",
-      "export_sha256": "415b19f391e565bdc35d5e0e9ee96ba4cf810c229af0b635fb362261370bdcbe",
-      "qa_report_path": "build/assets/candidates/boss-animation-native/qa-report.json",
+      "source_sha256": "d422c58901a38c1986279edf63e47117c8010e518a7ad1835e58c6097a571ed8",
+      "export_sha256": "5c70cdacd43e4f0f0524c1f30ed784fe9fa395a6bcc7c7f653860913604c6aaa",
+      "qa_report_path": "build/assets/candidates/animation-directional/qa-report.json",
       "generation_status": "candidate",
       "validation_status": "passed",
       "human_review_status": "pending",
@@ -3200,8 +3290,8 @@
         "boss identity/patterns and move animation timing are open"
       ],
       "requirement_source": "GDD v1.6 + Godot runtime contracts",
-      "candidate_export_path": "build/assets/candidates/boss-animation-native/sprites/animation/boss_pulse_warden_move.png",
-      "candidate_source_path": "build/assets/candidates/boss-animation-native/source/animation/boss_pulse_warden_move.aseprite",
+      "candidate_export_path": "build/assets/candidates/animation-directional/sprites/animation/boss_pulse_warden_move.png",
+      "candidate_source_path": "build/assets/candidates/animation-directional/source/animation/boss_pulse_warden_move.aseprite",
       "acceptance_status": "accepted_for_provisional_production",
       "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
       "godot_animation_resource": "game/assets/sprites/animation/boss_pulse_warden_move.tres",
@@ -3229,14 +3319,28 @@
       "generator_version": "3",
       "generation_seed": 20261018,
       "generation_parameters": {
-        "effect": "pulse",
+        "effect": "burst",
         "category": "boss_animation",
         "source_path": "build/assets/candidates/pixel-art-complete/sprites/roster/boss_pulse_warden.png",
-        "native_source_dimensions_preserved": true
+        "native_source_dimensions_preserved": true,
+        "generator_version": "4",
+        "direction_rows": [
+          "down",
+          "left",
+          "right",
+          "up"
+        ],
+        "direction_rotation_quarter_turns": [
+          0,
+          3,
+          1,
+          2
+        ],
+        "source_candidate_batch": "build/assets/candidates/animation-directional"
       },
-      "source_sha256": "7c1cac7d530ac0f57c00715387d0bce6d9eb32e1b0dd382ffd543256d980d7e4",
-      "export_sha256": "415b19f391e565bdc35d5e0e9ee96ba4cf810c229af0b635fb362261370bdcbe",
-      "qa_report_path": "build/assets/candidates/boss-animation-native/qa-report.json",
+      "source_sha256": "006ed913704c7a276c84d8f9d61830fea1bfdd9faf6575c14983a127c0f01c58",
+      "export_sha256": "edf6050b14559f2dd228f05ab7c6d8b426a690872bbd2e9e9ce4aba47343f9e1",
+      "qa_report_path": "build/assets/candidates/animation-directional/qa-report.json",
       "generation_status": "candidate",
       "validation_status": "passed",
       "human_review_status": "pending",
@@ -3245,8 +3349,8 @@
         "boss identity/patterns and attack animation timing are open"
       ],
       "requirement_source": "GDD v1.6 + Godot runtime contracts",
-      "candidate_export_path": "build/assets/candidates/boss-animation-native/sprites/animation/boss_pulse_warden_attack.png",
-      "candidate_source_path": "build/assets/candidates/boss-animation-native/source/animation/boss_pulse_warden_attack.aseprite",
+      "candidate_export_path": "build/assets/candidates/animation-directional/sprites/animation/boss_pulse_warden_attack.png",
+      "candidate_source_path": "build/assets/candidates/animation-directional/source/animation/boss_pulse_warden_attack.aseprite",
       "acceptance_status": "accepted_for_provisional_production",
       "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
       "godot_animation_resource": "game/assets/sprites/animation/boss_pulse_warden_attack.tres",
@@ -3274,14 +3378,28 @@
       "generator_version": "3",
       "generation_seed": 20261018,
       "generation_parameters": {
-        "effect": "burst",
+        "effect": "orbit",
         "category": "boss_animation",
         "source_path": "build/assets/candidates/pixel-art-complete/sprites/roster/boss_pulse_warden.png",
-        "native_source_dimensions_preserved": true
+        "native_source_dimensions_preserved": true,
+        "generator_version": "4",
+        "direction_rows": [
+          "down",
+          "left",
+          "right",
+          "up"
+        ],
+        "direction_rotation_quarter_turns": [
+          0,
+          3,
+          1,
+          2
+        ],
+        "source_candidate_batch": "build/assets/candidates/animation-directional"
       },
-      "source_sha256": "6a9121ddfd6e098d6be30118b8edfdadb23d967748a2a98f214d511e2c0be159",
-      "export_sha256": "ba0db3674ec43eb4ddebe03e47f1552ca6b34317bf6057173385a93a1edd3207",
-      "qa_report_path": "build/assets/candidates/boss-animation-native/qa-report.json",
+      "source_sha256": "ae6634a559fb597a3517979b645c6ca4be26bda249d7f023d2455eb5c8ee37e2",
+      "export_sha256": "153789a3f23c7c7f28cad801b925b519643202a516a125d32182f4e157403c79",
+      "qa_report_path": "build/assets/candidates/animation-directional/qa-report.json",
       "generation_status": "candidate",
       "validation_status": "passed",
       "human_review_status": "pending",
@@ -3290,8 +3408,8 @@
         "boss identity/patterns and special animation timing are open"
       ],
       "requirement_source": "GDD v1.6 + Godot runtime contracts",
-      "candidate_export_path": "build/assets/candidates/boss-animation-native/sprites/animation/boss_pulse_warden_special.png",
-      "candidate_source_path": "build/assets/candidates/boss-animation-native/source/animation/boss_pulse_warden_special.aseprite",
+      "candidate_export_path": "build/assets/candidates/animation-directional/sprites/animation/boss_pulse_warden_special.png",
+      "candidate_source_path": "build/assets/candidates/animation-directional/source/animation/boss_pulse_warden_special.aseprite",
       "acceptance_status": "accepted_for_provisional_production",
       "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
       "godot_animation_resource": "game/assets/sprites/animation/boss_pulse_warden_special.tres",
@@ -3322,11 +3440,25 @@
         "effect": "dissolve",
         "category": "boss_animation",
         "source_path": "build/assets/candidates/pixel-art-complete/sprites/roster/boss_pulse_warden.png",
-        "native_source_dimensions_preserved": true
+        "native_source_dimensions_preserved": true,
+        "generator_version": "4",
+        "direction_rows": [
+          "down",
+          "left",
+          "right",
+          "up"
+        ],
+        "direction_rotation_quarter_turns": [
+          0,
+          3,
+          1,
+          2
+        ],
+        "source_candidate_batch": "build/assets/candidates/animation-directional"
       },
-      "source_sha256": "e06327319ef95a7fa013bf1c41e07c3fa17f27c66989313d65da5b7a964eeb3e",
-      "export_sha256": "26d167de9de5487e4bef1d34f826ccc4335828f7988502154dd4d492c64c8127",
-      "qa_report_path": "build/assets/candidates/boss-animation-native/qa-report.json",
+      "source_sha256": "33ed1bebe5e77cacc8a929e42cb08e3b9ed157c6ecd395c92cf10eff445646db",
+      "export_sha256": "2583119c6f523bad5d5371d8316ca22cd0866779fffaa322cdf89521d9b79453",
+      "qa_report_path": "build/assets/candidates/animation-directional/qa-report.json",
       "generation_status": "candidate",
       "validation_status": "passed",
       "human_review_status": "pending",
@@ -3335,8 +3467,8 @@
         "boss identity/patterns remain open; runtime uses authored provisional death timing while canonical timing remains open"
       ],
       "requirement_source": "GDD v1.6 + Godot runtime contracts",
-      "candidate_export_path": "build/assets/candidates/boss-animation-native/sprites/animation/boss_pulse_warden_death.png",
-      "candidate_source_path": "build/assets/candidates/boss-animation-native/source/animation/boss_pulse_warden_death.aseprite",
+      "candidate_export_path": "build/assets/candidates/animation-directional/sprites/animation/boss_pulse_warden_death.png",
+      "candidate_source_path": "build/assets/candidates/animation-directional/source/animation/boss_pulse_warden_death.aseprite",
       "acceptance_status": "accepted_for_provisional_production",
       "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
       "godot_animation_resource": "game/assets/sprites/animation/boss_pulse_warden_death.tres",
@@ -3407,11 +3539,25 @@
         "effect": "pulse",
         "category": "boss_animation",
         "source_path": "build/assets/candidates/pixel-art-complete/sprites/roster/boss_dopamine_core.png",
-        "native_source_dimensions_preserved": true
+        "native_source_dimensions_preserved": true,
+        "generator_version": "4",
+        "direction_rows": [
+          "down",
+          "left",
+          "right",
+          "up"
+        ],
+        "direction_rotation_quarter_turns": [
+          0,
+          3,
+          1,
+          2
+        ],
+        "source_candidate_batch": "build/assets/candidates/animation-directional"
       },
-      "source_sha256": "afc7132b1348b7911b36a122c8da1e22b24520be7d57692fa5c80ab9fe0c9441",
-      "export_sha256": "7c96ad6d3ab18061fd97554b23fc01f7e458b929558036e12f365b3cd1e1c7f1",
-      "qa_report_path": "build/assets/candidates/boss-animation-native/qa-report.json",
+      "source_sha256": "a7c97856e9a34972b055f048afb653cb62e28af253afcba3b278dfe97ea114b5",
+      "export_sha256": "3a318bce7b4377b1a1385177d622fd92d1c2363182ee2b13e1546b371c8c08b7",
+      "qa_report_path": "build/assets/candidates/animation-directional/qa-report.json",
       "generation_status": "candidate",
       "validation_status": "passed",
       "human_review_status": "pending",
@@ -3420,8 +3566,8 @@
         "boss identity/patterns and idle animation timing are open"
       ],
       "requirement_source": "GDD v1.6 + Godot runtime contracts",
-      "candidate_export_path": "build/assets/candidates/boss-animation-native/sprites/animation/boss_dopamine_core_idle.png",
-      "candidate_source_path": "build/assets/candidates/boss-animation-native/source/animation/boss_dopamine_core_idle.aseprite",
+      "candidate_export_path": "build/assets/candidates/animation-directional/sprites/animation/boss_dopamine_core_idle.png",
+      "candidate_source_path": "build/assets/candidates/animation-directional/source/animation/boss_dopamine_core_idle.aseprite",
       "acceptance_status": "accepted_for_provisional_production",
       "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
       "godot_animation_resource": "game/assets/sprites/animation/boss_dopamine_core_idle.tres",
@@ -3449,14 +3595,28 @@
       "generator_version": "3",
       "generation_seed": 20261018,
       "generation_parameters": {
-        "effect": "pulse",
+        "effect": "drift",
         "category": "boss_animation",
         "source_path": "build/assets/candidates/pixel-art-complete/sprites/roster/boss_dopamine_core.png",
-        "native_source_dimensions_preserved": true
+        "native_source_dimensions_preserved": true,
+        "generator_version": "4",
+        "direction_rows": [
+          "down",
+          "left",
+          "right",
+          "up"
+        ],
+        "direction_rotation_quarter_turns": [
+          0,
+          3,
+          1,
+          2
+        ],
+        "source_candidate_batch": "build/assets/candidates/animation-directional"
       },
-      "source_sha256": "cbcb31d33da06f64df23c21b774b035f50b2b3a4ffc958be12cbd4db78b9e08d",
-      "export_sha256": "7c96ad6d3ab18061fd97554b23fc01f7e458b929558036e12f365b3cd1e1c7f1",
-      "qa_report_path": "build/assets/candidates/boss-animation-native/qa-report.json",
+      "source_sha256": "6acd1442b9b3b5779ba6faf647a0f96bc99329eb111126cac8bcf383c3855575",
+      "export_sha256": "8c174415b8c7659c7540ddcad7213fbe3290c6ea7d01526e571394089c7cea1e",
+      "qa_report_path": "build/assets/candidates/animation-directional/qa-report.json",
       "generation_status": "candidate",
       "validation_status": "passed",
       "human_review_status": "pending",
@@ -3465,8 +3625,8 @@
         "boss identity/patterns and move animation timing are open"
       ],
       "requirement_source": "GDD v1.6 + Godot runtime contracts",
-      "candidate_export_path": "build/assets/candidates/boss-animation-native/sprites/animation/boss_dopamine_core_move.png",
-      "candidate_source_path": "build/assets/candidates/boss-animation-native/source/animation/boss_dopamine_core_move.aseprite",
+      "candidate_export_path": "build/assets/candidates/animation-directional/sprites/animation/boss_dopamine_core_move.png",
+      "candidate_source_path": "build/assets/candidates/animation-directional/source/animation/boss_dopamine_core_move.aseprite",
       "acceptance_status": "accepted_for_provisional_production",
       "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
       "godot_animation_resource": "game/assets/sprites/animation/boss_dopamine_core_move.tres",
@@ -3494,14 +3654,28 @@
       "generator_version": "3",
       "generation_seed": 20261018,
       "generation_parameters": {
-        "effect": "pulse",
+        "effect": "burst",
         "category": "boss_animation",
         "source_path": "build/assets/candidates/pixel-art-complete/sprites/roster/boss_dopamine_core.png",
-        "native_source_dimensions_preserved": true
+        "native_source_dimensions_preserved": true,
+        "generator_version": "4",
+        "direction_rows": [
+          "down",
+          "left",
+          "right",
+          "up"
+        ],
+        "direction_rotation_quarter_turns": [
+          0,
+          3,
+          1,
+          2
+        ],
+        "source_candidate_batch": "build/assets/candidates/animation-directional"
       },
-      "source_sha256": "f735951499d5ff81db1b8874f286e89a9d861e67131436ba4c323a5c84918735",
-      "export_sha256": "7c96ad6d3ab18061fd97554b23fc01f7e458b929558036e12f365b3cd1e1c7f1",
-      "qa_report_path": "build/assets/candidates/boss-animation-native/qa-report.json",
+      "source_sha256": "2da81998f62afe00615fada1abc7c6ebcf9064c20c2608f43ad96e2e781a8360",
+      "export_sha256": "9cff7be849dbd23702c12cb447f2aaa07256a1f007f34d05ac6d331f0f7e55cf",
+      "qa_report_path": "build/assets/candidates/animation-directional/qa-report.json",
       "generation_status": "candidate",
       "validation_status": "passed",
       "human_review_status": "pending",
@@ -3510,8 +3684,8 @@
         "boss identity/patterns and attack animation timing are open"
       ],
       "requirement_source": "GDD v1.6 + Godot runtime contracts",
-      "candidate_export_path": "build/assets/candidates/boss-animation-native/sprites/animation/boss_dopamine_core_attack.png",
-      "candidate_source_path": "build/assets/candidates/boss-animation-native/source/animation/boss_dopamine_core_attack.aseprite",
+      "candidate_export_path": "build/assets/candidates/animation-directional/sprites/animation/boss_dopamine_core_attack.png",
+      "candidate_source_path": "build/assets/candidates/animation-directional/source/animation/boss_dopamine_core_attack.aseprite",
       "acceptance_status": "accepted_for_provisional_production",
       "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
       "godot_animation_resource": "game/assets/sprites/animation/boss_dopamine_core_attack.tres",
@@ -3539,14 +3713,28 @@
       "generator_version": "3",
       "generation_seed": 20261018,
       "generation_parameters": {
-        "effect": "burst",
+        "effect": "orbit",
         "category": "boss_animation",
         "source_path": "build/assets/candidates/pixel-art-complete/sprites/roster/boss_dopamine_core.png",
-        "native_source_dimensions_preserved": true
+        "native_source_dimensions_preserved": true,
+        "generator_version": "4",
+        "direction_rows": [
+          "down",
+          "left",
+          "right",
+          "up"
+        ],
+        "direction_rotation_quarter_turns": [
+          0,
+          3,
+          1,
+          2
+        ],
+        "source_candidate_batch": "build/assets/candidates/animation-directional"
       },
-      "source_sha256": "60b06ed0a99a6802415f05104ac07948ffa579d51e8831bfdb497ae823ff39da",
-      "export_sha256": "e41a7ee92f32f00ad35dba551ecee74ca979b359c0193f6196bc16c8b8c9fd1e",
-      "qa_report_path": "build/assets/candidates/boss-animation-native/qa-report.json",
+      "source_sha256": "3bf3ec3a1d9e38a55dbf18bc9539b393ffb748ed3349bbef2f2f0de667fb8dee",
+      "export_sha256": "8eaeba8ab44a985b1ddff45d3910213a84c6c12fdbf729d9e5e2a45489fff533",
+      "qa_report_path": "build/assets/candidates/animation-directional/qa-report.json",
       "generation_status": "candidate",
       "validation_status": "passed",
       "human_review_status": "pending",
@@ -3555,8 +3743,8 @@
         "boss identity/patterns and special animation timing are open"
       ],
       "requirement_source": "GDD v1.6 + Godot runtime contracts",
-      "candidate_export_path": "build/assets/candidates/boss-animation-native/sprites/animation/boss_dopamine_core_special.png",
-      "candidate_source_path": "build/assets/candidates/boss-animation-native/source/animation/boss_dopamine_core_special.aseprite",
+      "candidate_export_path": "build/assets/candidates/animation-directional/sprites/animation/boss_dopamine_core_special.png",
+      "candidate_source_path": "build/assets/candidates/animation-directional/source/animation/boss_dopamine_core_special.aseprite",
       "acceptance_status": "accepted_for_provisional_production",
       "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
       "godot_animation_resource": "game/assets/sprites/animation/boss_dopamine_core_special.tres",
@@ -3587,11 +3775,25 @@
         "effect": "dissolve",
         "category": "boss_animation",
         "source_path": "build/assets/candidates/pixel-art-complete/sprites/roster/boss_dopamine_core.png",
-        "native_source_dimensions_preserved": true
+        "native_source_dimensions_preserved": true,
+        "generator_version": "4",
+        "direction_rows": [
+          "down",
+          "left",
+          "right",
+          "up"
+        ],
+        "direction_rotation_quarter_turns": [
+          0,
+          3,
+          1,
+          2
+        ],
+        "source_candidate_batch": "build/assets/candidates/animation-directional"
       },
-      "source_sha256": "65ca51f4a9d350d16e9ebfcbaa31e43723a365bf0781a34e4a2c95309c321fd5",
-      "export_sha256": "c172a0c6b9858cec35f8a9aeefa1021372a3b3c3635e4d25881d57f0ca69f76a",
-      "qa_report_path": "build/assets/candidates/boss-animation-native/qa-report.json",
+      "source_sha256": "970575bcf5ca99c922d362da481c850ab030036f2863e0e188746d4e22615cf2",
+      "export_sha256": "7ea76b180a8b0f0749de55ed7c2182df1ce4bfe8ab42e76943c73cb70a4a55fb",
+      "qa_report_path": "build/assets/candidates/animation-directional/qa-report.json",
       "generation_status": "candidate",
       "validation_status": "passed",
       "human_review_status": "pending",
@@ -3600,8 +3802,8 @@
         "boss identity/patterns remain open; runtime uses authored provisional death timing while canonical timing remains open"
       ],
       "requirement_source": "GDD v1.6 + Godot runtime contracts",
-      "candidate_export_path": "build/assets/candidates/boss-animation-native/sprites/animation/boss_dopamine_core_death.png",
-      "candidate_source_path": "build/assets/candidates/boss-animation-native/source/animation/boss_dopamine_core_death.aseprite",
+      "candidate_export_path": "build/assets/candidates/animation-directional/sprites/animation/boss_dopamine_core_death.png",
+      "candidate_source_path": "build/assets/candidates/animation-directional/source/animation/boss_dopamine_core_death.aseprite",
       "acceptance_status": "accepted_for_provisional_production",
       "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
       "godot_animation_resource": "game/assets/sprites/animation/boss_dopamine_core_death.tres",

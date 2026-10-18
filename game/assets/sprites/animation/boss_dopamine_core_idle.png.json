@@ -3,7 +3,7 @@
   "status": "provisionally_integrated",
   "skill": "dopamine-animation",
   "generator": "game/tools/generate_dopamine_misc_animation.py",
-  "generator_version": "3",
+  "generator_version": "4",
   "seed": 20261018,
   "seed_policy": "fixed geometry and staged source; seed recorded but not consumed",
   "identity_source": "build/assets/candidates/pixel-art-complete/sprites/roster/boss_dopamine_core.png",
@@ -13,10 +13,13 @@
   ],
   "grid": [
     4,
-    1
+    4
   ],
   "directions": [
-    "forward"
+    "down",
+    "left",
+    "right",
+    "up"
   ],
   "fps_proposed": 8,
   "frame_duration_seconds_proposed": 0.125,
@@ -28,15 +31,21 @@
     "effect": "pulse",
     "category": "boss_animation",
     "source_path": "build/assets/candidates/pixel-art-complete/sprites/roster/boss_dopamine_core.png",
-    "native_source_dimensions_preserved": true
+    "native_source_dimensions_preserved": true,
+    "direction_rotation_quarter_turns": [
+      0,
+      3,
+      1,
+      2
+    ]
   },
   "source_path": "source/animation/boss_dopamine_core_idle.aseprite",
   "export_path": "sprites/animation/boss_dopamine_core_idle.png",
-  "source_sha256": "afc7132b1348b7911b36a122c8da1e22b24520be7d57692fa5c80ab9fe0c9441",
-  "export_sha256": "7c96ad6d3ab18061fd97554b23fc01f7e458b929558036e12f365b3cd1e1c7f1",
+  "source_sha256": "a7c97856e9a34972b055f048afb653cb62e28af253afcba3b278dfe97ea114b5",
+  "export_sha256": "3a318bce7b4377b1a1385177d622fd92d1c2363182ee2b13e1546b371c8c08b7",
   "acceptance_status": "accepted_for_provisional_production",
   "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
   "human_review_status": "pending",
-  "candidate_export_path": "build/assets/candidates/boss-animation-native/sprites/animation/boss_dopamine_core_idle.png",
+  "candidate_export_path": "build/assets/candidates/animation-directional/sprites/animation/boss_dopamine_core_idle.png",
   "integrated_export_path": "game/assets/sprites/animation/boss_dopamine_core_idle.png"
 }

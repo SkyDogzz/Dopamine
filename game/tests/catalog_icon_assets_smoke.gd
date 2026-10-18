@@ -471,6 +471,7 @@ func _check_player_animation_sheets() -> bool:
 	return true
 
 func _check_boss_and_elite_animation_resources() -> bool:
+	var directions := ["down", "left", "right", "up"]
 	var expected_roles := {
 		"elite_sprinter": Vector2i(24, 24),
 		"boss_pulse_warden": Vector2i(96, 96),
@@ -480,25 +481,35 @@ func _check_boss_and_elite_animation_resources() -> bool:
 		for state in ["idle", "move", "attack", "death"]:
 			var asset_id := "%s_%s" % [role, state]
 			var frames := load("res://assets/sprites/animation/%s.tres" % asset_id) as SpriteFrames
-			if frames == null or not frames.has_animation(asset_id) or frames.get_frame_count(asset_id) != 4:
-				push_error("Missing four-frame Godot animation resource: %s" % asset_id)
+			if frames == null:
+				push_error("Missing Godot animation resource: %s" % asset_id)
 				return false
-			var texture := frames.get_frame_texture(asset_id, 0)
-			var atlas := texture as AtlasTexture
-			if atlas == null or atlas.region.size != Vector2(expected_roles[role]):
-				push_error("Animation frame dimensions do not match role sprite %s" % asset_id)
-				return false
+			for direction in directions:
+				var animation_name := "%s_%s" % [asset_id, direction]
+				if not frames.has_animation(animation_name) or frames.get_frame_count(animation_name) != 4:
+					push_error("Missing four-frame directional animation: %s" % animation_name)
+					return false
+				var texture := frames.get_frame_texture(animation_name, 0)
+				var atlas := texture as AtlasTexture
+				if atlas == null or atlas.region.size != Vector2(expected_roles[role]):
+					push_error("Animation frame dimensions do not match role sprite %s" % animation_name)
+					return false
 		for special_state in (["special"] if role.begins_with("boss_") else []):
 			var asset_id := "%s_%s" % [role, special_state]
 			var frames := load("res://assets/sprites/animation/%s.tres" % asset_id) as SpriteFrames
-			if frames == null or not frames.has_animation(asset_id) or frames.get_frame_count(asset_id) != 4:
-				push_error("Missing four-frame Godot animation resource: %s" % asset_id)
+			if frames == null:
+				push_error("Missing Godot animation resource: %s" % asset_id)
 				return false
-			var texture := frames.get_frame_texture(asset_id, 0)
-			var atlas := texture as AtlasTexture
-			if atlas == null or atlas.region.size != Vector2(expected_roles[role]):
-				push_error("Animation frame dimensions do not match role sprite %s" % asset_id)
-				return false
+			for direction in directions:
+				var animation_name := "%s_%s" % [asset_id, direction]
+				if not frames.has_animation(animation_name) or frames.get_frame_count(animation_name) != 4:
+					push_error("Missing four-frame directional animation: %s" % animation_name)
+					return false
+				var texture := frames.get_frame_texture(animation_name, 0)
+				var atlas := texture as AtlasTexture
+				if atlas == null or atlas.region.size != Vector2(expected_roles[role]):
+					push_error("Animation frame dimensions do not match role sprite %s" % animation_name)
+					return false
 	return true
 
 func _check_generated_animation_resources() -> bool:

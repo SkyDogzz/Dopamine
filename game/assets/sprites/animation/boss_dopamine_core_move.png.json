@@ -3,7 +3,7 @@
   "status": "provisionally_integrated",
   "skill": "dopamine-animation",
   "generator": "game/tools/generate_dopamine_misc_animation.py",
-  "generator_version": "3",
+  "generator_version": "4",
   "seed": 20261018,
   "seed_policy": "fixed geometry and staged source; seed recorded but not consumed",
   "identity_source": "build/assets/candidates/pixel-art-complete/sprites/roster/boss_dopamine_core.png",
@@ -13,10 +13,13 @@
   ],
   "grid": [
     4,
-    1
+    4
   ],
   "directions": [
-    "forward"
+    "down",
+    "left",
+    "right",
+    "up"
   ],
   "fps_proposed": 8,
   "frame_duration_seconds_proposed": 0.125,
@@ -25,18 +28,24 @@
     48
   ],
   "parameters": {
-    "effect": "pulse",
+    "effect": "drift",
     "category": "boss_animation",
     "source_path": "build/assets/candidates/pixel-art-complete/sprites/roster/boss_dopamine_core.png",
-    "native_source_dimensions_preserved": true
+    "native_source_dimensions_preserved": true,
+    "direction_rotation_quarter_turns": [
+      0,
+      3,
+      1,
+      2
+    ]
   },
   "source_path": "source/animation/boss_dopamine_core_move.aseprite",
   "export_path": "sprites/animation/boss_dopamine_core_move.png",
-  "source_sha256": "cbcb31d33da06f64df23c21b774b035f50b2b3a4ffc958be12cbd4db78b9e08d",
-  "export_sha256": "7c96ad6d3ab18061fd97554b23fc01f7e458b929558036e12f365b3cd1e1c7f1",
+  "source_sha256": "6acd1442b9b3b5779ba6faf647a0f96bc99329eb111126cac8bcf383c3855575",
+  "export_sha256": "8c174415b8c7659c7540ddcad7213fbe3290c6ea7d01526e571394089c7cea1e",
   "acceptance_status": "accepted_for_provisional_production",
   "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
   "human_review_status": "pending",
-  "candidate_export_path": "build/assets/candidates/boss-animation-native/sprites/animation/boss_dopamine_core_move.png",
+  "candidate_export_path": "build/assets/candidates/animation-directional/sprites/animation/boss_dopamine_core_move.png",
   "integrated_export_path": "game/assets/sprites/animation/boss_dopamine_core_move.png"
 }

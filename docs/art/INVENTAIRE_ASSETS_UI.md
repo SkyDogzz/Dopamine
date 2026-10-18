@@ -4,6 +4,10 @@
 
 Les 20 événements de tir et d’impact des dix armes ont chacun quatre variantes SFX déterministes et distinctes; `SfxService` les fait tourner. Elles ont été générées par `dopamine-sfx`, passées au QA numérique et vérifiées dans Godot. La galerie locale `build/assets/candidates/review/index.html` contient actuellement 100 cartes visuelles légendées, 131 aperçus d’animation et 133 lecteurs audio. L’écoute et la revue artistique du propriétaire restent requises.
 
+Les animations d’élite et des deux boss ont été corrigées pour suivre la règle directionnelle de l’Art Bible : leurs 14 sheets ont quatre rangées bas/gauche/droite/haut et leurs 56 animations Godot correspondantes sont chargées. Les effets, armes, reliques, projectiles et ramassages non directionnels restent sur une rangée `forward`.
+
+La silhouette de l’élite sprinter a ensuite été refaite depuis une primitive de corps blindé, avec aura séparée et marque de rang; ses quatre animations ont été régénérées depuis ce modèle partagé avec des mouvements distincts par état. QA palette/source, import Godot et smokes ciblés passent. La qualité artistique est toujours en attente de revue.
+
 
 **Statut :** inventaire de travail fondé sur le contenu présent dans le dépôt, établi le 2026-10-16. L’intention de recréer tout le catalogue visuel et de refaire toutes les interfaces selon [`ART_BIBLE.txt`](../ART_BIBLE.txt) a été confirmée par l’utilisateur. Ce document recense le travail; il ne constitue pas une validation des propositions visuelles encore ouvertes.
 

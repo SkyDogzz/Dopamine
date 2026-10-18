@@ -3,7 +3,7 @@
   "status": "provisionally_integrated",
   "skill": "dopamine-animation",
   "generator": "game/tools/generate_dopamine_misc_animation.py",
-  "generator_version": "3",
+  "generator_version": "4",
   "seed": 20261018,
   "seed_policy": "fixed geometry and staged source; seed recorded but not consumed",
   "identity_source": "build/assets/candidates/pixel-art-complete/sprites/roster/boss_pulse_warden.png",
@@ -13,10 +13,13 @@
   ],
   "grid": [
     4,
-    1
+    4
   ],
   "directions": [
-    "forward"
+    "down",
+    "left",
+    "right",
+    "up"
   ],
   "fps_proposed": 8,
   "frame_duration_seconds_proposed": 0.125,
@@ -28,15 +31,21 @@
     "effect": "dissolve",
     "category": "boss_animation",
     "source_path": "build/assets/candidates/pixel-art-complete/sprites/roster/boss_pulse_warden.png",
-    "native_source_dimensions_preserved": true
+    "native_source_dimensions_preserved": true,
+    "direction_rotation_quarter_turns": [
+      0,
+      3,
+      1,
+      2
+    ]
   },
   "source_path": "source/animation/boss_pulse_warden_death.aseprite",
   "export_path": "sprites/animation/boss_pulse_warden_death.png",
-  "source_sha256": "e06327319ef95a7fa013bf1c41e07c3fa17f27c66989313d65da5b7a964eeb3e",
-  "export_sha256": "26d167de9de5487e4bef1d34f826ccc4335828f7988502154dd4d492c64c8127",
+  "source_sha256": "33ed1bebe5e77cacc8a929e42cb08e3b9ed157c6ecd395c92cf10eff445646db",
+  "export_sha256": "2583119c6f523bad5d5371d8316ca22cd0866779fffaa322cdf89521d9b79453",
   "acceptance_status": "accepted_for_provisional_production",
   "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
   "human_review_status": "pending",
-  "candidate_export_path": "build/assets/candidates/boss-animation-native/sprites/animation/boss_pulse_warden_death.png",
+  "candidate_export_path": "build/assets/candidates/animation-directional/sprites/animation/boss_pulse_warden_death.png",
   "integrated_export_path": "game/assets/sprites/animation/boss_pulse_warden_death.png"
 }

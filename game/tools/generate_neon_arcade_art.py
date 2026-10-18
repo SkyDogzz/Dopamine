@@ -569,11 +569,16 @@ def draw_ui_catalog(icon: str, palette) -> Canvas:
 def draw_elite_role(palette) -> Canvas:
     c = Canvas(24, 24)
     shadow, edge, accent, light = colors_for("elite_sprinter", palette)
-    c.line(5, 18, 15, 8, edge, 5)
-    c.line(9, 20, 20, 9, accent, 4)
-    c.line(4, 11, 9, 6, light, 2)
-    c.line(3, 17, 7, 13, light, 1)
-    c.pixel(17, 5, shadow)
+    # Generic elite prototype: readable armored body, separate aura, and a
+    # four-point yellow rank mark. No canon identity is implied.
+    c.ring(12, 13, 11, 9, accent)
+    c.line(8, 18, 6, 21, edge, 2)
+    c.line(16, 18, 18, 21, edge, 2)
+    c.disc(12, 14, 6, edge)
+    c.diamond(12, 13, 4, shadow)
+    c.rect(8, 11, 9, 3, light)
+    c.rect(10, 12, 5, 1, accent)
+    c.star(12, 3, 3, palette["yellow_3"], 1, 4)
     return c
 
 

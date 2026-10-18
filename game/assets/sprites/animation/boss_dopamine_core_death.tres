@@ -1,4 +1,4 @@
-[gd_resource type="SpriteFrames" load_steps=6 format=3]
+[gd_resource type="SpriteFrames" load_steps=18 format=3]
 
 [ext_resource type="Texture2D" path="res://assets/sprites/animation/boss_dopamine_core_death.png" id="1_texture"]
 
@@ -18,5 +18,53 @@ region = Rect2(192, 0, 96, 96)
 atlas = ExtResource("1_texture")
 region = Rect2(288, 0, 96, 96)
 
+[sub_resource type="AtlasTexture" id="AtlasFrame_4"]
+atlas = ExtResource("1_texture")
+region = Rect2(0, 96, 96, 96)
+
+[sub_resource type="AtlasTexture" id="AtlasFrame_5"]
+atlas = ExtResource("1_texture")
+region = Rect2(96, 96, 96, 96)
+
+[sub_resource type="AtlasTexture" id="AtlasFrame_6"]
+atlas = ExtResource("1_texture")
+region = Rect2(192, 96, 96, 96)
+
+[sub_resource type="AtlasTexture" id="AtlasFrame_7"]
+atlas = ExtResource("1_texture")
+region = Rect2(288, 96, 96, 96)
+
+[sub_resource type="AtlasTexture" id="AtlasFrame_8"]
+atlas = ExtResource("1_texture")
+region = Rect2(0, 192, 96, 96)
+
+[sub_resource type="AtlasTexture" id="AtlasFrame_9"]
+atlas = ExtResource("1_texture")
+region = Rect2(96, 192, 96, 96)
+
+[sub_resource type="AtlasTexture" id="AtlasFrame_10"]
+atlas = ExtResource("1_texture")
+region = Rect2(192, 192, 96, 96)
+
+[sub_resource type="AtlasTexture" id="AtlasFrame_11"]
+atlas = ExtResource("1_texture")
+region = Rect2(288, 192, 96, 96)
+
+[sub_resource type="AtlasTexture" id="AtlasFrame_12"]
+atlas = ExtResource("1_texture")
+region = Rect2(0, 288, 96, 96)
+
+[sub_resource type="AtlasTexture" id="AtlasFrame_13"]
+atlas = ExtResource("1_texture")
+region = Rect2(96, 288, 96, 96)
+
+[sub_resource type="AtlasTexture" id="AtlasFrame_14"]
+atlas = ExtResource("1_texture")
+region = Rect2(192, 288, 96, 96)
+
+[sub_resource type="AtlasTexture" id="AtlasFrame_15"]
+atlas = ExtResource("1_texture")
+region = Rect2(288, 288, 96, 96)
+
 [resource]
-animations = [{"frames": [{"duration": 1.0, "texture": SubResource("AtlasFrame_0")}, {"duration": 1.0, "texture": SubResource("AtlasFrame_1")}, {"duration": 1.0, "texture": SubResource("AtlasFrame_2")}, {"duration": 1.0, "texture": SubResource("AtlasFrame_3")}], "loop": false, "name": &"boss_dopamine_core_death", "speed": 8.0}]
+animations = [{"frames": [{"duration": 1.0, "texture": SubResource("AtlasFrame_0")}, {"duration": 1.0, "texture": SubResource("AtlasFrame_1")}, {"duration": 1.0, "texture": SubResource("AtlasFrame_2")}, {"duration": 1.0, "texture": SubResource("AtlasFrame_3")}], "loop": false, "name": &"boss_dopamine_core_death_down", "speed": 8.0}, {"frames": [{"duration": 1.0, "texture": SubResource("AtlasFrame_4")}, {"duration": 1.0, "texture": SubResource("AtlasFrame_5")}, {"duration": 1.0, "texture": SubResource("AtlasFrame_6")}, {"duration": 1.0, "texture": SubResource("AtlasFrame_7")}], "loop": false, "name": &"boss_dopamine_core_death_left", "speed": 8.0}, {"frames": [{"duration": 1.0, "texture": SubResource("AtlasFrame_8")}, {"duration": 1.0, "texture": SubResource("AtlasFrame_9")}, {"duration": 1.0, "texture": SubResource("AtlasFrame_10")}, {"duration": 1.0, "texture": SubResource("AtlasFrame_11")}], "loop": false, "name": &"boss_dopamine_core_death_right", "speed": 8.0}, {"frames": [{"duration": 1.0, "texture": SubResource("AtlasFrame_12")}, {"duration": 1.0, "texture": SubResource("AtlasFrame_13")}, {"duration": 1.0, "texture": SubResource("AtlasFrame_14")}, {"duration": 1.0, "texture": SubResource("AtlasFrame_15")}], "loop": false, "name": &"boss_dopamine_core_death_up", "speed": 8.0}]
