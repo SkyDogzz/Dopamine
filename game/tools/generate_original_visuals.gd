@@ -6,9 +6,17 @@ extends SceneTree
 const REGISTRY := "res://../docs/art/PROVENANCE_ASSETS.csv"
 const OUT_ROOT := "res://assets"
 const SOURCE_ROOT := "res://assets/source/original_procedural"
-const PALETTE := ["#080B18", "#10152B", "#1B2340", "#293354", "#3D4868", "#586381", "#7B87A2", "#A5AEC3", "#D4D9E8", "#F6F7FF", "#37314F", "#59476F", "#826999", "#AD91BB", "#D2B9D9", "#EEDCF4", "#075A80", "#087FB2", "#0EB8D4", "#37E8F5", "#7623A8", "#A52DCA", "#E13ACB", "#FF75E3", "#A85B19", "#E69825", "#FFD447", "#FFF19A", "#158C62", "#48E69B", "#C83B62", "#FF7181"]
+const PALETTE := ["#080B18", "#10152B", "#1B2340", "#075A80", "#087FB2", "#0EB8D4", "#37E8F5", "#7623A8", "#AD91BB", "#E13ACB", "#FF75E3", "#826999", "#E69825", "#FFD447", "#FFF19A", "#F6F7FF"]
 const TILE := ["#080B18", "#10152B", "#1B2340", "#293354", "#075A80", "#087FB2"]
 const UI_ICON_NAMES := ["equipment_helmet", "equipment_armor", "equipment_gloves", "equipment_boots", "equipment_amulet", "equipment_ring", "rarity_normal", "rarity_magic", "rarity_mystic", "rarity_legendary", "rarity_mythic", "resource_essence", "resource_powder", "skill_node", "achievement_medal", "run_record"]
+const CATALOG_ICON_NAMES := [
+	"weapon_lightning_conductor", "weapon_inferno_sprayer", "weapon_crimson_daggers", "weapon_minigun", "weapon_toxic_cloud",
+	"weapon_sawblades", "weapon_meteor_staff", "weapon_prism_laser", "weapon_void_orb", "weapon_frost_nova",
+	"evolution_lightning_conductor", "evolution_inferno_sprayer", "evolution_crimson_daggers", "evolution_minigun", "evolution_toxic_cloud",
+	"evolution_sawblades", "evolution_meteor_staff", "evolution_prism_laser", "evolution_void_orb", "evolution_frost_nova",
+	"relic_storm_core", "relic_infernal_heart", "relic_blood_chalice", "relic_celestial_eye", "relic_frozen_crown",
+	"relic_magnetic_coil", "relic_overdrive_engine", "relic_plague_mask", "relic_prism_crystal", "relic_singularity", "relic_magnet_heart",
+]
 
 func _initialize() -> void:
 	if "--ui-icons-only" in OS.get_cmdline_user_args():
@@ -17,6 +25,14 @@ func _initialize() -> void:
 				quit(1)
 				return
 		print("Generated original UI icons and editable Aseprite sources")
+		quit()
+		return
+	if "--catalog-icons-only" in OS.get_cmdline_user_args():
+		for name in CATALOG_ICON_NAMES:
+			if not _build("game/assets/sprites/catalog/%s.png" % name):
+				quit(1)
+				return
+		print("Generated original catalog icons and editable Aseprite sources")
 		quit()
 		return
 	var file := FileAccess.open(REGISTRY, FileAccess.READ)

@@ -9,12 +9,6 @@ const PROJECTILES := ["projectile_lightning", "projectile_inferno", "projectile_
 const SOURCELESS_PNG_EXCEPTIONS: Array[String] = []
 
 func _initialize() -> void:
-	var icon_builder := FileAccess.get_file_as_string("res://tools/build_catalog_icon_assets.gd")
-	if not FileAccess.file_exists("res://assets/source/catalog_weapons/weapon_lightning_conductor_reference.png") or \
-		not icon_builder.contains("weapon_lightning_conductor_reference.png"):
-		push_error("The Lightning Conductor icon should retain its dedicated rebuildable visual reference")
-		quit(1)
-		return
 	for weapon_id in WEAPONS:
 		if not _check_icon("weapon_" + weapon_id) or not _check_icon("evolution_" + weapon_id):
 			quit(1)
@@ -78,6 +72,9 @@ func _initialize() -> void:
 	if not _check_original_ui_icons_pipeline():
 		quit(1)
 		return
+	if not _check_original_catalog_icons_pipeline():
+		quit(1)
+		return
 	if not _check_title_skyline():
 		quit(1)
 		return
@@ -87,7 +84,7 @@ func _initialize() -> void:
 	if not _check_exported_png_sources():
 		quit(1)
 		return
-	if "--capture" in OS.get_cmdline_user_args() and not _capture_ui_icon_sheet():
+	if "--capture" in OS.get_cmdline_user_args() and (not _capture_ui_icon_sheet() or not _capture_catalog_icon_sheet()):
 		quit(1)
 		return
 	var impact_atlas := load("res://assets/sprites/weapon_impacts_pixel.png") as Texture2D
@@ -147,7 +144,8 @@ func _check_icon(asset_name: String) -> bool:
 	var is_roster := ROSTER.has(asset_name)
 	var is_vfx := IMPACTS.has(asset_name)
 	var is_projectile := PROJECTILES.has(asset_name)
-	var is_ui_icon := not is_roster and not is_vfx and not is_projectile and not asset_name.begins_with("weapon_") and not asset_name.begins_with("evolution_") and not asset_name.begins_with("relic_")
+	var is_catalog_icon := asset_name.begins_with("weapon_") or asset_name.begins_with("evolution_") or asset_name.begins_with("relic_")
+	var is_ui_icon := not is_roster and not is_vfx and not is_projectile and not is_catalog_icon
 	var png_path := "res://assets/icons/catalog/%s.png" % asset_name if is_ui_icon else "res://assets/sprites/roster/%s.png" % asset_name if is_roster else "res://assets/sprites/vfx/%s.png" % asset_name if is_vfx else "res://assets/sprites/projectiles/%s.png" % asset_name if is_projectile else "res://assets/sprites/catalog/%s.png" % asset_name
 	var source_family := "ui" if is_ui_icon else "roster" if is_roster else "vfx" if is_vfx else "projectiles" if is_projectile else "relics" if asset_name.begins_with("relic_") else "weapons"
 	var source_folder := source_family if is_roster or is_vfx or is_projectile else "catalog_" + source_family
@@ -171,8 +169,8 @@ func _check_icon(asset_name: String) -> bool:
 		for x in range(image.get_width()):
 			var pixel := image.get_pixel(x, y)
 			if pixel.a > 0.0:
-				if is_ui_icon and not _master_palette_has(pixel):
-					push_error("UI icon uses a color outside the Art Bible palette: %s" % asset_name)
+				if (is_ui_icon or is_catalog_icon) and not _master_palette_has(pixel):
+					push_error("UI/catalog icon uses a color outside the Art Bible palette: %s" % asset_name)
 					return false
 				colors[pixel.to_html(false)] = true
 	if colors.size() > 16:
@@ -367,10 +365,54 @@ func _capture_ui_icon_sheet() -> bool:
 		var icon := texture.get_image()
 		icon.resize(64, 64, Image.INTERPOLATE_NEAREST)
 		var cell := Vector2i((index % 4) * 80 + 8, floori(float(index) / 4.0) * 80 + 8)
-		sheet.blit_rect(icon, Rect2i(Vector2i.ZERO, icon.get_size()), cell)
+		sheet.blend_rect(icon, Rect2i(Vector2i.ZERO, icon.get_size()), cell)
 	if sheet.save_png("/tmp/dopamine-ui-icon-contact.png") != OK:
 		return false
 	print("UI icon contact sheet saved to /tmp/dopamine-ui-icon-contact.png; cell order: %s" % ", ".join(UI_ICONS))
+	return true
+
+func _check_original_catalog_icons_pipeline() -> bool:
+	var legacy_builder := FileAccess.get_file_as_string("res://tools/build_catalog_icon_assets.gd")
+	if legacy_builder.contains("catalog_weapons") or legacy_builder.contains("catalog_relics"):
+		push_error("Retired catalog reference sheets must not overwrite original icons")
+		return false
+	for family in ["catalog_weapons", "catalog_relics"]:
+		if DirAccess.dir_exists_absolute(ProjectSettings.globalize_path("res://assets/source/%s" % family)):
+			push_error("Legacy catalog source folder should be retired after migration: %s" % family)
+			return false
+	for icon_name in WEAPONS:
+		for asset_name in ["weapon_" + icon_name, "evolution_" + icon_name]:
+			if not FileAccess.file_exists("res://assets/source/original_procedural/%s.aseprite" % asset_name):
+				push_error("Missing original editable catalog source: %s" % asset_name)
+				return false
+	for relic_name in RELICS:
+		if not FileAccess.file_exists("res://assets/source/original_procedural/relic_%s.aseprite" % relic_name):
+			push_error("Missing original editable relic source: %s" % relic_name)
+			return false
+	return true
+
+
+func _capture_catalog_icon_sheet() -> bool:
+	var names := []
+	for name in WEAPONS:
+		names.append("weapon_" + name)
+	for name in WEAPONS:
+		names.append("evolution_" + name)
+	for name in RELICS:
+		names.append("relic_" + name)
+	var sheet := Image.create(560, 480, false, Image.FORMAT_RGBA8)
+	sheet.fill(Color("#080B18"))
+	for index in range(names.size()):
+		var icon_name: String = names[index]
+		var icon := Image.load_from_file(ProjectSettings.globalize_path("res://assets/sprites/catalog/%s.png" % icon_name))
+		if icon == null:
+			return false
+		icon.resize(48, 48, Image.INTERPOLATE_NEAREST)
+		var cell := Vector2i((index % 7) * 80 + 16, floori(float(index) / 7.0) * 80 + 16)
+		sheet.blend_rect(icon, Rect2i(Vector2i.ZERO, icon.get_size()), cell)
+	if sheet.save_png("/tmp/dopamine-catalog-icons.png") != OK:
+		return false
+	print("Catalog icon contact sheet saved to /tmp/dopamine-catalog-icons.png; cell order: %s" % ", ".join(names))
 	return true
 
 func _check_title_skyline() -> bool:

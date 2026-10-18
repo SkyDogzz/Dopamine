@@ -44,7 +44,7 @@ func _initialize() -> void:
 	if catalog.relics["magnet_heart"].has("weapon_id") or catalog.relics["magnet_heart"].has("evolution_id"):
 		_fail("Magnet Heart must remain an unpaired utility relic")
 		return
-	var magnet_icon: Texture2D = load("res://assets/sprites/relic_magnet_heart.svg")
+	var magnet_icon: Texture2D = load("res://assets/sprites/catalog/relic_magnet_heart.png")
 	if magnet_icon == null:
 		_fail("Magnet Heart should have a chest-ready icon asset")
 		return

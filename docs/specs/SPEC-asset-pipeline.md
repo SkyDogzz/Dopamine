@@ -23,6 +23,8 @@ Préparer le remplacement complet des assets graphiques et audio du jeu avec un 
 
 - **[PROPOSÉ]** Les 16 icônes UI actives (6 slots, 5 raretés, 2 ressources, skill, médaille, record) ont des PNG originaux et des sources Aseprite sous `source/original_procedural/`, dessinés par `generate_original_visuals.gd` depuis les rôles sémantiques et la palette maître. Les chemins runtime sont conservés. La planche, les sources et les doublons racine historiques ont été retirés après audit; voir `ASSET_MIGRATIONS.csv` et `ASSET_RETIREMENTS.csv`. `catalog_icon_assets_smoke.gd` contrôle provenance interne, source, palette et capture de planche. Cette tranche ne définit aucun nœud ou effet du skill tree.
 
+- **[PROPOSÉ]** Les 20 icônes d’armes/évolutions et 11 icônes de reliques du catalogue utilisent des motifs générés depuis leurs rôles sémantiques et la palette maître, avec sources Aseprite sous `source/original_procedural/`. Les chemins runtime et règles de disponibilité restent inchangés. Les anciennes planches/sources et doublons racine sans consommateur ont été retirés après audit; voir `ASSET_MIGRATIONS.csv` et `ASSET_RETIREMENTS.csv`. La capture `/tmp/dopamine-catalog-icons.png` a été inspectée; le smoke vérifie la palette et les sources.
+
 ## Commandes de vérification
 
 - `godot --headless --editor --path game --quit` — import Godot.

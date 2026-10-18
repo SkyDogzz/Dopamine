@@ -1,44 +1,5 @@
 extends SceneTree
 
-const REFERENCE := "res://assets/source/catalog_weapons/generated_reference.png"
-const SOURCE_DIR := "res://assets/source/catalog_weapons"
-const OUTPUT_DIR := "res://assets/sprites/catalog"
-const DEDICATED_ICON_REFERENCES := {
-	"weapon_lightning_conductor": "res://assets/source/catalog_weapons/weapon_lightning_conductor_reference.png",
-	"weapon_inferno_sprayer": "res://assets/source/catalog_weapons/weapon_inferno_sprayer_reference.png",
-	"weapon_crimson_daggers": "res://assets/source/catalog_weapons/weapon_crimson_daggers_reference.png",
-	"weapon_minigun": "res://assets/source/catalog_weapons/weapon_minigun_reference.png",
-	"weapon_toxic_cloud": "res://assets/source/catalog_weapons/weapon_toxic_cloud_reference.png",
-	"weapon_sawblades": "res://assets/source/catalog_weapons/weapon_sawblades_reference.png",
-	"weapon_meteor_staff": "res://assets/source/catalog_weapons/weapon_meteor_staff_reference.png",
-	"weapon_prism_laser": "res://assets/source/catalog_weapons/weapon_prism_laser_reference.png",
-	"weapon_void_orb": "res://assets/source/catalog_weapons/weapon_void_orb_reference.png",
-	"weapon_frost_nova": "res://assets/source/catalog_weapons/weapon_frost_nova_reference.png",
-	"evolution_lightning_conductor": "res://assets/source/catalog_weapons/evolution_lightning_conductor_reference.png",
-	"evolution_inferno_sprayer": "res://assets/source/catalog_weapons/evolution_inferno_sprayer_reference.png",
-	"evolution_crimson_daggers": "res://assets/source/catalog_weapons/evolution_crimson_daggers_reference.png",
-	"evolution_void_orb": "res://assets/source/catalog_weapons/evolution_void_orb_reference.png",
-	"evolution_frost_nova": "res://assets/source/catalog_weapons/evolution_frost_nova_reference.png",
-	"evolution_minigun": "res://assets/source/catalog_weapons/evolution_minigun_reference.png",
-	"evolution_toxic_cloud": "res://assets/source/catalog_weapons/evolution_toxic_cloud_reference.png",
-	"evolution_sawblades": "res://assets/source/catalog_weapons/evolution_sawblades_reference.png",
-	"evolution_meteor_staff": "res://assets/source/catalog_weapons/evolution_meteor_staff_reference.png",
-	"evolution_prism_laser": "res://assets/source/catalog_weapons/evolution_prism_laser_reference.png",
-	"relic_storm_core": "res://assets/source/catalog_relics/relic_storm_core_reference.png",
-	"relic_infernal_heart": "res://assets/source/catalog_relics/relic_infernal_heart_reference.png",
-	"relic_blood_chalice": "res://assets/source/catalog_relics/relic_blood_chalice_reference.png",
-	"relic_celestial_eye": "res://assets/source/catalog_relics/relic_celestial_eye_reference.png",
-	"relic_frozen_crown": "res://assets/source/catalog_relics/relic_frozen_crown_reference.png",
-	"relic_magnetic_coil": "res://assets/source/catalog_relics/relic_magnetic_coil_reference.png",
-	"relic_overdrive_engine": "res://assets/source/catalog_relics/relic_overdrive_engine_reference.png",
-	"relic_plague_mask": "res://assets/source/catalog_relics/relic_plague_mask_reference.png",
-	"relic_prism_crystal": "res://assets/source/catalog_relics/relic_prism_crystal_reference.png",
-	"relic_singularity": "res://assets/source/catalog_relics/relic_singularity_reference.png",
-	"relic_magnet_heart": "res://assets/source/catalog_relics/relic_magnet_heart_reference.png",
-}
-const RELIC_REFERENCE := "res://assets/source/catalog_relics/generated_reference.png"
-const RELIC_SOURCE_DIR := "res://assets/source/catalog_relics"
-const RELICS := ["storm_core", "infernal_heart", "blood_chalice", "celestial_eye", "frozen_crown", "magnet_heart", "magnetic_coil", "overdrive_engine", "plague_mask", "prism_crystal", "singularity"]
 const ROSTER_REFERENCE := "res://assets/source/roster/generated_reference.png"
 const ROSTER_NAMES := ["enemy_chaser", "enemy_sprinter", "enemy_tank", "enemy_shooter", "enemy_buffer", "enemy_exploder", "enemy_shielder", "enemy_summoner", "enemy_summoned", "elite_sprinter", "boss_mid_placeholder", "boss_final_placeholder"]
 const RETIRED_ROSTER_COUNT := 9
@@ -46,53 +7,8 @@ const VFX_REFERENCE := "res://assets/source/vfx/weapon_impacts_reference.png"
 const IMPACT_NAMES := ["impact_spark", "impact_star", "impact_slash", "impact_pop", "impact_ring", "impact_burst", "impact_shards", "impact_shock_ring", "impact_angular", "impact_evolved"]
 const GROUND_REFERENCE := "res://assets/source/environment/ground_candidate_reference.png"
 const RUINS_REFERENCE := "res://assets/source/environment/ruins_candidate_reference.png"
-const WEAPONS := [
-	"lightning_conductor", "inferno_sprayer", "crimson_daggers", "minigun", "toxic_cloud",
-	"sawblades", "meteor_staff", "prism_laser", "void_orb", "frost_nova",
-]
-const PALETTE := ["#080B18", "#10152B", "#1B2340", "#293354", "#37314F", "#59476F", "#826999", "#AD91BB", "#075A80", "#087FB2", "#0EB8D4", "#37E8F5", "#7623A8", "#E13ACB", "#FFD447", "#FFF19A"]
-const OUTPUT_SIZE := 32
 
 func _initialize() -> void:
-	var texture := load(REFERENCE) as Texture2D
-	if texture == null:
-		push_error("Missing generated weapon reference: %s" % REFERENCE)
-		quit(1)
-		return
-	var source := texture.get_image()
-	var cell_width := source.get_width() / 5
-	var cell_height := source.get_height() / 4
-	for index in range(WEAPONS.size()):
-		for evolution in [false, true]:
-			var row: int = floori(float(index) / 5.0) + (2 if evolution else 0)
-			var column := index % 5
-			var rect := Rect2i(column * cell_width, row * cell_height, cell_width, cell_height)
-			var name: String = ("evolution_" if evolution else "weapon_") + WEAPONS[index]
-			if not _export_cell(source, rect, name):
-				quit(1)
-				return
-	var relic_texture := load(RELIC_REFERENCE) as Texture2D
-	if relic_texture == null:
-		push_error("Missing generated relic reference: %s" % RELIC_REFERENCE)
-		quit(1)
-		return
-	var relic_source := relic_texture.get_image()
-	var relic_cell_width := relic_source.get_width() / 4
-	var relic_cell_height := relic_source.get_height() / 3
-	for index in range(RELICS.size()):
-		var rect := Rect2i((index % 4) * relic_cell_width, floori(float(index) / 4.0) * relic_cell_height, relic_cell_width, relic_cell_height)
-		if not _export_relic_cell(relic_source, rect, RELICS[index]):
-			quit(1)
-			return
-	for icon_name in DEDICATED_ICON_REFERENCES:
-		var reference_texture := load(DEDICATED_ICON_REFERENCES[icon_name]) as Texture2D
-		var source_dir := RELIC_SOURCE_DIR if icon_name.begins_with("relic_") else SOURCE_DIR
-		if reference_texture == null or not _export_transparent(
-			reference_texture.get_image(), icon_name, OUTPUT_SIZE, PALETTE, OUTPUT_DIR, source_dir
-		):
-			push_error("Could not export catalog icon %s from its dedicated reference" % icon_name)
-			quit(1)
-			return
 	var roster_texture := load(ROSTER_REFERENCE) as Texture2D
 	if roster_texture == null:
 		push_error("Missing generated roster reference: %s" % ROSTER_REFERENCE)
@@ -162,17 +78,8 @@ func _initialize() -> void:
 		push_error("Could not save the palette-limited ruins candidate")
 		quit(1)
 		return
-	print("Built catalog/UI/roster icons, VFX and environment assets with editable Aseprite sources")
+	print("Built legacy roster prototypes, VFX and environment candidates with editable Aseprite sources")
 	quit()
-
-func _export_cell(source: Image, rect: Rect2i, name: String) -> bool:
-	var background := source.get_pixel(0, 0)
-	return _export_crop(source, rect, background, name, OUTPUT_DIR, SOURCE_DIR)
-
-func _export_relic_cell(source: Image, rect: Rect2i, name: String) -> bool:
-	var content_rect := Rect2i(rect.position + Vector2i(8, 8), rect.size - Vector2i(16, 16))
-	var background := source.get_pixel(content_rect.position.x + 4, content_rect.position.y + 4)
-	return _export_crop(source, content_rect, background, "relic_" + name, OUTPUT_DIR, RELIC_SOURCE_DIR)
 
 func _export_crop(source: Image, rect: Rect2i, background: Color, name: String, output_dir: String, source_dir: String, output_size: int = OUTPUT_SIZE) -> bool:
 	var left := rect.end.x
@@ -207,45 +114,6 @@ func _export_crop(source: Image, rect: Rect2i, background: Color, name: String, 
 		push_error("Could not save catalog icon %s" % name)
 		return false
 	return true
-
-func _export_transparent(
-	source: Image,
-	name: String,
-	output_size: int,
-	palette: Array,
-	output_dir: String = "res://assets/sprites/rewards",
-	source_dir: String = "res://assets/source/rewards"
-) -> bool:
-	var left := source.get_width()
-	var top := source.get_height()
-	var right := -1
-	var bottom := -1
-	for y in range(source.get_height()):
-		for x in range(source.get_width()):
-			if source.get_pixel(x, y).a < 0.5:
-				continue
-			left = mini(left, x)
-			top = mini(top, y)
-			right = maxi(right, x)
-			bottom = maxi(bottom, y)
-	if right < left:
-		return false
-	var crop := source.get_region(Rect2i(left, top, right - left + 1, bottom - top + 1))
-	var scale := minf(float(output_size - 4) / crop.get_width(), float(output_size - 4) / crop.get_height())
-	var draw_size := Vector2i(maxi(1, roundi(crop.get_width() * scale)), maxi(1, roundi(crop.get_height() * scale)))
-	crop.resize(draw_size.x, draw_size.y, Image.INTERPOLATE_NEAREST)
-	var result := Image.create(output_size, output_size, false, Image.FORMAT_RGBA8)
-	result.fill(Color.TRANSPARENT)
-	var offset := (Vector2i(output_size, output_size) - draw_size) / 2
-	for y in range(draw_size.y):
-		for x in range(draw_size.x):
-			var pixel := crop.get_pixel(x, y)
-			if pixel.a >= 0.5:
-				result.set_pixel(x + offset.x, y + offset.y, _nearest_palette_color_from(pixel, palette))
-	return result.save_png("%s/%s.png" % [output_dir, name]) == OK and _save_aseprite(result, "%s/%s.aseprite" % [source_dir, name], name)
-
-func _color_distance_squared(a: Color, b: Color) -> float:
-	return pow(a.r - b.r, 2.0) + pow(a.g - b.g, 2.0) + pow(a.b - b.b, 2.0)
 
 func _nearest_palette_color(pixel: Color) -> Color:
 	return _nearest_palette_color_from(pixel, PALETTE)
