@@ -70,6 +70,8 @@ def main():
     cards=[]
     for group in sets:
         cards.append(f'<section><h2>{html.escape(group["title"])}</h2><p>{len(group["items"])} sprites · contact sheet <a href="{html.escape(group["path"])}">PNG</a></p><img src="{html.escape(group["path"])}"></section>')
+    gallery=''.join(f'<figure><a href="{html.escape(os.path.relpath(p,OUT))}"><img src="{html.escape(os.path.relpath(p,OUT))}"></a><figcaption>{html.escape(p.stem)}</figcaption></figure>' for p in files)
+    cards.append(f'<section><h2>Static candidate gallery ({len(files)})</h2><div class="gallery">{gallery}</div></section>')
     for batch in ("player-animation","enemy-animation-complete","misc-animation"):
         page=ROOT/f"build/assets/candidates/{batch}/qa-report.json"
         if page.exists():
@@ -83,7 +85,7 @@ def main():
     music=sorted((audio/"cues").glob("*.wav"))
     stems=sorted((audio/"music").glob("*.wav"))
     audio_html=''.join(f'<li>{html.escape(p.stem)} <audio controls preload="none" src="{html.escape(os.path.relpath(p,OUT))}"></audio></li>' for p in players+music+stems)
-    page='<!doctype html><meta charset="utf-8"><title>Dopamine candidate review</title><style>body{font:16px system-ui;background:#080b18;color:#eee;margin:2rem}section{background:#10152b;padding:1rem;margin:1rem 0;border:1px solid #293354}img{max-width:100%;image-rendering:pixelated}.anim{width:512px}audio{vertical-align:middle}small{color:#adc}</style><h1>Dopamine Survivor · asset candidate review</h1><p>All files are staged candidates. Technical QA passed; artistic acceptance and audio listening are pending. Nothing is installed in the runtime asset directory.</p>'+''.join(cards)+f'<section><h2>Audio inventory ({len(players+music+stems)} files)</h2><ul>'+audio_html+'</ul></section>'
+    page='<!doctype html><meta charset="utf-8"><title>Dopamine candidate review</title><style>body{font:16px system-ui;background:#080b18;color:#eee;margin:2rem}section{background:#10152b;padding:1rem;margin:1rem 0;border:1px solid #293354}img{max-width:100%;image-rendering:pixelated}.anim{width:512px}.gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:1rem}.gallery figure{margin:0;background:#080b18;padding:.75rem}.gallery img{width:100%;height:120px;object-fit:contain}.gallery figcaption{overflow-wrap:anywhere;font-size:.8rem}audio{vertical-align:middle}small{color:#adc}</style><h1>Dopamine Survivor · asset candidate review</h1><p>All files are staged candidates. Technical QA passed; artistic acceptance and audio listening are pending. Nothing is installed in the runtime asset directory.</p>'+''.join(cards)+f'<section><h2>Audio inventory ({len(players+music+stems)} files)</h2><ul>'+audio_html+'</ul></section>'
     (OUT/"index.html").write_text(page)
     (OUT/"contact-sheets.json").write_text(json.dumps(sets,indent=2)+"\n")
     print(f"Wrote {len(sets)} contact sheets, {len(q.get('animations',[])) if 'q' in locals() else 0} last-batch animation records and {len(wavs)} audio inventory entries to {OUT}")

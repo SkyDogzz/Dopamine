@@ -93,7 +93,8 @@
     "contact_sheets": 4,
     "animation_previews": 131,
     "audio_inventory": "build/assets/candidates/review/audio-inventory.json",
-    "broken_local_references": 0
+    "broken_local_references": 0,
+    "static_gallery_items": 106
   },
   "godot_integration_preflight": {
     "status": "passed",
