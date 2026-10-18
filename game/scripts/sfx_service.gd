@@ -16,6 +16,13 @@ const SOUNDS := {
 	"boss_telegraph": ["boss_telegraph"],
 	"boss_phase": ["boss_phase"],
 	"boss_defeat": ["boss_defeat"],
+	"weapon_family_fire": ["weapon_family_fire"],
+	"weapon_family_impact": ["weapon_family_impact"],
+	"damage_taken": ["damage_taken"],
+	"healing": ["healing"],
+	"explosion": ["explosion"],
+	"victory": ["victory"],
+	"defeat": ["defeat"],
 	"ui_focus": ["ui_focus"],
 	"ui_confirm": ["ui_confirm"],
 	"ui_back": ["ui_back"],
@@ -27,6 +34,7 @@ const PRIORITY := {
 	"hit_light": 2, "hit_heavy": 5, "enemy_kill": 2, "xp_pickup": 1,
 	"relic_pickup": 7, "chest_open": 5, "chest_reward": 6, "level_up": 8,
 	"boss_telegraph": 10, "boss_phase": 9, "boss_defeat": 9,
+	"weapon_family_fire": 3, "weapon_family_impact": 3,
 	"damage_taken": 5, "healing": 4, "explosion": 6, "victory": 10, "defeat": 10,
 	"ui_focus": 1, "ui_confirm": 4, "ui_back": 4, "ui_error": 5, "ui_pause": 5,
 }
@@ -38,6 +46,7 @@ const MIN_INTERVAL := {
 	"hit_light": 0.035, "hit_heavy": 0.08, "enemy_kill": 0.045, "xp_pickup": 0.055,
 	"ui_focus": 0.08,
 	"damage_taken": 0.4, "healing": 0.65, "explosion": 0.12,
+	"weapon_family_fire": 0.065, "weapon_family_impact": 0.035,
 }
 const SFX_DIR := "res://assets/audio/original_procedural/sfx/"
 const WEAPON_IDS := ["lightning_conductor", "inferno_sprayer", "crimson_daggers", "minigun", "toxic_cloud", "sawblades", "meteor_staff", "prism_laser", "void_orb", "frost_nova"]

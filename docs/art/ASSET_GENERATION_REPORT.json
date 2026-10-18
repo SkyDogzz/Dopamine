@@ -3,7 +3,7 @@
   "generated_at": "2026-10-18",
   "manifest": "docs/art/ASSET_MANIFEST.json",
   "candidate_root": "build/assets/candidates",
-  "runtime_integration": "308/308 assets integrated into game/assets at manifest destinations; acceptance basis is user-authorized prototype scope; detailed human visual and audio review remains pending",
+  "runtime_integration": "308/308 assets integrated into game/assets; seven formerly unmapped generated SFX families now exposed to runtime playback; acceptance basis is user-authorized prototype scope; detailed human visual and audio review remains pending",
   "asset_counts": {
     "dopamine-animation": {
       "count": 141,
@@ -124,13 +124,14 @@
     "godot_import": "passed (308 resource imports)",
     "integration_dry_run": "passed 308/308; zero collisions/overwrites; exports and source hashes passed",
     "runtime_assets_integrated": 308,
-    "godot_test_suite": "passed 120/120 in 80.04 s after player direction regeneration and registration of the isolated asset integration scope smoke; earlier single Toxic Ignition failure did not reproduce in six targeted reruns or later complete suites",
+    "godot_test_suite": "passed 120/120 tests after SFX event family mapping change; 0 failed in LastTest.log",
     "asset_provenance_registry": "passed; 308 current creative assets and 417 historical assets audited",
     "remaining_review": "Owner visual/art direction review and auditory review; static icon simplicity remains an internal quality concern, and no playback hardware is available in this session",
     "specific_weapon_sfx": "passed for fire and impact on all 10 weapons; registered in CTest",
     "player_animation_batch": "passed: four generated sheets, per-batch animation QA, Godot import, player/art/combat smokes 5/5",
     "legacy_hash_reuse": "passed; 982 packaged/current checked files have no exact match in initial 425-file register",
-    "asset_integration_scope_smoke": "passed; verifies exact-ID replacement opt-in, managed-asset ownership, dry-run non-mutation and mismatched-owner refusal"
+    "asset_integration_scope_smoke": "passed; verifies exact-ID replacement opt-in, managed-asset ownership, dry-run non-mutation and mismatched-owner refusal",
+    "sfx_runtime_event_mapping": "passed: all 7 previously unmapped generated SFX families are exposed by Sfx.play() and resolve dedicated WAV streams; sfx_service_assets_smoke and sfx_specific_event_smoke passed"
   },
   "godot_pck_export": {
     "status": "passed",

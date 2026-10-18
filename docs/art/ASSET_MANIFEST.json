@@ -12070,9 +12070,7 @@
       "validation_status": "passed",
       "human_review_status": "pending",
       "integration_status": "integrated",
-      "blockers": [
-        "new event is not yet mapped in runtime"
-      ],
+      "blockers": [],
       "requirement_source": "user goal audio coverage",
       "candidate_export_path": "build/assets/candidates/audio-complete/sfx/weapon_family_fire.wav",
       "acceptance_status": "accepted_for_provisional_production",
@@ -12111,9 +12109,7 @@
       "validation_status": "passed",
       "human_review_status": "pending",
       "integration_status": "integrated",
-      "blockers": [
-        "new event is not yet mapped in runtime"
-      ],
+      "blockers": [],
       "requirement_source": "user goal audio coverage",
       "candidate_export_path": "build/assets/candidates/audio-complete/sfx/weapon_family_impact.wav",
       "acceptance_status": "accepted_for_provisional_production",
@@ -12152,9 +12148,7 @@
       "validation_status": "passed",
       "human_review_status": "pending",
       "integration_status": "integrated",
-      "blockers": [
-        "new event is not yet mapped in runtime"
-      ],
+      "blockers": [],
       "requirement_source": "user goal audio coverage",
       "candidate_export_path": "build/assets/candidates/audio-complete/sfx/damage_taken.wav",
       "acceptance_status": "accepted_for_provisional_production",
@@ -12193,9 +12187,7 @@
       "validation_status": "passed",
       "human_review_status": "pending",
       "integration_status": "integrated",
-      "blockers": [
-        "new event is not yet mapped in runtime"
-      ],
+      "blockers": [],
       "requirement_source": "user goal audio coverage",
       "candidate_export_path": "build/assets/candidates/audio-complete/sfx/healing.wav",
       "acceptance_status": "accepted_for_provisional_production",
@@ -12234,9 +12226,7 @@
       "validation_status": "passed",
       "human_review_status": "pending",
       "integration_status": "integrated",
-      "blockers": [
-        "new event is not yet mapped in runtime"
-      ],
+      "blockers": [],
       "requirement_source": "user goal audio coverage",
       "candidate_export_path": "build/assets/candidates/audio-complete/sfx/explosion.wav",
       "acceptance_status": "accepted_for_provisional_production",
@@ -12275,9 +12265,7 @@
       "validation_status": "passed",
       "human_review_status": "pending",
       "integration_status": "integrated",
-      "blockers": [
-        "new event is not yet mapped in runtime"
-      ],
+      "blockers": [],
       "requirement_source": "user goal audio coverage",
       "candidate_export_path": "build/assets/candidates/audio-complete/sfx/victory.wav",
       "acceptance_status": "accepted_for_provisional_production",
@@ -12316,9 +12304,7 @@
       "validation_status": "passed",
       "human_review_status": "pending",
       "integration_status": "integrated",
-      "blockers": [
-        "new event is not yet mapped in runtime"
-      ],
+      "blockers": [],
       "requirement_source": "user goal audio coverage",
       "candidate_export_path": "build/assets/candidates/audio-complete/sfx/defeat.wav",
       "acceptance_status": "accepted_for_provisional_production",

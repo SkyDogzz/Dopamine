@@ -14,12 +14,17 @@ func _run() -> void:
 	root.add_child(service)
 	await process_frame
 	var families: Dictionary = service._streams
-	if families.size() != 19:
+	if families.size() != 26:
 		_fail("All existing SFX event families should remain mapped")
 		return
 	for player in service._players:
 		if player.bus != "SFX":
 			_fail("Every procedural effect voice should route through the SFX bus")
+			return
+	for family in ["weapon_family_fire", "weapon_family_impact", "damage_taken", "healing", "explosion", "victory", "defeat"]:
+		var streams: Array = families.get(family, [])
+		if streams.size() != 1 or not streams[0].resource_path.ends_with("/%s.wav" % family):
+			_fail("New mapped SFX family %s should resolve its dedicated WAV" % family)
 			return
 	var stream_count := 0
 	var empty_families := 0
@@ -36,8 +41,8 @@ func _run() -> void:
 		if empty_families != families.size() or service.play("boss_telegraph") or service.play("unknown_family"):
 			_fail("An empty asset root should remain silent and reject unknown SFX families")
 			return
-	elif stream_count != 38 and empty_families == 0:
-		_fail("Expected all 38 original procedural SFX, got %d" % stream_count)
+	elif stream_count != 45 and empty_families == 0:
+		_fail("Expected all 45 original procedural SFX family streams, got %d" % stream_count)
 		return
 	var telegraph_streams: Array = families["boss_telegraph"]
 	if not telegraph_streams.is_empty() and not telegraph_streams[0].resource_path.ends_with("/boss_telegraph.wav"):
