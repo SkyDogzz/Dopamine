@@ -126,7 +126,7 @@
     "runtime_assets_integrated": 308,
     "godot_test_suite": "full CTest: 121/121 passed after projectile SpriteFrames integration; final projectile selection guard verified by Godot import plus render_visual_smoke, render_batching_smoke and survival_shooter_smoke (4/4 targeted checks).",
     "asset_provenance_registry": "passed; 308 current creative assets and 417 historical assets audited after boss/elite regeneration",
-    "remaining_review": "Owner visual/art direction review and auditory review remain pending; remaining special, weapon fire/impact and pickup animation resources remain to be connected to gameplay events; projectile SpriteFrames loop playback has been connected; no playback hardware is available in this session",
+    "remaining_review": "Owner visual/art direction review and auditory review remain pending. Detailed animation timings and directions remain provisional where the GDD leaves them open. No audio playback hardware is available in this session; local review page includes playback controls.",
     "specific_weapon_sfx": "passed for fire and impact on all 10 weapons; registered in CTest",
     "player_animation_batch": "passed: four generated sheets, per-batch animation QA, Godot import, player/art/combat smokes 5/5",
     "legacy_hash_reuse": "passed; 982 packaged/current checked files have no exact match in initial 425-file register",
