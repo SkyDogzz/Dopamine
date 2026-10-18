@@ -2351,3 +2351,8 @@ Note de clôture : le blocage historique du smoke `sandbox_ui_smoke.gd` décrit 
 
 - [x] Les 356 destinations du manifeste ont été recoupées avec les références directes et les chargeurs dynamiques Godot : 196 ont une référence explicite dans les scripts/scènes/ressources; 160 passent par les tables runtime et conventions de noms. Aucune destination sans consommateur identifié.
 - [x] Les 36 sprites de rôles/projectiles correspondent aux tables `SPRITE_FILES` et à l’icône de sélection Sandbox; les 131 ressources d’animation existent et sont chargées par familles (smoke catalogue manifest-driven); les 125 IDs SFX égalent exactement les événements/variantes attendus par `SfxService`; les 8/8 musiques apparaissent dans les ressources runtime.
+
+## PCK Godot actuel après raccordement des animations joueur — 2026-10-18
+
+- [x] Export Godot 4.7.2 `Linux/X11` vers `build/assets/DopamineSurvivor.pck` terminé; taille **3 341 584 octets**, SHA-256 `6d8bbe0188eaac0ec42eb2a199fcdaada4f217b543882f601e9e453997ef9b38`.
+- [x] Démarrage headless du pack avec `--main-pack` et `--quit-after 5` terminé. Godot signale seulement ses avertissements habituels de ressources retenues à la fermeture headless.
