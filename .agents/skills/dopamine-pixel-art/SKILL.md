@@ -25,3 +25,7 @@ Work only with local scripts and data. Never call cloud image generation, paid A
 ## Open sprite-sheet conventions
 
 The Art Bible confirms player 32x32 frames, four directions, four walk and four idle frames, but leaves row order, pivots and timing open. Preserve the existing 4x4 layout for compatible player assets and report assumptions. Ask for a decision only when a new asset depends on an unresolved convention.
+
+## Local project interface
+
+For the procedural static library, run `python3 game/tools/generate_neon_arcade_art.py <families> --ids <asset_id...> --seed <integer> --out-root build/assets/candidates/pixel-art`. Families are `catalog`, `projectiles`, `vfx`, `environment`, `boss`, `ui`, and `roles`. The output root is isolated, IDs limit writes, and each selected PNG is paired with an editable Aseprite document and JSON provenance. The generator uses deterministic geometry; the recorded seed is informational and does not alter pixels. Run `python3 game/tools/validate_dopamine_pixel_candidates.py build/assets/candidates/pixel-art --report build/assets/candidates/pixel-art/qa-report.json` before integration.

@@ -17,3 +17,13 @@ Generate all music locally with Python standard library synthesis or installed l
 - Run `dopamine-asset-qa`; check duration, sample format, clipping, equal lengths, loop-boundary discontinuity and manifest hashes. Then verify import/playback in Godot and review transitions in context.
 
 Existing timing, key, gains and intensity behavior marked `[PROPOSÉ]` remain proposals until approved. Keep Sandbox audio and normal progression isolated.
+
+## Local project interface
+
+`game/tools/generate_original_audio.py` generates the current synchronized five-stem proposal using Python's standard library. Stage it with:
+
+```sh
+python3 game/tools/generate_original_audio.py --kind music --seed 90210 --out-dir build/assets/candidates/audio-sample
+```
+
+The batch writes rhythm, bass, pad, arp and boss WAVs, a preview mix, per-file JSON provenance and a manifest. Validate with `python3 game/tools/validate_dopamine_audio_candidates.py build/assets/candidates/audio-sample --report build/assets/candidates/audio-sample/qa-report.json`. Only the selected `--out-dir` is written; keep candidates staged before acceptance.

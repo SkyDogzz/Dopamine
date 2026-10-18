@@ -1,15 +1,20 @@
 #!/usr/bin/env python3
 """Create the original 640x360 Neon Arcade title skyline from the master palette."""
 
+import argparse
+import hashlib
+import json
 import random
 import struct
 import zlib
 from pathlib import Path
 
+from generate_neon_arcade_art import Canvas as RgbaCanvas, aseprite_bytes
+
 
 ROOT = Path(__file__).resolve().parents[2]
 PALETTE_PATH = ROOT / "docs" / "art" / "palette_master.gpl"
-OUTPUT = ROOT / "game" / "assets" / "backgrounds" / "title_skyline.png"
+DEFAULT_OUTPUT_ROOT = ROOT / "build/assets/candidates/title-art"
 WIDTH = 640
 HEIGHT = 360
 
@@ -72,6 +77,10 @@ def _building(pixels: bytearray, rng: random.Random, x: int, width: int, top: in
 
 
 def main() -> None:
+	parser = argparse.ArgumentParser(description=__doc__)
+	parser.add_argument("--out-root", type=Path, default=DEFAULT_OUTPUT_ROOT)
+	parser.add_argument("--seed", type=int, default=640360)
+	args = parser.parse_args()
 	palette = _load_palette()
 	pixels = bytearray([0]) * (WIDTH * HEIGHT)
 	# Discrete night-sky bands use only validated palette colors.
@@ -79,7 +88,7 @@ def main() -> None:
 	_rect(pixels, 0, 68, WIDTH, 78, 1)
 	_rect(pixels, 0, 146, WIDTH, 64, 2)
 	_rect(pixels, 0, 210, WIDTH, 150, 1)
-	rng = random.Random(640360)
+	rng = random.Random(args.seed)
 	for _ in range(55):
 		x = rng.randrange(190, WIDTH)
 		y = rng.randrange(14, 145)
@@ -106,8 +115,22 @@ def main() -> None:
 	_rect(pixels, 192, 322, WIDTH - 192, 1, 3)
 	_rect(pixels, 210, 338, 300, 1, 2)
 	_rect(pixels, 237, 348, 242, 1, 2)
-	_write_png(OUTPUT, pixels, palette)
-	print(f"Wrote original title skyline: {OUTPUT} ({WIDTH}x{HEIGHT}, indexed PNG using the master palette)")
+	output = args.out_root / "backgrounds/title_skyline.png"
+	_write_png(output, pixels, palette)
+	rgba = RgbaCanvas(WIDTH, HEIGHT)
+	for index, color_index in enumerate(pixels):
+		rgba.data[index * 4:index * 4 + 4] = bytes((*palette[color_index], 255))
+	source = args.out_root / "source/backgrounds/title_skyline.aseprite"
+	source.parent.mkdir(parents=True, exist_ok=True)
+	ase = aseprite_bytes(rgba, "title_skyline")
+	source.write_bytes(ase)
+	metadata = {"asset_id": "title_skyline", "status": "candidate_not_approved", "skill": "dopamine-pixel-art",
+		"generator": "game/tools/generate_original_title_skyline.py", "generator_version": "2", "seed": args.seed,
+		"parameters": {"width": WIDTH, "height": HEIGHT, "palette_source": "docs/art/palette_master.gpl"},
+		"source_path": str(source.relative_to(args.out_root)), "export_path": str(output.relative_to(args.out_root)),
+		"source_sha256": hashlib.sha256(ase).hexdigest(), "export_sha256": hashlib.sha256(output.read_bytes()).hexdigest()}
+	output.with_suffix(".json").write_text(json.dumps(metadata, indent=2) + "\n")
+	print(f"Wrote staged original title skyline: {output} ({WIDTH}x{HEIGHT}, indexed master palette)")
 
 
 if __name__ == "__main__":

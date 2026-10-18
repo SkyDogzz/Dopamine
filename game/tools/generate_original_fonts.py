@@ -1,14 +1,17 @@
 #!/usr/bin/env python3
 """Build two small original vector/pixel fonts from authored glyph grids with FontForge."""
 
+import argparse
+import hashlib
+import json
 from pathlib import Path
 
 import fontforge
 
 
 ROOT = Path(__file__).resolve().parents[2]
-FONT_OUT = ROOT / "game/assets/fonts"
-SOURCE_OUT = ROOT / "game/assets/source/original_procedural/fonts"
+FONT_OUT = ROOT / "build/assets/candidates/font-art/fonts"
+SOURCE_OUT = ROOT / "build/assets/candidates/font-art/source/fonts"
 UPPER = {
 	"A": ["01110", "10001", "10001", "11111", "10001", "10001", "10001"],
 	"B": ["11110", "10001", "10001", "11110", "10001", "10001", "11110"],
@@ -189,7 +192,7 @@ def add_glyph(font, char: str, body: bool) -> None:
 	glyph.left_side_bearing = 20
 
 
-def build_font(family: str, body: bool, path: Path) -> None:
+def build_font(family: str, body: bool, path: Path, font_out: Path, asset_id: str) -> None:
 	font = fontforge.font()
 	font.encoding = "UnicodeFull"
 	font.fontname = family.replace(" ", "") + "Regular"
@@ -219,16 +222,31 @@ def build_font(family: str, body: bool, path: Path) -> None:
 	font.os2_windescent_add = False
 	font.os2_use_typo_metrics = True
 	path.parent.mkdir(parents=True, exist_ok=True)
-	font.generate(str(FONT_OUT / (family.replace(" ", "") + ".ttf")))
+	font_path = font_out / (family.replace(" ", "") + ".ttf")
+	font_path.parent.mkdir(parents=True, exist_ok=True)
+	font.generate(str(font_path))
 	font.save(str(path))
 	font.close()
+	metadata = {"asset_id": asset_id, "status": "candidate_not_approved", "skill": "dopamine-pixel-art",
+		"generator": "game/tools/generate_original_fonts.py", "generator_version": "2", "seed": 0,
+		"seed_policy": "font outlines are deterministic and do not consume a random seed",
+		"parameters": {"family": family, "glyph_count": len(chars), "format": "TrueType"},
+		"source_path": str(path.relative_to(path.parents[2])), "export_path": str(font_path.relative_to(path.parents[2])),
+		"source_sha256": hashlib.sha256(path.read_bytes()).hexdigest(),
+		"export_sha256": hashlib.sha256(font_path.read_bytes()).hexdigest()}
+	font_path.with_suffix(".json").write_text(json.dumps(metadata, indent=2) + "\n")
 	print(f"Generated {family}: {len(chars)} authored glyph slots")
 
 
 def main() -> None:
-	FONT_OUT.mkdir(parents=True, exist_ok=True)
-	build_font("Neon Arcade Pixel", False, SOURCE_OUT / "NeonArcadePixel.sfd")
-	build_font("Neon Arcade UI", True, SOURCE_OUT / "NeonArcadeUI.sfd")
+	parser = argparse.ArgumentParser(description=__doc__)
+	parser.add_argument("--out-root", type=Path, default=FONT_OUT.parent)
+	args = parser.parse_args()
+	font_out = args.out_root / "fonts"
+	source_out = args.out_root / "source/fonts"
+	font_out.mkdir(parents=True, exist_ok=True)
+	build_font("Neon Arcade Pixel", False, source_out / "NeonArcadePixel.sfd", font_out, "font_neonarcadepixel")
+	build_font("Neon Arcade UI", True, source_out / "NeonArcadeUI.sfd", font_out, "font_neonarcadeui")
 
 
 if __name__ == "__main__":

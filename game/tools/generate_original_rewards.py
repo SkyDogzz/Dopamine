@@ -1,13 +1,18 @@
 #!/usr/bin/env python3
 """Draw original Survival chest and XP pickup sprites from palette primitives."""
 
+import argparse
+import hashlib
+import json
 import struct
 import zlib
 from pathlib import Path
 
+from generate_neon_arcade_art import Canvas as RgbaCanvas, aseprite_bytes
+
 ROOT = Path(__file__).resolve().parents[2]
 PALETTE_FILE = ROOT / "docs/art/palette_master.gpl"
-OUTPUT_DIR = ROOT / "game/assets/sprites/rewards"
+OUTPUT_DIR = ROOT / "build/assets/candidates/rewards"
 PALETTE_SUBSET = [
 	"080B18", "10152B", "1B2340", "293354", "59476F", "075A80", "087FB2", "0EB8D4",
 	"37E8F5", "7623A8", "E13ACB", "FFD447", "FFF19A", "D4D9E8", "F6F7FF",
@@ -104,10 +109,32 @@ def draw_xp(palette: dict[str, int]) -> Canvas:
 
 
 def main() -> None:
+	parser = argparse.ArgumentParser(description=__doc__)
+	parser.add_argument("--out-root", type=Path, default=OUTPUT_DIR)
+	parser.add_argument("--seed", type=int, default=0, help="Recorded only; the primitive drawings are deterministic")
+	args = parser.parse_args()
 	colors, lookup = palette_data()
-	OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
-	draw_chest(lookup).save(OUTPUT_DIR / "chest_closed.png", colors)
-	draw_xp(lookup).save(OUTPUT_DIR / "xp_orb.png", colors)
+	(args.out_root / "sprites/rewards").mkdir(parents=True, exist_ok=True)
+	for asset_id, sprite in (("chest_closed", draw_chest(lookup)), ("xp_orb", draw_xp(lookup))):
+		png_path = args.out_root / "sprites/rewards" / f"{asset_id}.png"
+		sprite.save(png_path, colors)
+		rgba = RgbaCanvas(sprite.size, sprite.size)
+		for index, color_index in enumerate(sprite.pixels):
+			color = colors[color_index]
+			alpha = 0 if color_index == 0 else 255
+			rgba.data[index * 4:index * 4 + 4] = bytes((*color, alpha))
+		source_path = args.out_root / "source/rewards" / f"{asset_id}.aseprite"
+		source_path.parent.mkdir(parents=True, exist_ok=True)
+		ase = aseprite_bytes(rgba, asset_id)
+		source_path.write_bytes(ase)
+		metadata = {"asset_id": asset_id, "status": "candidate_not_approved", "skill": "dopamine-pixel-art",
+			"generator": "game/tools/generate_original_rewards.py", "generator_version": "2", "seed": args.seed,
+			"seed_policy": "fixed primitive geometry; seed recorded but not consumed",
+			"dimensions": {"width": sprite.size, "height": sprite.size},
+			"source_path": str(source_path.relative_to(args.out_root)), "export_path": str(png_path.relative_to(args.out_root)),
+			"source_sha256": hashlib.sha256(ase).hexdigest(),
+			"export_sha256": hashlib.sha256(png_path.read_bytes()).hexdigest()}
+		png_path.with_suffix(".json").write_text(json.dumps(metadata, indent=2) + "\n")
 	print("Wrote original indexed chest and XP orb sprites from the Art Bible palette")
 
 

@@ -34,25 +34,26 @@ La purge complète a été exécutée et vérifiée dans le commit `fd1e4e6`; `g
 
 ## Audit et backlog courant
 
-**[EN COURS] Audit du 2026-10-18 :** `docs/art/ASSET_MANIFEST.json` contient 308 IDs uniques issus du GDD, de l’Art Bible et des ressources runtime; 141 entrées couvrent animations et VFX. Tous les 63 chemins littéraux trouvés dans les scripts, scènes, thèmes et données figurent au manifeste. `game/tools/build_asset_manifest.py` reconstruit le backlog et `game/tools/validate_asset_manifest.py` vérifie les IDs, champs, statuts et skills affectés. Les sorties n’ont pas encore été générées ni validées. Les dimensions/timings laissés ouverts sont `null` et portent un blocage explicite.
+**[ÉTAT AU 2026-10-18 — candidats générés, revue requise]** `docs/art/ASSET_MANIFEST.json` contient 308 IDs uniques issus du GDD, de l’Art Bible et des ressources runtime; 141 entrées couvrent animations et VFX. Tous les 63 chemins littéraux trouvés dans les scripts, scènes, thèmes et données figurent au manifeste. `game/tools/build_asset_manifest.py` reconstruit le backlog et `game/tools/validate_asset_manifest.py` vérifie les IDs, champs, statuts et skills affectés. Les 308 entrées ont été générées en staging et leurs contrôles techniques passent : 92 visuels, 141 animations, 65 SFX et 10 fichiers musique/stems. Le rapport détaillé est `docs/art/ASSET_GENERATION_REPORT.json`. Aucun candidat n’a été copié dans `game/assets`: intégration différée jusqu’à revue artistique/écoute, et le runtime garde sa sémantique « chemin absent = asset non recréé ».
 
-Les cinq skills ont été lus intégralement. Ils spécifient leur méthode mais n’exposent pas encore de CLI stable pour staging, génération par ID, seeds en ligne de commande, import ou rapport QA. Les générateurs locaux existants écrivent en partie directement dans les chemins runtime et n’écrivent pas les métadonnées requises; ils doivent être adaptés avant de servir d’interfaces de production. LibreSprite 1.3 fonctionne via `APPIMAGE_EXTRACT_AND_RUN=1`; Python 3.13, FFmpeg 7.1.5, FFplay, Audacity (`/usr/bin/audacity`) et Godot 4.7.2 sont disponibles. Aucun GPU NVIDIA n’est détecté; le travail visuel/audio doit fonctionner sur CPU. Le conteneur n’a pas de `DISPLAY`; la lecture audio réelle n’a pas encore été vérifiée. Les tests numériques ne remplacent pas l’écoute.
+Les cinq skills ont été lus intégralement. Les interfaces locales SFX, musique, art statique et QA disposent désormais d’une sortie staging, d’une sélection ciblée et/ou de rapports par asset. LibreSprite 1.3 ouvre le document Aseprite produit; Python 3.13, FFmpeg 7.1.5, FFplay, Audacity (`/usr/bin/audacity`) et Godot 4.7.2 sont disponibles. Aucun GPU NVIDIA n’est détecté; le travail visuel/audio fonctionne sur CPU. Le conteneur n’a pas de `DISPLAY`; la lecture audio réelle n’a pas encore été vérifiée. Les tests numériques ne remplacent pas l’écoute.
 
-**[OUVERT — préproduction visuelle]** La tenue exacte du héros, l’ordre des directions et les timings joueur, les animations d’attaque/mort, l’identité du premier biome, les détails canoniques des boss et le mapping couleur-élément sont laissés ouverts par les références. Le brief du premier lot est demandé au propriétaire avant toute production de masse. Voir les questions de production dans le journal du goal.
+**[OUVERT — préproduction visuelle]** La tenue exacte du héros, l’ordre des directions et les timings joueur, les animations d’attaque/mort, l’identité du premier biome, les détails canoniques des boss et le mapping couleur-élément sont laissés ouverts par les références. Le propriétaire a autorisé des choix provisoires: joueur armure bleu nuit/cyan, accents magenta/jaune, lignes bas/gauche/droite/haut, idle 3 fps, marche 8 fps; les animations joueur d’attaque/mort demeurent des propositions. Monde nuit violet/bleu, boss par rôle et couleurs d’éléments sont non canoniques. Pour les animations non-joueur, ordre bas/gauche/droite/haut, pivot centre, idle 4 fps, déplacement 8 fps, attaque/special/mort 10 fps et VFX 12 fps sont documentés comme conventions provisoires.
 
 ## État des décisions
 
 - **[VALIDÉ]** Art Bible : pixel art strict, palette maître de 32 couleurs, maximum 16 couleurs par sprite 32x32, joueur 32x32, tiles 16x16, glow uniquement dans les VFX, priorité à la lisibilité.
 - **[VALIDÉ]** GDD : feedback audio avec SFX et musique EDM/synthwave adaptative.
 - **[PROPOSÉ]** Métadonnées JSON par asset, staging candidats, et statuts candidate/accepted/retired.
-- **[OUVERT]** Ordre universel des directions, pivots, timing hors animations joueur, méthode de revue artistique/audio et seuils d’acceptation perceptuelle.
+- **[PROPOSÉ]** Ordre bas/gauche/droite/haut et pivot central pour les prototypes non-joueur; idle 4 fps, déplacement 8 fps, attaque/spécial/mort 10 fps, VFX 12 fps. Ces choix ne sont pas canoniques.
+- **[OUVERT]** Revue artistique/audio et seuils d’acceptation perceptuelle; audio non écouté en contexte dans l’environnement sans DISPLAY.
 - **[OUVERT]** Les choix audio précis (gains, composition, format final) ne deviennent pas validés par l’existence des anciens candidats.
 
 ## Plan d’installation
 
-1. Conserver les cinq skills versionnés dans `.agents/skills/`; ne pas installer de dépendances globales.
-2. Utiliser les générateurs existants, puis compléter leurs interfaces de sélection d’IDs, seed explicite et sortie staging.
-3. Ajouter un orchestrateur minimal `game/tools/asset_pipeline.py` pour générer, valider, accepter/importer et régénérer par ID, avec garde contre les modifications hors cible.
-4. Étendre les validateurs pour lire la palette/règles et vérifier la provenance, les feuilles, le WAV et les boucles.
-5. Migrer les références Godot, puis exécuter l’import headless et les vérifications ciblées correspondantes.
+1. Conserver les cinq skills versionnés dans `.agents/skills/`; dépendances détectées: Python standard, Godot 4.7.2, FontForge, FFmpeg/FFplay, LibreSprite 1.3 et Audacity; pas de dépendance globale Python à installer.
+2. Génération ciblée staging: `generate_neon_arcade_art.py`, `generate_original_audio.py`, `generate_original_player_sheets.py`, `generate_dopamine_enemy_animation.py`, `generate_dopamine_misc_animation.py`, `generate_original_roster.py`, `generate_original_rewards.py`, `generate_original_title_skyline.py`, `generate_original_fonts.py`. Les primitives déterministes enregistrent la seed sans la consommer.
+3. Les entrées sont ID-scopées lorsque le générateur le supporte; orchestrateur d’acceptation/import atomique par IDs reste à créer avant copie runtime.
+4. Contrôles installés: `validate_dopamine_pixel_candidates.py`, `validate_dopamine_animation_candidates.py`, `validate_dopamine_audio_candidates.py`; utiliser après chaque lot.
+5. L’import Godot jetable des 376 exports a réussi; l’intégration runtime/références reste à faire après acceptation artistique.
 6. Exécuter la purge demandée seulement après que le projet fonctionne avec les sorties de remplacement et que le diff de purge a été examiné.

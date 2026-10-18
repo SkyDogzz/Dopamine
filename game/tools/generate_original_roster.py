@@ -5,6 +5,9 @@ from __future__ import annotations
 
 import struct
 import zlib
+import hashlib
+import json
+import argparse
 from pathlib import Path
 
 
@@ -147,14 +150,33 @@ def draw(role: str) -> Sprite:
 
 
 def main() -> None:
+	parser = argparse.ArgumentParser(description=__doc__)
+	parser.add_argument("--out-root", type=Path, default=ROOT / "build/assets/candidates/roster")
+	parser.add_argument("--seed", type=int, default=0)
+	args = parser.parse_args()
+	output = args.out_root / "sprites/roster"
+	source_dir = args.out_root / "source/roster"
+	output.mkdir(parents=True, exist_ok=True)
+	source_dir.mkdir(parents=True, exist_ok=True)
 	palette, lookup = read_palette()
-	ROSTER_DIR.mkdir(parents=True, exist_ok=True)
 	for role in ROLES:
 		sprite = draw(role)
-		path = ROSTER_DIR / f"enemy_{role}.png"
+		path = output / f"enemy_{role}.png"
 		sprite.to_png(path, palette, lookup)
-		# LibreSprite is used separately to make an editable Aseprite source from this indexed PNG.
-	print(f"Wrote {len(ROLES)} original 24x24 roster sprites from {PALETTE_PATH}")
+		from generate_neon_arcade_art import Canvas, aseprite_bytes
+		canvas = Canvas(32, 32)
+		for y in range(32):
+			for x in range(32):
+				color = sprite.pixels[y][x]
+				if color:
+					rgb = tuple(int(color[i:i+2],16) for i in (0,2,4))
+					canvas.pixel(x,y,rgb+(255,))
+		source = source_dir / f"enemy_{role}.aseprite"
+		ase = aseprite_bytes(canvas, f"enemy_{role}")
+		source.write_bytes(ase)
+		meta = {"asset_id":f"enemy_{role}_sprite","status":"candidate_not_approved","skill":"dopamine-pixel-art","generator":"game/tools/generate_original_roster.py","generator_version":"2","seed":args.seed,"seed_policy":"role primitives are deterministic; seed recorded but not consumed","dimensions":{"width":24,"height":24},"source_path":str(source.relative_to(args.out_root)),"export_path":str(path.relative_to(args.out_root)),"source_sha256":hashlib.sha256(ase).hexdigest(),"export_sha256":hashlib.sha256(path.read_bytes()).hexdigest()}
+		path.with_suffix(".json").write_text(json.dumps(meta,indent=2)+"\n")
+	print(f"Wrote {len(ROLES)} staged original 24x24 roster sprites from {PALETTE_PATH}")
 
 
 if __name__ == "__main__":

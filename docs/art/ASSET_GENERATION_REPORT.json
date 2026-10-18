@@ -1,0 +1,91 @@
+{
+  "status": "candidate_library_built",
+  "generated_at": "2026-10-18",
+  "manifest": "docs/art/ASSET_MANIFEST.json",
+  "candidate_root": "build/assets/candidates",
+  "runtime_integration": "deferred pending human/artistic acceptance; runtime game/assets intentionally remains empty except notices",
+  "asset_counts": {
+    "dopamine-animation": {
+      "count": 141,
+      "qa_passed": 141,
+      "human_review_pending": 141
+    },
+    "dopamine-pixel-art": {
+      "count": 92,
+      "qa_passed": 92,
+      "human_review_pending": 92
+    },
+    "dopamine-sfx": {
+      "count": 65,
+      "qa_passed": 65,
+      "human_review_pending": 65
+    },
+    "dopamine-music": {
+      "count": 10,
+      "qa_passed": 10,
+      "human_review_pending": 10
+    }
+  },
+  "total_assets": 308,
+  "all_manifest_candidates_technical_qa_pass": true,
+  "godot_import_check": {
+    "status": "passed",
+    "godot": "4.7.2",
+    "checked_exports": 376,
+    "project_copy": "build/assets/candidates/godot-final-import-check/project",
+    "log": "build/assets/candidates/godot-final-import-check/import.log"
+  },
+  "artistic_review": "pending; no display/audio playback available in this environment",
+  "game_assets_files": [
+    {
+      "path": "game/assets/README.md",
+      "sha256": "1859d304bf9314a1c1cf7b09c1d30aad5e4b2aa38bf4c983775eb36a48cf9d47"
+    },
+    {
+      "path": "game/assets/sprites/roster/enemy_shooter.png",
+      "sha256": "386dcf6eb46830aa31721513fc0b1005782e533ebb1d31888a07ddacf9421293"
+    },
+    {
+      "path": "game/assets/sprites/roster/enemy_tank.png",
+      "sha256": "f621451ffeddf5d2780d2f1d9a218d2fa4ce056d58d280dc980f07e02135d6d1"
+    },
+    {
+      "path": "game/assets/sprites/roster/enemy_summoner.png",
+      "sha256": "0858c780147b9cfc15310de1fc43f39425997edae176d601c9e638f42904e8c7"
+    },
+    {
+      "path": "game/assets/sprites/roster/enemy_chaser.png",
+      "sha256": "e68e9b87745af7827375bac3fb6c20edc729c6a52999d9427ec487a8ee97410a"
+    },
+    {
+      "path": "game/assets/sprites/roster/enemy_buffer.png",
+      "sha256": "ab9b36be2f74e80884644651c12109654edf29f0c2cdfc04b1a09c849a7bebfd"
+    },
+    {
+      "path": "game/assets/sprites/roster/enemy_exploder.png",
+      "sha256": "f683b079c80b12524eb6c1c51f1d240f7e672447b7b7de5beec2dd4c311b83ee"
+    },
+    {
+      "path": "game/assets/sprites/roster/enemy_sprinter.png",
+      "sha256": "46926f320e6cdbad9f551c3dcd81f0c5bb41f5112fd8763ed0550907f68f2acc"
+    },
+    {
+      "path": "game/assets/sprites/roster/enemy_shielder.png",
+      "sha256": "2e263789a4ddce7999882ff1c33cd57b65e997752b88012a5b388f6d53394e64"
+    },
+    {
+      "path": "game/assets/sprites/roster/enemy_summoned.png",
+      "sha256": "4d6a57919d6d895762cb6f0d306baa6b8e3930cb4f57d7851ef88b0b3a334cd9"
+    },
+    {
+      "path": "game/assets/source/original_procedural/README.md",
+      "sha256": "bb61878d6268e3d64f49bf0049748235fe1c0d45a611a806227c587274020cd7"
+    }
+  ],
+  "limitations": [
+    "Candidates were generated locally by deterministic primitive/oscillator recipes; a passing technical validator does not establish production artistic quality.",
+    "Many non-player animation frames are procedural identity-preserving role prototypes, not bespoke animation art.",
+    "Per-weapon SFX IDs are generated, but runtime event mapping needs gameplay integration.",
+    "Music tempo/key/arrangements and final gain balance remain proposed."
+  ]
+}

@@ -4,6 +4,8 @@
 from __future__ import annotations
 
 import hashlib
+import argparse
+import json
 import math
 import pathlib
 import re
@@ -14,6 +16,8 @@ import zlib
 ROOT = pathlib.Path(__file__).resolve().parents[2]
 PALETTE_FILE = ROOT / "docs/art/palette_master.gpl"
 ASSETS = ROOT / "game/assets"
+SELECTED_IDS: set[str] = set()
+GENERATION_SEED = 0
 
 WEAPONS = [
     "weapon_lightning_conductor", "weapon_inferno_sprayer", "weapon_crimson_daggers",
@@ -53,7 +57,12 @@ IMPACTS = [
     "impact_spark", "impact_star", "impact_slash", "impact_pop", "impact_ring",
     "impact_burst", "impact_shards", "impact_shock_ring", "impact_angular", "impact_evolved",
 ]
-FAMILIES = {"catalog", "projectiles", "vfx", "environment", "boss", "ui", "roles"}
+UI_CATALOG = [
+    "equipment_helmet", "equipment_armor", "equipment_gloves", "equipment_boots", "equipment_amulet",
+    "equipment_ring", "rarity_normal", "rarity_magic", "rarity_mystic", "rarity_legendary", "rarity_mythic",
+    "resource_essence", "resource_powder", "skill_node", "achievement_medal", "run_record",
+]
+FAMILIES = {"catalog", "projectiles", "vfx", "environment", "boss", "ui", "ui_catalog", "roles"}
 
 
 def load_palette() -> dict[str, tuple[int, int, int, int]]:
@@ -159,8 +168,31 @@ def aseprite_bytes(image: Canvas, name: str) -> bytes:
 def save(name: str, output: pathlib.Path, source: pathlib.Path, image: Canvas):
     output.parent.mkdir(parents=True, exist_ok=True)
     source.parent.mkdir(parents=True, exist_ok=True)
-    output.write_bytes(png_bytes(image))
-    source.write_bytes(aseprite_bytes(image, name))
+    png = png_bytes(image)
+    ase = aseprite_bytes(image, name)
+    output.write_bytes(png)
+    source.write_bytes(ase)
+    colors = sorted({tuple(image.data[i:i + 4]) for i in range(0, len(image.data), 4)})
+    asset_id = name
+    if name == "weapon_impacts_pixel":
+        asset_id = "weapon_impacts_atlas"
+    elif name == "elite_sprinter" or name.startswith("boss_"):
+        asset_id = f"{name}_sprite"
+    elif name in WEAPONS or name in RELICS:
+        asset_id = f"{name}_icon"
+    elif name in EVOLUTION_ROLES:
+        asset_id = f"weapon_{EVOLUTION_ROLES[name]}_icon"
+    metadata = {
+        "asset_id": asset_id, "status": "candidate_not_approved", "skill": "dopamine-pixel-art",
+        "generator": "game/tools/generate_neon_arcade_art.py", "generator_version": "2",
+        "seed": GENERATION_SEED, "seed_policy": "fixed procedural geometry; seed is recorded but not consumed",
+        "brief": "Procedural pixel art using only docs/art/palette_master.gpl",
+        "dimensions": {"width": image.width, "height": image.height},
+        "palette_rgba": [list(color) for color in colors],
+        "source_path": str(source.relative_to(ASSETS)), "export_path": str(output.relative_to(ASSETS)),
+        "source_sha256": hashlib.sha256(ase).hexdigest(), "export_sha256": hashlib.sha256(png).hexdigest(),
+    }
+    output.with_suffix(".json").write_text(json.dumps(metadata, indent=2) + "\n")
 
 
 def colors_for(name: str, palette):
@@ -341,6 +373,59 @@ def draw_signal_prism(palette) -> Canvas:
     return c
 
 
+def draw_ui_catalog(icon: str, palette) -> Canvas:
+    c = Canvas(32, 32)
+    shadow, edge, accent, light = colors_for(icon, palette)
+    if icon.startswith("rarity_"):
+        accent = {
+            "rarity_normal": palette["neutral_2"], "rarity_magic": palette["cyan_3"],
+            "rarity_mystic": palette["magenta_3"], "rarity_legendary": palette["yellow_3"],
+            "rarity_mythic": palette["accent_3"],
+        }[icon]
+        c.star(16, 16, 13, edge, 5, 5)
+        c.star(16, 16, 9, accent, 3, 5)
+        c.disc(16, 16, 3, light)
+    elif icon == "equipment_helmet":
+        c.rect(6, 9, 20, 13, edge); c.rect(8, 7, 16, 13, shadow)
+        c.rect(10, 10, 12, 5, accent); c.rect(9, 16, 14, 2, light)
+        c.rect(5, 21, 22, 3, edge)
+    elif icon == "equipment_armor":
+        c.diamond(16, 16, 13, edge); c.diamond(16, 16, 10, shadow)
+        c.rect(9, 8, 14, 15, accent); c.rect(13, 12, 6, 8, light)
+        c.rect(6, 10, 5, 7, edge); c.rect(21, 10, 5, 7, edge)
+    elif icon == "equipment_gloves":
+        for x, y, width, height in ((9, 7, 4, 12), (14, 5, 4, 14), (19, 7, 4, 12), (8, 17, 16, 9)):
+            c.rect(x, y, width, height, edge)
+        c.rect(10, 18, 12, 6, accent); c.rect(12, 20, 8, 2, light)
+    elif icon == "equipment_boots":
+        c.rect(8, 6, 8, 15, edge); c.rect(17, 9, 8, 12, edge)
+        c.rect(7, 19, 11, 6, accent); c.rect(16, 18, 11, 7, accent)
+        c.rect(6, 25, 13, 2, light); c.rect(15, 25, 13, 2, light)
+    elif icon == "equipment_amulet":
+        c.line(8, 6, 16, 18, edge, 2); c.line(24, 6, 16, 18, edge, 2)
+        c.diamond(16, 20, 9, edge); c.diamond(16, 20, 6, accent); c.diamond(16, 20, 3, light)
+    elif icon == "equipment_ring":
+        c.ring(16, 19, 11, 6, edge); c.ring(16, 19, 8, 5, accent)
+        c.diamond(16, 7, 6, edge); c.diamond(16, 7, 3, light)
+    elif icon == "resource_essence":
+        c.disc(16, 16, 13, edge); c.disc(16, 16, 9, accent); c.star(16, 16, 6, light, 2, 4)
+    elif icon == "resource_powder":
+        for x, y, radius in ((8, 19, 4), (13, 14, 6), (20, 18, 5), (24, 22, 3)):
+            c.disc(x, y, radius, edge); c.disc(x, y, max(1, radius - 2), accent)
+        c.pixel(15, 9, light); c.pixel(19, 11, light)
+    elif icon == "skill_node":
+        c.ring(16, 16, 14, 10, edge); c.ring(16, 16, 9, 6, accent); c.disc(16, 16, 4, light)
+        c.line(16, 2, 16, 6, light); c.line(16, 26, 16, 30, light)
+    elif icon == "achievement_medal":
+        c.star(16, 12, 11, edge, 5, 5); c.star(16, 12, 7, accent, 3, 5)
+        c.rect(10, 20, 5, 9, edge); c.rect(17, 20, 5, 9, edge); c.rect(11, 21, 3, 6, light)
+    else:  # run record
+        c.rect(7, 4, 18, 24, edge); c.rect(9, 6, 14, 20, shadow)
+        c.rect(11, 10, 10, 2, accent); c.rect(11, 15, 8, 2, light); c.rect(11, 20, 10, 2, accent)
+        c.pixel(22, 26, light)
+    return c
+
+
 def draw_elite_role(palette) -> Canvas:
     c = Canvas(24, 24)
     shadow, edge, accent, light = colors_for("elite_sprinter", palette)
@@ -398,6 +483,8 @@ def draw_ruins(palette) -> Canvas:
 
 
 def output_pair(name: str, png: pathlib.Path, source: pathlib.Path, image: Canvas):
+    if SELECTED_IDS and name not in SELECTED_IDS:
+        return
     save(name, png, source, image)
 
 
@@ -430,6 +517,11 @@ def generate(families: set[str], palette):
         output_pair("boss_dopamine_core", ASSETS / "sprites/roster/boss_dopamine_core.png", source_dir / "boss_dopamine_core.aseprite", draw_boss_core(palette))
     if "ui" in families:
         output_pair("signal_prism", ASSETS / "icons/ui/signal_prism.png", source_dir / "signal_prism.aseprite", draw_signal_prism(palette))
+    if "ui_catalog" in families:
+        for icon in UI_CATALOG:
+            name = f"ui_{icon}"
+            output_pair(name, ASSETS / "icons/catalog" / f"{icon}.png",
+                        ASSETS / "source/ui" / f"{icon}.aseprite", draw_ui_catalog(icon, palette))
     if "roles" in families:
         for name in ("elite_sprinter", "boss_pulse_warden"):
             image = draw_elite_role(palette) if name == "elite_sprinter" else draw_generic_boss_role(name, palette)
@@ -437,14 +529,31 @@ def generate(families: set[str], palette):
 
 
 def main():
-    requested = set(sys.argv[1:])
+    global ASSETS, SELECTED_IDS, GENERATION_SEED
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("families", nargs="*", choices=sorted(FAMILIES))
+    parser.add_argument("--out-root", type=pathlib.Path, default=ASSETS,
+        help="Output root; use build/assets/candidates/pixel-art for staged candidates")
+    parser.add_argument("--ids", nargs="+", help="Write only these output asset IDs")
+    parser.add_argument("--seed", type=int, default=0, help="Record generation seed (geometry is deterministic)")
+    args = parser.parse_args()
+    ASSETS = args.out_root.resolve()
+    SELECTED_IDS = set(args.ids or [])
+    GENERATION_SEED = args.seed
+    requested = set(args.families)
     if not requested:
         requested = set(FAMILIES)
-    if requested - FAMILIES:
-        raise SystemExit(f"Unknown family: {', '.join(sorted(requested - FAMILIES))}")
+    known_ids = set(WEAPONS + EVOLUTIONS + RELICS + PROJECTILES + IMPACTS + [
+        "weapon_impacts_pixel", "survival_ground_tile", "survival_ruins_pixel", "boss_dopamine_core",
+        "signal_prism", "elite_sprinter", "boss_pulse_warden",
+    ])
+    known_ids.update(f"ui_{icon}" for icon in UI_CATALOG)
+    unknown = SELECTED_IDS - known_ids
+    if unknown:
+        parser.error(f"unknown asset IDs: {sorted(unknown)}")
     palette = load_palette()
     generate(requested, palette)
-    print(f"Generated {', '.join(sorted(requested))} from 32 Art Bible colors; no existing image was loaded")
+    print(f"Generated candidates under {ASSETS} for {', '.join(sorted(requested))} from 32 Art Bible colors; no existing image was loaded")
 
 
 if __name__ == "__main__":
