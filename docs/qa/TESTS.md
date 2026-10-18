@@ -14,6 +14,12 @@
 - [x] `XDG_DATA_HOME=/tmp/dopamine-initiative-final-full DOPAMINE_TEST_TIMEOUT=480s PATH="$PWD/build/cmake-3.31.12-linux-x86_64/bin:$PATH" ctest --test-dir build --output-on-failure -j1` : **118/118 réussis en 79,30 s**, après le correctif d’opacité partagé. Couvre import Godot, rendus Xvfb, audit palette/assets, Survival, UI/arbre/équipement, audio numérique, parcours clavier/manette et scénarios Sandbox.
 - [i] Les tests de contrôles physiques et d’écoute humaine ne sont pas simulés par cette suite; ils restent **[OUVERTS]**.
 
+## Preuves UI après correction d’opacité — 2026-10-18
+
+- [x] Sous Xvfb/Mesa llvmpipe, les états UI (11 captures) et les smokes de skill tree, équipement, menu, hub, combat, catalogue, loadout, HUD, revive et détail de statistiques ont régénéré les preuves après le passage des fonds `PanelContainer`/`CompactPanel` à l’opacité complète, requise par l’Art Bible.
+- [x] Les vues intégrées hub, coffre en run, arbre et équipement ont été inspectées; les overlays ne laissent plus transparaître le contenu sous-jacent. Les 35 PNG d’évidence ont un SHA-256 correspondant dans `docs/art/evidence/2026-10-18/README.md`.
+- [i] Quelques scripts de capture GUI impriment des diagnostics de ressources/RID conservés lors de la fermeture de leur processus, malgré leur code de sortie 0 et les assertions passées. Le parcours du paquet Release ne contient pas de `ERROR:`; le contrôle des ressources des harnais GUI reste à part et n’est pas assimilé à une validation GPU physique.
+
 ## Bornes du skill tree aux viewports ciblés — 2026-10-18
 
 - [x] `skill_tree_panel_visual_smoke.gd` vérifie maintenant que le cadre du graphe reste dans les viewports logiques/rendus 640×360, 1280×720 et 1920×1080; `godot_project_import` et le smoke ciblé passent (**2/2**).
