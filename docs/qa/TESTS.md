@@ -2346,3 +2346,8 @@ Note de clôture : le blocage historique du smoke `sandbox_ui_smoke.gd` décrit 
 
 - [x] Le smoke `survival_run_result_smoke.gd` vérifie que `player_death.png` reste visible tandis que l’overlay opaque est caché, puis que l’écran apparaît après la dernière frame. Le contrôleur expose l’état effectif de fin d’animation; `_finish_run` attend cet état uniquement pour une mort en jeu/refus de réanimation. Victoire et abandon Endless n’attendent pas l’animation.
 - [x] Les smokes défaite, réanimation, récompense Survival, records Armorless et abandon Endless passent 5/5; la suite CTest après correction passe **121/121** en 24,71 s.
+
+## Audit des consommateurs runtime — 2026-10-18
+
+- [x] Les 356 destinations du manifeste ont été recoupées avec les références directes et les chargeurs dynamiques Godot : 196 ont une référence explicite dans les scripts/scènes/ressources; 160 passent par les tables runtime et conventions de noms. Aucune destination sans consommateur identifié.
+- [x] Les 36 sprites de rôles/projectiles correspondent aux tables `SPRITE_FILES` et à l’icône de sélection Sandbox; les 131 ressources d’animation existent et sont chargées par familles (smoke catalogue manifest-driven); les 125 IDs SFX égalent exactement les événements/variantes attendus par `SfxService`; les 8/8 musiques apparaissent dans les ressources runtime.

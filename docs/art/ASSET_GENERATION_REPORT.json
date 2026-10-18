@@ -5805,7 +5805,8 @@
     "audio_manifest_coverage": "passed: 125 SFX assets map to all 65 base SfxService cues plus 60 per-weapon variations; all 133 integrated audio sidecars match manifest IDs, skills, generator versions and hashes; every integrated music file has a runtime consumer.",
     "elite_role_visual": "passed: elite_sprinter_sprite regenerated as a generic armored role with a separate aura ring and rank symbol; palette, 24x24 dimensions, editable source/hash QA and four identity-locked directional animation sheets passed. Artistic review remains pending.",
     "player_death_runtime": "passed: the player death sheet advances while movement is disabled; the opaque run-result overlay waits for the actual final animation frame only on final defeat/revive decline. Abandonment and victory remain immediate. Regression smoke covers ordering; CTest 121/121.",
-    "asset_manifest": "passed on current state: 356 unique asset IDs, provenance registry 356 current/417 initial, no exact SHA-256 reuse in the 425-file initial register."
+    "asset_manifest": "passed on current state: 356 unique asset IDs, provenance registry 356 current/417 initial, no exact SHA-256 reuse in the 425-file initial register.",
+    "runtime_consumer_coverage": "passed: all 356 manifest destinations have a runtime consumer; 196 direct script/scene/resource references and 160 documented dynamic loads. All 36 role/projectile sprite files are in renderer/Sandbox maps, all 131 animation resources pass manifest-driven Godot loading and family checks, 125 SFX IDs exactly match SfxService expected cues/variants, and 8/8 music paths are referenced at runtime."
   },
   "godot_pck_export": {
     "status": "passed",
