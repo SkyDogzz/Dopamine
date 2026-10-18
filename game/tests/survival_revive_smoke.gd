@@ -27,9 +27,25 @@ func _run() -> void:
 		_fail("A lethal hit with revive_once should ask for confirmation")
 		return
 	var revive_button: Button = dialog.get_node("Center/Panel/Content/Actions/ReviveButton")
+	var decline_button: Button = dialog.get_node("Center/Panel/Content/Actions/DeclineButton")
 	if root.gui_get_focus_owner() != revive_button:
 		_fail("Revive confirmation should place focus on the REVIVE action")
 		return
+	var dialog_panel: Control = dialog.get_node("Center/Panel")
+	var dialog_actions: Control = dialog.get_node("Center/Panel/Content/Actions")
+	var original_viewport_size := root.size
+	for viewport_size in [Vector2i(640, 360), Vector2i(1280, 720), Vector2i(1920, 1080)]:
+		root.size = viewport_size
+		await process_frame
+		var viewport_bounds := Rect2(Vector2.ZERO, Vector2(viewport_size))
+		if not viewport_bounds.encloses(dialog_panel.get_global_rect()) or \
+			not dialog_panel.get_global_rect().encloses(dialog_actions.get_global_rect()) or \
+			not dialog_actions.get_global_rect().encloses(decline_button.get_global_rect()) or \
+			not dialog_actions.get_global_rect().encloses(revive_button.get_global_rect()):
+			_fail("Revive confirmation and both actions should fit the %s viewport" % viewport_size)
+			return
+	root.size = original_viewport_size
+	await process_frame
 	if "--capture" in OS.get_cmdline_user_args() and not await _capture_ui_state(session, "revive-confirmation.png"):
 		return
 	revive_button.pressed.emit()

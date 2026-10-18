@@ -11,6 +11,12 @@
 - [x] Le smoke peut capturer l’état initial à 640×360 avant toute mutation de réglage; la capture `states/options.png` a été régénérée et inspectée, son SHA-256 reste `7777bc770de2b71396314d98d19a0a45384e15b91cf8f65de0bd59f531745fe2`.
 - [i] Le focus visible et le confinement des contrôles sont couverts par rendu logiciel; cela ne valide ni matériel physique ni toutes les branches d’erreur/focus de la page.
 
+## Confirmation de revive — bounds et actions aux viewports ciblés — 2026-10-18
+
+- [x] `survival_revive_smoke.gd` vérifie que le modal, son conteneur d’actions et les deux boutons restent dans les bounds à 640×360, 1280×720 et 1920×1080; le viewport est restauré à 640×360 avant capture.
+- [x] Le smoke passe sous Xvfb/Mesa avec capture. `states/revive-confirmation.png` a été inspectée : modal centré, actions complètes et focus Neon sur `REVIVE`; le scénario de refus produit aussi son résultat et termine avec code 0.
+- [i] Le rendu logiciel ne valide pas la lisibilité ni les commandes sur écran/manette physiques; les autres états interactifs ne sont pas tous couverts.
+
 ## Migration des récompenses visuelles — 2026-10-18
 
 - [x] Le coffre 32×32 et l’orbe XP 16×16 sont redessinés par primitives originales, avec PNG indexés limités à la palette maître et sources Aseprite éditables. La capture de contrôle agrandie nearest-neighbor a été examinée; silhouette du coffre et forme facettée de l’orbe restent lisibles.
