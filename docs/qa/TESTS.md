@@ -2151,3 +2151,8 @@ Note de clôture : le blocage historique du smoke `sandbox_ui_smoke.gd` décrit 
 - [x] `survival_revive_smoke.gd --capture` génère la confirmation et le résultat après refus; `survival_run_stat_hub_smoke.gd --capture` génère le panneau Tab avec focus de fermeture. Les images sont examinées et hashées dans le README de preuves. La défaite capturée affiche l’erreur de sauvegarde du run de durée nulle du fixture isolé.
 - [x] `godot_project_import`, `survival_revive_smoke`, `survival_run_stat_hub_smoke` et `survival_run_result_smoke` passent par CTest (**4/4**).
 - [i] Le dialogue et le détail sont capturés avec un profil temporaire isolé; revue physique manette/clavier, états d’erreur sur profils réels et toutes les branches de focus restent ouverts.
+
+## Jalon global après refonte des interfaces Survival — 2026-10-18
+
+- [x] `XDG_DATA_HOME=/tmp/dopamine-ui-dialog-full-rerun DOPAMINE_TEST_TIMEOUT=480s PATH=/tmp/cmake-3.31.12-linux-x86_64/bin:$PATH ctest --test-dir build --output-on-failure -j1` : **118/118 tests réussis en 81,44 s**, comprenant Sandbox, combat, assets, équipement, navigation clavier/manette synthétique, parcours existants et import Godot.
+- [i] Suite exécutée sur le build local déjà configuré; ce résultat ne valide ni matériel physique, ni écoute humaine. L’écoute audio en contexte reste **[OUVERTE]** à la demande de l’utilisateur de poursuivre sans retour audio; identité des boss/biome, contenu canonique de l’arbre et revue exhaustive des états UI restent également ouverts.
