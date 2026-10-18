@@ -15,7 +15,9 @@ Préparer le remplacement complet des assets graphiques et audio du jeu avec un 
 - **[PROPOSÉ]** `docs/art/palette_master.gpl` est une copie exploitable de la palette maître; `game/tools/validate_original_title_art.py` vérifie l'ordre et les 32 valeurs contre l'Art Bible.
 - **[PROPOSÉ]** La skyline de titre active a été remplacée par une création 640×360 sans référence extérieure. `game/tools/generate_original_title_skyline.py` produit le PNG indexé depuis la palette `.gpl`; LibreSprite batch produit sa source Aseprite éditable.
 - Revue en copie temporaire après réimport Godot : capture de menu à 640×360 examinée et `launch_navigation_smoke.gd` réussi sous Xvfb. La migration conserve le chemin utilisé par la scène. L'identité d'un biome n'est pas déduite de ce décor de menu.
-- Vérifications : `python3 game/tools/validate_original_title_art.py`, `catalog_icon_assets_smoke.gd`, puis `launch_navigation_smoke.gd` avec capture. L'export PCK doit encore être refait au jalon de migration des assets.
+- **[PROPOSÉ]** Les neuf sprites actifs de rôles ennemis communs/soutiens ont été remplacés par des silhouettes pixel originales sans références; hashes avant/après et provenance figurent dans `docs/art/roster_migration.json` et les registres CSV. L'ancien builder n'écrit plus ces neuf chemins.
+- `original_roster_assets_smoke.gd`, les smokes catalogue, hub et soutien, le rendu de combat sous Xvfb et un PCK Linux/X11 ciblé passent. La capture dense a été examinée. Les références historiques partagées restent jusqu'à migration des prototypes restants; le nouveau générateur ne les lit pas.
+- Vérifications skyline : `python3 game/tools/validate_original_title_art.py`, `catalog_icon_assets_smoke.gd`, puis `launch_navigation_smoke.gd` avec capture. Le PCK décrit au jalon d'assets complet a encore à être refait après migration des autres familles.
 
 ## Commandes de vérification
 

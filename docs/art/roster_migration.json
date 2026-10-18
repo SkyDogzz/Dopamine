@@ -1,0 +1,146 @@
+{
+  "date": "2026-10-18",
+  "status": "[PROPOSÉ] original replacement sprites; boss identity remains [OUVERT]",
+  "scope": "Nine common enemy/support role sprites; elite and bosses deliberately excluded from this tranche.",
+  "method": "New dedicated Python pixel primitives; reads role names and docs/art/palette_master.gpl only. LibreSprite 1.3 batch exports indexed PNGs to editable Aseprite documents. No legacy asset or recipe read.",
+  "visual_review": {
+    "contact_sheet": "/tmp/roster-contact-large.png",
+    "combat_capture": "/tmp/dopamine-survival-combat-visual.png",
+    "combat_capture_sha256": "7a22cc39ce26ecdc9b41ca49d0b10ee548b3b76e34ac15fb6fb69fa50d4ee1e4",
+    "review": "Contact sheet and dense 640x360 combat capture visually examined; nine roles remain distinguishable. Existing attacks, markers and elite treatment remain in renderer.",
+    "contact_sheet_sha256": "e70cb6fd65e312e2b3524bd7bf885e8af68a2d7c35ce3496b41c5ed8c8c99a45"
+  },
+  "generator_sha256": "b4d98eaa9988beeb9b25af9d218f2d396ac0120c617c047dc933ee20e0f1afc9",
+  "assets": [
+    {
+      "legacy_runtime_path": "game/assets/sprites/roster/enemy_buffer.png",
+      "legacy_runtime_sha256": "2f416af24e92e1afb2c092dc7b3befa877356e4124e29a6537dfce38062f6521",
+      "legacy_source_path": "game/assets/source/roster/enemy_buffer.aseprite",
+      "legacy_source_sha256": "aea6b64ca944206cdac247ca7647a8a52ac3a3d595f20fdf55d9867719e81498",
+      "legacy_reference_path": "game/assets/source/roster/generated_reference.png",
+      "legacy_reference_sha256": "cd9963aa5b4c609dc17d5acdccd003b9046d6db32c541a3e0ab1ce0ee265c7c8",
+      "replacement_runtime_path": "game/assets/sprites/roster/enemy_buffer.png",
+      "replacement_runtime_sha256": "ab9b36be2f74e80884644651c12109654edf29f0c2cdfc04b1a09c849a7bebfd",
+      "replacement_source_path": "game/assets/source/roster/enemy_buffer.aseprite",
+      "replacement_source_sha256": "02e1341741226b4363b5f253d59374657d89b9940e958f20b5cd326103a7c9cd",
+      "generator": "game/tools/generate_original_roster.py"
+    },
+    {
+      "legacy_runtime_path": "game/assets/sprites/roster/enemy_chaser.png",
+      "legacy_runtime_sha256": "3a523358eaf03c553251a959a096925de22966d486b70b599123c94b77c7443f",
+      "legacy_source_path": "game/assets/source/pilot/enemy_chaser.aseprite | game/assets/source/roster/enemy_chaser.aseprite",
+      "legacy_source_sha256": "a8ca7717f77413ce3ed8565a4cb14cafb3c2daf6dcd598407539e6c32c4d7666 | 253695b195574e5e74c6bb5bd2cf5c3ac85d64bbeeb6129c8d0c4f0883e9a457",
+      "legacy_reference_path": "game/assets/source/roster/generated_reference.png",
+      "legacy_reference_sha256": "cd9963aa5b4c609dc17d5acdccd003b9046d6db32c541a3e0ab1ce0ee265c7c8",
+      "replacement_runtime_path": "game/assets/sprites/roster/enemy_chaser.png",
+      "replacement_runtime_sha256": "e68e9b87745af7827375bac3fb6c20edc729c6a52999d9427ec487a8ee97410a",
+      "replacement_source_path": "game/assets/source/roster/enemy_chaser.aseprite",
+      "replacement_source_sha256": "1aefa18ce3460bdc7c0820c49f9f6a19d7ab8dd70533b2f7da6a08ba3d23ce39",
+      "generator": "game/tools/generate_original_roster.py"
+    },
+    {
+      "legacy_runtime_path": "game/assets/sprites/roster/enemy_exploder.png",
+      "legacy_runtime_sha256": "e9ad38a03b4b0b869e64a0be3ea3ae38100a46ab49369f7304ccee2b3e6bb87d",
+      "legacy_source_path": "game/assets/source/roster/enemy_exploder.aseprite",
+      "legacy_source_sha256": "d1d13cfbf606849a3432cb723cfb849b9cf9ff7c0d981e9ecd43aec2f85d072c",
+      "legacy_reference_path": "game/assets/source/roster/generated_reference.png",
+      "legacy_reference_sha256": "cd9963aa5b4c609dc17d5acdccd003b9046d6db32c541a3e0ab1ce0ee265c7c8",
+      "replacement_runtime_path": "game/assets/sprites/roster/enemy_exploder.png",
+      "replacement_runtime_sha256": "f683b079c80b12524eb6c1c51f1d240f7e672447b7b7de5beec2dd4c311b83ee",
+      "replacement_source_path": "game/assets/source/roster/enemy_exploder.aseprite",
+      "replacement_source_sha256": "f4c9c9a7fe3b1e7ff02f9a4ec754f151f59a96b3273fee3de1345d3b9454f1e6",
+      "generator": "game/tools/generate_original_roster.py"
+    },
+    {
+      "legacy_runtime_path": "game/assets/sprites/roster/enemy_shielder.png",
+      "legacy_runtime_sha256": "d91775751b8028553e19bf9738e928cf38806da223d0d51c3b95b6f5b0232ac0",
+      "legacy_source_path": "game/assets/source/roster/enemy_shielder.aseprite",
+      "legacy_source_sha256": "f51f6d7441f0d827c5fa7e977b42a8b59b241bf5bfb74244064e98039eecfa8a",
+      "legacy_reference_path": "game/assets/source/roster/generated_reference.png",
+      "legacy_reference_sha256": "cd9963aa5b4c609dc17d5acdccd003b9046d6db32c541a3e0ab1ce0ee265c7c8",
+      "replacement_runtime_path": "game/assets/sprites/roster/enemy_shielder.png",
+      "replacement_runtime_sha256": "2e263789a4ddce7999882ff1c33cd57b65e997752b88012a5b388f6d53394e64",
+      "replacement_source_path": "game/assets/source/roster/enemy_shielder.aseprite",
+      "replacement_source_sha256": "96390c2c6a18491f56085f35c28e81bf884b1c699fd52e66454892f80610a196",
+      "generator": "game/tools/generate_original_roster.py"
+    },
+    {
+      "legacy_runtime_path": "game/assets/sprites/roster/enemy_shooter.png",
+      "legacy_runtime_sha256": "77076fe368645a402984ec840fafcad3187d5e13f313564e38e5b061ba8d246f",
+      "legacy_source_path": "game/assets/source/roster/enemy_shooter.aseprite",
+      "legacy_source_sha256": "99504ff1b6faa12007662c5a0d49c9b9cf86b56db29da0328dbe8f9f6e8593e5",
+      "legacy_reference_path": "game/assets/source/roster/generated_reference.png",
+      "legacy_reference_sha256": "cd9963aa5b4c609dc17d5acdccd003b9046d6db32c541a3e0ab1ce0ee265c7c8",
+      "replacement_runtime_path": "game/assets/sprites/roster/enemy_shooter.png",
+      "replacement_runtime_sha256": "386dcf6eb46830aa31721513fc0b1005782e533ebb1d31888a07ddacf9421293",
+      "replacement_source_path": "game/assets/source/roster/enemy_shooter.aseprite",
+      "replacement_source_sha256": "7d4a8453e0c2ed641f8a1e4e6ec5e93d035d0777891dd2670a5bc2ba9d42fb95",
+      "generator": "game/tools/generate_original_roster.py"
+    },
+    {
+      "legacy_runtime_path": "game/assets/sprites/roster/enemy_sprinter.png",
+      "legacy_runtime_sha256": "195f4d487a6e586fe92182f02ee4adf5a1a5536e5222630ecbfb5f90a1ffd8a6",
+      "legacy_source_path": "game/assets/source/roster/enemy_sprinter.aseprite",
+      "legacy_source_sha256": "15915ab7c0678704dfef13bdba306dc6d34fcdeff3206ee0731ed62e51a3db9f",
+      "legacy_reference_path": "game/assets/source/roster/generated_reference.png",
+      "legacy_reference_sha256": "cd9963aa5b4c609dc17d5acdccd003b9046d6db32c541a3e0ab1ce0ee265c7c8",
+      "replacement_runtime_path": "game/assets/sprites/roster/enemy_sprinter.png",
+      "replacement_runtime_sha256": "46926f320e6cdbad9f551c3dcd81f0c5bb41f5112fd8763ed0550907f68f2acc",
+      "replacement_source_path": "game/assets/source/roster/enemy_sprinter.aseprite",
+      "replacement_source_sha256": "89334e454140a2db1fe4f34c201fc82b1fe43e60d83e5501bc81c72f260bca20",
+      "generator": "game/tools/generate_original_roster.py"
+    },
+    {
+      "legacy_runtime_path": "game/assets/sprites/roster/enemy_summoned.png",
+      "legacy_runtime_sha256": "2aba59767b25ed9ebb384a35ed9447ad0aeefbbee5a20e0d8cc87e9ec1cb0919",
+      "legacy_source_path": "game/assets/source/roster/enemy_summoned.aseprite",
+      "legacy_source_sha256": "61f3327ea05c249fb29e03d4e68045103e8b4bb42403e4a715a2282ecf5e0dda",
+      "legacy_reference_path": "game/assets/source/roster/generated_reference.png",
+      "legacy_reference_sha256": "cd9963aa5b4c609dc17d5acdccd003b9046d6db32c541a3e0ab1ce0ee265c7c8",
+      "replacement_runtime_path": "game/assets/sprites/roster/enemy_summoned.png",
+      "replacement_runtime_sha256": "4d6a57919d6d895762cb6f0d306baa6b8e3930cb4f57d7851ef88b0b3a334cd9",
+      "replacement_source_path": "game/assets/source/roster/enemy_summoned.aseprite",
+      "replacement_source_sha256": "14dcac923506684625d248510754127176723f22945e02ab5d4d3789eb87daf9",
+      "generator": "game/tools/generate_original_roster.py"
+    },
+    {
+      "legacy_runtime_path": "game/assets/sprites/roster/enemy_summoner.png",
+      "legacy_runtime_sha256": "9125f1220495bdd4662ccfee7751a4aad2bd3f09ec1caa7afe70d04396bb9eab",
+      "legacy_source_path": "game/assets/source/roster/enemy_summoner.aseprite",
+      "legacy_source_sha256": "ce7d3b1fb3e4b81c2ae345e86f5ccf41e95515b509a0c345eebfb228d472b96e",
+      "legacy_reference_path": "game/assets/source/roster/generated_reference.png",
+      "legacy_reference_sha256": "cd9963aa5b4c609dc17d5acdccd003b9046d6db32c541a3e0ab1ce0ee265c7c8",
+      "replacement_runtime_path": "game/assets/sprites/roster/enemy_summoner.png",
+      "replacement_runtime_sha256": "0858c780147b9cfc15310de1fc43f39425997edae176d601c9e638f42904e8c7",
+      "replacement_source_path": "game/assets/source/roster/enemy_summoner.aseprite",
+      "replacement_source_sha256": "e0a6462c4d6c2424d8a158ab471eeed20c4270e338e46b022e2ddff5a988a9e0",
+      "generator": "game/tools/generate_original_roster.py"
+    },
+    {
+      "legacy_runtime_path": "game/assets/sprites/roster/enemy_tank.png",
+      "legacy_runtime_sha256": "a98dbda8784908ae8b0f19085de5b02b24e3fae5b9e2edd2546a65391d648bdc",
+      "legacy_source_path": "game/assets/source/roster/enemy_tank.aseprite",
+      "legacy_source_sha256": "f65c60dc6dcf8deb3e5defeb3763a2cbbe66bfc1b87c7cb61afa5a10727433ca",
+      "legacy_reference_path": "game/assets/source/roster/generated_reference.png",
+      "legacy_reference_sha256": "cd9963aa5b4c609dc17d5acdccd003b9046d6db32c541a3e0ab1ce0ee265c7c8",
+      "replacement_runtime_path": "game/assets/sprites/roster/enemy_tank.png",
+      "replacement_runtime_sha256": "f621451ffeddf5d2780d2f1d9a218d2fa4ce056d58d280dc980f07e02135d6d1",
+      "replacement_source_path": "game/assets/source/roster/enemy_tank.aseprite",
+      "replacement_source_sha256": "b777355f56235a48cda01b5a8599162897d92eddeff827a74a0382f675b9de57",
+      "generator": "game/tools/generate_original_roster.py"
+    }
+  ],
+  "tests": [
+    "catalog_icon_assets_smoke.gd",
+    "survival_hub_smoke.gd",
+    "survival_combat_visual_smoke.gd"
+  ],
+  "remaining": "The old source builder is constrained to the remaining inactive/prototype roster slots and no longer writes these nine active role paths. Shared source reference remains only for not-yet-migrated assets; it was not read for replacements.",
+  "pck": {
+    "path": "/tmp/dopamine-roster-migration.pck",
+    "bytes": 6170152,
+    "sha256": "ef48d67e4f21a38f5cca695d80142615ec5cdfd39a235033682b4a7ef02a2a08",
+    "replacement_names_present": true,
+    "source_reference_and_tool_absent": true
+  }
+}

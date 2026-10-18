@@ -13,6 +13,8 @@ Godot 4.7.2; PNG de runtime sous `game/assets/`; sources graphiques Aseprite sel
 - **[PROPOSÉ]** La skyline de titre active `game/assets/backgrounds/title_skyline.png` est maintenant une création originale 640×360, indexée avec 16 couleurs de la palette maître de 32 couleurs; sa source éditable Aseprite est `game/assets/source/backgrounds/title_skyline.aseprite`.
 - Provenance et hashes : `docs/art/title_skyline_migration.json`; contrôle reproductible : `python3 game/tools/validate_original_title_art.py`.
 - Revue visuelle dans le menu à 640×360 : une copie temporaire avec réimport Godot a passé `launch_navigation_smoke.gd` sous Xvfb; la capture `/tmp/dopamine-launch-menu.png` a été examinée. Le fond garde les silhouettes urbaines et l'espace sombre à gauche. Cette vérification **[VALIDÉE pour l'asset et le parcours d'accueil]** ne valide pas l'interface finale, dont les autres assets restent à remplacer.
+- **[PROPOSÉ]** Les neuf sprites de rôles ennemis communs/soutiens (24×24) sont maintenant des formes pixel originales produites par `game/tools/generate_original_roster.py`, avec sources Aseprite générées par LibreSprite. Le générateur ne lit que les rôles et la palette validée; les anciennes sources de référence ne servent plus à ces chemins actifs. Les boss restent hors de cette migration et leurs identités restent **[OUVERTES]**.
+- La validation ciblée `catalog_icon_assets_smoke.gd` et `survival_hub_smoke.gd` passe; une capture de combat dense à 640×360 a été examinée à `/tmp/dopamine-survival-combat-visual.png`. Les neuf rôles restent séparables dans la scène; le reste des visuels et l'UI visibles restent à remplacer.
 
 ## Commandes de vérification
 

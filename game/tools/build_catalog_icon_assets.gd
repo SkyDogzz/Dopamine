@@ -129,7 +129,10 @@ func _initialize() -> void:
 	var roster_source := roster_texture.get_image()
 	var roster_cell_width := roster_source.get_width() / 4
 	var roster_cell_height := roster_source.get_height() / 3
-	for index in range(ROSTER_NAMES.size()):
+	# The active common enemy family has migrated to original role drawings.
+	# Keep the legacy source builder available only for the remaining prototypes;
+	# never regenerate migrated runtime paths from the old reference sheet.
+	for index in range(9, ROSTER_NAMES.size()):
 		var rect := Rect2i((index % 4) * roster_cell_width, floori(float(index) / 4.0) * roster_cell_height, roster_cell_width, roster_cell_height)
 		var background := roster_source.get_pixel(rect.position.x + 4, rect.position.y + 4)
 		var sprite_size := 96 if ROSTER_NAMES[index].begins_with("boss_") else 24

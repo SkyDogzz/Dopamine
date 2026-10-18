@@ -1,5 +1,12 @@
 # Tests d'acceptation et validation
 
+## Migration du roster commun — 2026-10-18
+
+- [x] `original_roster_assets_smoke.gd` vérifie les neuf silhouettes 24×24, la palette maître, la limite 16 couleurs, les sources Aseprite éditables et l'interdiction pour l'ancien builder d'écraser les chemins migrés.
+- [x] `catalog_icon_assets_smoke.gd` et `survival_hub_smoke.gd` passent; capture Survival dense sous Xvfb à 640×360 examinée dans `/tmp/dopamine-survival-combat-visual.png` (SHA-256 `7a22cc39ce26ecdc9b41ca49d0b10ee548b3b76e34ac15fb6fb69fa50d4ee1e4`). Les silhouettes des neuf rôles restent séparables. Les smokes signalent des fuites d'ObjectDB/ressources déjà présentes à la fermeture; ils terminent avec succès.
+- [x] Godot 4.7.2 importe les neuf remplacements; le PCK Linux/X11 de 6 170 152 octets contient leurs chemins et exclut la planche de référence, les sources Aseprite et les outils de génération.
+- [i] Cette preuve visuelle n'approuve ni les autres familles d'assets encore anciennes, ni l'UI finale, ni une identité de boss/biome. Statuts, hash avant/après et provenance sont dans `docs/art/roster_migration.json`, `ASSET_MIGRATIONS.csv` et `PROVENANCE_ASSETS.csv`.
+
 ## P9.7/P9.8 — Staging Linux filtré depuis `e415326` — 2026-10-18
 
 - [x] `tools/package_linux_staging.sh` reconstruit le snapshot Git `e415326268f0a1b9af68b6150aa19112e993f028` en Release depuis un répertoire CMake vierge : GCC 14.2.0, CMake 3.31.12, Godot 4.7.2 et `godot-cpp` épinglé à `b8530af7546a3fcae80cef2477526569fd42ffc2`. L’extension native compile, Godot importe le projet, l’export autonome Linux/X11 passe et son journal respecte les chemins de ressources attendus et les exclusions de développement.
