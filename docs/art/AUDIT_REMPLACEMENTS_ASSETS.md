@@ -2,6 +2,14 @@
 
 **Date : 2026-10-18.** Point de reprise du goal de remplacement ciblé. Cet audit distingue le remplacement et le QA technique de l’acceptation artistique et auditive.
 
+## Mise à jour de suivi — revue humaine non reçue
+
+Le 2026-10-18, les registres courants et l’environnement de revue ont été revérifiés. Les 356 entrées du manifeste sont toujours intégrées (`integrated`), validées techniquement (`passed`) et acceptées uniquement pour la production provisoire (`accepted_for_provisional_production`); les 356 ont `human_review_status=pending`. Les captures et planches archivées permettent une inspection visuelle représentative, mais ne constituent pas l’acceptation globale du propriétaire. L’environnement ne possède pas de sortie PCM (`/dev/snd` expose seulement `seq` et `timer`), donc aucun son ne peut être approuvé à l’écoute depuis cet environnement.
+
+La demande de revue n’a pas produit de choix d’acceptation ni de liste d’IDs à corriger. En conséquence, aucun asset n’est modifié ni promu en « approuvé ». Les assets restent des propositions provisoires; les choix canoniques encore ouverts (héros, boss, biome, détails d’animation et mix) restent non tranchés. Reprendre uniquement sur les IDs signalés par le propriétaire, ou mettre à jour l’acceptation après revue humaine effective.
+
+**Limite de clôture :** l’audit peut conclure qu’aucun asset hérité/non remplacé requis ni défaut technique connu ne reste dans les registres actuels, mais il ne peut pas établir une acceptation perceptuelle/auditive humaine. Le goal ne peut donc pas être déclaré complet avant cette revue ou une décision explicite de laisser ces propositions provisoires hors acceptation.
+
 ## État constaté
 
 - `ASSET_MANIFEST.json` contient 356 IDs uniques; leurs 356 chemins runtime existent et sont marqués `integrated`. Les 356 entrées ont `validation_status=passed` et `acceptance_status=accepted_for_provisional_production`; leur `human_review_status` reste `pending`.
@@ -28,5 +36,7 @@ Godot 4.7.2 a été lancé depuis `/tmp`; la GDExtension Debug a été compilée
 - Revue visuelle du propriétaire sur les planches/captures et les animations en jeu; les validations mécaniques ne prouvent pas la lisibilité ou la cohérence perçue.
 - Écoute humaine des SFX, de la musique et des transitions en contexte; cet environnement n’a pas de sortie audio PCM.
 - Toute correction issue de ces revues doit cibler seulement les IDs signalés; préserver les autres exports validés.
+
+- Demande de revue envoyée; aucun choix d’acceptation ni IDs à corriger reçu à la date de cette mise à jour.
 
 **Statut :** aucune lacune de remplacement ou d’intégration détectée dans l’audit courant. Les preuves techniques sont à jour; le goal reste ouvert jusqu’à l’acceptation humaine visuelle et auditive ou jusqu’à ce que les choix en attente soient explicitement documentés comme non acceptés.
