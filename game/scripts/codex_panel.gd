@@ -206,14 +206,14 @@ func _make_catalog_entry(title_text: String, description: String, status_text: S
 	style.content_margin_bottom = 4.0
 	card.add_theme_stylebox_override("panel", style)
 	card.set_meta("card_style", style)
+	card.set_meta("codex_title", title_text)
+	card.set_meta("codex_status", status_text)
+	card.set_meta("codex_description", description)
+	card.set_meta("codex_icon", icon_path)
 	if selectable:
 		card.mouse_filter = Control.MOUSE_FILTER_STOP
 		card.gui_input.connect(_on_card_input.bind(card, title_text, status_text, description, icon_path, key))
 		card.focus_mode = Control.FOCUS_ALL
-		card.set_meta("codex_title", title_text)
-		card.set_meta("codex_status", status_text)
-		card.set_meta("codex_description", description)
-		card.set_meta("codex_icon", icon_path)
 		card.focus_entered.connect(_on_card_focus.bind(card, title_text, status_text, description, icon_path))
 	var row := HBoxContainer.new()
 	row.add_theme_constant_override("separation", 7)

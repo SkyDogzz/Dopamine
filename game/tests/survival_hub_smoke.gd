@@ -152,8 +152,12 @@ func _run() -> void:
 		return
 	var enemy_entries: GridContainer = codex.get_node("Center/Panel/Content/Body/EntryScroll/Entries")
 	var first_enemy_copy: VBoxContainer = enemy_entries.get_child(0).get_child(0).get_child(1)
+	var first_enemy_title: Label = codex.get_node("Center/Panel/Content/Body/Detail/DetailContent/DetailTitle")
 	if first_enemy_copy.get_child(0).text != "INCONNU" or first_enemy_copy.get_child(2).text.find("NON RENCONTRÉ") < 0:
 		_fail("An enemy not encountered in Survival should remain hidden in Codex")
+		return
+	if first_enemy_title.text != "INCONNU":
+		_fail("Codex should select and safely display an unrevealed enemy entry")
 		return
 	if not bounds.encloses(codex.get_node("Center/Panel").get_global_rect()):
 		_fail("Codex should fit the logical viewport")
