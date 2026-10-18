@@ -6,6 +6,7 @@
 - [x] Archive de contrôle non versionnée `build/linux/staging/DopamineSurvivor-linux-e3d0c4f-staging.tar.gz` : 29 878 849 octets, SHA-256 `0681a9110d9a6510edaefe2e3bedd83f5fed7907338c5921c7d0fc53cb8339f2`.
 - [x] Vérification après extraction : exécutable 75 119 888 octets, SHA-256 `86f90e2ecda55d351165c8301fc55375610400e2edd4b13f1a1520fee3e79750`; GDExtension Release 1 140 456 octets, SHA-256 `3f929d4abe737ae8abfafcba3233c80898071866eeeeab7fbbd2b0f66aaecd56`; notices et licences présentes.
 - [x] Parcours avec `XDG_DATA_HOME` neuf : menu → hub → équipement → skill tree → choix d’arme → combat → pause sous Xvfb/Mesa llvmpipe à 1280×720 avec touches XTest. Sept captures générées, inspectées et indexées dans `docs/art/evidence/2026-10-18/README.md`; journal sans `ERROR:`.
+- [x] `strings -a` sur l’exécutable Release extrait retrouve les **137/137** chemins runtime statiques/dynamiques de `ASSET_FILE_REGISTER_CURRENT.csv`; le registre ne compte aucun chemin actif absent du paquet.
 - [i] Il s’agit d’un staging Linux x86_64 non distribuable, testé sur l’hôte Debian avec pilote audio Dummy. Cela ne couvre pas le rendu/GPU matériel, les contrôles physiques, une installation distincte ni l’écoute audio humaine.
 
 ## Suite complète après staging courant — 2026-10-18
