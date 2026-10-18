@@ -22,6 +22,8 @@ func _run() -> void:
 					if frame_texture is AtlasTexture:
 						var atlas_frame := frame_texture as AtlasTexture
 						var expected_image := atlas_frame.atlas.get_image().get_region(Rect2i(atlas_frame.region))
+						if role_id == "xp_orb":
+							expected_image.flip_y()
 						assert(batch["texture"].get_image().get_data() == expected_image.get_data(),
 							"%s:%d should contain the selected atlas region pixels" % [animation_name, frame])
 						if animation_name.ends_with("_up"):
@@ -101,7 +103,10 @@ func _run() -> void:
 	assert(view._sprite_renderer._projectile_trails[0]["start"].x < view._sprite_renderer._projectile_trails[0]["end"].x, "A right-moving projectile should trail behind its current position")
 	assert(is_equal_approx(view._sprite_renderer._projectile_trails[0]["start"].distance_to(view._sprite_renderer._projectile_trails[0]["end"]), 12.0), "Projectile trails should keep the proposed 12-pixel length")
 	assert(view._xp_multimesh.instance_count == 1, "XP orbs should use a separate MultiMesh batch")
-	assert(view._sprite_renderer._batches["xp_orb"]["texture"].resource_path.ends_with("rewards/xp_orb.png"), "XP should load its dedicated pixel-art reward sprite")
+	var xp_source: Image = load("res://assets/sprites/rewards/xp_orb.png").get_image()
+	xp_source.flip_y()
+	assert(view._sprite_renderer._batches["xp_orb"]["texture"].get_image().get_data() == xp_source.get_data(),
+			"XP should use its dedicated sprite in the corrected vertical orientation")
 	var tank_idle_instances := 0
 	for animation_key in view._sprite_renderer._animated_batches:
 		if str(animation_key).begins_with("enemy_tank_idle_up:"):

@@ -93,8 +93,13 @@ func _init() -> void:
 		var filename: String = SPRITE_FILES[sprite_id]
 		if not filename.contains("."):
 			filename += ".png"
+		var source_texture: Texture2D = load("res://assets/sprites/%s" % filename) if ResourceLoader.exists("res://assets/sprites/%s" % filename) else null
+		if sprite_id == "xp_orb" and source_texture != null:
+			var oriented_image := source_texture.get_image()
+			oriented_image.flip_y()
+			source_texture = ImageTexture.create_from_image(oriented_image)
 		_batches[sprite_id] = {
-			"texture": load("res://assets/sprites/%s" % filename) if ResourceLoader.exists("res://assets/sprites/%s" % filename) else null,
+			"texture": source_texture,
 			"multimesh": mesh,
 		}
 	for role_id in ANIMATED_ROLE_IDS:
@@ -311,6 +316,8 @@ func _get_animation_batch(role_id: String, state: String, animation_name: String
 			return {}
 	else:
 		frame_image = texture.get_image()
+	if role_id == "xp_orb":
+		frame_image.flip_y()
 	if flip_x:
 		frame_image.flip_x()
 	texture = ImageTexture.create_from_image(frame_image)
