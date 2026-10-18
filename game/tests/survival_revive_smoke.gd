@@ -14,6 +14,7 @@ func _run() -> void:
 		return
 	var session: Node2D = load("res://scenes/survival_session.tscn").instantiate()
 	session.progression_service = progression
+	session.difficulty_id = "easy"
 	session.skip_starting_weapon_choice = true
 	session.spawn_initial_enemy = false
 	session.wave_spawning_enabled = false
@@ -88,17 +89,24 @@ func _expect_revive_unavailable(mode: String, sandbox: bool, progression: RefCou
 func _expect_revive_cancelled(progression: RefCounted) -> bool:
 	var session: Node2D = load("res://scenes/survival_session.tscn").instantiate()
 	session.progression_service = progression
+	session.difficulty_id = "easy"
 	session.skip_starting_weapon_choice = true
 	session.spawn_initial_enemy = false
 	session.wave_spawning_enabled = false
 	session.weapon_enabled = false
 	root.add_child(session)
 	await process_frame
+	session.player_active_time = 65.0
+	session.kill_count = 12
 	session._take_player_damage(session.player_max_hp + 1.0)
 	var dialog: Control = session.get_node("HUD/ReviveConfirmationDialog")
 	dialog.get_node("Center/Panel/Content/Actions/DeclineButton").pressed.emit()
 	if not session.run_over or not session.simulation.snapshot()["paused"]:
 		_fail("Declining revive should end and pause the run")
+		return true
+	var rewards: Label = session.get_node("HUD/RunResultOverlay/RunResultPanel/Content/Rewards")
+	if rewards.text == "PROGRESSION SAVE FAILED" or not rewards.text.contains("ESSENCE"):
+		_fail("Declining revive should show a successfully recorded run result")
 		return true
 	if "--capture" in OS.get_cmdline_user_args() and not await _capture_ui_state(session, "revive-declined-result.png"):
 		return true

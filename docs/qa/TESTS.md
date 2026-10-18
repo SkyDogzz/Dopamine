@@ -2148,7 +2148,7 @@ Note de clôture : le blocage historique du smoke `sandbox_ui_smoke.gd` décrit 
 ## Dialogue de revive et statistiques de run — 2026-10-18
 
 - [x] La confirmation native grise du revive est remplacée par `revive_confirmation.tscn`, un overlay Neon dans le HUD. Le focus initial reste sur `REVIVE`; `ACCEPT DEFEAT` conserve le refus et Échap le déclenche aussi. Le smoke vérifie la confirmation, le refus, l’unicité du revive et son indisponibilité Armorless/Sandbox.
-- [x] `survival_revive_smoke.gd --capture` génère la confirmation et le résultat après refus; `survival_run_stat_hub_smoke.gd --capture` génère le panneau Tab avec focus de fermeture. Les images sont examinées et hashées dans le README de preuves. La défaite capturée affiche l’erreur de sauvegarde du run de durée nulle du fixture isolé.
+- [x] `survival_revive_smoke.gd --capture` génère la confirmation et le résultat après refus; `survival_run_stat_hub_smoke.gd --capture` génère le panneau Tab avec focus de fermeture. Le fixture de résultat utilise le slot Easy débloqué et vérifie que la sauvegarde renvoie des récompenses valides. Les images sont examinées et hashées dans le README de preuves.
 - [x] `godot_project_import`, `survival_revive_smoke`, `survival_run_stat_hub_smoke` et `survival_run_result_smoke` passent par CTest (**4/4**).
 - [i] Le dialogue et le détail sont capturés avec un profil temporaire isolé; revue physique manette/clavier, états d’erreur sur profils réels et toutes les branches de focus restent ouverts.
 
@@ -2172,3 +2172,9 @@ Note de clôture : le blocage historique du smoke `sandbox_ui_smoke.gd` décrit 
 
 - [x] Contrôle des entrées PNG indexées dans `docs/art/evidence/2026-10-18/README.md` : **31/31 fichiers présents et SHA-256 conformes**. Les SHA-256 des deux WAV de preuve audio (`adaptive-music-transition.wav` et `adaptive-music-runtime-capture.wav`) correspondent également au README.
 - [i] Ces empreintes attestent l’identité et la présence des preuves, pas une approbation humaine du mix audio ni une validation sur GPU/contrôleur physique.
+
+## Résultat de défaite après refus du revive — 2026-10-18
+
+- [x] Le smoke de revive utilise un profil temporaire dont la difficulté Easy est débloquée; il avance les métriques synthétiques et exige une récompense enregistrée après le refus. La cause du précédent `PROGRESSION SAVE FAILED` était `difficulty_locked`, et non la durée du run.
+- [x] La capture intégrée du HUD `states/revive-declined-result.png` a été régénérée et examinée; son hash est actualisé dans le README des preuves. Les 31 hashes PNG de l’index passent après cette régénération.
+- [x] `godot_project_import` et `survival_revive_smoke` passent (**2/2**). Suite complète `XDG_DATA_HOME=/tmp/dopamine-revive-ui-full DOPAMINE_TEST_TIMEOUT=480s PATH=/tmp/cmake-3.31.12-linux-x86_64/bin:$PATH ctest --test-dir build --output-on-failure -j1` : **118/118 en 79,23 s**.
