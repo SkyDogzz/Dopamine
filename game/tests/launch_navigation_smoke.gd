@@ -24,6 +24,11 @@ func _run() -> void:
 	if launch_menu.get_node_or_null("SkylineLights") == null:
 		_fail("The title skyline should include its neon signage layer")
 		return
+	var skyline := launch_menu.get_node_or_null("Skyline") as TextureRect
+	if skyline == null or skyline.texture == null or \
+		skyline.texture.resource_path != "res://assets/backgrounds/title_skyline.png":
+		_fail("The launch menu should display its title skyline background texture")
+		return
 	var menu_music := launch_menu.get_node_or_null("MenuMusic") as AudioStreamPlayer
 	if menu_music == null or menu_music.bus != "Music" or menu_music.stream == null:
 		_fail("The launch menu should route its original theme through the Music bus")

@@ -1,10 +1,11 @@
-[gd_scene load_steps=6 format=3]
+[gd_scene load_steps=7 format=3]
 
 [ext_resource type="Theme" path="res://themes/dopamine_ui.tres" id="1_theme"]
 [ext_resource type="Script" path="res://scripts/launch_menu.gd" id="2_script"]
 [ext_resource type="Script" path="res://scripts/title_skyline_lights.gd" id="4_signs"]
 [ext_resource type="AudioStream" path="res://assets/audio/music/menu_theme.wav" id="5_menu_music"]
 [ext_resource type="Texture2D" path="res://assets/icons/ui/signal_prism.png" id="6_signal_prism"]
+[ext_resource type="Texture2D" path="res://assets/backgrounds/title_skyline.png" id="7_title_skyline"]
 
 [node name="LaunchMenu" type="Control"]
 layout_mode = 3
@@ -41,6 +42,7 @@ grow_vertical = 2
 mouse_filter = 2
 texture_filter = 1
 stretch_mode = 6
+texture = ExtResource("7_title_skyline")
 
 [node name="SkylineLights" type="Control" parent="."]
 layout_mode = 1
