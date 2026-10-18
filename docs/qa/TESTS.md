@@ -1,5 +1,10 @@
 # Tests d'acceptation et validation
 
+## Bornes du skill tree aux viewports ciblés — 2026-10-18
+
+- [x] `skill_tree_panel_visual_smoke.gd` vérifie maintenant que le cadre du graphe reste dans les viewports logiques/rendus 640×360, 1280×720 et 1920×1080; `godot_project_import` et le smoke ciblé passent (**2/2**).
+- [i] Le contrôle porte sur les bornes du cadre, pas sur la lisibilité de chaque nœud à chaque taille. La capture inspectée reste 640×360; le focus manette synthétique passe, mais aucun appareil physique n’a été essayé.
+
 ## Migration des récompenses visuelles — 2026-10-18
 
 - [x] Le coffre 32×32 et l’orbe XP 16×16 sont redessinés par primitives originales, avec PNG indexés limités à la palette maître et sources Aseprite éditables. La capture de contrôle agrandie nearest-neighbor a été examinée; silhouette du coffre et forme facettée de l’orbe restent lisibles.

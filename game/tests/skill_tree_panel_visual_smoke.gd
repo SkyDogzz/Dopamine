@@ -42,9 +42,18 @@ func _run() -> void:
 		focus.disabled or not focus.text.begins_with("·") or not weapon.text.begins_with("·") or not relic.text.begins_with("·"):
 		_fail("The tree should derive available and locked states from current prerequisites and Essence")
 		return
-	if frame.size.x > 640.0 or frame.size.y > 360.0 or not panel.get_global_rect().encloses(frame.get_global_rect()):
-		_fail("The tree frame should fit the 640x360 logical viewport")
-		return
+	var original_size := root.size
+	for viewport_size in [Vector2i(640, 360), Vector2i(1280, 720), Vector2i(1920, 1080)]:
+		root.size = viewport_size
+		await process_frame
+		var viewport_bounds := Rect2(Vector2.ZERO, Vector2(viewport_size))
+		if not viewport_bounds.encloses(frame.get_global_rect()) or \
+			frame.size.x > viewport_size.x or frame.size.y > viewport_size.y or \
+			not panel.get_global_rect().encloses(frame.get_global_rect()):
+			_fail("The tree frame should fit the %s viewport" % viewport_size)
+			return
+	root.size = original_size
+	await process_frame
 	if vitality.focus_mode == Control.FOCUS_NONE or panel.get_node("Panel/Content/ActionRow/UnlockButton").disabled:
 		_fail("Available nodes and their action should remain keyboard accessible")
 		return

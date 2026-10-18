@@ -11,7 +11,7 @@ Godot 4.7.2, `Control`, GDScript et système de progression existant (`game/scri
 ### Avancement (2026-10-18)
 
 - **[PROPOSÉ]** La page affiche les définitions actuellement exposées par `ProgressionService` sous forme de graphe ramifié: liens depuis `prerequisites`, rangs de statistiques et branches de déblocages d’armes/reliques. Le smoke confirme les 100 définitions runtime actuelles, les états, coûts et effets dérivés du service, ainsi que navigation clavier/manette, sélection, déblocage délégué, respec et état d’erreur.
-- **[VALIDÉ]** Cette tranche ne modifie ni les données de nœuds, ni les coûts/effets, ni le service de progression. Les paramètres qui portent `PROPOSED` restent proposés; l’UI les identifie comme tels. Capture 640×360 inspectée à `/tmp/dopamine-skill-tree.png`; bornes de viewport 640×360, 1280×720 et 1920×1080 vérifiées.
+- **[VALIDÉ]** Cette tranche ne modifie ni les données de nœuds, ni les coûts/effets, ni le service de progression. Les paramètres qui portent `PROPOSED` restent proposés; l’UI les identifie comme tels. Capture 640×360 inspectée à `/tmp/dopamine-skill-tree.png`; smoke exécuté le 2026-10-18 et cadre du graphe vérifié dans les viewports 640×360, 1280×720 et 1920×1080. Cette assertion vérifie le cadre et son inclusion dans le viewport; elle ne mesure pas la lisibilité de chaque nœud à chaque taille ni les contrôles physiques.
 - **[OUVERT]** Les définitions actuelles comprennent des valeurs proposées et constituent les données existantes du prototype; leur validation de design/équilibrage reste hors de cette tranche. La mise en page choisie pour cette implémentation est une carte de graphe navigable par scroll sur deux axes.
 
 ## Commandes de vérification
