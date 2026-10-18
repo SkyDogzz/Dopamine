@@ -673,9 +673,9 @@ func _run() -> void:
 			achievement_profile["achievement_progress"]["metrics"]["runs_at_difficulty_easy"] != 1 or \
 			achievement_profile["achievement_progress"]["metrics"]["boss_victories_at_difficulty_easy"] != 1 or \
 			achievement_profile["achievement_progress"]["tiers"]["survivor_depth"] != 4 or \
-			not is_equal_approx(achievement_service.achievement_bonus("damage_pct"), 0.005) or \
-			not is_equal_approx(achievement_service.achievement_bonus("max_hp_pct"), 0.01) or \
-			not is_equal_approx(achievement_service.achievement_bonus("critical_chance_pct"), 0.125):
+			not is_equal_approx(achievement_service.achievement_bonus("damage_pct"), 0.05) or \
+			not is_equal_approx(achievement_service.achievement_bonus("max_hp_pct"), 0.1) or \
+			not is_equal_approx(achievement_service.achievement_bonus("critical_chance_pct"), 1.25):
 		_fail("The first Exterminator tier should grant its proposed cumulative bonuses: award=%s progress=%s bonus=%s" % [
 			str(achievement_run), str(achievement_profile["achievement_progress"]),
 				str(achievement_service.achievement_bonus("damage_pct")),
@@ -683,7 +683,7 @@ func _run() -> void:
 		return
 	var second_achievement_run: Dictionary = achievement_service.award_survival_run("kill-run-two", 24, true, 900, "easy")
 	if second_achievement_run.get("new_achievement_tiers") != 1 or \
-			not is_equal_approx(achievement_service.achievement_bonus("damage_pct"), 0.015) or \
+			not is_equal_approx(achievement_service.achievement_bonus("damage_pct"), 0.15) or \
 			achievement_service.award_survival_run("kill-run-two", 24, true, 1000, "easy").get("duplicate") != true or \
 			achievement_service.load_profile()["profile"]["achievement_progress"]["metrics"]["total_kills"] != 1000:
 		_fail("The proposed Exterminator tier should unlock once and run rewards should stay idempotent: run=%s bonus=%s progress=%s" % [
@@ -693,7 +693,7 @@ func _run() -> void:
 		return
 	achievement_service.award_survival_run("kill-run-three", 24, true, 9000, "easy")
 	achievement_service.award_survival_run("kill-run-four", 24, true, 90000, "easy")
-	if not is_equal_approx(achievement_service.achievement_bonus("damage_pct"), 0.05) or \
+	if not is_equal_approx(achievement_service.achievement_bonus("damage_pct"), 0.5) or \
 			achievement_service.load_profile()["profile"]["achievement_progress"]["tiers"]["exterminator"] != 4:
 		_fail("All four proposed Exterminator tiers should accumulate the example total bonus")
 		return
@@ -707,7 +707,7 @@ func _run() -> void:
 	if chaos_achievement_run.get("new_achievement_tier_count") != 3 or \
 			chaos_achievement_profile["achievement_progress"]["metrics"]["chaos_victories"] != 1 or \
 			chaos_achievement_profile["achievement_progress"]["tiers"]["chaos_conqueror"] != 1 or \
-				not is_equal_approx(achievement_service.achievement_bonus("damage_pct"), 0.05):
+				not is_equal_approx(achievement_service.achievement_bonus("damage_pct"), 0.5):
 		_fail("Secret Chaos achievements should track their metric before revealing their first tier")
 		return
 	var unlock_directory := directory.path_join("difficulty_unlock")

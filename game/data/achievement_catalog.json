@@ -8,10 +8,10 @@
       "metric": "total_kills",
       "aggregation": "sum",
       "tiers": [
-        { "id": "bronze", "threshold": 100, "rewards": { "damage_pct": 0.005 }, "steam_api_name": "DOP_ACH_EXTERMINATOR_BRONZE" },
-        { "id": "silver", "threshold": 1000, "rewards": { "damage_pct": 0.01 }, "steam_api_name": "DOP_ACH_EXTERMINATOR_SILVER" },
-        { "id": "gold", "threshold": 10000, "rewards": { "damage_pct": 0.015 }, "steam_api_name": "DOP_ACH_EXTERMINATOR_GOLD" },
-        { "id": "diamond", "threshold": 100000, "rewards": { "damage_pct": 0.02 }, "steam_api_name": "DOP_ACH_EXTERMINATOR_DIAMOND" }
+        { "id": "bronze", "threshold": 100, "rewards": { "damage_pct": 0.05 }, "steam_api_name": "DOP_ACH_EXTERMINATOR_BRONZE" },
+        { "id": "silver", "threshold": 1000, "rewards": { "damage_pct": 0.1 }, "steam_api_name": "DOP_ACH_EXTERMINATOR_SILVER" },
+        { "id": "gold", "threshold": 10000, "rewards": { "damage_pct": 0.15 }, "steam_api_name": "DOP_ACH_EXTERMINATOR_GOLD" },
+        { "id": "diamond", "threshold": 100000, "rewards": { "damage_pct": 0.2 }, "steam_api_name": "DOP_ACH_EXTERMINATOR_DIAMOND" }
       ],
       "name": "Exterminator"
     },
@@ -22,10 +22,10 @@
       "metric": "highest_wave",
       "aggregation": "max",
       "tiers": [
-        { "id": "bronze", "threshold": 6, "rewards": { "max_hp_pct": 0.001 }, "steam_api_name": "DOP_ACH_SURVIVOR_DEPTH_BRONZE" },
-        { "id": "silver", "threshold": 12, "rewards": { "max_hp_pct": 0.002 }, "steam_api_name": "DOP_ACH_SURVIVOR_DEPTH_SILVER" },
-        { "id": "gold", "threshold": 18, "rewards": { "max_hp_pct": 0.003 }, "steam_api_name": "DOP_ACH_SURVIVOR_DEPTH_GOLD" },
-        { "id": "diamond", "threshold": 24, "rewards": { "max_hp_pct": 0.004 }, "steam_api_name": "DOP_ACH_SURVIVOR_DEPTH_DIAMOND" }
+        { "id": "bronze", "threshold": 6, "rewards": { "max_hp_pct": 0.01 }, "steam_api_name": "DOP_ACH_SURVIVOR_DEPTH_BRONZE" },
+        { "id": "silver", "threshold": 12, "rewards": { "max_hp_pct": 0.02 }, "steam_api_name": "DOP_ACH_SURVIVOR_DEPTH_SILVER" },
+        { "id": "gold", "threshold": 18, "rewards": { "max_hp_pct": 0.03 }, "steam_api_name": "DOP_ACH_SURVIVOR_DEPTH_GOLD" },
+        { "id": "diamond", "threshold": 24, "rewards": { "max_hp_pct": 0.04 }, "steam_api_name": "DOP_ACH_SURVIVOR_DEPTH_DIAMOND" }
       ],
       "name": "Survivor Depth"
     },
@@ -36,10 +36,10 @@
       "metric": "completed_runs",
       "aggregation": "sum",
       "tiers": [
-        { "id": "bronze", "threshold": 10, "rewards": { "move_speed_pct": 0.0005 }, "steam_api_name": "DOP_ACH_VETERAN_RUNNER_BRONZE" },
-        { "id": "silver", "threshold": 50, "rewards": { "move_speed_pct": 0.001 }, "steam_api_name": "DOP_ACH_VETERAN_RUNNER_SILVER" },
-        { "id": "gold", "threshold": 100, "rewards": { "move_speed_pct": 0.0015 }, "steam_api_name": "DOP_ACH_VETERAN_RUNNER_GOLD" },
-        { "id": "diamond", "threshold": 250, "rewards": { "move_speed_pct": 0.002 }, "steam_api_name": "DOP_ACH_VETERAN_RUNNER_DIAMOND" }
+        { "id": "bronze", "threshold": 10, "rewards": { "move_speed_pct": 0.005 }, "steam_api_name": "DOP_ACH_VETERAN_RUNNER_BRONZE" },
+        { "id": "silver", "threshold": 50, "rewards": { "move_speed_pct": 0.01 }, "steam_api_name": "DOP_ACH_VETERAN_RUNNER_SILVER" },
+        { "id": "gold", "threshold": 100, "rewards": { "move_speed_pct": 0.015 }, "steam_api_name": "DOP_ACH_VETERAN_RUNNER_GOLD" },
+        { "id": "diamond", "threshold": 250, "rewards": { "move_speed_pct": 0.02 }, "steam_api_name": "DOP_ACH_VETERAN_RUNNER_DIAMOND" }
       ],
       "name": "Veteran Runner"
     },
@@ -50,10 +50,10 @@
       "metric": "boss_victories",
       "aggregation": "sum",
       "tiers": [
-        { "id": "bronze", "threshold": 1, "rewards": { "critical_chance_pct": 0.1 }, "steam_api_name": "DOP_ACH_BOSS_SLAYER_BRONZE" },
-        { "id": "silver", "threshold": 5, "rewards": { "critical_chance_pct": 0.2 }, "steam_api_name": "DOP_ACH_BOSS_SLAYER_SILVER" },
-        { "id": "gold", "threshold": 15, "rewards": { "critical_chance_pct": 0.3 }, "steam_api_name": "DOP_ACH_BOSS_SLAYER_GOLD" },
-        { "id": "diamond", "threshold": 30, "rewards": { "critical_chance_pct": 0.4 }, "steam_api_name": "DOP_ACH_BOSS_SLAYER_DIAMOND" }
+        { "id": "bronze", "threshold": 1, "rewards": { "critical_chance_pct": 1 }, "steam_api_name": "DOP_ACH_BOSS_SLAYER_BRONZE" },
+        { "id": "silver", "threshold": 5, "rewards": { "critical_chance_pct": 2 }, "steam_api_name": "DOP_ACH_BOSS_SLAYER_SILVER" },
+        { "id": "gold", "threshold": 15, "rewards": { "critical_chance_pct": 3 }, "steam_api_name": "DOP_ACH_BOSS_SLAYER_GOLD" },
+        { "id": "diamond", "threshold": 30, "rewards": { "critical_chance_pct": 4 }, "steam_api_name": "DOP_ACH_BOSS_SLAYER_DIAMOND" }
       ],
       "name": "Boss Slayer"
     },
@@ -64,10 +64,10 @@
       "metric": "chaos_victories",
       "aggregation": "sum",
       "tiers": [
-        { "id": "bronze", "threshold": 1, "rewards": { "critical_chance_pct": 0.1 }, "steam_api_name": "DOP_ACH_CHAOS_CONQUEROR_BRONZE" },
-        { "id": "silver", "threshold": 3, "rewards": { "critical_chance_pct": 0.2 }, "steam_api_name": "DOP_ACH_CHAOS_CONQUEROR_SILVER" },
-        { "id": "gold", "threshold": 10, "rewards": { "critical_chance_pct": 0.3 }, "steam_api_name": "DOP_ACH_CHAOS_CONQUEROR_GOLD" },
-        { "id": "diamond", "threshold": 25, "rewards": { "critical_chance_pct": 0.4 }, "steam_api_name": "DOP_ACH_CHAOS_CONQUEROR_DIAMOND" }
+        { "id": "bronze", "threshold": 1, "rewards": { "critical_chance_pct": 1 }, "steam_api_name": "DOP_ACH_CHAOS_CONQUEROR_BRONZE" },
+        { "id": "silver", "threshold": 3, "rewards": { "critical_chance_pct": 2 }, "steam_api_name": "DOP_ACH_CHAOS_CONQUEROR_SILVER" },
+        { "id": "gold", "threshold": 10, "rewards": { "critical_chance_pct": 3 }, "steam_api_name": "DOP_ACH_CHAOS_CONQUEROR_GOLD" },
+        { "id": "diamond", "threshold": 25, "rewards": { "critical_chance_pct": 4 }, "steam_api_name": "DOP_ACH_CHAOS_CONQUEROR_DIAMOND" }
       ],
       "name": "Chaos Conqueror"
     },
@@ -78,10 +78,10 @@
       "metric": "max_weapon_loadout",
       "aggregation": "max",
       "tiers": [
-        { "id": "bronze", "threshold": 2, "rewards": { "attack_speed_pct": 0.1 }, "steam_api_name": "DOP_ACH_ARSENAL_BUILDER_BRONZE" },
-        { "id": "silver", "threshold": 3, "rewards": { "attack_speed_pct": 0.2 }, "steam_api_name": "DOP_ACH_ARSENAL_BUILDER_SILVER" },
-        { "id": "gold", "threshold": 4, "rewards": { "attack_speed_pct": 0.3 }, "steam_api_name": "DOP_ACH_ARSENAL_BUILDER_GOLD" },
-        { "id": "diamond", "threshold": 5, "rewards": { "attack_speed_pct": 0.4 }, "steam_api_name": "DOP_ACH_ARSENAL_BUILDER_DIAMOND" }
+        { "id": "bronze", "threshold": 2, "rewards": { "attack_speed_pct": 1 }, "steam_api_name": "DOP_ACH_ARSENAL_BUILDER_BRONZE" },
+        { "id": "silver", "threshold": 3, "rewards": { "attack_speed_pct": 2 }, "steam_api_name": "DOP_ACH_ARSENAL_BUILDER_SILVER" },
+        { "id": "gold", "threshold": 4, "rewards": { "attack_speed_pct": 3 }, "steam_api_name": "DOP_ACH_ARSENAL_BUILDER_GOLD" },
+        { "id": "diamond", "threshold": 5, "rewards": { "attack_speed_pct": 4 }, "steam_api_name": "DOP_ACH_ARSENAL_BUILDER_DIAMOND" }
       ],
       "name": "Arsenal Builder"
     },
@@ -92,10 +92,10 @@
       "metric": "max_relic_loadout",
       "aggregation": "max",
       "tiers": [
-        { "id": "bronze", "threshold": 1, "rewards": { "attack_speed_pct": 0.1 }, "steam_api_name": "DOP_ACH_RELIC_COLLECTOR_BRONZE" },
-        { "id": "silver", "threshold": 2, "rewards": { "attack_speed_pct": 0.2 }, "steam_api_name": "DOP_ACH_RELIC_COLLECTOR_SILVER" },
-        { "id": "gold", "threshold": 3, "rewards": { "attack_speed_pct": 0.3 }, "steam_api_name": "DOP_ACH_RELIC_COLLECTOR_GOLD" },
-        { "id": "diamond", "threshold": 5, "rewards": { "attack_speed_pct": 0.4 }, "steam_api_name": "DOP_ACH_RELIC_COLLECTOR_DIAMOND" }
+        { "id": "bronze", "threshold": 1, "rewards": { "attack_speed_pct": 1 }, "steam_api_name": "DOP_ACH_RELIC_COLLECTOR_BRONZE" },
+        { "id": "silver", "threshold": 2, "rewards": { "attack_speed_pct": 2 }, "steam_api_name": "DOP_ACH_RELIC_COLLECTOR_SILVER" },
+        { "id": "gold", "threshold": 3, "rewards": { "attack_speed_pct": 3 }, "steam_api_name": "DOP_ACH_RELIC_COLLECTOR_GOLD" },
+        { "id": "diamond", "threshold": 5, "rewards": { "attack_speed_pct": 4 }, "steam_api_name": "DOP_ACH_RELIC_COLLECTOR_DIAMOND" }
       ],
       "name": "Relic Collector"
     },
@@ -106,10 +106,10 @@
       "metric": "evolutions_in_run",
       "aggregation": "sum",
       "tiers": [
-        { "id": "bronze", "threshold": 1, "rewards": { "attack_speed_pct": 0.1 }, "steam_api_name": "DOP_ACH_EVOLUTIONIST_BRONZE" },
-        { "id": "silver", "threshold": 5, "rewards": { "attack_speed_pct": 0.2 }, "steam_api_name": "DOP_ACH_EVOLUTIONIST_SILVER" },
-        { "id": "gold", "threshold": 25, "rewards": { "attack_speed_pct": 0.3 }, "steam_api_name": "DOP_ACH_EVOLUTIONIST_GOLD" },
-        { "id": "diamond", "threshold": 100, "rewards": { "attack_speed_pct": 0.4 }, "steam_api_name": "DOP_ACH_EVOLUTIONIST_DIAMOND" }
+        { "id": "bronze", "threshold": 1, "rewards": { "attack_speed_pct": 1 }, "steam_api_name": "DOP_ACH_EVOLUTIONIST_BRONZE" },
+        { "id": "silver", "threshold": 5, "rewards": { "attack_speed_pct": 2 }, "steam_api_name": "DOP_ACH_EVOLUTIONIST_SILVER" },
+        { "id": "gold", "threshold": 25, "rewards": { "attack_speed_pct": 3 }, "steam_api_name": "DOP_ACH_EVOLUTIONIST_GOLD" },
+        { "id": "diamond", "threshold": 100, "rewards": { "attack_speed_pct": 4 }, "steam_api_name": "DOP_ACH_EVOLUTIONIST_DIAMOND" }
       ],
       "name": "Evolutionist"
     },
@@ -120,10 +120,10 @@
       "metric": "equipment_items_collected",
       "aggregation": "sum",
       "tiers": [
-        { "id": "bronze", "threshold": 10, "rewards": { "max_hp_pct": 0.0005 }, "steam_api_name": "DOP_ACH_EQUIPMENT_COLLECTOR_BRONZE" },
-        { "id": "silver", "threshold": 25, "rewards": { "max_hp_pct": 0.001 }, "steam_api_name": "DOP_ACH_EQUIPMENT_COLLECTOR_SILVER" },
-        { "id": "gold", "threshold": 50, "rewards": { "max_hp_pct": 0.0015 }, "steam_api_name": "DOP_ACH_EQUIPMENT_COLLECTOR_GOLD" },
-        { "id": "diamond", "threshold": 100, "rewards": { "max_hp_pct": 0.002 }, "steam_api_name": "DOP_ACH_EQUIPMENT_COLLECTOR_DIAMOND" }
+        { "id": "bronze", "threshold": 10, "rewards": { "max_hp_pct": 0.005 }, "steam_api_name": "DOP_ACH_EQUIPMENT_COLLECTOR_BRONZE" },
+        { "id": "silver", "threshold": 25, "rewards": { "max_hp_pct": 0.01 }, "steam_api_name": "DOP_ACH_EQUIPMENT_COLLECTOR_SILVER" },
+        { "id": "gold", "threshold": 50, "rewards": { "max_hp_pct": 0.015 }, "steam_api_name": "DOP_ACH_EQUIPMENT_COLLECTOR_GOLD" },
+        { "id": "diamond", "threshold": 100, "rewards": { "max_hp_pct": 0.02 }, "steam_api_name": "DOP_ACH_EQUIPMENT_COLLECTOR_DIAMOND" }
       ],
       "name": "Equipment Collector"
     },
@@ -134,10 +134,10 @@
       "metric": "enemy_kills_chaser",
       "aggregation": "sum",
       "tiers": [
-        { "id": "bronze", "threshold": 100, "rewards": { "damage_pct": 0.00025 }, "steam_api_name": "DOP_ACH_ENEMY_HUNTER_CHASER_BRONZE" },
-        { "id": "silver", "threshold": 500, "rewards": { "damage_pct": 0.0005 }, "steam_api_name": "DOP_ACH_ENEMY_HUNTER_CHASER_SILVER" },
-        { "id": "gold", "threshold": 2500, "rewards": { "damage_pct": 0.00075 }, "steam_api_name": "DOP_ACH_ENEMY_HUNTER_CHASER_GOLD" },
-        { "id": "diamond", "threshold": 10000, "rewards": { "damage_pct": 0.001 }, "steam_api_name": "DOP_ACH_ENEMY_HUNTER_CHASER_DIAMOND" }
+        { "id": "bronze", "threshold": 100, "rewards": { "damage_pct": 0.0025 }, "steam_api_name": "DOP_ACH_ENEMY_HUNTER_CHASER_BRONZE" },
+        { "id": "silver", "threshold": 500, "rewards": { "damage_pct": 0.005 }, "steam_api_name": "DOP_ACH_ENEMY_HUNTER_CHASER_SILVER" },
+        { "id": "gold", "threshold": 2500, "rewards": { "damage_pct": 0.0075 }, "steam_api_name": "DOP_ACH_ENEMY_HUNTER_CHASER_GOLD" },
+        { "id": "diamond", "threshold": 10000, "rewards": { "damage_pct": 0.01 }, "steam_api_name": "DOP_ACH_ENEMY_HUNTER_CHASER_DIAMOND" }
       ],
       "name": "Enemy Hunter Chaser"
     },
@@ -148,10 +148,10 @@
       "metric": "enemy_kills_sprinter",
       "aggregation": "sum",
       "tiers": [
-        { "id": "bronze", "threshold": 50, "rewards": { "damage_pct": 0.00025 }, "steam_api_name": "DOP_ACH_ENEMY_HUNTER_SPRINTER_BRONZE" },
-        { "id": "silver", "threshold": 250, "rewards": { "damage_pct": 0.0005 }, "steam_api_name": "DOP_ACH_ENEMY_HUNTER_SPRINTER_SILVER" },
-        { "id": "gold", "threshold": 1000, "rewards": { "damage_pct": 0.00075 }, "steam_api_name": "DOP_ACH_ENEMY_HUNTER_SPRINTER_GOLD" },
-        { "id": "diamond", "threshold": 5000, "rewards": { "damage_pct": 0.001 }, "steam_api_name": "DOP_ACH_ENEMY_HUNTER_SPRINTER_DIAMOND" }
+        { "id": "bronze", "threshold": 50, "rewards": { "damage_pct": 0.0025 }, "steam_api_name": "DOP_ACH_ENEMY_HUNTER_SPRINTER_BRONZE" },
+        { "id": "silver", "threshold": 250, "rewards": { "damage_pct": 0.005 }, "steam_api_name": "DOP_ACH_ENEMY_HUNTER_SPRINTER_SILVER" },
+        { "id": "gold", "threshold": 1000, "rewards": { "damage_pct": 0.0075 }, "steam_api_name": "DOP_ACH_ENEMY_HUNTER_SPRINTER_GOLD" },
+        { "id": "diamond", "threshold": 5000, "rewards": { "damage_pct": 0.01 }, "steam_api_name": "DOP_ACH_ENEMY_HUNTER_SPRINTER_DIAMOND" }
       ],
       "name": "Enemy Hunter Sprinter"
     },
@@ -162,10 +162,10 @@
       "metric": "enemy_kills_tank",
       "aggregation": "sum",
       "tiers": [
-        { "id": "bronze", "threshold": 25, "rewards": { "damage_pct": 0.00025 }, "steam_api_name": "DOP_ACH_ENEMY_HUNTER_TANK_BRONZE" },
-        { "id": "silver", "threshold": 100, "rewards": { "damage_pct": 0.0005 }, "steam_api_name": "DOP_ACH_ENEMY_HUNTER_TANK_SILVER" },
-        { "id": "gold", "threshold": 500, "rewards": { "damage_pct": 0.00075 }, "steam_api_name": "DOP_ACH_ENEMY_HUNTER_TANK_GOLD" },
-        { "id": "diamond", "threshold": 2000, "rewards": { "damage_pct": 0.001 }, "steam_api_name": "DOP_ACH_ENEMY_HUNTER_TANK_DIAMOND" }
+        { "id": "bronze", "threshold": 25, "rewards": { "damage_pct": 0.0025 }, "steam_api_name": "DOP_ACH_ENEMY_HUNTER_TANK_BRONZE" },
+        { "id": "silver", "threshold": 100, "rewards": { "damage_pct": 0.005 }, "steam_api_name": "DOP_ACH_ENEMY_HUNTER_TANK_SILVER" },
+        { "id": "gold", "threshold": 500, "rewards": { "damage_pct": 0.0075 }, "steam_api_name": "DOP_ACH_ENEMY_HUNTER_TANK_GOLD" },
+        { "id": "diamond", "threshold": 2000, "rewards": { "damage_pct": 0.01 }, "steam_api_name": "DOP_ACH_ENEMY_HUNTER_TANK_DIAMOND" }
       ],
       "name": "Enemy Hunter Tank"
     },
@@ -176,10 +176,10 @@
       "metric": "enemy_kills_shooter",
       "aggregation": "sum",
       "tiers": [
-        { "id": "bronze", "threshold": 50, "rewards": { "damage_pct": 0.00025 }, "steam_api_name": "DOP_ACH_ENEMY_HUNTER_SHOOTER_BRONZE" },
-        { "id": "silver", "threshold": 250, "rewards": { "damage_pct": 0.0005 }, "steam_api_name": "DOP_ACH_ENEMY_HUNTER_SHOOTER_SILVER" },
-        { "id": "gold", "threshold": 1000, "rewards": { "damage_pct": 0.00075 }, "steam_api_name": "DOP_ACH_ENEMY_HUNTER_SHOOTER_GOLD" },
-        { "id": "diamond", "threshold": 5000, "rewards": { "damage_pct": 0.001 }, "steam_api_name": "DOP_ACH_ENEMY_HUNTER_SHOOTER_DIAMOND" }
+        { "id": "bronze", "threshold": 50, "rewards": { "damage_pct": 0.0025 }, "steam_api_name": "DOP_ACH_ENEMY_HUNTER_SHOOTER_BRONZE" },
+        { "id": "silver", "threshold": 250, "rewards": { "damage_pct": 0.005 }, "steam_api_name": "DOP_ACH_ENEMY_HUNTER_SHOOTER_SILVER" },
+        { "id": "gold", "threshold": 1000, "rewards": { "damage_pct": 0.0075 }, "steam_api_name": "DOP_ACH_ENEMY_HUNTER_SHOOTER_GOLD" },
+        { "id": "diamond", "threshold": 5000, "rewards": { "damage_pct": 0.01 }, "steam_api_name": "DOP_ACH_ENEMY_HUNTER_SHOOTER_DIAMOND" }
       ],
       "name": "Enemy Hunter Shooter"
     },
@@ -190,10 +190,10 @@
       "metric": "enemy_kills_buffer",
       "aggregation": "sum",
       "tiers": [
-        { "id": "bronze", "threshold": 25, "rewards": { "damage_pct": 0.00025 }, "steam_api_name": "DOP_ACH_ENEMY_HUNTER_BUFFER_BRONZE" },
-        { "id": "silver", "threshold": 100, "rewards": { "damage_pct": 0.0005 }, "steam_api_name": "DOP_ACH_ENEMY_HUNTER_BUFFER_SILVER" },
-        { "id": "gold", "threshold": 500, "rewards": { "damage_pct": 0.00075 }, "steam_api_name": "DOP_ACH_ENEMY_HUNTER_BUFFER_GOLD" },
-        { "id": "diamond", "threshold": 2000, "rewards": { "damage_pct": 0.001 }, "steam_api_name": "DOP_ACH_ENEMY_HUNTER_BUFFER_DIAMOND" }
+        { "id": "bronze", "threshold": 25, "rewards": { "damage_pct": 0.0025 }, "steam_api_name": "DOP_ACH_ENEMY_HUNTER_BUFFER_BRONZE" },
+        { "id": "silver", "threshold": 100, "rewards": { "damage_pct": 0.005 }, "steam_api_name": "DOP_ACH_ENEMY_HUNTER_BUFFER_SILVER" },
+        { "id": "gold", "threshold": 500, "rewards": { "damage_pct": 0.0075 }, "steam_api_name": "DOP_ACH_ENEMY_HUNTER_BUFFER_GOLD" },
+        { "id": "diamond", "threshold": 2000, "rewards": { "damage_pct": 0.01 }, "steam_api_name": "DOP_ACH_ENEMY_HUNTER_BUFFER_DIAMOND" }
       ],
       "name": "Enemy Hunter Buffer"
     },
@@ -204,10 +204,10 @@
       "metric": "enemy_kills_exploder",
       "aggregation": "sum",
       "tiers": [
-        { "id": "bronze", "threshold": 25, "rewards": { "damage_pct": 0.00025 }, "steam_api_name": "DOP_ACH_ENEMY_HUNTER_EXPLODER_BRONZE" },
-        { "id": "silver", "threshold": 100, "rewards": { "damage_pct": 0.0005 }, "steam_api_name": "DOP_ACH_ENEMY_HUNTER_EXPLODER_SILVER" },
-        { "id": "gold", "threshold": 500, "rewards": { "damage_pct": 0.00075 }, "steam_api_name": "DOP_ACH_ENEMY_HUNTER_EXPLODER_GOLD" },
-        { "id": "diamond", "threshold": 2000, "rewards": { "damage_pct": 0.001 }, "steam_api_name": "DOP_ACH_ENEMY_HUNTER_EXPLODER_DIAMOND" }
+        { "id": "bronze", "threshold": 25, "rewards": { "damage_pct": 0.0025 }, "steam_api_name": "DOP_ACH_ENEMY_HUNTER_EXPLODER_BRONZE" },
+        { "id": "silver", "threshold": 100, "rewards": { "damage_pct": 0.005 }, "steam_api_name": "DOP_ACH_ENEMY_HUNTER_EXPLODER_SILVER" },
+        { "id": "gold", "threshold": 500, "rewards": { "damage_pct": 0.0075 }, "steam_api_name": "DOP_ACH_ENEMY_HUNTER_EXPLODER_GOLD" },
+        { "id": "diamond", "threshold": 2000, "rewards": { "damage_pct": 0.01 }, "steam_api_name": "DOP_ACH_ENEMY_HUNTER_EXPLODER_DIAMOND" }
       ],
       "name": "Enemy Hunter Exploder"
     },
@@ -218,10 +218,10 @@
       "metric": "enemy_kills_shielder",
       "aggregation": "sum",
       "tiers": [
-        { "id": "bronze", "threshold": 25, "rewards": { "damage_pct": 0.00025 }, "steam_api_name": "DOP_ACH_ENEMY_HUNTER_SHIELDER_BRONZE" },
-        { "id": "silver", "threshold": 100, "rewards": { "damage_pct": 0.0005 }, "steam_api_name": "DOP_ACH_ENEMY_HUNTER_SHIELDER_SILVER" },
-        { "id": "gold", "threshold": 500, "rewards": { "damage_pct": 0.00075 }, "steam_api_name": "DOP_ACH_ENEMY_HUNTER_SHIELDER_GOLD" },
-        { "id": "diamond", "threshold": 2000, "rewards": { "damage_pct": 0.001 }, "steam_api_name": "DOP_ACH_ENEMY_HUNTER_SHIELDER_DIAMOND" }
+        { "id": "bronze", "threshold": 25, "rewards": { "damage_pct": 0.0025 }, "steam_api_name": "DOP_ACH_ENEMY_HUNTER_SHIELDER_BRONZE" },
+        { "id": "silver", "threshold": 100, "rewards": { "damage_pct": 0.005 }, "steam_api_name": "DOP_ACH_ENEMY_HUNTER_SHIELDER_SILVER" },
+        { "id": "gold", "threshold": 500, "rewards": { "damage_pct": 0.0075 }, "steam_api_name": "DOP_ACH_ENEMY_HUNTER_SHIELDER_GOLD" },
+        { "id": "diamond", "threshold": 2000, "rewards": { "damage_pct": 0.01 }, "steam_api_name": "DOP_ACH_ENEMY_HUNTER_SHIELDER_DIAMOND" }
       ],
       "name": "Enemy Hunter Shielder"
     },
@@ -232,10 +232,10 @@
       "metric": "enemy_kills_summoner",
       "aggregation": "sum",
       "tiers": [
-        { "id": "bronze", "threshold": 10, "rewards": { "damage_pct": 0.00025 }, "steam_api_name": "DOP_ACH_ENEMY_HUNTER_SUMMONER_BRONZE" },
-        { "id": "silver", "threshold": 50, "rewards": { "damage_pct": 0.0005 }, "steam_api_name": "DOP_ACH_ENEMY_HUNTER_SUMMONER_SILVER" },
-        { "id": "gold", "threshold": 250, "rewards": { "damage_pct": 0.00075 }, "steam_api_name": "DOP_ACH_ENEMY_HUNTER_SUMMONER_GOLD" },
-        { "id": "diamond", "threshold": 1000, "rewards": { "damage_pct": 0.001 }, "steam_api_name": "DOP_ACH_ENEMY_HUNTER_SUMMONER_DIAMOND" }
+        { "id": "bronze", "threshold": 10, "rewards": { "damage_pct": 0.0025 }, "steam_api_name": "DOP_ACH_ENEMY_HUNTER_SUMMONER_BRONZE" },
+        { "id": "silver", "threshold": 50, "rewards": { "damage_pct": 0.005 }, "steam_api_name": "DOP_ACH_ENEMY_HUNTER_SUMMONER_SILVER" },
+        { "id": "gold", "threshold": 250, "rewards": { "damage_pct": 0.0075 }, "steam_api_name": "DOP_ACH_ENEMY_HUNTER_SUMMONER_GOLD" },
+        { "id": "diamond", "threshold": 1000, "rewards": { "damage_pct": 0.01 }, "steam_api_name": "DOP_ACH_ENEMY_HUNTER_SUMMONER_DIAMOND" }
       ],
       "name": "Enemy Hunter Summoner"
     },
@@ -246,10 +246,10 @@
       "metric": "enemy_kills_summoned",
       "aggregation": "sum",
       "tiers": [
-        { "id": "bronze", "threshold": 50, "rewards": { "damage_pct": 0.00025 }, "steam_api_name": "DOP_ACH_ENEMY_HUNTER_SUMMONED_BRONZE" },
-        { "id": "silver", "threshold": 250, "rewards": { "damage_pct": 0.0005 }, "steam_api_name": "DOP_ACH_ENEMY_HUNTER_SUMMONED_SILVER" },
-        { "id": "gold", "threshold": 1000, "rewards": { "damage_pct": 0.00075 }, "steam_api_name": "DOP_ACH_ENEMY_HUNTER_SUMMONED_GOLD" },
-        { "id": "diamond", "threshold": 5000, "rewards": { "damage_pct": 0.001 }, "steam_api_name": "DOP_ACH_ENEMY_HUNTER_SUMMONED_DIAMOND" }
+        { "id": "bronze", "threshold": 50, "rewards": { "damage_pct": 0.0025 }, "steam_api_name": "DOP_ACH_ENEMY_HUNTER_SUMMONED_BRONZE" },
+        { "id": "silver", "threshold": 250, "rewards": { "damage_pct": 0.005 }, "steam_api_name": "DOP_ACH_ENEMY_HUNTER_SUMMONED_SILVER" },
+        { "id": "gold", "threshold": 1000, "rewards": { "damage_pct": 0.0075 }, "steam_api_name": "DOP_ACH_ENEMY_HUNTER_SUMMONED_GOLD" },
+        { "id": "diamond", "threshold": 5000, "rewards": { "damage_pct": 0.01 }, "steam_api_name": "DOP_ACH_ENEMY_HUNTER_SUMMONED_DIAMOND" }
       ],
       "name": "Enemy Hunter Summoned"
     },
@@ -260,10 +260,10 @@
       "metric": "enemy_kills_elite",
       "aggregation": "sum",
       "tiers": [
-        { "id": "bronze", "threshold": 1, "rewards": { "damage_pct": 0.00025 }, "steam_api_name": "DOP_ACH_ENEMY_HUNTER_ELITE_BRONZE" },
-        { "id": "silver", "threshold": 10, "rewards": { "damage_pct": 0.0005 }, "steam_api_name": "DOP_ACH_ENEMY_HUNTER_ELITE_SILVER" },
-        { "id": "gold", "threshold": 50, "rewards": { "damage_pct": 0.00075 }, "steam_api_name": "DOP_ACH_ENEMY_HUNTER_ELITE_GOLD" },
-        { "id": "diamond", "threshold": 200, "rewards": { "damage_pct": 0.001 }, "steam_api_name": "DOP_ACH_ENEMY_HUNTER_ELITE_DIAMOND" }
+        { "id": "bronze", "threshold": 1, "rewards": { "damage_pct": 0.0025 }, "steam_api_name": "DOP_ACH_ENEMY_HUNTER_ELITE_BRONZE" },
+        { "id": "silver", "threshold": 10, "rewards": { "damage_pct": 0.005 }, "steam_api_name": "DOP_ACH_ENEMY_HUNTER_ELITE_SILVER" },
+        { "id": "gold", "threshold": 50, "rewards": { "damage_pct": 0.0075 }, "steam_api_name": "DOP_ACH_ENEMY_HUNTER_ELITE_GOLD" },
+        { "id": "diamond", "threshold": 200, "rewards": { "damage_pct": 0.01 }, "steam_api_name": "DOP_ACH_ENEMY_HUNTER_ELITE_DIAMOND" }
       ],
       "name": "Enemy Hunter Elite"
     },
@@ -274,10 +274,10 @@
       "metric": "enemy_kills_mid_boss",
       "aggregation": "sum",
       "tiers": [
-        { "id": "bronze", "threshold": 1, "rewards": { "damage_pct": 0.00025 }, "steam_api_name": "DOP_ACH_ENEMY_HUNTER_MID_BOSS_BRONZE" },
-        { "id": "silver", "threshold": 5, "rewards": { "damage_pct": 0.0005 }, "steam_api_name": "DOP_ACH_ENEMY_HUNTER_MID_BOSS_SILVER" },
-        { "id": "gold", "threshold": 20, "rewards": { "damage_pct": 0.00075 }, "steam_api_name": "DOP_ACH_ENEMY_HUNTER_MID_BOSS_GOLD" },
-        { "id": "diamond", "threshold": 50, "rewards": { "damage_pct": 0.001 }, "steam_api_name": "DOP_ACH_ENEMY_HUNTER_MID_BOSS_DIAMOND" }
+        { "id": "bronze", "threshold": 1, "rewards": { "damage_pct": 0.0025 }, "steam_api_name": "DOP_ACH_ENEMY_HUNTER_MID_BOSS_BRONZE" },
+        { "id": "silver", "threshold": 5, "rewards": { "damage_pct": 0.005 }, "steam_api_name": "DOP_ACH_ENEMY_HUNTER_MID_BOSS_SILVER" },
+        { "id": "gold", "threshold": 20, "rewards": { "damage_pct": 0.0075 }, "steam_api_name": "DOP_ACH_ENEMY_HUNTER_MID_BOSS_GOLD" },
+        { "id": "diamond", "threshold": 50, "rewards": { "damage_pct": 0.01 }, "steam_api_name": "DOP_ACH_ENEMY_HUNTER_MID_BOSS_DIAMOND" }
       ],
       "name": "Enemy Hunter Mid Boss"
     },
@@ -288,10 +288,10 @@
       "metric": "enemy_kills_final_boss",
       "aggregation": "sum",
       "tiers": [
-        { "id": "bronze", "threshold": 1, "rewards": { "damage_pct": 0.00025 }, "steam_api_name": "DOP_ACH_ENEMY_HUNTER_FINAL_BOSS_BRONZE" },
-        { "id": "silver", "threshold": 3, "rewards": { "damage_pct": 0.0005 }, "steam_api_name": "DOP_ACH_ENEMY_HUNTER_FINAL_BOSS_SILVER" },
-        { "id": "gold", "threshold": 10, "rewards": { "damage_pct": 0.00075 }, "steam_api_name": "DOP_ACH_ENEMY_HUNTER_FINAL_BOSS_GOLD" },
-        { "id": "diamond", "threshold": 25, "rewards": { "damage_pct": 0.001 }, "steam_api_name": "DOP_ACH_ENEMY_HUNTER_FINAL_BOSS_DIAMOND" }
+        { "id": "bronze", "threshold": 1, "rewards": { "damage_pct": 0.0025 }, "steam_api_name": "DOP_ACH_ENEMY_HUNTER_FINAL_BOSS_BRONZE" },
+        { "id": "silver", "threshold": 3, "rewards": { "damage_pct": 0.005 }, "steam_api_name": "DOP_ACH_ENEMY_HUNTER_FINAL_BOSS_SILVER" },
+        { "id": "gold", "threshold": 10, "rewards": { "damage_pct": 0.0075 }, "steam_api_name": "DOP_ACH_ENEMY_HUNTER_FINAL_BOSS_GOLD" },
+        { "id": "diamond", "threshold": 25, "rewards": { "damage_pct": 0.01 }, "steam_api_name": "DOP_ACH_ENEMY_HUNTER_FINAL_BOSS_DIAMOND" }
       ],
       "name": "Enemy Hunter Final Boss"
     },
@@ -302,10 +302,10 @@
       "metric": "weapon_damage_lightning_conductor",
       "aggregation": "sum",
       "tiers": [
-        { "id": "bronze", "threshold": 1000, "rewards": { "attack_speed_pct": 0.025 }, "steam_api_name": "DOP_ACH_WEAPON_MASTERY_LIGHTNING_CONDUCTOR_BRONZE" },
-        { "id": "silver", "threshold": 10000, "rewards": { "attack_speed_pct": 0.05 }, "steam_api_name": "DOP_ACH_WEAPON_MASTERY_LIGHTNING_CONDUCTOR_SILVER" },
-        { "id": "gold", "threshold": 50000, "rewards": { "attack_speed_pct": 0.075 }, "steam_api_name": "DOP_ACH_WEAPON_MASTERY_LIGHTNING_CONDUCTOR_GOLD" },
-        { "id": "diamond", "threshold": 250000, "rewards": { "attack_speed_pct": 0.1 }, "steam_api_name": "DOP_ACH_WEAPON_MASTERY_LIGHTNING_CONDUCTOR_DIAMOND" }
+        { "id": "bronze", "threshold": 1000, "rewards": { "attack_speed_pct": 0.25 }, "steam_api_name": "DOP_ACH_WEAPON_MASTERY_LIGHTNING_CONDUCTOR_BRONZE" },
+        { "id": "silver", "threshold": 10000, "rewards": { "attack_speed_pct": 0.5 }, "steam_api_name": "DOP_ACH_WEAPON_MASTERY_LIGHTNING_CONDUCTOR_SILVER" },
+        { "id": "gold", "threshold": 50000, "rewards": { "attack_speed_pct": 0.75 }, "steam_api_name": "DOP_ACH_WEAPON_MASTERY_LIGHTNING_CONDUCTOR_GOLD" },
+        { "id": "diamond", "threshold": 250000, "rewards": { "attack_speed_pct": 1 }, "steam_api_name": "DOP_ACH_WEAPON_MASTERY_LIGHTNING_CONDUCTOR_DIAMOND" }
       ],
       "name": "Weapon Mastery Lightning Conductor"
     },
@@ -316,10 +316,10 @@
       "metric": "weapon_damage_inferno_sprayer",
       "aggregation": "sum",
       "tiers": [
-        { "id": "bronze", "threshold": 1000, "rewards": { "attack_speed_pct": 0.025 }, "steam_api_name": "DOP_ACH_WEAPON_MASTERY_INFERNO_SPRAYER_BRONZE" },
-        { "id": "silver", "threshold": 10000, "rewards": { "attack_speed_pct": 0.05 }, "steam_api_name": "DOP_ACH_WEAPON_MASTERY_INFERNO_SPRAYER_SILVER" },
-        { "id": "gold", "threshold": 50000, "rewards": { "attack_speed_pct": 0.075 }, "steam_api_name": "DOP_ACH_WEAPON_MASTERY_INFERNO_SPRAYER_GOLD" },
-        { "id": "diamond", "threshold": 250000, "rewards": { "attack_speed_pct": 0.1 }, "steam_api_name": "DOP_ACH_WEAPON_MASTERY_INFERNO_SPRAYER_DIAMOND" }
+        { "id": "bronze", "threshold": 1000, "rewards": { "attack_speed_pct": 0.25 }, "steam_api_name": "DOP_ACH_WEAPON_MASTERY_INFERNO_SPRAYER_BRONZE" },
+        { "id": "silver", "threshold": 10000, "rewards": { "attack_speed_pct": 0.5 }, "steam_api_name": "DOP_ACH_WEAPON_MASTERY_INFERNO_SPRAYER_SILVER" },
+        { "id": "gold", "threshold": 50000, "rewards": { "attack_speed_pct": 0.75 }, "steam_api_name": "DOP_ACH_WEAPON_MASTERY_INFERNO_SPRAYER_GOLD" },
+        { "id": "diamond", "threshold": 250000, "rewards": { "attack_speed_pct": 1 }, "steam_api_name": "DOP_ACH_WEAPON_MASTERY_INFERNO_SPRAYER_DIAMOND" }
       ],
       "name": "Weapon Mastery Inferno Sprayer"
     },
@@ -330,10 +330,10 @@
       "metric": "weapon_damage_crimson_daggers",
       "aggregation": "sum",
       "tiers": [
-        { "id": "bronze", "threshold": 1000, "rewards": { "attack_speed_pct": 0.025 }, "steam_api_name": "DOP_ACH_WEAPON_MASTERY_CRIMSON_DAGGERS_BRONZE" },
-        { "id": "silver", "threshold": 10000, "rewards": { "attack_speed_pct": 0.05 }, "steam_api_name": "DOP_ACH_WEAPON_MASTERY_CRIMSON_DAGGERS_SILVER" },
-        { "id": "gold", "threshold": 50000, "rewards": { "attack_speed_pct": 0.075 }, "steam_api_name": "DOP_ACH_WEAPON_MASTERY_CRIMSON_DAGGERS_GOLD" },
-        { "id": "diamond", "threshold": 250000, "rewards": { "attack_speed_pct": 0.1 }, "steam_api_name": "DOP_ACH_WEAPON_MASTERY_CRIMSON_DAGGERS_DIAMOND" }
+        { "id": "bronze", "threshold": 1000, "rewards": { "attack_speed_pct": 0.25 }, "steam_api_name": "DOP_ACH_WEAPON_MASTERY_CRIMSON_DAGGERS_BRONZE" },
+        { "id": "silver", "threshold": 10000, "rewards": { "attack_speed_pct": 0.5 }, "steam_api_name": "DOP_ACH_WEAPON_MASTERY_CRIMSON_DAGGERS_SILVER" },
+        { "id": "gold", "threshold": 50000, "rewards": { "attack_speed_pct": 0.75 }, "steam_api_name": "DOP_ACH_WEAPON_MASTERY_CRIMSON_DAGGERS_GOLD" },
+        { "id": "diamond", "threshold": 250000, "rewards": { "attack_speed_pct": 1 }, "steam_api_name": "DOP_ACH_WEAPON_MASTERY_CRIMSON_DAGGERS_DIAMOND" }
       ],
       "name": "Weapon Mastery Crimson Daggers"
     },
@@ -344,10 +344,10 @@
       "metric": "weapon_damage_minigun",
       "aggregation": "sum",
       "tiers": [
-        { "id": "bronze", "threshold": 1000, "rewards": { "attack_speed_pct": 0.025 }, "steam_api_name": "DOP_ACH_WEAPON_MASTERY_MINIGUN_BRONZE" },
-        { "id": "silver", "threshold": 10000, "rewards": { "attack_speed_pct": 0.05 }, "steam_api_name": "DOP_ACH_WEAPON_MASTERY_MINIGUN_SILVER" },
-        { "id": "gold", "threshold": 50000, "rewards": { "attack_speed_pct": 0.075 }, "steam_api_name": "DOP_ACH_WEAPON_MASTERY_MINIGUN_GOLD" },
-        { "id": "diamond", "threshold": 250000, "rewards": { "attack_speed_pct": 0.1 }, "steam_api_name": "DOP_ACH_WEAPON_MASTERY_MINIGUN_DIAMOND" }
+        { "id": "bronze", "threshold": 1000, "rewards": { "attack_speed_pct": 0.25 }, "steam_api_name": "DOP_ACH_WEAPON_MASTERY_MINIGUN_BRONZE" },
+        { "id": "silver", "threshold": 10000, "rewards": { "attack_speed_pct": 0.5 }, "steam_api_name": "DOP_ACH_WEAPON_MASTERY_MINIGUN_SILVER" },
+        { "id": "gold", "threshold": 50000, "rewards": { "attack_speed_pct": 0.75 }, "steam_api_name": "DOP_ACH_WEAPON_MASTERY_MINIGUN_GOLD" },
+        { "id": "diamond", "threshold": 250000, "rewards": { "attack_speed_pct": 1 }, "steam_api_name": "DOP_ACH_WEAPON_MASTERY_MINIGUN_DIAMOND" }
       ],
       "name": "Weapon Mastery Minigun"
     },
@@ -358,10 +358,10 @@
       "metric": "weapon_damage_toxic_cloud",
       "aggregation": "sum",
       "tiers": [
-        { "id": "bronze", "threshold": 1000, "rewards": { "attack_speed_pct": 0.025 }, "steam_api_name": "DOP_ACH_WEAPON_MASTERY_TOXIC_CLOUD_BRONZE" },
-        { "id": "silver", "threshold": 10000, "rewards": { "attack_speed_pct": 0.05 }, "steam_api_name": "DOP_ACH_WEAPON_MASTERY_TOXIC_CLOUD_SILVER" },
-        { "id": "gold", "threshold": 50000, "rewards": { "attack_speed_pct": 0.075 }, "steam_api_name": "DOP_ACH_WEAPON_MASTERY_TOXIC_CLOUD_GOLD" },
-        { "id": "diamond", "threshold": 250000, "rewards": { "attack_speed_pct": 0.1 }, "steam_api_name": "DOP_ACH_WEAPON_MASTERY_TOXIC_CLOUD_DIAMOND" }
+        { "id": "bronze", "threshold": 1000, "rewards": { "attack_speed_pct": 0.25 }, "steam_api_name": "DOP_ACH_WEAPON_MASTERY_TOXIC_CLOUD_BRONZE" },
+        { "id": "silver", "threshold": 10000, "rewards": { "attack_speed_pct": 0.5 }, "steam_api_name": "DOP_ACH_WEAPON_MASTERY_TOXIC_CLOUD_SILVER" },
+        { "id": "gold", "threshold": 50000, "rewards": { "attack_speed_pct": 0.75 }, "steam_api_name": "DOP_ACH_WEAPON_MASTERY_TOXIC_CLOUD_GOLD" },
+        { "id": "diamond", "threshold": 250000, "rewards": { "attack_speed_pct": 1 }, "steam_api_name": "DOP_ACH_WEAPON_MASTERY_TOXIC_CLOUD_DIAMOND" }
       ],
       "name": "Weapon Mastery Toxic Cloud"
     },
@@ -372,10 +372,10 @@
       "metric": "weapon_damage_sawblades",
       "aggregation": "sum",
       "tiers": [
-        { "id": "bronze", "threshold": 1000, "rewards": { "attack_speed_pct": 0.025 }, "steam_api_name": "DOP_ACH_WEAPON_MASTERY_SAWBLADES_BRONZE" },
-        { "id": "silver", "threshold": 10000, "rewards": { "attack_speed_pct": 0.05 }, "steam_api_name": "DOP_ACH_WEAPON_MASTERY_SAWBLADES_SILVER" },
-        { "id": "gold", "threshold": 50000, "rewards": { "attack_speed_pct": 0.075 }, "steam_api_name": "DOP_ACH_WEAPON_MASTERY_SAWBLADES_GOLD" },
-        { "id": "diamond", "threshold": 250000, "rewards": { "attack_speed_pct": 0.1 }, "steam_api_name": "DOP_ACH_WEAPON_MASTERY_SAWBLADES_DIAMOND" }
+        { "id": "bronze", "threshold": 1000, "rewards": { "attack_speed_pct": 0.25 }, "steam_api_name": "DOP_ACH_WEAPON_MASTERY_SAWBLADES_BRONZE" },
+        { "id": "silver", "threshold": 10000, "rewards": { "attack_speed_pct": 0.5 }, "steam_api_name": "DOP_ACH_WEAPON_MASTERY_SAWBLADES_SILVER" },
+        { "id": "gold", "threshold": 50000, "rewards": { "attack_speed_pct": 0.75 }, "steam_api_name": "DOP_ACH_WEAPON_MASTERY_SAWBLADES_GOLD" },
+        { "id": "diamond", "threshold": 250000, "rewards": { "attack_speed_pct": 1 }, "steam_api_name": "DOP_ACH_WEAPON_MASTERY_SAWBLADES_DIAMOND" }
       ],
       "name": "Weapon Mastery Sawblades"
     },
@@ -386,10 +386,10 @@
       "metric": "weapon_damage_meteor_staff",
       "aggregation": "sum",
       "tiers": [
-        { "id": "bronze", "threshold": 1000, "rewards": { "attack_speed_pct": 0.025 }, "steam_api_name": "DOP_ACH_WEAPON_MASTERY_METEOR_STAFF_BRONZE" },
-        { "id": "silver", "threshold": 10000, "rewards": { "attack_speed_pct": 0.05 }, "steam_api_name": "DOP_ACH_WEAPON_MASTERY_METEOR_STAFF_SILVER" },
-        { "id": "gold", "threshold": 50000, "rewards": { "attack_speed_pct": 0.075 }, "steam_api_name": "DOP_ACH_WEAPON_MASTERY_METEOR_STAFF_GOLD" },
-        { "id": "diamond", "threshold": 250000, "rewards": { "attack_speed_pct": 0.1 }, "steam_api_name": "DOP_ACH_WEAPON_MASTERY_METEOR_STAFF_DIAMOND" }
+        { "id": "bronze", "threshold": 1000, "rewards": { "attack_speed_pct": 0.25 }, "steam_api_name": "DOP_ACH_WEAPON_MASTERY_METEOR_STAFF_BRONZE" },
+        { "id": "silver", "threshold": 10000, "rewards": { "attack_speed_pct": 0.5 }, "steam_api_name": "DOP_ACH_WEAPON_MASTERY_METEOR_STAFF_SILVER" },
+        { "id": "gold", "threshold": 50000, "rewards": { "attack_speed_pct": 0.75 }, "steam_api_name": "DOP_ACH_WEAPON_MASTERY_METEOR_STAFF_GOLD" },
+        { "id": "diamond", "threshold": 250000, "rewards": { "attack_speed_pct": 1 }, "steam_api_name": "DOP_ACH_WEAPON_MASTERY_METEOR_STAFF_DIAMOND" }
       ],
       "name": "Weapon Mastery Meteor Staff"
     },
@@ -400,10 +400,10 @@
       "metric": "weapon_damage_prism_laser",
       "aggregation": "sum",
       "tiers": [
-        { "id": "bronze", "threshold": 1000, "rewards": { "attack_speed_pct": 0.025 }, "steam_api_name": "DOP_ACH_WEAPON_MASTERY_PRISM_LASER_BRONZE" },
-        { "id": "silver", "threshold": 10000, "rewards": { "attack_speed_pct": 0.05 }, "steam_api_name": "DOP_ACH_WEAPON_MASTERY_PRISM_LASER_SILVER" },
-        { "id": "gold", "threshold": 50000, "rewards": { "attack_speed_pct": 0.075 }, "steam_api_name": "DOP_ACH_WEAPON_MASTERY_PRISM_LASER_GOLD" },
-        { "id": "diamond", "threshold": 250000, "rewards": { "attack_speed_pct": 0.1 }, "steam_api_name": "DOP_ACH_WEAPON_MASTERY_PRISM_LASER_DIAMOND" }
+        { "id": "bronze", "threshold": 1000, "rewards": { "attack_speed_pct": 0.25 }, "steam_api_name": "DOP_ACH_WEAPON_MASTERY_PRISM_LASER_BRONZE" },
+        { "id": "silver", "threshold": 10000, "rewards": { "attack_speed_pct": 0.5 }, "steam_api_name": "DOP_ACH_WEAPON_MASTERY_PRISM_LASER_SILVER" },
+        { "id": "gold", "threshold": 50000, "rewards": { "attack_speed_pct": 0.75 }, "steam_api_name": "DOP_ACH_WEAPON_MASTERY_PRISM_LASER_GOLD" },
+        { "id": "diamond", "threshold": 250000, "rewards": { "attack_speed_pct": 1 }, "steam_api_name": "DOP_ACH_WEAPON_MASTERY_PRISM_LASER_DIAMOND" }
       ],
       "name": "Weapon Mastery Prism Laser"
     },
@@ -414,10 +414,10 @@
       "metric": "weapon_damage_void_orb",
       "aggregation": "sum",
       "tiers": [
-        { "id": "bronze", "threshold": 1000, "rewards": { "attack_speed_pct": 0.025 }, "steam_api_name": "DOP_ACH_WEAPON_MASTERY_VOID_ORB_BRONZE" },
-        { "id": "silver", "threshold": 10000, "rewards": { "attack_speed_pct": 0.05 }, "steam_api_name": "DOP_ACH_WEAPON_MASTERY_VOID_ORB_SILVER" },
-        { "id": "gold", "threshold": 50000, "rewards": { "attack_speed_pct": 0.075 }, "steam_api_name": "DOP_ACH_WEAPON_MASTERY_VOID_ORB_GOLD" },
-        { "id": "diamond", "threshold": 250000, "rewards": { "attack_speed_pct": 0.1 }, "steam_api_name": "DOP_ACH_WEAPON_MASTERY_VOID_ORB_DIAMOND" }
+        { "id": "bronze", "threshold": 1000, "rewards": { "attack_speed_pct": 0.25 }, "steam_api_name": "DOP_ACH_WEAPON_MASTERY_VOID_ORB_BRONZE" },
+        { "id": "silver", "threshold": 10000, "rewards": { "attack_speed_pct": 0.5 }, "steam_api_name": "DOP_ACH_WEAPON_MASTERY_VOID_ORB_SILVER" },
+        { "id": "gold", "threshold": 50000, "rewards": { "attack_speed_pct": 0.75 }, "steam_api_name": "DOP_ACH_WEAPON_MASTERY_VOID_ORB_GOLD" },
+        { "id": "diamond", "threshold": 250000, "rewards": { "attack_speed_pct": 1 }, "steam_api_name": "DOP_ACH_WEAPON_MASTERY_VOID_ORB_DIAMOND" }
       ],
       "name": "Weapon Mastery Void Orb"
     },
@@ -428,10 +428,10 @@
       "metric": "weapon_damage_frost_nova",
       "aggregation": "sum",
       "tiers": [
-        { "id": "bronze", "threshold": 1000, "rewards": { "attack_speed_pct": 0.025 }, "steam_api_name": "DOP_ACH_WEAPON_MASTERY_FROST_NOVA_BRONZE" },
-        { "id": "silver", "threshold": 10000, "rewards": { "attack_speed_pct": 0.05 }, "steam_api_name": "DOP_ACH_WEAPON_MASTERY_FROST_NOVA_SILVER" },
-        { "id": "gold", "threshold": 50000, "rewards": { "attack_speed_pct": 0.075 }, "steam_api_name": "DOP_ACH_WEAPON_MASTERY_FROST_NOVA_GOLD" },
-        { "id": "diamond", "threshold": 250000, "rewards": { "attack_speed_pct": 0.1 }, "steam_api_name": "DOP_ACH_WEAPON_MASTERY_FROST_NOVA_DIAMOND" }
+        { "id": "bronze", "threshold": 1000, "rewards": { "attack_speed_pct": 0.25 }, "steam_api_name": "DOP_ACH_WEAPON_MASTERY_FROST_NOVA_BRONZE" },
+        { "id": "silver", "threshold": 10000, "rewards": { "attack_speed_pct": 0.5 }, "steam_api_name": "DOP_ACH_WEAPON_MASTERY_FROST_NOVA_SILVER" },
+        { "id": "gold", "threshold": 50000, "rewards": { "attack_speed_pct": 0.75 }, "steam_api_name": "DOP_ACH_WEAPON_MASTERY_FROST_NOVA_GOLD" },
+        { "id": "diamond", "threshold": 250000, "rewards": { "attack_speed_pct": 1 }, "steam_api_name": "DOP_ACH_WEAPON_MASTERY_FROST_NOVA_DIAMOND" }
       ],
       "name": "Weapon Mastery Frost Nova"
     },
@@ -442,10 +442,10 @@
       "metric": "weapon_kills_lightning_conductor",
       "aggregation": "sum",
       "tiers": [
-        { "id": "bronze", "threshold": 10, "rewards": { "attack_speed_pct": 0.025 }, "steam_api_name": "DOP_ACH_WEAPON_KILLER_LIGHTNING_CONDUCTOR_BRONZE" },
-        { "id": "silver", "threshold": 50, "rewards": { "attack_speed_pct": 0.05 }, "steam_api_name": "DOP_ACH_WEAPON_KILLER_LIGHTNING_CONDUCTOR_SILVER" },
-        { "id": "gold", "threshold": 250, "rewards": { "attack_speed_pct": 0.075 }, "steam_api_name": "DOP_ACH_WEAPON_KILLER_LIGHTNING_CONDUCTOR_GOLD" },
-        { "id": "diamond", "threshold": 1000, "rewards": { "attack_speed_pct": 0.1 }, "steam_api_name": "DOP_ACH_WEAPON_KILLER_LIGHTNING_CONDUCTOR_DIAMOND" }
+        { "id": "bronze", "threshold": 10, "rewards": { "attack_speed_pct": 0.25 }, "steam_api_name": "DOP_ACH_WEAPON_KILLER_LIGHTNING_CONDUCTOR_BRONZE" },
+        { "id": "silver", "threshold": 50, "rewards": { "attack_speed_pct": 0.5 }, "steam_api_name": "DOP_ACH_WEAPON_KILLER_LIGHTNING_CONDUCTOR_SILVER" },
+        { "id": "gold", "threshold": 250, "rewards": { "attack_speed_pct": 0.75 }, "steam_api_name": "DOP_ACH_WEAPON_KILLER_LIGHTNING_CONDUCTOR_GOLD" },
+        { "id": "diamond", "threshold": 1000, "rewards": { "attack_speed_pct": 1 }, "steam_api_name": "DOP_ACH_WEAPON_KILLER_LIGHTNING_CONDUCTOR_DIAMOND" }
       ],
       "name": "Weapon Killer Lightning Conductor"
     },
@@ -456,10 +456,10 @@
       "metric": "weapon_kills_inferno_sprayer",
       "aggregation": "sum",
       "tiers": [
-        { "id": "bronze", "threshold": 10, "rewards": { "attack_speed_pct": 0.025 }, "steam_api_name": "DOP_ACH_WEAPON_KILLER_INFERNO_SPRAYER_BRONZE" },
-        { "id": "silver", "threshold": 50, "rewards": { "attack_speed_pct": 0.05 }, "steam_api_name": "DOP_ACH_WEAPON_KILLER_INFERNO_SPRAYER_SILVER" },
-        { "id": "gold", "threshold": 250, "rewards": { "attack_speed_pct": 0.075 }, "steam_api_name": "DOP_ACH_WEAPON_KILLER_INFERNO_SPRAYER_GOLD" },
-        { "id": "diamond", "threshold": 1000, "rewards": { "attack_speed_pct": 0.1 }, "steam_api_name": "DOP_ACH_WEAPON_KILLER_INFERNO_SPRAYER_DIAMOND" }
+        { "id": "bronze", "threshold": 10, "rewards": { "attack_speed_pct": 0.25 }, "steam_api_name": "DOP_ACH_WEAPON_KILLER_INFERNO_SPRAYER_BRONZE" },
+        { "id": "silver", "threshold": 50, "rewards": { "attack_speed_pct": 0.5 }, "steam_api_name": "DOP_ACH_WEAPON_KILLER_INFERNO_SPRAYER_SILVER" },
+        { "id": "gold", "threshold": 250, "rewards": { "attack_speed_pct": 0.75 }, "steam_api_name": "DOP_ACH_WEAPON_KILLER_INFERNO_SPRAYER_GOLD" },
+        { "id": "diamond", "threshold": 1000, "rewards": { "attack_speed_pct": 1 }, "steam_api_name": "DOP_ACH_WEAPON_KILLER_INFERNO_SPRAYER_DIAMOND" }
       ],
       "name": "Weapon Killer Inferno Sprayer"
     },
@@ -470,10 +470,10 @@
       "metric": "weapon_kills_crimson_daggers",
       "aggregation": "sum",
       "tiers": [
-        { "id": "bronze", "threshold": 10, "rewards": { "attack_speed_pct": 0.025 }, "steam_api_name": "DOP_ACH_WEAPON_KILLER_CRIMSON_DAGGERS_BRONZE" },
-        { "id": "silver", "threshold": 50, "rewards": { "attack_speed_pct": 0.05 }, "steam_api_name": "DOP_ACH_WEAPON_KILLER_CRIMSON_DAGGERS_SILVER" },
-        { "id": "gold", "threshold": 250, "rewards": { "attack_speed_pct": 0.075 }, "steam_api_name": "DOP_ACH_WEAPON_KILLER_CRIMSON_DAGGERS_GOLD" },
-        { "id": "diamond", "threshold": 1000, "rewards": { "attack_speed_pct": 0.1 }, "steam_api_name": "DOP_ACH_WEAPON_KILLER_CRIMSON_DAGGERS_DIAMOND" }
+        { "id": "bronze", "threshold": 10, "rewards": { "attack_speed_pct": 0.25 }, "steam_api_name": "DOP_ACH_WEAPON_KILLER_CRIMSON_DAGGERS_BRONZE" },
+        { "id": "silver", "threshold": 50, "rewards": { "attack_speed_pct": 0.5 }, "steam_api_name": "DOP_ACH_WEAPON_KILLER_CRIMSON_DAGGERS_SILVER" },
+        { "id": "gold", "threshold": 250, "rewards": { "attack_speed_pct": 0.75 }, "steam_api_name": "DOP_ACH_WEAPON_KILLER_CRIMSON_DAGGERS_GOLD" },
+        { "id": "diamond", "threshold": 1000, "rewards": { "attack_speed_pct": 1 }, "steam_api_name": "DOP_ACH_WEAPON_KILLER_CRIMSON_DAGGERS_DIAMOND" }
       ],
       "name": "Weapon Killer Crimson Daggers"
     },
@@ -484,10 +484,10 @@
       "metric": "weapon_kills_minigun",
       "aggregation": "sum",
       "tiers": [
-        { "id": "bronze", "threshold": 10, "rewards": { "attack_speed_pct": 0.025 }, "steam_api_name": "DOP_ACH_WEAPON_KILLER_MINIGUN_BRONZE" },
-        { "id": "silver", "threshold": 50, "rewards": { "attack_speed_pct": 0.05 }, "steam_api_name": "DOP_ACH_WEAPON_KILLER_MINIGUN_SILVER" },
-        { "id": "gold", "threshold": 250, "rewards": { "attack_speed_pct": 0.075 }, "steam_api_name": "DOP_ACH_WEAPON_KILLER_MINIGUN_GOLD" },
-        { "id": "diamond", "threshold": 1000, "rewards": { "attack_speed_pct": 0.1 }, "steam_api_name": "DOP_ACH_WEAPON_KILLER_MINIGUN_DIAMOND" }
+        { "id": "bronze", "threshold": 10, "rewards": { "attack_speed_pct": 0.25 }, "steam_api_name": "DOP_ACH_WEAPON_KILLER_MINIGUN_BRONZE" },
+        { "id": "silver", "threshold": 50, "rewards": { "attack_speed_pct": 0.5 }, "steam_api_name": "DOP_ACH_WEAPON_KILLER_MINIGUN_SILVER" },
+        { "id": "gold", "threshold": 250, "rewards": { "attack_speed_pct": 0.75 }, "steam_api_name": "DOP_ACH_WEAPON_KILLER_MINIGUN_GOLD" },
+        { "id": "diamond", "threshold": 1000, "rewards": { "attack_speed_pct": 1 }, "steam_api_name": "DOP_ACH_WEAPON_KILLER_MINIGUN_DIAMOND" }
       ],
       "name": "Weapon Killer Minigun"
     },
@@ -498,10 +498,10 @@
       "metric": "weapon_kills_toxic_cloud",
       "aggregation": "sum",
       "tiers": [
-        { "id": "bronze", "threshold": 10, "rewards": { "attack_speed_pct": 0.025 }, "steam_api_name": "DOP_ACH_WEAPON_KILLER_TOXIC_CLOUD_BRONZE" },
-        { "id": "silver", "threshold": 50, "rewards": { "attack_speed_pct": 0.05 }, "steam_api_name": "DOP_ACH_WEAPON_KILLER_TOXIC_CLOUD_SILVER" },
-        { "id": "gold", "threshold": 250, "rewards": { "attack_speed_pct": 0.075 }, "steam_api_name": "DOP_ACH_WEAPON_KILLER_TOXIC_CLOUD_GOLD" },
-        { "id": "diamond", "threshold": 1000, "rewards": { "attack_speed_pct": 0.1 }, "steam_api_name": "DOP_ACH_WEAPON_KILLER_TOXIC_CLOUD_DIAMOND" }
+        { "id": "bronze", "threshold": 10, "rewards": { "attack_speed_pct": 0.25 }, "steam_api_name": "DOP_ACH_WEAPON_KILLER_TOXIC_CLOUD_BRONZE" },
+        { "id": "silver", "threshold": 50, "rewards": { "attack_speed_pct": 0.5 }, "steam_api_name": "DOP_ACH_WEAPON_KILLER_TOXIC_CLOUD_SILVER" },
+        { "id": "gold", "threshold": 250, "rewards": { "attack_speed_pct": 0.75 }, "steam_api_name": "DOP_ACH_WEAPON_KILLER_TOXIC_CLOUD_GOLD" },
+        { "id": "diamond", "threshold": 1000, "rewards": { "attack_speed_pct": 1 }, "steam_api_name": "DOP_ACH_WEAPON_KILLER_TOXIC_CLOUD_DIAMOND" }
       ],
       "name": "Weapon Killer Toxic Cloud"
     },
@@ -512,10 +512,10 @@
       "metric": "weapon_kills_sawblades",
       "aggregation": "sum",
       "tiers": [
-        { "id": "bronze", "threshold": 10, "rewards": { "attack_speed_pct": 0.025 }, "steam_api_name": "DOP_ACH_WEAPON_KILLER_SAWBLADES_BRONZE" },
-        { "id": "silver", "threshold": 50, "rewards": { "attack_speed_pct": 0.05 }, "steam_api_name": "DOP_ACH_WEAPON_KILLER_SAWBLADES_SILVER" },
-        { "id": "gold", "threshold": 250, "rewards": { "attack_speed_pct": 0.075 }, "steam_api_name": "DOP_ACH_WEAPON_KILLER_SAWBLADES_GOLD" },
-        { "id": "diamond", "threshold": 1000, "rewards": { "attack_speed_pct": 0.1 }, "steam_api_name": "DOP_ACH_WEAPON_KILLER_SAWBLADES_DIAMOND" }
+        { "id": "bronze", "threshold": 10, "rewards": { "attack_speed_pct": 0.25 }, "steam_api_name": "DOP_ACH_WEAPON_KILLER_SAWBLADES_BRONZE" },
+        { "id": "silver", "threshold": 50, "rewards": { "attack_speed_pct": 0.5 }, "steam_api_name": "DOP_ACH_WEAPON_KILLER_SAWBLADES_SILVER" },
+        { "id": "gold", "threshold": 250, "rewards": { "attack_speed_pct": 0.75 }, "steam_api_name": "DOP_ACH_WEAPON_KILLER_SAWBLADES_GOLD" },
+        { "id": "diamond", "threshold": 1000, "rewards": { "attack_speed_pct": 1 }, "steam_api_name": "DOP_ACH_WEAPON_KILLER_SAWBLADES_DIAMOND" }
       ],
       "name": "Weapon Killer Sawblades"
     },
@@ -526,10 +526,10 @@
       "metric": "weapon_kills_meteor_staff",
       "aggregation": "sum",
       "tiers": [
-        { "id": "bronze", "threshold": 10, "rewards": { "attack_speed_pct": 0.025 }, "steam_api_name": "DOP_ACH_WEAPON_KILLER_METEOR_STAFF_BRONZE" },
-        { "id": "silver", "threshold": 50, "rewards": { "attack_speed_pct": 0.05 }, "steam_api_name": "DOP_ACH_WEAPON_KILLER_METEOR_STAFF_SILVER" },
-        { "id": "gold", "threshold": 250, "rewards": { "attack_speed_pct": 0.075 }, "steam_api_name": "DOP_ACH_WEAPON_KILLER_METEOR_STAFF_GOLD" },
-        { "id": "diamond", "threshold": 1000, "rewards": { "attack_speed_pct": 0.1 }, "steam_api_name": "DOP_ACH_WEAPON_KILLER_METEOR_STAFF_DIAMOND" }
+        { "id": "bronze", "threshold": 10, "rewards": { "attack_speed_pct": 0.25 }, "steam_api_name": "DOP_ACH_WEAPON_KILLER_METEOR_STAFF_BRONZE" },
+        { "id": "silver", "threshold": 50, "rewards": { "attack_speed_pct": 0.5 }, "steam_api_name": "DOP_ACH_WEAPON_KILLER_METEOR_STAFF_SILVER" },
+        { "id": "gold", "threshold": 250, "rewards": { "attack_speed_pct": 0.75 }, "steam_api_name": "DOP_ACH_WEAPON_KILLER_METEOR_STAFF_GOLD" },
+        { "id": "diamond", "threshold": 1000, "rewards": { "attack_speed_pct": 1 }, "steam_api_name": "DOP_ACH_WEAPON_KILLER_METEOR_STAFF_DIAMOND" }
       ],
       "name": "Weapon Killer Meteor Staff"
     },
@@ -540,10 +540,10 @@
       "metric": "weapon_kills_prism_laser",
       "aggregation": "sum",
       "tiers": [
-        { "id": "bronze", "threshold": 10, "rewards": { "attack_speed_pct": 0.025 }, "steam_api_name": "DOP_ACH_WEAPON_KILLER_PRISM_LASER_BRONZE" },
-        { "id": "silver", "threshold": 50, "rewards": { "attack_speed_pct": 0.05 }, "steam_api_name": "DOP_ACH_WEAPON_KILLER_PRISM_LASER_SILVER" },
-        { "id": "gold", "threshold": 250, "rewards": { "attack_speed_pct": 0.075 }, "steam_api_name": "DOP_ACH_WEAPON_KILLER_PRISM_LASER_GOLD" },
-        { "id": "diamond", "threshold": 1000, "rewards": { "attack_speed_pct": 0.1 }, "steam_api_name": "DOP_ACH_WEAPON_KILLER_PRISM_LASER_DIAMOND" }
+        { "id": "bronze", "threshold": 10, "rewards": { "attack_speed_pct": 0.25 }, "steam_api_name": "DOP_ACH_WEAPON_KILLER_PRISM_LASER_BRONZE" },
+        { "id": "silver", "threshold": 50, "rewards": { "attack_speed_pct": 0.5 }, "steam_api_name": "DOP_ACH_WEAPON_KILLER_PRISM_LASER_SILVER" },
+        { "id": "gold", "threshold": 250, "rewards": { "attack_speed_pct": 0.75 }, "steam_api_name": "DOP_ACH_WEAPON_KILLER_PRISM_LASER_GOLD" },
+        { "id": "diamond", "threshold": 1000, "rewards": { "attack_speed_pct": 1 }, "steam_api_name": "DOP_ACH_WEAPON_KILLER_PRISM_LASER_DIAMOND" }
       ],
       "name": "Weapon Killer Prism Laser"
     },
@@ -554,10 +554,10 @@
       "metric": "weapon_kills_void_orb",
       "aggregation": "sum",
       "tiers": [
-        { "id": "bronze", "threshold": 10, "rewards": { "attack_speed_pct": 0.025 }, "steam_api_name": "DOP_ACH_WEAPON_KILLER_VOID_ORB_BRONZE" },
-        { "id": "silver", "threshold": 50, "rewards": { "attack_speed_pct": 0.05 }, "steam_api_name": "DOP_ACH_WEAPON_KILLER_VOID_ORB_SILVER" },
-        { "id": "gold", "threshold": 250, "rewards": { "attack_speed_pct": 0.075 }, "steam_api_name": "DOP_ACH_WEAPON_KILLER_VOID_ORB_GOLD" },
-        { "id": "diamond", "threshold": 1000, "rewards": { "attack_speed_pct": 0.1 }, "steam_api_name": "DOP_ACH_WEAPON_KILLER_VOID_ORB_DIAMOND" }
+        { "id": "bronze", "threshold": 10, "rewards": { "attack_speed_pct": 0.25 }, "steam_api_name": "DOP_ACH_WEAPON_KILLER_VOID_ORB_BRONZE" },
+        { "id": "silver", "threshold": 50, "rewards": { "attack_speed_pct": 0.5 }, "steam_api_name": "DOP_ACH_WEAPON_KILLER_VOID_ORB_SILVER" },
+        { "id": "gold", "threshold": 250, "rewards": { "attack_speed_pct": 0.75 }, "steam_api_name": "DOP_ACH_WEAPON_KILLER_VOID_ORB_GOLD" },
+        { "id": "diamond", "threshold": 1000, "rewards": { "attack_speed_pct": 1 }, "steam_api_name": "DOP_ACH_WEAPON_KILLER_VOID_ORB_DIAMOND" }
       ],
       "name": "Weapon Killer Void Orb"
     },
@@ -568,10 +568,10 @@
       "metric": "weapon_kills_frost_nova",
       "aggregation": "sum",
       "tiers": [
-        { "id": "bronze", "threshold": 10, "rewards": { "attack_speed_pct": 0.025 }, "steam_api_name": "DOP_ACH_WEAPON_KILLER_FROST_NOVA_BRONZE" },
-        { "id": "silver", "threshold": 50, "rewards": { "attack_speed_pct": 0.05 }, "steam_api_name": "DOP_ACH_WEAPON_KILLER_FROST_NOVA_SILVER" },
-        { "id": "gold", "threshold": 250, "rewards": { "attack_speed_pct": 0.075 }, "steam_api_name": "DOP_ACH_WEAPON_KILLER_FROST_NOVA_GOLD" },
-        { "id": "diamond", "threshold": 1000, "rewards": { "attack_speed_pct": 0.1 }, "steam_api_name": "DOP_ACH_WEAPON_KILLER_FROST_NOVA_DIAMOND" }
+        { "id": "bronze", "threshold": 10, "rewards": { "attack_speed_pct": 0.25 }, "steam_api_name": "DOP_ACH_WEAPON_KILLER_FROST_NOVA_BRONZE" },
+        { "id": "silver", "threshold": 50, "rewards": { "attack_speed_pct": 0.5 }, "steam_api_name": "DOP_ACH_WEAPON_KILLER_FROST_NOVA_SILVER" },
+        { "id": "gold", "threshold": 250, "rewards": { "attack_speed_pct": 0.75 }, "steam_api_name": "DOP_ACH_WEAPON_KILLER_FROST_NOVA_GOLD" },
+        { "id": "diamond", "threshold": 1000, "rewards": { "attack_speed_pct": 1 }, "steam_api_name": "DOP_ACH_WEAPON_KILLER_FROST_NOVA_DIAMOND" }
       ],
       "name": "Weapon Killer Frost Nova"
     },
@@ -582,10 +582,10 @@
       "metric": "max_relic_level_storm_core",
       "aggregation": "max",
       "tiers": [
-        { "id": "bronze", "threshold": 2, "rewards": { "attack_speed_pct": 0.025 }, "steam_api_name": "DOP_ACH_RELIC_MASTERY_STORM_CORE_BRONZE" },
-        { "id": "silver", "threshold": 3, "rewards": { "attack_speed_pct": 0.05 }, "steam_api_name": "DOP_ACH_RELIC_MASTERY_STORM_CORE_SILVER" },
-        { "id": "gold", "threshold": 4, "rewards": { "attack_speed_pct": 0.075 }, "steam_api_name": "DOP_ACH_RELIC_MASTERY_STORM_CORE_GOLD" },
-        { "id": "diamond", "threshold": 5, "rewards": { "attack_speed_pct": 0.1 }, "steam_api_name": "DOP_ACH_RELIC_MASTERY_STORM_CORE_DIAMOND" }
+        { "id": "bronze", "threshold": 2, "rewards": { "attack_speed_pct": 0.25 }, "steam_api_name": "DOP_ACH_RELIC_MASTERY_STORM_CORE_BRONZE" },
+        { "id": "silver", "threshold": 3, "rewards": { "attack_speed_pct": 0.5 }, "steam_api_name": "DOP_ACH_RELIC_MASTERY_STORM_CORE_SILVER" },
+        { "id": "gold", "threshold": 4, "rewards": { "attack_speed_pct": 0.75 }, "steam_api_name": "DOP_ACH_RELIC_MASTERY_STORM_CORE_GOLD" },
+        { "id": "diamond", "threshold": 5, "rewards": { "attack_speed_pct": 1 }, "steam_api_name": "DOP_ACH_RELIC_MASTERY_STORM_CORE_DIAMOND" }
       ],
       "name": "Relic Mastery Storm Core"
     },
@@ -596,10 +596,10 @@
       "metric": "max_relic_level_infernal_heart",
       "aggregation": "max",
       "tiers": [
-        { "id": "bronze", "threshold": 2, "rewards": { "attack_speed_pct": 0.025 }, "steam_api_name": "DOP_ACH_RELIC_MASTERY_INFERNAL_HEART_BRONZE" },
-        { "id": "silver", "threshold": 3, "rewards": { "attack_speed_pct": 0.05 }, "steam_api_name": "DOP_ACH_RELIC_MASTERY_INFERNAL_HEART_SILVER" },
-        { "id": "gold", "threshold": 4, "rewards": { "attack_speed_pct": 0.075 }, "steam_api_name": "DOP_ACH_RELIC_MASTERY_INFERNAL_HEART_GOLD" },
-        { "id": "diamond", "threshold": 5, "rewards": { "attack_speed_pct": 0.1 }, "steam_api_name": "DOP_ACH_RELIC_MASTERY_INFERNAL_HEART_DIAMOND" }
+        { "id": "bronze", "threshold": 2, "rewards": { "attack_speed_pct": 0.25 }, "steam_api_name": "DOP_ACH_RELIC_MASTERY_INFERNAL_HEART_BRONZE" },
+        { "id": "silver", "threshold": 3, "rewards": { "attack_speed_pct": 0.5 }, "steam_api_name": "DOP_ACH_RELIC_MASTERY_INFERNAL_HEART_SILVER" },
+        { "id": "gold", "threshold": 4, "rewards": { "attack_speed_pct": 0.75 }, "steam_api_name": "DOP_ACH_RELIC_MASTERY_INFERNAL_HEART_GOLD" },
+        { "id": "diamond", "threshold": 5, "rewards": { "attack_speed_pct": 1 }, "steam_api_name": "DOP_ACH_RELIC_MASTERY_INFERNAL_HEART_DIAMOND" }
       ],
       "name": "Relic Mastery Infernal Heart"
     },
@@ -610,10 +610,10 @@
       "metric": "max_relic_level_blood_chalice",
       "aggregation": "max",
       "tiers": [
-        { "id": "bronze", "threshold": 2, "rewards": { "attack_speed_pct": 0.025 }, "steam_api_name": "DOP_ACH_RELIC_MASTERY_BLOOD_CHALICE_BRONZE" },
-        { "id": "silver", "threshold": 3, "rewards": { "attack_speed_pct": 0.05 }, "steam_api_name": "DOP_ACH_RELIC_MASTERY_BLOOD_CHALICE_SILVER" },
-        { "id": "gold", "threshold": 4, "rewards": { "attack_speed_pct": 0.075 }, "steam_api_name": "DOP_ACH_RELIC_MASTERY_BLOOD_CHALICE_GOLD" },
-        { "id": "diamond", "threshold": 5, "rewards": { "attack_speed_pct": 0.1 }, "steam_api_name": "DOP_ACH_RELIC_MASTERY_BLOOD_CHALICE_DIAMOND" }
+        { "id": "bronze", "threshold": 2, "rewards": { "attack_speed_pct": 0.25 }, "steam_api_name": "DOP_ACH_RELIC_MASTERY_BLOOD_CHALICE_BRONZE" },
+        { "id": "silver", "threshold": 3, "rewards": { "attack_speed_pct": 0.5 }, "steam_api_name": "DOP_ACH_RELIC_MASTERY_BLOOD_CHALICE_SILVER" },
+        { "id": "gold", "threshold": 4, "rewards": { "attack_speed_pct": 0.75 }, "steam_api_name": "DOP_ACH_RELIC_MASTERY_BLOOD_CHALICE_GOLD" },
+        { "id": "diamond", "threshold": 5, "rewards": { "attack_speed_pct": 1 }, "steam_api_name": "DOP_ACH_RELIC_MASTERY_BLOOD_CHALICE_DIAMOND" }
       ],
       "name": "Relic Mastery Blood Chalice"
     },
@@ -624,10 +624,10 @@
       "metric": "max_relic_level_overdrive_engine",
       "aggregation": "max",
       "tiers": [
-        { "id": "bronze", "threshold": 2, "rewards": { "attack_speed_pct": 0.025 }, "steam_api_name": "DOP_ACH_RELIC_MASTERY_OVERDRIVE_ENGINE_BRONZE" },
-        { "id": "silver", "threshold": 3, "rewards": { "attack_speed_pct": 0.05 }, "steam_api_name": "DOP_ACH_RELIC_MASTERY_OVERDRIVE_ENGINE_SILVER" },
-        { "id": "gold", "threshold": 4, "rewards": { "attack_speed_pct": 0.075 }, "steam_api_name": "DOP_ACH_RELIC_MASTERY_OVERDRIVE_ENGINE_GOLD" },
-        { "id": "diamond", "threshold": 5, "rewards": { "attack_speed_pct": 0.1 }, "steam_api_name": "DOP_ACH_RELIC_MASTERY_OVERDRIVE_ENGINE_DIAMOND" }
+        { "id": "bronze", "threshold": 2, "rewards": { "attack_speed_pct": 0.25 }, "steam_api_name": "DOP_ACH_RELIC_MASTERY_OVERDRIVE_ENGINE_BRONZE" },
+        { "id": "silver", "threshold": 3, "rewards": { "attack_speed_pct": 0.5 }, "steam_api_name": "DOP_ACH_RELIC_MASTERY_OVERDRIVE_ENGINE_SILVER" },
+        { "id": "gold", "threshold": 4, "rewards": { "attack_speed_pct": 0.75 }, "steam_api_name": "DOP_ACH_RELIC_MASTERY_OVERDRIVE_ENGINE_GOLD" },
+        { "id": "diamond", "threshold": 5, "rewards": { "attack_speed_pct": 1 }, "steam_api_name": "DOP_ACH_RELIC_MASTERY_OVERDRIVE_ENGINE_DIAMOND" }
       ],
       "name": "Relic Mastery Overdrive Engine"
     },
@@ -638,10 +638,10 @@
       "metric": "max_relic_level_plague_mask",
       "aggregation": "max",
       "tiers": [
-        { "id": "bronze", "threshold": 2, "rewards": { "attack_speed_pct": 0.025 }, "steam_api_name": "DOP_ACH_RELIC_MASTERY_PLAGUE_MASK_BRONZE" },
-        { "id": "silver", "threshold": 3, "rewards": { "attack_speed_pct": 0.05 }, "steam_api_name": "DOP_ACH_RELIC_MASTERY_PLAGUE_MASK_SILVER" },
-        { "id": "gold", "threshold": 4, "rewards": { "attack_speed_pct": 0.075 }, "steam_api_name": "DOP_ACH_RELIC_MASTERY_PLAGUE_MASK_GOLD" },
-        { "id": "diamond", "threshold": 5, "rewards": { "attack_speed_pct": 0.1 }, "steam_api_name": "DOP_ACH_RELIC_MASTERY_PLAGUE_MASK_DIAMOND" }
+        { "id": "bronze", "threshold": 2, "rewards": { "attack_speed_pct": 0.25 }, "steam_api_name": "DOP_ACH_RELIC_MASTERY_PLAGUE_MASK_BRONZE" },
+        { "id": "silver", "threshold": 3, "rewards": { "attack_speed_pct": 0.5 }, "steam_api_name": "DOP_ACH_RELIC_MASTERY_PLAGUE_MASK_SILVER" },
+        { "id": "gold", "threshold": 4, "rewards": { "attack_speed_pct": 0.75 }, "steam_api_name": "DOP_ACH_RELIC_MASTERY_PLAGUE_MASK_GOLD" },
+        { "id": "diamond", "threshold": 5, "rewards": { "attack_speed_pct": 1 }, "steam_api_name": "DOP_ACH_RELIC_MASTERY_PLAGUE_MASK_DIAMOND" }
       ],
       "name": "Relic Mastery Plague Mask"
     },
@@ -652,10 +652,10 @@
       "metric": "max_relic_level_magnetic_coil",
       "aggregation": "max",
       "tiers": [
-        { "id": "bronze", "threshold": 2, "rewards": { "attack_speed_pct": 0.025 }, "steam_api_name": "DOP_ACH_RELIC_MASTERY_MAGNETIC_COIL_BRONZE" },
-        { "id": "silver", "threshold": 3, "rewards": { "attack_speed_pct": 0.05 }, "steam_api_name": "DOP_ACH_RELIC_MASTERY_MAGNETIC_COIL_SILVER" },
-        { "id": "gold", "threshold": 4, "rewards": { "attack_speed_pct": 0.075 }, "steam_api_name": "DOP_ACH_RELIC_MASTERY_MAGNETIC_COIL_GOLD" },
-        { "id": "diamond", "threshold": 5, "rewards": { "attack_speed_pct": 0.1 }, "steam_api_name": "DOP_ACH_RELIC_MASTERY_MAGNETIC_COIL_DIAMOND" }
+        { "id": "bronze", "threshold": 2, "rewards": { "attack_speed_pct": 0.25 }, "steam_api_name": "DOP_ACH_RELIC_MASTERY_MAGNETIC_COIL_BRONZE" },
+        { "id": "silver", "threshold": 3, "rewards": { "attack_speed_pct": 0.5 }, "steam_api_name": "DOP_ACH_RELIC_MASTERY_MAGNETIC_COIL_SILVER" },
+        { "id": "gold", "threshold": 4, "rewards": { "attack_speed_pct": 0.75 }, "steam_api_name": "DOP_ACH_RELIC_MASTERY_MAGNETIC_COIL_GOLD" },
+        { "id": "diamond", "threshold": 5, "rewards": { "attack_speed_pct": 1 }, "steam_api_name": "DOP_ACH_RELIC_MASTERY_MAGNETIC_COIL_DIAMOND" }
       ],
       "name": "Relic Mastery Magnetic Coil"
     },
@@ -666,10 +666,10 @@
       "metric": "max_relic_level_celestial_eye",
       "aggregation": "max",
       "tiers": [
-        { "id": "bronze", "threshold": 2, "rewards": { "attack_speed_pct": 0.025 }, "steam_api_name": "DOP_ACH_RELIC_MASTERY_CELESTIAL_EYE_BRONZE" },
-        { "id": "silver", "threshold": 3, "rewards": { "attack_speed_pct": 0.05 }, "steam_api_name": "DOP_ACH_RELIC_MASTERY_CELESTIAL_EYE_SILVER" },
-        { "id": "gold", "threshold": 4, "rewards": { "attack_speed_pct": 0.075 }, "steam_api_name": "DOP_ACH_RELIC_MASTERY_CELESTIAL_EYE_GOLD" },
-        { "id": "diamond", "threshold": 5, "rewards": { "attack_speed_pct": 0.1 }, "steam_api_name": "DOP_ACH_RELIC_MASTERY_CELESTIAL_EYE_DIAMOND" }
+        { "id": "bronze", "threshold": 2, "rewards": { "attack_speed_pct": 0.25 }, "steam_api_name": "DOP_ACH_RELIC_MASTERY_CELESTIAL_EYE_BRONZE" },
+        { "id": "silver", "threshold": 3, "rewards": { "attack_speed_pct": 0.5 }, "steam_api_name": "DOP_ACH_RELIC_MASTERY_CELESTIAL_EYE_SILVER" },
+        { "id": "gold", "threshold": 4, "rewards": { "attack_speed_pct": 0.75 }, "steam_api_name": "DOP_ACH_RELIC_MASTERY_CELESTIAL_EYE_GOLD" },
+        { "id": "diamond", "threshold": 5, "rewards": { "attack_speed_pct": 1 }, "steam_api_name": "DOP_ACH_RELIC_MASTERY_CELESTIAL_EYE_DIAMOND" }
       ],
       "name": "Relic Mastery Celestial Eye"
     },
@@ -680,10 +680,10 @@
       "metric": "max_relic_level_prism_crystal",
       "aggregation": "max",
       "tiers": [
-        { "id": "bronze", "threshold": 2, "rewards": { "attack_speed_pct": 0.025 }, "steam_api_name": "DOP_ACH_RELIC_MASTERY_PRISM_CRYSTAL_BRONZE" },
-        { "id": "silver", "threshold": 3, "rewards": { "attack_speed_pct": 0.05 }, "steam_api_name": "DOP_ACH_RELIC_MASTERY_PRISM_CRYSTAL_SILVER" },
-        { "id": "gold", "threshold": 4, "rewards": { "attack_speed_pct": 0.075 }, "steam_api_name": "DOP_ACH_RELIC_MASTERY_PRISM_CRYSTAL_GOLD" },
-        { "id": "diamond", "threshold": 5, "rewards": { "attack_speed_pct": 0.1 }, "steam_api_name": "DOP_ACH_RELIC_MASTERY_PRISM_CRYSTAL_DIAMOND" }
+        { "id": "bronze", "threshold": 2, "rewards": { "attack_speed_pct": 0.25 }, "steam_api_name": "DOP_ACH_RELIC_MASTERY_PRISM_CRYSTAL_BRONZE" },
+        { "id": "silver", "threshold": 3, "rewards": { "attack_speed_pct": 0.5 }, "steam_api_name": "DOP_ACH_RELIC_MASTERY_PRISM_CRYSTAL_SILVER" },
+        { "id": "gold", "threshold": 4, "rewards": { "attack_speed_pct": 0.75 }, "steam_api_name": "DOP_ACH_RELIC_MASTERY_PRISM_CRYSTAL_GOLD" },
+        { "id": "diamond", "threshold": 5, "rewards": { "attack_speed_pct": 1 }, "steam_api_name": "DOP_ACH_RELIC_MASTERY_PRISM_CRYSTAL_DIAMOND" }
       ],
       "name": "Relic Mastery Prism Crystal"
     },
@@ -694,10 +694,10 @@
       "metric": "max_relic_level_singularity",
       "aggregation": "max",
       "tiers": [
-        { "id": "bronze", "threshold": 2, "rewards": { "attack_speed_pct": 0.025 }, "steam_api_name": "DOP_ACH_RELIC_MASTERY_SINGULARITY_BRONZE" },
-        { "id": "silver", "threshold": 3, "rewards": { "attack_speed_pct": 0.05 }, "steam_api_name": "DOP_ACH_RELIC_MASTERY_SINGULARITY_SILVER" },
-        { "id": "gold", "threshold": 4, "rewards": { "attack_speed_pct": 0.075 }, "steam_api_name": "DOP_ACH_RELIC_MASTERY_SINGULARITY_GOLD" },
-        { "id": "diamond", "threshold": 5, "rewards": { "attack_speed_pct": 0.1 }, "steam_api_name": "DOP_ACH_RELIC_MASTERY_SINGULARITY_DIAMOND" }
+        { "id": "bronze", "threshold": 2, "rewards": { "attack_speed_pct": 0.25 }, "steam_api_name": "DOP_ACH_RELIC_MASTERY_SINGULARITY_BRONZE" },
+        { "id": "silver", "threshold": 3, "rewards": { "attack_speed_pct": 0.5 }, "steam_api_name": "DOP_ACH_RELIC_MASTERY_SINGULARITY_SILVER" },
+        { "id": "gold", "threshold": 4, "rewards": { "attack_speed_pct": 0.75 }, "steam_api_name": "DOP_ACH_RELIC_MASTERY_SINGULARITY_GOLD" },
+        { "id": "diamond", "threshold": 5, "rewards": { "attack_speed_pct": 1 }, "steam_api_name": "DOP_ACH_RELIC_MASTERY_SINGULARITY_DIAMOND" }
       ],
       "name": "Relic Mastery Singularity"
     },
@@ -708,10 +708,10 @@
       "metric": "max_relic_level_frozen_crown",
       "aggregation": "max",
       "tiers": [
-        { "id": "bronze", "threshold": 2, "rewards": { "attack_speed_pct": 0.025 }, "steam_api_name": "DOP_ACH_RELIC_MASTERY_FROZEN_CROWN_BRONZE" },
-        { "id": "silver", "threshold": 3, "rewards": { "attack_speed_pct": 0.05 }, "steam_api_name": "DOP_ACH_RELIC_MASTERY_FROZEN_CROWN_SILVER" },
-        { "id": "gold", "threshold": 4, "rewards": { "attack_speed_pct": 0.075 }, "steam_api_name": "DOP_ACH_RELIC_MASTERY_FROZEN_CROWN_GOLD" },
-        { "id": "diamond", "threshold": 5, "rewards": { "attack_speed_pct": 0.1 }, "steam_api_name": "DOP_ACH_RELIC_MASTERY_FROZEN_CROWN_DIAMOND" }
+        { "id": "bronze", "threshold": 2, "rewards": { "attack_speed_pct": 0.25 }, "steam_api_name": "DOP_ACH_RELIC_MASTERY_FROZEN_CROWN_BRONZE" },
+        { "id": "silver", "threshold": 3, "rewards": { "attack_speed_pct": 0.5 }, "steam_api_name": "DOP_ACH_RELIC_MASTERY_FROZEN_CROWN_SILVER" },
+        { "id": "gold", "threshold": 4, "rewards": { "attack_speed_pct": 0.75 }, "steam_api_name": "DOP_ACH_RELIC_MASTERY_FROZEN_CROWN_GOLD" },
+        { "id": "diamond", "threshold": 5, "rewards": { "attack_speed_pct": 1 }, "steam_api_name": "DOP_ACH_RELIC_MASTERY_FROZEN_CROWN_DIAMOND" }
       ],
       "name": "Relic Mastery Frozen Crown"
     },
@@ -722,10 +722,10 @@
       "metric": "max_relic_level_magnet_heart",
       "aggregation": "max",
       "tiers": [
-        { "id": "bronze", "threshold": 2, "rewards": { "attack_speed_pct": 0.025 }, "steam_api_name": "DOP_ACH_RELIC_MASTERY_MAGNET_HEART_BRONZE" },
-        { "id": "silver", "threshold": 3, "rewards": { "attack_speed_pct": 0.05 }, "steam_api_name": "DOP_ACH_RELIC_MASTERY_MAGNET_HEART_SILVER" },
-        { "id": "gold", "threshold": 4, "rewards": { "attack_speed_pct": 0.075 }, "steam_api_name": "DOP_ACH_RELIC_MASTERY_MAGNET_HEART_GOLD" },
-        { "id": "diamond", "threshold": 5, "rewards": { "attack_speed_pct": 0.1 }, "steam_api_name": "DOP_ACH_RELIC_MASTERY_MAGNET_HEART_DIAMOND" }
+        { "id": "bronze", "threshold": 2, "rewards": { "attack_speed_pct": 0.25 }, "steam_api_name": "DOP_ACH_RELIC_MASTERY_MAGNET_HEART_BRONZE" },
+        { "id": "silver", "threshold": 3, "rewards": { "attack_speed_pct": 0.5 }, "steam_api_name": "DOP_ACH_RELIC_MASTERY_MAGNET_HEART_SILVER" },
+        { "id": "gold", "threshold": 4, "rewards": { "attack_speed_pct": 0.75 }, "steam_api_name": "DOP_ACH_RELIC_MASTERY_MAGNET_HEART_GOLD" },
+        { "id": "diamond", "threshold": 5, "rewards": { "attack_speed_pct": 1 }, "steam_api_name": "DOP_ACH_RELIC_MASTERY_MAGNET_HEART_DIAMOND" }
       ],
       "name": "Relic Mastery Magnet Heart"
     },
@@ -736,10 +736,10 @@
       "metric": "evolutions_lightning_conductor",
       "aggregation": "sum",
       "tiers": [
-        { "id": "bronze", "threshold": 1, "rewards": { "attack_speed_pct": 0.025 }, "steam_api_name": "DOP_ACH_EVOLUTION_MASTERY_LIGHTNING_CONDUCTOR_BRONZE" },
-        { "id": "silver", "threshold": 5, "rewards": { "attack_speed_pct": 0.05 }, "steam_api_name": "DOP_ACH_EVOLUTION_MASTERY_LIGHTNING_CONDUCTOR_SILVER" },
-        { "id": "gold", "threshold": 15, "rewards": { "attack_speed_pct": 0.075 }, "steam_api_name": "DOP_ACH_EVOLUTION_MASTERY_LIGHTNING_CONDUCTOR_GOLD" },
-        { "id": "diamond", "threshold": 50, "rewards": { "attack_speed_pct": 0.1 }, "steam_api_name": "DOP_ACH_EVOLUTION_MASTERY_LIGHTNING_CONDUCTOR_DIAMOND" }
+        { "id": "bronze", "threshold": 1, "rewards": { "attack_speed_pct": 0.25 }, "steam_api_name": "DOP_ACH_EVOLUTION_MASTERY_LIGHTNING_CONDUCTOR_BRONZE" },
+        { "id": "silver", "threshold": 5, "rewards": { "attack_speed_pct": 0.5 }, "steam_api_name": "DOP_ACH_EVOLUTION_MASTERY_LIGHTNING_CONDUCTOR_SILVER" },
+        { "id": "gold", "threshold": 15, "rewards": { "attack_speed_pct": 0.75 }, "steam_api_name": "DOP_ACH_EVOLUTION_MASTERY_LIGHTNING_CONDUCTOR_GOLD" },
+        { "id": "diamond", "threshold": 50, "rewards": { "attack_speed_pct": 1 }, "steam_api_name": "DOP_ACH_EVOLUTION_MASTERY_LIGHTNING_CONDUCTOR_DIAMOND" }
       ],
       "name": "Evolution Mastery Lightning Conductor"
     },
@@ -750,10 +750,10 @@
       "metric": "evolutions_inferno_sprayer",
       "aggregation": "sum",
       "tiers": [
-        { "id": "bronze", "threshold": 1, "rewards": { "attack_speed_pct": 0.025 }, "steam_api_name": "DOP_ACH_EVOLUTION_MASTERY_INFERNO_SPRAYER_BRONZE" },
-        { "id": "silver", "threshold": 5, "rewards": { "attack_speed_pct": 0.05 }, "steam_api_name": "DOP_ACH_EVOLUTION_MASTERY_INFERNO_SPRAYER_SILVER" },
-        { "id": "gold", "threshold": 15, "rewards": { "attack_speed_pct": 0.075 }, "steam_api_name": "DOP_ACH_EVOLUTION_MASTERY_INFERNO_SPRAYER_GOLD" },
-        { "id": "diamond", "threshold": 50, "rewards": { "attack_speed_pct": 0.1 }, "steam_api_name": "DOP_ACH_EVOLUTION_MASTERY_INFERNO_SPRAYER_DIAMOND" }
+        { "id": "bronze", "threshold": 1, "rewards": { "attack_speed_pct": 0.25 }, "steam_api_name": "DOP_ACH_EVOLUTION_MASTERY_INFERNO_SPRAYER_BRONZE" },
+        { "id": "silver", "threshold": 5, "rewards": { "attack_speed_pct": 0.5 }, "steam_api_name": "DOP_ACH_EVOLUTION_MASTERY_INFERNO_SPRAYER_SILVER" },
+        { "id": "gold", "threshold": 15, "rewards": { "attack_speed_pct": 0.75 }, "steam_api_name": "DOP_ACH_EVOLUTION_MASTERY_INFERNO_SPRAYER_GOLD" },
+        { "id": "diamond", "threshold": 50, "rewards": { "attack_speed_pct": 1 }, "steam_api_name": "DOP_ACH_EVOLUTION_MASTERY_INFERNO_SPRAYER_DIAMOND" }
       ],
       "name": "Evolution Mastery Inferno Sprayer"
     },
@@ -764,10 +764,10 @@
       "metric": "evolutions_crimson_daggers",
       "aggregation": "sum",
       "tiers": [
-        { "id": "bronze", "threshold": 1, "rewards": { "attack_speed_pct": 0.025 }, "steam_api_name": "DOP_ACH_EVOLUTION_MASTERY_CRIMSON_DAGGERS_BRONZE" },
-        { "id": "silver", "threshold": 5, "rewards": { "attack_speed_pct": 0.05 }, "steam_api_name": "DOP_ACH_EVOLUTION_MASTERY_CRIMSON_DAGGERS_SILVER" },
-        { "id": "gold", "threshold": 15, "rewards": { "attack_speed_pct": 0.075 }, "steam_api_name": "DOP_ACH_EVOLUTION_MASTERY_CRIMSON_DAGGERS_GOLD" },
-        { "id": "diamond", "threshold": 50, "rewards": { "attack_speed_pct": 0.1 }, "steam_api_name": "DOP_ACH_EVOLUTION_MASTERY_CRIMSON_DAGGERS_DIAMOND" }
+        { "id": "bronze", "threshold": 1, "rewards": { "attack_speed_pct": 0.25 }, "steam_api_name": "DOP_ACH_EVOLUTION_MASTERY_CRIMSON_DAGGERS_BRONZE" },
+        { "id": "silver", "threshold": 5, "rewards": { "attack_speed_pct": 0.5 }, "steam_api_name": "DOP_ACH_EVOLUTION_MASTERY_CRIMSON_DAGGERS_SILVER" },
+        { "id": "gold", "threshold": 15, "rewards": { "attack_speed_pct": 0.75 }, "steam_api_name": "DOP_ACH_EVOLUTION_MASTERY_CRIMSON_DAGGERS_GOLD" },
+        { "id": "diamond", "threshold": 50, "rewards": { "attack_speed_pct": 1 }, "steam_api_name": "DOP_ACH_EVOLUTION_MASTERY_CRIMSON_DAGGERS_DIAMOND" }
       ],
       "name": "Evolution Mastery Crimson Daggers"
     },
@@ -778,10 +778,10 @@
       "metric": "evolutions_minigun",
       "aggregation": "sum",
       "tiers": [
-        { "id": "bronze", "threshold": 1, "rewards": { "attack_speed_pct": 0.025 }, "steam_api_name": "DOP_ACH_EVOLUTION_MASTERY_MINIGUN_BRONZE" },
-        { "id": "silver", "threshold": 5, "rewards": { "attack_speed_pct": 0.05 }, "steam_api_name": "DOP_ACH_EVOLUTION_MASTERY_MINIGUN_SILVER" },
-        { "id": "gold", "threshold": 15, "rewards": { "attack_speed_pct": 0.075 }, "steam_api_name": "DOP_ACH_EVOLUTION_MASTERY_MINIGUN_GOLD" },
-        { "id": "diamond", "threshold": 50, "rewards": { "attack_speed_pct": 0.1 }, "steam_api_name": "DOP_ACH_EVOLUTION_MASTERY_MINIGUN_DIAMOND" }
+        { "id": "bronze", "threshold": 1, "rewards": { "attack_speed_pct": 0.25 }, "steam_api_name": "DOP_ACH_EVOLUTION_MASTERY_MINIGUN_BRONZE" },
+        { "id": "silver", "threshold": 5, "rewards": { "attack_speed_pct": 0.5 }, "steam_api_name": "DOP_ACH_EVOLUTION_MASTERY_MINIGUN_SILVER" },
+        { "id": "gold", "threshold": 15, "rewards": { "attack_speed_pct": 0.75 }, "steam_api_name": "DOP_ACH_EVOLUTION_MASTERY_MINIGUN_GOLD" },
+        { "id": "diamond", "threshold": 50, "rewards": { "attack_speed_pct": 1 }, "steam_api_name": "DOP_ACH_EVOLUTION_MASTERY_MINIGUN_DIAMOND" }
       ],
       "name": "Evolution Mastery Minigun"
     },
@@ -792,10 +792,10 @@
       "metric": "evolutions_toxic_cloud",
       "aggregation": "sum",
       "tiers": [
-        { "id": "bronze", "threshold": 1, "rewards": { "attack_speed_pct": 0.025 }, "steam_api_name": "DOP_ACH_EVOLUTION_MASTERY_TOXIC_CLOUD_BRONZE" },
-        { "id": "silver", "threshold": 5, "rewards": { "attack_speed_pct": 0.05 }, "steam_api_name": "DOP_ACH_EVOLUTION_MASTERY_TOXIC_CLOUD_SILVER" },
-        { "id": "gold", "threshold": 15, "rewards": { "attack_speed_pct": 0.075 }, "steam_api_name": "DOP_ACH_EVOLUTION_MASTERY_TOXIC_CLOUD_GOLD" },
-        { "id": "diamond", "threshold": 50, "rewards": { "attack_speed_pct": 0.1 }, "steam_api_name": "DOP_ACH_EVOLUTION_MASTERY_TOXIC_CLOUD_DIAMOND" }
+        { "id": "bronze", "threshold": 1, "rewards": { "attack_speed_pct": 0.25 }, "steam_api_name": "DOP_ACH_EVOLUTION_MASTERY_TOXIC_CLOUD_BRONZE" },
+        { "id": "silver", "threshold": 5, "rewards": { "attack_speed_pct": 0.5 }, "steam_api_name": "DOP_ACH_EVOLUTION_MASTERY_TOXIC_CLOUD_SILVER" },
+        { "id": "gold", "threshold": 15, "rewards": { "attack_speed_pct": 0.75 }, "steam_api_name": "DOP_ACH_EVOLUTION_MASTERY_TOXIC_CLOUD_GOLD" },
+        { "id": "diamond", "threshold": 50, "rewards": { "attack_speed_pct": 1 }, "steam_api_name": "DOP_ACH_EVOLUTION_MASTERY_TOXIC_CLOUD_DIAMOND" }
       ],
       "name": "Evolution Mastery Toxic Cloud"
     },
@@ -806,10 +806,10 @@
       "metric": "evolutions_sawblades",
       "aggregation": "sum",
       "tiers": [
-        { "id": "bronze", "threshold": 1, "rewards": { "attack_speed_pct": 0.025 }, "steam_api_name": "DOP_ACH_EVOLUTION_MASTERY_SAWBLADES_BRONZE" },
-        { "id": "silver", "threshold": 5, "rewards": { "attack_speed_pct": 0.05 }, "steam_api_name": "DOP_ACH_EVOLUTION_MASTERY_SAWBLADES_SILVER" },
-        { "id": "gold", "threshold": 15, "rewards": { "attack_speed_pct": 0.075 }, "steam_api_name": "DOP_ACH_EVOLUTION_MASTERY_SAWBLADES_GOLD" },
-        { "id": "diamond", "threshold": 50, "rewards": { "attack_speed_pct": 0.1 }, "steam_api_name": "DOP_ACH_EVOLUTION_MASTERY_SAWBLADES_DIAMOND" }
+        { "id": "bronze", "threshold": 1, "rewards": { "attack_speed_pct": 0.25 }, "steam_api_name": "DOP_ACH_EVOLUTION_MASTERY_SAWBLADES_BRONZE" },
+        { "id": "silver", "threshold": 5, "rewards": { "attack_speed_pct": 0.5 }, "steam_api_name": "DOP_ACH_EVOLUTION_MASTERY_SAWBLADES_SILVER" },
+        { "id": "gold", "threshold": 15, "rewards": { "attack_speed_pct": 0.75 }, "steam_api_name": "DOP_ACH_EVOLUTION_MASTERY_SAWBLADES_GOLD" },
+        { "id": "diamond", "threshold": 50, "rewards": { "attack_speed_pct": 1 }, "steam_api_name": "DOP_ACH_EVOLUTION_MASTERY_SAWBLADES_DIAMOND" }
       ],
       "name": "Evolution Mastery Sawblades"
     },
@@ -820,10 +820,10 @@
       "metric": "evolutions_meteor_staff",
       "aggregation": "sum",
       "tiers": [
-        { "id": "bronze", "threshold": 1, "rewards": { "attack_speed_pct": 0.025 }, "steam_api_name": "DOP_ACH_EVOLUTION_MASTERY_METEOR_STAFF_BRONZE" },
-        { "id": "silver", "threshold": 5, "rewards": { "attack_speed_pct": 0.05 }, "steam_api_name": "DOP_ACH_EVOLUTION_MASTERY_METEOR_STAFF_SILVER" },
-        { "id": "gold", "threshold": 15, "rewards": { "attack_speed_pct": 0.075 }, "steam_api_name": "DOP_ACH_EVOLUTION_MASTERY_METEOR_STAFF_GOLD" },
-        { "id": "diamond", "threshold": 50, "rewards": { "attack_speed_pct": 0.1 }, "steam_api_name": "DOP_ACH_EVOLUTION_MASTERY_METEOR_STAFF_DIAMOND" }
+        { "id": "bronze", "threshold": 1, "rewards": { "attack_speed_pct": 0.25 }, "steam_api_name": "DOP_ACH_EVOLUTION_MASTERY_METEOR_STAFF_BRONZE" },
+        { "id": "silver", "threshold": 5, "rewards": { "attack_speed_pct": 0.5 }, "steam_api_name": "DOP_ACH_EVOLUTION_MASTERY_METEOR_STAFF_SILVER" },
+        { "id": "gold", "threshold": 15, "rewards": { "attack_speed_pct": 0.75 }, "steam_api_name": "DOP_ACH_EVOLUTION_MASTERY_METEOR_STAFF_GOLD" },
+        { "id": "diamond", "threshold": 50, "rewards": { "attack_speed_pct": 1 }, "steam_api_name": "DOP_ACH_EVOLUTION_MASTERY_METEOR_STAFF_DIAMOND" }
       ],
       "name": "Evolution Mastery Meteor Staff"
     },
@@ -834,10 +834,10 @@
       "metric": "evolutions_prism_laser",
       "aggregation": "sum",
       "tiers": [
-        { "id": "bronze", "threshold": 1, "rewards": { "attack_speed_pct": 0.025 }, "steam_api_name": "DOP_ACH_EVOLUTION_MASTERY_PRISM_LASER_BRONZE" },
-        { "id": "silver", "threshold": 5, "rewards": { "attack_speed_pct": 0.05 }, "steam_api_name": "DOP_ACH_EVOLUTION_MASTERY_PRISM_LASER_SILVER" },
-        { "id": "gold", "threshold": 15, "rewards": { "attack_speed_pct": 0.075 }, "steam_api_name": "DOP_ACH_EVOLUTION_MASTERY_PRISM_LASER_GOLD" },
-        { "id": "diamond", "threshold": 50, "rewards": { "attack_speed_pct": 0.1 }, "steam_api_name": "DOP_ACH_EVOLUTION_MASTERY_PRISM_LASER_DIAMOND" }
+        { "id": "bronze", "threshold": 1, "rewards": { "attack_speed_pct": 0.25 }, "steam_api_name": "DOP_ACH_EVOLUTION_MASTERY_PRISM_LASER_BRONZE" },
+        { "id": "silver", "threshold": 5, "rewards": { "attack_speed_pct": 0.5 }, "steam_api_name": "DOP_ACH_EVOLUTION_MASTERY_PRISM_LASER_SILVER" },
+        { "id": "gold", "threshold": 15, "rewards": { "attack_speed_pct": 0.75 }, "steam_api_name": "DOP_ACH_EVOLUTION_MASTERY_PRISM_LASER_GOLD" },
+        { "id": "diamond", "threshold": 50, "rewards": { "attack_speed_pct": 1 }, "steam_api_name": "DOP_ACH_EVOLUTION_MASTERY_PRISM_LASER_DIAMOND" }
       ],
       "name": "Evolution Mastery Prism Laser"
     },
@@ -848,10 +848,10 @@
       "metric": "evolutions_void_orb",
       "aggregation": "sum",
       "tiers": [
-        { "id": "bronze", "threshold": 1, "rewards": { "attack_speed_pct": 0.025 }, "steam_api_name": "DOP_ACH_EVOLUTION_MASTERY_VOID_ORB_BRONZE" },
-        { "id": "silver", "threshold": 5, "rewards": { "attack_speed_pct": 0.05 }, "steam_api_name": "DOP_ACH_EVOLUTION_MASTERY_VOID_ORB_SILVER" },
-        { "id": "gold", "threshold": 15, "rewards": { "attack_speed_pct": 0.075 }, "steam_api_name": "DOP_ACH_EVOLUTION_MASTERY_VOID_ORB_GOLD" },
-        { "id": "diamond", "threshold": 50, "rewards": { "attack_speed_pct": 0.1 }, "steam_api_name": "DOP_ACH_EVOLUTION_MASTERY_VOID_ORB_DIAMOND" }
+        { "id": "bronze", "threshold": 1, "rewards": { "attack_speed_pct": 0.25 }, "steam_api_name": "DOP_ACH_EVOLUTION_MASTERY_VOID_ORB_BRONZE" },
+        { "id": "silver", "threshold": 5, "rewards": { "attack_speed_pct": 0.5 }, "steam_api_name": "DOP_ACH_EVOLUTION_MASTERY_VOID_ORB_SILVER" },
+        { "id": "gold", "threshold": 15, "rewards": { "attack_speed_pct": 0.75 }, "steam_api_name": "DOP_ACH_EVOLUTION_MASTERY_VOID_ORB_GOLD" },
+        { "id": "diamond", "threshold": 50, "rewards": { "attack_speed_pct": 1 }, "steam_api_name": "DOP_ACH_EVOLUTION_MASTERY_VOID_ORB_DIAMOND" }
       ],
       "name": "Evolution Mastery Void Orb"
     },
@@ -862,10 +862,10 @@
       "metric": "evolutions_frost_nova",
       "aggregation": "sum",
       "tiers": [
-        { "id": "bronze", "threshold": 1, "rewards": { "attack_speed_pct": 0.025 }, "steam_api_name": "DOP_ACH_EVOLUTION_MASTERY_FROST_NOVA_BRONZE" },
-        { "id": "silver", "threshold": 5, "rewards": { "attack_speed_pct": 0.05 }, "steam_api_name": "DOP_ACH_EVOLUTION_MASTERY_FROST_NOVA_SILVER" },
-        { "id": "gold", "threshold": 15, "rewards": { "attack_speed_pct": 0.075 }, "steam_api_name": "DOP_ACH_EVOLUTION_MASTERY_FROST_NOVA_GOLD" },
-        { "id": "diamond", "threshold": 50, "rewards": { "attack_speed_pct": 0.1 }, "steam_api_name": "DOP_ACH_EVOLUTION_MASTERY_FROST_NOVA_DIAMOND" }
+        { "id": "bronze", "threshold": 1, "rewards": { "attack_speed_pct": 0.25 }, "steam_api_name": "DOP_ACH_EVOLUTION_MASTERY_FROST_NOVA_BRONZE" },
+        { "id": "silver", "threshold": 5, "rewards": { "attack_speed_pct": 0.5 }, "steam_api_name": "DOP_ACH_EVOLUTION_MASTERY_FROST_NOVA_SILVER" },
+        { "id": "gold", "threshold": 15, "rewards": { "attack_speed_pct": 0.75 }, "steam_api_name": "DOP_ACH_EVOLUTION_MASTERY_FROST_NOVA_GOLD" },
+        { "id": "diamond", "threshold": 50, "rewards": { "attack_speed_pct": 1 }, "steam_api_name": "DOP_ACH_EVOLUTION_MASTERY_FROST_NOVA_DIAMOND" }
       ],
       "name": "Evolution Mastery Frost Nova"
     },
@@ -876,10 +876,10 @@
       "metric": "equipment_rarity_normal",
       "aggregation": "sum",
       "tiers": [
-        { "id": "bronze", "threshold": 10, "rewards": { "max_hp_pct": 0.00025 }, "steam_api_name": "DOP_ACH_EQUIPMENT_RARITY_NORMAL_BRONZE" },
-        { "id": "silver", "threshold": 25, "rewards": { "max_hp_pct": 0.0005 }, "steam_api_name": "DOP_ACH_EQUIPMENT_RARITY_NORMAL_SILVER" },
-        { "id": "gold", "threshold": 50, "rewards": { "max_hp_pct": 0.00075 }, "steam_api_name": "DOP_ACH_EQUIPMENT_RARITY_NORMAL_GOLD" },
-        { "id": "diamond", "threshold": 100, "rewards": { "max_hp_pct": 0.001 }, "steam_api_name": "DOP_ACH_EQUIPMENT_RARITY_NORMAL_DIAMOND" }
+        { "id": "bronze", "threshold": 10, "rewards": { "max_hp_pct": 0.0025 }, "steam_api_name": "DOP_ACH_EQUIPMENT_RARITY_NORMAL_BRONZE" },
+        { "id": "silver", "threshold": 25, "rewards": { "max_hp_pct": 0.005 }, "steam_api_name": "DOP_ACH_EQUIPMENT_RARITY_NORMAL_SILVER" },
+        { "id": "gold", "threshold": 50, "rewards": { "max_hp_pct": 0.0075 }, "steam_api_name": "DOP_ACH_EQUIPMENT_RARITY_NORMAL_GOLD" },
+        { "id": "diamond", "threshold": 100, "rewards": { "max_hp_pct": 0.01 }, "steam_api_name": "DOP_ACH_EQUIPMENT_RARITY_NORMAL_DIAMOND" }
       ],
       "name": "Equipment Rarity Normal"
     },
@@ -890,10 +890,10 @@
       "metric": "equipment_rarity_magic",
       "aggregation": "sum",
       "tiers": [
-        { "id": "bronze", "threshold": 10, "rewards": { "max_hp_pct": 0.00025 }, "steam_api_name": "DOP_ACH_EQUIPMENT_RARITY_MAGIC_BRONZE" },
-        { "id": "silver", "threshold": 25, "rewards": { "max_hp_pct": 0.0005 }, "steam_api_name": "DOP_ACH_EQUIPMENT_RARITY_MAGIC_SILVER" },
-        { "id": "gold", "threshold": 50, "rewards": { "max_hp_pct": 0.00075 }, "steam_api_name": "DOP_ACH_EQUIPMENT_RARITY_MAGIC_GOLD" },
-        { "id": "diamond", "threshold": 100, "rewards": { "max_hp_pct": 0.001 }, "steam_api_name": "DOP_ACH_EQUIPMENT_RARITY_MAGIC_DIAMOND" }
+        { "id": "bronze", "threshold": 10, "rewards": { "max_hp_pct": 0.0025 }, "steam_api_name": "DOP_ACH_EQUIPMENT_RARITY_MAGIC_BRONZE" },
+        { "id": "silver", "threshold": 25, "rewards": { "max_hp_pct": 0.005 }, "steam_api_name": "DOP_ACH_EQUIPMENT_RARITY_MAGIC_SILVER" },
+        { "id": "gold", "threshold": 50, "rewards": { "max_hp_pct": 0.0075 }, "steam_api_name": "DOP_ACH_EQUIPMENT_RARITY_MAGIC_GOLD" },
+        { "id": "diamond", "threshold": 100, "rewards": { "max_hp_pct": 0.01 }, "steam_api_name": "DOP_ACH_EQUIPMENT_RARITY_MAGIC_DIAMOND" }
       ],
       "name": "Equipment Rarity Magic"
     },
@@ -904,10 +904,10 @@
       "metric": "equipment_rarity_mystic",
       "aggregation": "sum",
       "tiers": [
-        { "id": "bronze", "threshold": 10, "rewards": { "max_hp_pct": 0.00025 }, "steam_api_name": "DOP_ACH_EQUIPMENT_RARITY_MYSTIC_BRONZE" },
-        { "id": "silver", "threshold": 25, "rewards": { "max_hp_pct": 0.0005 }, "steam_api_name": "DOP_ACH_EQUIPMENT_RARITY_MYSTIC_SILVER" },
-        { "id": "gold", "threshold": 50, "rewards": { "max_hp_pct": 0.00075 }, "steam_api_name": "DOP_ACH_EQUIPMENT_RARITY_MYSTIC_GOLD" },
-        { "id": "diamond", "threshold": 100, "rewards": { "max_hp_pct": 0.001 }, "steam_api_name": "DOP_ACH_EQUIPMENT_RARITY_MYSTIC_DIAMOND" }
+        { "id": "bronze", "threshold": 10, "rewards": { "max_hp_pct": 0.0025 }, "steam_api_name": "DOP_ACH_EQUIPMENT_RARITY_MYSTIC_BRONZE" },
+        { "id": "silver", "threshold": 25, "rewards": { "max_hp_pct": 0.005 }, "steam_api_name": "DOP_ACH_EQUIPMENT_RARITY_MYSTIC_SILVER" },
+        { "id": "gold", "threshold": 50, "rewards": { "max_hp_pct": 0.0075 }, "steam_api_name": "DOP_ACH_EQUIPMENT_RARITY_MYSTIC_GOLD" },
+        { "id": "diamond", "threshold": 100, "rewards": { "max_hp_pct": 0.01 }, "steam_api_name": "DOP_ACH_EQUIPMENT_RARITY_MYSTIC_DIAMOND" }
       ],
       "name": "Equipment Rarity Mystic"
     },
@@ -918,10 +918,10 @@
       "metric": "equipment_rarity_legendary",
       "aggregation": "sum",
       "tiers": [
-        { "id": "bronze", "threshold": 10, "rewards": { "max_hp_pct": 0.00025 }, "steam_api_name": "DOP_ACH_EQUIPMENT_RARITY_LEGENDARY_BRONZE" },
-        { "id": "silver", "threshold": 25, "rewards": { "max_hp_pct": 0.0005 }, "steam_api_name": "DOP_ACH_EQUIPMENT_RARITY_LEGENDARY_SILVER" },
-        { "id": "gold", "threshold": 50, "rewards": { "max_hp_pct": 0.00075 }, "steam_api_name": "DOP_ACH_EQUIPMENT_RARITY_LEGENDARY_GOLD" },
-        { "id": "diamond", "threshold": 100, "rewards": { "max_hp_pct": 0.001 }, "steam_api_name": "DOP_ACH_EQUIPMENT_RARITY_LEGENDARY_DIAMOND" }
+        { "id": "bronze", "threshold": 10, "rewards": { "max_hp_pct": 0.0025 }, "steam_api_name": "DOP_ACH_EQUIPMENT_RARITY_LEGENDARY_BRONZE" },
+        { "id": "silver", "threshold": 25, "rewards": { "max_hp_pct": 0.005 }, "steam_api_name": "DOP_ACH_EQUIPMENT_RARITY_LEGENDARY_SILVER" },
+        { "id": "gold", "threshold": 50, "rewards": { "max_hp_pct": 0.0075 }, "steam_api_name": "DOP_ACH_EQUIPMENT_RARITY_LEGENDARY_GOLD" },
+        { "id": "diamond", "threshold": 100, "rewards": { "max_hp_pct": 0.01 }, "steam_api_name": "DOP_ACH_EQUIPMENT_RARITY_LEGENDARY_DIAMOND" }
       ],
       "name": "Equipment Rarity Legendary"
     },
@@ -932,10 +932,10 @@
       "metric": "equipment_rarity_mythic",
       "aggregation": "sum",
       "tiers": [
-        { "id": "bronze", "threshold": 10, "rewards": { "max_hp_pct": 0.00025 }, "steam_api_name": "DOP_ACH_EQUIPMENT_RARITY_MYTHIC_BRONZE" },
-        { "id": "silver", "threshold": 25, "rewards": { "max_hp_pct": 0.0005 }, "steam_api_name": "DOP_ACH_EQUIPMENT_RARITY_MYTHIC_SILVER" },
-        { "id": "gold", "threshold": 50, "rewards": { "max_hp_pct": 0.00075 }, "steam_api_name": "DOP_ACH_EQUIPMENT_RARITY_MYTHIC_GOLD" },
-        { "id": "diamond", "threshold": 100, "rewards": { "max_hp_pct": 0.001 }, "steam_api_name": "DOP_ACH_EQUIPMENT_RARITY_MYTHIC_DIAMOND" }
+        { "id": "bronze", "threshold": 10, "rewards": { "max_hp_pct": 0.0025 }, "steam_api_name": "DOP_ACH_EQUIPMENT_RARITY_MYTHIC_BRONZE" },
+        { "id": "silver", "threshold": 25, "rewards": { "max_hp_pct": 0.005 }, "steam_api_name": "DOP_ACH_EQUIPMENT_RARITY_MYTHIC_SILVER" },
+        { "id": "gold", "threshold": 50, "rewards": { "max_hp_pct": 0.0075 }, "steam_api_name": "DOP_ACH_EQUIPMENT_RARITY_MYTHIC_GOLD" },
+        { "id": "diamond", "threshold": 100, "rewards": { "max_hp_pct": 0.01 }, "steam_api_name": "DOP_ACH_EQUIPMENT_RARITY_MYTHIC_DIAMOND" }
       ],
       "name": "Equipment Rarity Mythic"
     },
@@ -946,10 +946,10 @@
       "metric": "equipment_slot_helmet",
       "aggregation": "sum",
       "tiers": [
-        { "id": "bronze", "threshold": 10, "rewards": { "max_hp_pct": 0.00025 }, "steam_api_name": "DOP_ACH_EQUIPMENT_SLOT_HELMET_BRONZE" },
-        { "id": "silver", "threshold": 25, "rewards": { "max_hp_pct": 0.0005 }, "steam_api_name": "DOP_ACH_EQUIPMENT_SLOT_HELMET_SILVER" },
-        { "id": "gold", "threshold": 50, "rewards": { "max_hp_pct": 0.00075 }, "steam_api_name": "DOP_ACH_EQUIPMENT_SLOT_HELMET_GOLD" },
-        { "id": "diamond", "threshold": 100, "rewards": { "max_hp_pct": 0.001 }, "steam_api_name": "DOP_ACH_EQUIPMENT_SLOT_HELMET_DIAMOND" }
+        { "id": "bronze", "threshold": 10, "rewards": { "max_hp_pct": 0.0025 }, "steam_api_name": "DOP_ACH_EQUIPMENT_SLOT_HELMET_BRONZE" },
+        { "id": "silver", "threshold": 25, "rewards": { "max_hp_pct": 0.005 }, "steam_api_name": "DOP_ACH_EQUIPMENT_SLOT_HELMET_SILVER" },
+        { "id": "gold", "threshold": 50, "rewards": { "max_hp_pct": 0.0075 }, "steam_api_name": "DOP_ACH_EQUIPMENT_SLOT_HELMET_GOLD" },
+        { "id": "diamond", "threshold": 100, "rewards": { "max_hp_pct": 0.01 }, "steam_api_name": "DOP_ACH_EQUIPMENT_SLOT_HELMET_DIAMOND" }
       ],
       "name": "Equipment Slot Helmet"
     },
@@ -960,10 +960,10 @@
       "metric": "equipment_slot_armor",
       "aggregation": "sum",
       "tiers": [
-        { "id": "bronze", "threshold": 10, "rewards": { "max_hp_pct": 0.00025 }, "steam_api_name": "DOP_ACH_EQUIPMENT_SLOT_ARMOR_BRONZE" },
-        { "id": "silver", "threshold": 25, "rewards": { "max_hp_pct": 0.0005 }, "steam_api_name": "DOP_ACH_EQUIPMENT_SLOT_ARMOR_SILVER" },
-        { "id": "gold", "threshold": 50, "rewards": { "max_hp_pct": 0.00075 }, "steam_api_name": "DOP_ACH_EQUIPMENT_SLOT_ARMOR_GOLD" },
-        { "id": "diamond", "threshold": 100, "rewards": { "max_hp_pct": 0.001 }, "steam_api_name": "DOP_ACH_EQUIPMENT_SLOT_ARMOR_DIAMOND" }
+        { "id": "bronze", "threshold": 10, "rewards": { "max_hp_pct": 0.0025 }, "steam_api_name": "DOP_ACH_EQUIPMENT_SLOT_ARMOR_BRONZE" },
+        { "id": "silver", "threshold": 25, "rewards": { "max_hp_pct": 0.005 }, "steam_api_name": "DOP_ACH_EQUIPMENT_SLOT_ARMOR_SILVER" },
+        { "id": "gold", "threshold": 50, "rewards": { "max_hp_pct": 0.0075 }, "steam_api_name": "DOP_ACH_EQUIPMENT_SLOT_ARMOR_GOLD" },
+        { "id": "diamond", "threshold": 100, "rewards": { "max_hp_pct": 0.01 }, "steam_api_name": "DOP_ACH_EQUIPMENT_SLOT_ARMOR_DIAMOND" }
       ],
       "name": "Equipment Slot Armor"
     },
@@ -974,10 +974,10 @@
       "metric": "equipment_slot_gloves",
       "aggregation": "sum",
       "tiers": [
-        { "id": "bronze", "threshold": 10, "rewards": { "max_hp_pct": 0.00025 }, "steam_api_name": "DOP_ACH_EQUIPMENT_SLOT_GLOVES_BRONZE" },
-        { "id": "silver", "threshold": 25, "rewards": { "max_hp_pct": 0.0005 }, "steam_api_name": "DOP_ACH_EQUIPMENT_SLOT_GLOVES_SILVER" },
-        { "id": "gold", "threshold": 50, "rewards": { "max_hp_pct": 0.00075 }, "steam_api_name": "DOP_ACH_EQUIPMENT_SLOT_GLOVES_GOLD" },
-        { "id": "diamond", "threshold": 100, "rewards": { "max_hp_pct": 0.001 }, "steam_api_name": "DOP_ACH_EQUIPMENT_SLOT_GLOVES_DIAMOND" }
+        { "id": "bronze", "threshold": 10, "rewards": { "max_hp_pct": 0.0025 }, "steam_api_name": "DOP_ACH_EQUIPMENT_SLOT_GLOVES_BRONZE" },
+        { "id": "silver", "threshold": 25, "rewards": { "max_hp_pct": 0.005 }, "steam_api_name": "DOP_ACH_EQUIPMENT_SLOT_GLOVES_SILVER" },
+        { "id": "gold", "threshold": 50, "rewards": { "max_hp_pct": 0.0075 }, "steam_api_name": "DOP_ACH_EQUIPMENT_SLOT_GLOVES_GOLD" },
+        { "id": "diamond", "threshold": 100, "rewards": { "max_hp_pct": 0.01 }, "steam_api_name": "DOP_ACH_EQUIPMENT_SLOT_GLOVES_DIAMOND" }
       ],
       "name": "Equipment Slot Gloves"
     },
@@ -988,10 +988,10 @@
       "metric": "equipment_slot_boots",
       "aggregation": "sum",
       "tiers": [
-        { "id": "bronze", "threshold": 10, "rewards": { "max_hp_pct": 0.00025 }, "steam_api_name": "DOP_ACH_EQUIPMENT_SLOT_BOOTS_BRONZE" },
-        { "id": "silver", "threshold": 25, "rewards": { "max_hp_pct": 0.0005 }, "steam_api_name": "DOP_ACH_EQUIPMENT_SLOT_BOOTS_SILVER" },
-        { "id": "gold", "threshold": 50, "rewards": { "max_hp_pct": 0.00075 }, "steam_api_name": "DOP_ACH_EQUIPMENT_SLOT_BOOTS_GOLD" },
-        { "id": "diamond", "threshold": 100, "rewards": { "max_hp_pct": 0.001 }, "steam_api_name": "DOP_ACH_EQUIPMENT_SLOT_BOOTS_DIAMOND" }
+        { "id": "bronze", "threshold": 10, "rewards": { "max_hp_pct": 0.0025 }, "steam_api_name": "DOP_ACH_EQUIPMENT_SLOT_BOOTS_BRONZE" },
+        { "id": "silver", "threshold": 25, "rewards": { "max_hp_pct": 0.005 }, "steam_api_name": "DOP_ACH_EQUIPMENT_SLOT_BOOTS_SILVER" },
+        { "id": "gold", "threshold": 50, "rewards": { "max_hp_pct": 0.0075 }, "steam_api_name": "DOP_ACH_EQUIPMENT_SLOT_BOOTS_GOLD" },
+        { "id": "diamond", "threshold": 100, "rewards": { "max_hp_pct": 0.01 }, "steam_api_name": "DOP_ACH_EQUIPMENT_SLOT_BOOTS_DIAMOND" }
       ],
       "name": "Equipment Slot Boots"
     },
@@ -1002,10 +1002,10 @@
       "metric": "equipment_slot_amulet",
       "aggregation": "sum",
       "tiers": [
-        { "id": "bronze", "threshold": 10, "rewards": { "max_hp_pct": 0.00025 }, "steam_api_name": "DOP_ACH_EQUIPMENT_SLOT_AMULET_BRONZE" },
-        { "id": "silver", "threshold": 25, "rewards": { "max_hp_pct": 0.0005 }, "steam_api_name": "DOP_ACH_EQUIPMENT_SLOT_AMULET_SILVER" },
-        { "id": "gold", "threshold": 50, "rewards": { "max_hp_pct": 0.00075 }, "steam_api_name": "DOP_ACH_EQUIPMENT_SLOT_AMULET_GOLD" },
-        { "id": "diamond", "threshold": 100, "rewards": { "max_hp_pct": 0.001 }, "steam_api_name": "DOP_ACH_EQUIPMENT_SLOT_AMULET_DIAMOND" }
+        { "id": "bronze", "threshold": 10, "rewards": { "max_hp_pct": 0.0025 }, "steam_api_name": "DOP_ACH_EQUIPMENT_SLOT_AMULET_BRONZE" },
+        { "id": "silver", "threshold": 25, "rewards": { "max_hp_pct": 0.005 }, "steam_api_name": "DOP_ACH_EQUIPMENT_SLOT_AMULET_SILVER" },
+        { "id": "gold", "threshold": 50, "rewards": { "max_hp_pct": 0.0075 }, "steam_api_name": "DOP_ACH_EQUIPMENT_SLOT_AMULET_GOLD" },
+        { "id": "diamond", "threshold": 100, "rewards": { "max_hp_pct": 0.01 }, "steam_api_name": "DOP_ACH_EQUIPMENT_SLOT_AMULET_DIAMOND" }
       ],
       "name": "Equipment Slot Amulet"
     },
@@ -1016,10 +1016,10 @@
       "metric": "equipment_slot_ring",
       "aggregation": "sum",
       "tiers": [
-        { "id": "bronze", "threshold": 10, "rewards": { "max_hp_pct": 0.00025 }, "steam_api_name": "DOP_ACH_EQUIPMENT_SLOT_RING_BRONZE" },
-        { "id": "silver", "threshold": 25, "rewards": { "max_hp_pct": 0.0005 }, "steam_api_name": "DOP_ACH_EQUIPMENT_SLOT_RING_SILVER" },
-        { "id": "gold", "threshold": 50, "rewards": { "max_hp_pct": 0.00075 }, "steam_api_name": "DOP_ACH_EQUIPMENT_SLOT_RING_GOLD" },
-        { "id": "diamond", "threshold": 100, "rewards": { "max_hp_pct": 0.001 }, "steam_api_name": "DOP_ACH_EQUIPMENT_SLOT_RING_DIAMOND" }
+        { "id": "bronze", "threshold": 10, "rewards": { "max_hp_pct": 0.0025 }, "steam_api_name": "DOP_ACH_EQUIPMENT_SLOT_RING_BRONZE" },
+        { "id": "silver", "threshold": 25, "rewards": { "max_hp_pct": 0.005 }, "steam_api_name": "DOP_ACH_EQUIPMENT_SLOT_RING_SILVER" },
+        { "id": "gold", "threshold": 50, "rewards": { "max_hp_pct": 0.0075 }, "steam_api_name": "DOP_ACH_EQUIPMENT_SLOT_RING_GOLD" },
+        { "id": "diamond", "threshold": 100, "rewards": { "max_hp_pct": 0.01 }, "steam_api_name": "DOP_ACH_EQUIPMENT_SLOT_RING_DIAMOND" }
       ],
       "name": "Equipment Slot Ring"
     },
@@ -1030,10 +1030,10 @@
       "metric": "runs_at_difficulty_easy",
       "aggregation": "sum",
       "tiers": [
-        { "id": "bronze", "threshold": 10, "rewards": { "critical_chance_pct": 0.025 }, "steam_api_name": "DOP_ACH_EASY_RUNNER_MASTERY_BRONZE" },
-        { "id": "silver", "threshold": 25, "rewards": { "critical_chance_pct": 0.05 }, "steam_api_name": "DOP_ACH_EASY_RUNNER_MASTERY_SILVER" },
-        { "id": "gold", "threshold": 50, "rewards": { "critical_chance_pct": 0.075 }, "steam_api_name": "DOP_ACH_EASY_RUNNER_MASTERY_GOLD" },
-        { "id": "diamond", "threshold": 100, "rewards": { "critical_chance_pct": 0.1 }, "steam_api_name": "DOP_ACH_EASY_RUNNER_MASTERY_DIAMOND" }
+        { "id": "bronze", "threshold": 10, "rewards": { "critical_chance_pct": 0.25 }, "steam_api_name": "DOP_ACH_EASY_RUNNER_MASTERY_BRONZE" },
+        { "id": "silver", "threshold": 25, "rewards": { "critical_chance_pct": 0.5 }, "steam_api_name": "DOP_ACH_EASY_RUNNER_MASTERY_SILVER" },
+        { "id": "gold", "threshold": 50, "rewards": { "critical_chance_pct": 0.75 }, "steam_api_name": "DOP_ACH_EASY_RUNNER_MASTERY_GOLD" },
+        { "id": "diamond", "threshold": 100, "rewards": { "critical_chance_pct": 1 }, "steam_api_name": "DOP_ACH_EASY_RUNNER_MASTERY_DIAMOND" }
       ],
       "name": "Easy Runner Mastery"
     },
@@ -1044,10 +1044,10 @@
       "metric": "boss_victories_at_difficulty_easy",
       "aggregation": "sum",
       "tiers": [
-        { "id": "bronze", "threshold": 1, "rewards": { "critical_chance_pct": 0.025 }, "steam_api_name": "DOP_ACH_EASY_BOSS_MASTERY_BRONZE" },
-        { "id": "silver", "threshold": 5, "rewards": { "critical_chance_pct": 0.05 }, "steam_api_name": "DOP_ACH_EASY_BOSS_MASTERY_SILVER" },
-        { "id": "gold", "threshold": 15, "rewards": { "critical_chance_pct": 0.075 }, "steam_api_name": "DOP_ACH_EASY_BOSS_MASTERY_GOLD" },
-        { "id": "diamond", "threshold": 30, "rewards": { "critical_chance_pct": 0.1 }, "steam_api_name": "DOP_ACH_EASY_BOSS_MASTERY_DIAMOND" }
+        { "id": "bronze", "threshold": 1, "rewards": { "critical_chance_pct": 0.25 }, "steam_api_name": "DOP_ACH_EASY_BOSS_MASTERY_BRONZE" },
+        { "id": "silver", "threshold": 5, "rewards": { "critical_chance_pct": 0.5 }, "steam_api_name": "DOP_ACH_EASY_BOSS_MASTERY_SILVER" },
+        { "id": "gold", "threshold": 15, "rewards": { "critical_chance_pct": 0.75 }, "steam_api_name": "DOP_ACH_EASY_BOSS_MASTERY_GOLD" },
+        { "id": "diamond", "threshold": 30, "rewards": { "critical_chance_pct": 1 }, "steam_api_name": "DOP_ACH_EASY_BOSS_MASTERY_DIAMOND" }
       ],
       "name": "Easy Boss Mastery"
     },
@@ -1058,10 +1058,10 @@
       "metric": "runs_at_difficulty_normal",
       "aggregation": "sum",
       "tiers": [
-        { "id": "bronze", "threshold": 10, "rewards": { "critical_chance_pct": 0.025 }, "steam_api_name": "DOP_ACH_NORMAL_RUNNER_MASTERY_BRONZE" },
-        { "id": "silver", "threshold": 25, "rewards": { "critical_chance_pct": 0.05 }, "steam_api_name": "DOP_ACH_NORMAL_RUNNER_MASTERY_SILVER" },
-        { "id": "gold", "threshold": 50, "rewards": { "critical_chance_pct": 0.075 }, "steam_api_name": "DOP_ACH_NORMAL_RUNNER_MASTERY_GOLD" },
-        { "id": "diamond", "threshold": 100, "rewards": { "critical_chance_pct": 0.1 }, "steam_api_name": "DOP_ACH_NORMAL_RUNNER_MASTERY_DIAMOND" }
+        { "id": "bronze", "threshold": 10, "rewards": { "critical_chance_pct": 0.25 }, "steam_api_name": "DOP_ACH_NORMAL_RUNNER_MASTERY_BRONZE" },
+        { "id": "silver", "threshold": 25, "rewards": { "critical_chance_pct": 0.5 }, "steam_api_name": "DOP_ACH_NORMAL_RUNNER_MASTERY_SILVER" },
+        { "id": "gold", "threshold": 50, "rewards": { "critical_chance_pct": 0.75 }, "steam_api_name": "DOP_ACH_NORMAL_RUNNER_MASTERY_GOLD" },
+        { "id": "diamond", "threshold": 100, "rewards": { "critical_chance_pct": 1 }, "steam_api_name": "DOP_ACH_NORMAL_RUNNER_MASTERY_DIAMOND" }
       ],
       "name": "Normal Runner Mastery"
     },
@@ -1072,10 +1072,10 @@
       "metric": "boss_victories_at_difficulty_normal",
       "aggregation": "sum",
       "tiers": [
-        { "id": "bronze", "threshold": 1, "rewards": { "critical_chance_pct": 0.025 }, "steam_api_name": "DOP_ACH_NORMAL_BOSS_MASTERY_BRONZE" },
-        { "id": "silver", "threshold": 5, "rewards": { "critical_chance_pct": 0.05 }, "steam_api_name": "DOP_ACH_NORMAL_BOSS_MASTERY_SILVER" },
-        { "id": "gold", "threshold": 15, "rewards": { "critical_chance_pct": 0.075 }, "steam_api_name": "DOP_ACH_NORMAL_BOSS_MASTERY_GOLD" },
-        { "id": "diamond", "threshold": 30, "rewards": { "critical_chance_pct": 0.1 }, "steam_api_name": "DOP_ACH_NORMAL_BOSS_MASTERY_DIAMOND" }
+        { "id": "bronze", "threshold": 1, "rewards": { "critical_chance_pct": 0.25 }, "steam_api_name": "DOP_ACH_NORMAL_BOSS_MASTERY_BRONZE" },
+        { "id": "silver", "threshold": 5, "rewards": { "critical_chance_pct": 0.5 }, "steam_api_name": "DOP_ACH_NORMAL_BOSS_MASTERY_SILVER" },
+        { "id": "gold", "threshold": 15, "rewards": { "critical_chance_pct": 0.75 }, "steam_api_name": "DOP_ACH_NORMAL_BOSS_MASTERY_GOLD" },
+        { "id": "diamond", "threshold": 30, "rewards": { "critical_chance_pct": 1 }, "steam_api_name": "DOP_ACH_NORMAL_BOSS_MASTERY_DIAMOND" }
       ],
       "name": "Normal Boss Mastery"
     },
@@ -1086,10 +1086,10 @@
       "metric": "runs_at_difficulty_hard",
       "aggregation": "sum",
       "tiers": [
-        { "id": "bronze", "threshold": 10, "rewards": { "critical_chance_pct": 0.025 }, "steam_api_name": "DOP_ACH_HARD_RUNNER_MASTERY_BRONZE" },
-        { "id": "silver", "threshold": 25, "rewards": { "critical_chance_pct": 0.05 }, "steam_api_name": "DOP_ACH_HARD_RUNNER_MASTERY_SILVER" },
-        { "id": "gold", "threshold": 50, "rewards": { "critical_chance_pct": 0.075 }, "steam_api_name": "DOP_ACH_HARD_RUNNER_MASTERY_GOLD" },
-        { "id": "diamond", "threshold": 100, "rewards": { "critical_chance_pct": 0.1 }, "steam_api_name": "DOP_ACH_HARD_RUNNER_MASTERY_DIAMOND" }
+        { "id": "bronze", "threshold": 10, "rewards": { "critical_chance_pct": 0.25 }, "steam_api_name": "DOP_ACH_HARD_RUNNER_MASTERY_BRONZE" },
+        { "id": "silver", "threshold": 25, "rewards": { "critical_chance_pct": 0.5 }, "steam_api_name": "DOP_ACH_HARD_RUNNER_MASTERY_SILVER" },
+        { "id": "gold", "threshold": 50, "rewards": { "critical_chance_pct": 0.75 }, "steam_api_name": "DOP_ACH_HARD_RUNNER_MASTERY_GOLD" },
+        { "id": "diamond", "threshold": 100, "rewards": { "critical_chance_pct": 1 }, "steam_api_name": "DOP_ACH_HARD_RUNNER_MASTERY_DIAMOND" }
       ],
       "name": "Hard Runner Mastery"
     },
@@ -1100,10 +1100,10 @@
       "metric": "boss_victories_at_difficulty_hard",
       "aggregation": "sum",
       "tiers": [
-        { "id": "bronze", "threshold": 1, "rewards": { "critical_chance_pct": 0.025 }, "steam_api_name": "DOP_ACH_HARD_BOSS_MASTERY_BRONZE" },
-        { "id": "silver", "threshold": 5, "rewards": { "critical_chance_pct": 0.05 }, "steam_api_name": "DOP_ACH_HARD_BOSS_MASTERY_SILVER" },
-        { "id": "gold", "threshold": 15, "rewards": { "critical_chance_pct": 0.075 }, "steam_api_name": "DOP_ACH_HARD_BOSS_MASTERY_GOLD" },
-        { "id": "diamond", "threshold": 30, "rewards": { "critical_chance_pct": 0.1 }, "steam_api_name": "DOP_ACH_HARD_BOSS_MASTERY_DIAMOND" }
+        { "id": "bronze", "threshold": 1, "rewards": { "critical_chance_pct": 0.25 }, "steam_api_name": "DOP_ACH_HARD_BOSS_MASTERY_BRONZE" },
+        { "id": "silver", "threshold": 5, "rewards": { "critical_chance_pct": 0.5 }, "steam_api_name": "DOP_ACH_HARD_BOSS_MASTERY_SILVER" },
+        { "id": "gold", "threshold": 15, "rewards": { "critical_chance_pct": 0.75 }, "steam_api_name": "DOP_ACH_HARD_BOSS_MASTERY_GOLD" },
+        { "id": "diamond", "threshold": 30, "rewards": { "critical_chance_pct": 1 }, "steam_api_name": "DOP_ACH_HARD_BOSS_MASTERY_DIAMOND" }
       ],
       "name": "Hard Boss Mastery"
     },
@@ -1114,10 +1114,10 @@
       "metric": "runs_at_difficulty_nightmare",
       "aggregation": "sum",
       "tiers": [
-        { "id": "bronze", "threshold": 10, "rewards": { "critical_chance_pct": 0.025 }, "steam_api_name": "DOP_ACH_NIGHTMARE_RUNNER_MASTERY_BRONZE" },
-        { "id": "silver", "threshold": 25, "rewards": { "critical_chance_pct": 0.05 }, "steam_api_name": "DOP_ACH_NIGHTMARE_RUNNER_MASTERY_SILVER" },
-        { "id": "gold", "threshold": 50, "rewards": { "critical_chance_pct": 0.075 }, "steam_api_name": "DOP_ACH_NIGHTMARE_RUNNER_MASTERY_GOLD" },
-        { "id": "diamond", "threshold": 100, "rewards": { "critical_chance_pct": 0.1 }, "steam_api_name": "DOP_ACH_NIGHTMARE_RUNNER_MASTERY_DIAMOND" }
+        { "id": "bronze", "threshold": 10, "rewards": { "critical_chance_pct": 0.25 }, "steam_api_name": "DOP_ACH_NIGHTMARE_RUNNER_MASTERY_BRONZE" },
+        { "id": "silver", "threshold": 25, "rewards": { "critical_chance_pct": 0.5 }, "steam_api_name": "DOP_ACH_NIGHTMARE_RUNNER_MASTERY_SILVER" },
+        { "id": "gold", "threshold": 50, "rewards": { "critical_chance_pct": 0.75 }, "steam_api_name": "DOP_ACH_NIGHTMARE_RUNNER_MASTERY_GOLD" },
+        { "id": "diamond", "threshold": 100, "rewards": { "critical_chance_pct": 1 }, "steam_api_name": "DOP_ACH_NIGHTMARE_RUNNER_MASTERY_DIAMOND" }
       ],
       "name": "Nightmare Runner Mastery"
     },
@@ -1128,10 +1128,10 @@
       "metric": "boss_victories_at_difficulty_nightmare",
       "aggregation": "sum",
       "tiers": [
-        { "id": "bronze", "threshold": 1, "rewards": { "critical_chance_pct": 0.025 }, "steam_api_name": "DOP_ACH_NIGHTMARE_BOSS_MASTERY_BRONZE" },
-        { "id": "silver", "threshold": 5, "rewards": { "critical_chance_pct": 0.05 }, "steam_api_name": "DOP_ACH_NIGHTMARE_BOSS_MASTERY_SILVER" },
-        { "id": "gold", "threshold": 15, "rewards": { "critical_chance_pct": 0.075 }, "steam_api_name": "DOP_ACH_NIGHTMARE_BOSS_MASTERY_GOLD" },
-        { "id": "diamond", "threshold": 30, "rewards": { "critical_chance_pct": 0.1 }, "steam_api_name": "DOP_ACH_NIGHTMARE_BOSS_MASTERY_DIAMOND" }
+        { "id": "bronze", "threshold": 1, "rewards": { "critical_chance_pct": 0.25 }, "steam_api_name": "DOP_ACH_NIGHTMARE_BOSS_MASTERY_BRONZE" },
+        { "id": "silver", "threshold": 5, "rewards": { "critical_chance_pct": 0.5 }, "steam_api_name": "DOP_ACH_NIGHTMARE_BOSS_MASTERY_SILVER" },
+        { "id": "gold", "threshold": 15, "rewards": { "critical_chance_pct": 0.75 }, "steam_api_name": "DOP_ACH_NIGHTMARE_BOSS_MASTERY_GOLD" },
+        { "id": "diamond", "threshold": 30, "rewards": { "critical_chance_pct": 1 }, "steam_api_name": "DOP_ACH_NIGHTMARE_BOSS_MASTERY_DIAMOND" }
       ],
       "name": "Nightmare Boss Mastery"
     },
@@ -1142,10 +1142,10 @@
       "metric": "runs_at_difficulty_chaos",
       "aggregation": "sum",
       "tiers": [
-        { "id": "bronze", "threshold": 10, "rewards": { "critical_chance_pct": 0.025 }, "steam_api_name": "DOP_ACH_CHAOS_RUNNER_MASTERY_BRONZE" },
-        { "id": "silver", "threshold": 25, "rewards": { "critical_chance_pct": 0.05 }, "steam_api_name": "DOP_ACH_CHAOS_RUNNER_MASTERY_SILVER" },
-        { "id": "gold", "threshold": 50, "rewards": { "critical_chance_pct": 0.075 }, "steam_api_name": "DOP_ACH_CHAOS_RUNNER_MASTERY_GOLD" },
-        { "id": "diamond", "threshold": 100, "rewards": { "critical_chance_pct": 0.1 }, "steam_api_name": "DOP_ACH_CHAOS_RUNNER_MASTERY_DIAMOND" }
+        { "id": "bronze", "threshold": 10, "rewards": { "critical_chance_pct": 0.25 }, "steam_api_name": "DOP_ACH_CHAOS_RUNNER_MASTERY_BRONZE" },
+        { "id": "silver", "threshold": 25, "rewards": { "critical_chance_pct": 0.5 }, "steam_api_name": "DOP_ACH_CHAOS_RUNNER_MASTERY_SILVER" },
+        { "id": "gold", "threshold": 50, "rewards": { "critical_chance_pct": 0.75 }, "steam_api_name": "DOP_ACH_CHAOS_RUNNER_MASTERY_GOLD" },
+        { "id": "diamond", "threshold": 100, "rewards": { "critical_chance_pct": 1 }, "steam_api_name": "DOP_ACH_CHAOS_RUNNER_MASTERY_DIAMOND" }
       ],
       "name": "Chaos Runner Mastery"
     },
@@ -1156,10 +1156,10 @@
       "metric": "boss_victories_at_difficulty_chaos",
       "aggregation": "sum",
       "tiers": [
-        { "id": "bronze", "threshold": 1, "rewards": { "critical_chance_pct": 0.025 }, "steam_api_name": "DOP_ACH_CHAOS_BOSS_MASTERY_BRONZE" },
-        { "id": "silver", "threshold": 5, "rewards": { "critical_chance_pct": 0.05 }, "steam_api_name": "DOP_ACH_CHAOS_BOSS_MASTERY_SILVER" },
-        { "id": "gold", "threshold": 15, "rewards": { "critical_chance_pct": 0.075 }, "steam_api_name": "DOP_ACH_CHAOS_BOSS_MASTERY_GOLD" },
-        { "id": "diamond", "threshold": 30, "rewards": { "critical_chance_pct": 0.1 }, "steam_api_name": "DOP_ACH_CHAOS_BOSS_MASTERY_DIAMOND" }
+        { "id": "bronze", "threshold": 1, "rewards": { "critical_chance_pct": 0.25 }, "steam_api_name": "DOP_ACH_CHAOS_BOSS_MASTERY_BRONZE" },
+        { "id": "silver", "threshold": 5, "rewards": { "critical_chance_pct": 0.5 }, "steam_api_name": "DOP_ACH_CHAOS_BOSS_MASTERY_SILVER" },
+        { "id": "gold", "threshold": 15, "rewards": { "critical_chance_pct": 0.75 }, "steam_api_name": "DOP_ACH_CHAOS_BOSS_MASTERY_GOLD" },
+        { "id": "diamond", "threshold": 30, "rewards": { "critical_chance_pct": 1 }, "steam_api_name": "DOP_ACH_CHAOS_BOSS_MASTERY_DIAMOND" }
       ],
       "name": "Chaos Boss Mastery"
     },
@@ -1170,10 +1170,10 @@
       "metric": "max_weapon_level_lightning_conductor",
       "aggregation": "max",
       "tiers": [
-        { "id": "bronze", "threshold": 2, "rewards": { "attack_speed_pct": 0.025 }, "steam_api_name": "DOP_ACH_WEAPON_LEVEL_MASTERY_LIGHTNING_CONDUCTOR_BRONZE" },
-        { "id": "silver", "threshold": 3, "rewards": { "attack_speed_pct": 0.025 }, "steam_api_name": "DOP_ACH_WEAPON_LEVEL_MASTERY_LIGHTNING_CONDUCTOR_SILVER" },
-        { "id": "gold", "threshold": 4, "rewards": { "attack_speed_pct": 0.025 }, "steam_api_name": "DOP_ACH_WEAPON_LEVEL_MASTERY_LIGHTNING_CONDUCTOR_GOLD" },
-        { "id": "diamond", "threshold": 5, "rewards": { "attack_speed_pct": 0.025 }, "steam_api_name": "DOP_ACH_WEAPON_LEVEL_MASTERY_LIGHTNING_CONDUCTOR_DIAMOND" }
+        { "id": "bronze", "threshold": 2, "rewards": { "attack_speed_pct": 0.25 }, "steam_api_name": "DOP_ACH_WEAPON_LEVEL_MASTERY_LIGHTNING_CONDUCTOR_BRONZE" },
+        { "id": "silver", "threshold": 3, "rewards": { "attack_speed_pct": 0.25 }, "steam_api_name": "DOP_ACH_WEAPON_LEVEL_MASTERY_LIGHTNING_CONDUCTOR_SILVER" },
+        { "id": "gold", "threshold": 4, "rewards": { "attack_speed_pct": 0.25 }, "steam_api_name": "DOP_ACH_WEAPON_LEVEL_MASTERY_LIGHTNING_CONDUCTOR_GOLD" },
+        { "id": "diamond", "threshold": 5, "rewards": { "attack_speed_pct": 0.25 }, "steam_api_name": "DOP_ACH_WEAPON_LEVEL_MASTERY_LIGHTNING_CONDUCTOR_DIAMOND" }
       ],
       "name": "Weapon Level Mastery Lightning Conductor"
     },
@@ -1184,10 +1184,10 @@
       "metric": "max_weapon_level_inferno_sprayer",
       "aggregation": "max",
       "tiers": [
-        { "id": "bronze", "threshold": 2, "rewards": { "attack_speed_pct": 0.025 }, "steam_api_name": "DOP_ACH_WEAPON_LEVEL_MASTERY_INFERNO_SPRAYER_BRONZE" },
-        { "id": "silver", "threshold": 3, "rewards": { "attack_speed_pct": 0.025 }, "steam_api_name": "DOP_ACH_WEAPON_LEVEL_MASTERY_INFERNO_SPRAYER_SILVER" },
-        { "id": "gold", "threshold": 4, "rewards": { "attack_speed_pct": 0.025 }, "steam_api_name": "DOP_ACH_WEAPON_LEVEL_MASTERY_INFERNO_SPRAYER_GOLD" },
-        { "id": "diamond", "threshold": 5, "rewards": { "attack_speed_pct": 0.025 }, "steam_api_name": "DOP_ACH_WEAPON_LEVEL_MASTERY_INFERNO_SPRAYER_DIAMOND" }
+        { "id": "bronze", "threshold": 2, "rewards": { "attack_speed_pct": 0.25 }, "steam_api_name": "DOP_ACH_WEAPON_LEVEL_MASTERY_INFERNO_SPRAYER_BRONZE" },
+        { "id": "silver", "threshold": 3, "rewards": { "attack_speed_pct": 0.25 }, "steam_api_name": "DOP_ACH_WEAPON_LEVEL_MASTERY_INFERNO_SPRAYER_SILVER" },
+        { "id": "gold", "threshold": 4, "rewards": { "attack_speed_pct": 0.25 }, "steam_api_name": "DOP_ACH_WEAPON_LEVEL_MASTERY_INFERNO_SPRAYER_GOLD" },
+        { "id": "diamond", "threshold": 5, "rewards": { "attack_speed_pct": 0.25 }, "steam_api_name": "DOP_ACH_WEAPON_LEVEL_MASTERY_INFERNO_SPRAYER_DIAMOND" }
       ],
       "name": "Weapon Level Mastery Inferno Sprayer"
     },
@@ -1198,10 +1198,10 @@
       "metric": "max_weapon_level_crimson_daggers",
       "aggregation": "max",
       "tiers": [
-        { "id": "bronze", "threshold": 2, "rewards": { "attack_speed_pct": 0.025 }, "steam_api_name": "DOP_ACH_WEAPON_LEVEL_MASTERY_CRIMSON_DAGGERS_BRONZE" },
-        { "id": "silver", "threshold": 3, "rewards": { "attack_speed_pct": 0.025 }, "steam_api_name": "DOP_ACH_WEAPON_LEVEL_MASTERY_CRIMSON_DAGGERS_SILVER" },
-        { "id": "gold", "threshold": 4, "rewards": { "attack_speed_pct": 0.025 }, "steam_api_name": "DOP_ACH_WEAPON_LEVEL_MASTERY_CRIMSON_DAGGERS_GOLD" },
-        { "id": "diamond", "threshold": 5, "rewards": { "attack_speed_pct": 0.025 }, "steam_api_name": "DOP_ACH_WEAPON_LEVEL_MASTERY_CRIMSON_DAGGERS_DIAMOND" }
+        { "id": "bronze", "threshold": 2, "rewards": { "attack_speed_pct": 0.25 }, "steam_api_name": "DOP_ACH_WEAPON_LEVEL_MASTERY_CRIMSON_DAGGERS_BRONZE" },
+        { "id": "silver", "threshold": 3, "rewards": { "attack_speed_pct": 0.25 }, "steam_api_name": "DOP_ACH_WEAPON_LEVEL_MASTERY_CRIMSON_DAGGERS_SILVER" },
+        { "id": "gold", "threshold": 4, "rewards": { "attack_speed_pct": 0.25 }, "steam_api_name": "DOP_ACH_WEAPON_LEVEL_MASTERY_CRIMSON_DAGGERS_GOLD" },
+        { "id": "diamond", "threshold": 5, "rewards": { "attack_speed_pct": 0.25 }, "steam_api_name": "DOP_ACH_WEAPON_LEVEL_MASTERY_CRIMSON_DAGGERS_DIAMOND" }
       ],
       "name": "Weapon Level Mastery Crimson Daggers"
     },
@@ -1212,10 +1212,10 @@
       "metric": "max_weapon_level_minigun",
       "aggregation": "max",
       "tiers": [
-        { "id": "bronze", "threshold": 2, "rewards": { "attack_speed_pct": 0.025 }, "steam_api_name": "DOP_ACH_WEAPON_LEVEL_MASTERY_MINIGUN_BRONZE" },
-        { "id": "silver", "threshold": 3, "rewards": { "attack_speed_pct": 0.025 }, "steam_api_name": "DOP_ACH_WEAPON_LEVEL_MASTERY_MINIGUN_SILVER" },
-        { "id": "gold", "threshold": 4, "rewards": { "attack_speed_pct": 0.025 }, "steam_api_name": "DOP_ACH_WEAPON_LEVEL_MASTERY_MINIGUN_GOLD" },
-        { "id": "diamond", "threshold": 5, "rewards": { "attack_speed_pct": 0.025 }, "steam_api_name": "DOP_ACH_WEAPON_LEVEL_MASTERY_MINIGUN_DIAMOND" }
+        { "id": "bronze", "threshold": 2, "rewards": { "attack_speed_pct": 0.25 }, "steam_api_name": "DOP_ACH_WEAPON_LEVEL_MASTERY_MINIGUN_BRONZE" },
+        { "id": "silver", "threshold": 3, "rewards": { "attack_speed_pct": 0.25 }, "steam_api_name": "DOP_ACH_WEAPON_LEVEL_MASTERY_MINIGUN_SILVER" },
+        { "id": "gold", "threshold": 4, "rewards": { "attack_speed_pct": 0.25 }, "steam_api_name": "DOP_ACH_WEAPON_LEVEL_MASTERY_MINIGUN_GOLD" },
+        { "id": "diamond", "threshold": 5, "rewards": { "attack_speed_pct": 0.25 }, "steam_api_name": "DOP_ACH_WEAPON_LEVEL_MASTERY_MINIGUN_DIAMOND" }
       ],
       "name": "Weapon Level Mastery Minigun"
     },
@@ -1226,10 +1226,10 @@
       "metric": "max_weapon_level_toxic_cloud",
       "aggregation": "max",
       "tiers": [
-        { "id": "bronze", "threshold": 2, "rewards": { "attack_speed_pct": 0.025 }, "steam_api_name": "DOP_ACH_WEAPON_LEVEL_MASTERY_TOXIC_CLOUD_BRONZE" },
-        { "id": "silver", "threshold": 3, "rewards": { "attack_speed_pct": 0.025 }, "steam_api_name": "DOP_ACH_WEAPON_LEVEL_MASTERY_TOXIC_CLOUD_SILVER" },
-        { "id": "gold", "threshold": 4, "rewards": { "attack_speed_pct": 0.025 }, "steam_api_name": "DOP_ACH_WEAPON_LEVEL_MASTERY_TOXIC_CLOUD_GOLD" },
-        { "id": "diamond", "threshold": 5, "rewards": { "attack_speed_pct": 0.025 }, "steam_api_name": "DOP_ACH_WEAPON_LEVEL_MASTERY_TOXIC_CLOUD_DIAMOND" }
+        { "id": "bronze", "threshold": 2, "rewards": { "attack_speed_pct": 0.25 }, "steam_api_name": "DOP_ACH_WEAPON_LEVEL_MASTERY_TOXIC_CLOUD_BRONZE" },
+        { "id": "silver", "threshold": 3, "rewards": { "attack_speed_pct": 0.25 }, "steam_api_name": "DOP_ACH_WEAPON_LEVEL_MASTERY_TOXIC_CLOUD_SILVER" },
+        { "id": "gold", "threshold": 4, "rewards": { "attack_speed_pct": 0.25 }, "steam_api_name": "DOP_ACH_WEAPON_LEVEL_MASTERY_TOXIC_CLOUD_GOLD" },
+        { "id": "diamond", "threshold": 5, "rewards": { "attack_speed_pct": 0.25 }, "steam_api_name": "DOP_ACH_WEAPON_LEVEL_MASTERY_TOXIC_CLOUD_DIAMOND" }
       ],
       "name": "Weapon Level Mastery Toxic Cloud"
     },
@@ -1240,10 +1240,10 @@
       "metric": "max_weapon_level_sawblades",
       "aggregation": "max",
       "tiers": [
-        { "id": "bronze", "threshold": 2, "rewards": { "attack_speed_pct": 0.025 }, "steam_api_name": "DOP_ACH_WEAPON_LEVEL_MASTERY_SAWBLADES_BRONZE" },
-        { "id": "silver", "threshold": 3, "rewards": { "attack_speed_pct": 0.025 }, "steam_api_name": "DOP_ACH_WEAPON_LEVEL_MASTERY_SAWBLADES_SILVER" },
-        { "id": "gold", "threshold": 4, "rewards": { "attack_speed_pct": 0.025 }, "steam_api_name": "DOP_ACH_WEAPON_LEVEL_MASTERY_SAWBLADES_GOLD" },
-        { "id": "diamond", "threshold": 5, "rewards": { "attack_speed_pct": 0.025 }, "steam_api_name": "DOP_ACH_WEAPON_LEVEL_MASTERY_SAWBLADES_DIAMOND" }
+        { "id": "bronze", "threshold": 2, "rewards": { "attack_speed_pct": 0.25 }, "steam_api_name": "DOP_ACH_WEAPON_LEVEL_MASTERY_SAWBLADES_BRONZE" },
+        { "id": "silver", "threshold": 3, "rewards": { "attack_speed_pct": 0.25 }, "steam_api_name": "DOP_ACH_WEAPON_LEVEL_MASTERY_SAWBLADES_SILVER" },
+        { "id": "gold", "threshold": 4, "rewards": { "attack_speed_pct": 0.25 }, "steam_api_name": "DOP_ACH_WEAPON_LEVEL_MASTERY_SAWBLADES_GOLD" },
+        { "id": "diamond", "threshold": 5, "rewards": { "attack_speed_pct": 0.25 }, "steam_api_name": "DOP_ACH_WEAPON_LEVEL_MASTERY_SAWBLADES_DIAMOND" }
       ],
       "name": "Weapon Level Mastery Sawblades"
     },
@@ -1254,10 +1254,10 @@
       "metric": "max_weapon_level_meteor_staff",
       "aggregation": "max",
       "tiers": [
-        { "id": "bronze", "threshold": 2, "rewards": { "attack_speed_pct": 0.025 }, "steam_api_name": "DOP_ACH_WEAPON_LEVEL_MASTERY_METEOR_STAFF_BRONZE" },
-        { "id": "silver", "threshold": 3, "rewards": { "attack_speed_pct": 0.025 }, "steam_api_name": "DOP_ACH_WEAPON_LEVEL_MASTERY_METEOR_STAFF_SILVER" },
-        { "id": "gold", "threshold": 4, "rewards": { "attack_speed_pct": 0.025 }, "steam_api_name": "DOP_ACH_WEAPON_LEVEL_MASTERY_METEOR_STAFF_GOLD" },
-        { "id": "diamond", "threshold": 5, "rewards": { "attack_speed_pct": 0.025 }, "steam_api_name": "DOP_ACH_WEAPON_LEVEL_MASTERY_METEOR_STAFF_DIAMOND" }
+        { "id": "bronze", "threshold": 2, "rewards": { "attack_speed_pct": 0.25 }, "steam_api_name": "DOP_ACH_WEAPON_LEVEL_MASTERY_METEOR_STAFF_BRONZE" },
+        { "id": "silver", "threshold": 3, "rewards": { "attack_speed_pct": 0.25 }, "steam_api_name": "DOP_ACH_WEAPON_LEVEL_MASTERY_METEOR_STAFF_SILVER" },
+        { "id": "gold", "threshold": 4, "rewards": { "attack_speed_pct": 0.25 }, "steam_api_name": "DOP_ACH_WEAPON_LEVEL_MASTERY_METEOR_STAFF_GOLD" },
+        { "id": "diamond", "threshold": 5, "rewards": { "attack_speed_pct": 0.25 }, "steam_api_name": "DOP_ACH_WEAPON_LEVEL_MASTERY_METEOR_STAFF_DIAMOND" }
       ],
       "name": "Weapon Level Mastery Meteor Staff"
     },
@@ -1268,10 +1268,10 @@
       "metric": "max_weapon_level_prism_laser",
       "aggregation": "max",
       "tiers": [
-        { "id": "bronze", "threshold": 2, "rewards": { "attack_speed_pct": 0.025 }, "steam_api_name": "DOP_ACH_WEAPON_LEVEL_MASTERY_PRISM_LASER_BRONZE" },
-        { "id": "silver", "threshold": 3, "rewards": { "attack_speed_pct": 0.025 }, "steam_api_name": "DOP_ACH_WEAPON_LEVEL_MASTERY_PRISM_LASER_SILVER" },
-        { "id": "gold", "threshold": 4, "rewards": { "attack_speed_pct": 0.025 }, "steam_api_name": "DOP_ACH_WEAPON_LEVEL_MASTERY_PRISM_LASER_GOLD" },
-        { "id": "diamond", "threshold": 5, "rewards": { "attack_speed_pct": 0.025 }, "steam_api_name": "DOP_ACH_WEAPON_LEVEL_MASTERY_PRISM_LASER_DIAMOND" }
+        { "id": "bronze", "threshold": 2, "rewards": { "attack_speed_pct": 0.25 }, "steam_api_name": "DOP_ACH_WEAPON_LEVEL_MASTERY_PRISM_LASER_BRONZE" },
+        { "id": "silver", "threshold": 3, "rewards": { "attack_speed_pct": 0.25 }, "steam_api_name": "DOP_ACH_WEAPON_LEVEL_MASTERY_PRISM_LASER_SILVER" },
+        { "id": "gold", "threshold": 4, "rewards": { "attack_speed_pct": 0.25 }, "steam_api_name": "DOP_ACH_WEAPON_LEVEL_MASTERY_PRISM_LASER_GOLD" },
+        { "id": "diamond", "threshold": 5, "rewards": { "attack_speed_pct": 0.25 }, "steam_api_name": "DOP_ACH_WEAPON_LEVEL_MASTERY_PRISM_LASER_DIAMOND" }
       ],
       "name": "Weapon Level Mastery Prism Laser"
     },
@@ -1282,10 +1282,10 @@
       "metric": "max_weapon_level_void_orb",
       "aggregation": "max",
       "tiers": [
-        { "id": "bronze", "threshold": 2, "rewards": { "attack_speed_pct": 0.025 }, "steam_api_name": "DOP_ACH_WEAPON_LEVEL_MASTERY_VOID_ORB_BRONZE" },
-        { "id": "silver", "threshold": 3, "rewards": { "attack_speed_pct": 0.025 }, "steam_api_name": "DOP_ACH_WEAPON_LEVEL_MASTERY_VOID_ORB_SILVER" },
-        { "id": "gold", "threshold": 4, "rewards": { "attack_speed_pct": 0.025 }, "steam_api_name": "DOP_ACH_WEAPON_LEVEL_MASTERY_VOID_ORB_GOLD" },
-        { "id": "diamond", "threshold": 5, "rewards": { "attack_speed_pct": 0.025 }, "steam_api_name": "DOP_ACH_WEAPON_LEVEL_MASTERY_VOID_ORB_DIAMOND" }
+        { "id": "bronze", "threshold": 2, "rewards": { "attack_speed_pct": 0.25 }, "steam_api_name": "DOP_ACH_WEAPON_LEVEL_MASTERY_VOID_ORB_BRONZE" },
+        { "id": "silver", "threshold": 3, "rewards": { "attack_speed_pct": 0.25 }, "steam_api_name": "DOP_ACH_WEAPON_LEVEL_MASTERY_VOID_ORB_SILVER" },
+        { "id": "gold", "threshold": 4, "rewards": { "attack_speed_pct": 0.25 }, "steam_api_name": "DOP_ACH_WEAPON_LEVEL_MASTERY_VOID_ORB_GOLD" },
+        { "id": "diamond", "threshold": 5, "rewards": { "attack_speed_pct": 0.25 }, "steam_api_name": "DOP_ACH_WEAPON_LEVEL_MASTERY_VOID_ORB_DIAMOND" }
       ],
       "name": "Weapon Level Mastery Void Orb"
     },
@@ -1296,10 +1296,10 @@
       "metric": "max_weapon_level_frost_nova",
       "aggregation": "max",
       "tiers": [
-        { "id": "bronze", "threshold": 2, "rewards": { "attack_speed_pct": 0.025 }, "steam_api_name": "DOP_ACH_WEAPON_LEVEL_MASTERY_FROST_NOVA_BRONZE" },
-        { "id": "silver", "threshold": 3, "rewards": { "attack_speed_pct": 0.025 }, "steam_api_name": "DOP_ACH_WEAPON_LEVEL_MASTERY_FROST_NOVA_SILVER" },
-        { "id": "gold", "threshold": 4, "rewards": { "attack_speed_pct": 0.025 }, "steam_api_name": "DOP_ACH_WEAPON_LEVEL_MASTERY_FROST_NOVA_GOLD" },
-        { "id": "diamond", "threshold": 5, "rewards": { "attack_speed_pct": 0.025 }, "steam_api_name": "DOP_ACH_WEAPON_LEVEL_MASTERY_FROST_NOVA_DIAMOND" }
+        { "id": "bronze", "threshold": 2, "rewards": { "attack_speed_pct": 0.25 }, "steam_api_name": "DOP_ACH_WEAPON_LEVEL_MASTERY_FROST_NOVA_BRONZE" },
+        { "id": "silver", "threshold": 3, "rewards": { "attack_speed_pct": 0.25 }, "steam_api_name": "DOP_ACH_WEAPON_LEVEL_MASTERY_FROST_NOVA_SILVER" },
+        { "id": "gold", "threshold": 4, "rewards": { "attack_speed_pct": 0.25 }, "steam_api_name": "DOP_ACH_WEAPON_LEVEL_MASTERY_FROST_NOVA_GOLD" },
+        { "id": "diamond", "threshold": 5, "rewards": { "attack_speed_pct": 0.25 }, "steam_api_name": "DOP_ACH_WEAPON_LEVEL_MASTERY_FROST_NOVA_DIAMOND" }
       ],
       "name": "Weapon Level Mastery Frost Nova"
     },
@@ -1310,10 +1310,10 @@
       "metric": "elite_affix_kills_hasted",
       "aggregation": "sum",
       "tiers": [
-        { "id": "bronze", "threshold": 1, "rewards": { "damage_pct": 0.00025 }, "steam_api_name": "DOP_ACH_ELITE_AFFIX_HUNTER_HASTED_BRONZE" },
-        { "id": "silver", "threshold": 5, "rewards": { "damage_pct": 0.00025 }, "steam_api_name": "DOP_ACH_ELITE_AFFIX_HUNTER_HASTED_SILVER" },
-        { "id": "gold", "threshold": 15, "rewards": { "damage_pct": 0.00025 }, "steam_api_name": "DOP_ACH_ELITE_AFFIX_HUNTER_HASTED_GOLD" },
-        { "id": "diamond", "threshold": 50, "rewards": { "damage_pct": 0.00025 }, "steam_api_name": "DOP_ACH_ELITE_AFFIX_HUNTER_HASTED_DIAMOND" }
+        { "id": "bronze", "threshold": 1, "rewards": { "damage_pct": 0.0025 }, "steam_api_name": "DOP_ACH_ELITE_AFFIX_HUNTER_HASTED_BRONZE" },
+        { "id": "silver", "threshold": 5, "rewards": { "damage_pct": 0.0025 }, "steam_api_name": "DOP_ACH_ELITE_AFFIX_HUNTER_HASTED_SILVER" },
+        { "id": "gold", "threshold": 15, "rewards": { "damage_pct": 0.0025 }, "steam_api_name": "DOP_ACH_ELITE_AFFIX_HUNTER_HASTED_GOLD" },
+        { "id": "diamond", "threshold": 50, "rewards": { "damage_pct": 0.0025 }, "steam_api_name": "DOP_ACH_ELITE_AFFIX_HUNTER_HASTED_DIAMOND" }
       ],
       "name": "Elite Affix Hunter Hasted"
     },
@@ -1324,10 +1324,10 @@
       "metric": "elite_affix_kills_armored",
       "aggregation": "sum",
       "tiers": [
-        { "id": "bronze", "threshold": 1, "rewards": { "damage_pct": 0.00025 }, "steam_api_name": "DOP_ACH_ELITE_AFFIX_HUNTER_ARMORED_BRONZE" },
-        { "id": "silver", "threshold": 5, "rewards": { "damage_pct": 0.00025 }, "steam_api_name": "DOP_ACH_ELITE_AFFIX_HUNTER_ARMORED_SILVER" },
-        { "id": "gold", "threshold": 15, "rewards": { "damage_pct": 0.00025 }, "steam_api_name": "DOP_ACH_ELITE_AFFIX_HUNTER_ARMORED_GOLD" },
-        { "id": "diamond", "threshold": 50, "rewards": { "damage_pct": 0.00025 }, "steam_api_name": "DOP_ACH_ELITE_AFFIX_HUNTER_ARMORED_DIAMOND" }
+        { "id": "bronze", "threshold": 1, "rewards": { "damage_pct": 0.0025 }, "steam_api_name": "DOP_ACH_ELITE_AFFIX_HUNTER_ARMORED_BRONZE" },
+        { "id": "silver", "threshold": 5, "rewards": { "damage_pct": 0.0025 }, "steam_api_name": "DOP_ACH_ELITE_AFFIX_HUNTER_ARMORED_SILVER" },
+        { "id": "gold", "threshold": 15, "rewards": { "damage_pct": 0.0025 }, "steam_api_name": "DOP_ACH_ELITE_AFFIX_HUNTER_ARMORED_GOLD" },
+        { "id": "diamond", "threshold": 50, "rewards": { "damage_pct": 0.0025 }, "steam_api_name": "DOP_ACH_ELITE_AFFIX_HUNTER_ARMORED_DIAMOND" }
       ],
       "name": "Elite Affix Hunter Armored"
     },
@@ -1338,10 +1338,10 @@
       "metric": "elite_affix_kills_regenerating",
       "aggregation": "sum",
       "tiers": [
-        { "id": "bronze", "threshold": 1, "rewards": { "damage_pct": 0.00025 }, "steam_api_name": "DOP_ACH_ELITE_AFFIX_HUNTER_REGENERATING_BRONZE" },
-        { "id": "silver", "threshold": 5, "rewards": { "damage_pct": 0.00025 }, "steam_api_name": "DOP_ACH_ELITE_AFFIX_HUNTER_REGENERATING_SILVER" },
-        { "id": "gold", "threshold": 15, "rewards": { "damage_pct": 0.00025 }, "steam_api_name": "DOP_ACH_ELITE_AFFIX_HUNTER_REGENERATING_GOLD" },
-        { "id": "diamond", "threshold": 50, "rewards": { "damage_pct": 0.00025 }, "steam_api_name": "DOP_ACH_ELITE_AFFIX_HUNTER_REGENERATING_DIAMOND" }
+        { "id": "bronze", "threshold": 1, "rewards": { "damage_pct": 0.0025 }, "steam_api_name": "DOP_ACH_ELITE_AFFIX_HUNTER_REGENERATING_BRONZE" },
+        { "id": "silver", "threshold": 5, "rewards": { "damage_pct": 0.0025 }, "steam_api_name": "DOP_ACH_ELITE_AFFIX_HUNTER_REGENERATING_SILVER" },
+        { "id": "gold", "threshold": 15, "rewards": { "damage_pct": 0.0025 }, "steam_api_name": "DOP_ACH_ELITE_AFFIX_HUNTER_REGENERATING_GOLD" },
+        { "id": "diamond", "threshold": 50, "rewards": { "damage_pct": 0.0025 }, "steam_api_name": "DOP_ACH_ELITE_AFFIX_HUNTER_REGENERATING_DIAMOND" }
       ],
       "name": "Elite Affix Hunter Regenerating"
     },
@@ -1352,10 +1352,10 @@
       "metric": "elite_affix_kills_volatile",
       "aggregation": "sum",
       "tiers": [
-        { "id": "bronze", "threshold": 1, "rewards": { "damage_pct": 0.00025 }, "steam_api_name": "DOP_ACH_ELITE_AFFIX_HUNTER_VOLATILE_BRONZE" },
-        { "id": "silver", "threshold": 5, "rewards": { "damage_pct": 0.00025 }, "steam_api_name": "DOP_ACH_ELITE_AFFIX_HUNTER_VOLATILE_SILVER" },
-        { "id": "gold", "threshold": 15, "rewards": { "damage_pct": 0.00025 }, "steam_api_name": "DOP_ACH_ELITE_AFFIX_HUNTER_VOLATILE_GOLD" },
-        { "id": "diamond", "threshold": 50, "rewards": { "damage_pct": 0.00025 }, "steam_api_name": "DOP_ACH_ELITE_AFFIX_HUNTER_VOLATILE_DIAMOND" }
+        { "id": "bronze", "threshold": 1, "rewards": { "damage_pct": 0.0025 }, "steam_api_name": "DOP_ACH_ELITE_AFFIX_HUNTER_VOLATILE_BRONZE" },
+        { "id": "silver", "threshold": 5, "rewards": { "damage_pct": 0.0025 }, "steam_api_name": "DOP_ACH_ELITE_AFFIX_HUNTER_VOLATILE_SILVER" },
+        { "id": "gold", "threshold": 15, "rewards": { "damage_pct": 0.0025 }, "steam_api_name": "DOP_ACH_ELITE_AFFIX_HUNTER_VOLATILE_GOLD" },
+        { "id": "diamond", "threshold": 50, "rewards": { "damage_pct": 0.0025 }, "steam_api_name": "DOP_ACH_ELITE_AFFIX_HUNTER_VOLATILE_DIAMOND" }
       ],
       "name": "Elite Affix Hunter Volatile"
     },
@@ -1366,10 +1366,10 @@
       "metric": "elite_affix_kills_shielded",
       "aggregation": "sum",
       "tiers": [
-        { "id": "bronze", "threshold": 1, "rewards": { "damage_pct": 0.00025 }, "steam_api_name": "DOP_ACH_ELITE_AFFIX_HUNTER_SHIELDED_BRONZE" },
-        { "id": "silver", "threshold": 5, "rewards": { "damage_pct": 0.00025 }, "steam_api_name": "DOP_ACH_ELITE_AFFIX_HUNTER_SHIELDED_SILVER" },
-        { "id": "gold", "threshold": 15, "rewards": { "damage_pct": 0.00025 }, "steam_api_name": "DOP_ACH_ELITE_AFFIX_HUNTER_SHIELDED_GOLD" },
-        { "id": "diamond", "threshold": 50, "rewards": { "damage_pct": 0.00025 }, "steam_api_name": "DOP_ACH_ELITE_AFFIX_HUNTER_SHIELDED_DIAMOND" }
+        { "id": "bronze", "threshold": 1, "rewards": { "damage_pct": 0.0025 }, "steam_api_name": "DOP_ACH_ELITE_AFFIX_HUNTER_SHIELDED_BRONZE" },
+        { "id": "silver", "threshold": 5, "rewards": { "damage_pct": 0.0025 }, "steam_api_name": "DOP_ACH_ELITE_AFFIX_HUNTER_SHIELDED_SILVER" },
+        { "id": "gold", "threshold": 15, "rewards": { "damage_pct": 0.0025 }, "steam_api_name": "DOP_ACH_ELITE_AFFIX_HUNTER_SHIELDED_GOLD" },
+        { "id": "diamond", "threshold": 50, "rewards": { "damage_pct": 0.0025 }, "steam_api_name": "DOP_ACH_ELITE_AFFIX_HUNTER_SHIELDED_DIAMOND" }
       ],
       "name": "Elite Affix Hunter Shielded"
     },
@@ -1380,10 +1380,10 @@
       "metric": "elite_affix_kills_split_on_death",
       "aggregation": "sum",
       "tiers": [
-        { "id": "bronze", "threshold": 1, "rewards": { "damage_pct": 0.00025 }, "steam_api_name": "DOP_ACH_ELITE_AFFIX_HUNTER_SPLIT_ON_DEATH_BRONZE" },
-        { "id": "silver", "threshold": 5, "rewards": { "damage_pct": 0.00025 }, "steam_api_name": "DOP_ACH_ELITE_AFFIX_HUNTER_SPLIT_ON_DEATH_SILVER" },
-        { "id": "gold", "threshold": 15, "rewards": { "damage_pct": 0.00025 }, "steam_api_name": "DOP_ACH_ELITE_AFFIX_HUNTER_SPLIT_ON_DEATH_GOLD" },
-        { "id": "diamond", "threshold": 50, "rewards": { "damage_pct": 0.00025 }, "steam_api_name": "DOP_ACH_ELITE_AFFIX_HUNTER_SPLIT_ON_DEATH_DIAMOND" }
+        { "id": "bronze", "threshold": 1, "rewards": { "damage_pct": 0.0025 }, "steam_api_name": "DOP_ACH_ELITE_AFFIX_HUNTER_SPLIT_ON_DEATH_BRONZE" },
+        { "id": "silver", "threshold": 5, "rewards": { "damage_pct": 0.0025 }, "steam_api_name": "DOP_ACH_ELITE_AFFIX_HUNTER_SPLIT_ON_DEATH_SILVER" },
+        { "id": "gold", "threshold": 15, "rewards": { "damage_pct": 0.0025 }, "steam_api_name": "DOP_ACH_ELITE_AFFIX_HUNTER_SPLIT_ON_DEATH_GOLD" },
+        { "id": "diamond", "threshold": 50, "rewards": { "damage_pct": 0.0025 }, "steam_api_name": "DOP_ACH_ELITE_AFFIX_HUNTER_SPLIT_ON_DEATH_DIAMOND" }
       ],
       "name": "Elite Affix Hunter Split On Death"
     },
@@ -1394,10 +1394,10 @@
       "metric": "elite_affix_types_defeated",
       "aggregation": "max",
       "tiers": [
-        { "id": "bronze", "threshold": 1, "rewards": { "critical_chance_pct": 0.025 }, "steam_api_name": "DOP_ACH_ELITE_AFFIX_VARIETY_BRONZE" },
-        { "id": "silver", "threshold": 3, "rewards": { "critical_chance_pct": 0.025 }, "steam_api_name": "DOP_ACH_ELITE_AFFIX_VARIETY_SILVER" },
-        { "id": "gold", "threshold": 5, "rewards": { "critical_chance_pct": 0.025 }, "steam_api_name": "DOP_ACH_ELITE_AFFIX_VARIETY_GOLD" },
-        { "id": "diamond", "threshold": 6, "rewards": { "critical_chance_pct": 0.025 }, "steam_api_name": "DOP_ACH_ELITE_AFFIX_VARIETY_DIAMOND" }
+        { "id": "bronze", "threshold": 1, "rewards": { "critical_chance_pct": 0.25 }, "steam_api_name": "DOP_ACH_ELITE_AFFIX_VARIETY_BRONZE" },
+        { "id": "silver", "threshold": 3, "rewards": { "critical_chance_pct": 0.25 }, "steam_api_name": "DOP_ACH_ELITE_AFFIX_VARIETY_SILVER" },
+        { "id": "gold", "threshold": 5, "rewards": { "critical_chance_pct": 0.25 }, "steam_api_name": "DOP_ACH_ELITE_AFFIX_VARIETY_GOLD" },
+        { "id": "diamond", "threshold": 6, "rewards": { "critical_chance_pct": 0.25 }, "steam_api_name": "DOP_ACH_ELITE_AFFIX_VARIETY_DIAMOND" }
       ],
       "name": "Elite Affix Variety"
     }
