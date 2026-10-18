@@ -1,6 +1,6 @@
 # Preuves visuelles — 2026-10-18
 
-Captures 640×360 générées avec Godot 4.7.2 sous Xvfb/Mesa llvmpipe. Les smokes associés aux parcours ont tous terminé sans échec; ALSA a basculé sur le pilote audio dummy et n’apporte aucune preuve d’écoute.
+Captures UI principalement en 640×360 et planches d’icônes aux dimensions dédiées, générées ou exportées avec Godot 4.7.2 sous Xvfb/Mesa llvmpipe. Les smokes associés aux parcours ont terminé sans échec; le pilote audio Dummy n’apporte aucune preuve d’écoute.
 
 | Capture | SHA-256 | Revue |
 |---|---|---|
@@ -10,6 +10,7 @@ Captures 640×360 générées avec Godot 4.7.2 sous Xvfb/Mesa llvmpipe. Les smok
 | `equipment.png` | `fdf7f1367464be670107084e95e347886b31b1357700d9bb2d1d71603cdc29a5` | Six slots, inventaire équipable, commandes de remplacement et variation avant/après visibles; le cadre Neon suit le focus manette/clavier sur l’anneau équipé. |
 | `survival-combat.png` | `42a848645e910f5c69a070365279f1d00f76f23fae8f5c6ee2cb0500ebb15239` | Combat chargé : familles d’ennemis, projectiles, impacts, XP, télégraphe et faisceaux visibles. |
 | `catalog-icons.png` | `cf37687d14edcfb90d0c0bbdefa811e2580f20973e302c1fb0e46370968eb37a` | Planche de contrôle pour icônes d’armes, évolutions et reliques; revue des silhouettes en grille. |
+| `ui-icons.png` | `9bb8f23a277fb5d4215c3fd539c32407aaf0c91cc902e96cecc36e0b651a3b45` | Planche des 16 icônes UI 32×32 : six slots, cinq raretés, ressources, skill node, médaille et record; silhouettes inspectées sur fond nuit. |
 | `states/options.png` | `3c240b6341e63824130e22832a3f5fd56d64c2fde20d9505e8fce75ab6c5ec37` | Options générales, audio, accessibilité et focus initial. |
 | `states/pause.png` | `691217da7f20fc4ed3e12b3adfeddb0cdb3e00a3cc80d6b1bedd2256161f65c6` | Pause, état figé, vitesse, verrouillage et focus visible sur `RESUME`. |
 | `states/pause-confirmation.png` | `41af7f0d83eab32b75d28e0e792ed6f8f75446377d4f3caf99cc0679dc76551e` | Confirmation d’abandon au-dessus de la pause; focus initial sur `KEEP PLAYING`, action de danger séparée. |

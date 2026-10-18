@@ -17,7 +17,7 @@
 ## Preuves UI après correction d’opacité — 2026-10-18
 
 - [x] Sous Xvfb/Mesa llvmpipe, les états UI (11 captures) et les smokes de skill tree, équipement, menu, hub, combat, catalogue, loadout, HUD, revive et détail de statistiques ont régénéré les preuves après le passage des fonds `PanelContainer`/`CompactPanel` à l’opacité complète, requise par l’Art Bible.
-- [x] Les vues intégrées hub, coffre en run, arbre et équipement ont été inspectées; les overlays ne laissent plus transparaître le contenu sous-jacent. Les 35 PNG d’évidence ont un SHA-256 correspondant dans `docs/art/evidence/2026-10-18/README.md`.
+- [x] Les vues intégrées hub, coffre en run, arbre et équipement ont été inspectées; les overlays ne laissent plus transparaître le contenu sous-jacent. Les 35 captures UI et les planches d’icônes font **36 PNG** dont le SHA-256 correspondant est indexé dans `docs/art/evidence/2026-10-18/README.md`.
 - [i] Quelques scripts de capture GUI impriment des diagnostics de ressources/RID conservés lors de la fermeture de leur processus, malgré leur code de sortie 0 et les assertions passées. Le parcours du paquet Release ne contient pas de `ERROR:`; le contrôle des ressources des harnais GUI reste à part et n’est pas assimilé à une validation GPU physique.
 
 ## Revue matérielle Linux — à réaliser sur poste avec écran/sorties
