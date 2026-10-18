@@ -27,6 +27,16 @@ func _run() -> void:
 	if session.simulation == null:
 		_fail("Survival session failed to initialize")
 		return
+	session._weapon_transient_animations.clear()
+	session._queue_weapon_fire_visual("minigun", session._last_simulation_time)
+	if not session._weapon_transient_animations.is_empty():
+		_fail("Weapon fire should animate the player without leaving a separate weapon sprite at the shot position")
+		return
+	session.player.global_position += Vector2(24.0, 0.0)
+	session._queue_weapon_fire_visual("minigun", session._last_simulation_time + 0.1)
+	if not session._weapon_transient_animations.is_empty():
+		_fail("Moving after a weapon shot must not reveal a lingering multi-frame weapon sprite")
+		return
 	var target_position: Vector2 = session.player.global_position + Vector2(80.0, 0.0)
 	if session.simulation.spawn_enemy("chaser", 1, target_position, Vector2.ZERO, 100.0) <= 0:
 		_fail("Could not spawn a target for the native critical-hit visual check")

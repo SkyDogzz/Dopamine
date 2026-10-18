@@ -4100,15 +4100,9 @@ func _queue_transient_animation(weapon_role: String, state: String, position: Ve
 		_weapon_transient_animations.pop_front()
 	return true
 
-func _queue_weapon_fire_visual(weapon_id: String, active_time: float) -> void:
+func _queue_weapon_fire_visual(_weapon_id: String, _active_time: float) -> void:
 	if player != null and player.has_method("play_attack"):
 		player.play_attack(_weapon_target_direction())
-	var weapon_variant := weapon_id
-	if loadout != null and loadout.is_evolved(weapon_id):
-		weapon_variant = str(WEAPON_EVOLUTION_IDS.get(weapon_id, weapon_id))
-	var position: Vector2 = player.global_position if player != null else Vector2.ZERO
-	_queue_transient_animation("weapon_%s" % weapon_variant, "attack", position, Vector2.ZERO,
-			active_time, 22.0)
 
 func _weapon_target_direction() -> Vector2:
 	if player == null:
