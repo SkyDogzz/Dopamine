@@ -32,6 +32,13 @@ Les statuts suivants décrivent le dépôt; ils ne valident aucun choix de conte
 | `equipment-screen` | **TRANCHE LIVRÉE — CAPACITÉ EN COURS** | Six slots, filtre, bonus avant/après et actions existantes conservées; états sans pièce compatible et échec réel d’action capturés. Overlay du personnage et formules proposées restent ouverts. Commit initial `5eadb12`; couverture d’état ajoutée dans la tranche courante. |
 | `adaptive-audio` | **EN COURS** | 38 SFX branchés sur 19 familles; cinq stems originaux synchronisés suivent les vagues et ajoutent le stem boss par fondu sans redémarrage. Capture numérique du bus Master en runtime ajoutée, sans écrêtage mesuré; extrait de transition aussi prêt pour écoute locale. Mix/gains **[PROPOSÉS]**; revue auditive humaine et en jeu **[OUVERTE]** faute de sortie locale. |
 
+### Mise à jour des preuves UI (2026-10-18)
+
+- **[VALIDÉ — ÉQUIPEMENT]** La confirmation de vente système grise est remplacée par un overlay Neon; l’annulation et l’absence de mutation avant confirmation sont testées. Capture indexée dans `docs/art/evidence/2026-10-18/README.md`, commit `cfe4e51`.
+- **[VALIDÉ — SKILL TREE]** Libellés de nœuds agrandis à 9 px et boutons à 82 px; capture 640×360 actualisée. Les 100 nœuds restent dérivés des données existantes; la lisibilité universelle n’est pas encore validée, commit `64d5c91`.
+- **[VALIDÉ — TESTS]** CTest complet après les deux tranches : 118/118, résultat détaillé dans `docs/qa/TESTS.md`.
+- **[OUVERT]** Revue matérielle exhaustive, contrôles physiques et écoute audio en jeu; ces preuves virtualisées ne les remplacent pas.
+
 ## Contraintes déjà confirmées
 
 - Style Neon Arcade, pixel art strict pour les sources, VFX modernes et contextuels, lisibilité prioritaire.

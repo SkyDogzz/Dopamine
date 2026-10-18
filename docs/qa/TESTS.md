@@ -2226,3 +2226,8 @@ Note de clôture : le blocage historique du smoke `sandbox_ui_smoke.gd` décrit 
 - [x] L’inspection de la capture 640×360 a motivé des boutons de graphe de 82 px, des libellés 9 px et un espacement de colonnes adapté. Les définitions et états restent ceux de `ProgressionService`; aucune compétence ni règle n’a été ajoutée.
 - [x] `godot_project_import` et `skill_tree_panel_visual_smoke` passent par CTest (**2/2**); le smoke contrôle toujours les 100 nœuds runtime, les prérequis acycliques, le focus clavier/manette et les bornes à trois résolutions.
 - [x] Capture `skill-tree.png` régénérée, inspectée et hash indexé. Lisibilité de tous les nœuds et contrôle physique restent **[OUVERTS]**.
+
+## Jalon CTest après ajustements des vues — 2026-10-18
+
+- [x] `PATH="$PWD/build/cmake-3.31.12-linux-x86_64/bin:$PATH" XDG_DATA_HOME=/tmp/dopamine-neon-ui-followup DOPAMINE_TEST_TIMEOUT=480s ctest --test-dir build --output-on-failure -j1` : **118/118 tests passent en 79,39 s** après le remplacement de la confirmation de vente système et l’ajustement des nœuds du skill tree.
+- [i] Le jalon couvre l’import, l’ensemble CTest et Sandbox; l’environnement reste Xvfb/Mesa llvmpipe avec audio Dummy. Il ne valide pas les périphériques, le GPU ni l’écoute humaine.
