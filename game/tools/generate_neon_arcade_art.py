@@ -645,7 +645,6 @@ def generate(families: set[str], palette):
         atlas = Canvas(640, 64)
         for i, name in enumerate(IMPACTS):
             cell = draw_impact(name, palette)
-            output_pair(name, ASSETS / "sprites/vfx" / f"{name}.png", source_dir / f"{name}.aseprite", cell)
             for y in range(64):
                 start = (y * 64) * 4
                 atlas.data[(y * 640 + i * 64) * 4:(y * 640 + (i + 1) * 64) * 4] = cell.data[start:start + 256]
@@ -688,7 +687,7 @@ def main():
     requested = set(args.families)
     if not requested:
         requested = set(FAMILIES)
-    known_ids = set(WEAPONS + EVOLUTIONS + RELICS + PROJECTILES + IMPACTS + [
+    known_ids = set(WEAPONS + EVOLUTIONS + RELICS + PROJECTILES + [
         "weapon_impacts_pixel", "survival_ground_tile", "survival_ruins_pixel", "boss_dopamine_core",
         "signal_prism", "elite_sprinter", "boss_pulse_warden",
     ])

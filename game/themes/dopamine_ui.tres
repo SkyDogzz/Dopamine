@@ -1,6 +1,7 @@
-[gd_resource type="Theme" load_steps=25 format=3]
+[gd_resource type="Theme" load_steps=26 format=3]
 
 [ext_resource type="FontFile" path="res://assets/fonts/NeonArcadePixel.ttf" id="1_pixel_font"]
+[ext_resource type="FontFile" path="res://assets/fonts/NeonArcadeUI.ttf" id="2_ui_font"]
 
 [sub_resource type="StyleBoxFlat" id="PanelSurface"]
 bg_color = Color(0.062745, 0.082353, 0.168627, 1)
@@ -289,7 +290,7 @@ fill_from = Vector2(0.5, 0.5)
 fill_to = Vector2(0.5, 0)
 
 [resource]
-default_font = ExtResource("1_pixel_font")
+default_font = ExtResource("2_ui_font")
 default_font_size = 8
 PixelHeading/fonts/font = ExtResource("1_pixel_font")
 OptionPixelHeading/base_type = "Label"

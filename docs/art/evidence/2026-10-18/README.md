@@ -4,7 +4,7 @@ Captures UI principalement en 640×360 et planches d’icônes aux dimensions d�
 
 | Capture | SHA-256 | Revue |
 |---|---|---|
-| `launch-menu.png` | `ab60b24696238f5c2558287827d610aa2ddd0deab1cb8f8e3ba8d147bc9984d4` | Composition validée dans l’Art Bible : navigation à gauche, identité à droite. |
+| `launch-menu.png` | `0a15362bdd87b12fac2d28471af1041ffb46929df42b467c6e6e039a7e441527` | Composition validée dans l’Art Bible : navigation à gauche, identité à droite; le Signal Prism généré localement apparaît maintenant à côté du titre. |
 | `survival-hub.png` | `efa56a85a46fa4e12a5a64c9fc8644c076dd84f03191bab94af81a7570511f15` | Panneaux et parcours de préparation restent lisibles dans le viewport logique. |
 | `skill-tree.png` | `f97bef7d87ce0e5ce3fd3805f33824c47b55b84a5523a987f821b2fde91d9042` | Graphe ramifié à 640×360, intégré au fond réel du hub Survival assombri; nœud sélectionné, détails, boutons élargis et libellés à 9 px visibles. Le contenu, coûts et effets restent **[PROPOSÉS]** ou **[OUVERTS]**. |
 | `equipment.png` | `fdf7f1367464be670107084e95e347886b31b1357700d9bb2d1d71603cdc29a5` | Six slots, inventaire équipable, commandes de remplacement et variation avant/après visibles; le cadre Neon suit le focus manette/clavier sur l’anneau équipé. |

@@ -5,8 +5,8 @@ const FONT_PATHS := [
 	"res://assets/fonts/NeonArcadeUI.ttf",
 ]
 const SOURCE_PATHS := [
-	"res://assets/source/original_procedural/fonts/NeonArcadePixel.sfd",
-	"res://assets/source/original_procedural/fonts/NeonArcadeUI.sfd",
+	"res://assets/source/fonts/NeonArcadePixel.sfd",
+	"res://assets/source/fonts/NeonArcadeUI.sfd",
 ]
 const REQUIRED_GLYPHS := "SURVIVAL ÉQUIPEMENT DÉGÂTS • +12% ← ↑ → ↓ ◆ ✓"
 

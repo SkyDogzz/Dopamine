@@ -163,11 +163,6 @@ visual("title_skyline", "background", "main menu", [640, 360], "res://assets/bac
 visual("weapon_impacts_atlas", "impact_vfx_atlas", "weapon hit feedback", [640, 64],
 	"res://assets/sprites/weapon_impacts_pixel.png", ["10 cells × 64×64; frames are weapon hit styles"])
 
-for impact in ("spark", "star", "slash", "pop", "ring", "burst", "shards", "shock_ring", "angular", "evolved"):
-	visual(f"impact_{impact}", "impact_vfx", "weapon hit", [64, 64],
-		f"res://assets/sprites/vfx/impact_{impact}.png", ["frame sequence unspecified"],
-		"element-color mapping/intensity and frame timing open", animated=True)
-
 for icon in [
 	"equipment_helmet", "equipment_armor", "equipment_gloves", "equipment_boots", "equipment_amulet", "equipment_ring",
 	"rarity_normal", "rarity_magic", "rarity_mystic", "rarity_legendary", "rarity_mythic",
@@ -236,4 +231,4 @@ OUTPUT.write_text(json.dumps({
 	],
 	"assets": assets,
 }, indent=2) + "\n")
-print(f"Wrote {OUTPUT.relative_to(ROOT)}: {len(assets)} assets ({sum(a['category'] in {'character_animation', 'enemy_animation', 'elite_animation', 'boss_animation', 'weapon_animation', 'weapon_vfx_animation', 'relic_animation', 'projectile_animation', 'pickup_animation', 'impact_vfx'} for a in assets)} animation/VFX records)")
+print(f"Wrote {OUTPUT.relative_to(ROOT)}: {len(assets)} assets ({sum(a['category'] in {'character_animation', 'enemy_animation', 'elite_animation', 'boss_animation', 'weapon_animation', 'weapon_vfx_animation', 'relic_animation', 'projectile_animation', 'pickup_animation'} for a in assets)} animation/VFX records)")

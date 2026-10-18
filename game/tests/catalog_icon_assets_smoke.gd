@@ -152,6 +152,20 @@ func _collect_exported_png_paths(directory_path: String, png_paths: PackedString
 func _check_icon(asset_name: String) -> bool:
 	var is_roster := ROSTER.has(asset_name)
 	var is_vfx := IMPACTS.has(asset_name)
+	if is_vfx:
+		var impact_index := IMPACTS.find(asset_name)
+		var atlas := load("res://assets/sprites/weapon_impacts_pixel.png") as Texture2D
+		if atlas == null or atlas.get_size() != Vector2(640, 64):
+			push_error("Missing 10-cell weapon impact atlas")
+			return false
+		var cell := atlas.get_image().get_region(Rect2i(impact_index * 64, 0, 64, 64))
+		if cell.is_empty() or cell.get_used_rect().size == Vector2i.ZERO:
+			push_error("Missing atlas cell for %s" % asset_name)
+			return false
+		if ResourceLoader.exists("res://assets/sprites/vfx/%s.png" % asset_name):
+			push_error("Retired standalone VFX export unexpectedly exists: %s" % asset_name)
+			return false
+		return true
 	var is_projectile := PROJECTILES.has(asset_name)
 	var is_catalog_icon := asset_name.begins_with("weapon_") or asset_name.begins_with("evolution_") or asset_name.begins_with("relic_")
 	var is_ui_icon := not is_roster and not is_vfx and not is_projectile and not is_catalog_icon
