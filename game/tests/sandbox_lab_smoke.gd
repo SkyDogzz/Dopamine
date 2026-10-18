@@ -33,6 +33,9 @@ func _run() -> void:
 			lab.context.progression_service != null or lab.context.normal_save_service != null:
 		_fail("The player Sandbox Lab should start without progression or save services")
 		return
+	if lab.context.session.get_node("HUD").visible:
+		_fail("The hidden combat session must not leak its CanvasLayer HUD into the Sandbox Lab")
+		return
 	if lab.context.session.loadout.weapon_level("lightning_conductor") != 1 or \
 			lab.context.session.loadout.relic_level("storm_core") != 1:
 		_fail("The default Lab preset build should be applied to the real combat loadout")

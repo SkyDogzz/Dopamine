@@ -33,6 +33,9 @@ func start(preset: Variant) -> Dictionary:
 	candidate_session.process_mode = Node.PROCESS_MODE_DISABLED
 	candidate_session.progression_service = null
 	candidate_session.sandbox_diagnostics_enabled = true
+	# CanvasLayer ignores visibility inherited from the hidden Node2D. The Lab
+	# renders its own simulation view, so keep the Survival HUD out of this route.
+	candidate_session.get_node("HUD").visible = false
 	candidate_session.sandbox_rng_seed = int(checked["preset"]["seed"])
 	candidate_session.mode_id = base_mode
 	candidate_session.difficulty_id = "normal"
