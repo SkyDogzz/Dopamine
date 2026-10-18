@@ -164,8 +164,8 @@ func _show_relics() -> void:
 func _make_entry(entry: Dictionary) -> Control:
 	var entry_id := str(entry["id"])
 	var path := SPRITE_PATH % (entry_id if entry_id.begins_with("boss_") else "enemy_%s" % entry_id)
-	var runtime_id := {"elite_sprinter": "elite", "boss_pulse_warden": "mid_boss", \
-		"boss_dopamine_core": "final_boss"}.get(entry_id, entry_id)
+	var runtime_id: String = str({"elite_sprinter": "elite", "boss_pulse_warden": "mid_boss", \
+		"boss_dopamine_core": "final_boss"}.get(entry_id, entry_id))
 	var seen := _seen_enemies.has(runtime_id)
 	return _make_catalog_entry(str(entry["name"]) if seen else "INCONNU", \
 		str(entry["role"]) if seen else "Rencontrez cet ennemi pendant une run pour révéler cette fiche.", \
