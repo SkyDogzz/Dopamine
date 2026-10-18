@@ -2130,3 +2130,10 @@ Note de clôture : le blocage historique du smoke `sandbox_ui_smoke.gd` décrit 
 - [x] `sandbox_ui_smoke.gd` vérifie le focus initial visible sur `ACCUEIL`, le passage à `PLAY SURVIVAL` par flèche gauche et le retour par D-pad droit; la capture `states/sandbox.png` montre le cadre Neon sur `ACCUEIL`.
 - [x] Le smoke complet du Sandbox développeur passe avec Godot 4.7.2; il préserve aussi son slot de sauvegarde sentinelle.
 - [i] Les entrées synthétiques ne remplacent pas le test sur contrôleur physique.
+
+## Capture audio numérique du runtime — 2026-10-18
+
+- [x] `adaptive_survival_music_runtime_capture.gd` enregistre le bus Master Godot avec `AudioEffectRecord` et le pilote Dummy; il exerce l’autoload SFX et le vrai contrôleur musical aux vagues 1/8/16/24, au télégraphe/à la phase boss, à la pause/reprise et à la fin de run. Les marqueurs horodatés sont imprimés à chaque génération.
+- [x] Capture `docs/art/evidence/2026-10-18/adaptive-music-runtime-capture.wav`: PCM16 stéréo 44,1 kHz, 12,26 s, pic -2,73 dBFS, RMS -23,06 dBFS, zéro échantillon écrêté; SHA-256 `667ce7238edccb80e69b37fb5c18916753306da985291bad74acc219bde140b3`.
+- [x] `godot_project_import`, `sfx_service_assets_smoke` et `adaptive_survival_music_smoke` passent dans CTest (3/3).
+- [i] La capture établit la sortie numérique du moteur pendant les contextes du scénario, sans valider le niveau perçu, le masquage des cues, la continuité entendue ni un vrai combat. L’écoute humaine sur sortie audio reste **[OUVERTE]**, conformément à la demande de continuer sans retour d’écoute.
