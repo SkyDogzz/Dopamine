@@ -95,8 +95,8 @@ func _run() -> void:
 		return
 	var detail_panel: PanelContainer = hub.get_node("Detail")
 	if compact_panel.visible or detail_panel.get_global_rect().position.x != compact_panel.get_global_rect().position.x or \
-		detail_panel.get_global_rect().position.y != compact_panel.get_global_rect().end.y:
-		_fail("Opening details should extend the stats panel directly below the compact panel")
+		detail_panel.get_global_rect().position.y != compact_panel.get_global_rect().position.y:
+		_fail("The compact and detailed stats should share the same top-left position")
 		return
 	var scroll: ScrollContainer = hub.get_node("Detail/Content/StatsScroll")
 	var close_button: Button = hub.get_node("Detail/Content/Header/CloseButton")

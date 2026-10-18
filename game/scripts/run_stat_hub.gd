@@ -76,7 +76,7 @@ func update_stats(stats: Dictionary, xp_status: String) -> void:
 func _build_compact_panel() -> void:
 	_compact_panel = PanelContainer.new()
 	_compact_panel.name = "CompactPanel"
-	_compact_panel.position = Vector2(8.0, 56.0)
+	_compact_panel.position = Vector2(8.0, 108.0)
 	_compact_panel.add_theme_stylebox_override("panel", _panel_style(CYAN))
 	_compact_panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(_compact_panel)
@@ -108,7 +108,7 @@ func _build_compact_panel() -> void:
 func _build_detail_panel() -> void:
 	_detail_panel = PanelContainer.new()
 	_detail_panel.name = "Detail"
-	_detail_panel.position = Vector2(8.0, 108.0)
+	_detail_panel.position = _compact_panel.position
 	_detail_panel.custom_minimum_size = Vector2(260.0, 218.0)
 	_detail_panel.size = Vector2(260.0, 218.0)
 	_detail_panel.add_theme_stylebox_override("panel", _panel_style(CYAN))
