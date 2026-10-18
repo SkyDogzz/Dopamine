@@ -46,6 +46,41 @@ theme_override_font_sizes/font_size = 8
 text = "PROTOTYPE DEFINITIONS · COSTS AND EFFECTS PROPOSED"
 horizontal_alignment = 1
 
+[node name="Legend" type="HBoxContainer" parent="Panel/Content"]
+layout_mode = 2
+alignment = 1
+theme_override_constants/separation = 7
+
+[node name="Vitality" type="Label" parent="Panel/Content/Legend"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.278431, 0.901961, 0.607843, 1)
+theme_override_font_sizes/font_size = 7
+text = "PV"
+
+[node name="Damage" type="Label" parent="Panel/Content/Legend"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.443137, 0.505882, 1)
+theme_override_font_sizes/font_size = 7
+text = "DÉGÂTS"
+
+[node name="Mobility" type="Label" parent="Panel/Content/Legend"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.215686, 0.909804, 0.960784, 1)
+theme_override_font_sizes/font_size = 7
+text = "MOBILITÉ"
+
+[node name="Crit" type="Label" parent="Panel/Content/Legend"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.776471, 0.482353, 1, 1)
+theme_override_font_sizes/font_size = 7
+text = "CRITIQUE"
+
+[node name="Unlocks" type="Label" parent="Panel/Content/Legend"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.831373, 0.278431, 1)
+theme_override_font_sizes/font_size = 7
+text = "ARMES / RELIQUES"
+
 [node name="EssenceRow" type="HBoxContainer" parent="Panel/Content"]
 layout_mode = 2
 alignment = 1

@@ -52,7 +52,11 @@ const EVOLUTION_NAMES := {
 	"spectrum_collapse": "Spectrum Collapse",
 }
 
-@onready var _entries: VBoxContainer = $Center/Panel/Content/Body/Entries
+@onready var _entries: GridContainer = $Center/Panel/Content/Body/EntryScroll/Entries
+@onready var _detail_portrait: TextureRect = $Center/Panel/Content/Body/Detail/DetailContent/Portrait
+@onready var _detail_title: Label = $Center/Panel/Content/Body/Detail/DetailContent/DetailTitle
+@onready var _detail_status: Label = $Center/Panel/Content/Body/Detail/DetailContent/DetailStatus
+@onready var _detail_description: Label = $Center/Panel/Content/Body/Detail/DetailContent/DetailDescription
 @onready var _close_button: Button = $Center/Panel/Content/Header/CloseButton
 @onready var _category: OptionButton = $Center/Panel/Content/Category
 @onready var _intro: Label = $Center/Panel/Content/Intro
@@ -62,6 +66,7 @@ var _combat_catalog: RefCounted
 var _seen_enemies: Dictionary = {}
 var _unlocked_weapons: Dictionary = {}
 var _unlocked_relics: Dictionary = {}
+var _selected_card: PanelContainer
 
 func _ready() -> void:
 	_combat_catalog = COMBAT_CATALOG_SCRIPT.new()
@@ -94,7 +99,7 @@ func present_error() -> void:
 	_title.text = "CODEX · INDISPONIBLE"
 	_intro.text = "Le profil est indisponible; impossible de charger l’état de progression du Codex."
 	_category.visible = false
-	_entries.visible = false
+	$Center/Panel/Content/Body.visible = false
 	_close_button.grab_focus()
 
 func _to_lookup(ids: Array) -> Dictionary:
@@ -113,10 +118,15 @@ func _count_unlocked(unlocked: Dictionary, catalog_entries: Dictionary) -> int:
 func _show_category(index: int) -> void:
 	for child in _entries.get_children():
 		child.queue_free()
+	_selected_card = null
+	_set_detail("SÉLECTIONNEZ UNE FICHE", "", "Choisissez un ennemi, une arme, une relique ou une évolution dans la liste.", "")
 	if index == 0:
 		_intro.text = "Ennemis rencontrés: %d / %d" % [_seen_enemies.size(), ENEMY_COUNT]
 		for entry in ENTRIES:
-			_entries.add_child(_make_entry(entry))
+			var card := _make_entry(entry)
+			_entries.add_child(card)
+			if _selected_card == null:
+				_select_codex_entry(card)
 	elif index == 1:
 		_intro.text = "ARMES DÉBLOQUÉES: %d / %d" % [_count_unlocked(_unlocked_weapons, _combat_catalog.weapons), _combat_catalog.weapons.size()]
 		_show_weapons()
@@ -137,10 +147,13 @@ func _show_weapons() -> void:
 		var combo_text := "ARME DÉBLOQUÉE · Combo: %s + %s → %s" % [str(weapon["name"]), \
 			str(relic["name"]), combo_name] if unlocked and relic_unlocked else \
 			"ARME %s · combo verrouillé (arme et relique niveau 5)" % ("DÉBLOQUÉE" if unlocked else "VERROUILLÉE")
-		_entries.add_child(_make_catalog_entry(
+		var card := _make_catalog_entry(
 			str(weapon["name"]), str(WEAPON_DESCRIPTIONS.get(weapon_id, weapon["behavior"])), combo_text, weapon_icon_path,
-			"Évolution offerte quand l’arme et sa relique atteignent le niveau 5." if unlocked else ""
-		))
+			"Évolution offerte quand l’arme et sa relique atteignent le niveau 5." if unlocked else "", str(weapon_id)
+		)
+		_entries.add_child(card)
+		if _selected_card == null:
+			_select_codex_entry(card)
 
 func _show_relics() -> void:
 	var relics: Dictionary = _combat_catalog.relics
@@ -158,13 +171,16 @@ func _show_relics() -> void:
 					str(EVOLUTION_NAMES.get(str(linked_weapon["evolution_id"]), linked_weapon["evolution_id"])).to_upper()]
 			else:
 				status = "%s · combo verrouillé" % ("RELIQUE DÉBLOQUÉE" if unlocked else "RELIQUE VERROUILLÉE")
-		_entries.add_child(_make_catalog_entry(
+		var card := _make_catalog_entry(
 			str(relic["name"]), "%s Bonus par niveau [PROPOSÉ]: %s." % [
 				str(RELIC_DESCRIPTIONS.get(relic_id, relic["behavior"])),
 				str(relic.get("global_bonus_per_level", "—")),
 			], status,
-			icon_path, "Bonus chiffrés marqués [PROPOSÉS] dans le catalogue de combat"
-		))
+			icon_path, "Bonus chiffrés marqués [PROPOSÉS] dans le catalogue de combat", str(relic_id)
+		)
+		_entries.add_child(card)
+		if _selected_card == null:
+			_select_codex_entry(card)
 
 func _make_entry(entry: Dictionary) -> Control:
 	var entry_id := str(entry["id"])
@@ -174,19 +190,50 @@ func _make_entry(entry: Dictionary) -> Control:
 	var seen := _seen_enemies.has(runtime_id)
 	return _make_catalog_entry(str(entry["name"]) if seen else "INCONNU", \
 		str(entry["role"]) if seen else "Rencontrez cet ennemi pendant une run pour révéler cette fiche.", \
-		str(entry["status"]) if seen else "NON RENCONTRÉ", path if seen else "", "")
+		str(entry["status"]) if seen else "NON RENCONTRÉ", path if seen else "", "", entry_id if seen else "", false)
 
-func _make_catalog_entry(title_text: String, description: String, status_text: String, icon_path: String, tooltip: String) -> Control:
+func _make_catalog_entry(title_text: String, description: String, status_text: String, icon_path: String, tooltip: String, key: String = "", selectable: bool = true) -> Control:
+	var card := PanelContainer.new()
+	card.custom_minimum_size = Vector2(0, 48)
+	var style := StyleBoxFlat.new()
+	var is_locked := status_text.contains("VERROUILLÉ") or status_text.contains("NON RENCONTRÉ")
+	style.bg_color = Color("#10172B") if is_locked else Color("#14243A")
+	style.border_color = Color("#39486B") if is_locked else Color("#243B65")
+	style.set_border_width_all(1)
+	style.content_margin_left = 5.0
+	style.content_margin_right = 5.0
+	style.content_margin_top = 4.0
+	style.content_margin_bottom = 4.0
+	card.add_theme_stylebox_override("panel", style)
+	card.set_meta("card_style", style)
+	if selectable:
+		card.mouse_filter = Control.MOUSE_FILTER_STOP
+		card.gui_input.connect(_on_card_input.bind(card, title_text, status_text, description, icon_path, key))
+		card.focus_mode = Control.FOCUS_ALL
+		card.set_meta("codex_title", title_text)
+		card.set_meta("codex_status", status_text)
+		card.set_meta("codex_description", description)
+		card.set_meta("codex_icon", icon_path)
+		card.focus_entered.connect(_on_card_focus.bind(card, title_text, status_text, description, icon_path))
 	var row := HBoxContainer.new()
-	row.custom_minimum_size = Vector2(0, 37)
-	row.add_theme_constant_override("separation", 6)
+	row.add_theme_constant_override("separation", 7)
+	card.add_child(row)
 	var portrait := TextureRect.new()
 	portrait.texture = load(icon_path) as Texture2D if not icon_path.is_empty() and ResourceLoader.exists(icon_path) else null
-	portrait.custom_minimum_size = Vector2(32, 32)
+	portrait.custom_minimum_size = Vector2(34, 34)
 	portrait.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	portrait.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	portrait.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	row.add_child(portrait)
+	if portrait.texture == null:
+		var unknown_mark := Label.new()
+		unknown_mark.text = "?"
+		unknown_mark.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+		unknown_mark.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		unknown_mark.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+		unknown_mark.add_theme_font_size_override("font_size", 14)
+		unknown_mark.add_theme_color_override("font_color", Color("#586381"))
+		portrait.add_child(unknown_mark)
 	var copy := VBoxContainer.new()
 	copy.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	copy.add_theme_constant_override("separation", 0)
@@ -198,9 +245,45 @@ func _make_catalog_entry(title_text: String, description: String, status_text: S
 	name.add_theme_color_override("font_color", Color("#37E8F5"))
 	copy.add_child(name)
 	var details := Label.new()
-	details.text = "%s  ·  %s" % [description, status_text]
+	details.text = description
 	details.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	details.add_theme_font_size_override("font_size", 6)
+	details.add_theme_font_size_override("font_size", 7)
 	details.add_theme_color_override("font_color", Color("#A5AEC3"))
 	copy.add_child(details)
-	return row
+	var status := Label.new()
+	status.text = status_text
+	status.add_theme_font_size_override("font_size", 6)
+	status.add_theme_color_override("font_color", Color("#A6AEC4") if is_locked else Color("#48E69B"))
+	copy.add_child(status)
+	return card
+
+func _on_card_input(event: InputEvent, card: PanelContainer, title_text: String, status_text: String, description: String, icon_path: String, key: String) -> void:
+	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
+		_set_selected_card(card)
+		_set_detail(title_text, status_text, description, icon_path)
+		if not key.is_empty() and key.begins_with("boss_"):
+			_detail_description.text += "\n\nBoss à phases : patterns détaillés dans la documentation de conception."
+
+func _on_card_focus(card: PanelContainer, title_text: String, status_text: String, description: String, icon_path: String) -> void:
+	_set_selected_card(card)
+	_set_detail(title_text, status_text, description, icon_path)
+
+func _set_selected_card(card: PanelContainer) -> void:
+	if is_instance_valid(_selected_card):
+		var previous_style: StyleBoxFlat = _selected_card.get_meta("card_style")
+		previous_style.border_color = Color("#243B65")
+	if is_instance_valid(card):
+		var selected_style: StyleBoxFlat = card.get_meta("card_style")
+		selected_style.border_color = Color("#FFD447")
+		_selected_card = card
+
+func _set_detail(title_text: String, status_text: String, description: String, icon_path: String) -> void:
+	_detail_title.text = title_text
+	_detail_status.text = status_text
+	_detail_description.text = description
+	_detail_portrait.texture = load(icon_path) as Texture2D if not icon_path.is_empty() and ResourceLoader.exists(icon_path) else null
+
+func _select_codex_entry(card: PanelContainer) -> void:
+	_set_selected_card(card)
+	_set_detail(str(card.get_meta("codex_title")), str(card.get_meta("codex_status")), \
+		str(card.get_meta("codex_description")), str(card.get_meta("codex_icon")))

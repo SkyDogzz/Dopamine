@@ -11,13 +11,19 @@ class GraphLayer extends Control:
 	func _draw() -> void:
 		for lane in lanes:
 			var y := float(lane["y"])
-			draw_line(Vector2(0, y), Vector2(size.x, y), Color("#1b2340"), 1.0)
+			var lane_color: Color = lane["color"]
+			draw_line(Vector2(0, y), Vector2(size.x, y), lane_color.darkened(0.72), 1.0)
 		for edge in edges:
 			var start: Vector2 = edge["start"]
 			var finish: Vector2 = edge["finish"]
-			draw_line(start, finish, Color("#59476f") if edge["unlocked"] else Color("#293354"), 2.0 if edge["unlocked"] else 1.0)
+			var edge_color: Color = edge["color"]
+			draw_line(start, finish, edge_color if edge["unlocked"] else edge_color.darkened(0.7), 2.0 if edge["unlocked"] else 1.0)
 
 const LANE_ORDER := ["MAX HP", "DAMAGE", "MOVE SPEED", "CRIT CHANCE", "WEAPON UNLOCKS", "RELIC UNLOCKS"]
+const LANE_COLORS := {
+	"MAX HP": Color("#48E69B"), "DAMAGE": Color("#FF7181"), "MOVE SPEED": Color("#37E8F5"),
+	"CRIT CHANCE": Color("#C67BFF"), "WEAPON UNLOCKS": Color("#FFD447"), "RELIC UNLOCKS": Color("#FF75E3"),
+}
 const CORE_STAT_KEYS := ["max_hp_pct", "damage_pct", "move_speed_pct", "critical_chance_pct"]
 const CORE_STAT_NAMES := {
 	"max_hp_pct": "MAX HP", "damage_pct": "DAMAGE",
@@ -32,6 +38,8 @@ const NODE_WIDTH := 82.0
 const NODE_COLUMN_STEP := 90.0
 
 @onready var _essence: Label = $Panel/Content/EssenceRow/Essence
+@onready var _status: Label = $Panel/Content/Status
+@onready var _graph_legend: HBoxContainer = $Panel/Content/Legend
 @onready var _tree_scroll: ScrollContainer = $Panel/Content/TreeScroll
 @onready var _graph: Control = $Panel/Content/TreeScroll/Graph
 @onready var _selected_title: Label = $Panel/Content/Details/DetailContent/SelectedTitle
@@ -149,11 +157,11 @@ func _build_graph() -> void:
 			lane_label.text = lane
 			lane_label.position = Vector2(4, y - 6)
 			lane_label.add_theme_font_size_override("font_size", 8)
-			lane_label.add_theme_color_override("font_color", Color("#586381"))
+			lane_label.add_theme_color_override("font_color", LANE_COLORS.get(lane, Color("#586381")))
 			_graph.add_child(lane_label)
 			visible_lanes[lane] = true
 	for lane in LANE_ORDER:
-		_graph_layer.lanes.append({"y": lane_y[lane]})
+		_graph_layer.lanes.append({"y": lane_y[lane], "color": LANE_COLORS[lane]})
 	for node_id in ids:
 		var definition: Dictionary = progression_service.skill_node_definition(node_id)
 		for prerequisite in definition.get("prerequisites", []):
@@ -165,6 +173,7 @@ func _build_graph() -> void:
 			_graph_layer.edges.append({
 				"start": from + Vector2(NODE_WIDTH, 13), "finish": to + Vector2(0, 13),
 				"prerequisite_id": prerequisite_id,
+				"color": LANE_COLORS.get(_lane_name(node_id, definition), Color("#37E8F5")),
 				"unlocked": prerequisite_id in _profile.get("unlocked_skill_nodes", []),
 			})
 	_graph.custom_minimum_size = Vector2(190 + float(max_depth / 3) * 72.0, 26.0 + LANE_ORDER.size() * 48.0)
@@ -209,14 +218,33 @@ func _lane_name(node_id: String, definition: Dictionary) -> String:
 func _refresh_graph() -> void:
 	var unlocked: Array = _profile.get("unlocked_skill_nodes", [])
 	var essence := int(_profile.get("resources", {}).get("essence", 0))
+	var available_count := 0
 	for node_id in _node_buttons:
 		var definition: Dictionary = progression_service.skill_node_definition(node_id)
 		var button := _node_buttons[node_id] as Button
 		var is_unlocked: bool = node_id in unlocked
 		var available: bool = _prerequisites_met(definition, unlocked) and essence >= progression_service.skill_node_cost(node_id)
+		if available and not is_unlocked:
+			available_count += 1
 		button.text = "%s %s" % ["✓" if is_unlocked else "◆" if available else "·", _short_node_label(node_id, definition)]
-		button.self_modulate = Color("#37e8f5") if is_unlocked else Color("#fff19a") if available else Color("#7b87a2")
+		var lane_color: Color = LANE_COLORS.get(_lane_name(node_id, definition), Color("#37e8f5"))
+		button.self_modulate = lane_color if is_unlocked else Color("#fff19a") if available else Color("#7b87a2")
+		var node_style := StyleBoxFlat.new()
+		node_style.bg_color = Color("#14243A") if is_unlocked else Color("#211D31") if available else Color("#10172B")
+		node_style.border_color = lane_color if is_unlocked else Color("#FFD447") if available else Color("#39486B")
+		node_style.set_border_width_all(1)
+		node_style.content_margin_left = 3.0
+		node_style.content_margin_right = 3.0
+		node_style.content_margin_top = 1.0
+		node_style.content_margin_bottom = 1.0
+		button.add_theme_stylebox_override("normal", node_style)
+		var hover_style := node_style.duplicate() as StyleBoxFlat
+		hover_style.bg_color = lane_color.darkened(0.65)
+		hover_style.border_color = lane_color
+		button.add_theme_stylebox_override("hover", hover_style)
 		button.disabled = not _profile_available
+	_status.text = "%d / %d NODES UNLOCKED  ·  %d AVAILABLE" % [unlocked.size(), _node_buttons.size(), available_count]
+	_graph_legend.tooltip_text = "Chaque couleur identifie une voie de progression. Les nœuds dorés sont sélectionnés; les couleurs vives indiquent les nœuds accessibles ou acquis."
 	if _graph_layer != null:
 		for edge in _graph_layer.edges:
 			edge["unlocked"] = str(edge["prerequisite_id"]) in unlocked

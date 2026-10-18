@@ -133,7 +133,8 @@ func _run() -> void:
 	await _send_mouse_click(achievements)
 	await process_frame
 	var achievements_panel: Control = hub.get_node("AchievementsPanel")
-	if not achievements_panel.visible or achievements_panel.get_node("Center/Panel/Content/Body/Entries").get_child_count() != 100:
+	var achievement_entries: GridContainer = achievements_panel.get_node("Center/Panel/Content/Body/BodyRow/EntriesScroll/Entries")
+	if not achievements_panel.visible or achievement_entries.get_child_count() != 100:
 		_fail("Achievements should open a panel with all 100 achievement families")
 		return
 	if not bounds.encloses(achievements_panel.get_node("Center/Panel").get_global_rect()):
@@ -146,12 +147,12 @@ func _run() -> void:
 	hub._open_codex()
 	await process_frame
 	var codex: Control = hub.get_node("CodexPanel")
-	if not codex.visible or codex.get_node("Center/Panel/Content/Body/Entries").get_child_count() != 12:
+	if not codex.visible or codex.get_node("Center/Panel/Content/Body/EntryScroll/Entries").get_child_count() != 12:
 		_fail("Codex should open with the implemented enemy roster")
 		return
-	var enemy_entries: VBoxContainer = codex.get_node("Center/Panel/Content/Body/Entries")
-	if enemy_entries.get_child(0).get_child(1).get_child(0).text != "INCONNU" or \
-		enemy_entries.get_child(0).get_child(1).get_child(1).text.find("NON RENCONTRÉ") < 0:
+	var enemy_entries: GridContainer = codex.get_node("Center/Panel/Content/Body/EntryScroll/Entries")
+	var first_enemy_copy: VBoxContainer = enemy_entries.get_child(0).get_child(0).get_child(1)
+	if first_enemy_copy.get_child(0).text != "INCONNU" or first_enemy_copy.get_child(2).text.find("NON RENCONTRÉ") < 0:
 		_fail("An enemy not encountered in Survival should remain hidden in Codex")
 		return
 	if not bounds.encloses(codex.get_node("Center/Panel").get_global_rect()):
@@ -161,14 +162,16 @@ func _run() -> void:
 	category.select(1)
 	category.item_selected.emit(1)
 	await process_frame
-	var entries: VBoxContainer = codex.get_node("Center/Panel/Content/Body/Entries")
-	if entries.get_child_count() != 10 or entries.get_child(0).get_child(1).get_child(0).text != "Lightning Conductor" or \
-		entries.get_child(2).get_child(1).get_child(0).text != "Crimson Daggers" or \
-		not entries.get_child(2).get_child(1).get_child(1).text.contains("ARME VERROUILLÉE"):
+	var entries: GridContainer = codex.get_node("Center/Panel/Content/Body/EntryScroll/Entries")
+	var first_weapon_copy: VBoxContainer = entries.get_child(0).get_child(0).get_child(1)
+	var third_weapon_copy: VBoxContainer = entries.get_child(2).get_child(0).get_child(1)
+	if entries.get_child_count() != 10 or first_weapon_copy.get_child(0).text != "Lightning Conductor" or \
+		third_weapon_copy.get_child(0).text != "Crimson Daggers" or \
+		not third_weapon_copy.get_child(2).text.contains("ARME VERROUILLÉE"):
 		_fail("Codex should describe locked weapons while clearly marking their locked status")
 		return
-	if not entries.get_child(0).get_child(1).get_child(1).text.contains("INFINITE CIRCUIT") or \
-		not entries.get_child(2).get_child(1).get_child(1).text.contains("combo verrouillé"):
+	if not first_weapon_copy.get_child(2).text.contains("INFINITE CIRCUIT") or \
+		not third_weapon_copy.get_child(2).text.contains("combo verrouillé"):
 		_fail("Unlocked starter combos should be described while locked combinations stay hidden")
 		return
 	category.select(2)
@@ -177,8 +180,9 @@ func _run() -> void:
 	if entries.get_child_count() != 11:
 		_fail("Codex should show all eleven relics")
 		return
-	if entries.get_child(2).get_child(1).get_child(0).text != "Blood Chalice" or \
-		not entries.get_child(2).get_child(1).get_child(1).text.contains("VERROUILLÉE"):
+	var third_relic_copy: VBoxContainer = entries.get_child(2).get_child(0).get_child(1)
+	if third_relic_copy.get_child(0).text != "Blood Chalice" or \
+		not third_relic_copy.get_child(2).text.contains("VERROUILLÉE"):
 		_fail("Codex should describe locked relics while clearly marking their locked status")
 		return
 	await _send_key(KEY_ESCAPE)

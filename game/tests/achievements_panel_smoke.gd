@@ -21,26 +21,30 @@ func _run() -> void:
 		"tiers": {"exterminator": 1, "hidden": 0},
 	}})
 	await process_frame
-	var entries: VBoxContainer = panel.get_node("Center/Panel/Content/Body/Entries")
-	var objective: Label = entries.get_child(0).get_node("AchievementObjective")
-	var progress: Label = entries.get_child(0).get_node("AchievementProgress")
-	var bar: ProgressBar = entries.get_child(0).get_node("AchievementProgressBar")
-	var reward: Label = entries.get_child(0).get_node("AchievementReward")
+	var entries: GridContainer = panel.get_node("Center/Panel/Content/Body/BodyRow/EntriesScroll/Entries")
+	var objective: Label = entries.get_child(0).get_node("CardContent/AchievementObjective")
+	var progress: Label = entries.get_child(0).get_node("CardContent/AchievementProgress")
+	var bar: ProgressBar = entries.get_child(0).get_node("CardContent/AchievementProgressBar")
+	var reward: Label = entries.get_child(0).get_node("CardContent/AchievementReward")
 	if entries.get_child_count() != 2 or not objective.text.contains("ENNEMIS ÉLIMINÉS") or \
 		not objective.text.contains("PROCHAIN PALIER ARGENT") or progress.text != "PROGRESSION : 250 / 500" or \
 		bar.value != 250.0 or not reward.text.contains("OBTENU · DÉGÂTS +0.50%") or \
 		not reward.text.contains("À GAGNER · DÉGÂTS +1.00%"):
 		_fail("Achievement cards should explain the objective, numeric progress, and earned/next rewards")
 		return
-	var hidden: VBoxContainer = entries.get_child(1)
-	if hidden.get_node("Heading/AchievementName").text != "SUCCÈS SECRET  ·  À DÉBLOQUER" or \
-		not hidden.get_node("AchievementObjective").text.contains("révéler") or \
-		hidden.get_node("AchievementProgressBar").visible or not hidden.get_node("AchievementReward").text.is_empty():
+	var hidden: PanelContainer = entries.get_child(1)
+	if hidden.get_node("CardContent/Heading/AchievementName").text != "SUCCÈS SECRET  ·  À DÉBLOQUER" or \
+		not hidden.get_node("CardContent/AchievementObjective").text.contains("révéler") or \
+		hidden.get_node("CardContent/AchievementProgressBar").visible or not hidden.get_node("CardContent/AchievementReward").text.is_empty():
 		_fail("Undiscovered secret achievements should hide their objective progress and rewards")
 		return
 	var intro: Label = panel.get_node("Center/Panel/Content/Intro")
 	if not intro.text.contains("PALIERS OBTENUS : 1 / 8") or not intro.text.contains("SUCCÈS RÉVÉLÉS : 1 / 2"):
 		_fail("Achievement summary should count earned tiers and revealed families")
+		return
+	var detail_title: Label = panel.get_node("Center/Panel/Content/Body/BodyRow/Detail/DetailContent/DetailTitle")
+	if not detail_title.text.contains("EXTERMINATOR"):
+		_fail("Achievement details should select the first visible achievement")
 		return
 	print("Achievements panel clarity smoke passed")
 	quit()
