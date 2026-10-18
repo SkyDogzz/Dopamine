@@ -35,6 +35,19 @@ func _run() -> void:
 	}
 	entities.append(pandemic_field)
 	view.set_entities(entities)
+	for weapon_id in view._sprite_renderer.WEAPON_ANIMATION_IDS:
+		var weapon_role := "weapon_%s" % weapon_id
+		assert(view._sprite_renderer._role_animation_sets.has(weapon_role),
+				"Weapon %s should resolve its authored attack animation" % weapon_id)
+		var attack_frames: SpriteFrames = view._sprite_renderer._role_animation_sets[weapon_role]["attack"]
+		assert(attack_frames.get_frame_count("%s_attack" % weapon_role) == 4,
+				"Weapon %s should have all four attack frames" % weapon_id)
+	for family in view._sprite_renderer.WEAPON_VFX_FAMILIES:
+		var vfx_role := "weapon_%s" % family
+		for state in ["fire_vfx", "impact_vfx"]:
+			var vfx_frames: SpriteFrames = view._sprite_renderer._role_animation_sets[vfx_role][state]
+			assert(vfx_frames.get_frame_count("%s_%s" % [vfx_role, state]) == 4,
+					"Weapon %s %s should have all four frames" % [family, state])
 	for sprite_id in view._sprite_renderer.SPRITE_FILES:
 		if not str(sprite_id).begins_with("projectile_"):
 			continue
@@ -98,6 +111,12 @@ func _run() -> void:
 	assert(view._sprite_renderer._batches["projectile_redline"]["texture"].resource_path.ends_with("projectiles/projectile_minigun.png"), "Redline should retain the Minigun bolt silhouette")
 	assert(view._sprite_renderer.SPRITE_COLORS["projectile_redline"] == Color("#FF7181"), "Redline bolts should use the established neon red tint")
 	assert(view._sprite_renderer._batches["enemy_chaser"]["texture"].resource_path.ends_with("enemy_chaser.png"), "Chaser batch should load its pixel-art sprite")
+	view._sprite_renderer.set_entities([], Vector2.ZERO, 0.1, {}, [{
+		"role": "weapon_minigun", "state": "fire_vfx", "position": Vector2(20, 30),
+		"size": 28.0, "direction": Vector2.ZERO, "started_at": 0.0,
+	}])
+	assert(view._sprite_renderer.animated_multimesh_for("weapon_minigun_fire_vfx", 1).instance_count == 1,
+			"Transient weapon fire VFX should render on its authored second frame")
 	view.set_selected_entity(2502, 1)
 	assert(not view._selected_entity_found, "Projectile animation instances should not become selectable targets")
 	var shooter := _entity(2600, "shooter", 0, 0)

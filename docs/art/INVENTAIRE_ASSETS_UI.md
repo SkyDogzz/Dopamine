@@ -21,6 +21,8 @@
 
 **Avancement polices 2026-10-18 — fontes originales :** FontForge a produit deux fontes TTF depuis des grilles de glyphes originales, avec sources `.sfd` conservées dans `game/assets/source/original_procedural/fonts/`. `NeonArcadePixel` sert les titres/dégâts et `NeonArcadeUI` le texte courant. Les anciennes fontes et leurs notices tierces ont été supprimées après migration et recherche de références; hash et preuve sont dans `ASSET_RETIREMENTS.csv`. Le smoke de glyphes et d’intégration du thème passe. **[VALIDÉ — LISIBILITÉ CIBLÉE]** L’utilisateur confirme que les deux fontes sont lisibles à taille normale dans les captures 640×360 du hub et de l’équipement. Le choix typographique global, tailles sur tous les écrans et parcours restent **[PROPOSÉS]**/**[OUVERTS]** jusqu’à leur revue complète.
 
+**Avancement animations d’armes 2026-10-18 :** le renderer charge les 20 feuilles d’attaque (armes de base et évolutions) et les 20 feuilles de flash de tir/impact des dix familles. Un tir réussi joue l’attaque et le flash de départ; un impact direct joue sa feuille dédiée lorsqu’elle existe, avec rotation et accent de taille critique. Un plafond de 64 animations transitoires et le réglage « effets réduits » contrôlent ces effets. `render_batching_smoke.gd`, `survival_weapon_smoke.gd`, `survival_shooter_smoke.gd` et `survival_visual_effects_smoke.gd` passent. Les animations de ramassage restent à raccorder; la revue artistique et les cadences demeurent provisoires.
+
 ## Portée et règles
 
 - Recréer les assets visuels actuellement utilisés, même lorsqu’ils semblent déjà proches de la direction retenue, et combler les manques du contenu effectivement présent dans le jeu.

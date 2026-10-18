@@ -121,15 +121,17 @@ func _run() -> void:
 		return
 	if "--capture" in OS.get_cmdline_user_args() and not await _verify_status_capture(session):
 		return
+	session._weapon_transient_animations.clear()
+	session._weapon_impacts.clear()
 	session._add_weapon_impact("inferno_sprayer", Vector2.ZERO, false)
 	session._add_weapon_impact("inferno_sprayer", Vector2.RIGHT * 20.0, false, true)
 	session._add_enemy_death_pixels("chaser", Vector2.ZERO)
 	session._add_lightning_arc(Vector2.ZERO, Vector2.RIGHT * 20.0)
-	if session._weapon_impacts.size() != 2 or \
-		bool(session._weapon_impacts[0].get("critical_hit", true)) or \
-		bool(session._weapon_impacts[1].get("critical_hit", false)) != true or \
-		float(session._weapon_impacts[1].get("emphasis_scale", 1.0)) <= \
-		float(session._weapon_impacts[0].get("emphasis_scale", 1.0)) or \
+	if session._weapon_transient_animations.size() != 2 or \
+		bool(session._weapon_transient_animations[0].get("critical_hit", true)) or \
+		bool(session._weapon_transient_animations[1].get("critical_hit", false)) != true or \
+		float(session._weapon_transient_animations[1].get("size", 0.0)) <= \
+		float(session._weapon_transient_animations[0].get("size", 0.0)) or \
 		session._enemy_death_pixels.size() != 8 or \
 		session._lightning_arcs.size() != 1:
 		_fail("Critical direct hits should retain metadata and receive visible size emphasis")
@@ -147,6 +149,7 @@ func _run() -> void:
 	session._add_enemy_death_pixels("chaser", Vector2.ZERO)
 	session._add_lightning_arc(Vector2.ZERO, Vector2.RIGHT * 20.0)
 	if not session._visual_effects_reduced() or not session._weapon_impacts.is_empty() or \
+		not session._weapon_transient_animations.is_empty() or \
 		not session._enemy_death_pixels.is_empty() or not session._lightning_arcs.is_empty():
 		_fail("Reduced effects should clear and suppress impact, death and lightning visuals")
 		return
@@ -169,18 +172,22 @@ func _verify_impact_capture(session: Node2D) -> bool:
 	var impact_position := Vector2(180.0, 90.0)
 	var screen_position: Vector2 = session.get_global_transform_with_canvas() * impact_position
 	session._weapon_impacts.clear()
+	session._weapon_transient_animations.clear()
 	session.queue_redraw()
 	await process_frame
 	await RenderingServer.frame_post_draw
 	var baseline: Image = root.get_texture().get_image()
 	session._add_weapon_impact("inferno_sprayer", impact_position, false)
+	await process_frame
 	session.queue_redraw()
 	await process_frame
 	await RenderingServer.frame_post_draw
 	var normal_image: Image = root.get_texture().get_image()
 	var normal_pixels := _count_changed_pixels(baseline, normal_image, screen_position)
 	session._weapon_impacts.clear()
+	session._weapon_transient_animations.clear()
 	session._add_weapon_impact("inferno_sprayer", impact_position, false, true)
+	await process_frame
 	session.queue_redraw()
 	await process_frame
 	await RenderingServer.frame_post_draw
@@ -242,6 +249,9 @@ func _wait_for_critical_impact(session: Node2D) -> bool:
 		await process_frame
 		for impact in session._weapon_impacts:
 			if bool(impact.get("critical_hit", false)):
+				return true
+		for transient in session._weapon_transient_animations:
+			if str(transient.get("state", "")) == "impact_vfx" and bool(transient.get("critical_hit", false)):
 				return true
 	return false
 

@@ -52,6 +52,16 @@ const PROJECTILE_ANIMATION_ALIASES := {
 	"projectile_shatter_impact": "projectile_absolute_zero",
 	"projectile_shatter_fragment": "projectile_absolute_zero",
 }
+const WEAPON_ANIMATION_IDS := [
+	"lightning_conductor", "infinite_circuit", "inferno_sprayer", "wildfire",
+	"crimson_daggers", "bloodstorm", "minigun", "redline", "toxic_cloud", "pandemic",
+	"sawblades", "razorstorm", "meteor_staff", "starfall", "prism_laser",
+	"spectrum_collapse", "void_orb", "event_horizon", "frost_nova", "absolute_zero",
+]
+const WEAPON_VFX_FAMILIES := [
+	"lightning_conductor", "inferno_sprayer", "crimson_daggers", "minigun", "toxic_cloud",
+	"sawblades", "meteor_staff", "prism_laser", "void_orb", "frost_nova",
+]
 const ANIMATED_ROLE_IDS := [
 	"enemy_chaser", "enemy_sprinter", "enemy_tank", "enemy_shooter", "enemy_buffer",
 	"enemy_exploder", "enemy_shielder", "enemy_summoner", "enemy_summoned",
@@ -95,6 +105,17 @@ func _init() -> void:
 		var resource_path := "res://assets/sprites/animation/%s.tres" % animation_id
 		if ResourceLoader.exists(resource_path):
 			_role_animation_sets[sprite_id] = {"projectile": load(resource_path) as SpriteFrames}
+	for weapon_id in WEAPON_ANIMATION_IDS:
+		var attack_path := "res://assets/sprites/animation/%s_attack.tres" % weapon_id
+		if ResourceLoader.exists(attack_path):
+			_role_animation_sets["weapon_%s" % weapon_id] = {"attack": load(attack_path) as SpriteFrames}
+	for family in WEAPON_VFX_FAMILIES:
+		var weapon_role := "weapon_%s" % family
+		_role_animation_sets[weapon_role] = _role_animation_sets.get(weapon_role, {})
+		for state in ["fire_vfx", "impact_vfx"]:
+			var vfx_path := "res://assets/sprites/animation/%s_%s.tres" % [family, state.trim_suffix("_vfx")]
+			if ResourceLoader.exists(vfx_path):
+				_role_animation_sets[weapon_role][state] = load(vfx_path) as SpriteFrames
 
 func set_entities(entities: Array, origin: Vector2 = Vector2.ZERO, animation_time: float = 0.0,
 		animation_overrides: Dictionary = {}, transient_animations: Array = []) -> void:
@@ -316,7 +337,7 @@ func _append_transient_animation(instances_by_animation: Dictionary, transient: 
 	instances_by_animation[key].append({
 		"point": origin + position,
 		"size": float(transient.get("size", 24.0)),
-		"rotation": 0.0,
+		"rotation": float(transient.get("rotation", 0.0)),
 	})
 
 func draw_projectile_trails(canvas: CanvasItem) -> void:

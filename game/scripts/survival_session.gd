@@ -42,6 +42,12 @@ const WEAPON_IMPACT_SOURCE_IDS := {
 	"absolute_zero": "frost_nova", "thermal_shock": "frost_nova", "shatter_impact": "frost_nova",
 	"shatter_fragment": "frost_nova",
 }
+const WEAPON_EVOLUTION_IDS := {
+	"lightning_conductor": "infinite_circuit", "inferno_sprayer": "wildfire",
+	"crimson_daggers": "bloodstorm", "minigun": "redline", "toxic_cloud": "pandemic",
+	"sawblades": "razorstorm", "meteor_staff": "starfall", "prism_laser": "spectrum_collapse",
+	"void_orb": "event_horizon", "frost_nova": "absolute_zero",
+}
 const SHATTER_IMPACT_SOURCE_TYPES := ["crimson_dagger", "bloodstorm_dagger", "minigun", "redline",
 		"sawblades", "razorstorm", "meteor_staff", "starfall", "starfall_fragment", "void_orb", "event_horizon"]
 const ELECTROPLAGUE_SHOCK_SOURCE_TYPES := ["lightning_primary", "lightning_arc", "lightning_conductor",
@@ -72,6 +78,7 @@ const ENEMY_DEATH_PIXEL_LIFETIME := 0.32
 const ENEMY_DEATH_PIXEL_COUNT := 8
 const MAX_ENEMY_DEATH_PIXELS := 256
 const MAX_ENEMY_DEATH_ANIMATIONS := 64
+const MAX_WEAPON_TRANSIENT_ANIMATIONS := 64
 const ENEMY_DEATH_TYPES := ["chaser", "sprinter", "tank", "shooter", "buffer", "exploder", "shielder", "summoner", "summoned", "elite", "mid_boss", "final_boss"]
 const ELITE_AFFIX_ACHIEVEMENT_IDS := {
 	"Hasted": "hasted", "Armored": "armored", "Regenerating": "regenerating",
@@ -423,6 +430,7 @@ var _weapon_impacts: Array[Dictionary] = []
 var _damage_numbers: Array[Dictionary] = []
 var _enemy_death_pixels: Array[Dictionary] = []
 var _enemy_death_animations: Array[Dictionary] = []
+var _weapon_transient_animations: Array[Dictionary] = []
 var _starfall_fragments_spawned: Dictionary = {}
 var _entities: Array = []
 var _pending_xp_orbs: Dictionary = {}
@@ -886,6 +894,9 @@ func _process(_delta: float) -> void:
 	for index in range(_enemy_death_animations.size() - 1, -1, -1):
 		if current_simulation_time >= float(_enemy_death_animations[index]["expires_at"]):
 			_enemy_death_animations.remove_at(index)
+	for index in range(_weapon_transient_animations.size() - 1, -1, -1):
+		if current_simulation_time >= float(_weapon_transient_animations[index]["expires_at"]):
+			_weapon_transient_animations.remove_at(index)
 	for index in range(_lightning_arcs.size() - 1, -1, -1):
 		_lightning_arcs[index]["remaining"] = float(_lightning_arcs[index]["remaining"]) - elapsed_active_time
 		if float(_lightning_arcs[index]["remaining"]) <= 0.0:
@@ -1019,8 +1030,10 @@ func _process(_delta: float) -> void:
 	_update_summoner_attacks(current_simulation_time, bool(state["paused"]))
 	_update_pulse_warden_attacks(current_simulation_time, bool(state["paused"]))
 	_update_dopamine_core_attacks(current_simulation_time, bool(state["paused"]))
+	var transient_animations := _enemy_death_animations.duplicate()
+	transient_animations.append_array(_weapon_transient_animations)
 	_sprite_renderer.set_entities(_entities, Vector2.ZERO, current_simulation_time,
-				_enemy_attack_animation_overrides(current_simulation_time), _enemy_death_animations)
+				_enemy_attack_animation_overrides(current_simulation_time), transient_animations)
 	_collect_nearby_xp_orbs(state)
 	_collect_nearby_chests(state)
 	_complete_pending_victory()
@@ -2650,6 +2663,7 @@ func _fire_lightning_conductor(active_time: float, paused: bool) -> void:
 		_lightning_chain_states.erase(chain_id)
 		return
 	Sfx.play_weapon_fire("lightning_conductor", "weapon_zap")
+	_queue_weapon_fire_visual("lightning_conductor", active_time)
 	_try_unique_lightning_burst(lightning_damage * damage_multiplier)
 	_try_evolution_shockwave(lightning_damage * damage_multiplier)
 	_next_weapon_time = active_time + _effective_weapon_cooldown(cooldown)
@@ -3040,6 +3054,7 @@ func _fire_infinite_circuit(active_time: float, target_budget: int, damage_multi
 			frontier = next_frontier
 	if fired:
 		Sfx.play_weapon_fire("lightning_conductor", "weapon_zap")
+		_queue_weapon_fire_visual("lightning_conductor", active_time)
 		_try_unique_lightning_burst(lightning_damage * damage_multiplier)
 		_next_weapon_time = active_time + _effective_weapon_cooldown(cooldown)
 
@@ -3115,6 +3130,7 @@ func _fire_inferno_sprayer(active_time: float, paused: bool) -> void:
 			_last_attack_critical_hit)
 	if projectile_sequence > 0:
 		Sfx.play_weapon_fire("inferno_sprayer", "weapon_shot")
+		_queue_weapon_fire_visual("inferno_sprayer", active_time)
 		_try_unique_lightning_burst(damage)
 		_try_evolution_shockwave(damage)
 		_next_inferno_time = active_time + _effective_weapon_cooldown(inferno_cooldown)
@@ -3161,6 +3177,7 @@ func _fire_crimson_daggers(active_time: float, paused: bool) -> void:
 			fired += 1
 	if fired > 0:
 		Sfx.play_weapon_fire("crimson_daggers", "weapon_sweep")
+		_queue_weapon_fire_visual("crimson_daggers", active_time)
 		_try_unique_lightning_burst(damage)
 		_try_evolution_shockwave(damage)
 		_next_daggers_time = active_time + _effective_weapon_cooldown(daggers_cooldown)
@@ -3200,6 +3217,7 @@ func _fire_minigun(active_time: float, paused: bool) -> void:
 			_last_attack_critical_hit) <= 0:
 		return
 	Sfx.play_weapon_fire("minigun", "weapon_shot")
+	_queue_weapon_fire_visual("minigun", active_time)
 	if loadout.is_evolved("minigun"):
 		var ramp := clampf((active_time - _redline_fire_time) / maxf(redline_ramp_seconds, 0.01), 0.0, 1.0)
 		cadence_multiplier *= 1.0 + redline_max_cadence_bonus * ramp
@@ -3232,6 +3250,7 @@ func _fire_toxic_cloud(active_time: float, paused: bool) -> void:
 		_last_attack_critical_hit)
 	if sequence > 0:
 		Sfx.play_weapon_fire("toxic_cloud", "weapon_zap")
+		_queue_weapon_fire_visual("toxic_cloud", active_time)
 		_next_toxic_time = active_time + _effective_weapon_cooldown(toxic_cooldown)
 
 func _fire_sawblades(active_time: float, paused: bool) -> void:
@@ -3259,6 +3278,7 @@ func _fire_sawblades(active_time: float, paused: bool) -> void:
 		_last_attack_critical_hit, homing_turn_rate, homing_radius)
 	if sequence > 0:
 		Sfx.play_weapon_fire("sawblades", "weapon_sweep")
+		_queue_weapon_fire_visual("sawblades", active_time)
 		_next_sawblades_time = active_time + _effective_weapon_cooldown(sawblades_cooldown)
 
 func _fire_meteor_staff(active_time: float, paused: bool) -> void:
@@ -3287,6 +3307,7 @@ func _fire_meteor_staff(active_time: float, paused: bool) -> void:
 			fired = true
 	if fired:
 		Sfx.play_weapon_fire("meteor_staff", "weapon_shot")
+		_queue_weapon_fire_visual("meteor_staff", active_time)
 		var cooldown_multiplier := _weapon_level_multiplier("meteor_staff", "cooldown_multiplier", level)
 		_next_meteor_time = active_time + _effective_weapon_cooldown(meteor_staff_cooldown * cooldown_multiplier)
 
@@ -3346,6 +3367,7 @@ func _fire_prism_laser(active_time: float, paused: bool) -> void:
 			fired = true
 	if fired:
 		Sfx.play_weapon_fire("prism_laser", "weapon_zap")
+		_queue_weapon_fire_visual("prism_laser", active_time)
 		_next_prism_time = active_time + _effective_weapon_cooldown(prism_laser_cooldown)
 
 func _fire_void_orb(active_time: float, paused: bool) -> void:
@@ -3373,6 +3395,7 @@ func _fire_void_orb(active_time: float, paused: bool) -> void:
 			_last_attack_critical_hit)
 	if sequence > 0:
 		Sfx.play_weapon_fire("void_orb", "weapon_zap")
+		_queue_weapon_fire_visual("void_orb", active_time)
 		_next_void_orb_time = active_time + _effective_weapon_cooldown(void_orb_cooldown)
 
 func _fire_frost_nova(active_time: float, paused: bool) -> void:
@@ -3402,6 +3425,7 @@ func _fire_frost_nova(active_time: float, paused: bool) -> void:
 			radius, frost_nova_duration_seconds, 2.0, 0.5, 2.0, 0.0, 0.0, 0, 0.0, 0.0,
 			true, duration, frost_chill_speed_multiplier, vulnerability) > 0:
 		Sfx.play_weapon_fire("frost_nova", "weapon_zap")
+		_queue_weapon_fire_visual("frost_nova", active_time)
 		_next_frost_nova_time = active_time + _effective_weapon_cooldown(frost_nova_cooldown * _weapon_level_multiplier("frost_nova", "cooldown_multiplier", level))
 
 func _nearest_enemy_excluding(origin: Vector2, max_range: float, excluded: Array[Vector2i]) -> Dictionary:
@@ -4035,6 +4059,33 @@ func _add_enemy_death_pixels(enemy_type: String, position: Vector2) -> void:
 	while _enemy_death_pixels.size() > MAX_ENEMY_DEATH_PIXELS:
 		_enemy_death_pixels.pop_front()
 
+func _queue_weapon_transient(weapon_role: String, state: String, position: Vector2,
+		direction: Vector2, active_time: float, size: float, rotation: float = 0.0,
+		critical_hit: bool = false) -> bool:
+	if _visual_effects_reduced() or _sprite_renderer == null:
+		return false
+	var duration: float = _sprite_renderer.animation_duration(weapon_role, state)
+	if duration <= 0.0:
+		return false
+	_weapon_transient_animations.append({
+		"role": weapon_role, "state": state, "position": position, "direction": direction,
+		"started_at": active_time, "expires_at": active_time + duration,
+		"size": size, "rotation": rotation, "critical_hit": critical_hit,
+	})
+	while _weapon_transient_animations.size() > MAX_WEAPON_TRANSIENT_ANIMATIONS:
+		_weapon_transient_animations.pop_front()
+	return true
+
+func _queue_weapon_fire_visual(weapon_id: String, active_time: float) -> void:
+	var weapon_variant := weapon_id
+	if loadout != null and loadout.is_evolved(weapon_id):
+		weapon_variant = str(WEAPON_EVOLUTION_IDS.get(weapon_id, weapon_id))
+	var position: Vector2 = player.global_position if player != null else Vector2.ZERO
+	_queue_weapon_transient("weapon_%s" % weapon_variant, "attack", position, Vector2.ZERO,
+			active_time, 22.0)
+	_queue_weapon_transient("weapon_%s" % weapon_id, "fire_vfx", position, Vector2.ZERO,
+			active_time, 28.0)
+
 func _add_weapon_impact(source_type: String, position: Vector2, is_damage_over_time: bool,
 		critical_hit: bool = false) -> void:
 	var impact_type := source_type.get_slice(":", 0)
@@ -4045,9 +4096,13 @@ func _add_weapon_impact(source_type: String, position: Vector2, is_damage_over_t
 	var rotation := _random_float_range(-0.25, 0.25, "enemy_death_particle_rotation")
 	if _visual_effects_reduced():
 		return
+	var weapon_id: String = WEAPON_IMPACT_SOURCE_IDS.get(impact_type, "")
+	if not weapon_id.is_empty() and _queue_weapon_transient("weapon_%s" % weapon_id, "impact_vfx",
+			position, Vector2.ZERO, _last_simulation_time,
+			28.0 * (CRITICAL_HIT_IMPACT_SCALE if critical_hit else 1.0), rotation, critical_hit):
+		return
 	if _weapon_impacts.size() >= MAX_VISIBLE_WEAPON_IMPACTS:
 		_weapon_impacts.pop_front()
-	var weapon_id: String = WEAPON_IMPACT_SOURCE_IDS.get(impact_type, "")
 	var level: int = loadout.weapon_level(weapon_id) if not weapon_id.is_empty() else 1
 	_weapon_impacts.append({
 		"type": int(WEAPON_IMPACT_TYPES[impact_type]),
@@ -4071,6 +4126,7 @@ func _on_settings_changed() -> void:
 		_weapon_impacts.clear()
 		_enemy_death_pixels.clear()
 		_enemy_death_animations.clear()
+		_weapon_transient_animations.clear()
 		_lightning_arcs.clear()
 		_pandemic_bursts.clear()
 	queue_redraw()
