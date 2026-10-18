@@ -94,7 +94,7 @@ func _run() -> void:
 				scene.present({})
 		await RenderingServer.frame_post_draw
 		var image := root.get_texture().get_image()
-		if image.get_size() != Vector2i(1280, 720):
+		if image.get_size() != Vector2i(853, 480):
 			_fail("Unexpected viewport while capturing %s: %s" % [evidence_id, image.get_size()])
 			return
 		var output := ProjectSettings.globalize_path("%s/%s.png" % [OUTPUT_DIR, evidence_id])

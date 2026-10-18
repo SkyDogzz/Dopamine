@@ -324,11 +324,11 @@ RÈGLES :
 
 12.2 RÉSOLUTION LOGIQUE [VALIDÉ]
 - Surface de rendu logique : 1280 × 720 pixels, format 16:9 (extension créateur du 2026-10-18).
-- Exemple de sortie : 1920 × 1080 à l'échelle entière ×3.
-- Filtrage nearest, gestion des écrans non 16:9 et zoom caméra :
-  [PROPOSÉ / À CONFIRMER selon le paramètre].
-- Attention : un joueur de 32×32 occupe 5 % de la hauteur logique
-  (32/360 ≈ 8,9 %) ; vérifier sa lisibilité en situation.
+- Échelle d’essai du contenu : ×1,5 fractionnaire sur la fenêtre de référence 1280×720; le viewport conserve son format de base et la zone visible passe à environ 853×480 unités.
+- Filtrage nearest; politique pour écrans non 16:9, autres résolutions et zoom caméra :
+  **[PROPOSÉ / À CONFIRMER]** après revue visuelle.
+- À l’échelle d’essai ×1,5, un joueur de 32×32 occupe environ 6,7 %
+  des 480 unités visibles en hauteur ; vérifier sa lisibilité en situation.
 
 12.3 SPRITESHEETS [VALIDÉ]
 - Un fichier de spritesheet par animation (ex. player_walk.png, player_idle.png).

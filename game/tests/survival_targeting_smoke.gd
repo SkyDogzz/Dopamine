@@ -8,7 +8,7 @@ func _initialize() -> void:
 		var defaults: Dictionary = TARGETING.preview_defaults(policy)
 		assert(TARGETING.weapon_range(float(defaults["range"])) <= TARGETING.VISIBLE_TARGET_RADIUS,
 			"%s Survival range must stay within the visible radius" % policy)
-	assert(is_equal_approx(TARGETING.WEAPON_RANGE_SCALE, 360.0 / 620.0),
+	assert(is_equal_approx(TARGETING.WEAPON_RANGE_SCALE, 240.0 / 620.0),
 		"Every weapon range should use the common reduction derived from Prism's maximum base reach")
 	assert(is_equal_approx(TARGETING.weapon_range(620.0, 1.38, 1.2), TARGETING.VISIBLE_TARGET_RADIUS),
 		"Even fully upgraded Prism with area bonuses must not target beyond the screen-safe radius")
@@ -16,8 +16,8 @@ func _initialize() -> void:
 		"The common reduction should reduce the former 620-unit reach to the screen-safe radius")
 	assert(is_equal_approx(TARGETING.visible_range(1000.0), TARGETING.VISIBLE_TARGET_RADIUS),
 		"Edited weapon ranges must also respect the visible radius")
-	assert(TARGETING.is_inside_visible_radius(Vector2.ZERO, Vector2(0.0, 360.0)) and
-		not TARGETING.is_inside_visible_radius(Vector2.ZERO, Vector2(361.0, 0.0)),
+	assert(TARGETING.is_inside_visible_radius(Vector2.ZERO, Vector2(0.0, 240.0)) and
+		not TARGETING.is_inside_visible_radius(Vector2.ZERO, Vector2(241.0, 0.0)),
 		"Primary and chain target selectors should reject enemies beyond the visible circle")
 	var projectile := _enemy(5, Vector2(1.0, 0.0), 100.0, 1000.0)
 	projectile["components"]["IsProjectile"] = true

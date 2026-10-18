@@ -151,8 +151,8 @@ func _fail(message: String) -> void:
 	quit(1)
 
 func _capture_detail(session: Node2D) -> bool:
-	if root.get_visible_rect().size != Vector2(1280, 720):
-		_fail("Expected a 1280x720 logical viewport for run stat details")
+	if root.get_visible_rect().size != Vector2(853, 480):
+		_fail("Expected an 853x480 visible area for run stat details")
 		return false
 	var was_processing := session.is_processing()
 	session.set_process(false)

@@ -196,8 +196,8 @@ func _fail(message: String) -> void:
 
 func _capture_hud(session: Node2D, file_name: String) -> bool:
 	var viewport_size := root.get_visible_rect().size
-	if viewport_size != Vector2(1280, 720):
-		_fail("Expected a 1280x720 logical viewport for the Survival HUD capture, got %s" % viewport_size)
+	if viewport_size != Vector2(853, 480):
+		_fail("Expected an 853x480 visible area for the Survival HUD capture, got %s" % viewport_size)
 		return false
 	var was_processing := session.is_processing()
 	session.set_process(false)

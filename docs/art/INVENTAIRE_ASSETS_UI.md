@@ -51,7 +51,7 @@ La silhouette de l’élite sprinter a ensuite été refaite depuis une primitiv
 
 ## Référence technique importante
 
-La résolution logique **1280×720 est [VALIDÉE — EXTENSION CRÉATEUR 2026-10-18]** dans l’Art Bible et le projet l’utilise avec une fenêtre par défaut de 1280×720, sans agrandissement 2× du viewport. Le pixel art utilise le filtrage nearest; le fond titre 640×360 est étiré à la surface logique. Les principaux contrôles des interfaces d’accueil, préparation et Survival sont couverts par `game/tests/ui_viewport_layout_smoke.gd` à plusieurs tailles. Cette géométrie ne remplace pas la revue visuelle finale aux dimensions natives ni un parcours matériel souris/clavier/manette.
+La résolution logique **1280×720 est [VALIDÉE — EXTENSION CRÉATEUR 2026-10-18]** dans l’Art Bible et le projet l’utilise avec une fenêtre par défaut de 1280×720 et une échelle de contenu fractionnaire de 1,5×. La surface visible représente environ 853×480 unités; le pixel art est filtré en nearest et le fond titre 640×360 est étiré à la surface logique avant mise à l’échelle. Les principaux contrôles des interfaces d’accueil, préparation et Survival sont couverts par `game/tests/ui_viewport_layout_smoke.gd` à plusieurs tailles. La lisibilité du rendu 1,5× reste à confirmer visuellement.
 
 ## État présent du dépôt
 

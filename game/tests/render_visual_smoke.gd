@@ -81,7 +81,7 @@ func _run() -> void:
 	await process_frame
 	await RenderingServer.frame_post_draw
 	var image: Image = get_root().get_texture().get_image()
-	if image.is_empty() or image.get_width() != 1280 or image.get_height() != 720:
+	if image.is_empty() or image.get_width() != 853 or image.get_height() != 480:
 		_fail("Godot did not produce the logical 1280x720 frame")
 		return
 	var enemy_pixel: Vector2 = view.get_global_transform_with_canvas() * (view.size * 0.5 + Vector2(-168.0, -96.0))

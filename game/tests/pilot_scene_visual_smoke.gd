@@ -41,7 +41,7 @@ func _run() -> void:
 	await process_frame
 	await RenderingServer.frame_post_draw
 	var image: Image = root.get_texture().get_image()
-	if image.is_empty() or image.get_width() != 1280 or image.get_height() != 720 or image.save_png(SCREENSHOT) != OK:
+	if image.is_empty() or image.get_width() != 853 or image.get_height() != 480 or image.save_png(SCREENSHOT) != OK:
 		_fail("Could not render the pilot scene at the current gameplay viewport")
 		return
 	print("Pilot scene screenshot: %s" % SCREENSHOT)
