@@ -1,11 +1,11 @@
 {
-  "asset_id": "weapon_meteor_staff_fire",
+  "asset_id": "sfx_weapon_meteor_staff_fire",
   "kind": "sfx",
   "status": "provisionally_integrated",
   "skill": "dopamine-sfx",
   "generator": "game/tools/generate_original_audio.py",
-  "generator_version": "2",
-  "source_sha256": "7e870ecbe7a3b2f270c1e329f10831d2a17c37066425aca64ac40594e1dec1b9",
+  "generator_version": "3",
+  "source_sha256": "ab70598d01ba45b7418d7fd49e9f751881b542b2de5a86bee52de7ef8c6262ff",
   "seed": 3690967927,
   "parameters": {
     "sample_rate_hz": 44100,

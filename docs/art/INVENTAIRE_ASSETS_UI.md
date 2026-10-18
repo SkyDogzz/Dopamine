@@ -1,6 +1,6 @@
 # Inventaire des assets visuels et de l’UI
 
-> **État courant — 2026-10-18 :** après la purge initiale, 308 assets locaux ont été générés et intégrés provisoirement sous `game/assets/`, avec sources, métadonnées, ressources Godot et provenance. Le manifeste est [`ASSET_MANIFEST.json`](ASSET_MANIFEST.json), le rapport QA/intégration [`ASSET_GENERATION_REPORT.json`](ASSET_GENERATION_REPORT.json). L’acceptation porte sur le prototype non canonique autorisé; la revue visuelle globale et l’écoute restent pendantes. Les descriptions ci-dessous mêlent l’état courant et des audits explicitement marqués historiques.
+> **État courant — 2026-10-18 :** après la purge initiale, 306 assets locaux sont intégrés provisoirement sous `game/assets/`, avec sources, métadonnées, ressources Godot et provenance. Le manifeste est [`ASSET_MANIFEST.json`](ASSET_MANIFEST.json), le rapport QA/intégration [`ASSET_GENERATION_REPORT.json`](ASSET_GENERATION_REPORT.json). L’acceptation porte sur le prototype non canonique autorisé; la revue visuelle globale et l’écoute restent pendantes. Les descriptions ci-dessous mêlent l’état courant et des audits explicitement marqués historiques.
 
 
 **Statut :** inventaire de travail fondé sur le contenu présent dans le dépôt, établi le 2026-10-16. L’intention de recréer tout le catalogue visuel et de refaire toutes les interfaces selon [`ART_BIBLE.txt`](../ART_BIBLE.txt) a été confirmée par l’utilisateur. Ce document recense le travail; il ne constitue pas une validation des propositions visuelles encore ouvertes.

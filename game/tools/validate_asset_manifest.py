@@ -3,6 +3,7 @@
 
 import json
 import hashlib
+import re
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -59,7 +60,51 @@ def main() -> None:
 			source_file = generator_path
 		source_hash = hashlib.sha256(source_file.read_bytes()).hexdigest()
 		assert source_hash == asset["source_sha256"], f"{asset['asset_id']}: stale source_sha256"
+	validate_audio_coverage(assets)
 	print(f"Manifest valid: {len(assets)} unique assets; source/export hashes, Godot paths, generators, QA and integration verified.")
+
+
+def validate_audio_coverage(assets: list[dict]) -> None:
+	sfx_source = (ROOT / "game/scripts/sfx_service.gd").read_text()
+	sounds_block = sfx_source.split("const SOUNDS := {", 1)[1].split("const PRIORITY := {", 1)[0]
+	expected_sfx = {
+		name for values in re.findall(r'"[^"\n]+": \[([^\]]*)\]', sounds_block)
+		for name in re.findall(r'"([^"\n]+)"', values)
+	}
+	weapon_block = re.search(r"const WEAPON_IDS := \[(.*?)\]", sfx_source, re.S)
+	assert weapon_block, "SfxService must declare its weapon sound IDs"
+	weapon_ids = re.findall(r'"([^"\n]+)"', weapon_block.group(1))
+	expected_sfx.update({f"weapon_{weapon}_{event}" for weapon in weapon_ids for event in ("fire", "impact")})
+	expected_sfx.update({"victory", "defeat", "damage_taken", "healing", "explosion"})
+	manifest_sfx = {asset["asset_id"].removeprefix("sfx_") for asset in assets if asset["category"] == "sound_effect"}
+	assert manifest_sfx == expected_sfx, (
+		f"SFX coverage mismatch; missing={sorted(expected_sfx - manifest_sfx)}, "
+		f"orphaned={sorted(manifest_sfx - expected_sfx)}"
+	)
+	for asset in assets:
+		if asset["category"] not in {"sound_effect", "music", "music_stem"}:
+			continue
+		metadata_path = ROOT / (asset["integrated_path"] + ".json")
+		assert metadata_path.is_file(), f"{asset['asset_id']}: missing integrated audio metadata"
+		metadata = json.loads(metadata_path.read_text())
+		assert metadata.get("asset_id") == asset["asset_id"], f"{asset['asset_id']}: audio sidecar ID mismatch"
+		assert metadata.get("source_sha256") == asset["source_sha256"], f"{asset['asset_id']}: audio source hash mismatch"
+		assert metadata.get("generator_version") == asset["generator_version"], f"{asset['asset_id']}: audio generator version mismatch"
+		assert metadata.get("skill") == asset["assigned_generation_skill"], f"{asset['asset_id']}: audio skill mismatch"
+		assert metadata.get("export", {}).get("sha256") == asset["export_sha256"], f"{asset['asset_id']}: audio sidecar export hash mismatch"
+	runtime_sources = []
+	for path in (ROOT / "game").rglob("*"):
+		if not path.is_file() or path.suffix not in {".gd", ".tscn", ".tres", ".godot", ".cfg"}:
+			continue
+		if any(part in {"assets", "tests", "tools"} for part in path.relative_to(ROOT / "game").parts):
+			continue
+		runtime_sources.append(path.read_text(errors="replace"))
+	runtime_text = "\n".join(runtime_sources)
+	for asset in assets:
+		if asset["category"] not in {"music", "music_stem"}:
+			continue
+		resource_path = "res://" + asset["integrated_path"].removeprefix("game/")
+		assert resource_path in runtime_text, f"{asset['asset_id']}: music asset has no runtime consumer"
 
 
 if __name__ == "__main__":

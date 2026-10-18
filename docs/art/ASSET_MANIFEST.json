@@ -7,7 +7,7 @@
     "docs/specs/SPEC-asset-pipeline.md",
     "Godot runtime references"
   ],
-  "asset_root_status": "308 generated assets provisionally integrated; human visual/audio review remains pending.",
+  "asset_root_status": "306 generated assets provisionally integrated; human visual/audio review remains pending.",
   "audit_notes": [
     "Unknown dimensions/timing remain null and are not guessed.",
     "Open design blockers remain attached to affected IDs.",
@@ -10649,7 +10649,7 @@
       "assigned_generation_skill": "dopamine-sfx",
       "godot_destination": "res://assets/audio/original_procedural/sfx/weapon_shot_01.wav",
       "authoring_source_or_recipe": "game/tools/generate_original_audio.py",
-      "generator_version": "2",
+      "generator_version": "3",
       "generation_seed": 334893928,
       "generation_parameters": {
         "sample_rate_hz": 44100,
@@ -10657,7 +10657,7 @@
         "encoding": "PCM16 WAV",
         "method": "role-specific oscillator/noise layers with analytic envelopes"
       },
-      "source_sha256": "7e870ecbe7a3b2f270c1e329f10831d2a17c37066425aca64ac40594e1dec1b9",
+      "source_sha256": "ab70598d01ba45b7418d7fd49e9f751881b542b2de5a86bee52de7ef8c6262ff",
       "export_sha256": "226e376f20165e03e322fc94131808a13a0b1a0e1aa8c4b591215893f406f43f",
       "qa_report_path": "build/assets/candidates/audio-complete/qa-report.json",
       "generation_status": "candidate",
@@ -10688,7 +10688,7 @@
       "assigned_generation_skill": "dopamine-sfx",
       "godot_destination": "res://assets/audio/original_procedural/sfx/weapon_shot_02.wav",
       "authoring_source_or_recipe": "game/tools/generate_original_audio.py",
-      "generator_version": "2",
+      "generator_version": "3",
       "generation_seed": 4158234453,
       "generation_parameters": {
         "sample_rate_hz": 44100,
@@ -10696,7 +10696,7 @@
         "encoding": "PCM16 WAV",
         "method": "role-specific oscillator/noise layers with analytic envelopes"
       },
-      "source_sha256": "7e870ecbe7a3b2f270c1e329f10831d2a17c37066425aca64ac40594e1dec1b9",
+      "source_sha256": "ab70598d01ba45b7418d7fd49e9f751881b542b2de5a86bee52de7ef8c6262ff",
       "export_sha256": "e1f9fbfff25a4a0ea09e6ecf387f9b5daceae914a468f38acb6293eac3162217",
       "qa_report_path": "build/assets/candidates/audio-complete/qa-report.json",
       "generation_status": "candidate",
@@ -10727,7 +10727,7 @@
       "assigned_generation_skill": "dopamine-sfx",
       "godot_destination": "res://assets/audio/original_procedural/sfx/weapon_shot_03.wav",
       "authoring_source_or_recipe": "game/tools/generate_original_audio.py",
-      "generator_version": "2",
+      "generator_version": "3",
       "generation_seed": 1268003968,
       "generation_parameters": {
         "sample_rate_hz": 44100,
@@ -10735,7 +10735,7 @@
         "encoding": "PCM16 WAV",
         "method": "role-specific oscillator/noise layers with analytic envelopes"
       },
-      "source_sha256": "7e870ecbe7a3b2f270c1e329f10831d2a17c37066425aca64ac40594e1dec1b9",
+      "source_sha256": "ab70598d01ba45b7418d7fd49e9f751881b542b2de5a86bee52de7ef8c6262ff",
       "export_sha256": "d932bbc0d7dbf86f5d96dd7b77683a11108cd19f247944cd295aac2f825f090d",
       "qa_report_path": "build/assets/candidates/audio-complete/qa-report.json",
       "generation_status": "candidate",
@@ -10766,7 +10766,7 @@
       "assigned_generation_skill": "dopamine-sfx",
       "godot_destination": "res://assets/audio/original_procedural/sfx/weapon_shot_04.wav",
       "authoring_source_or_recipe": "game/tools/generate_original_audio.py",
-      "generator_version": "2",
+      "generator_version": "3",
       "generation_seed": 1660431787,
       "generation_parameters": {
         "sample_rate_hz": 44100,
@@ -10774,7 +10774,7 @@
         "encoding": "PCM16 WAV",
         "method": "role-specific oscillator/noise layers with analytic envelopes"
       },
-      "source_sha256": "7e870ecbe7a3b2f270c1e329f10831d2a17c37066425aca64ac40594e1dec1b9",
+      "source_sha256": "ab70598d01ba45b7418d7fd49e9f751881b542b2de5a86bee52de7ef8c6262ff",
       "export_sha256": "e62a6ea1173537575877abe3375d629597afc9e148f73247f8a7e3e43cb72219",
       "qa_report_path": "build/assets/candidates/audio-complete/qa-report.json",
       "generation_status": "candidate",
@@ -10805,7 +10805,7 @@
       "assigned_generation_skill": "dopamine-sfx",
       "godot_destination": "res://assets/audio/original_procedural/sfx/weapon_zap_01.wav",
       "authoring_source_or_recipe": "game/tools/generate_original_audio.py",
-      "generator_version": "2",
+      "generator_version": "3",
       "generation_seed": 397673986,
       "generation_parameters": {
         "sample_rate_hz": 44100,
@@ -10813,7 +10813,7 @@
         "encoding": "PCM16 WAV",
         "method": "role-specific oscillator/noise layers with analytic envelopes"
       },
-      "source_sha256": "7e870ecbe7a3b2f270c1e329f10831d2a17c37066425aca64ac40594e1dec1b9",
+      "source_sha256": "ab70598d01ba45b7418d7fd49e9f751881b542b2de5a86bee52de7ef8c6262ff",
       "export_sha256": "544b26c8e624a6b477b5acb38b451aecd2e0d0fee6c6cc2f5d4ae3e331848bd2",
       "qa_report_path": "build/assets/candidates/audio-complete/qa-report.json",
       "generation_status": "candidate",
@@ -10844,7 +10844,7 @@
       "assigned_generation_skill": "dopamine-sfx",
       "godot_destination": "res://assets/audio/original_procedural/sfx/weapon_zap_02.wav",
       "authoring_source_or_recipe": "game/tools/generate_original_audio.py",
-      "generator_version": "2",
+      "generator_version": "3",
       "generation_seed": 1648214493,
       "generation_parameters": {
         "sample_rate_hz": 44100,
@@ -10852,7 +10852,7 @@
         "encoding": "PCM16 WAV",
         "method": "role-specific oscillator/noise layers with analytic envelopes"
       },
-      "source_sha256": "7e870ecbe7a3b2f270c1e329f10831d2a17c37066425aca64ac40594e1dec1b9",
+      "source_sha256": "ab70598d01ba45b7418d7fd49e9f751881b542b2de5a86bee52de7ef8c6262ff",
       "export_sha256": "5f4e1ce85e2651de8f2700a52de55ebc11349a530c36e03c22b1d3ec04172f53",
       "qa_report_path": "build/assets/candidates/audio-complete/qa-report.json",
       "generation_status": "candidate",
@@ -10883,7 +10883,7 @@
       "assigned_generation_skill": "dopamine-sfx",
       "godot_destination": "res://assets/audio/original_procedural/sfx/weapon_zap_03.wav",
       "authoring_source_or_recipe": "game/tools/generate_original_audio.py",
-      "generator_version": "2",
+      "generator_version": "3",
       "generation_seed": 1792114152,
       "generation_parameters": {
         "sample_rate_hz": 44100,
@@ -10891,7 +10891,7 @@
         "encoding": "PCM16 WAV",
         "method": "role-specific oscillator/noise layers with analytic envelopes"
       },
-      "source_sha256": "7e870ecbe7a3b2f270c1e329f10831d2a17c37066425aca64ac40594e1dec1b9",
+      "source_sha256": "ab70598d01ba45b7418d7fd49e9f751881b542b2de5a86bee52de7ef8c6262ff",
       "export_sha256": "3da3c7b3617a1c3ef1b3d1fcf6cb251ce7c4a3e7803514c6a072d5e227cb7f88",
       "qa_report_path": "build/assets/candidates/audio-complete/qa-report.json",
       "generation_status": "candidate",
@@ -10922,7 +10922,7 @@
       "assigned_generation_skill": "dopamine-sfx",
       "godot_destination": "res://assets/audio/original_procedural/sfx/weapon_zap_04.wav",
       "authoring_source_or_recipe": "game/tools/generate_original_audio.py",
-      "generator_version": "2",
+      "generator_version": "3",
       "generation_seed": 2474183592,
       "generation_parameters": {
         "sample_rate_hz": 44100,
@@ -10930,7 +10930,7 @@
         "encoding": "PCM16 WAV",
         "method": "role-specific oscillator/noise layers with analytic envelopes"
       },
-      "source_sha256": "7e870ecbe7a3b2f270c1e329f10831d2a17c37066425aca64ac40594e1dec1b9",
+      "source_sha256": "ab70598d01ba45b7418d7fd49e9f751881b542b2de5a86bee52de7ef8c6262ff",
       "export_sha256": "e434a45234ac32c1e9eaedc069857830fcd9a7f1dcbf52e8a870a015092d55cc",
       "qa_report_path": "build/assets/candidates/audio-complete/qa-report.json",
       "generation_status": "candidate",
@@ -10961,7 +10961,7 @@
       "assigned_generation_skill": "dopamine-sfx",
       "godot_destination": "res://assets/audio/original_procedural/sfx/weapon_sweep_01.wav",
       "authoring_source_or_recipe": "game/tools/generate_original_audio.py",
-      "generator_version": "2",
+      "generator_version": "3",
       "generation_seed": 1431105710,
       "generation_parameters": {
         "sample_rate_hz": 44100,
@@ -10969,7 +10969,7 @@
         "encoding": "PCM16 WAV",
         "method": "role-specific oscillator/noise layers with analytic envelopes"
       },
-      "source_sha256": "7e870ecbe7a3b2f270c1e329f10831d2a17c37066425aca64ac40594e1dec1b9",
+      "source_sha256": "ab70598d01ba45b7418d7fd49e9f751881b542b2de5a86bee52de7ef8c6262ff",
       "export_sha256": "288ddee67c24431b26bbdd645ec2f849c784a7f6b6365a50f2d6c676e8e56e9e",
       "qa_report_path": "build/assets/candidates/audio-complete/qa-report.json",
       "generation_status": "candidate",
@@ -11000,7 +11000,7 @@
       "assigned_generation_skill": "dopamine-sfx",
       "godot_destination": "res://assets/audio/original_procedural/sfx/weapon_sweep_02.wav",
       "authoring_source_or_recipe": "game/tools/generate_original_audio.py",
-      "generator_version": "2",
+      "generator_version": "3",
       "generation_seed": 2030792159,
       "generation_parameters": {
         "sample_rate_hz": 44100,
@@ -11008,7 +11008,7 @@
         "encoding": "PCM16 WAV",
         "method": "role-specific oscillator/noise layers with analytic envelopes"
       },
-      "source_sha256": "7e870ecbe7a3b2f270c1e329f10831d2a17c37066425aca64ac40594e1dec1b9",
+      "source_sha256": "ab70598d01ba45b7418d7fd49e9f751881b542b2de5a86bee52de7ef8c6262ff",
       "export_sha256": "96111fe26bed47b3aad6b5a7ae4fd224f9e0bab51317fa87b23c7e63ff14f669",
       "qa_report_path": "build/assets/candidates/audio-complete/qa-report.json",
       "generation_status": "candidate",
@@ -11039,7 +11039,7 @@
       "assigned_generation_skill": "dopamine-sfx",
       "godot_destination": "res://assets/audio/original_procedural/sfx/weapon_sweep_03.wav",
       "authoring_source_or_recipe": "game/tools/generate_original_audio.py",
-      "generator_version": "2",
+      "generator_version": "3",
       "generation_seed": 4262959451,
       "generation_parameters": {
         "sample_rate_hz": 44100,
@@ -11047,7 +11047,7 @@
         "encoding": "PCM16 WAV",
         "method": "role-specific oscillator/noise layers with analytic envelopes"
       },
-      "source_sha256": "7e870ecbe7a3b2f270c1e329f10831d2a17c37066425aca64ac40594e1dec1b9",
+      "source_sha256": "ab70598d01ba45b7418d7fd49e9f751881b542b2de5a86bee52de7ef8c6262ff",
       "export_sha256": "acd097c2ce473efb1812218b2bcdd5e567277da96fa0a749412993b36e6bc4e4",
       "qa_report_path": "build/assets/candidates/audio-complete/qa-report.json",
       "generation_status": "candidate",
@@ -11078,7 +11078,7 @@
       "assigned_generation_skill": "dopamine-sfx",
       "godot_destination": "res://assets/audio/original_procedural/sfx/hit_light_01.wav",
       "authoring_source_or_recipe": "game/tools/generate_original_audio.py",
-      "generator_version": "2",
+      "generator_version": "3",
       "generation_seed": 1741091678,
       "generation_parameters": {
         "sample_rate_hz": 44100,
@@ -11086,7 +11086,7 @@
         "encoding": "PCM16 WAV",
         "method": "role-specific oscillator/noise layers with analytic envelopes"
       },
-      "source_sha256": "7e870ecbe7a3b2f270c1e329f10831d2a17c37066425aca64ac40594e1dec1b9",
+      "source_sha256": "ab70598d01ba45b7418d7fd49e9f751881b542b2de5a86bee52de7ef8c6262ff",
       "export_sha256": "9ac2493498138ddfb545db8b55e9fbc673a6662b99136781e258f01d329a495d",
       "qa_report_path": "build/assets/candidates/audio-complete/qa-report.json",
       "generation_status": "candidate",
@@ -11117,7 +11117,7 @@
       "assigned_generation_skill": "dopamine-sfx",
       "godot_destination": "res://assets/audio/original_procedural/sfx/hit_light_02.wav",
       "authoring_source_or_recipe": "game/tools/generate_original_audio.py",
-      "generator_version": "2",
+      "generator_version": "3",
       "generation_seed": 3226246328,
       "generation_parameters": {
         "sample_rate_hz": 44100,
@@ -11125,7 +11125,7 @@
         "encoding": "PCM16 WAV",
         "method": "role-specific oscillator/noise layers with analytic envelopes"
       },
-      "source_sha256": "7e870ecbe7a3b2f270c1e329f10831d2a17c37066425aca64ac40594e1dec1b9",
+      "source_sha256": "ab70598d01ba45b7418d7fd49e9f751881b542b2de5a86bee52de7ef8c6262ff",
       "export_sha256": "f634d464c29002d9fad75965553d6d3172ad38951b14cbae523948b8263be5fd",
       "qa_report_path": "build/assets/candidates/audio-complete/qa-report.json",
       "generation_status": "candidate",
@@ -11156,7 +11156,7 @@
       "assigned_generation_skill": "dopamine-sfx",
       "godot_destination": "res://assets/audio/original_procedural/sfx/hit_light_03.wav",
       "authoring_source_or_recipe": "game/tools/generate_original_audio.py",
-      "generator_version": "2",
+      "generator_version": "3",
       "generation_seed": 2924360433,
       "generation_parameters": {
         "sample_rate_hz": 44100,
@@ -11164,7 +11164,7 @@
         "encoding": "PCM16 WAV",
         "method": "role-specific oscillator/noise layers with analytic envelopes"
       },
-      "source_sha256": "7e870ecbe7a3b2f270c1e329f10831d2a17c37066425aca64ac40594e1dec1b9",
+      "source_sha256": "ab70598d01ba45b7418d7fd49e9f751881b542b2de5a86bee52de7ef8c6262ff",
       "export_sha256": "42be020a91520c0d875a59090bf72e4ce405acf0abbd2c3d669f7571cc064332",
       "qa_report_path": "build/assets/candidates/audio-complete/qa-report.json",
       "generation_status": "candidate",
@@ -11195,7 +11195,7 @@
       "assigned_generation_skill": "dopamine-sfx",
       "godot_destination": "res://assets/audio/original_procedural/sfx/hit_light_04.wav",
       "authoring_source_or_recipe": "game/tools/generate_original_audio.py",
-      "generator_version": "2",
+      "generator_version": "3",
       "generation_seed": 1303638547,
       "generation_parameters": {
         "sample_rate_hz": 44100,
@@ -11203,7 +11203,7 @@
         "encoding": "PCM16 WAV",
         "method": "role-specific oscillator/noise layers with analytic envelopes"
       },
-      "source_sha256": "7e870ecbe7a3b2f270c1e329f10831d2a17c37066425aca64ac40594e1dec1b9",
+      "source_sha256": "ab70598d01ba45b7418d7fd49e9f751881b542b2de5a86bee52de7ef8c6262ff",
       "export_sha256": "1ab8dad7e526471dedacc5e31939b4007cfc5e0b8b4f0c21d7819f256a2c9530",
       "qa_report_path": "build/assets/candidates/audio-complete/qa-report.json",
       "generation_status": "candidate",
@@ -11234,7 +11234,7 @@
       "assigned_generation_skill": "dopamine-sfx",
       "godot_destination": "res://assets/audio/original_procedural/sfx/hit_heavy_01.wav",
       "authoring_source_or_recipe": "game/tools/generate_original_audio.py",
-      "generator_version": "2",
+      "generator_version": "3",
       "generation_seed": 4035971483,
       "generation_parameters": {
         "sample_rate_hz": 44100,
@@ -11242,7 +11242,7 @@
         "encoding": "PCM16 WAV",
         "method": "role-specific oscillator/noise layers with analytic envelopes"
       },
-      "source_sha256": "7e870ecbe7a3b2f270c1e329f10831d2a17c37066425aca64ac40594e1dec1b9",
+      "source_sha256": "ab70598d01ba45b7418d7fd49e9f751881b542b2de5a86bee52de7ef8c6262ff",
       "export_sha256": "8795e4f3c600f39f56bd42d6b17b863e304f130853cf7fd1416d52d8b9bd8d4b",
       "qa_report_path": "build/assets/candidates/audio-complete/qa-report.json",
       "generation_status": "candidate",
@@ -11273,7 +11273,7 @@
       "assigned_generation_skill": "dopamine-sfx",
       "godot_destination": "res://assets/audio/original_procedural/sfx/hit_heavy_02.wav",
       "authoring_source_or_recipe": "game/tools/generate_original_audio.py",
-      "generator_version": "2",
+      "generator_version": "3",
       "generation_seed": 2809306444,
       "generation_parameters": {
         "sample_rate_hz": 44100,
@@ -11281,7 +11281,7 @@
         "encoding": "PCM16 WAV",
         "method": "role-specific oscillator/noise layers with analytic envelopes"
       },
-      "source_sha256": "7e870ecbe7a3b2f270c1e329f10831d2a17c37066425aca64ac40594e1dec1b9",
+      "source_sha256": "ab70598d01ba45b7418d7fd49e9f751881b542b2de5a86bee52de7ef8c6262ff",
       "export_sha256": "20bc97b663e079756ad5295c4093d73956a8a4a4c491ed02375ce76a83f6021f",
       "qa_report_path": "build/assets/candidates/audio-complete/qa-report.json",
       "generation_status": "candidate",
@@ -11312,7 +11312,7 @@
       "assigned_generation_skill": "dopamine-sfx",
       "godot_destination": "res://assets/audio/original_procedural/sfx/hit_heavy_03.wav",
       "authoring_source_or_recipe": "game/tools/generate_original_audio.py",
-      "generator_version": "2",
+      "generator_version": "3",
       "generation_seed": 2476937523,
       "generation_parameters": {
         "sample_rate_hz": 44100,
@@ -11320,7 +11320,7 @@
         "encoding": "PCM16 WAV",
         "method": "role-specific oscillator/noise layers with analytic envelopes"
       },
-      "source_sha256": "7e870ecbe7a3b2f270c1e329f10831d2a17c37066425aca64ac40594e1dec1b9",
+      "source_sha256": "ab70598d01ba45b7418d7fd49e9f751881b542b2de5a86bee52de7ef8c6262ff",
       "export_sha256": "5f27cd9b05eec2af3d8bab4ee4cc262b9b1a72df974a1b67bd68fe2b79dd02e5",
       "qa_report_path": "build/assets/candidates/audio-complete/qa-report.json",
       "generation_status": "candidate",
@@ -11351,7 +11351,7 @@
       "assigned_generation_skill": "dopamine-sfx",
       "godot_destination": "res://assets/audio/original_procedural/sfx/enemy_kill_01.wav",
       "authoring_source_or_recipe": "game/tools/generate_original_audio.py",
-      "generator_version": "2",
+      "generator_version": "3",
       "generation_seed": 2796928364,
       "generation_parameters": {
         "sample_rate_hz": 44100,
@@ -11359,7 +11359,7 @@
         "encoding": "PCM16 WAV",
         "method": "role-specific oscillator/noise layers with analytic envelopes"
       },
-      "source_sha256": "7e870ecbe7a3b2f270c1e329f10831d2a17c37066425aca64ac40594e1dec1b9",
+      "source_sha256": "ab70598d01ba45b7418d7fd49e9f751881b542b2de5a86bee52de7ef8c6262ff",
       "export_sha256": "57c0157e3b28bb3ffd55dac89021cf38b4934f4fa4c1af6ecdd2aedac17dd868",
       "qa_report_path": "build/assets/candidates/audio-complete/qa-report.json",
       "generation_status": "candidate",
@@ -11390,7 +11390,7 @@
       "assigned_generation_skill": "dopamine-sfx",
       "godot_destination": "res://assets/audio/original_procedural/sfx/enemy_kill_02.wav",
       "authoring_source_or_recipe": "game/tools/generate_original_audio.py",
-      "generator_version": "2",
+      "generator_version": "3",
       "generation_seed": 2262004065,
       "generation_parameters": {
         "sample_rate_hz": 44100,
@@ -11398,7 +11398,7 @@
         "encoding": "PCM16 WAV",
         "method": "role-specific oscillator/noise layers with analytic envelopes"
       },
-      "source_sha256": "7e870ecbe7a3b2f270c1e329f10831d2a17c37066425aca64ac40594e1dec1b9",
+      "source_sha256": "ab70598d01ba45b7418d7fd49e9f751881b542b2de5a86bee52de7ef8c6262ff",
       "export_sha256": "c75dedcc19523bb8dc18dedda2b82e3be9805cc3ba2ff46339a9366c40a4ecb9",
       "qa_report_path": "build/assets/candidates/audio-complete/qa-report.json",
       "generation_status": "candidate",
@@ -11429,7 +11429,7 @@
       "assigned_generation_skill": "dopamine-sfx",
       "godot_destination": "res://assets/audio/original_procedural/sfx/enemy_kill_03.wav",
       "authoring_source_or_recipe": "game/tools/generate_original_audio.py",
-      "generator_version": "2",
+      "generator_version": "3",
       "generation_seed": 1281900797,
       "generation_parameters": {
         "sample_rate_hz": 44100,
@@ -11437,7 +11437,7 @@
         "encoding": "PCM16 WAV",
         "method": "role-specific oscillator/noise layers with analytic envelopes"
       },
-      "source_sha256": "7e870ecbe7a3b2f270c1e329f10831d2a17c37066425aca64ac40594e1dec1b9",
+      "source_sha256": "ab70598d01ba45b7418d7fd49e9f751881b542b2de5a86bee52de7ef8c6262ff",
       "export_sha256": "81440c5f24c319f0ed54ce7971dc95595ddb9fcca1298c41d4bfeec7eecbcc01",
       "qa_report_path": "build/assets/candidates/audio-complete/qa-report.json",
       "generation_status": "candidate",
@@ -11468,7 +11468,7 @@
       "assigned_generation_skill": "dopamine-sfx",
       "godot_destination": "res://assets/audio/original_procedural/sfx/enemy_kill_04.wav",
       "authoring_source_or_recipe": "game/tools/generate_original_audio.py",
-      "generator_version": "2",
+      "generator_version": "3",
       "generation_seed": 77370879,
       "generation_parameters": {
         "sample_rate_hz": 44100,
@@ -11476,7 +11476,7 @@
         "encoding": "PCM16 WAV",
         "method": "role-specific oscillator/noise layers with analytic envelopes"
       },
-      "source_sha256": "7e870ecbe7a3b2f270c1e329f10831d2a17c37066425aca64ac40594e1dec1b9",
+      "source_sha256": "ab70598d01ba45b7418d7fd49e9f751881b542b2de5a86bee52de7ef8c6262ff",
       "export_sha256": "d6c60f4178271a51627641f5b05e46104459be0902edd041822a4e8f665c2b3e",
       "qa_report_path": "build/assets/candidates/audio-complete/qa-report.json",
       "generation_status": "candidate",
@@ -11507,7 +11507,7 @@
       "assigned_generation_skill": "dopamine-sfx",
       "godot_destination": "res://assets/audio/original_procedural/sfx/xp_pickup_01.wav",
       "authoring_source_or_recipe": "game/tools/generate_original_audio.py",
-      "generator_version": "2",
+      "generator_version": "3",
       "generation_seed": 2298690674,
       "generation_parameters": {
         "sample_rate_hz": 44100,
@@ -11515,7 +11515,7 @@
         "encoding": "PCM16 WAV",
         "method": "role-specific oscillator/noise layers with analytic envelopes"
       },
-      "source_sha256": "7e870ecbe7a3b2f270c1e329f10831d2a17c37066425aca64ac40594e1dec1b9",
+      "source_sha256": "ab70598d01ba45b7418d7fd49e9f751881b542b2de5a86bee52de7ef8c6262ff",
       "export_sha256": "e6cadccc906a6481908d59e9895697e2fceece661525dbf1447f8cdfd659d17d",
       "qa_report_path": "build/assets/candidates/audio-complete/qa-report.json",
       "generation_status": "candidate",
@@ -11546,7 +11546,7 @@
       "assigned_generation_skill": "dopamine-sfx",
       "godot_destination": "res://assets/audio/original_procedural/sfx/xp_pickup_02.wav",
       "authoring_source_or_recipe": "game/tools/generate_original_audio.py",
-      "generator_version": "2",
+      "generator_version": "3",
       "generation_seed": 2973835681,
       "generation_parameters": {
         "sample_rate_hz": 44100,
@@ -11554,7 +11554,7 @@
         "encoding": "PCM16 WAV",
         "method": "role-specific oscillator/noise layers with analytic envelopes"
       },
-      "source_sha256": "7e870ecbe7a3b2f270c1e329f10831d2a17c37066425aca64ac40594e1dec1b9",
+      "source_sha256": "ab70598d01ba45b7418d7fd49e9f751881b542b2de5a86bee52de7ef8c6262ff",
       "export_sha256": "b176b7dc6eb5ef41e5d8b205abb3f3029418c21c39c50ec998245b3ede7e81e6",
       "qa_report_path": "build/assets/candidates/audio-complete/qa-report.json",
       "generation_status": "candidate",
@@ -11585,7 +11585,7 @@
       "assigned_generation_skill": "dopamine-sfx",
       "godot_destination": "res://assets/audio/original_procedural/sfx/xp_pickup_03.wav",
       "authoring_source_or_recipe": "game/tools/generate_original_audio.py",
-      "generator_version": "2",
+      "generator_version": "3",
       "generation_seed": 2718184553,
       "generation_parameters": {
         "sample_rate_hz": 44100,
@@ -11593,7 +11593,7 @@
         "encoding": "PCM16 WAV",
         "method": "role-specific oscillator/noise layers with analytic envelopes"
       },
-      "source_sha256": "7e870ecbe7a3b2f270c1e329f10831d2a17c37066425aca64ac40594e1dec1b9",
+      "source_sha256": "ab70598d01ba45b7418d7fd49e9f751881b542b2de5a86bee52de7ef8c6262ff",
       "export_sha256": "83d0751cb9bec472538ad7c9e85eaba1fe34368f3afb16657fd71910ff7d6b37",
       "qa_report_path": "build/assets/candidates/audio-complete/qa-report.json",
       "generation_status": "candidate",
@@ -11624,7 +11624,7 @@
       "assigned_generation_skill": "dopamine-sfx",
       "godot_destination": "res://assets/audio/original_procedural/sfx/xp_pickup_04.wav",
       "authoring_source_or_recipe": "game/tools/generate_original_audio.py",
-      "generator_version": "2",
+      "generator_version": "3",
       "generation_seed": 3278868771,
       "generation_parameters": {
         "sample_rate_hz": 44100,
@@ -11632,7 +11632,7 @@
         "encoding": "PCM16 WAV",
         "method": "role-specific oscillator/noise layers with analytic envelopes"
       },
-      "source_sha256": "7e870ecbe7a3b2f270c1e329f10831d2a17c37066425aca64ac40594e1dec1b9",
+      "source_sha256": "ab70598d01ba45b7418d7fd49e9f751881b542b2de5a86bee52de7ef8c6262ff",
       "export_sha256": "973766e3ee0f6726eab0a5f794027b205614b38ccfc0b3000f35ae0e289ddfcb",
       "qa_report_path": "build/assets/candidates/audio-complete/qa-report.json",
       "generation_status": "candidate",
@@ -11663,7 +11663,7 @@
       "assigned_generation_skill": "dopamine-sfx",
       "godot_destination": "res://assets/audio/original_procedural/sfx/relic_pickup.wav",
       "authoring_source_or_recipe": "game/tools/generate_original_audio.py",
-      "generator_version": "2",
+      "generator_version": "3",
       "generation_seed": 2374731812,
       "generation_parameters": {
         "sample_rate_hz": 44100,
@@ -11671,7 +11671,7 @@
         "encoding": "PCM16 WAV",
         "method": "role-specific oscillator/noise layers with analytic envelopes"
       },
-      "source_sha256": "7e870ecbe7a3b2f270c1e329f10831d2a17c37066425aca64ac40594e1dec1b9",
+      "source_sha256": "ab70598d01ba45b7418d7fd49e9f751881b542b2de5a86bee52de7ef8c6262ff",
       "export_sha256": "5c891ffb0df35ad0bdef9ee85e7a627426dccecf8ddfbaaf77969984757b7aeb",
       "qa_report_path": "build/assets/candidates/audio-complete/qa-report.json",
       "generation_status": "candidate",
@@ -11702,7 +11702,7 @@
       "assigned_generation_skill": "dopamine-sfx",
       "godot_destination": "res://assets/audio/original_procedural/sfx/chest_open.wav",
       "authoring_source_or_recipe": "game/tools/generate_original_audio.py",
-      "generator_version": "2",
+      "generator_version": "3",
       "generation_seed": 3263757533,
       "generation_parameters": {
         "sample_rate_hz": 44100,
@@ -11710,7 +11710,7 @@
         "encoding": "PCM16 WAV",
         "method": "role-specific oscillator/noise layers with analytic envelopes"
       },
-      "source_sha256": "7e870ecbe7a3b2f270c1e329f10831d2a17c37066425aca64ac40594e1dec1b9",
+      "source_sha256": "ab70598d01ba45b7418d7fd49e9f751881b542b2de5a86bee52de7ef8c6262ff",
       "export_sha256": "c95733d6997ee1241412ded6bd2b5a693d8749dab741631da056fe26fabe809b",
       "qa_report_path": "build/assets/candidates/audio-complete/qa-report.json",
       "generation_status": "candidate",
@@ -11741,7 +11741,7 @@
       "assigned_generation_skill": "dopamine-sfx",
       "godot_destination": "res://assets/audio/original_procedural/sfx/chest_reward.wav",
       "authoring_source_or_recipe": "game/tools/generate_original_audio.py",
-      "generator_version": "2",
+      "generator_version": "3",
       "generation_seed": 3340607880,
       "generation_parameters": {
         "sample_rate_hz": 44100,
@@ -11749,7 +11749,7 @@
         "encoding": "PCM16 WAV",
         "method": "role-specific oscillator/noise layers with analytic envelopes"
       },
-      "source_sha256": "7e870ecbe7a3b2f270c1e329f10831d2a17c37066425aca64ac40594e1dec1b9",
+      "source_sha256": "ab70598d01ba45b7418d7fd49e9f751881b542b2de5a86bee52de7ef8c6262ff",
       "export_sha256": "c2798da73721a485769999876b27f8a78a14360e2040b48d0bec90e419c26fda",
       "qa_report_path": "build/assets/candidates/audio-complete/qa-report.json",
       "generation_status": "candidate",
@@ -11780,7 +11780,7 @@
       "assigned_generation_skill": "dopamine-sfx",
       "godot_destination": "res://assets/audio/original_procedural/sfx/level_up.wav",
       "authoring_source_or_recipe": "game/tools/generate_original_audio.py",
-      "generator_version": "2",
+      "generator_version": "3",
       "generation_seed": 2560753222,
       "generation_parameters": {
         "sample_rate_hz": 44100,
@@ -11788,7 +11788,7 @@
         "encoding": "PCM16 WAV",
         "method": "role-specific oscillator/noise layers with analytic envelopes"
       },
-      "source_sha256": "7e870ecbe7a3b2f270c1e329f10831d2a17c37066425aca64ac40594e1dec1b9",
+      "source_sha256": "ab70598d01ba45b7418d7fd49e9f751881b542b2de5a86bee52de7ef8c6262ff",
       "export_sha256": "64546fac487e08785c7a0b7cdbb142ff0180da4e805df500e8d9fc92e92733ac",
       "qa_report_path": "build/assets/candidates/audio-complete/qa-report.json",
       "generation_status": "candidate",
@@ -11819,7 +11819,7 @@
       "assigned_generation_skill": "dopamine-sfx",
       "godot_destination": "res://assets/audio/original_procedural/sfx/boss_telegraph.wav",
       "authoring_source_or_recipe": "game/tools/generate_original_audio.py",
-      "generator_version": "2",
+      "generator_version": "3",
       "generation_seed": 68553403,
       "generation_parameters": {
         "sample_rate_hz": 44100,
@@ -11827,7 +11827,7 @@
         "encoding": "PCM16 WAV",
         "method": "role-specific oscillator/noise layers with analytic envelopes"
       },
-      "source_sha256": "7e870ecbe7a3b2f270c1e329f10831d2a17c37066425aca64ac40594e1dec1b9",
+      "source_sha256": "ab70598d01ba45b7418d7fd49e9f751881b542b2de5a86bee52de7ef8c6262ff",
       "export_sha256": "2023797f48a71a10a12dac60cd39fd1218b43274ba854fb5e06fe9b9008974f4",
       "qa_report_path": "build/assets/candidates/audio-complete/qa-report.json",
       "generation_status": "candidate",
@@ -11858,7 +11858,7 @@
       "assigned_generation_skill": "dopamine-sfx",
       "godot_destination": "res://assets/audio/original_procedural/sfx/boss_phase.wav",
       "authoring_source_or_recipe": "game/tools/generate_original_audio.py",
-      "generator_version": "2",
+      "generator_version": "3",
       "generation_seed": 1090104100,
       "generation_parameters": {
         "sample_rate_hz": 44100,
@@ -11866,7 +11866,7 @@
         "encoding": "PCM16 WAV",
         "method": "role-specific oscillator/noise layers with analytic envelopes"
       },
-      "source_sha256": "7e870ecbe7a3b2f270c1e329f10831d2a17c37066425aca64ac40594e1dec1b9",
+      "source_sha256": "ab70598d01ba45b7418d7fd49e9f751881b542b2de5a86bee52de7ef8c6262ff",
       "export_sha256": "1cb410cecf8aa21822689b0da070d4662839d65819831e8660f47c6d4ed2716c",
       "qa_report_path": "build/assets/candidates/audio-complete/qa-report.json",
       "generation_status": "candidate",
@@ -11897,7 +11897,7 @@
       "assigned_generation_skill": "dopamine-sfx",
       "godot_destination": "res://assets/audio/original_procedural/sfx/boss_defeat.wav",
       "authoring_source_or_recipe": "game/tools/generate_original_audio.py",
-      "generator_version": "2",
+      "generator_version": "3",
       "generation_seed": 1607876697,
       "generation_parameters": {
         "sample_rate_hz": 44100,
@@ -11905,7 +11905,7 @@
         "encoding": "PCM16 WAV",
         "method": "role-specific oscillator/noise layers with analytic envelopes"
       },
-      "source_sha256": "7e870ecbe7a3b2f270c1e329f10831d2a17c37066425aca64ac40594e1dec1b9",
+      "source_sha256": "ab70598d01ba45b7418d7fd49e9f751881b542b2de5a86bee52de7ef8c6262ff",
       "export_sha256": "585e767f4ded177f2578653d080b7a58bea92a92b698a1d076faf45e1d058664",
       "qa_report_path": "build/assets/candidates/audio-complete/qa-report.json",
       "generation_status": "candidate",
@@ -11936,7 +11936,7 @@
       "assigned_generation_skill": "dopamine-sfx",
       "godot_destination": "res://assets/audio/original_procedural/sfx/ui_focus.wav",
       "authoring_source_or_recipe": "game/tools/generate_original_audio.py",
-      "generator_version": "2",
+      "generator_version": "3",
       "generation_seed": 1616708360,
       "generation_parameters": {
         "sample_rate_hz": 44100,
@@ -11944,7 +11944,7 @@
         "encoding": "PCM16 WAV",
         "method": "role-specific oscillator/noise layers with analytic envelopes"
       },
-      "source_sha256": "7e870ecbe7a3b2f270c1e329f10831d2a17c37066425aca64ac40594e1dec1b9",
+      "source_sha256": "ab70598d01ba45b7418d7fd49e9f751881b542b2de5a86bee52de7ef8c6262ff",
       "export_sha256": "c26c22cef4677eb48d9bbf7f15f2ba338ce3741f471d39c1400487b4a644537e",
       "qa_report_path": "build/assets/candidates/audio-complete/qa-report.json",
       "generation_status": "candidate",
@@ -11975,7 +11975,7 @@
       "assigned_generation_skill": "dopamine-sfx",
       "godot_destination": "res://assets/audio/original_procedural/sfx/ui_confirm.wav",
       "authoring_source_or_recipe": "game/tools/generate_original_audio.py",
-      "generator_version": "2",
+      "generator_version": "3",
       "generation_seed": 1316089085,
       "generation_parameters": {
         "sample_rate_hz": 44100,
@@ -11983,7 +11983,7 @@
         "encoding": "PCM16 WAV",
         "method": "role-specific oscillator/noise layers with analytic envelopes"
       },
-      "source_sha256": "7e870ecbe7a3b2f270c1e329f10831d2a17c37066425aca64ac40594e1dec1b9",
+      "source_sha256": "ab70598d01ba45b7418d7fd49e9f751881b542b2de5a86bee52de7ef8c6262ff",
       "export_sha256": "150b53a2817b1912bb10c708fec0715a2867f20c5252d698edb5aa5616e7dbd3",
       "qa_report_path": "build/assets/candidates/audio-complete/qa-report.json",
       "generation_status": "candidate",
@@ -12014,7 +12014,7 @@
       "assigned_generation_skill": "dopamine-sfx",
       "godot_destination": "res://assets/audio/original_procedural/sfx/ui_back.wav",
       "authoring_source_or_recipe": "game/tools/generate_original_audio.py",
-      "generator_version": "2",
+      "generator_version": "3",
       "generation_seed": 400904841,
       "generation_parameters": {
         "sample_rate_hz": 44100,
@@ -12022,7 +12022,7 @@
         "encoding": "PCM16 WAV",
         "method": "role-specific oscillator/noise layers with analytic envelopes"
       },
-      "source_sha256": "7e870ecbe7a3b2f270c1e329f10831d2a17c37066425aca64ac40594e1dec1b9",
+      "source_sha256": "ab70598d01ba45b7418d7fd49e9f751881b542b2de5a86bee52de7ef8c6262ff",
       "export_sha256": "15c436c872c27de88a7a90d3c5936d67fe82dde91db0d9fb8c6bec638194bdd0",
       "qa_report_path": "build/assets/candidates/audio-complete/qa-report.json",
       "generation_status": "candidate",
@@ -12053,7 +12053,7 @@
       "assigned_generation_skill": "dopamine-sfx",
       "godot_destination": "res://assets/audio/original_procedural/sfx/ui_error.wav",
       "authoring_source_or_recipe": "game/tools/generate_original_audio.py",
-      "generator_version": "2",
+      "generator_version": "3",
       "generation_seed": 3477335550,
       "generation_parameters": {
         "sample_rate_hz": 44100,
@@ -12061,7 +12061,7 @@
         "encoding": "PCM16 WAV",
         "method": "role-specific oscillator/noise layers with analytic envelopes"
       },
-      "source_sha256": "7e870ecbe7a3b2f270c1e329f10831d2a17c37066425aca64ac40594e1dec1b9",
+      "source_sha256": "ab70598d01ba45b7418d7fd49e9f751881b542b2de5a86bee52de7ef8c6262ff",
       "export_sha256": "cda742620001ff3976581f06254415445ae089d36c348a74f3e5f0b49788fd81",
       "qa_report_path": "build/assets/candidates/audio-complete/qa-report.json",
       "generation_status": "candidate",
@@ -12092,7 +12092,7 @@
       "assigned_generation_skill": "dopamine-sfx",
       "godot_destination": "res://assets/audio/original_procedural/sfx/ui_pause.wav",
       "authoring_source_or_recipe": "game/tools/generate_original_audio.py",
-      "generator_version": "2",
+      "generator_version": "3",
       "generation_seed": 2924438704,
       "generation_parameters": {
         "sample_rate_hz": 44100,
@@ -12100,7 +12100,7 @@
         "encoding": "PCM16 WAV",
         "method": "role-specific oscillator/noise layers with analytic envelopes"
       },
-      "source_sha256": "7e870ecbe7a3b2f270c1e329f10831d2a17c37066425aca64ac40594e1dec1b9",
+      "source_sha256": "ab70598d01ba45b7418d7fd49e9f751881b542b2de5a86bee52de7ef8c6262ff",
       "export_sha256": "4bfd4a073930846f672a45cc1d45feeff07f2bb21c051ebc13b9b878d1fcec47",
       "qa_report_path": "build/assets/candidates/audio-complete/qa-report.json",
       "generation_status": "candidate",
@@ -12131,7 +12131,7 @@
       "assigned_generation_skill": "dopamine-sfx",
       "godot_destination": "res://assets/audio/original_procedural/sfx/weapon_family_fire.wav",
       "authoring_source_or_recipe": "game/tools/generate_original_audio.py",
-      "generator_version": "2",
+      "generator_version": "3",
       "generation_seed": 1427454858,
       "generation_parameters": {
         "sample_rate_hz": 44100,
@@ -12139,7 +12139,7 @@
         "encoding": "PCM16 WAV",
         "method": "role-specific oscillator/noise layers with analytic envelopes"
       },
-      "source_sha256": "7e870ecbe7a3b2f270c1e329f10831d2a17c37066425aca64ac40594e1dec1b9",
+      "source_sha256": "ab70598d01ba45b7418d7fd49e9f751881b542b2de5a86bee52de7ef8c6262ff",
       "export_sha256": "e74b9217854d718d59500814801cb46bca36a0ecc07dc03a919cc98b18c80d66",
       "qa_report_path": "build/assets/candidates/audio-complete/qa-report.json",
       "generation_status": "candidate",
@@ -12170,7 +12170,7 @@
       "assigned_generation_skill": "dopamine-sfx",
       "godot_destination": "res://assets/audio/original_procedural/sfx/weapon_family_impact.wav",
       "authoring_source_or_recipe": "game/tools/generate_original_audio.py",
-      "generator_version": "2",
+      "generator_version": "3",
       "generation_seed": 2720499681,
       "generation_parameters": {
         "sample_rate_hz": 44100,
@@ -12178,7 +12178,7 @@
         "encoding": "PCM16 WAV",
         "method": "role-specific oscillator/noise layers with analytic envelopes"
       },
-      "source_sha256": "7e870ecbe7a3b2f270c1e329f10831d2a17c37066425aca64ac40594e1dec1b9",
+      "source_sha256": "ab70598d01ba45b7418d7fd49e9f751881b542b2de5a86bee52de7ef8c6262ff",
       "export_sha256": "aa29662bf65ad81044b4d2b90ba67911f1052a6681a2648f2a2d772c168febe4",
       "qa_report_path": "build/assets/candidates/audio-complete/qa-report.json",
       "generation_status": "candidate",
@@ -12209,7 +12209,7 @@
       "assigned_generation_skill": "dopamine-sfx",
       "godot_destination": "res://assets/audio/original_procedural/sfx/damage_taken.wav",
       "authoring_source_or_recipe": "game/tools/generate_original_audio.py",
-      "generator_version": "2",
+      "generator_version": "3",
       "generation_seed": 814322876,
       "generation_parameters": {
         "sample_rate_hz": 44100,
@@ -12217,7 +12217,7 @@
         "encoding": "PCM16 WAV",
         "method": "role-specific oscillator/noise layers with analytic envelopes"
       },
-      "source_sha256": "7e870ecbe7a3b2f270c1e329f10831d2a17c37066425aca64ac40594e1dec1b9",
+      "source_sha256": "ab70598d01ba45b7418d7fd49e9f751881b542b2de5a86bee52de7ef8c6262ff",
       "export_sha256": "99ae82954c463ca515add75911edab1d7cc070f2ced51a54662f19491ee9d9e2",
       "qa_report_path": "build/assets/candidates/audio-complete/qa-report.json",
       "generation_status": "candidate",
@@ -12248,7 +12248,7 @@
       "assigned_generation_skill": "dopamine-sfx",
       "godot_destination": "res://assets/audio/original_procedural/sfx/healing.wav",
       "authoring_source_or_recipe": "game/tools/generate_original_audio.py",
-      "generator_version": "2",
+      "generator_version": "3",
       "generation_seed": 1065878761,
       "generation_parameters": {
         "sample_rate_hz": 44100,
@@ -12256,7 +12256,7 @@
         "encoding": "PCM16 WAV",
         "method": "role-specific oscillator/noise layers with analytic envelopes"
       },
-      "source_sha256": "7e870ecbe7a3b2f270c1e329f10831d2a17c37066425aca64ac40594e1dec1b9",
+      "source_sha256": "ab70598d01ba45b7418d7fd49e9f751881b542b2de5a86bee52de7ef8c6262ff",
       "export_sha256": "d8475ac00e8f90eb87a5948d803559fcbf83cc80d372e7d4e846b6784cb12f80",
       "qa_report_path": "build/assets/candidates/audio-complete/qa-report.json",
       "generation_status": "candidate",
@@ -12287,7 +12287,7 @@
       "assigned_generation_skill": "dopamine-sfx",
       "godot_destination": "res://assets/audio/original_procedural/sfx/explosion.wav",
       "authoring_source_or_recipe": "game/tools/generate_original_audio.py",
-      "generator_version": "2",
+      "generator_version": "3",
       "generation_seed": 2111124302,
       "generation_parameters": {
         "sample_rate_hz": 44100,
@@ -12295,7 +12295,7 @@
         "encoding": "PCM16 WAV",
         "method": "role-specific oscillator/noise layers with analytic envelopes"
       },
-      "source_sha256": "7e870ecbe7a3b2f270c1e329f10831d2a17c37066425aca64ac40594e1dec1b9",
+      "source_sha256": "ab70598d01ba45b7418d7fd49e9f751881b542b2de5a86bee52de7ef8c6262ff",
       "export_sha256": "e77dbf413e7b941be584d025e2a9d7e9d12ee07cfd0c823083305da68d425e6a",
       "qa_report_path": "build/assets/candidates/audio-complete/qa-report.json",
       "generation_status": "candidate",
@@ -12326,7 +12326,7 @@
       "assigned_generation_skill": "dopamine-sfx",
       "godot_destination": "res://assets/audio/original_procedural/sfx/victory.wav",
       "authoring_source_or_recipe": "game/tools/generate_original_audio.py",
-      "generator_version": "2",
+      "generator_version": "3",
       "generation_seed": 2723964449,
       "generation_parameters": {
         "sample_rate_hz": 44100,
@@ -12334,7 +12334,7 @@
         "encoding": "PCM16 WAV",
         "method": "role-specific oscillator/noise layers with analytic envelopes"
       },
-      "source_sha256": "7e870ecbe7a3b2f270c1e329f10831d2a17c37066425aca64ac40594e1dec1b9",
+      "source_sha256": "ab70598d01ba45b7418d7fd49e9f751881b542b2de5a86bee52de7ef8c6262ff",
       "export_sha256": "8424de585305507a5f38deabfde5b86d83717d438625bd1b247250218442cf5c",
       "qa_report_path": "build/assets/candidates/audio-complete/qa-report.json",
       "generation_status": "candidate",
@@ -12365,7 +12365,7 @@
       "assigned_generation_skill": "dopamine-sfx",
       "godot_destination": "res://assets/audio/original_procedural/sfx/defeat.wav",
       "authoring_source_or_recipe": "game/tools/generate_original_audio.py",
-      "generator_version": "2",
+      "generator_version": "3",
       "generation_seed": 1314651999,
       "generation_parameters": {
         "sample_rate_hz": 44100,
@@ -12373,7 +12373,7 @@
         "encoding": "PCM16 WAV",
         "method": "role-specific oscillator/noise layers with analytic envelopes"
       },
-      "source_sha256": "7e870ecbe7a3b2f270c1e329f10831d2a17c37066425aca64ac40594e1dec1b9",
+      "source_sha256": "ab70598d01ba45b7418d7fd49e9f751881b542b2de5a86bee52de7ef8c6262ff",
       "export_sha256": "6d161e5783cc64b19753edf9296e74e3ac010d2ed5813426ddf6fecad565ddc4",
       "qa_report_path": "build/assets/candidates/audio-complete/qa-report.json",
       "generation_status": "candidate",
@@ -12404,7 +12404,7 @@
       "assigned_generation_skill": "dopamine-sfx",
       "godot_destination": "res://assets/audio/original_procedural/sfx/weapon_lightning_conductor_fire.wav",
       "authoring_source_or_recipe": "game/tools/generate_original_audio.py",
-      "generator_version": "2",
+      "generator_version": "3",
       "generation_seed": 3529462400,
       "generation_parameters": {
         "sample_rate_hz": 44100,
@@ -12412,7 +12412,7 @@
         "encoding": "PCM16 WAV",
         "method": "role-specific oscillator/noise layers with analytic envelopes"
       },
-      "source_sha256": "7e870ecbe7a3b2f270c1e329f10831d2a17c37066425aca64ac40594e1dec1b9",
+      "source_sha256": "ab70598d01ba45b7418d7fd49e9f751881b542b2de5a86bee52de7ef8c6262ff",
       "export_sha256": "e19ccd7d5d1d3e67c16121e28e53563cab2e12d49cc048b6409d74c2641a7659",
       "qa_report_path": "build/assets/candidates/audio-complete/qa-report.json",
       "generation_status": "candidate",
@@ -12443,7 +12443,7 @@
       "assigned_generation_skill": "dopamine-sfx",
       "godot_destination": "res://assets/audio/original_procedural/sfx/weapon_lightning_conductor_impact.wav",
       "authoring_source_or_recipe": "game/tools/generate_original_audio.py",
-      "generator_version": "2",
+      "generator_version": "3",
       "generation_seed": 2057817497,
       "generation_parameters": {
         "sample_rate_hz": 44100,
@@ -12451,7 +12451,7 @@
         "encoding": "PCM16 WAV",
         "method": "role-specific oscillator/noise layers with analytic envelopes"
       },
-      "source_sha256": "7e870ecbe7a3b2f270c1e329f10831d2a17c37066425aca64ac40594e1dec1b9",
+      "source_sha256": "ab70598d01ba45b7418d7fd49e9f751881b542b2de5a86bee52de7ef8c6262ff",
       "export_sha256": "b1abd313d8900eb926634a33d40647c2203ac0b2b0d39d54119accf8fc8d5cb9",
       "qa_report_path": "build/assets/candidates/audio-complete/qa-report.json",
       "generation_status": "candidate",
@@ -12482,7 +12482,7 @@
       "assigned_generation_skill": "dopamine-sfx",
       "godot_destination": "res://assets/audio/original_procedural/sfx/weapon_inferno_sprayer_fire.wav",
       "authoring_source_or_recipe": "game/tools/generate_original_audio.py",
-      "generator_version": "2",
+      "generator_version": "3",
       "generation_seed": 743583096,
       "generation_parameters": {
         "sample_rate_hz": 44100,
@@ -12490,7 +12490,7 @@
         "encoding": "PCM16 WAV",
         "method": "role-specific oscillator/noise layers with analytic envelopes"
       },
-      "source_sha256": "7e870ecbe7a3b2f270c1e329f10831d2a17c37066425aca64ac40594e1dec1b9",
+      "source_sha256": "ab70598d01ba45b7418d7fd49e9f751881b542b2de5a86bee52de7ef8c6262ff",
       "export_sha256": "9750a56aa166debab2702940b7344e9ca899e0ce639169525213faf7a5931c9e",
       "qa_report_path": "build/assets/candidates/audio-complete/qa-report.json",
       "generation_status": "candidate",
@@ -12521,7 +12521,7 @@
       "assigned_generation_skill": "dopamine-sfx",
       "godot_destination": "res://assets/audio/original_procedural/sfx/weapon_inferno_sprayer_impact.wav",
       "authoring_source_or_recipe": "game/tools/generate_original_audio.py",
-      "generator_version": "2",
+      "generator_version": "3",
       "generation_seed": 1661096795,
       "generation_parameters": {
         "sample_rate_hz": 44100,
@@ -12529,7 +12529,7 @@
         "encoding": "PCM16 WAV",
         "method": "role-specific oscillator/noise layers with analytic envelopes"
       },
-      "source_sha256": "7e870ecbe7a3b2f270c1e329f10831d2a17c37066425aca64ac40594e1dec1b9",
+      "source_sha256": "ab70598d01ba45b7418d7fd49e9f751881b542b2de5a86bee52de7ef8c6262ff",
       "export_sha256": "383e89d76713105a3688a009027b57b95a2aaae7436c47145a64ee413d117e1f",
       "qa_report_path": "build/assets/candidates/audio-complete/qa-report.json",
       "generation_status": "candidate",
@@ -12560,7 +12560,7 @@
       "assigned_generation_skill": "dopamine-sfx",
       "godot_destination": "res://assets/audio/original_procedural/sfx/weapon_crimson_daggers_fire.wav",
       "authoring_source_or_recipe": "game/tools/generate_original_audio.py",
-      "generator_version": "2",
+      "generator_version": "3",
       "generation_seed": 1767594248,
       "generation_parameters": {
         "sample_rate_hz": 44100,
@@ -12568,7 +12568,7 @@
         "encoding": "PCM16 WAV",
         "method": "role-specific oscillator/noise layers with analytic envelopes"
       },
-      "source_sha256": "7e870ecbe7a3b2f270c1e329f10831d2a17c37066425aca64ac40594e1dec1b9",
+      "source_sha256": "ab70598d01ba45b7418d7fd49e9f751881b542b2de5a86bee52de7ef8c6262ff",
       "export_sha256": "e47610979b92fb3ddbd6f8bc42a6b97049a954c79a834389b672cea95fbf6733",
       "qa_report_path": "build/assets/candidates/audio-complete/qa-report.json",
       "generation_status": "candidate",
@@ -12599,7 +12599,7 @@
       "assigned_generation_skill": "dopamine-sfx",
       "godot_destination": "res://assets/audio/original_procedural/sfx/weapon_crimson_daggers_impact.wav",
       "authoring_source_or_recipe": "game/tools/generate_original_audio.py",
-      "generator_version": "2",
+      "generator_version": "3",
       "generation_seed": 3703227529,
       "generation_parameters": {
         "sample_rate_hz": 44100,
@@ -12607,7 +12607,7 @@
         "encoding": "PCM16 WAV",
         "method": "role-specific oscillator/noise layers with analytic envelopes"
       },
-      "source_sha256": "7e870ecbe7a3b2f270c1e329f10831d2a17c37066425aca64ac40594e1dec1b9",
+      "source_sha256": "ab70598d01ba45b7418d7fd49e9f751881b542b2de5a86bee52de7ef8c6262ff",
       "export_sha256": "af6dba56315cc2b3cbc8d547fdfe753e563b9f4d5c42adc9b13a8102719d264a",
       "qa_report_path": "build/assets/candidates/audio-complete/qa-report.json",
       "generation_status": "candidate",
@@ -12638,7 +12638,7 @@
       "assigned_generation_skill": "dopamine-sfx",
       "godot_destination": "res://assets/audio/original_procedural/sfx/weapon_minigun_fire.wav",
       "authoring_source_or_recipe": "game/tools/generate_original_audio.py",
-      "generator_version": "2",
+      "generator_version": "3",
       "generation_seed": 3522894974,
       "generation_parameters": {
         "sample_rate_hz": 44100,
@@ -12646,7 +12646,7 @@
         "encoding": "PCM16 WAV",
         "method": "role-specific oscillator/noise layers with analytic envelopes"
       },
-      "source_sha256": "7e870ecbe7a3b2f270c1e329f10831d2a17c37066425aca64ac40594e1dec1b9",
+      "source_sha256": "ab70598d01ba45b7418d7fd49e9f751881b542b2de5a86bee52de7ef8c6262ff",
       "export_sha256": "bd807997cd8e7a6b55e40571bf86b372c40006120362369580983aa4a914637a",
       "qa_report_path": "build/assets/candidates/audio-complete/qa-report.json",
       "generation_status": "candidate",
@@ -12677,7 +12677,7 @@
       "assigned_generation_skill": "dopamine-sfx",
       "godot_destination": "res://assets/audio/original_procedural/sfx/weapon_minigun_impact.wav",
       "authoring_source_or_recipe": "game/tools/generate_original_audio.py",
-      "generator_version": "2",
+      "generator_version": "3",
       "generation_seed": 3308239770,
       "generation_parameters": {
         "sample_rate_hz": 44100,
@@ -12685,7 +12685,7 @@
         "encoding": "PCM16 WAV",
         "method": "role-specific oscillator/noise layers with analytic envelopes"
       },
-      "source_sha256": "7e870ecbe7a3b2f270c1e329f10831d2a17c37066425aca64ac40594e1dec1b9",
+      "source_sha256": "ab70598d01ba45b7418d7fd49e9f751881b542b2de5a86bee52de7ef8c6262ff",
       "export_sha256": "5d8cd61b6183d710fe0f5ff1bbf0f5270070f8360cffa0678565cfc1d19ea81b",
       "qa_report_path": "build/assets/candidates/audio-complete/qa-report.json",
       "generation_status": "candidate",
@@ -12716,7 +12716,7 @@
       "assigned_generation_skill": "dopamine-sfx",
       "godot_destination": "res://assets/audio/original_procedural/sfx/weapon_toxic_cloud_fire.wav",
       "authoring_source_or_recipe": "game/tools/generate_original_audio.py",
-      "generator_version": "2",
+      "generator_version": "3",
       "generation_seed": 1452261799,
       "generation_parameters": {
         "sample_rate_hz": 44100,
@@ -12724,7 +12724,7 @@
         "encoding": "PCM16 WAV",
         "method": "role-specific oscillator/noise layers with analytic envelopes"
       },
-      "source_sha256": "7e870ecbe7a3b2f270c1e329f10831d2a17c37066425aca64ac40594e1dec1b9",
+      "source_sha256": "ab70598d01ba45b7418d7fd49e9f751881b542b2de5a86bee52de7ef8c6262ff",
       "export_sha256": "d58294d396c0935b8509a4255b2ac41171d761f5f762378b610ffd35e1bbae88",
       "qa_report_path": "build/assets/candidates/audio-complete/qa-report.json",
       "generation_status": "candidate",
@@ -12755,7 +12755,7 @@
       "assigned_generation_skill": "dopamine-sfx",
       "godot_destination": "res://assets/audio/original_procedural/sfx/weapon_toxic_cloud_impact.wav",
       "authoring_source_or_recipe": "game/tools/generate_original_audio.py",
-      "generator_version": "2",
+      "generator_version": "3",
       "generation_seed": 547859811,
       "generation_parameters": {
         "sample_rate_hz": 44100,
@@ -12763,7 +12763,7 @@
         "encoding": "PCM16 WAV",
         "method": "role-specific oscillator/noise layers with analytic envelopes"
       },
-      "source_sha256": "7e870ecbe7a3b2f270c1e329f10831d2a17c37066425aca64ac40594e1dec1b9",
+      "source_sha256": "ab70598d01ba45b7418d7fd49e9f751881b542b2de5a86bee52de7ef8c6262ff",
       "export_sha256": "98963a7d1d561e1b9e5fb9a95f25aad217c2f8b4025cab0acf61a7c6fd69c5e0",
       "qa_report_path": "build/assets/candidates/audio-complete/qa-report.json",
       "generation_status": "candidate",
@@ -12794,7 +12794,7 @@
       "assigned_generation_skill": "dopamine-sfx",
       "godot_destination": "res://assets/audio/original_procedural/sfx/weapon_sawblades_fire.wav",
       "authoring_source_or_recipe": "game/tools/generate_original_audio.py",
-      "generator_version": "2",
+      "generator_version": "3",
       "generation_seed": 3837497983,
       "generation_parameters": {
         "sample_rate_hz": 44100,
@@ -12802,7 +12802,7 @@
         "encoding": "PCM16 WAV",
         "method": "role-specific oscillator/noise layers with analytic envelopes"
       },
-      "source_sha256": "7e870ecbe7a3b2f270c1e329f10831d2a17c37066425aca64ac40594e1dec1b9",
+      "source_sha256": "ab70598d01ba45b7418d7fd49e9f751881b542b2de5a86bee52de7ef8c6262ff",
       "export_sha256": "38f5d79c5578fd8598ceeeb80bc809d2adfa8dfb629abfd26398f78b24ae26b7",
       "qa_report_path": "build/assets/candidates/audio-complete/qa-report.json",
       "generation_status": "candidate",
@@ -12833,7 +12833,7 @@
       "assigned_generation_skill": "dopamine-sfx",
       "godot_destination": "res://assets/audio/original_procedural/sfx/weapon_sawblades_impact.wav",
       "authoring_source_or_recipe": "game/tools/generate_original_audio.py",
-      "generator_version": "2",
+      "generator_version": "3",
       "generation_seed": 1573936608,
       "generation_parameters": {
         "sample_rate_hz": 44100,
@@ -12841,7 +12841,7 @@
         "encoding": "PCM16 WAV",
         "method": "role-specific oscillator/noise layers with analytic envelopes"
       },
-      "source_sha256": "7e870ecbe7a3b2f270c1e329f10831d2a17c37066425aca64ac40594e1dec1b9",
+      "source_sha256": "ab70598d01ba45b7418d7fd49e9f751881b542b2de5a86bee52de7ef8c6262ff",
       "export_sha256": "3b2a33a0adc7999bee39e08f26b64523dd5620e1eea85d3e214150fc6617d156",
       "qa_report_path": "build/assets/candidates/audio-complete/qa-report.json",
       "generation_status": "candidate",
@@ -12872,7 +12872,7 @@
       "assigned_generation_skill": "dopamine-sfx",
       "godot_destination": "res://assets/audio/original_procedural/sfx/weapon_meteor_staff_fire.wav",
       "authoring_source_or_recipe": "game/tools/generate_original_audio.py",
-      "generator_version": "2",
+      "generator_version": "3",
       "generation_seed": 3690967927,
       "generation_parameters": {
         "sample_rate_hz": 44100,
@@ -12880,7 +12880,7 @@
         "encoding": "PCM16 WAV",
         "method": "role-specific oscillator/noise layers with analytic envelopes"
       },
-      "source_sha256": "7e870ecbe7a3b2f270c1e329f10831d2a17c37066425aca64ac40594e1dec1b9",
+      "source_sha256": "ab70598d01ba45b7418d7fd49e9f751881b542b2de5a86bee52de7ef8c6262ff",
       "export_sha256": "6e91388c3f848f070753d0b740d91c841909ddd663c289d19e420c53a78d1413",
       "qa_report_path": "build/assets/candidates/audio-complete/qa-report.json",
       "generation_status": "candidate",
@@ -12911,7 +12911,7 @@
       "assigned_generation_skill": "dopamine-sfx",
       "godot_destination": "res://assets/audio/original_procedural/sfx/weapon_meteor_staff_impact.wav",
       "authoring_source_or_recipe": "game/tools/generate_original_audio.py",
-      "generator_version": "2",
+      "generator_version": "3",
       "generation_seed": 2825796527,
       "generation_parameters": {
         "sample_rate_hz": 44100,
@@ -12919,7 +12919,7 @@
         "encoding": "PCM16 WAV",
         "method": "role-specific oscillator/noise layers with analytic envelopes"
       },
-      "source_sha256": "7e870ecbe7a3b2f270c1e329f10831d2a17c37066425aca64ac40594e1dec1b9",
+      "source_sha256": "ab70598d01ba45b7418d7fd49e9f751881b542b2de5a86bee52de7ef8c6262ff",
       "export_sha256": "16c5db02b85d89e339512b8c312e75e7fc3be55025398469891c7c5733a7e895",
       "qa_report_path": "build/assets/candidates/audio-complete/qa-report.json",
       "generation_status": "candidate",
@@ -12950,7 +12950,7 @@
       "assigned_generation_skill": "dopamine-sfx",
       "godot_destination": "res://assets/audio/original_procedural/sfx/weapon_prism_laser_fire.wav",
       "authoring_source_or_recipe": "game/tools/generate_original_audio.py",
-      "generator_version": "2",
+      "generator_version": "3",
       "generation_seed": 221632707,
       "generation_parameters": {
         "sample_rate_hz": 44100,
@@ -12958,7 +12958,7 @@
         "encoding": "PCM16 WAV",
         "method": "role-specific oscillator/noise layers with analytic envelopes"
       },
-      "source_sha256": "7e870ecbe7a3b2f270c1e329f10831d2a17c37066425aca64ac40594e1dec1b9",
+      "source_sha256": "ab70598d01ba45b7418d7fd49e9f751881b542b2de5a86bee52de7ef8c6262ff",
       "export_sha256": "73eb68d07b0d8b80b2df5e4c2cd0db63870d9a2eea316dcc67dcc852b5d1db5b",
       "qa_report_path": "build/assets/candidates/audio-complete/qa-report.json",
       "generation_status": "candidate",
@@ -12989,7 +12989,7 @@
       "assigned_generation_skill": "dopamine-sfx",
       "godot_destination": "res://assets/audio/original_procedural/sfx/weapon_prism_laser_impact.wav",
       "authoring_source_or_recipe": "game/tools/generate_original_audio.py",
-      "generator_version": "2",
+      "generator_version": "3",
       "generation_seed": 2470230064,
       "generation_parameters": {
         "sample_rate_hz": 44100,
@@ -12997,7 +12997,7 @@
         "encoding": "PCM16 WAV",
         "method": "role-specific oscillator/noise layers with analytic envelopes"
       },
-      "source_sha256": "7e870ecbe7a3b2f270c1e329f10831d2a17c37066425aca64ac40594e1dec1b9",
+      "source_sha256": "ab70598d01ba45b7418d7fd49e9f751881b542b2de5a86bee52de7ef8c6262ff",
       "export_sha256": "1a7fbc5cf7af1e083cb8bdb77b433cc049372d94511413a0fece9a536e4f4427",
       "qa_report_path": "build/assets/candidates/audio-complete/qa-report.json",
       "generation_status": "candidate",
@@ -13028,7 +13028,7 @@
       "assigned_generation_skill": "dopamine-sfx",
       "godot_destination": "res://assets/audio/original_procedural/sfx/weapon_void_orb_fire.wav",
       "authoring_source_or_recipe": "game/tools/generate_original_audio.py",
-      "generator_version": "2",
+      "generator_version": "3",
       "generation_seed": 3036030780,
       "generation_parameters": {
         "sample_rate_hz": 44100,
@@ -13036,7 +13036,7 @@
         "encoding": "PCM16 WAV",
         "method": "role-specific oscillator/noise layers with analytic envelopes"
       },
-      "source_sha256": "7e870ecbe7a3b2f270c1e329f10831d2a17c37066425aca64ac40594e1dec1b9",
+      "source_sha256": "ab70598d01ba45b7418d7fd49e9f751881b542b2de5a86bee52de7ef8c6262ff",
       "export_sha256": "1359c46071d684c07eb8beff4c9cffd835885dc45ff18ca50f1578fc645a9f59",
       "qa_report_path": "build/assets/candidates/audio-complete/qa-report.json",
       "generation_status": "candidate",
@@ -13067,7 +13067,7 @@
       "assigned_generation_skill": "dopamine-sfx",
       "godot_destination": "res://assets/audio/original_procedural/sfx/weapon_void_orb_impact.wav",
       "authoring_source_or_recipe": "game/tools/generate_original_audio.py",
-      "generator_version": "2",
+      "generator_version": "3",
       "generation_seed": 902928538,
       "generation_parameters": {
         "sample_rate_hz": 44100,
@@ -13075,7 +13075,7 @@
         "encoding": "PCM16 WAV",
         "method": "role-specific oscillator/noise layers with analytic envelopes"
       },
-      "source_sha256": "7e870ecbe7a3b2f270c1e329f10831d2a17c37066425aca64ac40594e1dec1b9",
+      "source_sha256": "ab70598d01ba45b7418d7fd49e9f751881b542b2de5a86bee52de7ef8c6262ff",
       "export_sha256": "37554d48a2ec1f6b5df8ed7eb667664f9b10c36a9c4c4b3a5108fe6348863a87",
       "qa_report_path": "build/assets/candidates/audio-complete/qa-report.json",
       "generation_status": "candidate",
@@ -13106,7 +13106,7 @@
       "assigned_generation_skill": "dopamine-sfx",
       "godot_destination": "res://assets/audio/original_procedural/sfx/weapon_frost_nova_fire.wav",
       "authoring_source_or_recipe": "game/tools/generate_original_audio.py",
-      "generator_version": "2",
+      "generator_version": "3",
       "generation_seed": 228888668,
       "generation_parameters": {
         "sample_rate_hz": 44100,
@@ -13114,7 +13114,7 @@
         "encoding": "PCM16 WAV",
         "method": "role-specific oscillator/noise layers with analytic envelopes"
       },
-      "source_sha256": "7e870ecbe7a3b2f270c1e329f10831d2a17c37066425aca64ac40594e1dec1b9",
+      "source_sha256": "ab70598d01ba45b7418d7fd49e9f751881b542b2de5a86bee52de7ef8c6262ff",
       "export_sha256": "9e5a00df25584e954440788fe85f0e2871aa8e5dd37f23e4368ed74579ab318e",
       "qa_report_path": "build/assets/candidates/audio-complete/qa-report.json",
       "generation_status": "candidate",
@@ -13145,7 +13145,7 @@
       "assigned_generation_skill": "dopamine-sfx",
       "godot_destination": "res://assets/audio/original_procedural/sfx/weapon_frost_nova_impact.wav",
       "authoring_source_or_recipe": "game/tools/generate_original_audio.py",
-      "generator_version": "2",
+      "generator_version": "3",
       "generation_seed": 3191546098,
       "generation_parameters": {
         "sample_rate_hz": 44100,
@@ -13153,7 +13153,7 @@
         "encoding": "PCM16 WAV",
         "method": "role-specific oscillator/noise layers with analytic envelopes"
       },
-      "source_sha256": "7e870ecbe7a3b2f270c1e329f10831d2a17c37066425aca64ac40594e1dec1b9",
+      "source_sha256": "ab70598d01ba45b7418d7fd49e9f751881b542b2de5a86bee52de7ef8c6262ff",
       "export_sha256": "b429a23aca2be536e32cabbfdf4846213e582afc7ec09e6deb36a8bc27115c62",
       "qa_report_path": "build/assets/candidates/audio-complete/qa-report.json",
       "generation_status": "candidate",
@@ -13184,7 +13184,7 @@
       "assigned_generation_skill": "dopamine-music",
       "godot_destination": "res://assets/audio/music/menu_theme.wav",
       "authoring_source_or_recipe": "game/tools/generate_original_audio.py",
-      "generator_version": "2",
+      "generator_version": "3",
       "generation_seed": 90210,
       "generation_parameters": {
         "sample_rate_hz": 44100,
@@ -13192,7 +13192,7 @@
         "encoding": "PCM16 WAV",
         "method": "synchronized synthesized stem with 12 ms edge fade"
       },
-      "source_sha256": "7e870ecbe7a3b2f270c1e329f10831d2a17c37066425aca64ac40594e1dec1b9",
+      "source_sha256": "ab70598d01ba45b7418d7fd49e9f751881b542b2de5a86bee52de7ef8c6262ff",
       "export_sha256": "5072ad85e44e0bd75c81e82fff8f7e018770e91b232042a873ae837b896929c9",
       "qa_report_path": "build/assets/candidates/audio-complete/qa-report.json",
       "generation_status": "candidate",
@@ -13206,90 +13206,6 @@
       "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
       "integrated_path": "game/assets/audio/music/menu_theme.wav",
       "runtime_use": "Runtime loop in the launch menu scene."
-    },
-    {
-      "asset_id": "music_survival_adaptive",
-      "category": "music",
-      "gameplay_entity_or_system": "survival adaptive",
-      "required_animations_or_variants": [
-        "loop seamlessly"
-      ],
-      "required_audio_events": [
-        "survival_adaptive"
-      ],
-      "target_format_and_dimensions": {
-        "format": "WAV PCM16 mono 44.1 kHz; Godot import",
-        "pixels": null
-      },
-      "assigned_generation_skill": "dopamine-music",
-      "godot_destination": "res://assets/audio/music/survival_adaptive.wav",
-      "authoring_source_or_recipe": "game/tools/generate_original_audio.py",
-      "generator_version": "2",
-      "generation_seed": 90210,
-      "generation_parameters": {
-        "sample_rate_hz": 44100,
-        "channels": 1,
-        "encoding": "PCM16 WAV",
-        "method": "synchronized synthesized stem with 12 ms edge fade"
-      },
-      "source_sha256": "7e870ecbe7a3b2f270c1e329f10831d2a17c37066425aca64ac40594e1dec1b9",
-      "export_sha256": "4bcf59d06dda0d96a9955e273485d7aad423a1f8382248071f8cc07fc5d5463d",
-      "qa_report_path": "build/assets/candidates/audio-complete/qa-report.json",
-      "generation_status": "candidate",
-      "validation_status": "passed",
-      "human_review_status": "pending",
-      "integration_status": "integrated",
-      "blockers": [
-        "arrangement/tempo/key/duration are not validated decisions"
-      ],
-      "requirement_source": "user goal + adaptive-audio GDD spec",
-      "candidate_export_path": "build/assets/candidates/audio-complete/music/cues/survival_adaptive.wav",
-      "acceptance_status": "accepted_for_provisional_production",
-      "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
-      "integrated_path": "game/assets/audio/music/survival_adaptive.wav",
-      "runtime_use": "Listening reference mix of the adaptive stems; the runtime plays synchronized stem resources."
-    },
-    {
-      "asset_id": "music_boss_intensity",
-      "category": "music",
-      "gameplay_entity_or_system": "boss intensity",
-      "required_animations_or_variants": [
-        "state transition cue"
-      ],
-      "required_audio_events": [
-        "boss_intensity"
-      ],
-      "target_format_and_dimensions": {
-        "format": "WAV PCM16 mono 44.1 kHz; Godot import",
-        "pixels": null
-      },
-      "assigned_generation_skill": "dopamine-music",
-      "godot_destination": "res://assets/audio/music/boss_intensity.wav",
-      "authoring_source_or_recipe": "game/tools/generate_original_audio.py",
-      "generator_version": "2",
-      "generation_seed": 90210,
-      "generation_parameters": {
-        "sample_rate_hz": 44100,
-        "channels": 1,
-        "encoding": "PCM16 WAV",
-        "method": "synchronized synthesized stem with 12 ms edge fade"
-      },
-      "source_sha256": "7e870ecbe7a3b2f270c1e329f10831d2a17c37066425aca64ac40594e1dec1b9",
-      "export_sha256": "00290293336c02b309ceda94fc53a5c6ee4ec3edf986dca701d8a75ee8797bc7",
-      "qa_report_path": "build/assets/candidates/audio-complete/qa-report.json",
-      "generation_status": "candidate",
-      "validation_status": "passed",
-      "human_review_status": "pending",
-      "integration_status": "integrated",
-      "blockers": [
-        "arrangement/tempo/key/duration are not validated decisions"
-      ],
-      "requirement_source": "user goal + adaptive-audio GDD spec",
-      "candidate_export_path": "build/assets/candidates/audio-complete/music/cues/boss_intensity.wav",
-      "acceptance_status": "accepted_for_provisional_production",
-      "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
-      "integrated_path": "game/assets/audio/music/boss_intensity.wav",
-      "runtime_use": "Listening reference mix for boss intensity; the runtime raises the synchronized boss stem."
     },
     {
       "asset_id": "music_victory_cue",
@@ -13308,7 +13224,7 @@
       "assigned_generation_skill": "dopamine-music",
       "godot_destination": "res://assets/audio/music/victory_cue.wav",
       "authoring_source_or_recipe": "game/tools/generate_original_audio.py",
-      "generator_version": "2",
+      "generator_version": "3",
       "generation_seed": 90210,
       "generation_parameters": {
         "sample_rate_hz": 44100,
@@ -13316,7 +13232,7 @@
         "encoding": "PCM16 WAV",
         "method": "synchronized synthesized stem with 12 ms edge fade"
       },
-      "source_sha256": "7e870ecbe7a3b2f270c1e329f10831d2a17c37066425aca64ac40594e1dec1b9",
+      "source_sha256": "ab70598d01ba45b7418d7fd49e9f751881b542b2de5a86bee52de7ef8c6262ff",
       "export_sha256": "f8e991690881eaf1d49e7a69856baafc5fc5b3cb512332a56ea09995761f384d",
       "qa_report_path": "build/assets/candidates/audio-complete/qa-report.json",
       "generation_status": "candidate",
@@ -13348,7 +13264,7 @@
       "assigned_generation_skill": "dopamine-music",
       "godot_destination": "res://assets/audio/music/defeat_cue.wav",
       "authoring_source_or_recipe": "game/tools/generate_original_audio.py",
-      "generator_version": "2",
+      "generator_version": "3",
       "generation_seed": 90210,
       "generation_parameters": {
         "sample_rate_hz": 44100,
@@ -13356,7 +13272,7 @@
         "encoding": "PCM16 WAV",
         "method": "synchronized synthesized stem with 12 ms edge fade"
       },
-      "source_sha256": "7e870ecbe7a3b2f270c1e329f10831d2a17c37066425aca64ac40594e1dec1b9",
+      "source_sha256": "ab70598d01ba45b7418d7fd49e9f751881b542b2de5a86bee52de7ef8c6262ff",
       "export_sha256": "cef156bd131309e2bd3d279fc507fe5a2d40ad2505732406a1d67fc873cc695f",
       "qa_report_path": "build/assets/candidates/audio-complete/qa-report.json",
       "generation_status": "candidate",
@@ -13388,7 +13304,7 @@
       "assigned_generation_skill": "dopamine-music",
       "godot_destination": "res://assets/audio/original_procedural/music/rhythm.wav",
       "authoring_source_or_recipe": "game/tools/generate_original_audio.py",
-      "generator_version": "2",
+      "generator_version": "3",
       "generation_seed": 90210,
       "generation_parameters": {
         "sample_rate_hz": 44100,
@@ -13396,7 +13312,7 @@
         "encoding": "PCM16 WAV",
         "method": "synchronized synthesized stem with 12 ms edge fade"
       },
-      "source_sha256": "7e870ecbe7a3b2f270c1e329f10831d2a17c37066425aca64ac40594e1dec1b9",
+      "source_sha256": "ab70598d01ba45b7418d7fd49e9f751881b542b2de5a86bee52de7ef8c6262ff",
       "export_sha256": "5c00fa5c8045861205487a22b6df6e1e99041b1b92cde4066e002377a53f82b3",
       "qa_report_path": "build/assets/candidates/audio-complete/qa-report.json",
       "generation_status": "candidate",
@@ -13430,7 +13346,7 @@
       "assigned_generation_skill": "dopamine-music",
       "godot_destination": "res://assets/audio/original_procedural/music/bass.wav",
       "authoring_source_or_recipe": "game/tools/generate_original_audio.py",
-      "generator_version": "2",
+      "generator_version": "3",
       "generation_seed": 90210,
       "generation_parameters": {
         "sample_rate_hz": 44100,
@@ -13438,7 +13354,7 @@
         "encoding": "PCM16 WAV",
         "method": "synchronized synthesized stem with 12 ms edge fade"
       },
-      "source_sha256": "7e870ecbe7a3b2f270c1e329f10831d2a17c37066425aca64ac40594e1dec1b9",
+      "source_sha256": "ab70598d01ba45b7418d7fd49e9f751881b542b2de5a86bee52de7ef8c6262ff",
       "export_sha256": "24abc21443f8eed1d26325b65e3fbcf198e88c55f735a91740b0cc8319e86362",
       "qa_report_path": "build/assets/candidates/audio-complete/qa-report.json",
       "generation_status": "candidate",
@@ -13472,7 +13388,7 @@
       "assigned_generation_skill": "dopamine-music",
       "godot_destination": "res://assets/audio/original_procedural/music/pad.wav",
       "authoring_source_or_recipe": "game/tools/generate_original_audio.py",
-      "generator_version": "2",
+      "generator_version": "3",
       "generation_seed": 90210,
       "generation_parameters": {
         "sample_rate_hz": 44100,
@@ -13480,7 +13396,7 @@
         "encoding": "PCM16 WAV",
         "method": "synchronized synthesized stem with 12 ms edge fade"
       },
-      "source_sha256": "7e870ecbe7a3b2f270c1e329f10831d2a17c37066425aca64ac40594e1dec1b9",
+      "source_sha256": "ab70598d01ba45b7418d7fd49e9f751881b542b2de5a86bee52de7ef8c6262ff",
       "export_sha256": "e184ba817fe47be9598916e5fa47d8dce31b3b494c160f95bdd1eb2bb3324249",
       "qa_report_path": "build/assets/candidates/audio-complete/qa-report.json",
       "generation_status": "candidate",
@@ -13514,7 +13430,7 @@
       "assigned_generation_skill": "dopamine-music",
       "godot_destination": "res://assets/audio/original_procedural/music/arp.wav",
       "authoring_source_or_recipe": "game/tools/generate_original_audio.py",
-      "generator_version": "2",
+      "generator_version": "3",
       "generation_seed": 90210,
       "generation_parameters": {
         "sample_rate_hz": 44100,
@@ -13522,7 +13438,7 @@
         "encoding": "PCM16 WAV",
         "method": "synchronized synthesized stem with 12 ms edge fade"
       },
-      "source_sha256": "7e870ecbe7a3b2f270c1e329f10831d2a17c37066425aca64ac40594e1dec1b9",
+      "source_sha256": "ab70598d01ba45b7418d7fd49e9f751881b542b2de5a86bee52de7ef8c6262ff",
       "export_sha256": "de5faa7da8afca72bddac26e0d6b407bec7d26bde94b284739eed42ef39c756f",
       "qa_report_path": "build/assets/candidates/audio-complete/qa-report.json",
       "generation_status": "candidate",
@@ -13556,7 +13472,7 @@
       "assigned_generation_skill": "dopamine-music",
       "godot_destination": "res://assets/audio/original_procedural/music/boss.wav",
       "authoring_source_or_recipe": "game/tools/generate_original_audio.py",
-      "generator_version": "2",
+      "generator_version": "3",
       "generation_seed": 90210,
       "generation_parameters": {
         "sample_rate_hz": 44100,
@@ -13564,7 +13480,7 @@
         "encoding": "PCM16 WAV",
         "method": "synchronized synthesized stem with 12 ms edge fade"
       },
-      "source_sha256": "7e870ecbe7a3b2f270c1e329f10831d2a17c37066425aca64ac40594e1dec1b9",
+      "source_sha256": "ab70598d01ba45b7418d7fd49e9f751881b542b2de5a86bee52de7ef8c6262ff",
       "export_sha256": "a28a4c4fcbdecccef7c2afcbf8d12984a9745262a1d6a40769e5b6a72c28ebdf",
       "qa_report_path": "build/assets/candidates/audio-complete/qa-report.json",
       "generation_status": "candidate",

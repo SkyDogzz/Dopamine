@@ -242,7 +242,7 @@ def _metadata(asset_id: str, kind: str, seed: int, metric: dict) -> dict:
 	return {
 		"asset_id": asset_id, "kind": kind, "status": "candidate_not_approved",
 		"skill": "dopamine-sfx" if kind == "sfx" else "dopamine-music",
-		"generator": "game/tools/generate_original_audio.py", "generator_version": "2",
+		"generator": "game/tools/generate_original_audio.py", "generator_version": "3",
 		"source_sha256": hashlib.sha256(source_path.read_bytes()).hexdigest(),
 		"seed": seed,
 		"parameters": {"sample_rate_hz": SAMPLE_RATE, "channels": 1, "encoding": "PCM16 WAV",
@@ -275,7 +275,7 @@ def main() -> None:
 			seed = args.seed if args.seed is not None else stable_seed
 			metric = _write_wave(sfx_directory / f"{sound_id}.wav", _render_sfx(sound_id, seed))
 			(sfx_directory / f"{sound_id}.json").write_text(json.dumps(
-				_metadata(sound_id, "sfx", seed, metric), indent=2) + "\n")
+				_metadata(f"sfx_{sound_id}", "sfx", seed, metric), indent=2) + "\n")
 			results["sfx"].append(metric)
 		(sfx_directory / "manifest.json").write_text(json.dumps({
 			"status": "candidate_not_approved", "method": "role-specific oscillator/noise layers with analytic envelopes",
@@ -291,7 +291,7 @@ def main() -> None:
 		mix_gains = {"rhythm": 0.38, "bass": 0.34, "pad": 0.27, "arp": 0.22, "boss": 0.20}
 		for name, stem in stems.items():
 			metric = _write_wave(music_directory / f"{name}.wav", stem)
-			metadata = _metadata(f"gameplay_loop_{name}", "music", seed, metric)
+			metadata = _metadata(f"music_stem_{name}", "music", seed, metric)
 			metadata.update({"tempo_bpm": MUSIC_BPM, "meter": "4/4", "bars": MUSIC_BARS,
 				"loop_start_sample": 0, "loop_end_sample": MUSIC_SAMPLE_COUNT,
 				"mix_gain_linear_proposed": mix_gains[name]})
@@ -308,7 +308,12 @@ def main() -> None:
 		for cue, gains in mixes.items():
 			mix = _mix_stems(stems, gains)
 			metric = _write_wave(cue_directory / f"{cue}.wav", mix)
-			metadata = _metadata(cue, "music", seed, metric)
+			metadata_id = {
+				"menu_theme": "music_menu_theme",
+				"survival_adaptive": "music_preview_survival_adaptive",
+				"boss_intensity": "music_preview_boss_intensity",
+			}[cue]
+			metadata = _metadata(metadata_id, "music", seed, metric)
 			metadata.update({"tempo_bpm": MUSIC_BPM, "meter": "4/4", "bars": MUSIC_BARS,
 				"loop": True, "loop_start_sample": 0, "loop_end_sample": MUSIC_SAMPLE_COUNT,
 				"mix_gains_linear_proposed": gains})
@@ -319,7 +324,7 @@ def main() -> None:
 		for cue in ("victory_cue", "defeat_cue"):
 			mix = _render_music_cue(cue)
 			metric = _write_wave(cue_directory / f"{cue}.wav", mix)
-			metadata = _metadata(cue, "music", seed, metric)
+			metadata = _metadata(f"music_{cue}", "music", seed, metric)
 			metadata.update({"loop": False, "notes_hz": [293.66, 369.99, 440.0, 587.33]
 				if cue == "victory_cue" else [440.0, 349.23, 261.63, 220.0], "note_seconds": 0.32})
 			(cue_directory / f"{cue}.json").write_text(json.dumps(metadata, indent=2) + "\n")
@@ -327,7 +332,7 @@ def main() -> None:
 		preview_metrics = _write_wave(music_directory / "preview_mix.wav", preview_mix)
 		(music_directory / "manifest.json").write_text(json.dumps({
 			"status": "candidate_not_approved", "generator": "game/tools/generate_original_audio.py",
-			"generator_version": "2", "seed": seed, "tempo_bpm": MUSIC_BPM, "bars": MUSIC_BARS,
+			"generator_version": "3", "seed": seed, "tempo_bpm": MUSIC_BPM, "bars": MUSIC_BARS,
 			"duration_seconds": round(MUSIC_SAMPLE_COUNT / SAMPLE_RATE, 6), "meter": "4/4",
 			"key_center": "D minor (proposed)", "loop_start_sample": 0, "loop_end_sample": MUSIC_SAMPLE_COUNT,
 			"mix_gains_linear_proposed": mix_gains, "stems": results["music"],
