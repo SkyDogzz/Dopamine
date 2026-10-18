@@ -2,14 +2,15 @@
 
 ## Staging Linux courant après refonte UI/assets — 2026-10-18
 
-- [x] `tools/package_linux_staging.sh` reconstruit un checkout `git archive` propre du commit `50f33eb` avec GCC 14.2.0, CMake 3.31.12, Godot 4.7.2 et `godot-cpp` épinglé. Compilation native Release vierge, import, export Linux/X11 filtré, extraction, notices/licences, exclusions des ressources de développement, `ldd` sans dépendance manquante et lancement headless de l’exécutable extrait avec la GDExtension adjacente passent.
-- [x] Archive de contrôle non versionnée `build/linux/staging/DopamineSurvivor-linux-50f33eb-staging.tar.gz` : 29 878 840 octets, SHA-256 `b87ab7229fa105a4b1e8c2c34bc128b263c762d222513107847dd34a27b7c41b`; le fichier `.sha256` passe.
-- [x] Vérification après extraction : exécutable, GDExtension Release adjacente, notices et licences présentes; l’archive ne contient que les fichiers du paquet attendus.
-- [i] Il s’agit d’un staging Linux x86_64 non distribuable, testé sur l’hôte Debian avec pilote audio Dummy. Cela ne couvre pas le rendu/GPU, les contrôles physiques, une installation distincte ni l’écoute audio humaine.
+- [x] `tools/package_linux_staging.sh` reconstruit un checkout `git archive` propre du commit `e3d0c4f` avec GCC 14.2.0, CMake 3.31.12, Godot 4.7.2 et `godot-cpp` épinglé. Compilation native Release vierge, import, export Linux/X11 filtré, extraction, notices/licences, exclusions des ressources de développement, `ldd` sans dépendance manquante et lancement headless de l’exécutable extrait avec la GDExtension adjacente passent.
+- [x] Archive de contrôle non versionnée `build/linux/staging/DopamineSurvivor-linux-e3d0c4f-staging.tar.gz` : 29 878 849 octets, SHA-256 `0681a9110d9a6510edaefe2e3bedd83f5fed7907338c5921c7d0fc53cb8339f2`.
+- [x] Vérification après extraction : exécutable 75 119 888 octets, SHA-256 `86f90e2ecda55d351165c8301fc55375610400e2edd4b13f1a1520fee3e79750`; GDExtension Release 1 140 456 octets, SHA-256 `3f929d4abe737ae8abfafcba3233c80898071866eeeeab7fbbd2b0f66aaecd56`; notices et licences présentes.
+- [x] Parcours avec `XDG_DATA_HOME` neuf : menu → hub → équipement → skill tree → choix d’arme → combat → pause sous Xvfb/Mesa llvmpipe à 1280×720 avec touches XTest. Sept captures générées, inspectées et indexées dans `docs/art/evidence/2026-10-18/README.md`; journal sans `ERROR:`.
+- [i] Il s’agit d’un staging Linux x86_64 non distribuable, testé sur l’hôte Debian avec pilote audio Dummy. Cela ne couvre pas le rendu/GPU matériel, les contrôles physiques, une installation distincte ni l’écoute audio humaine.
 
 ## Suite complète après staging courant — 2026-10-18
 
-- [x] `XDG_DATA_HOME=/tmp/dopamine-initiative-final-full DOPAMINE_TEST_TIMEOUT=480s PATH="$PWD/build/cmake-3.31.12-linux-x86_64/bin:$PATH" ctest --test-dir build --output-on-failure -j1` : **118/118 réussis en 79,50 s**. Couvre import Godot, rendus Xvfb, audit palette/assets, Survival, UI/arbre/équipement, audio numérique, parcours clavier/manette et scénarios Sandbox.
+- [x] `XDG_DATA_HOME=/tmp/dopamine-initiative-final-full DOPAMINE_TEST_TIMEOUT=480s PATH="$PWD/build/cmake-3.31.12-linux-x86_64/bin:$PATH" ctest --test-dir build --output-on-failure -j1` : **118/118 réussis en 79,30 s**, après le correctif d’opacité partagé. Couvre import Godot, rendus Xvfb, audit palette/assets, Survival, UI/arbre/équipement, audio numérique, parcours clavier/manette et scénarios Sandbox.
 - [i] Les tests de contrôles physiques et d’écoute humaine ne sont pas simulés par cette suite; ils restent **[OUVERTS]**.
 
 ## Bornes du skill tree aux viewports ciblés — 2026-10-18
@@ -2143,9 +2144,9 @@ Note de clôture : le blocage historique du smoke `sandbox_ui_smoke.gd` décrit 
 
 ## Parcours du build Linux/X11 Release courant — 2026-10-18
 
-- [x] Godot 4.7.2 exporte le commit `565b177` en Linux/X11 Release. Le binaire fait 75 113 712 octets (SHA-256 `a529f38c3d6cb292422d6539d9a3929e7464b7375174cb1808fd878a3a093004`); son sidecar GDExtension fait 1 140 440 octets (SHA-256 `a6d148c988fcb78476b3e43fb721869a0b2fddc1251e78ed1033231690b05dfa`). `ldd` ne signale aucune bibliothèque manquante.
-- [x] Démarrage headless à code 0, puis copie des deux fichiers dans un répertoire temporaire vide et nouveau `XDG_DATA_HOME`; le lancement relocalisé termine aussi sans erreur. Sous Xvfb/Mesa llvmpipe, le paquet suit le menu, hub, choix d’arme, run active et pause au clavier synthétique XTest; images et hashes dans `docs/art/evidence/2026-10-18/README.md`.
-- [i] Build de contrôle sur l’hôte Debian, non versionné/distribuable. Xvfb/XTest ne remplacent ni écran/GPU/clavier/manette physiques ni écoute audio; la sortie était Dummy. Le parcours d’arme capture le panneau de sélection, tandis que la capture run montre le départ du combat; le combat dense est documenté par la capture dédiée précédemment inspectée.
+- [x] Depuis l’archive staging propre du commit `50f33eb`, l’exécutable Linux/X11 fait 75 119 888 octets (SHA-256 `311ee4e24822a1ba4ab10837c04aabed85bb481f93c2e012a141364d203cb4bb`); la GDExtension Release adjacente fait 1 140 456 octets (SHA-256 `560fbc3f38534f9b1b4cad4ef858c0fafc713fa02ab06a3901cf0b28bfa7a9ed`). L’archive complète est 29 878 840 octets (SHA-256 `b87ab7229fa105a4b1e8c2c34bc128b263c762d222513107847dd34a27b7c41b`) et `ldd` ne signale aucune dépendance manquante.
+- [x] Avec `XDG_DATA_HOME` neuf, le paquet suit menu → hub → choix d’arme → run active → pause sous Xvfb/Mesa llvmpipe à 1280×720, via des touches synthétiques XTest. Les cinq captures sont régénérées, inspectées et hashées dans `docs/art/evidence/2026-10-18/README.md`; le journal ne contient aucun `ERROR:`.
+- [i] Le processus de capture a été arrêté par `SIGTERM` après l’état Pause. Ce build demeure un staging non versionné et non distribuable; Xvfb/XTest et le pilote audio `Dummy` ne remplacent ni matériel physique ni écoute audio.
 
 ## Layout et rendu du Sandbox Lab — 2026-10-18
 

@@ -39,17 +39,19 @@ Les onze premières captures `states/*.png` ont été générées par `game/test
 
 ## Parcours du paquet Linux/X11 Release — build du 2026-10-18
 
-Le binaire exporté depuis `565b177` et son sidecar GDExtension ont été copiés dans un dossier temporaire vide, puis démarrés avec un `XDG_DATA_HOME` neuf : code 0, aucune erreur ni bibliothèque manquante. Le parcours sous Xvfb/Mesa llvmpipe utilise des touches clavier synthétiques via XTest et suit menu → hub → choix d’arme → combat → pause. Les cinq captures 1280×720 sont dans `release-linux/`; elles ont été inspectées et montrent le rendu du paquet exporté. Le pilote audio était `Dummy`, aucun contrôleur physique ni sortie audio n’a été essayé.
+Le paquet de staging actuel provient de l’archive propre du commit `e3d0c4f`: 29 878 849 octets, SHA-256 `0681a9110d9a6510edaefe2e3bedd83f5fed7907338c5921c7d0fc53cb8339f2`. L’exécutable extrait fait 75 119 888 octets (SHA-256 `86f90e2ecda55d351165c8301fc55375610400e2edd4b13f1a1520fee3e79750`); sa GDExtension Release fait 1 140 456 octets (SHA-256 `3f929d4abe737ae8abfafcba3233c80898071866eeeeab7fbbd2b0f66aaecd56`). Avec un `XDG_DATA_HOME` jetable, le paquet suit menu → hub → équipement → arbre de compétences → choix d’arme → combat → pause sous Xvfb/Mesa llvmpipe à 1280×720, via XTest. Les sept captures ont été régénérées et inspectées; le journal ne contient aucun `ERROR:`. Le processus a été arrêté après les captures (`SIGTERM`). Le pilote audio était `Dummy`; aucun contrôleur physique ni sortie audio réelle n’a été essayé.
 
 | Capture | SHA-256 |
 |---|---|
-| `release-linux/dopamine-release-menu.png` | `4deda85c9002ee309cfb3c7739128551f66624d8fc92e58695e40253ec4275fd` |
-| `release-linux/dopamine-release-hub.png` | `bd18454012fe598bb2adc7107ef1a0cccb9d4b9e4ab1285614e018adb0eb938b` |
-| `release-linux/dopamine-release-weapon-choice.png` | `fa56c34614f39fdf0de320025765ef7e13ac1a654da00476481d840375e1db0c` |
-| `release-linux/dopamine-release-combat.png` | `d867cf457068a92f3c4b8be91876a6d60799cc826f84acdd76f3d83c4bc9dd9d` |
-| `release-linux/dopamine-release-pause-final.png` | `f39ea87f425f6c7089647e275cfffb2be59da38977576c87199d6fd4f6ac8020` |
+| `release-linux/dopamine-release-menu.png` | `23f32cf7c8c68e2a9ae41cc68f3cd4e48bb22bbf7b42568d71f07b5947807bd6` |
+| `release-linux/dopamine-release-hub.png` | `859b7d532e0054a17b60ff3e09a9458d0a959bb29b22b937db6ac819c169fc83` |
+| `release-linux/dopamine-release-equipment.png` | `dfd45c1f502c2d0846f5dd50e842dae49a725b32a0eb63a4a445481bd664654f` |
+| `release-linux/dopamine-release-skill-tree.png` | `54cdac0f93f1b1f183272bff49edd39ef6c42a18f6a55624211cc2371919b19b` |
+| `release-linux/dopamine-release-weapon-choice.png` | `bd16460173f70b5417ac121d6987141471e4faaa1efbe37f5b5ce562d5d1413d` |
+| `release-linux/dopamine-release-combat.png` | `381e4243a8145a5c31035705d1f2b44d8582f48939c00b09ae608e297ff563d2` |
+| `release-linux/dopamine-release-pause-final.png` | `161bae6563bbc8ab9740491681a99b84dfd76d3de51b6d01cffe435f9ad501c6` |
 
-Hashes du paquet : exécutable 75 113 712 octets, SHA-256 `a529f38c3d6cb292422d6539d9a3929e7464b7375174cb1808fd878a3a093004`; GDExtension 1 140 440 octets, SHA-256 `a6d148c988fcb78476b3e43fb721869a0b2fddc1251e78ed1033231690b05dfa`. C’est une preuve de lancement relocalisé sur l’hôte Debian courant; pas une installation sur machine distincte ni une validation matérielle.
+C’est une preuve de lancement relocalisé sur l’hôte Debian courant; pas une installation sur machine distincte ni une validation matérielle.
 
 ## Audio
 
