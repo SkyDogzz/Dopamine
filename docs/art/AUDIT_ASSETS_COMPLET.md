@@ -1,7 +1,7 @@
 # Audit complet des assets avant remplacement
 
 Date de l'audit de base : 2026-10-18
-Statut : snapshot initial des 425 fichiers; depuis ce snapshot, la skyline de titre a été migrée. Les hash initiaux restent inchangés dans le registre historique.
+Statut : le registre initial de 425 fichiers reste le snapshot historique avant purge. **État courant au 2026-10-18 :** après purge, 308 assets créatifs ont été régénérés par les cinq skills locaux et intégrés provisoirement; la revue perceptuelle reste ouverte. Voir `ASSET_MANIFEST.json`, `ASSET_GENERATION_REPORT.json` et `INVENTAIRE_ASSETS_UI.md` pour l’état courant.
 
 ## Portée et règle de remplacement
 
@@ -11,9 +11,9 @@ L'inventaire recense les fichiers sous `game/assets/`, les références Godot da
 
 ## Comptage initial
 
-Comptage vérifié au 2026-10-18. Le snapshot initial immuable est [`ASSET_FILE_REGISTER.csv`](ASSET_FILE_REGISTER.csv) (425 fichiers hors `.import`); [`ASSET_FILE_REGISTER_CURRENT.csv`](ASSET_FILE_REGISTER_CURRENT.csv) reflète le dépôt courant après retrait de douze sources Aseprite historiques dupliquées, remplacement des 107 correspondances d’empreinte exactes dans les familles graphiques et retrait des deux placeholders boss inutilisés (258 fichiers hors `.import`), avec hashes et références. Le contrôle `game/tools/validate_no_legacy_asset_hash_reuse.py` compare chaque asset courant au snapshot immuable : zéro correspondance exacte. Les fichiers `.import` Godot sont exclus; migrations et retraits sont consignés dans les CSV dédiés.
+Comptage de base vérifié au 2026-10-18. Le snapshot initial immuable est [`ASSET_FILE_REGISTER.csv`](ASSET_FILE_REGISTER.csv) (425 fichiers hors `.import`). Le relevé de 258 fichiers décrit un checkpoint historique antérieur à la purge finale et à la reconstruction. Le registre courant [`ASSET_FILE_REGISTER_CURRENT.csv`](ASSET_FILE_REGISTER_CURRENT.csv) est ensuite rafraîchi depuis le manifeste et recense 1 290 fichiers sous `game/assets`, dont 308 assets créatifs avec hashes et références; les fichiers `.import` sont inclus dans ce relevé courant. Le contrôle `game/tools/validate_no_legacy_asset_hash_reuse.py` compare les exports actuels au snapshot immuable; migrations et retraits sont consignés dans les CSV dédiés.
 
-Le registre courant mis à jour après génération sépare **64 chemins statiques** et **73 chargements dynamiques** observés dans le runtime (table `SPRITE_FILES`, familles SFX et chemins d’icônes construits), **104 sources éditables** (102 Aseprite + 2 FontForge), **10 cellules d’auteur** combinées dans l’atlas d’impacts, **aucun placeholder de boss sans consommateur** et **7 fichiers de métadonnées/prévisualisation**. Les sources d’auteur, cellules VFX séparées et prévisualisations sont exclues des presets de paquet; leurs exports nécessaires en jeu restent inclus. Au checkpoint `4e9e822`, les 137 chemins runtime du registre sont tous retrouvés dans le PCK de contrôle et aucun ancien chemin retiré recherché n’y apparaît.
+Au checkpoint historique `4e9e822`, le registre séparait **64 chemins statiques** et **73 chargements dynamiques** observés dans le runtime; les 137 chemins avaient été retrouvés dans le PCK de contrôle. Après reconstruction, 308 IDs du manifeste sont intégrés et revalidés par import Godot et tests; les chemins et états actuels sont dans les registres courants et le rapport de génération. Les sources éditables restent exclues du PCK runtime.
 
 | Groupe | Quantité constatée | Sources / provenance connues | Décision pour cette initiative |
 |---|---:|---|---|

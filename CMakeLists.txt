@@ -25,6 +25,12 @@ target_compile_features(dopamine_simulation PUBLIC cxx_std_23)
 set_target_properties(dopamine_simulation PROPERTIES POSITION_INDEPENDENT_CODE ON)
 
 if(BUILD_TESTING)
+    find_package(Python3 COMPONENTS Interpreter QUIET)
+    if(Python3_Interpreter_FOUND)
+        add_test(NAME asset_integration_scope_smoke
+            COMMAND "${Python3_EXECUTABLE}" "${PROJECT_SOURCE_DIR}/game/tools/asset_integration_scope_smoke.py")
+        set_tests_properties(asset_integration_scope_smoke PROPERTIES TIMEOUT 10)
+    endif()
     set(DOPAMINE_GAME_PROJECT_DIR "${PROJECT_SOURCE_DIR}/game" CACHE PATH "Godot project directory used by automated tests")
     add_executable(simulation_core_tests native/tests/simulation_core_test.cpp)
     target_link_libraries(simulation_core_tests PRIVATE dopamine_simulation)

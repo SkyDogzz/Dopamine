@@ -63,6 +63,18 @@ class Canvas:
 			self.rect(x + left, y + offset, right - left + 1, 1, color)
 
 
+def _rotate_frame(source: Canvas, quarter_turns: int) -> Canvas:
+	"""Rotate the canonical down-facing model without redrawing its identity."""
+	result = Canvas(source.palette_index, source.width, source.height)
+	for y in range(source.height):
+		for x in range(source.width):
+			new_x, new_y = x, y
+			for _ in range(quarter_turns % 4):
+				new_x, new_y = new_y, source.width - 1 - new_x
+			result.pixels[new_y * result.width + new_x] = source.pixels[y * source.width + x]
+	return result
+
+
 def _draw_frame(canvas: Canvas, origin_x: int, origin_y: int, direction: int,
 		frame: int, walking: bool) -> None:
 	step_cycle = [-2, -1, 2, 1] if walking else [0, 0, 0, 0]
@@ -219,7 +231,9 @@ def main() -> None:
 		for row in range(4):
 			for column in range(4):
 				frame = Canvas(palette_index, FRAME_SIZE, FRAME_SIZE)
-				_draw_frame(frame, 0, 0, row, column, walking)
+				_draw_frame(frame, 0, 0, 0, column, walking)
+				# Rows follow down/left/right/up and rotate the full locked model.
+				frame = _rotate_frame(frame, (0, 1, 3, 2)[row])
 				_proposed_player_state(frame, row, column, animation, palette_index)
 				for y in range(FRAME_SIZE):
 					source = y * frame.width
@@ -233,7 +247,8 @@ def main() -> None:
 			color = palette[palette_index_value]
 			alpha = 0 if palette_index_value == 0 else 255
 			rgba.data[index * 4:index * 4 + 4] = bytes((*color, alpha))
-		source = args.out_root / "source" / "animation" / f"player_{animation}.aseprite"
+		source_group = "pilot" if animation in ("idle", "walk") else "animation"
+		source = args.out_root / "source" / source_group / f"player_{animation}.aseprite"
 		source.parent.mkdir(parents=True, exist_ok=True)
 		source_bytes = aseprite_bytes(rgba, f"player_{animation}")
 		source.write_bytes(source_bytes)
@@ -242,7 +257,7 @@ def main() -> None:
 		metadata = {
 			"asset_id": f"player_{animation}", "status": "candidate_not_approved",
 			"skill": "dopamine-animation", "generator": "game/tools/generate_original_player_sheets.py",
-			"generator_version": "2", "seed": args.seed,
+			"generator_version": "3", "seed": args.seed,
 			"seed_policy": "fixed procedural geometry; seed recorded but not consumed",
 			"brief": "User-approved provisional midnight-blue/cyan armor, cyan visor, magenta/yellow accents",
 			"frame_size": [FRAME_SIZE, FRAME_SIZE], "grid": [4, 4],

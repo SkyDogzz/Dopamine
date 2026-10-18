@@ -2296,3 +2296,16 @@ Note de clôture : le blocage historique du smoke `sandbox_ui_smoke.gd` décrit 
 - [x] QA par lot, audit Art Bible des exports runtime, import Godot 4.7.2 et ressources `SpriteFrames` chargées; suite CTest complète **119/119** réussie après enregistrement de `sfx_specific_event_smoke`. Le smoke SFX vérifie le tir et l’impact de chacune des dix armes.
 - [x] Export PCK `Linux/X11` réussi; les VFX, sons et fontes sont inclus et les sources restent exclues. La génération, les validations et la prévisualisation sont documentées dans `docs/art/ASSET_GENERATION_REPORT.json`.
 - [i] Intégration provisoire selon l’autorisation de prototypes non canoniques. La revue artistique globale, l’écoute, le rendu sur GPU physique et les choix encore ouverts du biome, des boss, des fonts et des conventions d’animation restent **[OUVERTS]**; les checks numériques ne constituent pas une acceptation perceptuelle.
+
+
+## Correction des rangées directionnelles du joueur — 2026-10-18
+
+- [x] Inspection pixel-level des sheets à échelle entière : la première version variait le viseur sans tourner toute la silhouette. `generate_original_player_sheets.py` v3 génère les quatre IDs depuis le modèle partagé et applique les rangées bas/gauche/droite/haut par rotation.
+- [x] `validate_dopamine_animation_candidates.py` : quatre sheets 4×4 validées, palette Art Bible, unicité interframes, sources et hashes. L’intégration `--replace-ids` a remplacé uniquement `player_idle`, `player_walk`, `player_attack` et `player_death`; les hashes avant/après sont dans `ASSET_MIGRATIONS.csv`.
+- [x] Godot 4.7.2 import, `player_animation_assets_smoke`, `pilot_scene_visual_smoke`, `art_bible_asset_audit` et `survival_combat_visual_smoke` passent (**5/5**). La revue humaine artistique reste séparée.
+- [x] Après cette correction, la suite complète CTest passe **119/119 en 79,28 s**. Un précédent run avait échoué une fois dans `survival_weapon_catalog_smoke` (Toxic Ignition); six exécutions ciblées et la suite complète suivante passent. Le cas reste noté comme intermittent.
+
+## Garde de remplacement ciblé des assets — 2026-10-18
+
+- [x] `asset_integration_scope_smoke.py` construit un dépôt temporaire et vérifie qu’un asset différent est refusé sans `--replace-ids`, accepté en dry-run seulement pour le même ID/path géré, qu’aucun fichier n’est écrit en dry-run et qu’un sidecar d’un autre ID bloque le remplacement.
+- [x] Le smoke est enregistré dans CTest; configuration et exécution ciblée passent. Suite complète après ajout : **120/120 en 80,04 s**.

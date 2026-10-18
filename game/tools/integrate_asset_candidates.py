@@ -52,8 +52,12 @@ def source_destination(source: Path | None, asset_id: str = "") -> Path | None:
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--ids", nargs="+", required=True, help="Exact manifest asset IDs to integrate")
+    parser.add_argument("--replace-ids", nargs="*", default=[],
+                        help="IDs authorized for regeneration; existing targets must prove the same managed ID/path")
     parser.add_argument("--dry-run", action="store_true", help="Validate scope and show files without copying")
     args = parser.parse_args()
+    if not set(args.replace_ids) <= set(args.ids):
+        parser.error("--replace-ids must be a subset of --ids")
     manifest = json.loads(MANIFEST.read_text())
     by_id = {item["asset_id"]: item for item in manifest["assets"]}
     unknown = sorted(set(args.ids) - set(by_id))
@@ -84,8 +88,6 @@ def main() -> None:
         if target in destinations:
             errors.append(f"{item['asset_id']}: destination collision at {target}")
         destinations.add(target)
-        if target.exists() and sha256(target) != actual_hash:
-            errors.append(f"{item['asset_id']}: target exists with different bytes; refusing overwrite: {target}")
         source = ROOT / item["candidate_source_path"] if item.get("candidate_source_path") else None
         if source is not None and not source.is_file():
             errors.append(f"{item['asset_id']}: authoring source missing: {source}")
@@ -94,6 +96,19 @@ def main() -> None:
         meta_path = src.with_suffix(".json")
         metadata = json.loads(meta_path.read_text()) if meta_path.exists() else {}
         sidecar_target = target.with_suffix(target.suffix + ".json")
+        source_target = source_destination(source, item["asset_id"])
+        replace_authorized = item["asset_id"] in args.replace_ids
+        if target.exists() and sha256(target) != actual_hash:
+            try:
+                current_metadata = json.loads(sidecar_target.read_text())
+            except (OSError, json.JSONDecodeError):
+                current_metadata = {}
+            managed_target = (
+                current_metadata.get("asset_id") == item["asset_id"]
+                and current_metadata.get("integrated_export_path") == str(target.relative_to(ROOT))
+            )
+            if not replace_authorized or not managed_target:
+                errors.append(f"{item['asset_id']}: target differs and is not explicitly authorized as the same managed asset: {target}")
         if sidecar_target.exists() and meta_path.exists() and sha256(sidecar_target) != sha256(meta_path):
             try:
                 existing_sidecar = json.loads(sidecar_target.read_text())
@@ -105,13 +120,22 @@ def main() -> None:
             )
             if not managed_sidecar:
                 errors.append(f"{item['asset_id']}: sidecar exists with different bytes and is not managed for this candidate; refusing overwrite: {sidecar_target}")
-        source_target = source_destination(source, item["asset_id"])
         if source_target and source_target in source_destinations:
             errors.append(f"{item['asset_id']}: authoring source destination collision at {source_target}")
         if source_target:
             source_destinations.add(source_target)
         if source_target and source_target.exists() and source and sha256(source_target) != sha256(source):
-            errors.append(f"{item['asset_id']}: authoring source exists with different bytes; refusing overwrite: {source_target}")
+            try:
+                current_metadata = json.loads(sidecar_target.read_text())
+            except (OSError, json.JSONDecodeError):
+                current_metadata = {}
+            managed_source = (
+                current_metadata.get("asset_id") == item["asset_id"]
+                and (current_metadata.get("integrated_source_path") == str(source_target.relative_to(ROOT))
+                     or current_metadata.get("source_path") == str(source_target.relative_to(ROOT / "game/assets")))
+            )
+            if not replace_authorized or not managed_source:
+                errors.append(f"{item['asset_id']}: source differs and is not explicitly authorized as the same managed asset: {source_target}")
         sprite_frames = make_sprite_frames(metadata, destination)
         resource_target = target.with_suffix(".tres") if sprite_frames else None
         if resource_target and resource_target.exists() and resource_target.read_text() != sprite_frames:
@@ -128,7 +152,7 @@ def main() -> None:
         return
     for item, src, target, source, digest, metadata, source_target, sprite_frames, resource_target, metadata_path in plan:
         target.parent.mkdir(parents=True, exist_ok=True)
-        if not target.exists():
+        if not target.exists() or sha256(target) != digest:
             shutil.copy2(src, target)
         sidecar = target.with_suffix(target.suffix + ".json")
         if metadata_path.is_file():
@@ -145,7 +169,7 @@ def main() -> None:
             sidecar.write_text(json.dumps(accepted_metadata, indent=2, ensure_ascii=False) + "\n")
         if source and source.is_file():
             source_target.parent.mkdir(parents=True, exist_ok=True)
-            if not source_target.exists():
+            if not source_target.exists() or sha256(source_target) != sha256(source):
                 shutil.copy2(source, source_target)
         if sprite_frames:
             if not resource_target.exists():

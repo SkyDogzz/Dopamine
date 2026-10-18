@@ -21,6 +21,7 @@ Use local deterministic Python or LibreSprite CLI only; no cloud generation or p
 - Direction row order, pivots, animation timing, asymmetrical mirroring, and non-player frame counts remain open where not explicitly specified. Record assumptions instead of presenting them as validated decisions.
 - Validate dimensions, frame-grid alignment, alpha, palette, identity markers, and frame-to-frame bounds with `dopamine-asset-qa` before Godot import.
 - Generate and integrate only the requested animation IDs. Keep unrelated art untouched.
+- For a reviewed regeneration of an already integrated ID, QA the staged replacement first, then pass that exact ID in both `--ids` and `--replace-ids` to `game/tools/integrate_asset_candidates.py`. The integrator requires the destination metadata to prove the same managed ID and path; never widen the replacement list to unrelated assets.
 
 ## Local project interface
 
