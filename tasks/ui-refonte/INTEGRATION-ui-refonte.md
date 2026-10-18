@@ -33,12 +33,12 @@ Avant la correction viewport, 21 smokes UI et d’intégration passaient avec un
 | `ui-foundation` | Theme partagé pixel art néon, styles de contrôles et focus, prévisualisation. Cette extension poursuit la conformité complète à l’Art Bible et aux écrans à 640×360. |
 | `ui-settings` | Préférences plein écran/volume et panneau Options réutilisable; intégration depuis Pause conserve les horloges gelées. |
 | `launch-navigation` | Accueil, Options, Quitter, entrée discrète et isolée au Sandbox; navigation Jouer vers le hub. |
-| `survival-hub` | Préparation Survival, difficultés séquentielles, équipement/compétences, boutons Succès/Bestiaire inertes et lancement explicite. |
+| `survival-hub` | Préparation Survival, difficultés séquentielles, équipement/compétences, Succès inerte, Codex lecture seule et lancement explicite. |
 | `survival-hud` | HUD, choix de coffre typé et décrit, résultat de run. |
 | `survival-pause` | Pause/reprise, Options, inventaire de run en lecture seule et abandon confirmé. |
 | `sandbox-ui` | Theme partagé, métriques en grille, commandes clarifiées, rendu contenu au playfield et isolation conservée. |
 
-Les multiplicateurs de difficulté et autres paramètres de balance restent **[PROPOSÉS]**. Les comportements spéciaux Chaos restent **[OUVERTS]**. Les décisions de parcours acceptées demeurent **[VALIDÉES]**. Aucun écran Succès/Bestiaire fictif, Sandbox Lab joueur P8 ou accès du Sandbox aux services de progression n’a été ajouté.
+Les multiplicateurs de difficulté et autres paramètres de balance restent **[PROPOSÉS]**. Les comportements spéciaux Chaos restent **[OUVERTS]**. Les décisions de parcours acceptées demeurent **[VALIDÉES]**. Le Codex réutilise les catalogues existants; aucun accès du Sandbox aux services de progression n’a été ajouté.
 
 ## Vérifications de clôture
 

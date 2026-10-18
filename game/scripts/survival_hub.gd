@@ -7,6 +7,7 @@ const SURVIVAL_ENTRY_SCENE := preload("res://scenes/survival_entry.tscn")
 const EQUIPMENT_PANEL_SCENE := preload("res://scenes/equipment_inventory_panel.tscn")
 const SKILL_TREE_PANEL_SCENE := preload("res://scenes/skill_tree_panel.tscn")
 const ARMORLESS_RECORDS_PANEL_SCENE := preload("res://scenes/armorless_records_panel.tscn")
+const CODEX_PANEL_SCENE := preload("res://scenes/codex_panel.tscn")
 
 @onready var _difficulty_list: VBoxContainer = $Content/Main/DifficultyCard/Body/DifficultyList
 @onready var _difficulty_status: Label = $Content/Main/DifficultyCard/Body/DifficultyStatus
@@ -21,6 +22,7 @@ const ARMORLESS_RECORDS_PANEL_SCENE := preload("res://scenes/armorless_records_p
 @onready var _skill_tree_button: Button = $Content/Main/PreparationCard/Body/SkillTreeButton
 @onready var _records_button: Button = $Content/Header/RecordsButton
 @onready var _back_button: Button = $Content/Header/BackButton
+@onready var _codex_button: Button = $Content/Main/PreparationCard/Body/InactiveFeatures/BestiaryButton
 
 var progression_service: RefCounted
 var selected_difficulty := "easy"
@@ -33,6 +35,7 @@ var _difficulty_group := ButtonGroup.new()
 var _equipment_panel: Control
 var _skill_tree_panel: Control
 var _records_panel: Control
+var _codex_panel: Control
 
 func _ready() -> void:
 	for button_and_path in [
@@ -49,6 +52,9 @@ func _ready() -> void:
 	_equipment_button.pressed.connect(_open_equipment)
 	_skill_tree_button.pressed.connect(_open_skill_tree)
 	_records_button.pressed.connect(_open_armorless_records)
+	_codex_button.text = "CODEX"
+	_codex_button.theme_type_variation = "Button"
+	_codex_button.pressed.connect(_open_codex)
 	_launch_button.pressed.connect(_launch_run)
 	_armorless_launch_button.pressed.connect(_launch_armorless_run)
 	_endless_launch_button.pressed.connect(_launch_endless_run)
@@ -62,7 +68,8 @@ func _unhandled_input(event: InputEvent) -> void:
 		return
 	if (_equipment_panel != null and _equipment_panel.visible) or \
 			(_skill_tree_panel != null and _skill_tree_panel.visible) or \
-			(_records_panel != null and _records_panel.visible):
+			(_records_panel != null and _records_panel.visible) or \
+			(_codex_panel != null and _codex_panel.visible):
 		return
 	_on_back_pressed()
 	if get_viewport() != null:
@@ -88,6 +95,9 @@ func _create_panels() -> void:
 	_skill_tree_panel.unlock_requested.connect(_unlock_skill_node)
 	_skill_tree_panel.respec_requested.connect(_respec_skill_tree)
 	add_child(_skill_tree_panel)
+	_codex_panel = CODEX_PANEL_SCENE.instantiate()
+	_codex_panel.close_requested.connect(_close_codex)
+	add_child(_codex_panel)
 
 func _load_profile() -> void:
 	var result: Dictionary = progression_service.load_profile()
@@ -241,6 +251,13 @@ func _close_equipment() -> void:
 func _close_skill_tree() -> void:
 	_skill_tree_panel.visible = false
 	_skill_tree_button.grab_focus()
+
+func _open_codex() -> void:
+	_codex_panel.present()
+
+func _close_codex() -> void:
+	_codex_panel.visible = false
+	_codex_button.grab_focus()
 
 func _set_equipment_state(instance_id: String, equipped: bool) -> void:
 	var result: Dictionary = progression_service.set_equipped(instance_id, equipped)

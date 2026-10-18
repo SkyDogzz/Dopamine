@@ -7,7 +7,7 @@
 - **[VALIDÉ]** Survival est le seul mode jouable; le hub propose une action explicite pour lancer une run.
 - **[VALIDÉ]** Les difficultés sont Easy, Normal, Hard, Nightmare et Chaos. Easy est débloquée au départ; chacune des suivantes se débloque après une victoire dans la difficulté précédente.
 - **[VALIDÉ]** L’équipement permanent et l’arbre de compétences se consultent et se modifient dans le hub avant la run; ils ne sont pas modifiables pendant une run.
-- **[VALIDÉ]** Succès et Bestiaire sont visibles mais sans fonctionnalité ni contenu inventé.
+- **[VALIDÉ — EXTENSION UTILISATEUR]** Succès reste visible et inactif; l’ancien Bestiaire devient le Codex consultable depuis le hub, avec ennemis, armes, reliques et combos existants.
 - **[VALIDÉ]** L’accueil expose les records; le hub présente les records Armorless locaux des cinq difficultés en lecture seule, sans modifier la progression.
 - **[VALIDÉ]** La scène de démarrage est l’accueil; **Jouer** transmet au hub. Le Sandbox reste strictement séparé de la progression normale et de `SaveService`.
 - **[PROPOSÉ]** Les entrées visibles mais inactives Succès/Bestiaire gardent un style atténué tout en conservant le focus clavier/manette visible; elles ne sont pas désactivées pour préserver leur atteignabilité.
@@ -34,6 +34,10 @@ La victoire sur les boss, l’ordre des difficultés et l’accès progressif so
 
 Compléter le parcours **Jouer → préparation Survival → lancement explicite d’une run**. Centraliser dans le hub la sélection de difficulté, les modifications d’équipement permanent et de compétences, puis transmettre les choix au parcours de run normal.
 
+## Codex — extension acceptée
+
+Le Codex est une fenêtre de référence en lecture seule accessible depuis le hub. Ses catégories listent les 12 entrées de roster avec leurs sprites et rôles, les dix armes avec leur description et leur combo arme + relique → évolution, puis les onze reliques avec leur rôle et leur bonus par niveau. Les données d’armes/reliques et leurs associations viennent de `game/data/combat_catalog.json`; les sprites sont ceux déjà utilisés par le jeu. Familles ennemies validées restent distinguées des profils/patterns/chiffres proposés ou prototypes. Aucun nouvel état de découverte, profil sauvegardé ou accès Sandbox n’est créé.
+
 ## Périmètre
 
 - Créer le hub Survival comme destination du signal `play_requested` de `launch-navigation`.
@@ -42,7 +46,7 @@ Compléter le parcours **Jouer → préparation Survival → lancement explicite
 - Persister les déblocages séquentiels dans le profil normal existant et relier la victoire de run à l’octroi du prochain déblocage. Ajouter une migration de profil non destructive si le schéma doit évoluer.
 - Réutiliser les panneaux existants d’équipement permanent et d’arbre de compétences dans le hub, en conservant les fonctionnalités déjà présentes de ces panneaux.
 - Retirer l’accès de modification à ces panneaux depuis l’interface d’une run; les bonus sélectionnés dans le hub sont chargés au démarrage de la run.
-- Afficher Succès et Bestiaire en contrôles focusables inertes; ils n’ouvrent aucun écran et ne chargent aucune donnée dédiée.
+- Afficher Succès en contrôle focusable inerte. Le bouton Bestiaire ouvre le Codex en lecture seule, construit depuis les profils roster et `combat_catalog.json`; aucun contenu de progression ou sauvegarde n’est ajouté.
 - Afficher un accès focusable aux records Armorless par difficulté; la table utilise les données locales existantes et indique les difficultés sans record.
 - Ajouter un bouton explicite **Lancer la run** qui utilise la voie Survival normale, passe la difficulté sélectionnée et conserve le choix d’arme initial déjà présenté au début de la session.
 - Afficher proprement une erreur de profil indisponible sans créer de nouveau fichier ou profil de secours qui contournerait `SaveService`.
@@ -50,7 +54,7 @@ Compléter le parcours **Jouer → préparation Survival → lancement explicite
 
 ## Hors périmètre
 
-- Implémenter Succès ou Bestiaire, ajouter d’autres modes, ou construire des écrans factices pour ces fonctions.
+- Implémenter Succès, ajouter d’autres modes, ou modifier les règles de combat/équilibrage depuis le Codex.
 - Modifier le Sandbox, lui donner accès au profil normal, ou partager ses données avec le hub.
 - Ajouter des règles spéciales à Chaos pendant que leurs comportements restent **[OUVERTS]**.
 - Refaire le HUD en run, les coffres ou les résultats; ces éléments appartiennent à `survival-hud`.
@@ -62,7 +66,7 @@ Compléter le parcours **Jouer → préparation Survival → lancement explicite
 1. Depuis l’accueil, **Jouer** ouvre le hub et donne le focus à l’action Survival principale.
 2. Easy est sélectionnée par défaut. Une difficulté verrouillée reste visible, explique qu’une victoire dans la difficulté précédente est requise et ne peut pas être sélectionnée.
 3. Les panneaux Équipement et Compétences s’ouvrent depuis le hub. Ils utilisent le profil normal et rendent le focus au bouton d’origine à la fermeture.
-4. Succès et Bestiaire sont visibles et focalisables, indiqués comme indisponibles, et ne déclenchent aucune action.
+4. Succès reste inerte; CODEX ouvre les entrées ennemis, armes, reliques et combos. Le sélecteur de catégories et la liste sont parcourables au clavier/manette; Échap ferme le panneau et rend le focus au bouton CODEX.
 5. **Lancer la run** transmet la difficulté retenue à la session Survival normale. La session applique l’équipement et les bonus de compétence chargés; son choix d’arme initial reste le premier choix de gameplay de la run.
 6. Une victoire normale dans la difficulté sélectionnée débloque la difficulté suivante dans le profil. Une défaite ou un abandon ne modifie pas les déblocages.
 
@@ -78,7 +82,7 @@ Compléter le parcours **Jouer → préparation Survival → lancement explicite
 - [x] Les panneaux existants Équipement et Compétences sont utilisables dans le hub; les changements s’appliquent à la run suivante.
 - [x] La vue Records Armorless compare les cinq difficultés en lecture seule; Échap/manette ferme le panneau et rend le focus à l’action d’ouverture.
 - [x] Pendant une run, aucun contrôle ou chemin UI ne permet de modifier l’équipement permanent ou l’arbre de compétences.
-- [x] Succès et Bestiaire sont visibles, atteignables au clavier/manette, inertes à l’activation clavier/manette/souris simulée et n’ajoutent aucune donnée fictive; `survival_hub_smoke.gd` vérifie le parcours et l’absence de destinations. L’interaction avec des périphériques physiques reste à essayer.
+- [x] Succès reste inerte; le Codex est atteignable au clavier/manette, présente les catalogues ennemis/armes/reliques et restitue le focus à la fermeture. `survival_hub_smoke.gd` couvre le contrat; l’interaction avec des périphériques physiques reste à essayer.
 - [x] L’action **Lancer la run** ouvre le parcours de run normal, transmet la difficulté et conserve le choix d’arme initial.
 - [x] Aucune donnée du Sandbox n’est lue/modifiée; aucune dépendance Sandbox → `SaveService` ou progression n’est ajoutée.
 - [x] La navigation et les panneaux restent lisibles aux résolutions UI de référence, avec focus visible et sans action nécessitant une souris.

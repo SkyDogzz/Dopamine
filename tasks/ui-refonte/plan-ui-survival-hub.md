@@ -8,7 +8,7 @@
 
 Relier **Jouer** au hub de préparation Survival, transférer une difficulté autorisée vers la run normale et limiter la modification d’équipement permanent et de compétences au hub. Les décisions [VALIDÉ], les réglages [PROPOSÉ] et les comportements [OUVERT] restent tels que consignés dans [`SPEC-survival-hub.md`](SPEC-survival-hub.md).
 
-Le Sandbox reste hors du parcours et des données du hub. Succès et Bestiaire restent des contrôles inertes. Les multiplicateurs GDD seront centralisés comme réglages provisoires [PROPOSÉ]; aucune règle spéciale Chaos ne sera ajoutée.
+Le Sandbox reste hors du parcours et des données du hub. Le bouton Succès reste inerte. **Addendum utilisateur :** l’ancien bouton Bestiaire ouvre désormais le Codex en lecture seule, sans modifier l’isolation Sandbox. Les multiplicateurs GDD restent provisoires [PROPOSÉ]; aucune règle spéciale Chaos n’est ajoutée.
 
 ## Découpage vertical
 
