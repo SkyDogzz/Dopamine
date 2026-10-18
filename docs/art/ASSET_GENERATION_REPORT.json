@@ -2403,7 +2403,7 @@
     },
     {
       "path": "game/assets/source/environment/survival_ground_tile.aseprite",
-      "sha256": "5390292db2e421399a4c7d7f168cc4c045677c363d521ebba8732e80cba14e9d"
+      "sha256": "14ddb90e90a557a4a8c0ec3fbffd613bba2a2f3677eec713faf6a2c969f6b1fc"
     },
     {
       "path": "game/assets/source/fonts/NeonArcadePixel.sfd",
@@ -2615,7 +2615,7 @@
     },
     {
       "path": "game/assets/source/original_procedural/survival_ruins_pixel.aseprite",
-      "sha256": "acc4f2b76c9d619e72b0e616089d320aa4f099e5b7079903d29485b2d75a7073"
+      "sha256": "c6236204bc833a9ec2d9f5e708c1d7943759460d799085a9ee8cd63f80945cb0"
     },
     {
       "path": "game/assets/source/original_procedural/weapon_crimson_daggers.aseprite",
@@ -5183,7 +5183,7 @@
     },
     {
       "path": "game/assets/sprites/environment/survival_ground_tile.png",
-      "sha256": "adddc28c22cdb72275d0a72b935542528bb66c025cfe6f728ca218541daa456a"
+      "sha256": "be6ac25d75938b5cedd7caff6a1eec570a77e6145db9078c51473893c2882010"
     },
     {
       "path": "game/assets/sprites/environment/survival_ground_tile.png.import",
@@ -5195,7 +5195,7 @@
     },
     {
       "path": "game/assets/sprites/environment/survival_ruins_pixel.png",
-      "sha256": "b5ed4dade0c8732eb602759d3918384a6479743ebf2815a416d5c5c31c1644ed"
+      "sha256": "e4c920e621076aa8fef867823e358dd645e7a0f579e9486b1cc251d02416ad31"
     },
     {
       "path": "game/assets/sprites/environment/survival_ruins_pixel.png.import",

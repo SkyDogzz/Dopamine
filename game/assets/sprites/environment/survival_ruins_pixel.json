@@ -1,0 +1,52 @@
+{
+  "asset_id": "survival_ruins_pixel",
+  "status": "candidate_not_approved",
+  "skill": "dopamine-pixel-art",
+  "generator": "game/tools/generate_neon_arcade_art.py",
+  "generator_version": "4",
+  "seed": 0,
+  "seed_policy": "fixed procedural geometry; seed is recorded but not consumed",
+  "brief": "Four restored circular stone pads around the open Survival arena center",
+  "parameters": {
+    "drawing_method": "deterministic role primitives",
+    "asset_name": "survival_ruins_pixel",
+    "palette_source": "docs/art/palette_master.gpl",
+    "seed_consumed": false,
+    "arena_layout": "four broken circular stone rings at the prior corner landmarks",
+    "open_center_radius": 350
+  },
+  "dimensions": {
+    "width": 1536,
+    "height": 1536
+  },
+  "palette_rgba": [
+    [
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      8,
+      11,
+      24,
+      255
+    ],
+    [
+      16,
+      21,
+      43,
+      255
+    ],
+    [
+      27,
+      35,
+      64,
+      255
+    ]
+  ],
+  "source_path": "source/original_procedural/survival_ruins_pixel.aseprite",
+  "export_path": "sprites/environment/survival_ruins_pixel.png",
+  "source_sha256": "c6236204bc833a9ec2d9f5e708c1d7943759460d799085a9ee8cd63f80945cb0",
+  "export_sha256": "e4c920e621076aa8fef867823e358dd645e7a0f579e9486b1cc251d02416ad31"
+}

@@ -184,11 +184,18 @@ def save(name: str, output: pathlib.Path, source: pathlib.Path, image: Canvas):
         asset_id = f"weapon_{EVOLUTION_ROLES[name]}_icon"
     metadata = {
         "asset_id": asset_id, "status": "candidate_not_approved", "skill": "dopamine-pixel-art",
-        "generator": "game/tools/generate_neon_arcade_art.py", "generator_version": "3",
+        "generator": "game/tools/generate_neon_arcade_art.py", "generator_version": "4",
         "seed": GENERATION_SEED, "seed_policy": "fixed procedural geometry; seed is recorded but not consumed",
-        "brief": "Distinct role silhouette pixel art using only docs/art/palette_master.gpl",
+        "brief": ("Four restored circular stone pads around the open Survival arena center"
+                  if name == "survival_ruins_pixel" else
+                  "Sparse seamless dark floor tile, with six restrained stone accents"
+                  if name == "survival_ground_tile" else
+                  "Distinct role silhouette pixel art using only docs/art/palette_master.gpl"),
         "parameters": {"drawing_method": "deterministic role primitives", "asset_name": name,
-                       "palette_source": "docs/art/palette_master.gpl", "seed_consumed": False},
+                       "palette_source": "docs/art/palette_master.gpl", "seed_consumed": False,
+                       **({"arena_layout": "four broken circular stone rings at the prior corner landmarks",
+                           "open_center_radius": 350} if name == "survival_ruins_pixel" else {}),
+                       **({"seamless": True, "accent_pixels": 6} if name == "survival_ground_tile" else {})},
         "dimensions": {"width": image.width, "height": image.height},
         "palette_rgba": [list(color) for color in colors],
         "source_path": str(source.relative_to(ASSETS)), "export_path": str(output.relative_to(ASSETS)),
@@ -603,18 +610,18 @@ def draw_generic_boss_role(name: str, palette) -> Canvas:
 
 
 def draw_ruins(palette) -> Canvas:
-    # Generic, low contrast masonry remains an environment role, not a biome identity.
+    # Keep the arena center readable and restore the four circular ruin pads.
     c = Canvas(1536, 1536)
     rng = hashlib.sha256(b"neon-arcade-masonry-layout-v2").digest()
     dark, mid, hi = palette["shadow_1"], palette["shadow_2"], palette["shadow_3"]
+    cx = cy = 768
     cell = 48
     for row in range(32):
         offset = 24 if row % 2 else 0
         for col in range(32):
             v = rng[(row * 32 + col) % len(rng)]
-            # A broad open lane keeps combat silhouettes legible.
             px, py = col * cell + offset, row * cell
-            if 10 <= col <= 21 and 9 <= row <= 23:
+            if math.hypot(px + 20 - cx, py + 18 - cy) < 350:
                 continue
             if v < 92:
                 continue
@@ -624,6 +631,25 @@ def draw_ruins(palette) -> Canvas:
             c.rect(px, py, w, h, color)
             if v % 5 == 0:
                 c.rect(px + 5, py + 5, max(2, w - 10), 2, dark)
+
+    # Four broken circular stone pads recall the original arena landmarks.
+    pads = ((cx - 610, cy - 610), (cx + 610, cy - 610),
+            (cx - 610, cy + 610), (cx + 610, cy + 610))
+    for px, py in pads:
+        c.ring(px, py, 104, 80, dark)
+        c.ring(px, py, 88, 76, mid)
+        c.ring(px, py, 64, 59, hi)
+        # Deliberate gaps keep the ring broken and pixel-art-like.
+        for gx, gy, w, h in ((px - 8, py - 108, 16, 24),
+                             (px + 88, py - 8, 24, 16),
+                             (px - 8, py + 84, 16, 24),
+                             (px - 112, py - 8, 24, 16)):
+            c.rect(gx, gy, w, h, (0, 0, 0, 0))
+        c.disc(px, py, 18, mid)
+        c.disc(px, py, 9, hi)
+        for ox, oy in ((-122, -20), (112, 24), (20, -118), (-24, 112)):
+            c.rect(px + ox - 9, py + oy - 7, 18, 14, mid)
+            c.rect(px + ox - 4, py + oy - 2, 8, 4, hi)
     return c
 
 
@@ -653,7 +679,8 @@ def generate(families: set[str], palette):
         ground = Canvas(16, 16)
         floor, seam, speck = palette["shadow_2"], palette["shadow_3"], palette["shadow_4"]
         ground.data[:] = bytes(floor) * (16 * 16)
-        for x, y, color in ((3, 4, seam), (10, 5, speck), (7, 11, seam), (12, 13, speck)):
+        for x, y, color in ((8, 2, seam), (12, 5, speck), (13, 9, seam),
+                            (8, 13, speck), (3, 10, seam), (4, 5, speck)):
             ground.pixel(x, y, color)
         output_pair("survival_ground_tile", ASSETS / "sprites/environment/survival_ground_tile.png", ASSETS / "source/environment/survival_ground_tile.aseprite", ground)
         output_pair("survival_ruins_pixel", ASSETS / "sprites/environment/survival_ruins_pixel.png", source_dir / "survival_ruins_pixel.aseprite", draw_ruins(palette))

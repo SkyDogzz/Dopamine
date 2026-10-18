@@ -1,0 +1,46 @@
+{
+  "asset_id": "survival_ground_tile",
+  "status": "candidate_not_approved",
+  "skill": "dopamine-pixel-art",
+  "generator": "game/tools/generate_neon_arcade_art.py",
+  "generator_version": "4",
+  "seed": 0,
+  "seed_policy": "fixed procedural geometry; seed is recorded but not consumed",
+  "brief": "Sparse seamless dark floor tile, with six restrained stone accents",
+  "parameters": {
+    "drawing_method": "deterministic role primitives",
+    "asset_name": "survival_ground_tile",
+    "palette_source": "docs/art/palette_master.gpl",
+    "seed_consumed": false,
+    "seamless": true,
+    "accent_pixels": 6
+  },
+  "dimensions": {
+    "width": 16,
+    "height": 16
+  },
+  "palette_rgba": [
+    [
+      16,
+      21,
+      43,
+      255
+    ],
+    [
+      27,
+      35,
+      64,
+      255
+    ],
+    [
+      41,
+      51,
+      84,
+      255
+    ]
+  ],
+  "source_path": "source/environment/survival_ground_tile.aseprite",
+  "export_path": "sprites/environment/survival_ground_tile.png",
+  "source_sha256": "14ddb90e90a557a4a8c0ec3fbffd613bba2a2f3677eec713faf6a2c969f6b1fc",
+  "export_sha256": "be6ac25d75938b5cedd7caff6a1eec570a77e6145db9078c51473893c2882010"
+}
