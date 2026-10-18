@@ -269,7 +269,9 @@ func _sell_equipment(instance_id: String) -> void:
 
 func _refresh_equipment(result: Dictionary) -> void:
 	if result.get("ok", false):
+		var previous_slot := str(_equipment_panel.selected_slot())
 		_equipment_panel.present(result["profile"])
+		_equipment_panel.set_selected_slot(previous_slot)
 	else:
 		_equipment_panel.show_feedback("ACTION FAILED: %s" % str(result.get("error", "unknown")))
 

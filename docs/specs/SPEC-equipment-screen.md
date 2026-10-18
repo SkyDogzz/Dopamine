@@ -50,5 +50,12 @@ Vérifier chaque slot, sélection/filtrage, pièce déjà équipée, slot vide, 
 
 ## Questions ouvertes
 
-- Quel asset représente le personnage équipé et les superpositions de pièces sont-elles une exigence visuelle ou une représentation schématique suffit-elle ?
-- Les fonctions existantes de vente, démantèlement et enhancement restent accessibles; leur placement exact (fiche secondaire ou écran dédié) peut suivre le design final sans supprimer ces parcours.
+- **[OUVERT]** Les overlays visuels des pièces sur le personnage sont-ils nécessaires ? La tranche actuelle emploie l’icône d’armure comme repère schématique; elle ne prétend pas que l’apparence du survivor change.
+- **[PROPOSÉ]** Le panneau « Details » conserve enhancement, effets uniques, vente et démantèlement. Son contenu défile à 640×360; aucun parcours de gestion n’est supprimé.
+- **[OUVERT]** Les plages de stats, coûts et rendements d’économie équipement restent proposées dans le service; leur équilibrage n’est pas fixé par cette interface.
+
+## Avancement (2026-10-18)
+
+- **[PROPOSÉ]** La page hub montre le repère du personnage, les six slots, l’inventaire filtré pour le slot sélectionné et une comparaison avant/après des bonus d’équipement. Cette comparaison additionne les bonus équipés et utilise le calculateur de valeurs du générateur; elle ne simule pas les transformations spécifiques de gameplay (multiplicateurs, caps et stats dérivées). Une sélection seule ne modifie pas le profil; l’action explicite émet la requête d’équipement/retrait et le hub persiste via `ProgressionService`.
+- **[VALIDÉ]** Le calcul de preview utilise `EquipmentGenerator.stat_value`, retire l’équipement actuellement porté dans le slot, puis ajoute le candidat une seule fois. Les smokes `equipment_stats_smoke`, `equipment_slots_smoke`, `equipment_panel_visual_smoke` et `survival_hub_smoke` passent. La capture 640×360 `/tmp/dopamine-equipment.png` a été inspectée; le layout s’adapte aux viewports 640×360, 1280×720 et 1920×1080.
+- **[PROPOSÉ]** Les pièces, rangs et bonus d’équipement restent marqués proposés comme dans le profil/service; cette page n’élève pas leur statut de design.

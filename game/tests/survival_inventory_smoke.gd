@@ -45,10 +45,13 @@ func _run() -> void:
 	var equipment_button: Button = hub.get_node("Content/Main/PreparationCard/Body/EquipmentButton")
 	equipment_button.pressed.emit()
 	var panel: Control = hub.get_node("EquipmentInventoryPanel")
-	var items: VBoxContainer = panel.get_node("Panel/Content/Scroll/Items")
-	if not panel.visible or _equipment_rows(items).size() != 2:
+	var items: VBoxContainer = panel.get_node("Panel/Content/Columns/RightColumn/Scroll/Items")
+	if not panel.visible or panel.inventory_item_count() != 2:
 		_fail("The hub equipment panel should list the profile's permanent items")
 		return
+	var management_button: Button = panel.get_node("Panel/Content/Columns/RightColumn/ItemHeader/ManagementButton")
+	management_button.pressed.emit()
+	await process_frame
 	var item_content: VBoxContainer = _equipment_row(items, 0).get_child(0).get_child(1)
 	var rarity_icon: TextureRect = _equipment_row(items, 0).get_child(0).get_child(0).get_child(1)
 	if rarity_icon.texture == null or rarity_icon.texture.resource_path != "res://assets/icons/catalog/rarity_legendary.png":
@@ -78,6 +81,9 @@ func _run() -> void:
 	if progression.load_profile()["profile"]["equipment_inventory"][0]["unique_effect_id"] == "pending_choice":
 		_fail("Selecting a unique effect should persist the choice")
 		return
+	await process_frame
+	management_button.pressed.emit()
+	await process_frame
 	item_content = _equipment_row(items, 0).get_child(0).get_child(1)
 	var enhancement_row: HBoxContainer = item_content.get_child(1)
 	var enhance_button: Button = enhancement_row.get_child(2)
@@ -85,13 +91,17 @@ func _run() -> void:
 		_fail("The inventory should expose enhancement and its Powder selector")
 		return
 	enhance_button.pressed.emit()
+	await process_frame
 	var enhanced_profile: Dictionary = progression.load_profile()["profile"]
 	if enhanced_profile["equipment_inventory"][0]["stat_lines"][0]["enhancement_level"] != 1 or \
 		not panel.get_node("Panel/Content/Feedback").text.contains("SUCCESS"):
 		_fail("Hub enhancement should persist and report its guaranteed success")
 		return
+	management_button.pressed.emit()
+	await process_frame
 	item_content = _equipment_row(items, 0).get_child(0).get_child(1)
 	_find_button(item_content, "EQUIP").pressed.emit()
+	await process_frame
 	var equipped_profile: Dictionary = progression.load_profile()["profile"]
 	if not equipped_profile["equipment_inventory"][0]["equipped"] or equipped_profile["equipment_inventory"][1]["equipped"]:
 		_fail("Equipping a permanent item should persist in the hub")
@@ -115,6 +125,8 @@ func _run() -> void:
 		return
 	session.queue_free()
 	await process_frame
+	management_button.pressed.emit()
+	await process_frame
 	item_content = _equipment_row(items, 0).get_child(0).get_child(1)
 	var reroll_row := item_content.get_child(5) as HBoxContainer
 	var reroll_options := reroll_row.get_child(0) as OptionButton
@@ -133,6 +145,9 @@ func _run() -> void:
 		reroll_profile["resources"]["powder_pure"] != 0:
 		_fail("The hub reroll should persist the chosen replacement effect and consume one Pure Powder")
 		return
+	await process_frame
+	management_button.pressed.emit()
+	await process_frame
 	item_content = _equipment_row(items, 0).get_child(0).get_child(1)
 	if not (item_content.get_child(5).get_child(1) as Button).disabled:
 		_fail("The hub should disable Legendary reroll when no Pure Powder remains")
@@ -142,7 +157,13 @@ func _run() -> void:
 	if replacement["equipment_inventory"][0]["equipped"] or not replacement["equipment_inventory"][1]["equipped"]:
 		_fail("Equipping another item in the same slot should replace the first one")
 		return
+	await process_frame
+	management_button.pressed.emit()
+	await process_frame
 	_find_button(_equipment_row(items, 1).get_child(0).get_child(1), "UNEQUIP").pressed.emit()
+	await process_frame
+	management_button.pressed.emit()
+	await process_frame
 	var dismantle := _find_button(_equipment_row(items, 1).get_child(0).get_child(1), "DISMANTLE  •  +1 BASIC POWDER")
 	if dismantle == null:
 		dismantle = _find_button_with_prefix(_equipment_row(items, 1).get_child(0).get_child(1), "DISMANTLE")
@@ -158,6 +179,9 @@ func _run() -> void:
 		if root.get_texture().get_image().save_png("/tmp/dopamine-equipment-inventory.png") != OK:
 			_fail("Could not capture the equipment inventory render")
 			return
+	await process_frame
+	management_button.pressed.emit()
+	await process_frame
 	var remaining_content: VBoxContainer = _equipment_row(items, 0).get_child(0).get_child(1)
 	var sell_button := _find_button_with_prefix(remaining_content, "SELL  •  40 ESSENCE")
 	if sell_button == null:
@@ -169,6 +193,7 @@ func _run() -> void:
 		_fail("Selling an item should show its irreversible Essence value for confirmation")
 		return
 	sell_confirmation.confirmed.emit()
+	await process_frame
 	var sold_profile: Dictionary = progression.load_profile()["profile"]
 	if not sold_profile["equipment_inventory"].is_empty() or sold_profile["resources"]["essence"] != 240 or \
 			_equipment_rows(items).size() != 0:
@@ -265,9 +290,9 @@ func _run() -> void:
 	if skill_panel.visible or root.gui_get_focus_owner() != skill_button:
 		_fail("Closing the skill tree should restore focus to its hub control")
 		return
-	panel.present({})
-	var empty_state: Label = panel.get_node("Panel/Content/Scroll/Items/EmptyState")
-	var error_state: Label = panel.get_node("Panel/Content/Scroll/Items/ErrorState")
+	panel.present({"equipment_inventory": [], "resources": {}})
+	var empty_state: Label = panel.get_node("Panel/Content/Columns/RightColumn/Scroll/Items/EmptyState")
+	var error_state: Label = panel.get_node("Panel/Content/Columns/RightColumn/Scroll/Items/ErrorState")
 	if not empty_state.visible or error_state.visible:
 		_fail("An empty equipment inventory should show its centered empty state")
 		return
