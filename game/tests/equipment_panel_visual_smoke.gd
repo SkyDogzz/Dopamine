@@ -144,6 +144,30 @@ func _run() -> void:
 				return
 	root.size = original_management_size
 	await process_frame
+	if "--capture-sell-confirmation" in OS.get_cmdline_user_args():
+		var sell_button := _find_button_with_prefix(management_row, "SELL  •")
+		if sell_button == null:
+			_fail("Equipment Details should expose the sale confirmation action")
+			return
+		sell_button.pressed.emit()
+		await process_frame
+		var sell_confirmation: Control = panel.get_node("SellConfirmation")
+		var sell_description: Label = sell_confirmation.get_node("Center/Panel/Content/Description")
+		if not sell_confirmation.visible or not sell_description.text.contains("CANNOT BE UNDONE") or \
+			root.gui_get_focus_owner() != sell_confirmation.get_node("Center/Panel/Content/Actions/CancelButton"):
+			_fail("Sale should show its explicit irreversible-action confirmation")
+			return
+		sell_confirmation.get_node("Center/Panel/Content/Actions/CancelButton").pressed.emit()
+		if sell_confirmation.visible:
+			_fail("Cancel should close sale confirmation without executing the sale")
+			return
+		sell_button.pressed.emit()
+		await process_frame
+		await RenderingServer.frame_post_draw
+		var confirmation_path := ProjectSettings.globalize_path(EVIDENCE_DIR + "/equipment-sell-confirmation.png")
+		if root.get_texture().get_image().save_png(confirmation_path) != OK:
+			_fail("Could not capture the equipment sale confirmation")
+			return
 	var original_size: Vector2i = root.size
 	for viewport_size in [Vector2i(640, 360), Vector2i(1280, 720), Vector2i(1920, 1080)]:
 		root.size = viewport_size
@@ -202,6 +226,15 @@ func _save_evidence(evidence_id: String) -> bool:
 func _fail(message: String) -> void:
 	push_error(message)
 	quit(1)
+
+func _find_button_with_prefix(node: Node, prefix: String) -> Button:
+	if node is Button and (node as Button).text.begins_with(prefix):
+		return node as Button
+	for child in node.get_children():
+		var found := _find_button_with_prefix(child, prefix)
+		if found != null:
+			return found
+	return null
 
 func _send_key(keycode: Key) -> void:
 	var key_event := InputEventKey.new()

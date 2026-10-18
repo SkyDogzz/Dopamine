@@ -66,7 +66,8 @@ const DISMANTLE_POWDER := {
 }
 const SELL_ESSENCE: Dictionary = PROGRESSION_SERVICE_SCRIPT.PROPOSED_SELL_ESSENCE
 
-var _sell_confirmation: ConfirmationDialog
+var _sell_confirmation: Control
+var _sell_description: Label
 var _pending_sell_instance_id := ""
 var _profile: Dictionary = {}
 var _selected_slot := "helmet"
@@ -83,18 +84,18 @@ func _ready() -> void:
 		var slot: String = SLOTS[index]
 		_slot_buttons[slot] = button
 		button.pressed.connect(func() -> void: _select_slot(slot))
-	_sell_confirmation = ConfirmationDialog.new()
-	_sell_confirmation.name = "SellConfirmation"
-	_sell_confirmation.title = "SELL EQUIPMENT?"
-	_sell_confirmation.ok_button_text = "SELL"
-	_sell_confirmation.confirmed.connect(func() -> void:
-		sell_requested.emit(_pending_sell_instance_id)
-		_pending_sell_instance_id = ""
-	)
+	_sell_confirmation = load("res://scenes/sell_confirmation.tscn").instantiate()
+	_sell_description = _sell_confirmation.get_node("Center/Panel/Content/Description")
+	_sell_confirmation.get_node("Center/Panel/Content/Actions/CancelButton").pressed.connect(_cancel_sell)
+	_sell_confirmation.get_node("Center/Panel/Content/Actions/SellButton").pressed.connect(_confirm_sell)
 	add_child(_sell_confirmation)
 
 func _unhandled_input(event: InputEvent) -> void:
 	if visible and event.is_action_pressed("ui_cancel"):
+		if _sell_confirmation.visible:
+			_cancel_sell()
+			get_viewport().set_input_as_handled()
+			return
 		_close()
 		get_viewport().set_input_as_handled()
 
@@ -426,8 +427,9 @@ func _create_item_row(equipment: Dictionary, resources: Dictionary) -> Control:
 	sell_button.tooltip_text = "Proposed sale value; selling removes this equipment and does not refund its enhancements."
 	sell_button.pressed.connect(func() -> void:
 		_pending_sell_instance_id = str(equipment.get("instance_id", ""))
-		_sell_confirmation.dialog_text = "Sell this %s item for %d Essence? This cannot be undone." % [rarity, sell_value]
-		_sell_confirmation.popup_centered()
+		_sell_description.text = "SELL THIS %s ITEM FOR %d ESSENCE?\nTHIS CANNOT BE UNDONE." % [rarity.to_upper(), sell_value]
+		_sell_confirmation.visible = true
+		_sell_confirmation.get_node("Center/Panel/Content/Actions/CancelButton").grab_focus()
 	)
 	content.add_child(sell_button)
 	return row
@@ -467,8 +469,23 @@ func _create_loadout_item_row(equipment: Dictionary) -> Control:
 	return row
 
 func _close() -> void:
+	_sell_confirmation.visible = false
+	_pending_sell_instance_id = ""
 	visible = false
 	close_requested.emit()
+
+func _cancel_sell() -> void:
+	_sell_confirmation.visible = false
+	_pending_sell_instance_id = ""
+	_management_button.grab_focus()
+
+func _confirm_sell() -> void:
+	if _pending_sell_instance_id.is_empty():
+		return
+	var instance_id := _pending_sell_instance_id
+	_pending_sell_instance_id = ""
+	_sell_confirmation.visible = false
+	sell_requested.emit(instance_id)
 
 func _clear_items() -> void:
 	for child in _items.get_children():

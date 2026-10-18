@@ -188,11 +188,15 @@ func _run() -> void:
 		_fail("Equipment should expose a rarity-priced sell action")
 		return
 	sell_button.pressed.emit()
-	var sell_confirmation: ConfirmationDialog = panel.get_node("SellConfirmation")
-	if not sell_confirmation.visible or not sell_confirmation.dialog_text.contains("40 Essence"):
+	var sell_confirmation: Control = panel.get_node("SellConfirmation")
+	var sell_description: Label = sell_confirmation.get_node("Center/Panel/Content/Description")
+	if not sell_confirmation.visible or not sell_description.text.contains("40 ESSENCE"):
 		_fail("Selling an item should show its irreversible Essence value for confirmation")
 		return
-	sell_confirmation.confirmed.emit()
+	if progression.load_profile()["profile"]["equipment_inventory"].is_empty():
+		_fail("Opening sale confirmation must not remove equipment before the player confirms")
+		return
+	sell_confirmation.get_node("Center/Panel/Content/Actions/SellButton").pressed.emit()
 	await process_frame
 	var sold_profile: Dictionary = progression.load_profile()["profile"]
 	if not sold_profile["equipment_inventory"].is_empty() or sold_profile["resources"]["essence"] != 240 or \

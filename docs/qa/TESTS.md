@@ -2205,7 +2205,7 @@ Note de clôture : le blocage historique du smoke `sandbox_ui_smoke.gd` décrit 
 
 ## Intégrité de l’index des preuves visuelles et audio — 2026-10-18
 
-- [x] Contrôle des entrées PNG indexées dans `docs/art/evidence/2026-10-18/README.md` : **31/31 fichiers présents et SHA-256 conformes**. Les SHA-256 des deux WAV de preuve audio (`adaptive-music-transition.wav` et `adaptive-music-runtime-capture.wav`) correspondent également au README.
+- [x] Contrôle des entrées PNG indexées dans `docs/art/evidence/2026-10-18/README.md` : **33/33 fichiers présents et SHA-256 conformes**. Les SHA-256 des deux WAV de preuve audio (`adaptive-music-transition.wav` et `adaptive-music-runtime-capture.wav`) correspondent également au README.
 - [i] Ces empreintes attestent l’identité et la présence des preuves, pas une approbation humaine du mix audio ni une validation sur GPU/contrôleur physique.
 
 ## Résultat de défaite après refus du revive — 2026-10-18
@@ -2213,3 +2213,10 @@ Note de clôture : le blocage historique du smoke `sandbox_ui_smoke.gd` décrit 
 - [x] Le smoke de revive utilise un profil temporaire dont la difficulté Easy est débloquée; il avance les métriques synthétiques et exige une récompense enregistrée après le refus. La cause du précédent `PROGRESSION SAVE FAILED` était `difficulty_locked`, et non la durée du run.
 - [x] La capture intégrée du HUD `states/revive-declined-result.png` a été régénérée et examinée; son hash est actualisé dans le README des preuves. Les 31 hashes PNG de l’index passent après cette régénération.
 - [x] `godot_project_import` et `survival_revive_smoke` passent (**2/2**). Suite complète `XDG_DATA_HOME=/tmp/dopamine-revive-ui-full DOPAMINE_TEST_TIMEOUT=480s PATH=/tmp/cmake-3.31.12-linux-x86_64/bin:$PATH ctest --test-dir build --output-on-failure -j1` : **118/118 en 79,23 s**.
+
+## Confirmation de vente d’équipement — 2026-10-18
+
+- [x] La capture Xvfb/Mesa de l’état de vente a révélé une boîte système grise. `SellConfirmation` utilise maintenant `sell_confirmation.tscn`, un overlay Neon avec avertissement et focus initial sur CANCEL; Échap annule. La valeur économique reste celle du service **[PROPOSÉE]**.
+- [x] `godot_project_import`, `equipment_panel_visual_smoke` et `survival_inventory_smoke` passent par CTest (**3/3**). Le smoke visuel contrôle aussi Annuler et le focus initial; le parcours persistant vérifie qu’ouvrir le dialogue ne retire rien avant confirmation, puis vend via SELL.
+- [x] Capture 640×360 examinée et indexée dans `docs/art/evidence/2026-10-18/README.md`.
+- [i] La confirmation de vente est couverte; les autres branches interactives et la revue avec périphériques physiques restent ouvertes.
