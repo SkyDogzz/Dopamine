@@ -71,6 +71,11 @@ func _ready() -> void:
 	_category.item_selected.connect(_show_category)
 	_close_button.pressed.connect(func() -> void: close_requested.emit())
 
+func _unhandled_input(event: InputEvent) -> void:
+	if visible and event.is_action_pressed("ui_cancel"):
+		close_requested.emit()
+		get_viewport().set_input_as_handled()
+
 func present(progress: Dictionary) -> void:
 	visible = true
 	_title.text = "CODEX · CONTENU"

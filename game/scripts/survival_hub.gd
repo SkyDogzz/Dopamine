@@ -56,10 +56,10 @@ func _ready() -> void:
 	_skill_tree_button.pressed.connect(_open_skill_tree)
 	_records_button.pressed.connect(_open_armorless_records)
 	_codex_button.text = "CODEX"
-	_codex_button.theme_type_variation = "Button"
+	_codex_button.theme_type_variation = "InactiveButton"
 	_codex_button.pressed.connect(_open_codex)
 	_achievements_button.text = "SUCCÈS"
-	_achievements_button.theme_type_variation = "Button"
+	_achievements_button.theme_type_variation = "InactiveButton"
 	_achievements_button.pressed.connect(_open_achievements)
 	_launch_button.pressed.connect(_launch_run)
 	_armorless_launch_button.pressed.connect(_launch_armorless_run)

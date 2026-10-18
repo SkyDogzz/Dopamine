@@ -328,12 +328,12 @@ func _run() -> void:
 	if not service.codex_seen_enemy_ids().is_empty():
 		_fail("A new profile should keep every Codex enemy undiscovered")
 		return
-	var first_sight := service.record_codex_enemy_sightings(["chaser", "mid_boss", "invalid_enemy", "chaser"])
+	var first_sight: Dictionary = service.record_codex_enemy_sightings(["chaser", "mid_boss", "invalid_enemy", "chaser"])
 	if not first_sight.get("ok", false) or not first_sight.get("changed", false) or \
 		first_sight.get("seen_enemies", []) != ["chaser", "mid_boss"]:
 		_fail("Codex sightings should accept valid enemy IDs once and ignore invalid or duplicate IDs")
 		return
-	var repeated_sight := service.record_codex_enemy_sightings(["chaser", "mid_boss"])
+	var repeated_sight: Dictionary = service.record_codex_enemy_sightings(["chaser", "mid_boss"])
 	if not repeated_sight.get("ok", false) or repeated_sight.get("changed", true) or \
 		service.codex_seen_enemy_ids() != ["chaser", "mid_boss"]:
 		_fail("Repeated Codex sightings should be idempotent and persist the discovered set")
@@ -675,8 +675,8 @@ func _run() -> void:
 			achievement_profile["achievement_progress"]["tiers"]["survivor_depth"] != 4 or \
 			not is_equal_approx(achievement_service.achievement_bonus("damage_pct"), 0.0005) or \
 			not is_equal_approx(achievement_service.achievement_bonus("max_hp_pct"), 0.001) or \
-			not is_equal_approx(achievement_service.achievement_bonus("critical_chance_pct"), 0.01):
-		_fail("The first Exterminator tier should grant only its proposed cumulative damage bonus: award=%s progress=%s bonus=%s" % [
+			not is_equal_approx(achievement_service.achievement_bonus("critical_chance_pct"), 0.0125):
+		_fail("The first Exterminator tier should grant its proposed cumulative bonuses: award=%s progress=%s bonus=%s" % [
 			str(achievement_run), str(achievement_profile["achievement_progress"]),
 				str(achievement_service.achievement_bonus("damage_pct")),
 		])

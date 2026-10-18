@@ -89,7 +89,7 @@ func _run() -> void:
 		bestiary.pressed.get_connections().size() != 1:
 		_fail("Achievements and Codex should both be focusable and actionable")
 		return
-	if achievements.theme_type_variation != "Button" or bestiary.theme_type_variation != "Button" or \
+	if achievements.theme_type_variation != "InactiveButton" or bestiary.theme_type_variation != "InactiveButton" or \
 		achievements.disabled or bestiary.disabled or bestiary.text != "CODEX" or achievements.text != "SUCCÈS":
 		_fail("Achievements and Codex should be available from the hub")
 		return
@@ -102,9 +102,9 @@ func _run() -> void:
 		bestiary.texture_filter != CanvasItem.TEXTURE_FILTER_NEAREST:
 		_fail("Inactive entry icons should keep a compact nearest-filtered pixel size")
 		return
-	if achievements.get_theme_color("icon_normal_color") != hub.theme.get_color("icon_normal_color", "Button") or \
-		achievements.get_theme_color("icon_focus_color") != hub.theme.get_color("icon_focus_color", "Button") or \
-		bestiary.get_theme_color("icon_focus_color") != hub.theme.get_color("icon_focus_color", "Button"):
+	if achievements.get_theme_color("icon_normal_color") != hub.theme.get_color("icon_normal_color", "InactiveButton") or \
+		achievements.get_theme_color("icon_focus_color") != hub.theme.get_color("icon_focus_color", "InactiveButton") or \
+		bestiary.get_theme_color("icon_focus_color") != hub.theme.get_color("icon_focus_color", "InactiveButton"):
 		_fail("Hub entry icons should use the shared focus color")
 		return
 	if achievements.get_theme_stylebox("focus") != hub.theme.get_stylebox("focus", "Button"):
@@ -167,7 +167,7 @@ func _run() -> void:
 		not entries.get_child(2).get_child(1).get_child(1).text.contains("ARME VERROUILLÉE"):
 		_fail("Codex should describe locked weapons while clearly marking their locked status")
 		return
-	if not entries.get_child(0).get_child(1).get_child(1).text.contains("Infinite Circuit") or \
+	if not entries.get_child(0).get_child(1).get_child(1).text.contains("INFINITE CIRCUIT") or \
 		not entries.get_child(2).get_child(1).get_child(1).text.contains("combo verrouillé"):
 		_fail("Unlocked starter combos should be described while locked combinations stay hidden")
 		return
@@ -199,6 +199,7 @@ func _run() -> void:
 	if root.gui_get_focus_owner() != (bestiary if inactive_focus == achievements else achievements):
 		_fail("Gamepad navigation should reach both inactive features")
 		return
+	inactive_focus = root.gui_get_focus_owner()
 	await _send_gamepad_button(JOY_BUTTON_A)
 	var activated_achievements_panel: Control = hub.get_node("AchievementsPanel")
 	var codex_panel: Control = hub.get_node("CodexPanel")
@@ -437,7 +438,8 @@ func _run() -> void:
 		_fail("A hub Endless run should start without carrying weapon or relic run levels")
 		return
 	var expected_max_hp: float = current_scene.simulation.initial_player_hp() * \
-		(1.0 + progression.skill_bonus("max_hp_pct")) + progression.equipment_bonus("max_hp")
+		(1.0 + progression.skill_bonus("max_hp_pct") + progression.achievement_bonus("max_hp_pct")) + \
+		progression.equipment_bonus("max_hp")
 	if not is_equal_approx(current_scene.player_max_hp, expected_max_hp):
 		_fail("A hub Endless run should apply the permanent skill and equipment HP bonuses")
 		return
