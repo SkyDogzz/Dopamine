@@ -12,7 +12,7 @@ Godot 4.7.2; PNG de runtime sous `game/assets/`; sources graphiques Aseprite sel
 
 - **[PROPOSÉ]** La skyline de titre `game/assets/backgrounds/original_procedural/title_skyline.png` est une première création originale 640×360, indexée selon les 32 couleurs exactes de l’Art Bible; sa source éditable est `game/assets/source/original_procedural/title_skyline.aseprite`.
 - Provenance et hashes : `game/assets/backgrounds/original_procedural/title_skyline.json`. Contrôle reproductible : `python3 game/tools/validate_original_title_art.py`.
-- Revue isolée : pixel art net, 16 couleurs utilisées, silhouettes urbaines et espace sombre à gauche pour la colonne de menu. **[OUVERT]** Le contrôle headless du menu n’a pas abouti à une capture; l’adéquation visuelle au menu reste à vérifier en contexte avant intégration.
+- Revue visuelle isolée et dans le menu : pixel art net, 16 couleurs utilisées, silhouettes urbaines et espace sombre à gauche pour la colonne de menu. Un projet temporaire remplaçant uniquement la texture active, après réimport Godot, a passé `launch_navigation_smoke.gd` sous Xvfb et une capture 640×360 a été examinée. Cette vérification **[VALIDÉE pour le candidat]** n’intègre pas l’asset dans le dépôt actif; la capture transitoire `/tmp/dopamine-launch-menu.png` montre encore des éléments UI existants qui restent à remplacer et n’est pas une preuve de l’interface finale.
 - L’asset demeure non actif. La skyline existante, sa source et les références du menu ne sont pas retirées avant une migration et un smoke de navigation valides.
 
 ## Commandes de vérification

@@ -13,5 +13,5 @@
   "export_png": "game/assets/backgrounds/original_procedural/title_skyline.png",
   "export_png_sha256": "d70a57b84efde988781e418a483b6cb13ab69c76d1b0cc22283e93c2910c3bf2",
   "provenance": "Original in-repository procedural artwork; no external references or legacy assets used.",
-  "review": "Isolated visual review only; menu-context review remains open."
+  "review": "[PROPOS\u00c9] Isolated preview and 640x360 temporary menu-context review completed after Godot reimport; launch navigation smoke passed under Xvfb. Not integrated in the active project. The temporary screenshot still contains legacy UI assets and is not final-interface evidence."
 }
