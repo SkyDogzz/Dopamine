@@ -16,11 +16,11 @@ func _run() -> void:
 			"pause-confirmation":
 				scene = load("res://scenes/pause_menu.tscn").instantiate()
 			"chest":
-				scene = load("res://scenes/chest_choice.tscn").instantiate()
+				scene = null
 			"run-inventory":
 				scene = load("res://scenes/run_inventory_panel.tscn").instantiate()
 			"run-result":
-				scene = load("res://scenes/run_result_panel.tscn").instantiate()
+				scene = null
 			"armorless-records":
 				scene = load("res://scenes/armorless_records_panel.tscn").instantiate()
 			"sandbox":
@@ -31,18 +31,30 @@ func _run() -> void:
 				scene = load("res://scenes/equipment_inventory_panel.tscn").instantiate()
 			"skill-tree-error":
 				scene = load("res://scenes/skill_tree_panel.tscn").instantiate()
+		var capture_root: Node
+		if evidence_id in ["chest", "run-result"]:
+			var session: Node2D = load("res://scenes/survival_session.tscn").instantiate()
+			session.skip_starting_weapon_choice = true
+			session.spawn_initial_enemy = false
+			session.wave_spawning_enabled = false
+			root.add_child(session)
+			await process_frame
+			capture_root = session
+			if evidence_id == "chest":
+				scene = session.get_node("HUD/ChestOverlay/ChestChoice") as Control
+			else:
+				var result_overlay: Control = session.get_node("HUD/RunResultOverlay")
+				result_overlay.visible = true
+				scene = session.get_node("HUD/RunResultOverlay/RunResultPanel") as Control
+		else:
+			if scene == null:
+				_fail("Could not build evidence scene: %s" % evidence_id)
+				return
+			capture_root = scene
+			root.add_child(scene)
 		if scene == null:
 			_fail("Could not build evidence scene: %s" % evidence_id)
 			return
-		var capture_root: Control = scene
-		if evidence_id in ["chest", "run-result"]:
-			var center := CenterContainer.new()
-			center.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-			root.add_child(center)
-			center.add_child(scene)
-			capture_root = center
-		else:
-			root.add_child(scene)
 		await process_frame
 		match evidence_id:
 			"pause":

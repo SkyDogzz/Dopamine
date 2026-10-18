@@ -2243,3 +2243,11 @@ Note de clôture : le blocage historique du smoke `sandbox_ui_smoke.gd` décrit 
 - [x] La revue des captures a détecté que `skill_tree_panel_visual_smoke.gd` rendait le panneau seul : son backdrop translucide mélangeait le gris de viewport Godot, absent en jeu. Le smoke instancie maintenant le vrai hub Survival comme fond, puis ajoute le panneau avec un service de progression isolé; aucune sauvegarde normale n’est lue ou modifiée.
 - [x] Capture 640×360 régénérée et inspectée : `docs/art/evidence/2026-10-18/skill-tree.png`. Le registre de preuves porte son SHA-256 `54033cebcd09c16c22c254151d7de2f998db865d0f6b038126bb1369581320c3`.
 - [x] `godot_project_import` et `skill_tree_panel_visual_smoke` passent via CTest (**2/2**). L’UI et les données runtime ne changent pas; la lisibilité globale et les contrôles physiques restent **[OUVERTS]**.
+
+## Captures intégrées du coffre et du résultat — 2026-10-18
+
+- [x] La revue a repéré le fond gris de viewport dans les captures isolées `chest.png` et `run-result.png`. `ui_states_evidence_smoke.gd` utilise désormais les panneaux réels sous `SurvivalSession/HUD`, avec spawning d’ennemis désactivé; la session n’a pas de service de progression et ne peut pas écrire une sauvegarde normale.
+- [x] Les captures 640×360 ont été régénérées et inspectées dans leur contexte de run. Hashes dans le README des preuves : `chest.png` `9a67eecefa823116c8530f6e2d99929291a0d81e4e51bff4a04ee00ce609e958`, `run-result.png` `27e1197ee4282ebf8866c83dc6c13757d0e5f3620ce92f383fc2914d2a068462`.
+- [x] Le smoke d’évidence passe sous Xvfb/Godot 4.7.2. CTest ciblé `godot_project_import`, coffre, layout coffre, HUD, résultat Survival et panneau résultat : **6/6**.
+- [i] Ce rendu virtualisé ne remplace pas une capture vidéo d’une run réelle ni le test matériel; les fixtures d’offres/récompenses restent des données de présentation.
+- [i] À la fermeture, le smoke signale 12 instances ObjectDB et 5 ressources encore référencées, comme le smoke HUD existant exécuté séparément; les assertions et six tests ciblés passent, mais l’origine des références n’est pas isolée par cette tranche.
