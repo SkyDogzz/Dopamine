@@ -66,9 +66,16 @@ func _run() -> void:
 		return
 	var view: Control = sandbox.get_node("Shell/Content/MainColumn/SimulationView")
 	sandbox._refresh()
-	if view._enemy_multimesh.instance_count != 499 or view._projectile_multimesh.instance_count != 2000 or \
-			view._sprite_renderer.multimesh_for("enemy_sprinter").instance_count != 1:
-		_fail("MultiMesh batches do not contain the target load and elite sprite")
+	var chaser_animation_instances := 0
+	var elite_animation_instances := 0
+	for animation_key in view._sprite_renderer._animated_batches:
+		var count: int = view._sprite_renderer._animated_batches[animation_key]["multimesh"].instance_count
+		if str(animation_key).begins_with("enemy_chaser_"):
+			chaser_animation_instances += count
+		elif str(animation_key).begins_with("elite_sprinter_"):
+			elite_animation_instances += count
+	if chaser_animation_instances != 499 or view._projectile_multimesh.instance_count != 2000 or elite_animation_instances != 1:
+		_fail("Animated MultiMesh batches do not contain the target load and elite sprite")
 		return
 	await process_frame
 	await RenderingServer.frame_post_draw

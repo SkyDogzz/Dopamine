@@ -1006,7 +1006,7 @@ func _process(_delta: float) -> void:
 		if not active_projectiles.has(projectile_key):
 			_starfall_fragments_spawned.erase(projectile_key)
 	_entities = state["entities"]
-	_sprite_renderer.set_entities(_entities)
+	_sprite_renderer.set_entities(_entities, Vector2.ZERO, current_simulation_time)
 	_advance_wave_director(elapsed_active_time, state["paused"])
 	_apply_contact_damage(state, current_simulation_time)
 	_update_shooter_attacks(current_simulation_time, bool(state["paused"]))

@@ -43,7 +43,7 @@ func _run() -> void:
 			not is_equal_approx(float(nearby_velocity["x"]), 90.0) or \
 			not is_equal_approx(float(distant_velocity["x"]), 75.0) or \
 			renderer._batches["enemy_buffer"]["texture"] == null or \
-			renderer.multimesh_for("enemy_buffer").instance_count != 1:
+			renderer.animated_instance_count_for_role("enemy_buffer") != 1:
 		_fail("Only enemies inside the visible Buffer aura should receive its speed bonus")
 		return
 	print("Survival support enemy smoke passed")

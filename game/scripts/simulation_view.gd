@@ -40,7 +40,7 @@ func set_entities(entities: Array) -> void:
 		if point.x < -32 or point.y < -32 or point.x > size.x + 32 or point.y > size.y + 32:
 			continue
 		visible_entities.append(entity)
-	_sprite_renderer.set_entities(visible_entities, center)
+	_sprite_renderer.set_entities(visible_entities, center, Time.get_ticks_msec() / 1000.0)
 	_selected_point = _sprite_renderer.selected_point
 	_selected_entity_found = _sprite_renderer.selected_entity_found
 	queue_redraw()

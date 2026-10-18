@@ -47,8 +47,15 @@ const SPRITE_FILES := {
 	"projectile_evolution_shockwave": "projectiles/projectile_evolution_shockwave",
 }
 const SPRITE_COLORS := {"projectile_redline": Color("#FF7181")}
+const ANIMATED_ROLE_IDS := [
+	"enemy_chaser", "enemy_sprinter", "enemy_tank", "enemy_shooter", "enemy_buffer",
+	"enemy_exploder", "enemy_shielder", "enemy_summoner", "enemy_summoned",
+	"elite_sprinter", "boss_pulse_warden", "boss_dopamine_core",
+]
 
 var _batches: Dictionary = {}
+var _role_animation_sets: Dictionary = {}
+var _animated_batches: Dictionary = {}
 var _projectile_trails: Array[Dictionary] = []
 var _selected_index := -1
 var _selected_generation := -1
@@ -70,9 +77,16 @@ func _init() -> void:
 			"texture": load("res://assets/sprites/%s" % filename) if ResourceLoader.exists("res://assets/sprites/%s" % filename) else null,
 			"multimesh": mesh,
 		}
+	for role_id in ANIMATED_ROLE_IDS:
+		_role_animation_sets[role_id] = {}
+		for state in ["idle", "move"]:
+			var resource_path := "res://assets/sprites/animation/%s_%s.tres" % [role_id, state]
+			if ResourceLoader.exists(resource_path):
+				_role_animation_sets[role_id][state] = load(resource_path) as SpriteFrames
 
-func set_entities(entities: Array, origin: Vector2 = Vector2.ZERO) -> void:
+func set_entities(entities: Array, origin: Vector2 = Vector2.ZERO, animation_time: float = 0.0) -> void:
 	var instances_by_sprite: Dictionary = {}
+	var instances_by_animation: Dictionary = {}
 	_projectile_trails.clear()
 	for sprite_id in _batches:
 		instances_by_sprite[sprite_id] = []
@@ -85,6 +99,20 @@ func set_entities(entities: Array, origin: Vector2 = Vector2.ZERO) -> void:
 		var transform: Dictionary = components["Transform2D"]
 		var point := origin + Vector2(float(transform["x"]), float(transform["y"]))
 		var size := _size_for_entity(sprite_id, components)
+		var animation := _animation_for_entity(components, animation_time)
+		if not animation.is_empty():
+			var animation_key := "%s:%d" % [animation["name"], animation["frame"]]
+			var animation_batch := _get_animation_batch(animation["role"], animation["state"],
+					animation["name"], int(animation["frame"]))
+			if not animation_batch.is_empty():
+				if not instances_by_animation.has(animation_key):
+					instances_by_animation[animation_key] = []
+				instances_by_animation[animation_key].append({"point": point, "size": size, "rotation": 0.0})
+				var id: Dictionary = entity["id"]
+				if int(id["index"]) == _selected_index and int(id["generation"]) == _selected_generation:
+					selected_point = point
+					selected_entity_found = true
+				continue
 		var rotation := 0.0
 		if sprite_id.begins_with("projectile_"):
 			var velocity: Dictionary = components.get("Velocity2D", {})
@@ -105,6 +133,9 @@ func set_entities(entities: Array, origin: Vector2 = Vector2.ZERO) -> void:
 			selected_entity_found = not sprite_id.begins_with("projectile_") and sprite_id != "xp_orb"
 	for sprite_id in _batches:
 		_set_instances(_batches[sprite_id]["multimesh"], instances_by_sprite[sprite_id])
+	for animation_key in _animated_batches:
+		_set_instances(_animated_batches[animation_key]["multimesh"],
+				instances_by_animation.get(animation_key, []))
 
 func set_selected_entity(index: int, generation: int) -> void:
 	_selected_index = index
@@ -117,6 +148,80 @@ func draw_batches(canvas: CanvasItem) -> void:
 		var multimesh: MultiMesh = batch["multimesh"]
 		if multimesh.instance_count > 0 and batch["texture"] != null:
 			canvas.draw_multimesh(multimesh, batch["texture"])
+	for batch in _animated_batches.values():
+		var multimesh: MultiMesh = batch["multimesh"]
+		if multimesh.instance_count > 0 and batch["texture"] != null:
+			canvas.draw_multimesh(multimesh, batch["texture"])
+
+func animated_multimesh_for(animation_name: String, frame: int) -> MultiMesh:
+	var key := "%s:%d" % [animation_name, frame]
+	if not _animated_batches.has(key):
+		return null
+	return _animated_batches[key]["multimesh"]
+
+func animated_instance_count_for_role(role_id: String) -> int:
+	var total := 0
+	for animation_key in _animated_batches:
+		if str(animation_key).begins_with(role_id + "_"):
+			total += (_animated_batches[animation_key]["multimesh"] as MultiMesh).instance_count
+	return total
+
+func _animation_for_entity(components: Dictionary, animation_time: float) -> Dictionary:
+	if components.get("IsProjectile", false) or components.get("IsXpOrb", false):
+		return {}
+	var enemy_type := str(components.get("EnemyType", "chaser"))
+	var role_id := ""
+	match enemy_type:
+		"elite": role_id = "elite_sprinter"
+		"mid_boss": role_id = "boss_pulse_warden"
+		"final_boss": role_id = "boss_dopamine_core"
+		_: role_id = "enemy_%s" % enemy_type
+	if not _role_animation_sets.has(role_id):
+		return {}
+	var velocity: Dictionary = components.get("Velocity2D", {})
+	var direction := Vector2(float(velocity.get("x", 0.0)), float(velocity.get("y", 0.0)))
+	var state := "move" if direction.length_squared() > 1.0 else "idle"
+	var sprite_frames: SpriteFrames = _role_animation_sets[role_id].get(state)
+	if sprite_frames == null:
+		return {}
+	var base_name := "%s_%s" % [role_id, state]
+	var animation_name := base_name
+	if sprite_frames.has_animation(base_name + "_down"):
+		var direction_name := "down"
+		if direction.length_squared() > 0.001:
+			if absf(direction.x) > absf(direction.y):
+				direction_name = "right" if direction.x > 0.0 else "left"
+			else:
+				direction_name = "down" if direction.y > 0.0 else "up"
+		animation_name = base_name + "_" + direction_name
+	if not sprite_frames.has_animation(animation_name):
+		return {}
+	var frame_count := sprite_frames.get_frame_count(animation_name)
+	if frame_count <= 0:
+		return {}
+	var fps := sprite_frames.get_animation_speed(animation_name)
+	var frame := posmod(floori(animation_time * fps), frame_count)
+	return {"role": role_id, "state": state, "name": animation_name, "frame": frame}
+
+func _get_animation_batch(role_id: String, state: String, animation_name: String, frame: int) -> Dictionary:
+	var key := "%s:%d" % [animation_name, frame]
+	if _animated_batches.has(key):
+		return _animated_batches[key]
+	var sprite_frames: SpriteFrames = _role_animation_sets.get(role_id, {}).get(state)
+	if sprite_frames == null or frame >= sprite_frames.get_frame_count(animation_name):
+		return {}
+	var texture := sprite_frames.get_frame_texture(animation_name, frame)
+	if texture == null:
+		return {}
+	var multimesh := MultiMesh.new()
+	multimesh.transform_format = MultiMesh.TRANSFORM_2D
+	var quad := QuadMesh.new()
+	quad.size = Vector2.ONE
+	multimesh.mesh = quad
+	multimesh.use_colors = true
+	var batch := {"texture": texture, "multimesh": multimesh}
+	_animated_batches[key] = batch
+	return batch
 
 func draw_projectile_trails(canvas: CanvasItem) -> void:
 	for trail in _projectile_trails:

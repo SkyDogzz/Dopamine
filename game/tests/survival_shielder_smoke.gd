@@ -22,7 +22,7 @@ func _run() -> void:
 	var renderer: RefCounted = load("res://scripts/sprite_batch_renderer.gd").new()
 	renderer.set_entities(simulation.snapshot()["entities"])
 	if renderer._batches["enemy_shielder"]["texture"] == null or \
-			renderer.multimesh_for("enemy_shielder").instance_count != 1:
+			renderer.animated_instance_count_for_role("enemy_shielder") != 1:
 		_fail("Shielder should render its dedicated visible sprite")
 		return
 	simulation.pause()

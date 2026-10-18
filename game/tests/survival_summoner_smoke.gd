@@ -66,7 +66,7 @@ func _run() -> void:
 	session._entities = entities
 	renderer.set_entities(entities)
 	if renderer._batches["enemy_summoned"]["texture"] == null or \
-			renderer.multimesh_for("enemy_summoned").instance_count != 3:
+			renderer.animated_instance_count_for_role("enemy_summoned") != 3:
 		_fail("Summoned adds should use their dedicated visible sprite")
 		return
 	session._update_summoner_attacks(now + 20.0, false)

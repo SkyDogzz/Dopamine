@@ -35,14 +35,24 @@ func _run() -> void:
 	}
 	entities.append(pandemic_field)
 	view.set_entities(entities)
-	assert(view._enemy_multimesh.instance_count == 500, "500 enemies should fit one MultiMesh batch")
+	var chaser_instances := 0
+	for animation_key in view._sprite_renderer._animated_batches:
+		if str(animation_key).begins_with("enemy_chaser_idle_"):
+			chaser_instances += view._sprite_renderer._animated_batches[animation_key]["multimesh"].instance_count
+	assert(chaser_instances == 500, "500 enemies should remain batched by their current animation frame")
 	assert(view._projectile_multimesh.instance_count == 2000, "2,000 common projectiles should fit one MultiMesh batch")
 	assert(view._sprite_renderer._projectile_trails.size() == view._sprite_renderer.MAX_PROJECTILE_TRAILS, "Projectile trails should use a fixed visual budget under load")
 	assert(view._sprite_renderer._projectile_trails[0]["start"].x < view._sprite_renderer._projectile_trails[0]["end"].x, "A right-moving projectile should trail behind its current position")
 	assert(is_equal_approx(view._sprite_renderer._projectile_trails[0]["start"].distance_to(view._sprite_renderer._projectile_trails[0]["end"]), 12.0), "Projectile trails should keep the proposed 12-pixel length")
 	assert(view._xp_multimesh.instance_count == 1, "XP orbs should use a separate MultiMesh batch")
 	assert(view._sprite_renderer._batches["xp_orb"]["texture"].resource_path.ends_with("rewards/xp_orb.png"), "XP should load its dedicated pixel-art reward sprite")
-	assert(view._sprite_renderer.multimesh_for("enemy_tank").instance_count == 1, "Enemy profiles should use their sprite batches")
+	var tank_idle_instances := 0
+	for animation_key in view._sprite_renderer._animated_batches:
+		if str(animation_key).begins_with("enemy_tank_idle_down:"):
+			tank_idle_instances += view._sprite_renderer._animated_batches[animation_key]["multimesh"].instance_count
+	assert(tank_idle_instances == 1, "Idle enemies should render from their directional animation frames")
+	var moving_tank: Dictionary = view._sprite_renderer._animation_for_entity({"EnemyType": "tank", "Velocity2D": {"x": 80.0, "y": 0.0}}, 0.0)
+	assert(moving_tank["name"] == "enemy_tank_move_right" and moving_tank["frame"] == 0, "Moving enemies should select the matching directional movement animation")
 	assert(is_equal_approx(view._sprite_renderer._size_for_entity("enemy_chaser", {"CollisionRadius": 12.0}), 24.0), "Mob sprite diameter should match its shared collision radius")
 	assert(is_equal_approx(view._sprite_renderer._size_for_entity("boss_dopamine_core", {"CollisionRadius": 26.0}), 52.0), "Boss sprite diameter should match its shared collision radius")
 	assert(view._sprite_renderer.multimesh_for("projectile_inferno").instance_count == 1, "Weapon projectile art should remain distinct")
