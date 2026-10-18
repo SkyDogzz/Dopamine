@@ -4,29 +4,29 @@
   "status": "provisionally_integrated",
   "skill": "dopamine-sfx",
   "generator": "game/tools/generate_original_audio.py",
-  "generator_version": "4",
-  "source_sha256": "53a6845af9614cda4ae22304cba58dd245cef5b63953f0c6b3b9ff3cdea2cc4c",
+  "generator_version": "5",
+  "source_sha256": "ab2381dfa9211b7b2d4fb20460c7ffd1f82a8b9534a6b4998cc42307134ef55c",
   "seed": 2924438704,
   "parameters": {
     "sample_rate_hz": 44100,
     "channels": 1,
     "encoding": "PCM16 WAV",
-    "method": "role-specific oscillator/noise layers with analytic envelopes"
+    "method": "event-contoured oscillator, transient, and role-specific synthesis v2"
   },
   "export": {
     "file": "ui_pause.wav",
-    "sha256": "4bfd4a073930846f672a45cc1d45feeff07f2bb21c051ebc13b9b878d1fcec47",
+    "sha256": "e8d35d8f8c329e4333491b1291ec5a22eaf5c37063c6898bae44711674c3c3bf",
     "sample_rate_hz": 44100,
     "channels": 1,
-    "duration_seconds": 0.21,
+    "duration_seconds": 0.24,
     "peak_dbfs": -2.853,
-    "rms_dbfs": -16.49,
-    "crest_factor_db": 13.636
+    "rms_dbfs": -14.054,
+    "crest_factor_db": 11.2
   },
   "acceptance_status": "accepted_for_provisional_production",
-  "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
+  "acceptance_basis": "Provisional integration of complete audio redesign; owner listening review remains pending.",
   "human_review_status": "pending",
-  "candidate_export_path": "build/assets/candidates/audio-complete/sfx/ui_pause.wav",
+  "candidate_export_path": "build/assets/candidates/audio-refonte-20261018/sfx/ui_pause.wav",
   "integrated_export_path": "game/assets/audio/original_procedural/sfx/ui_pause.wav",
   "export_path": "audio/original_procedural/sfx/ui_pause.wav"
 }

@@ -4,29 +4,29 @@
   "status": "provisionally_integrated",
   "skill": "dopamine-sfx",
   "generator": "game/tools/generate_original_audio.py",
-  "generator_version": "4",
-  "source_sha256": "53a6845af9614cda4ae22304cba58dd245cef5b63953f0c6b3b9ff3cdea2cc4c",
+  "generator_version": "5",
+  "source_sha256": "ab2381dfa9211b7b2d4fb20460c7ffd1f82a8b9534a6b4998cc42307134ef55c",
   "seed": 77370879,
   "parameters": {
     "sample_rate_hz": 44100,
     "channels": 1,
     "encoding": "PCM16 WAV",
-    "method": "role-specific oscillator/noise layers with analytic envelopes"
+    "method": "event-contoured oscillator, transient, and role-specific synthesis v2"
   },
   "export": {
     "file": "enemy_kill_04.wav",
-    "sha256": "d6c60f4178271a51627641f5b05e46104459be0902edd041822a4e8f665c2b3e",
+    "sha256": "a309de49924a7331a24b47f041c6d49b81988e5715bb659cf13bc2c8e4ca427d",
     "sample_rate_hz": 44100,
     "channels": 1,
-    "duration_seconds": 0.16,
+    "duration_seconds": 0.15,
     "peak_dbfs": -2.853,
-    "rms_dbfs": -15.956,
-    "crest_factor_db": 13.102
+    "rms_dbfs": -13.803,
+    "crest_factor_db": 10.949
   },
   "acceptance_status": "accepted_for_provisional_production",
-  "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
+  "acceptance_basis": "Provisional integration of complete audio redesign; owner listening review remains pending.",
   "human_review_status": "pending",
-  "candidate_export_path": "build/assets/candidates/audio-complete/sfx/enemy_kill_04.wav",
+  "candidate_export_path": "build/assets/candidates/audio-refonte-20261018/sfx/enemy_kill_04.wav",
   "integrated_export_path": "game/assets/audio/original_procedural/sfx/enemy_kill_04.wav",
   "export_path": "audio/original_procedural/sfx/enemy_kill_04.wav"
 }

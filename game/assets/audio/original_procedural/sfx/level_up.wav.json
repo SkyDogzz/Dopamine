@@ -4,29 +4,29 @@
   "status": "provisionally_integrated",
   "skill": "dopamine-sfx",
   "generator": "game/tools/generate_original_audio.py",
-  "generator_version": "4",
-  "source_sha256": "53a6845af9614cda4ae22304cba58dd245cef5b63953f0c6b3b9ff3cdea2cc4c",
+  "generator_version": "5",
+  "source_sha256": "ab2381dfa9211b7b2d4fb20460c7ffd1f82a8b9534a6b4998cc42307134ef55c",
   "seed": 2560753222,
   "parameters": {
     "sample_rate_hz": 44100,
     "channels": 1,
     "encoding": "PCM16 WAV",
-    "method": "role-specific oscillator/noise layers with analytic envelopes"
+    "method": "event-contoured oscillator, transient, and role-specific synthesis v2"
   },
   "export": {
     "file": "level_up.wav",
-    "sha256": "64546fac487e08785c7a0b7cdbb142ff0180da4e805df500e8d9fc92e92733ac",
+    "sha256": "85d798e0b7f72894e719a38a8c8698057b08d6084242b84cbe780da6e46a9fe5",
     "sample_rate_hz": 44100,
     "channels": 1,
-    "duration_seconds": 0.62,
+    "duration_seconds": 0.64,
     "peak_dbfs": -2.853,
-    "rms_dbfs": -16.022,
-    "crest_factor_db": 13.169
+    "rms_dbfs": -13.992,
+    "crest_factor_db": 11.138
   },
   "acceptance_status": "accepted_for_provisional_production",
-  "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
+  "acceptance_basis": "Provisional integration of complete audio redesign; owner listening review remains pending.",
   "human_review_status": "pending",
-  "candidate_export_path": "build/assets/candidates/audio-complete/sfx/level_up.wav",
+  "candidate_export_path": "build/assets/candidates/audio-refonte-20261018/sfx/level_up.wav",
   "integrated_export_path": "game/assets/audio/original_procedural/sfx/level_up.wav",
   "export_path": "audio/original_procedural/sfx/level_up.wav"
 }

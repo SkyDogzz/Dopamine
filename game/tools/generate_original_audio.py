@@ -13,8 +13,8 @@ from pathlib import Path
 
 
 SAMPLE_RATE = 44_100
-MUSIC_BPM = 115
-MUSIC_BARS = 4
+MUSIC_BPM = 124
+MUSIC_BARS = 8
 BEAT_SECONDS = 60.0 / MUSIC_BPM
 BAR_SECONDS = BEAT_SECONDS * 4.0
 MUSIC_SAMPLE_COUNT = round(SAMPLE_RATE * BAR_SECONDS * MUSIC_BARS)
@@ -64,41 +64,68 @@ def _sfx_family(sound_id: str) -> str:
 
 
 def _render_sfx(sound_id: str, seed: int | None = None) -> list[float]:
-	"""Synthesize a new short effect from event role and stable ID-derived seed."""
+	"""Synthesize a role-specific arcade sound with an event-dependent contour."""
 	family = _sfx_family(sound_id)
 	if seed is None:
 		seed = int.from_bytes(hashlib.sha256(sound_id.encode("utf-8")).digest()[:4], "little")
 	rng = random.Random(seed)
 	profiles = {
-		"weapon_shot": (0.105, 520.0, 0.75, 0.04), "weapon_zap": (0.14, 760.0, 0.5, 0.13),
-		"weapon_sweep": (0.20, 290.0, 0.28, 0.28), "hit_light": (0.095, 940.0, 0.65, 0.08),
-		"hit_heavy": (0.22, 125.0, 0.9, 0.08), "enemy_kill": (0.16, 370.0, 0.34, 0.25),
-		"xp_pickup": (0.13, 830.0, 0.12, 0.18), "relic_pickup": (0.48, 440.0, 0.12, 0.23),
-		"chest_open": (0.38, 190.0, 0.38, 0.16), "chest_reward": (0.32, 590.0, 0.12, 0.19),
-		"level_up": (0.62, 500.0, 0.08, 0.3), "boss_telegraph": (0.36, 510.0, 0.16, 0.32),
-		"boss_phase": (0.72, 220.0, 0.4, 0.2), "boss_defeat": (0.95, 330.0, 0.16, 0.34),
-		"ui_focus": (0.045, 1150.0, 0.04, 0.08), "ui_confirm": (0.13, 680.0, 0.06, 0.2),
-		"ui_back": (0.12, 420.0, 0.06, -0.16), "ui_error": (0.15, 260.0, 0.09, -0.12),
-		"ui_pause": (0.21, 470.0, 0.12, 0.16),
+		"weapon_shot": (0.105, 420.0, 0.82, -0.18, "shot"), "weapon_zap": (0.16, 690.0, 0.38, 0.78, "zap"),
+		"weapon_sweep": (0.21, 310.0, 0.25, 0.62, "sweep"), "hit_light": (0.09, 980.0, 0.78, -0.55, "hit"),
+		"hit_heavy": (0.23, 94.0, 0.88, -0.28, "impact"), "enemy_kill": (0.15, 520.0, 0.18, 0.52, "shard"),
+		"xp_pickup": (0.14, 1040.0, 0.05, 0.94, "coin"), "relic_pickup": (0.46, 390.0, 0.08, 0.48, "chime"),
+		"chest_open": (0.42, 160.0, 0.42, 0.31, "riser"), "chest_reward": (0.36, 720.0, 0.06, 0.55, "chime"),
+		"level_up": (0.64, 560.0, 0.02, 0.82, "arpeggio"), "boss_telegraph": (0.48, 210.0, 0.18, 0.83, "alarm"),
+		"boss_phase": (0.76, 135.0, 0.55, -0.12, "impact"), "boss_defeat": (0.95, 260.0, 0.06, 0.74, "fanfare"),
+		"ui_focus": (0.045, 1240.0, 0.01, 0.0, "blip"), "ui_confirm": (0.13, 660.0, 0.02, 0.72, "chime"),
+		"ui_back": (0.12, 470.0, 0.02, -0.62, "blip"), "ui_error": (0.17, 180.0, 0.16, -0.58, "buzzer"),
+		"ui_pause": (0.24, 350.0, 0.03, -0.45, "sweep"),
 	}
-	duration, base_frequency, noise_amount, pitch_sweep = profiles[family]
+	duration, base_frequency, noise_amount, pitch_sweep, contour = profiles[family]
+	weapon_profiles = {
+		"lightning_conductor": (1250.0, "zap", 0.68), "inferno_sprayer": (240.0, "flame", 0.92),
+		"crimson_daggers": (520.0, "slash", 0.88), "minigun": (180.0, "shot", 0.72),
+		"toxic_cloud": (320.0, "bubbly", 0.8), "sawblades": (145.0, "grind", 0.75),
+		"meteor_staff": (110.0, "whoosh", 0.65), "prism_laser": (1800.0, "laser", 0.92),
+		"void_orb": (75.0, "void", 0.85), "frost_nova": (840.0, "crystal", 0.72),
+	}
+	for weapon, (frequency, shape, noise) in weapon_profiles.items():
+		if sound_id.startswith(f"weapon_{weapon}_"):
+			base_frequency, contour = frequency, shape
+			noise_amount = noise if "_fire" in sound_id else min(0.95, noise + 0.12)
+			break
 	count = round(SAMPLE_RATE * duration)
-	transient = [rng.uniform(-1.0, 1.0) for _ in range(round(SAMPLE_RATE * 0.018))]
+	transient = [rng.uniform(-1.0, 1.0) for _ in range(round(SAMPLE_RATE * 0.032))]
 	pitch_variant = 1.0 + rng.uniform(-0.045, 0.045)
 	phase = rng.uniform(0.0, math.tau)
 	samples: list[float] = []
 	for index in range(count):
 		time = index / SAMPLE_RATE
 		normalized_time = time / duration
-		frequency = base_frequency * pitch_variant * (1.0 + pitch_sweep * normalized_time)
-		envelope = min(1.0, time / 0.003) * math.exp(-time * (4.2 / duration))
-		body = math.sin(math.tau * frequency * time + phase)
-		body += 0.31 * math.sin(math.tau * frequency * 1.618 * time + phase * 0.7)
-		body += 0.12 * math.sin(math.tau * frequency * 2.414 * time)
+		frequency = base_frequency * pitch_variant * max(0.18, 1.0 + pitch_sweep * normalized_time)
+		attack = min(1.0, time / 0.0025)
+		decay = math.exp(-time * (3.0 / duration))
+		if contour in {"alarm", "riser", "whoosh"}:
+			decay *= min(1.0, normalized_time * 3.0 + 0.08)
+		envelope = attack * decay
+		if contour in {"chime", "coin", "crystal", "arpeggio", "fanfare"}:
+			semitone = 1.0 if contour in {"coin", "chime"} else 1.5
+			frequency *= 1.0 + semitone * min(1.0, normalized_time * 1.4)
+		carrier = math.sin(math.tau * frequency * time + phase)
+		body = carrier + 0.24 * math.sin(math.tau * frequency * 2.0 * time + phase * 0.7)
+		if contour in {"grind", "flame", "bubbly", "void", "impact", "shot"}:
+			body += 0.38 * math.sin(math.tau * frequency * 0.5 * time + phase * 1.2)
+		if contour in {"zap", "laser", "alarm"}:
+			body += 0.28 * math.sin(math.tau * frequency * (2.0 + 0.3 * math.sin(time * 31.0)) * time)
 		transient_sample = transient[index] if index < len(transient) else 0.0
-		transient_sample *= math.exp(-time * 340.0)
-		pulse = 0.78 + 0.22 * math.sin(math.pi * 5.0 * normalized_time) ** 2
-		samples.append((body * (1.0 - noise_amount * 0.35) + transient_sample * noise_amount) * envelope * pulse)
+		transient_sample *= math.exp(-time * 240.0)
+		pulse_rate = 3.0 if contour in {"bubbly", "grind", "alarm"} else 1.0
+		pulse = 0.72 + 0.28 * math.sin(math.pi * pulse_rate * normalized_time) ** 2
+		if contour == "slash":
+			body *= math.sin(math.pi * min(0.999, normalized_time))
+		elif contour == "buzzer":
+			body *= 0.65 + 0.35 * math.sin(math.tau * 27.0 * time)
+		samples.append((body * (1.0 - noise_amount * 0.30) + transient_sample * noise_amount) * envelope * pulse)
 	fade_samples = round(SAMPLE_RATE * min(0.008, duration * 0.08))
 	for index in range(fade_samples):
 		samples[-fade_samples + index] *= 1.0 - (index + 1) / fade_samples
@@ -179,40 +206,46 @@ def _make_loop_seamless(stem: array) -> None:
 
 
 def _render_music_stems(seed: int = 90210) -> dict[str, array]:
-	"""Render a four-bar minor-key EDM loop with phase-aligned intensity stems."""
+	"""Render an eight-bar, phase-aligned synthwave EDM loop with graduated layers."""
 	stems = {name: array("f", [0.0]) * MUSIC_SAMPLE_COUNT
 		for name in ["rhythm", "bass", "pad", "arp", "boss"]}
+	# D minor / Bb / F / C, returning through D minor and resolving on A major.
 	chords = [
-		(73.416, (146.832, 174.614, 220.000)),
-		(58.270, (116.541, 146.832, 174.614)),
-		(87.307, (174.614, 220.000, 261.626)),
-		(65.406, (130.813, 164.814, 196.000)),
+		(73.42, (146.83, 174.61, 220.0)), (58.27, (116.54, 146.83, 174.61)),
+		(87.31, (174.61, 220.0, 261.63)), (65.41, (130.81, 164.81, 196.0)),
+		(73.42, (146.83, 174.61, 220.0)), (58.27, (116.54, 146.83, 174.61)),
+		(65.41, (130.81, 164.81, 196.0)), (55.0, (110.0, 138.59, 164.81)),
 	]
 	rhythm_rng = random.Random(seed)
 	for beat in range(MUSIC_BARS * 4):
 		start = beat * BEAT_SECONDS
-		_add_tone(stems["rhythm"], start, 0.25, 75.0, 0.72, 16.0, -42.0, 0.18)
-		if beat % 4 in (1, 3):
-			_add_noise(stems["rhythm"], start, 0.17, 0.34, 24.0, rhythm_rng)
-		else:
-			_add_noise(stems["rhythm"], start + BEAT_SECONDS * 0.5, 0.045, 0.12, 68.0, rhythm_rng)
-		_add_noise(stems["rhythm"], start + BEAT_SECONDS * 0.5, 0.035, 0.11, 80.0, rhythm_rng)
+		bar_beat = beat % 4
+		if bar_beat in (0, 2):
+			_add_tone(stems["rhythm"], start, 0.29, 52.0, 0.76, 14.0, -24.0, 0.45)
+			_add_noise(stems["rhythm"], start, 0.085, 0.20, 95.0, rhythm_rng)
+		if bar_beat in (1, 3):
+			_add_noise(stems["rhythm"], start, 0.14, 0.29, 23.0, rhythm_rng)
+		for offbeat in (0.0, 0.5):
+			if offbeat == 0.5 or bar_beat in (1, 3):
+				_add_noise(stems["rhythm"], start + BEAT_SECONDS * offbeat, 0.022, 0.095, 115.0, rhythm_rng)
 	for bar in range(MUSIC_BARS):
 		root, chord = chords[bar]
 		bar_start = bar * BAR_SECONDS
-		_add_tone(stems["pad"], bar_start, BAR_SECONDS, chord[0], 0.12, 0.12)
-		_add_tone(stems["pad"], bar_start, BAR_SECONDS, chord[1], 0.10, 0.12)
-		_add_tone(stems["pad"], bar_start, BAR_SECONDS, chord[2], 0.09, 0.12)
-		for step in range(8):
+		# Slow filter-like breathing in the pad is realized with overlapping octaves.
+		for note_index, note in enumerate(chord):
+			_add_tone(stems["pad"], bar_start, BAR_SECONDS, note, (0.075, 0.055, 0.042)[note_index], 0.10)
+			_add_tone(stems["pad"], bar_start, BAR_SECONDS, note * 2.0, 0.018, 0.18)
+		for step in range(16):
 			start = bar_start + step * BEAT_SECONDS * 0.5
-			bass_note = root if step in (0, 3, 4, 7) else root * 1.5
-			_add_tone(stems["bass"], start, BEAT_SECONDS * 0.39, bass_note, 0.38, 5.0, 0.0, 0.2)
-			arp_note = chord[(step + bar) % len(chord)] * (2.0 if step % 4 else 4.0)
-			_add_tone(stems["arp"], start, BEAT_SECONDS * 0.34, arp_note, 0.14, 8.0, 0.0, 0.22)
-			if step in (2, 6):
-				_add_tone(stems["boss"], start, BEAT_SECONDS * 0.42, arp_note * 0.5, 0.12, 5.5, 0.0, 0.12)
-		if bar in (1, 3):
-			_add_noise(stems["boss"], bar_start + BAR_SECONDS - 0.12, 0.11, 0.18, 8.0, rhythm_rng)
+			bass_note = root if step in (0, 3, 6, 8, 11, 14) else root * 1.5
+			_add_tone(stems["bass"], start, BEAT_SECONDS * 0.39, bass_note, 0.42, 5.5, 0.0, 0.34)
+			if step % 2 == 0 or step in (3, 11, 15):
+				arp_note = chord[(step // 2 + bar) % len(chord)] * (2.0 if step % 4 else 4.0)
+				_add_tone(stems["arp"], start, BEAT_SECONDS * 0.28, arp_note, 0.105, 10.0, 0.0, 0.30)
+			if step in (0, 7, 8, 15):
+				_add_tone(stems["boss"], start, BEAT_SECONDS * 0.48, root * (1.0 if step in (0, 8) else 2.0), 0.20, 3.0, -5.0, 0.42)
+		if bar in (3, 7):
+			_add_noise(stems["boss"], bar_start + BAR_SECONDS - 0.18, 0.16, 0.12, 7.0, rhythm_rng)
 	for stem in stems.values():
 		_make_loop_seamless(stem)
 	return stems
@@ -231,14 +264,23 @@ def _mix_stems(stems: dict[str, array], gains: dict[str, float]) -> array:
 
 
 def _render_music_cue(cue: str) -> array:
-	"""Render short deterministic one-shot melodic bookends, without sample libraries."""
-	notes = [293.66, 369.99, 440.0, 587.33] if cue == "victory_cue" else [440.0, 349.23, 261.63, 220.0]
-	segment = 0.32
-	samples = array("f", [0.0]) * round(SAMPLE_RATE * segment * len(notes))
+	"""Render a distinctly melodic, layered win/defeat synthwave stinger."""
+	if cue == "victory_cue":
+		notes, segment, sub = [293.66, 349.23, 440.0, 587.33, 698.46, 880.0], 0.22, 146.83
+	else:
+		notes, segment, sub = [440.0, 349.23, 293.66, 220.0, 164.81], 0.26, 82.41
+	samples = array("f", [0.0]) * round(SAMPLE_RATE * (segment * (len(notes) - 1) + 0.72))
+	_add_tone(samples, 0.0, len(samples) / SAMPLE_RATE, sub, 0.16, 0.9, 0.0, 0.24)
 	for index, frequency in enumerate(notes):
-		_add_tone(samples, index * segment, segment, frequency, 0.38, 3.5, 0.0, 0.18)
+		start = index * segment
+		duration = 0.31 if index == len(notes) - 1 else segment * 0.92
+		_add_tone(samples, start, duration, frequency, 0.30, 2.4, 0.0, 0.31)
+		_add_tone(samples, start, duration, frequency * 2.0, 0.075, 3.2, 0.0, 0.18)
+	for index in range(round(SAMPLE_RATE * 0.035)):
+		gain = index / (SAMPLE_RATE * 0.035)
+		samples[index] *= gain
 	peak = max(abs(sample) for sample in samples)
-	return array("f", (sample * min(1.0, 0.78 / peak) for sample in samples))
+	return array("f", (sample * min(1.0, 0.52 / peak) for sample in samples))
 
 
 def _metadata(asset_id: str, kind: str, seed: int, metric: dict) -> dict:
@@ -246,12 +288,12 @@ def _metadata(asset_id: str, kind: str, seed: int, metric: dict) -> dict:
 	return {
 		"asset_id": asset_id, "kind": kind, "status": "candidate_not_approved",
 		"skill": "dopamine-sfx" if kind == "sfx" else "dopamine-music",
-		"generator": "game/tools/generate_original_audio.py", "generator_version": "4",
+		"generator": "game/tools/generate_original_audio.py", "generator_version": "5",
 		"source_sha256": hashlib.sha256(source_path.read_bytes()).hexdigest(),
 		"seed": seed,
 		"parameters": {"sample_rate_hz": SAMPLE_RATE, "channels": 1, "encoding": "PCM16 WAV",
-			"method": "role-specific oscillator/noise layers with analytic envelopes" if kind == "sfx"
-			else "synchronized synthesized stem with 12 ms edge fade"},
+			"method": "event-contoured oscillator, transient, and role-specific synthesis v2" if kind == "sfx"
+			else "124 BPM eight-bar layered synthwave EDM with phase-aligned stems"},
 		"export": metric,
 	}
 

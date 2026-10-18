@@ -4,31 +4,31 @@
   "status": "provisionally_integrated",
   "skill": "dopamine-sfx",
   "generator": "game/tools/generate_original_audio.py",
-  "generator_version": "4",
-  "source_sha256": "53a6845af9614cda4ae22304cba58dd245cef5b63953f0c6b3b9ff3cdea2cc4c",
+  "generator_version": "5",
+  "source_sha256": "ab2381dfa9211b7b2d4fb20460c7ffd1f82a8b9534a6b4998cc42307134ef55c",
   "seed": 2825796527,
   "parameters": {
     "sample_rate_hz": 44100,
     "channels": 1,
     "encoding": "PCM16 WAV",
-    "method": "role-specific oscillator/noise layers with analytic envelopes",
+    "method": "event-contoured oscillator, transient, and role-specific synthesis v2",
     "variation_index": 1,
     "variation_count": 4
   },
   "export": {
     "file": "weapon_meteor_staff_impact.wav",
-    "sha256": "16c5db02b85d89e339512b8c312e75e7fc3be55025398469891c7c5733a7e895",
+    "sha256": "1776079f6cf7cdd23f057a2764cccd46dbe556718c522343ab028b479aff78ab",
     "sample_rate_hz": 44100,
     "channels": 1,
-    "duration_seconds": 0.095011,
+    "duration_seconds": 0.09,
     "peak_dbfs": -2.853,
-    "rms_dbfs": -16.451,
-    "crest_factor_db": 13.597
+    "rms_dbfs": -11.401,
+    "crest_factor_db": 8.548
   },
   "acceptance_status": "accepted_for_provisional_production",
-  "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
+  "acceptance_basis": "Provisional integration of complete audio redesign; owner listening review remains pending.",
   "human_review_status": "pending",
-  "candidate_export_path": "build/assets/candidates/audio-complete/sfx/weapon_meteor_staff_impact.wav",
+  "candidate_export_path": "build/assets/candidates/audio-refonte-20261018/sfx/weapon_meteor_staff_impact.wav",
   "integrated_export_path": "game/assets/audio/original_procedural/sfx/weapon_meteor_staff_impact.wav",
   "export_path": "audio/original_procedural/sfx/weapon_meteor_staff_impact.wav"
 }

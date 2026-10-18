@@ -4,29 +4,29 @@
   "status": "provisionally_integrated",
   "skill": "dopamine-sfx",
   "generator": "game/tools/generate_original_audio.py",
-  "generator_version": "4",
-  "source_sha256": "53a6845af9614cda4ae22304cba58dd245cef5b63953f0c6b3b9ff3cdea2cc4c",
+  "generator_version": "5",
+  "source_sha256": "ab2381dfa9211b7b2d4fb20460c7ffd1f82a8b9534a6b4998cc42307134ef55c",
   "seed": 2809306444,
   "parameters": {
     "sample_rate_hz": 44100,
     "channels": 1,
     "encoding": "PCM16 WAV",
-    "method": "role-specific oscillator/noise layers with analytic envelopes"
+    "method": "event-contoured oscillator, transient, and role-specific synthesis v2"
   },
   "export": {
     "file": "hit_heavy_02.wav",
-    "sha256": "20bc97b663e079756ad5295c4093d73956a8a4a4c491ed02375ce76a83f6021f",
+    "sha256": "416aac9bd6399d52b1754ebae307dba180377ff8bdb962e1139bd0784e1242ac",
     "sample_rate_hz": 44100,
     "channels": 1,
-    "duration_seconds": 0.22,
+    "duration_seconds": 0.23,
     "peak_dbfs": -2.853,
-    "rms_dbfs": -16.995,
-    "crest_factor_db": 14.142
+    "rms_dbfs": -15.715,
+    "crest_factor_db": 12.862
   },
   "acceptance_status": "accepted_for_provisional_production",
-  "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
+  "acceptance_basis": "Provisional integration of complete audio redesign; owner listening review remains pending.",
   "human_review_status": "pending",
-  "candidate_export_path": "build/assets/candidates/audio-complete/sfx/hit_heavy_02.wav",
+  "candidate_export_path": "build/assets/candidates/audio-refonte-20261018/sfx/hit_heavy_02.wav",
   "integrated_export_path": "game/assets/audio/original_procedural/sfx/hit_heavy_02.wav",
   "export_path": "audio/original_procedural/sfx/hit_heavy_02.wav"
 }

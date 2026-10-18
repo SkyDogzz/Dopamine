@@ -4,29 +4,29 @@
   "status": "provisionally_integrated",
   "skill": "dopamine-sfx",
   "generator": "game/tools/generate_original_audio.py",
-  "generator_version": "4",
-  "source_sha256": "53a6845af9614cda4ae22304cba58dd245cef5b63953f0c6b3b9ff3cdea2cc4c",
+  "generator_version": "5",
+  "source_sha256": "ab2381dfa9211b7b2d4fb20460c7ffd1f82a8b9534a6b4998cc42307134ef55c",
   "seed": 2973835681,
   "parameters": {
     "sample_rate_hz": 44100,
     "channels": 1,
     "encoding": "PCM16 WAV",
-    "method": "role-specific oscillator/noise layers with analytic envelopes"
+    "method": "event-contoured oscillator, transient, and role-specific synthesis v2"
   },
   "export": {
     "file": "xp_pickup_02.wav",
-    "sha256": "b176b7dc6eb5ef41e5d8b205abb3f3029418c21c39c50ec998245b3ede7e81e6",
+    "sha256": "a09d2f72ee3d7b7e83837c6818c8bac78d8bba970a24494e7c4fff85109c2480",
     "sample_rate_hz": 44100,
     "channels": 1,
-    "duration_seconds": 0.13,
+    "duration_seconds": 0.14,
     "peak_dbfs": -2.853,
-    "rms_dbfs": -15.916,
-    "crest_factor_db": 13.063
+    "rms_dbfs": -13.605,
+    "crest_factor_db": 10.751
   },
   "acceptance_status": "accepted_for_provisional_production",
-  "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
+  "acceptance_basis": "Provisional integration of complete audio redesign; owner listening review remains pending.",
   "human_review_status": "pending",
-  "candidate_export_path": "build/assets/candidates/audio-complete/sfx/xp_pickup_02.wav",
+  "candidate_export_path": "build/assets/candidates/audio-refonte-20261018/sfx/xp_pickup_02.wav",
   "integrated_export_path": "game/assets/audio/original_procedural/sfx/xp_pickup_02.wav",
   "export_path": "audio/original_procedural/sfx/xp_pickup_02.wav"
 }

@@ -4,29 +4,29 @@
   "status": "provisionally_integrated",
   "skill": "dopamine-sfx",
   "generator": "game/tools/generate_original_audio.py",
-  "generator_version": "4",
-  "source_sha256": "53a6845af9614cda4ae22304cba58dd245cef5b63953f0c6b3b9ff3cdea2cc4c",
+  "generator_version": "5",
+  "source_sha256": "ab2381dfa9211b7b2d4fb20460c7ffd1f82a8b9534a6b4998cc42307134ef55c",
   "seed": 68553403,
   "parameters": {
     "sample_rate_hz": 44100,
     "channels": 1,
     "encoding": "PCM16 WAV",
-    "method": "role-specific oscillator/noise layers with analytic envelopes"
+    "method": "event-contoured oscillator, transient, and role-specific synthesis v2"
   },
   "export": {
     "file": "boss_telegraph.wav",
-    "sha256": "2023797f48a71a10a12dac60cd39fd1218b43274ba854fb5e06fe9b9008974f4",
+    "sha256": "ffc9ebfbb7cf85c26974bdac64e30f670c0a8c60cbfe8dfc1e431fe1c07d0083",
     "sample_rate_hz": 44100,
     "channels": 1,
-    "duration_seconds": 0.36,
+    "duration_seconds": 0.48,
     "peak_dbfs": -2.853,
-    "rms_dbfs": -15.805,
-    "crest_factor_db": 12.952
+    "rms_dbfs": -13.354,
+    "crest_factor_db": 10.501
   },
   "acceptance_status": "accepted_for_provisional_production",
-  "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
+  "acceptance_basis": "Provisional integration of complete audio redesign; owner listening review remains pending.",
   "human_review_status": "pending",
-  "candidate_export_path": "build/assets/candidates/audio-complete/sfx/boss_telegraph.wav",
+  "candidate_export_path": "build/assets/candidates/audio-refonte-20261018/sfx/boss_telegraph.wav",
   "integrated_export_path": "game/assets/audio/original_procedural/sfx/boss_telegraph.wav",
   "export_path": "audio/original_procedural/sfx/boss_telegraph.wav"
 }

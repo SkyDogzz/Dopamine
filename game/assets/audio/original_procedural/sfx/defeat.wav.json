@@ -4,29 +4,29 @@
   "status": "provisionally_integrated",
   "skill": "dopamine-sfx",
   "generator": "game/tools/generate_original_audio.py",
-  "generator_version": "4",
-  "source_sha256": "53a6845af9614cda4ae22304cba58dd245cef5b63953f0c6b3b9ff3cdea2cc4c",
+  "generator_version": "5",
+  "source_sha256": "ab2381dfa9211b7b2d4fb20460c7ffd1f82a8b9534a6b4998cc42307134ef55c",
   "seed": 1314651999,
   "parameters": {
     "sample_rate_hz": 44100,
     "channels": 1,
     "encoding": "PCM16 WAV",
-    "method": "role-specific oscillator/noise layers with analytic envelopes"
+    "method": "event-contoured oscillator, transient, and role-specific synthesis v2"
   },
   "export": {
     "file": "defeat.wav",
-    "sha256": "6d161e5783cc64b19753edf9296e74e3ac010d2ed5813426ddf6fecad565ddc4",
+    "sha256": "013e88e8c6d1fad1b493b79f0acd8f4128a444704606e402c241b79bbc57e6df",
     "sample_rate_hz": 44100,
     "channels": 1,
-    "duration_seconds": 0.72,
+    "duration_seconds": 0.76,
     "peak_dbfs": -2.853,
-    "rms_dbfs": -16.114,
-    "crest_factor_db": 13.26
+    "rms_dbfs": -16.805,
+    "crest_factor_db": 13.951
   },
   "acceptance_status": "accepted_for_provisional_production",
-  "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
+  "acceptance_basis": "Provisional integration of complete audio redesign; owner listening review remains pending.",
   "human_review_status": "pending",
-  "candidate_export_path": "build/assets/candidates/audio-complete/sfx/defeat.wav",
+  "candidate_export_path": "build/assets/candidates/audio-refonte-20261018/sfx/defeat.wav",
   "integrated_export_path": "game/assets/audio/original_procedural/sfx/defeat.wav",
   "export_path": "audio/original_procedural/sfx/defeat.wav"
 }

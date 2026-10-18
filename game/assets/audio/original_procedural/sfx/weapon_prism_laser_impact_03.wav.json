@@ -4,31 +4,31 @@
   "status": "provisionally_integrated",
   "skill": "dopamine-sfx",
   "generator": "game/tools/generate_original_audio.py",
-  "generator_version": "4",
-  "source_sha256": "53a6845af9614cda4ae22304cba58dd245cef5b63953f0c6b3b9ff3cdea2cc4c",
+  "generator_version": "5",
+  "source_sha256": "ab2381dfa9211b7b2d4fb20460c7ffd1f82a8b9534a6b4998cc42307134ef55c",
   "seed": 4239116375,
   "parameters": {
     "sample_rate_hz": 44100,
     "channels": 1,
     "encoding": "PCM16 WAV",
-    "method": "role-specific oscillator/noise layers with analytic envelopes",
+    "method": "event-contoured oscillator, transient, and role-specific synthesis v2",
     "variation_index": 3,
     "variation_count": 4
   },
   "export": {
     "file": "weapon_prism_laser_impact_03.wav",
-    "sha256": "424dd97c9c69e9afbf4bcb2c8ca7db39554b4bf9e1378be3facfc47c0789b500",
+    "sha256": "d15231e842c9ac3ee9bcb7c4293d71e79bf0f2e374ed4bdedd4bb788b2bc232c",
     "sample_rate_hz": 44100,
     "channels": 1,
-    "duration_seconds": 0.095011,
+    "duration_seconds": 0.09,
     "peak_dbfs": -2.853,
-    "rms_dbfs": -17.091,
-    "crest_factor_db": 14.238
+    "rms_dbfs": -17.5,
+    "crest_factor_db": 14.647
   },
   "acceptance_status": "accepted_for_provisional_production",
-  "acceptance_basis": "User-authorized local prototype scope; variation preserves the established per-weapon family signature.",
+  "acceptance_basis": "Provisional integration of complete audio redesign; owner listening review remains pending.",
   "human_review_status": "pending",
-  "candidate_export_path": "build/assets/candidates/audio-complete/sfx/weapon_prism_laser_impact_03.wav",
+  "candidate_export_path": "build/assets/candidates/audio-refonte-20261018/sfx/weapon_prism_laser_impact_03.wav",
   "integrated_export_path": "game/assets/audio/original_procedural/sfx/weapon_prism_laser_impact_03.wav",
   "export_path": "audio/original_procedural/sfx/weapon_prism_laser_impact_03.wav"
 }

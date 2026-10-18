@@ -13,12 +13,14 @@
         "sample_rate_hz": 44100,
         "channels": 1,
         "encoding": "PCM16 WAV",
-        "method": "role-specific oscillator/noise layers with analytic envelopes"
+        "method": "event-contoured oscillator, transient, and role-specific synthesis v2"
       },
       "validation_status": "passed",
-      "duration_seconds": 0.105,
+      "human_review_status": "pending",
+      "duration_seconds": 0.104989,
       "channels": 1,
-      "sample_rate": 44100
+      "sample_rate": 44100,
+      "sha256": "3b817c0a06f0429fd0604f2ae4661d6c07727ac38d2d91d1f8b9ec1fe8da7ad8"
     },
     {
       "id": "sfx_weapon_shot_02",
@@ -32,12 +34,14 @@
         "sample_rate_hz": 44100,
         "channels": 1,
         "encoding": "PCM16 WAV",
-        "method": "role-specific oscillator/noise layers with analytic envelopes"
+        "method": "event-contoured oscillator, transient, and role-specific synthesis v2"
       },
       "validation_status": "passed",
-      "duration_seconds": 0.105,
+      "human_review_status": "pending",
+      "duration_seconds": 0.104989,
       "channels": 1,
-      "sample_rate": 44100
+      "sample_rate": 44100,
+      "sha256": "59184d101d868f5d0a7e8b08b09cf8fad6aeafed0788b6b7b49eda408d1c541a"
     },
     {
       "id": "sfx_weapon_shot_03",
@@ -51,12 +55,14 @@
         "sample_rate_hz": 44100,
         "channels": 1,
         "encoding": "PCM16 WAV",
-        "method": "role-specific oscillator/noise layers with analytic envelopes"
+        "method": "event-contoured oscillator, transient, and role-specific synthesis v2"
       },
       "validation_status": "passed",
-      "duration_seconds": 0.105,
+      "human_review_status": "pending",
+      "duration_seconds": 0.104989,
       "channels": 1,
-      "sample_rate": 44100
+      "sample_rate": 44100,
+      "sha256": "82352813bd1564744f0d2f795f6218308a7e272b824ca61e6a4ade15640c62d5"
     },
     {
       "id": "sfx_weapon_shot_04",
@@ -70,12 +76,14 @@
         "sample_rate_hz": 44100,
         "channels": 1,
         "encoding": "PCM16 WAV",
-        "method": "role-specific oscillator/noise layers with analytic envelopes"
+        "method": "event-contoured oscillator, transient, and role-specific synthesis v2"
       },
       "validation_status": "passed",
-      "duration_seconds": 0.105,
+      "human_review_status": "pending",
+      "duration_seconds": 0.104989,
       "channels": 1,
-      "sample_rate": 44100
+      "sample_rate": 44100,
+      "sha256": "766bdf7d889ccc3e8ac7319263238beaaf331ffc09d65fca1a8849b47b98540a"
     },
     {
       "id": "sfx_weapon_zap_01",
@@ -89,12 +97,14 @@
         "sample_rate_hz": 44100,
         "channels": 1,
         "encoding": "PCM16 WAV",
-        "method": "role-specific oscillator/noise layers with analytic envelopes"
+        "method": "event-contoured oscillator, transient, and role-specific synthesis v2"
       },
       "validation_status": "passed",
-      "duration_seconds": 0.14,
+      "human_review_status": "pending",
+      "duration_seconds": 0.16,
       "channels": 1,
-      "sample_rate": 44100
+      "sample_rate": 44100,
+      "sha256": "3298c35055e1db16b45923d1a0af1c30de51c272779cf69d31090983c1cd7462"
     },
     {
       "id": "sfx_weapon_zap_02",
@@ -108,12 +118,14 @@
         "sample_rate_hz": 44100,
         "channels": 1,
         "encoding": "PCM16 WAV",
-        "method": "role-specific oscillator/noise layers with analytic envelopes"
+        "method": "event-contoured oscillator, transient, and role-specific synthesis v2"
       },
       "validation_status": "passed",
-      "duration_seconds": 0.14,
+      "human_review_status": "pending",
+      "duration_seconds": 0.16,
       "channels": 1,
-      "sample_rate": 44100
+      "sample_rate": 44100,
+      "sha256": "c97a593e636be71bda11adcbe7c16f15be2369f6293cf29f1d764f0f766c568f"
     },
     {
       "id": "sfx_weapon_zap_03",
@@ -127,12 +139,14 @@
         "sample_rate_hz": 44100,
         "channels": 1,
         "encoding": "PCM16 WAV",
-        "method": "role-specific oscillator/noise layers with analytic envelopes"
+        "method": "event-contoured oscillator, transient, and role-specific synthesis v2"
       },
       "validation_status": "passed",
-      "duration_seconds": 0.14,
+      "human_review_status": "pending",
+      "duration_seconds": 0.16,
       "channels": 1,
-      "sample_rate": 44100
+      "sample_rate": 44100,
+      "sha256": "30972dab05f3aa9b4f88468bb5651559a81fd530b73bbe0c80aa14028862bb52"
     },
     {
       "id": "sfx_weapon_zap_04",
@@ -146,12 +160,14 @@
         "sample_rate_hz": 44100,
         "channels": 1,
         "encoding": "PCM16 WAV",
-        "method": "role-specific oscillator/noise layers with analytic envelopes"
+        "method": "event-contoured oscillator, transient, and role-specific synthesis v2"
       },
       "validation_status": "passed",
-      "duration_seconds": 0.14,
+      "human_review_status": "pending",
+      "duration_seconds": 0.16,
       "channels": 1,
-      "sample_rate": 44100
+      "sample_rate": 44100,
+      "sha256": "8383b6f3bbb04489c28667d8788d675826e1a732e787dc9daca5684fb83d6952"
     },
     {
       "id": "sfx_weapon_sweep_01",
@@ -165,12 +181,14 @@
         "sample_rate_hz": 44100,
         "channels": 1,
         "encoding": "PCM16 WAV",
-        "method": "role-specific oscillator/noise layers with analytic envelopes"
+        "method": "event-contoured oscillator, transient, and role-specific synthesis v2"
       },
       "validation_status": "passed",
-      "duration_seconds": 0.2,
+      "human_review_status": "pending",
+      "duration_seconds": 0.21,
       "channels": 1,
-      "sample_rate": 44100
+      "sample_rate": 44100,
+      "sha256": "d2acab57b8be9160e2741a380cdd7d53e3a8640443de8f3a1eabf318ffe26f0e"
     },
     {
       "id": "sfx_weapon_sweep_02",
@@ -184,12 +202,14 @@
         "sample_rate_hz": 44100,
         "channels": 1,
         "encoding": "PCM16 WAV",
-        "method": "role-specific oscillator/noise layers with analytic envelopes"
+        "method": "event-contoured oscillator, transient, and role-specific synthesis v2"
       },
       "validation_status": "passed",
-      "duration_seconds": 0.2,
+      "human_review_status": "pending",
+      "duration_seconds": 0.21,
       "channels": 1,
-      "sample_rate": 44100
+      "sample_rate": 44100,
+      "sha256": "bc1832798c6f0ea8848d49d63c973ac062fb96ccd677d881ddc04521f3370208"
     },
     {
       "id": "sfx_weapon_sweep_03",
@@ -203,12 +223,14 @@
         "sample_rate_hz": 44100,
         "channels": 1,
         "encoding": "PCM16 WAV",
-        "method": "role-specific oscillator/noise layers with analytic envelopes"
+        "method": "event-contoured oscillator, transient, and role-specific synthesis v2"
       },
       "validation_status": "passed",
-      "duration_seconds": 0.2,
+      "human_review_status": "pending",
+      "duration_seconds": 0.21,
       "channels": 1,
-      "sample_rate": 44100
+      "sample_rate": 44100,
+      "sha256": "36af0e17c600297e5c952748e82196f5adfd0a6bbb64c9e6689c7a3662dbac21"
     },
     {
       "id": "sfx_hit_light_01",
@@ -222,12 +244,14 @@
         "sample_rate_hz": 44100,
         "channels": 1,
         "encoding": "PCM16 WAV",
-        "method": "role-specific oscillator/noise layers with analytic envelopes"
+        "method": "event-contoured oscillator, transient, and role-specific synthesis v2"
       },
       "validation_status": "passed",
-      "duration_seconds": 0.095,
+      "human_review_status": "pending",
+      "duration_seconds": 0.09,
       "channels": 1,
-      "sample_rate": 44100
+      "sample_rate": 44100,
+      "sha256": "ac85cc4f8b03d199bbbd144bd18d4cd03361544a14e9f65b773b2decc34b02e9"
     },
     {
       "id": "sfx_hit_light_02",
@@ -241,12 +265,14 @@
         "sample_rate_hz": 44100,
         "channels": 1,
         "encoding": "PCM16 WAV",
-        "method": "role-specific oscillator/noise layers with analytic envelopes"
+        "method": "event-contoured oscillator, transient, and role-specific synthesis v2"
       },
       "validation_status": "passed",
-      "duration_seconds": 0.095,
+      "human_review_status": "pending",
+      "duration_seconds": 0.09,
       "channels": 1,
-      "sample_rate": 44100
+      "sample_rate": 44100,
+      "sha256": "19367697906247670c2c45f2306d6bacf9b1b2a64795994356b48c8429e6ac0e"
     },
     {
       "id": "sfx_hit_light_03",
@@ -260,12 +286,14 @@
         "sample_rate_hz": 44100,
         "channels": 1,
         "encoding": "PCM16 WAV",
-        "method": "role-specific oscillator/noise layers with analytic envelopes"
+        "method": "event-contoured oscillator, transient, and role-specific synthesis v2"
       },
       "validation_status": "passed",
-      "duration_seconds": 0.095,
+      "human_review_status": "pending",
+      "duration_seconds": 0.09,
       "channels": 1,
-      "sample_rate": 44100
+      "sample_rate": 44100,
+      "sha256": "be0bcc09f09fcadd08f8b8666aad9762a966fd8a59d146d5cd3243b8511c1e6c"
     },
     {
       "id": "sfx_hit_light_04",
@@ -279,12 +307,14 @@
         "sample_rate_hz": 44100,
         "channels": 1,
         "encoding": "PCM16 WAV",
-        "method": "role-specific oscillator/noise layers with analytic envelopes"
+        "method": "event-contoured oscillator, transient, and role-specific synthesis v2"
       },
       "validation_status": "passed",
-      "duration_seconds": 0.095,
+      "human_review_status": "pending",
+      "duration_seconds": 0.09,
       "channels": 1,
-      "sample_rate": 44100
+      "sample_rate": 44100,
+      "sha256": "020f19a1bfebae626f53791971907fd79ba1f52f3d966b519cacd13a602b8c92"
     },
     {
       "id": "sfx_hit_heavy_01",
@@ -298,12 +328,14 @@
         "sample_rate_hz": 44100,
         "channels": 1,
         "encoding": "PCM16 WAV",
-        "method": "role-specific oscillator/noise layers with analytic envelopes"
+        "method": "event-contoured oscillator, transient, and role-specific synthesis v2"
       },
       "validation_status": "passed",
-      "duration_seconds": 0.22,
+      "human_review_status": "pending",
+      "duration_seconds": 0.23,
       "channels": 1,
-      "sample_rate": 44100
+      "sample_rate": 44100,
+      "sha256": "7782bc8ab7eda50cd44e0f055114f52ba7f7ca27dd037c13c774bf5cbf37bf45"
     },
     {
       "id": "sfx_hit_heavy_02",
@@ -317,12 +349,14 @@
         "sample_rate_hz": 44100,
         "channels": 1,
         "encoding": "PCM16 WAV",
-        "method": "role-specific oscillator/noise layers with analytic envelopes"
+        "method": "event-contoured oscillator, transient, and role-specific synthesis v2"
       },
       "validation_status": "passed",
-      "duration_seconds": 0.22,
+      "human_review_status": "pending",
+      "duration_seconds": 0.23,
       "channels": 1,
-      "sample_rate": 44100
+      "sample_rate": 44100,
+      "sha256": "416aac9bd6399d52b1754ebae307dba180377ff8bdb962e1139bd0784e1242ac"
     },
     {
       "id": "sfx_hit_heavy_03",
@@ -336,12 +370,14 @@
         "sample_rate_hz": 44100,
         "channels": 1,
         "encoding": "PCM16 WAV",
-        "method": "role-specific oscillator/noise layers with analytic envelopes"
+        "method": "event-contoured oscillator, transient, and role-specific synthesis v2"
       },
       "validation_status": "passed",
-      "duration_seconds": 0.22,
+      "human_review_status": "pending",
+      "duration_seconds": 0.23,
       "channels": 1,
-      "sample_rate": 44100
+      "sample_rate": 44100,
+      "sha256": "c126e30f03f1ea3fbb83093f472a5d2095b4361bfe2affefc45aaed5081974aa"
     },
     {
       "id": "sfx_enemy_kill_01",
@@ -355,12 +391,14 @@
         "sample_rate_hz": 44100,
         "channels": 1,
         "encoding": "PCM16 WAV",
-        "method": "role-specific oscillator/noise layers with analytic envelopes"
+        "method": "event-contoured oscillator, transient, and role-specific synthesis v2"
       },
       "validation_status": "passed",
-      "duration_seconds": 0.16,
+      "human_review_status": "pending",
+      "duration_seconds": 0.15,
       "channels": 1,
-      "sample_rate": 44100
+      "sample_rate": 44100,
+      "sha256": "c1b3dda78ec79c6e51af4f8ebc130a93624ff1c6a4dc94f6e3425a70d9ba8cac"
     },
     {
       "id": "sfx_enemy_kill_02",
@@ -374,12 +412,14 @@
         "sample_rate_hz": 44100,
         "channels": 1,
         "encoding": "PCM16 WAV",
-        "method": "role-specific oscillator/noise layers with analytic envelopes"
+        "method": "event-contoured oscillator, transient, and role-specific synthesis v2"
       },
       "validation_status": "passed",
-      "duration_seconds": 0.16,
+      "human_review_status": "pending",
+      "duration_seconds": 0.15,
       "channels": 1,
-      "sample_rate": 44100
+      "sample_rate": 44100,
+      "sha256": "67e225c61dc508e41e699da094b9d3d5adf12ebe1831f8e0adfd2f4ad14e051e"
     },
     {
       "id": "sfx_enemy_kill_03",
@@ -393,12 +433,14 @@
         "sample_rate_hz": 44100,
         "channels": 1,
         "encoding": "PCM16 WAV",
-        "method": "role-specific oscillator/noise layers with analytic envelopes"
+        "method": "event-contoured oscillator, transient, and role-specific synthesis v2"
       },
       "validation_status": "passed",
-      "duration_seconds": 0.16,
+      "human_review_status": "pending",
+      "duration_seconds": 0.15,
       "channels": 1,
-      "sample_rate": 44100
+      "sample_rate": 44100,
+      "sha256": "e98b75c13559a155a15e666e1b0acb1420c71e2bf6ec804cfbeea46d18d1f89c"
     },
     {
       "id": "sfx_enemy_kill_04",
@@ -412,12 +454,14 @@
         "sample_rate_hz": 44100,
         "channels": 1,
         "encoding": "PCM16 WAV",
-        "method": "role-specific oscillator/noise layers with analytic envelopes"
+        "method": "event-contoured oscillator, transient, and role-specific synthesis v2"
       },
       "validation_status": "passed",
-      "duration_seconds": 0.16,
+      "human_review_status": "pending",
+      "duration_seconds": 0.15,
       "channels": 1,
-      "sample_rate": 44100
+      "sample_rate": 44100,
+      "sha256": "a309de49924a7331a24b47f041c6d49b81988e5715bb659cf13bc2c8e4ca427d"
     },
     {
       "id": "sfx_xp_pickup_01",
@@ -431,12 +475,14 @@
         "sample_rate_hz": 44100,
         "channels": 1,
         "encoding": "PCM16 WAV",
-        "method": "role-specific oscillator/noise layers with analytic envelopes"
+        "method": "event-contoured oscillator, transient, and role-specific synthesis v2"
       },
       "validation_status": "passed",
-      "duration_seconds": 0.13,
+      "human_review_status": "pending",
+      "duration_seconds": 0.14,
       "channels": 1,
-      "sample_rate": 44100
+      "sample_rate": 44100,
+      "sha256": "e14a26b8fb34ece24bf9d03ddb07279a993654b6ccc8b660d9edf7ffb202ef71"
     },
     {
       "id": "sfx_xp_pickup_02",
@@ -450,12 +496,14 @@
         "sample_rate_hz": 44100,
         "channels": 1,
         "encoding": "PCM16 WAV",
-        "method": "role-specific oscillator/noise layers with analytic envelopes"
+        "method": "event-contoured oscillator, transient, and role-specific synthesis v2"
       },
       "validation_status": "passed",
-      "duration_seconds": 0.13,
+      "human_review_status": "pending",
+      "duration_seconds": 0.14,
       "channels": 1,
-      "sample_rate": 44100
+      "sample_rate": 44100,
+      "sha256": "a09d2f72ee3d7b7e83837c6818c8bac78d8bba970a24494e7c4fff85109c2480"
     },
     {
       "id": "sfx_xp_pickup_03",
@@ -469,12 +517,14 @@
         "sample_rate_hz": 44100,
         "channels": 1,
         "encoding": "PCM16 WAV",
-        "method": "role-specific oscillator/noise layers with analytic envelopes"
+        "method": "event-contoured oscillator, transient, and role-specific synthesis v2"
       },
       "validation_status": "passed",
-      "duration_seconds": 0.13,
+      "human_review_status": "pending",
+      "duration_seconds": 0.14,
       "channels": 1,
-      "sample_rate": 44100
+      "sample_rate": 44100,
+      "sha256": "23e139e314ce1309aedcdebf6dcae293c4f8ec4a9db5e5e4b9b9400fce428a87"
     },
     {
       "id": "sfx_xp_pickup_04",
@@ -488,12 +538,14 @@
         "sample_rate_hz": 44100,
         "channels": 1,
         "encoding": "PCM16 WAV",
-        "method": "role-specific oscillator/noise layers with analytic envelopes"
+        "method": "event-contoured oscillator, transient, and role-specific synthesis v2"
       },
       "validation_status": "passed",
-      "duration_seconds": 0.13,
+      "human_review_status": "pending",
+      "duration_seconds": 0.14,
       "channels": 1,
-      "sample_rate": 44100
+      "sample_rate": 44100,
+      "sha256": "35c5d459879cb20567ce83d76853c63a46c36245d0dd07922bc250fa971f3e8f"
     },
     {
       "id": "sfx_relic_pickup",
@@ -507,12 +559,14 @@
         "sample_rate_hz": 44100,
         "channels": 1,
         "encoding": "PCM16 WAV",
-        "method": "role-specific oscillator/noise layers with analytic envelopes"
+        "method": "event-contoured oscillator, transient, and role-specific synthesis v2"
       },
       "validation_status": "passed",
-      "duration_seconds": 0.48,
+      "human_review_status": "pending",
+      "duration_seconds": 0.46,
       "channels": 1,
-      "sample_rate": 44100
+      "sample_rate": 44100,
+      "sha256": "2479f0098c6b3047caf215ee56a6f3f1a8d615ed48cef67b7b87bc102959d81a"
     },
     {
       "id": "sfx_chest_open",
@@ -526,12 +580,14 @@
         "sample_rate_hz": 44100,
         "channels": 1,
         "encoding": "PCM16 WAV",
-        "method": "role-specific oscillator/noise layers with analytic envelopes"
+        "method": "event-contoured oscillator, transient, and role-specific synthesis v2"
       },
       "validation_status": "passed",
-      "duration_seconds": 0.38,
+      "human_review_status": "pending",
+      "duration_seconds": 0.42,
       "channels": 1,
-      "sample_rate": 44100
+      "sample_rate": 44100,
+      "sha256": "826cae3cfe0aea87855d68be22567d35d5770db87cf514f6ba1433c163090c1b"
     },
     {
       "id": "sfx_chest_reward",
@@ -545,12 +601,14 @@
         "sample_rate_hz": 44100,
         "channels": 1,
         "encoding": "PCM16 WAV",
-        "method": "role-specific oscillator/noise layers with analytic envelopes"
+        "method": "event-contoured oscillator, transient, and role-specific synthesis v2"
       },
       "validation_status": "passed",
-      "duration_seconds": 0.32,
+      "human_review_status": "pending",
+      "duration_seconds": 0.36,
       "channels": 1,
-      "sample_rate": 44100
+      "sample_rate": 44100,
+      "sha256": "1ed5314fa6553015cd84e0c3fc1fa834ca021730456b6c91b4e5d53002c5453c"
     },
     {
       "id": "sfx_level_up",
@@ -564,12 +622,14 @@
         "sample_rate_hz": 44100,
         "channels": 1,
         "encoding": "PCM16 WAV",
-        "method": "role-specific oscillator/noise layers with analytic envelopes"
+        "method": "event-contoured oscillator, transient, and role-specific synthesis v2"
       },
       "validation_status": "passed",
-      "duration_seconds": 0.62,
+      "human_review_status": "pending",
+      "duration_seconds": 0.64,
       "channels": 1,
-      "sample_rate": 44100
+      "sample_rate": 44100,
+      "sha256": "85d798e0b7f72894e719a38a8c8698057b08d6084242b84cbe780da6e46a9fe5"
     },
     {
       "id": "sfx_boss_telegraph",
@@ -583,12 +643,14 @@
         "sample_rate_hz": 44100,
         "channels": 1,
         "encoding": "PCM16 WAV",
-        "method": "role-specific oscillator/noise layers with analytic envelopes"
+        "method": "event-contoured oscillator, transient, and role-specific synthesis v2"
       },
       "validation_status": "passed",
-      "duration_seconds": 0.36,
+      "human_review_status": "pending",
+      "duration_seconds": 0.48,
       "channels": 1,
-      "sample_rate": 44100
+      "sample_rate": 44100,
+      "sha256": "ffc9ebfbb7cf85c26974bdac64e30f670c0a8c60cbfe8dfc1e431fe1c07d0083"
     },
     {
       "id": "sfx_boss_phase",
@@ -602,12 +664,14 @@
         "sample_rate_hz": 44100,
         "channels": 1,
         "encoding": "PCM16 WAV",
-        "method": "role-specific oscillator/noise layers with analytic envelopes"
+        "method": "event-contoured oscillator, transient, and role-specific synthesis v2"
       },
       "validation_status": "passed",
-      "duration_seconds": 0.72,
+      "human_review_status": "pending",
+      "duration_seconds": 0.76,
       "channels": 1,
-      "sample_rate": 44100
+      "sample_rate": 44100,
+      "sha256": "acb5b61b45ba52efc5af75285991ece5dd968576406ae1f24a0fa7fccc5679bf"
     },
     {
       "id": "sfx_boss_defeat",
@@ -621,12 +685,14 @@
         "sample_rate_hz": 44100,
         "channels": 1,
         "encoding": "PCM16 WAV",
-        "method": "role-specific oscillator/noise layers with analytic envelopes"
+        "method": "event-contoured oscillator, transient, and role-specific synthesis v2"
       },
       "validation_status": "passed",
+      "human_review_status": "pending",
       "duration_seconds": 0.95,
       "channels": 1,
-      "sample_rate": 44100
+      "sample_rate": 44100,
+      "sha256": "72dca2f2afa76a2a65f266777ef1e1b802f0cd0bc210a286a6b91518c9ac205b"
     },
     {
       "id": "sfx_ui_focus",
@@ -640,12 +706,14 @@
         "sample_rate_hz": 44100,
         "channels": 1,
         "encoding": "PCM16 WAV",
-        "method": "role-specific oscillator/noise layers with analytic envelopes"
+        "method": "event-contoured oscillator, transient, and role-specific synthesis v2"
       },
       "validation_status": "passed",
-      "duration_seconds": 0.045,
+      "human_review_status": "pending",
+      "duration_seconds": 0.044989,
       "channels": 1,
-      "sample_rate": 44100
+      "sample_rate": 44100,
+      "sha256": "4bb9feac1d43d75efac1b462f1111222c479af8926596b41c3cadd26a1d820f8"
     },
     {
       "id": "sfx_ui_confirm",
@@ -659,12 +727,14 @@
         "sample_rate_hz": 44100,
         "channels": 1,
         "encoding": "PCM16 WAV",
-        "method": "role-specific oscillator/noise layers with analytic envelopes"
+        "method": "event-contoured oscillator, transient, and role-specific synthesis v2"
       },
       "validation_status": "passed",
+      "human_review_status": "pending",
       "duration_seconds": 0.13,
       "channels": 1,
-      "sample_rate": 44100
+      "sample_rate": 44100,
+      "sha256": "3818fbe7c34a523df87e213c4f5ca042b57ab82657c5c6022395450262914c39"
     },
     {
       "id": "sfx_ui_back",
@@ -678,12 +748,14 @@
         "sample_rate_hz": 44100,
         "channels": 1,
         "encoding": "PCM16 WAV",
-        "method": "role-specific oscillator/noise layers with analytic envelopes"
+        "method": "event-contoured oscillator, transient, and role-specific synthesis v2"
       },
       "validation_status": "passed",
+      "human_review_status": "pending",
       "duration_seconds": 0.12,
       "channels": 1,
-      "sample_rate": 44100
+      "sample_rate": 44100,
+      "sha256": "1ad98a570edd4edd58b867299a2692367013d704dffda40c671eafe1400a8b48"
     },
     {
       "id": "sfx_ui_error",
@@ -697,12 +769,14 @@
         "sample_rate_hz": 44100,
         "channels": 1,
         "encoding": "PCM16 WAV",
-        "method": "role-specific oscillator/noise layers with analytic envelopes"
+        "method": "event-contoured oscillator, transient, and role-specific synthesis v2"
       },
       "validation_status": "passed",
-      "duration_seconds": 0.15,
+      "human_review_status": "pending",
+      "duration_seconds": 0.17,
       "channels": 1,
-      "sample_rate": 44100
+      "sample_rate": 44100,
+      "sha256": "8703a4424ba802c8e3f58c6425ba67ffee31e8c521d4202e734d8cd1479089af"
     },
     {
       "id": "sfx_ui_pause",
@@ -716,12 +790,14 @@
         "sample_rate_hz": 44100,
         "channels": 1,
         "encoding": "PCM16 WAV",
-        "method": "role-specific oscillator/noise layers with analytic envelopes"
+        "method": "event-contoured oscillator, transient, and role-specific synthesis v2"
       },
       "validation_status": "passed",
-      "duration_seconds": 0.21,
+      "human_review_status": "pending",
+      "duration_seconds": 0.24,
       "channels": 1,
-      "sample_rate": 44100
+      "sample_rate": 44100,
+      "sha256": "e8d35d8f8c329e4333491b1291ec5a22eaf5c37063c6898bae44711674c3c3bf"
     },
     {
       "id": "sfx_weapon_family_fire",
@@ -735,12 +811,14 @@
         "sample_rate_hz": 44100,
         "channels": 1,
         "encoding": "PCM16 WAV",
-        "method": "role-specific oscillator/noise layers with analytic envelopes"
+        "method": "event-contoured oscillator, transient, and role-specific synthesis v2"
       },
       "validation_status": "passed",
-      "duration_seconds": 0.14,
+      "human_review_status": "pending",
+      "duration_seconds": 0.16,
       "channels": 1,
-      "sample_rate": 44100
+      "sample_rate": 44100,
+      "sha256": "2eeaaee60c585c3c6583dd6dbe0f6f5800e4b0977535c43750424f6e5320d8fe"
     },
     {
       "id": "sfx_weapon_family_impact",
@@ -754,12 +832,14 @@
         "sample_rate_hz": 44100,
         "channels": 1,
         "encoding": "PCM16 WAV",
-        "method": "role-specific oscillator/noise layers with analytic envelopes"
+        "method": "event-contoured oscillator, transient, and role-specific synthesis v2"
       },
       "validation_status": "passed",
-      "duration_seconds": 0.095,
+      "human_review_status": "pending",
+      "duration_seconds": 0.09,
       "channels": 1,
-      "sample_rate": 44100
+      "sample_rate": 44100,
+      "sha256": "37808b024905acd9e93fefcf58914f02e19ac96a0ef8931140f1761e9ab2bab9"
     },
     {
       "id": "sfx_damage_taken",
@@ -773,12 +853,14 @@
         "sample_rate_hz": 44100,
         "channels": 1,
         "encoding": "PCM16 WAV",
-        "method": "role-specific oscillator/noise layers with analytic envelopes"
+        "method": "event-contoured oscillator, transient, and role-specific synthesis v2"
       },
       "validation_status": "passed",
-      "duration_seconds": 0.22,
+      "human_review_status": "pending",
+      "duration_seconds": 0.23,
       "channels": 1,
-      "sample_rate": 44100
+      "sample_rate": 44100,
+      "sha256": "88af7c85d7da1d90b72d1838dc6e175b0fc8fa995ae5b0fa4c39646838233d43"
     },
     {
       "id": "sfx_healing",
@@ -792,12 +874,14 @@
         "sample_rate_hz": 44100,
         "channels": 1,
         "encoding": "PCM16 WAV",
-        "method": "role-specific oscillator/noise layers with analytic envelopes"
+        "method": "event-contoured oscillator, transient, and role-specific synthesis v2"
       },
       "validation_status": "passed",
-      "duration_seconds": 0.48,
+      "human_review_status": "pending",
+      "duration_seconds": 0.46,
       "channels": 1,
-      "sample_rate": 44100
+      "sample_rate": 44100,
+      "sha256": "ac99d5c4b5619133265a6a4da428e762a6b0ca0c30201eb238c398f32287c53d"
     },
     {
       "id": "sfx_explosion",
@@ -811,12 +895,14 @@
         "sample_rate_hz": 44100,
         "channels": 1,
         "encoding": "PCM16 WAV",
-        "method": "role-specific oscillator/noise layers with analytic envelopes"
+        "method": "event-contoured oscillator, transient, and role-specific synthesis v2"
       },
       "validation_status": "passed",
-      "duration_seconds": 0.22,
+      "human_review_status": "pending",
+      "duration_seconds": 0.23,
       "channels": 1,
-      "sample_rate": 44100
+      "sample_rate": 44100,
+      "sha256": "1f8ecbb01365db0da90d4c1448a3e471cc1e54b3208570024952c40a2aafb679"
     },
     {
       "id": "sfx_victory",
@@ -830,12 +916,14 @@
         "sample_rate_hz": 44100,
         "channels": 1,
         "encoding": "PCM16 WAV",
-        "method": "role-specific oscillator/noise layers with analytic envelopes"
+        "method": "event-contoured oscillator, transient, and role-specific synthesis v2"
       },
       "validation_status": "passed",
+      "human_review_status": "pending",
       "duration_seconds": 0.95,
       "channels": 1,
-      "sample_rate": 44100
+      "sample_rate": 44100,
+      "sha256": "2bb3d975837d6dcab2a4c2dcf9c769dc2bbf863d233232930276b5b63d2d001e"
     },
     {
       "id": "sfx_defeat",
@@ -849,12 +937,14 @@
         "sample_rate_hz": 44100,
         "channels": 1,
         "encoding": "PCM16 WAV",
-        "method": "role-specific oscillator/noise layers with analytic envelopes"
+        "method": "event-contoured oscillator, transient, and role-specific synthesis v2"
       },
       "validation_status": "passed",
-      "duration_seconds": 0.72,
+      "human_review_status": "pending",
+      "duration_seconds": 0.76,
       "channels": 1,
-      "sample_rate": 44100
+      "sample_rate": 44100,
+      "sha256": "013e88e8c6d1fad1b493b79f0acd8f4128a444704606e402c241b79bbc57e6df"
     },
     {
       "id": "sfx_weapon_lightning_conductor_fire",
@@ -868,14 +958,16 @@
         "sample_rate_hz": 44100,
         "channels": 1,
         "encoding": "PCM16 WAV",
-        "method": "role-specific oscillator/noise layers with analytic envelopes",
+        "method": "event-contoured oscillator, transient, and role-specific synthesis v2",
         "variation_index": 1,
         "variation_count": 4
       },
       "validation_status": "passed",
-      "duration_seconds": 0.14,
+      "human_review_status": "pending",
+      "duration_seconds": 0.16,
       "channels": 1,
-      "sample_rate": 44100
+      "sample_rate": 44100,
+      "sha256": "96cc93e8a89e5962462bbd5014143d3d93ff3d7c1290be354754ec5d3f691d3d"
     },
     {
       "id": "sfx_weapon_lightning_conductor_fire_02",
@@ -889,14 +981,16 @@
         "sample_rate_hz": 44100,
         "channels": 1,
         "encoding": "PCM16 WAV",
-        "method": "role-specific oscillator/noise layers with analytic envelopes",
+        "method": "event-contoured oscillator, transient, and role-specific synthesis v2",
         "variation_index": 2,
         "variation_count": 4
       },
       "validation_status": "passed",
-      "duration_seconds": 0.14,
+      "human_review_status": "pending",
+      "duration_seconds": 0.16,
       "channels": 1,
-      "sample_rate": 44100
+      "sample_rate": 44100,
+      "sha256": "b200ae8d551bbcc00ec14312ba9777c731ff531a4a391d28346435271453cd3d"
     },
     {
       "id": "sfx_weapon_lightning_conductor_fire_03",
@@ -910,14 +1004,16 @@
         "sample_rate_hz": 44100,
         "channels": 1,
         "encoding": "PCM16 WAV",
-        "method": "role-specific oscillator/noise layers with analytic envelopes",
+        "method": "event-contoured oscillator, transient, and role-specific synthesis v2",
         "variation_index": 3,
         "variation_count": 4
       },
       "validation_status": "passed",
-      "duration_seconds": 0.14,
+      "human_review_status": "pending",
+      "duration_seconds": 0.16,
       "channels": 1,
-      "sample_rate": 44100
+      "sample_rate": 44100,
+      "sha256": "0ba5b355427c91c860069e0a2c2eb51d0ce8a64dd5fa8864ef69bd3864784e35"
     },
     {
       "id": "sfx_weapon_lightning_conductor_fire_04",
@@ -931,14 +1027,16 @@
         "sample_rate_hz": 44100,
         "channels": 1,
         "encoding": "PCM16 WAV",
-        "method": "role-specific oscillator/noise layers with analytic envelopes",
+        "method": "event-contoured oscillator, transient, and role-specific synthesis v2",
         "variation_index": 4,
         "variation_count": 4
       },
       "validation_status": "passed",
-      "duration_seconds": 0.14,
+      "human_review_status": "pending",
+      "duration_seconds": 0.16,
       "channels": 1,
-      "sample_rate": 44100
+      "sample_rate": 44100,
+      "sha256": "2a07089e8f7578b30ce7c3f94cf99bb6c36215f02a9bb6930b8d6fb242f8a219"
     },
     {
       "id": "sfx_weapon_lightning_conductor_impact",
@@ -952,14 +1050,16 @@
         "sample_rate_hz": 44100,
         "channels": 1,
         "encoding": "PCM16 WAV",
-        "method": "role-specific oscillator/noise layers with analytic envelopes",
+        "method": "event-contoured oscillator, transient, and role-specific synthesis v2",
         "variation_index": 1,
         "variation_count": 4
       },
       "validation_status": "passed",
-      "duration_seconds": 0.095,
+      "human_review_status": "pending",
+      "duration_seconds": 0.09,
       "channels": 1,
-      "sample_rate": 44100
+      "sample_rate": 44100,
+      "sha256": "0701d7628844fa674011b7d7587caaf49394f3fd8c7d65fab35691f8e0daa2d1"
     },
     {
       "id": "sfx_weapon_lightning_conductor_impact_02",
@@ -973,14 +1073,16 @@
         "sample_rate_hz": 44100,
         "channels": 1,
         "encoding": "PCM16 WAV",
-        "method": "role-specific oscillator/noise layers with analytic envelopes",
+        "method": "event-contoured oscillator, transient, and role-specific synthesis v2",
         "variation_index": 2,
         "variation_count": 4
       },
       "validation_status": "passed",
-      "duration_seconds": 0.095,
+      "human_review_status": "pending",
+      "duration_seconds": 0.09,
       "channels": 1,
-      "sample_rate": 44100
+      "sample_rate": 44100,
+      "sha256": "abdd363a5582c018850809735dcf75577d5f1bc2af8df47a6fca9ea28ab514c5"
     },
     {
       "id": "sfx_weapon_lightning_conductor_impact_03",
@@ -994,14 +1096,16 @@
         "sample_rate_hz": 44100,
         "channels": 1,
         "encoding": "PCM16 WAV",
-        "method": "role-specific oscillator/noise layers with analytic envelopes",
+        "method": "event-contoured oscillator, transient, and role-specific synthesis v2",
         "variation_index": 3,
         "variation_count": 4
       },
       "validation_status": "passed",
-      "duration_seconds": 0.095,
+      "human_review_status": "pending",
+      "duration_seconds": 0.09,
       "channels": 1,
-      "sample_rate": 44100
+      "sample_rate": 44100,
+      "sha256": "71befc1e6fe9714f86c9749f9d5d8d99d5ed9ed3c91249970514a68c3b047007"
     },
     {
       "id": "sfx_weapon_lightning_conductor_impact_04",
@@ -1015,14 +1119,16 @@
         "sample_rate_hz": 44100,
         "channels": 1,
         "encoding": "PCM16 WAV",
-        "method": "role-specific oscillator/noise layers with analytic envelopes",
+        "method": "event-contoured oscillator, transient, and role-specific synthesis v2",
         "variation_index": 4,
         "variation_count": 4
       },
       "validation_status": "passed",
-      "duration_seconds": 0.095,
+      "human_review_status": "pending",
+      "duration_seconds": 0.09,
       "channels": 1,
-      "sample_rate": 44100
+      "sample_rate": 44100,
+      "sha256": "f38235a2bc1b7feb12e7594ede76de6310468076f8a339414acde5f5e81bf528"
     },
     {
       "id": "sfx_weapon_inferno_sprayer_fire",
@@ -1036,14 +1142,16 @@
         "sample_rate_hz": 44100,
         "channels": 1,
         "encoding": "PCM16 WAV",
-        "method": "role-specific oscillator/noise layers with analytic envelopes",
+        "method": "event-contoured oscillator, transient, and role-specific synthesis v2",
         "variation_index": 1,
         "variation_count": 4
       },
       "validation_status": "passed",
-      "duration_seconds": 0.2,
+      "human_review_status": "pending",
+      "duration_seconds": 0.21,
       "channels": 1,
-      "sample_rate": 44100
+      "sample_rate": 44100,
+      "sha256": "0b8721543fdfbcc50576b6f5a1f663f9d71ea19819516b47361fe75ca29726ce"
     },
     {
       "id": "sfx_weapon_inferno_sprayer_fire_02",
@@ -1057,14 +1165,16 @@
         "sample_rate_hz": 44100,
         "channels": 1,
         "encoding": "PCM16 WAV",
-        "method": "role-specific oscillator/noise layers with analytic envelopes",
+        "method": "event-contoured oscillator, transient, and role-specific synthesis v2",
         "variation_index": 2,
         "variation_count": 4
       },
       "validation_status": "passed",
-      "duration_seconds": 0.2,
+      "human_review_status": "pending",
+      "duration_seconds": 0.21,
       "channels": 1,
-      "sample_rate": 44100
+      "sample_rate": 44100,
+      "sha256": "8a869f988c2f6d28ab5b9240bb36996001c58a5d2beb48e2eba4b92bd922d280"
     },
     {
       "id": "sfx_weapon_inferno_sprayer_fire_03",
@@ -1078,14 +1188,16 @@
         "sample_rate_hz": 44100,
         "channels": 1,
         "encoding": "PCM16 WAV",
-        "method": "role-specific oscillator/noise layers with analytic envelopes",
+        "method": "event-contoured oscillator, transient, and role-specific synthesis v2",
         "variation_index": 3,
         "variation_count": 4
       },
       "validation_status": "passed",
-      "duration_seconds": 0.2,
+      "human_review_status": "pending",
+      "duration_seconds": 0.21,
       "channels": 1,
-      "sample_rate": 44100
+      "sample_rate": 44100,
+      "sha256": "f3fe457e8f2412c4440ceeafa57504ae8b5d4bf14a39731ed92d01b03d39d803"
     },
     {
       "id": "sfx_weapon_inferno_sprayer_fire_04",
@@ -1099,14 +1211,16 @@
         "sample_rate_hz": 44100,
         "channels": 1,
         "encoding": "PCM16 WAV",
-        "method": "role-specific oscillator/noise layers with analytic envelopes",
+        "method": "event-contoured oscillator, transient, and role-specific synthesis v2",
         "variation_index": 4,
         "variation_count": 4
       },
       "validation_status": "passed",
-      "duration_seconds": 0.2,
+      "human_review_status": "pending",
+      "duration_seconds": 0.21,
       "channels": 1,
-      "sample_rate": 44100
+      "sample_rate": 44100,
+      "sha256": "f243f303397cad14482d162322e9a6aaeeef42be33ef9d1ea02e604246e3ded1"
     },
     {
       "id": "sfx_weapon_inferno_sprayer_impact",
@@ -1120,14 +1234,16 @@
         "sample_rate_hz": 44100,
         "channels": 1,
         "encoding": "PCM16 WAV",
-        "method": "role-specific oscillator/noise layers with analytic envelopes",
+        "method": "event-contoured oscillator, transient, and role-specific synthesis v2",
         "variation_index": 1,
         "variation_count": 4
       },
       "validation_status": "passed",
-      "duration_seconds": 0.095,
+      "human_review_status": "pending",
+      "duration_seconds": 0.09,
       "channels": 1,
-      "sample_rate": 44100
+      "sample_rate": 44100,
+      "sha256": "366ee69957b98fec4f876d5b6eee354244812a76790c48740bcdd87ac4805a20"
     },
     {
       "id": "sfx_weapon_inferno_sprayer_impact_02",
@@ -1141,14 +1257,16 @@
         "sample_rate_hz": 44100,
         "channels": 1,
         "encoding": "PCM16 WAV",
-        "method": "role-specific oscillator/noise layers with analytic envelopes",
+        "method": "event-contoured oscillator, transient, and role-specific synthesis v2",
         "variation_index": 2,
         "variation_count": 4
       },
       "validation_status": "passed",
-      "duration_seconds": 0.095,
+      "human_review_status": "pending",
+      "duration_seconds": 0.09,
       "channels": 1,
-      "sample_rate": 44100
+      "sample_rate": 44100,
+      "sha256": "9201012eec88fd7cb398bdf510b1a3f27eaf9d3d080751b1dfe9ed3b1cd00f12"
     },
     {
       "id": "sfx_weapon_inferno_sprayer_impact_03",
@@ -1162,14 +1280,16 @@
         "sample_rate_hz": 44100,
         "channels": 1,
         "encoding": "PCM16 WAV",
-        "method": "role-specific oscillator/noise layers with analytic envelopes",
+        "method": "event-contoured oscillator, transient, and role-specific synthesis v2",
         "variation_index": 3,
         "variation_count": 4
       },
       "validation_status": "passed",
-      "duration_seconds": 0.095,
+      "human_review_status": "pending",
+      "duration_seconds": 0.09,
       "channels": 1,
-      "sample_rate": 44100
+      "sample_rate": 44100,
+      "sha256": "25d1f1ac155d0ed86f41cf642cd688ecb50bad50769116eed28a248c586371d5"
     },
     {
       "id": "sfx_weapon_inferno_sprayer_impact_04",
@@ -1183,14 +1303,16 @@
         "sample_rate_hz": 44100,
         "channels": 1,
         "encoding": "PCM16 WAV",
-        "method": "role-specific oscillator/noise layers with analytic envelopes",
+        "method": "event-contoured oscillator, transient, and role-specific synthesis v2",
         "variation_index": 4,
         "variation_count": 4
       },
       "validation_status": "passed",
-      "duration_seconds": 0.095,
+      "human_review_status": "pending",
+      "duration_seconds": 0.09,
       "channels": 1,
-      "sample_rate": 44100
+      "sample_rate": 44100,
+      "sha256": "4439d739a8791ff864ee209a5bd9b898e27169b5168cc0a2c36e0760560d02a1"
     },
     {
       "id": "sfx_weapon_crimson_daggers_fire",
@@ -1204,14 +1326,16 @@
         "sample_rate_hz": 44100,
         "channels": 1,
         "encoding": "PCM16 WAV",
-        "method": "role-specific oscillator/noise layers with analytic envelopes",
+        "method": "event-contoured oscillator, transient, and role-specific synthesis v2",
         "variation_index": 1,
         "variation_count": 4
       },
       "validation_status": "passed",
-      "duration_seconds": 0.2,
+      "human_review_status": "pending",
+      "duration_seconds": 0.21,
       "channels": 1,
-      "sample_rate": 44100
+      "sample_rate": 44100,
+      "sha256": "582f0c1eafd0b49d5f54dee8400b6d4d2ffcaa3a4635b0afdd60fe3c0a9eebcf"
     },
     {
       "id": "sfx_weapon_crimson_daggers_fire_02",
@@ -1225,14 +1349,16 @@
         "sample_rate_hz": 44100,
         "channels": 1,
         "encoding": "PCM16 WAV",
-        "method": "role-specific oscillator/noise layers with analytic envelopes",
+        "method": "event-contoured oscillator, transient, and role-specific synthesis v2",
         "variation_index": 2,
         "variation_count": 4
       },
       "validation_status": "passed",
-      "duration_seconds": 0.2,
+      "human_review_status": "pending",
+      "duration_seconds": 0.21,
       "channels": 1,
-      "sample_rate": 44100
+      "sample_rate": 44100,
+      "sha256": "ea7e4987982f0fcb93e64c6ee6d0e8891ffa04f86be47a830e79c936a3b87938"
     },
     {
       "id": "sfx_weapon_crimson_daggers_fire_03",
@@ -1246,14 +1372,16 @@
         "sample_rate_hz": 44100,
         "channels": 1,
         "encoding": "PCM16 WAV",
-        "method": "role-specific oscillator/noise layers with analytic envelopes",
+        "method": "event-contoured oscillator, transient, and role-specific synthesis v2",
         "variation_index": 3,
         "variation_count": 4
       },
       "validation_status": "passed",
-      "duration_seconds": 0.2,
+      "human_review_status": "pending",
+      "duration_seconds": 0.21,
       "channels": 1,
-      "sample_rate": 44100
+      "sample_rate": 44100,
+      "sha256": "9a09dcab23d58e84f03627c2310cf30a1c8c762212e2eb0b6511c9e913da7ab1"
     },
     {
       "id": "sfx_weapon_crimson_daggers_fire_04",
@@ -1267,14 +1395,16 @@
         "sample_rate_hz": 44100,
         "channels": 1,
         "encoding": "PCM16 WAV",
-        "method": "role-specific oscillator/noise layers with analytic envelopes",
+        "method": "event-contoured oscillator, transient, and role-specific synthesis v2",
         "variation_index": 4,
         "variation_count": 4
       },
       "validation_status": "passed",
-      "duration_seconds": 0.2,
+      "human_review_status": "pending",
+      "duration_seconds": 0.21,
       "channels": 1,
-      "sample_rate": 44100
+      "sample_rate": 44100,
+      "sha256": "f2c18ca8d3493026a2ce0b0250ee3f5dc8fc9f645a19daf2183457dbfa8df1da"
     },
     {
       "id": "sfx_weapon_crimson_daggers_impact",
@@ -1288,14 +1418,16 @@
         "sample_rate_hz": 44100,
         "channels": 1,
         "encoding": "PCM16 WAV",
-        "method": "role-specific oscillator/noise layers with analytic envelopes",
+        "method": "event-contoured oscillator, transient, and role-specific synthesis v2",
         "variation_index": 1,
         "variation_count": 4
       },
       "validation_status": "passed",
-      "duration_seconds": 0.095,
+      "human_review_status": "pending",
+      "duration_seconds": 0.09,
       "channels": 1,
-      "sample_rate": 44100
+      "sample_rate": 44100,
+      "sha256": "f165b6b8575b9e54df1a51160f1f57201d99fd922bc9005b694ba2fd341ee3f6"
     },
     {
       "id": "sfx_weapon_crimson_daggers_impact_02",
@@ -1309,14 +1441,16 @@
         "sample_rate_hz": 44100,
         "channels": 1,
         "encoding": "PCM16 WAV",
-        "method": "role-specific oscillator/noise layers with analytic envelopes",
+        "method": "event-contoured oscillator, transient, and role-specific synthesis v2",
         "variation_index": 2,
         "variation_count": 4
       },
       "validation_status": "passed",
-      "duration_seconds": 0.095,
+      "human_review_status": "pending",
+      "duration_seconds": 0.09,
       "channels": 1,
-      "sample_rate": 44100
+      "sample_rate": 44100,
+      "sha256": "b3b893ce6abc36ae401ae81eaa0f3f6b4ef92d18690b496cd2993d6baf861c45"
     },
     {
       "id": "sfx_weapon_crimson_daggers_impact_03",
@@ -1330,14 +1464,16 @@
         "sample_rate_hz": 44100,
         "channels": 1,
         "encoding": "PCM16 WAV",
-        "method": "role-specific oscillator/noise layers with analytic envelopes",
+        "method": "event-contoured oscillator, transient, and role-specific synthesis v2",
         "variation_index": 3,
         "variation_count": 4
       },
       "validation_status": "passed",
-      "duration_seconds": 0.095,
+      "human_review_status": "pending",
+      "duration_seconds": 0.09,
       "channels": 1,
-      "sample_rate": 44100
+      "sample_rate": 44100,
+      "sha256": "fce90397a9bdc84f49d1eea2c7053d609edfae046f21390606c0aa26aba1a44b"
     },
     {
       "id": "sfx_weapon_crimson_daggers_impact_04",
@@ -1351,14 +1487,16 @@
         "sample_rate_hz": 44100,
         "channels": 1,
         "encoding": "PCM16 WAV",
-        "method": "role-specific oscillator/noise layers with analytic envelopes",
+        "method": "event-contoured oscillator, transient, and role-specific synthesis v2",
         "variation_index": 4,
         "variation_count": 4
       },
       "validation_status": "passed",
-      "duration_seconds": 0.095,
+      "human_review_status": "pending",
+      "duration_seconds": 0.09,
       "channels": 1,
-      "sample_rate": 44100
+      "sample_rate": 44100,
+      "sha256": "147883aa13308395ab1d901c41789c45990d7921c883fee93af738de36a23dc9"
     },
     {
       "id": "sfx_weapon_minigun_fire",
@@ -1372,14 +1510,16 @@
         "sample_rate_hz": 44100,
         "channels": 1,
         "encoding": "PCM16 WAV",
-        "method": "role-specific oscillator/noise layers with analytic envelopes",
+        "method": "event-contoured oscillator, transient, and role-specific synthesis v2",
         "variation_index": 1,
         "variation_count": 4
       },
       "validation_status": "passed",
-      "duration_seconds": 0.105,
+      "human_review_status": "pending",
+      "duration_seconds": 0.104989,
       "channels": 1,
-      "sample_rate": 44100
+      "sample_rate": 44100,
+      "sha256": "e2337ccb073c5852399bd3f77f352a4657537a1890e7a63bbcf3cb2eb75d709e"
     },
     {
       "id": "sfx_weapon_minigun_fire_02",
@@ -1393,14 +1533,16 @@
         "sample_rate_hz": 44100,
         "channels": 1,
         "encoding": "PCM16 WAV",
-        "method": "role-specific oscillator/noise layers with analytic envelopes",
+        "method": "event-contoured oscillator, transient, and role-specific synthesis v2",
         "variation_index": 2,
         "variation_count": 4
       },
       "validation_status": "passed",
-      "duration_seconds": 0.105,
+      "human_review_status": "pending",
+      "duration_seconds": 0.104989,
       "channels": 1,
-      "sample_rate": 44100
+      "sample_rate": 44100,
+      "sha256": "4b62aa8a517cdd2279c299384917a6782ead8f0436d9cda80b6ca48ff580d7b6"
     },
     {
       "id": "sfx_weapon_minigun_fire_03",
@@ -1414,14 +1556,16 @@
         "sample_rate_hz": 44100,
         "channels": 1,
         "encoding": "PCM16 WAV",
-        "method": "role-specific oscillator/noise layers with analytic envelopes",
+        "method": "event-contoured oscillator, transient, and role-specific synthesis v2",
         "variation_index": 3,
         "variation_count": 4
       },
       "validation_status": "passed",
-      "duration_seconds": 0.105,
+      "human_review_status": "pending",
+      "duration_seconds": 0.104989,
       "channels": 1,
-      "sample_rate": 44100
+      "sample_rate": 44100,
+      "sha256": "2f441ccf28b21c23facc4782f79665c4336b4f77c0a64c521368eb2d7da0f95b"
     },
     {
       "id": "sfx_weapon_minigun_fire_04",
@@ -1435,14 +1579,16 @@
         "sample_rate_hz": 44100,
         "channels": 1,
         "encoding": "PCM16 WAV",
-        "method": "role-specific oscillator/noise layers with analytic envelopes",
+        "method": "event-contoured oscillator, transient, and role-specific synthesis v2",
         "variation_index": 4,
         "variation_count": 4
       },
       "validation_status": "passed",
-      "duration_seconds": 0.105,
+      "human_review_status": "pending",
+      "duration_seconds": 0.104989,
       "channels": 1,
-      "sample_rate": 44100
+      "sample_rate": 44100,
+      "sha256": "43afd7c6f26c0d6fec9640744b5af1b01fa2df0dfefe8d17bafaf7a1dba5045e"
     },
     {
       "id": "sfx_weapon_minigun_impact",
@@ -1456,14 +1602,16 @@
         "sample_rate_hz": 44100,
         "channels": 1,
         "encoding": "PCM16 WAV",
-        "method": "role-specific oscillator/noise layers with analytic envelopes",
+        "method": "event-contoured oscillator, transient, and role-specific synthesis v2",
         "variation_index": 1,
         "variation_count": 4
       },
       "validation_status": "passed",
-      "duration_seconds": 0.095,
+      "human_review_status": "pending",
+      "duration_seconds": 0.09,
       "channels": 1,
-      "sample_rate": 44100
+      "sample_rate": 44100,
+      "sha256": "bf28c0b0860ad3e648dda73fb4349d838030a447bb6d140f95c64ed6801a53e2"
     },
     {
       "id": "sfx_weapon_minigun_impact_02",
@@ -1477,14 +1625,16 @@
         "sample_rate_hz": 44100,
         "channels": 1,
         "encoding": "PCM16 WAV",
-        "method": "role-specific oscillator/noise layers with analytic envelopes",
+        "method": "event-contoured oscillator, transient, and role-specific synthesis v2",
         "variation_index": 2,
         "variation_count": 4
       },
       "validation_status": "passed",
-      "duration_seconds": 0.095,
+      "human_review_status": "pending",
+      "duration_seconds": 0.09,
       "channels": 1,
-      "sample_rate": 44100
+      "sample_rate": 44100,
+      "sha256": "24268ba9b7ef0055464f50ffbbe1937bdda4f716fee68526b4154e600dd23beb"
     },
     {
       "id": "sfx_weapon_minigun_impact_03",
@@ -1498,14 +1648,16 @@
         "sample_rate_hz": 44100,
         "channels": 1,
         "encoding": "PCM16 WAV",
-        "method": "role-specific oscillator/noise layers with analytic envelopes",
+        "method": "event-contoured oscillator, transient, and role-specific synthesis v2",
         "variation_index": 3,
         "variation_count": 4
       },
       "validation_status": "passed",
-      "duration_seconds": 0.095,
+      "human_review_status": "pending",
+      "duration_seconds": 0.09,
       "channels": 1,
-      "sample_rate": 44100
+      "sample_rate": 44100,
+      "sha256": "1a00be64311b35a92a8e5478e11cfc1d0a4d94476ebdfe603e049cea94d50884"
     },
     {
       "id": "sfx_weapon_minigun_impact_04",
@@ -1519,14 +1671,16 @@
         "sample_rate_hz": 44100,
         "channels": 1,
         "encoding": "PCM16 WAV",
-        "method": "role-specific oscillator/noise layers with analytic envelopes",
+        "method": "event-contoured oscillator, transient, and role-specific synthesis v2",
         "variation_index": 4,
         "variation_count": 4
       },
       "validation_status": "passed",
-      "duration_seconds": 0.095,
+      "human_review_status": "pending",
+      "duration_seconds": 0.09,
       "channels": 1,
-      "sample_rate": 44100
+      "sample_rate": 44100,
+      "sha256": "8c782839591bc4ccd1a7956859b2c89891ba97e2257fa8819effd29648ed0f0f"
     },
     {
       "id": "sfx_weapon_toxic_cloud_fire",
@@ -1540,14 +1694,16 @@
         "sample_rate_hz": 44100,
         "channels": 1,
         "encoding": "PCM16 WAV",
-        "method": "role-specific oscillator/noise layers with analytic envelopes",
+        "method": "event-contoured oscillator, transient, and role-specific synthesis v2",
         "variation_index": 1,
         "variation_count": 4
       },
       "validation_status": "passed",
-      "duration_seconds": 0.2,
+      "human_review_status": "pending",
+      "duration_seconds": 0.21,
       "channels": 1,
-      "sample_rate": 44100
+      "sample_rate": 44100,
+      "sha256": "c50939f2c9417a167a2d1bea10aa045c07e6ff8039b9a2bb3d8a257ef0fc063b"
     },
     {
       "id": "sfx_weapon_toxic_cloud_fire_02",
@@ -1561,14 +1717,16 @@
         "sample_rate_hz": 44100,
         "channels": 1,
         "encoding": "PCM16 WAV",
-        "method": "role-specific oscillator/noise layers with analytic envelopes",
+        "method": "event-contoured oscillator, transient, and role-specific synthesis v2",
         "variation_index": 2,
         "variation_count": 4
       },
       "validation_status": "passed",
-      "duration_seconds": 0.2,
+      "human_review_status": "pending",
+      "duration_seconds": 0.21,
       "channels": 1,
-      "sample_rate": 44100
+      "sample_rate": 44100,
+      "sha256": "612b9fa8ce081ab7f7381e4b24870e16f3b4fc9e161c1c1c274ecd12e352bf93"
     },
     {
       "id": "sfx_weapon_toxic_cloud_fire_03",
@@ -1582,14 +1740,16 @@
         "sample_rate_hz": 44100,
         "channels": 1,
         "encoding": "PCM16 WAV",
-        "method": "role-specific oscillator/noise layers with analytic envelopes",
+        "method": "event-contoured oscillator, transient, and role-specific synthesis v2",
         "variation_index": 3,
         "variation_count": 4
       },
       "validation_status": "passed",
-      "duration_seconds": 0.2,
+      "human_review_status": "pending",
+      "duration_seconds": 0.21,
       "channels": 1,
-      "sample_rate": 44100
+      "sample_rate": 44100,
+      "sha256": "e1e1988bdb2420531e82024fa7287dffe8566e8393f7f14a8a11aea75cbcd41a"
     },
     {
       "id": "sfx_weapon_toxic_cloud_fire_04",
@@ -1603,14 +1763,16 @@
         "sample_rate_hz": 44100,
         "channels": 1,
         "encoding": "PCM16 WAV",
-        "method": "role-specific oscillator/noise layers with analytic envelopes",
+        "method": "event-contoured oscillator, transient, and role-specific synthesis v2",
         "variation_index": 4,
         "variation_count": 4
       },
       "validation_status": "passed",
-      "duration_seconds": 0.2,
+      "human_review_status": "pending",
+      "duration_seconds": 0.21,
       "channels": 1,
-      "sample_rate": 44100
+      "sample_rate": 44100,
+      "sha256": "a84073077cfd28512c9f69b452ddd5101c077443cbed829c4cd99f2d0316ea87"
     },
     {
       "id": "sfx_weapon_toxic_cloud_impact",
@@ -1624,14 +1786,16 @@
         "sample_rate_hz": 44100,
         "channels": 1,
         "encoding": "PCM16 WAV",
-        "method": "role-specific oscillator/noise layers with analytic envelopes",
+        "method": "event-contoured oscillator, transient, and role-specific synthesis v2",
         "variation_index": 1,
         "variation_count": 4
       },
       "validation_status": "passed",
-      "duration_seconds": 0.095,
+      "human_review_status": "pending",
+      "duration_seconds": 0.09,
       "channels": 1,
-      "sample_rate": 44100
+      "sample_rate": 44100,
+      "sha256": "ccdf3a58d02ae3c56b07dade2d06707da58642d4c84d35898cbcf3946235cfb6"
     },
     {
       "id": "sfx_weapon_toxic_cloud_impact_02",
@@ -1645,14 +1809,16 @@
         "sample_rate_hz": 44100,
         "channels": 1,
         "encoding": "PCM16 WAV",
-        "method": "role-specific oscillator/noise layers with analytic envelopes",
+        "method": "event-contoured oscillator, transient, and role-specific synthesis v2",
         "variation_index": 2,
         "variation_count": 4
       },
       "validation_status": "passed",
-      "duration_seconds": 0.095,
+      "human_review_status": "pending",
+      "duration_seconds": 0.09,
       "channels": 1,
-      "sample_rate": 44100
+      "sample_rate": 44100,
+      "sha256": "ae995f957e1b20eb9d054e728a246d82ccb2350cec38a04f085886cdaed5f0ef"
     },
     {
       "id": "sfx_weapon_toxic_cloud_impact_03",
@@ -1666,14 +1832,16 @@
         "sample_rate_hz": 44100,
         "channels": 1,
         "encoding": "PCM16 WAV",
-        "method": "role-specific oscillator/noise layers with analytic envelopes",
+        "method": "event-contoured oscillator, transient, and role-specific synthesis v2",
         "variation_index": 3,
         "variation_count": 4
       },
       "validation_status": "passed",
-      "duration_seconds": 0.095,
+      "human_review_status": "pending",
+      "duration_seconds": 0.09,
       "channels": 1,
-      "sample_rate": 44100
+      "sample_rate": 44100,
+      "sha256": "39e78758399be3baa04b8d100db2e20e797fc74bf4959a3bce9abb73672a2c25"
     },
     {
       "id": "sfx_weapon_toxic_cloud_impact_04",
@@ -1687,14 +1855,16 @@
         "sample_rate_hz": 44100,
         "channels": 1,
         "encoding": "PCM16 WAV",
-        "method": "role-specific oscillator/noise layers with analytic envelopes",
+        "method": "event-contoured oscillator, transient, and role-specific synthesis v2",
         "variation_index": 4,
         "variation_count": 4
       },
       "validation_status": "passed",
-      "duration_seconds": 0.095,
+      "human_review_status": "pending",
+      "duration_seconds": 0.09,
       "channels": 1,
-      "sample_rate": 44100
+      "sample_rate": 44100,
+      "sha256": "16af77d971bdb5c45e54df7c42402a7daa65690a1ee4e21af86026a689c11a62"
     },
     {
       "id": "sfx_weapon_sawblades_fire",
@@ -1708,14 +1878,16 @@
         "sample_rate_hz": 44100,
         "channels": 1,
         "encoding": "PCM16 WAV",
-        "method": "role-specific oscillator/noise layers with analytic envelopes",
+        "method": "event-contoured oscillator, transient, and role-specific synthesis v2",
         "variation_index": 1,
         "variation_count": 4
       },
       "validation_status": "passed",
-      "duration_seconds": 0.2,
+      "human_review_status": "pending",
+      "duration_seconds": 0.21,
       "channels": 1,
-      "sample_rate": 44100
+      "sample_rate": 44100,
+      "sha256": "df9366ee780476d3c18a2baf36c8954a9777125697bb1dc08f01339a92b95d6b"
     },
     {
       "id": "sfx_weapon_sawblades_fire_02",
@@ -1729,14 +1901,16 @@
         "sample_rate_hz": 44100,
         "channels": 1,
         "encoding": "PCM16 WAV",
-        "method": "role-specific oscillator/noise layers with analytic envelopes",
+        "method": "event-contoured oscillator, transient, and role-specific synthesis v2",
         "variation_index": 2,
         "variation_count": 4
       },
       "validation_status": "passed",
-      "duration_seconds": 0.2,
+      "human_review_status": "pending",
+      "duration_seconds": 0.21,
       "channels": 1,
-      "sample_rate": 44100
+      "sample_rate": 44100,
+      "sha256": "1be0a82a8f4f559435f48851541aa31c5974800e048527cf777c5c7b06f53840"
     },
     {
       "id": "sfx_weapon_sawblades_fire_03",
@@ -1750,14 +1924,16 @@
         "sample_rate_hz": 44100,
         "channels": 1,
         "encoding": "PCM16 WAV",
-        "method": "role-specific oscillator/noise layers with analytic envelopes",
+        "method": "event-contoured oscillator, transient, and role-specific synthesis v2",
         "variation_index": 3,
         "variation_count": 4
       },
       "validation_status": "passed",
-      "duration_seconds": 0.2,
+      "human_review_status": "pending",
+      "duration_seconds": 0.21,
       "channels": 1,
-      "sample_rate": 44100
+      "sample_rate": 44100,
+      "sha256": "162998af26872a8489bb86384fe9e1319e4f7a1ac4e2304366427bdd91923292"
     },
     {
       "id": "sfx_weapon_sawblades_fire_04",
@@ -1771,14 +1947,16 @@
         "sample_rate_hz": 44100,
         "channels": 1,
         "encoding": "PCM16 WAV",
-        "method": "role-specific oscillator/noise layers with analytic envelopes",
+        "method": "event-contoured oscillator, transient, and role-specific synthesis v2",
         "variation_index": 4,
         "variation_count": 4
       },
       "validation_status": "passed",
-      "duration_seconds": 0.2,
+      "human_review_status": "pending",
+      "duration_seconds": 0.21,
       "channels": 1,
-      "sample_rate": 44100
+      "sample_rate": 44100,
+      "sha256": "9059f0fe6ff90ff4a27a64312c79ccd64de2d34ed53916b36f1169a5fb8ba789"
     },
     {
       "id": "sfx_weapon_sawblades_impact",
@@ -1792,14 +1970,16 @@
         "sample_rate_hz": 44100,
         "channels": 1,
         "encoding": "PCM16 WAV",
-        "method": "role-specific oscillator/noise layers with analytic envelopes",
+        "method": "event-contoured oscillator, transient, and role-specific synthesis v2",
         "variation_index": 1,
         "variation_count": 4
       },
       "validation_status": "passed",
-      "duration_seconds": 0.095,
+      "human_review_status": "pending",
+      "duration_seconds": 0.09,
       "channels": 1,
-      "sample_rate": 44100
+      "sample_rate": 44100,
+      "sha256": "a4f8b73516d5f3a3866f718918f582a25c73a9b10c4491955d5a651e61089a7f"
     },
     {
       "id": "sfx_weapon_sawblades_impact_02",
@@ -1813,14 +1993,16 @@
         "sample_rate_hz": 44100,
         "channels": 1,
         "encoding": "PCM16 WAV",
-        "method": "role-specific oscillator/noise layers with analytic envelopes",
+        "method": "event-contoured oscillator, transient, and role-specific synthesis v2",
         "variation_index": 2,
         "variation_count": 4
       },
       "validation_status": "passed",
-      "duration_seconds": 0.095,
+      "human_review_status": "pending",
+      "duration_seconds": 0.09,
       "channels": 1,
-      "sample_rate": 44100
+      "sample_rate": 44100,
+      "sha256": "b65ee64c5d553b4403a869d19a8bed4d7ba5723aa434310f87edc2a4fcbced78"
     },
     {
       "id": "sfx_weapon_sawblades_impact_03",
@@ -1834,14 +2016,16 @@
         "sample_rate_hz": 44100,
         "channels": 1,
         "encoding": "PCM16 WAV",
-        "method": "role-specific oscillator/noise layers with analytic envelopes",
+        "method": "event-contoured oscillator, transient, and role-specific synthesis v2",
         "variation_index": 3,
         "variation_count": 4
       },
       "validation_status": "passed",
-      "duration_seconds": 0.095,
+      "human_review_status": "pending",
+      "duration_seconds": 0.09,
       "channels": 1,
-      "sample_rate": 44100
+      "sample_rate": 44100,
+      "sha256": "3ac87b7966a6e75e104ae295823f95135536083d6d78a679c3d12a56261ef9ea"
     },
     {
       "id": "sfx_weapon_sawblades_impact_04",
@@ -1855,14 +2039,16 @@
         "sample_rate_hz": 44100,
         "channels": 1,
         "encoding": "PCM16 WAV",
-        "method": "role-specific oscillator/noise layers with analytic envelopes",
+        "method": "event-contoured oscillator, transient, and role-specific synthesis v2",
         "variation_index": 4,
         "variation_count": 4
       },
       "validation_status": "passed",
-      "duration_seconds": 0.095,
+      "human_review_status": "pending",
+      "duration_seconds": 0.09,
       "channels": 1,
-      "sample_rate": 44100
+      "sample_rate": 44100,
+      "sha256": "d47270b6e4d5a5c88391fca4b6fbed0649c166659e480061ba8ebfca6574b8b9"
     },
     {
       "id": "sfx_weapon_meteor_staff_fire",
@@ -1876,14 +2062,16 @@
         "sample_rate_hz": 44100,
         "channels": 1,
         "encoding": "PCM16 WAV",
-        "method": "role-specific oscillator/noise layers with analytic envelopes",
+        "method": "event-contoured oscillator, transient, and role-specific synthesis v2",
         "variation_index": 1,
         "variation_count": 4
       },
       "validation_status": "passed",
-      "duration_seconds": 0.105,
+      "human_review_status": "pending",
+      "duration_seconds": 0.104989,
       "channels": 1,
-      "sample_rate": 44100
+      "sample_rate": 44100,
+      "sha256": "292c26c144f59abbf6d425939c03b292777abe698f34fc02c50c720f6d8911a4"
     },
     {
       "id": "sfx_weapon_meteor_staff_fire_02",
@@ -1897,14 +2085,16 @@
         "sample_rate_hz": 44100,
         "channels": 1,
         "encoding": "PCM16 WAV",
-        "method": "role-specific oscillator/noise layers with analytic envelopes",
+        "method": "event-contoured oscillator, transient, and role-specific synthesis v2",
         "variation_index": 2,
         "variation_count": 4
       },
       "validation_status": "passed",
-      "duration_seconds": 0.105,
+      "human_review_status": "pending",
+      "duration_seconds": 0.104989,
       "channels": 1,
-      "sample_rate": 44100
+      "sample_rate": 44100,
+      "sha256": "fd916779a072e7d093462ecb20614d0904a14531e7af0de72695890448a6edf8"
     },
     {
       "id": "sfx_weapon_meteor_staff_fire_03",
@@ -1918,14 +2108,16 @@
         "sample_rate_hz": 44100,
         "channels": 1,
         "encoding": "PCM16 WAV",
-        "method": "role-specific oscillator/noise layers with analytic envelopes",
+        "method": "event-contoured oscillator, transient, and role-specific synthesis v2",
         "variation_index": 3,
         "variation_count": 4
       },
       "validation_status": "passed",
-      "duration_seconds": 0.105,
+      "human_review_status": "pending",
+      "duration_seconds": 0.104989,
       "channels": 1,
-      "sample_rate": 44100
+      "sample_rate": 44100,
+      "sha256": "868a53b53ba48e1c7d1bfeabdbaaab739a32a445e008547cf18a9e6436d6ff1f"
     },
     {
       "id": "sfx_weapon_meteor_staff_fire_04",
@@ -1939,14 +2131,16 @@
         "sample_rate_hz": 44100,
         "channels": 1,
         "encoding": "PCM16 WAV",
-        "method": "role-specific oscillator/noise layers with analytic envelopes",
+        "method": "event-contoured oscillator, transient, and role-specific synthesis v2",
         "variation_index": 4,
         "variation_count": 4
       },
       "validation_status": "passed",
-      "duration_seconds": 0.105,
+      "human_review_status": "pending",
+      "duration_seconds": 0.104989,
       "channels": 1,
-      "sample_rate": 44100
+      "sample_rate": 44100,
+      "sha256": "a33c33a16655efc1d86a277ac2dc05178ec5dbf3cf0dcdf99099b67a1a2c3266"
     },
     {
       "id": "sfx_weapon_meteor_staff_impact",
@@ -1960,14 +2154,16 @@
         "sample_rate_hz": 44100,
         "channels": 1,
         "encoding": "PCM16 WAV",
-        "method": "role-specific oscillator/noise layers with analytic envelopes",
+        "method": "event-contoured oscillator, transient, and role-specific synthesis v2",
         "variation_index": 1,
         "variation_count": 4
       },
       "validation_status": "passed",
-      "duration_seconds": 0.095,
+      "human_review_status": "pending",
+      "duration_seconds": 0.09,
       "channels": 1,
-      "sample_rate": 44100
+      "sample_rate": 44100,
+      "sha256": "1776079f6cf7cdd23f057a2764cccd46dbe556718c522343ab028b479aff78ab"
     },
     {
       "id": "sfx_weapon_meteor_staff_impact_02",
@@ -1981,14 +2177,16 @@
         "sample_rate_hz": 44100,
         "channels": 1,
         "encoding": "PCM16 WAV",
-        "method": "role-specific oscillator/noise layers with analytic envelopes",
+        "method": "event-contoured oscillator, transient, and role-specific synthesis v2",
         "variation_index": 2,
         "variation_count": 4
       },
       "validation_status": "passed",
-      "duration_seconds": 0.095,
+      "human_review_status": "pending",
+      "duration_seconds": 0.09,
       "channels": 1,
-      "sample_rate": 44100
+      "sample_rate": 44100,
+      "sha256": "b5854e4f0d9b49f43808f42ec1c4b5b2e0b6b21cacc729b0d36580f67ac94279"
     },
     {
       "id": "sfx_weapon_meteor_staff_impact_03",
@@ -2002,14 +2200,16 @@
         "sample_rate_hz": 44100,
         "channels": 1,
         "encoding": "PCM16 WAV",
-        "method": "role-specific oscillator/noise layers with analytic envelopes",
+        "method": "event-contoured oscillator, transient, and role-specific synthesis v2",
         "variation_index": 3,
         "variation_count": 4
       },
       "validation_status": "passed",
-      "duration_seconds": 0.095,
+      "human_review_status": "pending",
+      "duration_seconds": 0.09,
       "channels": 1,
-      "sample_rate": 44100
+      "sample_rate": 44100,
+      "sha256": "cbda75bb13ea82c4918b7cafcddc57499e7ffdcaa2420bb1e866b5c5089efed6"
     },
     {
       "id": "sfx_weapon_meteor_staff_impact_04",
@@ -2023,14 +2223,16 @@
         "sample_rate_hz": 44100,
         "channels": 1,
         "encoding": "PCM16 WAV",
-        "method": "role-specific oscillator/noise layers with analytic envelopes",
+        "method": "event-contoured oscillator, transient, and role-specific synthesis v2",
         "variation_index": 4,
         "variation_count": 4
       },
       "validation_status": "passed",
-      "duration_seconds": 0.095,
+      "human_review_status": "pending",
+      "duration_seconds": 0.09,
       "channels": 1,
-      "sample_rate": 44100
+      "sample_rate": 44100,
+      "sha256": "560796e04983a2c43602fa01a744f1e3a20540dc5b6779d79f5cd1fd7a739461"
     },
     {
       "id": "sfx_weapon_prism_laser_fire",
@@ -2044,14 +2246,16 @@
         "sample_rate_hz": 44100,
         "channels": 1,
         "encoding": "PCM16 WAV",
-        "method": "role-specific oscillator/noise layers with analytic envelopes",
+        "method": "event-contoured oscillator, transient, and role-specific synthesis v2",
         "variation_index": 1,
         "variation_count": 4
       },
       "validation_status": "passed",
-      "duration_seconds": 0.14,
+      "human_review_status": "pending",
+      "duration_seconds": 0.16,
       "channels": 1,
-      "sample_rate": 44100
+      "sample_rate": 44100,
+      "sha256": "e393ccb0407a340b9c88258c6d4caa939d827fb16595cdc5fd56e4f1ffde91a8"
     },
     {
       "id": "sfx_weapon_prism_laser_fire_02",
@@ -2065,14 +2269,16 @@
         "sample_rate_hz": 44100,
         "channels": 1,
         "encoding": "PCM16 WAV",
-        "method": "role-specific oscillator/noise layers with analytic envelopes",
+        "method": "event-contoured oscillator, transient, and role-specific synthesis v2",
         "variation_index": 2,
         "variation_count": 4
       },
       "validation_status": "passed",
-      "duration_seconds": 0.14,
+      "human_review_status": "pending",
+      "duration_seconds": 0.16,
       "channels": 1,
-      "sample_rate": 44100
+      "sample_rate": 44100,
+      "sha256": "65e786c517bc9b4298cc639b13940aa03e5798674fbc023b8a618315ce3bad6f"
     },
     {
       "id": "sfx_weapon_prism_laser_fire_03",
@@ -2086,14 +2292,16 @@
         "sample_rate_hz": 44100,
         "channels": 1,
         "encoding": "PCM16 WAV",
-        "method": "role-specific oscillator/noise layers with analytic envelopes",
+        "method": "event-contoured oscillator, transient, and role-specific synthesis v2",
         "variation_index": 3,
         "variation_count": 4
       },
       "validation_status": "passed",
-      "duration_seconds": 0.14,
+      "human_review_status": "pending",
+      "duration_seconds": 0.16,
       "channels": 1,
-      "sample_rate": 44100
+      "sample_rate": 44100,
+      "sha256": "82ac40695b4bfaefc71f0e2a3e22f00931d3cbe6facf988a24fc1ebf1230597c"
     },
     {
       "id": "sfx_weapon_prism_laser_fire_04",
@@ -2107,14 +2315,16 @@
         "sample_rate_hz": 44100,
         "channels": 1,
         "encoding": "PCM16 WAV",
-        "method": "role-specific oscillator/noise layers with analytic envelopes",
+        "method": "event-contoured oscillator, transient, and role-specific synthesis v2",
         "variation_index": 4,
         "variation_count": 4
       },
       "validation_status": "passed",
-      "duration_seconds": 0.14,
+      "human_review_status": "pending",
+      "duration_seconds": 0.16,
       "channels": 1,
-      "sample_rate": 44100
+      "sample_rate": 44100,
+      "sha256": "a9668a807da0264b672d7822554bac629b127e8024936d6082a0b184896984ce"
     },
     {
       "id": "sfx_weapon_prism_laser_impact",
@@ -2128,14 +2338,16 @@
         "sample_rate_hz": 44100,
         "channels": 1,
         "encoding": "PCM16 WAV",
-        "method": "role-specific oscillator/noise layers with analytic envelopes",
+        "method": "event-contoured oscillator, transient, and role-specific synthesis v2",
         "variation_index": 1,
         "variation_count": 4
       },
       "validation_status": "passed",
-      "duration_seconds": 0.095,
+      "human_review_status": "pending",
+      "duration_seconds": 0.09,
       "channels": 1,
-      "sample_rate": 44100
+      "sample_rate": 44100,
+      "sha256": "dc0f2047c986f08ae22042837fc532907fd9f7f98658c5c69b5d43c0e0891ed9"
     },
     {
       "id": "sfx_weapon_prism_laser_impact_02",
@@ -2149,14 +2361,16 @@
         "sample_rate_hz": 44100,
         "channels": 1,
         "encoding": "PCM16 WAV",
-        "method": "role-specific oscillator/noise layers with analytic envelopes",
+        "method": "event-contoured oscillator, transient, and role-specific synthesis v2",
         "variation_index": 2,
         "variation_count": 4
       },
       "validation_status": "passed",
-      "duration_seconds": 0.095,
+      "human_review_status": "pending",
+      "duration_seconds": 0.09,
       "channels": 1,
-      "sample_rate": 44100
+      "sample_rate": 44100,
+      "sha256": "7fbd66511fb029e9bbc05be12d47e119d045de4221446252cc7720bf7834ff85"
     },
     {
       "id": "sfx_weapon_prism_laser_impact_03",
@@ -2170,14 +2384,16 @@
         "sample_rate_hz": 44100,
         "channels": 1,
         "encoding": "PCM16 WAV",
-        "method": "role-specific oscillator/noise layers with analytic envelopes",
+        "method": "event-contoured oscillator, transient, and role-specific synthesis v2",
         "variation_index": 3,
         "variation_count": 4
       },
       "validation_status": "passed",
-      "duration_seconds": 0.095,
+      "human_review_status": "pending",
+      "duration_seconds": 0.09,
       "channels": 1,
-      "sample_rate": 44100
+      "sample_rate": 44100,
+      "sha256": "d15231e842c9ac3ee9bcb7c4293d71e79bf0f2e374ed4bdedd4bb788b2bc232c"
     },
     {
       "id": "sfx_weapon_prism_laser_impact_04",
@@ -2191,14 +2407,16 @@
         "sample_rate_hz": 44100,
         "channels": 1,
         "encoding": "PCM16 WAV",
-        "method": "role-specific oscillator/noise layers with analytic envelopes",
+        "method": "event-contoured oscillator, transient, and role-specific synthesis v2",
         "variation_index": 4,
         "variation_count": 4
       },
       "validation_status": "passed",
-      "duration_seconds": 0.095,
+      "human_review_status": "pending",
+      "duration_seconds": 0.09,
       "channels": 1,
-      "sample_rate": 44100
+      "sample_rate": 44100,
+      "sha256": "62fd7b2d62567145bfff3130b17f8414716053f06b8f73192cca3c786614d57e"
     },
     {
       "id": "sfx_weapon_void_orb_fire",
@@ -2212,14 +2430,16 @@
         "sample_rate_hz": 44100,
         "channels": 1,
         "encoding": "PCM16 WAV",
-        "method": "role-specific oscillator/noise layers with analytic envelopes",
+        "method": "event-contoured oscillator, transient, and role-specific synthesis v2",
         "variation_index": 1,
         "variation_count": 4
       },
       "validation_status": "passed",
-      "duration_seconds": 0.14,
+      "human_review_status": "pending",
+      "duration_seconds": 0.16,
       "channels": 1,
-      "sample_rate": 44100
+      "sample_rate": 44100,
+      "sha256": "8a29e5319ba413b00eef1b68374da31f21aa9ec64d7e0b4c096afed466a6cd9d"
     },
     {
       "id": "sfx_weapon_void_orb_fire_02",
@@ -2233,14 +2453,16 @@
         "sample_rate_hz": 44100,
         "channels": 1,
         "encoding": "PCM16 WAV",
-        "method": "role-specific oscillator/noise layers with analytic envelopes",
+        "method": "event-contoured oscillator, transient, and role-specific synthesis v2",
         "variation_index": 2,
         "variation_count": 4
       },
       "validation_status": "passed",
-      "duration_seconds": 0.14,
+      "human_review_status": "pending",
+      "duration_seconds": 0.16,
       "channels": 1,
-      "sample_rate": 44100
+      "sample_rate": 44100,
+      "sha256": "45ea7e4e0a7bde7bc37dc109daa25290120146574c84946bbf57d0499b12629e"
     },
     {
       "id": "sfx_weapon_void_orb_fire_03",
@@ -2254,14 +2476,16 @@
         "sample_rate_hz": 44100,
         "channels": 1,
         "encoding": "PCM16 WAV",
-        "method": "role-specific oscillator/noise layers with analytic envelopes",
+        "method": "event-contoured oscillator, transient, and role-specific synthesis v2",
         "variation_index": 3,
         "variation_count": 4
       },
       "validation_status": "passed",
-      "duration_seconds": 0.14,
+      "human_review_status": "pending",
+      "duration_seconds": 0.16,
       "channels": 1,
-      "sample_rate": 44100
+      "sample_rate": 44100,
+      "sha256": "e457741f484cd742ebbee7736d529a965b6a66dbd5e0d47a631c2dea0082f5bf"
     },
     {
       "id": "sfx_weapon_void_orb_fire_04",
@@ -2275,14 +2499,16 @@
         "sample_rate_hz": 44100,
         "channels": 1,
         "encoding": "PCM16 WAV",
-        "method": "role-specific oscillator/noise layers with analytic envelopes",
+        "method": "event-contoured oscillator, transient, and role-specific synthesis v2",
         "variation_index": 4,
         "variation_count": 4
       },
       "validation_status": "passed",
-      "duration_seconds": 0.14,
+      "human_review_status": "pending",
+      "duration_seconds": 0.16,
       "channels": 1,
-      "sample_rate": 44100
+      "sample_rate": 44100,
+      "sha256": "78707d4d2d14f7d3c66143dfd814a356b44fff2c2ac9241fb7212ff5cddb1c83"
     },
     {
       "id": "sfx_weapon_void_orb_impact",
@@ -2296,14 +2522,16 @@
         "sample_rate_hz": 44100,
         "channels": 1,
         "encoding": "PCM16 WAV",
-        "method": "role-specific oscillator/noise layers with analytic envelopes",
+        "method": "event-contoured oscillator, transient, and role-specific synthesis v2",
         "variation_index": 1,
         "variation_count": 4
       },
       "validation_status": "passed",
-      "duration_seconds": 0.095,
+      "human_review_status": "pending",
+      "duration_seconds": 0.09,
       "channels": 1,
-      "sample_rate": 44100
+      "sample_rate": 44100,
+      "sha256": "3d1f1fba44600b4395accf859575b566ee4e86c029b2c23176795db7989d70d0"
     },
     {
       "id": "sfx_weapon_void_orb_impact_02",
@@ -2317,14 +2545,16 @@
         "sample_rate_hz": 44100,
         "channels": 1,
         "encoding": "PCM16 WAV",
-        "method": "role-specific oscillator/noise layers with analytic envelopes",
+        "method": "event-contoured oscillator, transient, and role-specific synthesis v2",
         "variation_index": 2,
         "variation_count": 4
       },
       "validation_status": "passed",
-      "duration_seconds": 0.095,
+      "human_review_status": "pending",
+      "duration_seconds": 0.09,
       "channels": 1,
-      "sample_rate": 44100
+      "sample_rate": 44100,
+      "sha256": "3379b826ff9baac77b325a054ed6af2e86f3d2ecb9ffc4e73cef9e565b078393"
     },
     {
       "id": "sfx_weapon_void_orb_impact_03",
@@ -2338,14 +2568,16 @@
         "sample_rate_hz": 44100,
         "channels": 1,
         "encoding": "PCM16 WAV",
-        "method": "role-specific oscillator/noise layers with analytic envelopes",
+        "method": "event-contoured oscillator, transient, and role-specific synthesis v2",
         "variation_index": 3,
         "variation_count": 4
       },
       "validation_status": "passed",
-      "duration_seconds": 0.095,
+      "human_review_status": "pending",
+      "duration_seconds": 0.09,
       "channels": 1,
-      "sample_rate": 44100
+      "sample_rate": 44100,
+      "sha256": "4c35eae5c847bb95f6226385411684f3157a362ba08204d700a196f9f17d4dd7"
     },
     {
       "id": "sfx_weapon_void_orb_impact_04",
@@ -2359,14 +2591,16 @@
         "sample_rate_hz": 44100,
         "channels": 1,
         "encoding": "PCM16 WAV",
-        "method": "role-specific oscillator/noise layers with analytic envelopes",
+        "method": "event-contoured oscillator, transient, and role-specific synthesis v2",
         "variation_index": 4,
         "variation_count": 4
       },
       "validation_status": "passed",
-      "duration_seconds": 0.095,
+      "human_review_status": "pending",
+      "duration_seconds": 0.09,
       "channels": 1,
-      "sample_rate": 44100
+      "sample_rate": 44100,
+      "sha256": "9d71a661cff871db13925905ac738b73dd458678ab37efca0e466cf487ffa522"
     },
     {
       "id": "sfx_weapon_frost_nova_fire",
@@ -2380,14 +2614,16 @@
         "sample_rate_hz": 44100,
         "channels": 1,
         "encoding": "PCM16 WAV",
-        "method": "role-specific oscillator/noise layers with analytic envelopes",
+        "method": "event-contoured oscillator, transient, and role-specific synthesis v2",
         "variation_index": 1,
         "variation_count": 4
       },
       "validation_status": "passed",
-      "duration_seconds": 0.2,
+      "human_review_status": "pending",
+      "duration_seconds": 0.21,
       "channels": 1,
-      "sample_rate": 44100
+      "sample_rate": 44100,
+      "sha256": "8472847d6217aa61a28d0402eba50911cdc58e40bf688ddcbfe338fbb59e9eff"
     },
     {
       "id": "sfx_weapon_frost_nova_fire_02",
@@ -2401,14 +2637,16 @@
         "sample_rate_hz": 44100,
         "channels": 1,
         "encoding": "PCM16 WAV",
-        "method": "role-specific oscillator/noise layers with analytic envelopes",
+        "method": "event-contoured oscillator, transient, and role-specific synthesis v2",
         "variation_index": 2,
         "variation_count": 4
       },
       "validation_status": "passed",
-      "duration_seconds": 0.2,
+      "human_review_status": "pending",
+      "duration_seconds": 0.21,
       "channels": 1,
-      "sample_rate": 44100
+      "sample_rate": 44100,
+      "sha256": "3617becf38e51989191b4f078be827418b1da1b91a4ed39c004ec12887449e7f"
     },
     {
       "id": "sfx_weapon_frost_nova_fire_03",
@@ -2422,14 +2660,16 @@
         "sample_rate_hz": 44100,
         "channels": 1,
         "encoding": "PCM16 WAV",
-        "method": "role-specific oscillator/noise layers with analytic envelopes",
+        "method": "event-contoured oscillator, transient, and role-specific synthesis v2",
         "variation_index": 3,
         "variation_count": 4
       },
       "validation_status": "passed",
-      "duration_seconds": 0.2,
+      "human_review_status": "pending",
+      "duration_seconds": 0.21,
       "channels": 1,
-      "sample_rate": 44100
+      "sample_rate": 44100,
+      "sha256": "ec19cd9159e5210a3e954aca90a48e2b35c39a0a84c9fe4c90ef4e978341ea5b"
     },
     {
       "id": "sfx_weapon_frost_nova_fire_04",
@@ -2443,14 +2683,16 @@
         "sample_rate_hz": 44100,
         "channels": 1,
         "encoding": "PCM16 WAV",
-        "method": "role-specific oscillator/noise layers with analytic envelopes",
+        "method": "event-contoured oscillator, transient, and role-specific synthesis v2",
         "variation_index": 4,
         "variation_count": 4
       },
       "validation_status": "passed",
-      "duration_seconds": 0.2,
+      "human_review_status": "pending",
+      "duration_seconds": 0.21,
       "channels": 1,
-      "sample_rate": 44100
+      "sample_rate": 44100,
+      "sha256": "2d22e75b073b9e8f4f997451ae1158273ffc9a2ec27a1f6f947763e6e1571f5e"
     },
     {
       "id": "sfx_weapon_frost_nova_impact",
@@ -2464,14 +2706,16 @@
         "sample_rate_hz": 44100,
         "channels": 1,
         "encoding": "PCM16 WAV",
-        "method": "role-specific oscillator/noise layers with analytic envelopes",
+        "method": "event-contoured oscillator, transient, and role-specific synthesis v2",
         "variation_index": 1,
         "variation_count": 4
       },
       "validation_status": "passed",
-      "duration_seconds": 0.095,
+      "human_review_status": "pending",
+      "duration_seconds": 0.09,
       "channels": 1,
-      "sample_rate": 44100
+      "sample_rate": 44100,
+      "sha256": "2d2d5185b5b6861d6ffb7aa55af59d45eb636e155146a353a929151b23c97bc4"
     },
     {
       "id": "sfx_weapon_frost_nova_impact_02",
@@ -2485,14 +2729,16 @@
         "sample_rate_hz": 44100,
         "channels": 1,
         "encoding": "PCM16 WAV",
-        "method": "role-specific oscillator/noise layers with analytic envelopes",
+        "method": "event-contoured oscillator, transient, and role-specific synthesis v2",
         "variation_index": 2,
         "variation_count": 4
       },
       "validation_status": "passed",
-      "duration_seconds": 0.095,
+      "human_review_status": "pending",
+      "duration_seconds": 0.09,
       "channels": 1,
-      "sample_rate": 44100
+      "sample_rate": 44100,
+      "sha256": "2fefa7f2b1ab17b3bec0cd96254022e6886045024c796e9754ed3e838490023e"
     },
     {
       "id": "sfx_weapon_frost_nova_impact_03",
@@ -2506,14 +2752,16 @@
         "sample_rate_hz": 44100,
         "channels": 1,
         "encoding": "PCM16 WAV",
-        "method": "role-specific oscillator/noise layers with analytic envelopes",
+        "method": "event-contoured oscillator, transient, and role-specific synthesis v2",
         "variation_index": 3,
         "variation_count": 4
       },
       "validation_status": "passed",
-      "duration_seconds": 0.095,
+      "human_review_status": "pending",
+      "duration_seconds": 0.09,
       "channels": 1,
-      "sample_rate": 44100
+      "sample_rate": 44100,
+      "sha256": "9f2a9c9064495aa9b1e16b652f9495429f3c5f9edceb68fc9bda756263023754"
     },
     {
       "id": "sfx_weapon_frost_nova_impact_04",
@@ -2527,14 +2775,16 @@
         "sample_rate_hz": 44100,
         "channels": 1,
         "encoding": "PCM16 WAV",
-        "method": "role-specific oscillator/noise layers with analytic envelopes",
+        "method": "event-contoured oscillator, transient, and role-specific synthesis v2",
         "variation_index": 4,
         "variation_count": 4
       },
       "validation_status": "passed",
-      "duration_seconds": 0.095,
+      "human_review_status": "pending",
+      "duration_seconds": 0.09,
       "channels": 1,
-      "sample_rate": 44100
+      "sample_rate": 44100,
+      "sha256": "3d6bd7bbd318b6e44b93734225de01b15774bc4a151fb61490a23210cd7cee65"
     },
     {
       "id": "music_menu_theme",
@@ -2548,12 +2798,14 @@
         "sample_rate_hz": 44100,
         "channels": 1,
         "encoding": "PCM16 WAV",
-        "method": "synchronized synthesized stem with 12 ms edge fade"
+        "method": "124 BPM eight-bar layered synthwave EDM with phase-aligned stems"
       },
       "validation_status": "passed",
-      "duration_seconds": 8.348,
+      "human_review_status": "pending",
+      "duration_seconds": 15.483878,
       "channels": 1,
-      "sample_rate": 44100
+      "sample_rate": 44100,
+      "sha256": "8a236f7cbe350e0bf03bb47b072d1bcfba2fc5f6821b38b0de08d1b5c4f4e057"
     },
     {
       "id": "music_victory_cue",
@@ -2567,12 +2819,14 @@
         "sample_rate_hz": 44100,
         "channels": 1,
         "encoding": "PCM16 WAV",
-        "method": "synchronized synthesized stem with 12 ms edge fade"
+        "method": "124 BPM eight-bar layered synthwave EDM with phase-aligned stems"
       },
       "validation_status": "passed",
-      "duration_seconds": 1.28,
+      "human_review_status": "pending",
+      "duration_seconds": 1.82,
       "channels": 1,
-      "sample_rate": 44100
+      "sample_rate": 44100,
+      "sha256": "eace4a3e5786ce170079f1a3e048fcbd98d032ca1d139237dd0913397c1742ea"
     },
     {
       "id": "music_defeat_cue",
@@ -2586,12 +2840,14 @@
         "sample_rate_hz": 44100,
         "channels": 1,
         "encoding": "PCM16 WAV",
-        "method": "synchronized synthesized stem with 12 ms edge fade"
+        "method": "124 BPM eight-bar layered synthwave EDM with phase-aligned stems"
       },
       "validation_status": "passed",
-      "duration_seconds": 1.28,
+      "human_review_status": "pending",
+      "duration_seconds": 1.76,
       "channels": 1,
-      "sample_rate": 44100
+      "sample_rate": 44100,
+      "sha256": "cc44711626eeca6101c37c671484eae1424869064ec0ec37b880dd27d8f7a9c6"
     },
     {
       "id": "music_stem_rhythm",
@@ -2605,12 +2861,14 @@
         "sample_rate_hz": 44100,
         "channels": 1,
         "encoding": "PCM16 WAV",
-        "method": "synchronized synthesized stem with 12 ms edge fade"
+        "method": "124 BPM eight-bar layered synthwave EDM with phase-aligned stems"
       },
       "validation_status": "passed",
-      "duration_seconds": 8.348,
+      "human_review_status": "pending",
+      "duration_seconds": 15.483878,
       "channels": 1,
-      "sample_rate": 44100
+      "sample_rate": 44100,
+      "sha256": "e9ae98533aec7db52bd72b6273e4b58ec2b73a9aeb60781454b8a97a957ababd"
     },
     {
       "id": "music_stem_bass",
@@ -2624,12 +2882,14 @@
         "sample_rate_hz": 44100,
         "channels": 1,
         "encoding": "PCM16 WAV",
-        "method": "synchronized synthesized stem with 12 ms edge fade"
+        "method": "124 BPM eight-bar layered synthwave EDM with phase-aligned stems"
       },
       "validation_status": "passed",
-      "duration_seconds": 8.348,
+      "human_review_status": "pending",
+      "duration_seconds": 15.483878,
       "channels": 1,
-      "sample_rate": 44100
+      "sample_rate": 44100,
+      "sha256": "fe2a883c1601342a352c6de2984a450b7b7cee88e255a1d88920dfb376495c2d"
     },
     {
       "id": "music_stem_pad",
@@ -2643,12 +2903,14 @@
         "sample_rate_hz": 44100,
         "channels": 1,
         "encoding": "PCM16 WAV",
-        "method": "synchronized synthesized stem with 12 ms edge fade"
+        "method": "124 BPM eight-bar layered synthwave EDM with phase-aligned stems"
       },
       "validation_status": "passed",
-      "duration_seconds": 8.348,
+      "human_review_status": "pending",
+      "duration_seconds": 15.483878,
       "channels": 1,
-      "sample_rate": 44100
+      "sample_rate": 44100,
+      "sha256": "3fa9fa99203d600f707b75edf30eaf1c72bf69e3a8a3daa72824ffdad75fc029"
     },
     {
       "id": "music_stem_arp",
@@ -2662,12 +2924,14 @@
         "sample_rate_hz": 44100,
         "channels": 1,
         "encoding": "PCM16 WAV",
-        "method": "synchronized synthesized stem with 12 ms edge fade"
+        "method": "124 BPM eight-bar layered synthwave EDM with phase-aligned stems"
       },
       "validation_status": "passed",
-      "duration_seconds": 8.348,
+      "human_review_status": "pending",
+      "duration_seconds": 15.483878,
       "channels": 1,
-      "sample_rate": 44100
+      "sample_rate": 44100,
+      "sha256": "35223b47961f5038acf7d4bc6b3108573b6ab7e127126aaf2ed61ddaf81c803c"
     },
     {
       "id": "music_stem_boss",
@@ -2681,12 +2945,14 @@
         "sample_rate_hz": 44100,
         "channels": 1,
         "encoding": "PCM16 WAV",
-        "method": "synchronized synthesized stem with 12 ms edge fade"
+        "method": "124 BPM eight-bar layered synthwave EDM with phase-aligned stems"
       },
       "validation_status": "passed",
-      "duration_seconds": 8.348,
+      "human_review_status": "pending",
+      "duration_seconds": 15.483878,
       "channels": 1,
-      "sample_rate": 44100
+      "sample_rate": 44100,
+      "sha256": "9a9bc3b37d2fde2fa2d9099f33b0c0e1867cfad55f66a4951318d70f8caac98c"
     }
   ]
 }

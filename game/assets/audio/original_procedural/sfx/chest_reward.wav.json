@@ -4,29 +4,29 @@
   "status": "provisionally_integrated",
   "skill": "dopamine-sfx",
   "generator": "game/tools/generate_original_audio.py",
-  "generator_version": "4",
-  "source_sha256": "53a6845af9614cda4ae22304cba58dd245cef5b63953f0c6b3b9ff3cdea2cc4c",
+  "generator_version": "5",
+  "source_sha256": "ab2381dfa9211b7b2d4fb20460c7ffd1f82a8b9534a6b4998cc42307134ef55c",
   "seed": 3340607880,
   "parameters": {
     "sample_rate_hz": 44100,
     "channels": 1,
     "encoding": "PCM16 WAV",
-    "method": "role-specific oscillator/noise layers with analytic envelopes"
+    "method": "event-contoured oscillator, transient, and role-specific synthesis v2"
   },
   "export": {
     "file": "chest_reward.wav",
-    "sha256": "c2798da73721a485769999876b27f8a78a14360e2040b48d0bec90e419c26fda",
+    "sha256": "1ed5314fa6553015cd84e0c3fc1fa834ca021730456b6c91b4e5d53002c5453c",
     "sample_rate_hz": 44100,
     "channels": 1,
-    "duration_seconds": 0.32,
+    "duration_seconds": 0.36,
     "peak_dbfs": -2.853,
-    "rms_dbfs": -16.369,
-    "crest_factor_db": 13.515
+    "rms_dbfs": -14.264,
+    "crest_factor_db": 11.41
   },
   "acceptance_status": "accepted_for_provisional_production",
-  "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
+  "acceptance_basis": "Provisional integration of complete audio redesign; owner listening review remains pending.",
   "human_review_status": "pending",
-  "candidate_export_path": "build/assets/candidates/audio-complete/sfx/chest_reward.wav",
+  "candidate_export_path": "build/assets/candidates/audio-refonte-20261018/sfx/chest_reward.wav",
   "integrated_export_path": "game/assets/audio/original_procedural/sfx/chest_reward.wav",
   "export_path": "audio/original_procedural/sfx/chest_reward.wav"
 }

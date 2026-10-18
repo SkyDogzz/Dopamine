@@ -4,29 +4,29 @@
   "status": "provisionally_integrated",
   "skill": "dopamine-sfx",
   "generator": "game/tools/generate_original_audio.py",
-  "generator_version": "4",
-  "source_sha256": "53a6845af9614cda4ae22304cba58dd245cef5b63953f0c6b3b9ff3cdea2cc4c",
+  "generator_version": "5",
+  "source_sha256": "ab2381dfa9211b7b2d4fb20460c7ffd1f82a8b9534a6b4998cc42307134ef55c",
   "seed": 814322876,
   "parameters": {
     "sample_rate_hz": 44100,
     "channels": 1,
     "encoding": "PCM16 WAV",
-    "method": "role-specific oscillator/noise layers with analytic envelopes"
+    "method": "event-contoured oscillator, transient, and role-specific synthesis v2"
   },
   "export": {
     "file": "damage_taken.wav",
-    "sha256": "99ae82954c463ca515add75911edab1d7cc070f2ced51a54662f19491ee9d9e2",
+    "sha256": "88af7c85d7da1d90b72d1838dc6e175b0fc8fa995ae5b0fa4c39646838233d43",
     "sample_rate_hz": 44100,
     "channels": 1,
-    "duration_seconds": 0.22,
+    "duration_seconds": 0.23,
     "peak_dbfs": -2.853,
-    "rms_dbfs": -16.709,
-    "crest_factor_db": 13.856
+    "rms_dbfs": -18.04,
+    "crest_factor_db": 15.186
   },
   "acceptance_status": "accepted_for_provisional_production",
-  "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
+  "acceptance_basis": "Provisional integration of complete audio redesign; owner listening review remains pending.",
   "human_review_status": "pending",
-  "candidate_export_path": "build/assets/candidates/audio-complete/sfx/damage_taken.wav",
+  "candidate_export_path": "build/assets/candidates/audio-refonte-20261018/sfx/damage_taken.wav",
   "integrated_export_path": "game/assets/audio/original_procedural/sfx/damage_taken.wav",
   "export_path": "audio/original_procedural/sfx/damage_taken.wav"
 }

@@ -4,31 +4,31 @@
   "status": "provisionally_integrated",
   "skill": "dopamine-sfx",
   "generator": "game/tools/generate_original_audio.py",
-  "generator_version": "4",
-  "source_sha256": "53a6845af9614cda4ae22304cba58dd245cef5b63953f0c6b3b9ff3cdea2cc4c",
+  "generator_version": "5",
+  "source_sha256": "ab2381dfa9211b7b2d4fb20460c7ffd1f82a8b9534a6b4998cc42307134ef55c",
   "seed": 3522894974,
   "parameters": {
     "sample_rate_hz": 44100,
     "channels": 1,
     "encoding": "PCM16 WAV",
-    "method": "role-specific oscillator/noise layers with analytic envelopes",
+    "method": "event-contoured oscillator, transient, and role-specific synthesis v2",
     "variation_index": 1,
     "variation_count": 4
   },
   "export": {
     "file": "weapon_minigun_fire.wav",
-    "sha256": "bd807997cd8e7a6b55e40571bf86b372c40006120362369580983aa4a914637a",
+    "sha256": "e2337ccb073c5852399bd3f77f352a4657537a1890e7a63bbcf3cb2eb75d709e",
     "sample_rate_hz": 44100,
     "channels": 1,
     "duration_seconds": 0.104989,
     "peak_dbfs": -2.853,
-    "rms_dbfs": -16.403,
-    "crest_factor_db": 13.55
+    "rms_dbfs": -17.156,
+    "crest_factor_db": 14.302
   },
   "acceptance_status": "accepted_for_provisional_production",
-  "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
+  "acceptance_basis": "Provisional integration of complete audio redesign; owner listening review remains pending.",
   "human_review_status": "pending",
-  "candidate_export_path": "build/assets/candidates/audio-complete/sfx/weapon_minigun_fire.wav",
+  "candidate_export_path": "build/assets/candidates/audio-refonte-20261018/sfx/weapon_minigun_fire.wav",
   "integrated_export_path": "game/assets/audio/original_procedural/sfx/weapon_minigun_fire.wav",
   "export_path": "audio/original_procedural/sfx/weapon_minigun_fire.wav"
 }

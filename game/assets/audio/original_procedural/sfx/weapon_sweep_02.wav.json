@@ -4,29 +4,29 @@
   "status": "provisionally_integrated",
   "skill": "dopamine-sfx",
   "generator": "game/tools/generate_original_audio.py",
-  "generator_version": "4",
-  "source_sha256": "53a6845af9614cda4ae22304cba58dd245cef5b63953f0c6b3b9ff3cdea2cc4c",
+  "generator_version": "5",
+  "source_sha256": "ab2381dfa9211b7b2d4fb20460c7ffd1f82a8b9534a6b4998cc42307134ef55c",
   "seed": 2030792159,
   "parameters": {
     "sample_rate_hz": 44100,
     "channels": 1,
     "encoding": "PCM16 WAV",
-    "method": "role-specific oscillator/noise layers with analytic envelopes"
+    "method": "event-contoured oscillator, transient, and role-specific synthesis v2"
   },
   "export": {
     "file": "weapon_sweep_02.wav",
-    "sha256": "96111fe26bed47b3aad6b5a7ae4fd224f9e0bab51317fa87b23c7e63ff14f669",
+    "sha256": "bc1832798c6f0ea8848d49d63c973ac062fb96ccd677d881ddc04521f3370208",
     "sample_rate_hz": 44100,
     "channels": 1,
-    "duration_seconds": 0.2,
+    "duration_seconds": 0.21,
     "peak_dbfs": -2.853,
-    "rms_dbfs": -16.334,
-    "crest_factor_db": 13.48
+    "rms_dbfs": -13.968,
+    "crest_factor_db": 11.115
   },
   "acceptance_status": "accepted_for_provisional_production",
-  "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
+  "acceptance_basis": "Provisional integration of complete audio redesign; owner listening review remains pending.",
   "human_review_status": "pending",
-  "candidate_export_path": "build/assets/candidates/audio-complete/sfx/weapon_sweep_02.wav",
+  "candidate_export_path": "build/assets/candidates/audio-refonte-20261018/sfx/weapon_sweep_02.wav",
   "integrated_export_path": "game/assets/audio/original_procedural/sfx/weapon_sweep_02.wav",
   "export_path": "audio/original_procedural/sfx/weapon_sweep_02.wav"
 }

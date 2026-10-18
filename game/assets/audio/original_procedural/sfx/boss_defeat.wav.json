@@ -4,29 +4,29 @@
   "status": "provisionally_integrated",
   "skill": "dopamine-sfx",
   "generator": "game/tools/generate_original_audio.py",
-  "generator_version": "4",
-  "source_sha256": "53a6845af9614cda4ae22304cba58dd245cef5b63953f0c6b3b9ff3cdea2cc4c",
+  "generator_version": "5",
+  "source_sha256": "ab2381dfa9211b7b2d4fb20460c7ffd1f82a8b9534a6b4998cc42307134ef55c",
   "seed": 1607876697,
   "parameters": {
     "sample_rate_hz": 44100,
     "channels": 1,
     "encoding": "PCM16 WAV",
-    "method": "role-specific oscillator/noise layers with analytic envelopes"
+    "method": "event-contoured oscillator, transient, and role-specific synthesis v2"
   },
   "export": {
     "file": "boss_defeat.wav",
-    "sha256": "585e767f4ded177f2578653d080b7a58bea92a92b698a1d076faf45e1d058664",
+    "sha256": "72dca2f2afa76a2a65f266777ef1e1b802f0cd0bc210a286a6b91518c9ac205b",
     "sample_rate_hz": 44100,
     "channels": 1,
     "duration_seconds": 0.95,
     "peak_dbfs": -2.853,
-    "rms_dbfs": -16.408,
-    "crest_factor_db": 13.554
+    "rms_dbfs": -13.741,
+    "crest_factor_db": 10.888
   },
   "acceptance_status": "accepted_for_provisional_production",
-  "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
+  "acceptance_basis": "Provisional integration of complete audio redesign; owner listening review remains pending.",
   "human_review_status": "pending",
-  "candidate_export_path": "build/assets/candidates/audio-complete/sfx/boss_defeat.wav",
+  "candidate_export_path": "build/assets/candidates/audio-refonte-20261018/sfx/boss_defeat.wav",
   "integrated_export_path": "game/assets/audio/original_procedural/sfx/boss_defeat.wav",
   "export_path": "audio/original_procedural/sfx/boss_defeat.wav"
 }

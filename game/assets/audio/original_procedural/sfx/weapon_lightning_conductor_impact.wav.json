@@ -4,31 +4,31 @@
   "status": "provisionally_integrated",
   "skill": "dopamine-sfx",
   "generator": "game/tools/generate_original_audio.py",
-  "generator_version": "4",
-  "source_sha256": "53a6845af9614cda4ae22304cba58dd245cef5b63953f0c6b3b9ff3cdea2cc4c",
+  "generator_version": "5",
+  "source_sha256": "ab2381dfa9211b7b2d4fb20460c7ffd1f82a8b9534a6b4998cc42307134ef55c",
   "seed": 2057817497,
   "parameters": {
     "sample_rate_hz": 44100,
     "channels": 1,
     "encoding": "PCM16 WAV",
-    "method": "role-specific oscillator/noise layers with analytic envelopes",
+    "method": "event-contoured oscillator, transient, and role-specific synthesis v2",
     "variation_index": 1,
     "variation_count": 4
   },
   "export": {
     "file": "weapon_lightning_conductor_impact.wav",
-    "sha256": "b1abd313d8900eb926634a33d40647c2203ac0b2b0d39d54119accf8fc8d5cb9",
+    "sha256": "0701d7628844fa674011b7d7587caaf49394f3fd8c7d65fab35691f8e0daa2d1",
     "sample_rate_hz": 44100,
     "channels": 1,
-    "duration_seconds": 0.095011,
+    "duration_seconds": 0.09,
     "peak_dbfs": -2.853,
-    "rms_dbfs": -16.453,
-    "crest_factor_db": 13.599
+    "rms_dbfs": -14.798,
+    "crest_factor_db": 11.945
   },
   "acceptance_status": "accepted_for_provisional_production",
-  "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
+  "acceptance_basis": "Provisional integration of complete audio redesign; owner listening review remains pending.",
   "human_review_status": "pending",
-  "candidate_export_path": "build/assets/candidates/audio-complete/sfx/weapon_lightning_conductor_impact.wav",
+  "candidate_export_path": "build/assets/candidates/audio-refonte-20261018/sfx/weapon_lightning_conductor_impact.wav",
   "integrated_export_path": "game/assets/audio/original_procedural/sfx/weapon_lightning_conductor_impact.wav",
   "export_path": "audio/original_procedural/sfx/weapon_lightning_conductor_impact.wav"
 }

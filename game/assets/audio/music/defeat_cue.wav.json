@@ -4,24 +4,24 @@
   "status": "provisionally_integrated",
   "skill": "dopamine-music",
   "generator": "game/tools/generate_original_audio.py",
-  "generator_version": "4",
-  "source_sha256": "53a6845af9614cda4ae22304cba58dd245cef5b63953f0c6b3b9ff3cdea2cc4c",
+  "generator_version": "5",
+  "source_sha256": "ab2381dfa9211b7b2d4fb20460c7ffd1f82a8b9534a6b4998cc42307134ef55c",
   "seed": 90210,
   "parameters": {
     "sample_rate_hz": 44100,
     "channels": 1,
     "encoding": "PCM16 WAV",
-    "method": "synchronized synthesized stem with 12 ms edge fade"
+    "method": "124 BPM eight-bar layered synthwave EDM with phase-aligned stems"
   },
   "export": {
     "file": "defeat_cue.wav",
-    "sha256": "cef156bd131309e2bd3d279fc507fe5a2d40ad2505732406a1d67fc873cc695f",
+    "sha256": "cc44711626eeca6101c37c671484eae1424869064ec0ec37b880dd27d8f7a9c6",
     "sample_rate_hz": 44100,
     "channels": 1,
-    "duration_seconds": 1.28,
-    "peak_dbfs": -8.047,
-    "rms_dbfs": -15.358,
-    "crest_factor_db": 7.31
+    "duration_seconds": 1.76,
+    "peak_dbfs": -5.68,
+    "rms_dbfs": -15.837,
+    "crest_factor_db": 10.157
   },
   "loop": false,
   "notes_hz": [
@@ -32,9 +32,9 @@
   ],
   "note_seconds": 0.32,
   "acceptance_status": "accepted_for_provisional_production",
-  "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
+  "acceptance_basis": "Provisional integration of complete audio redesign; owner listening review remains pending.",
   "human_review_status": "pending",
-  "candidate_export_path": "build/assets/candidates/audio-complete/music/cues/defeat_cue.wav",
+  "candidate_export_path": "build/assets/candidates/audio-refonte-20261018/music/cues/defeat_cue.wav",
   "integrated_export_path": "game/assets/audio/music/defeat_cue.wav",
   "export_path": "audio/music/defeat_cue.wav"
 }

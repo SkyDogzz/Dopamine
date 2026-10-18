@@ -4,35 +4,35 @@
   "status": "provisionally_integrated",
   "skill": "dopamine-music",
   "generator": "game/tools/generate_original_audio.py",
-  "generator_version": "4",
-  "source_sha256": "53a6845af9614cda4ae22304cba58dd245cef5b63953f0c6b3b9ff3cdea2cc4c",
+  "generator_version": "5",
+  "source_sha256": "ab2381dfa9211b7b2d4fb20460c7ffd1f82a8b9534a6b4998cc42307134ef55c",
   "seed": 90210,
   "parameters": {
     "sample_rate_hz": 44100,
     "channels": 1,
     "encoding": "PCM16 WAV",
-    "method": "synchronized synthesized stem with 12 ms edge fade"
+    "method": "124 BPM eight-bar layered synthwave EDM with phase-aligned stems"
   },
   "export": {
     "file": "boss.wav",
-    "sha256": "a28a4c4fcbdecccef7c2afcbf8d12984a9745262a1d6a40769e5b6a72c28ebdf",
+    "sha256": "9a9bc3b37d2fde2fa2d9099f33b0c0e1867cfad55f66a4951318d70f8caac98c",
     "sample_rate_hz": 44100,
     "channels": 1,
-    "duration_seconds": 8.347823,
-    "peak_dbfs": -15.016,
-    "rms_dbfs": -31.617,
-    "crest_factor_db": 16.601
+    "duration_seconds": 15.483878,
+    "peak_dbfs": -5.92,
+    "rms_dbfs": -22.626,
+    "crest_factor_db": 16.706
   },
-  "tempo_bpm": 115,
+  "tempo_bpm": 124,
   "meter": "4/4",
-  "bars": 4,
+  "bars": 8,
   "loop_start_sample": 0,
-  "loop_end_sample": 368139,
+  "loop_end_sample": 682839,
   "mix_gain_linear_proposed": 0.2,
   "acceptance_status": "accepted_for_provisional_production",
-  "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
+  "acceptance_basis": "Provisional integration of complete audio redesign; owner listening review remains pending.",
   "human_review_status": "pending",
-  "candidate_export_path": "build/assets/candidates/audio-complete/music/boss.wav",
+  "candidate_export_path": "build/assets/candidates/audio-refonte-20261018/music/boss.wav",
   "integrated_export_path": "game/assets/audio/original_procedural/music/boss.wav",
   "export_path": "audio/original_procedural/music/boss.wav"
 }

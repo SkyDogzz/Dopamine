@@ -69,6 +69,14 @@ Le smoke `adaptive_survival_music_smoke.gd` vérifie maintenant que la position 
 
 ## Avancement audio (2026-10-18)
 
+### Refonte complète des assets — v2 (2026-10-18)
+
+- Suite à la demande du propriétaire, les 125 effets et les 8 fichiers musicaux ont été remplacés par une nouvelle synthèse procédurale locale. Les anciens WAV intégrés n'ont servi ni d'échantillons ni de sources de génération. Les IDs et chemins consommés par Godot restent stables; toutes les catégories gardent donc leurs raccords runtime.
+- Les effets disposent maintenant de contours dédiés aux événements et d'une signature par arme (arc électrique, souffle de feu, entaille, rafale, toxine, scie, météore, laser prismatique, vide, glace). Les événements d'interface, XP, dégâts, boss et récompenses ont leurs propres enveloppes/formes.
+- La musique de prototype utilise cinq stems en phase à 124 BPM, en 4/4 sur huit mesures, plus le thème menu et les cues victoire/défaite. La montée de vague et l'arrivée du boss continuent à piloter les mêmes fondus progressifs. BPM, arrangement et gains restent **[PROPOSÉS]** jusqu'à la revue d'écoute.
+- Le générateur actuel est `game/tools/generate_original_audio.py` v5. Paramètres de chaque export : sidecars WAV; inventaire : `docs/art/ASSET_AUDIO_INVENTORY.json`; QA numérique : `docs/art/audio-redesign-v2/qa-report.json`; page d'écoute : `docs/art/AUDIO_A_ECOUTER.html`. Les 133 fichiers passent le contrôle PCM16/44,1 kHz, unicité des SFX, non-clipping, non-silence, longueur commune et raccord de boucle; les smokes SFX/adaptatif/résultat passent, et le réimport headless complet des WAV a passé sous Godot 4.7.2.
+- **[OUVERT — ÉCOUTE PROPRIÉTAIRE]** Le propriétaire doit écouter et valider le nouveau lot sur la page d'écoute; aucune préférence de mix ou approbation auditive n'est inférée de la demande de refonte.
+
 - **[VALIDÉ]** Les 38 anciens SFX et toutes les recettes/outils qui les ont produits ont été remplacés/retirés après migration. Le jeu garde les identifiants de famille et le mixage de priorité/voix; le nouvel autoload charge uniquement les créations originales.
 - **[VALIDÉ — CONTRÔLE NUMÉRIQUE]** `sfx_service_assets_smoke.gd` confirme les 45 WAV de familles génériques ainsi que quatre variantes distinctes pour les 20 événements de tir/impact; le validateur confirme hashes, format PCM16 mono 44,1 kHz, samples finis/non écrêtés et sons distincts. Aucun résultat numérique ne vaut revue auditive.
 - **[VALIDÉ — PAQUET]** L’export Linux/X11 ciblé `/tmp/dopamine-sfx.pck` contient les chemins SFX originaux vérifiés et exclut les chemins/recettes retirés.
