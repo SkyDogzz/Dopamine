@@ -18,23 +18,23 @@ Les skills orchestrent les générateurs locaux existants sous `game/tools/`; il
 
 Chaque asset possède un identifiant stable, une source modifiable ou recette, un export, une seed, des paramètres, une version de générateur, les hashes source/export, un rapport QA et des états distincts : `generation_status`, `validation_status`, `acceptance_status`, `human_review_status` et `integration_status`. Les exports passent en staging puis sont copiés vers les destinations exactes du manifeste seulement avec une acceptation explicite. Une commande de régénération nomme les IDs cibles, vérifie les hashes sources/exports et refuse les collisions ou écrasements non gérés.
 
-## Purge et redémarrage complet demandés
+## Purge initiale et reconstruction
 
-**Demande utilisateur :** tous les assets actuellement présents, qu’ils soient visuels ou audio, doivent être supprimés avant la nouvelle production.
+**Étape historique — 2026-10-18 :** l’utilisateur a demandé de supprimer les assets visuels et audio présents avant leur recréation. Cette purge a été exécutée avant la production décrite ci-dessous. Elle ne décrit plus l’état du dépôt.
 
 L’inventaire au 2026-10-18 relève 407 fichiers sous `game/assets` : 169 sprites, 34 icônes, 2 fonds, 4 fontes, 92 fichiers audio et 105 sources créatives. Plusieurs sont référencés par scènes, scripts et thèmes Godot. Une suppression seule casserait donc l’import et le démarrage du projet.
 
-La purge cible **tous** les visuels, sources graphiques, fontes, sons, musiques et sidecars d’import actuellement sous `game/assets`, sans conserver les anciens rendus comme secours. Les générateurs, palette de référence, contrats de gameplay, fichiers de configuration nécessaires au projet et registres d’audit/provenance sont conservés. `game/assets/README.md` devient une notice sur le répertoire vide et le workflow.
+La purge initiale a ciblé tous les visuels, sources graphiques, fontes, sons, musiques et sidecars d’import sous `game/assets`. Les générateurs, palette de référence, contrats de gameplay, fichiers de configuration et registres d’audit/provenance ont été conservés.
 
 L’application reste lançable pendant la reconstruction : une référence d’asset absente signifie « pas encore créé ». Les scènes/scripts doivent utiliser des ressources facultatives (`load` vérifié à l’exécution), des placeholders simples dessinés par code pour le visuel et le silence pour audio. Le thème garde des fontes intégrées/standards lorsque les fontes du jeu sont absentes. Les espaces visuels/audio n’ont alors aucun placeholder exporté dans `game/assets`; les marqueurs visuels temporaires sont du code runtime et non des créations importées.
 
 Avant la purge, on retire les `preload` obligatoires, les ressources de scènes/thème et les chargements audio non tolérants à l’absence. Les anciens hashes/usages sont déjà dans les registres d’audit et doivent rester consultables. Les sept fichiers `.uid`, `game/tools/__pycache__/` et le binaire LibreSprite non suivis observés dans l’arbre de travail ne sont pas des assets de `game/assets`; ils sont préservés.
 
-La purge complète a été exécutée et vérifiée dans le commit `fd1e4e6`; `game/assets/` ne contient que deux notices. L’import headless et le smoke `res://tests/empty_asset_root_smoke.gd` passent.
+La purge a été exécutée et vérifiée dans le commit `fd1e4e6`, puis suivie par la génération et l’intégration des prototypes présentées dans la section suivante. Le smoke `res://tests/empty_asset_root_smoke.gd` documente l’état intermédiaire vide et ne constitue plus le critère d’intégration courant.
 
 ## Audit et bibliothèque intégrée
 
-**[ÉTAT AU 2026-10-18 — intégration provisoire]** `docs/art/ASSET_MANIFEST.json` contient 308 IDs uniques : 92 assets pixel art, 141 entrées animation/VFX, 65 SFX et 10 musiques/stems. Les cinq skills locaux ont servi à générer les assets; les validations pixel art, animation et audio ont passé leurs rapports QA. Les sources, exports, sidecars et ressources `SpriteFrames` sont intégrés dans `game/assets/`.
+**[ÉTAT AU 2026-10-18 — intégration provisoire]** `docs/art/ASSET_MANIFEST.json` contient 308 IDs uniques : 92 assets pixel art, 141 entrées animation/VFX, 65 SFX et 10 musiques/stems. Les cinq skills locaux ont servi à générer les assets; les validations pixel art, animation et audio ont passé leurs rapports QA. Les sources, exports, sidecars et ressources `SpriteFrames` sont intégrés dans `game/assets/`. Cette intégration est un lot de prototypes accepté pour poursuivre la production; elle ne vaut pas approbation artistique ou canonique.
 
 Le propriétaire a autorisé une portée de prototypes provisoires non canoniques pour l’armure du héros, les ennemis/boss par rôle et l’arène nuit violet/bleu. Les lignes joueur bas/gauche/droite/haut, idle 3 fps et marche 8 fps ont été retenues. L’acceptation technique et l’intégration sont donc séparées de `human_review_status=pending`, qui reste en attente de revue perceptuelle et d’écoute. Les fonts, composition/mix musical et certains détails de biome/boss/éléments sont toujours explicitement provisoires.
 

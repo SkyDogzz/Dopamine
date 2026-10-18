@@ -2130,7 +2130,7 @@ Note de clôture : le blocage historique du smoke `sandbox_ui_smoke.gd` décrit 
 
 - [x] Les derniers PNG générés par `generate_original_visuals.gd` (Signal Prism, Elite Sprinter et trois placeholders de boss) et leurs sources Aseprite ont été renouvelés par `python3 game/tools/generate_neon_arcade_art.py ui roles`; l’ancien générateur est retiré. Les identités placeholder restent **[OUVERTES]** et ne deviennent pas des identités canoniques.
 - [x] Après réimport éditeur, `godot_project_import`, `catalog_icon_assets_smoke`, `original_roster_assets_smoke`, `signal_prism_asset_smoke`, `render_batching_smoke` et `survival_combat_visual_smoke` passent (6/6). La capture combat 640×360 a été régénérée et examinée.
-- [x] L’export PCK Linux/X11 final de cette tranche fait 1 594 240 octets, SHA-256 `042fecd856697aa52ec39e2a77c82c124624e88310c91a693d29c3d416ee1b49`; il contient les PNG runtime Signal Prism, Pulse Warden et Elite Sprinter et n’embarque pas les sources Aseprite ni l’ancien générateur. Le PCK est exporté, mais son exécution n’a pas été rejouée dans cette tranche.
+- [x] L’export PCK Linux/X11 final de cette tranche fait 1 594 240 octets, SHA-256 `042fecd856697aa52ec39e2a77c82c124624e88310c91a693d29c3d416ee1b49`; il contient les PNG runtime Signal Prism, Pulse Warden et Elite Sprinter et n’embarque pas les sources Aseprite ni l’ancien générateur. Le PCK est exporté; son exécution autonome n’a pas été rejouée dans cette tranche.
 - [x] Les validateurs passent : 258/258 chemins courants sans hash initial identique; 148 exports créatifs avec hash/source cohérents et 417 entrées créatives initiales migrées/retirées; 44 WAV conformes aux contrôles numériques.
 
 ## Retrait des placeholders boss sans consommateur — 2026-10-18
@@ -2283,7 +2283,16 @@ Note de clôture : le blocage historique du smoke `sandbox_ui_smoke.gd` décrit 
 
 ## Purge complète des assets et démarrage à vide (2026-10-18)
 
+> **État intermédiaire historique.** La section décrit la purge avant génération. Elle est supersédée par « Bibliothèque d’assets provisoire intégrée » plus bas; `game/assets/` n’est plus vide.
+
 - [x] À la demande du propriétaire, les exports graphiques/audio, sources créatives, fontes et sidecars `.import` existants sous `game/assets/` ont été supprimés; seules les notices README restent. Les générateurs sous `game/tools/`, la palette de référence et les registres historiques de hashes/usages sont conservés.
 - [x] Les chargements de textures/icônes/SFX/musique deviennent facultatifs. Sans asset, les icônes/sprites sont omis, le terrain emploie un fond de couleur codé et l’audio reste silencieux. Les données et la progression ne changent pas.
 - [x] `empty_asset_root_smoke.gd`, `launch_navigation_smoke.gd` et `sandbox_combat_smoke.gd` passent avec `game/assets/` dépourvu d’assets créatifs; import éditeur Godot 4.7.2 réussi.
-- [ ] Le rendu final n’est pas validé : le répertoire est volontairement vide jusqu’à recréation et acceptation de chaque asset.
+- [i] À cette étape de purge seulement, le rendu final n’était pas validé et le répertoire restait vide jusqu’à la reconstruction. État supersédé par l’intégration provisoire ci-dessous.
+
+## Bibliothèque d’assets provisoire intégrée (2026-10-18)
+
+- [x] Après la purge, les cinq skills locaux ont généré 308 assets, intégrés avec sources et métadonnées : 92 pixel art, 141 animations/VFX, 65 SFX, 10 musiques/stems. Le manifeste et les registres de provenance vérifient IDs, hashes et sources.
+- [x] QA par lot, audit Art Bible des exports runtime, import Godot 4.7.2 et ressources `SpriteFrames` chargées; suite CTest complète **119/119** réussie après enregistrement de `sfx_specific_event_smoke`. Le smoke SFX vérifie le tir et l’impact de chacune des dix armes.
+- [x] Export PCK `Linux/X11` réussi; les VFX, sons et fontes sont inclus et les sources restent exclues. La génération, les validations et la prévisualisation sont documentées dans `docs/art/ASSET_GENERATION_REPORT.json`.
+- [i] Intégration provisoire selon l’autorisation de prototypes non canoniques. La revue artistique globale, l’écoute, le rendu sur GPU physique et les choix encore ouverts du biome, des boss, des fonts et des conventions d’animation restent **[OUVERTS]**; les checks numériques ne constituent pas une acceptation perceptuelle.

@@ -98,6 +98,12 @@ if(BUILD_TESTING)
         set_tests_properties(sfx_service_assets_smoke PROPERTIES
             FIXTURES_REQUIRED godot_project_ready TIMEOUT 15)
         dopamine_isolate_windows_test_data(sfx_service_assets_smoke)
+        add_test(NAME sfx_specific_event_smoke
+            COMMAND "${DOPAMINE_GODOT_EXECUTABLE}" --headless --audio-driver Dummy
+                --path "${DOPAMINE_GAME_PROJECT_DIR}" --script res://tests/sfx_specific_event_smoke.gd)
+        set_tests_properties(sfx_specific_event_smoke PROPERTIES
+            FIXTURES_REQUIRED godot_project_ready TIMEOUT 15)
+        dopamine_isolate_windows_test_data(sfx_specific_event_smoke)
         add_test(NAME adaptive_survival_music_smoke
             COMMAND "${DOPAMINE_GODOT_EXECUTABLE}" --headless --audio-driver Dummy
                 --path "${DOPAMINE_GAME_PROJECT_DIR}" --script res://tests/adaptive_survival_music_smoke.gd)

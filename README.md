@@ -22,7 +22,7 @@
 
 ## Pipeline local d’assets
 
-Les cinq skills locaux et le workflow de reconstruction depuis un répertoire `game/assets` vide sont documentés dans [SPEC-local-asset-generation.md](docs/specs/SPEC-local-asset-generation.md). Le backlog audité des visuels, animations, SFX et musiques se trouve dans [ASSET_MANIFEST.json](docs/art/ASSET_MANIFEST.json) et se reconstruit avec `python3 game/tools/build_asset_manifest.py`; `python3 game/tools/validate_asset_manifest.py` contrôle son schéma et ses IDs. Les assets créatifs actifs ont été purgés le 2026-10-18; les anciens inventaires décrivent désormais un état historique. Une référence absente signifie que l’asset n’a pas encore été recréé. Le test `empty_asset_root_smoke.gd` vérifie cette condition.
+Les cinq skills locaux et le workflow de génération, QA et intégration ID-scopée sont documentés dans [SPEC-local-asset-generation.md](docs/specs/SPEC-local-asset-generation.md). Le manifeste de 308 assets visuels et audio se trouve dans [ASSET_MANIFEST.json](docs/art/ASSET_MANIFEST.json); `python3 game/tools/validate_asset_manifest.py` contrôle son schéma et ses IDs. Ces prototypes locaux sont intégrés dans `game/assets/`, avec sources et métadonnées. Leur revue artistique et l’écoute restent en attente; consultez le [rapport de génération](docs/art/ASSET_GENERATION_REPORT.json) et l’[inventaire](docs/art/INVENTAIRE_ASSETS_UI.md) pour l’état et les limites. La purge du 2026-10-18 est une étape historique, pas l’état courant.
 
 ## Statuts
 
