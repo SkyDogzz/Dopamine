@@ -745,6 +745,7 @@ P1 livre le Sandbox développeur et ne remplace pas cette feature produit.
   - [x] Vérifier l’idempotence des récompenses après redémarrage du service et l’arrêt/join du worker, y compris sous soumission concurrente; `progression_service_smoke.gd` et `simulation_worker` couvrent ces chemins.
 - [ ] **P9.7 — Plateformes**
   - [x] Refaire le build et l’export Linux depuis un snapshot Git propre avec un répertoire CMake vierge sur l’hôte courant; le probe release instancie `CombatSimulation` dans une session. La compilation et les limites sont consignées dans `docs/qa/TESTS.md`.
+  - [x] Revalider le staging filtré depuis `e415326` avec build Release vierge, export, extraction, dépendances, notices, GDExtension adjacente et démarrage headless sous profil neuf; archive, digest et limite de `/tmp` consignés dans `docs/qa/TESTS.md`. Cela ne ferme pas la validation sur machine distincte.
   - [x] Exclure les répertoires de développement `tests/`, `tools/` et `assets/source/` du preset d’export Linux; vérifier le démarrage de l’exécutable filtré et consigner le delta de taille dans `docs/qa/TESTS.md`.
   - [ ] Refaire build Linux et parcours sur une machine distincte; l’hôte de validation courant est virtualisé.
   - [x] Ajouter un preset Linux/X11 et une route `linux.release.x86_64` pour la GDExtension; le PCK 4.7.2 s’exporte sans warning, se charge avec le runtime Linux et l’extension debug, et les quatre checks import/Sandbox/catalogue passent. C’est une validation de pack et de chargement sur l’hôte courant, pas un export autonome.

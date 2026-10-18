@@ -1,5 +1,12 @@
 # Tests d'acceptation et validation
 
+## P9.7/P9.8 — Staging Linux filtré depuis `e415326` — 2026-10-18
+
+- [x] `tools/package_linux_staging.sh` reconstruit le snapshot Git `e415326268f0a1b9af68b6150aa19112e993f028` en Release depuis un répertoire CMake vierge : GCC 14.2.0, CMake 3.31.12, Godot 4.7.2 et `godot-cpp` épinglé à `b8530af7546a3fcae80cef2477526569fd42ffc2`. L’extension native compile, Godot importe le projet, l’export autonome Linux/X11 passe et son journal respecte les chemins de ressources attendus et les exclusions de développement.
+- [x] Le staging est extrait, ses fichiers requis sont contrôlés, `ldd` ne signale aucune dépendance manquante et l’exécutable extrait démarre headless avec un `XDG_DATA_HOME` neuf; `LD_DEBUG` confirme le chargement de la GDExtension Release adjacente.
+- [x] Archive non distribuable : `DopamineSurvivor-linux-e415326-staging.tar.gz`, 33 670 821 octets, SHA-256 `ac21ba6286448a0b111c669fcec9e8377ef7526536f8896c5caef104c30d2c0b`; elle contient l’exécutable, la GDExtension, README pré-release, notices et licences Godot/polices, sans outils/tests/sources.
+- [i] La première tentative a atteint la limite de 8 Go du `/tmp` partagé lors de la copie du binaire; la même procédure a ensuite réussi avec `TMPDIR` sur le disque de travail. Cette preuve reste limitée au même hôte Linux virtualisé et ne valide ni une machine distincte, ni l’interactivité/matériel, ni les autres plateformes.
+
 ## P9.5 — Outil de capture Linux — 2026-10-17
 
 - [x] Ajouter `tools/profile_linux.sh`, qui configure un build Debug dédié, construit l’extension/tests, lance CTest en série, puis ouvre le collecteur `PerformanceCapture`. Les répertoires XDG de CTest et de la run sont distincts et temporaires; aucun profil normal n’est utilisé.
