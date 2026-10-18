@@ -2160,5 +2160,5 @@ Note de clôture : le blocage historique du smoke `sandbox_ui_smoke.gd` décrit 
 ## États limites de l’écran équipement — 2026-10-18
 
 - [x] `equipment_panel_visual_smoke.gd` vérifie l’inventaire contenant uniquement un anneau lorsque les bottes sont sélectionnées : aucun item compatible, message explicite et aperçu sans changement. Il vérifie également la bannière de feedback d’échec.
-- [x] `survival_hub_smoke.gd` appelle le vrai `ProgressionService.set_equipped` avec un identifiant absent; le hub garde l’écran ouvert et affiche l’erreur. Les captures Xvfb/Mesa de ces états ont été inspectées et leurs hashes consignés dans `docs/art/evidence/2026-10-18/README.md`.
+- [x] `survival_hub_smoke.gd` ouvre les détails d’une vraie pièce de son profil isolé, rend l’entrée persistée obsolète puis actionne son bouton ÉQUIPER; le vrai `ProgressionService.set_equipped` échoue, le hub garde l’écran ouvert et affiche l’erreur. Les captures Xvfb/Mesa de ces états ont été inspectées et leurs hashes consignés dans `docs/art/evidence/2026-10-18/README.md`.
 - [x] CTest `godot_project_import`, `survival_hub_smoke`, `equipment_panel_visual_smoke` : **3/3**.

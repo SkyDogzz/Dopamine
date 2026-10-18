@@ -29,7 +29,7 @@ Captures 640×360 générées avec Godot 4.7.2 sous Xvfb/Mesa llvmpipe. Les smok
 | `states/revive-declined-result.png` | `83d55e0ad0953af43baf9645291c4f05d0381adbfdb37aecf3d5d193c756ca2e` | Écran RUN OVER après refus; indique l’échec de sauvegarde du run synthétique de durée nulle dans le profil de smoke. |
 | `states/run-stat-detail.png` | `ffb25b728ba1449e7f473fd9c5f3168ff7dcce4c05eebf59bcf7901b1f294a77` | Détail Tab des statistiques avec focus sur fermeture, contributions colorées et liste défilante. |
 | `states/equipment-no-compatible.png` | `d1bf947ad781772ef3763c0059cdbb82ba82e30080bc9820eb40f75d17dae156` | Inventaire non vide mais sans pièce compatible avec le slot bottes; état vide explicite et aperçu « no change ». |
-| `states/equipment-action-failed.png` | `50d4dd8d0162d0a2488e33af5550a4b277e79ba31191905bb84c41056ab2a44f` | L’action réelle du hub échoue sur un identifiant d’équipement absent; le panneau reste ouvert et la bannière explique l’échec. |
+| `states/equipment-action-failed.png` | `e3bc149c79aec65f604461fc83d5e54c37d4519f8420f0f15f0e15aaef85604b` | L’action ÉQUIPER d’une pièce devenue obsolète échoue via le vrai service; le panneau reste ouvert avec la pièce affichée et une bannière explicite. |
 
 Les captures ont été régénérées après import des exports graphiques renouvelés le 2026-10-18 et inspectées. La planche catalogue, le hub et le combat ont changé de hash; les autres captures sont identiques. L’utilisateur a confirmé que le texte courant et les labels pixel du hub et de l’équipement sont lisibles à 640×360. Ces images valident le rendu virtualisé ciblé, pas le GPU matériel ni les contrôles physiques. La revue audio en contexte reste **[OUVERTE]** à la demande de l’utilisateur de poursuivre sans écoute.
 

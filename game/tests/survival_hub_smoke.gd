@@ -17,6 +17,15 @@ func _run() -> void:
 		DirAccess.remove_absolute(directory.path_join(file_name))
 	var save_service = load("res://scripts/save_service.gd").new(directory)
 	var progression = load("res://scripts/progression_service.gd").new(save_service, "0")
+	var equipment_fixture: Dictionary = progression.load_profile()["profile"]
+	equipment_fixture["equipment_inventory"] = [{
+		"instance_id": "hub-stale-equipment", "slot": "helmet", "rarity": "normal",
+		"stat_lines": [{"stat_id": "max_hp", "roll_percentile": 0.5, "enhancement_level": 0, "fail_streak": 0}],
+		"equipped": false, "unique_effect_id": "", "source_mode": "survival",
+	}]
+	if not save_service.save_slot("0", equipment_fixture):
+		_fail("Could not seed the isolated equipment failure fixture")
+		return
 	var hub := load("res://scenes/survival_hub.tscn").instantiate() as Control
 	hub.progression_service = progression
 	root.add_child(hub)
@@ -183,7 +192,24 @@ func _run() -> void:
 		return
 	equipment_button.pressed.emit()
 	await process_frame
-	hub._set_equipment_state("missing-equipment-id", true)
+	var management_button: Button = equipment_panel.get_node(
+		"Panel/Content/Columns/RightColumn/ItemHeader/ManagementButton"
+	)
+	management_button.pressed.emit()
+	await process_frame
+	var stale_equipment_row: Control = equipment_panel.get_node(
+		"Panel/Content/Columns/RightColumn/Scroll/Items/Equipment_hub-stale-equipment"
+	)
+	var stale_equipment_action := stale_equipment_row.find_child("EquipmentStateAction", true, false) as Button
+	if stale_equipment_action == null:
+		_fail("The temporary equipment item should expose its existing equip action")
+		return
+	var changed_profile: Dictionary = progression.load_profile()["profile"]
+	changed_profile["equipment_inventory"] = []
+	if not save_service.save_slot("0", changed_profile):
+		_fail("Could not stale the displayed equipment fixture")
+		return
+	stale_equipment_action.pressed.emit()
 	await process_frame
 	var equipment_feedback: Label = equipment_panel.get_node("Panel/Content/Feedback")
 	if not equipment_panel.visible or not equipment_feedback.visible or \
