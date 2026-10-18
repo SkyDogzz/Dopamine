@@ -148,7 +148,7 @@ les projectiles et les objets ramassables.
 [PROPOSÉ] Les biomes changent l'ambiance et les couleurs de fond tout en
 conservant les règles communes de lisibilité et la palette de référence.
 [À CONFIRMER] Liste, ordre et identité de chaque biome.
-[VALIDÉ] Résolution logique 640 × 360, format 16:9.
+[VALIDÉ — EXTENSION CRÉATEUR 2026-10-18] Résolution logique 1280 × 720, format 16:9. Cette décision remplace la résolution 640 × 360 précédemment validée.
 [À CONFIRMER] Mise en page responsive du menu titre.
 [À CONFIRMER] Animation exacte de la skyline et limites des clignotements.
 
@@ -205,8 +205,8 @@ composition additive, mais ne doivent pas masquer les télégraphes de danger.
 pour désactiver les secousses de caméra.
 [PROPOSÉ] Tester la lisibilité sur une scène de combat chargée, pas seulement
 sur des assets isolés ou des captures d'écran de menus.
-[VALIDÉ] Résolution logique du jeu : 640 × 360 pixels (16:9).
-[PROPOSÉ] Affichage 1920 × 1080 avec mise à l’échelle entière ×3, filtre nearest.
+[VALIDÉ — EXTENSION CRÉATEUR 2026-10-18] Résolution logique du jeu : 1280 × 720 pixels (16:9), en remplacement de 640 × 360.
+[PROPOSÉ] Affichage 3840 × 2160 à l’échelle entière ×3; affichage 1920 × 1080 avec filtre nearest à l’échelle ×1,5, à vérifier visuellement.
 [À CONFIRMER] Zoom caméra et politique pixel-perfect lors des mouvements sous-pixel.
 [À CONFIRMER] Plateformes cibles et budgets de performances.
 
@@ -255,7 +255,7 @@ Aucune contradiction bloquante n'est identifiée parmi les choix explicites.
 10. QUESTIONS RESTANTES — ORDRE RECOMMANDÉ
 ======================================================================
 PRIORITÉ HAUTE (avant génération en série)
-1. [RÉSOLU] Résolution logique : 640 × 360 (16:9).
+1. [RÉSOLU — REMPLACÉ 2026-10-18] Résolution logique : 1280 × 720 (16:9).
 2. [RÉSOLU] Palette maître : 32 codes HEX fixés en section 12.
 3. Quel est le modèle visuel exact du joueur : silhouette, vêtements, visage,
    orientations et références ?
@@ -323,7 +323,7 @@ RÈGLES :
 - Les correspondances élément -> couleur restent [À CONFIRMER].
 
 12.2 RÉSOLUTION LOGIQUE [VALIDÉ]
-- Surface de rendu logique : 640 × 360 pixels, format 16:9.
+- Surface de rendu logique : 1280 × 720 pixels, format 16:9 (extension créateur du 2026-10-18).
 - Exemple de sortie : 1920 × 1080 à l'échelle entière ×3.
 - Filtrage nearest, gestion des écrans non 16:9 et zoom caméra :
   [PROPOSÉ / À CONFIRMER selon le paramètre].
@@ -343,7 +343,7 @@ RÈGLES :
 12.4 VÉRIFICATION DES CONTRADICTIONS
 - Palette maître fixe vs exceptions documentées : COMPATIBLE.
 - Pixel art strict vs VFX modernes : COMPATIBLE si les VFX restent séparés.
-- Résolution 640×360 vs sprites 32×32 : COMPATIBLE ; la lisibilité
+- Résolution 1280×720 vs sprites 32×32 : COMPATIBLE ; la lisibilité
   dépendra du zoom, de la caméra et de la densité d'ennemis.
 - Un fichier par animation vs grille lignes/colonnes : COMPATIBLE.
 - Glow VFX uniquement vs survol de bouton lumineux : COMPATIBLE

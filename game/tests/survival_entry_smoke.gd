@@ -61,8 +61,8 @@ func _run() -> void:
 		return
 	if "--capture" in OS.get_cmdline_user_args():
 		var viewport_size := root.get_visible_rect().size
-		if viewport_size != Vector2(640, 360):
-			_fail("Expected a 640x360 logical viewport for the starting loadout capture, got %s" % viewport_size)
+		if viewport_size != Vector2(1280, 720):
+			_fail("Expected a 1280x720 logical viewport for the starting loadout capture, got %s" % viewport_size)
 			return
 		await RenderingServer.frame_post_draw
 		var capture_path := ProjectSettings.globalize_path("res://../docs/art/evidence/2026-10-18/states/starting-loadout.png")

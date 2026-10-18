@@ -1,9 +1,9 @@
 extends RefCounted
 
-# The camera shows a 640x360 logical viewport centered on the player. Keeping
-# every weapon's targeting radius within the 180-unit half-height guarantees
+# The camera shows a 1280x720 logical viewport centered on the player. Keeping
+# every weapon's targeting radius within the 360-unit half-height guarantees
 # selected targets stay inside the visible rectangle in every direction.
-const VISIBLE_TARGET_RADIUS := 180.0
+const VISIBLE_TARGET_RADIUS := 360.0
 const BASE_MAX_WEAPON_RANGE := 620.0
 const WEAPON_RANGE_SCALE := VISIBLE_TARGET_RADIUS / BASE_MAX_WEAPON_RANGE
 

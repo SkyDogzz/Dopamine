@@ -84,8 +84,8 @@ func _run() -> void:
 	await process_frame
 	await RenderingServer.frame_post_draw
 	var image: Image = root.get_texture().get_image()
-	if image.is_empty() or image.get_width() != 640 or image.get_height() != 360:
-		_fail("Survival combat render is not 640x360")
+	if image.is_empty() or image.get_width() != 1280 or image.get_height() != 720:
+		_fail("Survival combat render is not 1280x720")
 		return
 	if image.save_png(SCREENSHOT) != OK:
 		_fail("Could not save Survival combat visual capture")

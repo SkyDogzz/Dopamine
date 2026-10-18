@@ -197,7 +197,7 @@ Le HUD Survival expose un `RunStatHub` compact à gauche. Tab ouvre son détail 
 
 ## Règles de propriété
 
-La fenêtre logique Survival mesure 640×360 et la caméra reste centrée sur le joueur. Les portées de ciblage des dix armes appliquent le même facteur `180 / 620 = 0,2903`, soit une réduction d’environ 71 % : la portée initiale maximale de 620 unités devient 180 unités. Le rayon de 180 unités correspond à la moitié de la hauteur visible et garantit une cible à l’écran quelle que soit sa direction. Les bonus de niveau/zone sont pris en compte et plafonnés à ce rayon; les cibles secondaires de Prism et les rebonds de foudre sont eux aussi gardés dans le cercle visible. Ces chiffres de portée restent **[PROPOSÉS]** et leur calibrage reste **[OUVERT]**.
+Depuis l’extension validée le 2026-10-18, la fenêtre logique Survival mesure 1280×720 et la caméra reste centrée sur le joueur. Les portées de ciblage des dix armes appliquent le même facteur `360 / 620 = 0,5806`, soit une réduction d’environ 42 % : la portée initiale maximale de 620 unités devient 360 unités. Le rayon de 360 unités correspond à la moitié de la hauteur visible et garantit une cible dans le cercle central affiché quelle que soit sa direction. Les bonus de niveau/zone sont pris en compte et plafonnés à ce rayon; les cibles secondaires de Prism et les rebonds de foudre sont eux aussi gardés dans ce cercle. Ces chiffres de portée restent **[PROPOSÉS]** et leur calibrage reste **[OUVERT]**.
 
 - Simulation : autorité sur HP/positions des ennemis et impacts de projectiles.
 - Godot : autorité sur menus, progression permanente, rendu et entrées.

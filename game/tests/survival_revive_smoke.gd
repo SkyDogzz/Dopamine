@@ -207,8 +207,8 @@ func _fail(message: String) -> void:
 	quit(1)
 
 func _capture_ui_state(session: Node2D, file_name: String) -> bool:
-	if root.get_visible_rect().size != Vector2(640, 360):
-		_fail("Expected a 640x360 logical viewport for %s" % file_name)
+	if root.get_visible_rect().size != Vector2(1280, 720):
+		_fail("Expected a 1280x720 logical viewport for %s" % file_name)
 		return false
 	var was_processing := session.is_processing()
 	var was_physics_processing := session.is_physics_processing()

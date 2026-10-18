@@ -21,6 +21,10 @@ func _initialize() -> void:
 	call_deferred("_run")
 
 func _run() -> void:
+	if int(ProjectSettings.get_setting("display/window/size/viewport_width")) != 1280 or \
+		int(ProjectSettings.get_setting("display/window/size/viewport_height")) != 720:
+		_fail("The project logical viewport must be configured at 1280x720")
+		return
 	for size in [Vector2i(640, 360), Vector2i(1280, 720), Vector2i(1920, 1080)]:
 		for key in SCENES:
 			var viewport := SubViewport.new()
@@ -57,7 +61,7 @@ func _run() -> void:
 			scene.free()
 			viewport.queue_free()
 			await process_frame
-	print("All active UI controls fit 640x360, 1280x720 and 1920x1080 viewports")
+	print("Project logical viewport is 1280x720; active UI controls fit 640x360, 1280x720 and 1920x1080 test viewports")
 	quit()
 
 func _visible_controls(root_control: Node) -> Array[Control]:

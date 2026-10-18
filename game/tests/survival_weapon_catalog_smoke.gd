@@ -848,7 +848,7 @@ func _prism_laser_level_progression() -> bool:
 		var expected_damage: float = base_damage * (1.2 if level >= 2 else 1.0) * (1.25 if level >= 5 else 1.0)
 		var expected_speed: float = session.prism_laser_projectile_speed
 		var range_multiplier: float = 1.2 if level >= 3 else 1.0
-		var expected_lifetime: float = session.prism_laser_range * (180.0 / 620.0) * range_multiplier / expected_speed
+		var expected_lifetime: float = session.prism_laser_range * (360.0 / 620.0) * range_multiplier / expected_speed
 		if not is_equal_approx(float(projectile["damage"]), expected_damage) or \
 			absf(speed - expected_speed) > 0.1 or absf(float(projectile["remaining_seconds"]) - expected_lifetime) > 0.1:
 			session.queue_free()

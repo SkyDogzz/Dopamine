@@ -1,13 +1,13 @@
 extends Control
 
-const LOGICAL_SIZE := Vector2(640.0, 360.0)
+const LOGICAL_SIZE := Vector2(1280.0, 720.0)
 const DIM_COLOR := Color("#10152B", 0.82)
 const CYAN_LIGHT := Color("#37E8F5", 0.48)
 const AMBER_LIGHT := Color("#FFD447", 0.48)
 const SIGNS := [
-	{"rect": Rect2(76.0, 119.0, 6.0, 33.0), "period": 1.7, "offset": 0.0, "color": AMBER_LIGHT},
-	{"rect": Rect2(544.0, 131.0, 6.0, 33.0), "period": 2.2, "offset": 0.8, "color": AMBER_LIGHT},
-	{"rect": Rect2(616.0, 10.0, 3.0, 42.0), "period": 1.4, "offset": 0.35, "color": CYAN_LIGHT},
+	{"rect": Rect2(152.0, 238.0, 12.0, 66.0), "period": 1.7, "offset": 0.0, "color": AMBER_LIGHT},
+	{"rect": Rect2(1088.0, 262.0, 12.0, 66.0), "period": 2.2, "offset": 0.8, "color": AMBER_LIGHT},
+	{"rect": Rect2(1232.0, 20.0, 6.0, 84.0), "period": 1.4, "offset": 0.35, "color": CYAN_LIGHT},
 ]
 
 var _elapsed := 0.0

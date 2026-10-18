@@ -45,7 +45,7 @@ Toutes les interfaces existantes doivent également être refaites pour applique
 
 Les contraintes validées de la Bible gouvernent la production. Les décisions encore **[OUVERTES]** — par exemple l’ordre des directions sur les feuilles, les frames d’animation des ennemis, le biome canonique et les paramètres VFX — restent visibles et ne deviennent pas des faits implicites. Le PNG et sa source Aseprite sont le format de livraison validé pour les sprites.
 
-Le viewport logique 640×360 reste **[VALIDÉ]**. Son activation fait partie de la mise en œuvre; chaque interface doit être adaptée et vérifiée à cette taille ainsi qu’en agrandissement. Les comportements de jeu, les fonctionnalités Succès/Bestiaire non implémentées et le Sandbox Lab joueur P8 restent hors de cette extension.
+Le viewport logique 1280×720 est **[VALIDÉ — EXTENSION CRÉATEUR 2026-10-18]** et remplace l’ancienne résolution logique 640×360. Chaque interface doit être adaptée et vérifiée à la taille native ainsi qu’aux résolutions d’affichage prises en charge. Les comportements de jeu, les fonctionnalités Succès/Bestiaire non implémentées et le Sandbox Lab joueur P8 restent hors de cette extension.
 
 L’inventaire de référence est [`docs/art/INVENTAIRE_ASSETS_UI.md`](../art/INVENTAIRE_ASSETS_UI.md).
 
