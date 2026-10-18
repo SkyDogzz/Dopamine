@@ -6,7 +6,7 @@ Remplacer tous les effets sonores et la musique par une direction arcade synthwa
 
 ## Stack et emplacement
 
-Godot 4.7.2 audio buses/players; runtime sous `game/assets/audio/`; orchestration actuelle `game/scripts/adaptive_survival_music.gd`; appels SFX à inventorier. Le format source/audio et le workflow d’enregistrement ou synthèse restent ouverts.
+Godot 4.7.2 audio buses/players; runtime sous `game/assets/audio/`; orchestration actuelle `game/scripts/adaptive_survival_music.gd`; les 38 SFX sont inventoriés et mappés aux 19 familles existantes. La production par synthèse procédurale originale est **[VALIDÉE]**; les formats finaux source/runtime, l’arrangement et la calibration de mix restent ouverts ou proposés selon les sections ci-dessous.
 
 ### Décisions validées pour cette initiative (2026-10-18)
 
