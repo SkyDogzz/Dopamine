@@ -3884,7 +3884,7 @@
       "qa_report_path": "build/assets/candidates/misc-animation/qa-report.json",
       "generation_status": "candidate",
       "validation_status": "passed",
-      "human_review_status": "pending",
+      "human_review_status": "approved",
       "integration_status": "integrated",
       "blockers": [
         "weapon level/evolution animation timing not specified"
@@ -3892,8 +3892,8 @@
       "requirement_source": "GDD v1.6 + Godot runtime contracts",
       "candidate_export_path": "build/assets/candidates/misc-animation/sprites/animation/weapon_lightning_conductor_attack.png",
       "candidate_source_path": "build/assets/candidates/misc-animation/source/animation/weapon_lightning_conductor_attack.aseprite",
-      "acceptance_status": "accepted_for_provisional_production",
-      "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
+      "acceptance_status": "accepted",
+      "acceptance_basis": "Owner explicitly approved all 20 base and evolved weapon attack animations in chat on 2026-10-18.",
       "godot_animation_resource": "game/assets/sprites/animation/lightning_conductor_attack.tres",
       "integrated_path": "game/assets/sprites/animation/lightning_conductor_attack.png",
       "integrated_source_path": "game/assets/source/animation/weapon_lightning_conductor_attack.aseprite"
@@ -3972,7 +3972,7 @@
       "qa_report_path": "build/assets/candidates/evolved-weapon-animation/qa-report.json",
       "generation_status": "candidate",
       "validation_status": "passed",
-      "human_review_status": "pending",
+      "human_review_status": "approved",
       "integration_status": "integrated",
       "blockers": [
         "weapon level/evolution animation timing not specified"
@@ -3980,8 +3980,8 @@
       "requirement_source": "GDD v1.6 + Godot runtime contracts",
       "candidate_export_path": "build/assets/candidates/evolved-weapon-animation/sprites/animation/weapon_infinite_circuit_attack.png",
       "candidate_source_path": "build/assets/candidates/evolved-weapon-animation/source/animation/weapon_infinite_circuit_attack.aseprite",
-      "acceptance_status": "accepted_for_provisional_production",
-      "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
+      "acceptance_status": "accepted",
+      "acceptance_basis": "Owner explicitly approved all 20 base and evolved weapon attack animations in chat on 2026-10-18.",
       "godot_animation_resource": "game/assets/sprites/animation/infinite_circuit_attack.tres",
       "integrated_path": "game/assets/sprites/animation/infinite_circuit_attack.png",
       "integrated_source_path": "game/assets/source/animation/weapon_infinite_circuit_attack.aseprite"
@@ -4146,7 +4146,7 @@
       "qa_report_path": "build/assets/candidates/misc-animation/qa-report.json",
       "generation_status": "candidate",
       "validation_status": "passed",
-      "human_review_status": "pending",
+      "human_review_status": "approved",
       "integration_status": "integrated",
       "blockers": [
         "weapon level/evolution animation timing not specified"
@@ -4154,8 +4154,8 @@
       "requirement_source": "GDD v1.6 + Godot runtime contracts",
       "candidate_export_path": "build/assets/candidates/misc-animation/sprites/animation/weapon_inferno_sprayer_attack.png",
       "candidate_source_path": "build/assets/candidates/misc-animation/source/animation/weapon_inferno_sprayer_attack.aseprite",
-      "acceptance_status": "accepted_for_provisional_production",
-      "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
+      "acceptance_status": "accepted",
+      "acceptance_basis": "Owner explicitly approved all 20 base and evolved weapon attack animations in chat on 2026-10-18.",
       "godot_animation_resource": "game/assets/sprites/animation/inferno_sprayer_attack.tres",
       "integrated_path": "game/assets/sprites/animation/inferno_sprayer_attack.png",
       "integrated_source_path": "game/assets/source/animation/weapon_inferno_sprayer_attack.aseprite"
@@ -4234,7 +4234,7 @@
       "qa_report_path": "build/assets/candidates/evolved-weapon-animation/qa-report.json",
       "generation_status": "candidate",
       "validation_status": "passed",
-      "human_review_status": "pending",
+      "human_review_status": "approved",
       "integration_status": "integrated",
       "blockers": [
         "weapon level/evolution animation timing not specified"
@@ -4242,8 +4242,8 @@
       "requirement_source": "GDD v1.6 + Godot runtime contracts",
       "candidate_export_path": "build/assets/candidates/evolved-weapon-animation/sprites/animation/weapon_wildfire_attack.png",
       "candidate_source_path": "build/assets/candidates/evolved-weapon-animation/source/animation/weapon_wildfire_attack.aseprite",
-      "acceptance_status": "accepted_for_provisional_production",
-      "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
+      "acceptance_status": "accepted",
+      "acceptance_basis": "Owner explicitly approved all 20 base and evolved weapon attack animations in chat on 2026-10-18.",
       "godot_animation_resource": "game/assets/sprites/animation/wildfire_attack.tres",
       "integrated_path": "game/assets/sprites/animation/wildfire_attack.png",
       "integrated_source_path": "game/assets/source/animation/weapon_wildfire_attack.aseprite"
@@ -4408,7 +4408,7 @@
       "qa_report_path": "build/assets/candidates/misc-animation/qa-report.json",
       "generation_status": "candidate",
       "validation_status": "passed",
-      "human_review_status": "pending",
+      "human_review_status": "approved",
       "integration_status": "integrated",
       "blockers": [
         "weapon level/evolution animation timing not specified"
@@ -4416,8 +4416,8 @@
       "requirement_source": "GDD v1.6 + Godot runtime contracts",
       "candidate_export_path": "build/assets/candidates/misc-animation/sprites/animation/weapon_crimson_daggers_attack.png",
       "candidate_source_path": "build/assets/candidates/misc-animation/source/animation/weapon_crimson_daggers_attack.aseprite",
-      "acceptance_status": "accepted_for_provisional_production",
-      "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
+      "acceptance_status": "accepted",
+      "acceptance_basis": "Owner explicitly approved all 20 base and evolved weapon attack animations in chat on 2026-10-18.",
       "godot_animation_resource": "game/assets/sprites/animation/crimson_daggers_attack.tres",
       "integrated_path": "game/assets/sprites/animation/crimson_daggers_attack.png",
       "integrated_source_path": "game/assets/source/animation/weapon_crimson_daggers_attack.aseprite"
@@ -4496,7 +4496,7 @@
       "qa_report_path": "build/assets/candidates/evolved-weapon-animation/qa-report.json",
       "generation_status": "candidate",
       "validation_status": "passed",
-      "human_review_status": "pending",
+      "human_review_status": "approved",
       "integration_status": "integrated",
       "blockers": [
         "weapon level/evolution animation timing not specified"
@@ -4504,8 +4504,8 @@
       "requirement_source": "GDD v1.6 + Godot runtime contracts",
       "candidate_export_path": "build/assets/candidates/evolved-weapon-animation/sprites/animation/weapon_bloodstorm_attack.png",
       "candidate_source_path": "build/assets/candidates/evolved-weapon-animation/source/animation/weapon_bloodstorm_attack.aseprite",
-      "acceptance_status": "accepted_for_provisional_production",
-      "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
+      "acceptance_status": "accepted",
+      "acceptance_basis": "Owner explicitly approved all 20 base and evolved weapon attack animations in chat on 2026-10-18.",
       "godot_animation_resource": "game/assets/sprites/animation/bloodstorm_attack.tres",
       "integrated_path": "game/assets/sprites/animation/bloodstorm_attack.png",
       "integrated_source_path": "game/assets/source/animation/weapon_bloodstorm_attack.aseprite"
@@ -4670,7 +4670,7 @@
       "qa_report_path": "build/assets/candidates/misc-animation/qa-report.json",
       "generation_status": "candidate",
       "validation_status": "passed",
-      "human_review_status": "pending",
+      "human_review_status": "approved",
       "integration_status": "integrated",
       "blockers": [
         "weapon level/evolution animation timing not specified"
@@ -4678,8 +4678,8 @@
       "requirement_source": "GDD v1.6 + Godot runtime contracts",
       "candidate_export_path": "build/assets/candidates/misc-animation/sprites/animation/weapon_minigun_attack.png",
       "candidate_source_path": "build/assets/candidates/misc-animation/source/animation/weapon_minigun_attack.aseprite",
-      "acceptance_status": "accepted_for_provisional_production",
-      "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
+      "acceptance_status": "accepted",
+      "acceptance_basis": "Owner explicitly approved all 20 base and evolved weapon attack animations in chat on 2026-10-18.",
       "godot_animation_resource": "game/assets/sprites/animation/minigun_attack.tres",
       "integrated_path": "game/assets/sprites/animation/minigun_attack.png",
       "integrated_source_path": "game/assets/source/animation/weapon_minigun_attack.aseprite"
@@ -4758,7 +4758,7 @@
       "qa_report_path": "build/assets/candidates/evolved-weapon-animation/qa-report.json",
       "generation_status": "candidate",
       "validation_status": "passed",
-      "human_review_status": "pending",
+      "human_review_status": "approved",
       "integration_status": "integrated",
       "blockers": [
         "weapon level/evolution animation timing not specified"
@@ -4766,8 +4766,8 @@
       "requirement_source": "GDD v1.6 + Godot runtime contracts",
       "candidate_export_path": "build/assets/candidates/evolved-weapon-animation/sprites/animation/weapon_redline_attack.png",
       "candidate_source_path": "build/assets/candidates/evolved-weapon-animation/source/animation/weapon_redline_attack.aseprite",
-      "acceptance_status": "accepted_for_provisional_production",
-      "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
+      "acceptance_status": "accepted",
+      "acceptance_basis": "Owner explicitly approved all 20 base and evolved weapon attack animations in chat on 2026-10-18.",
       "godot_animation_resource": "game/assets/sprites/animation/redline_attack.tres",
       "integrated_path": "game/assets/sprites/animation/redline_attack.png",
       "integrated_source_path": "game/assets/source/animation/weapon_redline_attack.aseprite"
@@ -4932,7 +4932,7 @@
       "qa_report_path": "build/assets/candidates/misc-animation/qa-report.json",
       "generation_status": "candidate",
       "validation_status": "passed",
-      "human_review_status": "pending",
+      "human_review_status": "approved",
       "integration_status": "integrated",
       "blockers": [
         "weapon level/evolution animation timing not specified"
@@ -4940,8 +4940,8 @@
       "requirement_source": "GDD v1.6 + Godot runtime contracts",
       "candidate_export_path": "build/assets/candidates/misc-animation/sprites/animation/weapon_toxic_cloud_attack.png",
       "candidate_source_path": "build/assets/candidates/misc-animation/source/animation/weapon_toxic_cloud_attack.aseprite",
-      "acceptance_status": "accepted_for_provisional_production",
-      "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
+      "acceptance_status": "accepted",
+      "acceptance_basis": "Owner explicitly approved all 20 base and evolved weapon attack animations in chat on 2026-10-18.",
       "godot_animation_resource": "game/assets/sprites/animation/toxic_cloud_attack.tres",
       "integrated_path": "game/assets/sprites/animation/toxic_cloud_attack.png",
       "integrated_source_path": "game/assets/source/animation/weapon_toxic_cloud_attack.aseprite"
@@ -5020,7 +5020,7 @@
       "qa_report_path": "build/assets/candidates/evolved-weapon-animation/qa-report.json",
       "generation_status": "candidate",
       "validation_status": "passed",
-      "human_review_status": "pending",
+      "human_review_status": "approved",
       "integration_status": "integrated",
       "blockers": [
         "weapon level/evolution animation timing not specified"
@@ -5028,8 +5028,8 @@
       "requirement_source": "GDD v1.6 + Godot runtime contracts",
       "candidate_export_path": "build/assets/candidates/evolved-weapon-animation/sprites/animation/weapon_pandemic_attack.png",
       "candidate_source_path": "build/assets/candidates/evolved-weapon-animation/source/animation/weapon_pandemic_attack.aseprite",
-      "acceptance_status": "accepted_for_provisional_production",
-      "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
+      "acceptance_status": "accepted",
+      "acceptance_basis": "Owner explicitly approved all 20 base and evolved weapon attack animations in chat on 2026-10-18.",
       "godot_animation_resource": "game/assets/sprites/animation/pandemic_attack.tres",
       "integrated_path": "game/assets/sprites/animation/pandemic_attack.png",
       "integrated_source_path": "game/assets/source/animation/weapon_pandemic_attack.aseprite"
@@ -5194,7 +5194,7 @@
       "qa_report_path": "build/assets/candidates/misc-animation/qa-report.json",
       "generation_status": "candidate",
       "validation_status": "passed",
-      "human_review_status": "pending",
+      "human_review_status": "approved",
       "integration_status": "integrated",
       "blockers": [
         "weapon level/evolution animation timing not specified"
@@ -5202,8 +5202,8 @@
       "requirement_source": "GDD v1.6 + Godot runtime contracts",
       "candidate_export_path": "build/assets/candidates/misc-animation/sprites/animation/weapon_sawblades_attack.png",
       "candidate_source_path": "build/assets/candidates/misc-animation/source/animation/weapon_sawblades_attack.aseprite",
-      "acceptance_status": "accepted_for_provisional_production",
-      "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
+      "acceptance_status": "accepted",
+      "acceptance_basis": "Owner explicitly approved all 20 base and evolved weapon attack animations in chat on 2026-10-18.",
       "godot_animation_resource": "game/assets/sprites/animation/sawblades_attack.tres",
       "integrated_path": "game/assets/sprites/animation/sawblades_attack.png",
       "integrated_source_path": "game/assets/source/animation/weapon_sawblades_attack.aseprite"
@@ -5282,7 +5282,7 @@
       "qa_report_path": "build/assets/candidates/evolved-weapon-animation/qa-report.json",
       "generation_status": "candidate",
       "validation_status": "passed",
-      "human_review_status": "pending",
+      "human_review_status": "approved",
       "integration_status": "integrated",
       "blockers": [
         "weapon level/evolution animation timing not specified"
@@ -5290,8 +5290,8 @@
       "requirement_source": "GDD v1.6 + Godot runtime contracts",
       "candidate_export_path": "build/assets/candidates/evolved-weapon-animation/sprites/animation/weapon_razorstorm_attack.png",
       "candidate_source_path": "build/assets/candidates/evolved-weapon-animation/source/animation/weapon_razorstorm_attack.aseprite",
-      "acceptance_status": "accepted_for_provisional_production",
-      "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
+      "acceptance_status": "accepted",
+      "acceptance_basis": "Owner explicitly approved all 20 base and evolved weapon attack animations in chat on 2026-10-18.",
       "godot_animation_resource": "game/assets/sprites/animation/razorstorm_attack.tres",
       "integrated_path": "game/assets/sprites/animation/razorstorm_attack.png",
       "integrated_source_path": "game/assets/source/animation/weapon_razorstorm_attack.aseprite"
@@ -5456,7 +5456,7 @@
       "qa_report_path": "build/assets/candidates/misc-animation/qa-report.json",
       "generation_status": "candidate",
       "validation_status": "passed",
-      "human_review_status": "pending",
+      "human_review_status": "approved",
       "integration_status": "integrated",
       "blockers": [
         "weapon level/evolution animation timing not specified"
@@ -5464,8 +5464,8 @@
       "requirement_source": "GDD v1.6 + Godot runtime contracts",
       "candidate_export_path": "build/assets/candidates/misc-animation/sprites/animation/weapon_meteor_staff_attack.png",
       "candidate_source_path": "build/assets/candidates/misc-animation/source/animation/weapon_meteor_staff_attack.aseprite",
-      "acceptance_status": "accepted_for_provisional_production",
-      "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
+      "acceptance_status": "accepted",
+      "acceptance_basis": "Owner explicitly approved all 20 base and evolved weapon attack animations in chat on 2026-10-18.",
       "godot_animation_resource": "game/assets/sprites/animation/meteor_staff_attack.tres",
       "integrated_path": "game/assets/sprites/animation/meteor_staff_attack.png",
       "integrated_source_path": "game/assets/source/animation/weapon_meteor_staff_attack.aseprite"
@@ -5544,7 +5544,7 @@
       "qa_report_path": "build/assets/candidates/evolved-weapon-animation/qa-report.json",
       "generation_status": "candidate",
       "validation_status": "passed",
-      "human_review_status": "pending",
+      "human_review_status": "approved",
       "integration_status": "integrated",
       "blockers": [
         "weapon level/evolution animation timing not specified"
@@ -5552,8 +5552,8 @@
       "requirement_source": "GDD v1.6 + Godot runtime contracts",
       "candidate_export_path": "build/assets/candidates/evolved-weapon-animation/sprites/animation/weapon_starfall_attack.png",
       "candidate_source_path": "build/assets/candidates/evolved-weapon-animation/source/animation/weapon_starfall_attack.aseprite",
-      "acceptance_status": "accepted_for_provisional_production",
-      "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
+      "acceptance_status": "accepted",
+      "acceptance_basis": "Owner explicitly approved all 20 base and evolved weapon attack animations in chat on 2026-10-18.",
       "godot_animation_resource": "game/assets/sprites/animation/starfall_attack.tres",
       "integrated_path": "game/assets/sprites/animation/starfall_attack.png",
       "integrated_source_path": "game/assets/source/animation/weapon_starfall_attack.aseprite"
@@ -5718,7 +5718,7 @@
       "qa_report_path": "build/assets/candidates/misc-animation/qa-report.json",
       "generation_status": "candidate",
       "validation_status": "passed",
-      "human_review_status": "pending",
+      "human_review_status": "approved",
       "integration_status": "integrated",
       "blockers": [
         "weapon level/evolution animation timing not specified"
@@ -5726,8 +5726,8 @@
       "requirement_source": "GDD v1.6 + Godot runtime contracts",
       "candidate_export_path": "build/assets/candidates/misc-animation/sprites/animation/weapon_prism_laser_attack.png",
       "candidate_source_path": "build/assets/candidates/misc-animation/source/animation/weapon_prism_laser_attack.aseprite",
-      "acceptance_status": "accepted_for_provisional_production",
-      "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
+      "acceptance_status": "accepted",
+      "acceptance_basis": "Owner explicitly approved all 20 base and evolved weapon attack animations in chat on 2026-10-18.",
       "godot_animation_resource": "game/assets/sprites/animation/prism_laser_attack.tres",
       "integrated_path": "game/assets/sprites/animation/prism_laser_attack.png",
       "integrated_source_path": "game/assets/source/animation/weapon_prism_laser_attack.aseprite"
@@ -5806,7 +5806,7 @@
       "qa_report_path": "build/assets/candidates/evolved-weapon-animation/qa-report.json",
       "generation_status": "candidate",
       "validation_status": "passed",
-      "human_review_status": "pending",
+      "human_review_status": "approved",
       "integration_status": "integrated",
       "blockers": [
         "weapon level/evolution animation timing not specified"
@@ -5814,8 +5814,8 @@
       "requirement_source": "GDD v1.6 + Godot runtime contracts",
       "candidate_export_path": "build/assets/candidates/evolved-weapon-animation/sprites/animation/weapon_spectrum_collapse_attack.png",
       "candidate_source_path": "build/assets/candidates/evolved-weapon-animation/source/animation/weapon_spectrum_collapse_attack.aseprite",
-      "acceptance_status": "accepted_for_provisional_production",
-      "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
+      "acceptance_status": "accepted",
+      "acceptance_basis": "Owner explicitly approved all 20 base and evolved weapon attack animations in chat on 2026-10-18.",
       "godot_animation_resource": "game/assets/sprites/animation/spectrum_collapse_attack.tres",
       "integrated_path": "game/assets/sprites/animation/spectrum_collapse_attack.png",
       "integrated_source_path": "game/assets/source/animation/weapon_spectrum_collapse_attack.aseprite"
@@ -5980,7 +5980,7 @@
       "qa_report_path": "build/assets/candidates/misc-animation/qa-report.json",
       "generation_status": "candidate",
       "validation_status": "passed",
-      "human_review_status": "pending",
+      "human_review_status": "approved",
       "integration_status": "integrated",
       "blockers": [
         "weapon level/evolution animation timing not specified"
@@ -5988,8 +5988,8 @@
       "requirement_source": "GDD v1.6 + Godot runtime contracts",
       "candidate_export_path": "build/assets/candidates/misc-animation/sprites/animation/weapon_void_orb_attack.png",
       "candidate_source_path": "build/assets/candidates/misc-animation/source/animation/weapon_void_orb_attack.aseprite",
-      "acceptance_status": "accepted_for_provisional_production",
-      "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
+      "acceptance_status": "accepted",
+      "acceptance_basis": "Owner explicitly approved all 20 base and evolved weapon attack animations in chat on 2026-10-18.",
       "godot_animation_resource": "game/assets/sprites/animation/void_orb_attack.tres",
       "integrated_path": "game/assets/sprites/animation/void_orb_attack.png",
       "integrated_source_path": "game/assets/source/animation/weapon_void_orb_attack.aseprite"
@@ -6068,7 +6068,7 @@
       "qa_report_path": "build/assets/candidates/evolved-weapon-animation/qa-report.json",
       "generation_status": "candidate",
       "validation_status": "passed",
-      "human_review_status": "pending",
+      "human_review_status": "approved",
       "integration_status": "integrated",
       "blockers": [
         "weapon level/evolution animation timing not specified"
@@ -6076,8 +6076,8 @@
       "requirement_source": "GDD v1.6 + Godot runtime contracts",
       "candidate_export_path": "build/assets/candidates/evolved-weapon-animation/sprites/animation/weapon_event_horizon_attack.png",
       "candidate_source_path": "build/assets/candidates/evolved-weapon-animation/source/animation/weapon_event_horizon_attack.aseprite",
-      "acceptance_status": "accepted_for_provisional_production",
-      "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
+      "acceptance_status": "accepted",
+      "acceptance_basis": "Owner explicitly approved all 20 base and evolved weapon attack animations in chat on 2026-10-18.",
       "godot_animation_resource": "game/assets/sprites/animation/event_horizon_attack.tres",
       "integrated_path": "game/assets/sprites/animation/event_horizon_attack.png",
       "integrated_source_path": "game/assets/source/animation/weapon_event_horizon_attack.aseprite"
@@ -6242,7 +6242,7 @@
       "qa_report_path": "build/assets/candidates/misc-animation/qa-report.json",
       "generation_status": "candidate",
       "validation_status": "passed",
-      "human_review_status": "pending",
+      "human_review_status": "approved",
       "integration_status": "integrated",
       "blockers": [
         "weapon level/evolution animation timing not specified"
@@ -6250,8 +6250,8 @@
       "requirement_source": "GDD v1.6 + Godot runtime contracts",
       "candidate_export_path": "build/assets/candidates/misc-animation/sprites/animation/weapon_frost_nova_attack.png",
       "candidate_source_path": "build/assets/candidates/misc-animation/source/animation/weapon_frost_nova_attack.aseprite",
-      "acceptance_status": "accepted_for_provisional_production",
-      "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
+      "acceptance_status": "accepted",
+      "acceptance_basis": "Owner explicitly approved all 20 base and evolved weapon attack animations in chat on 2026-10-18.",
       "godot_animation_resource": "game/assets/sprites/animation/frost_nova_attack.tres",
       "integrated_path": "game/assets/sprites/animation/frost_nova_attack.png",
       "integrated_source_path": "game/assets/source/animation/weapon_frost_nova_attack.aseprite"
@@ -6330,7 +6330,7 @@
       "qa_report_path": "build/assets/candidates/evolved-weapon-animation/qa-report.json",
       "generation_status": "candidate",
       "validation_status": "passed",
-      "human_review_status": "pending",
+      "human_review_status": "approved",
       "integration_status": "integrated",
       "blockers": [
         "weapon level/evolution animation timing not specified"
@@ -6338,8 +6338,8 @@
       "requirement_source": "GDD v1.6 + Godot runtime contracts",
       "candidate_export_path": "build/assets/candidates/evolved-weapon-animation/sprites/animation/weapon_absolute_zero_attack.png",
       "candidate_source_path": "build/assets/candidates/evolved-weapon-animation/source/animation/weapon_absolute_zero_attack.aseprite",
-      "acceptance_status": "accepted_for_provisional_production",
-      "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
+      "acceptance_status": "accepted",
+      "acceptance_basis": "Owner explicitly approved all 20 base and evolved weapon attack animations in chat on 2026-10-18.",
       "godot_animation_resource": "game/assets/sprites/animation/absolute_zero_attack.tres",
       "integrated_path": "game/assets/sprites/animation/absolute_zero_attack.png",
       "integrated_source_path": "game/assets/source/animation/weapon_absolute_zero_attack.aseprite"

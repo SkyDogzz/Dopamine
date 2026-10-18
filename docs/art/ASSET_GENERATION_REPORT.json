@@ -8,7 +8,7 @@
     "dopamine-animation": {
       "count": 131,
       "qa_passed": 131,
-      "human_review_pending": 131,
+      "human_review_pending": 111,
       "human_review_changes_requested": 0
     },
     "dopamine-pixel-art": {
@@ -39,7 +39,7 @@
     "project_copy": "build/assets/candidates/godot-final-import-check/project",
     "log": "build/assets/candidates/godot-final-import-check/import.log"
   },
-  "artistic_review": "Internal pixel-level review corrected a four-direction orientation defect in the player sheets. The static catalog remains geometric and non-player animation is still procedural role work; these are provisionally integrated prototypes, not a human-approved production art pass. A redesigned batch of 31 role-specific weapon/evolution/relic catalog icons passed palette, dimensions, color-count, source/export hash, and Godot smoke checks and replaced only those explicitly authorized managed IDs. Catalog readability and the provisional shapes/colors still need owner review. A technical audit found that the generated SpriteFrames resources stored atlas regions as unsupported frame fields, so Godot treated full sheets as every frame. All 131 animation resources now use per-frame AtlasTexture subresources and pass a manifest-driven Godot smoke; boss/elite animation sheets were regenerated at native 96x96/24x24 cel dimensions. Runtime now plays idle/move frames for all 12 enemy/elite/boss roles from simulation time, plus attack frames during shooter/exploder fuses and boss telegraph/charge phases. Boss special sheets now play during Warden charges and Core spiral/combined attacks. All weapon attack/fire/impact animation sheets are now connected to their corresponding successful-fire and direct-hit events; XP collection, chest-open and relic-acquisition animations are connected; projectile loop animation is connected using existing frames; death cadence follows authored provisional metadata. Human art review remains pending. Owner reviewed the 48 icons on the Catalog icons sheet and requested more detail. A new 48-ID v2 set is staged for review; none of the active exports has been replaced.",
+  "artistic_review": "Internal pixel-level review corrected a four-direction orientation defect in the player sheets. The static catalog remains geometric and non-player animation is still procedural role work; these are provisionally integrated prototypes, not a human-approved production art pass. A redesigned batch of 31 role-specific weapon/evolution/relic catalog icons passed palette, dimensions, color-count, source/export hash, and Godot smoke checks and replaced only those explicitly authorized managed IDs. Catalog readability and the provisional shapes/colors still need owner review. A technical audit found that the generated SpriteFrames resources stored atlas regions as unsupported frame fields, so Godot treated full sheets as every frame. All 131 animation resources now use per-frame AtlasTexture subresources and pass a manifest-driven Godot smoke; boss/elite animation sheets were regenerated at native 96x96/24x24 cel dimensions. Runtime now plays idle/move frames for all 12 enemy/elite/boss roles from simulation time, plus attack frames during shooter/exploder fuses and boss telegraph/charge phases. Boss special sheets now play during Warden charges and Core spiral/combined attacks. Weapon fire and impact VFX remain connected to successful shots and direct hits. A separate weapon attack overlay was disabled after it caused a lingering multi-frame sprite; the player attack animation remains in combat. XP collection, chest-open and relic-acquisition animations are connected; projectile loop animation is connected using existing frames; death cadence follows authored provisional metadata. Human art review remains pending. Owner reviewed the 48 icons on the Catalog icons sheet and requested more detail. A new 48-ID v2 set is staged for review; none of the active exports has been replaced. Owner explicitly approved all 20 base and evolved weapon attack animations on 2026-10-18; their frames and timing remain as authored in the manifest.",
   "game_assets_files": [
     {
       "path": "game/assets/README.md",
@@ -5773,7 +5773,7 @@
     "runtime_assets_integrated": 356,
     "godot_test_suite": "Full bundled CTest passed 121/121 after evolved weapon and enemy movement animation regeneration.",
     "asset_provenance_registry": "passed; 356 current creative assets and 417 initial assets have migration/retirement records.",
-    "remaining_review": "Owner visual/art direction review and auditory review remain pending. Detailed animation timings and directions remain provisional where the GDD leaves them open. No audio playback hardware is available in this session; local review page includes playback controls.",
+    "remaining_review": "Visual acceptance remains pending for assets outside the owner-approved 12 character sprites, 48 catalog/UI icons, and 20 weapon attack animations. SFX/music listening review remains pending; local review page includes playback controls.",
     "specific_weapon_sfx": "passed: four distinct deterministic fire variants and four impact variants load and rotate for each of all 10 weapons; SfxService smoke checks all 80 named streams.",
     "player_animation_batch": "Four sheets generated and batch-QA checked; after runtime wiring, player_controller_smoke and expanded player_animation_assets_smoke pass; attack/death sheets now have runtime consumers.",
     "legacy_hash_reuse": "passed; 1068 current assets have no exact SHA-256 match in the initial 425-file register",
@@ -6036,6 +6036,35 @@
       "qa": "48/48 passed PNG decode, 32x32 dimensions, opaque alpha, exact master-palette membership, 8-16 colors, Aseprite signatures and source/export hashes.",
       "integration": "not integrated; awaiting owner visual approval. Existing runtime icons remain active.",
       "human_review_status": "changes_requested"
+    },
+    {
+      "date": "2026-10-18",
+      "assets": [
+        "weapon_lightning_conductor_attack",
+        "weapon_infinite_circuit_attack",
+        "weapon_inferno_sprayer_attack",
+        "weapon_wildfire_attack",
+        "weapon_crimson_daggers_attack",
+        "weapon_bloodstorm_attack",
+        "weapon_minigun_attack",
+        "weapon_redline_attack",
+        "weapon_toxic_cloud_attack",
+        "weapon_pandemic_attack",
+        "weapon_sawblades_attack",
+        "weapon_razorstorm_attack",
+        "weapon_meteor_staff_attack",
+        "weapon_starfall_attack",
+        "weapon_prism_laser_attack",
+        "weapon_spectrum_collapse_attack",
+        "weapon_void_orb_attack",
+        "weapon_event_horizon_attack",
+        "weapon_frost_nova_attack",
+        "weapon_absolute_zero_attack"
+      ],
+      "finding": "The owner completed a preliminary review of the four-frame base and evolved weapon attack sheets.",
+      "action": "Recorded owner approval for all 20 weapon attack animations. Weapon fire and impact VFX remain outside this approval.",
+      "human_review_status": "approved",
+      "acceptance_basis": "Explicit owner approval in chat on 2026-10-18."
     }
   ],
   "music_runtime_roles": {
@@ -6046,7 +6075,7 @@
     "defeat_cue": "run-result one-shot",
     "stems": "runtime synchronized adaptive Survival arrangement"
   },
-  "remaining_review": "Remaining provisional visual acceptance outside the 48 approved catalog/UI icons, plus human listening review of SFX/music; open canonical choices stay provisional and detailed animation timings/directions remain as specified in the manifest.",
+  "remaining_review": "Visual acceptance remains pending for assets outside the owner-approved 12 character sprites, 48 catalog/UI icons, and 20 weapon attack animations; human listening review of SFX/music is pending. Open canonical choices stay provisional and detailed animation timings/directions remain as specified in the manifest.",
   "technical_qa_summary": {
     "asset_manifest": "passed: 356/356 unique assets; export/source hashes, Godot paths, generation recipes, QA and integration states verified",
     "asset_provenance": "passed: 356 current creative exports and 417 initial assets have migration/retirement records",
@@ -6128,5 +6157,5 @@
   },
   "catalog_icon_revision_review": "Owner approved all 48 detailed v2 candidates; integrated into their existing Godot destinations with editable sources. See docs/art/candidates/catalog-icons-detail-v2/index.html.",
   "catalog_icon_revision_integration": "48/48 integrated following explicit owner approval; manifest and provenance registry updated; catalog icon Godot smoke passed.",
-  "human_review": "Owner approved all 48 detailed catalog/UI icon v2 candidates. Remaining visual acceptance and audio listening review are pending; open canonical choices remain provisional."
+  "human_review": "Owner approved the 48 detailed catalog/UI icon v2 candidates, the 12 character sprites, and all 20 base/evolved weapon attack animations. Remaining visual acceptance (including weapon fire/impact VFX and other pending animations) and audio listening review are pending."
 }
