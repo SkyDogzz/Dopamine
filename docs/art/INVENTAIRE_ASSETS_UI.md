@@ -2,6 +2,8 @@
 
 **Statut :** inventaire de travail fondé sur le contenu présent dans le dépôt, établi le 2026-10-16. L’intention de recréer tout le catalogue visuel et de refaire toutes les interfaces selon [`ART_BIBLE.txt`](../ART_BIBLE.txt) a été confirmée par l’utilisateur. Ce document recense le travail; il ne constitue pas une validation des propositions visuelles encore ouvertes.
 
+**Mise à jour 2026-10-18 — audit de remplacement intégral :** l’utilisateur a précisé qu’aucun asset existant ne doit être réutilisé. Le registre exhaustif des fichiers sous `game/assets` (425 fichiers hors `.import`, hash SHA-256 par fichier et emplacements de références littérales) est [`ASSET_FILE_REGISTER.csv`](ASSET_FILE_REGISTER.csv); le périmètre et les limites de détection des usages dynamiques sont décrits dans [`AUDIT_ASSETS_COMPLET.md`](AUDIT_ASSETS_COMPLET.md). Aucun asset n’a encore été remplacé ou supprimé. Les assets livrés, polices comprises, devront être remplacés; les sources d’édition existantes ne doivent pas servir à produire les nouveaux exports.
+
 ## Portée et règles
 
 - Recréer les assets visuels actuellement utilisés, même lorsqu’ils semblent déjà proches de la direction retenue, et combler les manques du contenu effectivement présent dans le jeu.

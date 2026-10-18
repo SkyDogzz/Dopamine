@@ -11,17 +11,17 @@ L'inventaire recense les fichiers sous `game/assets/`, les références Godot da
 
 ## Comptage initial
 
-Comptage obtenu par `rg --files game/assets` au 2026-10-18; les fichiers `.import` Godot sont exclus des nombres de contenus.
+Comptage vérifié par `rg --files game/assets -g '!*.import'` au 2026-10-18. Le registre fichier par fichier [`ASSET_FILE_REGISTER.csv`](ASSET_FILE_REGISTER.csv) contient hash SHA-256, octets, catégorie, emplacements de références littérales et statut de recherche. Les fichiers `.import` Godot ne sont pas des contenus et ne sont pas comptés.
 
 | Groupe | Quantité constatée | Sources / provenance connues | Décision pour cette initiative |
 |---|---:|---|---|
-| Exports visuels PNG/SVG sous `game/assets` | 165 fichiers | Le registre [`PROVENANCE_ASSETS.csv`](PROVENANCE_ASSETS.csv) suit les hash et la provenance de 165 PNG/SVG livrables; les correspondances source/export ne sont pas toutes des preuves. | Remplacer tous les visuels actifs; examiner les visuels inactifs et les références avant exclusion/suppression. Aucun export actuel ne sera réutilisé. |
-| Audio runtime | 39 fichiers : 1 OGG, 38 WAV | Musique Space City CC0; SFX générés depuis recettes versionnées via Bfxr2 CLI MIT. Notices dans `THIRD_PARTY_NOTICES.md`, `game/assets/audio/sfx/README.md`, `recipes.json` et `manifest.json`. | Remplacer tous les fichiers audio actifs et ne pas réutiliser les recettes comme source de composition finale. Garder les outils historiques hors du runtime selon décision. |
-| Sources et références sous `game/assets/source/` | 212 fichiers non `.import` (dont Aseprite et planches/références PNG) | Plusieurs sources éditables Aseprite; certaines dérivent de références générées, d'autres sont procédurales. Registre détaillé des exports visuels dans `PROVENANCE_ASSETS.csv`; le lien par nom seul n'est pas une preuve. | Ne pas utiliser les sources existantes pour fabriquer les remplacements. Conserver en archives d'audit ou retirer après confirmation de leur statut et vérification qu'aucun outil/document actif ne les requiert. |
-| Polices runtime | 2 polices : Press Start 2P, DejaVu Sans | Licences OFL 1.1 et Bitstream Vera/DejaVu détaillées dans `THIRD_PARTY_NOTICES.md`. | Remplacer si la consigne « tous les assets » inclut les polices; choisir des remplaçantes avec licences documentées. |
-| Fichiers annexes audio | README, manifest, recettes JSON, galerie HTML et générateurs Python/JS | Sources de synthèse et notice MIT de Bfxr2 CLI déjà documentées. | Laisser hors runtime; archiver ou remplacer leur statut documentaire après migration. Ne pas les compter comme assets joués. |
+| Exports visuels PNG/SVG sous `game/assets` | 165 fichiers | `PROVENANCE_ASSETS.csv` suit les hash/provenance de 165 PNG/SVG; les correspondances source/export ne sont pas toutes des preuves. | Remplacer tous les visuels actifs; examiner les visuels inactifs et les références avant exclusion/suppression. Aucun export actuel ne sera réutilisé. |
+| Audio sous `game/assets/audio/` | 43 fichiers au total : 39 runtime (1 OGG, 38 WAV) et 4 fichiers de documentation/recette/galerie. | Musique Space City CC0; SFX générés depuis recettes versionnées via Bfxr2 CLI MIT. Notices dans `THIRD_PARTY_NOTICES.md`, `README.md`, `recipes.json` et `manifest.json`. | Remplacer tous les fichiers audio runtime et ne pas réutiliser les recettes comme source de composition finale. Les annexes auteur seront archivées ou exclues du paquet après migration. |
+| Sources et références sous `game/assets/source/` | 212 fichiers hors `.import` | Plusieurs sources éditables Aseprite; certaines dérivent de références générées, d'autres sont procédurales. Le lien par nom seul n'est pas une preuve. | Ne pas utiliser les sources existantes pour fabriquer les remplacements. Conserver en archives d'audit ou retirer après confirmation de leur statut et vérification qu'aucun outil/document actif ne les requiert. |
+| Polices sous `game/assets/fonts/` | 4 fichiers : 2 polices et 2 notices de licence. | Licences OFL 1.1 et Bitstream Vera/DejaVu détaillées dans `THIRD_PARTY_NOTICES.md`. | Remplacer les deux polices runtime; conserver les notices requises jusqu'à ce que les nouvelles licences soient documentées. |
+| Fichiers annexes audio | 4 dans `audio/sfx/` (README, manifest, recettes JSON, galerie HTML); générateurs sous `game/tools/` | Sources de synthèse et notice MIT de Bfxr2 CLI déjà documentées. | Laisser hors runtime; archiver ou remplacer leur statut documentaire après migration. Ne pas les compter comme assets joués. |
 
-Les 165 visuels comprennent exports utilisés et fichiers historiques/inactifs. Le PCK audité précédemment excluait certains doublons/références inactifs, mais les presets utilisent `all_resources`; tout export restant dans un dossier inclus peut donc être empaqueté. Un contrôle PCK doit être refait après migration.
+Le registre détaille les 425 fichiers sous `game/assets` hors `.import` : 165 visuels, 43 fichiers audio et annexes, 212 sources/références, 4 fichiers de fonte/licence et un README de dossier. Les 165 visuels comprennent exports utilisés et fichiers historiques/inactifs. Le PCK audité précédemment excluait certains doublons/références inactifs, mais les presets utilisent `all_resources`; tout export restant dans un dossier inclus peut donc être empaqueté. Un contrôle PCK doit être refait après migration.
 
 ## Références runtime explicites relevées
 
@@ -45,6 +45,10 @@ Les 165 visuels comprennent exports utilisés et fichiers historiques/inactifs. 
 - Les SFX actuels ont des recettes de paramètres éditables et reproductibles; l'outil auteur externe est MIT. Les SFX ne contiennent pas d'échantillons tiers identifiés selon la documentation. Leur rendu et leurs recettes ne seront pas utilisés comme éléments de composition des nouveaux sons.
 - Les polices sont sous OFL et Bitstream Vera/DejaVu. À remplacer si incluses dans la portée intégrale demandée.
 - Les fichiers Aseprite et références non listés comme livrables dans le registre de provenance nécessitent encore un inventaire individuel de liens, hashes, créateur et statut actif/inactif avant toute suppression définitive.
+
+## Couverture statique et chemins dynamiques
+
+Le registre contient 140 assets dont une référence de chemin littérale a été trouvée par recherche dans les fichiers Godot. Cela ne prouve pas que les 285 autres sont inutilisés : certains sont atteints par construction de chemins ou sont chargés par outils d'auteur. Les deux chargeurs dynamiques identifiés sont `sfx_service.gd` (19 familles/38 identifiants WAV sous un répertoire) et `sprite_batch_renderer.gd` (37 IDs visuels via `SPRITE_FILES`, avec extensions ajoutées à l'exécution). Les données de catalogue et les écrans chargent également des chemins calculés. Les recherches dans les tests/outils expliquent des références qui ne sont pas des consommateurs runtime. Le champ `reference_status` distingue explicitement une absence de chemin littéral d'une preuve d'inactivité.
 
 ## Méthode pour compléter les références
 
