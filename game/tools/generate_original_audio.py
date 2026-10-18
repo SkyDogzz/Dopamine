@@ -32,31 +32,6 @@ SFX_IDS = [
 ]
 
 
-def _render_boss_telegraph(seed: int = 731) -> list[float]:
-	"""A 360 ms rising dual-tone pulse with a short deterministic noise attack."""
-	rng = random.Random(seed)
-	duration = 0.36
-	count = round(SAMPLE_RATE * duration)
-	noise = [rng.uniform(-1.0, 1.0) for _ in range(round(SAMPLE_RATE * 0.012))]
-	samples: list[float] = []
-	for index in range(count):
-		time = index / SAMPLE_RATE
-		attack = min(1.0, time / 0.004)
-		decay = math.exp(-time * 2.3)
-		pulse = 0.72 + 0.28 * math.sin(2.0 * math.pi * 7.0 * time) ** 2
-		frequency = 510.0 + 680.0 * (time / duration)
-		body = math.sin(2.0 * math.pi * frequency * time)
-		body += 0.34 * math.sin(2.0 * math.pi * (frequency * 1.497) * time + 0.2)
-		transient = noise[index] * math.exp(-time * 480.0) if index < len(noise) else 0.0
-		samples.append((body * 0.42 + transient * 0.15) * attack * decay * pulse)
-	# Short fade avoids a discontinuity at the end of the generated buffer.
-	fade_samples = round(SAMPLE_RATE * 0.008)
-	for index in range(fade_samples):
-		samples[-fade_samples + index] *= 1.0 - (index + 1) / fade_samples
-	peak = max(abs(sample) for sample in samples)
-	return [sample * (0.72 / peak) for sample in samples]
-
-
 def _render_sfx(sound_id: str) -> list[float]:
 	"""Synthesize a new short effect from event role and stable ID-derived seed."""
 	family = sound_id.rsplit("_", 1)[0] if sound_id.rsplit("_", 1)[-1].isdigit() else sound_id
@@ -213,12 +188,11 @@ def _render_music_stems() -> dict[str, array]:
 
 def main() -> None:
 	OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
-	metrics = _write_wave(OUTPUT_DIR / "boss_telegraph.wav", _render_boss_telegraph())
 	sfx_directory = OUTPUT_DIR / "sfx"
 	sfx_directory.mkdir(exist_ok=True)
 	sfx_metrics = [_write_wave(sfx_directory / f"{sound_id}.wav", _render_sfx(sound_id)) for sound_id in SFX_IDS]
 	(sfx_directory / "manifest.json").write_text(json.dumps({
-		"status": "original procedural candidates; not integrated or ear-reviewed in game",
+		"status": "original procedural SFX integrated in game; not yet ear-reviewed in context",
 		"source": "game/tools/generate_original_audio.py",
 		"method": "deterministic oscillators, ID-seeded noise transients, analytic envelopes",
 		"sounds": sfx_metrics,
@@ -253,14 +227,13 @@ def main() -> None:
 		"preview_mix": preview_metrics,
 	}, indent=2) + "\n")
 	(OUTPUT_DIR / "manifest.json").write_text(json.dumps({
-		"status": "prototype; not yet integrated or ear-reviewed in game",
+		"status": "original procedural audio candidates; not yet ear-reviewed in game",
 		"source": "game/tools/generate_original_audio.py",
-		"method": "deterministic sine oscillators, seeded white-noise transient, analytic envelopes",
-		"sounds": [metrics],
+		"method": "deterministic oscillators, ID-seeded noise transients, analytic envelopes; five synchronized loop stems",
 		"sfx_candidate_count": len(sfx_metrics),
 		"music_manifest": "music/manifest.json",
 	}, indent=2) + "\n")
-	print(json.dumps({"prototype": metrics, "sfx_count": len(sfx_metrics)}, indent=2))
+	print(json.dumps({"sfx_count": len(sfx_metrics), "music_stems": len(music_metrics)}, indent=2))
 
 
 if __name__ == "__main__":

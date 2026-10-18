@@ -16,10 +16,16 @@ Comptage vérifié par `rg --files game/assets -g '!*.import'` au 2026-10-18 ava
 | Groupe | Quantité constatée | Sources / provenance connues | Décision pour cette initiative |
 |---|---:|---|---|
 | Exports visuels PNG/SVG sous `game/assets` | 165 fichiers | `PROVENANCE_ASSETS.csv` suit les hash/provenance de 165 PNG/SVG; les correspondances source/export ne sont pas toutes des preuves. | Remplacer tous les visuels actifs; examiner les visuels inactifs et les références avant exclusion/suppression. Aucun export actuel ne sera réutilisé. |
-| Audio sous `game/assets/audio/` | 43 fichiers au total : 39 runtime (1 OGG, 38 WAV) et 4 fichiers de documentation/recette/galerie. | Musique Space City CC0; SFX générés depuis recettes versionnées via Bfxr2 CLI MIT. Notices dans `THIRD_PARTY_NOTICES.md`, `README.md`, `recipes.json` et `manifest.json`. | Remplacer tous les fichiers audio runtime et ne pas réutiliser les recettes comme source de composition finale. Les annexes auteur seront archivées ou exclues du paquet après migration. |
+| Audio sous `game/assets/audio/` **[SNAPSHOT INITIAL — 2026-10-18]** | 43 fichiers : 1 OGG, 38 WAV et 4 annexes SFX. | Le morceau Space City était CC0; les SFX venaient de recettes Bfxr. | Snapshot historique immuable; voir l’état courant ci-dessous et `ASSET_MIGRATIONS.csv` / `ASSET_RETIREMENTS.csv`. |
 | Sources et références sous `game/assets/source/` | 212 fichiers hors `.import` | Plusieurs sources éditables Aseprite; certaines dérivent de références générées, d'autres sont procédurales. Le lien par nom seul n'est pas une preuve. | Ne pas utiliser les sources existantes pour fabriquer les remplacements; supprimer ces sources et références après migration, mise à jour des preuves et vérification qu'aucun outil/document actif ne les requiert. |
 | Polices sous `game/assets/fonts/` | 4 fichiers : 2 polices et 2 notices de licence. | Licences OFL 1.1 et Bitstream Vera/DejaVu détaillées dans `THIRD_PARTY_NOTICES.md`. | Remplacer les deux polices runtime; conserver les notices requises jusqu'à ce que les nouvelles licences soient documentées. |
-| Fichiers annexes audio | 4 dans `audio/sfx/` (README, manifest, recettes JSON, galerie HTML); générateurs sous `game/tools/` | Sources de synthèse et notice MIT de Bfxr2 CLI déjà documentées. | Ne pas réutiliser les recettes; retirer ces recettes/références auteur après création indépendante des remplaçants et vérification qu'aucun nouveau générateur ne les lit. |
+| Fichiers annexes audio **[SNAPSHOT INITIAL]** | README, manifest, recettes JSON et galerie HTML; générateurs Bfxr dans `game/tools/`. | Sources de synthèse et notice MIT conservées dans le snapshot d’audit. | Retirées après remplacement indépendant; voir les hashes de retrait.
+
+## État audio après migration SFX — 2026-10-18
+
+- Les 38 SFX runtime ont été remplacés par les WAV originaux générés par `game/tools/generate_original_audio.py`; l’autoload `Sfx` pointe désormais vers `game/assets/audio/original_procedural/sfx/`. Les usages d’événements et familles restent inchangés.
+- Les 38 WAV antérieurs, leurs fichiers `.import`, les recettes/manifestes/galeries/README et les scripts de production Bfxr ont été retirés après scan des références. Hashes, sources et remplacements figurent dans les CSV de migration et retrait.
+- **[PROPOSÉ / À ÉCOUTER]** Les effets originaux n’ont pas été validés à l’écoute ni en combat sur matériel. Le morceau historique reste actif jusqu’à sa migration musicale.
 
 Le registre détaille les 425 fichiers sous `game/assets` hors `.import` : 165 visuels, 43 fichiers audio et annexes, 212 sources/références, 4 fichiers de fonte/licence et un README de dossier. Les 165 visuels comprennent exports utilisés et fichiers historiques/inactifs. Le PCK audité précédemment excluait certains doublons/références inactifs, mais les presets utilisent `all_resources`; tout export restant dans un dossier inclus peut donc être empaqueté. Un contrôle PCK doit être refait après migration.
 
@@ -36,13 +42,13 @@ Le registre détaille les 425 fichiers sous `game/assets` hors `.import` : 165 v
 | Icônes UI/catalogue | `icons/catalog/equipment_*.png`, `rarity_*.png`, ressources, skill node, médaille, records | Hub, skill tree, équipement, statistiques, résultats. Certains sont seulement des pictogrammes sur des entrées inactives. |
 | Polices et thème | `fonts/PressStart2P-Regular.ttf`, `fonts/DejaVuSans.ttf`; `themes/dopamine_ui.tres` | Thème UI, titres et affichage de dégâts. Fonte exacte pixel encore ouverte dans l'Art Bible. |
 | Musique | `audio/music/space_city_bpm115.ogg` | `adaptive_survival_music.gd`; boucle active. |
-| SFX | 38 WAV sous `audio/sfx/` : tirs, zaps, balayages, impacts légers/lourds, morts, XP, relique, coffres, niveau, boss, interface | `sfx_service.gd`; inventaire exact des identifiants et mesures dans `manifest.json`. |
+| SFX — état après migration 2026-10-18 | 38 WAV sous `audio/original_procedural/sfx/`, 19 familles d’événements | `sfx_service.gd` garde les noms et règles des familles. `generate_original_audio.py`, `sfx/manifest.json` et `sfx_service_assets_smoke.gd` documentent, mesurent et vérifient les candidats originaux; anciens fichiers et recettes retirés, hashes conservés aux registres. |
 
 ## État de provenance et licences
 
 - Les exports PNG/SVG ont une provenance technique consignée dans `PROVENANCE_ASSETS.csv`; l'inventaire précédent indiquait 43 actifs dérivés de références C2PA Trusted et 59 générés par le dépôt. Cette initiative les remplace tous selon la consigne utilisateur, y compris les assets procéduraux internes.
 - La musique actuelle est identifiée comme Space City de MintoDog sous CC0. Ce statut documente l'existant mais ne l'autorise pas à être réutilisé dans les nouveaux livrables.
-- Les SFX actuels ont des recettes de paramètres éditables et reproductibles; l'outil auteur externe est MIT. Les SFX ne contiennent pas d'échantillons tiers identifiés selon la documentation. Leur rendu et leurs recettes ne seront pas utilisés comme éléments de composition des nouveaux sons.
+- **[HISTORIQUE]** Les anciens SFX Bfxr venaient de recettes versionnées et d’un renderer MIT; fichiers, recettes et renderer ont été retirés après la migration. **[PROPOSÉ]** Les nouveaux SFX sont synthétisés depuis des rôles et des seeds déterministes, sans lire l’ancien contenu; ils doivent encore être écoutés et approuvés en contexte.
 - Les polices sont sous OFL et Bitstream Vera/DejaVu. À remplacer si incluses dans la portée intégrale demandée.
 - Les fichiers Aseprite et références non listés comme livrables dans le registre de provenance nécessitent encore un inventaire individuel de liens, hashes, créateur et statut actif/inactif avant toute suppression définitive.
 

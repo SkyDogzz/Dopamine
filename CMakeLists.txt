@@ -88,6 +88,16 @@ if(BUILD_TESTING)
             set_tests_properties(${script_name} PROPERTIES FIXTURES_REQUIRED godot_project_ready TIMEOUT 15)
             dopamine_isolate_windows_test_data(${script_name})
         endforeach()
+        if(UNIX AND NOT APPLE)
+            set_tests_properties(sandbox_ui_smoke PROPERTIES
+                ENVIRONMENT "XDG_DATA_HOME=${CMAKE_CURRENT_BINARY_DIR}/test_appdata/sandbox_ui_smoke")
+        endif()
+        add_test(NAME sfx_service_assets_smoke
+            COMMAND "${DOPAMINE_GODOT_EXECUTABLE}" --headless --audio-driver Dummy
+                --path "${DOPAMINE_GAME_PROJECT_DIR}" --script res://tests/sfx_service_assets_smoke.gd)
+        set_tests_properties(sfx_service_assets_smoke PROPERTIES
+            FIXTURES_REQUIRED godot_project_ready TIMEOUT 15)
+        dopamine_isolate_windows_test_data(sfx_service_assets_smoke)
         add_test(NAME adaptive_survival_music_smoke
             COMMAND "${DOPAMINE_GODOT_EXECUTABLE}" --headless --audio-driver Dummy
                 --path "${DOPAMINE_GAME_PROJECT_DIR}" --script res://tests/adaptive_survival_music_smoke.gd)

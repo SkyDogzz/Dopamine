@@ -1,5 +1,5 @@
 {
-  "status": "original procedural candidates; not integrated or ear-reviewed in game",
+  "status": "original procedural SFX integrated in game; not yet ear-reviewed in context",
   "source": "game/tools/generate_original_audio.py",
   "method": "deterministic oscillators, ID-seeded noise transients, analytic envelopes",
   "sounds": [

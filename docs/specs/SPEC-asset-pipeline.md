@@ -8,7 +8,7 @@ Préparer le remplacement complet des assets graphiques et audio du jeu avec un 
 
 - Godot 4.7.2, assets sous `game/assets/`, sources graphiques actuelles en Aseprite et exports PNG.
 - Références : `docs/ART_BIBLE.txt`, `docs/art/INVENTAIRE_ASSETS_UI.md`, `docs/art/PROVENANCE_ASSETS.csv`, `THIRD_PARTY_NOTICES.md`.
-- La procédure audio actuelle se trouve sous `game/assets/audio/`; son outil et ses formats de source sont à inventorier.
+- La production audio originale est écrite dans `game/tools/generate_original_audio.py`; sorties candidates sous `game/assets/audio/original_procedural/`.
 
 ### Avancement de la filière (2026-10-18)
 
@@ -29,7 +29,8 @@ Préparer le remplacement complet des assets graphiques et audio du jeu avec un 
 
 - **[OUVERT — BLOQUANT POUR LES FAMILLES CONCERNÉES]** L’audit daté de base reste un snapshot; les familles actives non migrées incluent encore le joueur, deux boss/prototypes, élite, ennemis animés, terrain/environnement/ruines, récompenses, pickups et VFX. Aucune suppression correspondante n’est autorisée avant remplacement de tous les consommateurs et validation de l’import/PCK. Les identités définitives des boss/biome ne sont pas inventées; produire des rôles visuels provisoires si cela n’affirme aucune identité canonique.
 
-- **[OUVERT]** La production audio originale est autorisée par synthèse procédurale, sans lire les sons ni recettes préexistants. La livraison source/runtimes et leur intégration restent à compléter; une sortie audio humaine est indisponible dans l’environnement de validation courant.
+- **[VALIDÉ]** Les 38 nouveaux SFX procéduraux sont intégrés dans les familles actives de `Sfx`; leurs anciennes sources, recettes, renders et références de runtime sont retirés après migration vérifiée.
+- **[OUVERT]** La piste musicale historique, ses sources/références et l’orchestration adaptative doivent encore être remplacées. Les nouveaux SFX et stems sont des candidats non approuvés jusqu’à la revue auditive; aucune sortie audio n’est disponible dans l’environnement courant.
 
 ## Commandes de vérification
 
@@ -42,7 +43,7 @@ Préparer le remplacement complet des assets graphiques et audio du jeu avec un 
 
 - Garder les exports référencés par le projet sous `game/assets/` et les sources éditables organisées par famille sous `game/assets/source/`.
 - Inventorier chaque référence d’asset dans scènes, scripts, données, audio bus et exports. Aucun asset actif ne doit être supprimé avant migration de toutes ses références.
-- Préserver PNG + source Aseprite pour les sprites selon l’Art Bible. Pour l’audio, identifier format source, format runtime, fréquence, canaux, durée et provenance/licence avant de choisir la convention de production.
+- Préserver PNG + source Aseprite pour les sprites selon l’Art Bible. Pour l’audio original, conserver le script de synthèse et les manifestes; le runtime des candidats actuels est PCM16 mono WAV 44,1 kHz, choix encore **[PROPOSÉ]** jusqu’à revue de mix.
 - Les contrats validés de l’Art Bible sont obligatoires : pixel art strict, palette maître 32 couleurs, 16 couleurs maximum pour un sprite 32×32, glow uniquement en VFX, résolution logique 640×360, PNG + source Aseprite.
 
 ## Style et règles de données

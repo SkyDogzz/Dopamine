@@ -49,9 +49,8 @@ def main() -> None:
 	legacy_hashes = _load_legacy_hashes()
 	root_manifest_path = ASSET_ROOT / "manifest.json"
 	root_manifest = json.loads(root_manifest_path.read_text())
-	root_entries = root_manifest.get("sounds", [])
 	assert root_manifest["sfx_candidate_count"] == 38, "expected all 38 SFX candidates"
-	validated = [_read_candidate(root_manifest_path, entry, legacy_hashes) for entry in root_entries]
+	validated = []
 
 	sfx_manifest_path = ASSET_ROOT / "sfx" / "manifest.json"
 	sfx_manifest = json.loads(sfx_manifest_path.read_text())

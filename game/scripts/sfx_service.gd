@@ -37,7 +37,7 @@ const MIN_INTERVAL := {
 	"hit_light": 0.035, "hit_heavy": 0.08, "enemy_kill": 0.045, "xp_pickup": 0.055,
 	"ui_focus": 0.08,
 }
-const SFX_DIR := "res://assets/audio/sfx/"
+const SFX_DIR := "res://assets/audio/original_procedural/sfx/"
 
 var _streams: Dictionary = {}
 var _players: Array[AudioStreamPlayer] = []
