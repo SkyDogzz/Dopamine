@@ -8,12 +8,12 @@ Remplacer les assets graphiques et audio du jeu et refaire l’interface dans le
 
 | ID | Responsabilité | Dépend de |
 |---|---|---|
-| `asset-pipeline` | Inventorier les assets à remplacer, établir les sources/export PNG et critères de conformité visuelle et sonore, et intégrer les assets sans casser les références du jeu. | — |
-| `visual-assets` | Remplacer les assets de gameplay, environnements, récompenses, catalogue, effets et identité visuelle selon l’Art Bible. | `asset-pipeline` |
-| `interface-overhaul` | Refaire tous les écrans et composants UI existants en conservant les parcours validés, l’accessibilité et l’isolation Sandbox. | `asset-pipeline`, `visual-assets` |
-| `skill-tree` | Concevoir et réaliser une page de compétences présentant un arbre ramifié et ses états/actions. Les règles de progression non validées restent à définir avant implémentation. | `interface-overhaul` |
-| `equipment-screen` | Réaliser la page d’équipement avec personnage et six slots à gauche, équipements équipés, liste équipable à droite, actions d’équipement/remplacement et aperçu avant/après des statistiques. | `interface-overhaul` |
-| `adaptive-audio` | Remplacer musique et effets sonores par une direction arcade synthwave néon, avec une base EDM qui suit la progression de run et évolue par transitions fluides lors des événements, notamment les boss. | `asset-pipeline` |
+| `asset-pipeline` | [Spec](SPEC-asset-pipeline.md) — inventorier les assets à remplacer, établir les sources/export PNG et critères de conformité visuelle et sonore, et intégrer les assets sans casser les références du jeu. | — |
+| `visual-assets` | [Spec](SPEC-visual-assets.md) — remplacer les assets de gameplay, environnements, récompenses, catalogue, effets et identité visuelle selon l’Art Bible. | `asset-pipeline` |
+| `interface-overhaul` | [Spec](SPEC-interface-overhaul.md) — refaire tous les écrans et composants UI existants en conservant les parcours validés, l’accessibilité et l’isolation Sandbox. | `asset-pipeline`, `visual-assets` |
+| `skill-tree` | [Spec](SPEC-skill-tree.md) — concevoir et réaliser une page de compétences présentant un arbre ramifié et ses états/actions. Les règles de progression non validées restent à définir avant implémentation. | `interface-overhaul` |
+| `equipment-screen` | [Spec](SPEC-equipment-screen.md) — réaliser la page d’équipement avec personnage et six slots à gauche, équipements équipés, liste équipable à droite, actions d’équipement/remplacement et aperçu avant/après des statistiques. | `interface-overhaul` |
+| `adaptive-audio` | [Spec](SPEC-adaptive-audio.md) — remplacer musique et effets sonores par une direction arcade synthwave néon, avec une base EDM qui suit la progression de run et évolue par transitions fluides lors des événements, notamment les boss. | `asset-pipeline` |
 
 ## Ordre de réalisation proposé
 
