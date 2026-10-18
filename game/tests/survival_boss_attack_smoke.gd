@@ -70,6 +70,10 @@ func _run() -> void:
 	if attack["stage"] != "telegraph" or attack["pattern"] != "charge":
 		_fail("Phase two should alternate its aimed attack with a mobile charge")
 		return
+	var charge_overrides: Dictionary = session._enemy_attack_animation_overrides(float(attack["fire_at"]))
+	if charge_overrides.get(boss_key, {}).get("state", "") != "special":
+		_fail("A Warden charge should select its authored special animation")
+		return
 	var phase_two_boss := await _wait_for_boss(session)
 	var phase_two_transform: Dictionary = phase_two_boss["components"]["Transform2D"]
 	var before_phase_two_charge := Vector2(float(phase_two_transform["x"]), float(phase_two_transform["y"]))
@@ -246,6 +250,11 @@ func _verify_dopamine_core_patterns_and_phases() -> bool:
 	if attack["pattern"] != "spiral":
 		core_session.queue_free()
 		_fail("Phase two should telegraph the proposed spiral pattern")
+		return false
+	var spiral_overrides: Dictionary = core_session._enemy_attack_animation_overrides(float(attack["fire_at"]))
+	if spiral_overrides.get(boss_key, {}).get("state", "") != "special":
+		core_session.queue_free()
+		_fail("A Core spiral should select its authored special animation")
 		return false
 	core_session._update_dopamine_core_attacks(float(attack["fire_at"]), false)
 	for _index in range(8):

@@ -79,7 +79,7 @@ func _init() -> void:
 		}
 	for role_id in ANIMATED_ROLE_IDS:
 		_role_animation_sets[role_id] = {}
-		for state in ["idle", "move", "attack", "death"]:
+		for state in ["idle", "move", "attack", "special", "death"]:
 			var resource_path := "res://assets/sprites/animation/%s_%s.tres" % [role_id, state]
 			if ResourceLoader.exists(resource_path):
 				_role_animation_sets[role_id][state] = load(resource_path) as SpriteFrames

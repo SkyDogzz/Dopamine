@@ -1444,12 +1444,14 @@ func _enemy_attack_animation_overrides(current_simulation_time: float) -> Dictio
 	for key in _pulse_warden_attacks:
 		var attack: Dictionary = _pulse_warden_attacks[key]
 		if str(attack.get("stage", "")) in ["telegraph", "charging"]:
-			overrides[key] = {"state": "attack",
+			var state := "special" if str(attack.get("pattern", "")) == "charge" else "attack"
+			overrides[key] = {"state": state,
 				"started_at": float(attack.get("fire_at", current_simulation_time)) - pulse_warden_telegraph_seconds}
 	for key in _dopamine_core_attacks:
 		var attack: Dictionary = _dopamine_core_attacks[key]
-		if str(attack.get("stage", "")) == "telegraph":
-			overrides[key] = {"state": "attack",
+		if str(attack.get("stage", "")) in ["telegraph", "spiral"]:
+			var special_pattern := str(attack.get("pattern", "")) in ["spiral", "combined"]
+			overrides[key] = {"state": "special" if special_pattern else "attack",
 				"started_at": float(attack.get("fire_at", current_simulation_time)) - final_boss_telegraph_seconds}
 	return overrides
 
