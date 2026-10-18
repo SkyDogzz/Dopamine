@@ -31,7 +31,7 @@ if [[ "$godot_version" != 4.7.2* ]]; then
 	exit 1
 fi
 
-tmp_dir="$(mktemp -d "${TMPDIR:-/tmp}/dopamine-linux-staging.XXXXXX")"
+tmp_dir="$(cd "$(mktemp -d "${TMPDIR:-/tmp}/dopamine-linux-staging.XXXXXX")" && pwd -P)"
 trap 'rm -rf "$tmp_dir"' EXIT
 source_dir="$tmp_dir/source"
 build_dir="$tmp_dir/cmake-release"
