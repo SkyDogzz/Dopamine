@@ -66,6 +66,14 @@ func _run() -> void:
 		"Simulation entities should stay clipped to the playfield")
 	assert(sandbox.get_node("Shell/Header/HomeButton").has_focus(), "Sandbox should start with a visible keyboard focus")
 	assert(sandbox.get_node("Shell/Header/SurvivalButton").text == "PLAY SURVIVAL", "Sandbox should expose the Survival prototype entry")
+	var home_button: Button = sandbox.get_node("Shell/Header/HomeButton")
+	var survival_button: Button = sandbox.get_node("Shell/Header/SurvivalButton")
+	assert(home_button.get_theme_stylebox("focus") != null and survival_button.focus_mode != Control.FOCUS_NONE,
+		"Sandbox header actions should expose the shared visible focus treatment")
+	await _send_navigation_event(KEY_LEFT, false)
+	assert(root.gui_get_focus_owner() == survival_button, "Keyboard should move focus from Home to Play Survival")
+	await _send_navigation_event(KEY_RIGHT, true)
+	assert(root.gui_get_focus_owner() == home_button, "Gamepad D-pad should move focus from Play Survival to Home")
 	assert(sandbox.simulation != null, "Sandbox UI should create its simulation without a save")
 	for node_path in [
 		"Shell/Content/SidePanel/Sections/TargetingPanel/TargetingForm/PolicySelect",
@@ -333,3 +341,25 @@ func _wait_for_simulation_time(simulation: Object, expected_time: float) -> Dict
 func _fail(message: String) -> void:
 	push_error(message)
 	quit(1)
+
+func _send_navigation_event(keycode: Key, gamepad: bool) -> void:
+	if gamepad:
+		var button_event := InputEventJoypadButton.new()
+		button_event.device = 0
+		button_event.button_index = JOY_BUTTON_DPAD_RIGHT
+		button_event.pressed = true
+		Input.parse_input_event(button_event)
+		await process_frame
+		button_event.pressed = false
+		Input.parse_input_event(button_event)
+		await process_frame
+		return
+	var key_event := InputEventKey.new()
+	key_event.keycode = keycode
+	key_event.physical_keycode = keycode
+	key_event.pressed = true
+	Input.parse_input_event(key_event)
+	await process_frame
+	key_event.pressed = false
+	Input.parse_input_event(key_event)
+	await process_frame

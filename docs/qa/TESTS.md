@@ -2124,3 +2124,9 @@ Note de clôture : le blocage historique du smoke `sandbox_ui_smoke.gd` décrit 
 - [x] `equipment_panel_visual_smoke.gd` vérifie que l’écran pose le focus Neon sur l’anneau équipé, puis déplace le focus entre slots avec flèche haut et D-pad haut; les actions de slot et l’aperçu restent testés ensuite.
 - [x] Validation ciblée `equipment_panel_visual_smoke`, `equipment_slots_smoke` et `equipment_stats_smoke` par CTest consignée avec la validation UI de cet écran.
 - [i] Le D-pad synthétique valide le routage d’entrée, pas la sensation d’un contrôleur physique; les autres états d’équipement restent dans la revue globale d’interface.
+
+## Navigation du Sandbox développeur — 2026-10-18
+
+- [x] `sandbox_ui_smoke.gd` vérifie le focus initial visible sur `ACCUEIL`, le passage à `PLAY SURVIVAL` par flèche gauche et le retour par D-pad droit; la capture `states/sandbox.png` montre le cadre Neon sur `ACCUEIL`.
+- [x] Le smoke complet du Sandbox développeur passe avec Godot 4.7.2; il préserve aussi son slot de sauvegarde sentinelle.
+- [i] Les entrées synthétiques ne remplacent pas le test sur contrôleur physique.
