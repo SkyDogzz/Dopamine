@@ -118,6 +118,11 @@ def main() -> None:
                 existing_sidecar.get("candidate_export_path") == str(src.relative_to(ROOT))
                 and existing_sidecar.get("integrated_export_path") == str(target.relative_to(ROOT))
             )
+            same_managed_asset = (
+                existing_sidecar.get("asset_id") == item["asset_id"]
+                and existing_sidecar.get("integrated_export_path") == str(target.relative_to(ROOT))
+            )
+            managed_sidecar = managed_sidecar or (replace_authorized and same_managed_asset)
             if not managed_sidecar:
                 errors.append(f"{item['asset_id']}: sidecar exists with different bytes and is not managed for this candidate; refusing overwrite: {sidecar_target}")
         if source_target and source_target in source_destinations:

@@ -43,7 +43,8 @@ def main() -> None:
             "integrated_export_path": dest_rel,
         }
         (candidate.with_suffix(".json")).write_text(json.dumps(metadata))
-        (target.with_suffix(".png.json")).write_text(json.dumps(metadata))
+        prior_sidecar = {**metadata, "candidate_export_path": "build/assets/candidates/prior/sprites/test.png"}
+        (target.with_suffix(".png.json")).write_text(json.dumps(prior_sidecar))
         manifest = {
             "assets": [{
                 "asset_id": "test_asset", "validation_status": "passed",
