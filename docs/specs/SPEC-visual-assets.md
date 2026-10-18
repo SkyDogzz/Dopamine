@@ -16,6 +16,8 @@ Godot 4.7.2; PNG de runtime sous `game/assets/`; sources graphiques Aseprite sel
 - **[PROPOSÉ]** Les neuf sprites de rôles ennemis communs/soutiens (24×24) sont maintenant des formes pixel originales produites par `game/tools/generate_original_roster.py`, avec sources Aseprite générées par LibreSprite. Le générateur ne lit que les rôles et la palette validée; les anciennes sources de référence ne servent plus à ces chemins actifs. Les boss restent hors de cette migration et leurs identités restent **[OUVERTES]**.
 - La validation ciblée `catalog_icon_assets_smoke.gd` et `survival_hub_smoke.gd` passe; une capture de combat dense à 640×360 a été examinée à `/tmp/dopamine-survival-combat-visual.png`. Les neuf rôles restent séparables dans la scène; le reste des visuels et l'UI visibles restent à remplacer.
 
+- **[PROPOSÉ]** Les 24 projectiles 16×16 utilisent des créations procédurales originales et sources Aseprite sous `source/original_procedural/`; chemins runtime et comportements inchangés. Les sources/atlas historiques et doublons racine ont été retirés après recherche d’usages. Import, smoke catalogue, lots renderer et capture dense passent; le PCK Linux/X11 post-retrait contient les chemins runtime et exclut les anciens fichiers vérifiés.
+
 ## Commandes de vérification
 
 - `godot --headless --editor --path game --quit`

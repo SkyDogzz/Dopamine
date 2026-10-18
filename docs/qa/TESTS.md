@@ -2036,3 +2036,10 @@ Note de clôture : le blocage historique du smoke `sandbox_ui_smoke.gd` décrit 
 - [x] Le journal d’export ne contient pas `tests/`, `tools/` ni `assets/source/`; le chargeur confirme la GDExtension Release adjacente au binaire. Aucune ligne `ERROR:` n’apparaît au lancement.
 - [x] Archive non distribuable `DopamineSurvivor-linux-2cedc10-staging.tar.gz`, 35 711 829 octets, SHA-256 `97f5cd47d7b3896bd776cbbd6fe4db8aaeb47ef2548f3fc1a7676e4da383db92`; `sha256sum -c` passe.
 - [i] Cette preuve valide le staging Linux x86_64 sur l’hôte actuel; elle ne remplace pas l’installation Linux sur machine distincte, les vérifications interactives/matérielles, la provenance des visuels ni les validations de release P9 encore ouvertes.
+
+## Retrait des sources projectiles historiques — 2026-10-18
+
+- [x] Les 24 PNG runtime de `sprites/projectiles/` ont une source Aseprite sous `source/original_procedural/` et une provenance pointant au générateur procédural interne; le renderer les charge via `SPRITE_FILES`.
+- [x] La route projectile de `build_catalog_icon_assets.gd` a été supprimée. Recherche plein dépôt terminée avant retrait : l’atlas et les 24 sources Aseprite parallèles ne servaient qu’à ce builder; les PNG/SVG racine étaient inactifs et exclus du paquet. Les fichiers `.import` associés ont été retirés avec leurs fichiers.
+- [x] `godot_project_import`, `survival_combat_visual_smoke`, `render_batching_smoke`, `catalog_icon_assets_smoke` passent dans CTest (4/4). La capture de combat `/tmp/dopamine-survival-combat-visual.png` (640×360, SHA-256 `8acde3801cd14f132084aac19227d93a02407a8b6b169ffa2d703ca88e376de1`) a été examinée; les projectiles restent visibles au milieu du combat et des télégraphes.
+- [x] Export PCK Linux/X11 de 6 169 944 octets : les PNG runtime projetiles sont présents et l’atlas/source historiques ainsi que les exports racine vérifiés sont absents.

@@ -72,6 +72,9 @@ func _initialize() -> void:
 	if not _check_original_rewards_pipeline():
 		quit(1)
 		return
+	if not _check_projectile_migration_boundary():
+		quit(1)
+		return
 	if not _check_title_skyline():
 		quit(1)
 		return
@@ -319,6 +322,16 @@ func _master_palette_has(pixel: Color) -> bool:
 			if Color8(int(fields[0]), int(fields[1]), int(fields[2])).to_html(false) == expected:
 				return true
 	return false
+
+func _check_projectile_migration_boundary() -> bool:
+	var legacy_builder := FileAccess.get_file_as_string("res://tools/build_catalog_icon_assets.gd")
+	if legacy_builder.contains("PROJECTILE_REFERENCE") or legacy_builder.contains("source/projectiles"):
+		push_error("Retired projectile reference sheets must not overwrite original runtime sprites")
+		return false
+	if DirAccess.dir_exists_absolute(ProjectSettings.globalize_path("res://assets/source/projectiles")):
+		push_error("Legacy projectile sources should be retired after migrating to original_procedural")
+		return false
+	return true
 
 func _check_title_skyline() -> bool:
 	var png_path := "res://assets/backgrounds/title_skyline.png"

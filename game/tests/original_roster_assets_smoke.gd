@@ -17,7 +17,8 @@ func _initialize() -> void:
 		quit(1)
 		return
 	var legacy_builder := FileAccess.get_file_as_string("res://tools/build_catalog_icon_assets.gd")
-	if not legacy_builder.contains("for index in range(9, ROSTER_NAMES.size())"):
+	if not legacy_builder.contains("const RETIRED_ROSTER_COUNT := 9") or \
+			not legacy_builder.contains("for index in range(RETIRED_ROSTER_COUNT, ROSTER_NAMES.size())"):
 		push_error("Legacy roster builder must not overwrite the migrated common enemy sprites")
 		quit(1)
 		return
