@@ -2217,7 +2217,7 @@ Note de clôture : le blocage historique du smoke `sandbox_ui_smoke.gd` décrit 
 ## Confirmation de vente d’équipement — 2026-10-18
 
 - [x] La capture Xvfb/Mesa de l’état de vente a révélé une boîte système grise. `SellConfirmation` utilise maintenant `sell_confirmation.tscn`, un overlay Neon avec avertissement et focus initial sur CANCEL; Échap annule. La valeur économique reste celle du service **[PROPOSÉE]**.
-- [x] `godot_project_import`, `equipment_panel_visual_smoke` et `survival_inventory_smoke` passent par CTest (**3/3**). Le smoke visuel contrôle aussi Annuler et le focus initial; le parcours persistant vérifie qu’ouvrir le dialogue ne retire rien avant confirmation, puis vend via SELL.
+- [x] `godot_project_import`, `equipment_panel_visual_smoke` et `survival_inventory_smoke` passent par CTest (**3/3**). Le smoke visuel contrôle aussi Échap, CANCEL et le focus initial aux trois viewports; le parcours persistant vérifie qu’ouvrir le dialogue ne retire rien avant confirmation, puis vend via SELL.
 - [x] Capture 640×360 examinée et indexée dans `docs/art/evidence/2026-10-18/README.md`.
 - [i] La confirmation de vente est couverte; les autres branches interactives et la revue avec périphériques physiques restent ouvertes.
 

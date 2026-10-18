@@ -157,16 +157,33 @@ func _run() -> void:
 			root.gui_get_focus_owner() != sell_confirmation.get_node("Center/Panel/Content/Actions/CancelButton"):
 			_fail("Sale should show its explicit irreversible-action confirmation")
 			return
-		sell_confirmation.get_node("Center/Panel/Content/Actions/CancelButton").pressed.emit()
+		await _send_key(KEY_ESCAPE)
 		if sell_confirmation.visible:
-			_fail("Cancel should close sale confirmation without executing the sale")
+			_fail("Escape should close sale confirmation without executing the sale")
 			return
 		sell_button.pressed.emit()
+		await process_frame
+		var confirmation_panel: Control = sell_confirmation.get_node("Center/Panel")
+		var original_confirmation_size: Vector2i = root.size
+		for viewport_size in [Vector2i(640, 360), Vector2i(1280, 720), Vector2i(1920, 1080)]:
+			root.size = viewport_size
+			await process_frame
+			if not Rect2(Vector2.ZERO, Vector2(viewport_size)).encloses(confirmation_panel.get_global_rect()):
+				_fail("Sale confirmation should fit viewport %s" % viewport_size)
+				return
+			if root.gui_get_focus_owner() != sell_confirmation.get_node("Center/Panel/Content/Actions/CancelButton"):
+				_fail("Viewport changes should preserve the safe initial sale confirmation focus")
+				return
+		root.size = original_confirmation_size
 		await process_frame
 		await RenderingServer.frame_post_draw
 		var confirmation_path := ProjectSettings.globalize_path(EVIDENCE_DIR + "/equipment-sell-confirmation.png")
 		if root.get_texture().get_image().save_png(confirmation_path) != OK:
 			_fail("Could not capture the equipment sale confirmation")
+			return
+		sell_confirmation.get_node("Center/Panel/Content/Actions/CancelButton").pressed.emit()
+		if sell_confirmation.visible:
+			_fail("Cancel button should close sale confirmation without executing the sale")
 			return
 	var original_size: Vector2i = root.size
 	for viewport_size in [Vector2i(640, 360), Vector2i(1280, 720), Vector2i(1920, 1080)]:
