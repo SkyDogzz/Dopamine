@@ -2341,3 +2341,8 @@ Note de clôture : le blocage historique du smoke `sandbox_ui_smoke.gd` décrit 
 - [x] Un contrôle de lecture a révélé que le contrôleur retournait avant de faire avancer les frames de mort. `player_controller_smoke.gd` reproduit d’abord le défaut, puis vérifie l’avancement après correction. Les smokes joueur, sources/animations, armes, résultat de run, réanimation, Sandbox et musique adaptative passent.
 - [x] `build/cmake-3.31.12-linux-x86_64/bin/ctest --test-dir build --output-on-failure --parallel 4` passe **121/121** en 24,71 s; l’import éditeur Godot 4.7.2 passe également.
 - [i] Les prototypes visuels et le mix audio demeurent soumis à revue artistique et écoute sur une sortie PCM réelle; les choix marqués proposés/ouvertes dans le GDD ne sont pas canonisés par ces validations.
+
+## Visibilité de l’animation de défaite avant le panneau de résultat — 2026-10-18
+
+- [x] Le smoke `survival_run_result_smoke.gd` vérifie que `player_death.png` reste visible tandis que l’overlay opaque est caché, puis que l’écran apparaît après la dernière frame. Le contrôleur expose l’état effectif de fin d’animation; `_finish_run` attend cet état uniquement pour une mort en jeu/refus de réanimation. Victoire et abandon Endless n’attendent pas l’animation.
+- [x] Les smokes défaite, réanimation, récompense Survival, records Armorless et abandon Endless passent 5/5; la suite CTest après correction passe **121/121** en 24,71 s.

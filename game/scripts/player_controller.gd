@@ -76,6 +76,12 @@ func play_death() -> void:
 	_one_shot_frame = 0
 	_show_frame(_death_texture, _one_shot_frame, _facing_row)
 
+func death_animation_duration() -> float:
+	return 4.0 / DEATH_FRAME_RATE
+
+func is_death_animation_finished() -> bool:
+	return _one_shot_state == "death" and _one_shot_elapsed >= death_animation_duration()
+
 func _advance_one_shot(delta: float) -> void:
 	_one_shot_elapsed += delta
 	var frame_rate := DEATH_FRAME_RATE if _one_shot_state == "death" else ATTACK_FRAME_RATE

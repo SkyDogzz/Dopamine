@@ -120,8 +120,12 @@ func _expect_revive_cancelled(progression: RefCounted) -> bool:
 	if not session.run_over or not session.simulation.snapshot()["paused"]:
 		_fail("Declining revive should end and pause the run")
 		return true
+	var overlay: Control = session.get_node("HUD/RunResultOverlay")
+	var deadline := Time.get_ticks_msec() + 1000
+	while Time.get_ticks_msec() < deadline and not overlay.visible:
+		await process_frame
 	var rewards: Label = session.get_node("HUD/RunResultOverlay/RunResultPanel/Content/Rewards")
-	if rewards.text == "PROGRESSION SAVE FAILED" or not rewards.text.contains("ESSENCE"):
+	if not overlay.visible or rewards.text == "PROGRESSION SAVE FAILED" or not rewards.text.contains("ESSENCE"):
 		_fail("Declining revive should show a successfully recorded run result")
 		return true
 	if "--capture" in OS.get_cmdline_user_args() and not await _capture_ui_state(session, "revive-declined-result.png"):

@@ -1054,7 +1054,7 @@ func _process(_delta: float) -> void:
 	_fire_void_orb(current_simulation_time, state["paused"])
 	_fire_frost_nova(current_simulation_time, state["paused"])
 	if player_hp <= 0.0 and not run_over and not _revive_pending:
-		_finish_run(false)
+		_finish_run(false, true)
 	if mode_id == "armorless" and not run_over and not _manually_paused and \
 			not _pending_armorless_draft_waves.is_empty():
 		_open_next_armorless_draft()
@@ -1621,7 +1621,7 @@ func _decline_revive() -> void:
 		return
 	_revive_confirmation.hide()
 	_revive_pending = false
-	_finish_run(false)
+	_finish_run(false, true)
 
 func _player_health_decay_amount(active_time_seconds: float, delta_seconds: float) -> float:
 	var amount: float = simulation.health_decay_amount(active_time_seconds, delta_seconds)
@@ -2213,16 +2213,18 @@ func _complete_pending_victory() -> void:
 		_victory_pending = false
 		_finish_run(true)
 
-func _finish_run(victory: bool) -> void:
+func _finish_run(victory: bool, animate_player_death: bool = false) -> void:
 	if run_over:
 		return
 	run_over = true
-	if not victory and player != null and player.has_method("play_death"):
+	var death_animation_player: CharacterBody2D
+	if animate_player_death and not victory and player != null and player.has_method("play_death"):
 		player.play_death()
+		death_animation_player = player
 	_play_run_result_music(victory)
 	Sfx.play_named("victory" if victory else "defeat", "", "boss_defeat")
 	simulation.pause()
-	_run_result_overlay.visible = true
+	_run_result_overlay.visible = victory
 	var run_active_time := _run_active_time()
 	var reward := {}
 	var armorless_record := {}
@@ -2254,6 +2256,10 @@ func _finish_run(victory: bool) -> void:
 		reward = progression_service.award_survival_run(
 			_run_id, wave_director.wave, victory, kill_count, difficulty_id, _run_achievement_metrics()
 		)
+	if death_animation_player != null and death_animation_player.has_method("is_death_animation_finished"):
+		while not death_animation_player.is_death_animation_finished():
+			await get_tree().process_frame
+	_run_result_overlay.visible = true
 	_run_result.show_result(victory, wave_director.wave, run_active_time, kill_count, reward, armorless_record,
 		victory and mode_id == "survival")
 

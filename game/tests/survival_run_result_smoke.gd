@@ -35,6 +35,10 @@ func _run() -> void:
 			break
 	var overlay = session.get_node("HUD/RunResultOverlay")
 	var panel = session.get_node("HUD/RunResultOverlay/RunResultPanel")
+	var player_sprite: Sprite2D = session.player.get_node("Sprite")
+	if overlay.visible or player_sprite.texture.resource_path.get_file() != "player_death.png":
+		_fail("The player death animation should remain visible before the opaque result panel")
+		return
 	deadline = Time.get_ticks_msec() + 1000
 	while Time.get_ticks_msec() < deadline:
 		if session.simulation.snapshot()["paused"] and overlay.visible:
@@ -42,6 +46,9 @@ func _run() -> void:
 		await process_frame
 	if not session.run_over or not session.simulation.snapshot()["paused"] or not overlay.visible:
 		_fail("HP reaching zero should pause the run and show the result screen")
+		return
+	if player_sprite.region_rect.position.x < 96.0:
+		_fail("The result screen should appear after the player death animation finishes")
 		return
 	if panel.get_node("Content/Title").text != "RUN OVER" or not panel.get_node("Content/Summary").text.contains("WAVE"):
 		_fail("Defeat should show a run summary and RUN OVER title")
