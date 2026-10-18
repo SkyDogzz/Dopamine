@@ -2144,3 +2144,10 @@ Note de clôture : le blocage historique du smoke `sandbox_ui_smoke.gd` décrit 
 - [x] La capture boss a révélé le label au style par défaut et un chevauchement vertical avec le HUD de coin. `BossValue` utilise maintenant la fonte pixel 8 px cyan, la barre de vie est magenta, et le panneau est placé sous les panneaux HP et méta. La preuve combinée et le smoke valident le thème, l’absence de chevauchement et l’inclusion dans les bornes logiques.
 - [x] `godot_project_import`, `survival_entry_smoke`, `survival_hud_smoke`, `survival_visual_effects_smoke` et `survival_pause_smoke` passent par CTest (**5/5**).
 - [i] Les profils de run sont synthétiques, le rendu est Xvfb/Mesa llvmpipe; ceci n’établit pas la lisibilité de tous les états ni le rendu sur GPU matériel.
+
+## Dialogue de revive et statistiques de run — 2026-10-18
+
+- [x] La confirmation native grise du revive est remplacée par `revive_confirmation.tscn`, un overlay Neon dans le HUD. Le focus initial reste sur `REVIVE`; `ACCEPT DEFEAT` conserve le refus et Échap le déclenche aussi. Le smoke vérifie la confirmation, le refus, l’unicité du revive et son indisponibilité Armorless/Sandbox.
+- [x] `survival_revive_smoke.gd --capture` génère la confirmation et le résultat après refus; `survival_run_stat_hub_smoke.gd --capture` génère le panneau Tab avec focus de fermeture. Les images sont examinées et hashées dans le README de preuves. La défaite capturée affiche l’erreur de sauvegarde du run de durée nulle du fixture isolé.
+- [x] `godot_project_import`, `survival_revive_smoke`, `survival_run_stat_hub_smoke` et `survival_run_result_smoke` passent par CTest (**4/4**).
+- [i] Le dialogue et le détail sont capturés avec un profil temporaire isolé; revue physique manette/clavier, états d’erreur sur profils réels et toutes les branches de focus restent ouverts.

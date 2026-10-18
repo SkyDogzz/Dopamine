@@ -498,6 +498,9 @@ var _pending_armorless_draft_waves: Array[int] = []
 @onready var _abandon_confirmation: Control = $HUD/PauseOverlay/ConfirmationOverlay
 @onready var _abandon_cancel_button: Button = $HUD/PauseOverlay/ConfirmationOverlay/Center/Panel/Content/CancelButton
 @onready var _abandon_confirm_button: Button = $HUD/PauseOverlay/ConfirmationOverlay/Center/Panel/Content/ConfirmButton
+@onready var _revive_confirmation: Control = $HUD/ReviveConfirmationDialog
+@onready var _revive_button: Button = $HUD/ReviveConfirmationDialog/Center/Panel/Content/Actions/ReviveButton
+@onready var _revive_decline_button: Button = $HUD/ReviveConfirmationDialog/Center/Panel/Content/Actions/DeclineButton
 
 var _options_overlay: Control
 var _inventory_overlay: Control
@@ -506,7 +509,6 @@ var _run_stat_hub_dirty := true
 var _next_run_stat_hub_refresh_at := 0.0
 var _health_locked := false
 var _auto_select_first_chest := false
-var _revive_confirmation: ConfirmationDialog
 var _revive_pending := false
 var _revive_used := false
 var _revive_invulnerable_until := 0.0
@@ -582,16 +584,8 @@ func _ready() -> void:
 	_pause_abandon_button.pressed.connect(_open_abandon_confirmation)
 	_abandon_cancel_button.pressed.connect(_close_abandon_confirmation)
 	_abandon_confirm_button.pressed.connect(_confirm_abandon_run)
-	_revive_confirmation = ConfirmationDialog.new()
-	_revive_confirmation.name = "ReviveConfirmationDialog"
-	_revive_confirmation.theme = UI_THEME
-	_revive_confirmation.title = "LAST CHANCE"
-	_revive_confirmation.dialog_text = "USE REVIVE?\nRestore 50% HP and gain 3 seconds of invulnerability."
-	_revive_confirmation.get_ok_button().text = "REVIVE"
-	_revive_confirmation.get_cancel_button().text = "ACCEPT DEFEAT"
-	_revive_confirmation.confirmed.connect(_confirm_revive)
-	_revive_confirmation.canceled.connect(_decline_revive)
-	add_child(_revive_confirmation)
+	_revive_button.pressed.connect(_confirm_revive)
+	_revive_decline_button.pressed.connect(_decline_revive)
 	player_max_hp = simulation.initial_player_hp()
 	_base_player_move_speed = player.move_speed
 	if progression_service != null:
@@ -706,12 +700,16 @@ func _physics_process(_delta: float) -> void:
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventKey and event.pressed and not event.echo and event.keycode == KEY_TAB:
-		if simulation == null or run_over or _chest_open or _starting_weapon_choice_open or _manually_paused:
+		if simulation == null or run_over or _chest_open or _starting_weapon_choice_open or _manually_paused or _revive_pending:
 			return
 		_run_stat_hub.toggle_detail()
 		get_viewport().set_input_as_handled()
 		return
 	if not event.is_action_pressed("ui_cancel"):
+		return
+	if _revive_pending:
+		_decline_revive()
+		get_viewport().set_input_as_handled()
 		return
 	if _run_stat_hub != null and _run_stat_hub.detail_open:
 		_run_stat_hub.set_detail_open(false)
@@ -1500,7 +1498,8 @@ func _take_player_damage(amount: float) -> void:
 			player.controls_enabled = false
 		if simulation != null:
 			simulation.pause()
-		_revive_confirmation.popup_centered()
+		_revive_confirmation.show()
+		_revive_button.grab_focus()
 
 func _can_offer_revive() -> bool:
 	return mode_id in ["survival", "endless"] and not _revive_used and not sandbox_diagnostics_enabled and \

@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3]
+[gd_scene load_steps=8 format=3]
 
 [ext_resource type="Script" path="res://scripts/survival_session.gd" id="1_session"]
 [ext_resource type="PackedScene" path="res://scenes/chest_choice.tscn" id="2_chest_choice"]
@@ -6,6 +6,7 @@
 [ext_resource type="PackedScene" path="res://scenes/pause_menu.tscn" id="4_pause_menu"]
 [ext_resource type="Texture2D" path="res://assets/sprites/rewards/xp_orb.png" id="5_xp_orb"]
 [ext_resource type="Script" path="res://scripts/adaptive_survival_music.gd" id="6_adaptive_music"]
+[ext_resource type="PackedScene" path="res://scenes/revive_confirmation.tscn" id="7_revive_confirmation"]
 
 [node name="SurvivalSession" type="Node2D"]
 script = ExtResource("1_session")
@@ -233,3 +234,5 @@ mouse_filter = 2
 [node name="RunResultPanel" parent="HUD/RunResultOverlay" instance=ExtResource("3_run_result")]
 
 [node name="PauseOverlay" parent="HUD" instance=ExtResource("4_pause_menu")]
+
+[node name="ReviveConfirmationDialog" parent="HUD" instance=ExtResource("7_revive_confirmation")]

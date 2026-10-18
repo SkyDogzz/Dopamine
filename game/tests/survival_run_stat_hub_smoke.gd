@@ -107,6 +107,8 @@ func _run() -> void:
 	if not hub.get_node("Detail/Content/XPStatus").text.contains("RUN BONUSES 0"):
 		_fail("The detail panel should show the current XP run bonus count")
 		return
+	if "--capture" in OS.get_cmdline_user_args() and not await _capture_detail(session):
+		return
 	session._unhandled_input(tab)
 	if hub.detail_open:
 		_fail("Tab should close the stat detail without pausing the run")
@@ -138,3 +140,19 @@ func _run() -> void:
 func _fail(message: String) -> void:
 	push_error(message)
 	quit(1)
+
+func _capture_detail(session: Node2D) -> bool:
+	if root.get_visible_rect().size != Vector2(640, 360):
+		_fail("Expected a 640x360 logical viewport for run stat details")
+		return false
+	var was_processing := session.is_processing()
+	session.set_process(false)
+	await RenderingServer.frame_post_draw
+	var path := ProjectSettings.globalize_path("res://../docs/art/evidence/2026-10-18/states/run-stat-detail.png")
+	var save_error := root.get_texture().get_image().save_png(path)
+	session.set_process(was_processing)
+	if save_error != OK:
+		_fail("Could not capture the run stat details")
+		return false
+	print("Run stat detail visual capture: %s" % path)
+	return true
