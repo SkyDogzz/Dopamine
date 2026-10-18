@@ -4,13 +4,21 @@ func _initialize() -> void:
 	call_deferred("_run")
 
 func _run() -> void:
-	var panel: Control = load("res://scenes/skill_tree_panel.tscn").instantiate()
 	var save_service = load("res://scripts/save_service.gd").new("user://skill_tree_panel_visual_smoke")
 	var progression = load("res://scripts/progression_service.gd").new(save_service, "0")
+	var hub: Control = load("res://scenes/survival_hub.tscn").instantiate()
+	hub.progression_service = progression
+	root.add_child(hub)
+	await process_frame
+	var panel: Control = load("res://scenes/skill_tree_panel.tscn").instantiate()
 	panel.progression_service = progression
-	root.add_child(panel)
+	hub.add_child(panel)
 	panel.present({"resources": {"essence": 300}, "unlocked_skill_nodes": []})
 	await process_frame
+	var backdrop: ColorRect = hub.get_node("Background")
+	if backdrop.color != Color(0.031373, 0.043137, 0.094118, 1.0):
+		_fail("The skill tree evidence should use the actual dark Survival hub backdrop")
+		return
 	var frame: PanelContainer = panel.get_node("Panel")
 	var scroll: ScrollContainer = panel.get_node("Panel/Content/TreeScroll")
 	var graph: Control = panel.get_node("Panel/Content/TreeScroll/Graph")

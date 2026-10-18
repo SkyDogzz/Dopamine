@@ -2237,3 +2237,9 @@ Note de clôture : le blocage historique du smoke `sandbox_ui_smoke.gd` décrit 
 - [x] `ui_states_evidence_smoke.gd` régénère la capture du Lab; l’image 640×360 confirme le fond sombre uniforme au lieu du gris de fenêtre découvert pendant la revue.
 - [x] `godot_project_import`, `sandbox_preset_smoke`, `sandbox_lab_smoke` et `sandbox_lab_layout_smoke` passent par CTest (**4/4**), y compris isolation des services et bornes multi-résolution.
 - [x] Hash actualisé dans le README de preuves. L’inspection reste virtualisée; aucun contrôleur ou GPU matériel n’a été essayé.
+
+## Capture intégrée du skill tree — 2026-10-18
+
+- [x] La revue des captures a détecté que `skill_tree_panel_visual_smoke.gd` rendait le panneau seul : son backdrop translucide mélangeait le gris de viewport Godot, absent en jeu. Le smoke instancie maintenant le vrai hub Survival comme fond, puis ajoute le panneau avec un service de progression isolé; aucune sauvegarde normale n’est lue ou modifiée.
+- [x] Capture 640×360 régénérée et inspectée : `docs/art/evidence/2026-10-18/skill-tree.png`. Le registre de preuves porte son SHA-256 `54033cebcd09c16c22c254151d7de2f998db865d0f6b038126bb1369581320c3`.
+- [x] `godot_project_import` et `skill_tree_panel_visual_smoke` passent via CTest (**2/2**). L’UI et les données runtime ne changent pas; la lisibilité globale et les contrôles physiques restent **[OUVERTS]**.
