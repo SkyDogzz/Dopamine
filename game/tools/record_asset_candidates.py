@@ -70,6 +70,21 @@ def main() -> None:
             asset["generation_parameters"] = metadata.get("parameters", metadata.get("dimensions", {}))
             asset["source_sha256"] = metadata.get("source_sha256")
             asset["export_sha256"] = metadata.get("export_sha256") or metadata.get("export", {}).get("sha256")
+            exported = record.get("png", record.get("export", record.get("path")))
+            if exported:
+                export_path = Path(exported)
+                if not export_path.is_absolute():
+                    export_path = ROOT / export_path
+                asset["candidate_export_path"] = str(export_path.resolve().relative_to(ROOT))
+            source_name = metadata.get("source_path")
+            if source_name:
+                source_path = Path(source_name)
+                if not source_path.is_absolute():
+                    source_path = root / source_path
+                try:
+                    asset["candidate_source_path"] = str(source_path.resolve().relative_to(ROOT))
+                except ValueError:
+                    asset["candidate_source_path"] = str(source_path)
             asset["qa_report_path"] = str(report_path.relative_to(ROOT))
             recorded.append(asset_id)
     MANIFEST.write_text(json.dumps(manifest, indent=2, ensure_ascii=False) + "\n")

@@ -35,7 +35,7 @@
     "project_copy": "build/assets/candidates/godot-final-import-check/project",
     "log": "build/assets/candidates/godot-final-import-check/import.log"
   },
-  "artistic_review": "pending; no display/audio playback available in this environment",
+  "artistic_review": "pending; inspection found several static icons geometric and some animation sheets procedural pose variants; user review requested",
   "game_assets_files": [
     {
       "path": "game/assets/README.md",
@@ -87,5 +87,27 @@
     "Many non-player animation frames are procedural identity-preserving role prototypes, not bespoke animation art.",
     "Per-weapon SFX IDs are generated, but runtime event mapping needs gameplay integration.",
     "Music tempo/key/arrangements and final gain balance remain proposed."
-  ]
+  ],
+  "review_pack": {
+    "local_index": "build/assets/candidates/review/index.html",
+    "contact_sheets": 4,
+    "animation_previews": 131,
+    "audio_inventory": "build/assets/candidates/review/audio-inventory.json",
+    "broken_local_references": 0
+  },
+  "godot_integration_preflight": {
+    "status": "passed",
+    "candidate_destinations_checked": 308,
+    "dry_run_plan": "build/assets/candidates/review/integration-dry-run.json",
+    "candidate_hash_checks": "passed",
+    "destination_collisions": 0,
+    "overwrite_conflicts": 0,
+    "spriteframes_resources_loaded": 131,
+    "runtime_copies": "none; candidates are pending explicit acceptance"
+  },
+  "pixel_filtering": {
+    "godot_project_setting": "rendering/textures/canvas_textures/default_texture_filter",
+    "value": 1,
+    "evidence": "Godot 4.7.2 setting inspection; project scenes and smoke checks use texture_filter=1 as nearest"
+  }
 }

@@ -46,7 +46,9 @@
       "blockers": [
         "hero outfit details are open"
       ],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/player-animation/sprites/player/player_idle.png",
+      "candidate_source_path": "build/assets/candidates/player-animation/source/animation/player_idle.aseprite"
     },
     {
       "asset_id": "player_walk",
@@ -79,7 +81,9 @@
       "blockers": [
         "hero outfit details are open"
       ],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/player-animation/sprites/player/player_walk.png",
+      "candidate_source_path": "build/assets/candidates/player-animation/source/animation/player_walk.aseprite"
     },
     {
       "asset_id": "player_attack",
@@ -112,7 +116,9 @@
       "blockers": [
         "attack presentation is not specified by GDD/Art Bible"
       ],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/player-animation/sprites/player/player_attack.png",
+      "candidate_source_path": "build/assets/candidates/player-animation/source/animation/player_attack.aseprite"
     },
     {
       "asset_id": "player_death",
@@ -145,7 +151,9 @@
       "blockers": [
         "death animation is not specified by GDD/Art Bible"
       ],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/player-animation/sprites/player/player_death.png",
+      "candidate_source_path": "build/assets/candidates/player-animation/source/animation/player_death.aseprite"
     },
     {
       "asset_id": "enemy_chaser_sprite",
@@ -179,7 +187,9 @@
       "blockers": [
         "enemy outfit/identity details and final roster art brief are open"
       ],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/roster/sprites/roster/enemy_chaser.png",
+      "candidate_source_path": "build/assets/candidates/roster/source/roster/enemy_chaser.aseprite"
     },
     {
       "asset_id": "enemy_chaser_idle",
@@ -235,7 +245,9 @@
       "blockers": [
         "idle animation timing/frame count not specified"
       ],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/enemy-animation-complete/sprites/enemies/enemy_chaser_idle.png",
+      "candidate_source_path": "build/assets/candidates/enemy-animation-complete/source/animation/enemy_chaser_idle.aseprite"
     },
     {
       "asset_id": "enemy_chaser_move",
@@ -291,7 +303,9 @@
       "blockers": [
         "move animation timing/frame count not specified"
       ],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/enemy-animation-complete/sprites/enemies/enemy_chaser_move.png",
+      "candidate_source_path": "build/assets/candidates/enemy-animation-complete/source/animation/enemy_chaser_move.aseprite"
     },
     {
       "asset_id": "enemy_chaser_attack",
@@ -347,7 +361,9 @@
       "blockers": [
         "attack animation timing/frame count not specified"
       ],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/enemy-animation-complete/sprites/enemies/enemy_chaser_attack.png",
+      "candidate_source_path": "build/assets/candidates/enemy-animation-complete/source/animation/enemy_chaser_attack.aseprite"
     },
     {
       "asset_id": "enemy_chaser_death",
@@ -403,7 +419,9 @@
       "blockers": [
         "death animation timing/frame count not specified"
       ],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/enemy-animation-complete/sprites/enemies/enemy_chaser_death.png",
+      "candidate_source_path": "build/assets/candidates/enemy-animation-complete/source/animation/enemy_chaser_death.aseprite"
     },
     {
       "asset_id": "enemy_sprinter_sprite",
@@ -437,7 +455,9 @@
       "blockers": [
         "enemy outfit/identity details and final roster art brief are open"
       ],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/roster/sprites/roster/enemy_sprinter.png",
+      "candidate_source_path": "build/assets/candidates/roster/source/roster/enemy_sprinter.aseprite"
     },
     {
       "asset_id": "enemy_sprinter_idle",
@@ -493,7 +513,9 @@
       "blockers": [
         "idle animation timing/frame count not specified"
       ],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/enemy-animation-complete/sprites/enemies/enemy_sprinter_idle.png",
+      "candidate_source_path": "build/assets/candidates/enemy-animation-complete/source/animation/enemy_sprinter_idle.aseprite"
     },
     {
       "asset_id": "enemy_sprinter_move",
@@ -549,7 +571,9 @@
       "blockers": [
         "move animation timing/frame count not specified"
       ],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/enemy-animation-complete/sprites/enemies/enemy_sprinter_move.png",
+      "candidate_source_path": "build/assets/candidates/enemy-animation-complete/source/animation/enemy_sprinter_move.aseprite"
     },
     {
       "asset_id": "enemy_sprinter_attack",
@@ -605,7 +629,9 @@
       "blockers": [
         "attack animation timing/frame count not specified"
       ],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/enemy-animation-complete/sprites/enemies/enemy_sprinter_attack.png",
+      "candidate_source_path": "build/assets/candidates/enemy-animation-complete/source/animation/enemy_sprinter_attack.aseprite"
     },
     {
       "asset_id": "enemy_sprinter_death",
@@ -661,7 +687,9 @@
       "blockers": [
         "death animation timing/frame count not specified"
       ],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/enemy-animation-complete/sprites/enemies/enemy_sprinter_death.png",
+      "candidate_source_path": "build/assets/candidates/enemy-animation-complete/source/animation/enemy_sprinter_death.aseprite"
     },
     {
       "asset_id": "enemy_tank_sprite",
@@ -695,7 +723,9 @@
       "blockers": [
         "enemy outfit/identity details and final roster art brief are open"
       ],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/roster/sprites/roster/enemy_tank.png",
+      "candidate_source_path": "build/assets/candidates/roster/source/roster/enemy_tank.aseprite"
     },
     {
       "asset_id": "enemy_tank_idle",
@@ -751,7 +781,9 @@
       "blockers": [
         "idle animation timing/frame count not specified"
       ],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/enemy-animation-complete/sprites/enemies/enemy_tank_idle.png",
+      "candidate_source_path": "build/assets/candidates/enemy-animation-complete/source/animation/enemy_tank_idle.aseprite"
     },
     {
       "asset_id": "enemy_tank_move",
@@ -807,7 +839,9 @@
       "blockers": [
         "move animation timing/frame count not specified"
       ],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/enemy-animation-complete/sprites/enemies/enemy_tank_move.png",
+      "candidate_source_path": "build/assets/candidates/enemy-animation-complete/source/animation/enemy_tank_move.aseprite"
     },
     {
       "asset_id": "enemy_tank_attack",
@@ -863,7 +897,9 @@
       "blockers": [
         "attack animation timing/frame count not specified"
       ],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/enemy-animation-complete/sprites/enemies/enemy_tank_attack.png",
+      "candidate_source_path": "build/assets/candidates/enemy-animation-complete/source/animation/enemy_tank_attack.aseprite"
     },
     {
       "asset_id": "enemy_tank_death",
@@ -919,7 +955,9 @@
       "blockers": [
         "death animation timing/frame count not specified"
       ],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/enemy-animation-complete/sprites/enemies/enemy_tank_death.png",
+      "candidate_source_path": "build/assets/candidates/enemy-animation-complete/source/animation/enemy_tank_death.aseprite"
     },
     {
       "asset_id": "enemy_shooter_sprite",
@@ -953,7 +991,9 @@
       "blockers": [
         "enemy outfit/identity details and final roster art brief are open"
       ],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/roster/sprites/roster/enemy_shooter.png",
+      "candidate_source_path": "build/assets/candidates/roster/source/roster/enemy_shooter.aseprite"
     },
     {
       "asset_id": "enemy_shooter_idle",
@@ -1009,7 +1049,9 @@
       "blockers": [
         "idle animation timing/frame count not specified"
       ],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/enemy-animation-complete/sprites/enemies/enemy_shooter_idle.png",
+      "candidate_source_path": "build/assets/candidates/enemy-animation-complete/source/animation/enemy_shooter_idle.aseprite"
     },
     {
       "asset_id": "enemy_shooter_move",
@@ -1065,7 +1107,9 @@
       "blockers": [
         "move animation timing/frame count not specified"
       ],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/enemy-animation-complete/sprites/enemies/enemy_shooter_move.png",
+      "candidate_source_path": "build/assets/candidates/enemy-animation-complete/source/animation/enemy_shooter_move.aseprite"
     },
     {
       "asset_id": "enemy_shooter_attack",
@@ -1121,7 +1165,9 @@
       "blockers": [
         "attack animation timing/frame count not specified"
       ],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/enemy-animation-complete/sprites/enemies/enemy_shooter_attack.png",
+      "candidate_source_path": "build/assets/candidates/enemy-animation-complete/source/animation/enemy_shooter_attack.aseprite"
     },
     {
       "asset_id": "enemy_shooter_death",
@@ -1177,7 +1223,9 @@
       "blockers": [
         "death animation timing/frame count not specified"
       ],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/enemy-animation-complete/sprites/enemies/enemy_shooter_death.png",
+      "candidate_source_path": "build/assets/candidates/enemy-animation-complete/source/animation/enemy_shooter_death.aseprite"
     },
     {
       "asset_id": "enemy_buffer_sprite",
@@ -1211,7 +1259,9 @@
       "blockers": [
         "enemy outfit/identity details and final roster art brief are open"
       ],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/roster/sprites/roster/enemy_buffer.png",
+      "candidate_source_path": "build/assets/candidates/roster/source/roster/enemy_buffer.aseprite"
     },
     {
       "asset_id": "enemy_buffer_idle",
@@ -1267,7 +1317,9 @@
       "blockers": [
         "idle animation timing/frame count not specified"
       ],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/enemy-animation-complete/sprites/enemies/enemy_buffer_idle.png",
+      "candidate_source_path": "build/assets/candidates/enemy-animation-complete/source/animation/enemy_buffer_idle.aseprite"
     },
     {
       "asset_id": "enemy_buffer_move",
@@ -1323,7 +1375,9 @@
       "blockers": [
         "move animation timing/frame count not specified"
       ],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/enemy-animation-complete/sprites/enemies/enemy_buffer_move.png",
+      "candidate_source_path": "build/assets/candidates/enemy-animation-complete/source/animation/enemy_buffer_move.aseprite"
     },
     {
       "asset_id": "enemy_buffer_attack",
@@ -1379,7 +1433,9 @@
       "blockers": [
         "attack animation timing/frame count not specified"
       ],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/enemy-animation-complete/sprites/enemies/enemy_buffer_attack.png",
+      "candidate_source_path": "build/assets/candidates/enemy-animation-complete/source/animation/enemy_buffer_attack.aseprite"
     },
     {
       "asset_id": "enemy_buffer_death",
@@ -1435,7 +1491,9 @@
       "blockers": [
         "death animation timing/frame count not specified"
       ],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/enemy-animation-complete/sprites/enemies/enemy_buffer_death.png",
+      "candidate_source_path": "build/assets/candidates/enemy-animation-complete/source/animation/enemy_buffer_death.aseprite"
     },
     {
       "asset_id": "enemy_exploder_sprite",
@@ -1469,7 +1527,9 @@
       "blockers": [
         "enemy outfit/identity details and final roster art brief are open"
       ],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/roster/sprites/roster/enemy_exploder.png",
+      "candidate_source_path": "build/assets/candidates/roster/source/roster/enemy_exploder.aseprite"
     },
     {
       "asset_id": "enemy_exploder_idle",
@@ -1525,7 +1585,9 @@
       "blockers": [
         "idle animation timing/frame count not specified"
       ],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/enemy-animation-complete/sprites/enemies/enemy_exploder_idle.png",
+      "candidate_source_path": "build/assets/candidates/enemy-animation-complete/source/animation/enemy_exploder_idle.aseprite"
     },
     {
       "asset_id": "enemy_exploder_move",
@@ -1581,7 +1643,9 @@
       "blockers": [
         "move animation timing/frame count not specified"
       ],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/enemy-animation-complete/sprites/enemies/enemy_exploder_move.png",
+      "candidate_source_path": "build/assets/candidates/enemy-animation-complete/source/animation/enemy_exploder_move.aseprite"
     },
     {
       "asset_id": "enemy_exploder_attack",
@@ -1637,7 +1701,9 @@
       "blockers": [
         "attack animation timing/frame count not specified"
       ],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/enemy-animation-complete/sprites/enemies/enemy_exploder_attack.png",
+      "candidate_source_path": "build/assets/candidates/enemy-animation-complete/source/animation/enemy_exploder_attack.aseprite"
     },
     {
       "asset_id": "enemy_exploder_death",
@@ -1693,7 +1759,9 @@
       "blockers": [
         "death animation timing/frame count not specified"
       ],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/enemy-animation-complete/sprites/enemies/enemy_exploder_death.png",
+      "candidate_source_path": "build/assets/candidates/enemy-animation-complete/source/animation/enemy_exploder_death.aseprite"
     },
     {
       "asset_id": "enemy_shielder_sprite",
@@ -1727,7 +1795,9 @@
       "blockers": [
         "enemy outfit/identity details and final roster art brief are open"
       ],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/roster/sprites/roster/enemy_shielder.png",
+      "candidate_source_path": "build/assets/candidates/roster/source/roster/enemy_shielder.aseprite"
     },
     {
       "asset_id": "enemy_shielder_idle",
@@ -1783,7 +1853,9 @@
       "blockers": [
         "idle animation timing/frame count not specified"
       ],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/enemy-animation-complete/sprites/enemies/enemy_shielder_idle.png",
+      "candidate_source_path": "build/assets/candidates/enemy-animation-complete/source/animation/enemy_shielder_idle.aseprite"
     },
     {
       "asset_id": "enemy_shielder_move",
@@ -1839,7 +1911,9 @@
       "blockers": [
         "move animation timing/frame count not specified"
       ],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/enemy-animation-complete/sprites/enemies/enemy_shielder_move.png",
+      "candidate_source_path": "build/assets/candidates/enemy-animation-complete/source/animation/enemy_shielder_move.aseprite"
     },
     {
       "asset_id": "enemy_shielder_attack",
@@ -1895,7 +1969,9 @@
       "blockers": [
         "attack animation timing/frame count not specified"
       ],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/enemy-animation-complete/sprites/enemies/enemy_shielder_attack.png",
+      "candidate_source_path": "build/assets/candidates/enemy-animation-complete/source/animation/enemy_shielder_attack.aseprite"
     },
     {
       "asset_id": "enemy_shielder_death",
@@ -1951,7 +2027,9 @@
       "blockers": [
         "death animation timing/frame count not specified"
       ],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/enemy-animation-complete/sprites/enemies/enemy_shielder_death.png",
+      "candidate_source_path": "build/assets/candidates/enemy-animation-complete/source/animation/enemy_shielder_death.aseprite"
     },
     {
       "asset_id": "enemy_summoner_sprite",
@@ -1985,7 +2063,9 @@
       "blockers": [
         "enemy outfit/identity details and final roster art brief are open"
       ],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/roster/sprites/roster/enemy_summoner.png",
+      "candidate_source_path": "build/assets/candidates/roster/source/roster/enemy_summoner.aseprite"
     },
     {
       "asset_id": "enemy_summoner_idle",
@@ -2041,7 +2121,9 @@
       "blockers": [
         "idle animation timing/frame count not specified"
       ],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/enemy-animation-complete/sprites/enemies/enemy_summoner_idle.png",
+      "candidate_source_path": "build/assets/candidates/enemy-animation-complete/source/animation/enemy_summoner_idle.aseprite"
     },
     {
       "asset_id": "enemy_summoner_move",
@@ -2097,7 +2179,9 @@
       "blockers": [
         "move animation timing/frame count not specified"
       ],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/enemy-animation-complete/sprites/enemies/enemy_summoner_move.png",
+      "candidate_source_path": "build/assets/candidates/enemy-animation-complete/source/animation/enemy_summoner_move.aseprite"
     },
     {
       "asset_id": "enemy_summoner_attack",
@@ -2153,7 +2237,9 @@
       "blockers": [
         "attack animation timing/frame count not specified"
       ],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/enemy-animation-complete/sprites/enemies/enemy_summoner_attack.png",
+      "candidate_source_path": "build/assets/candidates/enemy-animation-complete/source/animation/enemy_summoner_attack.aseprite"
     },
     {
       "asset_id": "enemy_summoner_death",
@@ -2209,7 +2295,9 @@
       "blockers": [
         "death animation timing/frame count not specified"
       ],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/enemy-animation-complete/sprites/enemies/enemy_summoner_death.png",
+      "candidate_source_path": "build/assets/candidates/enemy-animation-complete/source/animation/enemy_summoner_death.aseprite"
     },
     {
       "asset_id": "enemy_summoned_sprite",
@@ -2243,7 +2331,9 @@
       "blockers": [
         "enemy outfit/identity details and final roster art brief are open"
       ],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/roster/sprites/roster/enemy_summoned.png",
+      "candidate_source_path": "build/assets/candidates/roster/source/roster/enemy_summoned.aseprite"
     },
     {
       "asset_id": "enemy_summoned_idle",
@@ -2299,7 +2389,9 @@
       "blockers": [
         "idle animation timing/frame count not specified"
       ],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/enemy-animation-complete/sprites/enemies/enemy_summoned_idle.png",
+      "candidate_source_path": "build/assets/candidates/enemy-animation-complete/source/animation/enemy_summoned_idle.aseprite"
     },
     {
       "asset_id": "enemy_summoned_move",
@@ -2355,7 +2447,9 @@
       "blockers": [
         "move animation timing/frame count not specified"
       ],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/enemy-animation-complete/sprites/enemies/enemy_summoned_move.png",
+      "candidate_source_path": "build/assets/candidates/enemy-animation-complete/source/animation/enemy_summoned_move.aseprite"
     },
     {
       "asset_id": "enemy_summoned_attack",
@@ -2411,7 +2505,9 @@
       "blockers": [
         "attack animation timing/frame count not specified"
       ],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/enemy-animation-complete/sprites/enemies/enemy_summoned_attack.png",
+      "candidate_source_path": "build/assets/candidates/enemy-animation-complete/source/animation/enemy_summoned_attack.aseprite"
     },
     {
       "asset_id": "enemy_summoned_death",
@@ -2467,7 +2563,9 @@
       "blockers": [
         "death animation timing/frame count not specified"
       ],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/enemy-animation-complete/sprites/enemies/enemy_summoned_death.png",
+      "candidate_source_path": "build/assets/candidates/enemy-animation-complete/source/animation/enemy_summoned_death.aseprite"
     },
     {
       "asset_id": "elite_sprinter_sprite",
@@ -2503,7 +2601,9 @@
       "blockers": [
         "elite visual identity details are not specified"
       ],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/pixel-art-complete/sprites/roster/elite_sprinter.png",
+      "candidate_source_path": "build/assets/candidates/pixel-art-complete/source/original_procedural/elite_sprinter.aseprite"
     },
     {
       "asset_id": "elite_sprinter_idle",
@@ -2540,7 +2640,9 @@
       "blockers": [
         "idle animation timing/frame count not specified"
       ],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/misc-animation/sprites/animation/elite_sprinter_idle.png",
+      "candidate_source_path": "build/assets/candidates/misc-animation/source/animation/elite_sprinter_idle.aseprite"
     },
     {
       "asset_id": "elite_sprinter_move",
@@ -2577,7 +2679,9 @@
       "blockers": [
         "move animation timing/frame count not specified"
       ],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/misc-animation/sprites/animation/elite_sprinter_move.png",
+      "candidate_source_path": "build/assets/candidates/misc-animation/source/animation/elite_sprinter_move.aseprite"
     },
     {
       "asset_id": "elite_sprinter_attack",
@@ -2614,7 +2718,9 @@
       "blockers": [
         "attack animation timing/frame count not specified"
       ],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/misc-animation/sprites/animation/elite_sprinter_attack.png",
+      "candidate_source_path": "build/assets/candidates/misc-animation/source/animation/elite_sprinter_attack.aseprite"
     },
     {
       "asset_id": "elite_sprinter_death",
@@ -2651,7 +2757,9 @@
       "blockers": [
         "death animation timing/frame count not specified"
       ],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/misc-animation/sprites/animation/elite_sprinter_death.png",
+      "candidate_source_path": "build/assets/candidates/misc-animation/source/animation/elite_sprinter_death.aseprite"
     },
     {
       "asset_id": "boss_pulse_warden_sprite",
@@ -2685,7 +2793,9 @@
       "blockers": [
         "canonical boss identity and patterns are open; only role prototypes permitted"
       ],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/pixel-art-complete/sprites/roster/boss_pulse_warden.png",
+      "candidate_source_path": "build/assets/candidates/pixel-art-complete/source/original_procedural/boss_pulse_warden.aseprite"
     },
     {
       "asset_id": "boss_pulse_warden_idle",
@@ -2722,7 +2832,9 @@
       "blockers": [
         "boss identity/patterns and idle animation timing are open"
       ],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/misc-animation/sprites/animation/boss_pulse_warden_idle.png",
+      "candidate_source_path": "build/assets/candidates/misc-animation/source/animation/boss_pulse_warden_idle.aseprite"
     },
     {
       "asset_id": "boss_pulse_warden_move",
@@ -2759,7 +2871,9 @@
       "blockers": [
         "boss identity/patterns and move animation timing are open"
       ],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/misc-animation/sprites/animation/boss_pulse_warden_move.png",
+      "candidate_source_path": "build/assets/candidates/misc-animation/source/animation/boss_pulse_warden_move.aseprite"
     },
     {
       "asset_id": "boss_pulse_warden_attack",
@@ -2796,7 +2910,9 @@
       "blockers": [
         "boss identity/patterns and attack animation timing are open"
       ],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/misc-animation/sprites/animation/boss_pulse_warden_attack.png",
+      "candidate_source_path": "build/assets/candidates/misc-animation/source/animation/boss_pulse_warden_attack.aseprite"
     },
     {
       "asset_id": "boss_pulse_warden_special",
@@ -2833,7 +2949,9 @@
       "blockers": [
         "boss identity/patterns and special animation timing are open"
       ],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/misc-animation/sprites/animation/boss_pulse_warden_special.png",
+      "candidate_source_path": "build/assets/candidates/misc-animation/source/animation/boss_pulse_warden_special.aseprite"
     },
     {
       "asset_id": "boss_pulse_warden_death",
@@ -2870,7 +2988,9 @@
       "blockers": [
         "boss identity/patterns and death animation timing are open"
       ],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/misc-animation/sprites/animation/boss_pulse_warden_death.png",
+      "candidate_source_path": "build/assets/candidates/misc-animation/source/animation/boss_pulse_warden_death.aseprite"
     },
     {
       "asset_id": "boss_dopamine_core_sprite",
@@ -2904,7 +3024,9 @@
       "blockers": [
         "canonical boss identity and patterns are open; only role prototypes permitted"
       ],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/pixel-art-complete/sprites/roster/boss_dopamine_core.png",
+      "candidate_source_path": "build/assets/candidates/pixel-art-complete/source/original_procedural/boss_dopamine_core.aseprite"
     },
     {
       "asset_id": "boss_dopamine_core_idle",
@@ -2941,7 +3063,9 @@
       "blockers": [
         "boss identity/patterns and idle animation timing are open"
       ],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/misc-animation/sprites/animation/boss_dopamine_core_idle.png",
+      "candidate_source_path": "build/assets/candidates/misc-animation/source/animation/boss_dopamine_core_idle.aseprite"
     },
     {
       "asset_id": "boss_dopamine_core_move",
@@ -2978,7 +3102,9 @@
       "blockers": [
         "boss identity/patterns and move animation timing are open"
       ],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/misc-animation/sprites/animation/boss_dopamine_core_move.png",
+      "candidate_source_path": "build/assets/candidates/misc-animation/source/animation/boss_dopamine_core_move.aseprite"
     },
     {
       "asset_id": "boss_dopamine_core_attack",
@@ -3015,7 +3141,9 @@
       "blockers": [
         "boss identity/patterns and attack animation timing are open"
       ],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/misc-animation/sprites/animation/boss_dopamine_core_attack.png",
+      "candidate_source_path": "build/assets/candidates/misc-animation/source/animation/boss_dopamine_core_attack.aseprite"
     },
     {
       "asset_id": "boss_dopamine_core_special",
@@ -3052,7 +3180,9 @@
       "blockers": [
         "boss identity/patterns and special animation timing are open"
       ],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/misc-animation/sprites/animation/boss_dopamine_core_special.png",
+      "candidate_source_path": "build/assets/candidates/misc-animation/source/animation/boss_dopamine_core_special.aseprite"
     },
     {
       "asset_id": "boss_dopamine_core_death",
@@ -3089,7 +3219,9 @@
       "blockers": [
         "boss identity/patterns and death animation timing are open"
       ],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/misc-animation/sprites/animation/boss_dopamine_core_death.png",
+      "candidate_source_path": "build/assets/candidates/misc-animation/source/animation/boss_dopamine_core_death.aseprite"
     },
     {
       "asset_id": "weapon_lightning_conductor_icon",
@@ -3123,7 +3255,9 @@
       "human_review_status": "pending",
       "integration_status": "not_integrated",
       "blockers": [],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/pixel-art-complete/sprites/catalog/weapon_lightning_conductor.png",
+      "candidate_source_path": "build/assets/candidates/pixel-art-complete/source/original_procedural/weapon_lightning_conductor.aseprite"
     },
     {
       "asset_id": "weapon_lightning_conductor_attack",
@@ -3160,7 +3294,9 @@
       "blockers": [
         "weapon level/evolution animation timing not specified"
       ],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/misc-animation/sprites/animation/weapon_lightning_conductor_attack.png",
+      "candidate_source_path": "build/assets/candidates/misc-animation/source/animation/weapon_lightning_conductor_attack.aseprite"
     },
     {
       "asset_id": "weapon_infinite_circuit_icon",
@@ -3194,7 +3330,9 @@
       "human_review_status": "pending",
       "integration_status": "not_integrated",
       "blockers": [],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/pixel-art-complete/sprites/catalog/evolution_lightning_conductor.png",
+      "candidate_source_path": "build/assets/candidates/pixel-art-complete/source/original_procedural/evolution_lightning_conductor.aseprite"
     },
     {
       "asset_id": "weapon_infinite_circuit_attack",
@@ -3231,7 +3369,9 @@
       "blockers": [
         "weapon level/evolution animation timing not specified"
       ],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/misc-animation/sprites/animation/weapon_infinite_circuit_attack.png",
+      "candidate_source_path": "build/assets/candidates/misc-animation/source/animation/weapon_infinite_circuit_attack.aseprite"
     },
     {
       "asset_id": "weapon_lightning_conductor_fire_vfx",
@@ -3268,7 +3408,9 @@
       "blockers": [
         "specific impact color/intensity and animation timing are open"
       ],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/misc-animation/sprites/animation/weapon_lightning_conductor_fire_vfx.png",
+      "candidate_source_path": "build/assets/candidates/misc-animation/source/animation/weapon_lightning_conductor_fire_vfx.aseprite"
     },
     {
       "asset_id": "weapon_lightning_conductor_impact_vfx",
@@ -3305,7 +3447,9 @@
       "blockers": [
         "specific impact color/intensity and animation timing are open"
       ],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/misc-animation/sprites/animation/weapon_lightning_conductor_impact_vfx.png",
+      "candidate_source_path": "build/assets/candidates/misc-animation/source/animation/weapon_lightning_conductor_impact_vfx.aseprite"
     },
     {
       "asset_id": "weapon_inferno_sprayer_icon",
@@ -3339,7 +3483,9 @@
       "human_review_status": "pending",
       "integration_status": "not_integrated",
       "blockers": [],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/pixel-art-complete/sprites/catalog/weapon_inferno_sprayer.png",
+      "candidate_source_path": "build/assets/candidates/pixel-art-complete/source/original_procedural/weapon_inferno_sprayer.aseprite"
     },
     {
       "asset_id": "weapon_inferno_sprayer_attack",
@@ -3376,7 +3522,9 @@
       "blockers": [
         "weapon level/evolution animation timing not specified"
       ],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/misc-animation/sprites/animation/weapon_inferno_sprayer_attack.png",
+      "candidate_source_path": "build/assets/candidates/misc-animation/source/animation/weapon_inferno_sprayer_attack.aseprite"
     },
     {
       "asset_id": "weapon_wildfire_icon",
@@ -3410,7 +3558,9 @@
       "human_review_status": "pending",
       "integration_status": "not_integrated",
       "blockers": [],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/pixel-art-complete/sprites/catalog/evolution_inferno_sprayer.png",
+      "candidate_source_path": "build/assets/candidates/pixel-art-complete/source/original_procedural/evolution_inferno_sprayer.aseprite"
     },
     {
       "asset_id": "weapon_wildfire_attack",
@@ -3447,7 +3597,9 @@
       "blockers": [
         "weapon level/evolution animation timing not specified"
       ],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/misc-animation/sprites/animation/weapon_wildfire_attack.png",
+      "candidate_source_path": "build/assets/candidates/misc-animation/source/animation/weapon_wildfire_attack.aseprite"
     },
     {
       "asset_id": "weapon_inferno_sprayer_fire_vfx",
@@ -3484,7 +3636,9 @@
       "blockers": [
         "specific impact color/intensity and animation timing are open"
       ],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/misc-animation/sprites/animation/weapon_inferno_sprayer_fire_vfx.png",
+      "candidate_source_path": "build/assets/candidates/misc-animation/source/animation/weapon_inferno_sprayer_fire_vfx.aseprite"
     },
     {
       "asset_id": "weapon_inferno_sprayer_impact_vfx",
@@ -3521,7 +3675,9 @@
       "blockers": [
         "specific impact color/intensity and animation timing are open"
       ],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/misc-animation/sprites/animation/weapon_inferno_sprayer_impact_vfx.png",
+      "candidate_source_path": "build/assets/candidates/misc-animation/source/animation/weapon_inferno_sprayer_impact_vfx.aseprite"
     },
     {
       "asset_id": "weapon_crimson_daggers_icon",
@@ -3555,7 +3711,9 @@
       "human_review_status": "pending",
       "integration_status": "not_integrated",
       "blockers": [],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/pixel-art-complete/sprites/catalog/weapon_crimson_daggers.png",
+      "candidate_source_path": "build/assets/candidates/pixel-art-complete/source/original_procedural/weapon_crimson_daggers.aseprite"
     },
     {
       "asset_id": "weapon_crimson_daggers_attack",
@@ -3592,7 +3750,9 @@
       "blockers": [
         "weapon level/evolution animation timing not specified"
       ],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/misc-animation/sprites/animation/weapon_crimson_daggers_attack.png",
+      "candidate_source_path": "build/assets/candidates/misc-animation/source/animation/weapon_crimson_daggers_attack.aseprite"
     },
     {
       "asset_id": "weapon_bloodstorm_icon",
@@ -3626,7 +3786,9 @@
       "human_review_status": "pending",
       "integration_status": "not_integrated",
       "blockers": [],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/pixel-art-complete/sprites/catalog/evolution_crimson_daggers.png",
+      "candidate_source_path": "build/assets/candidates/pixel-art-complete/source/original_procedural/evolution_crimson_daggers.aseprite"
     },
     {
       "asset_id": "weapon_bloodstorm_attack",
@@ -3663,7 +3825,9 @@
       "blockers": [
         "weapon level/evolution animation timing not specified"
       ],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/misc-animation/sprites/animation/weapon_bloodstorm_attack.png",
+      "candidate_source_path": "build/assets/candidates/misc-animation/source/animation/weapon_bloodstorm_attack.aseprite"
     },
     {
       "asset_id": "weapon_crimson_daggers_fire_vfx",
@@ -3700,7 +3864,9 @@
       "blockers": [
         "specific impact color/intensity and animation timing are open"
       ],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/misc-animation/sprites/animation/weapon_crimson_daggers_fire_vfx.png",
+      "candidate_source_path": "build/assets/candidates/misc-animation/source/animation/weapon_crimson_daggers_fire_vfx.aseprite"
     },
     {
       "asset_id": "weapon_crimson_daggers_impact_vfx",
@@ -3737,7 +3903,9 @@
       "blockers": [
         "specific impact color/intensity and animation timing are open"
       ],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/misc-animation/sprites/animation/weapon_crimson_daggers_impact_vfx.png",
+      "candidate_source_path": "build/assets/candidates/misc-animation/source/animation/weapon_crimson_daggers_impact_vfx.aseprite"
     },
     {
       "asset_id": "weapon_minigun_icon",
@@ -3771,7 +3939,9 @@
       "human_review_status": "pending",
       "integration_status": "not_integrated",
       "blockers": [],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/pixel-art-complete/sprites/catalog/weapon_minigun.png",
+      "candidate_source_path": "build/assets/candidates/pixel-art-complete/source/original_procedural/weapon_minigun.aseprite"
     },
     {
       "asset_id": "weapon_minigun_attack",
@@ -3808,7 +3978,9 @@
       "blockers": [
         "weapon level/evolution animation timing not specified"
       ],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/misc-animation/sprites/animation/weapon_minigun_attack.png",
+      "candidate_source_path": "build/assets/candidates/misc-animation/source/animation/weapon_minigun_attack.aseprite"
     },
     {
       "asset_id": "weapon_redline_icon",
@@ -3842,7 +4014,9 @@
       "human_review_status": "pending",
       "integration_status": "not_integrated",
       "blockers": [],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/pixel-art-complete/sprites/catalog/evolution_minigun.png",
+      "candidate_source_path": "build/assets/candidates/pixel-art-complete/source/original_procedural/evolution_minigun.aseprite"
     },
     {
       "asset_id": "weapon_redline_attack",
@@ -3879,7 +4053,9 @@
       "blockers": [
         "weapon level/evolution animation timing not specified"
       ],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/misc-animation/sprites/animation/weapon_redline_attack.png",
+      "candidate_source_path": "build/assets/candidates/misc-animation/source/animation/weapon_redline_attack.aseprite"
     },
     {
       "asset_id": "weapon_minigun_fire_vfx",
@@ -3916,7 +4092,9 @@
       "blockers": [
         "specific impact color/intensity and animation timing are open"
       ],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/misc-animation/sprites/animation/weapon_minigun_fire_vfx.png",
+      "candidate_source_path": "build/assets/candidates/misc-animation/source/animation/weapon_minigun_fire_vfx.aseprite"
     },
     {
       "asset_id": "weapon_minigun_impact_vfx",
@@ -3953,7 +4131,9 @@
       "blockers": [
         "specific impact color/intensity and animation timing are open"
       ],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/misc-animation/sprites/animation/weapon_minigun_impact_vfx.png",
+      "candidate_source_path": "build/assets/candidates/misc-animation/source/animation/weapon_minigun_impact_vfx.aseprite"
     },
     {
       "asset_id": "weapon_toxic_cloud_icon",
@@ -3987,7 +4167,9 @@
       "human_review_status": "pending",
       "integration_status": "not_integrated",
       "blockers": [],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/pixel-art-complete/sprites/catalog/weapon_toxic_cloud.png",
+      "candidate_source_path": "build/assets/candidates/pixel-art-complete/source/original_procedural/weapon_toxic_cloud.aseprite"
     },
     {
       "asset_id": "weapon_toxic_cloud_attack",
@@ -4024,7 +4206,9 @@
       "blockers": [
         "weapon level/evolution animation timing not specified"
       ],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/misc-animation/sprites/animation/weapon_toxic_cloud_attack.png",
+      "candidate_source_path": "build/assets/candidates/misc-animation/source/animation/weapon_toxic_cloud_attack.aseprite"
     },
     {
       "asset_id": "weapon_pandemic_icon",
@@ -4058,7 +4242,9 @@
       "human_review_status": "pending",
       "integration_status": "not_integrated",
       "blockers": [],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/pixel-art-complete/sprites/catalog/evolution_toxic_cloud.png",
+      "candidate_source_path": "build/assets/candidates/pixel-art-complete/source/original_procedural/evolution_toxic_cloud.aseprite"
     },
     {
       "asset_id": "weapon_pandemic_attack",
@@ -4095,7 +4281,9 @@
       "blockers": [
         "weapon level/evolution animation timing not specified"
       ],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/misc-animation/sprites/animation/weapon_pandemic_attack.png",
+      "candidate_source_path": "build/assets/candidates/misc-animation/source/animation/weapon_pandemic_attack.aseprite"
     },
     {
       "asset_id": "weapon_toxic_cloud_fire_vfx",
@@ -4132,7 +4320,9 @@
       "blockers": [
         "specific impact color/intensity and animation timing are open"
       ],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/misc-animation/sprites/animation/weapon_toxic_cloud_fire_vfx.png",
+      "candidate_source_path": "build/assets/candidates/misc-animation/source/animation/weapon_toxic_cloud_fire_vfx.aseprite"
     },
     {
       "asset_id": "weapon_toxic_cloud_impact_vfx",
@@ -4169,7 +4359,9 @@
       "blockers": [
         "specific impact color/intensity and animation timing are open"
       ],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/misc-animation/sprites/animation/weapon_toxic_cloud_impact_vfx.png",
+      "candidate_source_path": "build/assets/candidates/misc-animation/source/animation/weapon_toxic_cloud_impact_vfx.aseprite"
     },
     {
       "asset_id": "weapon_sawblades_icon",
@@ -4203,7 +4395,9 @@
       "human_review_status": "pending",
       "integration_status": "not_integrated",
       "blockers": [],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/pixel-art-complete/sprites/catalog/weapon_sawblades.png",
+      "candidate_source_path": "build/assets/candidates/pixel-art-complete/source/original_procedural/weapon_sawblades.aseprite"
     },
     {
       "asset_id": "weapon_sawblades_attack",
@@ -4240,7 +4434,9 @@
       "blockers": [
         "weapon level/evolution animation timing not specified"
       ],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/misc-animation/sprites/animation/weapon_sawblades_attack.png",
+      "candidate_source_path": "build/assets/candidates/misc-animation/source/animation/weapon_sawblades_attack.aseprite"
     },
     {
       "asset_id": "weapon_razorstorm_icon",
@@ -4274,7 +4470,9 @@
       "human_review_status": "pending",
       "integration_status": "not_integrated",
       "blockers": [],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/pixel-art-complete/sprites/catalog/evolution_sawblades.png",
+      "candidate_source_path": "build/assets/candidates/pixel-art-complete/source/original_procedural/evolution_sawblades.aseprite"
     },
     {
       "asset_id": "weapon_razorstorm_attack",
@@ -4311,7 +4509,9 @@
       "blockers": [
         "weapon level/evolution animation timing not specified"
       ],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/misc-animation/sprites/animation/weapon_razorstorm_attack.png",
+      "candidate_source_path": "build/assets/candidates/misc-animation/source/animation/weapon_razorstorm_attack.aseprite"
     },
     {
       "asset_id": "weapon_sawblades_fire_vfx",
@@ -4348,7 +4548,9 @@
       "blockers": [
         "specific impact color/intensity and animation timing are open"
       ],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/misc-animation/sprites/animation/weapon_sawblades_fire_vfx.png",
+      "candidate_source_path": "build/assets/candidates/misc-animation/source/animation/weapon_sawblades_fire_vfx.aseprite"
     },
     {
       "asset_id": "weapon_sawblades_impact_vfx",
@@ -4385,7 +4587,9 @@
       "blockers": [
         "specific impact color/intensity and animation timing are open"
       ],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/misc-animation/sprites/animation/weapon_sawblades_impact_vfx.png",
+      "candidate_source_path": "build/assets/candidates/misc-animation/source/animation/weapon_sawblades_impact_vfx.aseprite"
     },
     {
       "asset_id": "weapon_meteor_staff_icon",
@@ -4419,7 +4623,9 @@
       "human_review_status": "pending",
       "integration_status": "not_integrated",
       "blockers": [],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/pixel-art-complete/sprites/catalog/weapon_meteor_staff.png",
+      "candidate_source_path": "build/assets/candidates/pixel-art-complete/source/original_procedural/weapon_meteor_staff.aseprite"
     },
     {
       "asset_id": "weapon_meteor_staff_attack",
@@ -4456,7 +4662,9 @@
       "blockers": [
         "weapon level/evolution animation timing not specified"
       ],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/misc-animation/sprites/animation/weapon_meteor_staff_attack.png",
+      "candidate_source_path": "build/assets/candidates/misc-animation/source/animation/weapon_meteor_staff_attack.aseprite"
     },
     {
       "asset_id": "weapon_starfall_icon",
@@ -4490,7 +4698,9 @@
       "human_review_status": "pending",
       "integration_status": "not_integrated",
       "blockers": [],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/pixel-art-complete/sprites/catalog/evolution_meteor_staff.png",
+      "candidate_source_path": "build/assets/candidates/pixel-art-complete/source/original_procedural/evolution_meteor_staff.aseprite"
     },
     {
       "asset_id": "weapon_starfall_attack",
@@ -4527,7 +4737,9 @@
       "blockers": [
         "weapon level/evolution animation timing not specified"
       ],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/misc-animation/sprites/animation/weapon_starfall_attack.png",
+      "candidate_source_path": "build/assets/candidates/misc-animation/source/animation/weapon_starfall_attack.aseprite"
     },
     {
       "asset_id": "weapon_meteor_staff_fire_vfx",
@@ -4564,7 +4776,9 @@
       "blockers": [
         "specific impact color/intensity and animation timing are open"
       ],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/misc-animation/sprites/animation/weapon_meteor_staff_fire_vfx.png",
+      "candidate_source_path": "build/assets/candidates/misc-animation/source/animation/weapon_meteor_staff_fire_vfx.aseprite"
     },
     {
       "asset_id": "weapon_meteor_staff_impact_vfx",
@@ -4601,7 +4815,9 @@
       "blockers": [
         "specific impact color/intensity and animation timing are open"
       ],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/misc-animation/sprites/animation/weapon_meteor_staff_impact_vfx.png",
+      "candidate_source_path": "build/assets/candidates/misc-animation/source/animation/weapon_meteor_staff_impact_vfx.aseprite"
     },
     {
       "asset_id": "weapon_prism_laser_icon",
@@ -4635,7 +4851,9 @@
       "human_review_status": "pending",
       "integration_status": "not_integrated",
       "blockers": [],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/pixel-art-complete/sprites/catalog/weapon_prism_laser.png",
+      "candidate_source_path": "build/assets/candidates/pixel-art-complete/source/original_procedural/weapon_prism_laser.aseprite"
     },
     {
       "asset_id": "weapon_prism_laser_attack",
@@ -4672,7 +4890,9 @@
       "blockers": [
         "weapon level/evolution animation timing not specified"
       ],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/misc-animation/sprites/animation/weapon_prism_laser_attack.png",
+      "candidate_source_path": "build/assets/candidates/misc-animation/source/animation/weapon_prism_laser_attack.aseprite"
     },
     {
       "asset_id": "weapon_spectrum_collapse_icon",
@@ -4706,7 +4926,9 @@
       "human_review_status": "pending",
       "integration_status": "not_integrated",
       "blockers": [],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/pixel-art-complete/sprites/catalog/evolution_prism_laser.png",
+      "candidate_source_path": "build/assets/candidates/pixel-art-complete/source/original_procedural/evolution_prism_laser.aseprite"
     },
     {
       "asset_id": "weapon_spectrum_collapse_attack",
@@ -4743,7 +4965,9 @@
       "blockers": [
         "weapon level/evolution animation timing not specified"
       ],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/misc-animation/sprites/animation/weapon_spectrum_collapse_attack.png",
+      "candidate_source_path": "build/assets/candidates/misc-animation/source/animation/weapon_spectrum_collapse_attack.aseprite"
     },
     {
       "asset_id": "weapon_prism_laser_fire_vfx",
@@ -4780,7 +5004,9 @@
       "blockers": [
         "specific impact color/intensity and animation timing are open"
       ],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/misc-animation/sprites/animation/weapon_prism_laser_fire_vfx.png",
+      "candidate_source_path": "build/assets/candidates/misc-animation/source/animation/weapon_prism_laser_fire_vfx.aseprite"
     },
     {
       "asset_id": "weapon_prism_laser_impact_vfx",
@@ -4817,7 +5043,9 @@
       "blockers": [
         "specific impact color/intensity and animation timing are open"
       ],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/misc-animation/sprites/animation/weapon_prism_laser_impact_vfx.png",
+      "candidate_source_path": "build/assets/candidates/misc-animation/source/animation/weapon_prism_laser_impact_vfx.aseprite"
     },
     {
       "asset_id": "weapon_void_orb_icon",
@@ -4851,7 +5079,9 @@
       "human_review_status": "pending",
       "integration_status": "not_integrated",
       "blockers": [],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/pixel-art-complete/sprites/catalog/weapon_void_orb.png",
+      "candidate_source_path": "build/assets/candidates/pixel-art-complete/source/original_procedural/weapon_void_orb.aseprite"
     },
     {
       "asset_id": "weapon_void_orb_attack",
@@ -4888,7 +5118,9 @@
       "blockers": [
         "weapon level/evolution animation timing not specified"
       ],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/misc-animation/sprites/animation/weapon_void_orb_attack.png",
+      "candidate_source_path": "build/assets/candidates/misc-animation/source/animation/weapon_void_orb_attack.aseprite"
     },
     {
       "asset_id": "weapon_event_horizon_icon",
@@ -4922,7 +5154,9 @@
       "human_review_status": "pending",
       "integration_status": "not_integrated",
       "blockers": [],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/pixel-art-complete/sprites/catalog/evolution_void_orb.png",
+      "candidate_source_path": "build/assets/candidates/pixel-art-complete/source/original_procedural/evolution_void_orb.aseprite"
     },
     {
       "asset_id": "weapon_event_horizon_attack",
@@ -4959,7 +5193,9 @@
       "blockers": [
         "weapon level/evolution animation timing not specified"
       ],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/misc-animation/sprites/animation/weapon_event_horizon_attack.png",
+      "candidate_source_path": "build/assets/candidates/misc-animation/source/animation/weapon_event_horizon_attack.aseprite"
     },
     {
       "asset_id": "weapon_void_orb_fire_vfx",
@@ -4996,7 +5232,9 @@
       "blockers": [
         "specific impact color/intensity and animation timing are open"
       ],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/misc-animation/sprites/animation/weapon_void_orb_fire_vfx.png",
+      "candidate_source_path": "build/assets/candidates/misc-animation/source/animation/weapon_void_orb_fire_vfx.aseprite"
     },
     {
       "asset_id": "weapon_void_orb_impact_vfx",
@@ -5033,7 +5271,9 @@
       "blockers": [
         "specific impact color/intensity and animation timing are open"
       ],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/misc-animation/sprites/animation/weapon_void_orb_impact_vfx.png",
+      "candidate_source_path": "build/assets/candidates/misc-animation/source/animation/weapon_void_orb_impact_vfx.aseprite"
     },
     {
       "asset_id": "weapon_frost_nova_icon",
@@ -5067,7 +5307,9 @@
       "human_review_status": "pending",
       "integration_status": "not_integrated",
       "blockers": [],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/pixel-art-complete/sprites/catalog/weapon_frost_nova.png",
+      "candidate_source_path": "build/assets/candidates/pixel-art-complete/source/original_procedural/weapon_frost_nova.aseprite"
     },
     {
       "asset_id": "weapon_frost_nova_attack",
@@ -5104,7 +5346,9 @@
       "blockers": [
         "weapon level/evolution animation timing not specified"
       ],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/misc-animation/sprites/animation/weapon_frost_nova_attack.png",
+      "candidate_source_path": "build/assets/candidates/misc-animation/source/animation/weapon_frost_nova_attack.aseprite"
     },
     {
       "asset_id": "weapon_absolute_zero_icon",
@@ -5138,7 +5382,9 @@
       "human_review_status": "pending",
       "integration_status": "not_integrated",
       "blockers": [],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/pixel-art-complete/sprites/catalog/evolution_frost_nova.png",
+      "candidate_source_path": "build/assets/candidates/pixel-art-complete/source/original_procedural/evolution_frost_nova.aseprite"
     },
     {
       "asset_id": "weapon_absolute_zero_attack",
@@ -5175,7 +5421,9 @@
       "blockers": [
         "weapon level/evolution animation timing not specified"
       ],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/misc-animation/sprites/animation/weapon_absolute_zero_attack.png",
+      "candidate_source_path": "build/assets/candidates/misc-animation/source/animation/weapon_absolute_zero_attack.aseprite"
     },
     {
       "asset_id": "weapon_frost_nova_fire_vfx",
@@ -5212,7 +5460,9 @@
       "blockers": [
         "specific impact color/intensity and animation timing are open"
       ],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/misc-animation/sprites/animation/weapon_frost_nova_fire_vfx.png",
+      "candidate_source_path": "build/assets/candidates/misc-animation/source/animation/weapon_frost_nova_fire_vfx.aseprite"
     },
     {
       "asset_id": "weapon_frost_nova_impact_vfx",
@@ -5249,7 +5499,9 @@
       "blockers": [
         "specific impact color/intensity and animation timing are open"
       ],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/misc-animation/sprites/animation/weapon_frost_nova_impact_vfx.png",
+      "candidate_source_path": "build/assets/candidates/misc-animation/source/animation/weapon_frost_nova_impact_vfx.aseprite"
     },
     {
       "asset_id": "relic_storm_core_icon",
@@ -5281,7 +5533,9 @@
       "human_review_status": "pending",
       "integration_status": "not_integrated",
       "blockers": [],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/pixel-art-complete/sprites/catalog/relic_storm_core.png",
+      "candidate_source_path": "build/assets/candidates/pixel-art-complete/source/original_procedural/relic_storm_core.aseprite"
     },
     {
       "asset_id": "relic_storm_core_acquisition",
@@ -5318,7 +5572,9 @@
       "blockers": [
         "relic reward animation timing/rarity behavior open"
       ],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/misc-animation/sprites/animation/relic_storm_core_acquisition.png",
+      "candidate_source_path": "build/assets/candidates/misc-animation/source/animation/relic_storm_core_acquisition.aseprite"
     },
     {
       "asset_id": "relic_infernal_heart_icon",
@@ -5350,7 +5606,9 @@
       "human_review_status": "pending",
       "integration_status": "not_integrated",
       "blockers": [],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/pixel-art-complete/sprites/catalog/relic_infernal_heart.png",
+      "candidate_source_path": "build/assets/candidates/pixel-art-complete/source/original_procedural/relic_infernal_heart.aseprite"
     },
     {
       "asset_id": "relic_infernal_heart_acquisition",
@@ -5387,7 +5645,9 @@
       "blockers": [
         "relic reward animation timing/rarity behavior open"
       ],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/misc-animation/sprites/animation/relic_infernal_heart_acquisition.png",
+      "candidate_source_path": "build/assets/candidates/misc-animation/source/animation/relic_infernal_heart_acquisition.aseprite"
     },
     {
       "asset_id": "relic_blood_chalice_icon",
@@ -5419,7 +5679,9 @@
       "human_review_status": "pending",
       "integration_status": "not_integrated",
       "blockers": [],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/pixel-art-complete/sprites/catalog/relic_blood_chalice.png",
+      "candidate_source_path": "build/assets/candidates/pixel-art-complete/source/original_procedural/relic_blood_chalice.aseprite"
     },
     {
       "asset_id": "relic_blood_chalice_acquisition",
@@ -5456,7 +5718,9 @@
       "blockers": [
         "relic reward animation timing/rarity behavior open"
       ],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/misc-animation/sprites/animation/relic_blood_chalice_acquisition.png",
+      "candidate_source_path": "build/assets/candidates/misc-animation/source/animation/relic_blood_chalice_acquisition.aseprite"
     },
     {
       "asset_id": "relic_overdrive_engine_icon",
@@ -5488,7 +5752,9 @@
       "human_review_status": "pending",
       "integration_status": "not_integrated",
       "blockers": [],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/pixel-art-complete/sprites/catalog/relic_overdrive_engine.png",
+      "candidate_source_path": "build/assets/candidates/pixel-art-complete/source/original_procedural/relic_overdrive_engine.aseprite"
     },
     {
       "asset_id": "relic_overdrive_engine_acquisition",
@@ -5525,7 +5791,9 @@
       "blockers": [
         "relic reward animation timing/rarity behavior open"
       ],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/misc-animation/sprites/animation/relic_overdrive_engine_acquisition.png",
+      "candidate_source_path": "build/assets/candidates/misc-animation/source/animation/relic_overdrive_engine_acquisition.aseprite"
     },
     {
       "asset_id": "relic_plague_mask_icon",
@@ -5557,7 +5825,9 @@
       "human_review_status": "pending",
       "integration_status": "not_integrated",
       "blockers": [],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/pixel-art-complete/sprites/catalog/relic_plague_mask.png",
+      "candidate_source_path": "build/assets/candidates/pixel-art-complete/source/original_procedural/relic_plague_mask.aseprite"
     },
     {
       "asset_id": "relic_plague_mask_acquisition",
@@ -5594,7 +5864,9 @@
       "blockers": [
         "relic reward animation timing/rarity behavior open"
       ],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/misc-animation/sprites/animation/relic_plague_mask_acquisition.png",
+      "candidate_source_path": "build/assets/candidates/misc-animation/source/animation/relic_plague_mask_acquisition.aseprite"
     },
     {
       "asset_id": "relic_magnetic_coil_icon",
@@ -5626,7 +5898,9 @@
       "human_review_status": "pending",
       "integration_status": "not_integrated",
       "blockers": [],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/pixel-art-complete/sprites/catalog/relic_magnetic_coil.png",
+      "candidate_source_path": "build/assets/candidates/pixel-art-complete/source/original_procedural/relic_magnetic_coil.aseprite"
     },
     {
       "asset_id": "relic_magnetic_coil_acquisition",
@@ -5663,7 +5937,9 @@
       "blockers": [
         "relic reward animation timing/rarity behavior open"
       ],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/misc-animation/sprites/animation/relic_magnetic_coil_acquisition.png",
+      "candidate_source_path": "build/assets/candidates/misc-animation/source/animation/relic_magnetic_coil_acquisition.aseprite"
     },
     {
       "asset_id": "relic_celestial_eye_icon",
@@ -5695,7 +5971,9 @@
       "human_review_status": "pending",
       "integration_status": "not_integrated",
       "blockers": [],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/pixel-art-complete/sprites/catalog/relic_celestial_eye.png",
+      "candidate_source_path": "build/assets/candidates/pixel-art-complete/source/original_procedural/relic_celestial_eye.aseprite"
     },
     {
       "asset_id": "relic_celestial_eye_acquisition",
@@ -5732,7 +6010,9 @@
       "blockers": [
         "relic reward animation timing/rarity behavior open"
       ],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/misc-animation/sprites/animation/relic_celestial_eye_acquisition.png",
+      "candidate_source_path": "build/assets/candidates/misc-animation/source/animation/relic_celestial_eye_acquisition.aseprite"
     },
     {
       "asset_id": "relic_magnet_heart_icon",
@@ -5764,7 +6044,9 @@
       "human_review_status": "pending",
       "integration_status": "not_integrated",
       "blockers": [],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/pixel-art-complete/sprites/catalog/relic_magnet_heart.png",
+      "candidate_source_path": "build/assets/candidates/pixel-art-complete/source/original_procedural/relic_magnet_heart.aseprite"
     },
     {
       "asset_id": "relic_magnet_heart_acquisition",
@@ -5801,7 +6083,9 @@
       "blockers": [
         "relic reward animation timing/rarity behavior open"
       ],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/misc-animation/sprites/animation/relic_magnet_heart_acquisition.png",
+      "candidate_source_path": "build/assets/candidates/misc-animation/source/animation/relic_magnet_heart_acquisition.aseprite"
     },
     {
       "asset_id": "relic_frozen_crown_icon",
@@ -5833,7 +6117,9 @@
       "human_review_status": "pending",
       "integration_status": "not_integrated",
       "blockers": [],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/pixel-art-complete/sprites/catalog/relic_frozen_crown.png",
+      "candidate_source_path": "build/assets/candidates/pixel-art-complete/source/original_procedural/relic_frozen_crown.aseprite"
     },
     {
       "asset_id": "relic_frozen_crown_acquisition",
@@ -5870,7 +6156,9 @@
       "blockers": [
         "relic reward animation timing/rarity behavior open"
       ],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/misc-animation/sprites/animation/relic_frozen_crown_acquisition.png",
+      "candidate_source_path": "build/assets/candidates/misc-animation/source/animation/relic_frozen_crown_acquisition.aseprite"
     },
     {
       "asset_id": "relic_prism_crystal_icon",
@@ -5902,7 +6190,9 @@
       "human_review_status": "pending",
       "integration_status": "not_integrated",
       "blockers": [],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/pixel-art-complete/sprites/catalog/relic_prism_crystal.png",
+      "candidate_source_path": "build/assets/candidates/pixel-art-complete/source/original_procedural/relic_prism_crystal.aseprite"
     },
     {
       "asset_id": "relic_prism_crystal_acquisition",
@@ -5939,7 +6229,9 @@
       "blockers": [
         "relic reward animation timing/rarity behavior open"
       ],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/misc-animation/sprites/animation/relic_prism_crystal_acquisition.png",
+      "candidate_source_path": "build/assets/candidates/misc-animation/source/animation/relic_prism_crystal_acquisition.aseprite"
     },
     {
       "asset_id": "relic_singularity_icon",
@@ -5971,7 +6263,9 @@
       "human_review_status": "pending",
       "integration_status": "not_integrated",
       "blockers": [],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/pixel-art-complete/sprites/catalog/relic_singularity.png",
+      "candidate_source_path": "build/assets/candidates/pixel-art-complete/source/original_procedural/relic_singularity.aseprite"
     },
     {
       "asset_id": "relic_singularity_acquisition",
@@ -6008,7 +6302,9 @@
       "blockers": [
         "relic reward animation timing/rarity behavior open"
       ],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/misc-animation/sprites/animation/relic_singularity_acquisition.png",
+      "candidate_source_path": "build/assets/candidates/misc-animation/source/animation/relic_singularity_acquisition.aseprite"
     },
     {
       "asset_id": "projectile_lightning",
@@ -6042,7 +6338,9 @@
       "human_review_status": "pending",
       "integration_status": "not_integrated",
       "blockers": [],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/pixel-art-complete/sprites/projectiles/projectile_lightning.png",
+      "candidate_source_path": "build/assets/candidates/pixel-art-complete/source/original_procedural/projectile_lightning.aseprite"
     },
     {
       "asset_id": "projectile_lightning_animation",
@@ -6079,7 +6377,9 @@
       "blockers": [
         "projectile animation frame count/timing unspecified"
       ],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/misc-animation/sprites/animation/projectile_lightning_animation.png",
+      "candidate_source_path": "build/assets/candidates/misc-animation/source/animation/projectile_lightning_animation.aseprite"
     },
     {
       "asset_id": "projectile_inferno",
@@ -6113,7 +6413,9 @@
       "human_review_status": "pending",
       "integration_status": "not_integrated",
       "blockers": [],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/pixel-art-complete/sprites/projectiles/projectile_inferno.png",
+      "candidate_source_path": "build/assets/candidates/pixel-art-complete/source/original_procedural/projectile_inferno.aseprite"
     },
     {
       "asset_id": "projectile_inferno_animation",
@@ -6150,7 +6452,9 @@
       "blockers": [
         "projectile animation frame count/timing unspecified"
       ],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/misc-animation/sprites/animation/projectile_inferno_animation.png",
+      "candidate_source_path": "build/assets/candidates/misc-animation/source/animation/projectile_inferno_animation.aseprite"
     },
     {
       "asset_id": "projectile_crimson",
@@ -6184,7 +6488,9 @@
       "human_review_status": "pending",
       "integration_status": "not_integrated",
       "blockers": [],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/pixel-art-complete/sprites/projectiles/projectile_crimson.png",
+      "candidate_source_path": "build/assets/candidates/pixel-art-complete/source/original_procedural/projectile_crimson.aseprite"
     },
     {
       "asset_id": "projectile_crimson_animation",
@@ -6221,7 +6527,9 @@
       "blockers": [
         "projectile animation frame count/timing unspecified"
       ],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/misc-animation/sprites/animation/projectile_crimson_animation.png",
+      "candidate_source_path": "build/assets/candidates/misc-animation/source/animation/projectile_crimson_animation.aseprite"
     },
     {
       "asset_id": "projectile_enemy",
@@ -6255,7 +6563,9 @@
       "human_review_status": "pending",
       "integration_status": "not_integrated",
       "blockers": [],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/pixel-art-complete/sprites/projectiles/projectile_enemy.png",
+      "candidate_source_path": "build/assets/candidates/pixel-art-complete/source/original_procedural/projectile_enemy.aseprite"
     },
     {
       "asset_id": "projectile_enemy_animation",
@@ -6292,7 +6602,9 @@
       "blockers": [
         "projectile animation frame count/timing unspecified"
       ],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/misc-animation/sprites/animation/projectile_enemy_animation.png",
+      "candidate_source_path": "build/assets/candidates/misc-animation/source/animation/projectile_enemy_animation.aseprite"
     },
     {
       "asset_id": "projectile_minigun",
@@ -6326,7 +6638,9 @@
       "human_review_status": "pending",
       "integration_status": "not_integrated",
       "blockers": [],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/pixel-art-complete/sprites/projectiles/projectile_minigun.png",
+      "candidate_source_path": "build/assets/candidates/pixel-art-complete/source/original_procedural/projectile_minigun.aseprite"
     },
     {
       "asset_id": "projectile_minigun_animation",
@@ -6363,7 +6677,9 @@
       "blockers": [
         "projectile animation frame count/timing unspecified"
       ],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/misc-animation/sprites/animation/projectile_minigun_animation.png",
+      "candidate_source_path": "build/assets/candidates/misc-animation/source/animation/projectile_minigun_animation.aseprite"
     },
     {
       "asset_id": "projectile_toxic_cloud",
@@ -6397,7 +6713,9 @@
       "human_review_status": "pending",
       "integration_status": "not_integrated",
       "blockers": [],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/pixel-art-complete/sprites/projectiles/projectile_toxic_cloud.png",
+      "candidate_source_path": "build/assets/candidates/pixel-art-complete/source/original_procedural/projectile_toxic_cloud.aseprite"
     },
     {
       "asset_id": "projectile_toxic_cloud_animation",
@@ -6434,7 +6752,9 @@
       "blockers": [
         "projectile animation frame count/timing unspecified"
       ],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/misc-animation/sprites/animation/projectile_toxic_cloud_animation.png",
+      "candidate_source_path": "build/assets/candidates/misc-animation/source/animation/projectile_toxic_cloud_animation.aseprite"
     },
     {
       "asset_id": "projectile_sawblades",
@@ -6468,7 +6788,9 @@
       "human_review_status": "pending",
       "integration_status": "not_integrated",
       "blockers": [],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/pixel-art-complete/sprites/projectiles/projectile_sawblades.png",
+      "candidate_source_path": "build/assets/candidates/pixel-art-complete/source/original_procedural/projectile_sawblades.aseprite"
     },
     {
       "asset_id": "projectile_sawblades_animation",
@@ -6505,7 +6827,9 @@
       "blockers": [
         "projectile animation frame count/timing unspecified"
       ],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/misc-animation/sprites/animation/projectile_sawblades_animation.png",
+      "candidate_source_path": "build/assets/candidates/misc-animation/source/animation/projectile_sawblades_animation.aseprite"
     },
     {
       "asset_id": "projectile_meteor",
@@ -6539,7 +6863,9 @@
       "human_review_status": "pending",
       "integration_status": "not_integrated",
       "blockers": [],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/pixel-art-complete/sprites/projectiles/projectile_meteor.png",
+      "candidate_source_path": "build/assets/candidates/pixel-art-complete/source/original_procedural/projectile_meteor.aseprite"
     },
     {
       "asset_id": "projectile_meteor_animation",
@@ -6576,7 +6902,9 @@
       "blockers": [
         "projectile animation frame count/timing unspecified"
       ],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/misc-animation/sprites/animation/projectile_meteor_animation.png",
+      "candidate_source_path": "build/assets/candidates/misc-animation/source/animation/projectile_meteor_animation.aseprite"
     },
     {
       "asset_id": "projectile_starfall_fragment",
@@ -6610,7 +6938,9 @@
       "human_review_status": "pending",
       "integration_status": "not_integrated",
       "blockers": [],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/pixel-art-complete/sprites/projectiles/projectile_starfall_fragment.png",
+      "candidate_source_path": "build/assets/candidates/pixel-art-complete/source/original_procedural/projectile_starfall_fragment.aseprite"
     },
     {
       "asset_id": "projectile_starfall_fragment_animation",
@@ -6647,7 +6977,9 @@
       "blockers": [
         "projectile animation frame count/timing unspecified"
       ],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/misc-animation/sprites/animation/projectile_starfall_fragment_animation.png",
+      "candidate_source_path": "build/assets/candidates/misc-animation/source/animation/projectile_starfall_fragment_animation.aseprite"
     },
     {
       "asset_id": "projectile_prism_laser",
@@ -6681,7 +7013,9 @@
       "human_review_status": "pending",
       "integration_status": "not_integrated",
       "blockers": [],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/pixel-art-complete/sprites/projectiles/projectile_prism_laser.png",
+      "candidate_source_path": "build/assets/candidates/pixel-art-complete/source/original_procedural/projectile_prism_laser.aseprite"
     },
     {
       "asset_id": "projectile_prism_laser_animation",
@@ -6718,7 +7052,9 @@
       "blockers": [
         "projectile animation frame count/timing unspecified"
       ],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/misc-animation/sprites/animation/projectile_prism_laser_animation.png",
+      "candidate_source_path": "build/assets/candidates/misc-animation/source/animation/projectile_prism_laser_animation.aseprite"
     },
     {
       "asset_id": "projectile_prism_secondary",
@@ -6752,7 +7088,9 @@
       "human_review_status": "pending",
       "integration_status": "not_integrated",
       "blockers": [],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/pixel-art-complete/sprites/projectiles/projectile_prism_secondary.png",
+      "candidate_source_path": "build/assets/candidates/pixel-art-complete/source/original_procedural/projectile_prism_secondary.aseprite"
     },
     {
       "asset_id": "projectile_prism_secondary_animation",
@@ -6789,7 +7127,9 @@
       "blockers": [
         "projectile animation frame count/timing unspecified"
       ],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/misc-animation/sprites/animation/projectile_prism_secondary_animation.png",
+      "candidate_source_path": "build/assets/candidates/misc-animation/source/animation/projectile_prism_secondary_animation.aseprite"
     },
     {
       "asset_id": "projectile_void_orb",
@@ -6823,7 +7163,9 @@
       "human_review_status": "pending",
       "integration_status": "not_integrated",
       "blockers": [],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/pixel-art-complete/sprites/projectiles/projectile_void_orb.png",
+      "candidate_source_path": "build/assets/candidates/pixel-art-complete/source/original_procedural/projectile_void_orb.aseprite"
     },
     {
       "asset_id": "projectile_void_orb_animation",
@@ -6860,7 +7202,9 @@
       "blockers": [
         "projectile animation frame count/timing unspecified"
       ],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/misc-animation/sprites/animation/projectile_void_orb_animation.png",
+      "candidate_source_path": "build/assets/candidates/misc-animation/source/animation/projectile_void_orb_animation.aseprite"
     },
     {
       "asset_id": "projectile_frost_nova",
@@ -6894,7 +7238,9 @@
       "human_review_status": "pending",
       "integration_status": "not_integrated",
       "blockers": [],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/pixel-art-complete/sprites/projectiles/projectile_frost_nova.png",
+      "candidate_source_path": "build/assets/candidates/pixel-art-complete/source/original_procedural/projectile_frost_nova.aseprite"
     },
     {
       "asset_id": "projectile_frost_nova_animation",
@@ -6931,7 +7277,9 @@
       "blockers": [
         "projectile animation frame count/timing unspecified"
       ],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/misc-animation/sprites/animation/projectile_frost_nova_animation.png",
+      "candidate_source_path": "build/assets/candidates/misc-animation/source/animation/projectile_frost_nova_animation.aseprite"
     },
     {
       "asset_id": "projectile_infinite_circuit",
@@ -6965,7 +7313,9 @@
       "human_review_status": "pending",
       "integration_status": "not_integrated",
       "blockers": [],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/pixel-art-complete/sprites/projectiles/projectile_infinite_circuit.png",
+      "candidate_source_path": "build/assets/candidates/pixel-art-complete/source/original_procedural/projectile_infinite_circuit.aseprite"
     },
     {
       "asset_id": "projectile_infinite_circuit_animation",
@@ -7002,7 +7352,9 @@
       "blockers": [
         "projectile animation frame count/timing unspecified"
       ],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/misc-animation/sprites/animation/projectile_infinite_circuit_animation.png",
+      "candidate_source_path": "build/assets/candidates/misc-animation/source/animation/projectile_infinite_circuit_animation.aseprite"
     },
     {
       "asset_id": "projectile_wildfire",
@@ -7036,7 +7388,9 @@
       "human_review_status": "pending",
       "integration_status": "not_integrated",
       "blockers": [],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/pixel-art-complete/sprites/projectiles/projectile_wildfire.png",
+      "candidate_source_path": "build/assets/candidates/pixel-art-complete/source/original_procedural/projectile_wildfire.aseprite"
     },
     {
       "asset_id": "projectile_wildfire_animation",
@@ -7073,7 +7427,9 @@
       "blockers": [
         "projectile animation frame count/timing unspecified"
       ],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/misc-animation/sprites/animation/projectile_wildfire_animation.png",
+      "candidate_source_path": "build/assets/candidates/misc-animation/source/animation/projectile_wildfire_animation.aseprite"
     },
     {
       "asset_id": "projectile_bloodstorm",
@@ -7107,7 +7463,9 @@
       "human_review_status": "pending",
       "integration_status": "not_integrated",
       "blockers": [],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/pixel-art-complete/sprites/projectiles/projectile_bloodstorm.png",
+      "candidate_source_path": "build/assets/candidates/pixel-art-complete/source/original_procedural/projectile_bloodstorm.aseprite"
     },
     {
       "asset_id": "projectile_bloodstorm_animation",
@@ -7144,7 +7502,9 @@
       "blockers": [
         "projectile animation frame count/timing unspecified"
       ],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/misc-animation/sprites/animation/projectile_bloodstorm_animation.png",
+      "candidate_source_path": "build/assets/candidates/misc-animation/source/animation/projectile_bloodstorm_animation.aseprite"
     },
     {
       "asset_id": "projectile_event_horizon",
@@ -7178,7 +7538,9 @@
       "human_review_status": "pending",
       "integration_status": "not_integrated",
       "blockers": [],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/pixel-art-complete/sprites/projectiles/projectile_event_horizon.png",
+      "candidate_source_path": "build/assets/candidates/pixel-art-complete/source/original_procedural/projectile_event_horizon.aseprite"
     },
     {
       "asset_id": "projectile_event_horizon_animation",
@@ -7215,7 +7577,9 @@
       "blockers": [
         "projectile animation frame count/timing unspecified"
       ],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/misc-animation/sprites/animation/projectile_event_horizon_animation.png",
+      "candidate_source_path": "build/assets/candidates/misc-animation/source/animation/projectile_event_horizon_animation.aseprite"
     },
     {
       "asset_id": "projectile_absolute_zero",
@@ -7249,7 +7613,9 @@
       "human_review_status": "pending",
       "integration_status": "not_integrated",
       "blockers": [],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/pixel-art-complete/sprites/projectiles/projectile_absolute_zero.png",
+      "candidate_source_path": "build/assets/candidates/pixel-art-complete/source/original_procedural/projectile_absolute_zero.aseprite"
     },
     {
       "asset_id": "projectile_absolute_zero_animation",
@@ -7286,7 +7652,9 @@
       "blockers": [
         "projectile animation frame count/timing unspecified"
       ],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/misc-animation/sprites/animation/projectile_absolute_zero_animation.png",
+      "candidate_source_path": "build/assets/candidates/misc-animation/source/animation/projectile_absolute_zero_animation.aseprite"
     },
     {
       "asset_id": "projectile_pandemic",
@@ -7320,7 +7688,9 @@
       "human_review_status": "pending",
       "integration_status": "not_integrated",
       "blockers": [],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/pixel-art-complete/sprites/projectiles/projectile_pandemic.png",
+      "candidate_source_path": "build/assets/candidates/pixel-art-complete/source/original_procedural/projectile_pandemic.aseprite"
     },
     {
       "asset_id": "projectile_pandemic_animation",
@@ -7357,7 +7727,9 @@
       "blockers": [
         "projectile animation frame count/timing unspecified"
       ],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/misc-animation/sprites/animation/projectile_pandemic_animation.png",
+      "candidate_source_path": "build/assets/candidates/misc-animation/source/animation/projectile_pandemic_animation.aseprite"
     },
     {
       "asset_id": "projectile_razorstorm",
@@ -7391,7 +7763,9 @@
       "human_review_status": "pending",
       "integration_status": "not_integrated",
       "blockers": [],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/pixel-art-complete/sprites/projectiles/projectile_razorstorm.png",
+      "candidate_source_path": "build/assets/candidates/pixel-art-complete/source/original_procedural/projectile_razorstorm.aseprite"
     },
     {
       "asset_id": "projectile_razorstorm_animation",
@@ -7428,7 +7802,9 @@
       "blockers": [
         "projectile animation frame count/timing unspecified"
       ],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/misc-animation/sprites/animation/projectile_razorstorm_animation.png",
+      "candidate_source_path": "build/assets/candidates/misc-animation/source/animation/projectile_razorstorm_animation.aseprite"
     },
     {
       "asset_id": "projectile_starfall",
@@ -7462,7 +7838,9 @@
       "human_review_status": "pending",
       "integration_status": "not_integrated",
       "blockers": [],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/pixel-art-complete/sprites/projectiles/projectile_starfall.png",
+      "candidate_source_path": "build/assets/candidates/pixel-art-complete/source/original_procedural/projectile_starfall.aseprite"
     },
     {
       "asset_id": "projectile_starfall_animation",
@@ -7499,7 +7877,9 @@
       "blockers": [
         "projectile animation frame count/timing unspecified"
       ],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/misc-animation/sprites/animation/projectile_starfall_animation.png",
+      "candidate_source_path": "build/assets/candidates/misc-animation/source/animation/projectile_starfall_animation.aseprite"
     },
     {
       "asset_id": "projectile_spectrum_collapse",
@@ -7533,7 +7913,9 @@
       "human_review_status": "pending",
       "integration_status": "not_integrated",
       "blockers": [],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/pixel-art-complete/sprites/projectiles/projectile_spectrum_collapse.png",
+      "candidate_source_path": "build/assets/candidates/pixel-art-complete/source/original_procedural/projectile_spectrum_collapse.aseprite"
     },
     {
       "asset_id": "projectile_spectrum_collapse_animation",
@@ -7570,7 +7952,9 @@
       "blockers": [
         "projectile animation frame count/timing unspecified"
       ],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/misc-animation/sprites/animation/projectile_spectrum_collapse_animation.png",
+      "candidate_source_path": "build/assets/candidates/misc-animation/source/animation/projectile_spectrum_collapse_animation.aseprite"
     },
     {
       "asset_id": "projectile_unique_lightning_burst",
@@ -7604,7 +7988,9 @@
       "human_review_status": "pending",
       "integration_status": "not_integrated",
       "blockers": [],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/pixel-art-complete/sprites/projectiles/projectile_unique_lightning_burst.png",
+      "candidate_source_path": "build/assets/candidates/pixel-art-complete/source/original_procedural/projectile_unique_lightning_burst.aseprite"
     },
     {
       "asset_id": "projectile_unique_lightning_burst_animation",
@@ -7641,7 +8027,9 @@
       "blockers": [
         "projectile animation frame count/timing unspecified"
       ],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/misc-animation/sprites/animation/projectile_unique_lightning_burst_animation.png",
+      "candidate_source_path": "build/assets/candidates/misc-animation/source/animation/projectile_unique_lightning_burst_animation.aseprite"
     },
     {
       "asset_id": "projectile_evolution_shockwave",
@@ -7675,7 +8063,9 @@
       "human_review_status": "pending",
       "integration_status": "not_integrated",
       "blockers": [],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/pixel-art-complete/sprites/projectiles/projectile_evolution_shockwave.png",
+      "candidate_source_path": "build/assets/candidates/pixel-art-complete/source/original_procedural/projectile_evolution_shockwave.aseprite"
     },
     {
       "asset_id": "projectile_evolution_shockwave_animation",
@@ -7712,7 +8102,9 @@
       "blockers": [
         "projectile animation frame count/timing unspecified"
       ],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/misc-animation/sprites/animation/projectile_evolution_shockwave_animation.png",
+      "candidate_source_path": "build/assets/candidates/misc-animation/source/animation/projectile_evolution_shockwave_animation.aseprite"
     },
     {
       "asset_id": "chest_closed",
@@ -7747,7 +8139,9 @@
       "human_review_status": "pending",
       "integration_status": "not_integrated",
       "blockers": [],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/rewards/sprites/rewards/chest_closed.png",
+      "candidate_source_path": "build/assets/candidates/rewards/source/rewards/chest_closed.aseprite"
     },
     {
       "asset_id": "chest_open",
@@ -7784,7 +8178,9 @@
       "blockers": [
         "chest opening frame count and timing unspecified"
       ],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/misc-animation/sprites/animation/chest_open.png",
+      "candidate_source_path": "build/assets/candidates/misc-animation/source/animation/chest_open.aseprite"
     },
     {
       "asset_id": "xp_orb",
@@ -7816,7 +8212,9 @@
       "human_review_status": "pending",
       "integration_status": "not_integrated",
       "blockers": [],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/rewards/sprites/rewards/xp_orb.png",
+      "candidate_source_path": "build/assets/candidates/rewards/source/rewards/xp_orb.aseprite"
     },
     {
       "asset_id": "xp_orb_collect",
@@ -7853,7 +8251,9 @@
       "blockers": [
         "pickup animation timing unspecified"
       ],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/misc-animation/sprites/animation/xp_orb_collect.png",
+      "candidate_source_path": "build/assets/candidates/misc-animation/source/animation/xp_orb_collect.aseprite"
     },
     {
       "asset_id": "survival_ground_tile",
@@ -7887,7 +8287,9 @@
       "blockers": [
         "canonical first biome is open"
       ],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/pixel-art-complete/sprites/environment/survival_ground_tile.png",
+      "candidate_source_path": "build/assets/candidates/pixel-art-complete/source/environment/survival_ground_tile.aseprite"
     },
     {
       "asset_id": "survival_ruins_pixel",
@@ -7921,7 +8323,9 @@
       "blockers": [
         "canonical first biome is open"
       ],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/pixel-art-complete/sprites/environment/survival_ruins_pixel.png",
+      "candidate_source_path": "build/assets/candidates/pixel-art-complete/source/original_procedural/survival_ruins_pixel.aseprite"
     },
     {
       "asset_id": "title_skyline",
@@ -7954,7 +8358,9 @@
       "human_review_status": "pending",
       "integration_status": "not_integrated",
       "blockers": [],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/title-art/backgrounds/title_skyline.png",
+      "candidate_source_path": "build/assets/candidates/title-art/source/backgrounds/title_skyline.aseprite"
     },
     {
       "asset_id": "weapon_impacts_atlas",
@@ -7988,7 +8394,9 @@
       "human_review_status": "pending",
       "integration_status": "not_integrated",
       "blockers": [],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/pixel-art-complete/sprites/weapon_impacts_pixel.png",
+      "candidate_source_path": "build/assets/candidates/pixel-art-complete/source/original_procedural/weapon_impacts_pixel.aseprite"
     },
     {
       "asset_id": "impact_spark",
@@ -8024,7 +8432,9 @@
       "blockers": [
         "element-color mapping/intensity and frame timing open"
       ],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/pixel-art-complete/sprites/vfx/impact_spark.png",
+      "candidate_source_path": "build/assets/candidates/pixel-art-complete/source/original_procedural/impact_spark.aseprite"
     },
     {
       "asset_id": "impact_star",
@@ -8060,7 +8470,9 @@
       "blockers": [
         "element-color mapping/intensity and frame timing open"
       ],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/pixel-art-complete/sprites/vfx/impact_star.png",
+      "candidate_source_path": "build/assets/candidates/pixel-art-complete/source/original_procedural/impact_star.aseprite"
     },
     {
       "asset_id": "impact_slash",
@@ -8096,7 +8508,9 @@
       "blockers": [
         "element-color mapping/intensity and frame timing open"
       ],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/pixel-art-complete/sprites/vfx/impact_slash.png",
+      "candidate_source_path": "build/assets/candidates/pixel-art-complete/source/original_procedural/impact_slash.aseprite"
     },
     {
       "asset_id": "impact_pop",
@@ -8132,7 +8546,9 @@
       "blockers": [
         "element-color mapping/intensity and frame timing open"
       ],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/pixel-art-complete/sprites/vfx/impact_pop.png",
+      "candidate_source_path": "build/assets/candidates/pixel-art-complete/source/original_procedural/impact_pop.aseprite"
     },
     {
       "asset_id": "impact_ring",
@@ -8168,7 +8584,9 @@
       "blockers": [
         "element-color mapping/intensity and frame timing open"
       ],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/pixel-art-complete/sprites/vfx/impact_ring.png",
+      "candidate_source_path": "build/assets/candidates/pixel-art-complete/source/original_procedural/impact_ring.aseprite"
     },
     {
       "asset_id": "impact_burst",
@@ -8204,7 +8622,9 @@
       "blockers": [
         "element-color mapping/intensity and frame timing open"
       ],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/pixel-art-complete/sprites/vfx/impact_burst.png",
+      "candidate_source_path": "build/assets/candidates/pixel-art-complete/source/original_procedural/impact_burst.aseprite"
     },
     {
       "asset_id": "impact_shards",
@@ -8240,7 +8660,9 @@
       "blockers": [
         "element-color mapping/intensity and frame timing open"
       ],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/pixel-art-complete/sprites/vfx/impact_shards.png",
+      "candidate_source_path": "build/assets/candidates/pixel-art-complete/source/original_procedural/impact_shards.aseprite"
     },
     {
       "asset_id": "impact_shock_ring",
@@ -8276,7 +8698,9 @@
       "blockers": [
         "element-color mapping/intensity and frame timing open"
       ],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/pixel-art-complete/sprites/vfx/impact_shock_ring.png",
+      "candidate_source_path": "build/assets/candidates/pixel-art-complete/source/original_procedural/impact_shock_ring.aseprite"
     },
     {
       "asset_id": "impact_angular",
@@ -8312,7 +8736,9 @@
       "blockers": [
         "element-color mapping/intensity and frame timing open"
       ],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/pixel-art-complete/sprites/vfx/impact_angular.png",
+      "candidate_source_path": "build/assets/candidates/pixel-art-complete/source/original_procedural/impact_angular.aseprite"
     },
     {
       "asset_id": "impact_evolved",
@@ -8348,7 +8774,9 @@
       "blockers": [
         "element-color mapping/intensity and frame timing open"
       ],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/pixel-art-complete/sprites/vfx/impact_evolved.png",
+      "candidate_source_path": "build/assets/candidates/pixel-art-complete/source/original_procedural/impact_evolved.aseprite"
     },
     {
       "asset_id": "ui_equipment_helmet",
@@ -8380,7 +8808,9 @@
       "human_review_status": "pending",
       "integration_status": "not_integrated",
       "blockers": [],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/pixel-art-complete/icons/catalog/equipment_helmet.png",
+      "candidate_source_path": "build/assets/candidates/pixel-art-complete/source/ui/equipment_helmet.aseprite"
     },
     {
       "asset_id": "ui_equipment_armor",
@@ -8412,7 +8842,9 @@
       "human_review_status": "pending",
       "integration_status": "not_integrated",
       "blockers": [],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/pixel-art-complete/icons/catalog/equipment_armor.png",
+      "candidate_source_path": "build/assets/candidates/pixel-art-complete/source/ui/equipment_armor.aseprite"
     },
     {
       "asset_id": "ui_equipment_gloves",
@@ -8444,7 +8876,9 @@
       "human_review_status": "pending",
       "integration_status": "not_integrated",
       "blockers": [],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/pixel-art-complete/icons/catalog/equipment_gloves.png",
+      "candidate_source_path": "build/assets/candidates/pixel-art-complete/source/ui/equipment_gloves.aseprite"
     },
     {
       "asset_id": "ui_equipment_boots",
@@ -8476,7 +8910,9 @@
       "human_review_status": "pending",
       "integration_status": "not_integrated",
       "blockers": [],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/pixel-art-complete/icons/catalog/equipment_boots.png",
+      "candidate_source_path": "build/assets/candidates/pixel-art-complete/source/ui/equipment_boots.aseprite"
     },
     {
       "asset_id": "ui_equipment_amulet",
@@ -8508,7 +8944,9 @@
       "human_review_status": "pending",
       "integration_status": "not_integrated",
       "blockers": [],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/pixel-art-complete/icons/catalog/equipment_amulet.png",
+      "candidate_source_path": "build/assets/candidates/pixel-art-complete/source/ui/equipment_amulet.aseprite"
     },
     {
       "asset_id": "ui_equipment_ring",
@@ -8540,7 +8978,9 @@
       "human_review_status": "pending",
       "integration_status": "not_integrated",
       "blockers": [],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/pixel-art-complete/icons/catalog/equipment_ring.png",
+      "candidate_source_path": "build/assets/candidates/pixel-art-complete/source/ui/equipment_ring.aseprite"
     },
     {
       "asset_id": "ui_rarity_normal",
@@ -8572,7 +9012,9 @@
       "human_review_status": "pending",
       "integration_status": "not_integrated",
       "blockers": [],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/pixel-art-complete/icons/catalog/rarity_normal.png",
+      "candidate_source_path": "build/assets/candidates/pixel-art-complete/source/ui/rarity_normal.aseprite"
     },
     {
       "asset_id": "ui_rarity_magic",
@@ -8604,7 +9046,9 @@
       "human_review_status": "pending",
       "integration_status": "not_integrated",
       "blockers": [],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/pixel-art-complete/icons/catalog/rarity_magic.png",
+      "candidate_source_path": "build/assets/candidates/pixel-art-complete/source/ui/rarity_magic.aseprite"
     },
     {
       "asset_id": "ui_rarity_mystic",
@@ -8636,7 +9080,9 @@
       "human_review_status": "pending",
       "integration_status": "not_integrated",
       "blockers": [],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/pixel-art-complete/icons/catalog/rarity_mystic.png",
+      "candidate_source_path": "build/assets/candidates/pixel-art-complete/source/ui/rarity_mystic.aseprite"
     },
     {
       "asset_id": "ui_rarity_legendary",
@@ -8668,7 +9114,9 @@
       "human_review_status": "pending",
       "integration_status": "not_integrated",
       "blockers": [],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/pixel-art-complete/icons/catalog/rarity_legendary.png",
+      "candidate_source_path": "build/assets/candidates/pixel-art-complete/source/ui/rarity_legendary.aseprite"
     },
     {
       "asset_id": "ui_rarity_mythic",
@@ -8700,7 +9148,9 @@
       "human_review_status": "pending",
       "integration_status": "not_integrated",
       "blockers": [],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/pixel-art-complete/icons/catalog/rarity_mythic.png",
+      "candidate_source_path": "build/assets/candidates/pixel-art-complete/source/ui/rarity_mythic.aseprite"
     },
     {
       "asset_id": "ui_resource_essence",
@@ -8732,7 +9182,9 @@
       "human_review_status": "pending",
       "integration_status": "not_integrated",
       "blockers": [],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/pixel-art-complete/icons/catalog/resource_essence.png",
+      "candidate_source_path": "build/assets/candidates/pixel-art-complete/source/ui/resource_essence.aseprite"
     },
     {
       "asset_id": "ui_resource_powder",
@@ -8764,7 +9216,9 @@
       "human_review_status": "pending",
       "integration_status": "not_integrated",
       "blockers": [],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/pixel-art-complete/icons/catalog/resource_powder.png",
+      "candidate_source_path": "build/assets/candidates/pixel-art-complete/source/ui/resource_powder.aseprite"
     },
     {
       "asset_id": "ui_skill_node",
@@ -8796,7 +9250,9 @@
       "human_review_status": "pending",
       "integration_status": "not_integrated",
       "blockers": [],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/pixel-art-complete/icons/catalog/skill_node.png",
+      "candidate_source_path": "build/assets/candidates/pixel-art-complete/source/ui/skill_node.aseprite"
     },
     {
       "asset_id": "ui_achievement_medal",
@@ -8828,7 +9284,9 @@
       "human_review_status": "pending",
       "integration_status": "not_integrated",
       "blockers": [],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/pixel-art-complete/icons/catalog/achievement_medal.png",
+      "candidate_source_path": "build/assets/candidates/pixel-art-complete/source/ui/achievement_medal.aseprite"
     },
     {
       "asset_id": "ui_run_record",
@@ -8860,7 +9318,9 @@
       "human_review_status": "pending",
       "integration_status": "not_integrated",
       "blockers": [],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/pixel-art-complete/icons/catalog/run_record.png",
+      "candidate_source_path": "build/assets/candidates/pixel-art-complete/source/ui/run_record.aseprite"
     },
     {
       "asset_id": "signal_prism",
@@ -8892,7 +9352,9 @@
       "human_review_status": "pending",
       "integration_status": "not_integrated",
       "blockers": [],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/pixel-art-complete/icons/ui/signal_prism.png",
+      "candidate_source_path": "build/assets/candidates/pixel-art-complete/source/original_procedural/signal_prism.aseprite"
     },
     {
       "asset_id": "font_neonarcadepixel",
@@ -8924,7 +9386,9 @@
       "blockers": [
         "font family design and glyph coverage/size not locked"
       ],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/font-art/fonts/NeonArcadePixel.ttf",
+      "candidate_source_path": "build/assets/candidates/font-art/source/fonts/NeonArcadePixel.sfd"
     },
     {
       "asset_id": "font_neonarcadeui",
@@ -8956,7 +9420,9 @@
       "blockers": [
         "font family design and glyph coverage/size not locked"
       ],
-      "requirement_source": "GDD v1.6 + Godot runtime contracts"
+      "requirement_source": "GDD v1.6 + Godot runtime contracts",
+      "candidate_export_path": "build/assets/candidates/font-art/fonts/NeonArcadeUI.ttf",
+      "candidate_source_path": "build/assets/candidates/font-art/source/fonts/NeonArcadeUI.sfd"
     },
     {
       "asset_id": "sfx_weapon_shot_01",
@@ -8991,7 +9457,8 @@
       "human_review_status": "pending",
       "integration_status": "not_integrated",
       "blockers": [],
-      "requirement_source": "GDD feedback + sfx_service.gd event map"
+      "requirement_source": "GDD feedback + sfx_service.gd event map",
+      "candidate_export_path": "build/assets/candidates/audio-complete/sfx/weapon_shot_01.wav"
     },
     {
       "asset_id": "sfx_weapon_shot_02",
@@ -9026,7 +9493,8 @@
       "human_review_status": "pending",
       "integration_status": "not_integrated",
       "blockers": [],
-      "requirement_source": "GDD feedback + sfx_service.gd event map"
+      "requirement_source": "GDD feedback + sfx_service.gd event map",
+      "candidate_export_path": "build/assets/candidates/audio-complete/sfx/weapon_shot_02.wav"
     },
     {
       "asset_id": "sfx_weapon_shot_03",
@@ -9061,7 +9529,8 @@
       "human_review_status": "pending",
       "integration_status": "not_integrated",
       "blockers": [],
-      "requirement_source": "GDD feedback + sfx_service.gd event map"
+      "requirement_source": "GDD feedback + sfx_service.gd event map",
+      "candidate_export_path": "build/assets/candidates/audio-complete/sfx/weapon_shot_03.wav"
     },
     {
       "asset_id": "sfx_weapon_shot_04",
@@ -9096,7 +9565,8 @@
       "human_review_status": "pending",
       "integration_status": "not_integrated",
       "blockers": [],
-      "requirement_source": "GDD feedback + sfx_service.gd event map"
+      "requirement_source": "GDD feedback + sfx_service.gd event map",
+      "candidate_export_path": "build/assets/candidates/audio-complete/sfx/weapon_shot_04.wav"
     },
     {
       "asset_id": "sfx_weapon_zap_01",
@@ -9131,7 +9601,8 @@
       "human_review_status": "pending",
       "integration_status": "not_integrated",
       "blockers": [],
-      "requirement_source": "GDD feedback + sfx_service.gd event map"
+      "requirement_source": "GDD feedback + sfx_service.gd event map",
+      "candidate_export_path": "build/assets/candidates/audio-complete/sfx/weapon_zap_01.wav"
     },
     {
       "asset_id": "sfx_weapon_zap_02",
@@ -9166,7 +9637,8 @@
       "human_review_status": "pending",
       "integration_status": "not_integrated",
       "blockers": [],
-      "requirement_source": "GDD feedback + sfx_service.gd event map"
+      "requirement_source": "GDD feedback + sfx_service.gd event map",
+      "candidate_export_path": "build/assets/candidates/audio-complete/sfx/weapon_zap_02.wav"
     },
     {
       "asset_id": "sfx_weapon_zap_03",
@@ -9201,7 +9673,8 @@
       "human_review_status": "pending",
       "integration_status": "not_integrated",
       "blockers": [],
-      "requirement_source": "GDD feedback + sfx_service.gd event map"
+      "requirement_source": "GDD feedback + sfx_service.gd event map",
+      "candidate_export_path": "build/assets/candidates/audio-complete/sfx/weapon_zap_03.wav"
     },
     {
       "asset_id": "sfx_weapon_zap_04",
@@ -9236,7 +9709,8 @@
       "human_review_status": "pending",
       "integration_status": "not_integrated",
       "blockers": [],
-      "requirement_source": "GDD feedback + sfx_service.gd event map"
+      "requirement_source": "GDD feedback + sfx_service.gd event map",
+      "candidate_export_path": "build/assets/candidates/audio-complete/sfx/weapon_zap_04.wav"
     },
     {
       "asset_id": "sfx_weapon_sweep_01",
@@ -9271,7 +9745,8 @@
       "human_review_status": "pending",
       "integration_status": "not_integrated",
       "blockers": [],
-      "requirement_source": "GDD feedback + sfx_service.gd event map"
+      "requirement_source": "GDD feedback + sfx_service.gd event map",
+      "candidate_export_path": "build/assets/candidates/audio-complete/sfx/weapon_sweep_01.wav"
     },
     {
       "asset_id": "sfx_weapon_sweep_02",
@@ -9306,7 +9781,8 @@
       "human_review_status": "pending",
       "integration_status": "not_integrated",
       "blockers": [],
-      "requirement_source": "GDD feedback + sfx_service.gd event map"
+      "requirement_source": "GDD feedback + sfx_service.gd event map",
+      "candidate_export_path": "build/assets/candidates/audio-complete/sfx/weapon_sweep_02.wav"
     },
     {
       "asset_id": "sfx_weapon_sweep_03",
@@ -9341,7 +9817,8 @@
       "human_review_status": "pending",
       "integration_status": "not_integrated",
       "blockers": [],
-      "requirement_source": "GDD feedback + sfx_service.gd event map"
+      "requirement_source": "GDD feedback + sfx_service.gd event map",
+      "candidate_export_path": "build/assets/candidates/audio-complete/sfx/weapon_sweep_03.wav"
     },
     {
       "asset_id": "sfx_hit_light_01",
@@ -9376,7 +9853,8 @@
       "human_review_status": "pending",
       "integration_status": "not_integrated",
       "blockers": [],
-      "requirement_source": "GDD feedback + sfx_service.gd event map"
+      "requirement_source": "GDD feedback + sfx_service.gd event map",
+      "candidate_export_path": "build/assets/candidates/audio-complete/sfx/hit_light_01.wav"
     },
     {
       "asset_id": "sfx_hit_light_02",
@@ -9411,7 +9889,8 @@
       "human_review_status": "pending",
       "integration_status": "not_integrated",
       "blockers": [],
-      "requirement_source": "GDD feedback + sfx_service.gd event map"
+      "requirement_source": "GDD feedback + sfx_service.gd event map",
+      "candidate_export_path": "build/assets/candidates/audio-complete/sfx/hit_light_02.wav"
     },
     {
       "asset_id": "sfx_hit_light_03",
@@ -9446,7 +9925,8 @@
       "human_review_status": "pending",
       "integration_status": "not_integrated",
       "blockers": [],
-      "requirement_source": "GDD feedback + sfx_service.gd event map"
+      "requirement_source": "GDD feedback + sfx_service.gd event map",
+      "candidate_export_path": "build/assets/candidates/audio-complete/sfx/hit_light_03.wav"
     },
     {
       "asset_id": "sfx_hit_light_04",
@@ -9481,7 +9961,8 @@
       "human_review_status": "pending",
       "integration_status": "not_integrated",
       "blockers": [],
-      "requirement_source": "GDD feedback + sfx_service.gd event map"
+      "requirement_source": "GDD feedback + sfx_service.gd event map",
+      "candidate_export_path": "build/assets/candidates/audio-complete/sfx/hit_light_04.wav"
     },
     {
       "asset_id": "sfx_hit_heavy_01",
@@ -9516,7 +9997,8 @@
       "human_review_status": "pending",
       "integration_status": "not_integrated",
       "blockers": [],
-      "requirement_source": "GDD feedback + sfx_service.gd event map"
+      "requirement_source": "GDD feedback + sfx_service.gd event map",
+      "candidate_export_path": "build/assets/candidates/audio-complete/sfx/hit_heavy_01.wav"
     },
     {
       "asset_id": "sfx_hit_heavy_02",
@@ -9551,7 +10033,8 @@
       "human_review_status": "pending",
       "integration_status": "not_integrated",
       "blockers": [],
-      "requirement_source": "GDD feedback + sfx_service.gd event map"
+      "requirement_source": "GDD feedback + sfx_service.gd event map",
+      "candidate_export_path": "build/assets/candidates/audio-complete/sfx/hit_heavy_02.wav"
     },
     {
       "asset_id": "sfx_hit_heavy_03",
@@ -9586,7 +10069,8 @@
       "human_review_status": "pending",
       "integration_status": "not_integrated",
       "blockers": [],
-      "requirement_source": "GDD feedback + sfx_service.gd event map"
+      "requirement_source": "GDD feedback + sfx_service.gd event map",
+      "candidate_export_path": "build/assets/candidates/audio-complete/sfx/hit_heavy_03.wav"
     },
     {
       "asset_id": "sfx_enemy_kill_01",
@@ -9621,7 +10105,8 @@
       "human_review_status": "pending",
       "integration_status": "not_integrated",
       "blockers": [],
-      "requirement_source": "GDD feedback + sfx_service.gd event map"
+      "requirement_source": "GDD feedback + sfx_service.gd event map",
+      "candidate_export_path": "build/assets/candidates/audio-complete/sfx/enemy_kill_01.wav"
     },
     {
       "asset_id": "sfx_enemy_kill_02",
@@ -9656,7 +10141,8 @@
       "human_review_status": "pending",
       "integration_status": "not_integrated",
       "blockers": [],
-      "requirement_source": "GDD feedback + sfx_service.gd event map"
+      "requirement_source": "GDD feedback + sfx_service.gd event map",
+      "candidate_export_path": "build/assets/candidates/audio-complete/sfx/enemy_kill_02.wav"
     },
     {
       "asset_id": "sfx_enemy_kill_03",
@@ -9691,7 +10177,8 @@
       "human_review_status": "pending",
       "integration_status": "not_integrated",
       "blockers": [],
-      "requirement_source": "GDD feedback + sfx_service.gd event map"
+      "requirement_source": "GDD feedback + sfx_service.gd event map",
+      "candidate_export_path": "build/assets/candidates/audio-complete/sfx/enemy_kill_03.wav"
     },
     {
       "asset_id": "sfx_enemy_kill_04",
@@ -9726,7 +10213,8 @@
       "human_review_status": "pending",
       "integration_status": "not_integrated",
       "blockers": [],
-      "requirement_source": "GDD feedback + sfx_service.gd event map"
+      "requirement_source": "GDD feedback + sfx_service.gd event map",
+      "candidate_export_path": "build/assets/candidates/audio-complete/sfx/enemy_kill_04.wav"
     },
     {
       "asset_id": "sfx_xp_pickup_01",
@@ -9761,7 +10249,8 @@
       "human_review_status": "pending",
       "integration_status": "not_integrated",
       "blockers": [],
-      "requirement_source": "GDD feedback + sfx_service.gd event map"
+      "requirement_source": "GDD feedback + sfx_service.gd event map",
+      "candidate_export_path": "build/assets/candidates/audio-complete/sfx/xp_pickup_01.wav"
     },
     {
       "asset_id": "sfx_xp_pickup_02",
@@ -9796,7 +10285,8 @@
       "human_review_status": "pending",
       "integration_status": "not_integrated",
       "blockers": [],
-      "requirement_source": "GDD feedback + sfx_service.gd event map"
+      "requirement_source": "GDD feedback + sfx_service.gd event map",
+      "candidate_export_path": "build/assets/candidates/audio-complete/sfx/xp_pickup_02.wav"
     },
     {
       "asset_id": "sfx_xp_pickup_03",
@@ -9831,7 +10321,8 @@
       "human_review_status": "pending",
       "integration_status": "not_integrated",
       "blockers": [],
-      "requirement_source": "GDD feedback + sfx_service.gd event map"
+      "requirement_source": "GDD feedback + sfx_service.gd event map",
+      "candidate_export_path": "build/assets/candidates/audio-complete/sfx/xp_pickup_03.wav"
     },
     {
       "asset_id": "sfx_xp_pickup_04",
@@ -9866,7 +10357,8 @@
       "human_review_status": "pending",
       "integration_status": "not_integrated",
       "blockers": [],
-      "requirement_source": "GDD feedback + sfx_service.gd event map"
+      "requirement_source": "GDD feedback + sfx_service.gd event map",
+      "candidate_export_path": "build/assets/candidates/audio-complete/sfx/xp_pickup_04.wav"
     },
     {
       "asset_id": "sfx_relic_pickup",
@@ -9901,7 +10393,8 @@
       "human_review_status": "pending",
       "integration_status": "not_integrated",
       "blockers": [],
-      "requirement_source": "GDD feedback + sfx_service.gd event map"
+      "requirement_source": "GDD feedback + sfx_service.gd event map",
+      "candidate_export_path": "build/assets/candidates/audio-complete/sfx/relic_pickup.wav"
     },
     {
       "asset_id": "sfx_chest_open",
@@ -9936,7 +10429,8 @@
       "human_review_status": "pending",
       "integration_status": "not_integrated",
       "blockers": [],
-      "requirement_source": "GDD feedback + sfx_service.gd event map"
+      "requirement_source": "GDD feedback + sfx_service.gd event map",
+      "candidate_export_path": "build/assets/candidates/audio-complete/sfx/chest_open.wav"
     },
     {
       "asset_id": "sfx_chest_reward",
@@ -9971,7 +10465,8 @@
       "human_review_status": "pending",
       "integration_status": "not_integrated",
       "blockers": [],
-      "requirement_source": "GDD feedback + sfx_service.gd event map"
+      "requirement_source": "GDD feedback + sfx_service.gd event map",
+      "candidate_export_path": "build/assets/candidates/audio-complete/sfx/chest_reward.wav"
     },
     {
       "asset_id": "sfx_level_up",
@@ -10006,7 +10501,8 @@
       "human_review_status": "pending",
       "integration_status": "not_integrated",
       "blockers": [],
-      "requirement_source": "GDD feedback + sfx_service.gd event map"
+      "requirement_source": "GDD feedback + sfx_service.gd event map",
+      "candidate_export_path": "build/assets/candidates/audio-complete/sfx/level_up.wav"
     },
     {
       "asset_id": "sfx_boss_telegraph",
@@ -10041,7 +10537,8 @@
       "human_review_status": "pending",
       "integration_status": "not_integrated",
       "blockers": [],
-      "requirement_source": "GDD feedback + sfx_service.gd event map"
+      "requirement_source": "GDD feedback + sfx_service.gd event map",
+      "candidate_export_path": "build/assets/candidates/audio-complete/sfx/boss_telegraph.wav"
     },
     {
       "asset_id": "sfx_boss_phase",
@@ -10076,7 +10573,8 @@
       "human_review_status": "pending",
       "integration_status": "not_integrated",
       "blockers": [],
-      "requirement_source": "GDD feedback + sfx_service.gd event map"
+      "requirement_source": "GDD feedback + sfx_service.gd event map",
+      "candidate_export_path": "build/assets/candidates/audio-complete/sfx/boss_phase.wav"
     },
     {
       "asset_id": "sfx_boss_defeat",
@@ -10111,7 +10609,8 @@
       "human_review_status": "pending",
       "integration_status": "not_integrated",
       "blockers": [],
-      "requirement_source": "GDD feedback + sfx_service.gd event map"
+      "requirement_source": "GDD feedback + sfx_service.gd event map",
+      "candidate_export_path": "build/assets/candidates/audio-complete/sfx/boss_defeat.wav"
     },
     {
       "asset_id": "sfx_ui_focus",
@@ -10146,7 +10645,8 @@
       "human_review_status": "pending",
       "integration_status": "not_integrated",
       "blockers": [],
-      "requirement_source": "GDD feedback + sfx_service.gd event map"
+      "requirement_source": "GDD feedback + sfx_service.gd event map",
+      "candidate_export_path": "build/assets/candidates/audio-complete/sfx/ui_focus.wav"
     },
     {
       "asset_id": "sfx_ui_confirm",
@@ -10181,7 +10681,8 @@
       "human_review_status": "pending",
       "integration_status": "not_integrated",
       "blockers": [],
-      "requirement_source": "GDD feedback + sfx_service.gd event map"
+      "requirement_source": "GDD feedback + sfx_service.gd event map",
+      "candidate_export_path": "build/assets/candidates/audio-complete/sfx/ui_confirm.wav"
     },
     {
       "asset_id": "sfx_ui_back",
@@ -10216,7 +10717,8 @@
       "human_review_status": "pending",
       "integration_status": "not_integrated",
       "blockers": [],
-      "requirement_source": "GDD feedback + sfx_service.gd event map"
+      "requirement_source": "GDD feedback + sfx_service.gd event map",
+      "candidate_export_path": "build/assets/candidates/audio-complete/sfx/ui_back.wav"
     },
     {
       "asset_id": "sfx_ui_error",
@@ -10251,7 +10753,8 @@
       "human_review_status": "pending",
       "integration_status": "not_integrated",
       "blockers": [],
-      "requirement_source": "GDD feedback + sfx_service.gd event map"
+      "requirement_source": "GDD feedback + sfx_service.gd event map",
+      "candidate_export_path": "build/assets/candidates/audio-complete/sfx/ui_error.wav"
     },
     {
       "asset_id": "sfx_ui_pause",
@@ -10286,7 +10789,8 @@
       "human_review_status": "pending",
       "integration_status": "not_integrated",
       "blockers": [],
-      "requirement_source": "GDD feedback + sfx_service.gd event map"
+      "requirement_source": "GDD feedback + sfx_service.gd event map",
+      "candidate_export_path": "build/assets/candidates/audio-complete/sfx/ui_pause.wav"
     },
     {
       "asset_id": "sfx_weapon_family_fire",
@@ -10323,7 +10827,8 @@
       "blockers": [
         "new event is not yet mapped in runtime"
       ],
-      "requirement_source": "user goal audio coverage"
+      "requirement_source": "user goal audio coverage",
+      "candidate_export_path": "build/assets/candidates/audio-complete/sfx/weapon_family_fire.wav"
     },
     {
       "asset_id": "sfx_weapon_family_impact",
@@ -10360,7 +10865,8 @@
       "blockers": [
         "new event is not yet mapped in runtime"
       ],
-      "requirement_source": "user goal audio coverage"
+      "requirement_source": "user goal audio coverage",
+      "candidate_export_path": "build/assets/candidates/audio-complete/sfx/weapon_family_impact.wav"
     },
     {
       "asset_id": "sfx_damage_taken",
@@ -10397,7 +10903,8 @@
       "blockers": [
         "new event is not yet mapped in runtime"
       ],
-      "requirement_source": "user goal audio coverage"
+      "requirement_source": "user goal audio coverage",
+      "candidate_export_path": "build/assets/candidates/audio-complete/sfx/damage_taken.wav"
     },
     {
       "asset_id": "sfx_healing",
@@ -10434,7 +10941,8 @@
       "blockers": [
         "new event is not yet mapped in runtime"
       ],
-      "requirement_source": "user goal audio coverage"
+      "requirement_source": "user goal audio coverage",
+      "candidate_export_path": "build/assets/candidates/audio-complete/sfx/healing.wav"
     },
     {
       "asset_id": "sfx_explosion",
@@ -10471,7 +10979,8 @@
       "blockers": [
         "new event is not yet mapped in runtime"
       ],
-      "requirement_source": "user goal audio coverage"
+      "requirement_source": "user goal audio coverage",
+      "candidate_export_path": "build/assets/candidates/audio-complete/sfx/explosion.wav"
     },
     {
       "asset_id": "sfx_victory",
@@ -10508,7 +11017,8 @@
       "blockers": [
         "new event is not yet mapped in runtime"
       ],
-      "requirement_source": "user goal audio coverage"
+      "requirement_source": "user goal audio coverage",
+      "candidate_export_path": "build/assets/candidates/audio-complete/sfx/victory.wav"
     },
     {
       "asset_id": "sfx_defeat",
@@ -10545,7 +11055,8 @@
       "blockers": [
         "new event is not yet mapped in runtime"
       ],
-      "requirement_source": "user goal audio coverage"
+      "requirement_source": "user goal audio coverage",
+      "candidate_export_path": "build/assets/candidates/audio-complete/sfx/defeat.wav"
     },
     {
       "asset_id": "sfx_weapon_lightning_conductor_fire",
@@ -10582,7 +11093,8 @@
       "blockers": [
         "weapon-specific sound ID is not yet mapped in runtime"
       ],
-      "requirement_source": "user goal: distinct firing and impact signatures per weapon"
+      "requirement_source": "user goal: distinct firing and impact signatures per weapon",
+      "candidate_export_path": "build/assets/candidates/audio-complete/sfx/weapon_lightning_conductor_fire.wav"
     },
     {
       "asset_id": "sfx_weapon_lightning_conductor_impact",
@@ -10619,7 +11131,8 @@
       "blockers": [
         "weapon-specific sound ID is not yet mapped in runtime"
       ],
-      "requirement_source": "user goal: distinct firing and impact signatures per weapon"
+      "requirement_source": "user goal: distinct firing and impact signatures per weapon",
+      "candidate_export_path": "build/assets/candidates/audio-complete/sfx/weapon_lightning_conductor_impact.wav"
     },
     {
       "asset_id": "sfx_weapon_inferno_sprayer_fire",
@@ -10656,7 +11169,8 @@
       "blockers": [
         "weapon-specific sound ID is not yet mapped in runtime"
       ],
-      "requirement_source": "user goal: distinct firing and impact signatures per weapon"
+      "requirement_source": "user goal: distinct firing and impact signatures per weapon",
+      "candidate_export_path": "build/assets/candidates/audio-complete/sfx/weapon_inferno_sprayer_fire.wav"
     },
     {
       "asset_id": "sfx_weapon_inferno_sprayer_impact",
@@ -10693,7 +11207,8 @@
       "blockers": [
         "weapon-specific sound ID is not yet mapped in runtime"
       ],
-      "requirement_source": "user goal: distinct firing and impact signatures per weapon"
+      "requirement_source": "user goal: distinct firing and impact signatures per weapon",
+      "candidate_export_path": "build/assets/candidates/audio-complete/sfx/weapon_inferno_sprayer_impact.wav"
     },
     {
       "asset_id": "sfx_weapon_crimson_daggers_fire",
@@ -10730,7 +11245,8 @@
       "blockers": [
         "weapon-specific sound ID is not yet mapped in runtime"
       ],
-      "requirement_source": "user goal: distinct firing and impact signatures per weapon"
+      "requirement_source": "user goal: distinct firing and impact signatures per weapon",
+      "candidate_export_path": "build/assets/candidates/audio-complete/sfx/weapon_crimson_daggers_fire.wav"
     },
     {
       "asset_id": "sfx_weapon_crimson_daggers_impact",
@@ -10767,7 +11283,8 @@
       "blockers": [
         "weapon-specific sound ID is not yet mapped in runtime"
       ],
-      "requirement_source": "user goal: distinct firing and impact signatures per weapon"
+      "requirement_source": "user goal: distinct firing and impact signatures per weapon",
+      "candidate_export_path": "build/assets/candidates/audio-complete/sfx/weapon_crimson_daggers_impact.wav"
     },
     {
       "asset_id": "sfx_weapon_minigun_fire",
@@ -10804,7 +11321,8 @@
       "blockers": [
         "weapon-specific sound ID is not yet mapped in runtime"
       ],
-      "requirement_source": "user goal: distinct firing and impact signatures per weapon"
+      "requirement_source": "user goal: distinct firing and impact signatures per weapon",
+      "candidate_export_path": "build/assets/candidates/audio-complete/sfx/weapon_minigun_fire.wav"
     },
     {
       "asset_id": "sfx_weapon_minigun_impact",
@@ -10841,7 +11359,8 @@
       "blockers": [
         "weapon-specific sound ID is not yet mapped in runtime"
       ],
-      "requirement_source": "user goal: distinct firing and impact signatures per weapon"
+      "requirement_source": "user goal: distinct firing and impact signatures per weapon",
+      "candidate_export_path": "build/assets/candidates/audio-complete/sfx/weapon_minigun_impact.wav"
     },
     {
       "asset_id": "sfx_weapon_toxic_cloud_fire",
@@ -10878,7 +11397,8 @@
       "blockers": [
         "weapon-specific sound ID is not yet mapped in runtime"
       ],
-      "requirement_source": "user goal: distinct firing and impact signatures per weapon"
+      "requirement_source": "user goal: distinct firing and impact signatures per weapon",
+      "candidate_export_path": "build/assets/candidates/audio-complete/sfx/weapon_toxic_cloud_fire.wav"
     },
     {
       "asset_id": "sfx_weapon_toxic_cloud_impact",
@@ -10915,7 +11435,8 @@
       "blockers": [
         "weapon-specific sound ID is not yet mapped in runtime"
       ],
-      "requirement_source": "user goal: distinct firing and impact signatures per weapon"
+      "requirement_source": "user goal: distinct firing and impact signatures per weapon",
+      "candidate_export_path": "build/assets/candidates/audio-complete/sfx/weapon_toxic_cloud_impact.wav"
     },
     {
       "asset_id": "sfx_weapon_sawblades_fire",
@@ -10952,7 +11473,8 @@
       "blockers": [
         "weapon-specific sound ID is not yet mapped in runtime"
       ],
-      "requirement_source": "user goal: distinct firing and impact signatures per weapon"
+      "requirement_source": "user goal: distinct firing and impact signatures per weapon",
+      "candidate_export_path": "build/assets/candidates/audio-complete/sfx/weapon_sawblades_fire.wav"
     },
     {
       "asset_id": "sfx_weapon_sawblades_impact",
@@ -10989,7 +11511,8 @@
       "blockers": [
         "weapon-specific sound ID is not yet mapped in runtime"
       ],
-      "requirement_source": "user goal: distinct firing and impact signatures per weapon"
+      "requirement_source": "user goal: distinct firing and impact signatures per weapon",
+      "candidate_export_path": "build/assets/candidates/audio-complete/sfx/weapon_sawblades_impact.wav"
     },
     {
       "asset_id": "sfx_weapon_meteor_staff_fire",
@@ -11026,7 +11549,8 @@
       "blockers": [
         "weapon-specific sound ID is not yet mapped in runtime"
       ],
-      "requirement_source": "user goal: distinct firing and impact signatures per weapon"
+      "requirement_source": "user goal: distinct firing and impact signatures per weapon",
+      "candidate_export_path": "build/assets/candidates/audio-complete/sfx/weapon_meteor_staff_fire.wav"
     },
     {
       "asset_id": "sfx_weapon_meteor_staff_impact",
@@ -11063,7 +11587,8 @@
       "blockers": [
         "weapon-specific sound ID is not yet mapped in runtime"
       ],
-      "requirement_source": "user goal: distinct firing and impact signatures per weapon"
+      "requirement_source": "user goal: distinct firing and impact signatures per weapon",
+      "candidate_export_path": "build/assets/candidates/audio-complete/sfx/weapon_meteor_staff_impact.wav"
     },
     {
       "asset_id": "sfx_weapon_prism_laser_fire",
@@ -11100,7 +11625,8 @@
       "blockers": [
         "weapon-specific sound ID is not yet mapped in runtime"
       ],
-      "requirement_source": "user goal: distinct firing and impact signatures per weapon"
+      "requirement_source": "user goal: distinct firing and impact signatures per weapon",
+      "candidate_export_path": "build/assets/candidates/audio-complete/sfx/weapon_prism_laser_fire.wav"
     },
     {
       "asset_id": "sfx_weapon_prism_laser_impact",
@@ -11137,7 +11663,8 @@
       "blockers": [
         "weapon-specific sound ID is not yet mapped in runtime"
       ],
-      "requirement_source": "user goal: distinct firing and impact signatures per weapon"
+      "requirement_source": "user goal: distinct firing and impact signatures per weapon",
+      "candidate_export_path": "build/assets/candidates/audio-complete/sfx/weapon_prism_laser_impact.wav"
     },
     {
       "asset_id": "sfx_weapon_void_orb_fire",
@@ -11174,7 +11701,8 @@
       "blockers": [
         "weapon-specific sound ID is not yet mapped in runtime"
       ],
-      "requirement_source": "user goal: distinct firing and impact signatures per weapon"
+      "requirement_source": "user goal: distinct firing and impact signatures per weapon",
+      "candidate_export_path": "build/assets/candidates/audio-complete/sfx/weapon_void_orb_fire.wav"
     },
     {
       "asset_id": "sfx_weapon_void_orb_impact",
@@ -11211,7 +11739,8 @@
       "blockers": [
         "weapon-specific sound ID is not yet mapped in runtime"
       ],
-      "requirement_source": "user goal: distinct firing and impact signatures per weapon"
+      "requirement_source": "user goal: distinct firing and impact signatures per weapon",
+      "candidate_export_path": "build/assets/candidates/audio-complete/sfx/weapon_void_orb_impact.wav"
     },
     {
       "asset_id": "sfx_weapon_frost_nova_fire",
@@ -11248,7 +11777,8 @@
       "blockers": [
         "weapon-specific sound ID is not yet mapped in runtime"
       ],
-      "requirement_source": "user goal: distinct firing and impact signatures per weapon"
+      "requirement_source": "user goal: distinct firing and impact signatures per weapon",
+      "candidate_export_path": "build/assets/candidates/audio-complete/sfx/weapon_frost_nova_fire.wav"
     },
     {
       "asset_id": "sfx_weapon_frost_nova_impact",
@@ -11285,7 +11815,8 @@
       "blockers": [
         "weapon-specific sound ID is not yet mapped in runtime"
       ],
-      "requirement_source": "user goal: distinct firing and impact signatures per weapon"
+      "requirement_source": "user goal: distinct firing and impact signatures per weapon",
+      "candidate_export_path": "build/assets/candidates/audio-complete/sfx/weapon_frost_nova_impact.wav"
     },
     {
       "asset_id": "music_menu_theme",
@@ -11322,7 +11853,8 @@
       "blockers": [
         "arrangement/tempo/key/duration are not validated decisions"
       ],
-      "requirement_source": "user goal + adaptive-audio GDD spec"
+      "requirement_source": "user goal + adaptive-audio GDD spec",
+      "candidate_export_path": "build/assets/candidates/audio-complete/music/cues/menu_theme.wav"
     },
     {
       "asset_id": "music_survival_adaptive",
@@ -11359,7 +11891,8 @@
       "blockers": [
         "arrangement/tempo/key/duration are not validated decisions"
       ],
-      "requirement_source": "user goal + adaptive-audio GDD spec"
+      "requirement_source": "user goal + adaptive-audio GDD spec",
+      "candidate_export_path": "build/assets/candidates/audio-complete/music/cues/survival_adaptive.wav"
     },
     {
       "asset_id": "music_boss_intensity",
@@ -11396,7 +11929,8 @@
       "blockers": [
         "arrangement/tempo/key/duration are not validated decisions"
       ],
-      "requirement_source": "user goal + adaptive-audio GDD spec"
+      "requirement_source": "user goal + adaptive-audio GDD spec",
+      "candidate_export_path": "build/assets/candidates/audio-complete/music/cues/boss_intensity.wav"
     },
     {
       "asset_id": "music_victory_cue",
@@ -11433,7 +11967,8 @@
       "blockers": [
         "arrangement/tempo/key/duration are not validated decisions"
       ],
-      "requirement_source": "user goal + adaptive-audio GDD spec"
+      "requirement_source": "user goal + adaptive-audio GDD spec",
+      "candidate_export_path": "build/assets/candidates/audio-complete/music/cues/victory_cue.wav"
     },
     {
       "asset_id": "music_defeat_cue",
@@ -11470,7 +12005,8 @@
       "blockers": [
         "arrangement/tempo/key/duration are not validated decisions"
       ],
-      "requirement_source": "user goal + adaptive-audio GDD spec"
+      "requirement_source": "user goal + adaptive-audio GDD spec",
+      "candidate_export_path": "build/assets/candidates/audio-complete/music/cues/defeat_cue.wav"
     },
     {
       "asset_id": "music_stem_rhythm",
@@ -11507,7 +12043,8 @@
       "blockers": [
         "final stem arrangement/gains/formats remain open"
       ],
-      "requirement_source": "adaptive-audio spec [PROPOSÉ]"
+      "requirement_source": "adaptive-audio spec [PROPOSÉ]",
+      "candidate_export_path": "build/assets/candidates/audio-complete/music/rhythm.wav"
     },
     {
       "asset_id": "music_stem_bass",
@@ -11544,7 +12081,8 @@
       "blockers": [
         "final stem arrangement/gains/formats remain open"
       ],
-      "requirement_source": "adaptive-audio spec [PROPOSÉ]"
+      "requirement_source": "adaptive-audio spec [PROPOSÉ]",
+      "candidate_export_path": "build/assets/candidates/audio-complete/music/bass.wav"
     },
     {
       "asset_id": "music_stem_pad",
@@ -11581,7 +12119,8 @@
       "blockers": [
         "final stem arrangement/gains/formats remain open"
       ],
-      "requirement_source": "adaptive-audio spec [PROPOSÉ]"
+      "requirement_source": "adaptive-audio spec [PROPOSÉ]",
+      "candidate_export_path": "build/assets/candidates/audio-complete/music/pad.wav"
     },
     {
       "asset_id": "music_stem_arp",
@@ -11618,7 +12157,8 @@
       "blockers": [
         "final stem arrangement/gains/formats remain open"
       ],
-      "requirement_source": "adaptive-audio spec [PROPOSÉ]"
+      "requirement_source": "adaptive-audio spec [PROPOSÉ]",
+      "candidate_export_path": "build/assets/candidates/audio-complete/music/arp.wav"
     },
     {
       "asset_id": "music_stem_boss",
@@ -11655,7 +12195,8 @@
       "blockers": [
         "final stem arrangement/gains/formats remain open"
       ],
-      "requirement_source": "adaptive-audio spec [PROPOSÉ]"
+      "requirement_source": "adaptive-audio spec [PROPOSÉ]",
+      "candidate_export_path": "build/assets/candidates/audio-complete/music/boss.wav"
     }
   ]
 }
