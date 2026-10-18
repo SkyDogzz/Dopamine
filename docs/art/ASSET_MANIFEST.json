@@ -350,8 +350,8 @@
       "assigned_generation_skill": "dopamine-animation",
       "godot_destination": "res://assets/sprites/animation/enemy_chaser_move.png",
       "authoring_source_or_recipe": "game/tools/generate_dopamine_enemy_animation.py",
-      "generator_version": "1",
-      "generation_seed": 3384146127,
+      "generator_version": "2",
+      "generation_seed": 2366479303,
       "generation_parameters": {
         "identity_source": "enemy_chaser_sprite",
         "frame_size": [
@@ -376,9 +376,9 @@
         ],
         "conventions": "non-canonical sample; four directions and four frames per row are provisional"
       },
-      "source_sha256": "51d3f20fcd0d9534bea691dda4a1bcbcc9f253461dbfe25c030140721aa5fab4",
-      "export_sha256": "1ac2d4023e2451fb855f144b098834ebbfb95e2ded17e10e8342d2f9bd4c4f04",
-      "qa_report_path": "build/assets/candidates/enemy-animation-complete/qa-report.json",
+      "source_sha256": "eaaa14165380969a6f56a6ae57550c4649c4fb53191fbd98e2a1d04930b41d5a",
+      "export_sha256": "8053dbc26f3d6a67b3cfc3ac3cf1d796cdba1a0d68b8eda291ce6f0cbc5cb445",
+      "qa_report_path": "build/assets/candidates/enemy-move-refresh/qa-report.json",
       "generation_status": "candidate",
       "validation_status": "passed",
       "human_review_status": "pending",
@@ -387,8 +387,8 @@
         "move animation timing/frame count not specified"
       ],
       "requirement_source": "GDD v1.6 + Godot runtime contracts",
-      "candidate_export_path": "build/assets/candidates/enemy-animation-complete/sprites/enemies/enemy_chaser_move.png",
-      "candidate_source_path": "build/assets/candidates/enemy-animation-complete/source/animation/enemy_chaser_move.aseprite",
+      "candidate_export_path": "build/assets/candidates/enemy-move-refresh/sprites/animation/enemy_chaser_move.png",
+      "candidate_source_path": "build/assets/candidates/enemy-move-refresh/source/animation/enemy_chaser_move.aseprite",
       "acceptance_status": "accepted_for_provisional_production",
       "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
       "godot_animation_resource": "game/assets/sprites/animation/enemy_chaser_move.tres",
@@ -642,8 +642,8 @@
       "assigned_generation_skill": "dopamine-animation",
       "godot_destination": "res://assets/sprites/animation/enemy_sprinter_move.png",
       "authoring_source_or_recipe": "game/tools/generate_dopamine_enemy_animation.py",
-      "generator_version": "1",
-      "generation_seed": 815413644,
+      "generator_version": "2",
+      "generation_seed": 3042049916,
       "generation_parameters": {
         "identity_source": "enemy_sprinter_sprite",
         "frame_size": [
@@ -668,9 +668,9 @@
         ],
         "conventions": "non-canonical sample; four directions and four frames per row are provisional"
       },
-      "source_sha256": "a4c222aac5773d882a6e4521be6c203fdb0806ba23a78d6ca33ee40a466057d0",
-      "export_sha256": "1a61c98a8f4750ad3c8d9ea2e79e13a973c929932e880b68399c2c28434fce8e",
-      "qa_report_path": "build/assets/candidates/enemy-animation-complete/qa-report.json",
+      "source_sha256": "904f38550cd4553ec2fdfeac299b8735e20381203c174096865b5513f9443e42",
+      "export_sha256": "5869881b150365e7600b86c99c37779cf5f87474d86b1306d86fb88a4071fdae",
+      "qa_report_path": "build/assets/candidates/enemy-move-refresh/qa-report.json",
       "generation_status": "candidate",
       "validation_status": "passed",
       "human_review_status": "pending",
@@ -679,8 +679,8 @@
         "move animation timing/frame count not specified"
       ],
       "requirement_source": "GDD v1.6 + Godot runtime contracts",
-      "candidate_export_path": "build/assets/candidates/enemy-animation-complete/sprites/enemies/enemy_sprinter_move.png",
-      "candidate_source_path": "build/assets/candidates/enemy-animation-complete/source/animation/enemy_sprinter_move.aseprite",
+      "candidate_export_path": "build/assets/candidates/enemy-move-refresh/sprites/animation/enemy_sprinter_move.png",
+      "candidate_source_path": "build/assets/candidates/enemy-move-refresh/source/animation/enemy_sprinter_move.aseprite",
       "acceptance_status": "accepted_for_provisional_production",
       "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
       "godot_animation_resource": "game/assets/sprites/animation/enemy_sprinter_move.tres",
@@ -934,8 +934,8 @@
       "assigned_generation_skill": "dopamine-animation",
       "godot_destination": "res://assets/sprites/animation/enemy_tank_move.png",
       "authoring_source_or_recipe": "game/tools/generate_dopamine_enemy_animation.py",
-      "generator_version": "1",
-      "generation_seed": 2509753123,
+      "generator_version": "2",
+      "generation_seed": 3642456926,
       "generation_parameters": {
         "identity_source": "enemy_tank_sprite",
         "frame_size": [
@@ -960,9 +960,9 @@
         ],
         "conventions": "non-canonical sample; four directions and four frames per row are provisional"
       },
-      "source_sha256": "897ce229b458c2d30695745e02a25b7b0d27f72bdf61b50cc8e4a20aff9ab302",
-      "export_sha256": "2df33e02b34604df096d0cd9ef0de2cada66d65805f714b8350d4757f15f6127",
-      "qa_report_path": "build/assets/candidates/enemy-animation-complete/qa-report.json",
+      "source_sha256": "3c81d15cf2a0316f4f63fb5c66b4ec686d889dc9df298619f91f62670ef44b34",
+      "export_sha256": "42f3795e06ef7e2292353a6b04f6e2ac05557ec22765a1d9da959d10e9a0b5db",
+      "qa_report_path": "build/assets/candidates/enemy-move-refresh/qa-report.json",
       "generation_status": "candidate",
       "validation_status": "passed",
       "human_review_status": "pending",
@@ -971,8 +971,8 @@
         "move animation timing/frame count not specified"
       ],
       "requirement_source": "GDD v1.6 + Godot runtime contracts",
-      "candidate_export_path": "build/assets/candidates/enemy-animation-complete/sprites/enemies/enemy_tank_move.png",
-      "candidate_source_path": "build/assets/candidates/enemy-animation-complete/source/animation/enemy_tank_move.aseprite",
+      "candidate_export_path": "build/assets/candidates/enemy-move-refresh/sprites/animation/enemy_tank_move.png",
+      "candidate_source_path": "build/assets/candidates/enemy-move-refresh/source/animation/enemy_tank_move.aseprite",
       "acceptance_status": "accepted_for_provisional_production",
       "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
       "godot_animation_resource": "game/assets/sprites/animation/enemy_tank_move.tres",
@@ -1226,8 +1226,8 @@
       "assigned_generation_skill": "dopamine-animation",
       "godot_destination": "res://assets/sprites/animation/enemy_shooter_move.png",
       "authoring_source_or_recipe": "game/tools/generate_dopamine_enemy_animation.py",
-      "generator_version": "1",
-      "generation_seed": 4115904099,
+      "generator_version": "2",
+      "generation_seed": 1194769284,
       "generation_parameters": {
         "identity_source": "enemy_shooter_sprite",
         "frame_size": [
@@ -1252,9 +1252,9 @@
         ],
         "conventions": "non-canonical sample; four directions and four frames per row are provisional"
       },
-      "source_sha256": "aa0d5b2bed52fec812f87438f1075a3723ff2d4c76b6293978ce8926dba43821",
-      "export_sha256": "a593e424c50b0347136c5769ac288090f0d1ab5b25af616d02ca7dc2660e9d89",
-      "qa_report_path": "build/assets/candidates/enemy-animation-complete/qa-report.json",
+      "source_sha256": "9480633ee2e650fa6632888f0ef32792e3ed6c6976e2f442444932c506bc3255",
+      "export_sha256": "67736c3da048a9e544ef879bcd6c80bfbeaff15355b0ac76abfd7792678c42fd",
+      "qa_report_path": "build/assets/candidates/enemy-move-refresh/qa-report.json",
       "generation_status": "candidate",
       "validation_status": "passed",
       "human_review_status": "pending",
@@ -1263,8 +1263,8 @@
         "move animation timing/frame count not specified"
       ],
       "requirement_source": "GDD v1.6 + Godot runtime contracts",
-      "candidate_export_path": "build/assets/candidates/enemy-animation-complete/sprites/enemies/enemy_shooter_move.png",
-      "candidate_source_path": "build/assets/candidates/enemy-animation-complete/source/animation/enemy_shooter_move.aseprite",
+      "candidate_export_path": "build/assets/candidates/enemy-move-refresh/sprites/animation/enemy_shooter_move.png",
+      "candidate_source_path": "build/assets/candidates/enemy-move-refresh/source/animation/enemy_shooter_move.aseprite",
       "acceptance_status": "accepted_for_provisional_production",
       "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
       "godot_animation_resource": "game/assets/sprites/animation/enemy_shooter_move.tres",
@@ -1518,8 +1518,8 @@
       "assigned_generation_skill": "dopamine-animation",
       "godot_destination": "res://assets/sprites/animation/enemy_buffer_move.png",
       "authoring_source_or_recipe": "game/tools/generate_dopamine_enemy_animation.py",
-      "generator_version": "1",
-      "generation_seed": 1559499031,
+      "generator_version": "2",
+      "generation_seed": 2379683691,
       "generation_parameters": {
         "identity_source": "enemy_buffer_sprite",
         "frame_size": [
@@ -1544,9 +1544,9 @@
         ],
         "conventions": "non-canonical sample; four directions and four frames per row are provisional"
       },
-      "source_sha256": "52e21707a50f219e516628a5b704cac0eca4204c5f885596990ee4ae546000ba",
-      "export_sha256": "7f7807eb299ad5ec34908ef3c92d034dd5b4ea8ac93faae4d55e3df4537561db",
-      "qa_report_path": "build/assets/candidates/enemy-animation-complete/qa-report.json",
+      "source_sha256": "8d8c4e6460284fc70d565fd9f1b7162d0a11aa910d8199af82a208451e43ebac",
+      "export_sha256": "45fc224015fd22f05c8c3ab8ca1095064a8af3a7a7727ed3b6b5eeb747aeb1d9",
+      "qa_report_path": "build/assets/candidates/enemy-move-refresh/qa-report.json",
       "generation_status": "candidate",
       "validation_status": "passed",
       "human_review_status": "pending",
@@ -1555,8 +1555,8 @@
         "move animation timing/frame count not specified"
       ],
       "requirement_source": "GDD v1.6 + Godot runtime contracts",
-      "candidate_export_path": "build/assets/candidates/enemy-animation-complete/sprites/enemies/enemy_buffer_move.png",
-      "candidate_source_path": "build/assets/candidates/enemy-animation-complete/source/animation/enemy_buffer_move.aseprite",
+      "candidate_export_path": "build/assets/candidates/enemy-move-refresh/sprites/animation/enemy_buffer_move.png",
+      "candidate_source_path": "build/assets/candidates/enemy-move-refresh/source/animation/enemy_buffer_move.aseprite",
       "acceptance_status": "accepted_for_provisional_production",
       "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
       "godot_animation_resource": "game/assets/sprites/animation/enemy_buffer_move.tres",
@@ -1810,8 +1810,8 @@
       "assigned_generation_skill": "dopamine-animation",
       "godot_destination": "res://assets/sprites/animation/enemy_exploder_move.png",
       "authoring_source_or_recipe": "game/tools/generate_dopamine_enemy_animation.py",
-      "generator_version": "1",
-      "generation_seed": 2974466733,
+      "generator_version": "2",
+      "generation_seed": 736045487,
       "generation_parameters": {
         "identity_source": "enemy_exploder_sprite",
         "frame_size": [
@@ -1836,9 +1836,9 @@
         ],
         "conventions": "non-canonical sample; four directions and four frames per row are provisional"
       },
-      "source_sha256": "e54e53a4aab5f9f38816aa6eeba2d4e417d8813a1606c8a6276be5b50b3e1356",
-      "export_sha256": "7b7ceb97f7ba3f93fbad394e22e5883eb641f10aa0e9c1a1cd6ec9d22d44ef55",
-      "qa_report_path": "build/assets/candidates/enemy-animation-complete/qa-report.json",
+      "source_sha256": "e82ac71bb2b6f7672c7b5aadcb6547b22800a6a9cc265dd96862291024b496be",
+      "export_sha256": "bbdad84067bc368bc9b3f92aba014d7321efebd141305fa2a02aaa8603d3d4fa",
+      "qa_report_path": "build/assets/candidates/enemy-move-refresh/qa-report.json",
       "generation_status": "candidate",
       "validation_status": "passed",
       "human_review_status": "pending",
@@ -1847,8 +1847,8 @@
         "move animation timing/frame count not specified"
       ],
       "requirement_source": "GDD v1.6 + Godot runtime contracts",
-      "candidate_export_path": "build/assets/candidates/enemy-animation-complete/sprites/enemies/enemy_exploder_move.png",
-      "candidate_source_path": "build/assets/candidates/enemy-animation-complete/source/animation/enemy_exploder_move.aseprite",
+      "candidate_export_path": "build/assets/candidates/enemy-move-refresh/sprites/animation/enemy_exploder_move.png",
+      "candidate_source_path": "build/assets/candidates/enemy-move-refresh/source/animation/enemy_exploder_move.aseprite",
       "acceptance_status": "accepted_for_provisional_production",
       "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
       "godot_animation_resource": "game/assets/sprites/animation/enemy_exploder_move.tres",
@@ -2102,8 +2102,8 @@
       "assigned_generation_skill": "dopamine-animation",
       "godot_destination": "res://assets/sprites/animation/enemy_shielder_move.png",
       "authoring_source_or_recipe": "game/tools/generate_dopamine_enemy_animation.py",
-      "generator_version": "1",
-      "generation_seed": 1797727425,
+      "generator_version": "2",
+      "generation_seed": 3372353312,
       "generation_parameters": {
         "identity_source": "enemy_shielder_sprite",
         "frame_size": [
@@ -2128,9 +2128,9 @@
         ],
         "conventions": "non-canonical sample; four directions and four frames per row are provisional"
       },
-      "source_sha256": "429248f68bc41db7dbf3bb126514901f72d9f33c4bfeee4f00ac13c1406b01d9",
-      "export_sha256": "47da967199b2293c3d74e173fc522ab83547df15e12db463940efb0adb5e0ebf",
-      "qa_report_path": "build/assets/candidates/enemy-animation-complete/qa-report.json",
+      "source_sha256": "1739aba9420c1fff1300d659aec93b575514e4ecfb4ccc9af424e36aa234a686",
+      "export_sha256": "ca63d8698d658fd86a7f9eab5bc3f59e052b2b642c1dfb6623bd4e1625a90fd9",
+      "qa_report_path": "build/assets/candidates/enemy-move-refresh/qa-report.json",
       "generation_status": "candidate",
       "validation_status": "passed",
       "human_review_status": "pending",
@@ -2139,8 +2139,8 @@
         "move animation timing/frame count not specified"
       ],
       "requirement_source": "GDD v1.6 + Godot runtime contracts",
-      "candidate_export_path": "build/assets/candidates/enemy-animation-complete/sprites/enemies/enemy_shielder_move.png",
-      "candidate_source_path": "build/assets/candidates/enemy-animation-complete/source/animation/enemy_shielder_move.aseprite",
+      "candidate_export_path": "build/assets/candidates/enemy-move-refresh/sprites/animation/enemy_shielder_move.png",
+      "candidate_source_path": "build/assets/candidates/enemy-move-refresh/source/animation/enemy_shielder_move.aseprite",
       "acceptance_status": "accepted_for_provisional_production",
       "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
       "godot_animation_resource": "game/assets/sprites/animation/enemy_shielder_move.tres",
@@ -2394,8 +2394,8 @@
       "assigned_generation_skill": "dopamine-animation",
       "godot_destination": "res://assets/sprites/animation/enemy_summoner_move.png",
       "authoring_source_or_recipe": "game/tools/generate_dopamine_enemy_animation.py",
-      "generator_version": "1",
-      "generation_seed": 2173111659,
+      "generator_version": "2",
+      "generation_seed": 3718592807,
       "generation_parameters": {
         "identity_source": "enemy_summoner_sprite",
         "frame_size": [
@@ -2420,9 +2420,9 @@
         ],
         "conventions": "non-canonical sample; four directions and four frames per row are provisional"
       },
-      "source_sha256": "e4a91e9182cf5ce7c92e01405df5a89ac10be4a3e959af5cade3476ebb82d746",
-      "export_sha256": "f11d702ed8f58ef67b4695fd060d15e7e914a0211a09773abb82f3c3d8320d4a",
-      "qa_report_path": "build/assets/candidates/enemy-animation-complete/qa-report.json",
+      "source_sha256": "d4e0ff3da454be9b8d4871203bb6423aeec9d896014713b08ffb499b9f16449f",
+      "export_sha256": "a173f77f2d49f7ac746e1a75780621e2ace2ecd26a31c27f63d6283a0c850d24",
+      "qa_report_path": "build/assets/candidates/enemy-move-refresh/qa-report.json",
       "generation_status": "candidate",
       "validation_status": "passed",
       "human_review_status": "pending",
@@ -2431,8 +2431,8 @@
         "move animation timing/frame count not specified"
       ],
       "requirement_source": "GDD v1.6 + Godot runtime contracts",
-      "candidate_export_path": "build/assets/candidates/enemy-animation-complete/sprites/enemies/enemy_summoner_move.png",
-      "candidate_source_path": "build/assets/candidates/enemy-animation-complete/source/animation/enemy_summoner_move.aseprite",
+      "candidate_export_path": "build/assets/candidates/enemy-move-refresh/sprites/animation/enemy_summoner_move.png",
+      "candidate_source_path": "build/assets/candidates/enemy-move-refresh/source/animation/enemy_summoner_move.aseprite",
       "acceptance_status": "accepted_for_provisional_production",
       "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
       "godot_animation_resource": "game/assets/sprites/animation/enemy_summoner_move.tres",
@@ -2686,8 +2686,8 @@
       "assigned_generation_skill": "dopamine-animation",
       "godot_destination": "res://assets/sprites/animation/enemy_summoned_move.png",
       "authoring_source_or_recipe": "game/tools/generate_dopamine_enemy_animation.py",
-      "generator_version": "1",
-      "generation_seed": 4248156177,
+      "generator_version": "2",
+      "generation_seed": 2123921852,
       "generation_parameters": {
         "identity_source": "enemy_summoned_sprite",
         "frame_size": [
@@ -2712,9 +2712,9 @@
         ],
         "conventions": "non-canonical sample; four directions and four frames per row are provisional"
       },
-      "source_sha256": "7e7b8870f6021504e0df33f22eb5319d14b23004c275f7d8b9a5d83c03f804a0",
-      "export_sha256": "6b846b0d0c44e138605b9f885958bc98d13cd4f996b1d8fe42f38df29a3388bf",
-      "qa_report_path": "build/assets/candidates/enemy-animation-complete/qa-report.json",
+      "source_sha256": "65011bc7970dd7fcf4f0f350e090414f3ea0f61ae8385f07fc665a50cad3070c",
+      "export_sha256": "1fce45d5af14d282f4d0b8a1bbb89f0b97fc6c11e3de1c821a1d402d52011824",
+      "qa_report_path": "build/assets/candidates/enemy-move-refresh/qa-report.json",
       "generation_status": "candidate",
       "validation_status": "passed",
       "human_review_status": "pending",
@@ -2723,8 +2723,8 @@
         "move animation timing/frame count not specified"
       ],
       "requirement_source": "GDD v1.6 + Godot runtime contracts",
-      "candidate_export_path": "build/assets/candidates/enemy-animation-complete/sprites/enemies/enemy_summoned_move.png",
-      "candidate_source_path": "build/assets/candidates/enemy-animation-complete/source/animation/enemy_summoned_move.aseprite",
+      "candidate_export_path": "build/assets/candidates/enemy-move-refresh/sprites/animation/enemy_summoned_move.png",
+      "candidate_source_path": "build/assets/candidates/enemy-move-refresh/source/animation/enemy_summoned_move.aseprite",
       "acceptance_status": "accepted_for_provisional_production",
       "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
       "godot_animation_resource": "game/assets/sprites/animation/enemy_summoned_move.tres",

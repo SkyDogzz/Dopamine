@@ -25,8 +25,8 @@
   "status": "provisionally_integrated",
   "skill": "dopamine-animation",
   "generator": "game/tools/generate_dopamine_enemy_animation.py",
-  "generator_version": "1",
-  "seed": 3384146127,
+  "generator_version": "2",
+  "seed": 2366479303,
   "seed_policy": "fixed role primitives; seed recorded but not consumed",
   "parameters": {
     "identity_source": "enemy_chaser_sprite",
@@ -58,11 +58,11 @@
   ],
   "source_path": "source/animation/enemy_chaser_move.aseprite",
   "export_path": "sprites/animation/enemy_chaser_move.png",
-  "source_sha256": "51d3f20fcd0d9534bea691dda4a1bcbcc9f253461dbfe25c030140721aa5fab4",
-  "export_sha256": "1ac2d4023e2451fb855f144b098834ebbfb95e2ded17e10e8342d2f9bd4c4f04",
+  "source_sha256": "eaaa14165380969a6f56a6ae57550c4649c4fb53191fbd98e2a1d04930b41d5a",
+  "export_sha256": "8053dbc26f3d6a67b3cfc3ac3cf1d796cdba1a0d68b8eda291ce6f0cbc5cb445",
   "acceptance_status": "accepted_for_provisional_production",
   "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
   "human_review_status": "pending",
-  "candidate_export_path": "build/assets/candidates/enemy-animation-complete/sprites/enemies/enemy_chaser_move.png",
+  "candidate_export_path": "build/assets/candidates/enemy-move-refresh/sprites/animation/enemy_chaser_move.png",
   "integrated_export_path": "game/assets/sprites/animation/enemy_chaser_move.png"
 }

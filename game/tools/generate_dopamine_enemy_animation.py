@@ -42,7 +42,7 @@ def rotate(source: list[tuple[int, int, int, int]], turns: int) -> list[tuple[in
 def pose(base: list[tuple[int, int, int, int]], animation: str, frame: int) -> list[tuple[int, int, int, int]]:
     out = [(0, 0, 0, 0)] * (24 * 24)
     bob = (0, -1, 0, 1)[frame]
-    if animation in ("idle", "move"):
+    if animation == "idle":
         for y in range(24):
             dy = bob if y < 19 else 0
             for x in range(24):
@@ -50,6 +50,20 @@ def pose(base: list[tuple[int, int, int, int]], animation: str, frame: int) -> l
         if frame == 2:
             magenta = roster.P["magenta"]
             out[12 * 24 + 12] = tuple(int(magenta[i:i + 2], 16) for i in (0, 2, 4)) + (255,)
+    elif animation == "move":
+        body_bob = (0, -1, 1, 0)[frame]
+        for y in range(24):
+            for x in range(24):
+                foot_lift = -2 if y >= 19 and ((frame == 1 and x < 12) or (frame == 3 and x >= 12)) else 0
+                target_y = y + (body_bob if y < 19 else foot_lift)
+                if 0 <= target_y < 24:
+                    out[target_y * 24 + x] = base[y * 24 + x]
+        if frame in (1, 3):
+            # A small palette-locked stride accent makes the alternating step legible
+            # even on abstract enemy silhouettes with no separated feet.
+            accent = roster.P["bright"]
+            x = 9 if frame == 1 else 14
+            out[22 * 24 + x] = tuple(int(accent[i:i + 2], 16) for i in (0, 2, 4)) + (255,)
     elif animation == "attack":
         scale = (1.0, 0.82, 1.18, 1.0)[frame]
         shift = (0, 0, -2, 0)[frame]
@@ -102,7 +116,7 @@ def write_asset(root: Path, asset_id: str, pixels: list[tuple[int, int, int, int
     export.write_bytes(png)
     source.write_bytes(ase)
     metadata = {**details, "asset_id": asset_id, "status": "candidate_not_approved", "skill": "dopamine-animation",
-                "generator": "game/tools/generate_dopamine_enemy_animation.py", "generator_version": "1",
+                "generator": "game/tools/generate_dopamine_enemy_animation.py", "generator_version": "2",
                 "seed": seed, "seed_policy": "fixed role primitives; seed recorded but not consumed",
                 "parameters": details, "dimensions": [width, height],
                 "source_path": str(source.relative_to(root)), "export_path": str(export.relative_to(root)),

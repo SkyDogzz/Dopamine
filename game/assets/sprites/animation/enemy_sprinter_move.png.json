@@ -25,8 +25,8 @@
   "status": "provisionally_integrated",
   "skill": "dopamine-animation",
   "generator": "game/tools/generate_dopamine_enemy_animation.py",
-  "generator_version": "1",
-  "seed": 815413644,
+  "generator_version": "2",
+  "seed": 3042049916,
   "seed_policy": "fixed role primitives; seed recorded but not consumed",
   "parameters": {
     "identity_source": "enemy_sprinter_sprite",
@@ -58,11 +58,11 @@
   ],
   "source_path": "source/animation/enemy_sprinter_move.aseprite",
   "export_path": "sprites/animation/enemy_sprinter_move.png",
-  "source_sha256": "a4c222aac5773d882a6e4521be6c203fdb0806ba23a78d6ca33ee40a466057d0",
-  "export_sha256": "1a61c98a8f4750ad3c8d9ea2e79e13a973c929932e880b68399c2c28434fce8e",
+  "source_sha256": "904f38550cd4553ec2fdfeac299b8735e20381203c174096865b5513f9443e42",
+  "export_sha256": "5869881b150365e7600b86c99c37779cf5f87474d86b1306d86fb88a4071fdae",
   "acceptance_status": "accepted_for_provisional_production",
   "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
   "human_review_status": "pending",
-  "candidate_export_path": "build/assets/candidates/enemy-animation-complete/sprites/enemies/enemy_sprinter_move.png",
+  "candidate_export_path": "build/assets/candidates/enemy-move-refresh/sprites/animation/enemy_sprinter_move.png",
   "integrated_export_path": "game/assets/sprites/animation/enemy_sprinter_move.png"
 }

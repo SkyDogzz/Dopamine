@@ -25,8 +25,8 @@
   "status": "provisionally_integrated",
   "skill": "dopamine-animation",
   "generator": "game/tools/generate_dopamine_enemy_animation.py",
-  "generator_version": "1",
-  "seed": 2974466733,
+  "generator_version": "2",
+  "seed": 736045487,
   "seed_policy": "fixed role primitives; seed recorded but not consumed",
   "parameters": {
     "identity_source": "enemy_exploder_sprite",
@@ -58,11 +58,11 @@
   ],
   "source_path": "source/animation/enemy_exploder_move.aseprite",
   "export_path": "sprites/animation/enemy_exploder_move.png",
-  "source_sha256": "e54e53a4aab5f9f38816aa6eeba2d4e417d8813a1606c8a6276be5b50b3e1356",
-  "export_sha256": "7b7ceb97f7ba3f93fbad394e22e5883eb641f10aa0e9c1a1cd6ec9d22d44ef55",
+  "source_sha256": "e82ac71bb2b6f7672c7b5aadcb6547b22800a6a9cc265dd96862291024b496be",
+  "export_sha256": "bbdad84067bc368bc9b3f92aba014d7321efebd141305fa2a02aaa8603d3d4fa",
   "acceptance_status": "accepted_for_provisional_production",
   "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
   "human_review_status": "pending",
-  "candidate_export_path": "build/assets/candidates/enemy-animation-complete/sprites/enemies/enemy_exploder_move.png",
+  "candidate_export_path": "build/assets/candidates/enemy-move-refresh/sprites/animation/enemy_exploder_move.png",
   "integrated_export_path": "game/assets/sprites/animation/enemy_exploder_move.png"
 }

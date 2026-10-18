@@ -25,8 +25,8 @@
   "status": "provisionally_integrated",
   "skill": "dopamine-animation",
   "generator": "game/tools/generate_dopamine_enemy_animation.py",
-  "generator_version": "1",
-  "seed": 2173111659,
+  "generator_version": "2",
+  "seed": 3718592807,
   "seed_policy": "fixed role primitives; seed recorded but not consumed",
   "parameters": {
     "identity_source": "enemy_summoner_sprite",
@@ -58,11 +58,11 @@
   ],
   "source_path": "source/animation/enemy_summoner_move.aseprite",
   "export_path": "sprites/animation/enemy_summoner_move.png",
-  "source_sha256": "e4a91e9182cf5ce7c92e01405df5a89ac10be4a3e959af5cade3476ebb82d746",
-  "export_sha256": "f11d702ed8f58ef67b4695fd060d15e7e914a0211a09773abb82f3c3d8320d4a",
+  "source_sha256": "d4e0ff3da454be9b8d4871203bb6423aeec9d896014713b08ffb499b9f16449f",
+  "export_sha256": "a173f77f2d49f7ac746e1a75780621e2ace2ecd26a31c27f63d6283a0c850d24",
   "acceptance_status": "accepted_for_provisional_production",
   "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
   "human_review_status": "pending",
-  "candidate_export_path": "build/assets/candidates/enemy-animation-complete/sprites/enemies/enemy_summoner_move.png",
+  "candidate_export_path": "build/assets/candidates/enemy-move-refresh/sprites/animation/enemy_summoner_move.png",
   "integrated_export_path": "game/assets/sprites/animation/enemy_summoner_move.png"
 }

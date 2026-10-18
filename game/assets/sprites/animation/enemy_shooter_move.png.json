@@ -25,8 +25,8 @@
   "status": "provisionally_integrated",
   "skill": "dopamine-animation",
   "generator": "game/tools/generate_dopamine_enemy_animation.py",
-  "generator_version": "1",
-  "seed": 4115904099,
+  "generator_version": "2",
+  "seed": 1194769284,
   "seed_policy": "fixed role primitives; seed recorded but not consumed",
   "parameters": {
     "identity_source": "enemy_shooter_sprite",
@@ -58,11 +58,11 @@
   ],
   "source_path": "source/animation/enemy_shooter_move.aseprite",
   "export_path": "sprites/animation/enemy_shooter_move.png",
-  "source_sha256": "aa0d5b2bed52fec812f87438f1075a3723ff2d4c76b6293978ce8926dba43821",
-  "export_sha256": "a593e424c50b0347136c5769ac288090f0d1ab5b25af616d02ca7dc2660e9d89",
+  "source_sha256": "9480633ee2e650fa6632888f0ef32792e3ed6c6976e2f442444932c506bc3255",
+  "export_sha256": "67736c3da048a9e544ef879bcd6c80bfbeaff15355b0ac76abfd7792678c42fd",
   "acceptance_status": "accepted_for_provisional_production",
   "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
   "human_review_status": "pending",
-  "candidate_export_path": "build/assets/candidates/enemy-animation-complete/sprites/enemies/enemy_shooter_move.png",
+  "candidate_export_path": "build/assets/candidates/enemy-move-refresh/sprites/animation/enemy_shooter_move.png",
   "integrated_export_path": "game/assets/sprites/animation/enemy_shooter_move.png"
 }

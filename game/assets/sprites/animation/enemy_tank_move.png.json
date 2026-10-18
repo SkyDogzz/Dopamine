@@ -25,8 +25,8 @@
   "status": "provisionally_integrated",
   "skill": "dopamine-animation",
   "generator": "game/tools/generate_dopamine_enemy_animation.py",
-  "generator_version": "1",
-  "seed": 2509753123,
+  "generator_version": "2",
+  "seed": 3642456926,
   "seed_policy": "fixed role primitives; seed recorded but not consumed",
   "parameters": {
     "identity_source": "enemy_tank_sprite",
@@ -58,11 +58,11 @@
   ],
   "source_path": "source/animation/enemy_tank_move.aseprite",
   "export_path": "sprites/animation/enemy_tank_move.png",
-  "source_sha256": "897ce229b458c2d30695745e02a25b7b0d27f72bdf61b50cc8e4a20aff9ab302",
-  "export_sha256": "2df33e02b34604df096d0cd9ef0de2cada66d65805f714b8350d4757f15f6127",
+  "source_sha256": "3c81d15cf2a0316f4f63fb5c66b4ec686d889dc9df298619f91f62670ef44b34",
+  "export_sha256": "42f3795e06ef7e2292353a6b04f6e2ac05557ec22765a1d9da959d10e9a0b5db",
   "acceptance_status": "accepted_for_provisional_production",
   "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
   "human_review_status": "pending",
-  "candidate_export_path": "build/assets/candidates/enemy-animation-complete/sprites/enemies/enemy_tank_move.png",
+  "candidate_export_path": "build/assets/candidates/enemy-move-refresh/sprites/animation/enemy_tank_move.png",
   "integrated_export_path": "game/assets/sprites/animation/enemy_tank_move.png"
 }
