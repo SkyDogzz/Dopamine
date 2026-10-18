@@ -895,7 +895,10 @@ func _process(_delta: float) -> void:
 		if current_simulation_time >= float(_enemy_death_animations[index]["expires_at"]):
 			_enemy_death_animations.remove_at(index)
 	for index in range(_weapon_transient_animations.size() - 1, -1, -1):
-		if current_simulation_time >= float(_weapon_transient_animations[index]["expires_at"]):
+		var transient: Dictionary = _weapon_transient_animations[index]
+		var now := Time.get_ticks_msec() * 0.001 if bool(transient.get("use_wall_clock", false)) else current_simulation_time
+		var expiry := float(transient.get("wall_expires_at", transient.get("expires_at", 0.0)))
+		if now >= expiry:
 			_weapon_transient_animations.remove_at(index)
 	for index in range(_lightning_arcs.size() - 1, -1, -1):
 		_lightning_arcs[index]["remaining"] = float(_lightning_arcs[index]["remaining"]) - elapsed_active_time
@@ -2076,6 +2079,10 @@ func _on_chest_option_selected(option_id: String) -> void:
 	Sfx.play("relic_pickup" if item_family == "relic" else "chest_reward")
 	if previous_item_level >= 0:
 		_show_item_level_feedback(item_family, item_id, previous_item_level)
+	if item_family == "relic" and previous_item_level == 0 and player != null:
+		_queue_transient_animation("relic_%s" % item_id, "acquisition", player.global_position,
+				Vector2.ZERO, float(simulation.snapshot().get("simulation_time", 0.0)), 32.0,
+				0.0, false, true)
 	if option_id == "relic:magnet_heart" and previous_magnet_heart_level < loadout.MAX_LEVEL and \
 			loadout.relic_level("magnet_heart") >= loadout.MAX_LEVEL and \
 			is_finite(magnet_heart_level_five_pulse_interval_seconds) and magnet_heart_level_five_pulse_interval_seconds > 0.0:
@@ -2438,6 +2445,9 @@ func _collect_nearby_chests(state: Dictionary) -> void:
 		if player.global_position.distance_squared_to(chest["position"]) > chest_collection_radius * chest_collection_radius:
 			continue
 		if open_chest_family(str(chest["family"])):
+			_queue_transient_animation("chest", "open", chest["position"], Vector2.ZERO,
+					float(simulation.snapshot().get("simulation_time", 0.0)), CHEST_SPRITE_SIZE,
+					0.0, false, true)
 			_world_chests.remove_at(index)
 			return
 
@@ -4064,17 +4074,22 @@ func _add_enemy_death_pixels(enemy_type: String, position: Vector2) -> void:
 
 func _queue_transient_animation(weapon_role: String, state: String, position: Vector2,
 		direction: Vector2, active_time: float, size: float, rotation: float = 0.0,
-		critical_hit: bool = false) -> bool:
+		critical_hit: bool = false, use_wall_clock: bool = false) -> bool:
 	if _visual_effects_reduced() or _sprite_renderer == null:
 		return false
 	var duration: float = _sprite_renderer.animation_duration(weapon_role, state)
 	if duration <= 0.0:
 		return false
-	_weapon_transient_animations.append({
+	var now := Time.get_ticks_msec() * 0.001 if use_wall_clock else active_time
+	var transient := {
 		"role": weapon_role, "state": state, "position": position, "direction": direction,
-		"started_at": active_time, "expires_at": active_time + duration,
+		"started_at": now, "expires_at": active_time + duration,
 		"size": size, "rotation": rotation, "critical_hit": critical_hit,
-	})
+		"use_wall_clock": use_wall_clock,
+	}
+	if use_wall_clock:
+		transient["wall_expires_at"] = now + duration
+	_weapon_transient_animations.append(transient)
 	while _weapon_transient_animations.size() > MAX_WEAPON_TRANSIENT_ANIMATIONS:
 		_weapon_transient_animations.pop_front()
 	return true
@@ -4100,13 +4115,16 @@ func _add_weapon_impact(source_type: String, position: Vector2, is_damage_over_t
 	if _visual_effects_reduced():
 		return
 	var weapon_id: String = WEAPON_IMPACT_SOURCE_IDS.get(impact_type, "")
+	var level: int = loadout.weapon_level(weapon_id) if not weapon_id.is_empty() else 1
 	if not weapon_id.is_empty() and _queue_transient_animation("weapon_%s" % weapon_id, "impact_vfx",
 			position, Vector2.ZERO, _last_simulation_time,
-			28.0 * (CRITICAL_HIT_IMPACT_SCALE if critical_hit else 1.0), rotation, critical_hit):
+			28.0 * _weapon_impact_level_scale(level) * (CRITICAL_HIT_IMPACT_SCALE if critical_hit else 1.0),
+			rotation, critical_hit):
+		_weapon_transient_animations.back()["level"] = level
+		_weapon_transient_animations.back()["emphasis_scale"] = CRITICAL_HIT_IMPACT_SCALE if critical_hit else 1.0
 		return
 	if _weapon_impacts.size() >= MAX_VISIBLE_WEAPON_IMPACTS:
 		_weapon_impacts.pop_front()
-	var level: int = loadout.weapon_level(weapon_id) if not weapon_id.is_empty() else 1
 	_weapon_impacts.append({
 		"type": int(WEAPON_IMPACT_TYPES[impact_type]),
 		"position": position,

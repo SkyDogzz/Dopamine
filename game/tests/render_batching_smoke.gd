@@ -48,6 +48,15 @@ func _run() -> void:
 			var vfx_frames: SpriteFrames = view._sprite_renderer._role_animation_sets[vfx_role][state]
 			assert(vfx_frames.get_frame_count("%s_%s" % [vfx_role, state]) == 4,
 					"Weapon %s %s should have all four frames" % [family, state])
+	for relic_id in view._sprite_renderer.RELIC_ANIMATION_IDS:
+		var relic_role := "relic_%s" % relic_id
+		assert(view._sprite_renderer._role_animation_sets.has(relic_role),
+				"Relic %s should resolve its authored acquisition animation" % relic_id)
+		var acquisition_frames: SpriteFrames = view._sprite_renderer._role_animation_sets[relic_role]["acquisition"]
+		assert(acquisition_frames.get_frame_count("%s_acquisition" % relic_role) == 4,
+				"Relic %s should have all four acquisition frames" % relic_id)
+	assert(view._sprite_renderer._role_animation_sets["chest"]["open"].get_frame_count("chest_open") == 4,
+			"Reward chest should resolve all four opening frames")
 	for sprite_id in view._sprite_renderer.SPRITE_FILES:
 		if not str(sprite_id).begins_with("projectile_"):
 			continue
@@ -123,6 +132,13 @@ func _run() -> void:
 	}])
 	assert(view._sprite_renderer.animated_multimesh_for("xp_orb_collect", 1).instance_count == 1,
 			"Collected XP should play its authored collection animation after the orb despawns")
+	var wall_start := Time.get_ticks_msec() * 0.001 - 0.2
+	view._sprite_renderer.set_entities([], Vector2.ZERO, 0.1, {}, [{
+		"role": "relic_storm_core", "state": "acquisition", "position": Vector2(60, 70),
+		"size": 32.0, "direction": Vector2.ZERO, "started_at": wall_start, "use_wall_clock": true,
+	}])
+	assert(view._sprite_renderer.animated_multimesh_for("relic_storm_core_acquisition", 1).instance_count == 1,
+			"Relic acquisition animation should advance on wall time while the reward choice pauses simulation")
 	view.set_selected_entity(2502, 1)
 	assert(not view._selected_entity_found, "Projectile animation instances should not become selectable targets")
 	var shooter := _entity(2600, "shooter", 0, 0)

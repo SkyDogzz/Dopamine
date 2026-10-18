@@ -38,6 +38,14 @@ func _run() -> void:
 	if first_chest.is_empty() or session._world_chests.size() != 1:
 		_fail("Final boss victory should wait while both guaranteed chest families are processed")
 		return
+	var chest_animation_queued := false
+	for transient in session._weapon_transient_animations:
+		if str(transient.get("role", "")) == "chest" and str(transient.get("state", "")) == "open" and \
+			bool(transient.get("use_wall_clock", false)):
+			chest_animation_queued = true
+	if not chest_animation_queued:
+		_fail("A world reward chest should play its opening animation while its choice pauses simulation")
+		return
 	var choices := [0]
 	session.chest_option_chosen.connect(func(_option_id: String) -> void: choices[0] += 1)
 	session.get_node("HUD/ChestOverlay/ChestChoice/Content/Options/Choice0").emit_signal("pressed")

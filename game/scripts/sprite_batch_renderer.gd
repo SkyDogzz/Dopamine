@@ -62,6 +62,10 @@ const WEAPON_VFX_FAMILIES := [
 	"lightning_conductor", "inferno_sprayer", "crimson_daggers", "minigun", "toxic_cloud",
 	"sawblades", "meteor_staff", "prism_laser", "void_orb", "frost_nova",
 ]
+const RELIC_ANIMATION_IDS := [
+	"blood_chalice", "celestial_eye", "frozen_crown", "infernal_heart", "magnet_heart",
+	"magnetic_coil", "overdrive_engine", "plague_mask", "prism_crystal", "singularity", "storm_core",
+]
 const ANIMATED_ROLE_IDS := [
 	"enemy_chaser", "enemy_sprinter", "enemy_tank", "enemy_shooter", "enemy_buffer",
 	"enemy_exploder", "enemy_shielder", "enemy_summoner", "enemy_summoned",
@@ -119,6 +123,13 @@ func _init() -> void:
 	var xp_collect_path := "res://assets/sprites/animation/xp_orb_collect.tres"
 	if ResourceLoader.exists(xp_collect_path):
 		_role_animation_sets["xp_orb"] = {"collect": load(xp_collect_path) as SpriteFrames}
+	var chest_open_path := "res://assets/sprites/animation/chest_open.tres"
+	if ResourceLoader.exists(chest_open_path):
+		_role_animation_sets["chest"] = {"open": load(chest_open_path) as SpriteFrames}
+	for relic_id in RELIC_ANIMATION_IDS:
+		var relic_path := "res://assets/sprites/animation/relic_%s_acquisition.tres" % relic_id
+		if ResourceLoader.exists(relic_path):
+			_role_animation_sets["relic_%s" % relic_id] = {"acquisition": load(relic_path) as SpriteFrames}
 
 func set_entities(entities: Array, origin: Vector2 = Vector2.ZERO, animation_time: float = 0.0,
 		animation_overrides: Dictionary = {}, transient_animations: Array = []) -> void:
@@ -312,7 +323,7 @@ func _append_transient_animation(instances_by_animation: Dictionary, transient: 
 	if sprite_frames == null:
 		return
 	var started_at := float(transient.get("started_at", animation_time))
-	var elapsed := animation_time - started_at
+	var elapsed := Time.get_ticks_msec() * 0.001 - started_at if bool(transient.get("use_wall_clock", false)) else animation_time - started_at
 	if elapsed < 0.0:
 		return
 	var direction: Vector2 = transient.get("direction", Vector2.DOWN)

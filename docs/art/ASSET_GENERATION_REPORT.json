@@ -3,7 +3,7 @@
   "generated_at": "2026-10-18",
   "manifest": "docs/art/ASSET_MANIFEST.json",
   "candidate_root": "build/assets/candidates",
-  "runtime_integration": "308/308 creative assets provisionally integrated under game/assets. Player idle/walk and idle/move SpriteFrames for all nine common enemy roles, the elite prototype and both boss roles play from simulation time. Attack frames play during shooter/exploder fuses and boss telegraph/charge phases. Boss special animations now play for Warden charges and Core spiral/combined abilities. All projectile sprite roles now loop their authored SpriteFrames while retaining movement rotation, trails and per-instance tint. All 20 base/evolved weapon attack sheets and 20 family fire/impact sheets are loaded; attack and fire VFX play on successful shots, and animated impacts replace the static impact when available. The 64-entry transient animation cap bounds dense fire and impact scenes. XP collection plays its authored four-frame animation after orb despawn. Death animations survive ECS despawn and play for their metadata-defined duration. Generated SFX families and menu/result/adaptive music remain connected. Human visual and auditory review remains pending.",
+  "runtime_integration": "308/308 creative assets provisionally integrated under game/assets. Player idle/walk and idle/move SpriteFrames for all nine common enemy roles, the elite prototype and both boss roles play from simulation time. Attack frames play during shooter/exploder fuses and boss telegraph/charge phases. Boss special animations now play for Warden charges and Core spiral/combined abilities. All projectile sprite roles now loop their authored SpriteFrames while retaining movement rotation, trails and per-instance tint. All 20 base/evolved weapon attack sheets and 20 family fire/impact sheets are loaded; attack and fire VFX play on successful shots, and animated impacts replace the static impact when available. The 64-entry transient animation cap bounds dense fire and impact scenes. XP collection plays its authored four-frame animation after orb despawn; world reward chests and newly acquired relics play their authored reveal animations, including while the choice UI pauses simulation. Death animations survive ECS despawn and play for their metadata-defined duration. Generated SFX families and menu/result/adaptive music remain connected. Human visual and auditory review remains pending.",
   "asset_counts": {
     "dopamine-animation": {
       "count": 141,
@@ -35,7 +35,7 @@
     "project_copy": "build/assets/candidates/godot-final-import-check/project",
     "log": "build/assets/candidates/godot-final-import-check/import.log"
   },
-  "artistic_review": "Internal pixel-level review corrected a four-direction orientation defect in the player sheets. The static catalog remains geometric and non-player animation is still procedural role work; these are provisionally integrated prototypes, not a human-approved production art pass. A redesigned batch of 31 role-specific weapon/evolution/relic catalog icons passed palette, dimensions, color-count, source/export hash, and Godot smoke checks and replaced only those explicitly authorized managed IDs. Catalog readability and the provisional shapes/colors still need owner review. A technical audit found that the generated SpriteFrames resources stored atlas regions as unsupported frame fields, so Godot treated full sheets as every frame. All 131 animation resources now use per-frame AtlasTexture subresources and pass a manifest-driven Godot smoke; boss/elite animation sheets were regenerated at native 96x96/24x24 cel dimensions. Runtime now plays idle/move frames for all 12 enemy/elite/boss roles from simulation time, plus attack frames during shooter/exploder fuses and boss telegraph/charge phases. Boss special sheets now play during Warden charges and Core spiral/combined attacks. All weapon attack/fire/impact animation sheets are now connected to their corresponding successful-fire and direct-hit events; XP collection animation is connected; chest-open and relic-acquisition animations remain unconnected; projectile loop animation is connected using existing frames; death cadence follows authored provisional metadata. Human art review remains pending.",
+  "artistic_review": "Internal pixel-level review corrected a four-direction orientation defect in the player sheets. The static catalog remains geometric and non-player animation is still procedural role work; these are provisionally integrated prototypes, not a human-approved production art pass. A redesigned batch of 31 role-specific weapon/evolution/relic catalog icons passed palette, dimensions, color-count, source/export hash, and Godot smoke checks and replaced only those explicitly authorized managed IDs. Catalog readability and the provisional shapes/colors still need owner review. A technical audit found that the generated SpriteFrames resources stored atlas regions as unsupported frame fields, so Godot treated full sheets as every frame. All 131 animation resources now use per-frame AtlasTexture subresources and pass a manifest-driven Godot smoke; boss/elite animation sheets were regenerated at native 96x96/24x24 cel dimensions. Runtime now plays idle/move frames for all 12 enemy/elite/boss roles from simulation time, plus attack frames during shooter/exploder fuses and boss telegraph/charge phases. Boss special sheets now play during Warden charges and Core spiral/combined attacks. All weapon attack/fire/impact animation sheets are now connected to their corresponding successful-fire and direct-hit events; XP collection, chest-open and relic-acquisition animations are connected; projectile loop animation is connected using existing frames; death cadence follows authored provisional metadata. Human art review remains pending.",
   "game_assets_files": [
     {
       "path": "game/assets/README.md",
@@ -91,7 +91,7 @@
     "Some boss, biome, font and detailed animation conventions remain open in the GDD and stay explicitly provisional.",
     "One earlier full CTest run had a transient Toxic Ignition assertion failure; six targeted reruns and subsequent complete runs (119/119, then 120/120) passed. Keep monitoring this gameplay test for intermittent behavior.",
     "The survival_adaptive.wav and boss_intensity.wav full mixes are listening/reference renders; runtime music is composed from the synchronized stems. Their use is recorded in the asset manifest.",
-    "Enemy, elite and boss idle/move SpriteFrames now play in Survival and Sandbox. Attack frames play during shooter/exploder fuses and boss telegraph/charge phases; enemy/elite/boss death animations play from death events using authored provisional timing. Boss special sheets are wired to charge/spiral/combined abilities; all weapon attack/fire/impact sheets are wired to gameplay events; XP collection animation is connected; chest-open and relic-acquisition animation resources remain to be wired; projectile SpriteFrames loops are connected; timing and art review remain provisional."
+    "Enemy, elite and boss idle/move SpriteFrames now play in Survival and Sandbox. Attack frames play during shooter/exploder fuses and boss telegraph/charge phases; enemy/elite/boss death animations play from death events using authored provisional timing. Boss special sheets are wired to charge/spiral/combined abilities; all weapon attack/fire/impact sheets are wired to gameplay events; XP collection, chest-open and relic-acquisition animation resources are connected; projectile SpriteFrames loops are connected; timing and art review remain provisional."
   ],
   "review_pack": {
     "local_index": "build/assets/candidates/review/index.html",
@@ -133,10 +133,10 @@
     "asset_integration_scope_smoke": "passed; verifies exact-ID replacement opt-in, managed-asset ownership, dry-run non-mutation and mismatched-owner refusal",
     "sfx_runtime_event_mapping": "passed: 20 weapon-specific cues are loaded and invoked by gameplay; 7 generated event families are exposed; weapon_family_fire/impact are fallback paths if a specific cue is missing; targeted SFX tests passed.",
     "music_runtime_cues": "passed: menu theme loops on the Music bus in launch_menu; victory/defeat cues are selected at run completion and load on the Music bus; launch_navigation_smoke and survival_result_music_smoke passed",
-    "godot_pck_export": "passed after weapon and XP collection animation runtime wiring; Linux/X11 PCK rebuilt with updated transient animation playback.",
+    "godot_pck_export": "passed after weapon, XP, chest and relic animation runtime wiring; Linux/X11 PCK rebuilt. SHA-256 7d2f1c6bd6c48a054fd6372a40fb5edbaf7c81396018271737122a5a474548bb (3,236,308 bytes).",
     "music_format_audit": "passed: manifest now records all five integrated music mixes/cues as mono PCM16 44.1 kHz, matching WAV headers",
     "catalog_icon_redesign": "passed: all 31 explicit managed IDs regenerated from dopamine-pixel-art v3, validated with dopamine-asset-qa, integrated, and covered by catalog icon, Art Bible, Godot import, and replacement-scope smoke checks; owner art review remains pending",
-    "godot_test_suite_targeted": "passed: godot_project_import plus render_batching_smoke, survival_weapon_smoke, survival_shooter_smoke and survival_visual_effects_smoke (5/5)",
+    "godot_test_suite_targeted": "passed: render_batching_smoke, survival_weapon_smoke, survival_shooter_smoke, survival_visual_effects_smoke, survival_chest_choice_smoke, survival_level_feedback_smoke and survival_final_boss_loot_smoke (7/7), plus Godot 4.7.2 editor import.",
     "godot_animation_resources": "passed: all 131 generated SpriteFrames resources load, have the declared row/frame counts, and expose AtlasTexture regions matching metadata",
     "boss_elite_animation_batch": "passed: 14 boss/elite sheets regenerated by dopamine-animation at native frame sizes (boss 96x96, elite 24x24); animation QA, Aseprite source/export hashes, palette, and Godot resource smoke passed",
     "role_animation_runtime": "passed: idle/move frames for all nine enemy roles, elite prototype and both boss prototypes; attack playback is wired to shooter/exploder fuse and boss telegraph/charge phases; boss special playback is connected to charge/spiral/combined abilities, and transient death playback survives despawn using each SpriteFrames resource duration. Playback follows simulation time and freezes when paused.",
@@ -144,14 +144,15 @@
     "role_death_runtime": "passed: death events queue role-specific SpriteFrames at the original position/scale/direction, continue after ECS despawn, and expire at authored frame-count/FPS duration; 64 simultaneous death animations maximum.",
     "role_special_runtime": "passed: Pulse Warden special SpriteFrames selected during charge telegraph/charge; Dopamine Core special SpriteFrames selected for spiral and combined telegraph/volley phases.",
     "projectile_animation_runtime": "passed: every runtime projectile sprite role resolves to a looping multi-frame SpriteFrames resource; high-count 2,000 projectile capture passes. Rotation, trails, Redline tint, and non-selectable projectile behavior are retained.",
-    "weapon_animations_runtime": "passed: 20 attack sheets and 20 family fire/impact sheets load; successful shots trigger attack/fire sheets; direct hits trigger animated family impacts; 64 transient VFX cap; reduced-effects setting clears and suppresses them; XP orb collection animation is rendered after despawn and covered by render_batching_smoke."
+    "weapon_animations_runtime": "passed: 20 attack sheets and 20 family fire/impact sheets load; successful shots trigger attack/fire sheets; direct hits trigger animated family impacts; 64 transient VFX cap; reduced-effects setting clears and suppresses them; XP orb collection animation is rendered after despawn; chest opening and relic acquisition are integrated; regression smokes cover animation playback and level-scaled impact emphasis.",
+    "reward_animations_runtime": "passed: XP collection, world chest opening and first-time relic acquisition use their authored SpriteFrames; chest/relic reveal timing advances on wall clock during paused reward selection; all 11 relic resources load and final boss loot smoke confirms chest opening is queued."
   },
   "godot_pck_export": {
     "status": "passed",
     "preset": "Linux/X11",
     "path": "build/assets/DopamineSurvivor.pck",
-    "bytes": 3234996,
-    "sha256": "6cd7e633789db26e64ff891bfc449c552644cc841a8edac1e3b4b0eb5a8ccea0",
+    "bytes": 3236308,
+    "sha256": "7d2f1c6bd6c48a054fd6372a40fb5edbaf7c81396018271737122a5a474548bb",
     "music_runtime_paths": [
       "menu_theme.wav",
       "victory_cue.wav",
@@ -274,5 +275,6 @@
     "victory_cue": "run-result one-shot",
     "defeat_cue": "run-result one-shot",
     "stems": "runtime synchronized adaptive Survival arrangement"
-  }
+  },
+  "remaining_review": "Owner visual/art direction review and auditory review remain pending. Detailed animation timings and directions remain provisional where the GDD leaves them open. No audio playback hardware is available in this session; local review page includes playback controls."
 }
