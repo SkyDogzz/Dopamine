@@ -2333,3 +2333,11 @@ Note de clôture : le blocage historique du smoke `sandbox_ui_smoke.gd` décrit 
 - [x] Revue visuelle locale des neuf planches contact; archivées avec SHA-256 sous `docs/art/evidence/2026-10-18/contact-sheets/`. Cette inspection interne ne constitue pas une acceptation artistique par le propriétaire.
 - [x] Inventaire audio versionné : `docs/art/ASSET_AUDIO_INVENTORY.json` (133 entrées). Écoute humaine reste ouverte : l’environnement n’a pas de sortie PCM.
 - [x] PCK Linux/X11 reconstruit : 3 339 232 octets, SHA-256 `e4cfe6e83732e13326c6ebe3ba432c85b54a64f5d3099c8889d5e04a9060d2c3`.
+
+## Reprise QA de la bibliothèque et lecture de mort joueur — 2026-10-18
+
+- [x] Les 12 racines `candidate_batch_qa` du rapport ont été revalidées avec les trois validateurs Dopamine : 4 batchs animation (145 feuilles), 7 batchs pixel-art (124 sorties), et 1 batch audio (136 WAV); 0 erreur, chaque rapport indique `passed`. Le dossier historique vide `build/assets/candidates/roster` n’est pas un batch actif.
+- [x] `validate_asset_manifest.py`, `validate_asset_provenance_registry.py` et `validate_no_legacy_asset_hash_reuse.py` passent : 356 IDs uniques intégrés, 356 assets courants traçables, 417 entrées initiales migrées/retirées, aucune empreinte réutilisée.
+- [x] Un contrôle de lecture a révélé que le contrôleur retournait avant de faire avancer les frames de mort. `player_controller_smoke.gd` reproduit d’abord le défaut, puis vérifie l’avancement après correction. Les smokes joueur, sources/animations, armes, résultat de run, réanimation, Sandbox et musique adaptative passent.
+- [x] `build/cmake-3.31.12-linux-x86_64/bin/ctest --test-dir build --output-on-failure --parallel 4` passe **121/121** en 24,71 s; l’import éditeur Godot 4.7.2 passe également.
+- [i] Les prototypes visuels et le mix audio demeurent soumis à revue artistique et écoute sur une sortie PCM réelle; les choix marqués proposés/ouvertes dans le GDD ne sont pas canonisés par ces validations.

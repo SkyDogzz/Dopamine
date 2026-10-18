@@ -38,6 +38,10 @@ func _run() -> void:
 	if sprite.texture.resource_path.get_file() != "player_death.png" or player.controls_enabled:
 		_fail("Player death should display its sheet and disable movement")
 		return
+	player._physics_process(0.11)
+	if sprite.region_rect.position.x < 32.0:
+		_fail("Player death should advance its one-shot frames while controls are disabled")
+		return
 	player._one_shot_state = ""
 	player.controls_enabled = true
 	Input.parse_input_event(_key_event(KEY_D, true))

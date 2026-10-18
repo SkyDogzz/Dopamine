@@ -44,6 +44,7 @@ func _ready() -> void:
 
 func _physics_process(delta: float) -> void:
 	if _one_shot_state == "death":
+		_advance_one_shot(delta)
 		return
 	if not controls_enabled:
 		velocity = Vector2.ZERO
