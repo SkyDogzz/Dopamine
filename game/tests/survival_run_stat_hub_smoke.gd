@@ -78,8 +78,12 @@ func _run() -> void:
 			_fail("Stat contributions should use source icon and value pairs without text labels")
 			return
 	var compact_bounds := compact.get_global_rect()
-	if compact.get_parent() is PanelContainer or compact_bounds.size.x > 100.0:
-		_fail("The compact in-game stat hub should remain narrow and without a background panel")
+	var compact_panel: PanelContainer = hub.get_node("CompactPanel")
+	var run_panel: PanelContainer = session.get_node("HUD/RunPanel")
+	if compact_panel.get_global_rect().position.x != run_panel.get_global_rect().position.x or \
+		compact_panel.get_global_rect().position.y < run_panel.get_global_rect().end.y or \
+		compact_bounds.size.x > 100.0:
+		_fail("The compact stats should sit in their own panel directly below the run panel")
 		return
 	var start_time := float(session.simulation.snapshot()["simulation_time"])
 	var tab := InputEventKey.new()
@@ -88,6 +92,11 @@ func _run() -> void:
 	session._unhandled_input(tab)
 	if not hub.detail_open or root.gui_get_focus_owner() != hub.get_node("Detail/Content/Header/CloseButton"):
 		_fail("Tab should open the read-only detail and place keyboard/gamepad focus on Close")
+		return
+	var detail_panel: PanelContainer = hub.get_node("Detail")
+	if compact_panel.visible or detail_panel.get_global_rect().position.x != compact_panel.get_global_rect().position.x or \
+		detail_panel.get_global_rect().position.y != compact_panel.get_global_rect().end.y:
+		_fail("Opening details should extend the stats panel directly below the compact panel")
 		return
 	var scroll: ScrollContainer = hub.get_node("Detail/Content/StatsScroll")
 	var close_button: Button = hub.get_node("Detail/Content/Header/CloseButton")
@@ -110,8 +119,8 @@ func _run() -> void:
 	if "--capture" in OS.get_cmdline_user_args() and not await _capture_detail(session):
 		return
 	session._unhandled_input(tab)
-	if hub.detail_open:
-		_fail("Tab should close the stat detail without pausing the run")
+	if hub.detail_open or not compact_panel.visible:
+		_fail("Pressing Tab again should collapse details back into the compact panel")
 		return
 	session._unhandled_input(tab)
 	var cancel := InputEventKey.new()

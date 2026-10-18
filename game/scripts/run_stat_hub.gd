@@ -34,6 +34,7 @@ var _detail_panel: PanelContainer
 var _detail_content: VBoxContainer
 var _detail_scroll: ScrollContainer
 var _xp_status: Label
+var _compact_panel: PanelContainer
 var _close_button: Button
 var _last_stats: Dictionary = {}
 var _last_xp_status := ""
@@ -47,6 +48,7 @@ func _ready() -> void:
 func set_detail_open(open: bool) -> void:
 	detail_open = open
 	_detail_panel.visible = open
+	_compact_panel.visible = not open
 	if open:
 		_close_button.grab_focus()
 
@@ -72,12 +74,17 @@ func update_stats(stats: Dictionary, xp_status: String) -> void:
 		_detail_content.add_child(_stat_row(stat))
 
 func _build_compact_panel() -> void:
+	_compact_panel = PanelContainer.new()
+	_compact_panel.name = "CompactPanel"
+	_compact_panel.position = Vector2(8.0, 56.0)
+	_compact_panel.add_theme_stylebox_override("panel", _panel_style(CYAN))
+	_compact_panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	add_child(_compact_panel)
 	var content := VBoxContainer.new()
 	content.name = "Compact"
-	content.position = Vector2(8.0, 56.0)
-	content.custom_minimum_size = Vector2(30.0, 48.0)
+	content.custom_minimum_size = Vector2(48.0, 48.0)
 	content.add_theme_constant_override("separation", 2)
-	add_child(content)
+	_compact_panel.add_child(content)
 	for stat_id in COMPACT_STAT_ICONS:
 		var row := HBoxContainer.new()
 		row.name = str(stat_id)
@@ -101,9 +108,9 @@ func _build_compact_panel() -> void:
 func _build_detail_panel() -> void:
 	_detail_panel = PanelContainer.new()
 	_detail_panel.name = "Detail"
-	_detail_panel.position = Vector2(8.0, 56.0)
-	_detail_panel.custom_minimum_size = Vector2(260.0, 270.0)
-	_detail_panel.size = Vector2(260.0, 270.0)
+	_detail_panel.position = Vector2(8.0, 108.0)
+	_detail_panel.custom_minimum_size = Vector2(260.0, 218.0)
+	_detail_panel.size = Vector2(260.0, 218.0)
 	_detail_panel.add_theme_stylebox_override("panel", _panel_style(CYAN))
 	_detail_panel.visible = false
 	_detail_panel.mouse_filter = Control.MOUSE_FILTER_STOP
