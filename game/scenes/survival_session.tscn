@@ -168,10 +168,10 @@ mouse_filter = 2
 visible = false
 anchor_left = 0.5
 anchor_right = 0.5
-offset_left = -120
-offset_top = 55
-offset_right = 120
-offset_bottom = 77
+offset_left = -155
+offset_top = 78
+offset_right = 155
+offset_bottom = 100
 mouse_filter = 2
 theme_type_variation = "CompactPanel"
 
@@ -180,12 +180,14 @@ theme_override_constants/separation = 6
 mouse_filter = 2
 
 [node name="BossValue" type="Label" parent="HUD/BossPanel/BossInfo"]
-custom_minimum_size = Vector2(65, 0)
+custom_minimum_size = Vector2(168, 0)
 layout_mode = 2
+theme_override_colors/font_color = Color(0.215686, 0.909804, 0.960784, 1)
+theme_override_font_sizes/font_size = 8
 text = "BOSS  1000 / 1000"
 
 [node name="BossHPBar" type="ProgressBar" parent="HUD/BossPanel/BossInfo"]
-custom_minimum_size = Vector2(130, 0)
+custom_minimum_size = Vector2(112, 0)
 layout_mode = 2
 show_percentage = false
 
@@ -194,9 +196,9 @@ visible = false
 anchor_left = 0.5
 anchor_right = 0.5
 offset_left = -150
-offset_top = 83
+offset_top = 108
 offset_right = 150
-offset_bottom = 108
+offset_bottom = 133
 mouse_filter = 2
 theme_type_variation = "CompactPanel"
 

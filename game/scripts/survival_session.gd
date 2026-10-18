@@ -1735,6 +1735,11 @@ func _style_run_hud() -> void:
 	xp_fill.bg_color = Color("#37E8F5")
 	xp_fill.set_corner_radius_all(0)
 	_xp_bar.add_theme_stylebox_override("fill", xp_fill)
+	var boss_fill := StyleBoxFlat.new()
+	boss_fill.bg_color = Color("#FF75E4")
+	boss_fill.set_corner_radius_all(0)
+	_boss_hp_bar.add_theme_stylebox_override("background", bar_background.duplicate())
+	_boss_hp_bar.add_theme_stylebox_override("fill", boss_fill)
 
 func _refresh_boss_hud() -> void:
 	_boss_panel.visible = false

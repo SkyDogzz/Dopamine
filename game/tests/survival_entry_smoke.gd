@@ -59,6 +59,17 @@ func _run() -> void:
 	if current_scene.loadout._weapons.size() != 10 or current_scene.loadout._relics.size() != 11:
 		_fail("Sandbox Survival should retain the full playable weapon and relic catalog")
 		return
+	if "--capture" in OS.get_cmdline_user_args():
+		var viewport_size := root.get_visible_rect().size
+		if viewport_size != Vector2(640, 360):
+			_fail("Expected a 640x360 logical viewport for the starting loadout capture, got %s" % viewport_size)
+			return
+		await RenderingServer.frame_post_draw
+		var capture_path := ProjectSettings.globalize_path("res://../docs/art/evidence/2026-10-18/states/starting-loadout.png")
+		if root.get_texture().get_image().save_png(capture_path) != OK:
+			_fail("Could not capture the starting weapon choice")
+			return
+		print("Starting loadout visual capture: %s" % capture_path)
 	current_scene.queue_free()
 	await process_frame
 	print("Survival entry smoke passed")

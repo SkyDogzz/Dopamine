@@ -2137,3 +2137,10 @@ Note de clôture : le blocage historique du smoke `sandbox_ui_smoke.gd` décrit 
 - [x] Capture `docs/art/evidence/2026-10-18/adaptive-music-runtime-capture.wav`: PCM16 stéréo 44,1 kHz, 12,26 s, pic -2,73 dBFS, RMS -23,06 dBFS, zéro échantillon écrêté; SHA-256 `667ce7238edccb80e69b37fb5c18916753306da985291bad74acc219bde140b3`.
 - [x] `godot_project_import`, `sfx_service_assets_smoke` et `adaptive_survival_music_smoke` passent dans CTest (3/3).
 - [i] La capture établit la sortie numérique du moteur pendant les contextes du scénario, sans valider le niveau perçu, le masquage des cues, la continuité entendue ni un vrai combat. L’écoute humaine sur sortie audio reste **[OUVERTE]**, conformément à la demande de continuer sans retour d’écoute.
+
+## Captures Survival et HUD boss — 2026-10-18
+
+- [x] `survival_entry_smoke.gd --capture` génère l’écran de choix d’arme initial depuis la vraie session Sandbox Survival. `survival_hud_smoke.gd --capture` génère le HUD actif, le boss et le feedback d’acquisition simultanés à 640×360; les quatre captures ont été examinées et hashées dans `docs/art/evidence/2026-10-18/README.md`.
+- [x] La capture boss a révélé le label au style par défaut et un chevauchement vertical avec le HUD de coin. `BossValue` utilise maintenant la fonte pixel 8 px cyan, la barre de vie est magenta, et le panneau est placé sous les panneaux HP et méta. La preuve combinée et le smoke valident le thème, l’absence de chevauchement et l’inclusion dans les bornes logiques.
+- [x] `godot_project_import`, `survival_entry_smoke`, `survival_hud_smoke`, `survival_visual_effects_smoke` et `survival_pause_smoke` passent par CTest (**5/5**).
+- [i] Les profils de run sont synthétiques, le rendu est Xvfb/Mesa llvmpipe; ceci n’établit pas la lisibilité de tous les états ni le rendu sur GPU matériel.

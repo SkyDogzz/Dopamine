@@ -42,6 +42,8 @@ func _run() -> void:
 		session.get_node("HUD/RunPanel/RunInfo/StatusRow/XPRow/XPBar").value != 5.0:
 		_fail("The run HUD should display current health, XP, time, wave and weapon state")
 		return
+	if "--capture" in OS.get_cmdline_user_args() and not await _capture_hud(session, "survival-hud.png"):
+		return
 	var hud_background := (session.get_node("HUD/RunPanel") as PanelContainer).get_theme_stylebox("panel") as StyleBoxFlat
 	var hud_labels := [
 		session.get_node("HUD/RunPanel/RunInfo/StatusRow/HPRow/HPValue") as Label,
@@ -113,6 +115,24 @@ func _run() -> void:
 		session.get_node("HUD/BossPanel/BossInfo/BossHPBar").value != 20.0:
 		_fail("The boss HUD should show the current boss phase when a boss is active")
 		return
+	var boss_value := session.get_node("HUD/BossPanel/BossInfo/BossValue") as Label
+	var boss_bar := session.get_node("HUD/BossPanel/BossInfo/BossHPBar") as ProgressBar
+	var logical_bounds := Rect2(Vector2.ZERO, session.get_viewport().get_visible_rect().size)
+	if not logical_bounds.encloses(boss_panel.get_global_rect()) or boss_value.get_theme_font_size("font_size") != 8 or \
+		boss_value.get_theme_color("font_color").to_html(false) != "37e8f5" or \
+		boss_bar.get_theme_stylebox("fill").bg_color.to_html(false) != "ff75e4":
+		_fail("The boss HUD should fit the logical viewport and use the compact Neon label and health bar styles")
+		return
+	if "--capture" in OS.get_cmdline_user_args() and not await _capture_hud(session, "survival-boss-hud.png"):
+		return
+	if "--capture" in OS.get_cmdline_user_args():
+		session._show_effect_feedback("ITEM ACQUIRED  ·  LV 2")
+		var feedback_panel := session.get_node("HUD/ItemLevelFeedback") as Control
+		if boss_panel.get_global_rect().intersects(feedback_panel.get_global_rect()):
+			_fail("The boss HUD and run feedback should not overlap")
+			return
+		if not await _capture_hud(session, "survival-boss-feedback.png"):
+			return
 	for _level in range(5):
 		session.loadout.apply_offer("weapon:minigun")
 	for _level in range(5):
@@ -165,6 +185,23 @@ func _run() -> void:
 func _fail(message: String) -> void:
 	push_error(message)
 	quit(1)
+
+func _capture_hud(session: Node2D, file_name: String) -> bool:
+	var viewport_size := root.get_visible_rect().size
+	if viewport_size != Vector2(640, 360):
+		_fail("Expected a 640x360 logical viewport for the Survival HUD capture, got %s" % viewport_size)
+		return false
+	var was_processing := session.is_processing()
+	session.set_process(false)
+	await RenderingServer.frame_post_draw
+	var capture_path := ProjectSettings.globalize_path("res://../docs/art/evidence/2026-10-18/states/%s" % file_name)
+	if root.get_texture().get_image().save_png(capture_path) != OK:
+		session.set_process(was_processing)
+		_fail("Could not capture the Survival HUD: %s" % capture_path)
+		return false
+	session.set_process(was_processing)
+	print("Survival HUD visual capture: %s" % capture_path)
+	return true
 
 func _contrast_ratio(first: Color, second: Color) -> float:
 	var first_luminance := _relative_luminance(first)
