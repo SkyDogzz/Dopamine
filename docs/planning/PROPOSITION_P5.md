@@ -64,7 +64,7 @@ Garde-fou de puissance proposé : attribuer un budget de puissance à chaque nœ
 
 ## 5. Achievements
 
-Proposition : conserver les quatre seuils Exterminator et les bonus par palier déjà donnés en exemple dans le GDD ; ils servent de modèle, pas de catalogue accepté. Pour les autres familles, utiliser des métriques cumulées monotones (`sum`), des records (`max`) ou des compteurs d'événements idempotents selon la définition de l'objectif. Les récompenses de palier sont reconstruites à partir des paliers atteints, sans stocker les mêmes bonus deux fois.
+Proposition : conserver les quatre seuils Exterminator et multiplier par dix les montants de récompense du catalogue précédent ; ils servent de modèle, pas de catalogue accepté. Pour les autres familles, utiliser des métriques cumulées monotones (`sum`), des records (`max`) ou des compteurs d'événements idempotents selon la définition de l'objectif. Les récompenses de palier sont reconstruites à partir des paliers atteints, sans stocker les mêmes bonus deux fois.
 
 Répartition de 120 familles proposée par le GDD à garder comme squelette éditorial : Combat 25, Survival 15, Weapons 20, Relics & Evolutions 15, Equipment 15, Difficulty & Bosses 15, Progression 10, Secrets 5. Les bonus permanents doivent rester dans le budget GDD proposé de +12% global, mesuré sur plusieurs builds ; les récompenses utilitaires/effets spéciaux sont incluses dans ce budget après mesure.
 
