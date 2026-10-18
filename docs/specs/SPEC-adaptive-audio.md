@@ -8,6 +8,15 @@ Remplacer tous les effets sonores et la musique par une direction arcade synthwa
 
 Godot 4.7.2 audio buses/players; runtime sous `game/assets/audio/`; orchestration actuelle `game/scripts/adaptive_survival_music.gd`; appels SFX à inventorier. Le format source/audio et le workflow d’enregistrement ou synthèse restent ouverts.
 
+### Décisions validées pour cette initiative (2026-10-18)
+
+- **[VALIDÉ]** Produire les nouveaux SFX et la musique par synthèse procédurale originale, sans réutiliser les fichiers ni les recettes audio existants.
+- **[VALIDÉ]** Après migration complète, supprimer les anciennes sources/recettes/références audio et visuelles du dépôt; préserver jusque-là les fichiers actifs et les preuves d'audit nécessaires.
+- **[OUVERT]** Format source, fréquence runtime, canaux et format de boucle musicale; arrêter ces contrats avant la production finale de musique et du catalogue complet.
+- **[OUVERT]** Méthode d'arrangement adaptatif, seuils de progression et calibration de mix; les valeurs du contrôleur actuel restent **[PROPOSÉES]**.
+
+Prototype d'auteur indépendant : `game/tools/generate_original_audio.py` écrit un son prototype et 38 candidats couvrant les 19 familles SFX existantes, dans `game/assets/audio/original_procedural/`. L'algorithme emploie oscillateurs, enveloppes analytiques et un bruit transitoire à seed fixe via la seule bibliothèque standard Python; aucune recette ni sortie existante n'est lue. Les 38 WAV sont distincts et déterministes; format PCM16 mono 44,1 kHz, durée 45–950 ms, échantillons finis et non écrêtés. Chaque fichier a son hash, son niveau RMS/pic et sa durée dans `sfx/manifest.json`; la sortie est reproductible à l'identique. Une page d'aperçu est disponible à `preview.html`. **[PROPOSÉ]** Ces sons sont des candidats de synthèse, pas des remplacements approuvés. **[OUVERT]** Ils ne sont ni écoutés (aucun lecteur local dans l'environnement d'agent), ni intégrés ou mixés dans une run; ces validations restent obligatoires.
+
 ## Commandes de vérification
 
 - `godot --headless --editor --path game --quit`

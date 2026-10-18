@@ -1,0 +1,18 @@
+{
+  "status": "prototype; not yet integrated or ear-reviewed in game",
+  "source": "game/tools/generate_original_audio.py",
+  "method": "deterministic sine oscillators, seeded white-noise transient, analytic envelopes",
+  "sounds": [
+    {
+      "file": "boss_telegraph.wav",
+      "sha256": "8924055986f44789e3221e86195c18a8d9254b803c46cfb61230ffd0b911eccf",
+      "sample_rate_hz": 44100,
+      "channels": 1,
+      "duration_seconds": 0.36,
+      "peak_dbfs": -2.853,
+      "rms_dbfs": -11.421,
+      "crest_factor_db": 8.568
+    }
+  ],
+  "sfx_candidate_count": 38
+}
