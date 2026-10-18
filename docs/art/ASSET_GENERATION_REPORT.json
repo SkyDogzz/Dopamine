@@ -14,7 +14,7 @@
     "dopamine-pixel-art": {
       "count": 92,
       "qa_passed": 92,
-      "human_review_pending": 2,
+      "human_review_pending": 0,
       "human_review_changes_requested": 48
     },
     "dopamine-sfx": {
@@ -5773,7 +5773,7 @@
     "runtime_assets_integrated": 356,
     "godot_test_suite": "Full bundled CTest passed 121/121 after evolved weapon and enemy movement animation regeneration.",
     "asset_provenance_registry": "passed; 356 current creative assets and 417 initial assets have migration/retirement records.",
-    "remaining_review": "Visual review remains pending for two Survival environment assets. Human listening review remains pending for 125 SFX and 8 music/stem files; the local review page includes playback controls.",
+    "remaining_review": "Visual review is complete. Human listening review remains pending for 125 SFX and 8 music/stem files; the local review page includes playback controls.",
     "specific_weapon_sfx": "passed: four distinct deterministic fire variants and four impact variants load and rotate for each of all 10 weapons; SfxService smoke checks all 80 named streams.",
     "player_animation_batch": "Four sheets generated and batch-QA checked; after runtime wiring, player_controller_smoke and expanded player_animation_assets_smoke pass; attack/death sheets now have runtime consumers.",
     "legacy_hash_reuse": "passed; 1068 current assets have no exact SHA-256 match in the initial 425-file register",
@@ -6267,6 +6267,21 @@
       "integration": "already integrated",
       "human_review_status": "approved",
       "acceptance_basis": "Explicit owner approval in chat on 2026-10-18."
+    },
+    {
+      "date": "2026-10-18",
+      "assets": [
+        "survival_ground_tile",
+        "survival_ruins_pixel"
+      ],
+      "finding": "The owner approved the Survival ground tile and circular ruins overlay.",
+      "action": "Recorded explicit owner approval for both integrated environment assets; no further visual change requested.",
+      "skill": "dopamine-pixel-art",
+      "generator": "game/tools/generate_neon_arcade_art.py",
+      "qa": "passed",
+      "integration": "already integrated",
+      "human_review_status": "approved",
+      "acceptance_basis": "Explicit owner approval in chat on 2026-10-18."
     }
   ],
   "music_runtime_roles": {
@@ -6277,7 +6292,7 @@
     "defeat_cue": "run-result one-shot",
     "stems": "runtime synchronized adaptive Survival arrangement"
   },
-  "remaining_review": "Visual review remains pending for two Survival environment assets: the ground tile and ruins overlay. Human listening review remains pending for 125 SFX and 8 music/stem files.",
+  "remaining_review": "Visual review is complete: all visual asset categories have owner approval. Human listening review remains pending for 125 SFX and 8 music/stem files.",
   "technical_qa_summary": {
     "asset_manifest": "passed: 356/356 unique assets; export/source hashes, Godot paths, generation recipes, QA and integration states verified",
     "asset_provenance": "passed: 356 current creative exports and 417 initial assets have migration/retirement records",
@@ -6287,7 +6302,7 @@
     "godot_pck_export": "passed: Linux/X11 PCK rebuilt; 3339232 bytes, SHA-256 e4cfe6e83732e13326c6ebe3ba432c85b54a64f5d3099c8889d5e04a9060d2c3",
     "full_ctest": "passed: 121/121 tests (2026-10-18); import, asset QA smoke, visual/runtime, audio, menus, progression and Sandbox scenarios included",
     "candidate_batch_qa": "passed: all 12 QA roots referenced by current manifest were rerun; each report status=passed; catalog icon v2 candidates: 48/48 pass at docs/art/candidates/catalog-icons-detail-v2/qa-report.json; not integrated pending owner approval.",
-    "human_review": "approved: title_skyline; two Survival environment assets remain pending, with listening review pending for 125 SFX and 8 music/stem files.",
+    "human_review": "approved: all visual assets, including the Survival ground tile and ruins overlay. Listening review remains pending for 125 SFX and 8 music/stem files.",
     "integration_dry_run": "passed: current 356/356 IDs, 356 unique destinations, zero conflicts or collisions; report build/assets/candidates/review/integration-dry-run-356.json",
     "review_pack_links": "passed: 847 local HTML/CSS references and contact/audio inventory source paths resolve; zero missing targets"
   },
@@ -6359,5 +6374,5 @@
   },
   "catalog_icon_revision_review": "Owner approved all 48 detailed v2 candidates; integrated into their existing Godot destinations with editable sources. See docs/art/candidates/catalog-icons-detail-v2/index.html.",
   "catalog_icon_revision_integration": "48/48 integrated following explicit owner approval; manifest and provenance registry updated; catalog icon Godot smoke passed.",
-  "human_review": "Owner approved the 48 detailed catalog/UI icon v2 candidates, the 12 static enemy/elite/boss sprites, 24 static projectile sprites, 2 pickup sprites, 2 fonts, 20 weapon attack animations, all 10 weapon impact VFX plus their runtime atlas, all 10 weapon fire VFX, and the remaining 91 player/roster/projectile/relic/reward animations. Impact effects are displayed at half their previous size. Owner also approved title_skyline. Remaining visual review is limited to two Survival environment assets; listening review remains pending for 125 SFX and 8 music/stem files."
+  "human_review": "Owner approved the 48 detailed catalog/UI icon v2 candidates, the 12 static enemy/elite/boss sprites, 24 static projectile sprites, 2 pickup sprites, 2 fonts, 20 weapon attack animations, all 10 weapon impact VFX plus their runtime atlas, all 10 weapon fire VFX, and the remaining 91 player/roster/projectile/relic/reward animations. Impact effects are displayed at half their previous size. Owner approved title_skyline, survival_ground_tile and survival_ruins_pixel; all visual asset review is complete; listening review remains pending for 125 SFX and 8 music/stem files."
 }

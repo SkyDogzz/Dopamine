@@ -9569,7 +9569,7 @@
       "qa_report_path": "build/assets/candidates/pixel-art-complete/qa-report.json",
       "generation_status": "candidate",
       "validation_status": "passed",
-      "human_review_status": "pending",
+      "human_review_status": "approved",
       "integration_status": "integrated",
       "blockers": [
         "canonical first biome is open"
@@ -9577,11 +9577,12 @@
       "requirement_source": "GDD v1.6 + Godot runtime contracts",
       "candidate_export_path": "build/assets/candidates/pixel-art-complete/sprites/environment/survival_ground_tile.png",
       "candidate_source_path": "build/assets/candidates/pixel-art-complete/source/environment/survival_ground_tile.aseprite",
-      "acceptance_status": "accepted_for_provisional_production",
-      "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
+      "acceptance_status": "accepted",
+      "acceptance_basis": "Owner explicitly approved the Survival environment assets in chat on 2026-10-18.",
       "integrated_path": "game/assets/sprites/environment/survival_ground_tile.png",
       "integrated_source_path": "game/assets/source/environment/survival_ground_tile.aseprite",
-      "audit_notes": "Restored the four original corner-circle landmarks around a clear center; owner visual review remains pending."
+      "audit_notes": "Restored the four original corner-circle landmarks around a clear center; owner visual review remains pending.",
+      "acceptance_note": "Owner confirmed Survival ground and ruins are approved."
     },
     {
       "asset_id": "survival_ruins_pixel",
@@ -9613,7 +9614,7 @@
       "qa_report_path": "build/assets/candidates/pixel-art-complete/qa-report.json",
       "generation_status": "candidate",
       "validation_status": "passed",
-      "human_review_status": "pending",
+      "human_review_status": "approved",
       "integration_status": "integrated",
       "blockers": [
         "canonical first biome is open"
@@ -9621,11 +9622,12 @@
       "requirement_source": "GDD v1.6 + Godot runtime contracts",
       "candidate_export_path": "build/assets/candidates/pixel-art-complete/sprites/environment/survival_ruins_pixel.png",
       "candidate_source_path": "build/assets/candidates/pixel-art-complete/source/original_procedural/survival_ruins_pixel.aseprite",
-      "acceptance_status": "accepted_for_provisional_production",
-      "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
+      "acceptance_status": "accepted",
+      "acceptance_basis": "Owner explicitly approved the Survival environment assets in chat on 2026-10-18.",
       "integrated_path": "game/assets/sprites/environment/survival_ruins_pixel.png",
       "integrated_source_path": "game/assets/source/original_procedural/survival_ruins_pixel.aseprite",
-      "audit_notes": "Restored the four original corner-circle landmarks around a clear center; owner visual review remains pending."
+      "audit_notes": "Restored the four original corner-circle landmarks around a clear center; owner visual review remains pending.",
+      "acceptance_note": "Owner confirmed Survival ground and ruins are approved."
     },
     {
       "asset_id": "title_skyline",
