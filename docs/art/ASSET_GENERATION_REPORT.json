@@ -3,7 +3,7 @@
   "generated_at": "2026-10-18",
   "manifest": "docs/art/ASSET_MANIFEST.json",
   "candidate_root": "build/assets/candidates",
-  "runtime_integration": "306/306 creative assets provisionally integrated under game/assets. Player idle/walk and idle/move SpriteFrames for all nine common enemy roles, the elite prototype and both boss roles play from simulation time. Attack frames play during shooter/exploder fuses and boss telegraph/charge phases. Boss special animations now play for Warden charges and Core spiral/combined abilities. All projectile sprite roles now loop their authored SpriteFrames while retaining movement rotation, trails and per-instance tint. All 20 base/evolved weapon attack sheets and 20 family fire/impact sheets are loaded; attack and fire VFX play on successful shots, and animated impacts replace the static impact when available. The 64-entry transient animation cap bounds dense fire and impact scenes. XP collection plays its authored four-frame animation after orb despawn; world reward chests and newly acquired relics play their authored reveal animations, including while the choice UI pauses simulation. Death animations survive ECS despawn and play for their metadata-defined duration. Generated SFX families and menu/result/adaptive music remain connected. Human visual and auditory review remains pending. Two reference mixes without runtime consumers were retired from game/assets; their local generation recipes still emit staging-only previews.",
+  "runtime_integration": "366/366 creative assets provisionally integrated under game/assets. Player idle/walk and idle/move SpriteFrames for all nine common enemy roles, the elite prototype and both boss roles play from simulation time. Attack frames play during shooter/exploder fuses and boss telegraph/charge phases. Boss special animations now play for Warden charges and Core spiral/combined abilities. All projectile sprite roles now loop their authored SpriteFrames while retaining movement rotation, trails and per-instance tint. All 20 base/evolved weapon attack sheets and 20 family fire/impact sheets are loaded; attack and fire VFX play on successful shots, and animated impacts replace the static impact when available. The 64-entry transient animation cap bounds dense fire and impact scenes. XP collection plays its authored four-frame animation after orb despawn; world reward chests and newly acquired relics play their authored reveal animations, including while the choice UI pauses simulation. Death animations survive ECS despawn and play for their metadata-defined duration. Generated SFX families and menu/result/adaptive music remain connected. Human visual and auditory review remains pending. Two reference mixes without runtime consumers were retired from game/assets; their local generation recipes still emit staging-only previews. Each of ten weapons now has four deterministic fire variations and four impact variations; SfxService rotates the four files for each frequent event.",
   "asset_counts": {
     "dopamine-animation": {
       "count": 141,
@@ -16,9 +16,9 @@
       "human_review_pending": 92
     },
     "dopamine-sfx": {
-      "count": 65,
-      "qa_passed": 65,
-      "human_review_pending": 65
+      "count": 125,
+      "qa_passed": 125,
+      "human_review_pending": 125
     },
     "dopamine-music": {
       "count": 8,
@@ -26,7 +26,7 @@
       "human_review_pending": 8
     }
   },
-  "total_assets": 306,
+  "total_assets": 366,
   "all_manifest_candidates_technical_qa_pass": true,
   "godot_import_check": {
     "status": "passed",
@@ -100,18 +100,18 @@
     "audio_inventory": "build/assets/candidates/review/audio-inventory.json",
     "broken_local_references": 0,
     "static_gallery_items": 100,
-    "note": "Regenerated directly from ASSET_MANIFEST.json: all 100 static visual assets are individually labeled with stable IDs, source links, skill, seed and parameters; all 131 animation sheets have per-row animated HTML previews and provenance/QA metadata; two font samples and 73 integrated WAV players are included. All 775 HTML attribute and CSS file references resolve; all contact-sheet source records and audio inventory paths also resolve. Owner visual/audio review remains pending.",
-    "audio_inventory_count": 73
+    "note": "Regenerated from the current 366-ID manifest: all 100 static visual assets are individually labeled with stable IDs, source links, skill, seed and parameters; all 131 animation sheets have per-row animated previews and provenance/QA metadata; two font samples and 133 integrated WAV players are included. All 835 HTML attribute/CSS references and all contact-sheet source/audio-inventory paths resolve. Owner visual/audio review remains pending.",
+    "audio_inventory_count": 133
   },
   "godot_integration_preflight": {
     "status": "passed",
-    "candidate_destinations_checked": 306,
+    "candidate_destinations_checked": 366,
     "dry_run_plan": "build/assets/candidates/review/integration-dry-run-all.json",
     "candidate_hash_checks": "passed",
     "destination_collisions": 0,
     "overwrite_conflicts": 0,
     "spriteframes_resources_loaded": 131,
-    "runtime_copies": "306 exports provisionally integrated; source and resource records integrated for the 306 manifest assets"
+    "runtime_copies": "366 exports provisionally integrated; source and resource records integrated for the 366 manifest assets"
   },
   "pixel_filtering": {
     "godot_project_setting": "rendering/textures/canvas_textures/default_texture_filter",
@@ -119,22 +119,22 @@
     "evidence": "Godot 4.7.2 setting inspection; project scenes and smoke checks use texture_filter=1 as nearest"
   },
   "latest_validation": {
-    "candidate_count": 306,
+    "candidate_count": 366,
     "manifest": "passed",
     "candidate_batches_qa": "passed",
     "godot_import": "passed; Godot import and a manifest-driven smoke verified all 131 SpriteFrames animations and frame regions",
-    "integration_dry_run": "passed current 306/306 ID-scoped integration dry run; zero collisions or unauthorized overwrites. Audio metadata IDs exactly match manifest IDs.",
-    "runtime_assets_integrated": 306,
-    "godot_test_suite": "full CTest rerun after orphan retirement: 121/121 tests passed; Godot 4.7.2 import passed. Targeted audio smokes passed for SFX loading, weapon-event selection, adaptive Survival music and victory/defeat cue routing.",
-    "asset_provenance_registry": "passed; 306 current creative assets and 417 historical assets audited after retiring two unused music mixes",
+    "integration_dry_run": "passed current 366/366 ID-scoped integration dry run; zero collisions or unauthorized overwrites, including the 60 added weapon SFX variations.",
+    "runtime_assets_integrated": 366,
+    "godot_test_suite": "After four deterministic fire and impact variants were integrated for each weapon, full CTest passed 121/121 tests (2026-10-18). The first suite run had one isolated survival_difficulty_unlock_smoke failure; five isolated reruns and the subsequent complete suite passed. Godot 4.7.2 import passed.",
+    "asset_provenance_registry": "passed; 366 current creative assets and 417 historical assets audited; the two unused music mixes remain retired.",
     "remaining_review": "Owner visual/art direction review and auditory review remain pending. Detailed animation timings and directions remain provisional where the GDD leaves them open. No audio playback hardware is available in this session; local review page includes playback controls.",
-    "specific_weapon_sfx": "passed for fire and impact on all 10 weapons; registered in CTest",
+    "specific_weapon_sfx": "passed: four distinct deterministic fire variants and four impact variants load and rotate for each of all 10 weapons; SfxService smoke checks all 80 named streams.",
     "player_animation_batch": "passed: four generated sheets, per-batch animation QA, Godot import, player/art/combat smokes 5/5",
     "legacy_hash_reuse": "passed; 982 packaged/current checked files have no exact match in initial 425-file register",
     "asset_integration_scope_smoke": "passed; verifies exact-ID replacement opt-in, managed-asset ownership, dry-run non-mutation and mismatched-owner refusal",
     "sfx_runtime_event_mapping": "passed: 20 weapon-specific cues are loaded and invoked by gameplay; 7 generated event families are exposed; weapon_family_fire/impact are fallback paths if a specific cue is missing; targeted SFX tests passed.",
     "music_runtime_cues": "passed: menu theme loops on the Music bus; five synchronized stems drive Survival and boss intensity; victory/defeat cues load on the Music bus. The two unused reference mixes are staging-only and not in game/assets.",
-    "godot_pck_export": "passed: Linux/X11 PCK rebuilt after removing two unused mixes; 2933712 bytes, SHA-256 9870fb4fccf62ba3b0ec8a906a96d40195b9cb379448af2324cec3e4aa70a5a3; retired WAV names absent.",
+    "godot_pck_export": "passed: rebuilt Linux/X11 PCK includes all new weapon variations; 3218908 bytes, SHA-256 9b7dbf372bdd619aa0791a7667c9f1c149a70a473014457b61bb0ea1f2d89be8; retired mix paths absent.",
     "music_format_audit": "passed: three integrated music cues and five synchronized stems are PCM16 mono 44.1 kHz, matching WAV headers",
     "catalog_icon_redesign": "passed: all 31 explicit managed IDs regenerated from dopamine-pixel-art v3, validated with dopamine-asset-qa, integrated, and covered by catalog icon, Art Bible, Godot import, and replacement-scope smoke checks; owner art review remains pending",
     "godot_test_suite_targeted": "passed after full-suite rerun: relevant renderer, weapon, impact, chest, relic, progression and final-boss checks all pass; full CTest 121/121 supersedes the targeted run.",
@@ -148,16 +148,16 @@
     "weapon_animations_runtime": "passed: 20 attack sheets and 20 family fire/impact sheets load; successful shots trigger attack/fire sheets; direct hits trigger animated family impacts; 64 transient VFX cap; reduced-effects setting clears and suppresses them; XP orb collection animation is rendered after despawn; chest opening and relic acquisition are integrated; regression smokes cover animation playback and level-scaled impact emphasis.",
     "reward_animations_runtime": "passed: XP collection, world chest opening and first-time relic acquisition use their authored SpriteFrames; chest/relic reveal timing advances on wall clock during paused reward selection; all 11 relic resources load and final boss loot smoke confirms chest opening is queued.",
     "dopamine_animation_source_qa": "passed: candidate validator rerun across eight local animation batches; 131 unique manifest animation IDs all covered with geometry, Art Bible palette, per-frame color limits, no duplicate frames per direction, source/export SHA-256 and Aseprite source checks.",
-    "local_review_pack": "passed: current manifest yields 9 contact sheets, 100 individually labeled static visual entries, 131 animated previews, 2 font samples and 73 integrated audio players; all 775 HTML/CSS and inventory/contact-sheet paths resolve.",
-    "dopamine_audio_numeric_qa": "passed: all 76 staged WAV outputs (65 SFX, 5 stems, 5 music cues and one preview mix) pass non-silence, clipping, PCM16 mono 44.1 kHz, metadata and loop checks. The 73 integrated audio exports match their QA hashes; two reference mixes are staging-only.",
-    "audio_manifest_coverage": "passed: all 65 SfxService event IDs map exactly to manifest SFX IDs; all 73 integrated audio sidecars match manifest ID, skill, generator version and source/export hashes; every integrated music path has a runtime scene/script consumer."
+    "local_review_pack": "passed: 9 contact sheets, 100 labeled static images, 131 animated previews, 2 font samples and 133 integrated audio players; all 835 HTML/CSS and inventory/contact-sheet references resolve.",
+    "dopamine_audio_numeric_qa": "passed: all 136 staged WAV outputs (125 SFX, 5 music stems, 5 music cues and one preview mix) pass non-silence, clipping, PCM16 mono 44.1 kHz, metadata and loop checks. All 133 integrated audio exports match QA hashes; the 20 weapon fire/impact event groups each contain four distinct WAV hashes.",
+    "audio_manifest_coverage": "passed: 125 SFX assets map to all 65 base SfxService cues plus 60 per-weapon variations; all 133 integrated audio sidecars match manifest IDs, skills, generator versions and hashes; every integrated music file has a runtime consumer."
   },
   "godot_pck_export": {
     "status": "passed",
     "preset": "Linux/X11",
     "path": "build/assets/DopamineSurvivor.pck",
-    "bytes": 2933712,
-    "sha256": "9870fb4fccf62ba3b0ec8a906a96d40195b9cb379448af2324cec3e4aa70a5a3",
+    "bytes": 3218908,
+    "sha256": "9b7dbf372bdd619aa0791a7667c9f1c149a70a473014457b61bb0ea1f2d89be8",
     "music_runtime_paths": [
       "menu_theme.wav",
       "victory_cue.wav",
@@ -167,7 +167,7 @@
       "weapon_family_fire.wav",
       "weapon_family_impact.wav"
     ],
-    "verified": "Godot 4.7.2 Linux/X11 PCK export completed after cleanup. All 131 SpriteFrames resources remain packaged; retired reference mixes are absent; five synchronized stems remain the Survival/boss arrangement."
+    "verified": "Godot 4.7.2 Linux/X11 PCK includes all 80 per-weapon fire/impact variations and 131 SpriteFrames animation resources; retired reference mixes are absent."
   },
   "review_findings": [
     {

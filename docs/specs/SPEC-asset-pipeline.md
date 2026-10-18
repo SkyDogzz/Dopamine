@@ -8,7 +8,7 @@ Préparer le remplacement complet des assets graphiques et audio du jeu avec un 
 
 - Godot 4.7.2, assets sous `game/assets/`, sources graphiques actuelles en Aseprite et exports PNG.
 - Références : `docs/ART_BIBLE.txt`, `docs/art/INVENTAIRE_ASSETS_UI.md`, `docs/art/PROVENANCE_ASSETS.csv`, `THIRD_PARTY_NOTICES.md`.
-- La production audio originale est écrite dans `game/tools/generate_original_audio.py`; sorties candidates sous `game/assets/audio/original_procedural/`. Les 38 SFX sont actifs sur les familles existantes et cinq stems musique sont intégrés au flux adaptatif; composition, gains et format restent **[PROPOSÉS]**.
+- La production audio originale est écrite dans `game/tools/generate_original_audio.py`; sorties candidates sous `game/assets/audio/original_procedural/`. Les 125 SFX actifs couvrent les familles existantes et quatre variantes par événement fréquent d’arme et cinq stems musique sont intégrés au flux adaptatif; composition, gains et format restent **[PROPOSÉS]**.
 
 ### Avancement de la filière (2026-10-18)
 
@@ -33,7 +33,7 @@ Préparer le remplacement complet des assets graphiques et audio du jeu avec un 
 - **[VALIDÉ — STAGING COURANT, 2026-10-18]** `tools/package_linux_staging.sh` reconstruit depuis l’archive propre du commit `f3141f3`, incluant le correctif de panneaux opaques : compilation Release vierge, import/export Linux/X11 filtré, extraction, notices/licences, dépendances et lancement passent. Le parcours UI sous Xvfb couvre menu, hub, équipement, arbre, choix d’arme, combat et pause; captures indexées dans `docs/art/evidence/2026-10-18/README.md`. Archive de 29 878 857 octets, SHA-256 `1fa1303bb60a7c59e4e820a4a2fced206759075a2ba4c499d4c2459e1e9b763e`; limites et instructions de revue matérielle dans `docs/qa/TESTS.md`. Artefact de contrôle non versionné et non distribuable.
 - **[OUVERT — CLÔTURE]** Produire et vérifier le paquet distribuable après les revues UI/audio restantes; compléter la revue de toutes les scènes/états, les commandes physiques et la sortie audio réelle. L’export ci-dessus reste un build de contrôle non versionné et non distribuable; le PCK de contrôle seul n’est pas un paquet autonome.
 
-- **[VALIDÉ]** Les 38 nouveaux SFX procéduraux sont intégrés dans les familles actives de `Sfx`; leurs anciennes sources, recettes, renders et références de runtime sont retirés après migration vérifiée.
+- **[HISTORIQUE — supersédé]** Les 38 premiers SFX procéduraux ont été intégrés dans les familles actives de `Sfx`. Le lot courant compte 125 fichiers : 65 cues de base et 60 variations tir/impact d’armes, jouées en rotation; les anciens assets/recettes restent retirés après migration vérifiée.
 - L’ancien OGG et son import sont retirés après migration des références, avec hashes dans les registres. L’orchestration utilise cinq stems synchronisés, évolution graduelle de l’arpège par vague et fondu du stem boss sans redémarrage; le smoke `adaptive_survival_music_smoke.gd` vérifie ces contrats.
 - **[OUVERT — NON ÉCOUTÉS]** Les nouveaux SFX et stems restent des candidats non approuvés. L’utilisateur a choisi de poursuivre sans retour d’écoute; la validation auditive n’est donc pas acquise. L’écoute en situation doit couvrir mix, transitions et priorité des cues avant de clore la capacité.
 

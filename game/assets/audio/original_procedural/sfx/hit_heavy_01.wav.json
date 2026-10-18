@@ -4,8 +4,8 @@
   "status": "provisionally_integrated",
   "skill": "dopamine-sfx",
   "generator": "game/tools/generate_original_audio.py",
-  "generator_version": "3",
-  "source_sha256": "ab70598d01ba45b7418d7fd49e9f751881b542b2de5a86bee52de7ef8c6262ff",
+  "generator_version": "4",
+  "source_sha256": "53a6845af9614cda4ae22304cba58dd245cef5b63953f0c6b3b9ff3cdea2cc4c",
   "seed": 4035971483,
   "parameters": {
     "sample_rate_hz": 44100,

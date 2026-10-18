@@ -1,0 +1,34 @@
+{
+  "asset_id": "sfx_weapon_toxic_cloud_impact_03",
+  "kind": "sfx",
+  "status": "provisionally_integrated",
+  "skill": "dopamine-sfx",
+  "generator": "game/tools/generate_original_audio.py",
+  "generator_version": "4",
+  "source_sha256": "53a6845af9614cda4ae22304cba58dd245cef5b63953f0c6b3b9ff3cdea2cc4c",
+  "seed": 1132834640,
+  "parameters": {
+    "sample_rate_hz": 44100,
+    "channels": 1,
+    "encoding": "PCM16 WAV",
+    "method": "role-specific oscillator/noise layers with analytic envelopes",
+    "variation_index": 3,
+    "variation_count": 4
+  },
+  "export": {
+    "file": "weapon_toxic_cloud_impact_03.wav",
+    "sha256": "6a519cf44bf8399d36c85e605db4d249362fd0f5445d4940d087847262fd8900",
+    "sample_rate_hz": 44100,
+    "channels": 1,
+    "duration_seconds": 0.095011,
+    "peak_dbfs": -2.853,
+    "rms_dbfs": -16.299,
+    "crest_factor_db": 13.446
+  },
+  "acceptance_status": "accepted_for_provisional_production",
+  "acceptance_basis": "User-authorized local prototype scope; variation preserves the established per-weapon family signature.",
+  "human_review_status": "pending",
+  "candidate_export_path": "build/assets/candidates/audio-complete/sfx/weapon_toxic_cloud_impact_03.wav",
+  "integrated_export_path": "game/assets/audio/original_procedural/sfx/weapon_toxic_cloud_impact_03.wav",
+  "export_path": "audio/original_procedural/sfx/weapon_toxic_cloud_impact_03.wav"
+}

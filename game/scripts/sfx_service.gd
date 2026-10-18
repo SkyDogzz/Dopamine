@@ -74,11 +74,20 @@ func _ready() -> void:
 	for weapon_id in WEAPON_IDS:
 		named_sounds.append_array(["weapon_%s_fire" % weapon_id, "weapon_%s_impact" % weapon_id])
 	for sound_id in named_sounds:
-		var sound_path: String = SFX_DIR + sound_id + ".wav"
-		if ResourceLoader.exists(sound_path):
+		var variant_ids := [sound_id]
+		if sound_id.begins_with("weapon_") and (sound_id.ends_with("_fire") or sound_id.ends_with("_impact")):
+			for variant in range(2, 5):
+				variant_ids.append("%s_%02d" % [sound_id, variant])
+		var variant_streams: Array[AudioStream] = []
+		for variant_id in variant_ids:
+			var sound_path: String = SFX_DIR + variant_id + ".wav"
+			if not ResourceLoader.exists(sound_path):
+				continue
 			var stream := load(sound_path) as AudioStream
 			if stream != null:
-				_named_streams[sound_id] = [stream]
+				variant_streams.append(stream)
+		if not variant_streams.is_empty():
+			_named_streams[sound_id] = variant_streams
 	for index in range(VOICE_COUNT):
 		var player := AudioStreamPlayer.new()
 		player.name = "Voice%d" % index

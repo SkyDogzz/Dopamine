@@ -2297,6 +2297,13 @@ Note de clôture : le blocage historique du smoke `sandbox_ui_smoke.gd` décrit 
 - [x] Export PCK `Linux/X11` réussi; les VFX, sons et fontes sont inclus et les sources restent exclues. La génération, les validations et la prévisualisation sont documentées dans `docs/art/ASSET_GENERATION_REPORT.json`.
 - [i] Intégration provisoire selon l’autorisation de prototypes non canoniques. La revue artistique globale, l’écoute, le rendu sur GPU physique et les choix encore ouverts du biome, des boss, des fonts et des conventions d’animation restent **[OUVERTS]**; les checks numériques ne constituent pas une acceptation perceptuelle.
 
+## Variantes SFX d’armes et validation finale — 2026-10-18
+
+- [x] `dopamine-sfx` v4 génère quatre WAV déterministes par événement de tir et d’impact pour chacune des dix armes. Le smoke `sfx_specific_event_smoke.gd` vérifie 80 chemins distincts et la rotation des variantes dans `SfxService`; QA confirme quatre SHA distincts pour chaque groupe.
+- [x] QA numérique passe sur 136 WAV de staging et les 133 exports audio intégrés; les sidecars sont rapprochés des IDs, skills, versions de générateur et hashes du manifeste. Les deux mixes musicaux sans consommateur runtime sont exclus de `game/assets/` et du PCK.
+- [x] Import Godot 4.7.2, export PCK Linux/X11 et suite CTest complète passent après intégration : **121/121 tests**. Un premier lancement complet a eu un échec isolé de `survival_difficulty_unlock_smoke`; cinq relances isolées puis le lancement complet suivant ont tous passé.
+- [i] La galerie locale comprend 9 planches, 100 images statiques légendées, 131 aperçus animés, 2 fontes et 133 lecteurs audio; 835 références sont résolues. Écoute et validation artistique par le propriétaire restent **[OUVERTES]**.
+
 
 ## Correction des rangées directionnelles du joueur — 2026-10-18
 

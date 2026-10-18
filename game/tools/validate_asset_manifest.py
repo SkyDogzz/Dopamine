@@ -75,6 +75,10 @@ def validate_audio_coverage(assets: list[dict]) -> None:
 	assert weapon_block, "SfxService must declare its weapon sound IDs"
 	weapon_ids = re.findall(r'"([^"\n]+)"', weapon_block.group(1))
 	expected_sfx.update({f"weapon_{weapon}_{event}" for weapon in weapon_ids for event in ("fire", "impact")})
+	expected_sfx.update(
+		f"weapon_{weapon}_{event}_{variant:02d}"
+		for weapon in weapon_ids for event in ("fire", "impact") for variant in range(2, 5)
+	)
 	expected_sfx.update({"victory", "defeat", "damage_taken", "healing", "explosion"})
 	manifest_sfx = {asset["asset_id"].removeprefix("sfx_") for asset in assets if asset["category"] == "sound_effect"}
 	assert manifest_sfx == expected_sfx, (

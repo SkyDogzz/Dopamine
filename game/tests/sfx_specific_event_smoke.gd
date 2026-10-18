@@ -17,6 +17,16 @@ func _run() -> void:
 				if not service._named_streams.has(weapon_sound_id):
 					_fail("Integrated named SFX should load %s" % weapon_sound_id)
 					return
+				var variants: Array = service._named_streams[weapon_sound_id]
+				if variants.size() != 4:
+					_fail("Frequent weapon event %s should load four variations" % weapon_sound_id)
+					return
+				var paths := {}
+				for stream: AudioStream in variants:
+					paths[stream.resource_path] = true
+				if paths.size() != 4:
+					_fail("Weapon event variations should resolve to four distinct files: %s" % weapon_sound_id)
+					return
 		for sound_id in ["damage_taken", "healing", "explosion", "victory", "defeat"]:
 			if not service._named_streams.has(sound_id):
 				_fail("Integrated named SFX should load %s" % sound_id)

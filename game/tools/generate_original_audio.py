@@ -35,7 +35,11 @@ SFX_IDS += ["weapon_family_fire", "weapon_family_impact", "damage_taken", "heali
 	"explosion", "victory", "defeat"]
 WEAPON_IDS = ["lightning_conductor", "inferno_sprayer", "crimson_daggers", "minigun",
 	"toxic_cloud", "sawblades", "meteor_staff", "prism_laser", "void_orb", "frost_nova"]
-SFX_IDS += [f"weapon_{weapon}_{event}" for weapon in WEAPON_IDS for event in ("fire", "impact")]
+for weapon in WEAPON_IDS:
+	for event in ("fire", "impact"):
+		base_id = f"weapon_{weapon}_{event}"
+		SFX_IDS.append(base_id)
+		SFX_IDS.extend(f"{base_id}_{variant:02d}" for variant in range(2, 5))
 
 
 def _sfx_family(sound_id: str) -> str:
@@ -54,7 +58,7 @@ def _sfx_family(sound_id: str) -> str:
 				"toxic_cloud": "weapon_sweep", "sawblades": "weapon_sweep",
 				"meteor_staff": "weapon_shot", "prism_laser": "weapon_zap",
 				"void_orb": "weapon_zap", "frost_nova": "weapon_sweep"}[weapon]
-			return family if sound_id.endswith("_fire") else "hit_light"
+			return family if "_fire" in sound_id else "hit_light"
 	last_part = sound_id.rsplit("_", 1)[-1]
 	return sound_id.rsplit("_", 1)[0] if last_part.isdigit() else sound_id
 
@@ -242,7 +246,7 @@ def _metadata(asset_id: str, kind: str, seed: int, metric: dict) -> dict:
 	return {
 		"asset_id": asset_id, "kind": kind, "status": "candidate_not_approved",
 		"skill": "dopamine-sfx" if kind == "sfx" else "dopamine-music",
-		"generator": "game/tools/generate_original_audio.py", "generator_version": "3",
+		"generator": "game/tools/generate_original_audio.py", "generator_version": "4",
 		"source_sha256": hashlib.sha256(source_path.read_bytes()).hexdigest(),
 		"seed": seed,
 		"parameters": {"sample_rate_hz": SAMPLE_RATE, "channels": 1, "encoding": "PCM16 WAV",
@@ -274,8 +278,14 @@ def main() -> None:
 			stable_seed = int.from_bytes(hashlib.sha256(sound_id.encode("utf-8")).digest()[:4], "little")
 			seed = args.seed if args.seed is not None else stable_seed
 			metric = _write_wave(sfx_directory / f"{sound_id}.wav", _render_sfx(sound_id, seed))
+			metadata = _metadata(f"sfx_{sound_id}", "sfx", seed, metric)
+			if any(sound_id == f"weapon_{weapon}_{event}" or sound_id.startswith(f"weapon_{weapon}_{event}_")
+					for weapon in WEAPON_IDS for event in ("fire", "impact")):
+				suffix = sound_id.rsplit("_", 1)[-1]
+				variant_index = int(suffix) if suffix.isdigit() else 1
+				metadata["parameters"].update({"variation_index": variant_index, "variation_count": 4})
 			(sfx_directory / f"{sound_id}.json").write_text(json.dumps(
-				_metadata(f"sfx_{sound_id}", "sfx", seed, metric), indent=2) + "\n")
+				metadata, indent=2) + "\n")
 			results["sfx"].append(metric)
 		(sfx_directory / "manifest.json").write_text(json.dumps({
 			"status": "candidate_not_approved", "method": "role-specific oscillator/noise layers with analytic envelopes",
@@ -332,7 +342,7 @@ def main() -> None:
 		preview_metrics = _write_wave(music_directory / "preview_mix.wav", preview_mix)
 		(music_directory / "manifest.json").write_text(json.dumps({
 			"status": "candidate_not_approved", "generator": "game/tools/generate_original_audio.py",
-			"generator_version": "3", "seed": seed, "tempo_bpm": MUSIC_BPM, "bars": MUSIC_BARS,
+			"generator_version": "4", "seed": seed, "tempo_bpm": MUSIC_BPM, "bars": MUSIC_BARS,
 			"duration_seconds": round(MUSIC_SAMPLE_COUNT / SAMPLE_RATE, 6), "meter": "4/4",
 			"key_center": "D minor (proposed)", "loop_start_sample": 0, "loop_end_sample": MUSIC_SAMPLE_COUNT,
 			"mix_gains_linear_proposed": mix_gains, "stems": results["music"],
