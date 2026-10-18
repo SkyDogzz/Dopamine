@@ -2118,3 +2118,9 @@ Note de clôture : le blocage historique du smoke `sandbox_ui_smoke.gd` décrit 
 - [x] `sandbox_lab_smoke.gd`, `sandbox_preset_smoke.gd` et `launch_navigation_smoke.gd` passent avec Godot 4.7.2. Le Lab démarre avec le focus visible sur `PAUSE`; le smoke déplace le focus par flèche clavier et D-pad. Il cache aussi la HUD CanvasLayer de sa session de combat et désactive sa caméra : ces nœuds ignoraient le `visible=false` du parent et la caméra décalait le canvas global. L’isolation progression/sauvegarde normale reste vérifiée.
 - [x] Capture Xvfb/Mesa 640×360 inspectée : `docs/art/evidence/2026-10-18/states/sandbox-lab.png`, hash dans le README de preuves. CTest ciblé : **7/7**; checkpoint complet `XDG_DATA_HOME=/tmp/dopamine-lab-layout-full DOPAMINE_TEST_TIMEOUT=480s PATH=/tmp/cmake-3.31.12-linux-x86_64/bin:$PATH ctest --test-dir build --output-on-failure -j1` : **118/118 tests en 79,28 s**.
 - [i] Revue sur écran/GPU et contrôleurs physiques reste ouverte.
+
+## Navigation clavier/manette du loadout — 2026-10-18
+
+- [x] `equipment_panel_visual_smoke.gd` vérifie que l’écran pose le focus Neon sur l’anneau équipé, puis déplace le focus entre slots avec flèche haut et D-pad haut; les actions de slot et l’aperçu restent testés ensuite.
+- [x] Validation ciblée `equipment_panel_visual_smoke`, `equipment_slots_smoke` et `equipment_stats_smoke` par CTest consignée avec la validation UI de cet écran.
+- [i] Le D-pad synthétique valide le routage d’entrée, pas la sensation d’un contrôleur physique; les autres états d’équipement restent dans la revue globale d’interface.

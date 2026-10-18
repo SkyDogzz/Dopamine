@@ -27,6 +27,20 @@ func _run() -> void:
 	var portrait: TextureRect = panel.get_node("Panel/Content/Columns/Loadout/Body/Character/Portrait")
 	var items: VBoxContainer = panel.get_node("Panel/Content/Columns/RightColumn/Scroll/Items")
 	var compare: Label = panel.get_node("Panel/Content/Columns/RightColumn/Compare/Comparison/CompareBody")
+	var equipped_ring: Button = panel.get_node("Panel/Content/Columns/Loadout/Body/Slots/SlotRing")
+	if root.gui_get_focus_owner() != equipped_ring or equipped_ring.get_theme_stylebox("focus") == null:
+		_fail("Equipment should focus the equipped slot with the visible Neon focus treatment")
+		return
+	await _send_key(KEY_UP)
+	var keyboard_focus := root.gui_get_focus_owner()
+	if keyboard_focus == equipped_ring or keyboard_focus == null:
+		_fail("Keyboard navigation should move focus across equipment slots")
+		return
+	await _send_gamepad(JOY_BUTTON_DPAD_UP)
+	var gamepad_focus := root.gui_get_focus_owner()
+	if gamepad_focus == keyboard_focus or gamepad_focus == null:
+		_fail("Gamepad D-pad should move focus across equipment slots")
+		return
 	if slots.get_child_count() != 6 or portrait.texture == null or panel_frame.custom_minimum_size != Vector2(600, 326):
 		_fail("Equipment screen should show a schematic character and all six slots")
 		return
@@ -125,3 +139,25 @@ func _run() -> void:
 func _fail(message: String) -> void:
 	push_error(message)
 	quit(1)
+
+func _send_key(keycode: Key) -> void:
+	var key_event := InputEventKey.new()
+	key_event.keycode = keycode
+	key_event.physical_keycode = keycode
+	key_event.pressed = true
+	Input.parse_input_event(key_event)
+	await process_frame
+	key_event.pressed = false
+	Input.parse_input_event(key_event)
+	await process_frame
+
+func _send_gamepad(button_index: JoyButton) -> void:
+	var button_event := InputEventJoypadButton.new()
+	button_event.device = 0
+	button_event.button_index = button_index
+	button_event.pressed = true
+	Input.parse_input_event(button_event)
+	await process_frame
+	button_event.pressed = false
+	Input.parse_input_event(button_event)
+	await process_frame
