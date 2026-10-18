@@ -2231,3 +2231,9 @@ Note de clôture : le blocage historique du smoke `sandbox_ui_smoke.gd` décrit 
 
 - [x] `PATH="$PWD/build/cmake-3.31.12-linux-x86_64/bin:$PATH" XDG_DATA_HOME=/tmp/dopamine-neon-ui-followup DOPAMINE_TEST_TIMEOUT=480s ctest --test-dir build --output-on-failure -j1` : **118/118 tests passent en 79,39 s** après le remplacement de la confirmation de vente système et l’ajustement des nœuds du skill tree.
 - [i] Le jalon couvre l’import, l’ensemble CTest et Sandbox; l’environnement reste Xvfb/Mesa llvmpipe avec audio Dummy. Il ne valide pas les périphériques, le GPU ni l’écoute humaine.
+
+## Fond du Sandbox Lab — 2026-10-18
+
+- [x] `ui_states_evidence_smoke.gd` régénère la capture du Lab; l’image 640×360 confirme le fond sombre uniforme au lieu du gris de fenêtre découvert pendant la revue.
+- [x] `godot_project_import`, `sandbox_preset_smoke`, `sandbox_lab_smoke` et `sandbox_lab_layout_smoke` passent par CTest (**4/4**), y compris isolation des services et bornes multi-résolution.
+- [x] Hash actualisé dans le README de preuves. L’inspection reste virtualisée; aucun contrôleur ou GPU matériel n’a été essayé.
