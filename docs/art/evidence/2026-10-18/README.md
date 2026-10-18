@@ -39,7 +39,7 @@ Les onze premières captures `states/*.png` ont été générées par `game/test
 
 ## Parcours du paquet Linux/X11 Release — build du 2026-10-18
 
-Le paquet de staging actuel provient de l’archive propre du commit `e3d0c4f`: 29 878 849 octets, SHA-256 `0681a9110d9a6510edaefe2e3bedd83f5fed7907338c5921c7d0fc53cb8339f2`. L’exécutable extrait fait 75 119 888 octets (SHA-256 `86f90e2ecda55d351165c8301fc55375610400e2edd4b13f1a1520fee3e79750`); sa GDExtension Release fait 1 140 456 octets (SHA-256 `3f929d4abe737ae8abfafcba3233c80898071866eeeeab7fbbd2b0f66aaecd56`). Avec un `XDG_DATA_HOME` jetable, le paquet suit menu → hub → équipement → arbre de compétences → choix d’arme → combat → pause sous Xvfb/Mesa llvmpipe à 1280×720, via XTest. Les sept captures ont été régénérées et inspectées; le journal ne contient aucun `ERROR:`. Le processus a été arrêté après les captures (`SIGTERM`). Le pilote audio était `Dummy`; aucun contrôleur physique ni sortie audio réelle n’a été essayé.
+Le paquet de staging actuel provient de l’archive propre du commit `f3141f3`: 29 878 857 octets, SHA-256 `1fa1303bb60a7c59e4e820a4a2fced206759075a2ba4c499d4c2459e1e9b763e`. L’exécutable extrait fait 75 119 888 octets (SHA-256 `ac550146ae12ac0e5e1ad37f821bdfe918763eb0f84bfa05cc87bdda4d579db7`); sa GDExtension Release fait 1 140 456 octets (SHA-256 `27597dbc63f81492a19c821d809cf0c5001ff1f0b9cb0bafeffdf7e767e2d5b2`). Avec un `XDG_DATA_HOME` jetable, le paquet suit menu → hub → équipement → arbre de compétences → choix d’arme → combat → pause sous Xvfb/Mesa llvmpipe à 1280×720, via XTest. Les sept captures ont été régénérées et inspectées; le journal ne contient aucun `ERROR:`. Le processus a été arrêté après les captures (`SIGTERM`). Le pilote audio était `Dummy`; aucun contrôleur physique ni sortie audio réelle n’a été essayé.
 
 | Capture | SHA-256 |
 |---|---|
@@ -47,9 +47,9 @@ Le paquet de staging actuel provient de l’archive propre du commit `e3d0c4f`: 
 | `release-linux/dopamine-release-hub.png` | `859b7d532e0054a17b60ff3e09a9458d0a959bb29b22b937db6ac819c169fc83` |
 | `release-linux/dopamine-release-equipment.png` | `dfd45c1f502c2d0846f5dd50e842dae49a725b32a0eb63a4a445481bd664654f` |
 | `release-linux/dopamine-release-skill-tree.png` | `54cdac0f93f1b1f183272bff49edd39ef6c42a18f6a55624211cc2371919b19b` |
-| `release-linux/dopamine-release-weapon-choice.png` | `bd16460173f70b5417ac121d6987141471e4faaa1efbe37f5b5ce562d5d1413d` |
-| `release-linux/dopamine-release-combat.png` | `381e4243a8145a5c31035705d1f2b44d8582f48939c00b09ae608e297ff563d2` |
-| `release-linux/dopamine-release-pause-final.png` | `161bae6563bbc8ab9740491681a99b84dfd76d3de51b6d01cffe435f9ad501c6` |
+| `release-linux/dopamine-release-weapon-choice.png` | `e441dbb077fba2ddf4cd73bcede2eedc13fd694a072eaf921b6a5bc3cfb6b9c0` |
+| `release-linux/dopamine-release-combat.png` | `6c1fd0ed4aefc6c3dd8a27b824ce7dca10ca55852853b00c8bde58fafa9741f5` |
+| `release-linux/dopamine-release-pause-final.png` | `bffaf00dc0dafe16e891ea16f94c165a0d3fab355f5836f1f234bc1b497fa49d` |
 
 C’est une preuve de lancement relocalisé sur l’hôte Debian courant; pas une installation sur machine distincte ni une validation matérielle.
 

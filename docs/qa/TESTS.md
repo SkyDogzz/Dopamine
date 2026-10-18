@@ -2,9 +2,9 @@
 
 ## Staging Linux courant après refonte UI/assets — 2026-10-18
 
-- [x] `tools/package_linux_staging.sh` reconstruit un checkout `git archive` propre du commit `e3d0c4f` avec GCC 14.2.0, CMake 3.31.12, Godot 4.7.2 et `godot-cpp` épinglé. Compilation native Release vierge, import, export Linux/X11 filtré, extraction, notices/licences, exclusions des ressources de développement, `ldd` sans dépendance manquante et lancement headless de l’exécutable extrait avec la GDExtension adjacente passent.
-- [x] Archive de contrôle non versionnée `build/linux/staging/DopamineSurvivor-linux-e3d0c4f-staging.tar.gz` : 29 878 849 octets, SHA-256 `0681a9110d9a6510edaefe2e3bedd83f5fed7907338c5921c7d0fc53cb8339f2`.
-- [x] Vérification après extraction : exécutable 75 119 888 octets, SHA-256 `86f90e2ecda55d351165c8301fc55375610400e2edd4b13f1a1520fee3e79750`; GDExtension Release 1 140 456 octets, SHA-256 `3f929d4abe737ae8abfafcba3233c80898071866eeeeab7fbbd2b0f66aaecd56`; notices et licences présentes.
+- [x] `tools/package_linux_staging.sh` reconstruit un checkout `git archive` propre du commit `f3141f3` avec GCC 14.2.0, CMake 3.31.12, Godot 4.7.2 et `godot-cpp` épinglé. Compilation native Release vierge, import, export Linux/X11 filtré, extraction, notices/licences, exclusions des ressources de développement, `ldd` sans dépendance manquante et lancement headless de l’exécutable extrait avec la GDExtension adjacente passent.
+- [x] Archive de contrôle non versionnée `build/linux/staging/DopamineSurvivor-linux-f3141f3-staging.tar.gz` : 29 878 857 octets, SHA-256 `1fa1303bb60a7c59e4e820a4a2fced206759075a2ba4c499d4c2459e1e9b763e`; son fichier `.sha256` passe.
+- [x] Vérification après extraction : exécutable 75 119 888 octets, SHA-256 `ac550146ae12ac0e5e1ad37f821bdfe918763eb0f84bfa05cc87bdda4d579db7`; GDExtension Release 1 140 456 octets, SHA-256 `27597dbc63f81492a19c821d809cf0c5001ff1f0b9cb0bafeffdf7e767e2d5b2`; notices et licences présentes.
 - [x] Parcours avec `XDG_DATA_HOME` neuf : menu → hub → équipement → skill tree → choix d’arme → combat → pause sous Xvfb/Mesa llvmpipe à 1280×720 avec touches XTest. Sept captures générées, inspectées et indexées dans `docs/art/evidence/2026-10-18/README.md`; journal sans `ERROR:`.
 - [x] `strings -a` sur l’exécutable Release extrait retrouve les **137/137** chemins runtime statiques/dynamiques de `ASSET_FILE_REGISTER_CURRENT.csv`; le registre ne compte aucun chemin actif absent du paquet.
 - [i] Il s’agit d’un staging Linux x86_64 non distribuable, testé sur l’hôte Debian avec pilote audio Dummy. Cela ne couvre pas le rendu/GPU matériel, les contrôles physiques, une installation distincte ni l’écoute audio humaine.
@@ -19,6 +19,20 @@
 - [x] Sous Xvfb/Mesa llvmpipe, les états UI (11 captures) et les smokes de skill tree, équipement, menu, hub, combat, catalogue, loadout, HUD, revive et détail de statistiques ont régénéré les preuves après le passage des fonds `PanelContainer`/`CompactPanel` à l’opacité complète, requise par l’Art Bible.
 - [x] Les vues intégrées hub, coffre en run, arbre et équipement ont été inspectées; les overlays ne laissent plus transparaître le contenu sous-jacent. Les 35 PNG d’évidence ont un SHA-256 correspondant dans `docs/art/evidence/2026-10-18/README.md`.
 - [i] Quelques scripts de capture GUI impriment des diagnostics de ressources/RID conservés lors de la fermeture de leur processus, malgré leur code de sortie 0 et les assertions passées. Le parcours du paquet Release ne contient pas de `ERROR:`; le contrôle des ressources des harnais GUI reste à part et n’est pas assimilé à une validation GPU physique.
+
+## Revue matérielle Linux — à réaliser sur poste avec écran/sorties
+
+- [i] L’hôte courant expose uniquement Xvfb pour le rendu, pas de session `DISPLAY`/Wayland ni serveur audio; les périphériques d’entrée visibles sont clavier/souris et tablette QEMU virtuelle. Aucune entrée de contrôleur physique ou sortie audio réelle n’est attestée.
+- Pour lancer le staging f3141f3 sur un poste Debian interactif avec une sauvegarde isolée :
+
+  ```bash
+  review_dir="$(mktemp -d /tmp/dopamine-hardware-review.XXXXXX)"
+  tar -xzf build/linux/staging/DopamineSurvivor-linux-f3141f3-staging.tar.gz -C "$review_dir"
+  XDG_DATA_HOME="$review_dir/user-data" "$review_dir/DopamineSurvivor.x86_64"
+  ```
+
+- [ ] Vérifier à l’écran le menu, hub, overlays équipement/arbre, pause et HUD/combat; confirmer focus et navigation clavier/souris/manette si ces contrôleurs sont disponibles.
+- [ ] Avec la sortie audio active, écouter la musique en run, les transitions vague/boss/pause/fin et les cues prioritaires sans modifier le profil de sauvegarde normal. Cette étape reste **[OUVERTE]**; le choix de l’utilisateur de poursuivre sans retour audio ne constitue pas une approbation.
 
 ## Bornes du skill tree aux viewports ciblés — 2026-10-18
 
