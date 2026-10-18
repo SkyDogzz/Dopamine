@@ -7,6 +7,11 @@
 - [x] Scan `strings -a` de l’exécutable extrait : les 137 chemins `runtime_static`/`runtime_dynamic` de `ASSET_FILE_REGISTER_CURRENT.csv` sont présents (137/137) et aucun chemin `assets/source/` n’est embarqué.
 - [i] Il s’agit d’un staging Linux x86_64 non distribuable, testé sur l’hôte Debian avec pilote audio Dummy. Cela ne couvre pas le rendu/GPU, les contrôles physiques, une installation distincte ni l’écoute audio humaine.
 
+## Suite complète après staging courant — 2026-10-18
+
+- [x] `XDG_DATA_HOME=/tmp/dopamine-initiative-final-full DOPAMINE_TEST_TIMEOUT=480s PATH="$PWD/build/cmake-3.31.12-linux-x86_64/bin:$PATH" ctest --test-dir build --output-on-failure -j1` : **118/118 réussis en 79,50 s**. Couvre import Godot, rendus Xvfb, audit palette/assets, Survival, UI/arbre/équipement, audio numérique, parcours clavier/manette et scénarios Sandbox.
+- [i] Les tests de contrôles physiques et d’écoute humaine ne sont pas simulés par cette suite; ils restent **[OUVERTS]**.
+
 ## Bornes du skill tree aux viewports ciblés — 2026-10-18
 
 - [x] `skill_tree_panel_visual_smoke.gd` vérifie maintenant que le cadre du graphe reste dans les viewports logiques/rendus 640×360, 1280×720 et 1920×1080; `godot_project_import` et le smoke ciblé passent (**2/2**).
