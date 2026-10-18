@@ -19,6 +19,19 @@ Remplacer les assets graphiques et audio du jeu et refaire l’interface dans le
 
 `asset-pipeline` → `visual-assets` → `interface-overhaul` → `skill-tree` et `equipment-screen` ; `adaptive-audio` peut avancer après `asset-pipeline` en parallèle des capacités visuelles.
 
+## État d’initiative (2026-10-18)
+
+Les statuts suivants décrivent le dépôt; ils ne valident aucun choix de contenu marqué proposé.
+
+| Capacité | Statut | Livré / restant |
+|---|---|---|
+| `asset-pipeline` | **EN COURS** | Registres initiaux, audit et migrations ciblées disponibles. Sources, recettes et exports originaux remplacés pour projectiles, icônes UI et catalogue; un audit exhaustif et un PCK final restent requis après toutes les familles. |
+| `visual-assets` | **EN COURS** | Skyline, neuf rôles communs/supports, 24 projectiles, 16 icônes UI et 31 icônes catalogue remplacés. Le joueur, élite/boss, tuiles/environnement, récompenses, VFX et audio/identité restante exigent encore audit/migration. Les identités ouvertes de boss et biome restent non décidées. |
+| `interface-overhaul` | **EN COURS** | Fondations, accueil, options, hub, vues Survival/Sandbox et parcours existants ont déjà des changements et smokes antérieurs; capture et revue finale écran par écran, focus et commandes matérielles restent à compléter. L’isolation Sandbox est conservée et couverte par smoke ciblé. |
+| `skill-tree` | **TRANCHE LIVRÉE — CAPACITÉ EN COURS** | Graphe navigable montrant 100 définitions runtime et leurs vrais prérequis; contenu, coûts et effets proposés ne sont pas validés. Commit `15a9071`. |
+| `equipment-screen` | **TRANCHE LIVRÉE — CAPACITÉ EN COURS** | Six slots, filtre, bonus avant/après et actions existantes conservées; overlay du personnage et formules proposées restent ouverts. Commit `5eadb12`. |
+| `adaptive-audio` | **EN COURS** | Synthèse originale fournit 38 SFX candidats, cinq stems et un mix de préécoute; ils ne sont pas encore branchés en runtime, écoutés en contexte ni approuvés. |
+
 ## Contraintes déjà confirmées
 
 - Style Neon Arcade, pixel art strict pour les sources, VFX modernes et contextuels, lisibilité prioritaire.

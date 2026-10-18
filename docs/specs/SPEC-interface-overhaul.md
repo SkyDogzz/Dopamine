@@ -50,3 +50,9 @@ Smokes de fondation et de parcours, bornes de layout aux viewports ciblés, navi
 ## Questions ouvertes
 
 Arbitrer les fontes exactes, tailles/espacements et navigation manette détaillée lorsqu’ils empêchent le dessin final; préserver les choix confirmés et propositions existantes comme tels.
+
+## Avancement (2026-10-18)
+
+- **[PROPOSÉ]** L’accueil, les options, le hub, plusieurs overlays Survival, le résultat, l’inventaire de run et l’interface Sandbox ont déjà été retouchés à travers des tranches précédentes; les fondations/theme, tailles ciblées et parcours sont couverts par les smokes existants. Le graphe de compétences (`15a9071`) et l’écran de loadout six slots (`5eadb12`) complètent les deux vues dédiées.
+- **[VALIDÉ]** L’écran Sandbox reste isolé de la progression normale; ses smokes et ceux de l’accueil/hub, de la pause et des vues de run protègent les parcours concernés.
+- **[OUVERT]** La preuve visuelle finale de chaque écran/état aux viewports cibles, la revue du focus de toutes les actions et l’essai avec appareils physiques ne sont pas encore exhaustifs. Cette capacité reste en cours jusqu’à leur consignation; les changements de style précédents ne suffisent pas seuls à la marquer terminée.

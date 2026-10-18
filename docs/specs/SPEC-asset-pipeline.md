@@ -25,6 +25,12 @@ Préparer le remplacement complet des assets graphiques et audio du jeu avec un 
 
 - **[PROPOSÉ]** Les 20 icônes d’armes/évolutions et 11 icônes de reliques du catalogue utilisent des motifs générés depuis leurs rôles sémantiques et la palette maître, avec sources Aseprite sous `source/original_procedural/`. Les chemins runtime et règles de disponibilité restent inchangés. Les anciennes planches/sources et doublons racine sans consommateur ont été retirés après audit; voir `ASSET_MIGRATIONS.csv` et `ASSET_RETIREMENTS.csv`. La capture `/tmp/dopamine-catalog-icons.png` a été inspectée; le smoke vérifie la palette et les sources.
 
+- **[VALIDÉ] Portée des remplacements (2026-10-18)** : aucun asset existant ni aucune recette de production ne doit être réutilisé pour les livrables. Les sources originales restent conservées jusqu’au remplacement des usages et vérification exhaustive; les anciennes sources/recettes/références doivent ensuite être retirées du dépôt, avec hash et usage conservés dans les registres d’audit. Les fichiers `*.import` générés par Godot ne sont pas des sources créatives.
+
+- **[OUVERT — BLOQUANT POUR LES FAMILLES CONCERNÉES]** L’audit daté de base reste un snapshot; les familles actives non migrées incluent encore le joueur, deux boss/prototypes, élite, ennemis animés, terrain/environnement/ruines, récompenses, pickups et VFX. Aucune suppression correspondante n’est autorisée avant remplacement de tous les consommateurs et validation de l’import/PCK. Les identités définitives des boss/biome ne sont pas inventées; produire des rôles visuels provisoires si cela n’affirme aucune identité canonique.
+
+- **[OUVERT]** La production audio originale est autorisée par synthèse procédurale, sans lire les sons ni recettes préexistants. La livraison source/runtimes et leur intégration restent à compléter; une sortie audio humaine est indisponible dans l’environnement de validation courant.
+
 ## Commandes de vérification
 
 - `godot --headless --editor --path game --quit` — import Godot.
