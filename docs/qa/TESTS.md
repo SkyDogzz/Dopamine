@@ -2251,3 +2251,9 @@ Note de clôture : le blocage historique du smoke `sandbox_ui_smoke.gd` décrit 
 - [x] Le smoke d’évidence passe sous Xvfb/Godot 4.7.2. CTest ciblé `godot_project_import`, coffre, layout coffre, HUD, résultat Survival et panneau résultat : **6/6**.
 - [i] Ce rendu virtualisé ne remplace pas une capture vidéo d’une run réelle ni le test matériel; les fixtures d’offres/récompenses restent des données de présentation.
 - [i] À la fermeture, le smoke signale 12 instances ObjectDB et 5 ressources encore référencées, comme le smoke HUD existant exécuté séparément; les assertions et six tests ciblés passent, mais l’origine des références n’est pas isolée par cette tranche.
+
+## Captures des erreurs UI et de l’équipement dans leur écran parent — 2026-10-18
+
+- [x] Le profil équipement illisible, le profil arbre indisponible et l’inventaire sans pièce compatible sont capturés avec le vrai hub Survival visible sous le voile Neon; le rendu gris du viewport par défaut est éliminé pour ces états.
+- [x] Les smokes injectent des services avec un chemin `user://` dédié; ils ne lisent ni n’écrivent la sauvegarde normale. Les captures 640×360 ont été régénérées, inspectées et hashées dans le README des preuves.
+- [x] `equipment_panel_visual_smoke.gd --capture-states` et `ui_states_evidence_smoke.gd` passent; CTest import/equipment slots/stats/hub/panel : **5/5**. Les erreurs restent des états de présentation isolés et les commandes physiques restent **[OUVERTES]**.

@@ -46,6 +46,15 @@ func _run() -> void:
 				var result_overlay: Control = session.get_node("HUD/RunResultOverlay")
 				result_overlay.visible = true
 				scene = session.get_node("HUD/RunResultOverlay/RunResultPanel") as Control
+		elif evidence_id in ["equipment-error", "skill-tree-error"]:
+			var save_service = load("res://scripts/save_service.gd").new("user://ui_states_evidence_smoke_context")
+			var progression = load("res://scripts/progression_service.gd").new(save_service, "0")
+			var hub: Control = load("res://scenes/survival_hub.tscn").instantiate()
+			hub.progression_service = progression
+			root.add_child(hub)
+			await process_frame
+			hub.add_child(scene)
+			capture_root = hub
 		else:
 			if scene == null:
 				_fail("Could not build evidence scene: %s" % evidence_id)

@@ -216,8 +216,21 @@ func _run() -> void:
 		_fail("A slot without compatible inventory should show an explicit empty result and no-change preview")
 		return
 	if "--capture-states" in OS.get_cmdline_user_args():
+		var save_service = load("res://scripts/save_service.gd").new("user://equipment_panel_visual_smoke_context")
+		var progression = load("res://scripts/progression_service.gd").new(save_service, "0")
+		var hub: Control = load("res://scenes/survival_hub.tscn").instantiate()
+		hub.progression_service = progression
+		root.add_child(hub)
+		await process_frame
+		root.remove_child(panel)
+		hub.add_child(panel)
+		await process_frame
 		if not await _save_evidence("equipment-no-compatible"):
 			return
+		hub.remove_child(panel)
+		root.add_child(panel)
+		hub.queue_free()
+		await process_frame
 	error.visible = false
 	panel.show_feedback("ACTION FAILED: profile unavailable")
 	var feedback: Label = panel.get_node("Panel/Content/Feedback")
