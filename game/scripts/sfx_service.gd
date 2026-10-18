@@ -92,12 +92,20 @@ func play(sound_family: String) -> bool:
 	return _play_streams(sound_family, _streams.get(sound_family, []))
 
 func play_weapon_fire(weapon_id: String, fallback_family: String) -> bool:
-	var family := _weapon_sound_family(weapon_id, "fire", fallback_family)
-	return play_named(family, fallback_family, fallback_family) if family != fallback_family else play(fallback_family)
+	var sound_id := _weapon_sound_family(weapon_id, "fire", "")
+	if not sound_id.is_empty():
+		return play_named(sound_id, fallback_family, fallback_family)
+	return _play_weapon_family_fallback("weapon_family_fire", fallback_family)
 
 func play_weapon_impact(weapon_id: String, fallback_family: String) -> bool:
-	var family := _weapon_sound_family(weapon_id, "impact", fallback_family)
-	return play_named(family, fallback_family, fallback_family) if family != fallback_family else play(fallback_family)
+	var sound_id := _weapon_sound_family(weapon_id, "impact", "")
+	if not sound_id.is_empty():
+		return play_named(sound_id, fallback_family, fallback_family)
+	return _play_weapon_family_fallback("weapon_family_impact", fallback_family)
+
+func _play_weapon_family_fallback(sound_family: String, fallback_family: String) -> bool:
+	var streams: Array = _streams.get(sound_family, [])
+	return _play_streams(sound_family, streams, fallback_family) if not streams.is_empty() else play(fallback_family)
 
 func play_named(sound_id: String, fallback_family: String = "", policy_family: String = "") -> bool:
 	var streams: Array = _named_streams.get(sound_id, [])

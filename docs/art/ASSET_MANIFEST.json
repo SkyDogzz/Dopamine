@@ -12343,9 +12343,7 @@
       "validation_status": "passed",
       "human_review_status": "pending",
       "integration_status": "integrated",
-      "blockers": [
-        "weapon-specific sound ID is not yet mapped in runtime"
-      ],
+      "blockers": [],
       "requirement_source": "user goal: distinct firing and impact signatures per weapon",
       "candidate_export_path": "build/assets/candidates/audio-complete/sfx/weapon_lightning_conductor_fire.wav",
       "acceptance_status": "accepted_for_provisional_production",
@@ -12384,9 +12382,7 @@
       "validation_status": "passed",
       "human_review_status": "pending",
       "integration_status": "integrated",
-      "blockers": [
-        "weapon-specific sound ID is not yet mapped in runtime"
-      ],
+      "blockers": [],
       "requirement_source": "user goal: distinct firing and impact signatures per weapon",
       "candidate_export_path": "build/assets/candidates/audio-complete/sfx/weapon_lightning_conductor_impact.wav",
       "acceptance_status": "accepted_for_provisional_production",
@@ -12425,9 +12421,7 @@
       "validation_status": "passed",
       "human_review_status": "pending",
       "integration_status": "integrated",
-      "blockers": [
-        "weapon-specific sound ID is not yet mapped in runtime"
-      ],
+      "blockers": [],
       "requirement_source": "user goal: distinct firing and impact signatures per weapon",
       "candidate_export_path": "build/assets/candidates/audio-complete/sfx/weapon_inferno_sprayer_fire.wav",
       "acceptance_status": "accepted_for_provisional_production",
@@ -12466,9 +12460,7 @@
       "validation_status": "passed",
       "human_review_status": "pending",
       "integration_status": "integrated",
-      "blockers": [
-        "weapon-specific sound ID is not yet mapped in runtime"
-      ],
+      "blockers": [],
       "requirement_source": "user goal: distinct firing and impact signatures per weapon",
       "candidate_export_path": "build/assets/candidates/audio-complete/sfx/weapon_inferno_sprayer_impact.wav",
       "acceptance_status": "accepted_for_provisional_production",
@@ -12507,9 +12499,7 @@
       "validation_status": "passed",
       "human_review_status": "pending",
       "integration_status": "integrated",
-      "blockers": [
-        "weapon-specific sound ID is not yet mapped in runtime"
-      ],
+      "blockers": [],
       "requirement_source": "user goal: distinct firing and impact signatures per weapon",
       "candidate_export_path": "build/assets/candidates/audio-complete/sfx/weapon_crimson_daggers_fire.wav",
       "acceptance_status": "accepted_for_provisional_production",
@@ -12548,9 +12538,7 @@
       "validation_status": "passed",
       "human_review_status": "pending",
       "integration_status": "integrated",
-      "blockers": [
-        "weapon-specific sound ID is not yet mapped in runtime"
-      ],
+      "blockers": [],
       "requirement_source": "user goal: distinct firing and impact signatures per weapon",
       "candidate_export_path": "build/assets/candidates/audio-complete/sfx/weapon_crimson_daggers_impact.wav",
       "acceptance_status": "accepted_for_provisional_production",
@@ -12589,9 +12577,7 @@
       "validation_status": "passed",
       "human_review_status": "pending",
       "integration_status": "integrated",
-      "blockers": [
-        "weapon-specific sound ID is not yet mapped in runtime"
-      ],
+      "blockers": [],
       "requirement_source": "user goal: distinct firing and impact signatures per weapon",
       "candidate_export_path": "build/assets/candidates/audio-complete/sfx/weapon_minigun_fire.wav",
       "acceptance_status": "accepted_for_provisional_production",
@@ -12630,9 +12616,7 @@
       "validation_status": "passed",
       "human_review_status": "pending",
       "integration_status": "integrated",
-      "blockers": [
-        "weapon-specific sound ID is not yet mapped in runtime"
-      ],
+      "blockers": [],
       "requirement_source": "user goal: distinct firing and impact signatures per weapon",
       "candidate_export_path": "build/assets/candidates/audio-complete/sfx/weapon_minigun_impact.wav",
       "acceptance_status": "accepted_for_provisional_production",
@@ -12671,9 +12655,7 @@
       "validation_status": "passed",
       "human_review_status": "pending",
       "integration_status": "integrated",
-      "blockers": [
-        "weapon-specific sound ID is not yet mapped in runtime"
-      ],
+      "blockers": [],
       "requirement_source": "user goal: distinct firing and impact signatures per weapon",
       "candidate_export_path": "build/assets/candidates/audio-complete/sfx/weapon_toxic_cloud_fire.wav",
       "acceptance_status": "accepted_for_provisional_production",
@@ -12712,9 +12694,7 @@
       "validation_status": "passed",
       "human_review_status": "pending",
       "integration_status": "integrated",
-      "blockers": [
-        "weapon-specific sound ID is not yet mapped in runtime"
-      ],
+      "blockers": [],
       "requirement_source": "user goal: distinct firing and impact signatures per weapon",
       "candidate_export_path": "build/assets/candidates/audio-complete/sfx/weapon_toxic_cloud_impact.wav",
       "acceptance_status": "accepted_for_provisional_production",
@@ -12753,9 +12733,7 @@
       "validation_status": "passed",
       "human_review_status": "pending",
       "integration_status": "integrated",
-      "blockers": [
-        "weapon-specific sound ID is not yet mapped in runtime"
-      ],
+      "blockers": [],
       "requirement_source": "user goal: distinct firing and impact signatures per weapon",
       "candidate_export_path": "build/assets/candidates/audio-complete/sfx/weapon_sawblades_fire.wav",
       "acceptance_status": "accepted_for_provisional_production",
@@ -12794,9 +12772,7 @@
       "validation_status": "passed",
       "human_review_status": "pending",
       "integration_status": "integrated",
-      "blockers": [
-        "weapon-specific sound ID is not yet mapped in runtime"
-      ],
+      "blockers": [],
       "requirement_source": "user goal: distinct firing and impact signatures per weapon",
       "candidate_export_path": "build/assets/candidates/audio-complete/sfx/weapon_sawblades_impact.wav",
       "acceptance_status": "accepted_for_provisional_production",
@@ -12835,9 +12811,7 @@
       "validation_status": "passed",
       "human_review_status": "pending",
       "integration_status": "integrated",
-      "blockers": [
-        "weapon-specific sound ID is not yet mapped in runtime"
-      ],
+      "blockers": [],
       "requirement_source": "user goal: distinct firing and impact signatures per weapon",
       "candidate_export_path": "build/assets/candidates/audio-complete/sfx/weapon_meteor_staff_fire.wav",
       "acceptance_status": "accepted_for_provisional_production",
@@ -12876,9 +12850,7 @@
       "validation_status": "passed",
       "human_review_status": "pending",
       "integration_status": "integrated",
-      "blockers": [
-        "weapon-specific sound ID is not yet mapped in runtime"
-      ],
+      "blockers": [],
       "requirement_source": "user goal: distinct firing and impact signatures per weapon",
       "candidate_export_path": "build/assets/candidates/audio-complete/sfx/weapon_meteor_staff_impact.wav",
       "acceptance_status": "accepted_for_provisional_production",
@@ -12917,9 +12889,7 @@
       "validation_status": "passed",
       "human_review_status": "pending",
       "integration_status": "integrated",
-      "blockers": [
-        "weapon-specific sound ID is not yet mapped in runtime"
-      ],
+      "blockers": [],
       "requirement_source": "user goal: distinct firing and impact signatures per weapon",
       "candidate_export_path": "build/assets/candidates/audio-complete/sfx/weapon_prism_laser_fire.wav",
       "acceptance_status": "accepted_for_provisional_production",
@@ -12958,9 +12928,7 @@
       "validation_status": "passed",
       "human_review_status": "pending",
       "integration_status": "integrated",
-      "blockers": [
-        "weapon-specific sound ID is not yet mapped in runtime"
-      ],
+      "blockers": [],
       "requirement_source": "user goal: distinct firing and impact signatures per weapon",
       "candidate_export_path": "build/assets/candidates/audio-complete/sfx/weapon_prism_laser_impact.wav",
       "acceptance_status": "accepted_for_provisional_production",
@@ -12999,9 +12967,7 @@
       "validation_status": "passed",
       "human_review_status": "pending",
       "integration_status": "integrated",
-      "blockers": [
-        "weapon-specific sound ID is not yet mapped in runtime"
-      ],
+      "blockers": [],
       "requirement_source": "user goal: distinct firing and impact signatures per weapon",
       "candidate_export_path": "build/assets/candidates/audio-complete/sfx/weapon_void_orb_fire.wav",
       "acceptance_status": "accepted_for_provisional_production",
@@ -13040,9 +13006,7 @@
       "validation_status": "passed",
       "human_review_status": "pending",
       "integration_status": "integrated",
-      "blockers": [
-        "weapon-specific sound ID is not yet mapped in runtime"
-      ],
+      "blockers": [],
       "requirement_source": "user goal: distinct firing and impact signatures per weapon",
       "candidate_export_path": "build/assets/candidates/audio-complete/sfx/weapon_void_orb_impact.wav",
       "acceptance_status": "accepted_for_provisional_production",
@@ -13081,9 +13045,7 @@
       "validation_status": "passed",
       "human_review_status": "pending",
       "integration_status": "integrated",
-      "blockers": [
-        "weapon-specific sound ID is not yet mapped in runtime"
-      ],
+      "blockers": [],
       "requirement_source": "user goal: distinct firing and impact signatures per weapon",
       "candidate_export_path": "build/assets/candidates/audio-complete/sfx/weapon_frost_nova_fire.wav",
       "acceptance_status": "accepted_for_provisional_production",
@@ -13122,9 +13084,7 @@
       "validation_status": "passed",
       "human_review_status": "pending",
       "integration_status": "integrated",
-      "blockers": [
-        "weapon-specific sound ID is not yet mapped in runtime"
-      ],
+      "blockers": [],
       "requirement_source": "user goal: distinct firing and impact signatures per weapon",
       "candidate_export_path": "build/assets/candidates/audio-complete/sfx/weapon_frost_nova_impact.wav",
       "acceptance_status": "accepted_for_provisional_production",

@@ -31,7 +31,17 @@ func _run() -> void:
 		_fail("Missing per-weapon impact should fall back to the existing hit family")
 		return
 	if service._weapon_sound_family("unknown", "fire", "weapon_shot") != "weapon_shot":
-		_fail("Unknown weapon IDs should retain the generic fallback")
+		_fail("Unknown weapon IDs should retain the existing fallback-family resolution")
+		return
+	service._named_streams["weapon_lightning_conductor_fire"] = []
+	if not service.play_weapon_fire("lightning_conductor", "weapon_zap") or \
+			not service._next_variant.has("weapon_family_fire"):
+		_fail("A missing weapon-specific fire cue should play the generated weapon-family fallback")
+		return
+	service._named_streams["weapon_lightning_conductor_impact"] = []
+	if not service.play_weapon_impact("unknown", "hit_light") or \
+			not service._next_variant.has("weapon_family_impact"):
+		_fail("A missing weapon-specific impact cue should play the generated weapon-family fallback")
 		return
 	print("Specific weapon SFX selection smoke passed")
 	quit()
