@@ -39,6 +39,20 @@ func _run() -> void:
 	if lab.context.session._game_camera != null and lab.context.session._game_camera.enabled:
 		_fail("The hidden combat session must not move the Sandbox Lab viewport camera")
 		return
+	var first_control: Button = lab.get_node("Root/Body/Left/Controls/PauseButton")
+	if root.gui_get_focus_owner() != first_control or first_control.get_theme_stylebox("focus") == null:
+		_fail("The Sandbox Lab should start with visible keyboard/gamepad focus on its primary simulation control")
+		return
+	await _send_navigation_input(KEY_DOWN, false)
+	var keyboard_focus := root.gui_get_focus_owner()
+	if keyboard_focus == first_control or keyboard_focus == null:
+		_fail("Keyboard navigation should move focus from the primary Sandbox Lab control")
+		return
+	await _send_navigation_input(KEY_DOWN, true)
+	var gamepad_focus := root.gui_get_focus_owner()
+	if gamepad_focus == keyboard_focus or gamepad_focus == null:
+		_fail("Gamepad D-pad navigation should move focus through Sandbox Lab controls")
+		return
 	if lab.context.session.loadout.weapon_level("lightning_conductor") != 1 or \
 			lab.context.session.loadout.relic_level("storm_core") != 1:
 		_fail("The default Lab preset build should be applied to the real combat loadout")
@@ -648,6 +662,28 @@ func _option_index_for(option: OptionButton, metadata: String) -> int:
 		if str(option.get_item_metadata(index)) == metadata:
 			return index
 	return -1
+
+func _send_navigation_input(keycode: Key, gamepad: bool) -> void:
+	if gamepad:
+		var button_event := InputEventJoypadButton.new()
+		button_event.device = 0
+		button_event.button_index = JOY_BUTTON_DPAD_DOWN
+		button_event.pressed = true
+		Input.parse_input_event(button_event)
+		await process_frame
+		button_event.pressed = false
+		Input.parse_input_event(button_event)
+		await process_frame
+		return
+	var key_event := InputEventKey.new()
+	key_event.keycode = keycode
+	key_event.physical_keycode = keycode
+	key_event.pressed = true
+	Input.parse_input_event(key_event)
+	await process_frame
+	key_event.pressed = false
+	Input.parse_input_event(key_event)
+	await process_frame
 
 func _fail(message: String) -> void:
 	push_error(message)
