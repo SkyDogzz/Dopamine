@@ -45,7 +45,7 @@
 - [x] **[HISTORIQUE — paquet du 2026-10-17]** Faire un premier screening visuel en planche des 43 PNG associés à des sources **Trusted** : aucun logo de tiers ni personnage reconnaissable détecté. Le contrôle ne vaut pas clearance juridique; la base contractuelle d’ownership de sortie et les limites C2PA sont documentées dans [`../art/INVENTAIRE_ASSETS_UI.md`](../art/INVENTAIRE_ASSETS_UI.md).
 - [ ] Terminer la revue visuelle P9.8 sur les écrans cibles : la revue automatisée Linux logiciel couvre maintenant les planches générées et le combat dense (voir `../qa/TESTS.md`), mais ne vérifie pas tous les écrans/états ni le rendu sur matériel réel.
 - [x] **[HISTORIQUE — supersédée le 2026-10-18]** La décision de garder l’ancien audio comme candidate est remplacée par l’instruction de remplacer musique et SFX sans réutiliser leurs fichiers ou recettes. Les nouveaux candidats restent **[PROPOSÉS]** jusqu’à écoute humaine en contexte.
-- [x] Vérifier mécaniquement les 38 WAV SFX utilisés par `Sfx` contre le manifeste, leurs formats et leurs durées; consigner leurs recettes, le renderer et les licences identifiées dans `THIRD_PARTY_NOTICES.md`.
+- [x] Vérifier mécaniquement les 125 WAV SFX utilisés par `Sfx` avec leurs manifestes, formats, durées et provenance; le validateur courant `python3 game/tools/validate_original_audio.py` contrôle les 133 WAV intégrés. Les anciens fichiers/recettes retirés et leur provenance historique restent consignés dans les registres de migration/retrait.
 - [ ] Auditer à l’écoute le mix et les niveaux des sons effectivement livrés, y compris les priorités en combat dense, sur haut-parleurs/casque réels.
 
 ## Distribution et communication
