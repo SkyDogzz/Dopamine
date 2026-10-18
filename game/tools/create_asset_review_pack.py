@@ -66,13 +66,35 @@ def main():
         "Rewards": {"relic_animation", "pickup_animation"},
     }
     sheets = []
+    static_galleries = []
     for title, categories in static_groups.items():
-        records = [(a["asset_id"], ROOT / a["integrated_path"]) for a in assets
+        records = [(a, ROOT / a["integrated_path"]) for a in assets
                    if a["category"] in categories and a.get("integrated_path")]
-        records = [(name, path) for name, path in records if path.is_file() and path.suffix.lower() == ".png"]
+        records = [(asset, path) for asset, path in records
+                   if path.is_file() and path.suffix.lower() == ".png"]
         if records:
             slug = title.lower().replace(" ", "-")
-            sheets.append(sheet(title, records, OUT / f"{slug}-contact-sheet.png", columns=8))
+            sheets.append(sheet(title, [(asset["asset_id"], path) for asset, path in records],
+                                OUT / f"{slug}-contact-sheet.png", columns=8))
+            cards = []
+            for asset, path in records:
+                image_url = html.escape(os.path.relpath(path, OUT))
+                source_path = ROOT / str(asset.get("integrated_source_path", ""))
+                source_url = html.escape(os.path.relpath(source_path, OUT)) if source_path.is_file() else ""
+                params = html.escape(json.dumps(asset.get("generation_parameters", {}), ensure_ascii=False))
+                source_link = f'<a href="{source_url}">editable source</a>' if source_url else "source unavailable"
+                cards.append(
+                    f'<article class="static-card"><a href="{image_url}"><img src="{image_url}" '
+                    f'alt="{html.escape(asset["asset_id"])}"></a><h3>{html.escape(asset["asset_id"])}</h3>'
+                    f'<p>{html.escape(asset["category"])} · {html.escape(asset["assigned_generation_skill"])}</p>'
+                    f'<p>{source_link} · seed {html.escape(str(asset.get("generation_seed")))}</p>'
+                    f'<details><summary>Generation parameters</summary><code>{params}</code></details></article>'
+                )
+            static_galleries.append(
+                f'<section><h2>{html.escape(title)} ({len(cards)})</h2>'
+                f'<p>Each preview is labeled with its stable manifest ID and links to its full-size PNG.</p>'
+                f'<div class="static-grid">{"".join(cards)}</div></section>'
+            )
 
     animations = []
     previews = []
@@ -183,16 +205,23 @@ def main():
     page = (
         '<!doctype html><meta charset="utf-8"><title>Dopamine asset review</title>'
         '<style>body{font:16px system-ui;background:#080b18;color:#eee;margin:2rem}'
-        'section,.animation-card{background:#10152b;padding:1rem;margin:1rem 0;border:1px solid #293354}'
-        'img{max-width:100%;image-rendering:pixelated}.rows{display:flex;gap:2rem;flex-wrap:wrap;align-items:center}'
+        'section,.animation-card,.static-card{background:#10152b;padding:1rem;margin:1rem 0;border:1px solid #293354}'
+        'img{max-width:100%;image-rendering:pixelated}.static-grid{display:grid;'
+        'grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:.75rem}.static-card{margin:0;'
+        'overflow-wrap:anywhere}.static-card img{width:100%;height:150px;object-fit:contain;background:#080b18}'
+        '.static-card h3{font-size:1rem;margin:.45rem 0}.static-card p{font-size:.82rem;margin:.3rem 0}'
+        '.rows{display:flex;gap:2rem;flex-wrap:wrap;align-items:center}'
         '.sprite-preview{image-rendering:pixelated;background-repeat:no-repeat}.animation-grid{display:grid;'
         'grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:1rem}code{white-space:pre-wrap;overflow-wrap:anywhere}'
         'audio{vertical-align:middle}li{padding:.45rem}</style>'
         '<h1>Dopamine Survivor · integrated local asset library</h1>'
+        f'<p><strong>Provisional production batch.</strong> Technical QA status is not artistic approval. '
+        'The approved scope permits provisional hero/world/boss concepts; unresolved canon and all owner '
+        'visual/audio acceptance remain pending. Use each manifest ID when reporting a correction.</p>'
         f'<p>Manifest assets: {len(assets)} · animation previews: {len(animations)} · '
         f'audio players: {len(inventory["files"])}. Technical QA status is shown per asset; '
         'visual/audio owner review remains pending where marked.</p>'
-        + sheet_html + '<section><h2>All animation previews</h2><div class="animation-grid">'
+        + sheet_html + "".join(static_galleries) + '<section><h2>All animation previews</h2><div class="animation-grid">'
         + "".join(animations) + '</div></section>'
         + '<section><h2>Font previews</h2>'
         + "".join(font_samples) + '</section>'
