@@ -11,14 +11,14 @@ L'inventaire recense les fichiers sous `game/assets/`, les références Godot da
 
 ## Comptage initial
 
-Comptage vérifié par `rg --files game/assets -g '!*.import'` au 2026-10-18 avant la première migration. Le registre fichier par fichier [`ASSET_FILE_REGISTER.csv`](ASSET_FILE_REGISTER.csv) est un snapshot historique immuable contenant hash SHA-256, octets, catégorie, emplacements de références littérales et statut de recherche. Les fichiers `.import` Godot ne sont pas des contenus et ne sont pas comptés; les migrations ultérieures sont suivies dans [`ASSET_MIGRATIONS.csv`](ASSET_MIGRATIONS.csv).
+Comptage vérifié au 2026-10-18. Le snapshot initial immuable est [`ASSET_FILE_REGISTER.csv`](ASSET_FILE_REGISTER.csv) (425 fichiers hors `.import`); [`ASSET_FILE_REGISTER_CURRENT.csv`](ASSET_FILE_REGISTER_CURRENT.csv) reflète le dépôt courant (274 fichiers hors `.import`, dont images, sources éditables, fontes et exports audio), avec hashes et références littérales. Les fichiers `.import` Godot sont exclus; migrations et retraits sont consignés dans les CSV dédiés.
 
 | Groupe | Quantité constatée | Sources / provenance connues | Décision pour cette initiative |
 |---|---:|---|---|
 | Exports visuels PNG/SVG sous `game/assets` | 165 fichiers | `PROVENANCE_ASSETS.csv` suit les hash/provenance de 165 PNG/SVG; les correspondances source/export ne sont pas toutes des preuves. | Remplacer tous les visuels actifs; examiner les visuels inactifs et les références avant exclusion/suppression. Aucun export actuel ne sera réutilisé. |
 | Audio sous `game/assets/audio/` **[SNAPSHOT INITIAL — 2026-10-18]** | 43 fichiers : 1 OGG, 38 WAV et 4 annexes SFX. | Le morceau Space City était CC0; les SFX venaient de recettes Bfxr. | Snapshot historique immuable; voir l’état courant ci-dessous et `ASSET_MIGRATIONS.csv` / `ASSET_RETIREMENTS.csv`. |
 | Sources et références sous `game/assets/source/` | 212 fichiers hors `.import` | Plusieurs sources éditables Aseprite; certaines dérivent de références générées, d'autres sont procédurales. Le lien par nom seul n'est pas une preuve. | Ne pas utiliser les sources existantes pour fabriquer les remplacements; supprimer ces sources et références après migration, mise à jour des preuves et vérification qu'aucun outil/document actif ne les requiert. |
-| Polices sous `game/assets/fonts/` | 4 fichiers : 2 polices et 2 notices de licence. | Licences OFL 1.1 et Bitstream Vera/DejaVu détaillées dans `THIRD_PARTY_NOTICES.md`. | Remplacer les deux polices runtime; conserver les notices requises jusqu'à ce que les nouvelles licences soient documentées. |
+| Polices sous `game/assets/fonts/` | Snapshot initial : 2 polices + 2 notices; état courant : 2 fontes TTF originales. | Glyphes dessinés en grilles dans `generate_original_fonts.py`; sources FontForge `.sfd` conservées sous `source/original_procedural/fonts/`. | Anciennes fontes/notices supprimées après migration et recherche de références; nouvelles fontes **[PROPOSÉES]**, lisibilité à revoir. |
 | Fichiers annexes audio **[SNAPSHOT INITIAL]** | README, manifest, recettes JSON et galerie HTML; générateurs Bfxr dans `game/tools/`. | Sources de synthèse et notice MIT conservées dans le snapshot d’audit. | Retirées après remplacement indépendant; voir les hashes de retrait.
 
 ## État audio après migration SFX et musique — 2026-10-18
@@ -42,7 +42,7 @@ Le registre initial détaillait 425 fichiers sous `game/assets` hors `.import`; 
 | Terrain et récompenses | `environment/survival_ground_tile.png`, `survival_ruins_pixel.png`, `rewards/chest_closed.png`, `rewards/xp_orb.png` | Rendu Survival et parcours de récompense. Identité officielle de biome ouverte. |
 | Accueil | `backgrounds/title_skyline.png`, `icons/ui/signal_prism.png` | `launch_menu.tscn`; ambiance validée, emblème exact proposé. |
 | Icônes UI/catalogue | `icons/catalog/equipment_*.png`, `rarity_*.png`, ressources, skill node, médaille, records | Hub, skill tree, équipement, statistiques, résultats. Certains sont seulement des pictogrammes sur des entrées inactives. |
-| Polices et thème | `fonts/PressStart2P-Regular.ttf`, `fonts/DejaVuSans.ttf`; `themes/dopamine_ui.tres` | Thème UI, titres et affichage de dégâts. Fonte exacte pixel encore ouverte dans l'Art Bible. |
+| Polices et thème — état courant | `fonts/NeonArcadePixel.ttf`, `fonts/NeonArcadeUI.ttf`; `themes/dopamine_ui.tres` | Thème UI, titres et affichage de dégâts. Les deux fontes originales sont **[PROPOSÉES]**; lisibilité et tailles restent à revoir selon l’Art Bible. |
 | Musique — état courant | Cinq WAV sous `audio/original_procedural/music/` : rythme, basse, pad, arpège, boss | `adaptive_survival_music.gd`; flux synchronisé avec évolution proposée par vague et fondu boss. Ancien OGG retiré après migration; hashes dans les CSV. |
 | SFX — état après migration 2026-10-18 | 38 WAV sous `audio/original_procedural/sfx/`, 19 familles d’événements | `sfx_service.gd` garde les noms et règles des familles. `generate_original_audio.py`, `sfx/manifest.json` et `sfx_service_assets_smoke.gd` documentent, mesurent et vérifient les candidats originaux; anciens fichiers et recettes retirés, hashes conservés aux registres. |
 
@@ -51,7 +51,7 @@ Le registre initial détaillait 425 fichiers sous `game/assets` hors `.import`; 
 - Les exports PNG/SVG ont une provenance technique consignée dans `PROVENANCE_ASSETS.csv`; l'inventaire précédent indiquait 43 actifs dérivés de références C2PA Trusted et 59 générés par le dépôt. Cette initiative les remplace tous selon la consigne utilisateur, y compris les assets procéduraux internes.
 - **[HISTORIQUE]** L’ancien morceau était Space City de MintoDog sous CC0; l’OGG a été retiré après remplacement et n’est pas réutilisé. Hash et provenance restent au registre de migration.
 - **[HISTORIQUE]** Les anciens SFX Bfxr venaient de recettes versionnées et d’un renderer MIT; fichiers, recettes et renderer ont été retirés après la migration. **[PROPOSÉ]** Les nouveaux SFX sont synthétisés depuis des rôles et des seeds déterministes, sans lire l’ancien contenu; ils doivent encore être écoutés et approuvés en contexte.
-- Les polices sont sous OFL et Bitstream Vera/DejaVu. À remplacer si incluses dans la portée intégrale demandée.
+- **[HISTORIQUE]** Les polices retirées étaient sous OFL et Bitstream Vera/DejaVu; notices, fichiers et références runtime sont supprimés et leurs hash figurent au registre de retrait.
 - Les fichiers Aseprite et références non listés comme livrables dans le registre de provenance nécessitent encore un inventaire individuel de liens, hashes, créateur et statut actif/inactif avant toute suppression définitive.
 
 ## Couverture statique et chemins dynamiques
@@ -69,12 +69,12 @@ Le registre contient 140 assets dont une référence de chemin littérale a ét�
 
 - Le contenu des 100 nœuds et leurs effets/coûts sont **[PROPOSÉS]** dans `progression_service.gd`; seule la cible de 100 nœuds au lancement est **[VALIDÉE]**. L'arbre peut être affiché à partir des données implémentées sans inventer leur sens. Si une nouvelle définition de contenu est nécessaire, demander une validation précise.
 - L'identité canonique des boss et du premier biome reste **[OUVERTE]**. Remplacer les assets à rôle égal sans fabriquer une identité de lore ou de mécanique.
-- La police exacte reste **[OUVERTE]**. La spécification audio laisse ouverts le format source éditable, les gains finaux et l'approbation de la composition; le format runtime PCM16 mono WAV 44,1 kHz est **[PROPOSÉ]**. Les assets historiques, provenances et migrations sont relevés ci-dessus et dans les registres.
+- Les fontes actuelles sont **[PROPOSÉES]**; le choix final, tailles et lisibilité restent **[OUVERTS]**. La spécification audio laisse ouverts les gains finaux et l'approbation de la composition; le format runtime PCM16 mono WAV 44,1 kHz est **[PROPOSÉ]**. Les assets historiques, provenances et migrations sont relevés ci-dessus et dans les registres.
 - Garder les parcours validés et le Sandbox isolé de toute progression/sauvegarde normale pendant chaque tranche.
 
 ## Étape suivante
 
-**Visuel :** achever les familles restantes (élites, prototypes boss sans identité canonique, environnement, terrain, pickups et VFX), puis captures/revue en contexte, export PCK final et audit exhaustif des références. **Interface :** poursuivre l’overhaul et sa revue écran par écran, y compris les contrôles réels. **Audio :** fournir une écoute humaine du mix et des transitions; la revue doit couvrir run, boss, pause et cues de danger.
+**Visuel :** les familles de remplacement prévues sont produites; restent le contrôle PCK final, l’audit des références dynamiques et la revue lisibilité/GPU. **Interface :** revoir chaque écran/état et le focus, ainsi que les contrôles matériels. **Audio :** fournir une écoute humaine du mix et des transitions; couvrir run, boss, pause et cues de danger.
 
 **[VALIDÉ]** La production audio emploie une synthèse procédurale originale; les fichiers antérieurs ont été supprimés après migration et vérification des références. Les 38 SFX et les cinq stems sont intégrés au runtime, mais restent **[PROPOSÉS]** comme contenu de production jusqu’à la revue auditive. La validation numérique est reproductible avec `game/tools/validate_original_audio.py`; l’écoute humaine et l’écoute en run restent **[OUVERTES]**, car aucun périphérique de sortie audio n’est disponible dans cet environnement. Format source et gains finaux restent **[OUVERTS]**.
 

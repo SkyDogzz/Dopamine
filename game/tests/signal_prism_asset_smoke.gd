@@ -1,7 +1,7 @@
 extends SceneTree
 
 const PNG_PATH := "res://assets/icons/ui/signal_prism.png"
-const ASE_PATH := "res://assets/source/ui/signal_prism.aseprite"
+const ASE_PATH := "res://assets/source/original_procedural/signal_prism.aseprite"
 const PALETTE := [
 	"080b18", "10152b", "1b2340", "075a80", "087fb2", "0eb8d4", "37e8f5",
 	"7623a8", "a52dca", "e13acb", "ff75e3", "a85b19", "e69825", "ffd447",

@@ -148,10 +148,10 @@ func _select_difficulty(difficulty_id: String) -> void:
 func _refresh_armorless_record() -> void:
 	var record: Dictionary = _armorless_records.get(selected_difficulty, {})
 	if record.is_empty() or int(record.get("wave", 0)) <= 0:
-		_armorless_record_status.text = "ARMORLESS PB  ·  NONE"
+		_armorless_record_status.text = "ARMORLESS · NONE"
 		return
 	var seconds := int(floor(float(record.get("survival_time_seconds", 0.0))))
-	_armorless_record_status.text = "ARMORLESS PB  ·  WAVE %d  ·  %02d:%02d  ·  %d KILLS" % [
+	_armorless_record_status.text = "ARMORLESS · WAVE %d · %02d:%02d · %d KILLS" % [
 		int(record["wave"]), seconds / 60, seconds % 60, int(record["kills"]),
 	]
 

@@ -55,8 +55,7 @@ SOFTWARE.
 
 ## Fonts
 
-- **Press Start 2P** — SIL Open Font License 1.1; copyright 2012 The Press Start 2P Project Authors, with Reserved Font Name "Press Start 2P". The full license is in [`game/assets/fonts/PRESS-START-2P-OFL.txt`](game/assets/fonts/PRESS-START-2P-OFL.txt).
-- **DejaVu Sans** — Bitstream Vera license, with DejaVu changes in the public domain. The full copyright and license notice is in [`game/assets/fonts/DEJAVU-LICENSE.txt`](game/assets/fonts/DEJAVU-LICENSE.txt).
+- **Neon Arcade Pixel** and **Neon Arcade UI** — original project glyph designs generated from authored grid and vector primitives by `game/tools/generate_original_fonts.py`. No third-party font outlines are embedded. Editable FontForge sources are under `game/assets/source/original_procedural/fonts/`.
 
 ## Game assets
 

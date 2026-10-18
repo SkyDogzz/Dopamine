@@ -285,9 +285,7 @@ func _check_reward(reward_name: String) -> bool:
 
 func _check_original_rewards_pipeline() -> bool:
 	var generator := FileAccess.get_file_as_string("res://tools/generate_original_rewards.py")
-	var legacy_builder := FileAccess.get_file_as_string("res://tools/build_catalog_icon_assets.gd")
-	if generator.contains("chest_reference") or generator.contains("xp_orb_reference") or \
-			legacy_builder.contains("chest_reference") or legacy_builder.contains("xp_orb_reference"):
+	if generator.contains("chest_reference") or generator.contains("xp_orb_reference"):
 		push_error("Reward sprites must not reuse or be overwritten from retired reference sheets")
 		return false
 	for reward_name in ["chest_closed", "xp_orb"]:
@@ -314,9 +312,8 @@ func _master_palette_has(pixel: Color) -> bool:
 	return false
 
 func _check_projectile_migration_boundary() -> bool:
-	var legacy_builder := FileAccess.get_file_as_string("res://tools/build_catalog_icon_assets.gd")
-	if legacy_builder.contains("PROJECTILE_REFERENCE") or legacy_builder.contains("source/projectiles"):
-		push_error("Retired projectile reference sheets must not overwrite original runtime sprites")
+	if FileAccess.file_exists("res://tools/build_catalog_icon_assets.gd"):
+		push_error("Retired reference-sheet builder should remain absent")
 		return false
 	if DirAccess.dir_exists_absolute(ProjectSettings.globalize_path("res://assets/source/projectiles")):
 		push_error("Legacy projectile sources should be retired after migrating to original_procedural")
@@ -324,9 +321,8 @@ func _check_projectile_migration_boundary() -> bool:
 	return true
 
 func _check_original_ui_icons_pipeline() -> bool:
-	var legacy_builder := FileAccess.get_file_as_string("res://tools/build_catalog_icon_assets.gd")
-	if legacy_builder.contains("catalog_ui/generated_reference"):
-		push_error("Retired UI icon reference sheets must not overwrite original runtime icons")
+	if FileAccess.file_exists("res://tools/build_catalog_icon_assets.gd"):
+		push_error("Retired reference-sheet builder should remain absent")
 		return false
 	if DirAccess.dir_exists_absolute(ProjectSettings.globalize_path("res://assets/source/catalog_ui")):
 		push_error("Legacy UI icon sources should be retired after migrating to original_procedural")
@@ -355,9 +351,8 @@ func _capture_ui_icon_sheet() -> bool:
 	return true
 
 func _check_original_catalog_icons_pipeline() -> bool:
-	var legacy_builder := FileAccess.get_file_as_string("res://tools/build_catalog_icon_assets.gd")
-	if not legacy_builder.contains("Retired reference-sheet builder") or legacy_builder.contains("ground_candidate_reference") or legacy_builder.contains("weapon_impacts_reference"):
-		push_error("Reference-sheet builder must remain disabled so retired assets cannot be regenerated")
+	if FileAccess.file_exists("res://tools/build_catalog_icon_assets.gd"):
+		push_error("Reference-sheet builder must remain absent so retired assets cannot be regenerated")
 		return false
 	for family in ["catalog_weapons", "catalog_relics"]:
 		if DirAccess.dir_exists_absolute(ProjectSettings.globalize_path("res://assets/source/%s" % family)):

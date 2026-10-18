@@ -25,12 +25,12 @@ Les statuts suivants décrivent le dépôt; ils ne valident aucun choix de conte
 
 | Capacité | Statut | Livré / restant |
 |---|---|---|
-| `asset-pipeline` | **EN COURS** | Registres initiaux, audit et migrations ciblées disponibles. SFX, musique et familles visuelles partielles sont remplacés; familles graphiques restantes doivent être migrées. Un audit exhaustif et un PCK final restent requis. |
-| `visual-assets` | **EN COURS** | Skyline, sprites joueur, neuf rôles communs/supports, 24 projectiles, coffre/orbe XP, 16 icônes UI et 31 icônes catalogue remplacés. Sol actif, élite et prototypes boss de rôle sont migrés avec sources; candidats/références de sol supprimés. Identités boss/biome restent ouvertes; VFX/revue visuelle exhaustive et audit PCK final restent requis. Les identités ouvertes de boss et biome restent non décidées. |
+| `asset-pipeline` | **EN COURS** | Instantané initial conservé, registre courant (274 assets), migrations/retraits hashés. SFX, musique, familles visuelles et fontes runtime ont des remplacements originaux; audit des consommateurs dynamiques et PCK final restent requis. |
+| `visual-assets` | **EN COURS** | Skyline, joueur, neuf rôles communs/supports, 24 projectiles, coffre/orbe XP, icônes UI/catalogue, sol/ruines, élite, prototypes boss génériques, VFX et deux fontes originales ont des sources éditables. Exports racine hérités et recettes par référence retirés après vérification des consommateurs. Identités boss/biome restent ouvertes; revue lisibilité et GPU réelle restent à faire. |
 | `interface-overhaul` | **EN COURS** | Fondations, accueil, options, hub, vues Survival/Sandbox et parcours existants ont déjà des changements et smokes antérieurs; capture et revue finale écran par écran, focus et commandes matérielles restent à compléter. L’isolation Sandbox est conservée et couverte par smoke ciblé. |
 | `skill-tree` | **TRANCHE LIVRÉE — CAPACITÉ EN COURS** | Graphe navigable montrant 100 définitions runtime et leurs vrais prérequis; contenu, coûts et effets proposés ne sont pas validés. Commit `15a9071`. |
 | `equipment-screen` | **TRANCHE LIVRÉE — CAPACITÉ EN COURS** | Six slots, filtre, bonus avant/après et actions existantes conservées; overlay du personnage et formules proposées restent ouverts. Commit `5eadb12`. |
-| `adaptive-audio` | **EN COURS** | 38 SFX branchés sur 19 familles; cinq stems originaux synchronisés suivent les vagues et ajoutent le stem boss par fondu sans redémarrage. L’ancien OGG et les recettes SFX ont été retirés après migration. Mix et gains restent **[PROPOSÉS]**; écoutes humaine et en run restent **[OUVERTES]** faute de périphérique de sortie ici. |
+| `adaptive-audio` | **EN COURS** | 38 SFX branchés sur 19 familles; cinq stems originaux synchronisés suivent les vagues et ajoutent le stem boss par fondu sans redémarrage. L’ancien OGG et les recettes SFX ont été retirés après migration. Un extrait de transition est prêt pour écoute locale. Mix/gains **[PROPOSÉS]**; revue auditive humaine et en jeu **[OUVERTE]** faute de sortie locale. |
 
 ## Contraintes déjà confirmées
 

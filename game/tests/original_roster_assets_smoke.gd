@@ -16,9 +16,8 @@ func _initialize() -> void:
 		push_error("Original roster generator must not read legacy reference sheets or recipes")
 		quit(1)
 		return
-	var legacy_builder := FileAccess.get_file_as_string("res://tools/build_catalog_icon_assets.gd")
-	if not legacy_builder.contains("Retired reference-sheet builder") or legacy_builder.contains("generated_reference"):
-		push_error("Legacy reference-sheet builder must remain disabled")
+	if FileAccess.file_exists("res://tools/build_catalog_icon_assets.gd"):
+		push_error("Legacy reference-sheet builder should be retired after migration")
 		quit(1)
 		return
 	print("Original common roster PNGs, editable sources and migration boundary passed")

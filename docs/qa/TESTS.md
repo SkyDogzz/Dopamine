@@ -252,8 +252,8 @@
 
 ## P9.3 — Sprite prototype du Pulse Warden — 2026-10-17
 
-- [x] Remplacer l’export visuel du boss intermédiaire par `boss_pulse_warden.png`, avec source Aseprite dans `game/assets/source/roster/` et référence générée archivée dans `docs/art/source/pulse_warden_generated.png`.
-- [x] `process_pulse_warden.gd` reconstruit le PNG 96×96 depuis la source, conserve la transparence et limite les pixels à 16 couleurs de la palette maître; le test assets vérifie dimension, palette, source et route `mid_boss` du renderer.
+- [x] Historique 2026-10-17 : l’export d’alors du boss intermédiaire utilisait une source Aseprite sous `game/assets/source/roster/` et une référence générée. Le 2026-10-18, les deux ont été retirées après remplacement indépendant par un prototype de rôle original sous `source/original_procedural/`.
+- [x] La recette historique `process_pulse_warden.gd` vérifiait un PNG 96×96; elle a été supprimée avec les fichiers d’entrée. Le smoke actuel vérifie la source éditable originale et la route `mid_boss` du renderer.
 - [x] `catalog_icon_assets_smoke.gd` et `survival_boss_attack_smoke.gd` passent sous Godot 4.7.2. Le second signale des instances/ressources encore référencées à l’arrêt malgré ses assertions réussies.
 - [i] Sprite visuel prototype uniquement : il ne canonise ni l’identité du boss, ni ses patterns, et ne modifie aucun gameplay. Les deux exports placeholder historiques restent stockés mais inactifs; revue en mouvement sur GPU cible encore ouverte.
 
@@ -1218,8 +1218,9 @@
 ## Accueil — emblème pixel art — 2026-10-16
 
 - [x] `signal_prism_asset_smoke.gd` vérifie le PNG 32×32 transparent, sa palette maîtresse de 16 couleurs maximum, l’en-tête Aseprite et son intégration nearest dans le menu.
-- [x] `process_signal_prism.gd` reproduit l’export depuis la référence générée vers le PNG utilisé et la source Aseprite éditable.
+- [x] À l’origine, `process_signal_prism.gd` exportait depuis une image de référence. Cette recette, sa référence et son ancienne source Aseprite ont été supprimées le 2026-10-18; le smoke courant vérifie le PNG produit par `generate_original_visuals.gd -- --signal-prism-only`.
 - [x] Import Godot 4.7.2, `ui_foundation_smoke.gd` et `ui_viewport_layout_smoke.gd` passent; capture de l’accueil relue à 640×360 logique dans une fenêtre 1280×720.
+- [x] Migration du 2026-10-18 : la référence PNG, l’ancienne source Aseprite et la recette de conversion ont été retirées. `signal_prism_asset_smoke.gd` vérifie maintenant la source originale produite par `generate_original_visuals.gd -- --signal-prism-only`.
 
 ## Accueil — composition menu gauche de l’Art Bible — 2026-10-16
 

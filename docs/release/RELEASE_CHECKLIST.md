@@ -30,7 +30,7 @@
 
 ## Dépendances, licences et provenance
 
-- [x] Inventaire de départ disponible dans [`../../THIRD_PARTY_NOTICES.md`](../../THIRD_PARTY_NOTICES.md) : Godot/godot-cpp et polices embarquées y sont identifiés; textes de licences des polices conservés dans `game/assets/fonts/`.
+- [x] Inventaire de départ disponible dans [`../../THIRD_PARTY_NOTICES.md`](../../THIRD_PARTY_NOTICES.md) : Godot/godot-cpp sont identifiés; les polices embarquées sont créées par le projet et leurs sources FontForge sont conservées sous `game/assets/source/original_procedural/fonts/`.
 - [x] Archives d’informations de copyright et de licences Godot 4.7.2 disponibles dans `licenses/`.
 - [x] Comparer les deux archives Godot au retour du template Linux release 4.7.2 : 102 composants et 19 textes correspondent exactement; la méthode et la portée Linux seule sont consignées dans [`../../THIRD_PARTY_NOTICES.md`](../../THIRD_PARTY_NOTICES.md).
 - [x] Inclure les notices et textes de polices/Godot dans le paquet Linux de staging, en conservant les chemins référencés.

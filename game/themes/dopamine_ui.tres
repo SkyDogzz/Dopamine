@@ -1,7 +1,7 @@
 [gd_resource type="Theme" load_steps=26 format=3]
 
-[ext_resource type="FontFile" path="res://assets/fonts/DejaVuSans.ttf" id="font_body"]
-[ext_resource type="FontFile" path="res://assets/fonts/PressStart2P-Regular.ttf" id="font_heading"]
+[ext_resource type="FontFile" path="res://assets/fonts/NeonArcadeUI.ttf" id="font_body"]
+[ext_resource type="FontFile" path="res://assets/fonts/NeonArcadePixel.ttf" id="font_heading"]
 
 [sub_resource type="StyleBoxFlat" id="PanelSurface"]
 bg_color = Color(0.062745, 0.082353, 0.168627, 0.98)

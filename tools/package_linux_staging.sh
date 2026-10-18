@@ -62,15 +62,13 @@ if grep -Eq 'res://(tests|tools|assets/source)/' "$export_log"; then
 	exit 1
 fi
 
-mkdir -p "$package_dir/docs/release/licenses" "$package_dir/game/assets/fonts"
+mkdir -p "$package_dir/docs/release/licenses"
 cp "$export_dir/DopamineSurvivor.x86_64" "$package_dir/"
 cp "$export_dir/libdopamine.linux.template_release.x86_64.so" "$package_dir/"
 cp "$source_dir/THIRD_PARTY_NOTICES.md" "$package_dir/"
 cp "$source_dir/docs/release/licenses/godot-4.7.2-copyright-info.json" \
 	"$source_dir/docs/release/licenses/godot-4.7.2-license-info.json" \
 	"$package_dir/docs/release/licenses/"
-cp "$source_dir/game/assets/fonts/PRESS-START-2P-OFL.txt" \
-	"$source_dir/game/assets/fonts/DEJAVU-LICENSE.txt" "$package_dir/game/assets/fonts/"
 cat >"$package_dir/README.txt" <<EOF
 DOPAMINE SURVIVOR — LINUX VALIDATION STAGING
 
@@ -84,8 +82,8 @@ Native toolchain: $(c++ --version | sed -n '1p'), $(cmake --version | sed -n '1p
 Native dependency: godot-cpp b8530af7546a3fcae80cef2477526569fd42ffc2
 
 Keep the GDExtension next to the executable. Third-party notices are in
-THIRD_PARTY_NOTICES.md; referenced Godot and font license data is included
-at the paths used by that notice.
+THIRD_PARTY_NOTICES.md; referenced Godot license data is included at the
+paths used by that notice. Runtime fonts are original repository assets.
 
 Launch with ./DopamineSurvivor.x86_64.
 Godot user:// data is stored under app_userdata beneath XDG_DATA_HOME,
@@ -107,8 +105,6 @@ for required_file in \
 	'THIRD_PARTY_NOTICES.md' \
 	'docs/release/licenses/godot-4.7.2-copyright-info.json' \
 	'docs/release/licenses/godot-4.7.2-license-info.json' \
-	'game/assets/fonts/PRESS-START-2P-OFL.txt' \
-	'game/assets/fonts/DEJAVU-LICENSE.txt' \
 	'README.txt'; do
 	if [[ ! -f "$verify_dir/$required_file" ]]; then
 		echo "The extracted staging package is missing: $required_file" >&2

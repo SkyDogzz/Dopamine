@@ -26,6 +26,13 @@ func _initialize() -> void:
 		print("Generated non-canonical elite/boss role prototypes and editable Aseprite sources")
 		quit()
 		return
+	if "--signal-prism-only" in OS.get_cmdline_user_args():
+		if not _build("game/assets/icons/ui/signal_prism.png"):
+			quit(1)
+			return
+		print("Generated original Signal Prism emblem and editable Aseprite source")
+		quit()
+		return
 	if "--environment-only" in OS.get_cmdline_user_args():
 		if not _build("game/assets/sprites/environment/survival_ruins_pixel.png"):
 			quit(1)
@@ -194,6 +201,12 @@ func _draw_semantic(image: Image, name: String, unit: int, shadow: Color, mid: C
 		for angle in range(8):
 			var a := TAU * float(angle) / 8.0
 			_line(image, cx + roundi(cos(a)*10*s), cy + roundi(sin(a)*10*s), cx + roundi(cos(a)*14*s), cy + roundi(sin(a)*14*s), s, light if angle % 2 == 0 else mid)
+	elif name == "signal_prism":
+		_diamond(image, cx, cy, 12*s, Color("#10152B"))
+		_diamond(image, cx, cy, 9*s, Color("#087FB2"))
+		_diamond(image, cx, cy, 5*s, Color("#37E8F5"))
+		_line(image, cx - 11*s, cy, cx + 11*s, cy, s, Color("#0EB8D4"))
+		_line(image, cx, cy - 11*s, cx, cy + 11*s, s, Color("#0EB8D4"))
 	elif name.begins_with("equipment_"):
 		_draw_equipment_icon(image, name, cx, cy, shadow, mid, accent, light)
 	elif name.begins_with("rarity_"):
