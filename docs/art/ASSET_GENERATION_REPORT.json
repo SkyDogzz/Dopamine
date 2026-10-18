@@ -35,7 +35,7 @@
     "project_copy": "build/assets/candidates/godot-final-import-check/project",
     "log": "build/assets/candidates/godot-final-import-check/import.log"
   },
-  "artistic_review": "Internal pixel-level review corrected a four-direction orientation defect in the player sheets. The static catalog remains geometric and non-player animation is still procedural role work; these are provisionally integrated prototypes, not a human-approved production art pass.",
+  "artistic_review": "Internal pixel-level review corrected a four-direction orientation defect in the player sheets. The static catalog remains geometric and non-player animation is still procedural role work; these are provisionally integrated prototypes, not a human-approved production art pass. A targeted rework of the 31 weapon/evolution/relic catalog icons was staged and checked; it remained too generic/inconsistent at native size, so it was not integrated. The existing accepted icon set remains unchanged, and catalog readability stays a human-review concern.",
   "game_assets_files": [
     {
       "path": "game/assets/README.md",
@@ -90,7 +90,8 @@
     "Human visual and auditory acceptance remains pending; current integration is provisional per the user-authorized non-canonical prototype scope.",
     "Audio hardware is unavailable in this session, so numeric QA and Godot playback/import tests do not substitute for listening.",
     "Some boss, biome, font and detailed animation conventions remain open in the GDD and stay explicitly provisional.",
-    "One earlier full CTest run had a transient Toxic Ignition assertion failure; six targeted reruns and subsequent complete runs (119/119, then 120/120) passed. Keep monitoring this gameplay test for intermittent behavior."
+    "One earlier full CTest run had a transient Toxic Ignition assertion failure; six targeted reruns and subsequent complete runs (119/119, then 120/120) passed. Keep monitoring this gameplay test for intermittent behavior.",
+    "Targeted catalog icon redesign passed palette/dimension/hash QA but failed internal perceptual acceptance; candidates remain isolated under build/assets/candidates/pixel-art and did not replace integrated assets."
   ],
   "review_pack": {
     "local_index": "build/assets/candidates/review/index.html",
@@ -160,6 +161,18 @@
       "generator": "game/tools/generate_original_player_sheets.py v3",
       "qa": "animation grid, palette, frame uniqueness and source/export hashes passed",
       "integration": "four IDs replaced through explicit managed-ID regeneration guard",
+      "human_review_status": "pending"
+    },
+    {
+      "date": "2026-10-18",
+      "assets": [
+        "weapon/evolution/relic catalog icons (31 candidates)"
+      ],
+      "finding": "A targeted redesign removed the shared badge silhouette but still left inconsistent semantic silhouettes and theme color cues at native size.",
+      "action": "Kept the candidates outside Godot integration; preserved current integrated assets and recorded the limitation.",
+      "skill": "dopamine-pixel-art and dopamine-asset-qa",
+      "qa": "31 candidate PNG/Aseprite pairs passed palette, dimensions, color limit and hash checks; visual review not accepted.",
+      "integration": "not integrated",
       "human_review_status": "pending"
     }
   ]
