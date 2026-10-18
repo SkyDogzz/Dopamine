@@ -2167,3 +2167,8 @@ Note de clôture : le blocage historique du smoke `sandbox_ui_smoke.gd` décrit 
 ## Suite complète après couverture équipement — 2026-10-18
 
 - [x] `XDG_DATA_HOME=/tmp/dopamine-final-ui-regression DOPAMINE_TEST_TIMEOUT=480s PATH=/tmp/cmake-3.31.12-linux-x86_64/bin:$PATH ctest --test-dir build --output-on-failure -j1` : **118/118 tests réussis en 80,05 s** après l’ajout des scénarios de slot sans compatible, action obsolète et filtre des six slots.
+
+## Intégrité de l’index des preuves visuelles et audio — 2026-10-18
+
+- [x] Contrôle des entrées PNG indexées dans `docs/art/evidence/2026-10-18/README.md` : **31/31 fichiers présents et SHA-256 conformes**. Les SHA-256 des deux WAV de preuve audio (`adaptive-music-transition.wav` et `adaptive-music-runtime-capture.wav`) correspondent également au README.
+- [i] Ces empreintes attestent l’identité et la présence des preuves, pas une approbation humaine du mix audio ni une validation sur GPU/contrôleur physique.
