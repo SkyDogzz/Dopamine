@@ -1585,7 +1585,7 @@ Note de clôture : le blocage historique du smoke `sandbox_ui_smoke.gd` décrit 
 ## Art environnement — sol Survival provisoire (2026-10-16)
 
 - [x] `catalog_icon_assets_smoke.gd` vérifie les dimensions et sources Aseprite du sol candidat et de l’overlay pixel art; le sol candidat respecte les 32 couleurs de la palette maître.
-- [x] À ce stade historique, `pilot_scene_visual_smoke.gd` confirme l’overlay pixel art à 1280×800; le sol candidat reste hors du jeu car son motif répétitif est trop perceptible, donc `survival_ground.svg` est conservé. Ce sol a depuis été remplacé par `survival_ground_pixel.png` (section « Sol Survival pixel art »). Le biome canonique reste **[OUVERT]**.
+- [x] À ce stade historique, `pilot_scene_visual_smoke.gd` confirme l’overlay pixel art à 1280×800; le sol candidat est resté hors du jeu à cette étape historique. Depuis, le nouveau tile actif 16×16 `survival_ground_tile.png` a été généré sans reprendre le candidat; les candidats, SVG et recettes de sol hérités ont été retirés après migration (audit du 2026-10-18). Le biome canonique reste **[OUVERT]**.
 
 ## Art pickups Survival (2026-10-16)
 

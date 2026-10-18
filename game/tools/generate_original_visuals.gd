@@ -4,7 +4,6 @@ extends SceneTree
 ## No reference image or external artwork is loaded by this tool.
 
 const REGISTRY := "res://../docs/art/PROVENANCE_ASSETS.csv"
-const OUT_ROOT := "res://assets"
 const SOURCE_ROOT := "res://assets/source/original_procedural"
 const PALETTE := ["#080B18", "#10152B", "#1B2340", "#075A80", "#087FB2", "#0EB8D4", "#37E8F5", "#7623A8", "#AD91BB", "#E13ACB", "#FF75E3", "#826999", "#E69825", "#FFD447", "#FFF19A", "#F6F7FF"]
 const TILE := ["#080B18", "#10152B", "#1B2340", "#293354", "#075A80", "#087FB2"]
@@ -19,6 +18,20 @@ const CATALOG_ICON_NAMES := [
 ]
 
 func _initialize() -> void:
+	if "--role-prototypes-only" in OS.get_cmdline_user_args():
+		for name in ["elite_sprinter", "boss_pulse_warden", "boss_dopamine_core", "boss_mid_placeholder", "boss_final_placeholder"]:
+			if not _build("game/assets/sprites/roster/%s.png" % name):
+				quit(1)
+				return
+		print("Generated non-canonical elite/boss role prototypes and editable Aseprite sources")
+		quit()
+		return
+	if "--environment-only" in OS.get_cmdline_user_args():
+		if not _build("game/assets/sprites/environment/survival_ruins_pixel.png"):
+			quit(1)
+			return
+		print("Generated original non-canonical environment overlay and editable Aseprite source")
+		quit()
 	if "--ui-icons-only" in OS.get_cmdline_user_args():
 		for name in UI_ICON_NAMES:
 			if not _build("game/assets/icons/catalog/%s.png" % name):
@@ -68,7 +81,8 @@ func _build(path: String) -> bool:
 	var name := path.get_file().get_basename()
 	var size := 32
 	if name == "survival_ruins_pixel": size = 1536
-	elif name == "boss_dopamine_core": size = 96
+	elif name.begins_with("boss_"): size = 96
+	elif name == "elite_sprinter": size = 24
 	elif name.begins_with("projectile_"): size = 16
 	elif name.begins_with("impact_") or name == "weapon_impacts_pixel": size = 64
 	var base_size := 256 if size == 1536 else size
@@ -137,8 +151,8 @@ func _draw_motif(image: Image, name: String) -> void:
 		_pixel(image, cx - 11 * unit, cy - 8 * unit, c3)
 		_pixel(image, cx + 11 * unit, cy + 8 * unit, white)
 		_pixel(image, cx - 10 * unit, cy + 9 * unit, c2)
-	if name == "boss_dopamine_core":
-		# Framed, layered core with a dark eye and asymmetric energy fins.
+	if name.begins_with("boss_"):
+		# Framed, layered non-canonical role prototype with energy fins.
 		_circle(image, cx, cy, 13 * unit, c1)
 		_circle(image, cx, cy, 10 * unit, c3)
 		_circle(image, cx, cy, 7 * unit, c0)
@@ -149,6 +163,8 @@ func _draw_motif(image: Image, name: String) -> void:
 			_line(image, cx + roundi(cos(a) * 11 * unit), cy + roundi(sin(a) * 11 * unit), cx + roundi(cos(a) * 15 * unit), cy + roundi(sin(a) * 15 * unit), unit, c3 if angle % 2 == 0 else c2)
 
 func _has_semantic_shape(name: String) -> bool:
+	if name == "elite_sprinter" or name.begins_with("boss_"):
+		return true
 	if name.begins_with("equipment_") or name.begins_with("rarity_") or name.begins_with("resource_") or name in ["skill_node", "achievement_medal", "run_record"]:
 		return true
 	if name.begins_with("impact_"):
@@ -162,7 +178,23 @@ func _draw_semantic(image: Image, name: String, unit: int, shadow: Color, mid: C
 	var cx := image.get_width() / 2
 	var cy := image.get_height() / 2
 	var s := maxi(unit, 1)
-	if name.begins_with("equipment_"):
+	if name == "elite_sprinter":
+		# Role-only silhouette; no boss/biome identity or combat behavior is implied.
+		_diamond(image, cx, cy, 10*s, shadow)
+		_diamond(image, cx, cy, 7*s, accent)
+		_line(image, cx - 3*s, cy + 3*s, cx + 8*s, cy - 8*s, 2*s, light)
+		for side in [-1, 1]:
+			_line(image, cx + side*5*s, cy + 4*s, cx + side*11*s, cy + 11*s, s, mid)
+	elif name.begins_with("boss_"):
+		# Shared non-canonical boss role motif: layered energy core with fins.
+		_circle(image, cx, cy, 11*s, shadow)
+		_circle(image, cx, cy, 8*s, accent)
+		_circle(image, cx, cy, 5*s, shadow)
+		_circle(image, cx + s, cy - s, 2*s, light)
+		for angle in range(8):
+			var a := TAU * float(angle) / 8.0
+			_line(image, cx + roundi(cos(a)*10*s), cy + roundi(sin(a)*10*s), cx + roundi(cos(a)*14*s), cy + roundi(sin(a)*14*s), s, light if angle % 2 == 0 else mid)
+	elif name.begins_with("equipment_"):
 		_draw_equipment_icon(image, name, cx, cy, shadow, mid, accent, light)
 	elif name.begins_with("rarity_"):
 		_draw_rarity_icon(image, name, cx, cy, shadow, mid, accent, light)

@@ -53,7 +53,7 @@ func _initialize() -> void:
 			not _check_distinct_silhouette("projectile_lightning", "projectile_razorstorm"):
 		quit(1)
 		return
-	if not _check_ground_candidate():
+	if not _check_environment_sources():
 		quit(1)
 		return
 	if not _check_active_ground():
@@ -197,26 +197,9 @@ func _check_distinct_silhouette(first_name: String, second_name: String) -> bool
 		return false
 	return true
 
-func _check_ground_candidate() -> bool:
-	var png_path := "res://assets/sprites/environment/ground_moss_stone_candidate.png"
-	var ase_path := "res://assets/source/environment/ground_moss_stone_candidate.aseprite"
-	if not FileAccess.file_exists(png_path) or not FileAccess.file_exists(ase_path):
-		push_error("Missing PNG or Aseprite source for the ground candidate")
-		return false
-	var image := (load(png_path) as Texture2D).get_image()
-	if image.get_size() != Vector2i(256, 256):
-		push_error("The ground candidate should be a 256x256 texture composed of 16x16 pixel cells")
-		return false
-	var colors := {}
-	for y in range(image.get_height()):
-		for x in range(image.get_width()):
-			colors[image.get_pixel(x, y).to_html(false)] = true
-	if colors.size() > 32:
-		push_error("The ground candidate should use only the validated 32-color master palette")
-		return false
-	var source := FileAccess.open(ase_path, FileAccess.READ)
-	if source == null or source.get_32() != source.get_length() or source.get_16() != 0xA5E0 or source.get_16() != 1 or source.get_16() != 256 or source.get_16() != 256:
-		push_error("Invalid editable Aseprite source for the ground candidate")
+func _check_environment_sources() -> bool:
+	if FileAccess.file_exists("res://tools/process_survival_ground.gd"):
+		push_error("Retired reference-based floor generator must not return")
 		return false
 	var ruins_png := "res://assets/sprites/environment/survival_ruins_pixel.png"
 	var ruins_ase := "res://assets/source/environment/survival_ruins_pixel.aseprite"
@@ -373,8 +356,8 @@ func _capture_ui_icon_sheet() -> bool:
 
 func _check_original_catalog_icons_pipeline() -> bool:
 	var legacy_builder := FileAccess.get_file_as_string("res://tools/build_catalog_icon_assets.gd")
-	if legacy_builder.contains("catalog_weapons") or legacy_builder.contains("catalog_relics"):
-		push_error("Retired catalog reference sheets must not overwrite original icons")
+	if not legacy_builder.contains("Retired reference-sheet builder") or legacy_builder.contains("ground_candidate_reference") or legacy_builder.contains("weapon_impacts_reference"):
+		push_error("Reference-sheet builder must remain disabled so retired assets cannot be regenerated")
 		return false
 	for family in ["catalog_weapons", "catalog_relics"]:
 		if DirAccess.dir_exists_absolute(ProjectSettings.globalize_path("res://assets/source/%s" % family)):
