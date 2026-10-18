@@ -32,6 +32,10 @@ func _run() -> void:
 		session.progression_service != null:
 		_fail("Armorless session should initialize temporary state without a permanent progression service")
 		return
+	session._record_codex_sightings([{"components": {"EnemyType": "chaser"}}])
+	if not session._codex_sightings_recorded.is_empty():
+		_fail("Armorless sightings must not enter normal Codex progression")
+		return
 	var bosses_defeated := 0
 	for completed_wave in range(1, final_wave + 1):
 		if not await _wait_until(func() -> bool:

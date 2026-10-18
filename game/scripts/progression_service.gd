@@ -3,6 +3,7 @@ extends RefCounted
 const PROFILE_VERSION := 9
 const STARTER_WEAPONS := ["lightning_conductor", "inferno_sprayer"]
 const STARTER_RELICS := ["storm_core", "infernal_heart"]
+const CODEX_ENEMY_IDS := ["chaser", "sprinter", "tank", "shooter", "buffer", "exploder", "shielder", "summoner", "summoned", "elite", "mid_boss", "final_boss"]
 const POWDER_TIERS := ["basic", "refined", "pure", "prismatic"]
 const ENHANCEMENT_BASE_COSTS := [10, 15, 22, 32, 46, 65, 90, 125, 175, 250]
 const RARITY_COST_MULTIPLIERS := {"normal": 1.0, "magic": 1.5, "mystic": 2.0, "legendary": 3.0, "mythic": 4.0}
@@ -310,6 +311,9 @@ func load_profile() -> Dictionary:
 	if not profile.has("endless_standard_records"):
 		profile["endless_standard_records"] = _empty_endless_standard_records()
 		migrated = true
+	if not profile.has("codex_seen_enemies"):
+		profile["codex_seen_enemies"] = []
+		migrated = true
 	if migrated:
 		profile["profile_version"] = PROFILE_VERSION
 	if not _valid_profile(profile):
@@ -320,6 +324,36 @@ func load_profile() -> Dictionary:
 
 func can_save_profile() -> bool:
 	return _save_service != null
+
+func record_codex_enemy_sightings(enemy_ids: Array) -> Dictionary:
+	if _save_service == null:
+		return {"ok": false, "error": "save_service_unavailable"}
+	var profile_result := load_profile()
+	if not profile_result.get("ok", false):
+		return {"ok": false, "error": str(profile_result.get("error", "load_failed"))}
+	var profile: Dictionary = profile_result["profile"]
+	var seen: Array = profile["codex_seen_enemies"].duplicate()
+	var changed := false
+	for enemy_id in enemy_ids:
+		if typeof(enemy_id) != TYPE_STRING or enemy_id not in CODEX_ENEMY_IDS or enemy_id in seen:
+			continue
+		seen.append(enemy_id)
+		changed = true
+	if changed:
+		seen.sort()
+		profile["codex_seen_enemies"] = seen
+		if not _save_service.save_slot(_slot_id, profile):
+			return {"ok": false, "error": "save_failed"}
+	return {"ok": true, "changed": changed, "seen_enemies": seen.duplicate()}
+
+func codex_seen_enemy_ids() -> Array[String]:
+	var result: Array[String] = []
+	var profile_result := load_profile()
+	if not profile_result.get("ok", false):
+		return result
+	for enemy_id in profile_result["profile"].get("codex_seen_enemies", []):
+		result.append(str(enemy_id))
+	return result
 
 func record_armorless_result(difficulty_id: String, wave: int, survival_time_seconds: float, kills: int) -> Dictionary:
 	if _save_service == null:
@@ -801,6 +835,7 @@ func _empty_profile() -> Dictionary:
 		"armorless_records": _empty_armorless_records(),
 		"endless_standard_unlocked": false,
 		"endless_standard_records": _empty_endless_standard_records(),
+		"codex_seen_enemies": [],
 	}
 
 func _empty_armorless_records() -> Dictionary:
@@ -826,8 +861,14 @@ func _valid_profile(profile: Dictionary) -> bool:
 				not profile.get("armorless_records") is Dictionary or \
 				profile["armorless_records"].size() != SURVIVAL_DIFFICULTY_SCRIPT.ORDER.size() or \
 				not profile.get("endless_standard_records") is Dictionary or \
-				profile["endless_standard_records"].size() != SURVIVAL_DIFFICULTY_SCRIPT.ORDER.size():
+				profile["endless_standard_records"].size() != SURVIVAL_DIFFICULTY_SCRIPT.ORDER.size() or \
+				not profile.get("codex_seen_enemies") is Array:
 		return false
+	var seen_enemies: Dictionary = {}
+	for enemy_id in profile["codex_seen_enemies"]:
+		if typeof(enemy_id) != TYPE_STRING or enemy_id not in CODEX_ENEMY_IDS or seen_enemies.has(enemy_id):
+			return false
+		seen_enemies[enemy_id] = true
 	for records_name in ["armorless_records", "endless_standard_records"]:
 		var record_set: Dictionary = profile[records_name]
 		for difficulty_id in SURVIVAL_DIFFICULTY_SCRIPT.ORDER:

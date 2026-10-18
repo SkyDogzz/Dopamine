@@ -16,6 +16,7 @@ const ENTRIES := [
 	{"id": "boss_pulse_warden", "name": "PULSE WARDEN", "role": "Boss avec phases et patterns télégraphiés.", "status": "Boss validé · patterns et valeurs proposés"},
 	{"id": "boss_dopamine_core", "name": "DOPAMINE CORE", "role": "Boss final avec phases et patterns télégraphiés.", "status": "Boss validé · patterns et valeurs proposés"},
 ]
+const ENEMY_COUNT := 12
 
 const SPRITE_PATH := "res://assets/sprites/roster/%s.png"
 const COMBAT_CATALOG_SCRIPT := preload("res://scripts/combat_catalog.gd")
@@ -54,8 +55,13 @@ const EVOLUTION_NAMES := {
 @onready var _entries: VBoxContainer = $Center/Panel/Content/Body/Entries
 @onready var _close_button: Button = $Center/Panel/Content/Header/CloseButton
 @onready var _category: OptionButton = $Center/Panel/Content/Category
+@onready var _intro: Label = $Center/Panel/Content/Intro
+@onready var _title: Label = $Center/Panel/Content/Header/Title
 
 var _combat_catalog: RefCounted
+var _seen_enemies: Dictionary = {}
+var _unlocked_weapons: Dictionary = {}
+var _unlocked_relics: Dictionary = {}
 
 func _ready() -> void:
 	_combat_catalog = COMBAT_CATALOG_SCRIPT.new()
@@ -65,21 +71,52 @@ func _ready() -> void:
 	_category.item_selected.connect(_show_category)
 	_close_button.pressed.connect(func() -> void: close_requested.emit())
 
-func present() -> void:
+func present(progress: Dictionary) -> void:
 	visible = true
+	_title.text = "CODEX · CONTENU"
+	_intro.text = "Armes/reliques liées aux déblocages; ennemis révélés à la première rencontre."
+	_category.visible = true
+	_entries.visible = true
+	_seen_enemies = _to_lookup(progress.get("seen_enemies", []))
+	_unlocked_weapons = _to_lookup(progress.get("unlocked_weapons", []))
+	_unlocked_relics = _to_lookup(progress.get("unlocked_relics", []))
 	_category.select(0)
 	_show_category(0)
 	_category.grab_focus()
+
+func present_error() -> void:
+	visible = true
+	_title.text = "CODEX · INDISPONIBLE"
+	_intro.text = "Le profil est indisponible; impossible de charger l’état de progression du Codex."
+	_category.visible = false
+	_entries.visible = false
+	_close_button.grab_focus()
+
+func _to_lookup(ids: Array) -> Dictionary:
+	var result := {}
+	for item_id in ids:
+		result[str(item_id)] = true
+	return result
+
+func _count_unlocked(unlocked: Dictionary, catalog_entries: Dictionary) -> int:
+	var count := 0
+	for item_id in catalog_entries:
+		if unlocked.has(item_id):
+			count += 1
+	return count
 
 func _show_category(index: int) -> void:
 	for child in _entries.get_children():
 		child.queue_free()
 	if index == 0:
+		_intro.text = "Ennemis rencontrés: %d / %d" % [_seen_enemies.size(), ENEMY_COUNT]
 		for entry in ENTRIES:
 			_entries.add_child(_make_entry(entry))
 	elif index == 1:
+		_intro.text = "ARMES DÉBLOQUÉES: %d / %d" % [_count_unlocked(_unlocked_weapons, _combat_catalog.weapons), _combat_catalog.weapons.size()]
 		_show_weapons()
 	else:
+		_intro.text = "RELIQUES DÉBLOQUÉES: %d / %d" % [_count_unlocked(_unlocked_relics, _combat_catalog.relics), _combat_catalog.relics.size()]
 		_show_relics()
 
 func _show_weapons() -> void:
@@ -88,12 +125,16 @@ func _show_weapons() -> void:
 	for weapon_id in weapons:
 		var weapon: Dictionary = weapons[weapon_id]
 		var relic: Dictionary = relics.get(str(weapon["relic_id"]), {})
-		var weapon_icon_path := "res://assets/sprites/catalog/weapon_%s.png" % weapon_id
+		var unlocked := _unlocked_weapons.has(weapon_id)
+		var weapon_icon_path := "res://assets/sprites/catalog/weapon_%s.png" % weapon_id if unlocked else ""
 		var combo_name := str(EVOLUTION_NAMES.get(str(weapon["evolution_id"]), weapon["evolution_id"])).to_upper()
-		var combo_text := "%s + %s → %s" % [str(weapon["name"]), str(relic.get("name", "RELIQUE")), combo_name]
+		var relic_unlocked := _unlocked_relics.has(str(weapon["relic_id"]))
+		var combo_text := "ARME DÉBLOQUÉE · Combo: %s + %s → %s" % [str(weapon["name"]), \
+			str(relic["name"]), combo_name] if unlocked and relic_unlocked else \
+			"ARME %s · combo verrouillé (arme et relique niveau 5)" % ("DÉBLOQUÉE" if unlocked else "VERROUILLÉE")
 		_entries.add_child(_make_catalog_entry(
-			str(weapon["name"]), str(WEAPON_DESCRIPTIONS.get(weapon_id, weapon["behavior"])), combo_text,
-			weapon_icon_path, "Arme et évolution · conditions détaillées dans le jeu"
+			str(weapon["name"]), str(WEAPON_DESCRIPTIONS.get(weapon_id, weapon["behavior"])), combo_text, weapon_icon_path,
+			"Évolution offerte quand l’arme et sa relique atteignent le niveau 5." if unlocked else ""
 		))
 
 func _show_relics() -> void:
@@ -103,15 +144,19 @@ func _show_relics() -> void:
 		var relic: Dictionary = relics[relic_id]
 		var linked_weapon_id := str(relic.get("weapon_id", ""))
 		var linked_weapon: Dictionary = weapons.get(linked_weapon_id, {})
-		var icon_path := "res://assets/sprites/catalog/relic_%s.png" % relic_id
-		var status := "Relique globale · bonus chiffrés [PROPOSÉS]"
+		var unlocked := _unlocked_relics.has(relic_id)
+		var icon_path := "res://assets/sprites/catalog/relic_%s.png" % relic_id if unlocked else ""
+		var status := "Relique globale · bonus chiffrés [PROPOSÉS]" if unlocked else "VERROUILLÉE · arbre de compétences"
 		if not linked_weapon.is_empty():
-			status = "Combo: %s + %s → %s" % [str(linked_weapon["name"]), str(relic["name"]), \
-				str(EVOLUTION_NAMES.get(str(linked_weapon["evolution_id"]), linked_weapon["evolution_id"])).to_upper()]
+			if unlocked and _unlocked_weapons.has(linked_weapon_id):
+				status = "Combo: %s + %s → %s" % [str(linked_weapon["name"]), str(relic["name"]), \
+					str(EVOLUTION_NAMES.get(str(linked_weapon["evolution_id"]), linked_weapon["evolution_id"])).to_upper()]
+			else:
+				status = "%s · combo verrouillé" % ("RELIQUE DÉBLOQUÉE" if unlocked else "RELIQUE VERROUILLÉE")
 		_entries.add_child(_make_catalog_entry(
 			str(relic["name"]), "%s Bonus par niveau [PROPOSÉ]: %s." % [
 				str(RELIC_DESCRIPTIONS.get(relic_id, relic["behavior"])),
-			str(relic.get("global_bonus_per_level", "—")),
+				str(relic.get("global_bonus_per_level", "—")),
 			], status,
 			icon_path, "Bonus chiffrés marqués [PROPOSÉS] dans le catalogue de combat"
 		))
@@ -119,14 +164,19 @@ func _show_relics() -> void:
 func _make_entry(entry: Dictionary) -> Control:
 	var entry_id := str(entry["id"])
 	var path := SPRITE_PATH % (entry_id if entry_id.begins_with("boss_") else "enemy_%s" % entry_id)
-	return _make_catalog_entry(str(entry["name"]), str(entry["role"]), str(entry["status"]), path, "")
+	var runtime_id := {"elite_sprinter": "elite", "boss_pulse_warden": "mid_boss", \
+		"boss_dopamine_core": "final_boss"}.get(entry_id, entry_id)
+	var seen := _seen_enemies.has(runtime_id)
+	return _make_catalog_entry(str(entry["name"]) if seen else "INCONNU", \
+		str(entry["role"]) if seen else "Rencontrez cet ennemi pendant une run pour révéler cette fiche.", \
+		str(entry["status"]) if seen else "NON RENCONTRÉ", path if seen else "", "")
 
 func _make_catalog_entry(title_text: String, description: String, status_text: String, icon_path: String, tooltip: String) -> Control:
 	var row := HBoxContainer.new()
 	row.custom_minimum_size = Vector2(0, 37)
 	row.add_theme_constant_override("separation", 6)
 	var portrait := TextureRect.new()
-	portrait.texture = load(icon_path) as Texture2D if ResourceLoader.exists(icon_path) else null
+	portrait.texture = load(icon_path) as Texture2D if not icon_path.is_empty() and ResourceLoader.exists(icon_path) else null
 	portrait.custom_minimum_size = Vector2(32, 32)
 	portrait.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	portrait.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED

@@ -146,6 +146,11 @@ func _run() -> void:
 	if not codex.visible or codex.get_node("Center/Panel/Content/Body/Entries").get_child_count() != 12:
 		_fail("Codex should open with the implemented enemy roster")
 		return
+	var enemy_entries: VBoxContainer = codex.get_node("Center/Panel/Content/Body/Entries")
+	if enemy_entries.get_child(0).get_child(1).get_child(0).text != "INCONNU" or \
+		enemy_entries.get_child(0).get_child(1).get_child(1).text.find("NON RENCONTRÉ") < 0:
+		_fail("An enemy not encountered in Survival should remain hidden in Codex")
+		return
 	if not bounds.encloses(codex.get_node("Center/Panel").get_global_rect()):
 		_fail("Codex should fit the logical viewport")
 		return
@@ -154,14 +159,24 @@ func _run() -> void:
 	category.item_selected.emit(1)
 	await process_frame
 	var entries: VBoxContainer = codex.get_node("Center/Panel/Content/Body/Entries")
-	if entries.get_child_count() != 10 or not entries.get_child(0).get_child(1).get_child(1).text.contains("→"):
-		_fail("Codex weapons should show all ten weapons and their evolution combo")
+	if entries.get_child_count() != 10 or entries.get_child(0).get_child(1).get_child(0).text != "Lightning Conductor" or \
+		entries.get_child(2).get_child(1).get_child(0).text != "Crimson Daggers" or \
+		not entries.get_child(2).get_child(1).get_child(1).text.contains("ARME VERROUILLÉE"):
+		_fail("Codex should describe locked weapons while clearly marking their locked status")
+		return
+	if not entries.get_child(0).get_child(1).get_child(1).text.contains("Infinite Circuit") or \
+		not entries.get_child(2).get_child(1).get_child(1).text.contains("combo verrouillé"):
+		_fail("Unlocked starter combos should be described while locked combinations stay hidden")
 		return
 	category.select(2)
 	category.item_selected.emit(2)
 	await process_frame
 	if entries.get_child_count() != 11:
 		_fail("Codex should show all eleven relics")
+		return
+	if entries.get_child(2).get_child(1).get_child(0).text != "Blood Chalice" or \
+		not entries.get_child(2).get_child(1).get_child(1).text.contains("VERROUILLÉE"):
+		_fail("Codex should describe locked relics while clearly marking their locked status")
 		return
 	await _send_key(KEY_ESCAPE)
 	if codex.visible or root.gui_get_focus_owner() != bestiary:

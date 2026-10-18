@@ -36,7 +36,7 @@ Compléter le parcours **Jouer → préparation Survival → lancement explicite
 
 ## Codex — extension acceptée
 
-Le Codex est une fenêtre de référence en lecture seule accessible depuis le hub. Ses catégories listent les 12 entrées de roster avec leurs sprites et rôles, les dix armes avec leur description et leur combo arme + relique → évolution, puis les onze reliques avec leur rôle et leur bonus par niveau. Les données d’armes/reliques et leurs associations viennent de `game/data/combat_catalog.json`; les sprites sont ceux déjà utilisés par le jeu. Familles ennemies validées restent distinguées des profils/patterns/chiffres proposés ou prototypes. Aucun nouvel état de découverte, profil sauvegardé ou accès Sandbox n’est créé.
+Le Codex est une fenêtre de référence en lecture seule accessible depuis le hub. Les noms/sprites/descriptions d’armes et reliques restent consultables, mais indiquent si l’objet est verrouillé dans le profil; un combo ne révèle l’évolution que si arme et relique sont toutes deux débloquées. Les ennemis restent `INCONNU` sans portrait jusqu’à leur première apparition dans une run Survival ou Endless normale. Les rencontres sont ajoutées au profil normal à la fin de la run; les runs Armorless, temporaires sans sauvegarde et Sandbox n’alimentent pas ce suivi. Les données d’armes/reliques viennent de `combat_catalog.json`; les profils/patterns/chiffres ennemis proposés restent marqués comme tels.
 
 ## Périmètre
 
@@ -82,7 +82,7 @@ Le Codex est une fenêtre de référence en lecture seule accessible depuis le h
 - [x] Les panneaux existants Équipement et Compétences sont utilisables dans le hub; les changements s’appliquent à la run suivante.
 - [x] La vue Records Armorless compare les cinq difficultés en lecture seule; Échap/manette ferme le panneau et rend le focus à l’action d’ouverture.
 - [x] Pendant une run, aucun contrôle ou chemin UI ne permet de modifier l’équipement permanent ou l’arbre de compétences.
-- [x] Succès reste inerte; le Codex est atteignable au clavier/manette, présente les catalogues ennemis/armes/reliques et restitue le focus à la fermeture. `survival_hub_smoke.gd` couvre le contrat; l’interaction avec des périphériques physiques reste à essayer.
+- [x] Succès reste inerte; le Codex présente les objets verrouillés, cache les ennemis non rencontrés, est atteignable au clavier/manette et restitue le focus à la fermeture. Smokes du hub et du service de progression couvrent le contrat; l’interaction avec des périphériques physiques reste à essayer.
 - [x] L’action **Lancer la run** ouvre le parcours de run normal, transmet la difficulté et conserve le choix d’arme initial.
 - [x] Aucune donnée du Sandbox n’est lue/modifiée; aucune dépendance Sandbox → `SaveService` ou progression n’est ajoutée.
 - [x] La navigation et les panneaux restent lisibles aux résolutions UI de référence, avec focus visible et sans action nécessitant une souris.

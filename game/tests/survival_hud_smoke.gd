@@ -24,6 +24,14 @@ func _run() -> void:
 	if not difficulty.text.contains("HARD"):
 		_fail("The run HUD should show the selected difficulty id")
 		return
+	session._record_codex_sightings([{"components": {"EnemyType": "chaser"}},
+		{"components": {"EnemyType": "mid_boss"}},
+		{"components": {"EnemyType": "enemy_projectile", "IsProjectile": true}}])
+	if not session._codex_sightings_recorded.has("chaser") or \
+		not session._codex_sightings_recorded.has("mid_boss") or \
+		session._codex_sightings_recorded.has("enemy_projectile"):
+		_fail("Normal Survival should record enemy and boss sightings while ignoring projectiles")
+		return
 	session.player_hp = 42.0
 	session.player_shield = 6.0
 	session.player_xp = 5.0

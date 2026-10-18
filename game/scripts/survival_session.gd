@@ -471,6 +471,7 @@ var _weapon_progression: Dictionary = {}
 var _weapon_progression_valid := false
 var _armorless_equipment_generator: RefCounted
 var _pending_armorless_draft_waves: Array[int] = []
+var _codex_sightings_recorded: Dictionary = {}
 
 @onready var _hp_value: Label = $HUD/RunPanel/RunInfo/StatusRow/HPRow/HPValue
 @onready var _hp_bar: ProgressBar = $HUD/RunPanel/RunInfo/StatusRow/HPRow/HPBar
@@ -842,6 +843,7 @@ func _confirm_abandon_run() -> void:
 	if mode_id == "armorless" and armorless_run_state != null:
 		armorless_run_state.end_run()
 		_pending_armorless_draft_waves.clear()
+	_persist_codex_sightings()
 	_manually_paused = false
 	run_over = true
 	var error := get_tree().change_scene_to_file("res://scenes/launch_menu.tscn")
@@ -864,6 +866,7 @@ func _process(_delta: float) -> void:
 		_open_next_armorless_draft()
 		return
 	var state: Dictionary = simulation.snapshot()
+	_record_codex_sightings(state.get("entities", []))
 	var current_simulation_time: float = float(state["simulation_time"])
 	var elapsed_active_time := current_simulation_time - _last_simulation_time
 	_update_screen_shake(elapsed_active_time)
@@ -2215,6 +2218,7 @@ func _complete_pending_victory() -> void:
 func _finish_run(victory: bool, animate_player_death: bool = false) -> void:
 	if run_over:
 		return
+	_persist_codex_sightings()
 	run_over = true
 	var death_animation_player: CharacterBody2D
 	if animate_player_death and not victory and player != null and player.has_method("play_death"):
@@ -2294,6 +2298,30 @@ func _continue_as_endless_standard() -> void:
 
 func _run_active_time() -> float:
 	return maxf(0.0, player_active_time - _run_active_time_baseline)
+
+func _record_codex_sightings(entities: Array) -> void:
+	if mode_id not in ["survival", "endless"]:
+		return
+	var valid_enemy_ids := ["chaser", "sprinter", "tank", "shooter", "buffer", "exploder", \
+		"shielder", "summoner", "summoned", "elite", "mid_boss", "final_boss"]
+	var newly_seen: Array[String] = []
+	for entity in entities:
+		var components: Dictionary = entity.get("components", {})
+		if components.get("IsProjectile", false) or components.get("IsXpOrb", false):
+			continue
+		var enemy_id := str(components.get("EnemyType", ""))
+		if enemy_id in valid_enemy_ids:
+			_codex_sightings_recorded[enemy_id] = true
+
+func _persist_codex_sightings() -> void:
+	if progression_service == null or not progression_service.has_method("record_codex_enemy_sightings") or \
+		not progression_service.can_save_profile() or _codex_sightings_recorded.is_empty() or \
+		mode_id not in ["survival", "endless"]:
+		return
+	var sightings: Array[String] = []
+	for enemy_id in _codex_sightings_recorded:
+		sightings.append(str(enemy_id))
+	progression_service.record_codex_enemy_sightings(sightings)
 
 func _run_achievement_metrics() -> Dictionary:
 	var evolved_weapons := 0

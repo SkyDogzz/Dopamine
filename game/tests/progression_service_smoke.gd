@@ -325,6 +325,19 @@ func _run() -> void:
 		service.unlocked_relic_ids() != ["storm_core", "infernal_heart"]:
 		_fail("A new profile should start with the prototype starter weapon/relic pairs")
 		return
+	if not service.codex_seen_enemy_ids().is_empty():
+		_fail("A new profile should keep every Codex enemy undiscovered")
+		return
+	var first_sight := service.record_codex_enemy_sightings(["chaser", "mid_boss", "invalid_enemy", "chaser"])
+	if not first_sight.get("ok", false) or not first_sight.get("changed", false) or \
+		first_sight.get("seen_enemies", []) != ["chaser", "mid_boss"]:
+		_fail("Codex sightings should accept valid enemy IDs once and ignore invalid or duplicate IDs")
+		return
+	var repeated_sight := service.record_codex_enemy_sightings(["chaser", "mid_boss"])
+	if not repeated_sight.get("ok", false) or repeated_sight.get("changed", true) or \
+		service.codex_seen_enemy_ids() != ["chaser", "mid_boss"]:
+		_fail("Repeated Codex sightings should be idempotent and persist the discovered set")
+		return
 	if service.unlock_skill_node("focused_training").get("error") != "skill_prerequisite_locked":
 		_fail("A skill node should reject purchase until its prerequisite is unlocked")
 		return
@@ -397,6 +410,7 @@ func _run() -> void:
 	if not migrated_duplicate.get("ok", false) or not migrated_duplicate.get("duplicate", false) or \
 			migrated_profile.get("profile_version") != 9 or \
 			migrated_profile.get("highest_unlocked_difficulty") != "easy" or \
+			migrated_profile.get("codex_seen_enemies") != [] or \
 			migrated_profile["resources"].get("essence") != 7 or \
 			migrated_profile["equipment_inventory"].size() != 0:
 		_fail("A previous progression profile should migrate without losing resources or replaying a reward")

@@ -253,7 +253,15 @@ func _close_skill_tree() -> void:
 	_skill_tree_button.grab_focus()
 
 func _open_codex() -> void:
-	_codex_panel.present()
+	var result: Dictionary = progression_service.load_profile()
+	if not result.get("ok", false):
+		_codex_panel.present_error()
+		return
+	_codex_panel.present({
+		"seen_enemies": result["profile"].get("codex_seen_enemies", []),
+		"unlocked_weapons": progression_service.unlocked_weapon_ids(),
+		"unlocked_relics": progression_service.unlocked_relic_ids(),
+	})
 
 func _close_codex() -> void:
 	_codex_panel.visible = false
