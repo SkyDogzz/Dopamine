@@ -53,7 +53,7 @@ IMPACTS = [
     "impact_spark", "impact_star", "impact_slash", "impact_pop", "impact_ring",
     "impact_burst", "impact_shards", "impact_shock_ring", "impact_angular", "impact_evolved",
 ]
-FAMILIES = {"catalog", "projectiles", "vfx", "environment", "boss"}
+FAMILIES = {"catalog", "projectiles", "vfx", "environment", "boss", "ui", "roles"}
 
 
 def load_palette() -> dict[str, tuple[int, int, int, int]]:
@@ -327,6 +327,58 @@ def draw_boss_core(palette) -> Canvas:
     return c
 
 
+def draw_signal_prism(palette) -> Canvas:
+    c = Canvas(32, 32)
+    shadow, edge, accent, light = colors_for("signal_prism", palette)
+    c.diamond(16, 16, 13, edge)
+    c.diamond(16, 16, 10, shadow)
+    c.line(16, 4, 16, 27, light, 2)
+    c.line(5, 16, 27, 16, accent, 2)
+    c.line(8, 8, 24, 24, light, 1)
+    c.line(24, 8, 8, 24, accent, 1)
+    c.diamond(16, 16, 4, light)
+    c.pixel(16, 16, palette["yellow_3"])
+    return c
+
+
+def draw_elite_role(palette) -> Canvas:
+    c = Canvas(24, 24)
+    shadow, edge, accent, light = colors_for("elite_sprinter", palette)
+    c.line(5, 18, 15, 8, edge, 5)
+    c.line(9, 20, 20, 9, accent, 4)
+    c.line(4, 11, 9, 6, light, 2)
+    c.line(3, 17, 7, 13, light, 1)
+    c.pixel(17, 5, shadow)
+    return c
+
+
+def draw_generic_boss_role(name: str, palette) -> Canvas:
+    c = Canvas(96, 96)
+    shadow, edge, accent, light = colors_for(name, palette)
+    cx = cy = 48
+    if name == "boss_pulse_warden":
+        # Generic pulse/guard role motif; this makes no canon claim about identity.
+        c.ring(cx, cy, 38, 32, edge)
+        c.ring(cx, cy, 25, 20, accent)
+        c.diamond(cx, cy, 15, light)
+        c.diamond(cx, cy, 8, shadow)
+        for x, y in ((48, 5), (48, 91), (5, 48), (91, 48)):
+            c.disc(x, y, 3, light)
+    elif name == "boss_mid_placeholder":
+        c.diamond(cx, cy, 38, edge)
+        c.diamond(cx, cy, 29, shadow)
+        c.diamond(cx, cy, 20, accent)
+        c.line(21, 48, 75, 48, light, 3)
+        c.line(48, 21, 48, 75, light, 3)
+        c.disc(cx, cy, 8, shadow)
+    else:
+        c.ring(cx, cy, 40, 34, accent)
+        c.ring(cx, cy, 27, 21, edge)
+        c.star(cx, cy, 18, light, 3, 8)
+        c.disc(cx, cy, 8, shadow)
+    return c
+
+
 def draw_ruins(palette) -> Canvas:
     # Generic, low contrast masonry remains an environment role, not a biome identity.
     c = Canvas(1536, 1536)
@@ -383,6 +435,12 @@ def generate(families: set[str], palette):
         output_pair("survival_ruins_pixel", ASSETS / "sprites/environment/survival_ruins_pixel.png", source_dir / "survival_ruins_pixel.aseprite", draw_ruins(palette))
     if "boss" in families:
         output_pair("boss_dopamine_core", ASSETS / "sprites/roster/boss_dopamine_core.png", source_dir / "boss_dopamine_core.aseprite", draw_boss_core(palette))
+    if "ui" in families:
+        output_pair("signal_prism", ASSETS / "icons/ui/signal_prism.png", source_dir / "signal_prism.aseprite", draw_signal_prism(palette))
+    if "roles" in families:
+        for name in ("elite_sprinter", "boss_pulse_warden", "boss_mid_placeholder", "boss_final_placeholder"):
+            image = draw_elite_role(palette) if name == "elite_sprinter" else draw_generic_boss_role(name, palette)
+            output_pair(name, ASSETS / "sprites/roster" / f"{name}.png", source_dir / f"{name}.aseprite", image)
 
 
 def main():

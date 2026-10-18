@@ -44,9 +44,9 @@
 ## P9.8 — Décision de droits visuels et registre des assets — 2026-10-17
 
 - [x] Décision P9.8 sur les droits visuels **[VALIDÉE, réponse A]** : remplacer ou exclure tout visuel dont les droits/provenance ne sont pas vérifiables.
-- [x] Création de `docs/art/PROVENANCE_ASSETS.csv` : 165 enregistrements (140 PNG, 25 SVG) avec hashes SHA-256, taille, statut de paquet, mapping vers la référence signée, résultat C2PA et base contractuelle.
+- [x] Création initiale de `docs/art/PROVENANCE_ASSETS.csv` : 165 enregistrements (140 PNG, 25 SVG) **[HISTORIQUE]** avec hashes SHA-256, taille, statut de paquet, mapping vers la référence signée, résultat C2PA et base contractuelle.
 - [x] Godot 4.7.2 exporte le PCK Linux/X11 filtré : 5 086 716 octets; le journal confirme que les assets racine inutilisés sont exclus et que les visuels actifs restent empaquetés. Les presets Windows/Linux partagent ces règles.
-- [x] 63/165 PNG/SVG sont exclus du PCK; 102/165 restent présents. Leur statut de provenance est détaillé dans les deux contrôles C2PA ci-dessous.
+- [x] 63/165 PNG/SVG étaient exclus du PCK; 102/165 restaient présents dans l’export historique. Leur statut de provenance est détaillé dans les deux contrôles C2PA ci-dessous.
 - [x] `c2patool` 0.28.2 avec trust list C2PA officielle vérifie 49 références d’origine : 22 manifestes **Trusted** et 27 **Invalid** (EKU requis manquant). Les signatures et hashes de contenu passent pour les 49; les 27 invalides ne sont pas acceptés comme sources de release. Les 58 actifs auparavant associés aux références Invalid sont régénérés par formes internes sans entrée visuelle externe; le paquet prévu se répartit en 43 actifs issus de sources Trusted et 59 depuis le générateur interne.
 - [i] Les signaux C2PA attestent une origine ChatGPT/OpenAI, pas une propriété légale ni l’unicité. Le screening visuel initial de la planche des 43 actifs Trusted n’a détecté aucun logo de tiers ni personnage reconnaissable; ce constat ne vaut pas clearance juridique. Les nouveaux sprites exigent une revue en jeu de lisibilité/cohérence avant release. Conditions et limites sont documentées dans `docs/art/INVENTAIRE_ASSETS_UI.md`.
 - [x] Remplacement procédural : Godot 4.7.2 régénère 58 PNG, leurs sources Aseprite, l’atlas d’impacts et Signal Prism depuis le code interne. Le registre vérifie le SHA-256 de chaque PNG et du script, ainsi que les 58 sources éditables.
@@ -127,7 +127,7 @@
 
 ## P9.8 — Candidate audio — 2026-10-17
 
-- [x] Décision utilisateur **[VALIDÉE, réponse A]** : garder l’audio livré comme candidate de release.
+- [x] **[HISTORIQUE — supersédée le 2026-10-18]** : garder l’audio livré comme candidate. La consigne actuelle impose son remplacement; les candidats audio originaux sont toujours **[PROPOSÉS]** en attente d’écoute.
 - [HISTORIQUE — 2026-10-17] Le set Bfxr antérieur avait 38 WAV PCM16 mono et des recettes sous `audio/sfx/`; ce set a été remplacé le 2026-10-18. Hashes avant migration et retrait : `docs/art/ASSET_MIGRATIONS.csv` et `ASSET_RETIREMENTS.csv`.
 - [ ] Le set original procédural actuel comporte 38 SFX sous `game/assets/audio/original_procedural/sfx/`; validation de hashes, format, unicité, durées et niveaux effectuée par `python3 game/tools/validate_original_audio.py`. `Sfx` charge les chemins originaux; cinq stems synchronisés sont intégrés et couverts par un smoke dédié. Aucun contrôle numérique ne remplace l’écoute humaine en contexte, indisponible sans périphérique de sortie.
 - [x] Smoke d’intégration SFX : `sfx_service_assets_smoke.gd` vérifie le chargement des 38 WAV originaux sur les 19 familles d’événements et le cue prioritaire de télégraphe.
@@ -1218,9 +1218,9 @@
 ## Accueil — emblème pixel art — 2026-10-16
 
 - [x] `signal_prism_asset_smoke.gd` vérifie le PNG 32×32 transparent, sa palette maîtresse de 16 couleurs maximum, l’en-tête Aseprite et son intégration nearest dans le menu.
-- [x] À l’origine, `process_signal_prism.gd` exportait depuis une image de référence. Cette recette, sa référence et son ancienne source Aseprite ont été supprimées le 2026-10-18; le smoke courant vérifie le PNG produit par `generate_original_visuals.gd -- --signal-prism-only`.
+- [x] À l’origine, `process_signal_prism.gd` exportait depuis une image de référence. Cette recette, sa référence et son ancienne source Aseprite ont été supprimées le 2026-10-18; le smoke de l’époque vérifiait le PNG produit par `generate_original_visuals.gd -- --signal-prism-only` **[HISTORIQUE]**; l’asset courant a depuis été redessiné par `python3 game/tools/generate_neon_arcade_art.py ui`.
 - [x] Import Godot 4.7.2, `ui_foundation_smoke.gd` et `ui_viewport_layout_smoke.gd` passent; capture de l’accueil relue à 640×360 logique dans une fenêtre 1280×720.
-- [x] Migration du 2026-10-18 : la référence PNG, l’ancienne source Aseprite et la recette de conversion ont été retirées. `signal_prism_asset_smoke.gd` vérifie maintenant la source originale produite par `generate_original_visuals.gd -- --signal-prism-only`.
+- [x] Migration du 2026-10-18 : la référence PNG, l’ancienne source Aseprite et la recette de conversion ont été retirées. `signal_prism_asset_smoke.gd` vérifiait alors la source originale produite par `generate_original_visuals.gd -- --signal-prism-only` **[HISTORIQUE]**. La source et le PNG courants ont été renouvelés par le générateur canonique après cette note.
 
 ## Accueil — composition menu gauche de l’Art Bible — 2026-10-16
 
@@ -2059,5 +2059,27 @@ Note de clôture : le blocage historique du smoke `sandbox_ui_smoke.gd` décrit 
 - [x] Comparaison des SHA-256 des 262 assets courants avec l’inventaire initial immuable de 425 fichiers : zéro correspondance exacte. Commande reproductible : `python3 game/tools/validate_no_legacy_asset_hash_reuse.py`.
 - [x] 90 sources Aseprite concernées s’ouvrent et s’exportent via LibreSprite 1.3 batch. `catalog_icon_assets_smoke.gd`, `render_batching_smoke.gd`, `survival_combat_visual_smoke.gd` et `equipment_slots_smoke.gd` passent; la capture combat 640×360 a été inspectée et confirme la lecture des projectiles/impacts. L’utilisateur confirme séparément la lisibilité du hub/équipement.
 - [x] `sandbox_lab_smoke.gd` passe en session isolée et confirme que le reset n’atteint pas la progression normale; `progression_service_smoke.gd` passe. Le Sandbox signale des objets/ressources retenus à l’arrêt, sans assertion échouée.
-- [x] Godot 4.7.2 réexporte le PCK Linux/X11 de contrôle (1 594 240 octets). Les chemins runtime de catalogue/projectiles/atlas d’impacts/ruines/boss sont présents; sources Aseprite, cellules VFX de travail, previews et manifests audio sont exclus. `validate_original_audio.py` confirme 44 WAV valides numériquement; aucune écoute humaine n’est attestée.
+- [x] Godot 4.7.2 réexporte le PCK Linux/X11 de contrôle (1 594 240 octets) avant la régénération finale des rôles; chemins runtime de catalogue/projectiles/atlas d’impacts/ruines/boss présents, sources éditables, cellules VFX de travail, previews et manifests audio exclus. Cette valeur d’export est **[HISTORIQUE]**; voir le checkpoint après rôles ci-dessous.
 - [ ] Écoute des transitions adaptatives et du mix SFX/musique en contexte sur sortie audio réelle; choix typographique final, revue complète écran par écran et matériel GPU/commandes physiques restent ouverts.
+
+
+## Complétude du registre courant de provenance — 2026-10-18
+
+- [x] `PROVENANCE_ASSETS.csv` suit désormais les 150 exports créatifs courants (104 PNG, 2 TTF, 44 WAV dont la prévisualisation), ainsi que 17 anciens chemins absents conservés pour l’historique. Les familles graphiques et audio indiquent leurs scripts de génération, hashes courants et sources/manifestes. Le validateur vérifie également que les 417 entrées créatives du snapshot initial ont une migration ou un retrait tracé.
+- [x] `python3 game/tools/validate_asset_provenance_registry.py` vérifie les hashes du registre courant et de provenance, l’existence des sources éditables/candidates et la présence des lignes pour chaque asset créatif : 150/150 passent.
+- [ ] Les statuts de droits/provenance interne n’impliquent pas l’approbation artistique ou auditive; écoute de l’audio, revue globale de l’UI et contrôle matériel restent ouverts.
+
+## Remplacement des sorties visuelles résiduelles — 2026-10-18
+
+- [x] Les derniers PNG générés par `generate_original_visuals.gd` (Signal Prism, Elite Sprinter et trois placeholders de boss) et leurs sources Aseprite ont été renouvelés par `python3 game/tools/generate_neon_arcade_art.py ui roles`; l’ancien générateur est retiré. Les identités placeholder restent **[OUVERTES]** et ne deviennent pas des identités canoniques.
+- [x] Après réimport éditeur, `godot_project_import`, `catalog_icon_assets_smoke`, `original_roster_assets_smoke`, `signal_prism_asset_smoke`, `render_batching_smoke` et `survival_combat_visual_smoke` passent (6/6). La capture combat 640×360 a été régénérée et examinée.
+- [x] L’export PCK Linux/X11 final de cette tranche fait 1 594 240 octets, SHA-256 `042fecd856697aa52ec39e2a77c82c124624e88310c91a693d29c3d416ee1b49`; il contient les PNG runtime Signal Prism, Pulse Warden et Elite Sprinter et n’embarque pas les sources Aseprite ni l’ancien générateur. Le PCK est exporté, mais son exécution n’a pas été rejouée dans cette tranche.
+- [x] Les validateurs passent : 262/262 chemins courants sans hash initial identique; 150 exports créatifs avec hash/source cohérents et 417 entrées créatives initiales migrées/retirées; 44 WAV conformes aux contrôles numériques.
+
+
+## Suite complète après remplacement des assets graphiques — 2026-10-18
+
+- [x] `PATH=/tmp/cmake-3.31.12-linux-x86_64/bin:$PATH ctest --test-dir build --output-on-failure -j1` : **115/115 tests passés** dans `build/Testing/Temporary/LastTest.log`, zéro marqueur `Test Failed`. Godot 4.7.2, tests séquentiels. Les smokes Sandbox signalent encore des objets/ressources retenus à la fermeture mais leurs assertions passent.
+- [x] Après réimport éditeur des PNG courants, captures Xvfb/Mesa actualisées et inspectées pour catalogue, hub, menu, skill tree, équipement et combat; hashes consignés dans `docs/art/evidence/2026-10-18/README.md`. Le catalogue, le hub et le combat diffèrent des captures précédentes.
+- [x] `catalog_icon_assets_smoke.gd`, `survival_hub_smoke.gd`, `launch_navigation_smoke.gd`, `skill_tree_panel_visual_smoke.gd`, `equipment_panel_visual_smoke.gd` et `survival_combat_visual_smoke.gd` passent avec Xvfb et `--capture`. L’option `--capture` nécessite une session rendue; en mode `--headless`, les captures qui attendent `frame_post_draw` ne terminent pas.
+- [ ] Le rendu Xvfb ne remplace pas une validation GPU physique; l’écoute humaine des transitions musicales/SFX reste **[OUVERTE]** à la demande de l’utilisateur de poursuivre sans retour audio.
