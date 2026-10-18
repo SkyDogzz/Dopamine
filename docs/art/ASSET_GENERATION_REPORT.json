@@ -35,7 +35,7 @@
     "project_copy": "build/assets/candidates/godot-final-import-check/project",
     "log": "build/assets/candidates/godot-final-import-check/import.log"
   },
-  "artistic_review": "Internal pixel-level review corrected a four-direction orientation defect in the player sheets. The static catalog remains geometric and non-player animation is still procedural role work; these are provisionally integrated prototypes, not a human-approved production art pass. A redesigned batch of 31 role-specific weapon/evolution/relic catalog icons passed palette, dimensions, color-count, source/export hash, and Godot smoke checks and replaced only those explicitly authorized managed IDs. Catalog readability and the provisional shapes/colors still need owner review.",
+  "artistic_review": "Internal pixel-level review corrected a four-direction orientation defect in the player sheets. The static catalog remains geometric and non-player animation is still procedural role work; these are provisionally integrated prototypes, not a human-approved production art pass. A redesigned batch of 31 role-specific weapon/evolution/relic catalog icons passed palette, dimensions, color-count, source/export hash, and Godot smoke checks and replaced only those explicitly authorized managed IDs. Catalog readability and the provisional shapes/colors still need owner review. A technical audit found that the generated SpriteFrames resources stored atlas regions as unsupported frame fields, so Godot treated full sheets as every frame. All 131 animation resources now use per-frame AtlasTexture subresources and pass a manifest-driven Godot smoke; boss/elite animation sheets were regenerated at native 96x96/24x24 cel dimensions. Runtime playback for non-player SpriteFrames and human art review remain pending.",
   "game_assets_files": [
     {
       "path": "game/assets/README.md",
@@ -95,12 +95,12 @@
   ],
   "review_pack": {
     "local_index": "build/assets/candidates/review/index.html",
-    "contact_sheets": 4,
-    "animation_previews": 91,
+    "contact_sheets": 5,
+    "animation_previews": 105,
     "audio_inventory": "build/assets/candidates/review/audio-inventory.json",
     "broken_local_references": 0,
     "static_gallery_items": 106,
-    "note": "Build-local staging review pack; regenerated after player direction correction. Static contact sheets and local WAV players are available at the path above."
+    "note": "Build-local review pack includes the regenerated native-size boss/elite animation batch plus local audio playback controls; artistic/audio acceptance remains pending."
   },
   "godot_integration_preflight": {
     "status": "passed",
@@ -121,29 +121,31 @@
     "candidate_count": 308,
     "manifest": "passed",
     "candidate_batches_qa": "passed",
-    "godot_import": "passed (308 resource imports)",
+    "godot_import": "passed; Godot import and a manifest-driven smoke verified all 131 SpriteFrames animations and frame regions",
     "integration_dry_run": "passed 308/308; zero collisions/overwrites; exports and source hashes passed",
     "runtime_assets_integrated": 308,
-    "godot_test_suite": "full CTest: 120/121 passed, survival_revive_smoke failed once with its known intermittent result-panel assertion; that test passed 6/6 immediate targeted repetitions, all SFX/music tests passed.",
-    "asset_provenance_registry": "passed; 308 current creative assets and 417 historical assets audited",
-    "remaining_review": "Owner visual/art direction review and auditory review; the 31 redesigned catalog icons are still provisional, and no playback hardware is available in this session",
+    "godot_test_suite": "full CTest: 120/121 passed; progression_service_smoke failed once on Exterminator tier accumulation, then passed 5/5 targeted repetitions. All asset import, Art Bible, animation-grid and catalog smokes passed.",
+    "asset_provenance_registry": "passed; 308 current creative assets and 417 historical assets audited after boss/elite regeneration",
+    "remaining_review": "Owner visual/art direction review and auditory review remain pending; non-player animation resources are valid but are not yet all played by runtime entities; no playback hardware is available in this session",
     "specific_weapon_sfx": "passed for fire and impact on all 10 weapons; registered in CTest",
     "player_animation_batch": "passed: four generated sheets, per-batch animation QA, Godot import, player/art/combat smokes 5/5",
     "legacy_hash_reuse": "passed; 982 packaged/current checked files have no exact match in initial 425-file register",
     "asset_integration_scope_smoke": "passed; verifies exact-ID replacement opt-in, managed-asset ownership, dry-run non-mutation and mismatched-owner refusal",
     "sfx_runtime_event_mapping": "passed: 20 weapon-specific cues are loaded and invoked by gameplay; 7 generated event families are exposed; weapon_family_fire/impact are fallback paths if a specific cue is missing; targeted SFX tests passed.",
     "music_runtime_cues": "passed: menu theme loops on the Music bus in launch_menu; victory/defeat cues are selected at run completion and load on the Music bus; launch_navigation_smoke and survival_result_music_smoke passed",
-    "godot_pck_export": "passed after SFX family fallback change; required menu/result music and weapon family fallback paths verified in PCK",
+    "godot_pck_export": "passed after rebuilding all 131 SpriteFrames resources; PCK has updated animation atlases and the 96x96 boss animation sheets",
     "music_format_audit": "passed: manifest now records all five integrated music mixes/cues as mono PCM16 44.1 kHz, matching WAV headers",
     "catalog_icon_redesign": "passed: all 31 explicit managed IDs regenerated from dopamine-pixel-art v3, validated with dopamine-asset-qa, integrated, and covered by catalog icon, Art Bible, Godot import, and replacement-scope smoke checks; owner art review remains pending",
-    "godot_test_suite_targeted": "passed: catalog_icon_assets_smoke, art_bible_asset_audit, godot_project_import, asset_integration_scope_smoke (4/4)"
+    "godot_test_suite_targeted": "passed: catalog_icon_assets_smoke, art_bible_asset_audit, godot_project_import, asset_integration_scope_smoke (4/4)",
+    "godot_animation_resources": "passed: all 131 generated SpriteFrames resources load, have the declared row/frame counts, and expose AtlasTexture regions matching metadata",
+    "boss_elite_animation_batch": "passed: 14 boss/elite sheets regenerated by dopamine-animation at native frame sizes (boss 96x96, elite 24x24); animation QA, Aseprite source/export hashes, palette, and Godot resource smoke passed"
   },
   "godot_pck_export": {
     "status": "passed",
     "preset": "Linux/X11",
     "path": "build/assets/DopamineSurvivor.pck",
-    "bytes": 3084884,
-    "sha256": "8c04c917fe6ecfc95b1b52af6e5461aef01214d07b3acd4a544e5d5ebae838c2",
+    "bytes": 3223268,
+    "sha256": "73efd0407e5694a0a5b65c10f46da0f36e173b721f56c11764fbe44ebcdc2426",
     "music_runtime_paths": [
       "menu_theme.wav",
       "victory_cue.wav",
@@ -153,7 +155,7 @@
       "weapon_family_fire.wav",
       "weapon_family_impact.wav"
     ],
-    "verified": "PCK contains menu/result music and generic weapon family fallback assets; regenerated after the 31 catalog icon replacements."
+    "verified": "PCK contains menu/result music and weapon family fallback assets; all 131 SpriteFrames resources use per-frame atlas regions, and boss animation frames retain their 96x96 role size."
   },
   "review_findings": [
     {
@@ -182,6 +184,23 @@
       "skill": "dopamine-pixel-art and dopamine-asset-qa",
       "qa": "31 PNG/Aseprite pairs passed palette, dimensions, color limit, metadata, source/export hash checks, plus catalog icon, Art Bible, Godot import, and exact-ID replacement scope checks.",
       "integration": "31 explicit managed IDs replaced; PCK export rebuilt and hashed.",
+      "human_review_status": "pending"
+    },
+    {
+      "date": "2026-10-18",
+      "assets": [
+        "elite_sprinter_idle",
+        "elite_sprinter_move",
+        "elite_sprinter_attack",
+        "elite_sprinter_death",
+        "boss_pulse_warden_*",
+        "boss_dopamine_core_*"
+      ],
+      "finding": "The generic animation pipeline had reduced boss role sprites to 32x32 cels; generated SpriteFrames frame regions were also serialized as unsupported properties, causing Godot to load whole sheets instead of frames.",
+      "action": "Regenerated 14 boss/elite sheets at native dimensions and rebuilt all 131 SpriteFrames resources with one AtlasTexture subresource per frame. Added manifest-driven frame-region validation.",
+      "skill": "dopamine-animation and dopamine-asset-qa",
+      "qa": "14 animation sheets passed palette, grid, duplicate-frame and source/export hash validation; Godot smoke verified declared dimensions and atlas regions for all 131 resources.",
+      "integration": "14 boss/elite IDs replaced with exact-ID authorization; all 131 animation SpriteFrames resources rebuilt; updated Linux/X11 PCK exported.",
       "human_review_status": "pending"
     }
   ],

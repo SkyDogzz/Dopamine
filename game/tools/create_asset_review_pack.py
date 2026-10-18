@@ -51,7 +51,7 @@ def sheet(title, records, target, cell=96, columns=8):
 def main():
     visual_roots=[ROOT/"build/assets/candidates/pixel-art-complete",
                   ROOT/"build/assets/candidates/pixel-art"]
-    animations=[ROOT/"build/assets/candidates/player-animation",ROOT/"build/assets/candidates/enemy-animation-complete",ROOT/"build/assets/candidates/misc-animation"]
+    animations=[ROOT/"build/assets/candidates/player-animation",ROOT/"build/assets/candidates/enemy-animation-complete",ROOT/"build/assets/candidates/misc-animation",ROOT/"build/assets/candidates/boss-animation-native"]
     sets=[]
     files=[]
     for visual in visual_roots:

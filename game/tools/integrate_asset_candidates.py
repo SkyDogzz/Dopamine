@@ -26,13 +26,24 @@ def make_sprite_frames(meta: dict, texture_path: str) -> str | None:
     animation = meta.get("asset_id", "animation")
     loop = animation.endswith(("_idle", "_walk", "_move")) or "projectile" in animation
     frames = []
+    atlas_textures = []
+    frame_index = 0
     for row in range(rows):
         name = f"{animation}_{directions[row]}" if rows > 1 else animation
-        frame_list = [f'{{"duration": 1.0, "texture": ExtResource("1_texture"), "region": Rect2({col*fw}, {row*fh}, {fw}, {fh})}}' for col in range(columns)]
+        frame_list = []
+        for col in range(columns):
+            sub_id = f"AtlasFrame_{frame_index}"
+            region = f"Rect2({col*fw}, {row*fh}, {fw}, {fh})"
+            atlas_textures.append(
+                f'[sub_resource type="AtlasTexture" id="{sub_id}"]\natlas = ExtResource("1_texture")\nregion = {region}'
+            )
+            frame_list.append(f'{{"duration": 1.0, "texture": SubResource("{sub_id}")}}')
+            frame_index += 1
         frames.append(f'{{"frames": [{", ".join(frame_list)}], "loop": {str(loop).lower()}, "name": &{json.dumps(name)}, "speed": {fps}}}')
-    return ("[gd_resource type=\"SpriteFrames\" load_steps=2 format=3]\n\n"
+    return (f"[gd_resource type=\"SpriteFrames\" load_steps={2 + frame_index} format=3]\n\n"
             f'[ext_resource type="Texture2D" path={json.dumps(texture_path)} id="1_texture"]\n\n'
-            "[resource]\n" + f"animations = [{', '.join(frames)}]\n")
+            + "\n\n".join(atlas_textures) + "\n\n[resource]\n"
+            + f"animations = [{', '.join(frames)}]\n")
 
 
 def source_destination(source: Path | None, asset_id: str = "") -> Path | None:
@@ -115,6 +126,8 @@ def main() -> None:
             except (OSError, json.JSONDecodeError):
                 existing_sidecar = {}
             managed_sidecar = (
+                existing_sidecar.get("asset_id") == item["asset_id"]
+                and
                 existing_sidecar.get("candidate_export_path") == str(src.relative_to(ROOT))
                 and existing_sidecar.get("integrated_export_path") == str(target.relative_to(ROOT))
             )
@@ -139,12 +152,27 @@ def main() -> None:
                 and (current_metadata.get("integrated_source_path") == str(source_target.relative_to(ROOT))
                      or current_metadata.get("source_path") == str(source_target.relative_to(ROOT / "game/assets")))
             )
+            managed_source = managed_source or (
+                replace_authorized
+                and current_metadata.get("asset_id") == item["asset_id"]
+                and current_metadata.get("integrated_export_path") == str(target.relative_to(ROOT))
+            )
             if not replace_authorized or not managed_source:
                 errors.append(f"{item['asset_id']}: source differs and is not explicitly authorized as the same managed asset: {source_target}")
         sprite_frames = make_sprite_frames(metadata, destination)
         resource_target = target.with_suffix(".tres") if sprite_frames else None
         if resource_target and resource_target.exists() and resource_target.read_text() != sprite_frames:
-            errors.append(f"{item['asset_id']}: animation resource exists with different bytes; refusing overwrite: {resource_target}")
+            try:
+                current_metadata = json.loads(sidecar_target.read_text())
+            except (OSError, json.JSONDecodeError):
+                current_metadata = {}
+            managed_resource = (
+                replace_authorized
+                and current_metadata.get("asset_id") == item["asset_id"]
+                and current_metadata.get("integrated_export_path") == str(target.relative_to(ROOT))
+            )
+            if not managed_resource:
+                errors.append(f"{item['asset_id']}: animation resource exists with different bytes and is not an explicitly authorized managed asset; refusing overwrite: {resource_target}")
         plan.append((item, src, target, source, actual_hash, metadata, source_target, sprite_frames, resource_target, meta_path))
     if errors:
         raise SystemExit("Integration refused:\n- " + "\n- ".join(errors))
@@ -177,7 +205,7 @@ def main() -> None:
             if not source_target.exists() or sha256(source_target) != sha256(source):
                 shutil.copy2(source, source_target)
         if sprite_frames:
-            if not resource_target.exists():
+            if not resource_target.exists() or item["asset_id"] in args.replace_ids:
                 resource_target.write_text(sprite_frames)
             item["godot_animation_resource"] = str(resource_target.relative_to(ROOT))
         item["integration_status"] = "integrated"

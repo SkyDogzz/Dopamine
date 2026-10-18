@@ -24,7 +24,7 @@ def main() -> None:
         candidate = root / "build/assets/candidates/scope-test/sprites/test.png"
         candidate_source = root / "build/assets/candidates/scope-test/source/animation/test.aseprite"
         target = root / "game/assets/sprites/test.png"
-        source_target = root / "game/assets/source/animation/test.aseprite"
+        source_target = root / "game/assets/source/animation/test_asset.aseprite"
         candidate.parent.mkdir(parents=True)
         candidate_source.parent.mkdir(parents=True)
         target.parent.mkdir(parents=True)
@@ -33,6 +33,8 @@ def main() -> None:
         candidate_source.write_bytes(b"new editable source")
         target.write_bytes(b"old export")
         source_target.write_bytes(b"old editable source")
+        resource_target = target.with_suffix(".tres")
+        resource_target.write_text("old generated SpriteFrames resource")
 
         export_rel = "build/assets/candidates/scope-test/sprites/test.png"
         source_rel = "build/assets/candidates/scope-test/source/animation/test.aseprite"
@@ -41,6 +43,7 @@ def main() -> None:
             "asset_id": "test_asset", "source_path": "source/animation/test.aseprite",
             "export_path": "sprites/test.png", "candidate_export_path": export_rel,
             "integrated_export_path": dest_rel,
+            "frame_size": [8, 8], "grid": [1, 1], "directions": ["forward"],
         }
         (candidate.with_suffix(".json")).write_text(json.dumps(metadata))
         prior_sidecar = {**metadata, "candidate_export_path": "build/assets/candidates/prior/sprites/test.png"}
@@ -60,20 +63,27 @@ def main() -> None:
         manifest_path.write_text(json.dumps(manifest))
 
         command = [sys.executable, str(root / "game/tools/integrate_asset_candidates.py"),
-                   "--ids", "test_asset", "--dry-run"]
-        refused = subprocess.run(command, capture_output=True, text=True)
+                   "--ids", "test_asset"]
+        refused = subprocess.run(command + ["--dry-run"], capture_output=True, text=True)
         assert refused.returncode != 0 and "not explicitly authorized" in refused.stderr
 
-        allowed = subprocess.run(command + ["--replace-ids", "test_asset"], capture_output=True, text=True)
+        allowed = subprocess.run(command + ["--replace-ids", "test_asset", "--dry-run"], capture_output=True, text=True)
         assert allowed.returncode == 0, allowed.stderr
         assert target.read_bytes() == b"old export"
         assert source_target.read_bytes() == b"old editable source"
+        assert resource_target.read_text() == "old generated SpriteFrames resource"
         assert json.loads(manifest_path.read_text())["assets"][0]["export_sha256"] == digest(candidate.read_bytes())
+
+        integrated = subprocess.run(command + ["--replace-ids", "test_asset"], capture_output=True, text=True)
+        assert integrated.returncode == 0, integrated.stderr
+        assert target.read_bytes() == candidate.read_bytes()
+        assert source_target.read_bytes() == candidate_source.read_bytes()
+        assert "Rect2(0, 0, 8, 8)" in resource_target.read_text()
 
         metadata["asset_id"] = "unrelated_asset"
         target.with_suffix(".png.json").write_text(json.dumps(metadata))
-        wrong_owner = subprocess.run(command + ["--replace-ids", "test_asset"], capture_output=True, text=True)
-        assert wrong_owner.returncode != 0 and "not explicitly authorized" in wrong_owner.stderr
+        wrong_owner = subprocess.run(command + ["--replace-ids", "test_asset", "--dry-run"], capture_output=True, text=True)
+        assert wrong_owner.returncode != 0 and "not managed" in wrong_owner.stderr
 
     print("Asset integration scope smoke passed")
 

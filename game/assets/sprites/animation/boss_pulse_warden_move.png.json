@@ -3,13 +3,13 @@
   "status": "provisionally_integrated",
   "skill": "dopamine-animation",
   "generator": "game/tools/generate_dopamine_misc_animation.py",
-  "generator_version": "1",
+  "generator_version": "3",
   "seed": 20261018,
   "seed_policy": "fixed geometry and staged source; seed recorded but not consumed",
   "identity_source": "build/assets/candidates/pixel-art-complete/sprites/roster/boss_pulse_warden.png",
   "frame_size": [
-    32,
-    32
+    96,
+    96
   ],
   "grid": [
     4,
@@ -21,21 +21,22 @@
   "fps_proposed": 8,
   "frame_duration_seconds_proposed": 0.125,
   "pivot": [
-    16,
-    16
+    48,
+    48
   ],
   "parameters": {
     "effect": "pulse",
     "category": "boss_animation",
-    "source_path": "build/assets/candidates/pixel-art-complete/sprites/roster/boss_pulse_warden.png"
+    "source_path": "build/assets/candidates/pixel-art-complete/sprites/roster/boss_pulse_warden.png",
+    "native_source_dimensions_preserved": true
   },
   "source_path": "source/animation/boss_pulse_warden_move.aseprite",
   "export_path": "sprites/animation/boss_pulse_warden_move.png",
-  "source_sha256": "672bf8ee9f6c8fab208d28bc85527fbe280d016cc8b6d9c5fe74a0ecfd55b9d0",
-  "export_sha256": "5178ed874efe1826e55eac9ba9bb8095a9336cedc908384a2bcea80a440769da",
+  "source_sha256": "a87e90880bb1d547430b03d1b8bfd72a3eb866fbb72de648c5208e7fcd4c044c",
+  "export_sha256": "415b19f391e565bdc35d5e0e9ee96ba4cf810c229af0b635fb362261370bdcbe",
   "acceptance_status": "accepted_for_provisional_production",
   "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
   "human_review_status": "pending",
-  "candidate_export_path": "build/assets/candidates/misc-animation/sprites/animation/boss_pulse_warden_move.png",
+  "candidate_export_path": "build/assets/candidates/boss-animation-native/sprites/animation/boss_pulse_warden_move.png",
   "integrated_export_path": "game/assets/sprites/animation/boss_pulse_warden_move.png"
 }

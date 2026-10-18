@@ -3,13 +3,13 @@
   "status": "provisionally_integrated",
   "skill": "dopamine-animation",
   "generator": "game/tools/generate_dopamine_misc_animation.py",
-  "generator_version": "1",
+  "generator_version": "3",
   "seed": 20261018,
   "seed_policy": "fixed geometry and staged source; seed recorded but not consumed",
   "identity_source": "build/assets/candidates/pixel-art-complete/sprites/roster/elite_sprinter.png",
   "frame_size": [
-    32,
-    32
+    24,
+    24
   ],
   "grid": [
     4,
@@ -21,21 +21,22 @@
   "fps_proposed": 8,
   "frame_duration_seconds_proposed": 0.125,
   "pivot": [
-    16,
-    16
+    12,
+    12
   ],
   "parameters": {
     "effect": "pulse",
     "category": "elite_animation",
-    "source_path": "build/assets/candidates/pixel-art-complete/sprites/roster/elite_sprinter.png"
+    "source_path": "build/assets/candidates/pixel-art-complete/sprites/roster/elite_sprinter.png",
+    "native_source_dimensions_preserved": true
   },
   "source_path": "source/animation/elite_sprinter_move.aseprite",
   "export_path": "sprites/animation/elite_sprinter_move.png",
-  "source_sha256": "5c3405a0be272a1e7e427230850ea974df6a988f1a0784d433868ca675ba2c09",
-  "export_sha256": "d65754edd6c8c464d0e7caf7e5af10c265fbc11114c4405ae52f295f7dbd8224",
+  "source_sha256": "f1b53a43946c200f288df49bf2e783920bb9b17f91a85cd844cbb77ad3407c32",
+  "export_sha256": "a65a0a5bfd18280c15648beeb1fb7d600000c52581df56a547961abe69bd074a",
   "acceptance_status": "accepted_for_provisional_production",
   "acceptance_basis": "User-authorized local prototype scope; art remains non-canonical where GDD decisions are open.",
   "human_review_status": "pending",
-  "candidate_export_path": "build/assets/candidates/misc-animation/sprites/animation/elite_sprinter_move.png",
+  "candidate_export_path": "build/assets/candidates/boss-animation-native/sprites/animation/elite_sprinter_move.png",
   "integrated_export_path": "game/assets/sprites/animation/elite_sprinter_move.png"
 }

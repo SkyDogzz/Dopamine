@@ -82,6 +82,12 @@ func _initialize() -> void:
 	if not _check_player_animation_sheets():
 		quit(1)
 		return
+	if not _check_boss_and_elite_animation_resources():
+		quit(1)
+		return
+	if not _check_generated_animation_resources():
+		quit(1)
+		return
 	if not _check_exported_png_sources():
 		quit(1)
 		return
@@ -461,5 +467,79 @@ func _check_player_animation_sheets() -> bool:
 	var controller := FileAccess.get_file_as_string("res://scripts/player_controller.gd")
 	if not controller.contains("player_idle.png") or not controller.contains("player_walk.png"):
 		push_error("Player controller should use both Art Bible animation sheets")
+		return false
+	return true
+
+func _check_boss_and_elite_animation_resources() -> bool:
+	var expected_roles := {
+		"elite_sprinter": Vector2i(24, 24),
+		"boss_pulse_warden": Vector2i(96, 96),
+		"boss_dopamine_core": Vector2i(96, 96),
+	}
+	for role in expected_roles:
+		for state in ["idle", "move", "attack", "death"]:
+			var asset_id := "%s_%s" % [role, state]
+			var frames := load("res://assets/sprites/animation/%s.tres" % asset_id) as SpriteFrames
+			if frames == null or not frames.has_animation(asset_id) or frames.get_frame_count(asset_id) != 4:
+				push_error("Missing four-frame Godot animation resource: %s" % asset_id)
+				return false
+			var texture := frames.get_frame_texture(asset_id, 0)
+			var atlas := texture as AtlasTexture
+			if atlas == null or atlas.region.size != Vector2(expected_roles[role]):
+				push_error("Animation frame dimensions do not match role sprite %s" % asset_id)
+				return false
+		for special_state in (["special"] if role.begins_with("boss_") else []):
+			var asset_id := "%s_%s" % [role, special_state]
+			var frames := load("res://assets/sprites/animation/%s.tres" % asset_id) as SpriteFrames
+			if frames == null or not frames.has_animation(asset_id) or frames.get_frame_count(asset_id) != 4:
+				push_error("Missing four-frame Godot animation resource: %s" % asset_id)
+				return false
+			var texture := frames.get_frame_texture(asset_id, 0)
+			var atlas := texture as AtlasTexture
+			if atlas == null or atlas.region.size != Vector2(expected_roles[role]):
+				push_error("Animation frame dimensions do not match role sprite %s" % asset_id)
+				return false
+	return true
+
+func _check_generated_animation_resources() -> bool:
+	var manifest_path := ProjectSettings.globalize_path("res://../docs/art/ASSET_MANIFEST.json")
+	var manifest := JSON.parse_string(FileAccess.get_file_as_string(manifest_path)) as Dictionary
+	if manifest.is_empty():
+		push_error("Cannot read asset manifest while checking Godot animation resources")
+		return false
+	var checked := 0
+	for asset: Dictionary in manifest.get("assets", []):
+		if not asset.has("godot_animation_resource"):
+			continue
+		var asset_id: String = asset["asset_id"]
+		var resource_path := "res://" + str(asset["godot_animation_resource"]).trim_prefix("game/")
+		var frames := load(resource_path) as SpriteFrames
+		var sidecar_path := "res://" + str(asset["integrated_path"]).trim_prefix("game/") + ".json"
+		var metadata := JSON.parse_string(FileAccess.get_file_as_string(sidecar_path)) as Dictionary
+		if frames == null or metadata.is_empty():
+			push_error("Missing SpriteFrames or metadata for %s" % asset_id)
+			return false
+		var frame_size := Vector2(metadata["frame_size"][0], metadata["frame_size"][1])
+		var grid: Array = metadata["grid"]
+		var columns := int(grid[0])
+		var rows := int(grid[1])
+		var directions: Array = metadata.get("directions", [])
+		if directions.size() != rows:
+			push_error("Direction row metadata mismatch for %s" % asset_id)
+			return false
+		for row in range(rows):
+			var animation_name := "%s_%s" % [asset_id, directions[row]] if rows > 1 else asset_id
+			if not frames.has_animation(animation_name) or frames.get_frame_count(animation_name) != columns:
+				push_error("Godot animation grid mismatch for %s" % animation_name)
+				return false
+			for column in range(columns):
+				var atlas := frames.get_frame_texture(animation_name, column) as AtlasTexture
+				var expected_position := Vector2(column, row) * frame_size
+				if atlas == null or atlas.region.size != frame_size or atlas.region.position != expected_position:
+					push_error("Godot frame atlas mismatch for %s frame %d" % [animation_name, column])
+					return false
+		checked += 1
+	if checked != 131:
+		push_error("Expected 131 generated animation resources, found %d" % checked)
 		return false
 	return true
