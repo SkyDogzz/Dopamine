@@ -108,6 +108,8 @@ func _run() -> void:
 	var management: Button = panel.get_node("Panel/Content/Columns/RightColumn/ItemHeader/ManagementButton")
 	management.pressed.emit()
 	await process_frame
+	var inventory_scroll: ScrollContainer = panel.get_node("Panel/Content/Columns/RightColumn/Scroll")
+	var right_column: Control = panel.get_node("Panel/Content/Columns/RightColumn")
 	if not items.has_node("Equipment_boots-new"):
 		_fail("Existing enhancement, effect, sale and dismantle management must remain accessible")
 		return
@@ -121,6 +123,27 @@ func _run() -> void:
 	if management_row.get_theme_stylebox("panel") == null:
 		_fail("Management rows should keep the rarity edge treatment")
 		return
+	var original_management_size := root.size
+	for viewport_size in [Vector2i(640, 360), Vector2i(1280, 720), Vector2i(1920, 1080)]:
+		root.size = viewport_size
+		await process_frame
+		var viewport_bounds := Rect2(Vector2.ZERO, Vector2(viewport_size))
+		if not viewport_bounds.encloses(panel_frame.get_global_rect()) or \
+			not panel_frame.get_global_rect().encloses(right_column.get_global_rect()) or \
+			not right_column.get_global_rect().encloses(inventory_scroll.get_global_rect()):
+			_fail("Equipment Details and its scroll viewport should fit %s" % viewport_size)
+			return
+		if viewport_size == Vector2i(640, 360) and inventory_scroll.get_v_scroll_bar().max_value <= 0.0:
+			_fail("Dense equipment Details should expose vertical scrolling at 640x360")
+			return
+		if viewport_size == Vector2i(640, 360) and "--capture-details" in OS.get_cmdline_user_args():
+			await RenderingServer.frame_post_draw
+			var details_path := ProjectSettings.globalize_path(EVIDENCE_DIR + "/equipment-details.png")
+			if root.get_texture().get_image().save_png(details_path) != OK:
+				_fail("Could not capture 640x360 equipment Details state")
+				return
+	root.size = original_management_size
+	await process_frame
 	var original_size: Vector2i = root.size
 	for viewport_size in [Vector2i(640, 360), Vector2i(1280, 720), Vector2i(1920, 1080)]:
 		root.size = viewport_size

@@ -17,6 +17,12 @@
 - [x] Le smoke passe sous Xvfb/Mesa avec capture. `states/revive-confirmation.png` a été inspectée : modal centré, actions complètes et focus Neon sur `REVIVE`; le scénario de refus produit aussi son résultat et termine avec code 0.
 - [i] Le rendu logiciel ne valide pas la lisibilité ni les commandes sur écran/manette physiques; les autres états interactifs ne sont pas tous couverts.
 
+## Équipement — fenêtre Details défilante — 2026-10-18
+
+- [x] `equipment_panel_visual_smoke.gd` vérifie que le panneau, la colonne et le viewport de scroll restent contenus à 640×360, 1280×720 et 1920×1080, et qu’une liste Details dense présente une plage de défilement à 640×360.
+- [x] Capture 640×360 `states/equipment-details.png` inspectée : la liste de gestion défile sous son viewport et `CLOSE` reste visible hors de la liste. Le hash est indexé dans `docs/art/evidence/2026-10-18/README.md`.
+- [i] Vérification par Xvfb/Mesa et navigation synthétique seulement; aucun essai sur écran ou manette physique.
+
 ## Migration des récompenses visuelles — 2026-10-18
 
 - [x] Le coffre 32×32 et l’orbe XP 16×16 sont redessinés par primitives originales, avec PNG indexés limités à la palette maître et sources Aseprite éditables. La capture de contrôle agrandie nearest-neighbor a été examinée; silhouette du coffre et forme facettée de l’orbe restent lisibles.
