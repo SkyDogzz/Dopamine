@@ -1,7 +1,7 @@
 # Audit complet des assets avant remplacement
 
-Date de l'audit initial : 2026-10-18  
-Statut : inventaire initial; aucune migration ni suppression effectuée.
+Date de l'audit de base : 2026-10-18
+Statut : snapshot initial des 425 fichiers; depuis ce snapshot, la skyline de titre a été migrée. Les hash initiaux restent inchangés dans le registre historique.
 
 ## Portée et règle de remplacement
 
@@ -11,7 +11,7 @@ L'inventaire recense les fichiers sous `game/assets/`, les références Godot da
 
 ## Comptage initial
 
-Comptage vérifié par `rg --files game/assets -g '!*.import'` au 2026-10-18. Le registre fichier par fichier [`ASSET_FILE_REGISTER.csv`](ASSET_FILE_REGISTER.csv) contient hash SHA-256, octets, catégorie, emplacements de références littérales et statut de recherche. Les fichiers `.import` Godot ne sont pas des contenus et ne sont pas comptés.
+Comptage vérifié par `rg --files game/assets -g '!*.import'` au 2026-10-18 avant la première migration. Le registre fichier par fichier [`ASSET_FILE_REGISTER.csv`](ASSET_FILE_REGISTER.csv) est un snapshot historique immuable contenant hash SHA-256, octets, catégorie, emplacements de références littérales et statut de recherche. Les fichiers `.import` Godot ne sont pas des contenus et ne sont pas comptés; les migrations ultérieures sont suivies dans [`ASSET_MIGRATIONS.csv`](ASSET_MIGRATIONS.csv).
 
 | Groupe | Quantité constatée | Sources / provenance connues | Décision pour cette initiative |
 |---|---:|---|---|
@@ -68,6 +68,6 @@ Le registre contient 140 assets dont une référence de chemin littérale a ét�
 
 **[VALIDÉ]** La production audio emploie une synthèse procédurale originale; les sources et recettes existantes ne seront supprimées qu'après migration. Les candidats comprennent 38 SFX et cinq stems musicaux, mais restent non approuvés et non intégrés. La validation technique est reproductible avec `game/tools/validate_original_audio.py`; la lecture a échoué dans l'environnement de travail faute de périphérique audio, donc l'écoute humaine et l'écoute en run restent **[OUVERTES]**. Le format runtime et l'arrangement adaptatif final restent également **[OUVERTS]**.
 
-**[PROPOSÉ]** Le fichier de palette `docs/art/palette_master.gpl` reprend directement les 32 couleurs **[VALIDÉES]** de l'Art Bible. Une nouvelle skyline de titre 640×360 a été créée à partir de cette palette, avec son export PNG et sa source éditable `game/assets/source/original_procedural/title_skyline.aseprite`. Elle demeure un candidat isolé, non référencé par le jeu; la skyline active et ses sources restent en place. Dans un projet temporaire, après réimport Godot, la capture du menu à 640×360 a été examinée et le smoke de navigation d'accueil a passé. Cette preuve de candidat montre encore les éléments UI existants; elle ne valide pas l'interface finale ni la migration de l'asset.
+**[PROPOSÉ]** La skyline de titre active a été remplacée par une création 640×360 produite depuis `docs/art/palette_master.gpl`, source des 32 couleurs **[VALIDÉES]** de l'Art Bible. Le nouveau PNG et la source Aseprite sont aux chemins runtime existants; l'ancienne planche de référence et sa recette de traitement ont été retirées après recherche de références. `docs/art/title_skyline_migration.json` garde hashes et provenance avant/après. Dans une copie temporaire, après réimport Godot, la capture du menu à 640×360 a été examinée et le smoke de navigation d'accueil a passé. Cette preuve montre encore des éléments UI existants; elle ne valide pas l'interface finale.
 
 La suite de l'initiative poursuit le remplacement visuel par familles et la refonte des écrans, en gardant les assets actifs jusqu'à migration vérifiée. Pour tout asset conditionné par une identité **[OUVERTE]** (notamment les boss et le biome), poser la question avant production canonique; des prototypes de rôle ne deviennent pas des décisions de lore.

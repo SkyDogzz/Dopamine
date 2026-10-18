@@ -10,10 +10,9 @@ Godot 4.7.2; PNG de runtime sous `game/assets/`; sources graphiques Aseprite sel
 
 ### Avancement (2026-10-18)
 
-- **[PROPOSÉ]** La skyline de titre `game/assets/backgrounds/original_procedural/title_skyline.png` est une première création originale 640×360, indexée selon les 32 couleurs exactes de l’Art Bible; sa source éditable est `game/assets/source/original_procedural/title_skyline.aseprite`.
-- Provenance et hashes : `game/assets/backgrounds/original_procedural/title_skyline.json`. Contrôle reproductible : `python3 game/tools/validate_original_title_art.py`.
-- Revue visuelle isolée et dans le menu : pixel art net, 16 couleurs utilisées, silhouettes urbaines et espace sombre à gauche pour la colonne de menu. Un projet temporaire remplaçant uniquement la texture active, après réimport Godot, a passé `launch_navigation_smoke.gd` sous Xvfb et une capture 640×360 a été examinée. Cette vérification **[VALIDÉE pour le candidat]** n’intègre pas l’asset dans le dépôt actif; la capture transitoire `/tmp/dopamine-launch-menu.png` montre encore des éléments UI existants qui restent à remplacer et n’est pas une preuve de l’interface finale.
-- L’asset demeure non actif. La skyline existante, sa source et les références du menu ne sont pas retirées avant une migration et un smoke de navigation valides.
+- **[PROPOSÉ]** La skyline de titre active `game/assets/backgrounds/title_skyline.png` est maintenant une création originale 640×360, indexée avec 16 couleurs de la palette maître de 32 couleurs; sa source éditable Aseprite est `game/assets/source/backgrounds/title_skyline.aseprite`.
+- Provenance et hashes : `docs/art/title_skyline_migration.json`; contrôle reproductible : `python3 game/tools/validate_original_title_art.py`.
+- Revue visuelle dans le menu à 640×360 : une copie temporaire avec réimport Godot a passé `launch_navigation_smoke.gd` sous Xvfb; la capture `/tmp/dopamine-launch-menu.png` a été examinée. Le fond garde les silhouettes urbaines et l'espace sombre à gauche. Cette vérification **[VALIDÉE pour l'asset et le parcours d'accueil]** ne valide pas l'interface finale, dont les autres assets restent à remplacer.
 
 ## Commandes de vérification
 

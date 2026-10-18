@@ -1571,10 +1571,11 @@ Note de clôture : le blocage historique du smoke `sandbox_ui_smoke.gd` décrit 
 - [x] `catalog_icon_assets_smoke.gd` vérifie le coffre 32×32 et l’orbe XP 16×16, leurs PNG/Aseprite, et leur plafond de 16 couleurs.
 - [x] Les deux textures sont branchées aux appels de rendu déjà existants; aucune règle de collecte ou récompense n’a changé.
 
-## Art accueil — skyline (2026-10-16)
+## Art accueil — skyline (2026-10-18)
 
-- [x] `process_title_skyline.gd` régénère le PNG 640×360 et sa source Aseprite mono-calque depuis la référence aplatie, avec 30 couleurs de la palette maître.
-- [x] `catalog_icon_assets_smoke.gd` contrôle dimensions, palette et en-tête/dimensions Aseprite.
+- [x] `generate_original_title_skyline.py` produit le PNG 640×360 indexé depuis les 32 couleurs **[VALIDÉES]**; 16 couleurs sont utilisées. LibreSprite batch exporte la source Aseprite indexée depuis le PNG.
+- [x] `validate_original_title_art.py` vérifie palette exacte, dimensions, hashes, format source et absence de hash identique aux assets de l'audit initial.
+- [x] `catalog_icon_assets_smoke.gd` contrôle dimensions, palette et en-tête/dimensions Aseprite; `launch_navigation_smoke.gd` passe sous Xvfb après réimport de la texture remplacée.
 
 ## Responsive Sandbox — panneau latéral (2026-10-16)
 

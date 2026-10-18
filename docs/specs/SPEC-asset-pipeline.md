@@ -13,9 +13,9 @@ Préparer le remplacement complet des assets graphiques et audio du jeu avec un 
 ### Avancement de la filière (2026-10-18)
 
 - **[PROPOSÉ]** `docs/art/palette_master.gpl` est une copie exploitable de la palette maître; `game/tools/validate_original_title_art.py` vérifie l'ordre et les 32 valeurs contre l'Art Bible.
-- **[PROPOSÉ]** Une skyline 640×360 a été produite sans référence extérieure avec `game/tools/generate_original_title_skyline.py`, exportée en PNG indexé et convertie en source Aseprite avec LibreSprite. Le PNG et la source sont des candidats non intégrés sous `game/assets/{backgrounds,source}/original_procedural/`.
-- La capture isolée du PNG confirme les aplats pixelisés, le contraste et la composition urbaine. **[OUVERT]** La lisibilité derrière l'interface d'accueil reste à examiner après intégration; l'identité d'un biome n'est pas déduite de ce décor de menu.
-- Vérification locale : `python3 game/tools/validate_original_title_art.py`. Cette validation ne remplace pas le smoke visuel du menu après migration.
+- **[PROPOSÉ]** La skyline de titre active a été remplacée par une création 640×360 sans référence extérieure. `game/tools/generate_original_title_skyline.py` produit le PNG indexé depuis la palette `.gpl`; LibreSprite batch produit sa source Aseprite éditable.
+- Revue en copie temporaire après réimport Godot : capture de menu à 640×360 examinée et `launch_navigation_smoke.gd` réussi sous Xvfb. La migration conserve le chemin utilisé par la scène. L'identité d'un biome n'est pas déduite de ce décor de menu.
+- Vérifications : `python3 game/tools/validate_original_title_art.py`, `catalog_icon_assets_smoke.gd`, puis `launch_navigation_smoke.gd` avec capture. L'export PCK doit encore être refait au jalon de migration des assets.
 
 ## Commandes de vérification
 

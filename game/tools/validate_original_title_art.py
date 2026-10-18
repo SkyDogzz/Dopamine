@@ -13,9 +13,10 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 PALETTE = ROOT / "docs" / "art" / "palette_master.gpl"
 ART_BIBLE = ROOT / "docs" / "ART_BIBLE.txt"
-PNG = ROOT / "game" / "assets" / "backgrounds" / "original_procedural" / "title_skyline.png"
-ASEPRITE = ROOT / "game" / "assets" / "source" / "original_procedural" / "title_skyline.aseprite"
-MANIFEST = PNG.with_suffix(".json")
+PNG = ROOT / "game" / "assets" / "backgrounds" / "title_skyline.png"
+ASEPRITE = ROOT / "game" / "assets" / "source" / "backgrounds" / "title_skyline.aseprite"
+MANIFEST = ROOT / "docs" / "art" / "title_skyline_migration.json"
+GENERATOR = ROOT / "game" / "tools" / "generate_original_title_skyline.py"
 REGISTER = ROOT / "docs" / "art" / "ASSET_FILE_REGISTER.csv"
 
 
@@ -80,14 +81,15 @@ def main() -> None:
 	assert struct.unpack_from("<H", ase, 4)[0] == 0xA5E0, "invalid Aseprite source header"
 	assert struct.unpack_from("<HHH", ase, 8) == (640, 360, 8), "Aseprite source must be indexed 640x360"
 	manifest = json.loads(MANIFEST.read_text())
-	assert manifest["status"].startswith("[PROPOSÉ]") and "not integrated" in manifest["status"]
-	assert manifest["export_png_sha256"] == hashlib.sha256(PNG.read_bytes()).hexdigest(), "PNG manifest hash mismatch"
-	assert manifest["editable_source_sha256"] == hashlib.sha256(ase).hexdigest(), "Aseprite manifest hash mismatch"
+	assert manifest["status"].startswith("[PROPOSÉ]") and "active" in manifest["status"]
+	assert manifest["replacement_runtime"]["sha256"] == hashlib.sha256(PNG.read_bytes()).hexdigest(), "PNG manifest hash mismatch"
+	assert manifest["replacement_editable_source"]["sha256"] == hashlib.sha256(ase).hexdigest(), "Aseprite manifest hash mismatch"
+	assert manifest["generator"]["sha256"] == hashlib.sha256(GENERATOR.read_bytes()).hexdigest(), "generator manifest hash mismatch"
 	with REGISTER.open(newline="") as register:
 		old_hashes = {row["sha256"] for row in csv.DictReader(register)}
 	assert hashlib.sha256(PNG.read_bytes()).hexdigest() not in old_hashes, "PNG duplicates a registered legacy asset"
 	assert hashlib.sha256(ASEPRITE.read_bytes()).hexdigest() not in old_hashes, "Aseprite source duplicates a registered legacy asset"
-	print(f"Validated {PNG.name}: 640x360 indexed art, exact 32-color Bible palette, editable indexed Aseprite source, no legacy hash match ({len(indices)} colors used).")
+	print(f"Validated active {PNG.name}: 640x360 indexed art, exact 32-color Bible palette, editable indexed Aseprite source, no legacy hash match ({len(indices)} colors used).")
 
 
 if __name__ == "__main__":

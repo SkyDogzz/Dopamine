@@ -1,0 +1,63 @@
+{
+  "status": "[PROPOSÉ] active replacement; title art direction remains open for final review",
+  "role": "640x360 title-screen neon city skyline",
+  "previous_runtime": {
+    "path": "game/assets/backgrounds/title_skyline.png",
+    "sha256": "479dce3fb1748677a39b472cc79fc63b2c331c40d78223810d18c516187b34ff"
+  },
+  "previous_editable_source": {
+    "path": "game/assets/source/backgrounds/title_skyline.aseprite",
+    "sha256": "aea440671a7727b0931f03ff1301ef2be6ddee319eceddcb2d6fa90d6657a161"
+  },
+  "previous_generated_reference": {
+    "path": "docs/art/source/title_skyline_generated.png",
+    "sha256": "a11e048d4edfde01047e7f12c5a48b75c297a815edc82371ee7d14f885df90fc",
+    "provenance": "Old signed raster reference; audit retained in baseline register.",
+    "c2pa_validation": "Trusted by c2patool 0.28.2; signature and content hash valid; no ingredient assertion.",
+    "c2pa_manifest_id": "urn:c2pa:6bd2876d-e9e4-4952-9f9f-fa7980927f67",
+    "rights_basis": "OpenAI Terms of Use state user owns output as between user and OpenAI; C2PA does not establish legal ownership or third-party clearance."
+  },
+  "replacement_runtime": {
+    "path": "game/assets/backgrounds/title_skyline.png",
+    "sha256": "d70a57b84efde988781e418a483b6cb13ab69c76d1b0cc22283e93c2910c3bf2",
+    "bytes": 2239
+  },
+  "replacement_editable_source": {
+    "path": "game/assets/source/backgrounds/title_skyline.aseprite",
+    "sha256": "b109f28aedc1c29af3924aed49cd11af26daf90eb1341b8755501704aed33001",
+    "bytes": 3668,
+    "format": "Indexed Aseprite"
+  },
+  "generator": {
+    "path": "game/tools/generate_original_title_skyline.py",
+    "sha256": "3e2d8fa0a753049a9526f881b5499131acdf748d393cc215657ba26f45ab53d9",
+    "inputs": [
+      "docs/art/palette_master.gpl",
+      "docs/ART_BIBLE.txt section 12.1"
+    ]
+  },
+  "palette": {
+    "colors_available": 32,
+    "colors_used": 16,
+    "status": "[VALIDÉ] exact Art Bible palette values"
+  },
+  "provenance": "Original in-repository procedural drawing; no legacy pixels, references, or third-party material read.",
+  "verification": [
+    "python3 game/tools/validate_original_title_art.py",
+    "catalog_icon_assets_smoke.gd passed",
+    "launch_navigation_smoke.gd passed in a temporary project under Xvfb after reimport; 640x360 visual capture reviewed"
+  ],
+  "remaining": [
+    "PCK scan at the next asset migration milestone",
+    "Other existing graphics, fonts, and audio remain to be replaced."
+  ],
+  "visual_review_evidence": {
+    "path": "/tmp/dopamine-launch-menu.png",
+    "sha256": "59a0b30f74faac61ed371633197cc72d688713f9292b961cc1e249f4ec718955",
+    "resolution_px": [
+      640,
+      360
+    ],
+    "note": "Transient capture of the migrated skyline in the launch menu; legacy UI assets remain visible outside this migrated asset and are still scheduled for replacement."
+  }
+}

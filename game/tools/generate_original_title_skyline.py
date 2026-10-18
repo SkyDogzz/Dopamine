@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Create an original 640x360 Neon Arcade title skyline candidate."""
+"""Create the original 640x360 Neon Arcade title skyline from the master palette."""
 
 import random
 import struct
@@ -9,7 +9,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 PALETTE_PATH = ROOT / "docs" / "art" / "palette_master.gpl"
-OUTPUT = ROOT / "game" / "assets" / "backgrounds" / "original_procedural" / "title_skyline.png"
+OUTPUT = ROOT / "game" / "assets" / "backgrounds" / "title_skyline.png"
 WIDTH = 640
 HEIGHT = 360
 
@@ -107,7 +107,7 @@ def main() -> None:
 	_rect(pixels, 210, 338, 300, 1, 2)
 	_rect(pixels, 237, 348, 242, 1, 2)
 	_write_png(OUTPUT, pixels, palette)
-	print(f"Wrote original title skyline candidate: {OUTPUT} ({WIDTH}x{HEIGHT}, 32-color indexed PNG)")
+	print(f"Wrote original title skyline: {OUTPUT} ({WIDTH}x{HEIGHT}, indexed PNG using the master palette)")
 
 
 if __name__ == "__main__":
