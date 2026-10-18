@@ -202,7 +202,7 @@ func _check_environment_sources() -> bool:
 		push_error("Retired reference-based floor generator must not return")
 		return false
 	var ruins_png := "res://assets/sprites/environment/survival_ruins_pixel.png"
-	var ruins_ase := "res://assets/source/environment/survival_ruins_pixel.aseprite"
+	var ruins_ase := "res://assets/source/original_procedural/survival_ruins_pixel.aseprite"
 	if not FileAccess.file_exists(ruins_png) or not FileAccess.file_exists(ruins_ase):
 		push_error("Missing PNG or Aseprite source for Survival ruins")
 		return false

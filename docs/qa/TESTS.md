@@ -2052,3 +2052,12 @@ Note de clôture : le blocage historique du smoke `sandbox_ui_smoke.gd` décrit 
 - [x] La route projectile de `build_catalog_icon_assets.gd` a été supprimée. Recherche plein dépôt terminée avant retrait : l’atlas et les 24 sources Aseprite parallèles ne servaient qu’à ce builder; les PNG/SVG racine étaient inactifs et exclus du paquet. Les fichiers `.import` associés ont été retirés avec leurs fichiers.
 - [x] `godot_project_import`, `survival_combat_visual_smoke`, `render_batching_smoke`, `catalog_icon_assets_smoke` passent dans CTest (4/4). La capture de combat `/tmp/dopamine-survival-combat-visual.png` (640×360, SHA-256 `8acde3801cd14f132084aac19227d93a02407a8b6b169ffa2d703ca88e376de1`) a été examinée; les projectiles restent visibles au milieu du combat et des télégraphes.
 - [x] Export PCK Linux/X11 de 6 169 944 octets : les PNG runtime projetiles sont présents et l’atlas/source historiques ainsi que les exports racine vérifiés sont absents.
+
+
+## Remplacement graphique après contrôle des empreintes initiales — 2026-10-18
+
+- [x] Comparaison des SHA-256 des 262 assets courants avec l’inventaire initial immuable de 425 fichiers : zéro correspondance exacte. Commande reproductible : `python3 game/tools/validate_no_legacy_asset_hash_reuse.py`.
+- [x] 90 sources Aseprite concernées s’ouvrent et s’exportent via LibreSprite 1.3 batch. `catalog_icon_assets_smoke.gd`, `render_batching_smoke.gd`, `survival_combat_visual_smoke.gd` et `equipment_slots_smoke.gd` passent; la capture combat 640×360 a été inspectée et confirme la lecture des projectiles/impacts. L’utilisateur confirme séparément la lisibilité du hub/équipement.
+- [x] `sandbox_lab_smoke.gd` passe en session isolée et confirme que le reset n’atteint pas la progression normale; `progression_service_smoke.gd` passe. Le Sandbox signale des objets/ressources retenus à l’arrêt, sans assertion échouée.
+- [x] Godot 4.7.2 réexporte le PCK Linux/X11 de contrôle (1 594 240 octets). Les chemins runtime de catalogue/projectiles/atlas d’impacts/ruines/boss sont présents; sources Aseprite, cellules VFX de travail, previews et manifests audio sont exclus. `validate_original_audio.py` confirme 44 WAV valides numériquement; aucune écoute humaine n’est attestée.
+- [ ] Écoute des transitions adaptatives et du mix SFX/musique en contexte sur sortie audio réelle; choix typographique final, revue complète écran par écran et matériel GPU/commandes physiques restent ouverts.
