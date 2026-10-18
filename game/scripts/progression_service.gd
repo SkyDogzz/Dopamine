@@ -119,9 +119,9 @@ func _append_stat_nodes(stat_id: String, node_prefix: String, stat_name: String,
 
 func award_survival_run(
 	run_id: String, wave_reached: int, victory: bool, kills: int = 0, difficulty_id: String = "normal",
-	run_metrics: Dictionary = {}
+	run_metrics: Dictionary = {}, bonus_essence: int = 0
 ) -> Dictionary:
-	return _award_run(run_id, wave_reached, victory, kills, difficulty_id, run_metrics, true)
+	return _award_run(run_id, wave_reached, victory, kills, difficulty_id, run_metrics, true, false, bonus_essence)
 
 func award_armorless_run(
 	run_id: String, wave_reached: int, kills: int = 0, difficulty_id: String = "normal",
@@ -131,13 +131,13 @@ func award_armorless_run(
 
 func award_endless_standard_run(
 	run_id: String, wave_reached: int, kills: int = 0, difficulty_id: String = "normal",
-	run_metrics: Dictionary = {}
+	run_metrics: Dictionary = {}, bonus_essence: int = 0
 ) -> Dictionary:
-	return _award_run(run_id, wave_reached, false, kills, difficulty_id, run_metrics, false, true)
+	return _award_run(run_id, wave_reached, false, kills, difficulty_id, run_metrics, false, true, bonus_essence)
 
 func _award_run(
 	run_id: String, wave_reached: int, victory: bool, kills: int, difficulty_id: String,
-	run_metrics: Dictionary, award_equipment: bool, require_endless_unlock: bool = false
+	run_metrics: Dictionary, award_equipment: bool, require_endless_unlock: bool = false, bonus_essence: int = 0
 ) -> Dictionary:
 	if _save_service == null or not _valid_run_id(run_id):
 		return _award_error("invalid_run")
@@ -182,7 +182,7 @@ func _award_run(
 	if final_boss_vanquished and difficulty_index == unlocked_index and unlocked_index < SURVIVAL_DIFFICULTY_SCRIPT.ORDER.size() - 1:
 		newly_unlocked_difficulty = SURVIVAL_DIFFICULTY_SCRIPT.ORDER[unlocked_index + 1]
 		profile["highest_unlocked_difficulty"] = newly_unlocked_difficulty
-	var essence_reward := roundi((15.0 + 2.0 * wave + (25.0 if final_boss_vanquished else 0.0)) * difficulty_factors["essence"])
+	var essence_reward := roundi((15.0 + 2.0 * wave + (25.0 if final_boss_vanquished else 0.0)) * difficulty_factors["essence"]) + maxi(0, bonus_essence)
 	var powder_reward := roundi((20.0 + 3.0 * wave + (30.0 if final_boss_vanquished else 0.0)) * difficulty_factors["powder"])
 	profile["resources"]["essence"] = int(profile["resources"]["essence"]) + essence_reward
 	profile["resources"]["powder_basic"] = int(profile["resources"]["powder_basic"]) + powder_reward

@@ -143,11 +143,13 @@ Paires de contenu validées :
 
 [VALIDÉ] Chests d’armes et de reliques obtenus sur les ennemis, trois choix par ouverture, préférence pour les améliorations et synergies, et protection anti-malchance. Les slots pleins limitent les propositions aux améliorations encore disponibles. Les rerolls sont limités et obtenus via la progression. Le gameplay est en pause pendant le choix. Toute acquisition/amélioration peut rendre un choix d’évolution disponible ; le combo ne s’active qu’à sa collecte.
 
+[VALIDÉ — 2026-10-18] En Survival et Endless standard, si une famille de coffre n’a plus aucune acquisition, amélioration ou évolution disponible, ses coffres continuent de tomber et proposent une cache d’Essence à la place. L’Essence est ajoutée à la récompense de fin de run. La valeur de 5 Essence par coffre est **[PROPOSÉE]**. Sandbox et Armorless n’accordent pas cette ressource permanente.
+
 [VALIDÉ — EXTENSION DU 2026-10-17] Probabilité de drop par ennemi ordinaire : 0,75 % par famille, tirée indépendamment pour les chests d’armes et de reliques. Poids d’offre : formule `poids_final = 1 + (poids_proposé − 1) / 2`, appliquée à chaque multiplicateur et au plafond combiné. Les poids résultants sont ×1,25 pour une amélioration possédée, ×1,5 pour une relique liée à une arme possédée, ×1,25 pour une arme liée à une relique possédée, ×1,125 pour une évolution prête/proche, plafond combiné ×2. Le tirage reste sans remise parmi les options éligibles et garde à chacune un poids positif.
 
 [VALIDÉ — 2026-10-17] Élite : 30 % par famille, tirées indépendamment. Chaque boss garantit un chest de chaque famille éligible. Filet anti-poisse : au moins un chest éligible de chaque famille toutes les 60 secondes de temps actif, attribué au prochain événement de mort ennemi après le seuil. Ces règles s’appliquent seulement aux familles encore éligibles.
 
-[À TESTER] Éviter les tirages impossibles lorsque les slots sont pleins ; définir les alternatives quand tout est niveau 5 ; ne pas compter plusieurs fois les drops garantis ; prévenir les biais extrêmes ; empêcher l'ouverture en double après chargement.
+[À TESTER] Ne pas compter plusieurs fois les drops garantis ; prévenir les biais extrêmes ; empêcher l'ouverture en double après chargement.
 
 <a id="7"></a>
 

@@ -110,6 +110,7 @@ const CHEST_DIRECTOR_SCRIPT := preload("res://scripts/survival_chest_director.gd
 const DIFFICULTY_SCRIPT := preload("res://scripts/survival_difficulty.gd")
 const WAVE_HP_GROWTH := 1.12
 const WAVE_HP_CAP := 12.0
+const MAXED_CHEST_ESSENCE_REWARD := 5
 const MAX_SANDBOX_RNG_LOG_ENTRIES := 256
 const SANDBOX_SNAPSHOT_VALUE_TYPES := [
 	TYPE_NIL, TYPE_BOOL, TYPE_INT, TYPE_FLOAT, TYPE_STRING, TYPE_STRING_NAME,
@@ -444,6 +445,7 @@ var _chest_open := false
 var _active_chest_options: Array = []
 var _active_chest_heading := "CHEST — CHOOSE ONE"
 var _first_reward_chest_opened := false
+var _maxed_chest_essence_bonus := 0
 var _free_first_chest_reroll_used := false
 var _free_first_chest_reroll_available := false
 var _starting_weapon_choice_open := false
@@ -2011,7 +2013,23 @@ func open_chest(options: Array) -> bool:
 	return _open_chest(options, _chest_heading(family))
 
 func open_chest_family(family: String) -> bool:
-	return _open_chest(loadout.offers(family), _chest_heading(family))
+	if family not in ["weapon", "relic"]:
+		return false
+	var options := loadout.offers(family)
+	var heading := _chest_heading(family)
+	if options.is_empty() and _can_award_chest_essence():
+		options = [{
+			"id": "essence:maxed_chest",
+			"title": "ESSENCE CACHE  ·  +%d" % MAXED_CHEST_ESSENCE_REWARD,
+			"description": "All %s are fully upgraded. Claim essence instead." % family.to_upper(),
+			"icon": "res://assets/icons/catalog/resource_essence.png",
+		}]
+		heading = "ESSENCE CACHE — CLAIM REWARD"
+	return _open_chest(options, heading)
+
+func _can_award_chest_essence() -> bool:
+	return mode_id in ["survival", "endless"] and progression_service != null and \
+		progression_service.has_method("can_save_profile") and progression_service.can_save_profile()
 
 func _chest_heading(family: String) -> String:
 	if family == "weapon":
@@ -2066,6 +2084,17 @@ func _on_chest_option_selected(option_id: String) -> void:
 		Sfx.play("ui_error")
 		_chest_choice.present(_active_chest_options, _active_chest_options.size(), _active_chest_heading,
 				_free_first_chest_reroll_available)
+		return
+	if option_id == "essence:maxed_chest":
+		_maxed_chest_essence_bonus += MAXED_CHEST_ESSENCE_REWARD
+		_chest_open = false
+		_active_chest_options.clear()
+		_free_first_chest_reroll_available = false
+		_show_effect_feedback("+%d ESSENCE" % MAXED_CHEST_ESSENCE_REWARD)
+		Sfx.play("chest_reward")
+		chest_option_chosen.emit(option_id)
+		simulation.resume()
+		_complete_pending_victory()
 		return
 	var offer_parts := option_id.split(":", false, 1)
 	var item_family := str(offer_parts[0]) if offer_parts.size() == 2 else ""
@@ -2245,7 +2274,8 @@ func _finish_run(victory: bool, animate_player_death: bool = false) -> void:
 			armorless_record["mode_id"] = "endless"
 			if progression_service.has_method("award_endless_standard_run"):
 				reward = progression_service.award_endless_standard_run(
-					_run_id, wave_director.wave, kill_count, difficulty_id, _run_achievement_metrics()
+					_run_id, wave_director.wave, kill_count, difficulty_id, _run_achievement_metrics(),
+					_maxed_chest_essence_bonus
 				)
 	if mode_id == "armorless" and armorless_run_state != null:
 		if progression_service != null and progression_service.can_save_profile() and \
@@ -2262,7 +2292,8 @@ func _finish_run(victory: bool, animate_player_death: bool = false) -> void:
 		_pending_armorless_draft_waves.clear()
 	elif mode_id != "endless" and progression_service != null and progression_service.can_save_profile():
 		reward = progression_service.award_survival_run(
-			_run_id, wave_director.wave, victory, kill_count, difficulty_id, _run_achievement_metrics()
+			_run_id, wave_director.wave, victory, kill_count, difficulty_id, _run_achievement_metrics(),
+			_maxed_chest_essence_bonus
 		)
 	if death_animation_player != null and death_animation_player.has_method("is_death_animation_finished"):
 		while not death_animation_player.is_death_animation_finished():
@@ -2280,6 +2311,7 @@ func _continue_as_endless_standard() -> void:
 		return
 	mode_id = "endless"
 	_run_id = Crypto.new().generate_random_bytes(16).hex_encode()
+	_maxed_chest_essence_bonus = 0
 	_revive_used = false
 	_revive_invulnerable_until = 0.0
 	_run_active_time_baseline = player_active_time
@@ -2402,7 +2434,11 @@ func _roll_enemy_chests(enemy_type: String, position: Vector2) -> void:
 	var eligible_families: Array[String] = []
 	if not loadout.offers("weapon").is_empty():
 		eligible_families.append("weapon")
+	elif _can_award_chest_essence():
+		eligible_families.append("weapon")
 	if not loadout.offers("relic").is_empty():
+		eligible_families.append("relic")
+	elif _can_award_chest_essence():
 		eligible_families.append("relic")
 	var is_boss := enemy_type == "mid_boss" or enemy_type == "final_boss"
 	var is_elite := enemy_type == "elite"
