@@ -116,6 +116,12 @@ if(BUILD_TESTING)
         set_tests_properties(adaptive_survival_music_smoke PROPERTIES
             FIXTURES_REQUIRED godot_project_ready TIMEOUT 15)
         dopamine_isolate_windows_test_data(adaptive_survival_music_smoke)
+        add_test(NAME survival_result_music_smoke
+            COMMAND "${DOPAMINE_GODOT_EXECUTABLE}" --headless --audio-driver Dummy
+                --path "${DOPAMINE_GAME_PROJECT_DIR}" --script res://tests/survival_result_music_smoke.gd)
+        set_tests_properties(survival_result_music_smoke PROPERTIES
+            FIXTURES_REQUIRED godot_project_ready TIMEOUT 20)
+        dopamine_isolate_windows_test_data(survival_result_music_smoke)
         add_test(NAME keyboard_menu_journey_smoke
             COMMAND "${DOPAMINE_GODOT_EXECUTABLE}" --headless --path "${DOPAMINE_GAME_PROJECT_DIR}"
                 --script res://tests/keyboard_menu_journey_smoke.gd)

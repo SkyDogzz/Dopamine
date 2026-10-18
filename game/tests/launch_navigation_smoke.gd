@@ -24,9 +24,17 @@ func _run() -> void:
 	if launch_menu.get_node_or_null("SkylineLights") == null:
 		_fail("The title skyline should include its neon signage layer")
 		return
+	var menu_music := launch_menu.get_node_or_null("MenuMusic") as AudioStreamPlayer
+	if menu_music == null or menu_music.bus != "Music" or menu_music.stream == null:
+		_fail("The launch menu should route its original theme through the Music bus")
+		return
 	var hub_route := Callable(launch_menu, "_open_survival_hub")
 	root.add_child(launch_menu)
 	await process_frame
+	var menu_stream := menu_music.stream as AudioStreamWAV
+	if not menu_music.playing or menu_stream == null or menu_stream.loop_mode != AudioStreamWAV.LOOP_FORWARD:
+		_fail("The launch theme should play as a loop while the menu is open")
+		return
 	if launch_menu.play_requested.is_connected(hub_route):
 		launch_menu.play_requested.disconnect(hub_route)
 	var skyline_lights: Control = launch_menu.get_node("SkylineLights")

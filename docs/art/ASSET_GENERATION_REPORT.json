@@ -3,7 +3,7 @@
   "generated_at": "2026-10-18",
   "manifest": "docs/art/ASSET_MANIFEST.json",
   "candidate_root": "build/assets/candidates",
-  "runtime_integration": "308/308 assets integrated into game/assets; seven formerly unmapped generated SFX families now exposed to runtime playback; acceptance basis is user-authorized prototype scope; detailed human visual and audio review remains pending",
+  "runtime_integration": "308/308 assets integrated into game/assets; seven formerly unmapped generated SFX families now exposed to runtime playback; acceptance basis is user-authorized prototype scope; detailed human visual and audio review remains pending; menu theme and victory/defeat music cues are now connected to their runtime scenes",
   "asset_counts": {
     "dopamine-animation": {
       "count": 141,
@@ -124,28 +124,29 @@
     "godot_import": "passed (308 resource imports)",
     "integration_dry_run": "passed 308/308; zero collisions/overwrites; exports and source hashes passed",
     "runtime_assets_integrated": 308,
-    "godot_test_suite": "passed 120/120 tests after SFX event family mapping change; 0 failed in LastTest.log",
+    "godot_test_suite": "passed 121/121 tests after SFX family and menu/result music routing changes; 0 failed in LastTest.log",
     "asset_provenance_registry": "passed; 308 current creative assets and 417 historical assets audited",
     "remaining_review": "Owner visual/art direction review and auditory review; static icon simplicity remains an internal quality concern, and no playback hardware is available in this session",
     "specific_weapon_sfx": "passed for fire and impact on all 10 weapons; registered in CTest",
     "player_animation_batch": "passed: four generated sheets, per-batch animation QA, Godot import, player/art/combat smokes 5/5",
     "legacy_hash_reuse": "passed; 982 packaged/current checked files have no exact match in initial 425-file register",
     "asset_integration_scope_smoke": "passed; verifies exact-ID replacement opt-in, managed-asset ownership, dry-run non-mutation and mismatched-owner refusal",
-    "sfx_runtime_event_mapping": "passed: all 7 previously unmapped generated SFX families are exposed by Sfx.play() and resolve dedicated WAV streams; sfx_service_assets_smoke and sfx_specific_event_smoke passed"
+    "sfx_runtime_event_mapping": "passed: all 7 previously unmapped generated SFX families are exposed by Sfx.play() and resolve dedicated WAV streams; sfx_service_assets_smoke and sfx_specific_event_smoke passed",
+    "music_runtime_cues": "passed: menu theme loops on the Music bus in launch_menu; victory/defeat cues are selected at run completion and load on the Music bus; launch_navigation_smoke and survival_result_music_smoke passed",
+    "godot_pck_export": "passed after menu/result music routing; verified menu_theme.wav, victory_cue.wav and defeat_cue.wav paths in PCK"
   },
   "godot_pck_export": {
     "status": "passed",
     "preset": "Linux/X11",
     "path": "build/assets/DopamineSurvivor.pck",
-    "bytes": 3077124,
-    "sha256": "297c11fd9318ea1e973c02808ac8250c24603d60735aa965c950e62fe02e9933",
-    "player_animation_resources": [
-      "player_idle",
-      "player_walk",
-      "player_attack",
-      "player_death"
+    "bytes": 3078564,
+    "sha256": "eff1c1e0feffea3c9fce547fd80baa6e2d01b35738377d78ba342652161a8868",
+    "music_runtime_paths": [
+      "menu_theme.wav",
+      "victory_cue.wav",
+      "defeat_cue.wav"
     ],
-    "verified": "Current player PNG/SpriteFrames and impact VFX paths are present; Aseprite authoring files are excluded."
+    "verified": "PCK contains all three required menu/result music source paths; menu playback is looping and result cues are non-looping."
   },
   "review_findings": [
     {

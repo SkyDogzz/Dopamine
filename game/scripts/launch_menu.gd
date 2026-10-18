@@ -7,10 +7,17 @@ signal play_requested
 @onready var _quit_button: Button = $Content/Columns/MenuPanel/Menu/QuitButton
 @onready var _sandbox_button: Button = $Content/Columns/MenuPanel/Menu/SandboxButton
 @onready var _sandbox_lab_button: Button = $Content/Columns/MenuPanel/Menu/SandboxLabButton
+@onready var _menu_music: AudioStreamPlayer = $MenuMusic
 
 var _options_panel: Control
 
 func _ready() -> void:
+	var menu_stream := _menu_music.stream as AudioStreamWAV
+	if menu_stream != null:
+		menu_stream.loop_mode = AudioStreamWAV.LOOP_FORWARD
+		menu_stream.loop_begin = 0
+		menu_stream.loop_end = roundi(menu_stream.get_length() * menu_stream.mix_rate)
+	_menu_music.play()
 	_play_button.pressed.connect(_on_play_pressed)
 	play_requested.connect(_open_survival_hub)
 	_options_button.pressed.connect(_on_options_pressed)

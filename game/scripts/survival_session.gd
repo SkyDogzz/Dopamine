@@ -2124,6 +2124,7 @@ func _finish_run(victory: bool) -> void:
 	if run_over:
 		return
 	run_over = true
+	_play_run_result_music(victory)
 	Sfx.play_named("victory" if victory else "defeat", "", "boss_defeat")
 	simulation.pause()
 	_run_result_overlay.visible = true
@@ -2160,6 +2161,10 @@ func _finish_run(victory: bool) -> void:
 		)
 	_run_result.show_result(victory, wave_director.wave, run_active_time, kill_count, reward, armorless_record,
 		victory and mode_id == "survival")
+
+func _play_run_result_music(victory: bool) -> void:
+	var cue := $VictoryCueMusic if victory else $DefeatCueMusic
+	cue.play()
 
 func _continue_as_endless_standard() -> void:
 	if not run_over or mode_id != "survival" or wave_director.state != WAVE_DIRECTOR_SCRIPT.State.VICTORY:

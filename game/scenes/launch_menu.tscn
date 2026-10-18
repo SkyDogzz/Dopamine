@@ -1,8 +1,9 @@
-[gd_scene load_steps=4 format=3]
+[gd_scene load_steps=5 format=3]
 
 [ext_resource type="Theme" path="res://themes/dopamine_ui.tres" id="1_theme"]
 [ext_resource type="Script" path="res://scripts/launch_menu.gd" id="2_script"]
 [ext_resource type="Script" path="res://scripts/title_skyline_lights.gd" id="4_signs"]
+[ext_resource type="AudioStream" path="res://assets/audio/music/menu_theme.wav" id="5_menu_music"]
 
 [node name="LaunchMenu" type="Control"]
 layout_mode = 3
@@ -13,6 +14,11 @@ grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("1_theme")
 script = ExtResource("2_script")
+
+[node name="MenuMusic" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("5_menu_music")
+volume_db = -8.0
+bus = &"Music"
 
 [node name="Background" type="ColorRect" parent="."]
 layout_mode = 1
