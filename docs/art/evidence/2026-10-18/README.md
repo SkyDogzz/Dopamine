@@ -6,7 +6,7 @@ Captures 640×360 générées avec Godot 4.7.2 sous Xvfb/Mesa llvmpipe. Les smok
 |---|---|---|
 | `launch-menu.png` | `15b7e227a6e3e28e16558e7a1d930861b99c26cc01bd4a92dd22156a3a7ef88a` | Composition validée dans l’Art Bible : navigation à gauche, identité à droite. |
 | `survival-hub.png` | `900623d972ef6d1943040f081a3ee7e5cbc7357d4a7f40c5e98d034889fed645` | Panneaux et parcours de préparation restent lisibles dans le viewport logique. |
-| `skill-tree.png` | `4b416ddea4e9a00c76cb197c5f160da20e258ea7b9389794e691774af8ca70df` | Graphe de prototype ramifié; la capture montre une portion navigable. Le contenu, coûts et effets restent **[PROPOSÉS]** ou **[OUVERTS]**. |
+| `skill-tree.png` | `4445313cbd52f90f5575f2aefb10fd858bc83e3133cc38c9f47de34209924397` | Graphe ramifié à 640×360, nœud sélectionné et panneau de détails visibles; boutons élargis et libellés à 9 px. Le contenu, coûts et effets restent **[PROPOSÉS]** ou **[OUVERTS]**. |
 | `equipment.png` | `49136c8b371097b35c9a8170db46391e2fccf9937666f5906f6850a1695ca0c9` | Six slots, inventaire équipable, commandes de remplacement et variation avant/après visibles; le cadre Neon suit le focus manette/clavier sur l’anneau équipé. |
 | `survival-combat.png` | `e876f54d3b0f7f323b7495cd54368991e210d0da126e5b504aaf21667dbf8b52` | Combat chargé : familles d’ennemis, projectiles, impacts, XP, télégraphe et faisceaux visibles. |
 | `catalog-icons.png` | `cf37687d14edcfb90d0c0bbdefa811e2580f20973e302c1fb0e46370968eb37a` | Planche de contrôle pour icônes d’armes, évolutions et reliques; revue des silhouettes en grille. |

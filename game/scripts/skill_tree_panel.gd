@@ -28,6 +28,8 @@ const CORE_START_NODES := {
 	"fleet_footed": "MOVE SPEED", "steady_aim": "CRIT CHANCE",
 }
 const SOURCE_ICON := "res://assets/icons/catalog/skill_node.png"
+const NODE_WIDTH := 82.0
+const NODE_COLUMN_STEP := 90.0
 
 @onready var _essence: Label = $Panel/Content/EssenceRow/Essence
 @onready var _tree_scroll: ScrollContainer = $Panel/Content/TreeScroll
@@ -118,18 +120,18 @@ func _build_graph() -> void:
 		var depth := int(definition.get("depth", 3))
 		max_depth = maxi(max_depth, depth)
 		var graph_depth := int(_node_depths[node_id])
-		var position := Vector2(118.0 + (graph_depth - 1) * 72.0, y - 13.0)
+		var position := Vector2(118.0 + (graph_depth - 1) * NODE_COLUMN_STEP, y - 13.0)
 		_node_positions[node_id] = position
 		var button := Button.new()
 		button.name = "Node_%s" % node_id
-		button.custom_minimum_size = Vector2(66, 26)
+		button.custom_minimum_size = Vector2(NODE_WIDTH, 26)
 		button.position = position
 		button.focus_mode = Control.FOCUS_ALL
 		button.icon = load(SOURCE_ICON)
 		button.icon_alignment = HORIZONTAL_ALIGNMENT_LEFT
 		button.expand_icon = false
 		button.add_theme_constant_override("icon_max_width", 10)
-		button.add_theme_font_size_override("font_size", 8)
+		button.add_theme_font_size_override("font_size", 9)
 		button.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 		button.pressed.connect(_select_node.bind(node_id))
 		button.focus_entered.connect(_select_node.bind(node_id))
@@ -155,12 +157,12 @@ func _build_graph() -> void:
 			var from: Vector2 = _node_positions[prerequisite_id]
 			var to: Vector2 = _node_positions[node_id]
 			_graph_layer.edges.append({
-				"start": from + Vector2(66, 13), "finish": to + Vector2(0, 13),
+				"start": from + Vector2(NODE_WIDTH, 13), "finish": to + Vector2(0, 13),
 				"prerequisite_id": prerequisite_id,
 				"unlocked": prerequisite_id in _profile.get("unlocked_skill_nodes", []),
 			})
 	_graph.custom_minimum_size = Vector2(190 + float(max_depth / 3) * 72.0, 26.0 + LANE_ORDER.size() * 48.0)
-	_graph.custom_minimum_size.x = maxf(_graph.custom_minimum_size.x, 190.0 + float(_node_depths.values().max()) * 72.0)
+	_graph.custom_minimum_size.x = maxf(_graph.custom_minimum_size.x, 190.0 + float(_node_depths.values().max()) * NODE_COLUMN_STEP)
 
 func _graph_depth(node_id: String, visiting: Dictionary) -> int:
 	if _node_depths.has(node_id):

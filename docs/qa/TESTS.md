@@ -2220,3 +2220,9 @@ Note de clôture : le blocage historique du smoke `sandbox_ui_smoke.gd` décrit 
 - [x] `godot_project_import`, `equipment_panel_visual_smoke` et `survival_inventory_smoke` passent par CTest (**3/3**). Le smoke visuel contrôle aussi Annuler et le focus initial; le parcours persistant vérifie qu’ouvrir le dialogue ne retire rien avant confirmation, puis vend via SELL.
 - [x] Capture 640×360 examinée et indexée dans `docs/art/evidence/2026-10-18/README.md`.
 - [i] La confirmation de vente est couverte; les autres branches interactives et la revue avec périphériques physiques restent ouvertes.
+
+## Lisibilité des nœuds du skill tree — 2026-10-18
+
+- [x] L’inspection de la capture 640×360 a motivé des boutons de graphe de 82 px, des libellés 9 px et un espacement de colonnes adapté. Les définitions et états restent ceux de `ProgressionService`; aucune compétence ni règle n’a été ajoutée.
+- [x] `godot_project_import` et `skill_tree_panel_visual_smoke` passent par CTest (**2/2**); le smoke contrôle toujours les 100 nœuds runtime, les prérequis acycliques, le focus clavier/manette et les bornes à trois résolutions.
+- [x] Capture `skill-tree.png` régénérée, inspectée et hash indexé. Lisibilité de tous les nœuds et contrôle physique restent **[OUVERTS]**.

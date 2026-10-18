@@ -63,8 +63,9 @@ func _run() -> void:
 	if "--capture" in OS.get_cmdline_user_args():
 		await process_frame
 		var viewport_image := root.get_texture().get_image()
-		if viewport_image.save_png("/tmp/dopamine-skill-tree.png") != OK:
-			_fail("Could not save skill tree review capture")
+		var evidence_path := ProjectSettings.globalize_path("res://../docs/art/evidence/2026-10-18/skill-tree.png")
+		if viewport_image.save_png(evidence_path) != OK:
+			_fail("Could not save the indexed skill tree review capture")
 			return
 	var requests: Array[String] = []
 	panel.unlock_requested.connect(func(node_id: String) -> void: requests.append(node_id))
