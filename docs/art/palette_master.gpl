@@ -1,0 +1,36 @@
+GIMP Palette
+Name: Dopamine Survivor Neon Arcade v1.1
+Columns: 8
+# Generated directly from the validated 32 HEX colors in docs/ART_BIBLE.txt section 12.1.
+  8  11  24 Shadow 1
+ 16  21  43 Shadow 2
+ 27  35  64 Shadow 3
+ 41  51  84 Shadow 4
+ 61  72 104 Shadow 5
+ 88  99 129 Shadow 6
+123 135 162 Shadow 7
+165 174 195 Shadow 8
+212 217 232 Neutral 1
+246 247 255 Neutral 2
+ 55  49  79 Neutral 3
+ 89  71 111 Neutral 4
+130 105 153 Neutral 5
+173 145 187 Neutral 6
+210 185 217 Neutral 7
+238 220 244 Neutral 8
+  7  90 128 Cyan 1
+  8 127 178 Cyan 2
+ 14 184 212 Cyan 3
+ 55 232 245 Cyan 4
+118  35 168 Magenta 1
+165  45 202 Magenta 2
+225  58 203 Magenta 3
+255 117 227 Magenta 4
+168  91  25 Yellow 1
+230 152  37 Yellow 2
+255 212  71 Yellow 3
+255 241 154 Yellow 4
+ 21 140  98 Accent 1
+ 72 230 155 Accent 2
+200  59  98 Accent 3
+255 113 129 Accent 4

@@ -8,6 +8,13 @@ Remplacer les sprites, environnements, effets, récompenses, icônes, identité 
 
 Godot 4.7.2; PNG de runtime sous `game/assets/`; sources graphiques Aseprite selon l’Art Bible; données d’assets existantes dans `game/data/` et références documentées sous `docs/art/`.
 
+### Avancement (2026-10-18)
+
+- **[PROPOSÉ]** La skyline de titre `game/assets/backgrounds/original_procedural/title_skyline.png` est une première création originale 640×360, indexée selon les 32 couleurs exactes de l’Art Bible; sa source éditable est `game/assets/source/original_procedural/title_skyline.aseprite`.
+- Provenance et hashes : `game/assets/backgrounds/original_procedural/title_skyline.json`. Contrôle reproductible : `python3 game/tools/validate_original_title_art.py`.
+- Revue isolée : pixel art net, 16 couleurs utilisées, silhouettes urbaines et espace sombre à gauche pour la colonne de menu. **[OUVERT]** Le contrôle headless du menu n’a pas abouti à une capture; l’adéquation visuelle au menu reste à vérifier en contexte avant intégration.
+- L’asset demeure non actif. La skyline existante, sa source et les références du menu ne sont pas retirées avant une migration et un smoke de navigation valides.
+
 ## Commandes de vérification
 
 - `godot --headless --editor --path game --quit`

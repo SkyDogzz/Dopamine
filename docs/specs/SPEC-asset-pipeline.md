@@ -10,6 +10,13 @@ Préparer le remplacement complet des assets graphiques et audio du jeu avec un 
 - Références : `docs/ART_BIBLE.txt`, `docs/art/INVENTAIRE_ASSETS_UI.md`, `docs/art/PROVENANCE_ASSETS.csv`, `THIRD_PARTY_NOTICES.md`.
 - La procédure audio actuelle se trouve sous `game/assets/audio/`; son outil et ses formats de source sont à inventorier.
 
+### Avancement de la filière (2026-10-18)
+
+- **[PROPOSÉ]** `docs/art/palette_master.gpl` est une copie exploitable de la palette maître; `game/tools/validate_original_title_art.py` vérifie l'ordre et les 32 valeurs contre l'Art Bible.
+- **[PROPOSÉ]** Une skyline 640×360 a été produite sans référence extérieure avec `game/tools/generate_original_title_skyline.py`, exportée en PNG indexé et convertie en source Aseprite avec LibreSprite. Le PNG et la source sont des candidats non intégrés sous `game/assets/{backgrounds,source}/original_procedural/`.
+- La capture isolée du PNG confirme les aplats pixelisés, le contraste et la composition urbaine. **[OUVERT]** La lisibilité derrière l'interface d'accueil reste à examiner après intégration; l'identité d'un biome n'est pas déduite de ce décor de menu.
+- Vérification locale : `python3 game/tools/validate_original_title_art.py`. Cette validation ne remplace pas le smoke visuel du menu après migration.
+
 ## Commandes de vérification
 
 - `godot --headless --editor --path game --quit` — import Godot.

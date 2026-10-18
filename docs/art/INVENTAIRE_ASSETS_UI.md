@@ -4,6 +4,8 @@
 
 **Mise à jour 2026-10-18 — audit de remplacement intégral :** l’utilisateur a précisé qu’aucun asset existant ne doit être réutilisé. Le registre exhaustif des fichiers sous `game/assets` (425 fichiers hors `.import`, hash SHA-256 par fichier et emplacements de références littérales) est [`ASSET_FILE_REGISTER.csv`](ASSET_FILE_REGISTER.csv); le périmètre et les limites de détection des usages dynamiques sont décrits dans [`AUDIT_ASSETS_COMPLET.md`](AUDIT_ASSETS_COMPLET.md). Aucun asset n’a encore été remplacé ou supprimé. Les assets livrés, polices comprises, devront être remplacés; les sources d’édition existantes ne doivent pas servir à produire les nouveaux exports.
 
+**Avancement 2026-10-18 — nouveaux candidats isolés :** `docs/art/palette_master.gpl` encode dans l’ordre les 32 HEX **[VALIDÉS]** de l’Art Bible. Une skyline de titre originale 640×360, en PNG indexé et source Aseprite éditable, est disponible sous `game/assets/backgrounds/original_procedural/` et `game/assets/source/original_procedural/`. Ce visuel est **[PROPOSÉ]**, reste hors des références actives et n’a pas encore été revu en situation sur le menu. Les nouveaux candidats audio procéduraux sont également non approuvés/non intégrés; l’écoute attend un environnement de travail avec sortie audio.
+
 ## Portée et règles
 
 - Recréer les assets visuels actuellement utilisés, même lorsqu’ils semblent déjà proches de la direction retenue, et combler les manques du contenu effectivement présent dans le jeu.
