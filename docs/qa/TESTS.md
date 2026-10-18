@@ -2,8 +2,8 @@
 
 ## Staging Linux courant après refonte UI/assets — 2026-10-18
 
-- [x] `tools/package_linux_staging.sh` reconstruit un checkout `git archive` propre du commit `714d35c` avec GCC 14.2.0, CMake 3.31.12, Godot 4.7.2 et `godot-cpp` épinglé. Compilation native Release vierge, import, export Linux/X11 filtré, extraction, notices/licences, exclusions des ressources de développement, `ldd` sans dépendance manquante et lancement headless de l’exécutable extrait avec la GDExtension adjacente passent.
-- [x] Archive de contrôle non versionnée `build/linux/staging/DopamineSurvivor-linux-714d35c-staging.tar.gz` : 29 878 870 octets, SHA-256 `31543a08b6af7f1725e1a0e911c8ef96f1773e25d3f747839611db2430cc8dc0`; le fichier `.sha256` passe.
+- [x] `tools/package_linux_staging.sh` reconstruit un checkout `git archive` propre du commit `50f33eb` avec GCC 14.2.0, CMake 3.31.12, Godot 4.7.2 et `godot-cpp` épinglé. Compilation native Release vierge, import, export Linux/X11 filtré, extraction, notices/licences, exclusions des ressources de développement, `ldd` sans dépendance manquante et lancement headless de l’exécutable extrait avec la GDExtension adjacente passent.
+- [x] Archive de contrôle non versionnée `build/linux/staging/DopamineSurvivor-linux-50f33eb-staging.tar.gz` : 29 878 840 octets, SHA-256 `b87ab7229fa105a4b1e8c2c34bc128b263c762d222513107847dd34a27b7c41b`; le fichier `.sha256` passe.
 - [x] Vérification après extraction : exécutable, GDExtension Release adjacente, notices et licences présentes; l’archive ne contient que les fichiers du paquet attendus.
 - [i] Il s’agit d’un staging Linux x86_64 non distribuable, testé sur l’hôte Debian avec pilote audio Dummy. Cela ne couvre pas le rendu/GPU, les contrôles physiques, une installation distincte ni l’écoute audio humaine.
 
