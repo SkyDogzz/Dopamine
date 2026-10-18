@@ -42,7 +42,7 @@ Une revue visuelle agrandie a identifié puis corrigé un défaut d’orientatio
 
 La galerie locale `build/assets/candidates/review/index.html` contient planches contact, feuilles d’animation, aperçus et lecteurs WAV. L’environnement courant n’expose pas de périphérique de lecture audio (`/dev/snd` ne contient pas de sortie), donc l’écoute en contexte demeure requise. Python standard, Godot 4.7.2, FFmpeg/FFplay et Audacity sont disponibles; aucun service cloud ni API payante n’est utilisé.
 
-L’import Godot complet et CTest passent (**118/118**). L’export PCK `Linux/X11` a été généré avec succès; le preset inclut les VFX, l’audio et les fonts, mais exclut les sources éditables. Les registres `ASSET_FILE_REGISTER_CURRENT.csv` et `PROVENANCE_ASSETS.csv` ont été rafraîchis; leur vérificateur passe pour 308 assets créatifs actuels et 417 entrées historiques migrées/retirées.
+L’import Godot complet et CTest passent (**121/121**, 2026-10-18), lancés via `build/cmake-3.31.12-linux-x86_64/bin/ctest`; le test de capture d’impact compare désormais le même frame d’animation pour les tailles normale et critique. Le QA local des sources d’animation couvre les **131 IDs animés** du manifeste et passe dimensions, palette, limites de couleurs, unicité des frames et hashes source/export. L’export PCK `Linux/X11` a été généré avec succès; le preset inclut les VFX, l’audio et les fonts, mais exclut les sources éditables. Les registres `ASSET_FILE_REGISTER_CURRENT.csv` et `PROVENANCE_ASSETS.csv` ont été rafraîchis; leur vérificateur passe pour 308 assets créatifs actuels et 417 entrées historiques migrées/retirées.
 
 ## État des décisions
 
