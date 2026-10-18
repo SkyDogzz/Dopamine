@@ -31,6 +31,11 @@ func _run() -> void:
 	if session._sprite_renderer.animated_instance_count_for_role("enemy_shooter_attack") != 1:
 		_fail("Shooter telegraph should render its matching attack animation")
 		return
+	session._queue_enemy_death_animation({"index": 900, "generation": 1}, "shooter", Vector2(200, 0), render_time)
+	if session._enemy_death_animations.size() != 1 or \
+			not is_equal_approx(float(session._enemy_death_animations[0]["expires_at"]) - render_time, 0.4):
+		_fail("Death playback should queue the matching role animation for its metadata-derived duration")
+		return
 	session._update_shooter_attacks(fire_at + 1.0, true)
 	if session._shooter_attacks[key]["fire_at"] != fire_at:
 		_fail("Shooter attacks should stop while the simulation is paused")

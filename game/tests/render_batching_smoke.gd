@@ -92,6 +92,12 @@ func _run() -> void:
 	})
 	assert(view._sprite_renderer.animated_multimesh_for("enemy_shooter_attack_right", 2).instance_count == 1,
 			"Attack phase overrides should play the directional, correctly timed shooter attack frame")
+	view._sprite_renderer.set_entities([], Vector2.ZERO, 0.15, {}, [{
+		"role": "enemy_shooter", "state": "death", "position": Vector2(20, 30),
+		"size": 24.0, "direction": Vector2.LEFT, "started_at": 0.0,
+	}])
+	assert(view._sprite_renderer.animated_multimesh_for("enemy_shooter_death_left", 1).instance_count == 1,
+			"Transient deaths should render independently after the ECS entity has been removed")
 	view.set_selected_entity(10, 1)
 	assert(view._selected_entity_found, "Selecting an enemy should preserve its overlay above the batches")
 	if view._selected_point != Vector2(200, 160):

@@ -71,6 +71,7 @@ const LIGHTNING_ARC_LIFETIME := 0.12
 const ENEMY_DEATH_PIXEL_LIFETIME := 0.32
 const ENEMY_DEATH_PIXEL_COUNT := 8
 const MAX_ENEMY_DEATH_PIXELS := 256
+const MAX_ENEMY_DEATH_ANIMATIONS := 64
 const ENEMY_DEATH_TYPES := ["chaser", "sprinter", "tank", "shooter", "buffer", "exploder", "shielder", "summoner", "summoned", "elite", "mid_boss", "final_boss"]
 const ELITE_AFFIX_ACHIEVEMENT_IDS := {
 	"Hasted": "hasted", "Armored": "armored", "Regenerating": "regenerating",
@@ -421,6 +422,7 @@ var _overcharge_next_at: Dictionary = {}
 var _weapon_impacts: Array[Dictionary] = []
 var _damage_numbers: Array[Dictionary] = []
 var _enemy_death_pixels: Array[Dictionary] = []
+var _enemy_death_animations: Array[Dictionary] = []
 var _starfall_fragments_spawned: Dictionary = {}
 var _entities: Array = []
 var _pending_xp_orbs: Dictionary = {}
@@ -881,6 +883,9 @@ func _process(_delta: float) -> void:
 		_enemy_death_pixels[index]["position"] += _enemy_death_pixels[index]["velocity"] * elapsed_active_time
 		if float(_enemy_death_pixels[index]["remaining"]) <= 0.0:
 			_enemy_death_pixels.remove_at(index)
+	for index in range(_enemy_death_animations.size() - 1, -1, -1):
+		if current_simulation_time >= float(_enemy_death_animations[index]["expires_at"]):
+			_enemy_death_animations.remove_at(index)
 	for index in range(_lightning_arcs.size() - 1, -1, -1):
 		_lightning_arcs[index]["remaining"] = float(_lightning_arcs[index]["remaining"]) - elapsed_active_time
 		if float(_lightning_arcs[index]["remaining"]) <= 0.0:
@@ -951,6 +956,7 @@ func _process(_delta: float) -> void:
 				_record_weapon_kill(str(event.get("source_type", "")))
 				var death_position := Vector2(float(event["position"]["x"]), float(event["position"]["y"]))
 				Sfx.play("boss_defeat" if dead_enemy_type in ["mid_boss", "final_boss"] else "enemy_kill")
+				_queue_enemy_death_animation(dead_target, dead_enemy_type, death_position, current_simulation_time)
 				_add_enemy_death_pixels(dead_enemy_type, death_position)
 				if dead_enemy_type == "elite" and dead_enemy_affix.split("+").has("Split-on-Death"):
 					_spawn_split_summons(death_position, state)
@@ -1014,7 +1020,7 @@ func _process(_delta: float) -> void:
 	_update_pulse_warden_attacks(current_simulation_time, bool(state["paused"]))
 	_update_dopamine_core_attacks(current_simulation_time, bool(state["paused"]))
 	_sprite_renderer.set_entities(_entities, Vector2.ZERO, current_simulation_time,
-				_enemy_attack_animation_overrides(current_simulation_time))
+				_enemy_attack_animation_overrides(current_simulation_time), _enemy_death_animations)
 	_collect_nearby_xp_orbs(state)
 	_collect_nearby_chests(state)
 	_complete_pending_victory()
@@ -1446,6 +1452,43 @@ func _enemy_attack_animation_overrides(current_simulation_time: float) -> Dictio
 			overrides[key] = {"state": "attack",
 				"started_at": float(attack.get("fire_at", current_simulation_time)) - final_boss_telegraph_seconds}
 	return overrides
+
+func _queue_enemy_death_animation(target_id: Dictionary, enemy_type: String,
+		position: Vector2, current_simulation_time: float) -> void:
+	if enemy_type not in ENEMY_DEATH_TYPES:
+		return
+	var components := {"EnemyType": enemy_type}
+	var target_index := int(target_id.get("index", -1))
+	var target_generation := int(target_id.get("generation", 0))
+	for entity in _entities:
+		var id: Dictionary = entity.get("id", {})
+		if int(id.get("index", -2)) == target_index and int(id.get("generation", -1)) == target_generation:
+			components = entity.get("components", components)
+			break
+	var role_id: String = _sprite_renderer._sprite_for_entity(components)
+	var direction := Vector2.DOWN
+	var velocity: Dictionary = components.get("Velocity2D", {})
+	var velocity_vector := Vector2(float(velocity.get("x", 0.0)), float(velocity.get("y", 0.0)))
+	if velocity_vector.length_squared() > 0.001:
+		direction = velocity_vector
+	var size: float = _sprite_renderer._size_for_entity(role_id, components)
+	if not components.has("CollisionRadius") and role_id.begins_with("boss_"):
+		size = 52.0
+	var direction_name := "down"
+	if absf(direction.x) > absf(direction.y):
+		direction_name = "right" if direction.x > 0.0 else "left"
+	else:
+		direction_name = "down" if direction.y > 0.0 else "up"
+	var duration: float = _sprite_renderer.animation_duration(role_id, "death", direction_name)
+	if duration <= 0.0:
+		return
+	_enemy_death_animations.append({
+		"role": role_id, "state": "death", "position": position, "size": size,
+		"direction": direction, "started_at": current_simulation_time,
+		"expires_at": current_simulation_time + duration,
+	})
+	while _enemy_death_animations.size() > MAX_ENEMY_DEATH_ANIMATIONS:
+		_enemy_death_animations.pop_front()
 
 func _fire_dopamine_core_attack(attack: Dictionary) -> void:
 	var origin: Vector2 = attack["origin"]
@@ -4025,6 +4068,7 @@ func _on_settings_changed() -> void:
 		_clear_screen_shake()
 		_weapon_impacts.clear()
 		_enemy_death_pixels.clear()
+		_enemy_death_animations.clear()
 		_lightning_arcs.clear()
 		_pandemic_bursts.clear()
 	queue_redraw()

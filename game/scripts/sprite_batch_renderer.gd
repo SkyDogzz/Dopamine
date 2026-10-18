@@ -79,13 +79,13 @@ func _init() -> void:
 		}
 	for role_id in ANIMATED_ROLE_IDS:
 		_role_animation_sets[role_id] = {}
-		for state in ["idle", "move", "attack"]:
+		for state in ["idle", "move", "attack", "death"]:
 			var resource_path := "res://assets/sprites/animation/%s_%s.tres" % [role_id, state]
 			if ResourceLoader.exists(resource_path):
 				_role_animation_sets[role_id][state] = load(resource_path) as SpriteFrames
 
 func set_entities(entities: Array, origin: Vector2 = Vector2.ZERO, animation_time: float = 0.0,
-		animation_overrides: Dictionary = {}) -> void:
+		animation_overrides: Dictionary = {}, transient_animations: Array = []) -> void:
 	var instances_by_sprite: Dictionary = {}
 	var instances_by_animation: Dictionary = {}
 	_projectile_trails.clear()
@@ -137,6 +137,8 @@ func set_entities(entities: Array, origin: Vector2 = Vector2.ZERO, animation_tim
 		if int(id["index"]) == _selected_index and int(id["generation"]) == _selected_generation:
 			selected_point = point
 			selected_entity_found = not sprite_id.begins_with("projectile_") and sprite_id != "xp_orb"
+	for transient in transient_animations:
+		_append_transient_animation(instances_by_animation, transient, origin, animation_time)
 	for sprite_id in _batches:
 		_set_instances(_batches[sprite_id]["multimesh"], instances_by_sprite[sprite_id])
 	for animation_key in _animated_batches:
@@ -231,6 +233,56 @@ func _get_animation_batch(role_id: String, state: String, animation_name: String
 	var batch := {"texture": texture, "multimesh": multimesh}
 	_animated_batches[key] = batch
 	return batch
+
+func animation_duration(role_id: String, state: String, direction: String = "down") -> float:
+	var sprite_frames: SpriteFrames = _role_animation_sets.get(role_id, {}).get(state)
+	if sprite_frames == null:
+		return 0.0
+	var base_name := "%s_%s" % [role_id, state]
+	var animation_name := base_name + "_" + direction if sprite_frames.has_animation(base_name + "_" + direction) else base_name
+	if not sprite_frames.has_animation(animation_name):
+		return 0.0
+	var fps := sprite_frames.get_animation_speed(animation_name)
+	return float(sprite_frames.get_frame_count(animation_name)) / fps if fps > 0.0 else 0.0
+
+func _append_transient_animation(instances_by_animation: Dictionary, transient: Dictionary,
+		origin: Vector2, animation_time: float) -> void:
+	var role_id := str(transient.get("role", ""))
+	var state := str(transient.get("state", "death"))
+	var sprite_frames: SpriteFrames = _role_animation_sets.get(role_id, {}).get(state)
+	if sprite_frames == null:
+		return
+	var started_at := float(transient.get("started_at", animation_time))
+	var elapsed := animation_time - started_at
+	if elapsed < 0.0:
+		return
+	var direction: Vector2 = transient.get("direction", Vector2.DOWN)
+	var direction_name := "down"
+	if direction.length_squared() > 0.001:
+		if absf(direction.x) > absf(direction.y):
+			direction_name = "right" if direction.x > 0.0 else "left"
+		else:
+			direction_name = "down" if direction.y > 0.0 else "up"
+	var base_name := "%s_%s" % [role_id, state]
+	var animation_name := base_name + "_" + direction_name if sprite_frames.has_animation(base_name + "_" + direction_name) else base_name
+	if not sprite_frames.has_animation(animation_name):
+		return
+	var frame_count := sprite_frames.get_frame_count(animation_name)
+	var fps := sprite_frames.get_animation_speed(animation_name)
+	if frame_count <= 0 or fps <= 0.0:
+		return
+	var frame := mini(floori(elapsed * fps), frame_count - 1)
+	var key := "%s:%d" % [animation_name, frame]
+	if _get_animation_batch(role_id, state, animation_name, frame).is_empty():
+		return
+	if not instances_by_animation.has(key):
+		instances_by_animation[key] = []
+	var position: Vector2 = transient.get("position", Vector2.ZERO)
+	instances_by_animation[key].append({
+		"point": origin + position,
+		"size": float(transient.get("size", 24.0)),
+		"rotation": 0.0,
+	})
 
 func draw_projectile_trails(canvas: CanvasItem) -> void:
 	for trail in _projectile_trails:

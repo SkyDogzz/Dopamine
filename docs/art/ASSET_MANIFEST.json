@@ -509,7 +509,7 @@
       "human_review_status": "pending",
       "integration_status": "integrated",
       "blockers": [
-        "death animation timing/frame count not specified"
+        "runtime plays this animation using authored provisional frame timing; canonical timing remains open"
       ],
       "requirement_source": "GDD v1.6 + Godot runtime contracts",
       "candidate_export_path": "build/assets/candidates/enemy-animation-complete/sprites/enemies/enemy_chaser_death.png",
@@ -801,7 +801,7 @@
       "human_review_status": "pending",
       "integration_status": "integrated",
       "blockers": [
-        "death animation timing/frame count not specified"
+        "runtime plays this animation using authored provisional frame timing; canonical timing remains open"
       ],
       "requirement_source": "GDD v1.6 + Godot runtime contracts",
       "candidate_export_path": "build/assets/candidates/enemy-animation-complete/sprites/enemies/enemy_sprinter_death.png",
@@ -1093,7 +1093,7 @@
       "human_review_status": "pending",
       "integration_status": "integrated",
       "blockers": [
-        "death animation timing/frame count not specified"
+        "runtime plays this animation using authored provisional frame timing; canonical timing remains open"
       ],
       "requirement_source": "GDD v1.6 + Godot runtime contracts",
       "candidate_export_path": "build/assets/candidates/enemy-animation-complete/sprites/enemies/enemy_tank_death.png",
@@ -1385,7 +1385,7 @@
       "human_review_status": "pending",
       "integration_status": "integrated",
       "blockers": [
-        "death animation timing/frame count not specified"
+        "runtime plays this animation using authored provisional frame timing; canonical timing remains open"
       ],
       "requirement_source": "GDD v1.6 + Godot runtime contracts",
       "candidate_export_path": "build/assets/candidates/enemy-animation-complete/sprites/enemies/enemy_shooter_death.png",
@@ -1677,7 +1677,7 @@
       "human_review_status": "pending",
       "integration_status": "integrated",
       "blockers": [
-        "death animation timing/frame count not specified"
+        "runtime plays this animation using authored provisional frame timing; canonical timing remains open"
       ],
       "requirement_source": "GDD v1.6 + Godot runtime contracts",
       "candidate_export_path": "build/assets/candidates/enemy-animation-complete/sprites/enemies/enemy_buffer_death.png",
@@ -1969,7 +1969,7 @@
       "human_review_status": "pending",
       "integration_status": "integrated",
       "blockers": [
-        "death animation timing/frame count not specified"
+        "runtime plays this animation using authored provisional frame timing; canonical timing remains open"
       ],
       "requirement_source": "GDD v1.6 + Godot runtime contracts",
       "candidate_export_path": "build/assets/candidates/enemy-animation-complete/sprites/enemies/enemy_exploder_death.png",
@@ -2261,7 +2261,7 @@
       "human_review_status": "pending",
       "integration_status": "integrated",
       "blockers": [
-        "death animation timing/frame count not specified"
+        "runtime plays this animation using authored provisional frame timing; canonical timing remains open"
       ],
       "requirement_source": "GDD v1.6 + Godot runtime contracts",
       "candidate_export_path": "build/assets/candidates/enemy-animation-complete/sprites/enemies/enemy_shielder_death.png",
@@ -2553,7 +2553,7 @@
       "human_review_status": "pending",
       "integration_status": "integrated",
       "blockers": [
-        "death animation timing/frame count not specified"
+        "runtime plays this animation using authored provisional frame timing; canonical timing remains open"
       ],
       "requirement_source": "GDD v1.6 + Godot runtime contracts",
       "candidate_export_path": "build/assets/candidates/enemy-animation-complete/sprites/enemies/enemy_summoner_death.png",
@@ -2845,7 +2845,7 @@
       "human_review_status": "pending",
       "integration_status": "integrated",
       "blockers": [
-        "death animation timing/frame count not specified"
+        "runtime plays this animation using authored provisional frame timing; canonical timing remains open"
       ],
       "requirement_source": "GDD v1.6 + Godot runtime contracts",
       "candidate_export_path": "build/assets/candidates/enemy-animation-complete/sprites/enemies/enemy_summoned_death.png",
@@ -3067,7 +3067,7 @@
       "human_review_status": "pending",
       "integration_status": "integrated",
       "blockers": [
-        "death animation timing/frame count not specified"
+        "runtime plays this animation using authored provisional frame timing; canonical timing remains open"
       ],
       "requirement_source": "GDD v1.6 + Godot runtime contracts",
       "candidate_export_path": "build/assets/candidates/boss-animation-native/sprites/animation/elite_sprinter_death.png",
@@ -3332,7 +3332,7 @@
       "human_review_status": "pending",
       "integration_status": "integrated",
       "blockers": [
-        "boss identity/patterns and death animation timing are open"
+        "boss identity/patterns remain open; runtime uses authored provisional death timing while canonical timing remains open"
       ],
       "requirement_source": "GDD v1.6 + Godot runtime contracts",
       "candidate_export_path": "build/assets/candidates/boss-animation-native/sprites/animation/boss_pulse_warden_death.png",
@@ -3597,7 +3597,7 @@
       "human_review_status": "pending",
       "integration_status": "integrated",
       "blockers": [
-        "boss identity/patterns and death animation timing are open"
+        "boss identity/patterns remain open; runtime uses authored provisional death timing while canonical timing remains open"
       ],
       "requirement_source": "GDD v1.6 + Godot runtime contracts",
       "candidate_export_path": "build/assets/candidates/boss-animation-native/sprites/animation/boss_dopamine_core_death.png",
