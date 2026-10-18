@@ -4,206 +4,275 @@ signal close_requested
 signal unlock_requested(node_id: String)
 signal respec_requested
 
-@onready var _essence: Label = $Panel/Content/EssenceRow/Essence
-@onready var _node_button: Button = $Panel/Content/NodeScroll/Rows/NodeBranch/FoundationCard/Content/VitalityButton
-@onready var _focus_button: Button = $Panel/Content/NodeScroll/Rows/NodeBranch/FollowupCard/Content/FocusButton
-@onready var _node_effect: Label = $Panel/Content/NodeScroll/Rows/NodeBranch/FoundationCard/Content/Effect
-@onready var _focus_effect: Label = $Panel/Content/NodeScroll/Rows/NodeBranch/FollowupCard/Content/Effect
-@onready var _focus_kicker: Label = $Panel/Content/NodeScroll/Rows/NodeBranch/FollowupCard/Content/Kicker
-@onready var _mastery_button: Button = $Panel/Content/NodeScroll/Rows/NodeBranch/FollowupCard/Content/MasteryButton
-@onready var _mastery_effect: Label = $Panel/Content/NodeScroll/Rows/NodeBranch/FollowupCard/Content/MasteryEffect
-@onready var _mastery_kicker: Label = $Panel/Content/NodeScroll/Rows/NodeBranch/FollowupCard/Content/MasteryKicker
-@onready var _precision_button: Button = $Panel/Content/NodeScroll/Rows/NodeBranch/FollowupCard/Content/PrecisionButton
-@onready var _precision_effect: Label = $Panel/Content/NodeScroll/Rows/NodeBranch/FollowupCard/Content/PrecisionEffect
-@onready var _precision_kicker: Label = $Panel/Content/NodeScroll/Rows/NodeBranch/FollowupCard/Content/PrecisionKicker
-@onready var _weapon_unlock_button: Button = $Panel/Content/NodeScroll/Rows/UnlockBranch/UnlockWeaponCard/Content/WeaponUnlockButton
-@onready var _weapon_unlock_effect: Label = $Panel/Content/NodeScroll/Rows/UnlockBranch/UnlockWeaponCard/Content/Effect
-@onready var _weapon_unlock_status: Label = $Panel/Content/NodeScroll/Rows/UnlockBranch/UnlockWeaponCard/Content/Prerequisite
-@onready var _relic_unlock_button: Button = $Panel/Content/NodeScroll/Rows/UnlockBranch/UnlockRelicCard/Content/RelicUnlockButton
-@onready var _relic_unlock_effect: Label = $Panel/Content/NodeScroll/Rows/UnlockBranch/UnlockRelicCard/Content/Effect
-@onready var _relic_unlock_status: Label = $Panel/Content/NodeScroll/Rows/UnlockBranch/UnlockRelicCard/Content/Prerequisite
-@onready var _additional_unlocks: VBoxContainer = $Panel/Content/NodeScroll/Rows/AdditionalUnlocks
-@onready var _respec_button: Button = $Panel/Content/RespecButton
-@onready var _close_button: Button = $Panel/Content/CloseButton
+class GraphLayer extends Control:
+	var edges: Array[Dictionary] = []
+	var lanes: Array[Dictionary] = []
 
-const NODE_ID := "vitality_starter"
+	func _draw() -> void:
+		for lane in lanes:
+			var y := float(lane["y"])
+			draw_line(Vector2(0, y), Vector2(size.x, y), Color("#1b2340"), 1.0)
+		for edge in edges:
+			var start: Vector2 = edge["start"]
+			var finish: Vector2 = edge["finish"]
+			draw_line(start, finish, Color("#59476f") if edge["unlocked"] else Color("#293354"), 2.0 if edge["unlocked"] else 1.0)
+
+const LANE_ORDER := ["MAX HP", "DAMAGE", "MOVE SPEED", "CRIT CHANCE", "WEAPON UNLOCKS", "RELIC UNLOCKS"]
+const CORE_STAT_KEYS := ["max_hp_pct", "damage_pct", "move_speed_pct", "critical_chance_pct"]
+const CORE_STAT_NAMES := {
+	"max_hp_pct": "MAX HP", "damage_pct": "DAMAGE",
+	"move_speed_pct": "MOVE SPEED", "critical_chance_pct": "CRIT CHANCE",
+}
+const CORE_START_NODES := {
+	"vitality_starter": "MAX HP", "focused_training": "DAMAGE",
+	"fleet_footed": "MOVE SPEED", "steady_aim": "CRIT CHANCE",
+}
+const SOURCE_ICON := "res://assets/icons/catalog/skill_node.png"
+
+@onready var _essence: Label = $Panel/Content/EssenceRow/Essence
+@onready var _tree_scroll: ScrollContainer = $Panel/Content/TreeScroll
+@onready var _graph: Control = $Panel/Content/TreeScroll/Graph
+@onready var _selected_title: Label = $Panel/Content/Details/DetailContent/SelectedTitle
+@onready var _selected_effect: Label = $Panel/Content/Details/DetailContent/SelectedEffect
+@onready var _selected_requirements: Label = $Panel/Content/Details/DetailContent/SelectedRequirements
+@onready var _unlock_button: Button = $Panel/Content/ActionRow/UnlockButton
+@onready var _respec_button: Button = $Panel/Content/ActionRow/RespecButton
+@onready var _close_button: Button = $Panel/Content/ActionRow/CloseButton
+
 var progression_service: RefCounted
-var _additional_unlock_buttons: Dictionary = {}
+var selected_node_id := ""
+var _profile: Dictionary = {}
+var _node_buttons: Dictionary = {}
+var _node_positions: Dictionary = {}
+var _node_depths: Dictionary = {}
+var _graph_layer: GraphLayer
+var _profile_available := true
 
 func _ready() -> void:
 	visible = false
-	_close_button.pressed.connect(func() -> void: close_requested.emit())
-	_node_button.pressed.connect(func() -> void: unlock_requested.emit(NODE_ID))
-	_focus_button.pressed.connect(func() -> void: unlock_requested.emit("focused_training"))
-	_mastery_button.pressed.connect(func() -> void: unlock_requested.emit("fleet_footed"))
-	_precision_button.pressed.connect(func() -> void: unlock_requested.emit("steady_aim"))
-	_weapon_unlock_button.pressed.connect(func() -> void: unlock_requested.emit("unlock_crimson_daggers"))
-	_relic_unlock_button.pressed.connect(func() -> void: unlock_requested.emit("unlock_blood_chalice"))
+	_unlock_button.pressed.connect(_request_selected_unlock)
 	_respec_button.pressed.connect(func() -> void: respec_requested.emit())
-	_build_additional_unlock_buttons()
+	_close_button.pressed.connect(func() -> void: close_requested.emit())
+	_build_graph()
 
 func present(profile: Dictionary) -> void:
-	var resources: Dictionary = profile.get("resources", {})
-	var unlocked: Array = profile.get("unlocked_skill_nodes", [])
-	var essence := int(resources.get("essence", 0))
-	var vitality_cost: int = progression_service.skill_node_cost(NODE_ID) if progression_service != null else 50
-	var focus_cost: int = progression_service.skill_node_cost("focused_training") if progression_service != null else 80
-	var mastery_cost: int = progression_service.skill_node_cost("fleet_footed") if progression_service != null else 110
-	var precision_cost: int = progression_service.skill_node_cost("steady_aim") if progression_service != null else 140
-	var weapon_unlock_cost: int = progression_service.skill_node_cost("unlock_crimson_daggers") if progression_service != null else 130
-	var relic_unlock_cost: int = progression_service.skill_node_cost("unlock_blood_chalice") if progression_service != null else 160
-	var has_node := NODE_ID in unlocked
-	var has_focus := "focused_training" in unlocked
-	var has_mastery := "fleet_footed" in unlocked
-	var has_precision := "steady_aim" in unlocked
-	var has_weapon_unlock := "unlock_crimson_daggers" in unlocked
-	var has_relic_unlock := "unlock_blood_chalice" in unlocked
-	_essence.text = "ESSENCE %d" % essence
-	_node_button.text = "UNLOCKED" if has_node else "UNLOCK NODE"
-	_node_effect.text = "+5%% MAX HP  •  %d ESSENCE  •  PROPOSED" % vitality_cost
-	_node_button.disabled = has_node or essence < vitality_cost
-	_focus_button.text = "UNLOCKED" if has_focus else "UNLOCK NODE"
-	_focus_effect.text = "+3%% DAMAGE  •  %d ESSENCE  •  PROPOSED" % focus_cost
-	_focus_kicker.text = "FOLLOW-UP · UNLOCKED" if has_focus else \
-		"FOLLOW-UP · AVAILABLE" if has_node and essence >= focus_cost else "FOLLOW-UP · LOCKED"
-	_focus_button.disabled = has_focus or not has_node or essence < focus_cost
-	_mastery_button.text = "UNLOCKED" if has_mastery else "UNLOCK NODE"
-	_mastery_effect.text = "+2%% MOVE SPEED  •  %d ESSENCE  •  PROPOSED" % mastery_cost
-	_mastery_kicker.text = "MASTERY · UNLOCKED" if has_mastery else \
-		"MASTERY · AVAILABLE" if has_focus and essence >= mastery_cost else "MASTERY · LOCKED"
-	_mastery_button.disabled = has_mastery or not has_focus or essence < mastery_cost
-	_precision_button.text = "UNLOCKED" if has_precision else "UNLOCK NODE"
-	_precision_effect.text = "+1%% CRIT CHANCE  •  %d ESSENCE  •  PROPOSED" % precision_cost
-	_precision_kicker.text = "ADVANCED · UNLOCKED" if has_precision else \
-		"ADVANCED · AVAILABLE" if has_mastery and essence >= precision_cost else "ADVANCED · LOCKED"
-	_precision_button.disabled = has_precision or not has_mastery or essence < precision_cost
-	_weapon_unlock_effect.text = "CRIMSON DAGGERS  •  %d ESSENCE  •  PROPOSED" % weapon_unlock_cost
-	_weapon_unlock_status.text = "WEAPON · UNLOCKED" if has_weapon_unlock else \
-		"WEAPON · AVAILABLE" if has_node and essence >= weapon_unlock_cost else "WEAPON · REQUIRES VITALITY"
-	_weapon_unlock_button.text = "UNLOCKED" if has_weapon_unlock else "UNLOCK NODE"
-	_weapon_unlock_button.disabled = has_weapon_unlock or not has_node or essence < weapon_unlock_cost
-	_relic_unlock_effect.text = "BLOOD CHALICE  •  %d ESSENCE  •  PROPOSED" % relic_unlock_cost
-	_relic_unlock_status.text = "RELIC · UNLOCKED" if has_relic_unlock else \
-		"RELIC · AVAILABLE" if has_weapon_unlock and essence >= relic_unlock_cost else "RELIC · REQUIRES DAGGERS"
-	_relic_unlock_button.text = "UNLOCKED" if has_relic_unlock else "UNLOCK NODE"
-	_relic_unlock_button.disabled = has_relic_unlock or not has_weapon_unlock or essence < relic_unlock_cost
-	for node_id in _additional_unlock_buttons:
-		var definition: Dictionary = progression_service.skill_node_definition(node_id)
-		var unlocked_node: bool = node_id in unlocked
-		var prerequisites: Array = definition.get("prerequisites", [])
-		var ready := true
-		for prerequisite in prerequisites:
-			if prerequisite not in unlocked:
-				ready = false
-				break
-		var cost: int = progression_service.skill_node_cost(node_id)
-		var button: Button = _additional_unlock_buttons[node_id]
-		var category := str(definition.get("category", ""))
-		var category_label := "STAT" if category == "core_stats" else "WEAPON" if category == "weapon_unlocks" else "RELIC"
-		var state_label := "UNLOCKED" if unlocked_node else "AVAILABLE" if ready and essence >= cost else "LOCKED"
-		var label := str(definition.get("unlock_name", "" )).to_upper()
-		if category == "core_stats":
-			label = "%s · %s" % [label, str(definition.get("display_bonus", ""))]
-		button.text = "%s · %s · %s" % [category_label, label, state_label]
-		button.tooltip_text = "%s · %s · %d ESSENCE · PROPOSED" % [str(definition.get("unlock_name", "")), str(definition.get("display_bonus", "")), cost]
-		if not prerequisites.is_empty():
-			var prerequisite_names: PackedStringArray = []
-			for prerequisite in prerequisites:
-				var prerequisite_definition: Dictionary = progression_service.skill_node_definition(str(prerequisite))
-				var prerequisite_name := str(prerequisite_definition.get("unlock_name", ""))
-				if prerequisite_name.is_empty():
-					prerequisite_name = str(prerequisite).replace("_", " ").to_upper()
-				prerequisite_names.append(prerequisite_name.to_upper())
-			button.tooltip_text += " · REQUIRES %s" % ", ".join(prerequisite_names)
-		button.disabled = unlocked_node or not ready or essence < cost
+	_profile = profile.duplicate(true)
+	_profile_available = progression_service != null and progression_service.has_method("skill_node_ids")
+	if not _profile_available:
+		present_error()
+		return
+	var resources: Dictionary = _profile.get("resources", {})
+	var unlocked: Array = _profile.get("unlocked_skill_nodes", [])
+	_essence.text = "ESSENCE %d" % int(resources.get("essence", 0))
 	_respec_button.disabled = unlocked.is_empty()
+	_refresh_graph()
+	if selected_node_id.is_empty() or not _node_buttons.has(selected_node_id):
+		selected_node_id = "vitality_starter" if _node_buttons.has("vitality_starter") else str(_node_buttons.keys()[0])
+	_refresh_details()
 	visible = true
-	var focus_target: Button
-	for button in [_node_button, _focus_button, _mastery_button, _precision_button, _weapon_unlock_button, _relic_unlock_button]:
-		if not button.disabled:
-			focus_target = button
-			break
-	if focus_target == null:
-		for button in _additional_unlock_buttons.values():
-			if not button.disabled:
-				focus_target = button
-				break
-	if focus_target != null:
-		focus_target.grab_focus()
+	if selected_node_id == "vitality_starter":
+		_tree_scroll.scroll_horizontal = 0
+		_tree_scroll.scroll_vertical = 0
+	(_unlock_button if not _unlock_button.disabled else _close_button).grab_focus()
 
 func present_error() -> void:
+	_profile_available = false
 	_essence.text = "PROFILE UNAVAILABLE"
-	_node_effect.text = "PROFILE COULD NOT BE READ"
-	_focus_effect.text = "PROFILE COULD NOT BE READ"
-	_mastery_effect.text = "PROFILE COULD NOT BE READ"
-	_precision_effect.text = "PROFILE COULD NOT BE READ"
-	_weapon_unlock_effect.text = "PROFILE COULD NOT BE READ"
-	_relic_unlock_effect.text = "PROFILE COULD NOT BE READ"
-	_node_button.disabled = true
-	_focus_button.disabled = true
-	_mastery_button.disabled = true
-	_precision_button.disabled = true
-	_weapon_unlock_button.disabled = true
-	_relic_unlock_button.disabled = true
-	for button in _additional_unlock_buttons.values():
-		button.disabled = true
+	_selected_title.text = "PROFILE COULD NOT BE READ"
+	_selected_effect.text = "SKILL TREE ACTIONS DISABLED"
+	_selected_requirements.text = ""
+	_unlock_button.disabled = true
 	_respec_button.disabled = true
-	_node_button.text = "UNAVAILABLE"
-	_focus_button.text = "UNAVAILABLE"
-	_mastery_button.text = "UNAVAILABLE"
-	_precision_button.text = "UNAVAILABLE"
-	_weapon_unlock_button.text = "UNAVAILABLE"
-	_relic_unlock_button.text = "UNAVAILABLE"
-	_focus_kicker.text = "FOLLOW-UP · LOCKED"
-	_mastery_kicker.text = "MASTERY · LOCKED"
-	_precision_kicker.text = "ADVANCED · LOCKED"
-	_weapon_unlock_status.text = "WEAPON · LOCKED"
-	_relic_unlock_status.text = "RELIC · LOCKED"
+	for button in _node_buttons.values():
+		(button as Button).disabled = true
 	visible = true
 	_close_button.grab_focus()
 
-func _build_additional_unlock_buttons() -> void:
+func node_button_for_id(node_id: String) -> Button:
+	return _node_buttons.get(node_id) as Button
+
+func node_button_count() -> int:
+	return _node_buttons.size()
+
+func _build_graph() -> void:
 	if progression_service == null or not progression_service.has_method("skill_node_ids") or \
 		not progression_service.has_method("skill_node_definition"):
 		return
-	var headings := {
-		"core_stats": ["CoreStatsHeading", "CORE STAT RANKS"],
-		"weapon_unlocks": ["WeaponUnlocksHeading", "WEAPON UNLOCKS"],
-		"relic_unlocks": ["RelicUnlocksHeading", "RELIC UNLOCKS"],
-	}
-	for category in ["core_stats", "weapon_unlocks", "relic_unlocks"]:
-		var heading := Label.new()
-		heading.name = headings[category][0]
-		heading.text = headings[category][1]
-		heading.custom_minimum_size = Vector2(0, 16)
-		heading.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-		heading.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-		heading.add_theme_color_override("font_color", Color("#37e8f5"))
-		heading.add_theme_font_size_override("font_size", 8)
-		_additional_unlocks.add_child(heading)
-		for node_id in progression_service.skill_node_ids(category):
-			if node_id in ["vitality_starter", "focused_training", "fleet_footed", "steady_aim", \
-				"unlock_crimson_daggers", "unlock_blood_chalice"]:
+	_graph_layer = GraphLayer.new()
+	_graph_layer.name = "Connections"
+	_graph_layer.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	_graph.add_child(_graph_layer)
+	var ids: Array[String] = progression_service.skill_node_ids()
+	for node_id in ids:
+		_graph_depth(node_id, {})
+	ids.sort_custom(_node_before)
+	var lane_y := {}
+	var visible_lanes := {}
+	for index in range(LANE_ORDER.size()):
+		lane_y[LANE_ORDER[index]] = 26.0 + index * 48.0
+	var max_depth := 0
+	for node_id in ids:
+		var definition: Dictionary = progression_service.skill_node_definition(node_id)
+		var lane := _lane_name(node_id, definition)
+		var y := float(lane_y.get(lane, 26.0))
+		var depth := int(definition.get("depth", 3))
+		max_depth = maxi(max_depth, depth)
+		var graph_depth := int(_node_depths[node_id])
+		var position := Vector2(118.0 + (graph_depth - 1) * 72.0, y - 13.0)
+		_node_positions[node_id] = position
+		var button := Button.new()
+		button.name = "Node_%s" % node_id
+		button.custom_minimum_size = Vector2(66, 26)
+		button.position = position
+		button.focus_mode = Control.FOCUS_ALL
+		button.icon = load(SOURCE_ICON)
+		button.icon_alignment = HORIZONTAL_ALIGNMENT_LEFT
+		button.expand_icon = false
+		button.add_theme_constant_override("icon_max_width", 10)
+		button.add_theme_font_size_override("font_size", 8)
+		button.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+		button.pressed.connect(_select_node.bind(node_id))
+		button.focus_entered.connect(_select_node.bind(node_id))
+		_graph.add_child(button)
+		_node_buttons[node_id] = button
+		if not visible_lanes.has(lane):
+			var lane_label := Label.new()
+			lane_label.name = "Lane_%s" % lane.replace(" ", "_")
+			lane_label.text = lane
+			lane_label.position = Vector2(4, y - 6)
+			lane_label.add_theme_font_size_override("font_size", 8)
+			lane_label.add_theme_color_override("font_color", Color("#586381"))
+			_graph.add_child(lane_label)
+			visible_lanes[lane] = true
+	for lane in LANE_ORDER:
+		_graph_layer.lanes.append({"y": lane_y[lane]})
+	for node_id in ids:
+		var definition: Dictionary = progression_service.skill_node_definition(node_id)
+		for prerequisite in definition.get("prerequisites", []):
+			var prerequisite_id := str(prerequisite)
+			if not _node_positions.has(prerequisite_id):
 				continue
-			var definition: Dictionary = progression_service.skill_node_definition(node_id)
-			var name := str(definition.get("unlock_name", "Equipment"))
-			var button := Button.new()
-			button.name = node_id
-			button.custom_minimum_size = Vector2(0, 22)
-			button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-			var category_label := "STAT" if category == "core_stats" else "WEAPON" if category == "weapon_unlocks" else "RELIC"
-			button.text = "%s · %s · LOCKED" % [category_label, name.to_upper()]
-			button.focus_mode = Control.FOCUS_ALL
-			button.pressed.connect(_emit_unlock_requested.bind(node_id))
-			button.focus_entered.connect(_scroll_to_unlock_button.bind(button))
-			_additional_unlocks.add_child(button)
-			_additional_unlock_buttons[node_id] = button
+			var from: Vector2 = _node_positions[prerequisite_id]
+			var to: Vector2 = _node_positions[node_id]
+			_graph_layer.edges.append({
+				"start": from + Vector2(66, 13), "finish": to + Vector2(0, 13),
+				"prerequisite_id": prerequisite_id,
+				"unlocked": prerequisite_id in _profile.get("unlocked_skill_nodes", []),
+			})
+	_graph.custom_minimum_size = Vector2(190 + float(max_depth / 3) * 72.0, 26.0 + LANE_ORDER.size() * 48.0)
+	_graph.custom_minimum_size.x = maxf(_graph.custom_minimum_size.x, 190.0 + float(_node_depths.values().max()) * 72.0)
 
-func _emit_unlock_requested(node_id: String) -> void:
-	unlock_requested.emit(node_id)
+func _graph_depth(node_id: String, visiting: Dictionary) -> int:
+	if _node_depths.has(node_id):
+		return int(_node_depths[node_id])
+	if visiting.has(node_id):
+		return 1
+	visiting[node_id] = true
+	var definition: Dictionary = progression_service.skill_node_definition(node_id)
+	var parent_depth := 0
+	for prerequisite in definition.get("prerequisites", []):
+		var prerequisite_id := str(prerequisite)
+		if progression_service.skill_node_definition(prerequisite_id).is_empty():
+			continue
+		parent_depth = maxi(parent_depth, _graph_depth(prerequisite_id, visiting))
+	var graph_depth := maxi(parent_depth + 1, ceili(float(definition.get("depth", 3)) / 3.0))
+	visiting.erase(node_id)
+	_node_depths[node_id] = graph_depth
+	return graph_depth
 
-func _scroll_to_unlock_button(button: Control) -> void:
-	$Panel/Content/NodeScroll.ensure_control_visible(button)
+func _node_before(left: String, right: String) -> bool:
+	var left_definition: Dictionary = progression_service.skill_node_definition(left)
+	var right_definition: Dictionary = progression_service.skill_node_definition(right)
+	var left_depth := int(_node_depths.get(left, left_definition.get("depth", 0)))
+	var right_depth := int(_node_depths.get(right, right_definition.get("depth", 0)))
+	if left_depth != right_depth:
+		return left_depth < right_depth
+	return left < right
+
+func _lane_name(node_id: String, definition: Dictionary) -> String:
+	for stat_key in CORE_STAT_KEYS:
+		if definition.has(stat_key):
+			return CORE_STAT_NAMES[stat_key]
+	if CORE_START_NODES.has(node_id):
+		return CORE_START_NODES[node_id]
+	var category := str(definition.get("category", ""))
+	return "WEAPON UNLOCKS" if category == "weapon_unlocks" else "RELIC UNLOCKS" if category == "relic_unlocks" else "CORE STATS"
+
+func _refresh_graph() -> void:
+	var unlocked: Array = _profile.get("unlocked_skill_nodes", [])
+	var essence := int(_profile.get("resources", {}).get("essence", 0))
+	for node_id in _node_buttons:
+		var definition: Dictionary = progression_service.skill_node_definition(node_id)
+		var button := _node_buttons[node_id] as Button
+		var is_unlocked: bool = node_id in unlocked
+		var available: bool = _prerequisites_met(definition, unlocked) and essence >= progression_service.skill_node_cost(node_id)
+		button.text = "%s %s" % ["✓" if is_unlocked else "◆" if available else "·", _short_node_label(node_id, definition)]
+		button.self_modulate = Color("#37e8f5") if is_unlocked else Color("#fff19a") if available else Color("#7b87a2")
+		button.disabled = not _profile_available
+	if _graph_layer != null:
+		for edge in _graph_layer.edges:
+			edge["unlocked"] = str(edge["prerequisite_id"]) in unlocked
+		_graph_layer.queue_redraw()
+
+func _short_node_label(node_id: String, definition: Dictionary) -> String:
+	var lane := _lane_name(node_id, definition)
+	if lane in CORE_STAT_NAMES.values():
+		if CORE_START_NODES.has(node_id):
+			return "%s 01" % lane.split(" ")[0]
+		var suffix := node_id.get_slice("_", node_id.get_slice_count("_") - 1)
+		return "%s %s" % [lane.split(" ")[0], suffix]
+	var item_name := str(definition.get("unlock_name", node_id.replace("unlock_", "").replace("_", " "))).to_upper()
+	return "%s %s" % ["W" if lane == "WEAPON UNLOCKS" else "R", item_name.get_slice(" ", 0)]
+
+func _select_node(node_id: String) -> void:
+	if not _node_buttons.has(node_id):
+		return
+	selected_node_id = node_id
+	_refresh_details()
+
+func _refresh_details() -> void:
+	if not _profile_available or not _node_buttons.has(selected_node_id):
+		return
+	var definition: Dictionary = progression_service.skill_node_definition(selected_node_id)
+	var unlocked: Array = _profile.get("unlocked_skill_nodes", [])
+	var essence := int(_profile.get("resources", {}).get("essence", 0))
+	var cost: int = progression_service.skill_node_cost(selected_node_id)
+	var requirements: Array = definition.get("prerequisites", [])
+	var available := _prerequisites_met(definition, unlocked) and essence >= cost
+	_selected_title.text = str(definition.get("unlock_name", _short_node_label(selected_node_id, definition))).to_upper()
+	_selected_effect.text = "%s  ·  %d ESSENCE  ·  %s" % [_effect_summary(definition), cost, "PROPOSED"]
+	var prerequisite_names: PackedStringArray = []
+	for prerequisite in requirements:
+		var prerequisite_definition: Dictionary = progression_service.skill_node_definition(str(prerequisite))
+		prerequisite_names.append(str(prerequisite_definition.get("unlock_name", str(prerequisite).replace("_", " "))).to_upper())
+	var state := "UNLOCKED" if selected_node_id in unlocked else "AVAILABLE" if available else "LOCKED"
+	var prerequisite_text := "REQUIRES " + ", ".join(prerequisite_names) if not prerequisite_names.is_empty() else "NO PREREQUISITES"
+	_selected_requirements.text = "%s  ·  %s" % [state, prerequisite_text]
+	_unlock_button.text = "UNLOCK NODE  ·  PROPOSED" if selected_node_id not in unlocked else "NODE UNLOCKED"
+	_unlock_button.disabled = selected_node_id in unlocked or not available
+
+func _effect_summary(definition: Dictionary) -> String:
+	if definition.has("unlocks_weapon"):
+		return "UNLOCKS WEAPON · " + str(definition.get("unlock_name", definition["unlocks_weapon"])).to_upper()
+	if definition.has("unlocks_relic"):
+		return "UNLOCKS RELIC · " + str(definition.get("unlock_name", definition["unlocks_relic"])).to_upper()
+	if not str(definition.get("display_bonus", "")).is_empty():
+		return str(definition["display_bonus"]).to_upper()
+	for stat_key in CORE_STAT_KEYS:
+		if definition.has(stat_key):
+			var amount := float(definition[stat_key]) * 100.0
+			return "+%.1f%% %s" % [amount, CORE_STAT_NAMES[stat_key]]
+	return "EFFECT DETAILS UNAVAILABLE"
+
+func _prerequisites_met(definition: Dictionary, unlocked: Array) -> bool:
+	for prerequisite in definition.get("prerequisites", []):
+		if prerequisite not in unlocked:
+			return false
+	return true
+
+func _request_selected_unlock() -> void:
+	if not selected_node_id.is_empty() and not _unlock_button.disabled:
+		unlock_requested.emit(selected_node_id)
 
 func _unhandled_input(event: InputEvent) -> void:
 	if visible and event.is_action_pressed("ui_cancel"):

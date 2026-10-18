@@ -8,6 +8,12 @@ Remplacer la vue actuelle de nœuds par une véritable page qui représente les 
 
 Godot 4.7.2, `Control`, GDScript et système de progression existant (`game/scripts/progression_service.gd`, `game/scenes/skill_tree_panel.tscn`). Données structurées selon le modèle GDD `SkillNode {id, cost, prerequisites, effects}` et sauvegarde versionnée selon ADR-009.
 
+### Avancement (2026-10-18)
+
+- **[PROPOSÉ]** La page affiche les définitions actuellement exposées par `ProgressionService` sous forme de graphe ramifié: liens depuis `prerequisites`, rangs de statistiques et branches de déblocages d’armes/reliques. Le smoke confirme les 100 définitions runtime actuelles, les états, coûts et effets dérivés du service, ainsi que navigation clavier/manette, sélection, déblocage délégué, respec et état d’erreur.
+- **[VALIDÉ]** Cette tranche ne modifie ni les données de nœuds, ni les coûts/effets, ni le service de progression. Les paramètres qui portent `PROPOSED` restent proposés; l’UI les identifie comme tels. Capture 640×360 inspectée à `/tmp/dopamine-skill-tree.png`; bornes de viewport 640×360, 1280×720 et 1920×1080 vérifiées.
+- **[OUVERT]** Les définitions actuelles comprennent des valeurs proposées et constituent les données existantes du prototype; leur validation de design/équilibrage reste hors de cette tranche. La mise en page choisie pour cette implémentation est une carte de graphe navigable par scroll sur deux axes.
+
 ## Commandes de vérification
 
 - `godot --headless --editor --path game --quit`
@@ -48,5 +54,5 @@ Vérifier la validité du graphe (identifiants uniques, références de prérequ
 
 ## Questions ouvertes
 
-- Le GDD indique 100–150 nœuds avec lancement à 100, tandis que le jeu actuel doit être audité : confirmer les définitions réellement implémentées, leur disposition logique et quels paramètres restent proposés.
-- Choix de mise en page (vue panoramique, zoom, navigation par branches) et seuils de densité à définir en conception si l’arbre actuel ne suffit pas.
+- La validation de design et d’équilibrage des contenus déjà marqués `[PROPOSÉ]` reste à arbitrer; cette page les expose sans les transformer en décisions.
+- La disposition en six voies et la carte défilable sur deux axes sont un choix de présentation `[PROPOSÉ]`; ils n’ajoutent aucune sémantique de progression.
