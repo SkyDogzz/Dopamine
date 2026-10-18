@@ -1006,7 +1006,10 @@ func _process(_delta: float) -> void:
 			"xp_collected":
 				var id: Dictionary = event["target"]
 				_pending_xp_orbs.erase(_entity_key(int(id["index"]), int(id["generation"])))
-				_remove_reserved_xp_position(Vector2(float(event["position"]["x"]), float(event["position"]["y"])))
+				var collected_xp_position := Vector2(float(event["position"]["x"]), float(event["position"]["y"]))
+				_remove_reserved_xp_position(collected_xp_position)
+				_queue_transient_animation("xp_orb", "collect", collected_xp_position, Vector2.ZERO,
+						current_simulation_time, 14.0)
 				Sfx.play("xp_pickup")
 				_add_xp(float(event["amount"]))
 	_apply_pending_lifesteal(elapsed_active_time)
@@ -4059,7 +4062,7 @@ func _add_enemy_death_pixels(enemy_type: String, position: Vector2) -> void:
 	while _enemy_death_pixels.size() > MAX_ENEMY_DEATH_PIXELS:
 		_enemy_death_pixels.pop_front()
 
-func _queue_weapon_transient(weapon_role: String, state: String, position: Vector2,
+func _queue_transient_animation(weapon_role: String, state: String, position: Vector2,
 		direction: Vector2, active_time: float, size: float, rotation: float = 0.0,
 		critical_hit: bool = false) -> bool:
 	if _visual_effects_reduced() or _sprite_renderer == null:
@@ -4081,9 +4084,9 @@ func _queue_weapon_fire_visual(weapon_id: String, active_time: float) -> void:
 	if loadout != null and loadout.is_evolved(weapon_id):
 		weapon_variant = str(WEAPON_EVOLUTION_IDS.get(weapon_id, weapon_id))
 	var position: Vector2 = player.global_position if player != null else Vector2.ZERO
-	_queue_weapon_transient("weapon_%s" % weapon_variant, "attack", position, Vector2.ZERO,
+	_queue_transient_animation("weapon_%s" % weapon_variant, "attack", position, Vector2.ZERO,
 			active_time, 22.0)
-	_queue_weapon_transient("weapon_%s" % weapon_id, "fire_vfx", position, Vector2.ZERO,
+	_queue_transient_animation("weapon_%s" % weapon_id, "fire_vfx", position, Vector2.ZERO,
 			active_time, 28.0)
 
 func _add_weapon_impact(source_type: String, position: Vector2, is_damage_over_time: bool,
@@ -4097,7 +4100,7 @@ func _add_weapon_impact(source_type: String, position: Vector2, is_damage_over_t
 	if _visual_effects_reduced():
 		return
 	var weapon_id: String = WEAPON_IMPACT_SOURCE_IDS.get(impact_type, "")
-	if not weapon_id.is_empty() and _queue_weapon_transient("weapon_%s" % weapon_id, "impact_vfx",
+	if not weapon_id.is_empty() and _queue_transient_animation("weapon_%s" % weapon_id, "impact_vfx",
 			position, Vector2.ZERO, _last_simulation_time,
 			28.0 * (CRITICAL_HIT_IMPACT_SCALE if critical_hit else 1.0), rotation, critical_hit):
 		return

@@ -117,6 +117,12 @@ func _run() -> void:
 	}])
 	assert(view._sprite_renderer.animated_multimesh_for("weapon_minigun_fire_vfx", 1).instance_count == 1,
 			"Transient weapon fire VFX should render on its authored second frame")
+	view._sprite_renderer.set_entities([], Vector2.ZERO, 0.1, {}, [{
+		"role": "xp_orb", "state": "collect", "position": Vector2(40, 50),
+		"size": 14.0, "direction": Vector2.ZERO, "started_at": 0.0,
+	}])
+	assert(view._sprite_renderer.animated_multimesh_for("xp_orb_collect", 1).instance_count == 1,
+			"Collected XP should play its authored collection animation after the orb despawns")
 	view.set_selected_entity(2502, 1)
 	assert(not view._selected_entity_found, "Projectile animation instances should not become selectable targets")
 	var shooter := _entity(2600, "shooter", 0, 0)

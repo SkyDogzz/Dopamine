@@ -116,6 +116,9 @@ func _init() -> void:
 			var vfx_path := "res://assets/sprites/animation/%s_%s.tres" % [family, state.trim_suffix("_vfx")]
 			if ResourceLoader.exists(vfx_path):
 				_role_animation_sets[weapon_role][state] = load(vfx_path) as SpriteFrames
+	var xp_collect_path := "res://assets/sprites/animation/xp_orb_collect.tres"
+	if ResourceLoader.exists(xp_collect_path):
+		_role_animation_sets["xp_orb"] = {"collect": load(xp_collect_path) as SpriteFrames}
 
 func set_entities(entities: Array, origin: Vector2 = Vector2.ZERO, animation_time: float = 0.0,
 		animation_overrides: Dictionary = {}, transient_animations: Array = []) -> void:
