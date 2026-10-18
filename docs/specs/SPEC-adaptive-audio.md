@@ -42,6 +42,8 @@ GDScript conserve des fonctions de calcul de cible pures et des appels explicite
 
 Tester calculs déterministes de cibles de progression indépendamment du mix; smoke de non-redémarrage de piste et de transition continue aux contextes; examiner les formes d’onde et l’écoute répétée aux niveaux de volume. Couvrir les effets SFX pour collisions simultanées et options de volume.
 
+Le smoke `adaptive_survival_music_smoke.gd` vérifie maintenant que la position de lecture continue d'avancer quand le contexte de boss change; il confirme aussi que pause/fin cible le silence par fondu progressif, pas par arrêt immédiat. L'API native retenue pour le prototype de stems est [`AudioStreamSynchronized` (Godot 4.7)](https://docs.godotengine.org/en/4.7/classes/class_audiostreamsynchronized.html), qui synchronise ses sous-flux au lancement; la lecture boucle des WAV est décrite par [`AudioStreamWAV` (Godot 4.7)](https://docs.godotengine.org/en/4.7/classes/class_audiostreamwav.html). Ces références soutiennent le choix technique proposé, mais ne valent ni approbation de la composition ni revue d'écoute.
+
 ## Limites
 
 - Toujours respecter le choix utilisateur : synthwave/EDM, progression de run, transitions fluides, aucun changement abrupt au spawn boss.
