@@ -2097,3 +2097,10 @@ Note de clôture : le blocage historique du smoke `sandbox_ui_smoke.gd` décrit 
 - [x] Après réimport éditeur des PNG courants, captures Xvfb/Mesa actualisées et inspectées pour catalogue, hub, menu, skill tree, équipement et combat; hashes consignés dans `docs/art/evidence/2026-10-18/README.md`. Le catalogue, le hub et le combat diffèrent des captures précédentes.
 - [x] `catalog_icon_assets_smoke.gd`, `survival_hub_smoke.gd`, `launch_navigation_smoke.gd`, `skill_tree_panel_visual_smoke.gd`, `equipment_panel_visual_smoke.gd` et `survival_combat_visual_smoke.gd` passent avec Xvfb et `--capture`. L’option `--capture` nécessite une session rendue; en mode `--headless`, les captures qui attendent `frame_post_draw` ne terminent pas.
 - [ ] Le rendu Xvfb ne remplace pas une validation GPU physique; l’écoute humaine des transitions musicales/SFX reste **[OUVERTE]** à la demande de l’utilisateur de poursuivre sans retour audio.
+
+## Audit Art Bible runtime — 2026-10-18
+
+- [x] `art_bible_asset_audit.gd` parcourt les PNG actifs hors sources éditables et exige que chaque pixel opaque appartienne aux 32 couleurs maîtresses; les sprites 32×32 et chaque frame des feuilles joueur respectent la limite de 16 couleurs. L’atlas d’impacts doit contenir dix cellules 64×64 et ses couleurs visibles sont aussi contrôlées.
+- [x] Le script est intégré à CTest. L’exécution Godot 4.7.2 sur les 102 PNG runtime passe. Les chargements dynamiques restent couverts par les smokes catalogue/renderer et le smoke SFX (38 fichiers sur 19 familles); les validateurs de hash, provenance et audio passent également.
+- [i] Le contrôle vérifie conformité de palette et chemins/runtime testés, pas la qualité artistique de chaque asset ni son rendu matériel. La revue audio réelle demeure **[OUVERTE]**.
+- [x] Checkpoint complet après intégration de l’audit : `XDG_DATA_HOME=/tmp/dopamine-art-bible-full DOPAMINE_TEST_TIMEOUT=480s PATH=/tmp/cmake-3.31.12-linux-x86_64/bin:$PATH ctest --test-dir build --output-on-failure -j1` — **117/117 tests passent en 80,44 s**, incluant les parcours Sandbox, équipement, arbre de compétences, SFX et musique adaptative.

@@ -684,7 +684,7 @@ Conserver les autres règles d'équipement, enhancement, achievements et rareté
 - Options de réduction des VFX.
 - Musique EDM/synthwave adaptative aux vagues et boss.
 
-[PROPOSÉ — prototype P9.3] Une piste synthwave en boucle monte progressivement de niveau selon la vague, avec un accent pendant les combats de boss; elle s’atténue en pause, pendant les choix et après la fin de run. La piste actuelle et sa provenance CC0 sont consignées dans `THIRD_PARTY_NOTICES.md`; gains et vitesse de fondu restent à régler par écoute en jeu.
+[PROPOSÉ — prototype P9.3] Une base synthwave/EDM en boucle monte progressivement de niveau selon la vague, avec un accent pendant les combats de boss; elle s’atténue en pause, pendant les choix et après la fin de run. Les fichiers et recettes audio antérieurs ont été retirés conformément à la consigne de remplacement; les créations procédurales internes et leur manifeste sont documentés dans `docs/specs/SPEC-adaptive-audio.md` et `docs/art/PROVENANCE_ASSETS.csv`. Gains et vitesse de fondu restent à régler par écoute en jeu.
 
 ## J. Équilibrage et rejouabilité
 
