@@ -7,7 +7,7 @@ const PIXEL_HEADING_PATHS := {
 	"res://scenes/options_panel.tscn": ["Content/Center/OptionsCard/OptionsContent/Title"],
 	"res://scenes/survival_hub.tscn": ["Content/Header/Identity/Title", "Content/Main/DifficultyCard/Body/SectionTitle", "Content/Main/PreparationCard/Body/ModeTitle", "Content/Main/PreparationCard/Body/PreparationTitle"],
 	"res://scenes/chest_choice.tscn": ["Content/Title"],
-	"res://scenes/equipment_inventory_panel.tscn": ["Panel/Content/Title"],
+		"res://scenes/equipment_inventory_panel.tscn": ["Panel/Content/Header/Title"],
 	"res://scenes/skill_tree_panel.tscn": ["Panel/Content/Title"],
 	"res://scenes/run_inventory_panel.tscn": ["Center/Panel/Content/Title"],
 	"res://scenes/run_result_panel.tscn": ["Content/Title"],
