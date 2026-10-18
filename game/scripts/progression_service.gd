@@ -4,6 +4,7 @@ const PROFILE_VERSION := 9
 const STARTER_WEAPONS := ["lightning_conductor", "inferno_sprayer"]
 const STARTER_RELICS := ["storm_core", "infernal_heart"]
 const CODEX_ENEMY_IDS := ["chaser", "sprinter", "tank", "shooter", "buffer", "exploder", "shielder", "summoner", "summoned", "elite", "mid_boss", "final_boss"]
+const ACHIEVEMENT_REWARD_STATS := ["damage_pct", "max_hp_pct", "move_speed_pct", "attack_speed_pct", "critical_chance_pct"]
 const POWDER_TIERS := ["basic", "refined", "pure", "prismatic"]
 const ENHANCEMENT_BASE_COSTS := [10, 15, 22, 32, 46, 65, 90, 125, 175, 250]
 const RARITY_COST_MULTIPLIERS := {"normal": 1.0, "magic": 1.5, "mystic": 2.0, "legendary": 3.0, "mythic": 4.0}
@@ -222,6 +223,7 @@ func _award_run(
 	achievement_metrics["elite_affix_types_defeated"] = affix_types_defeated
 	var newly_unlocked_tiers := 0
 	var new_exterminator_tiers := 0
+	var new_steam_achievement_api_names: Array[String] = []
 	for achievement_id in _achievement_definitions:
 		var definition: Dictionary = _achievement_definitions[achievement_id]
 		var metric_id := str(definition["metric"])
@@ -229,6 +231,8 @@ func _award_run(
 		var current_tier := _achievement_tier_for_metric(definition, float(achievement_metrics[metric_id]))
 		achievement_tiers[achievement_id] = current_tier
 		newly_unlocked_tiers += current_tier - previous_tier
+		for tier_index in range(previous_tier, current_tier):
+			new_steam_achievement_api_names.append(str(definition["tiers"][tier_index]["steam_api_name"]))
 		if achievement_id == "exterminator":
 			new_exterminator_tiers = current_tier - previous_tier
 	achievement_progress["metrics"] = achievement_metrics
@@ -245,6 +249,7 @@ func _award_run(
 		"powder_basic": powder_reward,
 		"new_achievement_tiers": new_exterminator_tiers,
 		"new_achievement_tier_count": newly_unlocked_tiers,
+		"new_steam_achievement_api_names": new_steam_achievement_api_names,
 	}
 	if award_equipment:
 		result["equipment"] = equipment
@@ -716,17 +721,29 @@ func equipped_unique_effects() -> Array[String]:
 	return effects
 
 func achievement_bonus(stat_id: String) -> float:
+	return float(achievement_bonuses().get(stat_id, 0.0))
+
+func achievement_bonuses() -> Dictionary:
+	var bonuses := {}
 	var result := load_profile()
 	if not result.get("ok", false):
-		return 0.0
-	var bonus := 0.0
+		return bonuses
 	var acquired_tiers: Dictionary = result["profile"]["achievement_progress"]["tiers"]
 	for achievement_id in _achievement_definitions:
 		var definition: Dictionary = _achievement_definitions[achievement_id]
 		var tiers: Array = definition["tiers"]
 		for index in range(mini(int(acquired_tiers[achievement_id]), tiers.size())):
-			bonus += float(tiers[index]["rewards"].get(stat_id, 0.0))
-	return bonus
+			for stat_id in tiers[index]["rewards"]:
+				bonuses[stat_id] = float(bonuses.get(stat_id, 0.0)) + float(tiers[index]["rewards"][stat_id])
+	return bonuses
+
+func achievement_catalog() -> Array[Dictionary]:
+	var catalog: Array[Dictionary] = []
+	for achievement_id in _achievement_definitions:
+		var definition: Dictionary = _achievement_definitions[achievement_id].duplicate(true)
+		definition["id"] = str(achievement_id)
+		catalog.append(definition)
+	return catalog
 
 func _achievement_metric_aggregations() -> Dictionary:
 	var result := {}
@@ -776,10 +793,12 @@ func _load_achievement_catalog() -> Dictionary:
 		return {}
 	var definitions: Dictionary = {}
 	var metric_aggregations: Dictionary = {}
+	var steam_api_names: Dictionary = {}
 	for definition in parsed["achievements"]:
-		if not definition is Dictionary or definition.size() != 6 or typeof(definition.get("id")) != TYPE_STRING or \
+		if not definition is Dictionary or definition.size() != 7 or typeof(definition.get("id")) != TYPE_STRING or \
 				str(definition["id"]).is_empty() or definitions.has(definition["id"]) or \
 				typeof(definition.get("category")) != TYPE_STRING or str(definition["category"]).is_empty() or \
+				typeof(definition.get("name")) != TYPE_STRING or str(definition["name"]).is_empty() or \
 				typeof(definition.get("secret")) != TYPE_BOOL or \
 				typeof(definition.get("metric")) != TYPE_STRING or str(definition["metric"]).is_empty() or \
 				str(definition.get("aggregation", "")) not in ["sum", "max"] or \
@@ -793,9 +812,12 @@ func _load_achievement_catalog() -> Dictionary:
 		var previous_threshold := 0
 		var tier_ids: Dictionary = {}
 		for achievement_tier in definition["tiers"]:
-			if not achievement_tier is Dictionary or achievement_tier.size() != 3 or \
+			if not achievement_tier is Dictionary or achievement_tier.size() != 4 or \
 					typeof(achievement_tier.get("id")) != TYPE_STRING or \
 					str(achievement_tier["id"]).is_empty() or \
+					typeof(achievement_tier.get("steam_api_name")) != TYPE_STRING or \
+					str(achievement_tier["steam_api_name"]).is_empty() or \
+					steam_api_names.has(achievement_tier["steam_api_name"]) or \
 					tier_ids.has(achievement_tier["id"]) or \
 					typeof(achievement_tier.get("threshold")) not in [TYPE_INT, TYPE_FLOAT] or \
 					not is_finite(float(achievement_tier["threshold"])) or \
@@ -803,11 +825,12 @@ func _load_achievement_catalog() -> Dictionary:
 					float(achievement_tier["threshold"]) <= previous_threshold or \
 					not achievement_tier.get("rewards") is Dictionary:
 				return {}
+			steam_api_names[achievement_tier["steam_api_name"]] = true
 			tier_ids[achievement_tier["id"]] = true
 			previous_threshold = int(achievement_tier["threshold"])
 			for stat_id in achievement_tier["rewards"]:
 				var reward = achievement_tier["rewards"][stat_id]
-				if typeof(stat_id) != TYPE_STRING or str(stat_id).is_empty() or \
+				if typeof(stat_id) != TYPE_STRING or stat_id not in ACHIEVEMENT_REWARD_STATS or \
 						typeof(reward) not in [TYPE_INT, TYPE_FLOAT] or not is_finite(float(reward)):
 					return {}
 		definitions[definition["id"]] = definition.duplicate(true)

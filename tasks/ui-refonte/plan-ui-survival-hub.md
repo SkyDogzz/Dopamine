@@ -8,7 +8,7 @@
 
 Relier **Jouer** au hub de préparation Survival, transférer une difficulté autorisée vers la run normale et limiter la modification d’équipement permanent et de compétences au hub. Les décisions [VALIDÉ], les réglages [PROPOSÉ] et les comportements [OUVERT] restent tels que consignés dans [`SPEC-survival-hub.md`](SPEC-survival-hub.md).
 
-Le Sandbox reste hors du parcours et des données du hub. Le bouton Succès reste inerte. **Addendum utilisateur :** l’ancien bouton Bestiaire ouvre désormais le Codex en lecture seule, sans modifier l’isolation Sandbox. Les multiplicateurs GDD restent provisoires [PROPOSÉ]; aucune règle spéciale Chaos n’est ajoutée.
+Le Sandbox reste hors du parcours et des données du hub. **Addendum utilisateur :** l’ancien bouton Bestiaire ouvre le Codex en lecture seule et Succès ouvre les 100 familles de progression, leurs bonus et les paliers préparés pour Steam, sans modifier l’isolation Sandbox. Les multiplicateurs GDD restent provisoires [PROPOSÉ]; aucune règle spéciale Chaos n’est ajoutée.
 
 ## Découpage vertical
 
@@ -20,7 +20,7 @@ Avant le code, vérifier le format de profil courant, l’idempotence des récom
 
 ### Tranche B — Hub et navigation
 
-Créer le hub comme scène propriétaire de `ProgressionService`, charger le profil normal et afficher la sélection des difficultés déverrouillées/verrouillées avec leurs conditions. Réutiliser les panneaux d’équipement et d’arbre de compétences existants; fermeture et retour restaurent le focus. Succès et Bestiaire sont focalisables, indiqués comme indisponibles et sans callback fonctionnel. **Jouer** ouvre le hub; le retour renvoie à l’accueil.
+Créer le hub comme scène propriétaire de `ProgressionService`, charger le profil normal et afficher la sélection des difficultés déverrouillées/verrouillées avec leurs conditions. Réutiliser les panneaux d’équipement et d’arbre de compétences existants; fermeture et retour restaurent le focus. Succès et Bestiaire sont focalisables et ouvrent leurs panneaux de lecture. **Jouer** ouvre le hub; le retour renvoie à l’accueil.
 
 Une erreur de profil s’affiche sans fabriquer de profil de secours ni autoriser un lancement qui contourne les services normaux.
 

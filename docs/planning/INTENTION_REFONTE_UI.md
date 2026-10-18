@@ -26,7 +26,7 @@ Toutes les interfaces et actions de menu doivent être utilisables à la souris,
 ## Statuts de référence
 
 - **[VALIDÉ]** par le GDD ou un ADR : direction pixel art néon, lisibilité HUD à forte densité, prise en charge manette, choix/déblocage séquentiel des difficultés et Sandbox-first avec isolation de progression.
-- **[VALIDÉ]** par l’interview utilisateur : parcours décrit ci-dessus, menus d’options minimaux, boutons Succès/Bestiaire inactifs, inventaire de pause en lecture seule et confirmation d’abandon.
+- **[VALIDÉ]** par l’interview utilisateur : parcours décrit ci-dessus, menus d’options minimaux, inventaire de pause en lecture seule et confirmation d’abandon. **Extension utilisateur 2026-10-18 :** Succès ouvre la progression et les bonus d’achievements; Bestiaire ouvre le Codex.
 - **[PROPOSÉ]** : multiplicateurs de difficulté, paramètres d’équilibrage et recommandations visuelles non explicitement retenues.
 - **[OUVERT]** dans le GDD : wireframes détaillés, options VFX et détails audio. Ils ne sont pas implicitement arbitrés par cette intention.
 

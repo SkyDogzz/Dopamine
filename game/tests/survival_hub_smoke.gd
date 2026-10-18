@@ -85,13 +85,13 @@ func _run() -> void:
 		_fail("Permanent preparation actions should use their existing compact pixel icons")
 		return
 	if achievements == null or bestiary == null or achievements.focus_mode == Control.FOCUS_NONE or \
-		bestiary.focus_mode == Control.FOCUS_NONE or not achievements.pressed.get_connections().is_empty() or \
+		bestiary.focus_mode == Control.FOCUS_NONE or achievements.pressed.get_connections().size() != 1 or \
 		bestiary.pressed.get_connections().size() != 1:
-		_fail("Successes should stay inert while Codex is focusable and actionable")
+		_fail("Achievements and Codex should both be focusable and actionable")
 		return
-	if achievements.theme_type_variation != "InactiveButton" or bestiary.theme_type_variation != "Button" or \
-		achievements.disabled or bestiary.disabled or bestiary.text != "CODEX":
-		_fail("Successes should remain inactive and Codex should be available")
+	if achievements.theme_type_variation != "Button" or bestiary.theme_type_variation != "Button" or \
+		achievements.disabled or bestiary.disabled or bestiary.text != "CODEX" or achievements.text != "SUCCÈS":
+		_fail("Achievements and Codex should be available from the hub")
 		return
 	if achievements.icon == null or achievements.icon.resource_path != "res://assets/icons/catalog/achievement_medal.png" or \
 		bestiary.icon == null or bestiary.icon.resource_path != "res://assets/sprites/roster/enemy_chaser.png":
@@ -102,19 +102,13 @@ func _run() -> void:
 		bestiary.texture_filter != CanvasItem.TEXTURE_FILTER_NEAREST:
 		_fail("Inactive entry icons should keep a compact nearest-filtered pixel size")
 		return
-	if achievements.get_theme_color("icon_normal_color").to_html(false) != "7b87a2" or \
-		achievements.get_theme_color("icon_focus_color").to_html(false) != "ffd447" or \
-		bestiary.get_theme_color("icon_focus_color").to_html(false) != "ffd447":
+	if achievements.get_theme_color("icon_normal_color") != hub.theme.get_color("icon_normal_color", "Button") or \
+		achievements.get_theme_color("icon_focus_color") != hub.theme.get_color("icon_focus_color", "Button") or \
+		bestiary.get_theme_color("icon_focus_color") != hub.theme.get_color("icon_focus_color", "Button"):
 		_fail("Hub entry icons should use the shared focus color")
 		return
-	var inactive_style := achievements.get_theme_stylebox("normal") as StyleBoxFlat
-	if inactive_style.bg_color.to_html(false) != "1b2340" or \
-		achievements.get_theme_stylebox("focus") != hub.theme.get_stylebox("focus", "Button"):
-		_fail("Inactive achievements should retain muted visuals and shared focus")
-		return
-	var inactive_text := achievements.get_theme_color("font_color")
-	if _contrast_ratio(inactive_text, inactive_style.bg_color) < 4.5:
-		_fail("Inactive feature labels should keep at least 4.5:1 contrast against their card")
+	if achievements.get_theme_stylebox("focus") != hub.theme.get_stylebox("focus", "Button"):
+		_fail("Achievement entry should use the shared focus style")
 		return
 	for variation in ["Button", "OptionButton"]:
 		var disabled_style := hub.theme.get_stylebox("disabled", variation) as StyleBoxFlat
@@ -137,8 +131,17 @@ func _run() -> void:
 		_fail("Keyboard navigation should reach both inactive features")
 		return
 	await _send_mouse_click(achievements)
-	if achievements.pressed.get_connections().size() > 0:
-		_fail("Achievements should remain inert")
+	await process_frame
+	var achievements_panel: Control = hub.get_node("AchievementsPanel")
+	if not achievements_panel.visible or achievements_panel.get_node("Center/Panel/Content/Body/Entries").get_child_count() != 100:
+		_fail("Achievements should open a panel with all 100 achievement families")
+		return
+	if not bounds.encloses(achievements_panel.get_node("Center/Panel").get_global_rect()):
+		_fail("Achievements panel should fit the logical viewport")
+		return
+	await _send_key(KEY_ESCAPE)
+	if achievements_panel.visible or root.gui_get_focus_owner() != achievements:
+		_fail("Escape should close Achievements and restore focus to its hub button")
 		return
 	hub._open_codex()
 	await process_frame
@@ -197,12 +200,15 @@ func _run() -> void:
 		_fail("Gamepad navigation should reach both inactive features")
 		return
 	await _send_gamepad_button(JOY_BUTTON_A)
-	if hub.get_node_or_null("CodexPanel") == null or not hub.get_node("CodexPanel").visible:
-		_fail("Gamepad activation should open the Codex")
+	var activated_achievements_panel: Control = hub.get_node("AchievementsPanel")
+	var codex_panel: Control = hub.get_node("CodexPanel")
+	if (inactive_focus == achievements and not activated_achievements_panel.visible) or \
+		(inactive_focus == bestiary and not codex_panel.visible):
+		_fail("Gamepad activation should open the focused hub reference panel")
 		return
 	await _send_gamepad_cancel()
-	if hub.get_node("CodexPanel").visible:
-		_fail("Gamepad B should close the Codex")
+	if activated_achievements_panel.visible or codex_panel.visible:
+		_fail("Gamepad B should close the focused reference panel")
 		return
 	equipment_button.pressed.emit()
 	await process_frame

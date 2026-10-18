@@ -8,6 +8,7 @@ const EQUIPMENT_PANEL_SCENE := preload("res://scenes/equipment_inventory_panel.t
 const SKILL_TREE_PANEL_SCENE := preload("res://scenes/skill_tree_panel.tscn")
 const ARMORLESS_RECORDS_PANEL_SCENE := preload("res://scenes/armorless_records_panel.tscn")
 const CODEX_PANEL_SCENE := preload("res://scenes/codex_panel.tscn")
+const ACHIEVEMENTS_PANEL_SCENE := preload("res://scenes/achievements_panel.tscn")
 
 @onready var _difficulty_list: VBoxContainer = $Content/Main/DifficultyCard/Body/DifficultyList
 @onready var _difficulty_status: Label = $Content/Main/DifficultyCard/Body/DifficultyStatus
@@ -23,6 +24,7 @@ const CODEX_PANEL_SCENE := preload("res://scenes/codex_panel.tscn")
 @onready var _records_button: Button = $Content/Header/RecordsButton
 @onready var _back_button: Button = $Content/Header/BackButton
 @onready var _codex_button: Button = $Content/Main/PreparationCard/Body/InactiveFeatures/BestiaryButton
+@onready var _achievements_button: Button = $Content/Main/PreparationCard/Body/InactiveFeatures/AchievementsButton
 
 var progression_service: RefCounted
 var selected_difficulty := "easy"
@@ -36,6 +38,7 @@ var _equipment_panel: Control
 var _skill_tree_panel: Control
 var _records_panel: Control
 var _codex_panel: Control
+var _achievements_panel: Control
 
 func _ready() -> void:
 	for button_and_path in [
@@ -55,6 +58,9 @@ func _ready() -> void:
 	_codex_button.text = "CODEX"
 	_codex_button.theme_type_variation = "Button"
 	_codex_button.pressed.connect(_open_codex)
+	_achievements_button.text = "SUCCÈS"
+	_achievements_button.theme_type_variation = "Button"
+	_achievements_button.pressed.connect(_open_achievements)
 	_launch_button.pressed.connect(_launch_run)
 	_armorless_launch_button.pressed.connect(_launch_armorless_run)
 	_endless_launch_button.pressed.connect(_launch_endless_run)
@@ -69,7 +75,8 @@ func _unhandled_input(event: InputEvent) -> void:
 	if (_equipment_panel != null and _equipment_panel.visible) or \
 			(_skill_tree_panel != null and _skill_tree_panel.visible) or \
 			(_records_panel != null and _records_panel.visible) or \
-			(_codex_panel != null and _codex_panel.visible):
+			(_codex_panel != null and _codex_panel.visible) or \
+			(_achievements_panel != null and _achievements_panel.visible):
 		return
 	_on_back_pressed()
 	if get_viewport() != null:
@@ -98,6 +105,9 @@ func _create_panels() -> void:
 	_codex_panel = CODEX_PANEL_SCENE.instantiate()
 	_codex_panel.close_requested.connect(_close_codex)
 	add_child(_codex_panel)
+	_achievements_panel = ACHIEVEMENTS_PANEL_SCENE.instantiate()
+	_achievements_panel.close_requested.connect(_close_achievements)
+	add_child(_achievements_panel)
 
 func _load_profile() -> void:
 	var result: Dictionary = progression_service.load_profile()
@@ -266,6 +276,17 @@ func _open_codex() -> void:
 func _close_codex() -> void:
 	_codex_panel.visible = false
 	_codex_button.grab_focus()
+
+func _open_achievements() -> void:
+	var result: Dictionary = progression_service.load_profile()
+	if not result.get("ok", false):
+		_achievements_panel.present_error()
+		return
+	_achievements_panel.present(progression_service.achievement_catalog(), result["profile"])
+
+func _close_achievements() -> void:
+	_achievements_panel.visible = false
+	_achievements_button.grab_focus()
 
 func _set_equipment_state(instance_id: String, equipped: bool) -> void:
 	var result: Dictionary = progression_service.set_equipped(instance_id, equipped)

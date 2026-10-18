@@ -596,7 +596,8 @@ func _ready() -> void:
 	_base_player_move_speed = player.move_speed
 	if progression_service != null:
 		_refresh_persistent_bonuses()
-		player_max_hp *= 1.0 + progression_service.skill_bonus("max_hp_pct")
+		player_max_hp *= 1.0 + progression_service.skill_bonus("max_hp_pct") + \
+			float(_cached_achievement_stat_bonuses.get("max_hp_pct", 0.0))
 		if mode_id != "armorless":
 			player_max_hp += _equipment_bonus("max_hp")
 	player_hp = player_max_hp
@@ -1695,6 +1696,8 @@ func _run_stat_breakdown() -> Dictionary:
 		var equipment_value: float = _equipment_bonus(stat_id)
 		var achievement_value := float(_cached_achievement_stat_bonuses.get(stat_id, 0.0))
 		var skill_value := float(_cached_skill_stat_bonuses.get(stat_id, 0.0))
+		if stat_id in ["damage_pct", "move_speed_pct"]:
+			achievement_value *= 100.0
 		var base_value := 0.0
 		var total_value: float = run_value + equipment_value + achievement_value + skill_value
 		var total_text := "%+.1f%%" % total_value
@@ -1736,6 +1739,7 @@ func _run_stat_breakdown() -> Dictionary:
 				label = "CRIT DAMAGE"
 			"max_hp":
 				skill_value = float(_cached_skill_stat_bonuses.get("max_hp_pct", 0.0)) * 100.0
+				achievement_value = float(_cached_achievement_stat_bonuses.get("max_hp_pct", 0.0)) * 100.0
 				base_value = simulation.initial_player_hp() if simulation != null else 100.0
 				total_value = player_max_hp if player_max_hp > 0.0 else base_value * (1.0 + skill_value / 100.0) + equipment_value
 				total_text = "%.0f HP" % total_value
@@ -3596,7 +3600,11 @@ func _refresh_persistent_bonuses() -> void:
 		var skill_move_speed_bonus: float = progression_service.skill_bonus("move_speed_pct")
 		var skill_critical_chance_bonus: float = progression_service.skill_bonus("critical_chance_pct")
 		var skill_max_hp_bonus: float = progression_service.skill_bonus("max_hp_pct")
-		var achievement_damage_bonus: float = progression_service.achievement_bonus("damage_pct")
+		if progression_service.has_method("achievement_bonuses"):
+			_cached_achievement_stat_bonuses = progression_service.achievement_bonuses()
+		else:
+			_cached_achievement_stat_bonuses["damage_pct"] = progression_service.achievement_bonus("damage_pct")
+		var achievement_damage_bonus: float = float(_cached_achievement_stat_bonuses.get("damage_pct", 0.0))
 		_cached_persistent_damage_multiplier += skill_damage_bonus
 		_cached_skill_move_speed_pct = skill_move_speed_bonus
 		_cached_skill_critical_chance_pct = skill_critical_chance_bonus
@@ -3608,7 +3616,6 @@ func _refresh_persistent_bonuses() -> void:
 			"critical_chance_pct": skill_critical_chance_bonus,
 			"max_hp_pct": skill_max_hp_bonus,
 		}
-		_cached_achievement_stat_bonuses["damage_pct"] = achievement_damage_bonus * 100.0
 	var capacity_bonus := 1 if _has_unique_effect("expanded_loadout") else 0
 	loadout.set_slot_capacity_bonus(capacity_bonus, capacity_bonus)
 	_refresh_player_move_speed()
@@ -3634,13 +3641,19 @@ func _equipment_xp_value(base_xp: float) -> float:
 
 func _refresh_player_move_speed() -> void:
 	var haste_multiplier := 1.15 if _has_unique_effect("elite_haste") and player_active_time < _elite_haste_expires_at else 1.0
-	var next_speed := _base_player_move_speed * (1.0 + (_equipment_bonus("move_speed_pct") + _xp_run_stat_bonus("move_speed_pct")) / 100.0 + _cached_skill_move_speed_pct) * haste_multiplier
+	var next_speed := _base_player_move_speed * (
+		1.0 + (_equipment_bonus("move_speed_pct") + _xp_run_stat_bonus("move_speed_pct")) / 100.0 +
+		_cached_skill_move_speed_pct + float(_cached_achievement_stat_bonuses.get("move_speed_pct", 0.0))
+	) * haste_multiplier
 	if not is_equal_approx(player.move_speed, next_speed):
 		_run_stat_hub_dirty = true
 	player.move_speed = next_speed
 
 func _effective_weapon_cooldown(base_cooldown: float) -> float:
-	var speed_multiplier: float = 1.0 + (_equipment_bonus("attack_speed_pct") + loadout.global_relic_bonus("attack_speed_pct") + _xp_run_stat_bonus("attack_speed_pct")) / 100.0
+	var speed_multiplier: float = 1.0 + (
+		_equipment_bonus("attack_speed_pct") + loadout.global_relic_bonus("attack_speed_pct") +
+		_xp_run_stat_bonus("attack_speed_pct") + float(_cached_achievement_stat_bonuses.get("attack_speed_pct", 0.0))
+	) / 100.0
 	var cooldown_multiplier: float = maxf(0.1, 1.0 - (_equipment_bonus("cooldown_reduction_pct") + loadout.global_relic_bonus("cooldown_reduction_pct") + _xp_run_stat_bonus("cooldown_reduction_pct")) / 100.0)
 	return base_cooldown * cooldown_multiplier / speed_multiplier
 
@@ -3808,7 +3821,11 @@ func _roll_equipment_critical_multiplier() -> float:
 	return 1.0
 
 func _critical_chance() -> float:
-	return clampf(_equipment_bonus("critical_chance_pct") + _cached_skill_critical_chance_pct + _xp_run_stat_bonus("critical_chance_pct"), 0.0, 100.0)
+	return clampf(
+		_equipment_bonus("critical_chance_pct") + _cached_skill_critical_chance_pct +
+		_xp_run_stat_bonus("critical_chance_pct") + float(_cached_achievement_stat_bonuses.get("critical_chance_pct", 0.0)),
+		0.0, 100.0
+	)
 
 func _equipment_projectile_speed(base_speed: float) -> float:
 	return base_speed * (1.0 + (_equipment_bonus("projectile_speed_pct") + loadout.global_relic_bonus("projectile_speed_pct") + _xp_run_stat_bonus("projectile_speed_pct")) / 100.0)

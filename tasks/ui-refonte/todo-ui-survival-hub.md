@@ -54,11 +54,11 @@
 - [x] Survival est le seul mode jouable présenté.
 - [x] Les difficultés déverrouillées sont sélectionnables et les autres indiquent la condition de déblocage.
 - [x] Les panneaux Équipement et Compétences existants sont accessibles et utilisables dans le hub; fermeture rend le focus au contrôle d’origine.
-- [x] Succès reste visible et inerte; l’entrée Bestiaire ouvre le Codex en lecture seule avec ennemis, armes, reliques et combos.
+- [x] Succès ouvre les achievements avec progression, bonus permanents et paliers Steam préparés; l’entrée Bestiaire ouvre le Codex avec ennemis, armes, reliques et combos.
 - [x] Une erreur de chargement du profil n’entraîne ni profil de secours ni contournement de progression.
 - [x] Les contrôles utilisent les commandes natives et le focus visible du thème partagé; validation automatisée souris/clavier/manette couverte par contrôles focusables. Essai matériel manette indisponible et consigné dans le bilan final.
 
-**Vérification :** `survival_hub_smoke.gd` passe : profil neuf ou illisible, difficultés sélectionnée/verrouillées puis déblocage, Codex et catégories, Succès inerte, panneaux et restauration du focus; la revue matérielle reste non effectuée et est consignée dans le bilan final.
+**Vérification :** `survival_hub_smoke.gd` couvre profil neuf ou illisible, difficultés sélectionnée/verrouillées puis déblocage, Codex et catégories, panneau Succès, panneaux et restauration du focus; la revue matérielle reste non effectuée et est consignée dans le bilan final.
 
 **Dépendances :** Tâches 1 et 2; contrat `play_requested` du module `launch-navigation`.
 
