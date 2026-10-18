@@ -30,7 +30,15 @@ L’application reste lançable pendant la reconstruction : une référence d’
 
 Avant la purge, on retire les `preload` obligatoires, les ressources de scènes/thème et les chargements audio non tolérants à l’absence. Les anciens hashes/usages sont déjà dans les registres d’audit et doivent rester consultables. Les sept fichiers `.uid`, `game/tools/__pycache__/` et le binaire LibreSprite non suivis observés dans l’arbre de travail ne sont pas des assets de `game/assets`; ils sont préservés.
 
-La purge fait partie du travail demandé. Elle est exécutée après le mode lancement-à-vide et son validateur, puis un import headless confirme que l’absence des assets ne casse pas le chargement du projet. Les nouveaux fichiers ne seront intégrés qu’après QA et acceptance, ID par ID.
+La purge complète a été exécutée et vérifiée dans le commit `fd1e4e6`; `game/assets/` ne contient que deux notices. L’import headless et le smoke `res://tests/empty_asset_root_smoke.gd` passent.
+
+## Audit et backlog courant
+
+**[EN COURS] Audit du 2026-10-18 :** `docs/art/ASSET_MANIFEST.json` contient 308 IDs uniques issus du GDD, de l’Art Bible et des ressources runtime; 141 entrées couvrent animations et VFX. Tous les 63 chemins littéraux trouvés dans les scripts, scènes, thèmes et données figurent au manifeste. `game/tools/build_asset_manifest.py` reconstruit le backlog et `game/tools/validate_asset_manifest.py` vérifie les IDs, champs, statuts et skills affectés. Les sorties n’ont pas encore été générées ni validées. Les dimensions/timings laissés ouverts sont `null` et portent un blocage explicite.
+
+Les cinq skills ont été lus intégralement. Ils spécifient leur méthode mais n’exposent pas encore de CLI stable pour staging, génération par ID, seeds en ligne de commande, import ou rapport QA. Les générateurs locaux existants écrivent en partie directement dans les chemins runtime et n’écrivent pas les métadonnées requises; ils doivent être adaptés avant de servir d’interfaces de production. LibreSprite 1.3 fonctionne via `APPIMAGE_EXTRACT_AND_RUN=1`; Python 3.13, FFmpeg 7.1.5, FFplay, Audacity (`/usr/bin/audacity`) et Godot 4.7.2 sont disponibles. Aucun GPU NVIDIA n’est détecté; le travail visuel/audio doit fonctionner sur CPU. Le conteneur n’a pas de `DISPLAY`; la lecture audio réelle n’a pas encore été vérifiée. Les tests numériques ne remplacent pas l’écoute.
+
+**[OUVERT — préproduction visuelle]** La tenue exacte du héros, l’ordre des directions et les timings joueur, les animations d’attaque/mort, l’identité du premier biome, les détails canoniques des boss et le mapping couleur-élément sont laissés ouverts par les références. Le brief du premier lot est demandé au propriétaire avant toute production de masse. Voir les questions de production dans le journal du goal.
 
 ## État des décisions
 

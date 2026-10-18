@@ -22,7 +22,7 @@
 
 ## Pipeline local d’assets
 
-Les cinq skills locaux et le workflow de reconstruction depuis un répertoire `game/assets` vide sont documentés dans [SPEC-local-asset-generation.md](docs/specs/SPEC-local-asset-generation.md). Les assets créatifs actifs ont été purgés le 2026-10-18 à la demande du propriétaire; les anciens inventaires décrivent désormais un état historique. Une référence absente signifie que l’asset n’a pas encore été recréé. Le test `empty_asset_root_smoke.gd` vérifie cette condition.
+Les cinq skills locaux et le workflow de reconstruction depuis un répertoire `game/assets` vide sont documentés dans [SPEC-local-asset-generation.md](docs/specs/SPEC-local-asset-generation.md). Le backlog audité des visuels, animations, SFX et musiques se trouve dans [ASSET_MANIFEST.json](docs/art/ASSET_MANIFEST.json) et se reconstruit avec `python3 game/tools/build_asset_manifest.py`; `python3 game/tools/validate_asset_manifest.py` contrôle son schéma et ses IDs. Les assets créatifs actifs ont été purgés le 2026-10-18; les anciens inventaires décrivent désormais un état historique. Une référence absente signifie que l’asset n’a pas encore été recréé. Le test `empty_asset_root_smoke.gd` vérifie cette condition.
 
 ## Statuts
 
