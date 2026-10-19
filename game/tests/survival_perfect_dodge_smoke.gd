@@ -39,7 +39,7 @@ func _initialize() -> void:
 	session.player.position = Vector2(0.0, 25.0)
 	session._update_perfect_dodges(state, 0.0)
 	session._update_perfect_dodges(state, 0.21)
-	if session._perfect_dodge_style_points != 20:
+	if session._overstimulation_style_points != 20:
 		_fail("Moving out of a predicted projectile hit should award exactly 20 style points")
 		return
 	if not is_equal_approx(session._effective_weapon_cooldown(1.0), 1.0 / 1.1):
@@ -60,7 +60,7 @@ func _initialize() -> void:
 	cancelled_session._perfect_dodge_enemy_damage_serial += 1
 	cancelled_session._update_perfect_dodges(cancellation_state, 0.1)
 	cancelled_session._update_perfect_dodges(cancellation_state, 0.3)
-	if cancelled_session._perfect_dodge_style_points != 0:
+	if cancelled_session._overstimulation_style_points != 0:
 		_fail("Enemy damage during the prediction window should cancel the perfect dodge")
 		return
 	cancelled_session.player.free()

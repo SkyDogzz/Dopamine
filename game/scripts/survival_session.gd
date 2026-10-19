@@ -84,6 +84,15 @@ const RISK_REWARD_ZONE_RADIUS := 72.0
 const RISK_REWARD_ZONE_PLAYER_OFFSET := 140.0
 const RISK_REWARD_ZONE_BUFF_SECONDS := 8.0
 const RISK_REWARD_ZONE_STYLE_POINTS := 15
+const MOBILE_XP_CORE_INTERVAL_SECONDS := 45.0
+const MOBILE_XP_CORE_LIFETIME_SECONDS := 8.0
+const MOBILE_XP_CORE_REWARD := 0.2
+const MOBILE_XP_CORE_STYLE_POINTS := 10
+const MOBILE_XP_CORE_RADIUS := 12.0
+const MOBILE_XP_CORE_PATH_MARGIN := 32.0
+const MOBILE_XP_CORE_PATH_OFFSET := 110.0
+const MOBILE_XP_CORE_ATTRACTION_SPEED := 220.0
+const MOBILE_XP_CORE_FLASH_SECONDS := 0.3
 const OVERSTIMULATION_COMPATIBLE_PAIRS := [
 	"FERAL_SURGE|MAGNETIC_STORM", "FERAL_SURGE|OVERCLOCK", "FERAL_SURGE|PRISM_BREAK",
 	"MAGNETIC_STORM|OVERCLOCK", "MAGNETIC_STORM|PRISM_BREAK", "OVERCLOCK|PRISM_BREAK",
@@ -434,7 +443,7 @@ var _perfect_dodge_rewarded_attacks: Dictionary = {}
 var _perfect_dodge_enemy_damage_serial := 0
 var _perfect_dodge_last_frame_damage_serial := 0
 var _perfect_dodge_attack_speed_expires_at := 0.0
-var _perfect_dodge_style_points := 0
+var _overstimulation_style_points := 0
 var _perfect_dodge_flash_expires_at := 0.0
 var _perfect_dodge_flash_position := Vector2.ZERO
 var _perfect_dodge_flash_was_visible := false
@@ -443,6 +452,15 @@ var _risk_reward_zone_elapsed := 0.0
 var _risk_reward_zone_progress := 0.0
 var _risk_reward_zone_center := Vector2.ZERO
 var _risk_reward_buff_expires_at := 0.0
+var _mobile_xp_core_next_at := MOBILE_XP_CORE_INTERVAL_SECONDS
+var _mobile_core_active := false
+var _mobile_xp_core_position := Vector2.ZERO
+var _mobile_xp_core_velocity := Vector2.ZERO
+var _mobile_xp_core_remaining := 0.0
+var _mobile_xp_core_spawn_count := 0
+var _mobile_xp_core_feedback_expires_at := 0.0
+var _mobile_xp_core_feedback_position := Vector2.ZERO
+var _mobile_xp_core_feedback_was_visible := false
 var _next_elite_spawn_time := 0.0
 var _boss_spawn_pending := false
 var _pulse_warden_attacks: Dictionary = {}
@@ -543,6 +561,7 @@ var _codex_sightings_recorded: Dictionary = {}
 
 @onready var _hp_value: Label = $HUD/RunPanel/RunInfo/StatusRow/HPRow/HPValue
 @onready var _hp_bar: ProgressBar = $HUD/RunPanel/RunInfo/StatusRow/HPRow/HPBar
+@onready var _run_panel: PanelContainer = $HUD/RunPanel
 @onready var _time_value: Label = $HUD/MetaPanel/MetaRow/TimeValue
 @onready var _weapon_value: Label = $HUD/RunPanel/RunInfo/LoadoutRow/LoadoutLabel
 @onready var _weapon_icon: TextureRect = $HUD/RunPanel/RunInfo/LoadoutRow/WeaponIcon
@@ -553,6 +572,7 @@ var _codex_sightings_recorded: Dictionary = {}
 @onready var _wave_objective_panel: PanelContainer = $HUD/WaveObjectivePanel
 @onready var _wave_objective_label: Label = $HUD/WaveObjectivePanel/ObjectiveLabel
 @onready var _risk_reward_label: Label = $HUD/RunPanel/RunInfo/RiskRewardStatus
+@onready var _mobile_core_label: Label = $HUD/RunPanel/RunInfo/MobileCoreStatus
 @onready var _difficulty_value: Label = $HUD/MetaPanel/MetaRow/DifficultyValue
 @onready var _boss_panel: PanelContainer = $HUD/BossPanel
 @onready var _boss_value: Label = $HUD/BossPanel/BossInfo/BossValue
@@ -990,6 +1010,7 @@ func _process(_delta: float) -> void:
 		player_active_time += elapsed_active_time
 	_update_magnet_heart_pulse(state, elapsed_active_time)
 	_update_overstimulation_xp_attraction(state, elapsed_active_time)
+	_update_mobile_xp_core(state, elapsed_active_time)
 	_refresh_player_move_speed()
 	_last_simulation_time = current_simulation_time
 	var latest_event_sequence := _last_combat_event_sequence
@@ -1128,6 +1149,7 @@ func _process(_delta: float) -> void:
 	_update_pulse_warden_attacks(current_simulation_time, bool(state["paused"]))
 	_update_dopamine_core_attacks(current_simulation_time, bool(state["paused"]))
 	_update_perfect_dodges(state, current_simulation_time)
+	_update_run_panel_status_height()
 	var transient_animations := _enemy_death_animations.duplicate()
 	transient_animations.append_array(_weapon_transient_animations)
 	_sprite_renderer.set_entities(_entities, Vector2.ZERO, current_simulation_time,
@@ -1335,7 +1357,7 @@ func _register_perfect_dodge(attack_key: String, feedback_position: Vector2) -> 
 	if _perfect_dodge_rewarded_attacks.has(attack_key):
 		return
 	_perfect_dodge_rewarded_attacks[attack_key] = true
-	_perfect_dodge_style_points += PERFECT_DODGE_STYLE_POINTS
+	_overstimulation_style_points += PERFECT_DODGE_STYLE_POINTS
 	_perfect_dodge_attack_speed_expires_at = player_active_time + PERFECT_DODGE_ATTACK_SPEED_SECONDS
 	_perfect_dodge_flash_expires_at = _last_simulation_time + PERFECT_DODGE_FLASH_SECONDS
 	_perfect_dodge_flash_position = feedback_position
@@ -1904,6 +1926,7 @@ func _refresh_hud(state: Dictionary) -> void:
 			_wave_value.tooltip_text = ""
 	_difficulty_value.text = difficulty_id.to_upper()
 	_refresh_boss_hud()
+	_update_run_panel_status_height()
 	var total_seconds := int(floor(_run_active_time()))
 	_time_value.text = "%02d:%02d" % [total_seconds / 60, total_seconds % 60]
 	var equipped_names: Array[String] = []
@@ -1932,6 +1955,12 @@ func _refresh_hud(state: Dictionary) -> void:
 		_run_stat_hub.update_stats(_run_stat_breakdown(), "XP LEVEL %d  ·  RUN BONUSES %d" % [player_level, _xp_level_bonus_count])
 		_run_stat_hub_dirty = false
 		_next_run_stat_hub_refresh_at = player_active_time + 0.25
+
+func _update_run_panel_status_height() -> void:
+	if _run_panel == null:
+		return
+	var status_count := int(_risk_reward_label.visible) + int(_mobile_core_label.visible)
+	_run_panel.offset_bottom = 51.0 + float(status_count) * 15.0
 
 func _run_stat_breakdown() -> Dictionary:
 	var stat_ids := [
@@ -3030,7 +3059,7 @@ func _complete_risk_reward_zone() -> void:
 		return
 	_risk_reward_zone_active = false
 	_risk_reward_buff_expires_at = player_active_time + RISK_REWARD_ZONE_BUFF_SECONDS
-	_perfect_dodge_style_points += RISK_REWARD_ZONE_STYLE_POINTS
+	_overstimulation_style_points += RISK_REWARD_ZONE_STYLE_POINTS
 	if _risk_reward_label != null:
 		_risk_reward_label.hide()
 	Sfx.play("chest_reward")
@@ -3045,6 +3074,97 @@ func _update_risk_reward_hud() -> void:
 	_risk_reward_label.show()
 	_risk_reward_label.text = "RISK ZONE  ·  %.1f / 4s  ·  %ds" % [
 		_risk_reward_zone_progress, maxi(0, seconds_left)]
+
+func _mobile_xp_core_trajectory(center: Vector2, viewport_size: Vector2,
+		travel_direction: Vector2) -> Dictionary:
+	var direction := travel_direction.normalized()
+	if direction == Vector2.ZERO:
+		direction = Vector2.RIGHT
+	var half_diagonal := Vector2(viewport_size.x * 0.5, viewport_size.y * 0.5).length()
+	var travel_distance := 2.0 * (half_diagonal + MOBILE_XP_CORE_PATH_MARGIN)
+	var perpendicular_offset := direction.rotated(PI * 0.5) * MOBILE_XP_CORE_PATH_OFFSET
+	return {
+		"position": center + perpendicular_offset - direction * (half_diagonal + MOBILE_XP_CORE_PATH_MARGIN),
+		"velocity": direction * (travel_distance / MOBILE_XP_CORE_LIFETIME_SECONDS),
+	}
+
+func _update_mobile_xp_core(state: Dictionary, elapsed_active_time: float) -> void:
+	if not _overstimulation_enabled() or bool(state.get("paused", false)) or run_over:
+		if _mobile_core_active:
+			_mobile_core_active = false
+			if _mobile_core_label != null:
+				_mobile_core_label.hide()
+		return
+	if not _mobile_core_active and player_active_time >= _mobile_xp_core_next_at:
+		while _mobile_xp_core_next_at <= player_active_time:
+			_mobile_xp_core_next_at += MOBILE_XP_CORE_INTERVAL_SECONDS
+		_start_mobile_xp_core()
+		return
+	if not _mobile_core_active:
+		var flash_visible := _last_simulation_time < _mobile_xp_core_feedback_expires_at
+		if flash_visible or _mobile_xp_core_feedback_was_visible:
+			queue_redraw()
+		_mobile_xp_core_feedback_was_visible = flash_visible
+		return
+	if elapsed_active_time > 0.0:
+		_mobile_xp_core_remaining = maxf(0.0, _mobile_xp_core_remaining - elapsed_active_time)
+		var distance_to_player := _mobile_xp_core_position.distance_to(player.global_position)
+		if distance_to_player <= _xp_pickup_radius(float(state.get("simulation_time", 0.0))):
+			_mobile_xp_core_position = _mobile_xp_core_position.move_toward(
+					player.global_position, MOBILE_XP_CORE_ATTRACTION_SPEED * elapsed_active_time)
+		else:
+			_mobile_xp_core_position += _mobile_xp_core_velocity * elapsed_active_time
+	if _mobile_xp_core_position.distance_to(player.global_position) <= \
+			player_contact_radius + MOBILE_XP_CORE_RADIUS:
+		_collect_mobile_xp_core()
+	elif _mobile_xp_core_remaining <= 0.0:
+		_mobile_core_active = false
+		if _mobile_core_label != null:
+			_mobile_core_label.hide()
+		queue_redraw()
+	else:
+		if _mobile_core_label != null:
+			_mobile_core_label.show()
+			_mobile_core_label.text = "NEON CORE  ·  %02ds" % ceili(_mobile_xp_core_remaining)
+		queue_redraw()
+
+func _start_mobile_xp_core() -> void:
+	var viewport_size := Vector2(1280.0, 720.0)
+	if is_inside_tree():
+		viewport_size = get_viewport_rect().size
+	if viewport_size.x <= 0.0 or viewport_size.y <= 0.0:
+		viewport_size = Vector2(1280.0, 720.0)
+	if _game_camera != null:
+		viewport_size /= _game_camera.zoom
+	var angle := float(_mobile_xp_core_spawn_count) * 2.39996323
+	var trajectory := _mobile_xp_core_trajectory(player.global_position, viewport_size, Vector2.from_angle(angle))
+	_mobile_xp_core_position = trajectory["position"]
+	_mobile_xp_core_velocity = trajectory["velocity"]
+	_mobile_xp_core_remaining = MOBILE_XP_CORE_LIFETIME_SECONDS
+	_mobile_xp_core_spawn_count += 1
+	_mobile_core_active = true
+	if _mobile_core_label != null:
+		_mobile_core_label.show()
+		_mobile_core_label.text = "NEON CORE  ·  08s"
+	Sfx.play("chest_open")
+	if simulation != null:
+		_show_effect_feedback("NEON CORE CROSSING  ·  INTERCEPT FOR 20% XP")
+	queue_redraw()
+
+func _collect_mobile_xp_core() -> void:
+	if not _mobile_core_active:
+		return
+	_mobile_core_active = false
+	_mobile_xp_core_feedback_position = _mobile_xp_core_position
+	_mobile_xp_core_feedback_expires_at = _last_simulation_time + MOBILE_XP_CORE_FLASH_SECONDS
+	_add_xp(player_xp_to_next * MOBILE_XP_CORE_REWARD)
+	_overstimulation_style_points += MOBILE_XP_CORE_STYLE_POINTS
+	if _mobile_core_label != null:
+		_mobile_core_label.hide()
+	Sfx.play("chest_reward")
+	if simulation != null:
+		_show_effect_feedback("NEON CORE  ·  +20% XP  ·  +10 STYLE")
+	queue_redraw()
 
 func _finish_wave_objective(success: bool) -> void:
 	_wave_objective_active = false
@@ -4643,6 +4763,23 @@ func _draw() -> void:
 		_sprite_renderer.draw_projectile_trails(self)
 	_sprite_renderer.draw_batches(self)
 	_sprite_renderer.draw_enemy_feedback(self, _entities)
+	if _mobile_core_active:
+		var pulse := 1.0 + sin(_last_simulation_time * 8.0) * 0.12
+		draw_circle(_mobile_xp_core_position, 17.0 * pulse, Color(0.12, 0.9, 1.0, 0.14))
+		draw_arc(_mobile_xp_core_position, 17.0 * pulse, 0.0, TAU, 32, Color("#37E8F5"), 2.0, true)
+		var core_diamond := PackedVector2Array([
+			_mobile_xp_core_position + Vector2(0.0, -MOBILE_XP_CORE_RADIUS),
+			_mobile_xp_core_position + Vector2(MOBILE_XP_CORE_RADIUS, 0.0),
+			_mobile_xp_core_position + Vector2(0.0, MOBILE_XP_CORE_RADIUS),
+			_mobile_xp_core_position + Vector2(-MOBILE_XP_CORE_RADIUS, 0.0),
+		])
+		draw_colored_polygon(core_diamond, Color("#37E8F5"))
+		draw_circle(_mobile_xp_core_position, 3.0, Color("#F6F7FF"))
+	if not reduced_effects and _last_simulation_time < _mobile_xp_core_feedback_expires_at:
+		var core_flash_alpha := clampf((_mobile_xp_core_feedback_expires_at - _last_simulation_time) /
+				MOBILE_XP_CORE_FLASH_SECONDS, 0.0, 1.0)
+		draw_arc(_mobile_xp_core_feedback_position, 22.0, 0.0, TAU, 32,
+				Color(0.12, 0.9, 1.0, core_flash_alpha), 3.0, true)
 	if _wave_objective_active and _wave_objective_type == "PRIORITY_TARGET" and \
 			not _wave_objective_target_key.is_empty():
 		draw_arc(_wave_objective_target_position, 20.0, 0.0, TAU, 32, Color("#FFD447"), 2.0, true)

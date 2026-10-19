@@ -1,5 +1,11 @@
 # Tests d'acceptation et validation
 
+## Overstimulation — tranche 8/18
+
+- [x] `survival_mobile_xp_core_smoke.gd` passe sous Godot 4.7.2 : trajectoire de traversée de 8 s, spawn toutes les 45 s actives, attraction dans le rayon XP, ramassage au contact, gain de 20 % d’XP et 10 style une seule fois, expiration sans pénalité, exclusion Armorless/Sandbox.
+- [x] Les smokes esquive parfaite et zone risque/récompense passent aussi après le partage du compteur interne de style.
+- [i] Le rendu/ramassage en session native n’est pas vérifiable sans la GDExtension; la compilation de la scène HUD s’importe, mais pas de capture de run ni d’écoute humaine dans cet environnement.
+
 ## Overstimulation — tranche 7/18
 
 - [x] `survival_risk_reward_zone_smoke.gd` passe sous Godot 4.7.2 : activation toutes les quatre vagues non-boss, continuation en Endless, exclusions boss/Armorless/Sandbox, maintien cumulatif en sortant du cercle, gain unique après 4 s, +20 % dégâts/zone et expiration à 8 s.

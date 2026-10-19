@@ -40,7 +40,7 @@ func _initialize() -> void:
 		return
 	session.player.position = session._risk_reward_zone_center
 	session._update_risk_reward_zone(2.5)
-	if session._risk_reward_zone_active or session._perfect_dodge_style_points != 15:
+	if session._risk_reward_zone_active or session._overstimulation_style_points != 15:
 		_fail("Four cumulative seconds should grant one 15-point zone reward")
 		return
 	if not is_equal_approx(session._persistent_damage_multiplier(), 1.2) or \
