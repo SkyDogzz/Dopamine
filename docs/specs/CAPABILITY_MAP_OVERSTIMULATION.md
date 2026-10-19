@@ -70,4 +70,24 @@ Ces idées sont des pistes de design uniquement. Aucune n’est sélectionnée, 
 - Traînées et sons de vitesse déclenchés par déplacement rapide ou traversée d’un groupe.
 - Objectif court pendant une vague, par exemple éliminer les soutiens ou tenir une zone, avec récompense dédiée.
 
+## Hors gameplay — menus et parcours — [PROPOSÉ]
+
+Pistes d’ambiance, d’anticipation et de récompense entre les combats. Elles sont indépendantes des idées de gameplay ci-dessus et ne sont pas sélectionnées ni planifiées.
+
+- Menu d’accueil vivant : skyline animée, néons qui grésillent, circulation et silhouettes en mouvement.
+- Réaction distincte des boutons au focus : son, éclat et mouvement bref au survol ou au changement de sélection.
+- Lancement de run théâtral : transition énergique avec zoom, balayage lumineux et montée musicale, puis arrivée rapide dans le hub.
+- Hub qui reflète la progression avec une vitrine animée du personnage, des armes débloquées et des records.
+- Équipement mis en scène : aperçu visuel de l’objet sélectionné, carte animée et effets liés à sa rareté.
+- Découverte animée d’une entrée du Codex, avec silhouettes et descriptions révélées progressivement.
+- Succès célébrés par un toast visible, un badge animé et un récapitulatif des bonus acquis.
+- Arbre de compétences avec tracé lumineux entre les nœuds, onde d’énergie après achat et aperçu du prochain palier.
+- Résultat de run rythmé par des compteurs qui s’incrémentent par étapes, la mise en avant des records et un accès rapide à « Relancer ».
+- Identité sonore cohérente avec des sons distincts de navigation, confirmation, déblocage, erreur et rareté.
+- Transitions courtes entre menus, avec glissements ou flashs brefs adaptés à l’action et reprise rapide du contrôle.
+- Écran de chargement avec conseil court sur une arme, une synergie ou un ennemi et élément visuel animé.
+- Décor réactif qui varie subtilement selon l’onglet, la difficulté choisie ou la progression.
+- Meilleure vague ou dernier résultat affiché dans le hub pour soutenir l’envie de relancer une run.
+- Révélation de déblocage expliquant ce qui vient d’être obtenu et ce que cela permet avant la prochaine run.
+
 **Hors de cette carte :** aucun chiffre de fréquence, d’intensité, de durée, de multiplicateur ou de récompense n’est validé. Les valeurs actuelles restent des prototypes jusqu’à spécification et calibration.
