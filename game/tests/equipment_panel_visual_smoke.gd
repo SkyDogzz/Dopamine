@@ -42,7 +42,9 @@ func _run() -> void:
 	if gamepad_focus == keyboard_focus or gamepad_focus == null:
 		_fail("Gamepad D-pad should move focus across equipment slots")
 		return
-	if slots.find_children("*", "Button", true, false).size() != 6 or portrait.texture == null or panel_frame.custom_minimum_size != Vector2(600, 326):
+	if slots.find_children("*", "Button", true, false).size() != 6 or portrait.texture == null or \
+		panel_frame.get_global_rect().size.x > root.size.x or panel_frame.get_global_rect().size.y > root.size.y or \
+		panel_frame.custom_minimum_size.x > root.size.x - 32.0 or panel_frame.custom_minimum_size.y > root.size.y - 32.0:
 		_fail("Equipment screen should show a central character with six surrounding equipment slots")
 		return
 	if panel.inventory_item_count() != 2:

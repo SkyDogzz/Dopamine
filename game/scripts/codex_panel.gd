@@ -61,6 +61,7 @@ const EVOLUTION_NAMES := {
 @onready var _category: OptionButton = $Center/Panel/Content/Category
 @onready var _intro: Label = $Center/Panel/Content/Intro
 @onready var _title: Label = $Center/Panel/Content/Header/Title
+@onready var _panel_frame: PanelContainer = $Center/Panel
 
 var _combat_catalog: RefCounted
 var _seen_enemies: Dictionary = {}
@@ -69,12 +70,19 @@ var _unlocked_relics: Dictionary = {}
 var _selected_card: PanelContainer
 
 func _ready() -> void:
+	_fit_panel_to_viewport()
+	get_viewport().size_changed.connect(_fit_panel_to_viewport)
 	_combat_catalog = COMBAT_CATALOG_SCRIPT.new()
 	_category.add_item("ENNEMIS")
 	_category.add_item("ARMES ET COMBOS")
 	_category.add_item("RELIQUES")
 	_category.item_selected.connect(_show_category)
 	_close_button.pressed.connect(func() -> void: close_requested.emit())
+
+func _fit_panel_to_viewport() -> void:
+	var available := get_viewport_rect().size - Vector2(32.0, 32.0)
+	_panel_frame.custom_minimum_size = Vector2(minf(1150.0, available.x), minf(650.0, available.y))
+	_entries.columns = 3 if available.x >= 1100.0 else 2 if available.x >= 700.0 else 1
 
 func _unhandled_input(event: InputEvent) -> void:
 	if visible and event.is_action_pressed("ui_cancel"):

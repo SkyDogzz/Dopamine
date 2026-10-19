@@ -48,6 +48,7 @@ const NODE_COLUMN_STEP := 74.0
 @onready var _unlock_button: Button = $Panel/Content/ActionRow/UnlockButton
 @onready var _respec_button: Button = $Panel/Content/ActionRow/RespecButton
 @onready var _close_button: Button = $Panel/Content/ActionRow/CloseButton
+@onready var _panel_frame: PanelContainer = $Panel
 
 var progression_service: RefCounted
 var selected_node_id := ""
@@ -59,6 +60,8 @@ var _graph_layer: GraphLayer
 var _profile_available := true
 
 func _ready() -> void:
+	_fit_panel_to_viewport()
+	get_viewport().size_changed.connect(_fit_panel_to_viewport)
 	var source_icon := get_node_or_null("Panel/Content/Details/DetailContent/SourceIcon") as TextureRect
 	if source_icon != null:
 		source_icon.texture = load(SOURCE_ICON) as Texture2D if ResourceLoader.exists(SOURCE_ICON) else null
@@ -70,6 +73,11 @@ func _ready() -> void:
 	_respec_button.pressed.connect(func() -> void: respec_requested.emit())
 	_close_button.pressed.connect(func() -> void: close_requested.emit())
 	_build_graph()
+
+func _fit_panel_to_viewport() -> void:
+	var available := get_viewport_rect().size - Vector2(32.0, 32.0)
+	_panel_frame.custom_minimum_size = Vector2(minf(1150.0, available.x), minf(650.0, available.y))
+	_tree_scroll.custom_minimum_size.y = maxf(80.0, minf(480.0, available.y - 210.0))
 
 func present(profile: Dictionary) -> void:
 	_profile = profile.duplicate(true)

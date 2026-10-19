@@ -32,6 +32,7 @@ const METRIC_NAMES := {
 @onready var _detail_progress: Label = $Center/Panel/Content/Body/BodyRow/Detail/DetailContent/DetailProgress
 @onready var _detail_rewards: Label = $Center/Panel/Content/Body/BodyRow/Detail/DetailContent/DetailRewards
 @onready var _close_button: Button = $Center/Panel/Content/Header/CloseButton
+@onready var _panel_frame: PanelContainer = $Center/Panel
 
 var _catalog: Array[Dictionary] = []
 var _profile: Dictionary = {}
@@ -40,9 +41,16 @@ var _unlocked_tier_count := 0
 var _selected_card: PanelContainer
 
 func _ready() -> void:
+	_fit_panel_to_viewport()
+	get_viewport().size_changed.connect(_fit_panel_to_viewport)
 	visible = false
 	_close_button.pressed.connect(func() -> void: close_requested.emit())
 	_category.item_selected.connect(_show_category)
+
+func _fit_panel_to_viewport() -> void:
+	var available := get_viewport_rect().size - Vector2(32.0, 32.0)
+	_panel_frame.custom_minimum_size = Vector2(minf(1150.0, available.x), minf(650.0, available.y))
+	_entries.columns = 4 if available.x >= 1100.0 else 3 if available.x >= 900.0 else 2 if available.x >= 650.0 else 1
 
 func _unhandled_input(event: InputEvent) -> void:
 	if not visible or not event.is_action_pressed("ui_cancel"):

@@ -20,6 +20,7 @@ signal sell_requested(instance_id: String)
 @onready var _management_button: Button = $Panel/Content/Columns/RightColumn/ItemHeader/ManagementButton
 @onready var _portrait: TextureRect = $Panel/Content/Columns/Loadout/Body/Slots/Portrait
 @onready var _character_label: Label = $Panel/Content/Columns/Loadout/Body/CharacterLabel
+@onready var _panel_frame: PanelContainer = $Panel
 @onready var _slots: HBoxContainer = $Panel/Content/Columns/Loadout/Body/Slots
 @onready var _total_stats: GridContainer = $Panel/Content/Columns/Loadout/Body/TotalStats/StatsBody/StatsGrid
 
@@ -81,6 +82,8 @@ var _management_mode := false
 var _slot_buttons: Dictionary = {}
 
 func _ready() -> void:
+	_fit_panel_to_viewport()
+	get_viewport().size_changed.connect(_fit_panel_to_viewport)
 	visible = false
 	_close_button.pressed.connect(_close)
 	_management_button.pressed.connect(_toggle_management_mode)
@@ -96,6 +99,12 @@ func _ready() -> void:
 	_sell_confirmation.get_node("Center/Panel/Content/Actions/CancelButton").pressed.connect(_cancel_sell)
 	_sell_confirmation.get_node("Center/Panel/Content/Actions/SellButton").pressed.connect(_confirm_sell)
 	add_child(_sell_confirmation)
+
+func _fit_panel_to_viewport() -> void:
+	var available := get_viewport_rect().size - Vector2(32.0, 32.0)
+	_panel_frame.custom_minimum_size = Vector2(minf(1150.0, available.x), minf(650.0, available.y))
+	if not _management_mode:
+		_items.columns = 2 if available.x >= 700.0 else 1
 
 func _unhandled_input(event: InputEvent) -> void:
 	if visible and event.is_action_pressed("ui_cancel"):
@@ -216,7 +225,7 @@ func _refresh_slots() -> void:
 
 func _rebuild_inventory(inventory: Array, resources: Dictionary) -> void:
 	_clear_items()
-	_items.columns = 1 if _management_mode else 3
+	_items.columns = 1 if _management_mode or get_viewport_rect().size.x < 732.0 else 2
 	var compatible: Array[Dictionary] = []
 	for equipment in inventory:
 		if str(equipment.get("slot", "")) == _selected_slot:

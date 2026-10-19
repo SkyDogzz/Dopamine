@@ -34,7 +34,7 @@ grow_vertical = 2
 mouse_filter = 1
 
 [node name="Panel" type="PanelContainer" parent="Center"]
-custom_minimum_size = Vector2(1180, 680)
+custom_minimum_size = Vector2(1150, 650)
 layout_mode = 2
 theme_type_variation = "CompactPanel"
 
