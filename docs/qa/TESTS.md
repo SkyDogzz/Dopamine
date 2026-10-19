@@ -12,6 +12,13 @@
 - [i] La génération d’entités et le budget d’élites utilisent toujours le chemin natif; la vérification intégrée reste à relancer lorsque la GDExtension pourra être compilée (CMake absent de l’environnement courant).
 - [ ] Calibration des compositions dans des runs représentatives et revue de lisibilité des cinq motifs.
 
+## Overstimulation — tranche 3/18
+
+- [x] `tools/run_godot_test.sh tools/Godot_v4.7.2-stable_linux.x86_64 --headless --path game --script res://tests/survival_wave_objective_smoke.gd` — passe sous Godot 4.7.2; vérifie les vagues paires non-boss, l’exclusion des transitions de boss, la reprise après le mid-boss, le quota adapté, le gain de 15 % d’XP et le bonus d’attaque de 10 % pendant six secondes actives.
+- [x] `survival_wave_phase_smoke.gd` et `survival_wave_composition_smoke.gd` ont aussi été relancés après cette intégration; leurs assertions restent vertes.
+- [i] Le smoke charge le script de session pour valider sa syntaxe, mais l’exécution du spawn natif, du ciblage, de la zone et du cooldown nécessite la GDExtension absente (`game/bin/linux/libdopamine.linux.template_debug.x86_64.so`); CMake n’est pas installé dans l’environnement courant.
+- [ ] Vérifier les trois objectifs en run représentative; calibrer le quota et contrôler la lecture de la zone/cible pendant les télégraphes.
+
 ## Staging Linux courant après refonte UI/assets — 2026-10-18
 
 - [x] `tools/package_linux_staging.sh` reconstruit un checkout `git archive` propre du commit `f3141f3` avec GCC 14.2.0, CMake 3.31.12, Godot 4.7.2 et `godot-cpp` épinglé. Compilation native Release vierge, import, export Linux/X11 filtré, extraction, notices/licences, exclusions des ressources de développement, `ldd` sans dépendance manquante et lancement headless de l’exécutable extrait avec la GDExtension adjacente passent.

@@ -60,6 +60,9 @@ func composition_name() -> String:
 		available.append("NEST")
 	return available[(wave - 4) % available.size()]
 
+func objective_due() -> bool:
+	return state == State.WAVE and wave >= 2 and wave % 2 == 0
+
 func _init(is_endless_armorless: bool = false, is_endless_standard: bool = false) -> void:
 	endless_armorless = is_endless_armorless
 	endless_standard = is_endless_standard

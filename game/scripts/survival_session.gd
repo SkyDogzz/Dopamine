@@ -65,6 +65,9 @@ const WEAPON_IMPACT_LIFETIME := 0.22
 const MAX_VISIBLE_WEAPON_IMPACTS := 32
 const WEAPON_IMPACT_DISPLAY_SCALE := 0.5
 const CRITICAL_HIT_IMPACT_SCALE := 1.45 # [PROPOSÉ] Critical hits use the same weapon sprite at a larger size; no new color mapping.
+const WAVE_OBJECTIVE_DURATION_SECONDS := 15.0
+const WAVE_OBJECTIVE_ZONE_RADIUS := 72.0
+const WAVE_OBJECTIVE_ZONE_SECONDS := 8.0
 static var DAMAGE_NUMBER_FONT: Font = load("res://assets/fonts/NeonArcadePixel.ttf") as Font if ResourceLoader.exists("res://assets/fonts/NeonArcadePixel.ttf") else ThemeDB.fallback_font
 const DAMAGE_NUMBER_LIFETIME := 0.5 # [PROPOSÉ] Active simulation seconds.
 const DAMAGE_NUMBER_AGGREGATION_WINDOW := 0.12 # [PROPOSÉ] Merge repeated hits on one target.
@@ -379,6 +382,16 @@ var wave_director: RefCounted
 var _next_enemy_spawn_time := 0.0
 var _last_overstimulation_phase := ""
 var _wave_composition_spawn_index := 0
+var _wave_objective_active := false
+var _wave_objective_type := ""
+var _wave_objective_elapsed := 0.0
+var _wave_objective_kill_goal := 0
+var _wave_objective_kills := 0
+var _wave_objective_zone_progress := 0.0
+var _wave_objective_zone_origin := Vector2.ZERO
+var _wave_objective_target_key := ""
+var _wave_objective_target_position := Vector2.ZERO
+var _wave_objective_attack_speed_expires_at := 0.0
 var _next_elite_spawn_time := 0.0
 var _boss_spawn_pending := false
 var _pulse_warden_attacks: Dictionary = {}
@@ -486,6 +499,8 @@ var _codex_sightings_recorded: Dictionary = {}
 @onready var _xp_bar: ProgressBar = $HUD/RunPanel/RunInfo/StatusRow/XPRow/XPBar
 @onready var _run_state: Label = $HUD/MetaPanel/MetaRow/RunStateBadge/RunState
 @onready var _wave_value: Label = $HUD/MetaPanel/MetaRow/WaveValue
+@onready var _wave_objective_panel: PanelContainer = $HUD/WaveObjectivePanel
+@onready var _wave_objective_label: Label = $HUD/WaveObjectivePanel/ObjectiveLabel
 @onready var _difficulty_value: Label = $HUD/MetaPanel/MetaRow/DifficultyValue
 @onready var _boss_panel: PanelContainer = $HUD/BossPanel
 @onready var _boss_value: Label = $HUD/BossPanel/BossInfo/BossValue
@@ -990,6 +1005,7 @@ func _process(_delta: float) -> void:
 							_equipment_area(absolute_zero_shatter_radius), frost_nova_duration_seconds,
 							2.0, 0.5, 2.0, 0.0, 0.0, 0, 0.0, 0.0, true)
 				var dead_key := _entity_key(int(dead_target["index"]), int(dead_target["generation"]))
+				_record_wave_objective_kill(dead_key)
 				if _pandemic_poisoned_targets.has(dead_key) and not _pandemic_spread_targets.has(dead_key):
 					_pandemic_spread_targets[dead_key] = true
 					_spread_pandemic(death_position, state["entities"])
@@ -1039,6 +1055,7 @@ func _process(_delta: float) -> void:
 		if not active_projectiles.has(projectile_key):
 			_starfall_fragments_spawned.erase(projectile_key)
 	_entities = state["entities"]
+	_update_wave_objective(elapsed_active_time)
 	_advance_wave_director(elapsed_active_time, state["paused"])
 	_apply_contact_damage(state, current_simulation_time)
 	_update_shooter_attacks(current_simulation_time, bool(state["paused"]))
@@ -2268,6 +2285,8 @@ func _finish_run(victory: bool, animate_player_death: bool = false) -> void:
 		return
 	_persist_codex_sightings()
 	run_over = true
+	if _wave_objective_active:
+		_finish_wave_objective(false)
 	var death_animation_player: CharacterBody2D
 	if animate_player_death and not victory and player != null and player.has_method("play_death"):
 		player.play_death()
@@ -2548,6 +2567,8 @@ func _advance_wave_director(delta_seconds: float, paused: bool) -> void:
 		var previous_wave: int = wave_director.wave
 		var previous_state: int = wave_director.state
 		wave_director.advance(delta_seconds)
+		if _overstimulation_enabled() and previous_wave != wave_director.wave and wave_director.objective_due():
+			_start_wave_objective(wave_director.wave)
 		if _overstimulation_enabled() and wave_director.state == WAVE_DIRECTOR_SCRIPT.State.WAVE:
 			var current_phase: String = wave_director.phase_name()
 			if current_phase != _last_overstimulation_phase:
@@ -2635,6 +2656,105 @@ func _wave_composition_description() -> String:
 	if wave_director == null or wave_director.composition_name().is_empty():
 		return ""
 	return "WAVE COMPOSITION · %s" % wave_director.composition_name()
+
+func _start_wave_objective(wave_number: int) -> void:
+	_wave_objective_active = true
+	_wave_objective_elapsed = 0.0
+	_wave_objective_kills = 0
+	_wave_objective_zone_progress = 0.0
+	_wave_objective_target_key = ""
+	_wave_objective_zone_origin = player.global_position
+	var roll := _random_float("wave_objective_type")
+	_wave_objective_type = "KILL_QUOTA" if roll < 1.0 / 3.0 else \
+			"PRIORITY_TARGET" if roll < 2.0 / 3.0 else "MOVING_ZONE"
+	_wave_objective_kill_goal = _wave_objective_kill_quota(wave_number)
+	_wave_objective_panel.show()
+	_update_wave_objective_hud()
+	Sfx.play("chest_open")
+
+func _wave_objective_kill_quota(wave_number: int) -> int:
+	return clampi(3 + wave_number / 6, 3, 8)
+
+func _record_wave_objective_kill(enemy_key: String) -> void:
+	if not _wave_objective_active:
+		return
+	if _wave_objective_type == "KILL_QUOTA":
+		_wave_objective_kills += 1
+		if _wave_objective_kills >= _wave_objective_kill_goal:
+			_finish_wave_objective(true)
+	elif _wave_objective_type == "PRIORITY_TARGET" and enemy_key == _wave_objective_target_key:
+		_finish_wave_objective(true)
+
+func _update_wave_objective(delta_seconds: float) -> void:
+	if not _wave_objective_active:
+		return
+	var active_delta := maxf(0.0, delta_seconds)
+	_wave_objective_elapsed += active_delta
+	if _wave_objective_type == "MOVING_ZONE":
+		if player.global_position.distance_to(_wave_objective_zone_center()) <= WAVE_OBJECTIVE_ZONE_RADIUS:
+			_wave_objective_zone_progress = minf(WAVE_OBJECTIVE_ZONE_SECONDS,
+					_wave_objective_zone_progress + active_delta)
+		if _wave_objective_zone_progress >= WAVE_OBJECTIVE_ZONE_SECONDS:
+			_finish_wave_objective(true)
+			return
+	elif _wave_objective_type == "PRIORITY_TARGET":
+		_update_wave_objective_target()
+	if _wave_objective_elapsed >= WAVE_OBJECTIVE_DURATION_SECONDS:
+		_finish_wave_objective(false)
+		return
+	_update_wave_objective_hud()
+
+func _wave_objective_zone_center() -> Vector2:
+	var elapsed := _wave_objective_elapsed
+	return _wave_objective_zone_origin + Vector2(sin(elapsed * 0.35) * 92.0, cos(elapsed * 0.28) * 68.0)
+
+func _update_wave_objective_target() -> void:
+	var nearest_distance := INF
+	var nearest_key := ""
+	for entity in _entities:
+		var components: Dictionary = entity["components"]
+		var enemy_type := str(components.get("EnemyType", ""))
+		if enemy_type.is_empty() or enemy_type in ["mid_boss", "final_boss"] or \
+				components.get("IsProjectile", false) or components.get("IsXpOrb", false):
+			continue
+		var transform: Dictionary = components.get("Transform2D", {})
+		var position := Vector2(float(transform.get("x", 0.0)), float(transform.get("y", 0.0)))
+		var id: Dictionary = entity["id"]
+		var key := _entity_key(int(id["index"]), int(id["generation"]))
+		if key == _wave_objective_target_key:
+			_wave_objective_target_position = position
+			return
+		var distance := player.global_position.distance_squared_to(position)
+		if distance < nearest_distance:
+			nearest_distance = distance
+			nearest_key = key
+			_wave_objective_target_position = position
+	_wave_objective_target_key = nearest_key
+
+func _update_wave_objective_hud() -> void:
+	var seconds_left := ceili(WAVE_OBJECTIVE_DURATION_SECONDS - _wave_objective_elapsed)
+	match _wave_objective_type:
+		"KILL_QUOTA":
+			_wave_objective_label.text = "OBJECTIVE · ELIMINATE %d / %d · %02ds" % [
+				_wave_objective_kills, _wave_objective_kill_goal, seconds_left]
+			_wave_objective_label.tooltip_text = "Eliminate the quota before the 15-second timer ends."
+		"PRIORITY_TARGET":
+			_wave_objective_label.text = "OBJECTIVE · PRIORITY TARGET · %02ds" % seconds_left
+			_wave_objective_label.tooltip_text = "Eliminate the marked enemy before the 15-second timer ends."
+		"MOVING_ZONE":
+			_wave_objective_label.text = "OBJECTIVE · HOLD %.1f / 8s · %02ds" % [
+				_wave_objective_zone_progress, seconds_left]
+			_wave_objective_label.tooltip_text = "Stay inside the moving ring for 8 cumulative seconds."
+
+func _finish_wave_objective(success: bool) -> void:
+	_wave_objective_active = false
+	_wave_objective_panel.hide()
+	if not success:
+		return
+	_wave_objective_attack_speed_expires_at = player_active_time + 6.0
+	_add_xp(player_xp_to_next * 0.15)
+	Sfx.play("chest_reward")
+	_show_effect_feedback("OBJECTIVE COMPLETE  ·  +15% XP  ·  +10% ATTACK SPEED")
 
 func _support_enemy_spawn_chance(base_chance: float) -> float:
 	if difficulty_id != "chaos":
@@ -3773,9 +3893,11 @@ func _refresh_player_move_speed() -> void:
 	player.move_speed = next_speed
 
 func _effective_weapon_cooldown(base_cooldown: float) -> float:
+	var objective_attack_speed_bonus := 10.0 if player_active_time < _wave_objective_attack_speed_expires_at else 0.0
 	var speed_multiplier: float = 1.0 + (
 		_equipment_bonus("attack_speed_pct") + loadout.global_relic_bonus("attack_speed_pct") +
-		_xp_run_stat_bonus("attack_speed_pct") + float(_cached_achievement_stat_bonuses.get("attack_speed_pct", 0.0))
+		_xp_run_stat_bonus("attack_speed_pct") + float(_cached_achievement_stat_bonuses.get("attack_speed_pct", 0.0)) +
+		objective_attack_speed_bonus
 	) / 100.0
 	var cooldown_multiplier: float = maxf(0.1, 1.0 - (_equipment_bonus("cooldown_reduction_pct") + loadout.global_relic_bonus("cooldown_reduction_pct") + _xp_run_stat_bonus("cooldown_reduction_pct")) / 100.0)
 	return base_cooldown * cooldown_multiplier / speed_multiplier
@@ -4042,6 +4164,13 @@ func _draw() -> void:
 		draw_rect(Rect2(-8192.0, -8192.0, 16384.0, 16384.0), Color("#10152B"))
 	if RUINS_TEXTURE != null:
 		draw_texture_rect(RUINS_TEXTURE, Rect2(-768.0, -768.0, 1536.0, 1536.0), false, Color(1.0, 1.0, 1.0, 0.88))
+	if _wave_objective_active and _wave_objective_type == "MOVING_ZONE":
+		var zone_center := _wave_objective_zone_center()
+		draw_circle(zone_center, WAVE_OBJECTIVE_ZONE_RADIUS, Color(0.1, 0.82, 0.95, 0.08))
+		draw_arc(zone_center, WAVE_OBJECTIVE_ZONE_RADIUS, 0.0, TAU, 64, Color("#55D9FF"), 2.0, true)
+		var progress_angle := TAU * _wave_objective_zone_progress / WAVE_OBJECTIVE_ZONE_SECONDS
+		draw_arc(zone_center, WAVE_OBJECTIVE_ZONE_RADIUS + 6.0, -PI * 0.5,
+				-PI * 0.5 + progress_angle, 64, Color("#FFD447"), 3.0, true)
 	if _last_simulation_time < _magnet_heart_impulse_expires_at:
 		var impulse_radius := _magnet_heart_effective_pulse_radius()
 		draw_arc(player.global_position, impulse_radius, 0.0, TAU, 64, Color(0.22, 0.9, 1.0, 0.42), 1.5, true)
@@ -4049,6 +4178,14 @@ func _draw() -> void:
 		_sprite_renderer.draw_projectile_trails(self)
 	_sprite_renderer.draw_batches(self)
 	_sprite_renderer.draw_enemy_feedback(self, _entities)
+	if _wave_objective_active and _wave_objective_type == "PRIORITY_TARGET" and \
+			not _wave_objective_target_key.is_empty():
+		draw_arc(_wave_objective_target_position, 20.0, 0.0, TAU, 32, Color("#FFD447"), 2.0, true)
+		var target_label_position := _wave_objective_target_position + Vector2(-16.0, -24.0)
+		draw_string_outline(DAMAGE_NUMBER_FONT, target_label_position, "TARGET", HORIZONTAL_ALIGNMENT_LEFT,
+				-1.0, 8, 2, Color("#09111A"))
+		draw_string(DAMAGE_NUMBER_FONT, target_label_position, "TARGET", HORIZONTAL_ALIGNMENT_LEFT,
+				-1.0, 8, Color("#FFD447"))
 	for attack in _shooter_attacks.values():
 		if str(attack["phase"]) != "telegraph":
 			continue
