@@ -45,7 +45,7 @@ uint32_t CombatSimulationSnapshot::get_format_version() const {
 }
 
 bool CombatSimulationSnapshot::is_valid() const {
-	return state_.has_value() && format_version_ == 17;
+	return state_.has_value() && format_version_ == 18;
 }
 
 void CombatSimulation::_bind_methods() {
@@ -75,6 +75,10 @@ void CombatSimulation::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("apply_sandbox_overrides", "overrides"), &CombatSimulation::apply_sandbox_overrides);
 	ClassDB::bind_method(D_METHOD("set_steering_target", "position", "max_speed", "separation_radius", "separation_weight"),
 			&CombatSimulation::set_steering_target);
+	ClassDB::bind_method(D_METHOD("set_enemy_speed_multiplier", "multiplier"),
+			&CombatSimulation::set_enemy_speed_multiplier);
+	ClassDB::bind_method(D_METHOD("damage_enemies_in_radius", "center", "radius", "damage"),
+			&CombatSimulation::damage_enemies_in_radius);
 	ClassDB::bind_method(D_METHOD("dash_entity", "index", "generation", "velocity", "duration_seconds"),
 			&CombatSimulation::dash_entity);
 	ClassDB::bind_method(D_METHOD("acknowledge_events", "event_sequence"), &CombatSimulation::acknowledge_events);
@@ -431,6 +435,30 @@ int64_t CombatSimulation::set_steering_target(Vector2 position, float max_speed,
 	return submit(std::move(command));
 }
 
+int64_t CombatSimulation::set_enemy_speed_multiplier(float multiplier) {
+	if (!std::isfinite(multiplier) || multiplier < 0.1F || multiplier > 10.0F) {
+		return 0;
+	}
+	dopamine::sim::SimulationCommand command;
+	command.type = dopamine::sim::CommandType::SetEnemySpeedMultiplier;
+	command.enemy_speed_multiplier = multiplier;
+	return submit(std::move(command));
+}
+
+int64_t CombatSimulation::damage_enemies_in_radius(Vector2 center, float radius, float damage) {
+	if (!std::isfinite(center.x) || !std::isfinite(center.y) || !std::isfinite(radius) || radius < 0.0F ||
+			!std::isfinite(damage) || damage <= 0.0F) {
+		return 0;
+	}
+	dopamine::sim::SimulationCommand command;
+	command.type = dopamine::sim::CommandType::DamageEnemiesInRadius;
+	command.x = static_cast<float>(center.x);
+	command.y = static_cast<float>(center.y);
+	command.projectile_radius = radius;
+	command.projectile_damage = damage;
+	return submit(std::move(command));
+}
+
 int64_t CombatSimulation::dash_entity(int64_t index, int64_t generation, Vector2 velocity, double duration_seconds) {
 	constexpr int64_t max_id = std::numeric_limits<uint32_t>::max();
 	if (index < 0 || index > max_id || generation <= 0 || generation > max_id ||
@@ -678,7 +706,7 @@ Dictionary CombatSimulation::capture_state() {
 bool CombatSimulation::restore_state(const Dictionary &state) {
 	if (state.size() != 2 || !state.has("format_version") || !state.has("native_state") ||
 			state["format_version"].get_type() != Variant::INT ||
-			static_cast<uint32_t>(static_cast<int64_t>(state["format_version"])) != 17) {
+			static_cast<uint32_t>(static_cast<int64_t>(state["format_version"])) != 18) {
 		return false;
 	}
 	Ref<CombatSimulationSnapshot> native_state = state["native_state"];

@@ -52,6 +52,38 @@ int main() {
 	require(after_spawn->entities.size() == 1, "spawn command should publish one entity");
 	const auto first_snapshot = after_spawn;
 
+	SimulationCommand area_damage;
+	SimulationCommand area_target;
+	area_target.type = CommandType::Spawn;
+	area_target.entity_type = "chaser";
+	area_target.x = 1000.0F;
+	area_target.y = 1000.0F;
+	area_target.hp = 10.0F;
+	submit_and_wait(worker, area_target);
+	area_damage.type = CommandType::DamageEnemiesInRadius;
+	area_damage.x = 1000.0F;
+	area_damage.y = 1000.0F;
+	area_damage.projectile_radius = 32.0F;
+	area_damage.projectile_damage = 3.0F;
+	submit_and_wait(worker, area_damage);
+	const auto after_area_damage = worker.snapshot();
+	require(after_area_damage->events.size() == 1 &&
+			after_area_damage->events.front().type == dopamine::sim::CombatEventType::Damage &&
+			std::any_of(after_area_damage->entities.begin(), after_area_damage->entities.end(),
+					[](const Entity &entity) { return entity.transform.x == 1000.0F && entity.health.current == 7.0F; }),
+			"area damage command should publish standard damage events for nearby enemies");
+	SimulationCommand clear_area_events;
+	clear_area_events.type = CommandType::AcknowledgeEvents;
+	clear_area_events.event_sequence = after_area_damage->events.back().sequence;
+	submit_and_wait(worker, clear_area_events);
+	SimulationCommand clear_area_target;
+	clear_area_target.type = CommandType::Despawn;
+	clear_area_target.entity = after_area_damage->entities.back().id;
+	for (const Entity &entity : after_area_damage->entities) {
+		if (entity.transform.x == 1000.0F) clear_area_target.entity = entity.id;
+	}
+	submit_and_wait(worker, clear_area_target);
+
 	SimulationCommand set_speed;
 	set_speed.type = CommandType::SetSpeed;
 	set_speed.speed_multiplier = 2.0;
@@ -104,11 +136,18 @@ int main() {
 	steering_target.steering.separation_radius = 18.0F;
 	steering_target.steering.separation_weight = 0.5F;
 	submit_and_wait(worker, steering_target);
+	SimulationCommand enemy_speed;
+	enemy_speed.type = CommandType::SetEnemySpeedMultiplier;
+	enemy_speed.enemy_speed_multiplier = 1.15F;
+	submit_and_wait(worker, enemy_speed);
 	step.delta_seconds = 0.1;
 	submit_and_wait(worker, step);
 	const auto after_steering = worker.snapshot();
 	require(after_steering->entities[0].velocity.x > 0.0F,
 			"worker step should apply target steering through the shared core");
+	require(std::abs(std::hypot(after_steering->entities[0].velocity.x,
+				after_steering->entities[0].velocity.y) - 11.5F) < 0.01F,
+			"worker should apply the event speed multiplier to the existing enemy");
 	require(after_steering->entities[0].transform.x > after_step->entities[0].transform.x,
 			"steered worker step should move toward its target");
 
@@ -212,7 +251,8 @@ int main() {
 	dot_targets.count = 10;
 	dot_targets.hp = 100000.0F;
 	submit_and_wait(worker, dot_targets);
-	for (const auto &entity : worker.snapshot()->entities) {
+	const auto dot_target_snapshot = worker.snapshot();
+	for (const auto &entity : dot_target_snapshot->entities) {
 		SimulationCommand apply_status;
 		apply_status.type = CommandType::ApplyDamageOverTime;
 		apply_status.entity = entity.id;
@@ -316,7 +356,7 @@ int main() {
 	const auto captured_worker_state = worker.capture_state(1s);
 	require(captured_worker_state.has_value(), "worker should capture a coherent state at a command barrier");
 	const SimulationWorkerState saved_worker_state = *captured_worker_state;
-	require(saved_worker_state.format_version == 17 && saved_worker_state.paused && saved_worker_state.speed_multiplier == 2.0 &&
+	require(saved_worker_state.format_version == 18 && saved_worker_state.paused && saved_worker_state.speed_multiplier == 2.0 &&
 			saved_worker_state.has_steering_target && saved_worker_state.steering_target_x == 12.0F &&
 			saved_worker_state.steering_target_y == -6.0F && saved_worker_state.steering_config.max_speed == 48.0F &&
 			saved_worker_state.collision_count == benchmark_combat->collision_count &&

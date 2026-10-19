@@ -68,6 +68,10 @@ const CRITICAL_HIT_IMPACT_SCALE := 1.45 # [PROPOSÉ] Critical hits use the same 
 const WAVE_OBJECTIVE_DURATION_SECONDS := 15.0
 const WAVE_OBJECTIVE_ZONE_RADIUS := 72.0
 const WAVE_OBJECTIVE_ZONE_SECONDS := 8.0
+const OVERSTIMULATION_EVENT_INTERVAL_WAVES := 3
+const OVERSTIMULATION_EVENT_WARNING_SECONDS := 5.0
+const OVERSTIMULATION_EVENT_DURATION_SECONDS := 15.0
+const OVERSTIMULATION_EVENT_XP_REWARD := 0.15
 static var DAMAGE_NUMBER_FONT: Font = load("res://assets/fonts/NeonArcadePixel.ttf") as Font if ResourceLoader.exists("res://assets/fonts/NeonArcadePixel.ttf") else ThemeDB.fallback_font
 const DAMAGE_NUMBER_LIFETIME := 0.5 # [PROPOSÉ] Active simulation seconds.
 const DAMAGE_NUMBER_AGGREGATION_WINDOW := 0.12 # [PROPOSÉ] Merge repeated hits on one target.
@@ -392,6 +396,20 @@ var _wave_objective_zone_origin := Vector2.ZERO
 var _wave_objective_target_key := ""
 var _wave_objective_target_position := Vector2.ZERO
 var _wave_objective_attack_speed_expires_at := 0.0
+var _overstimulation_rng := RandomNumberGenerator.new()
+var _overstimulation_event_wave := 3
+var _overstimulation_event_warning := false
+var _overstimulation_event_elapsed := 0.0
+var _overstimulation_event_remaining := 0.0
+var _overstimulation_event_anomaly := ""
+var _overstimulation_event_kills := 0
+var _overstimulation_enemy_speed_multiplier := 1.0
+var _overstimulation_applied_enemy_speed_multiplier := 1.0
+var _overstimulation_attack_speed_bonus := 0.0
+var _overstimulation_xp_storm := false
+var _overstimulation_prism_break := false
+var _overstimulation_last_anomaly := ""
+var _overstimulation_xp_attraction_active := false
 var _next_elite_spawn_time := 0.0
 var _boss_spawn_pending := false
 var _pulse_warden_attacks: Dictionary = {}
@@ -556,6 +574,7 @@ func _ready() -> void:
 	$HUD.add_child(_run_stat_hub)
 	_sprite_renderer = SPRITE_RENDERER_SCRIPT.new()
 	_run_id = Crypto.new().generate_random_bytes(16).hex_encode()
+	_overstimulation_rng.seed = hash(_run_id)
 	if mode_id == "armorless":
 		armorless_run_state = ARMORLESS_RUN_STATE_SCRIPT.new(hash(_run_id))
 		armorless_run_state.begin_run()
@@ -936,6 +955,7 @@ func _process(_delta: float) -> void:
 		_take_player_damage(_player_health_decay_amount(player_active_time, elapsed_active_time))
 		player_active_time += elapsed_active_time
 	_update_magnet_heart_pulse(state, elapsed_active_time)
+	_update_overstimulation_xp_attraction(state, elapsed_active_time)
 	_refresh_player_move_speed()
 	_last_simulation_time = current_simulation_time
 	var latest_event_sequence := _last_combat_event_sequence
@@ -991,9 +1011,18 @@ func _process(_delta: float) -> void:
 				var dead_target: Dictionary = event["target"]
 				var dead_enemy_type: String = str(event.get("target_type", ""))
 				var dead_enemy_affix: String = str(event.get("target_affix", ""))
+				var death_position := Vector2(float(event["position"]["x"]), float(event["position"]["y"]))
+				if _overstimulation_prism_break and dead_enemy_type not in ["mid_boss", "final_boss"]:
+					_overstimulation_event_kills += 1
+					if _overstimulation_event_kills % 8 == 0:
+						var blast_sequence: int = simulation.damage_enemies_in_radius(death_position,
+								96.0, _overstimulation_base_weapon_damage() * _persistent_damage_multiplier())
+						if blast_sequence > 0:
+							queue_redraw()
+							Sfx.play("explosion")
+							_show_effect_feedback("PRISM BREAK  ·  8-KILL EXPLOSION")
 				_record_enemy_kill(dead_enemy_type, dead_enemy_affix)
 				_record_weapon_kill(str(event.get("source_type", "")))
-				var death_position := Vector2(float(event["position"]["x"]), float(event["position"]["y"]))
 				Sfx.play("boss_defeat" if dead_enemy_type in ["mid_boss", "final_boss"] else "enemy_kill")
 				_queue_enemy_death_animation(dead_target, dead_enemy_type, death_position, current_simulation_time)
 				_add_enemy_death_pixels(dead_enemy_type, death_position)
@@ -1929,11 +1958,12 @@ func _collect_nearby_xp_orbs(state: Dictionary) -> void:
 
 func _xp_pickup_radius(current_simulation_time: float) -> float:
 	var pickup_radius_bonus_pct: float = _equipment_bonus("pickup_radius_pct") + loadout.global_relic_bonus("pickup_radius_pct") + _xp_run_stat_bonus("pickup_radius_pct")
-	return xp_collection_radius * (1.0 + pickup_radius_bonus_pct / 100.0)
+	var radius := xp_collection_radius * (1.0 + pickup_radius_bonus_pct / 100.0)
+	return radius * 2.0 if _overstimulation_xp_storm else radius
 
 func _update_magnet_heart_pulse(state: Dictionary, elapsed_active_time: float) -> void:
 	if loadout.relic_level("magnet_heart") < loadout.MAX_LEVEL or run_over:
-		if _magnet_heart_impulse_expires_at > 0.0:
+		if _magnet_heart_impulse_expires_at > 0.0 and not _overstimulation_xp_storm:
 			simulation.stop_xp_orb_attraction()
 		_magnet_heart_impulse_expires_at = 0.0
 		_magnet_heart_next_pulse_at = -1.0
@@ -1966,6 +1996,18 @@ func _update_magnet_heart_pulse(state: Dictionary, elapsed_active_time: float) -
 		for field in _magnet_heart_singularity_fields():
 			simulation.attract_xp_orbs(field["position"], field["radius"],
 				magnet_heart_level_five_acceleration, _magnet_heart_effective_pulse_max_speed(), elapsed_active_time)
+
+func _update_overstimulation_xp_attraction(state: Dictionary, elapsed_active_time: float) -> void:
+	if bool(state["paused"]) or elapsed_active_time <= 0.0:
+		return
+	if _overstimulation_xp_storm:
+		_overstimulation_xp_attraction_active = true
+		simulation.attract_xp_orbs(player.global_position, _xp_pickup_radius(float(state["simulation_time"])),
+			magnet_heart_level_five_acceleration, magnet_heart_level_five_max_speed, elapsed_active_time)
+	elif _overstimulation_xp_attraction_active:
+		_overstimulation_xp_attraction_active = false
+		if _magnet_heart_impulse_expires_at <= float(state["simulation_time"]):
+			simulation.stop_xp_orb_attraction()
 
 func _magnet_heart_synergy_active(relic_id: String) -> bool:
 	return loadout.relic_level("magnet_heart") >= loadout.MAX_LEVEL and \
@@ -2588,6 +2630,7 @@ func _advance_wave_director(delta_seconds: float, paused: bool) -> void:
 			_spawn_wave_enemy()
 			_next_enemy_spawn_time = player_active_time + _wave_enemy_spawn_interval()
 		_try_spawn_elite()
+		_update_overstimulation_event(delta_seconds)
 	elif wave_director.state == WAVE_DIRECTOR_SCRIPT.State.MID_BOSS:
 		_spawn_boss_placeholder("mid_boss")
 	elif wave_director.state == WAVE_DIRECTOR_SCRIPT.State.FINAL_BOSS:
@@ -2733,22 +2776,35 @@ func _update_wave_objective_target() -> void:
 
 func _update_wave_objective_hud() -> void:
 	var seconds_left := ceili(WAVE_OBJECTIVE_DURATION_SECONDS - _wave_objective_elapsed)
+	_wave_objective_label.text = _wave_objective_status_text(seconds_left)
 	match _wave_objective_type:
 		"KILL_QUOTA":
-			_wave_objective_label.text = "OBJECTIVE · ELIMINATE %d / %d · %02ds" % [
-				_wave_objective_kills, _wave_objective_kill_goal, seconds_left]
 			_wave_objective_label.tooltip_text = "Eliminate the quota before the 15-second timer ends."
 		"PRIORITY_TARGET":
-			_wave_objective_label.text = "OBJECTIVE · PRIORITY TARGET · %02ds" % seconds_left
 			_wave_objective_label.tooltip_text = "Eliminate the marked enemy before the 15-second timer ends."
 		"MOVING_ZONE":
-			_wave_objective_label.text = "OBJECTIVE · HOLD %.1f / 8s · %02ds" % [
-				_wave_objective_zone_progress, seconds_left]
 			_wave_objective_label.tooltip_text = "Stay inside the moving ring for 8 cumulative seconds."
+
+func _wave_objective_status_text(seconds_left: int) -> String:
+	match _wave_objective_type:
+		"KILL_QUOTA":
+			return "OBJECTIVE · ELIMINATE %d / %d · %02ds" % [
+				_wave_objective_kills, _wave_objective_kill_goal, seconds_left]
+		"PRIORITY_TARGET":
+			return "OBJECTIVE · PRIORITY TARGET · %02ds" % seconds_left
+		"MOVING_ZONE":
+			return "OBJECTIVE · HOLD %.1f / 8s · %02ds" % [
+				_wave_objective_zone_progress, seconds_left]
+	return "OBJECTIVE"
 
 func _finish_wave_objective(success: bool) -> void:
 	_wave_objective_active = false
-	_wave_objective_panel.hide()
+	if not _overstimulation_event_anomaly.is_empty():
+		_update_overstimulation_event_hud()
+	elif _overstimulation_event_warning:
+		_wave_objective_panel.show()
+	else:
+		_wave_objective_panel.hide()
 	if not success:
 		return
 	_wave_objective_attack_speed_expires_at = player_active_time + 6.0
@@ -2866,7 +2922,8 @@ func _wave_enemy_spawn_interval() -> float:
 	var spawn_scale := wave_population_scale * density_factor
 	if not is_finite(spawn_scale) or spawn_scale <= 0.0:
 		return base_interval
-	return maxf(0.05, base_interval / spawn_scale / _overstimulation_spawn_rate_multiplier())
+	var event_spawn_multiplier := 1.5 if _overstimulation_enabled() and _overstimulation_event_anomaly == "FERAL_SURGE" else 1.0
+	return maxf(0.05, base_interval / spawn_scale / _overstimulation_spawn_rate_multiplier() / event_spawn_multiplier)
 
 func _overstimulation_enabled() -> bool:
 	return not sandbox_diagnostics_enabled and mode_id in ["survival", "endless"]
@@ -3897,10 +3954,121 @@ func _effective_weapon_cooldown(base_cooldown: float) -> float:
 	var speed_multiplier: float = 1.0 + (
 		_equipment_bonus("attack_speed_pct") + loadout.global_relic_bonus("attack_speed_pct") +
 		_xp_run_stat_bonus("attack_speed_pct") + float(_cached_achievement_stat_bonuses.get("attack_speed_pct", 0.0)) +
-		objective_attack_speed_bonus
+		objective_attack_speed_bonus + _overstimulation_attack_speed_bonus
 	) / 100.0
 	var cooldown_multiplier: float = maxf(0.1, 1.0 - (_equipment_bonus("cooldown_reduction_pct") + loadout.global_relic_bonus("cooldown_reduction_pct") + _xp_run_stat_bonus("cooldown_reduction_pct")) / 100.0)
 	return base_cooldown * cooldown_multiplier / speed_multiplier
+
+func _overstimulation_base_weapon_damage() -> float:
+	var weapons: Array[String] = loadout.owned_weapons()
+	if weapons.is_empty():
+		return 1.0
+	match weapons[0]:
+		"lightning_conductor": return lightning_damage
+		"inferno_sprayer": return inferno_damage
+		"crimson_daggers": return daggers_damage
+		"minigun": return minigun_damage
+		"toxic_cloud": return toxic_impact_damage
+		"sawblades": return sawblades_damage
+		"meteor_staff": return meteor_staff_damage
+		"prism_laser": return prism_laser_damage
+		"void_orb": return void_orb_damage
+		"frost_nova": return frost_nova_damage
+	return 1.0
+
+func _update_overstimulation_event(delta_seconds: float) -> void:
+	if not _overstimulation_enabled() or delta_seconds <= 0.0:
+		return
+	_apply_overstimulation_enemy_speed_multiplier()
+	if _overstimulation_event_anomaly.is_empty() and not _overstimulation_event_warning and \
+			wave_director.state == WAVE_DIRECTOR_SCRIPT.State.WAVE and wave_director.wave >= _overstimulation_event_wave and \
+			wave_director.wave % 12 != 0:
+		_overstimulation_event_warning = true
+		_overstimulation_event_elapsed = 0.0
+		_wave_objective_panel.show()
+		_wave_objective_label.text = "ANOMALY INCOMING · 05s"
+		_wave_objective_label.tooltip_text = "An event will begin in five seconds. Its effect is revealed on activation."
+		Sfx.play("boss_telegraph")
+	if _overstimulation_event_warning:
+		_overstimulation_event_elapsed += delta_seconds
+		var warning_left := ceili(OVERSTIMULATION_EVENT_WARNING_SECONDS - _overstimulation_event_elapsed)
+		var active_objective := "\n" + _wave_objective_status_text(
+				ceili(WAVE_OBJECTIVE_DURATION_SECONDS - _wave_objective_elapsed)) if _wave_objective_active else ""
+		_wave_objective_label.text = "ANOMALY INCOMING · %02ds%s" % [maxi(0, warning_left), active_objective]
+		_wave_objective_panel.show()
+		if _overstimulation_event_elapsed >= OVERSTIMULATION_EVENT_WARNING_SECONDS:
+			_start_overstimulation_event()
+	elif not _overstimulation_event_anomaly.is_empty():
+		_overstimulation_event_remaining -= delta_seconds
+		if _overstimulation_event_remaining <= 0.0:
+			_finish_overstimulation_event()
+		else:
+			_update_overstimulation_event_hud()
+
+func _start_overstimulation_event() -> void:
+	_overstimulation_event_warning = false
+	var anomalies := ["FERAL_SURGE", "OVERCLOCK", "MAGNETIC_STORM", "PRISM_BREAK"]
+	if not _overstimulation_last_anomaly.is_empty():
+		anomalies.erase(_overstimulation_last_anomaly)
+	_overstimulation_event_anomaly = anomalies[_overstimulation_rng.randi_range(0, anomalies.size() - 1)]
+	_overstimulation_last_anomaly = _overstimulation_event_anomaly
+	_overstimulation_event_remaining = OVERSTIMULATION_EVENT_DURATION_SECONDS
+	_overstimulation_event_kills = 0
+	_overstimulation_enemy_speed_multiplier = 1.15 if _overstimulation_event_anomaly in ["FERAL_SURGE", "OVERCLOCK"] else 1.0
+	_overstimulation_attack_speed_bonus = 20.0 if _overstimulation_event_anomaly == "OVERCLOCK" else 0.0
+	_overstimulation_xp_storm = _overstimulation_event_anomaly == "MAGNETIC_STORM"
+	_overstimulation_prism_break = _overstimulation_event_anomaly == "PRISM_BREAK"
+	_apply_overstimulation_enemy_speed_multiplier()
+	_update_overstimulation_event_hud()
+	Sfx.play("chest_reward")
+	_show_effect_feedback("%s  ·  15s" % _overstimulation_event_title())
+	queue_redraw()
+
+func _finish_overstimulation_event() -> void:
+	_overstimulation_event_anomaly = ""
+	_overstimulation_event_remaining = 0.0
+	_overstimulation_enemy_speed_multiplier = 1.0
+	_overstimulation_attack_speed_bonus = 0.0
+	_overstimulation_xp_storm = false
+	_overstimulation_prism_break = false
+	_apply_overstimulation_enemy_speed_multiplier()
+	if _wave_objective_active:
+		_update_wave_objective_hud()
+	else:
+		_wave_objective_panel.hide()
+	if player_hp > 0.0 and not run_over:
+		_add_xp(player_xp_to_next * OVERSTIMULATION_EVENT_XP_REWARD)
+		_show_effect_feedback("ANOMALY SURVIVED  ·  +15% XP")
+		Sfx.play("chest_reward")
+	_overstimulation_event_wave += OVERSTIMULATION_EVENT_INTERVAL_WAVES
+	queue_redraw()
+
+func _apply_overstimulation_enemy_speed_multiplier() -> void:
+	if is_equal_approx(_overstimulation_enemy_speed_multiplier, _overstimulation_applied_enemy_speed_multiplier):
+		return
+	if simulation.set_enemy_speed_multiplier(_overstimulation_enemy_speed_multiplier) > 0:
+		_overstimulation_applied_enemy_speed_multiplier = _overstimulation_enemy_speed_multiplier
+
+func _overstimulation_event_title() -> String:
+	match _overstimulation_event_anomaly:
+		"FERAL_SURGE": return "FERAL SURGE  ·  +50% SPAWNS / +15% ENEMY SPEED"
+		"OVERCLOCK": return "OVERCLOCK  ·  +20% ATTACK SPEED / +15% ENEMY SPEED"
+		"MAGNETIC_STORM": return "MAGNETIC STORM  ·  XP PULL ×2"
+		"PRISM_BREAK": return "PRISM BREAK  ·  EXPLOSION EACH 8 KILLS"
+	return "ANOMALY"
+
+func _update_overstimulation_event_hud() -> void:
+	if _overstimulation_event_anomaly.is_empty():
+		return
+	_wave_objective_panel.show()
+	var active_objective := ""
+	if _wave_objective_active:
+		active_objective = "\n" + _wave_objective_status_text(
+				ceili(WAVE_OBJECTIVE_DURATION_SECONDS - _wave_objective_elapsed))
+	_wave_objective_label.text = "%s · %02ds%s" % [
+		_overstimulation_event_title(), ceili(_overstimulation_event_remaining), active_objective,
+	]
+	_wave_objective_label.tooltip_text = "Survive until the event ends to gain 15% XP progression."
 
 func capture_sandbox_snapshot_state() -> Dictionary:
 	if not sandbox_diagnostics_enabled or mode_id != "survival" or progression_service != null or \

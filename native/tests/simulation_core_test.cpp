@@ -508,6 +508,30 @@ int main() {
 			"steering must respect the configured maximum speed");
 	require(steered->velocity.x < -1.0F && separated->velocity.x > 1.0F,
 			"nearby entities should steer apart while pursuing the target");
+	SimulationCore faster_enemies;
+	const auto faster_enemy = faster_enemies.spawn("chaser", -100.0F, 0.0F, 20.0F, 0.0F, 0.0F);
+	faster_enemies.set_enemy_speed_multiplier(1.15F);
+	faster_enemies.steer_enemies_towards(0.0F, 0.0F, {.max_speed = 75.0F, .separation_radius = 0.0F});
+	require(std::abs(std::hypot(faster_enemies.entity(faster_enemy)->velocity.x,
+			faster_enemies.entity(faster_enemy)->velocity.y) - 86.25F) < 0.001F,
+			"event speed multipliers should affect existing enemies");
+	SimulationCore restored_faster_enemies;
+	restored_faster_enemies.restore_state(faster_enemies.capture_state());
+	restored_faster_enemies.steer_enemies_towards(0.0F, 0.0F, {.max_speed = 75.0F, .separation_radius = 0.0F});
+	require(std::abs(std::hypot(restored_faster_enemies.entity(faster_enemy)->velocity.x,
+			restored_faster_enemies.entity(faster_enemy)->velocity.y) - 86.25F) < 0.001F,
+			"event speed multipliers should survive native snapshots");
+	SimulationCore area_damage;
+	const auto area_target = area_damage.spawn("chaser", 10.0F, 0.0F, 20.0F, 0.0F, 0.0F);
+	const auto area_boss = area_damage.spawn("mid_boss", 12.0F, 0.0F, 100.0F, 0.0F, 0.0F);
+	const auto area_far = area_damage.spawn("chaser", 120.0F, 0.0F, 20.0F, 0.0F, 0.0F);
+	std::vector<dopamine::sim::CombatEvent> area_events;
+	require(area_damage.damage_enemies_in_radius(0.0F, 0.0F, 50.0F, 8.0F, area_events) == 1 &&
+			area_damage.entity(area_target)->health.current == 12.0F &&
+			area_damage.entity(area_boss)->health.current == 100.0F &&
+			area_damage.entity(area_far)->health.current == 20.0F && area_events.size() == 1 &&
+			area_events.front().type == dopamine::sim::CombatEventType::Damage,
+			"area damage should affect nearby ordinary enemies and exclude bosses and distant entities");
 	steering.advance(0.1);
 	require(steering.entity(chaser)->transform.x < -20.0F, "steered entity should move after integration");
 	bool rejected_steering = false;

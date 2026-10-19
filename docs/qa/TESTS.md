@@ -1,5 +1,13 @@
 # Tests d'acceptation et validation
 
+## Overstimulation — tranche 4/18
+
+- [x] `survival_wave_event_smoke.gd` passe sous Godot 4.7.2; vérifie activation limitée à Survival/Endless standard, exclusion Armorless/Sandbox, +20 % Overclock, cadence Feral Surge ×1,5, rayon XP Magnetic Storm ×2 et tirage local reproductible.
+- [x] `survival_wave_phase_smoke.gd`, `survival_wave_objective_smoke.gd` et `survival_wave_composition_smoke.gd` passent après intégration; les smokes signalent toujours l’absence de `game/bin/linux/libdopamine.linux.template_debug.x86_64.so`, sans échec GDScript.
+- [x] Tests natifs `simulation_core_tests` et `simulation_worker_tests` compilés directement avec `g++ -std=c++23 -pthread` et exécutés : vitesse des ennemis existants et conservation au snapshot, dégâts de zone non-boss, commande worker de vitesse/zone et chemins voisins passent.
+- [i] La compilation de la GDExtension et un test de session avec simulation native ne sont pas exécutables ici : CMake, `godot-cpp` et le binaire d’extension manquent. Le binding Godot des deux nouvelles commandes doit être vérifié lors d’un build natif.
+- [ ] Calibration du taux d’événements et du rayon Prism Break **[PROPOSÉ]**, contrôle visuel/auditif sur matériel réel.
+
 ## Overstimulation — tranche 1/18
 
 - [x] `tools/run_godot_test.sh tools/Godot_v4.7.2-stable_linux.x86_64 --headless --path game --script res://tests/survival_wave_phase_smoke.gd` — passe sous Godot 4.7.2; vérifie montée progressive, cadences de pression et d’accalmie pour les trois groupes de vagues, durée fixe, et absence d’accalmie forcée en phase boss.

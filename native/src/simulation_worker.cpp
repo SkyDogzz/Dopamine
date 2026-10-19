@@ -110,7 +110,7 @@ std::optional<SimulationWorkerState> SimulationWorker::capture_state(std::chrono
 }
 
 bool SimulationWorker::restore_state(const SimulationWorkerState &state) {
-	if (state.format_version != 17 || state.next_sequence == 0 ||
+	if (state.format_version != 18 || state.next_sequence == 0 ||
 			state.next_sequence <= state.pending_sequence ||
 			state.pending_commands.size() > max_queued_commands_ ||
 			state.pending_events.size() > max_pending_events_ || state.logs.size() > 100 ||
@@ -371,6 +371,31 @@ void SimulationWorker::apply(const SimulationCommand &command,
 			steering_target_y_ = command.y;
 			steering_config_ = command.steering;
 			log("steering target updated");
+			break;
+		case CommandType::SetEnemySpeedMultiplier:
+			try {
+				simulation_.set_enemy_speed_multiplier(command.enemy_speed_multiplier);
+				log("enemy speed multiplier updated");
+			} catch (const std::exception &error) {
+				log(std::string("enemy speed multiplier rejected: ") + error.what());
+			}
+			break;
+		case CommandType::DamageEnemiesInRadius:
+			try {
+				const std::vector<EntityId> candidates = simulation_.query_radius(command.x, command.y,
+						command.projectile_radius);
+				if (pending_events_.size() + candidates.size() * 2 > max_pending_events_) {
+					log("area damage delayed: acknowledge pending events first");
+					break;
+				}
+				std::vector<CombatEvent> events;
+				simulation_.damage_enemies_in_radius(command.x, command.y, command.projectile_radius,
+						command.projectile_damage, events);
+				append_events(std::move(events));
+				log("area damage resolved");
+			} catch (const std::exception &error) {
+				log(std::string("area damage rejected: ") + error.what());
+			}
 			break;
 		case CommandType::DashEntity:
 			try {

@@ -208,6 +208,7 @@ struct SimulationCoreState {
 	std::size_t entity_count = 0;
 	double simulation_time = 0.0;
 	uint64_t next_event_sequence = 1;
+	float enemy_speed_multiplier = 1.0F;
 };
 
 class SimulationCore {
@@ -237,6 +238,8 @@ public:
 		float damage_taken_multiplier = 1.0F);
 	bool dash_entity(EntityId target, float velocity_x, float velocity_y, double duration_seconds);
 	void apply_direct_damage(EntityId source, EntityId target, float amount, std::vector<CombatEvent> &events);
+	std::size_t damage_enemies_in_radius(float x, float y, float radius, float amount,
+			std::vector<CombatEvent> &events);
 	bool collect_xp_orb(EntityId id, std::vector<CombatEvent> &events);
 	bool despawn(EntityId id);
 	void reset();
@@ -245,6 +248,7 @@ public:
 	std::size_t estimate_event_count_upper_bound(double delta_seconds) const;
 	std::vector<CombatEvent> advance(double delta_seconds);
 	void steer_enemies_towards(float target_x, float target_y, SteeringConfig config = {});
+	void set_enemy_speed_multiplier(float multiplier);
 	std::vector<EntityId> query_radius(float x, float y, float radius,
 			SpatialHashConfig config = {}) const;
 
@@ -291,6 +295,7 @@ private:
 	std::size_t entity_count_ = 0;
 	double simulation_time_ = 0.0;
 	uint64_t next_event_sequence_ = 1;
+	float enemy_speed_multiplier_ = 1.0F;
 };
 
 } // namespace dopamine::sim

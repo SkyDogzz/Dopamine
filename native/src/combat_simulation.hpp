@@ -27,7 +27,7 @@ public:
 private:
 	friend class CombatSimulation;
 	std::optional<dopamine::sim::SimulationWorkerState> state_;
-	uint32_t format_version_ = 17;
+	uint32_t format_version_ = 18;
 };
 
 class CombatSimulation : public RefCounted {
@@ -79,6 +79,8 @@ public:
 	int64_t set_speed(double multiplier);
 	int64_t apply_sandbox_overrides(Dictionary overrides);
 	int64_t set_steering_target(Vector2 position, float max_speed, float separation_radius, float separation_weight);
+	int64_t set_enemy_speed_multiplier(float multiplier);
+	int64_t damage_enemies_in_radius(Vector2 center, float radius, float damage);
 	int64_t dash_entity(int64_t index, int64_t generation, Vector2 velocity, double duration_seconds);
 	int64_t acknowledge_events(int64_t event_sequence);
 	double health_decay_amount(double active_time_seconds, double delta_seconds) const;

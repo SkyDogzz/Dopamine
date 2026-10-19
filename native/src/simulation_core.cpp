@@ -368,6 +368,36 @@ void SimulationCore::apply_direct_damage(EntityId source, EntityId target, float
 	}
 }
 
+std::size_t SimulationCore::damage_enemies_in_radius(float x, float y, float radius, float amount,
+		std::vector<CombatEvent> &events) {
+	if (!std::isfinite(x) || !std::isfinite(y) || !std::isfinite(radius) || radius < 0.0F ||
+			!std::isfinite(amount) || amount <= 0.0F) {
+		throw std::invalid_argument("invalid area damage");
+	}
+	const float radius_squared = radius * radius;
+	const std::vector<EntityId> targets = query_radius(x, y, radius);
+	std::size_t damaged = 0;
+	std::vector<EntityId> to_despawn;
+	std::size_t volatile_targets_remaining = 0;
+	for (const EntityId target : targets) {
+		const Entity &candidate = *entity(target);
+		if (candidate.health.current <= 0.0F || candidate.type.id == "mid_boss" || candidate.type.id == "final_boss") {
+			continue;
+		}
+		const float dx = candidate.transform.x - x;
+		const float dy = candidate.transform.y - y;
+		if (dx * dx + dy * dy > radius_squared) {
+			continue;
+		}
+		apply_damage({}, target, amount, events, to_despawn, volatile_targets_remaining, false);
+		++damaged;
+	}
+	for (const EntityId id : to_despawn) {
+		despawn(id);
+	}
+	return damaged;
+}
+
 bool SimulationCore::collect_xp_orb(EntityId id, std::vector<CombatEvent> &events) {
 	if (id.index >= slots_.size() || !slots_[id.index].active ||
 			slots_[id.index].generation != id.generation || !xp_orb_flags_[id.index]) {
@@ -415,6 +445,7 @@ void SimulationCore::reset() {
 	}
 	entity_count_ = 0;
 	simulation_time_ = 0.0;
+	enemy_speed_multiplier_ = 1.0F;
 	for (auto &effects : damage_over_time_) effects.clear();
 	for (auto &effect : chill_effects_) effect.reset();
 	for (auto &movement : movement_overrides_) movement.reset();
@@ -446,6 +477,7 @@ SimulationCoreState SimulationCore::capture_state() const {
 	state.entity_count = entity_count_;
 	state.simulation_time = simulation_time_;
 	state.next_event_sequence = next_event_sequence_;
+	state.enemy_speed_multiplier = enemy_speed_multiplier_;
 	return state;
 }
 
@@ -453,7 +485,8 @@ void SimulationCore::restore_state(const SimulationCoreState &state) {
 	const std::size_t slot_count = state.entities.size();
 	if (slot_count > std::numeric_limits<uint32_t>::max() || state.active_slots.size() != slot_count ||
 			state.entity_count > slot_count || !std::isfinite(state.simulation_time) || state.simulation_time < 0.0 ||
-			state.next_event_sequence == 0) {
+			state.next_event_sequence == 0 || !std::isfinite(state.enemy_speed_multiplier) ||
+			state.enemy_speed_multiplier < 0.1F || state.enemy_speed_multiplier > 10.0F) {
 		throw std::invalid_argument("invalid simulation core state header");
 	}
 
@@ -629,6 +662,7 @@ void SimulationCore::restore_state(const SimulationCoreState &state) {
 	restored.entity_count_ = state.entity_count;
 	restored.simulation_time_ = state.simulation_time;
 	restored.next_event_sequence_ = state.next_event_sequence;
+	restored.enemy_speed_multiplier_ = state.enemy_speed_multiplier;
 	*this = std::move(restored);
 }
 
@@ -1261,6 +1295,7 @@ void SimulationCore::steer_enemies_towards(float target_x, float target_y, Steer
 							: config.max_speed * support.support_speed_multiplier);
 				}
 			}
+			max_speed *= enemy_speed_multiplier_;
 			if (chill_effects_[index].has_value()) {
 				max_speed *= chill_effects_[index]->speed_multiplier;
 			}
@@ -1473,6 +1508,13 @@ void SimulationCore::apply_damage(EntityId source, EntityId target, float amount
 		}
 		deferred_despawns.push_back(target);
 	}
+}
+
+void SimulationCore::set_enemy_speed_multiplier(float multiplier) {
+	if (!std::isfinite(multiplier) || multiplier < 0.1F || multiplier > 10.0F) {
+		throw std::invalid_argument("invalid enemy speed multiplier");
+	}
+	enemy_speed_multiplier_ = multiplier;
 }
 
 std::optional<Entity> SimulationCore::entity(EntityId id) const {

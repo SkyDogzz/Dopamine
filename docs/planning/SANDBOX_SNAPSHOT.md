@@ -13,7 +13,7 @@ Le snapshot doit être validé complètement avant restauration. Une version inc
 | Groupe | Données minimales | État du code |
 |---|---|---|
 | Format | version explicite du snapshot | version 1, strictement validée |
-| Simulation native | entités/slots et générations, positions, vitesses, PV, projectiles, DoT, Chill, champs persistants, temps simulé et séquence d’événements | checkpoint opaque natif format 17, validé avant restauration |
+| Simulation native | entités/slots et générations, positions, vitesses, PV, projectiles, DoT, Chill, champs persistants, multiplicateur temporaire de vitesse ennemie, temps simulé et séquence d’événements | checkpoint opaque natif format 18, validé avant restauration; multiplicateur neutre (1,0) dans le Sandbox |
 | Worker | pause, vitesse, steering, file de commandes, prochaine séquence, événements en attente, compteurs et logs | inclus dans le checkpoint natif; la capture passe par la barrière worker |
 | Run Godot | variables primitives/tableaux/dictionnaires prises en charge, RNGs, position/vitesse joueur, cible, vague, loadout et timers de coffres | `SurvivalSession.capture_sandbox_snapshot_state()`; uniquement en pause et hors modal/fin de run |
 | Build et configuration Lab | `SandboxBuild`, preset, seed, God Mode et overrides LIVE | capturés dans `SandboxLabContext`; validation du preset/build avant toute mutation |
