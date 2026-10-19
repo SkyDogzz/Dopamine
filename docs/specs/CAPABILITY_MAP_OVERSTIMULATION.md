@@ -17,4 +17,36 @@ Objectif : donner à Survival une identité volontairement intense et généreus
 
 **Critère global proposé :** une run ne doit plus donner l’impression que seules les stats et la densité changent. Chaque tranche de jeu doit comporter des variations perceptibles de tempo, des occasions de payoff rapprochées et une présentation sonore/visuelle qui réagit à ce que le joueur fait et affronte.
 
+## Banque d’idées à trier — [PROPOSÉ]
+
+Ces idées sont des pistes de design uniquement. Aucune n’est sélectionnée, validée ou planifiée pour implémentation.
+
+### Réponses aux actions du joueur
+
+- Secousse brève à l’impact d’une arme lourde; réponse plus marquée contre un élite ou un boss.
+- Série d’éliminations avec compteur de combo, effets et son qui montent par paliers.
+- Dernier ennemi d’un groupe : micro-pause d’impact, flash de couleur et effet sonore distinct à sa mort.
+- Coup critique : dégâts agrandis, couleur dédiée, son percutant et légère secousse.
+- Montée de niveau mise en scène par une très courte suspension, une onde autour du joueur, une fanfare et une révélation du choix.
+- Ramassage groupé d’XP : trajectoires qui convergent en accélérant et compteur qui s’emballe à l’approche d’un niveau.
+- Élite vaincu : effet lié à son affixe, récompenses projetées et annonce brève de l’ennemi éliminé.
+- Synergie d’armes : effet de convergence, symbole ou nom bref au déclenchement d’une combo.
+
+### Réponses aux actions ennemies
+
+- Charge de boss : tension visuelle/sonore pendant le télégraphe, puis forte secousse à l’impact; conserver une fenêtre d’esquive lisible.
+- Menace proche : contour, couleur ou signal sonore directionnel qui varie avec le danger.
+- Dégâts reçus : bordure orientée vers l’attaque, son distinct et réaction du joueur, renforcés à bas PV.
+- Densité de menaces élevée : musique plus dense et rythme plus nerveux, puis relâchement après le pic.
+
+### Récompenses et événements
+
+- Coffre rare : ouverture en plusieurs temps, rayon lumineux, révélation de l’objet et accent sonore selon la rareté.
+- Compétence prête : halo ou icône pulsante, suivi d’un retour visuel et sonore à l’activation.
+
+### Secousses d’écran
+
+- Réserver les secousses aux événements marquants comme les impacts lourds, grosses éliminations et attaques de boss; calibrer séparément leur durée et leur amplitude.
+- Garder la lecture des menaces et le confort visuel comme contraintes à vérifier quand ces pistes seront triées.
+
 **Hors de cette carte :** aucun chiffre de fréquence, d’intensité, de durée, de multiplicateur ou de récompense n’est validé. Les valeurs actuelles restent des prototypes jusqu’à spécification et calibration.
