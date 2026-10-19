@@ -2015,7 +2015,7 @@ func open_chest(options: Array) -> bool:
 func open_chest_family(family: String) -> bool:
 	if family not in ["weapon", "relic"]:
 		return false
-	var options := loadout.offers(family)
+	var options: Array = loadout.offers(family)
 	var heading := _chest_heading(family)
 	if options.is_empty() and _can_award_chest_essence():
 		options = [{

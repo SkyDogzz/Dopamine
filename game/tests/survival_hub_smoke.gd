@@ -162,9 +162,9 @@ func _run() -> void:
 	if not bounds.encloses(codex.get_node("Center/Panel").get_global_rect()):
 		_fail("Codex should fit the logical viewport")
 		return
-	var category: OptionButton = codex.get_node("Center/Panel/Content/Category")
-	category.select(1)
-	category.item_selected.emit(1)
+	var category: TabBar = codex.get_node("Center/Panel/Content/Category")
+	category.current_tab = 1
+	category.tab_selected.emit(1)
 	await process_frame
 	var entries: GridContainer = codex.get_node("Center/Panel/Content/Body/EntryScroll/Entries")
 	var first_weapon_copy: VBoxContainer = entries.get_child(0).get_child(0).get_child(1)
@@ -178,8 +178,8 @@ func _run() -> void:
 		not third_weapon_copy.get_child(2).text.contains("combo verrouillé"):
 		_fail("Unlocked starter combos should be described while locked combinations stay hidden")
 		return
-	category.select(2)
-	category.item_selected.emit(2)
+	category.current_tab = 2
+	category.tab_selected.emit(2)
 	await process_frame
 	if entries.get_child_count() != 11:
 		_fail("Codex should show all eleven relics")

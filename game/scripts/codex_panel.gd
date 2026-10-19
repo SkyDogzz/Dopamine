@@ -58,7 +58,7 @@ const EVOLUTION_NAMES := {
 @onready var _detail_status: Label = $Center/Panel/Content/Body/Detail/DetailContent/DetailStatus
 @onready var _detail_description: Label = $Center/Panel/Content/Body/Detail/DetailContent/DetailDescription
 @onready var _close_button: Button = $Center/Panel/Content/Header/CloseButton
-@onready var _category: OptionButton = $Center/Panel/Content/Category
+@onready var _category: TabBar = $Center/Panel/Content/Category
 @onready var _intro: Label = $Center/Panel/Content/Intro
 @onready var _title: Label = $Center/Panel/Content/Header/Title
 @onready var _panel_frame: PanelContainer = $Center/Panel
@@ -73,10 +73,10 @@ func _ready() -> void:
 	_fit_panel_to_viewport()
 	get_viewport().size_changed.connect(_fit_panel_to_viewport)
 	_combat_catalog = COMBAT_CATALOG_SCRIPT.new()
-	_category.add_item("ENNEMIS")
-	_category.add_item("ARMES ET COMBOS")
-	_category.add_item("RELIQUES")
-	_category.item_selected.connect(_show_category)
+	_category.add_tab("ENNEMIS")
+	_category.add_tab("ARMES ET COMBOS")
+	_category.add_tab("RELIQUES")
+	_category.tab_selected.connect(_show_category)
 	_close_button.pressed.connect(func() -> void: close_requested.emit())
 
 func _fit_panel_to_viewport() -> void:
@@ -98,7 +98,7 @@ func present(progress: Dictionary) -> void:
 	_seen_enemies = _to_lookup(progress.get("seen_enemies", []))
 	_unlocked_weapons = _to_lookup(progress.get("unlocked_weapons", []))
 	_unlocked_relics = _to_lookup(progress.get("unlocked_relics", []))
-	_category.select(0)
+	_category.current_tab = 0
 	_show_category(0)
 	_category.grab_focus()
 
@@ -124,6 +124,7 @@ func _count_unlocked(unlocked: Dictionary, catalog_entries: Dictionary) -> int:
 	return count
 
 func _show_category(index: int) -> void:
+	_entries.columns = 1 if index == 1 else 3 if get_viewport_rect().size.x >= 1100.0 else 2 if get_viewport_rect().size.x >= 700.0 else 1
 	for child in _entries.get_children():
 		child.queue_free()
 	_selected_card = null
@@ -248,6 +249,8 @@ func _make_catalog_entry(title_text: String, description: String, status_text: S
 	row.add_child(copy)
 	var name := Label.new()
 	name.text = title_text
+	name.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	name.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	name.tooltip_text = tooltip
 	name.add_theme_font_size_override("font_size", 9)
 	name.add_theme_color_override("font_color", Color("#37E8F5"))
@@ -260,6 +263,8 @@ func _make_catalog_entry(title_text: String, description: String, status_text: S
 	copy.add_child(details)
 	var status := Label.new()
 	status.text = status_text
+	status.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	status.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	status.add_theme_font_size_override("font_size", 6)
 	status.add_theme_color_override("font_color", Color("#A6AEC4") if is_locked else Color("#48E69B"))
 	copy.add_child(status)
