@@ -77,6 +77,13 @@ const PERFECT_DODGE_ATTACK_SPEED_BONUS := 10.0
 const PERFECT_DODGE_ATTACK_SPEED_SECONDS := 2.0
 const PERFECT_DODGE_STYLE_POINTS := 20
 const PERFECT_DODGE_FLASH_SECONDS := 0.22
+const RISK_REWARD_ZONE_INTERVAL_WAVES := 4
+const RISK_REWARD_ZONE_DURATION_SECONDS := 12.0
+const RISK_REWARD_ZONE_CHARGE_SECONDS := 4.0
+const RISK_REWARD_ZONE_RADIUS := 72.0
+const RISK_REWARD_ZONE_PLAYER_OFFSET := 140.0
+const RISK_REWARD_ZONE_BUFF_SECONDS := 8.0
+const RISK_REWARD_ZONE_STYLE_POINTS := 15
 const OVERSTIMULATION_COMPATIBLE_PAIRS := [
 	"FERAL_SURGE|MAGNETIC_STORM", "FERAL_SURGE|OVERCLOCK", "FERAL_SURGE|PRISM_BREAK",
 	"MAGNETIC_STORM|OVERCLOCK", "MAGNETIC_STORM|PRISM_BREAK", "OVERCLOCK|PRISM_BREAK",
@@ -431,6 +438,11 @@ var _perfect_dodge_style_points := 0
 var _perfect_dodge_flash_expires_at := 0.0
 var _perfect_dodge_flash_position := Vector2.ZERO
 var _perfect_dodge_flash_was_visible := false
+var _risk_reward_zone_active := false
+var _risk_reward_zone_elapsed := 0.0
+var _risk_reward_zone_progress := 0.0
+var _risk_reward_zone_center := Vector2.ZERO
+var _risk_reward_buff_expires_at := 0.0
 var _next_elite_spawn_time := 0.0
 var _boss_spawn_pending := false
 var _pulse_warden_attacks: Dictionary = {}
@@ -540,6 +552,7 @@ var _codex_sightings_recorded: Dictionary = {}
 @onready var _wave_value: Label = $HUD/MetaPanel/MetaRow/WaveValue
 @onready var _wave_objective_panel: PanelContainer = $HUD/WaveObjectivePanel
 @onready var _wave_objective_label: Label = $HUD/WaveObjectivePanel/ObjectiveLabel
+@onready var _risk_reward_label: Label = $HUD/RunPanel/RunInfo/RiskRewardStatus
 @onready var _difficulty_value: Label = $HUD/MetaPanel/MetaRow/DifficultyValue
 @onready var _boss_panel: PanelContainer = $HUD/BossPanel
 @onready var _boss_value: Label = $HUD/BossPanel/BossInfo/BossValue
@@ -1106,6 +1119,7 @@ func _process(_delta: float) -> void:
 			_starfall_fragments_spawned.erase(projectile_key)
 	_entities = state["entities"]
 	_update_wave_objective(elapsed_active_time)
+	_update_risk_reward_zone(elapsed_active_time)
 	_advance_wave_director(elapsed_active_time, state["paused"])
 	_apply_contact_damage(state, current_simulation_time)
 	_update_shooter_attacks(current_simulation_time, bool(state["paused"]))
@@ -2783,6 +2797,8 @@ func _advance_wave_director(delta_seconds: float, paused: bool) -> void:
 		wave_director.advance(delta_seconds)
 		if _overstimulation_enabled() and previous_wave != wave_director.wave and wave_director.objective_due():
 			_start_wave_objective(wave_director.wave)
+		if previous_wave != wave_director.wave and _risk_reward_zone_due(wave_director.wave, wave_director.state):
+			_start_risk_reward_zone(wave_director.wave)
 		if _overstimulation_enabled() and wave_director.state == WAVE_DIRECTOR_SCRIPT.State.WAVE:
 			var current_phase: String = wave_director.phase_name()
 			if current_phase != _last_overstimulation_phase:
@@ -2968,6 +2984,67 @@ func _wave_objective_status_text(seconds_left: int) -> String:
 			return "OBJECTIVE · HOLD %.1f / 8s · %02ds" % [
 				_wave_objective_zone_progress, seconds_left]
 	return "OBJECTIVE"
+
+func _risk_reward_zone_due(wave_number: int, director_state: int) -> bool:
+	return _overstimulation_enabled() and director_state == WAVE_DIRECTOR_SCRIPT.State.WAVE and \
+			wave_number > 0 and wave_number % RISK_REWARD_ZONE_INTERVAL_WAVES == 0
+
+func _start_risk_reward_zone(wave_number: int) -> void:
+	_risk_reward_zone_active = true
+	_risk_reward_zone_elapsed = 0.0
+	_risk_reward_zone_progress = 0.0
+	var angle := float(wave_number) * 2.39996323
+	_risk_reward_zone_center = player.global_position + Vector2.from_angle(angle) * RISK_REWARD_ZONE_PLAYER_OFFSET
+	if _risk_reward_label != null:
+		_risk_reward_label.show()
+	_update_risk_reward_hud()
+	Sfx.play("boss_telegraph")
+	if simulation != null:
+		_show_effect_feedback("RISK ZONE  ·  HOLD 4s FOR +20% DAMAGE / AREA")
+	queue_redraw()
+
+func _update_risk_reward_zone(delta_seconds: float) -> void:
+	if _risk_reward_zone_active and delta_seconds > 0.0:
+		_risk_reward_zone_elapsed += delta_seconds
+		if player.global_position.distance_to(_risk_reward_zone_center) <= RISK_REWARD_ZONE_RADIUS:
+			_risk_reward_zone_progress = minf(RISK_REWARD_ZONE_CHARGE_SECONDS,
+					_risk_reward_zone_progress + delta_seconds)
+		if _risk_reward_zone_progress >= RISK_REWARD_ZONE_CHARGE_SECONDS:
+			_complete_risk_reward_zone()
+		elif _risk_reward_zone_elapsed >= RISK_REWARD_ZONE_DURATION_SECONDS:
+			_risk_reward_zone_active = false
+			queue_redraw()
+	if _risk_reward_zone_active:
+		_update_risk_reward_hud()
+		queue_redraw()
+	elif _risk_reward_buff_expires_at > player_active_time:
+		if _risk_reward_label != null:
+			_risk_reward_label.show()
+			_risk_reward_label.text = "RISK REWARD  ·  +20% DAMAGE / AREA  ·  %ds" % \
+					ceili(_risk_reward_buff_expires_at - player_active_time)
+	elif _risk_reward_label != null:
+		_risk_reward_label.hide()
+
+func _complete_risk_reward_zone() -> void:
+	if not _risk_reward_zone_active:
+		return
+	_risk_reward_zone_active = false
+	_risk_reward_buff_expires_at = player_active_time + RISK_REWARD_ZONE_BUFF_SECONDS
+	_perfect_dodge_style_points += RISK_REWARD_ZONE_STYLE_POINTS
+	if _risk_reward_label != null:
+		_risk_reward_label.hide()
+	Sfx.play("chest_reward")
+	if simulation != null:
+		_show_effect_feedback("RISK REWARD  ·  +20% DAMAGE / AREA  ·  +15 STYLE")
+	queue_redraw()
+
+func _update_risk_reward_hud() -> void:
+	if _risk_reward_label == null:
+		return
+	var seconds_left := ceili(RISK_REWARD_ZONE_DURATION_SECONDS - _risk_reward_zone_elapsed)
+	_risk_reward_label.show()
+	_risk_reward_label.text = "RISK ZONE  ·  %.1f / 4s  ·  %ds" % [
+		_risk_reward_zone_progress, maxi(0, seconds_left)]
 
 func _finish_wave_objective(success: bool) -> void:
 	_wave_objective_active = false
@@ -3842,7 +3919,7 @@ func _fire_prism_laser(active_time: float, paused: bool) -> void:
 		return
 	var level: int = loadout.weapon_level("prism_laser")
 	var range_multiplier := _weapon_level_multiplier("prism_laser", "range_multiplier", level)
-	var area_multiplier: float = 1.0 + (_equipment_bonus("area_pct") + loadout.global_relic_bonus("area_pct") + _xp_run_stat_bonus("area_pct")) / 100.0
+	var area_multiplier: float = (1.0 + (_equipment_bonus("area_pct") + loadout.global_relic_bonus("area_pct") + _xp_run_stat_bonus("area_pct")) / 100.0) * _risk_reward_buff_multiplier()
 	var laser_range := SURVIVAL_TARGETING.weapon_range(prism_laser_range, range_multiplier, area_multiplier)
 	var target := _prism_cluster_target(laser_range)
 	if target.is_empty():
@@ -3928,7 +4005,7 @@ func _fire_frost_nova(active_time: float, paused: bool) -> void:
 	if not weapon_enabled or level == 0 or paused or _chest_open or run_over or frost_nova_cooldown <= 0.0 or active_time < _next_frost_nova_time:
 		return
 	var evolved: bool = loadout.is_evolved("frost_nova")
-	var area_multiplier: float = 1.0 + (_equipment_bonus("area_pct") + loadout.global_relic_bonus("area_pct") + _xp_run_stat_bonus("area_pct")) / 100.0
+	var area_multiplier: float = (1.0 + (_equipment_bonus("area_pct") + loadout.global_relic_bonus("area_pct") + _xp_run_stat_bonus("area_pct")) / 100.0) * _risk_reward_buff_multiplier()
 	var radius := SURVIVAL_TARGETING.weapon_range(frost_nova_radius,
 		_weapon_level_multiplier("frost_nova", "area_multiplier", level), area_multiplier)
 	var duration := frost_chill_duration_seconds * _weapon_level_multiplier("frost_nova", "chill_duration_multiplier", level)
@@ -4051,7 +4128,7 @@ func _spread_pandemic(origin: Vector2, entities: Array) -> void:
 		_pandemic_bursts.append({"position": origin, "remaining": pandemic_feedback_seconds})
 
 func _persistent_damage_multiplier() -> float:
-	return _cached_persistent_damage_multiplier * (1.0 + (loadout.global_relic_bonus("damage_pct") + _xp_run_stat_bonus("damage_pct")) / 100.0)
+	return _cached_persistent_damage_multiplier * (1.0 + (loadout.global_relic_bonus("damage_pct") + _xp_run_stat_bonus("damage_pct")) / 100.0) * _risk_reward_buff_multiplier()
 
 func _weapon_combo_damage_multiplier(weapon_id: String) -> float:
 	return 1.25 if loadout.is_evolved(weapon_id) else 1.0
@@ -4449,7 +4526,10 @@ func _equipment_projectile_speed(base_speed: float) -> float:
 	return base_speed * (1.0 + (_equipment_bonus("projectile_speed_pct") + loadout.global_relic_bonus("projectile_speed_pct") + _xp_run_stat_bonus("projectile_speed_pct")) / 100.0)
 
 func _equipment_area(base_area: float) -> float:
-	return base_area * (1.0 + (_equipment_bonus("area_pct") + loadout.global_relic_bonus("area_pct") + _xp_run_stat_bonus("area_pct")) / 100.0)
+	return base_area * (1.0 + (_equipment_bonus("area_pct") + loadout.global_relic_bonus("area_pct") + _xp_run_stat_bonus("area_pct")) / 100.0) * _risk_reward_buff_multiplier()
+
+func _risk_reward_buff_multiplier() -> float:
+	return 1.2 if player_active_time < _risk_reward_buff_expires_at else 1.0
 
 func _has_unique_effect(effect_id: String) -> bool:
 	return _cached_unique_effects.has(effect_id)
@@ -4544,6 +4624,13 @@ func _draw() -> void:
 		var progress_angle := TAU * _wave_objective_zone_progress / WAVE_OBJECTIVE_ZONE_SECONDS
 		draw_arc(zone_center, WAVE_OBJECTIVE_ZONE_RADIUS + 6.0, -PI * 0.5,
 				-PI * 0.5 + progress_angle, 64, Color("#FFD447"), 3.0, true)
+	if _risk_reward_zone_active:
+		var charge_ratio := _risk_reward_zone_progress / RISK_REWARD_ZONE_CHARGE_SECONDS
+		draw_circle(_risk_reward_zone_center, RISK_REWARD_ZONE_RADIUS, Color(1.0, 0.68, 0.18, 0.08))
+		draw_arc(_risk_reward_zone_center, RISK_REWARD_ZONE_RADIUS, 0.0, TAU, 64,
+				Color("#FFB84A"), 2.0, true)
+		draw_arc(_risk_reward_zone_center, RISK_REWARD_ZONE_RADIUS + 7.0, -PI * 0.5,
+				-PI * 0.5 + TAU * charge_ratio, 64, Color("#FFD447"), 3.0, true)
 	if _last_simulation_time < _magnet_heart_impulse_expires_at:
 		var impulse_radius := _magnet_heart_effective_pulse_radius()
 		draw_arc(player.global_position, impulse_radius, 0.0, TAU, 64, Color(0.22, 0.9, 1.0, 0.42), 1.5, true)

@@ -1,5 +1,11 @@
 # Tests d'acceptation et validation
 
+## Overstimulation — tranche 7/18
+
+- [x] `survival_risk_reward_zone_smoke.gd` passe sous Godot 4.7.2 : activation toutes les quatre vagues non-boss, continuation en Endless, exclusions boss/Armorless/Sandbox, maintien cumulatif en sortant du cercle, gain unique après 4 s, +20 % dégâts/zone et expiration à 8 s.
+- [x] `godot --headless --editor --path game --quit` importe le projet et la nouvelle scène HUD; les smokes des tranches 1–6 restent ciblés.
+- [i] Les logs signalent l’extension native manquante, donc l’intégration de combat en session n’est pas exercée ici; pas de contrôle visuel en run ni de calibration.
+
 ## Overstimulation — tranche 6/18
 
 - [x] `survival_perfect_dodge_smoke.gd` passe sous Godot 4.7.2 : interception projectile/charge dans la fenêtre de 250 ms, trajectoires manquées exclues, déplacement hors collision, 20 points de style, bonus d’attaque +10 % durant deux secondes, annulation si dégât ennemi durant la candidate.
