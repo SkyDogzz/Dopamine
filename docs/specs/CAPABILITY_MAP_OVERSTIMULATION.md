@@ -13,6 +13,8 @@ Objectif : donner à Survival une identité volontairement intense et généreus
 
 **Ordre proposé :** `encounter-rhythm` → `combat-payoffs` → `sensory-feedback` et `reactive-audio`.
 
+Les règles détaillées proposées pour revue sont consignées dans [SPEC-overstimulation-gameplay.md](SPEC-overstimulation-gameplay.md). Aucune intégration ne commence avant sa revue utilisateur.
+
 ## Capacités de gameplay validées — 2026-10-19
 
 L’utilisateur a validé la présence des idées suivantes dans la conception Survival. Cela n’en valide pas encore les valeurs, les règles de détail, la présentation ou le calendrier de réalisation; ceux-ci restent **[OUVERTS]**.

@@ -12,7 +12,7 @@
 6. [Registre ADR](docs/adr/README.md) — décisions techniques acceptées, y compris Sandbox-first.
 7. [Roadmap GDD v1.6](docs/planning/ROADMAP.md).
 8. [Risques](docs/planning/RISQUES.md) et [tests d'acceptation](docs/qa/TESTS.md).
-9. [Intention de refonte UI](docs/planning/INTENTION_REFONTE_UI.md) et [carte des capacités UI](UI_CAPABILITY_MAP.md) — périmètre confirmé par interview; specs et avancement par module dans `tasks/ui-refonte/`.
+9. [Intention de refonte UI](docs/planning/INTENTION_REFONTE_UI.md) et [carte des capacités UI](UI_CAPABILITY_MAP.md) — périmètre confirmé par interview; specs et avancement par module dans `tasks/ui-refonte/`. La [carte Overstimulation](docs/specs/CAPABILITY_MAP_OVERSTIMULATION.md) distingue les capacités validées des pistes proposées; la [spec gameplay hyperactif](docs/specs/SPEC-overstimulation-gameplay.md) attend la revue avant intégration.
 10. [Art Bible](docs/ART_BIBLE.txt) — direction visuelle validée, palette maître, résolution logique et contrats des assets/UI; [inventaire assets + UI](docs/art/INVENTAIRE_ASSETS_UI.md) — portée confirmée et couverture actuelle, avec le [registre de provenance des visuels](docs/art/PROVENANCE_ASSETS.csv) pour le gate P9.8.
 11. [Goal principal de livraison complète](docs/planning/GOAL_PRINCIPAL.md) — objectif actif et reprise à partir de P5.
 12. [Registre des décisions restantes](docs/planning/DECISIONS_RESTANTES.md) — questions à interviewer une par une, choix proposés et validations techniques à distinguer.
