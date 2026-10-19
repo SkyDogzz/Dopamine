@@ -93,6 +93,11 @@ const MOBILE_XP_CORE_PATH_MARGIN := 32.0
 const MOBILE_XP_CORE_PATH_OFFSET := 110.0
 const MOBILE_XP_CORE_ATTRACTION_SPEED := 220.0
 const MOBILE_XP_CORE_FLASH_SECONDS := 0.3
+const OVERSTIMULATION_COMBO_WINDOW_SECONDS := 4.0
+const OVERSTIMULATION_COMBO_BONUS_SECONDS := 4.0
+const OVERSTIMULATION_COMBO_ATTACK_SPEED_PER_MILESTONE := 5.0
+const OVERSTIMULATION_COMBO_MILESTONES := [3, 6, 10, 15, 25]
+const OVERSTIMULATION_COMBO_MILESTONE_NAMES := ["RUSH", "RAMPAGE", "FRENZY", "MAYHEM", "UNSTOPPABLE"]
 const OVERSTIMULATION_COMPATIBLE_PAIRS := [
 	"FERAL_SURGE|MAGNETIC_STORM", "FERAL_SURGE|OVERCLOCK", "FERAL_SURGE|PRISM_BREAK",
 	"MAGNETIC_STORM|OVERCLOCK", "MAGNETIC_STORM|PRISM_BREAK", "OVERCLOCK|PRISM_BREAK",
@@ -461,6 +466,10 @@ var _mobile_xp_core_spawn_count := 0
 var _mobile_xp_core_feedback_expires_at := 0.0
 var _mobile_xp_core_feedback_position := Vector2.ZERO
 var _mobile_xp_core_feedback_was_visible := false
+var _overstimulation_combo_kills := 0
+var _overstimulation_combo_last_kill_at := -INF
+var _overstimulation_combo_milestone := 0
+var _overstimulation_combo_attack_speed_expires_at := 0.0
 var _next_elite_spawn_time := 0.0
 var _boss_spawn_pending := false
 var _pulse_warden_attacks: Dictionary = {}
@@ -573,6 +582,7 @@ var _codex_sightings_recorded: Dictionary = {}
 @onready var _wave_objective_label: Label = $HUD/WaveObjectivePanel/ObjectiveLabel
 @onready var _risk_reward_label: Label = $HUD/RunPanel/RunInfo/RiskRewardStatus
 @onready var _mobile_core_label: Label = $HUD/RunPanel/RunInfo/MobileCoreStatus
+@onready var _combo_label: Label = $HUD/RunPanel/RunInfo/ComboStatus
 @onready var _difficulty_value: Label = $HUD/MetaPanel/MetaRow/DifficultyValue
 @onready var _boss_panel: PanelContainer = $HUD/BossPanel
 @onready var _boss_value: Label = $HUD/BossPanel/BossInfo/BossValue
@@ -1065,6 +1075,7 @@ func _process(_delta: float) -> void:
 				kill_count += 1
 				var dead_target: Dictionary = event["target"]
 				var dead_enemy_type: String = str(event.get("target_type", ""))
+				_record_overstimulation_combo_kill(dead_enemy_type)
 				var dead_enemy_affix: String = str(event.get("target_affix", ""))
 				var death_position := Vector2(float(event["position"]["x"]), float(event["position"]["y"]))
 				if _overstimulation_prism_break and dead_enemy_type not in ["mid_boss", "final_boss"]:
@@ -1149,6 +1160,7 @@ func _process(_delta: float) -> void:
 	_update_pulse_warden_attacks(current_simulation_time, bool(state["paused"]))
 	_update_dopamine_core_attacks(current_simulation_time, bool(state["paused"]))
 	_update_perfect_dodges(state, current_simulation_time)
+	_update_overstimulation_combo()
 	_update_run_panel_status_height()
 	var transient_animations := _enemy_death_animations.duplicate()
 	transient_animations.append_array(_weapon_transient_animations)
@@ -1441,6 +1453,7 @@ func _update_exploder_attacks(current_simulation_time: float, paused: bool) -> v
 		attack["phase"] = "detonated"
 		kill_count += 1
 		_record_enemy_kill("exploder")
+		_record_overstimulation_combo_kill("exploder")
 		_roll_enemy_chests("exploder", blast_origin)
 		if not run_over:
 			var healing: float = _equipment_kill_healing(float(simulation.kill_heal_amount(float(components.get("ThreatLevel", 2.0)))))
@@ -1895,6 +1908,8 @@ func _take_enemy_damage(amount: float) -> void:
 	_take_player_damage(amount * float(factors["enemy_damage"]))
 	if player_hp + player_shield < damage_before:
 		_perfect_dodge_enemy_damage_serial += 1
+		if _overstimulation_enabled():
+			_break_overstimulation_combo()
 
 func _refresh_hud(state: Dictionary) -> void:
 	if _item_level_feedback.visible and float(state.get("simulation_time", 0.0)) >= _item_level_feedback_expires_at:
@@ -1960,6 +1975,7 @@ func _update_run_panel_status_height() -> void:
 	if _run_panel == null:
 		return
 	var status_count := int(_risk_reward_label.visible) + int(_mobile_core_label.visible)
+	status_count += int(_combo_label.visible)
 	_run_panel.offset_bottom = 51.0 + float(status_count) * 15.0
 
 func _run_stat_breakdown() -> Dictionary:
@@ -2602,6 +2618,7 @@ func _continue_as_endless_standard() -> void:
 	mode_id = "endless"
 	_run_id = Crypto.new().generate_random_bytes(16).hex_encode()
 	_maxed_chest_essence_bonus = 0
+	_break_overstimulation_combo()
 	_revive_used = false
 	_revive_invulnerable_until = 0.0
 	_run_active_time_baseline = player_active_time
@@ -2681,6 +2698,76 @@ func _record_enemy_kill(enemy_type: String, affix: String = "") -> void:
 			if ELITE_AFFIX_ACHIEVEMENT_IDS.has(affix_id):
 				var metric_id: String = ELITE_AFFIX_ACHIEVEMENT_IDS[affix_id]
 				_elite_affix_kills[metric_id] = int(_elite_affix_kills.get(metric_id, 0)) + 1
+
+func _record_overstimulation_combo_kill(_enemy_type: String = "") -> void:
+	if not _overstimulation_enabled():
+		return
+	if _overstimulation_combo_kills == 0 or \
+			player_active_time - _overstimulation_combo_last_kill_at > OVERSTIMULATION_COMBO_WINDOW_SECONDS:
+		_overstimulation_combo_kills = 0
+		_overstimulation_combo_milestone = 0
+		_overstimulation_combo_attack_speed_expires_at = 0.0
+	_overstimulation_combo_kills += 1
+	_overstimulation_combo_last_kill_at = player_active_time
+	var next_milestone_index := _overstimulation_combo_milestone
+	while next_milestone_index < OVERSTIMULATION_COMBO_MILESTONES.size() and \
+			_overstimulation_combo_kills >= OVERSTIMULATION_COMBO_MILESTONES[next_milestone_index]:
+		next_milestone_index += 1
+	if next_milestone_index > _overstimulation_combo_milestone:
+		_overstimulation_combo_milestone = next_milestone_index
+		_overstimulation_combo_attack_speed_expires_at = \
+				player_active_time + OVERSTIMULATION_COMBO_BONUS_SECONDS
+		_play_overstimulation_combo_milestone_feedback()
+	_update_overstimulation_combo_hud()
+
+func _update_overstimulation_combo() -> void:
+	if not _overstimulation_enabled():
+		_break_overstimulation_combo()
+		return
+	if _overstimulation_combo_kills > 0 and player_active_time - _overstimulation_combo_last_kill_at >= \
+			OVERSTIMULATION_COMBO_WINDOW_SECONDS:
+		_break_overstimulation_combo()
+	else:
+		_update_overstimulation_combo_hud()
+
+func _break_overstimulation_combo() -> void:
+	_overstimulation_combo_kills = 0
+	_overstimulation_combo_last_kill_at = -INF
+	_overstimulation_combo_milestone = 0
+	_overstimulation_combo_attack_speed_expires_at = 0.0
+	if _combo_label != null:
+		_combo_label.hide()
+		_combo_label.scale = Vector2.ONE
+
+func _update_overstimulation_combo_hud() -> void:
+	if _combo_label == null:
+		return
+	if _overstimulation_combo_kills <= 0:
+		_combo_label.hide()
+		return
+	var remaining := maxf(0.0, OVERSTIMULATION_COMBO_WINDOW_SECONDS -
+			(player_active_time - _overstimulation_combo_last_kill_at))
+	var status := "NEXT %02d" % OVERSTIMULATION_COMBO_MILESTONES[_overstimulation_combo_milestone] \
+			if _overstimulation_combo_milestone < OVERSTIMULATION_COMBO_MILESTONES.size() else "MAX TIER"
+	if _overstimulation_combo_milestone > 0:
+		status = OVERSTIMULATION_COMBO_MILESTONE_NAMES[_overstimulation_combo_milestone - 1]
+	_combo_label.text = "COMBO %02d  ·  %s  ·  %.1fs" % [
+		_overstimulation_combo_kills, status, remaining]
+	_combo_label.show()
+
+func _play_overstimulation_combo_milestone_feedback() -> void:
+	var milestone_name: String = OVERSTIMULATION_COMBO_MILESTONE_NAMES[_overstimulation_combo_milestone - 1]
+	var milestone_count: int = OVERSTIMULATION_COMBO_MILESTONES[_overstimulation_combo_milestone - 1]
+	Sfx.play("level_up")
+	if _combo_label != null and is_inside_tree():
+		_combo_label.pivot_offset = _combo_label.size * 0.5
+		_combo_label.scale = Vector2.ONE
+		var tween := create_tween()
+		tween.tween_property(_combo_label, "scale", Vector2(1.2, 1.2), 0.08)
+		tween.tween_property(_combo_label, "scale", Vector2.ONE, 0.2).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	if simulation != null:
+		_show_effect_feedback("%s  ·  COMBO %d  ·  +%d%% ATTACK SPEED" % [
+			milestone_name, milestone_count, _overstimulation_combo_milestone * int(OVERSTIMULATION_COMBO_ATTACK_SPEED_PER_MILESTONE)])
 
 func _record_weapon_damage(source_type: String, amount: float) -> void:
 	if not is_finite(amount) or amount <= 0.0:
@@ -4323,10 +4410,14 @@ func _effective_weapon_cooldown(base_cooldown: float) -> float:
 	var objective_attack_speed_bonus := 10.0 if player_active_time < _wave_objective_attack_speed_expires_at else 0.0
 	var perfect_dodge_attack_speed_bonus := PERFECT_DODGE_ATTACK_SPEED_BONUS if \
 			player_active_time < _perfect_dodge_attack_speed_expires_at else 0.0
+	var combo_attack_speed_bonus := float(_overstimulation_combo_milestone) * \
+			OVERSTIMULATION_COMBO_ATTACK_SPEED_PER_MILESTONE if \
+			player_active_time < _overstimulation_combo_attack_speed_expires_at else 0.0
 	var speed_multiplier: float = 1.0 + (
 		_equipment_bonus("attack_speed_pct") + loadout.global_relic_bonus("attack_speed_pct") +
 		_xp_run_stat_bonus("attack_speed_pct") + float(_cached_achievement_stat_bonuses.get("attack_speed_pct", 0.0)) +
-		objective_attack_speed_bonus + perfect_dodge_attack_speed_bonus + _overstimulation_attack_speed_bonus
+		objective_attack_speed_bonus + perfect_dodge_attack_speed_bonus + combo_attack_speed_bonus +
+		_overstimulation_attack_speed_bonus
 	) / 100.0
 	var cooldown_multiplier: float = maxf(0.1, 1.0 - (_equipment_bonus("cooldown_reduction_pct") + loadout.global_relic_bonus("cooldown_reduction_pct") + _xp_run_stat_bonus("cooldown_reduction_pct")) / 100.0)
 	return base_cooldown * cooldown_multiplier / speed_multiplier

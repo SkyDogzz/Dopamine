@@ -1,5 +1,11 @@
 # Tests d'acceptation et validation
 
+## Overstimulation — tranche 9/18
+
+- [x] `survival_kill_combo_smoke.gd` passe sous Godot 4.7.2 : les paliers 3/6/10/15/25 remplacent correctement le bonus (+5 % par palier) pendant 4 s; dégâts ennemis le rompent, HP decay ne le rompt pas; 4 s sans kill recommencent une chaîne.
+- [x] Armorless et Sandbox diagnostics restent exclus; les smokes des tranches 6–8 passent avec le compteur de style mutualisé et le nouveau statut HUD.
+- [i] Le smoke vérifie la logique et les multiplicateurs sans GDExtension; l’animation/layout en run native reste à examiner quand le binaire sera disponible.
+
 ## Overstimulation — tranche 8/18
 
 - [x] `survival_mobile_xp_core_smoke.gd` passe sous Godot 4.7.2 : trajectoire de traversée de 8 s, spawn toutes les 45 s actives, attraction dans le rayon XP, ramassage au contact, gain de 20 % d’XP et 10 style une seule fois, expiration sans pénalité, exclusion Armorless/Sandbox.
