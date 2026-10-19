@@ -72,6 +72,10 @@ const OVERSTIMULATION_EVENT_INTERVAL_WAVES := 3
 const OVERSTIMULATION_EVENT_WARNING_SECONDS := 5.0
 const OVERSTIMULATION_EVENT_DURATION_SECONDS := 15.0
 const OVERSTIMULATION_EVENT_XP_REWARD := 0.15
+const OVERSTIMULATION_COMPATIBLE_PAIRS := [
+	"FERAL_SURGE|MAGNETIC_STORM", "FERAL_SURGE|OVERCLOCK", "FERAL_SURGE|PRISM_BREAK",
+	"MAGNETIC_STORM|OVERCLOCK", "MAGNETIC_STORM|PRISM_BREAK", "OVERCLOCK|PRISM_BREAK",
+]
 static var DAMAGE_NUMBER_FONT: Font = load("res://assets/fonts/NeonArcadePixel.ttf") as Font if ResourceLoader.exists("res://assets/fonts/NeonArcadePixel.ttf") else ThemeDB.fallback_font
 const DAMAGE_NUMBER_LIFETIME := 0.5 # [PROPOSÉ] Active simulation seconds.
 const DAMAGE_NUMBER_AGGREGATION_WINDOW := 0.12 # [PROPOSÉ] Merge repeated hits on one target.
@@ -402,13 +406,14 @@ var _overstimulation_event_warning := false
 var _overstimulation_event_elapsed := 0.0
 var _overstimulation_event_remaining := 0.0
 var _overstimulation_event_anomaly := ""
+var _overstimulation_event_anomalies: Array[String] = []
 var _overstimulation_event_kills := 0
 var _overstimulation_enemy_speed_multiplier := 1.0
 var _overstimulation_applied_enemy_speed_multiplier := 1.0
 var _overstimulation_attack_speed_bonus := 0.0
 var _overstimulation_xp_storm := false
 var _overstimulation_prism_break := false
-var _overstimulation_last_anomaly := ""
+var _overstimulation_last_anomalies: Array[String] = []
 var _overstimulation_xp_attraction_active := false
 var _next_elite_spawn_time := 0.0
 var _boss_spawn_pending := false
@@ -1016,7 +1021,7 @@ func _process(_delta: float) -> void:
 					_overstimulation_event_kills += 1
 					if _overstimulation_event_kills % 8 == 0:
 						var blast_sequence: int = simulation.damage_enemies_in_radius(death_position,
-								96.0, _overstimulation_base_weapon_damage() * _persistent_damage_multiplier())
+			96.0, _overstimulation_base_weapon_damage() * _persistent_damage_multiplier())
 						if blast_sequence > 0:
 							queue_redraw()
 							Sfx.play("explosion")
@@ -2922,7 +2927,8 @@ func _wave_enemy_spawn_interval() -> float:
 	var spawn_scale := wave_population_scale * density_factor
 	if not is_finite(spawn_scale) or spawn_scale <= 0.0:
 		return base_interval
-	var event_spawn_multiplier := 1.5 if _overstimulation_enabled() and _overstimulation_event_anomaly == "FERAL_SURGE" else 1.0
+	var event_spawn_multiplier := 1.5 if _overstimulation_enabled() and \
+			_overstimulation_event_anomalies.has("FERAL_SURGE") else 1.0
 	return maxf(0.05, base_interval / spawn_scale / _overstimulation_spawn_rate_multiplier() / event_spawn_multiplier)
 
 func _overstimulation_enabled() -> bool:
@@ -4007,17 +4013,15 @@ func _update_overstimulation_event(delta_seconds: float) -> void:
 
 func _start_overstimulation_event() -> void:
 	_overstimulation_event_warning = false
-	var anomalies := ["FERAL_SURGE", "OVERCLOCK", "MAGNETIC_STORM", "PRISM_BREAK"]
-	if not _overstimulation_last_anomaly.is_empty():
-		anomalies.erase(_overstimulation_last_anomaly)
-	_overstimulation_event_anomaly = anomalies[_overstimulation_rng.randi_range(0, anomalies.size() - 1)]
-	_overstimulation_last_anomaly = _overstimulation_event_anomaly
+	_overstimulation_event_anomalies = _draw_overstimulation_event_anomalies()
+	_overstimulation_event_anomaly = _overstimulation_event_anomalies[0]
 	_overstimulation_event_remaining = OVERSTIMULATION_EVENT_DURATION_SECONDS
 	_overstimulation_event_kills = 0
-	_overstimulation_enemy_speed_multiplier = 1.15 if _overstimulation_event_anomaly in ["FERAL_SURGE", "OVERCLOCK"] else 1.0
-	_overstimulation_attack_speed_bonus = 20.0 if _overstimulation_event_anomaly == "OVERCLOCK" else 0.0
-	_overstimulation_xp_storm = _overstimulation_event_anomaly == "MAGNETIC_STORM"
-	_overstimulation_prism_break = _overstimulation_event_anomaly == "PRISM_BREAK"
+	_overstimulation_enemy_speed_multiplier = _overstimulation_event_enemy_speed_multiplier(
+			_overstimulation_event_anomalies)
+	_overstimulation_attack_speed_bonus = 20.0 if _overstimulation_event_anomalies.has("OVERCLOCK") else 0.0
+	_overstimulation_xp_storm = _overstimulation_event_anomalies.has("MAGNETIC_STORM")
+	_overstimulation_prism_break = _overstimulation_event_anomalies.has("PRISM_BREAK")
 	_apply_overstimulation_enemy_speed_multiplier()
 	_update_overstimulation_event_hud()
 	Sfx.play("chest_reward")
@@ -4026,6 +4030,7 @@ func _start_overstimulation_event() -> void:
 
 func _finish_overstimulation_event() -> void:
 	_overstimulation_event_anomaly = ""
+	_overstimulation_event_anomalies.clear()
 	_overstimulation_event_remaining = 0.0
 	_overstimulation_enemy_speed_multiplier = 1.0
 	_overstimulation_attack_speed_bonus = 0.0
@@ -4050,12 +4055,43 @@ func _apply_overstimulation_enemy_speed_multiplier() -> void:
 		_overstimulation_applied_enemy_speed_multiplier = _overstimulation_enemy_speed_multiplier
 
 func _overstimulation_event_title() -> String:
-	match _overstimulation_event_anomaly:
+	var titles: Array[String] = []
+	for anomaly in _overstimulation_event_anomalies:
+		titles.append(_overstimulation_anomaly_title(anomaly))
+	return "\n".join(titles) if not titles.is_empty() else "ANOMALY"
+
+func _overstimulation_anomaly_title(anomaly: String) -> String:
+	match anomaly:
 		"FERAL_SURGE": return "FERAL SURGE  ·  +50% SPAWNS / +15% ENEMY SPEED"
 		"OVERCLOCK": return "OVERCLOCK  ·  +20% ATTACK SPEED / +15% ENEMY SPEED"
 		"MAGNETIC_STORM": return "MAGNETIC STORM  ·  XP PULL ×2"
 		"PRISM_BREAK": return "PRISM BREAK  ·  EXPLOSION EACH 8 KILLS"
 	return "ANOMALY"
+
+func _draw_overstimulation_event_anomalies() -> Array[String]:
+	var eligible: Array[String] = ["FERAL_SURGE", "OVERCLOCK", "MAGNETIC_STORM", "PRISM_BREAK"]
+	for previous_anomaly in _overstimulation_last_anomalies:
+		eligible.erase(previous_anomaly)
+	var selected: Array[String] = [eligible[_overstimulation_rng.randi_range(0, eligible.size() - 1)]]
+	if _overstimulation_rng.randf() < 0.2:
+		var compatible: Array[String] = []
+		for candidate in eligible:
+			if candidate == selected[0]:
+				continue
+			if _overstimulation_pair_compatible(selected[0], candidate):
+				compatible.append(candidate)
+		if not compatible.is_empty():
+			selected.append(compatible[_overstimulation_rng.randi_range(0, compatible.size() - 1)])
+	_overstimulation_last_anomalies = selected.duplicate()
+	return selected
+
+func _overstimulation_pair_compatible(first: String, second: String) -> bool:
+	var pair := [first, second]
+	pair.sort()
+	return first != second and OVERSTIMULATION_COMPATIBLE_PAIRS.has("%s|%s" % [pair[0], pair[1]])
+
+func _overstimulation_event_enemy_speed_multiplier(anomalies: Array[String]) -> float:
+	return 1.15 if anomalies.has("FERAL_SURGE") or anomalies.has("OVERCLOCK") else 1.0
 
 func _update_overstimulation_event_hud() -> void:
 	if _overstimulation_event_anomaly.is_empty():
@@ -4065,7 +4101,7 @@ func _update_overstimulation_event_hud() -> void:
 	if _wave_objective_active:
 		active_objective = "\n" + _wave_objective_status_text(
 				ceili(WAVE_OBJECTIVE_DURATION_SECONDS - _wave_objective_elapsed))
-	_wave_objective_label.text = "%s · %02ds%s" % [
+	_wave_objective_label.text = "%s\nEVENT · %02ds%s" % [
 		_overstimulation_event_title(), ceili(_overstimulation_event_remaining), active_objective,
 	]
 	_wave_objective_label.tooltip_text = "Survive until the event ends to gain 15% XP progression."

@@ -1,5 +1,11 @@
 # Tests d'acceptation et validation
 
+## Overstimulation — tranche 5/18
+
+- [x] `survival_wave_event_smoke.gd` exécute 10 000 tirages seedés : les événements combinés restent entre 18–22 %, les listes contiennent une/deux anomalies, les paires satisfont la table et aucun effet ne se répète d’un événement au suivant.
+- [x] Le même smoke couvre aussi l’isolation Survival/Endless standard et les bonus Overclock/Feral Surge/Magnetic Storm; les smokes des tranches 1 à 4 passent après mise à jour.
+- [ ] Vérifier les événements combinés en session native et calibrer l’interface avec l’extension compilée.
+
 ## Overstimulation — tranche 4/18
 
 - [x] `survival_wave_event_smoke.gd` passe sous Godot 4.7.2; vérifie activation limitée à Survival/Endless standard, exclusion Armorless/Sandbox, +20 % Overclock, cadence Feral Surge ×1,5, rayon XP Magnetic Storm ×2 et tirage local reproductible.

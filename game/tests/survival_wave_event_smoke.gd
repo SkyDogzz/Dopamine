@@ -7,6 +7,39 @@ func _initialize() -> void:
 		return
 	var session = session_script.new()
 	session.loadout = load("res://scripts/survival_loadout.gd").new(1)
+	session._overstimulation_rng.seed = 918273
+	var previous_anomalies: Array[String] = []
+	var double_event_count := 0
+	for _event_index in range(10000):
+		var drawn_anomalies: Array[String] = session._draw_overstimulation_event_anomalies()
+		if drawn_anomalies.is_empty() or drawn_anomalies.size() > 2:
+			_fail("Surprise events should contain one or two anomalies")
+			return
+		for anomaly in drawn_anomalies:
+			if previous_anomalies.has(anomaly):
+				_fail("An anomaly should not repeat in consecutive events")
+				return
+		if drawn_anomalies.size() == 2:
+			double_event_count += 1
+			if not session._overstimulation_pair_compatible(drawn_anomalies[0], drawn_anomalies[1]):
+				_fail("Combined anomalies should pass the compatibility table")
+				return
+		previous_anomalies = drawn_anomalies.duplicate()
+	if float(double_event_count) / 10000.0 < 0.18 or float(double_event_count) / 10000.0 > 0.22:
+		_fail("Combined anomalies should be drawn in approximately 20 percent of events")
+		return
+	var overlapping_speed_anomalies: Array[String] = ["FERAL_SURGE", "OVERCLOCK"]
+	if not session._overstimulation_pair_compatible("FERAL_SURGE", "OVERCLOCK") or \
+			session._overstimulation_event_enemy_speed_multiplier(overlapping_speed_anomalies) != 1.15:
+		_fail("Feral Surge and Overclock should share one non-stacking enemy speed bonus")
+		return
+	session._overstimulation_event_anomalies.clear()
+	session._overstimulation_event_anomalies.append("FERAL_SURGE")
+	session._overstimulation_event_anomalies.append("MAGNETIC_STORM")
+	var combined_title: String = session._overstimulation_event_title()
+	if not combined_title.contains("FERAL SURGE") or not combined_title.contains("MAGNETIC STORM"):
+		_fail("The HUD should reveal both anomaly names and effects")
+		return
 	session.mode_id = "survival"
 	if not session._overstimulation_enabled():
 		_fail("Standard Survival should enable overstimulation events")
@@ -32,8 +65,10 @@ func _initialize() -> void:
 	session._overstimulation_attack_speed_bonus = 0.0
 	session.wave_director = load("res://scripts/survival_wave_director.gd").new()
 	session.wave_director.elapsed_in_wave = 5.0
+	session._overstimulation_event_anomalies.clear()
 	var normal_interval: float = session._wave_enemy_spawn_interval()
-	session._overstimulation_event_anomaly = "FERAL_SURGE"
+	session._overstimulation_event_anomalies.clear()
+	session._overstimulation_event_anomalies.append("FERAL_SURGE")
 	var feral_interval: float = session._wave_enemy_spawn_interval()
 	if not is_equal_approx(feral_interval, normal_interval / 1.5):
 		_fail("Feral Surge should raise spawn cadence by 50 percent")
@@ -45,7 +80,8 @@ func _initialize() -> void:
 	if first_rng.randi() != second_rng.randi():
 		_fail("Anomaly selection should use a seedable run-local random stream")
 		return
-	session._overstimulation_event_anomaly = "MAGNETIC_STORM"
+	session._overstimulation_event_anomalies.clear()
+	session._overstimulation_event_anomalies.append("MAGNETIC_STORM")
 	session._overstimulation_xp_storm = true
 	session._cached_equipment_bonuses = {}
 	var storm_radius: float = session._xp_pickup_radius(0.0)
