@@ -6,6 +6,12 @@
 - [i] Le lancement signale l’absence de `game/bin/linux/libdopamine.linux.template_debug.x86_64.so`; le smoke autonome du directeur passe sans l’extension. Le smoke complet `survival_wave_director_smoke.gd` et CTest restent à relancer après compilation native; CMake n’est pas installé dans l’environnement de cette session.
 - [ ] Calibration du rythme en runs représentatives; contrôle de lisibilité et écoute sur matériel réel.
 
+## Overstimulation — tranche 2/18
+
+- [x] `tools/run_godot_test.sh tools/Godot_v4.7.2-stable_linux.x86_64 --headless --path game --script res://tests/survival_wave_composition_smoke.gd` — passe sous Godot 4.7.2; vérifie la rotation débloquée par progression, l’exclusion des boss, les archétypes propres à chaque composition, le caractère déterministe du choix et l’augmentation de la part complémentaire avec la densité.
+- [i] La génération d’entités et le budget d’élites utilisent toujours le chemin natif; la vérification intégrée reste à relancer lorsque la GDExtension pourra être compilée (CMake absent de l’environnement courant).
+- [ ] Calibration des compositions dans des runs représentatives et revue de lisibilité des cinq motifs.
+
 ## Staging Linux courant après refonte UI/assets — 2026-10-18
 
 - [x] `tools/package_linux_staging.sh` reconstruit un checkout `git archive` propre du commit `f3141f3` avec GCC 14.2.0, CMake 3.31.12, Godot 4.7.2 et `godot-cpp` épinglé. Compilation native Release vierge, import, export Linux/X11 filtré, extraction, notices/licences, exclusions des ressources de développement, `ldd` sans dépendance manquante et lancement headless de l’exécutable extrait avec la GDExtension adjacente passent.

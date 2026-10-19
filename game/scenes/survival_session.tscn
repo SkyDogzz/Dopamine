@@ -122,7 +122,7 @@ clip_text = true
 [node name="MetaPanel" type="PanelContainer" parent="HUD"]
 anchor_left = 1.0
 anchor_right = 1.0
-offset_left = -296
+offset_left = -346
 offset_top = 7
 offset_right = -8
 offset_bottom = 29
@@ -146,7 +146,7 @@ text = "00:00"
 vertical_alignment = 1
 
 [node name="WaveValue" type="Label" parent="HUD/MetaPanel/MetaRow"]
-custom_minimum_size = Vector2(106, 0)
+custom_minimum_size = Vector2(160, 0)
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.82, 0.4, 1)
 theme_override_font_sizes/font_size = 8

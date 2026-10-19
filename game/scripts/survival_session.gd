@@ -378,6 +378,7 @@ var _run_active_time_baseline := 0.0
 var wave_director: RefCounted
 var _next_enemy_spawn_time := 0.0
 var _last_overstimulation_phase := ""
+var _wave_composition_spawn_index := 0
 var _next_elite_spawn_time := 0.0
 var _boss_spawn_pending := false
 var _pulse_warden_attacks: Dictionary = {}
@@ -1665,8 +1666,10 @@ func _refresh_hud(state: Dictionary) -> void:
 				WAVE_DIRECTOR_SCRIPT.WavePhase.CALM:
 					phase_color = Color("#48E69B")
 			_wave_value.add_theme_color_override("font_color", phase_color)
+			_wave_value.tooltip_text = _wave_composition_description()
 		else:
 			_wave_value.remove_theme_color_override("font_color")
+			_wave_value.tooltip_text = ""
 	_difficulty_value.text = difficulty_id.to_upper()
 	_refresh_boss_hud()
 	var total_seconds := int(floor(_run_active_time()))
@@ -2573,6 +2576,12 @@ func _spawn_wave_enemy() -> void:
 	var angle := _random_float("wave_enemy_spawn_angle") * TAU
 	var spawn_position := player.global_position + Vector2.from_angle(angle) * enemy_spawn_radius
 	var enemy_type := "chaser"
+	if _overstimulation_enabled() and wave_director.composition_name() != "":
+		enemy_type = _composed_enemy_type(wave_director.composition_name(), _wave_composition_spawn_index)
+		_wave_composition_spawn_index += 1
+		simulation.spawn_enemy(enemy_type, 1, spawn_position, Vector2.ZERO,
+				_enemy_hp_multiplier(wave_director.wave))
+		return
 	if wave_director.wave >= 4 and _random_float("wave_enemy_sprinter_roll") < 0.25:
 		enemy_type = "sprinter"
 	if wave_director.wave >= 8 and _random_float("wave_enemy_tank_roll") < 0.12:
@@ -2589,6 +2598,43 @@ func _spawn_wave_enemy() -> void:
 		enemy_type = "summoner"
 	var hp_multiplier := _enemy_hp_multiplier(wave_director.wave)
 	simulation.spawn_enemy(enemy_type, 1, spawn_position, Vector2.ZERO, hp_multiplier)
+
+func _composed_enemy_type(composition: String, spawn_index: int) -> String:
+	var role_chance := _composition_role_chance()
+	var wave_number: int = wave_director.wave if wave_director != null else 4
+	# Coprime strides distribute role weights over 100 slots without consuming combat RNG.
+	var roll := float((spawn_index * 37 + wave_number * 13) % 100) / 100.0
+	var secondary_roll := float((spawn_index * 53 + wave_number * 29) % 100) / 100.0
+	match composition:
+		"HUNT":
+			return "sprinter" if roll < role_chance else "chaser"
+		"CROSSFIRE":
+			if roll < role_chance:
+				return "tank" if secondary_roll < 0.5 else "shooter"
+		"NEST":
+			if roll < role_chance:
+				return "buffer" if secondary_roll < 1.0 / 3.0 else "shielder" if secondary_roll < 2.0 / 3.0 else "summoner"
+		"BLAST":
+			return "exploder" if roll < role_chance else "chaser"
+		"PURSUIT":
+			if roll < role_chance:
+				return "sprinter"
+			if wave_number >= 6 and roll >= 0.95:
+				return "buffer"
+	return "chaser"
+
+func _composition_role_chance() -> float:
+	var density: float = DIFFICULTY_SCRIPT.DATA.get(difficulty_id, DIFFICULTY_SCRIPT.DATA["normal"])["density"]
+	return clampf(0.30 * density, 0.20, 0.55)
+
+func _composition_elite_spawn_multiplier() -> float:
+	return 1.5 if _overstimulation_enabled() and wave_director != null and \
+			wave_director.composition_name() == "PURSUIT" else 1.0
+
+func _wave_composition_description() -> String:
+	if wave_director == null or wave_director.composition_name().is_empty():
+		return ""
+	return "WAVE COMPOSITION · %s" % wave_director.composition_name()
 
 func _support_enemy_spawn_chance(base_chance: float) -> float:
 	if difficulty_id != "chaos":
@@ -2617,7 +2663,7 @@ func _try_spawn_elite() -> void:
 		return
 	_next_elite_spawn_time = player_active_time + maxf(0.05, elite_spawn_interval_seconds) / \
 			_overstimulation_spawn_rate_multiplier()
-	if _random_float("elite_spawn_roll") > clampf(elite_spawn_chance, 0.0, 1.0):
+	if _random_float("elite_spawn_roll") > clampf(elite_spawn_chance * _composition_elite_spawn_multiplier(), 0.0, 1.0):
 		return
 	var spawn_position := player.global_position + Vector2.from_angle(_random_float("elite_spawn_angle") * TAU) * enemy_spawn_radius
 	var hp_multiplier := _enemy_hp_multiplier(wave_director.wave)
@@ -2740,8 +2786,12 @@ func _wave_status_text() -> String:
 			return "VICTORY"
 		_:
 			if _overstimulation_enabled():
-				return "WAVE %02d  •  %s %02ds" % [wave_director.wave,
+				var status := "W%02d %s %02d" % [wave_director.wave,
 					wave_director.phase_name(), ceili(wave_director.phase_remaining_seconds())]
+				var composition: String = wave_director.composition_name()
+				if not composition.is_empty():
+					status += "  •  " + composition
+				return status
 			return "WAVE %02d  •  %02d s" % [wave_director.wave, ceili(wave_duration_seconds - wave_director.elapsed_in_wave)]
 
 func _entity_key(index: int, generation: int) -> String:

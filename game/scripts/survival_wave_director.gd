@@ -48,6 +48,18 @@ func spawn_rate_multiplier() -> float:
 			return 0.5
 	return 1.0
 
+func composition_name() -> String:
+	if state != State.WAVE or wave < 4:
+		return ""
+	var available := ["HUNT", "PURSUIT"]
+	if wave >= 8:
+		available.append("BLAST")
+	if wave >= 10:
+		available.append("CROSSFIRE")
+	if wave >= 12:
+		available.append("NEST")
+	return available[(wave - 4) % available.size()]
+
 func _init(is_endless_armorless: bool = false, is_endless_standard: bool = false) -> void:
 	endless_armorless = is_endless_armorless
 	endless_standard = is_endless_standard
