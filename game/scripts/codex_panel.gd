@@ -124,7 +124,7 @@ func _count_unlocked(unlocked: Dictionary, catalog_entries: Dictionary) -> int:
 	return count
 
 func _show_category(index: int) -> void:
-	_entries.columns = 1 if index == 1 else 3 if get_viewport_rect().size.x >= 1100.0 else 2 if get_viewport_rect().size.x >= 700.0 else 1
+	_entries.columns = 1 if index == 1 else 3 if get_viewport_rect().size.x >= 1100.0 else 1
 	for child in _entries.get_children():
 		child.queue_free()
 	_selected_card = null
@@ -203,6 +203,7 @@ func _make_entry(entry: Dictionary) -> Control:
 
 func _make_catalog_entry(title_text: String, description: String, status_text: String, icon_path: String, tooltip: String, key: String = "", selectable: bool = true) -> Control:
 	var card := PanelContainer.new()
+	card.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	card.custom_minimum_size = Vector2(0, 68)
 	var style := StyleBoxFlat.new()
 	var is_locked := status_text.contains("VERROUILLÉ") or status_text.contains("NON RENCONTRÉ")

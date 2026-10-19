@@ -83,3 +83,14 @@ Ces planches représentent la bibliothèque intégrée courante après retrait d
 | [`rewards-animation-contact-sheet.png`](contact-sheets/rewards-animation-contact-sheet.png) | 13 feuilles de récompenses | `2fe061579222e7efbafb2b281d1366a47be3f24a44e30372963bcfa3a83aaccd` |
 
 L’inventaire détaillé de 133 fichiers audio avec skill, source/recette, paramètres, seed, durée, canaux et fréquence est dans [`ASSET_AUDIO_INVENTORY.json`](../../ASSET_AUDIO_INVENTORY.json). Les 90 cartes statiques et les 131 prévisualisations animées avec détails de provenance/QA sont aussi navigables dans la galerie locale recréable avec `python3 game/tools/create_asset_review_pack.py`.
+
+## Menus hub après correction du layout — 2026-10-19
+
+Quatre captures à la taille visible actuelle du viewport (853×480, scaling projet 1,5×), générées sous Xvfb/Mesa llvmpipe avec les scènes réelles du Codex et des succès. Les menus ont reçu directement leur catalogue de données afin d’isoler le rendu de l’extension native Linux, absente de ce checkout. Les cadres restent dans les limites du viewport; Succès passe à deux colonnes avec le détail à droite, tandis que les listes ennemis/armes/reliques du Codex restent dans leur zone défilante. L’onglet Codex remplace le popup qui débordait. Captures inspectées après génération.
+
+| Capture | SHA-256 | Revue |
+|---|---|---|
+| [`2026-10-19/hub-menus/achievements.png`](../2026-10-19/hub-menus/achievements.png) | `10c06a3e1127e2def4da537306a82615b0912bd3c533e6d611970521fd86ca6e` | Deux colonnes contenues dans le scroll à gauche, détails à droite; cadres, titre, filtre et fermeture visibles. |
+| [`2026-10-19/hub-menus/codex-enemies.png`](../2026-10-19/hub-menus/codex-enemies.png) | `30b6cc01749666b6488741214621195e7c52e1e6285c92b23ba6883973fad5e8` | Liste verticale des ennemis inconnus et panneau de fiche à droite, sans texte replié lettre par lettre. |
+| [`2026-10-19/hub-menus/codex-weapons.png`](../2026-10-19/hub-menus/codex-weapons.png) | `ee851744024803194bd95eedd8526c0f502f8722911160c97d9d9a2ac94d49e` | Armes et statuts de combo dans la liste défilante; les détails restent dans la colonne droite. |
+| [`2026-10-19/hub-menus/codex-relics.png`](../2026-10-19/hub-menus/codex-relics.png) | `8b7a0e4431636bf44ffe386f029e14d47c7fdc978ad0c1384a8266a469f9d908` | Liste des reliques et panneau de fiche dans les mêmes bounds. |
