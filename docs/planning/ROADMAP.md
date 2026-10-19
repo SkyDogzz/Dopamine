@@ -707,6 +707,24 @@ P1 livre le Sandbox développeur et ne remplace pas cette feature produit.
 - [ ] **P9.3 — Présentation audiovisuelle**
   - [x] Direction overstimulation Survival **[VALIDÉE par l’utilisateur, 2026-10-19]** : 18 capacités de design retenues (combo, variation de pression, événements, esquive parfaite, risque/récompense, mutations, objets maudits, surchauffe, synergies, compositions ennemies, patterns combinés, finishers, chaînes de boss et mode optionnel intense). Les règles et paramètres restent **[OUVERTS]**; liste de référence dans `docs/specs/CAPABILITY_MAP_OVERSTIMULATION.md` et GDD §2.
   - [x] Revue utilisateur **[VALIDÉE, 2026-10-19]** de `docs/specs/SPEC-overstimulation-gameplay.md` : règles, valeurs de départ et périmètre des 18 capacités approuvés. Implémentation par tranches; calibration dédiée après les premières tranches jouables.
+  - [x] Tranche 1/18 — alternance de pression et d’accalmies : phase de montée/pression/accalmie, cadence progressive 50–100–50 %, phase lisible au HUD et cues audio; Survival et Endless standard seulement. `survival_wave_phase_smoke.gd` couvre les durées et cadences; la vérification de session reste à relancer avec l’extension native compilée. Paramètres de design conservés; calibration **[OUVERTE]**.
+  - [ ] Tranche 2/18 — compositions d’ennemis complémentaires.
+  - [ ] Tranche 3/18 — objectifs courts de vague et récompenses.
+  - [ ] Tranche 4/18 — événements surprises et anomalies.
+  - [ ] Tranche 5/18 — combinaisons de mutations.
+  - [ ] Tranche 6/18 — esquive parfaite.
+  - [ ] Tranche 7/18 — zone de risque/récompense.
+  - [ ] Tranche 8/18 — bonus mobile à intercepter.
+  - [ ] Tranche 9/18 — combo d’éliminations et paliers.
+  - [ ] Tranche 10/18 — jauge de style.
+  - [ ] Tranche 11/18 — mutations temporaires de build.
+  - [ ] Tranche 12/18 — objets maudits.
+  - [ ] Tranche 13/18 — surchauffe automatique des armes.
+  - [ ] Tranche 14/18 — synergies spectaculaires arme/relique.
+  - [ ] Tranche 15/18 — patterns combinés de boss.
+  - [ ] Tranche 16/18 — finishers.
+  - [ ] Tranche 17/18 — explosion en chaîne à la mort d’un boss.
+  - [ ] Tranche 18/18 — mode optionnel « encore plus intense ».
   - [x] Décision utilisateur **[VALIDÉE, 2026-10-17] — réponse A** : conserver la direction de l’ART_BIBLE et reporter les arbitrages fins à la QA P9; mapping couleurs, biome, police, clignotement et identité canonique restent ouverts.
   - [x] **[HISTORIQUE — supersédée le 2026-10-18]** : la décision du 2026-10-17 de conserver l’audio existant comme candidat a été remplacée par la consigne de remplacer musique et SFX sans réutiliser aucun fichier ni recette. Les nouveaux candidats restent **[PROPOSÉS]** jusqu’à écoute.
   - [x] Vérifier feedback des dégâts directs/critique/statut : nombres agrégés, impact critique accentué, screen shake et indicateurs de statut sont couverts par les smokes visuels.

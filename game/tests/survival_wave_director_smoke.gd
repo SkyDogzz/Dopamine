@@ -21,6 +21,37 @@ func _run() -> void:
 	if director.wave != 1 or director.state != director_script.State.WAVE:
 		_fail("A run should start at wave 1")
 		return
+	var phase_director = director_script.new()
+	if phase_director.phase_name() != "RISING" or not is_equal_approx(phase_director.spawn_rate_multiplier(), 0.5):
+		_fail("A regular wave should begin with a readable rising phase and half spawn cadence")
+		return
+	phase_director.advance(2.5)
+	if not is_equal_approx(phase_director.spawn_rate_multiplier(), 0.75):
+		_fail("The rising phase should progressively increase the spawn cadence")
+		return
+	phase_director.advance(2.5)
+	if phase_director.phase_name() != "PRESSURE" or not is_equal_approx(phase_director.spawn_rate_multiplier(), 1.0):
+		_fail("The main pressure phase should use the normal spawn cadence")
+		return
+	phase_director.advance(20.0)
+	if phase_director.phase_name() != "CALM" or not is_equal_approx(phase_director.spawn_rate_multiplier(), 0.5):
+		_fail("Waves 1-4 should end with a brief half-cadence calm")
+		return
+	phase_director.advance(5.0)
+	if phase_director.wave != 2 or phase_director.phase_name() != "RISING":
+		_fail("A calm should not extend the fixed 30-second wave duration")
+		return
+	var later_wave_director = director_script.new()
+	later_wave_director.wave = 5
+	later_wave_director.advance(27.0)
+	if later_wave_director.phase_name() != "CALM":
+		_fail("Waves 5-12 should reserve their final three seconds for calm")
+		return
+	later_wave_director.wave = 13
+	later_wave_director.elapsed_in_wave = 28.0
+	if later_wave_director.phase_name() != "CALM":
+		_fail("Waves 13+ should reserve their final two seconds for calm")
+		return
 	if director.advance(29.0) or director.wave != 1:
 		_fail("A wave should remain active before its duration")
 		return

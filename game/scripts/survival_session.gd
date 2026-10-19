@@ -377,6 +377,7 @@ var player_active_time := 0.0
 var _run_active_time_baseline := 0.0
 var wave_director: RefCounted
 var _next_enemy_spawn_time := 0.0
+var _last_overstimulation_phase := ""
 var _next_elite_spawn_time := 0.0
 var _boss_spawn_pending := false
 var _pulse_warden_attacks: Dictionary = {}
@@ -1656,6 +1657,16 @@ func _refresh_hud(state: Dictionary) -> void:
 	_xp_bar.value = player_xp
 	if wave_director != null:
 		_wave_value.text = _wave_status_text()
+		if _overstimulation_enabled() and wave_director.state == WAVE_DIRECTOR_SCRIPT.State.WAVE:
+			var phase_color := Color("#55D9FF")
+			match wave_director.phase():
+				WAVE_DIRECTOR_SCRIPT.WavePhase.PRESSURE:
+					phase_color = Color("#FF7181")
+				WAVE_DIRECTOR_SCRIPT.WavePhase.CALM:
+					phase_color = Color("#48E69B")
+			_wave_value.add_theme_color_override("font_color", phase_color)
+		else:
+			_wave_value.remove_theme_color_override("font_color")
 	_difficulty_value.text = difficulty_id.to_upper()
 	_refresh_boss_hud()
 	var total_seconds := int(floor(_run_active_time()))
@@ -2534,6 +2545,13 @@ func _advance_wave_director(delta_seconds: float, paused: bool) -> void:
 		var previous_wave: int = wave_director.wave
 		var previous_state: int = wave_director.state
 		wave_director.advance(delta_seconds)
+		if _overstimulation_enabled() and wave_director.state == WAVE_DIRECTOR_SCRIPT.State.WAVE:
+			var current_phase: String = wave_director.phase_name()
+			if current_phase != _last_overstimulation_phase:
+				_last_overstimulation_phase = current_phase
+				_match_wave_phase_feedback(current_phase)
+		else:
+			_last_overstimulation_phase = ""
 		if mode_id == "armorless":
 			for completed_wave in range(previous_wave, wave_director.wave):
 				_pending_armorless_draft_waves.append(completed_wave)
@@ -2597,7 +2615,8 @@ func _try_spawn_elite() -> void:
 	var wave_threat_budget := float(_wave_population(wave_director.wave))
 	if active_threat + 3.0 > wave_threat_budget:
 		return
-	_next_elite_spawn_time = player_active_time + maxf(0.05, elite_spawn_interval_seconds)
+	_next_elite_spawn_time = player_active_time + maxf(0.05, elite_spawn_interval_seconds) / \
+			_overstimulation_spawn_rate_multiplier()
 	if _random_float("elite_spawn_roll") > clampf(elite_spawn_chance, 0.0, 1.0):
 		return
 	var spawn_position := player.global_position + Vector2.from_angle(_random_float("elite_spawn_angle") * TAU) * enemy_spawn_radius
@@ -2681,7 +2700,21 @@ func _wave_enemy_spawn_interval() -> float:
 	var spawn_scale := wave_population_scale * density_factor
 	if not is_finite(spawn_scale) or spawn_scale <= 0.0:
 		return base_interval
-	return maxf(0.05, base_interval / spawn_scale)
+	return maxf(0.05, base_interval / spawn_scale / _overstimulation_spawn_rate_multiplier())
+
+func _overstimulation_enabled() -> bool:
+	return not sandbox_diagnostics_enabled and mode_id in ["survival", "endless"]
+
+func _overstimulation_spawn_rate_multiplier() -> float:
+	return wave_director.spawn_rate_multiplier() if _overstimulation_enabled() and wave_director != null else 1.0
+
+func _match_wave_phase_feedback(phase_name: String) -> void:
+	if phase_name == "RISING":
+		Sfx.play("boss_phase")
+	elif phase_name == "PRESSURE":
+		Sfx.play("boss_telegraph")
+	elif phase_name == "CALM":
+		Sfx.play("xp_pickup")
 
 func _enemy_hp_multiplier(wave_number: int) -> float:
 	var wave_factor: float
@@ -2706,6 +2739,9 @@ func _wave_status_text() -> String:
 		WAVE_DIRECTOR_SCRIPT.State.VICTORY:
 			return "VICTORY"
 		_:
+			if _overstimulation_enabled():
+				return "WAVE %02d  •  %s %02ds" % [wave_director.wave,
+					wave_director.phase_name(), ceili(wave_director.phase_remaining_seconds())]
 			return "WAVE %02d  •  %02d s" % [wave_director.wave, ceili(wave_duration_seconds - wave_director.elapsed_in_wave)]
 
 func _entity_key(index: int, generation: int) -> String:

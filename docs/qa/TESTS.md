@@ -1,5 +1,11 @@
 # Tests d'acceptation et validation
 
+## Overstimulation — tranche 1/18
+
+- [x] `tools/run_godot_test.sh tools/Godot_v4.7.2-stable_linux.x86_64 --headless --path game --script res://tests/survival_wave_phase_smoke.gd` — passe sous Godot 4.7.2; vérifie montée progressive, cadences de pression et d’accalmie pour les trois groupes de vagues, durée fixe, et absence d’accalmie forcée en phase boss.
+- [i] Le lancement signale l’absence de `game/bin/linux/libdopamine.linux.template_debug.x86_64.so`; le smoke autonome du directeur passe sans l’extension. Le smoke complet `survival_wave_director_smoke.gd` et CTest restent à relancer après compilation native; CMake n’est pas installé dans l’environnement de cette session.
+- [ ] Calibration du rythme en runs représentatives; contrôle de lisibilité et écoute sur matériel réel.
+
 ## Staging Linux courant après refonte UI/assets — 2026-10-18
 
 - [x] `tools/package_linux_staging.sh` reconstruit un checkout `git archive` propre du commit `f3141f3` avec GCC 14.2.0, CMake 3.31.12, Godot 4.7.2 et `godot-cpp` épinglé. Compilation native Release vierge, import, export Linux/X11 filtré, extraction, notices/licences, exclusions des ressources de développement, `ldd` sans dépendance manquante et lancement headless de l’exécutable extrait avec la GDExtension adjacente passent.
