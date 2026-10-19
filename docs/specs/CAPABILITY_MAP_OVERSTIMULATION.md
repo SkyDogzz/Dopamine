@@ -90,4 +90,21 @@ Pistes d’ambiance, d’anticipation et de récompense entre les combats. Elles
 - Meilleure vague ou dernier résultat affiché dans le hub pour soutenir l’envie de relancer une run.
 - Révélation de déblocage expliquant ce qui vient d’être obtenu et ce que cela permet avant la prochaine run.
 
+## Idées générales — [PROPOSÉ]
+
+Pistes qui peuvent traverser plusieurs systèmes ou définir l’identité globale des runs. Elles restent à trier.
+
+- Donner à chaque run un modificateur ou une règle spéciale visible qui influe sur les choix.
+- Introduire des événements rares et annoncés qui bousculent brièvement le rythme habituel.
+- Proposer des choix entre récompenses incompatibles ou bonus puissants avec une contrepartie claire.
+- Résumer la signature de chaque run : build, relique, boss et moment fort qui l’ont rendue unique.
+- Offrir des objectifs personnels courts, optionnels et adaptés au build courant.
+- Faire varier le décor avec des palettes, météo néon ou anomalies, parfois liées au combat.
+- Créer des compositions d’ennemis qui se répondent et produisent des situations nouvelles.
+- Reconnaître les actions maîtrisées ou risquées sans exiger une partie parfaite.
+- Faire progresser les possibilités de jeu avec de nouvelles armes, variantes ou événements, au-delà des bonus statistiques.
+- Envisager un mode optionnel « encore plus intense » avec davantage d’événements, de densité et de surprises.
+- Utiliser de brèves accalmies ou coupures sonores pour renforcer le contraste avant les pics.
+- Garder un journal des moments marquants et le présenter comme le récit de la run.
+
 **Hors de cette carte :** aucun chiffre de fréquence, d’intensité, de durée, de multiplicateur ou de récompense n’est validé. Les valeurs actuelles restent des prototypes jusqu’à spécification et calibration.
