@@ -106,5 +106,20 @@ Pistes qui peuvent traverser plusieurs systèmes ou définir l’identité globa
 - Envisager un mode optionnel « encore plus intense » avec davantage d’événements, de densité et de surprises.
 - Utiliser de brèves accalmies ou coupures sonores pour renforcer le contraste avant les pics.
 - Garder un journal des moments marquants et le présenter comme le récit de la run.
+- Faire évoluer le comportement d’une arme selon la relique qui l’accompagne.
+- Aux paliers choisis, proposer une mutation temporaire qui transforme le build.
+- Faire dépendre une partie des récompenses de boss de la manière dont il est vaincu.
+- Proposer une graine quotidienne identique pour tous, avec comparaison de score asynchrone.
+- Permettre à des événements de se chevaucher et de créer des combinaisons rares.
+- Introduire des objets maudits : bonus très puissant accompagné d’une contrainte qui dure jusqu’à la fin de la run.
+- Ajouter un détour risqué pour sauver un PNJ et gagner une amélioration ou un vendeur temporaire.
+- Créer un rival récurrent qui peut survivre, revenir renforcé et varier selon la rencontre précédente.
+- Attribuer des badges de run à des exploits singuliers, par exemple gagner avec très peu de vie après un boss.
+- Faire varier l’arène ou la séquence finale selon le build ou les événements rencontrés.
+- Explorer un mode dédié aux combinaisons de build volontairement excessives.
+- Permettre de placer un totem ou un champ persistant qui modifie l’arène jusqu’à la fin de la run.
+- Annoncer mystérieusement une possibilité de nouvel ennemi ou de relique sans révéler son moment d’apparition.
+- Proposer des choix de route entre une séquence dangereuse à forte récompense et une voie plus sûre.
+- Créer des variantes de run courtes de 5 à 10 minutes, avec objectif et build imposés.
 
 **Hors de cette carte :** aucun chiffre de fréquence, d’intensité, de durée, de multiplicateur ou de récompense n’est validé. Les valeurs actuelles restent des prototypes jusqu’à spécification et calibration.
