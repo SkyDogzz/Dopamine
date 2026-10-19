@@ -35,6 +35,11 @@ func _ready() -> void:
 	_load_settings()
 	_apply_settings()
 
+func _input(event: InputEvent) -> void:
+	if event is InputEventKey and event.pressed and not event.echo and event.keycode == KEY_F11:
+		set_fullscreen_enabled(not _fullscreen_enabled)
+		get_viewport().set_input_as_handled()
+
 func set_fullscreen_enabled(enabled: bool) -> void:
 	_fullscreen_enabled = enabled
 	_apply_fullscreen()
@@ -79,7 +84,7 @@ func _apply_settings() -> void:
 	_apply_master_volume()
 
 func _apply_fullscreen() -> void:
-	var mode := DisplayServer.WINDOW_MODE_EXCLUSIVE_FULLSCREEN if _fullscreen_enabled else DisplayServer.WINDOW_MODE_WINDOWED
+	var mode := DisplayServer.WINDOW_MODE_FULLSCREEN if _fullscreen_enabled else DisplayServer.WINDOW_MODE_WINDOWED
 	DisplayServer.window_set_mode(mode)
 
 func _apply_master_volume() -> void:
