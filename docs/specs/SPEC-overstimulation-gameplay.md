@@ -1,6 +1,6 @@
 # Spécification — Survival hyperactif
 
-**Statut : proposition complète à relire.** La direction des 18 capacités est **[VALIDÉE par l’utilisateur, 2026-10-19]**. Les règles et valeurs ci-dessous sont **[PROPOSÉES]**; aucune intégration ne commence avant la revue de cette spécification.
+**Statut : spécification détaillée [VALIDÉE par l’utilisateur, 2026-10-19].** Les 18 capacités, règles et valeurs de départ ci-dessous sont approuvées pour intégration. Les mesures de runs pourront motiver une proposition de calibration ultérieure, consignée comme décision distincte.
 
 ## Objectif
 
@@ -186,8 +186,8 @@ Chaque incrément conserve les frontières de SimulationCore, Survival, progress
 - Le Sandbox ne lit, ne modifie et ne crédite aucune donnée de progression normale.
 - Les builds débutant, intermédiaire et complet restent jouables; les bonus temporaires n’outrepassent pas les caps documentés.
 
-## Questions restant à la revue
+## Suivi après approbation
 
-- Corriger, accepter ou écarter chaque règle et valeur proposée dans les 18 sections.
-- Confirmer le périmètre Survival + Endless standard et les exclusions Armorless/Sandbox.
-- Après validation de cette spec, faire une calibration de run avant de promouvoir les valeurs proposées en décisions définitives.
+- La revue utilisateur du 2026-10-19 a confirmé les règles, valeurs de départ, le périmètre Survival + Endless standard et les exclusions Armorless/Sandbox.
+- Implémenter les modules dans l’ordre indiqué, sans rouvrir les décisions approuvées.
+- Après les premières tranches jouables, mesurer des runs représentatives; documenter toute proposition de calibration avant de modifier ces règles.

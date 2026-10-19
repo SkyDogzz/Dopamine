@@ -1,6 +1,6 @@
 # Carte de capacités — Overstimulation
 
-**Statut : carte des modules [PROPOSÉE]; 18 capacités de gameplay ci-dessous [VALIDÉES le 2026-10-19]; règles détaillées et implémentation [À SPÉCIFIER].**
+**Statut : les 18 capacités et leur spec détaillée sont [VALIDÉES le 2026-10-19]; carte des modules et autres pistes restent [PROPOSÉES].**
 
 Objectif : donner à Survival une identité volontairement intense et généreuse. Le rythme, les combats, les récompenses et la présentation audiovisuelle doivent créer des pics mémorables, des retours fréquents et une montée perceptible, sans rendre les menaces illisibles. L’intensité élevée est la présentation par défaut; les réglages d’accessibilité existants restent respectés.
 
@@ -13,7 +13,7 @@ Objectif : donner à Survival une identité volontairement intense et généreus
 
 **Ordre proposé :** `encounter-rhythm` → `combat-payoffs` → `sensory-feedback` et `reactive-audio`.
 
-Les règles détaillées proposées pour revue sont consignées dans [SPEC-overstimulation-gameplay.md](SPEC-overstimulation-gameplay.md). Aucune intégration ne commence avant sa revue utilisateur.
+Les règles détaillées approuvées pour intégration sont consignées dans [SPEC-overstimulation-gameplay.md](SPEC-overstimulation-gameplay.md).
 
 ## Capacités de gameplay validées — 2026-10-19
 
