@@ -1,5 +1,11 @@
 # Tests d'acceptation et validation
 
+## Overstimulation — tranche 6/18
+
+- [x] `survival_perfect_dodge_smoke.gd` passe sous Godot 4.7.2 : interception projectile/charge dans la fenêtre de 250 ms, trajectoires manquées exclues, déplacement hors collision, 20 points de style, bonus d’attaque +10 % durant deux secondes, annulation si dégât ennemi durant la candidate.
+- [x] Le smoke couvre Survival/Endless et exclut Armorless, mode non sélectionné et Sandbox diagnostics. Les smokes événement et tranches 1–5 restent verts après cette intégration.
+- [i] La GDExtension absente empêche de vérifier une session complète et le smoke de dégâts de contact s’arrête à la création manquante de `CombatSimulation`; vérifier l’intégration native et la lecture du flash/cue dans un build avec extension. Aucune calibration ou capture audiovisuelle matérielle effectuée.
+
 ## Overstimulation — tranche 5/18
 
 - [x] `survival_wave_event_smoke.gd` exécute 10 000 tirages seedés : les événements combinés restent entre 18–22 %, les listes contiennent une/deux anomalies, les paires satisfont la table et aucun effet ne se répète d’un événement au suivant.

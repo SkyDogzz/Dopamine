@@ -72,6 +72,11 @@ const OVERSTIMULATION_EVENT_INTERVAL_WAVES := 3
 const OVERSTIMULATION_EVENT_WARNING_SECONDS := 5.0
 const OVERSTIMULATION_EVENT_DURATION_SECONDS := 15.0
 const OVERSTIMULATION_EVENT_XP_REWARD := 0.15
+const PERFECT_DODGE_WINDOW_SECONDS := 0.25
+const PERFECT_DODGE_ATTACK_SPEED_BONUS := 10.0
+const PERFECT_DODGE_ATTACK_SPEED_SECONDS := 2.0
+const PERFECT_DODGE_STYLE_POINTS := 20
+const PERFECT_DODGE_FLASH_SECONDS := 0.22
 const OVERSTIMULATION_COMPATIBLE_PAIRS := [
 	"FERAL_SURGE|MAGNETIC_STORM", "FERAL_SURGE|OVERCLOCK", "FERAL_SURGE|PRISM_BREAK",
 	"MAGNETIC_STORM|OVERCLOCK", "MAGNETIC_STORM|PRISM_BREAK", "OVERCLOCK|PRISM_BREAK",
@@ -415,6 +420,17 @@ var _overstimulation_xp_storm := false
 var _overstimulation_prism_break := false
 var _overstimulation_last_anomalies: Array[String] = []
 var _overstimulation_xp_attraction_active := false
+var _perfect_dodge_previous_position := Vector2.ZERO
+var _perfect_dodge_has_previous_position := false
+var _perfect_dodge_candidates: Dictionary = {}
+var _perfect_dodge_rewarded_attacks: Dictionary = {}
+var _perfect_dodge_enemy_damage_serial := 0
+var _perfect_dodge_last_frame_damage_serial := 0
+var _perfect_dodge_attack_speed_expires_at := 0.0
+var _perfect_dodge_style_points := 0
+var _perfect_dodge_flash_expires_at := 0.0
+var _perfect_dodge_flash_position := Vector2.ZERO
+var _perfect_dodge_flash_was_visible := false
 var _next_elite_spawn_time := 0.0
 var _boss_spawn_pending := false
 var _pulse_warden_attacks: Dictionary = {}
@@ -1097,6 +1113,7 @@ func _process(_delta: float) -> void:
 	_update_summoner_attacks(current_simulation_time, bool(state["paused"]))
 	_update_pulse_warden_attacks(current_simulation_time, bool(state["paused"]))
 	_update_dopamine_core_attacks(current_simulation_time, bool(state["paused"]))
+	_update_perfect_dodges(state, current_simulation_time)
 	var transient_animations := _enemy_death_animations.duplicate()
 	transient_animations.append_array(_weapon_transient_animations)
 	_sprite_renderer.set_entities(_entities, Vector2.ZERO, current_simulation_time,
@@ -1165,6 +1182,153 @@ func _apply_contact_damage(state: Dictionary, current_simulation_time: float) ->
 			continue
 		_take_enemy_damage(contact_damage_per_hit)
 		_contact_damage_until[enemy_key] = current_simulation_time + body_contact_cooldown_seconds
+
+func _update_perfect_dodges(state: Dictionary, current_simulation_time: float) -> void:
+	if player == null:
+		return
+	var player_position := player.global_position
+	if not _overstimulation_enabled() or bool(state.get("paused", false)) or run_over:
+		_perfect_dodge_candidates.clear()
+		_perfect_dodge_previous_position = player_position
+		_perfect_dodge_has_previous_position = true
+		_perfect_dodge_last_frame_damage_serial = _perfect_dodge_enemy_damage_serial
+		return
+	if not _perfect_dodge_has_previous_position:
+		_perfect_dodge_previous_position = player_position
+		_perfect_dodge_has_previous_position = true
+		return
+	var previous_position := _perfect_dodge_previous_position
+	var took_enemy_damage := _perfect_dodge_enemy_damage_serial != _perfect_dodge_last_frame_damage_serial
+	_perfect_dodge_last_frame_damage_serial = _perfect_dodge_enemy_damage_serial
+	if took_enemy_damage:
+		_perfect_dodge_candidates.clear()
+	if not took_enemy_damage:
+		for entity in state.get("entities", []):
+			var components: Dictionary = entity.get("components", {})
+			if not components.get("IsProjectile", false) or str(components.get("EnemyType", "")) != "enemy_projectile":
+				continue
+			var id: Dictionary = entity.get("id", {})
+			var projectile_key := _entity_key(int(id.get("index", -1)), int(id.get("generation", 0)))
+			if _perfect_dodge_rewarded_attacks.has(projectile_key) or \
+					_perfect_dodge_candidates.has(projectile_key):
+				continue
+			var transform: Dictionary = components.get("Transform2D", {})
+			var velocity: Dictionary = components.get("Velocity2D", {})
+			var position := Vector2(float(transform.get("x", 0.0)), float(transform.get("y", 0.0)))
+			var projectile_velocity := Vector2(float(velocity.get("x", 0.0)), float(velocity.get("y", 0.0)))
+			var projectile: Dictionary = components.get("Projectile", {})
+			var collision_radius := player_contact_radius + float(projectile.get("radius", 0.0))
+			var intercept_time := _projectile_intercept_time(position, projectile_velocity, previous_position, collision_radius)
+			if intercept_time < 0.0:
+				continue
+			if player_position.distance_to(position + projectile_velocity * intercept_time) <= collision_radius:
+				continue
+			_perfect_dodge_candidates[projectile_key] = {
+				"expires_at": current_simulation_time + intercept_time,
+				"damage_serial": _perfect_dodge_enemy_damage_serial,
+			}
+		_track_perfect_dodge_charges(previous_position, player_position, current_simulation_time)
+	var active_projectiles: Dictionary = {}
+	for entity in state.get("entities", []):
+		var components: Dictionary = entity.get("components", {})
+		if not components.get("IsProjectile", false) or str(components.get("EnemyType", "")) != "enemy_projectile":
+			continue
+		var id: Dictionary = entity.get("id", {})
+		active_projectiles[_entity_key(int(id.get("index", -1)), int(id.get("generation", 0)))] = true
+	for attack_key in _perfect_dodge_candidates.keys():
+		var candidate: Dictionary = _perfect_dodge_candidates[attack_key]
+		if int(candidate["damage_serial"]) != _perfect_dodge_enemy_damage_serial:
+			_perfect_dodge_candidates.erase(attack_key)
+			continue
+		if str(attack_key).begins_with("charge:"):
+			if current_simulation_time >= float(candidate["expires_at"]):
+				_register_perfect_dodge(str(attack_key), player_position)
+				_perfect_dodge_candidates.erase(attack_key)
+		elif not active_projectiles.has(attack_key) or current_simulation_time >= float(candidate["expires_at"]):
+			if current_simulation_time >= float(candidate["expires_at"]):
+				_register_perfect_dodge(str(attack_key), player_position)
+			_perfect_dodge_candidates.erase(attack_key)
+	for attack_key in _perfect_dodge_rewarded_attacks.keys():
+		if not str(attack_key).begins_with("charge:") and not active_projectiles.has(attack_key):
+			_perfect_dodge_rewarded_attacks.erase(attack_key)
+	_perfect_dodge_previous_position = player_position
+	var flash_visible := _last_simulation_time < _perfect_dodge_flash_expires_at
+	if flash_visible or _perfect_dodge_flash_was_visible:
+		queue_redraw()
+	_perfect_dodge_flash_was_visible = flash_visible
+
+func _track_perfect_dodge_charges(previous_position: Vector2, player_position: Vector2,
+		current_simulation_time: float) -> void:
+	var charge_radius := player_contact_radius + 26.0
+	for boss_key in _pulse_warden_attacks:
+		var attack: Dictionary = _pulse_warden_attacks[boss_key]
+		if str(attack.get("pattern", "")) != "charge" or \
+				str(attack.get("stage", "")) not in ["telegraph", "charging"]:
+			continue
+		var attack_id: Dictionary = attack.get("entity_id", {})
+		var charge_key := "charge:%s:%d" % [boss_key, int(attack.get("normal_attack_count", 0))]
+		if _perfect_dodge_rewarded_attacks.has(charge_key) or _perfect_dodge_candidates.has(charge_key):
+			continue
+		var origin: Vector2 = attack.get("origin", Vector2.ZERO)
+		var aim: Vector2 = attack.get("aim", Vector2.ZERO)
+		var direction := (aim - origin).normalized()
+		if direction == Vector2.ZERO:
+			continue
+		var time_to_charge := 0.0 if str(attack["stage"]) == "charging" else \
+			maxf(0.0, float(attack.get("fire_at", current_simulation_time)) - current_simulation_time)
+		var intercept_time := _charge_intercept_time(origin, direction, previous_position,
+				pulse_warden_charge_speed, time_to_charge, charge_radius)
+		if intercept_time < 0.0:
+			continue
+		var along := (previous_position - origin).dot(direction)
+		var closest_point := origin + direction * along
+		if player_position.distance_to(closest_point) <= charge_radius:
+			continue
+		_perfect_dodge_candidates[charge_key] = {
+			"expires_at": current_simulation_time + intercept_time,
+			"damage_serial": _perfect_dodge_enemy_damage_serial,
+			"boss_key": boss_key,
+			"boss_id": attack_id,
+		}
+
+func _projectile_intercept_time(projectile_position: Vector2, projectile_velocity: Vector2,
+		target_position: Vector2, collision_radius: float) -> float:
+	var speed_squared := projectile_velocity.length_squared()
+	if speed_squared <= 0.0 or collision_radius <= 0.0:
+		return -1.0
+	var relative_position := projectile_position - target_position
+	var intercept_time := -relative_position.dot(projectile_velocity) / speed_squared
+	if intercept_time <= 0.0 or intercept_time > PERFECT_DODGE_WINDOW_SECONDS:
+		return -1.0
+	if (relative_position + projectile_velocity * intercept_time).length() > collision_radius:
+		return -1.0
+	return intercept_time
+
+func _charge_intercept_time(origin: Vector2, direction: Vector2, target_position: Vector2,
+		charge_speed: float, telegraph_remaining: float, collision_radius: float) -> float:
+	var normalized_direction := direction.normalized()
+	var along := (target_position - origin).dot(normalized_direction)
+	var closest_point := origin + normalized_direction * along
+	if normalized_direction == Vector2.ZERO or along < 0.0 or charge_speed <= 0.0 or \
+			closest_point.distance_to(target_position) > collision_radius:
+		return -1.0
+	var intercept_time := maxf(0.0, telegraph_remaining) + along / charge_speed
+	if intercept_time <= 0.0 or intercept_time > PERFECT_DODGE_WINDOW_SECONDS:
+		return -1.0
+	return intercept_time
+
+func _register_perfect_dodge(attack_key: String, feedback_position: Vector2) -> void:
+	if _perfect_dodge_rewarded_attacks.has(attack_key):
+		return
+	_perfect_dodge_rewarded_attacks[attack_key] = true
+	_perfect_dodge_style_points += PERFECT_DODGE_STYLE_POINTS
+	_perfect_dodge_attack_speed_expires_at = player_active_time + PERFECT_DODGE_ATTACK_SPEED_SECONDS
+	_perfect_dodge_flash_expires_at = _last_simulation_time + PERFECT_DODGE_FLASH_SECONDS
+	_perfect_dodge_flash_position = feedback_position
+	Sfx.play("xp_pickup")
+	if _item_level_feedback_label != null and simulation != null:
+		_show_effect_feedback("PERFECT DODGE  ·  +20 STYLE  ·  +10% ATTACK SPEED")
+	queue_redraw()
 
 func _update_shooter_attacks(current_simulation_time: float, paused: bool) -> void:
 	if paused or run_over:
@@ -1690,8 +1854,11 @@ func _player_health_decay_amount(active_time_seconds: float, delta_seconds: floa
 	return amount
 
 func _take_enemy_damage(amount: float) -> void:
+	var damage_before := player_hp + player_shield
 	var factors: Dictionary = DIFFICULTY_SCRIPT.DATA.get(difficulty_id, DIFFICULTY_SCRIPT.DATA["normal"])
 	_take_player_damage(amount * float(factors["enemy_damage"]))
+	if player_hp + player_shield < damage_before:
+		_perfect_dodge_enemy_damage_serial += 1
 
 func _refresh_hud(state: Dictionary) -> void:
 	if _item_level_feedback.visible and float(state.get("simulation_time", 0.0)) >= _item_level_feedback_expires_at:
@@ -3957,10 +4124,12 @@ func _refresh_player_move_speed() -> void:
 
 func _effective_weapon_cooldown(base_cooldown: float) -> float:
 	var objective_attack_speed_bonus := 10.0 if player_active_time < _wave_objective_attack_speed_expires_at else 0.0
+	var perfect_dodge_attack_speed_bonus := PERFECT_DODGE_ATTACK_SPEED_BONUS if \
+			player_active_time < _perfect_dodge_attack_speed_expires_at else 0.0
 	var speed_multiplier: float = 1.0 + (
 		_equipment_bonus("attack_speed_pct") + loadout.global_relic_bonus("attack_speed_pct") +
 		_xp_run_stat_bonus("attack_speed_pct") + float(_cached_achievement_stat_bonuses.get("attack_speed_pct", 0.0)) +
-		objective_attack_speed_bonus + _overstimulation_attack_speed_bonus
+		objective_attack_speed_bonus + perfect_dodge_attack_speed_bonus + _overstimulation_attack_speed_bonus
 	) / 100.0
 	var cooldown_multiplier: float = maxf(0.1, 1.0 - (_equipment_bonus("cooldown_reduction_pct") + loadout.global_relic_bonus("cooldown_reduction_pct") + _xp_run_stat_bonus("cooldown_reduction_pct")) / 100.0)
 	return base_cooldown * cooldown_multiplier / speed_multiplier
@@ -4378,6 +4547,11 @@ func _draw() -> void:
 	if _last_simulation_time < _magnet_heart_impulse_expires_at:
 		var impulse_radius := _magnet_heart_effective_pulse_radius()
 		draw_arc(player.global_position, impulse_radius, 0.0, TAU, 64, Color(0.22, 0.9, 1.0, 0.42), 1.5, true)
+	if not reduced_effects and _last_simulation_time < _perfect_dodge_flash_expires_at:
+		var flash_alpha := clampf((_perfect_dodge_flash_expires_at - _last_simulation_time) /
+				PERFECT_DODGE_FLASH_SECONDS, 0.0, 1.0)
+		draw_arc(_perfect_dodge_flash_position, player_contact_radius + 8.0, 0.0, TAU, 32,
+				Color(0.22, 0.9, 1.0, flash_alpha), 3.0, true)
 	if not reduced_effects:
 		_sprite_renderer.draw_projectile_trails(self)
 	_sprite_renderer.draw_batches(self)
