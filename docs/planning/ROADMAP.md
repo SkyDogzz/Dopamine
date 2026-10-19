@@ -716,7 +716,7 @@ P1 livre le Sandbox développeur et ne remplace pas cette feature produit.
   - [x] Tranche 7/18 — zone de risque/récompense : toutes les 4 vagues hors boss, tenir 4 s cumulées dans le cercle annoncé de 12 s donne +20 % dégâts/zone pendant 8 s et +15 style; la progression persiste en sortant et après dégâts. Le HUD/cercle montrent progression, expiration et buff; `survival_risk_reward_zone_smoke.gd` vérifie cadence, cumul, bonus, durée et isolation. Session native à vérifier avec GDExtension.
   - [x] Tranche 8/18 — noyau XP mobile : apparaît toutes les 45 s actives, traverse l’écran et disparaît après 8 s; rayon de collecte l’attire et le contact direct l’intercepte; +20 % XP et +10 style, sans pénalité en cas d’échec. `survival_mobile_xp_core_smoke.gd` vérifie trajectoire, échéance, récompense unique et isolation Survival/Endless standard.
   - [x] Tranche 9/18 — combo de kills : fenêtre de 4 s, rupture sur dégâts ennemis (pas sur HP decay), paliers 3/6/10/15/25 et bonus d’attaque +5 % par palier pour 4 s. Le panneau HUD montre compteur/timer; nouveau palier anime le label, joue un cue et affiche son nom. `survival_kill_combo_smoke.gd` vérifie les règles et l’isolation Survival/Endless standard.
-  - [ ] Tranche 10/18 — jauge de style.
+  - [x] Tranche 10/18 — jauge de style : les kills ordinaires/élites rapportent +1/+8, esquive +20, objectif +25, zone +15, noyau +10; à 100 points, burst de 6 s (+15 % cadence/+10 % zone), compteur HUD et banque plafonnée à 100 pendant le burst. `survival_style_gauge_smoke.gd` vérifie unicité, seuil, banque, chaînage, multiplicateurs et exclusions.
   - [ ] Tranche 11/18 — mutations temporaires de build.
   - [ ] Tranche 12/18 — objets maudits.
   - [ ] Tranche 13/18 — surchauffe automatique des armes.

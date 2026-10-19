@@ -52,6 +52,14 @@ func _initialize() -> void:
 			not is_equal_approx(session._equipment_area(100.0), 100.0):
 		_fail("The damage and area reward should expire after eight active seconds")
 		return
+	session._overstimulation_style_burst_expires_at = 100.0
+	session._overstimulation_style_points = 0
+	session._overstimulation_style_scored_events.clear()
+	session._risk_reward_zone_active = true
+	session._complete_risk_reward_zone()
+	if session._overstimulation_style_pending_points != 15:
+		_fail("A zone completed during Style Burst should bank its 15 style points")
+		return
 	session.player.free()
 	session.free()
 	print("Survival risk/reward zone smoke passed")

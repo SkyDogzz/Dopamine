@@ -146,6 +146,27 @@ theme_override_font_sizes/font_size = 7
 text = "COMBO 00  ·  NEXT 03  ·  4.0s"
 clip_text = true
 
+[node name="StyleGaugeRow" type="HBoxContainer" parent="HUD/RunPanel/RunInfo"]
+visible = false
+custom_minimum_size = Vector2(0, 12)
+layout_mode = 2
+theme_override_constants/separation = 4
+mouse_filter = 2
+
+[node name="StyleValue" type="Label" parent="HUD/RunPanel/RunInfo/StyleGaugeRow"]
+custom_minimum_size = Vector2(105, 0)
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.42, 0.74, 1)
+theme_override_font_sizes/font_size = 7
+text = "STYLE  00 / 100"
+clip_text = true
+
+[node name="StyleBar" type="ProgressBar" parent="HUD/RunPanel/RunInfo/StyleGaugeRow"]
+custom_minimum_size = Vector2(75, 5)
+layout_mode = 2
+size_flags_horizontal = 3
+show_percentage = false
+
 [node name="MetaPanel" type="PanelContainer" parent="HUD"]
 anchor_left = 1.0
 anchor_right = 1.0

@@ -1,5 +1,10 @@
 # Tests d'acceptation et validation
 
+## Overstimulation — tranche 10/18
+
+- [x] `survival_style_gauge_smoke.gd` vérifie les points de kill ordinaire/élite, l’unicité, l’exclusion boss/chaîne, le burst au seuil 100, la banque plafonnée, le chaînage d’un burst, +15 % attaque et +10 % zone sans dégâts, le cumul de zone de risque, et la visibilité/isolation HUD.
+- [i] Vérification ciblée sous Godot 4.7.2; la GDExtension absente empêche encore un run natif interactif et la revue visuelle/audio matérielle.
+
 ## Overstimulation — tranche 9/18
 
 - [x] `survival_kill_combo_smoke.gd` passe sous Godot 4.7.2 : les paliers 3/6/10/15/25 remplacent correctement le bonus (+5 % par palier) pendant 4 s; dégâts ennemis le rompent, HP decay ne le rompt pas; 4 s sans kill recommencent une chaîne.

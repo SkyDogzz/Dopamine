@@ -97,6 +97,9 @@ const OVERSTIMULATION_COMBO_WINDOW_SECONDS := 4.0
 const OVERSTIMULATION_COMBO_BONUS_SECONDS := 4.0
 const OVERSTIMULATION_COMBO_ATTACK_SPEED_PER_MILESTONE := 5.0
 const OVERSTIMULATION_COMBO_MILESTONES := [3, 6, 10, 15, 25]
+const OVERSTIMULATION_STYLE_BURST_SECONDS := 6.0
+const OVERSTIMULATION_STYLE_BURST_ATTACK_SPEED_BONUS := 15.0
+const OVERSTIMULATION_STYLE_BURST_AREA_BONUS := 10.0
 const OVERSTIMULATION_COMBO_MILESTONE_NAMES := ["RUSH", "RAMPAGE", "FRENZY", "MAYHEM", "UNSTOPPABLE"]
 const OVERSTIMULATION_COMPATIBLE_PAIRS := [
 	"FERAL_SURGE|MAGNETIC_STORM", "FERAL_SURGE|OVERCLOCK", "FERAL_SURGE|PRISM_BREAK",
@@ -449,6 +452,9 @@ var _perfect_dodge_enemy_damage_serial := 0
 var _perfect_dodge_last_frame_damage_serial := 0
 var _perfect_dodge_attack_speed_expires_at := 0.0
 var _overstimulation_style_points := 0
+var _overstimulation_style_pending_points := 0
+var _overstimulation_style_burst_expires_at := 0.0
+var _overstimulation_style_scored_events: Dictionary = {}
 var _perfect_dodge_flash_expires_at := 0.0
 var _perfect_dodge_flash_position := Vector2.ZERO
 var _perfect_dodge_flash_was_visible := false
@@ -456,6 +462,7 @@ var _risk_reward_zone_active := false
 var _risk_reward_zone_elapsed := 0.0
 var _risk_reward_zone_progress := 0.0
 var _risk_reward_zone_center := Vector2.ZERO
+var _risk_reward_zone_wave := 0
 var _risk_reward_buff_expires_at := 0.0
 var _mobile_xp_core_next_at := MOBILE_XP_CORE_INTERVAL_SECONDS
 var _mobile_core_active := false
@@ -583,6 +590,9 @@ var _codex_sightings_recorded: Dictionary = {}
 @onready var _risk_reward_label: Label = $HUD/RunPanel/RunInfo/RiskRewardStatus
 @onready var _mobile_core_label: Label = $HUD/RunPanel/RunInfo/MobileCoreStatus
 @onready var _combo_label: Label = $HUD/RunPanel/RunInfo/ComboStatus
+@onready var _style_gauge_row: HBoxContainer = $HUD/RunPanel/RunInfo/StyleGaugeRow
+@onready var _style_value: Label = $HUD/RunPanel/RunInfo/StyleGaugeRow/StyleValue
+@onready var _style_bar: ProgressBar = $HUD/RunPanel/RunInfo/StyleGaugeRow/StyleBar
 @onready var _difficulty_value: Label = $HUD/MetaPanel/MetaRow/DifficultyValue
 @onready var _boss_panel: PanelContainer = $HUD/BossPanel
 @onready var _boss_value: Label = $HUD/BossPanel/BossInfo/BossValue
@@ -1076,6 +1086,8 @@ func _process(_delta: float) -> void:
 				var dead_target: Dictionary = event["target"]
 				var dead_enemy_type: String = str(event.get("target_type", ""))
 				_record_overstimulation_combo_kill(dead_enemy_type)
+				var dead_key := _entity_key(int(dead_target["index"]), int(dead_target["generation"]))
+				_record_overstimulation_style_kill(dead_enemy_type, dead_key)
 				var dead_enemy_affix: String = str(event.get("target_affix", ""))
 				var death_position := Vector2(float(event["position"]["x"]), float(event["position"]["y"]))
 				if _overstimulation_prism_break and dead_enemy_type not in ["mid_boss", "final_boss"]:
@@ -1099,7 +1111,6 @@ func _process(_delta: float) -> void:
 							frost_nova_damage * absolute_zero_shatter_damage_multiplier * _weapon_combo_damage_multiplier("frost_nova") * _persistent_damage_multiplier(),
 							_equipment_area(absolute_zero_shatter_radius), frost_nova_duration_seconds,
 							2.0, 0.5, 2.0, 0.0, 0.0, 0, 0.0, 0.0, true)
-				var dead_key := _entity_key(int(dead_target["index"]), int(dead_target["generation"]))
 				_record_wave_objective_kill(dead_key)
 				if _pandemic_poisoned_targets.has(dead_key) and not _pandemic_spread_targets.has(dead_key):
 					_pandemic_spread_targets[dead_key] = true
@@ -1161,6 +1172,7 @@ func _process(_delta: float) -> void:
 	_update_dopamine_core_attacks(current_simulation_time, bool(state["paused"]))
 	_update_perfect_dodges(state, current_simulation_time)
 	_update_overstimulation_combo()
+	_update_overstimulation_style_gauge()
 	_update_run_panel_status_height()
 	var transient_animations := _enemy_death_animations.duplicate()
 	transient_animations.append_array(_weapon_transient_animations)
@@ -1369,7 +1381,7 @@ func _register_perfect_dodge(attack_key: String, feedback_position: Vector2) -> 
 	if _perfect_dodge_rewarded_attacks.has(attack_key):
 		return
 	_perfect_dodge_rewarded_attacks[attack_key] = true
-	_overstimulation_style_points += PERFECT_DODGE_STYLE_POINTS
+	_add_overstimulation_style_points(PERFECT_DODGE_STYLE_POINTS, "perfect_dodge:%s" % attack_key)
 	_perfect_dodge_attack_speed_expires_at = player_active_time + PERFECT_DODGE_ATTACK_SPEED_SECONDS
 	_perfect_dodge_flash_expires_at = _last_simulation_time + PERFECT_DODGE_FLASH_SECONDS
 	_perfect_dodge_flash_position = feedback_position
@@ -1454,6 +1466,7 @@ func _update_exploder_attacks(current_simulation_time: float, paused: bool) -> v
 		kill_count += 1
 		_record_enemy_kill("exploder")
 		_record_overstimulation_combo_kill("exploder")
+		_record_overstimulation_style_kill("exploder", key)
 		_roll_enemy_chests("exploder", blast_origin)
 		if not run_over:
 			var healing: float = _equipment_kill_healing(float(simulation.kill_heal_amount(float(components.get("ThreatLevel", 2.0)))))
@@ -1976,6 +1989,7 @@ func _update_run_panel_status_height() -> void:
 		return
 	var status_count := int(_risk_reward_label.visible) + int(_mobile_core_label.visible)
 	status_count += int(_combo_label.visible)
+	status_count += int(_style_gauge_row.visible)
 	_run_panel.offset_bottom = 51.0 + float(status_count) * 15.0
 
 func _run_stat_breakdown() -> Dictionary:
@@ -2720,6 +2734,62 @@ func _record_overstimulation_combo_kill(_enemy_type: String = "") -> void:
 		_play_overstimulation_combo_milestone_feedback()
 	_update_overstimulation_combo_hud()
 
+func _record_overstimulation_style_kill(enemy_type: String, event_key: String) -> void:
+	if enemy_type in ["mid_boss", "final_boss"] or event_key.begins_with("boss_chain_"):
+		return
+	var points := 8 if enemy_type == "elite" else 1
+	_add_overstimulation_style_points(points, "kill:%s" % event_key)
+
+func _add_overstimulation_style_points(points: int, event_key: String) -> void:
+	if not _overstimulation_enabled() or points <= 0 or event_key.is_empty() or \
+			_overstimulation_style_scored_events.has(event_key):
+		return
+	_overstimulation_style_scored_events[event_key] = true
+	if player_active_time < _overstimulation_style_burst_expires_at:
+		_overstimulation_style_pending_points = mini(100, _overstimulation_style_pending_points + points)
+	else:
+		_overstimulation_style_points += points
+		if _overstimulation_style_points >= 100:
+			_overstimulation_style_pending_points = mini(100, _overstimulation_style_points - 100)
+			_overstimulation_style_points = 0
+			_start_overstimulation_style_burst()
+	_update_overstimulation_style_hud()
+
+func _start_overstimulation_style_burst() -> void:
+	_overstimulation_style_burst_expires_at = player_active_time + OVERSTIMULATION_STYLE_BURST_SECONDS
+	Sfx.play("level_up")
+	if simulation != null:
+		_show_effect_feedback("STYLE BURST  ·  +15% ATTACK SPEED  ·  +10% AREA")
+	queue_redraw()
+
+func _update_overstimulation_style_gauge() -> void:
+	if not _overstimulation_enabled():
+		if _style_gauge_row != null:
+			_style_gauge_row.hide()
+		return
+	if _overstimulation_style_burst_expires_at > 0.0 and \
+			player_active_time >= _overstimulation_style_burst_expires_at:
+		_overstimulation_style_burst_expires_at = 0.0
+		_overstimulation_style_points = _overstimulation_style_pending_points
+		_overstimulation_style_pending_points = 0
+		if _overstimulation_style_points >= 100:
+			_overstimulation_style_points = 0
+			_start_overstimulation_style_burst()
+	_update_overstimulation_style_hud()
+
+func _update_overstimulation_style_hud() -> void:
+	if _style_gauge_row == null or _style_value == null or _style_bar == null:
+		return
+	_style_gauge_row.show()
+	_style_bar.value = _overstimulation_style_points
+	if player_active_time < _overstimulation_style_burst_expires_at:
+		_style_value.text = "STYLE BURST  ·  %ds  ·  BANK %02d" % [
+			ceili(_overstimulation_style_burst_expires_at - player_active_time),
+			_overstimulation_style_pending_points,
+		]
+	else:
+		_style_value.text = "STYLE  %02d / 100" % _overstimulation_style_points
+
 func _update_overstimulation_combo() -> void:
 	if not _overstimulation_enabled():
 		_break_overstimulation_combo()
@@ -3107,6 +3177,7 @@ func _risk_reward_zone_due(wave_number: int, director_state: int) -> bool:
 
 func _start_risk_reward_zone(wave_number: int) -> void:
 	_risk_reward_zone_active = true
+	_risk_reward_zone_wave = wave_number
 	_risk_reward_zone_elapsed = 0.0
 	_risk_reward_zone_progress = 0.0
 	var angle := float(wave_number) * 2.39996323
@@ -3146,7 +3217,8 @@ func _complete_risk_reward_zone() -> void:
 		return
 	_risk_reward_zone_active = false
 	_risk_reward_buff_expires_at = player_active_time + RISK_REWARD_ZONE_BUFF_SECONDS
-	_overstimulation_style_points += RISK_REWARD_ZONE_STYLE_POINTS
+	_add_overstimulation_style_points(RISK_REWARD_ZONE_STYLE_POINTS,
+			"risk_zone:%d" % _risk_reward_zone_wave)
 	if _risk_reward_label != null:
 		_risk_reward_label.hide()
 	Sfx.play("chest_reward")
@@ -3245,7 +3317,8 @@ func _collect_mobile_xp_core() -> void:
 	_mobile_xp_core_feedback_position = _mobile_xp_core_position
 	_mobile_xp_core_feedback_expires_at = _last_simulation_time + MOBILE_XP_CORE_FLASH_SECONDS
 	_add_xp(player_xp_to_next * MOBILE_XP_CORE_REWARD)
-	_overstimulation_style_points += MOBILE_XP_CORE_STYLE_POINTS
+	_add_overstimulation_style_points(MOBILE_XP_CORE_STYLE_POINTS,
+			"mobile_core:%d" % (_mobile_xp_core_spawn_count - 1))
 	if _mobile_core_label != null:
 		_mobile_core_label.hide()
 	Sfx.play("chest_reward")
@@ -3263,6 +3336,7 @@ func _finish_wave_objective(success: bool) -> void:
 		_wave_objective_panel.hide()
 	if not success:
 		return
+	_add_overstimulation_style_points(25, "objective:%d:%s" % [wave_director.wave, _wave_objective_type])
 	_wave_objective_attack_speed_expires_at = player_active_time + 6.0
 	_add_xp(player_xp_to_next * 0.15)
 	Sfx.play("chest_reward")
@@ -4126,7 +4200,7 @@ func _fire_prism_laser(active_time: float, paused: bool) -> void:
 		return
 	var level: int = loadout.weapon_level("prism_laser")
 	var range_multiplier := _weapon_level_multiplier("prism_laser", "range_multiplier", level)
-	var area_multiplier: float = (1.0 + (_equipment_bonus("area_pct") + loadout.global_relic_bonus("area_pct") + _xp_run_stat_bonus("area_pct")) / 100.0) * _risk_reward_buff_multiplier()
+	var area_multiplier: float = (1.0 + (_equipment_bonus("area_pct") + loadout.global_relic_bonus("area_pct") + _xp_run_stat_bonus("area_pct")) / 100.0) * _overstimulation_area_multiplier()
 	var laser_range := SURVIVAL_TARGETING.weapon_range(prism_laser_range, range_multiplier, area_multiplier)
 	var target := _prism_cluster_target(laser_range)
 	if target.is_empty():
@@ -4212,7 +4286,7 @@ func _fire_frost_nova(active_time: float, paused: bool) -> void:
 	if not weapon_enabled or level == 0 or paused or _chest_open or run_over or frost_nova_cooldown <= 0.0 or active_time < _next_frost_nova_time:
 		return
 	var evolved: bool = loadout.is_evolved("frost_nova")
-	var area_multiplier: float = (1.0 + (_equipment_bonus("area_pct") + loadout.global_relic_bonus("area_pct") + _xp_run_stat_bonus("area_pct")) / 100.0) * _risk_reward_buff_multiplier()
+	var area_multiplier: float = (1.0 + (_equipment_bonus("area_pct") + loadout.global_relic_bonus("area_pct") + _xp_run_stat_bonus("area_pct")) / 100.0) * _overstimulation_area_multiplier()
 	var radius := SURVIVAL_TARGETING.weapon_range(frost_nova_radius,
 		_weapon_level_multiplier("frost_nova", "area_multiplier", level), area_multiplier)
 	var duration := frost_chill_duration_seconds * _weapon_level_multiplier("frost_nova", "chill_duration_multiplier", level)
@@ -4335,7 +4409,7 @@ func _spread_pandemic(origin: Vector2, entities: Array) -> void:
 		_pandemic_bursts.append({"position": origin, "remaining": pandemic_feedback_seconds})
 
 func _persistent_damage_multiplier() -> float:
-	return _cached_persistent_damage_multiplier * (1.0 + (loadout.global_relic_bonus("damage_pct") + _xp_run_stat_bonus("damage_pct")) / 100.0) * _risk_reward_buff_multiplier()
+	return _cached_persistent_damage_multiplier * (1.0 + (loadout.global_relic_bonus("damage_pct") + _xp_run_stat_bonus("damage_pct")) / 100.0) * _risk_reward_damage_multiplier()
 
 func _weapon_combo_damage_multiplier(weapon_id: String) -> float:
 	return 1.25 if loadout.is_evolved(weapon_id) else 1.0
@@ -4413,10 +4487,13 @@ func _effective_weapon_cooldown(base_cooldown: float) -> float:
 	var combo_attack_speed_bonus := float(_overstimulation_combo_milestone) * \
 			OVERSTIMULATION_COMBO_ATTACK_SPEED_PER_MILESTONE if \
 			player_active_time < _overstimulation_combo_attack_speed_expires_at else 0.0
+	var style_burst_attack_speed_bonus := OVERSTIMULATION_STYLE_BURST_ATTACK_SPEED_BONUS if \
+			_overstimulation_enabled() and player_active_time < _overstimulation_style_burst_expires_at else 0.0
 	var speed_multiplier: float = 1.0 + (
 		_equipment_bonus("attack_speed_pct") + loadout.global_relic_bonus("attack_speed_pct") +
 		_xp_run_stat_bonus("attack_speed_pct") + float(_cached_achievement_stat_bonuses.get("attack_speed_pct", 0.0)) +
 		objective_attack_speed_bonus + perfect_dodge_attack_speed_bonus + combo_attack_speed_bonus +
+		style_burst_attack_speed_bonus +
 		_overstimulation_attack_speed_bonus
 	) / 100.0
 	var cooldown_multiplier: float = maxf(0.1, 1.0 - (_equipment_bonus("cooldown_reduction_pct") + loadout.global_relic_bonus("cooldown_reduction_pct") + _xp_run_stat_bonus("cooldown_reduction_pct")) / 100.0)
@@ -4737,10 +4814,17 @@ func _equipment_projectile_speed(base_speed: float) -> float:
 	return base_speed * (1.0 + (_equipment_bonus("projectile_speed_pct") + loadout.global_relic_bonus("projectile_speed_pct") + _xp_run_stat_bonus("projectile_speed_pct")) / 100.0)
 
 func _equipment_area(base_area: float) -> float:
-	return base_area * (1.0 + (_equipment_bonus("area_pct") + loadout.global_relic_bonus("area_pct") + _xp_run_stat_bonus("area_pct")) / 100.0) * _risk_reward_buff_multiplier()
+	return base_area * (1.0 + (_equipment_bonus("area_pct") + loadout.global_relic_bonus("area_pct") + _xp_run_stat_bonus("area_pct")) / 100.0) * _overstimulation_area_multiplier()
 
-func _risk_reward_buff_multiplier() -> float:
+func _risk_reward_damage_multiplier() -> float:
 	return 1.2 if player_active_time < _risk_reward_buff_expires_at else 1.0
+
+func _overstimulation_area_multiplier() -> float:
+	var bonus := OVERSTIMULATION_STYLE_BURST_AREA_BONUS if \
+			_overstimulation_enabled() and player_active_time < _overstimulation_style_burst_expires_at else 0.0
+	if player_active_time < _risk_reward_buff_expires_at:
+		bonus += 20.0
+	return 1.0 + bonus / 100.0
 
 func _has_unique_effect(effect_id: String) -> bool:
 	return _cached_unique_effects.has(effect_id)
