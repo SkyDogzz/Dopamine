@@ -34,8 +34,8 @@ const CORE_START_NODES := {
 	"fleet_footed": "MOVE SPEED", "steady_aim": "CRIT CHANCE",
 }
 const SOURCE_ICON := "res://assets/icons/catalog/skill_node.png"
-const NODE_WIDTH := 82.0
-const NODE_COLUMN_STEP := 90.0
+const NODE_WIDTH := 72.0
+const NODE_COLUMN_STEP := 74.0
 
 @onready var _essence: Label = $Panel/Content/EssenceRow/Essence
 @onready var _status: Label = $Panel/Content/Status

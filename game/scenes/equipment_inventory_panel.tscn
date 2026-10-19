@@ -24,7 +24,7 @@ color = Color(0.031373, 0.043137, 0.094118, 0.82)
 mouse_filter = 2
 
 [node name="Panel" type="PanelContainer" parent="."]
-custom_minimum_size = Vector2(600, 326)
+custom_minimum_size = Vector2(1180, 680)
 layout_mode = 2
 theme_type_variation = "CompactPanel"
 
@@ -65,7 +65,7 @@ size_flags_vertical = 3
 theme_override_constants/separation = 6
 
 [node name="Loadout" type="PanelContainer" parent="Panel/Content/Columns"]
-custom_minimum_size = Vector2(198, 0)
+custom_minimum_size = Vector2(270, 0)
 layout_mode = 2
 theme_type_variation = "InsetPanel"
 

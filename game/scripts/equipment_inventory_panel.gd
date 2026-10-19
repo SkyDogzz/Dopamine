@@ -216,7 +216,7 @@ func _refresh_slots() -> void:
 
 func _rebuild_inventory(inventory: Array, resources: Dictionary) -> void:
 	_clear_items()
-	_items.columns = 1 if _management_mode else 2
+	_items.columns = 1 if _management_mode else 3
 	var compatible: Array[Dictionary] = []
 	for equipment in inventory:
 		if str(equipment.get("slot", "")) == _selected_slot:
@@ -501,7 +501,7 @@ func _create_loadout_item_row(equipment: Dictionary) -> Control:
 	style.content_margin_right = 5.0
 	style.content_margin_bottom = 4.0
 	row.add_theme_stylebox_override("panel", style)
-	row.custom_minimum_size = Vector2(0, 58)
+	row.custom_minimum_size = Vector2(0, 78)
 	var content := VBoxContainer.new()
 	content.name = "CardContent"
 	content.add_theme_constant_override("separation", 2)

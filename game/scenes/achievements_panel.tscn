@@ -34,7 +34,7 @@ grow_vertical = 2
 mouse_filter = 1
 
 [node name="Panel" type="PanelContainer" parent="Center"]
-custom_minimum_size = Vector2(600, 326)
+custom_minimum_size = Vector2(1180, 680)
 layout_mode = 2
 theme_type_variation = "CompactPanel"
 
@@ -95,12 +95,12 @@ horizontal_scroll_mode = 0
 [node name="Entries" type="GridContainer" parent="Center/Panel/Content/Body/BodyRow/EntriesScroll"]
 layout_mode = 2
 size_flags_horizontal = 3
-columns = 1
+columns = 4
 theme_override_constants/h_separation = 3
 theme_override_constants/v_separation = 3
 
 [node name="Detail" type="PanelContainer" parent="Center/Panel/Content/Body/BodyRow"]
-custom_minimum_size = Vector2(218, 0)
+custom_minimum_size = Vector2(270, 0)
 layout_mode = 2
 theme_type_variation = "InsetPanel"
 

@@ -194,7 +194,7 @@ func _make_entry(entry: Dictionary) -> Control:
 
 func _make_catalog_entry(title_text: String, description: String, status_text: String, icon_path: String, tooltip: String, key: String = "", selectable: bool = true) -> Control:
 	var card := PanelContainer.new()
-	card.custom_minimum_size = Vector2(0, 48)
+	card.custom_minimum_size = Vector2(0, 68)
 	var style := StyleBoxFlat.new()
 	var is_locked := status_text.contains("VERROUILLÉ") or status_text.contains("NON RENCONTRÉ")
 	style.bg_color = Color("#10172B") if is_locked else Color("#14243A")
@@ -220,7 +220,7 @@ func _make_catalog_entry(title_text: String, description: String, status_text: S
 	card.add_child(row)
 	var portrait := TextureRect.new()
 	portrait.texture = load(icon_path) as Texture2D if not icon_path.is_empty() and ResourceLoader.exists(icon_path) else null
-	portrait.custom_minimum_size = Vector2(34, 34)
+	portrait.custom_minimum_size = Vector2(42, 42)
 	portrait.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	portrait.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	portrait.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
@@ -241,13 +241,13 @@ func _make_catalog_entry(title_text: String, description: String, status_text: S
 	var name := Label.new()
 	name.text = title_text
 	name.tooltip_text = tooltip
-	name.add_theme_font_size_override("font_size", 8)
+	name.add_theme_font_size_override("font_size", 9)
 	name.add_theme_color_override("font_color", Color("#37E8F5"))
 	copy.add_child(name)
 	var details := Label.new()
 	details.text = description
 	details.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	details.add_theme_font_size_override("font_size", 7)
+	details.add_theme_font_size_override("font_size", 8)
 	details.add_theme_color_override("font_color", Color("#A5AEC3"))
 	copy.add_child(details)
 	var status := Label.new()

@@ -113,3 +113,7 @@ Le bouton Succès ouvre un panneau de progression en lecture seule pour les 100 
 ## Critère de sortie
 
 La spec, le plan et les tâches sont exécutés. Les multiplicateurs restent **[PROPOSÉS]** et les règles spéciales Chaos **[OUVERTES]**.
+
+## Extension visuelle des menus — [VALIDÉE, 2026-10-19]
+
+Les références PNG à la racine (`Neon Roguelike Codex and Skill Tree.png`, `Neon Cyberpunk Equipment Upgrade HUD.png`, `Neon Cyberpunk Achievements Dashboard.png`) guident maintenant la densité et la composition des quatre panneaux. Au viewport logique 1280×720, chaque panneau utilise presque toute la surface disponible : le Codex présente une grille de fiches avec aperçu détaillé; l’équipement garde le personnage, ses six emplacements, les stats et l’inventaire/comparaison; le Skill Tree expose une grande zone de graphe; les succès utilisent une grille à quatre colonnes avec progression et détail. Les couleurs et assets du jeu suivent l’Art Bible. Cette extension ne change aucune règle ni donnée de progression.

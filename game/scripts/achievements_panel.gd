@@ -117,7 +117,7 @@ func _show_category(index: int) -> void:
 func _make_entry(definition: Dictionary, metric_value: float, tier_index: int) -> Control:
 	var card := PanelContainer.new()
 	card.name = "AchievementEntry"
-	card.custom_minimum_size = Vector2(0, 58)
+	card.custom_minimum_size = Vector2(0, 112)
 	var tiers: Array = definition.get("tiers", [])
 	var style := StyleBoxFlat.new()
 	var secret := bool(definition.get("secret", false))
@@ -148,13 +148,13 @@ func _make_entry(definition: Dictionary, metric_value: float, tier_index: int) -
 	heading.name = "Heading"
 	var icon := TextureRect.new()
 	icon.texture = load("res://assets/icons/catalog/achievement_medal.png") as Texture2D
-	icon.custom_minimum_size = Vector2(18, 18)
+	icon.custom_minimum_size = Vector2(24, 24)
 	icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	heading.add_child(icon)
 	var title := Label.new()
 	title.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	title.add_theme_font_size_override("font_size", 8)
+	title.add_theme_font_size_override("font_size", 9)
 	var achievement_name := str(definition.get("name", definition.get("id", ""))).to_upper()
 	title.name = "AchievementName"
 	title.add_theme_color_override("font_color", accent)
@@ -173,7 +173,7 @@ func _make_entry(definition: Dictionary, metric_value: float, tier_index: int) -
 	var condition := Label.new()
 	condition.name = "AchievementObjective"
 	condition.add_theme_color_override("font_color", Color("#A5AEC3"))
-	condition.add_theme_font_size_override("font_size", 7)
+	condition.add_theme_font_size_override("font_size", 8)
 	condition.autowrap_mode = 2
 	condition.text = next_text if revealed or not secret else "Réalisez des actions pendant vos runs pour révéler ce succès."
 	content.add_child(condition)
@@ -196,7 +196,7 @@ func _make_entry(definition: Dictionary, metric_value: float, tier_index: int) -
 	var progress_label := Label.new()
 	progress_label.name = "AchievementProgress"
 	progress_label.add_theme_color_override("font_color", Color("#37E8F5"))
-	progress_label.add_theme_font_size_override("font_size", 7)
+	progress_label.add_theme_font_size_override("font_size", 8)
 	if tier_index >= tiers.size():
 		progress_label.text = "PROGRESSION : TERMINÉ · %d/4 PALIERS" % tiers.size()
 	elif revealed or not secret:
@@ -209,7 +209,7 @@ func _make_entry(definition: Dictionary, metric_value: float, tier_index: int) -
 	var reward := Label.new()
 	reward.name = "AchievementReward"
 	reward.add_theme_color_override("font_color", Color("#48E69B"))
-	reward.add_theme_font_size_override("font_size", 7)
+	reward.add_theme_font_size_override("font_size", 8)
 	reward.autowrap_mode = 2
 	var reward_lines: Array[String] = []
 	if tier_index > 0:
