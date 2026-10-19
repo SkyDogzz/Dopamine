@@ -1,6 +1,6 @@
 # Carte de capacités — Overstimulation
 
-**Statut : [PROPOSÉ] — à valider avant les specs et l’implémentation.**
+**Statut : carte des modules [PROPOSÉE]; 18 capacités de gameplay ci-dessous [VALIDÉES le 2026-10-19]; règles détaillées et implémentation [À SPÉCIFIER].**
 
 Objectif : donner à Survival une identité volontairement intense et généreuse. Le rythme, les combats, les récompenses et la présentation audiovisuelle doivent créer des pics mémorables, des retours fréquents et une montée perceptible, sans rendre les menaces illisibles. L’intensité élevée est la présentation par défaut; les réglages d’accessibilité existants restent respectés.
 
@@ -12,6 +12,29 @@ Objectif : donner à Survival une identité volontairement intense et généreus
 | `reactive-audio` | Faire réagir les SFX et les couches musicales aux événements et à l’intensité réelle du combat. | `encounter-rhythm`, `combat-payoffs` |
 
 **Ordre proposé :** `encounter-rhythm` → `combat-payoffs` → `sensory-feedback` et `reactive-audio`.
+
+## Capacités de gameplay validées — 2026-10-19
+
+L’utilisateur a validé la présence des idées suivantes dans la conception Survival. Cela n’en valide pas encore les valeurs, les règles de détail, la présentation ou le calendrier de réalisation; ceux-ci restent **[OUVERTS]**.
+
+1. Combo d’éliminations avec compteur, sons et effets qui montent par paliers.
+2. Alternance de vagues de pression et de brèves accalmies.
+3. Objectifs courts en pleine vague avec récompense immédiate.
+4. Événements surprises annoncés avec mutation temporaire et récompense spéciale.
+5. Chevauchement de modificateurs pour créer des situations rares.
+6. Esquive au dernier instant récompensée par un bref ralenti et une contre-attaque.
+7. Zone à risque/récompense qui charge une attaque ou augmente les gains.
+8. Bonus rare mobile à intercepter dans l’arène.
+9. Jauge de style alimentée par déplacements, esquives, éliminations et combos.
+10. Mutations temporaires choisies pour transformer le build.
+11. Objets maudits avec bonus puissant et contrainte jusqu’à la fin de run.
+12. Surchauffe d’arme qui charge une attaque plus puissante.
+13. Synergies spectaculaires entre armes et reliques.
+14. Compositions d’ennemis complémentaires qui créent des situations nouvelles.
+15. Patterns de boss combinés ou densifiés.
+16. Finishers spectaculaires sur des ennemis affaiblis.
+17. Explosion de mort du boss qui repousse ou élimine les ennemis proches.
+18. Mode optionnel « encore plus intense » avec davantage d’événements, de densité et de surprises.
 
 **Limites de conception proposées :** rester dans l’architecture Sandbox-first et ne jamais faire progresser la sauvegarde normale depuis le Sandbox; conserver les options de réduction des effets; différencier visuellement récompenses, dégâts reçus et dangers; préserver le contrôle du joueur pendant les pics.
 
