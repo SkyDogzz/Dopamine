@@ -49,4 +49,25 @@ Ces idées sont des pistes de design uniquement. Aucune n’est sélectionnée, 
 - Réserver les secousses aux événements marquants comme les impacts lourds, grosses éliminations et attaques de boss; calibrer séparément leur durée et leur amplitude.
 - Garder la lecture des menaces et le confort visuel comme contraintes à vérifier quand ces pistes seront triées.
 
+### Autres pistes à trier
+
+- Finisher spectaculaire quand un ennemi passe sous un seuil de vie.
+- Esquive au dernier instant récompensée par un bref ralenti, un cue sonore et une possibilité de contre-attaque.
+- Zone à risque qui charge une attaque ou augmente les gains tant que le joueur y reste.
+- Arène réactive après un pic d’éliminations : lumière au sol ou onde visuelle.
+- Surchauffe d’arme : maintenir le tir charge une attaque plus puissante avec une montée audiovisuelle.
+- Déclenchement automatique périodique de l’effet le plus spectaculaire d’une arme ou relique.
+- Vague surprise annoncée avec mutation temporaire et récompense dédiée.
+- Bonus rare qui traverse l’écran et demande au joueur de se déplacer pour l’attraper.
+- Survie à très bas PV récompensée par une courte poussée de puissance.
+- Explosion de mort de boss qui élimine ou repousse les ennemis proches.
+- Jauge de style nourrie par déplacements, esquives, éliminations et combos, qui améliore le prochain coffre.
+- Signature de feedback propre à chaque arme pour ses impacts, éliminations et synergies.
+- Entrée de boss théâtrale avec annonce sonore et changement visuel bref, sans longue perte de contrôle.
+- Présentation en rafale des niveaux gagnés simultanément.
+- Coupure momentanée de certains sons avant un impact majeur pour renforcer le contraste.
+- Variantes de patterns de boss qui combinent ou densifient des attaques déjà rencontrées.
+- Traînées et sons de vitesse déclenchés par déplacement rapide ou traversée d’un groupe.
+- Objectif court pendant une vague, par exemple éliminer les soutiens ou tenir une zone, avec récompense dédiée.
+
 **Hors de cette carte :** aucun chiffre de fréquence, d’intensité, de durée, de multiplicateur ou de récompense n’est validé. Les valeurs actuelles restent des prototypes jusqu’à spécification et calibration.
