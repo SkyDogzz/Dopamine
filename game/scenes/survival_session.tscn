@@ -176,6 +176,15 @@ theme_override_font_sizes/font_size = 7
 text = "MUTATION"
 clip_text = true
 
+[node name="CursedItemStatus" type="Label" parent="HUD/RunPanel/RunInfo"]
+visible = false
+custom_minimum_size = Vector2(0, 12)
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.38, 0.36, 1)
+theme_override_font_sizes/font_size = 7
+text = "CURSED ITEM"
+clip_text = true
+
 [node name="MetaPanel" type="PanelContainer" parent="HUD"]
 anchor_left = 1.0
 anchor_right = 1.0

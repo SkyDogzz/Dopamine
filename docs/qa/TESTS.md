@@ -1,3 +1,8 @@
+## Overstimulation — tranche 12/18
+
+- [x] `survival_cursed_item_smoke.gd` vérifie la chance de 20 % pour élite/boss, l’absence en coffre ordinaire, les quatre effets, l’annonce d’un remplacement et les exclusions Armorless/Sandbox.
+- [i] Vérification ciblée sous Godot 4.7.2. Le rayon Volatile Core de 100 px est **[PROPOSÉ]** faute de valeur dans la spec; la GDExtension manquante empêche le parcours interactif natif.
+
 # Tests d'acceptation et validation
 
 ## Overstimulation — tranche 11/18

@@ -98,6 +98,7 @@ const OVERSTIMULATION_COMBO_BONUS_SECONDS := 4.0
 const OVERSTIMULATION_COMBO_ATTACK_SPEED_PER_MILESTONE := 5.0
 const OVERSTIMULATION_COMBO_MILESTONES := [3, 6, 10, 15, 25]
 const OVERSTIMULATION_CHAIN_REACTION_RADIUS := 100.0 # [PROPOSÉ] la spec ne fixe pas le rayon.
+const OVERSTIMULATION_CURSED_ITEM_CHANCE := 0.2
 const OVERSTIMULATION_STYLE_BURST_SECONDS := 6.0
 const OVERSTIMULATION_STYLE_BURST_ATTACK_SPEED_BONUS := 15.0
 const OVERSTIMULATION_STYLE_BURST_AREA_BONUS := 10.0
@@ -412,6 +413,7 @@ var loadout: RefCounted
 var last_target_sequence := 0
 var player_hp := 0.0
 var player_max_hp := 0.0
+var _base_player_max_hp := 0.0
 var player_shield := 0.0
 var _shield_expires_at := 0.0
 var player_active_time := 0.0
@@ -454,6 +456,16 @@ var _overstimulation_mutation_critical_damage_bonus := 0.0
 var _overstimulation_mutation_damage_multiplier := 1.0
 var _overstimulation_mutation_player_speed_multiplier := 1.0
 var _overstimulation_mutation_rng := RandomNumberGenerator.new()
+var _overstimulation_cursed_rng := RandomNumberGenerator.new()
+var _overstimulation_cursed_item_active := ""
+var _overstimulation_cursed_weapon_damage_multiplier := 1.0
+var _overstimulation_cursed_health_decay_multiplier := 1.0
+var _overstimulation_cursed_max_hp_multiplier := 1.0
+var _overstimulation_cursed_attack_speed_bonus := 0.0
+var _overstimulation_cursed_enemy_speed_multiplier := 1.0
+var _overstimulation_cursed_contact_damage_multiplier := 1.0
+var _overstimulation_cursed_volatility_multiplier := 1.0
+var _overstimulation_cursed_offering := false
 var _overstimulation_enemy_speed_multiplier := 1.0
 var _overstimulation_applied_enemy_speed_multiplier := 1.0
 var _overstimulation_attack_speed_bonus := 0.0
@@ -611,6 +623,7 @@ var _codex_sightings_recorded: Dictionary = {}
 @onready var _style_value: Label = $HUD/RunPanel/RunInfo/StyleGaugeRow/StyleValue
 @onready var _style_bar: ProgressBar = $HUD/RunPanel/RunInfo/StyleGaugeRow/StyleBar
 @onready var _mutation_label: Label = $HUD/RunPanel/RunInfo/MutationStatus
+@onready var _cursed_item_label: Label = $HUD/RunPanel/RunInfo/CursedItemStatus
 @onready var _difficulty_value: Label = $HUD/MetaPanel/MetaRow/DifficultyValue
 @onready var _boss_panel: PanelContainer = $HUD/BossPanel
 @onready var _boss_value: Label = $HUD/BossPanel/BossInfo/BossValue
@@ -668,6 +681,7 @@ func _ready() -> void:
 	_run_id = Crypto.new().generate_random_bytes(16).hex_encode()
 	_overstimulation_rng.seed = hash(_run_id)
 	_overstimulation_mutation_rng.seed = hash(_run_id) ^ 0x4D555441
+	_overstimulation_cursed_rng.seed = hash(_run_id) ^ 0x43555253
 	if mode_id == "armorless":
 		armorless_run_state = ARMORLESS_RUN_STATE_SCRIPT.new(hash(_run_id))
 		armorless_run_state.begin_run()
@@ -731,6 +745,7 @@ func _ready() -> void:
 			float(_cached_achievement_stat_bonuses.get("max_hp_pct", 0.0))
 		if mode_id != "armorless":
 			player_max_hp += _equipment_bonus("max_hp")
+	_base_player_max_hp = player_max_hp
 	player_hp = player_max_hp
 	player_xp_to_next = xp_base_to_next_level
 	wave_director = WAVE_DIRECTOR_SCRIPT.new(mode_id == "armorless", mode_id == "endless")
@@ -1111,8 +1126,9 @@ func _process(_delta: float) -> void:
 				var dead_key := _entity_key(int(dead_target["index"]), int(dead_target["generation"]))
 				_record_overstimulation_style_kill(dead_enemy_type, dead_key,
 						str(event.get("source_type", "")))
-				var dead_enemy_affix: String = str(event.get("target_affix", ""))
 				var death_position := Vector2(float(event["position"]["x"]), float(event["position"]["y"]))
+				_record_overstimulation_cursed_kill(dead_enemy_type, death_position)
+				var dead_enemy_affix: String = str(event.get("target_affix", ""))
 				if _overstimulation_prism_break and dead_enemy_type not in ["mid_boss", "final_boss"]:
 					_overstimulation_event_kills += 1
 					if _overstimulation_event_kills % 8 == 0:
@@ -1266,7 +1282,7 @@ func _apply_contact_damage(state: Dictionary, current_simulation_time: float) ->
 		var enemy_key := _entity_key(int(id.get("index", -1)), int(id.get("generation", 0)))
 		if current_simulation_time < float(_contact_damage_until.get(enemy_key, -INF)):
 			continue
-		_take_enemy_damage(contact_damage_per_hit)
+		_take_enemy_damage(contact_damage_per_hit * _overstimulation_cursed_contact_damage_multiplier)
 		_contact_damage_until[enemy_key] = current_simulation_time + body_contact_cooldown_seconds
 
 func _update_perfect_dodges(state: Dictionary, current_simulation_time: float) -> void:
@@ -1937,6 +1953,7 @@ func _decline_revive() -> void:
 func _player_health_decay_amount(active_time_seconds: float, delta_seconds: float) -> float:
 	var amount: float = simulation.health_decay_amount(active_time_seconds, delta_seconds)
 	amount *= _overstimulation_mutation_health_decay_multiplier
+	amount *= _overstimulation_cursed_health_decay_multiplier
 	if sandbox_diagnostics_enabled:
 		var multiplier := sandbox_health_decay_multiplier if is_finite(sandbox_health_decay_multiplier) else 1.0
 		amount *= clampf(multiplier, 0.0, 10.0)
@@ -2018,6 +2035,7 @@ func _update_run_panel_status_height() -> void:
 	status_count += int(_combo_label.visible)
 	status_count += int(_style_gauge_row.visible)
 	status_count += int(_mutation_label.visible)
+	status_count += int(_cursed_item_label.visible)
 	_run_panel.offset_bottom = 51.0 + float(status_count) * 15.0
 
 func _run_stat_breakdown() -> Dictionary:
@@ -2342,6 +2360,7 @@ func _apply_xp_level_stat_bonus() -> void:
 	if stat_id == "max_hp":
 		var health_ratio := player_hp / player_max_hp if player_max_hp > 0.0 else 1.0
 		player_max_hp *= 1.01
+		_base_player_max_hp *= 1.01
 		player_hp = player_max_hp * health_ratio
 	elif stat_id == "move_speed_pct":
 		_refresh_player_move_speed()
@@ -2377,6 +2396,99 @@ func open_chest_family(family: String) -> bool:
 		}]
 		heading = "ESSENCE CACHE — CLAIM REWARD"
 	return _open_chest(options, heading)
+
+func _open_cursed_chest_family(family: String) -> bool:
+	if family not in ["weapon", "relic"] or not _overstimulation_enabled() or simulation == null or run_over or _chest_open:
+		return false
+	var options: Array = loadout.offers(family)
+	if options.is_empty() and _can_award_chest_essence():
+		options = [{"id": "essence:maxed_chest", "title": "ESSENCE CACHE  ·  +%d" % MAXED_CHEST_ESSENCE_REWARD,
+			"description": "All %s are fully upgraded. Claim essence instead." % family.to_upper(),
+			"icon": "res://assets/icons/catalog/resource_essence.png"}]
+	if options.is_empty():
+		return false
+	var slot := mini(_overstimulation_cursed_rng.randi_range(0, options.size() - 1), options.size() - 1)
+	options[slot] = _overstimulation_cursed_offer()
+	if not _open_chest(options, "ELITE CHEST — CURSED ITEM AVAILABLE"):
+		return false
+	_overstimulation_cursed_offering = true
+	return true
+
+func _overstimulation_cursed_offer() -> Dictionary:
+	var replacement := not _overstimulation_cursed_item_active.is_empty()
+	var replacement_text := "Replaces %s. " % _overstimulation_cursed_item_active.replace("_", " ").to_upper() if replacement else ""
+	var pool: Array[Dictionary] = [
+		{"id": "cursed:blood_debt", "title": "☠ BLOOD DEBT", "description": replacement_text + "+40% weapon damage · HP decay +35%"},
+		{"id": "cursed:glass_cannon", "title": "☠ GLASS CANNON", "description": replacement_text + "+60% weapon damage · maximum HP −35%"},
+		{"id": "cursed:red_hunger", "title": "☠ RED HUNGER", "description": replacement_text + "+30% attack speed · enemies +25% speed"},
+		{"id": "cursed:volatile_core", "title": "☠ VOLATILE CORE", "description": replacement_text + "Kills explode for 150% damage · contact damage +50%"},
+	]
+	return pool[_overstimulation_cursed_rng.randi_range(0, pool.size() - 1)]
+
+func _choose_overstimulation_cursed_item(option_id: String) -> void:
+	if not _is_active_chest_option(option_id) or not option_id.begins_with("cursed:"):
+		Sfx.play("ui_error")
+		_chest_choice.present(_active_chest_options, _active_chest_options.size(), _active_chest_heading)
+		return
+	_overstimulation_cursed_item_active = option_id.trim_prefix("cursed:")
+	_apply_overstimulation_cursed_item()
+	_overstimulation_cursed_offering = false
+	_chest_open = false
+	_active_chest_options.clear()
+	_active_chest_heading = "CHEST — CHOOSE ONE"
+	_update_overstimulation_cursed_hud()
+	_run_stat_hub_dirty = true
+	_show_effect_feedback("CURSED ITEM  ·  %s" % _overstimulation_cursed_item_active.replace("_", " ").to_upper())
+	Sfx.play("relic_pickup")
+	chest_option_chosen.emit(option_id)
+	simulation.resume()
+	_complete_pending_victory()
+
+func _apply_overstimulation_cursed_item() -> void:
+	_overstimulation_cursed_weapon_damage_multiplier = 1.0
+	_overstimulation_cursed_health_decay_multiplier = 1.0
+	_overstimulation_cursed_max_hp_multiplier = 1.0
+	_overstimulation_cursed_attack_speed_bonus = 0.0
+	_overstimulation_cursed_enemy_speed_multiplier = 1.0
+	_overstimulation_cursed_contact_damage_multiplier = 1.0
+	_overstimulation_cursed_volatility_multiplier = 1.0
+	match _overstimulation_cursed_item_active:
+		"blood_debt":
+			_overstimulation_cursed_weapon_damage_multiplier = 1.4
+			_overstimulation_cursed_health_decay_multiplier = 1.35
+		"glass_cannon":
+			_overstimulation_cursed_weapon_damage_multiplier = 1.6
+			_overstimulation_cursed_max_hp_multiplier = 0.65
+		"red_hunger":
+			_overstimulation_cursed_attack_speed_bonus = 30.0
+			_overstimulation_cursed_enemy_speed_multiplier = 1.25
+		"volatile_core":
+			_overstimulation_cursed_contact_damage_multiplier = 1.5
+			_overstimulation_cursed_volatility_multiplier = 1.5
+	if player_max_hp > 0.0:
+		var previous_max_hp := player_max_hp
+		player_max_hp = _base_player_max_hp * _overstimulation_cursed_max_hp_multiplier
+		player_hp = minf(player_hp * player_max_hp / previous_max_hp, player_max_hp)
+	_apply_overstimulation_enemy_speed_multiplier()
+	_refresh_player_move_speed()
+	_update_run_panel_status_height()
+
+func _update_overstimulation_cursed_hud() -> void:
+	if _cursed_item_label == null:
+		return
+	if not _overstimulation_enabled() or _overstimulation_cursed_item_active.is_empty():
+		_cursed_item_label.hide()
+		_update_run_panel_status_height()
+		return
+	var descriptions := {
+		"blood_debt": "☠ BLOOD DEBT · +40% DAMAGE · DECAY +35%",
+		"glass_cannon": "☠ GLASS CANNON · +60% DAMAGE · MAX HP −35%",
+		"red_hunger": "☠ RED HUNGER · +30% ATTACK · ENEMIES +25%",
+		"volatile_core": "☠ VOLATILE CORE · KILL BLASTS +50% · CONTACT +50%",
+	}
+	_cursed_item_label.text = str(descriptions.get(_overstimulation_cursed_item_active, "☠ CURSED ITEM"))
+	_cursed_item_label.show()
+	_update_run_panel_status_height()
 
 func _can_award_chest_essence() -> bool:
 	return mode_id in ["survival", "endless"] and progression_service != null and \
@@ -2492,6 +2604,10 @@ func _on_chest_option_selected(option_id: String) -> void:
 	if _overstimulation_mutation_offering:
 		_choose_overstimulation_mutation(option_id)
 		return
+	if _overstimulation_cursed_offering:
+		if option_id.begins_with("cursed:"):
+			_choose_overstimulation_cursed_item(option_id)
+			return
 	if _chest_open and _active_chest_heading.begins_with("ARMORLESS DRAFT"):
 		_choose_armorless_draft_option(option_id)
 		return
@@ -2501,6 +2617,7 @@ func _on_chest_option_selected(option_id: String) -> void:
 				_free_first_chest_reroll_available)
 		return
 	if option_id == "essence:maxed_chest":
+		_overstimulation_cursed_offering = false
 		_maxed_chest_essence_bonus += MAXED_CHEST_ESSENCE_REWARD
 		_chest_open = false
 		_active_chest_options.clear()
@@ -2523,6 +2640,7 @@ func _on_chest_option_selected(option_id: String) -> void:
 			_chest_choice.present(_active_chest_options, _active_chest_options.size(), _active_chest_heading,
 					_free_first_chest_reroll_available)
 		return
+	_overstimulation_cursed_offering = false
 	_chest_open = false
 	_run_stat_hub_dirty = true
 	_active_chest_options.clear()
@@ -2869,6 +2987,10 @@ func _apply_overstimulation_mutation() -> void:
 
 func _update_overstimulation_mutation_effects() -> void:
 	if not _overstimulation_enabled():
+		if _overstimulation_cursed_max_hp_multiplier != 1.0 and player_max_hp > 0.0:
+			var previous_max_hp := player_max_hp
+			player_max_hp = _base_player_max_hp
+			player_hp = minf(player_hp * player_max_hp / previous_max_hp, player_max_hp)
 		_overstimulation_mutation_active = ""
 		_overstimulation_mutation_enemy_speed_multiplier = 1.0
 		_overstimulation_mutation_attack_speed_bonus = 0.0
@@ -2880,11 +3002,21 @@ func _update_overstimulation_mutation_effects() -> void:
 		_overstimulation_mutation_critical_damage_bonus = 0.0
 		_overstimulation_mutation_damage_multiplier = 1.0
 		_overstimulation_mutation_player_speed_multiplier = 1.0
+		_overstimulation_cursed_item_active = ""
+		_overstimulation_cursed_weapon_damage_multiplier = 1.0
+		_overstimulation_cursed_health_decay_multiplier = 1.0
+		_overstimulation_cursed_max_hp_multiplier = 1.0
+		_overstimulation_cursed_attack_speed_bonus = 0.0
+		_overstimulation_cursed_enemy_speed_multiplier = 1.0
+		_overstimulation_cursed_contact_damage_multiplier = 1.0
+		_overstimulation_cursed_volatility_multiplier = 1.0
+		_overstimulation_cursed_offering = false
 		_overstimulation_mutation_offering = false
 		_overstimulation_mutation_options.clear()
 		_apply_overstimulation_enemy_speed_multiplier()
 		_refresh_player_move_speed()
 		_update_overstimulation_mutation_hud()
+		_update_overstimulation_cursed_hud()
 		return
 	_update_overstimulation_mutation_hud()
 
@@ -2917,10 +3049,21 @@ func _record_overstimulation_mutation_kill(enemy_type: String) -> void:
 			Sfx.play("explosion")
 			_show_effect_feedback("CHAIN REACTION  ·  8-KILL EXPLOSION")
 
+func _record_overstimulation_cursed_kill(enemy_type: String, position: Vector2) -> void:
+	if _overstimulation_cursed_item_active != "volatile_core" or enemy_type in ["mid_boss", "final_boss"]:
+		return
+	var sequence: int = simulation.damage_enemies_in_radius(position, OVERSTIMULATION_CHAIN_REACTION_RADIUS,
+			_overstimulation_base_weapon_damage() * _persistent_damage_multiplier() *
+			_overstimulation_cursed_volatility_multiplier)
+	if sequence > 0:
+		Sfx.play("explosion")
+		_show_effect_feedback("VOLATILE CORE  ·  KILL EXPLOSION")
+
 func _apply_overstimulation_enemy_speed_multiplier() -> void:
 	var anomaly_multiplier := _overstimulation_enemy_speed_multiplier
 	var mutation_multiplier := _overstimulation_mutation_enemy_speed_multiplier
-	var combined_multiplier := anomaly_multiplier * mutation_multiplier
+	var cursed_multiplier := _overstimulation_cursed_enemy_speed_multiplier
+	var combined_multiplier := anomaly_multiplier * mutation_multiplier * cursed_multiplier
 	if is_equal_approx(combined_multiplier, _overstimulation_applied_enemy_speed_multiplier):
 		return
 	if simulation == null:
@@ -3078,8 +3221,15 @@ func _roll_enemy_chests(enemy_type: String, position: Vector2) -> void:
 		eligible_families.append("relic")
 	var is_boss := enemy_type == "mid_boss" or enemy_type == "final_boss"
 	var is_elite := enemy_type == "elite"
-	for family in _chest_director.roll_drops(player_active_time, eligible_families, is_elite, is_boss):
-		_world_chests.append({"family": family, "position": _find_chest_drop_position(position)})
+	var drops: Array[String] = _chest_director.roll_drops(player_active_time, eligible_families, is_elite, is_boss)
+	for index in range(drops.size()):
+		var cursed := _overstimulation_cursed_drop_due(is_elite, is_boss)
+		_world_chests.append({"family": drops[index], "position": _find_chest_drop_position(position),
+			"cursed": cursed})
+
+func _overstimulation_cursed_drop_due(is_elite: bool, is_boss: bool) -> bool:
+	return _overstimulation_enabled() and (is_elite or is_boss) and \
+			_overstimulation_cursed_rng.randf() < OVERSTIMULATION_CURSED_ITEM_CHANCE
 
 func _spawn_xp_drop(position: Vector2, xp_value: float) -> int:
 	var drop_position := _find_xp_drop_position(position)
@@ -3156,7 +3306,9 @@ func _collect_nearby_chests(state: Dictionary) -> void:
 		var chest: Dictionary = _world_chests[index]
 		if player.global_position.distance_squared_to(chest["position"]) > chest_collection_radius * chest_collection_radius:
 			continue
-		if open_chest_family(str(chest["family"])):
+		var opened := _open_cursed_chest_family(str(chest["family"])) if bool(chest.get("cursed", false)) else \
+				open_chest_family(str(chest["family"]))
+		if opened:
 			_queue_transient_animation("chest", "open", chest["position"], Vector2.ZERO,
 					float(simulation.snapshot().get("simulation_time", 0.0)), CHEST_SPRITE_SIZE,
 					0.0, false, true)
@@ -4604,7 +4756,7 @@ func _spread_pandemic(origin: Vector2, entities: Array) -> void:
 		_pandemic_bursts.append({"position": origin, "remaining": pandemic_feedback_seconds})
 
 func _persistent_damage_multiplier() -> float:
-	return _cached_persistent_damage_multiplier * (1.0 + (loadout.global_relic_bonus("damage_pct") + _xp_run_stat_bonus("damage_pct")) / 100.0) * _risk_reward_damage_multiplier() * _overstimulation_mutation_damage_multiplier
+	return _cached_persistent_damage_multiplier * (1.0 + (loadout.global_relic_bonus("damage_pct") + _xp_run_stat_bonus("damage_pct")) / 100.0) * _risk_reward_damage_multiplier() * _overstimulation_mutation_damage_multiplier * _overstimulation_cursed_weapon_damage_multiplier
 
 func _weapon_combo_damage_multiplier(weapon_id: String) -> float:
 	return 1.25 if loadout.is_evolved(weapon_id) else 1.0
@@ -4691,7 +4843,8 @@ func _effective_weapon_cooldown(base_cooldown: float) -> float:
 		_xp_run_stat_bonus("attack_speed_pct") + float(_cached_achievement_stat_bonuses.get("attack_speed_pct", 0.0)) +
 		objective_attack_speed_bonus + perfect_dodge_attack_speed_bonus + combo_attack_speed_bonus +
 		style_burst_attack_speed_bonus +
-		_overstimulation_attack_speed_bonus + _overstimulation_mutation_attack_speed_bonus
+		_overstimulation_attack_speed_bonus + _overstimulation_mutation_attack_speed_bonus +
+		_overstimulation_cursed_attack_speed_bonus
 	) / 100.0
 	var cooldown_multiplier: float = maxf(0.1, 1.0 - (_equipment_bonus("cooldown_reduction_pct") + loadout.global_relic_bonus("cooldown_reduction_pct") + _xp_run_stat_bonus("cooldown_reduction_pct")) / 100.0)
 	return base_cooldown * cooldown_multiplier / speed_multiplier
