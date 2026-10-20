@@ -118,6 +118,14 @@ const OVERSTIMULATION_WEAPON_COLORS := {
 	"meteor_staff": Color("#FFB65D"), "prism_laser": Color("#F6F7FF"),
 	"void_orb": Color("#A58BFF"), "frost_nova": Color("#82D7FF"),
 }
+const OVERSTIMULATION_WEAPON_RELIC_PAIRS := {
+	"lightning_conductor": "storm_core", "inferno_sprayer": "infernal_heart",
+	"crimson_daggers": "blood_chalice", "void_orb": "singularity",
+	"frost_nova": "frozen_crown", "minigun": "overdrive_engine",
+	"meteor_staff": "celestial_eye", "sawblades": "magnetic_coil",
+	"toxic_cloud": "plague_mask", "prism_laser": "prism_crystal",
+}
+const OVERSTIMULATION_WEAPON_RELIC_SYNERGY_COOLDOWN := 12.0
 const OVERSTIMULATION_STYLE_BURST_SECONDS := 6.0
 const OVERSTIMULATION_STYLE_BURST_ATTACK_SPEED_BONUS := 15.0
 const OVERSTIMULATION_STYLE_BURST_AREA_BONUS := 10.0
@@ -488,6 +496,7 @@ var _overstimulation_cursed_offering := false
 var _overstimulation_weapon_heat: Dictionary = {}
 var _overstimulation_weapon_overdrive_until: Dictionary = {}
 var _weapon_heat_rows: Dictionary = {}
+var _weapon_relic_synergy_next_at: Dictionary = {}
 var _overstimulation_enemy_speed_multiplier := 1.0
 var _overstimulation_applied_enemy_speed_multiplier := 1.0
 var _overstimulation_attack_speed_bonus := 0.0
@@ -1152,6 +1161,23 @@ func _process(_delta: float) -> void:
 						str(event.get("source_type", "")))
 				var death_position := Vector2(float(event["position"]["x"]), float(event["position"]["y"]))
 				_record_overstimulation_cursed_kill(dead_enemy_type, death_position)
+				if bool(event.get("target_had_burn", false)) and \
+						_activate_overstimulation_weapon_relic_synergy("inferno_sprayer", current_simulation_time):
+					_spawn_inferno_synergy_burst(death_position)
+				if bool(event.get("target_had_bleed", false)) and \
+						_activate_overstimulation_weapon_relic_synergy("crimson_daggers", current_simulation_time):
+					_pending_lifesteal += _equipment_kill_healing(float(
+							simulation.kill_heal_amount(float(event["threat_level"]))))
+					Sfx.play("relic_pickup")
+					_show_effect_feedback("BLOOD CHALICE  ·  BLEED RETURN")
+				if bool(event.get("target_was_chilled", false)) and \
+						_activate_overstimulation_weapon_relic_synergy("frost_nova", current_simulation_time):
+					var shatter_sequence: int = simulation.damage_enemies_in_radius(death_position,
+							_equipment_area(frost_nova_radius * 0.5), frost_nova_damage * 0.5 *
+							_persistent_damage_multiplier())
+					if shatter_sequence > 0:
+						Sfx.play("explosion")
+						_show_effect_feedback("FROZEN CROWN  ·  SHATTER RING")
 				var dead_enemy_affix: String = str(event.get("target_affix", ""))
 				if _overstimulation_prism_break and dead_enemy_type not in ["mid_boss", "final_boss"]:
 					_overstimulation_event_kills += 1
@@ -3131,6 +3157,69 @@ func _overstimulation_effective_weapon_cooldown(weapon_id: String, base_cooldown
 	return _effective_weapon_cooldown(base_cooldown) / \
 			_overstimulation_weapon_cadence_multiplier(weapon_id, active_time)
 
+func _overstimulation_weapon_relic_synergy_available(weapon_id: String, active_time: float) -> bool:
+	if not _overstimulation_enabled() or not OVERSTIMULATION_WEAPON_RELIC_PAIRS.has(weapon_id) or \
+			loadout == null or not loadout.is_evolved(weapon_id):
+		return false
+	var relic_id: String = OVERSTIMULATION_WEAPON_RELIC_PAIRS[weapon_id]
+	if loadout.relic_level(relic_id) < loadout.MAX_LEVEL:
+		return false
+	var next_at := float(_weapon_relic_synergy_next_at.get(weapon_id, -INF))
+	return active_time >= next_at
+
+func _activate_overstimulation_weapon_relic_synergy(weapon_id: String, active_time: float) -> bool:
+	if not _overstimulation_weapon_relic_synergy_available(weapon_id, active_time):
+		return false
+	_weapon_relic_synergy_next_at[weapon_id] = active_time + OVERSTIMULATION_WEAPON_RELIC_SYNERGY_COOLDOWN
+	var relic_name: String = str(OVERSTIMULATION_WEAPON_RELIC_PAIRS[weapon_id]).replace("_", " ").to_upper()
+	Sfx.play("level_up")
+	if simulation != null:
+		_show_effect_feedback("%s + %s  ·  SYNERGY" % [
+			OVERSTIMULATION_WEAPON_NAMES[weapon_id], relic_name,
+		])
+	return true
+
+func _spawn_inferno_synergy_burst(origin: Vector2) -> void:
+	if simulation.spawn_status_projectile("wildfire_sprayer", origin, Vector2.ZERO,
+			inferno_damage * 0.5 * _persistent_damage_multiplier(), _equipment_area(64.0), 0.2,
+			inferno_burn_damage_per_tick * 1.5 * _persistent_damage_multiplier(),
+			inferno_burn_interval_seconds, inferno_burn_duration_seconds, 0.0, 0.0) > 0:
+		Sfx.play("explosion")
+		_show_effect_feedback("INFERNAL HEART  ·  BURN BLAST")
+
+func _fire_lightning_synergy_arcs(active_time: float) -> void:
+	if not _activate_overstimulation_weapon_relic_synergy("lightning_conductor", active_time):
+		return
+	var targets := _lightning_initial_targets(3)
+	var fired := 0
+	for target in targets:
+		var direction: Vector2 = (target["position"] - player.global_position).normalized()
+		if direction == Vector2.ZERO:
+			continue
+		if simulation.spawn_projectile("lightning_arc:synergy", player.global_position + direction * 14.0,
+				direction * _equipment_projectile_speed(lightning_projectile_speed),
+				lightning_damage * _persistent_damage_multiplier(), _equipment_area(lightning_projectile_radius),
+				lightning_projectile_lifetime) > 0:
+			fired += 1
+	if fired > 0:
+		Sfx.play("weapon_zap")
+
+func _spawn_meteor_synergy_salvo(origin: Vector2, primary_target: Dictionary) -> void:
+	var excluded: Array[Vector2i] = [primary_target["id"]]
+	for _shot in range(3):
+		var target := _nearest_enemy_excluding(origin, SURVIVAL_TARGETING.visible_range(starfall_fragment_radius), excluded)
+		if target.is_empty():
+			break
+		excluded.append(target["id"])
+		var direction: Vector2 = (target["position"] - origin).normalized()
+		if direction == Vector2.ZERO:
+			continue
+		simulation.spawn_projectile("starfall_fragment", origin + direction * 18.0,
+				direction * _equipment_projectile_speed(meteor_staff_projectile_speed * 1.25),
+				meteor_staff_damage * 0.5 * _weapon_combo_damage_multiplier("meteor_staff") *
+				_persistent_damage_multiplier(), _equipment_area(meteor_staff_projectile_radius * 0.65),
+				meteor_staff_projectile_lifetime)
+
 func _update_overstimulation_weapon_heat_hud(active_time: float) -> void:
 	if _weapon_heat_container == null:
 		return
@@ -4020,6 +4109,7 @@ func _fire_lightning_conductor(active_time: float, paused: bool) -> void:
 	_try_evolution_shockwave(lightning_damage * damage_multiplier)
 	_record_overstimulation_weapon_activation("lightning_conductor", cooldown, active_time)
 	_next_weapon_time = active_time + _overstimulation_effective_weapon_cooldown("lightning_conductor", cooldown, active_time)
+	_fire_lightning_synergy_arcs(active_time)
 
 func _try_thermal_shock(event: Dictionary, entities: Array, active_time: float) -> int:
 	if bool(event.get("is_damage_over_time", false)) or float(event.get("amount", 0.0)) <= 0.0:
@@ -4412,6 +4502,7 @@ func _fire_infinite_circuit(active_time: float, target_budget: int, damage_multi
 		_record_overstimulation_weapon_activation("lightning_conductor", cooldown, active_time)
 		_next_weapon_time = active_time + _overstimulation_effective_weapon_cooldown(
 				"lightning_conductor", cooldown, active_time)
+		_fire_lightning_synergy_arcs(active_time)
 
 func _nearest_lightning_targets(origin: Vector2, excluded_ids: Array[Vector2i], limit: int,
 		max_range: float = -1.0, entities: Variant = null) -> Array[Dictionary]:
@@ -4562,6 +4653,7 @@ func _fire_minigun(active_time: float, paused: bool) -> void:
 	var damage_multiplier := _weapon_level_multiplier("minigun", "damage_multiplier", level)
 	var cadence_multiplier := _weapon_level_multiplier("minigun", "cadence_multiplier", level)
 	var combo_multiplier := _weapon_combo_damage_multiplier("minigun")
+	var overdrive_synergy := _overstimulation_weapon_relic_synergy_available("minigun", active_time)
 	var damage := minigun_damage * damage_multiplier * combo_multiplier * _persistent_damage_multiplier() * _roll_equipment_critical_multiplier()
 	var direction: Vector2 = (target["position"] - player.global_position).normalized()
 	if direction == Vector2.ZERO:
@@ -4577,6 +4669,14 @@ func _fire_minigun(active_time: float, paused: bool) -> void:
 		return
 	Sfx.play_weapon_fire("minigun", "weapon_shot")
 	_queue_weapon_fire_visual("minigun", active_time)
+	if overdrive_synergy and _activate_overstimulation_weapon_relic_synergy("minigun", active_time):
+		for _shot in range(3):
+			simulation.spawn_projectile("redline", player.global_position + direction * 14.0,
+					direction * _equipment_projectile_speed(minigun_projectile_speed),
+					minigun_damage * 0.65 * combo_multiplier * _persistent_damage_multiplier(),
+					_equipment_area(minigun_projectile_radius), minigun_projectile_lifetime,
+					2.0, 0.5, 2.0, 0.0, 0.0, 0, 0.0, 0.0, true, 0.0, 1.0, 1.0, 0.0, 0, 1,
+					_last_attack_critical_hit)
 	if loadout.is_evolved("minigun"):
 		var ramp := clampf((active_time - _redline_fire_time) / maxf(redline_ramp_seconds, 0.01), 0.0, 1.0)
 		cadence_multiplier *= 1.0 + redline_max_cadence_bonus * ramp
@@ -4616,6 +4716,8 @@ func _fire_toxic_cloud(active_time: float, paused: bool) -> void:
 		_record_overstimulation_weapon_activation("toxic_cloud", toxic_cooldown, active_time)
 		_next_toxic_time = active_time + _overstimulation_effective_weapon_cooldown(
 				"toxic_cloud", toxic_cooldown, active_time)
+		if _activate_overstimulation_weapon_relic_synergy("toxic_cloud", active_time):
+			_spread_pandemic(target["position"], _entities)
 
 func _fire_sawblades(active_time: float, paused: bool) -> void:
 	if not weapon_enabled or loadout.weapon_level("sawblades") == 0 or paused or _chest_open or run_over or sawblades_cooldown <= 0.0 or active_time < _next_sawblades_time:
@@ -4630,6 +4732,9 @@ func _fire_sawblades(active_time: float, paused: bool) -> void:
 	var evolved: bool = loadout.is_evolved("sawblades")
 	var damage_multiplier := _weapon_level_multiplier("sawblades", "damage_multiplier", level)
 	var ricochets := 1 + _weapon_level_addition("sawblades", "ricochet_add", level) + (1 if evolved else 0)
+	var magnetic_synergy := _overstimulation_weapon_relic_synergy_available("sawblades", active_time)
+	if magnetic_synergy:
+		ricochets += 1
 	var projectile_speed := sawblades_projectile_speed * _weapon_level_multiplier("sawblades", "projectile_speed_multiplier", level)
 	var homing_turn_rate := _magnetic_coil_homing_turn_rate()
 	var homing_radius := SURVIVAL_TARGETING.visible_range(magnetic_coil_level_five_homing_radius) if homing_turn_rate > 0.0 else 0.0
@@ -4646,6 +4751,8 @@ func _fire_sawblades(active_time: float, paused: bool) -> void:
 		_record_overstimulation_weapon_activation("sawblades", sawblades_cooldown, active_time)
 		_next_sawblades_time = active_time + _overstimulation_effective_weapon_cooldown(
 				"sawblades", sawblades_cooldown, active_time)
+		if magnetic_synergy:
+			_activate_overstimulation_weapon_relic_synergy("sawblades", active_time)
 
 func _fire_meteor_staff(active_time: float, paused: bool) -> void:
 	if not weapon_enabled or loadout.weapon_level("meteor_staff") == 0 or paused or _chest_open or run_over or meteor_staff_cooldown <= 0.0 or active_time < _next_meteor_time:
@@ -4679,6 +4786,8 @@ func _fire_meteor_staff(active_time: float, paused: bool) -> void:
 		_record_overstimulation_weapon_activation("meteor_staff", weapon_cooldown, active_time)
 		_next_meteor_time = active_time + _overstimulation_effective_weapon_cooldown(
 				"meteor_staff", weapon_cooldown, active_time)
+		if _activate_overstimulation_weapon_relic_synergy("meteor_staff", active_time):
+			_spawn_meteor_synergy_salvo(target["position"], target)
 
 func _fire_prism_laser(active_time: float, paused: bool) -> void:
 	_prism_beams.clear()
@@ -4697,6 +4806,7 @@ func _fire_prism_laser(active_time: float, paused: bool) -> void:
 	var damage_multiplier := _weapon_level_multiplier("prism_laser", "damage_multiplier", level)
 	damage_multiplier *= _weapon_combo_damage_multiplier("prism_laser")
 	var targets: Array[Dictionary] = [target]
+	var prism_synergy := false
 	if evolved:
 		var excluded: Array[Vector2i] = [target["id"]]
 		for _beam in range(spectrum_collapse_secondary_beams):
@@ -4706,6 +4816,13 @@ func _fire_prism_laser(active_time: float, paused: bool) -> void:
 				break
 			targets.append(secondary)
 			excluded.append(secondary["id"])
+		if _overstimulation_weapon_relic_synergy_available("prism_laser", active_time):
+			var synergy_target := _nearest_enemy_excluding(player.global_position,
+					SURVIVAL_TARGETING.visible_range(spectrum_collapse_cluster_radius), excluded)
+			if not synergy_target.is_empty():
+				targets.append(synergy_target)
+				excluded.append(synergy_target["id"])
+				prism_synergy = true
 	var tracking_delta := maxf(active_time - _last_prism_active_time, 0.0)
 	_last_prism_active_time = active_time
 	for index in range(targets.size()):
@@ -4740,6 +4857,8 @@ func _fire_prism_laser(active_time: float, paused: bool) -> void:
 		_record_overstimulation_weapon_activation("prism_laser", prism_laser_cooldown, active_time)
 		_next_prism_time = active_time + _overstimulation_effective_weapon_cooldown(
 				"prism_laser", prism_laser_cooldown, active_time)
+		if prism_synergy:
+			_activate_overstimulation_weapon_relic_synergy("prism_laser", active_time)
 
 func _fire_void_orb(active_time: float, paused: bool) -> void:
 	if not weapon_enabled or loadout.weapon_level("void_orb") == 0 or paused or _chest_open or run_over or void_orb_cooldown <= 0.0 or active_time < _next_void_orb_time:
@@ -4754,9 +4873,13 @@ func _fire_void_orb(active_time: float, paused: bool) -> void:
 	var attraction_radius := void_orb_attraction_radius * _weapon_level_multiplier("void_orb", "attraction_radius_multiplier", level)
 	var lifetime := void_orb_lifetime * _weapon_level_multiplier("void_orb", "projectile_lifetime_multiplier", level)
 	var attraction_speed := void_orb_attraction_speed * _weapon_level_multiplier("void_orb", "attraction_force_multiplier", level)
+	var singularity_synergy := _overstimulation_weapon_relic_synergy_available("void_orb", active_time)
 	if evolved:
 		attraction_radius *= 1.5
 		attraction_speed *= 1.25
+	if singularity_synergy:
+		attraction_radius *= 1.5
+		attraction_speed *= 1.5
 	var projectile_type := "event_horizon" if evolved else "void_orb"
 	var sequence: int = simulation.spawn_projectile(projectile_type, player.global_position + direction * 14.0,
 			direction * _equipment_projectile_speed(void_orb_speed),
@@ -4770,6 +4893,8 @@ func _fire_void_orb(active_time: float, paused: bool) -> void:
 		_record_overstimulation_weapon_activation("void_orb", void_orb_cooldown, active_time)
 		_next_void_orb_time = active_time + _overstimulation_effective_weapon_cooldown(
 				"void_orb", void_orb_cooldown, active_time)
+		if singularity_synergy:
+			_activate_overstimulation_weapon_relic_synergy("void_orb", active_time)
 
 func _fire_frost_nova(active_time: float, paused: bool) -> void:
 	var level: int = loadout.weapon_level("frost_nova")

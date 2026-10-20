@@ -1,3 +1,8 @@
+## Overstimulation — tranche 14/18
+
+- [x] `survival_weapon_relic_synergy_smoke.gd` vérifie les dix paires, les portes arme évoluée/relique 5, le proc initial, le délai de 12 s et l’exclusion Sandbox/Armorless.
+- [i] La logique de qualification/cadence passe sous Godot 4.7.2. Les effets de tir et de statut en simulation native restent à vérifier quand la GDExtension sera disponible.
+
 ## Overstimulation — tranche 13/18
 
 - [x] `survival_weapon_heat_smoke.gd` vérifie la montée calibrée, le seuil 100, le reset à 25, le multiplicateur cadence 1,35 pendant 2 s, le refroidissement de 10/s et l’exclusion Armorless/Sandbox.
