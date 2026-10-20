@@ -81,6 +81,9 @@ void CombatSimulation::_bind_methods() {
 			&CombatSimulation::damage_enemies_in_radius);
 	ClassDB::bind_method(D_METHOD("apply_finisher_damage", "target_index", "target_generation", "damage"),
 			&CombatSimulation::apply_finisher_damage);
+	ClassDB::bind_method(D_METHOD("apply_boss_chain_explosion", "center", "radius", "damage",
+			"damage_is_health_fraction", "knockback_speed", "chain_depth"),
+			&CombatSimulation::apply_boss_chain_explosion);
 	ClassDB::bind_method(D_METHOD("dash_entity", "index", "generation", "velocity", "duration_seconds"),
 			&CombatSimulation::dash_entity);
 	ClassDB::bind_method(D_METHOD("acknowledge_events", "event_sequence"), &CombatSimulation::acknowledge_events);
@@ -474,6 +477,25 @@ int64_t CombatSimulation::apply_finisher_damage(int64_t target_index, int64_t ta
 	return submit(std::move(command));
 }
 
+int64_t CombatSimulation::apply_boss_chain_explosion(Vector2 center, float radius, float damage,
+		bool damage_is_health_fraction, float knockback_speed, int64_t chain_depth) {
+	if (!std::isfinite(center.x) || !std::isfinite(center.y) || !std::isfinite(radius) || radius < 0.0F ||
+			!std::isfinite(damage) || damage <= 0.0F || (damage_is_health_fraction && damage > 1.0F) ||
+			!std::isfinite(knockback_speed) || knockback_speed < 0.0F || chain_depth < 0 || chain_depth > 3) {
+		return 0;
+	}
+	dopamine::sim::SimulationCommand command;
+	command.type = dopamine::sim::CommandType::ApplyBossChainExplosion;
+	command.x = static_cast<float>(center.x);
+	command.y = static_cast<float>(center.y);
+	command.area_radius = radius;
+	command.area_damage = damage;
+	command.area_damage_is_health_fraction = damage_is_health_fraction;
+	command.knockback_speed = knockback_speed;
+	command.chain_depth = static_cast<uint32_t>(chain_depth);
+	return submit(std::move(command));
+}
+
 int64_t CombatSimulation::dash_entity(int64_t index, int64_t generation, Vector2 velocity, double duration_seconds) {
 	constexpr int64_t max_id = std::numeric_limits<uint32_t>::max();
 	if (index < 0 || index > max_id || generation <= 0 || generation > max_id ||
@@ -677,6 +699,7 @@ Dictionary CombatSimulation::snapshot() const {
 		entry["source"] = source;
 		entry["target"] = target;
 		entry["amount"] = event.amount;
+		entry["causal_damage"] = event.causal_damage;
 		entry["is_damage_over_time"] = event.is_damage_over_time;
 		entry["status_type"] = event.status_type.c_str();
 		entry["target_was_chilled"] = event.target_was_chilled;

@@ -41,6 +41,7 @@ enum class CommandType {
 	Reset,
 	CaptureState,
 	ApplyFinisherDamage,
+	ApplyBossChainExplosion,
 };
 
 struct SimulationWorkerState;
@@ -69,6 +70,11 @@ struct SimulationCommand {
 	double speed_multiplier = 1.0;
 	float projectile_damage = 1.0F;
 	float projectile_radius = 3.0F;
+	float area_damage = 0.0F;
+	float area_radius = 0.0F;
+	float knockback_speed = 0.0F;
+	uint32_t chain_depth = 0;
+	bool area_damage_is_health_fraction = false;
 	double projectile_lifetime = 5.0;
 	float projectile_status_damage = 2.0F;
 	double projectile_status_interval = 0.5;

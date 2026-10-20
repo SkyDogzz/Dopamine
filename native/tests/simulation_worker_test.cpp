@@ -111,6 +111,45 @@ int main() {
 	acknowledge_finisher.event_sequence = after_finisher->events.back().sequence;
 	submit_and_wait(worker, acknowledge_finisher);
 
+	SimulationCommand chain_target;
+	chain_target.type = CommandType::Spawn;
+	chain_target.entity_type = "chaser";
+	chain_target.x = 3000.0F;
+	chain_target.hp = 100.0F;
+	submit_and_wait(worker, chain_target);
+	Entity chain_target_id;
+	for (const Entity &entity : worker.snapshot()->entities) {
+		if (entity.transform.x == 3000.0F) chain_target_id = entity;
+	}
+	SimulationCommand chain_explosion;
+	chain_explosion.type = CommandType::ApplyBossChainExplosion;
+	chain_explosion.x = 3000.0F;
+	chain_explosion.area_radius = 160.0F;
+	chain_explosion.area_damage = 0.2F;
+	chain_explosion.area_damage_is_health_fraction = true;
+	chain_explosion.knockback_speed = 220.0F;
+	chain_explosion.chain_depth = 0;
+	submit_and_wait(worker, chain_explosion);
+	const auto after_chain = worker.snapshot();
+	bool chain_target_damaged = false;
+	for (const Entity &entity : after_chain->entities) {
+		if (entity.id == chain_target_id.id) {
+			chain_target_damaged = entity.health.current == 80.0F && entity.velocity.y < 0.0F;
+		}
+	}
+	require(chain_target_damaged && after_chain->events.size() == 1 &&
+			after_chain->events.front().source_type == "boss_chain_0" &&
+			after_chain->events.front().amount == 20.0F,
+			"boss chain command should apply max-health damage, outward knockback and causal event metadata");
+	SimulationCommand acknowledge_chain;
+	acknowledge_chain.type = CommandType::AcknowledgeEvents;
+	acknowledge_chain.event_sequence = after_chain->events.back().sequence;
+	submit_and_wait(worker, acknowledge_chain);
+	SimulationCommand clear_chain_target;
+	clear_chain_target.type = CommandType::Despawn;
+	clear_chain_target.entity = chain_target_id.id;
+	submit_and_wait(worker, clear_chain_target);
+
 	SimulationCommand set_speed;
 	set_speed.type = CommandType::SetSpeed;
 	set_speed.speed_multiplier = 2.0;

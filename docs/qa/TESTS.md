@@ -1,3 +1,10 @@
+## Overstimulation — tranche 17/18
+
+- [x] `simulation_core_tests` vérifie 20 % des PV maximum, le recul radial, les sources `boss_chain_0`, le dégât causal conservé sur une mort, et l’exclusion boss/projectile.
+- [x] `simulation_worker_tests` vérifie la commande native reçue par le worker, les dégâts et le recul; les deux binaires de tests compilés directement avec C++23 passent.
+- [x] `survival_boss_chain_smoke.gd` vérifie le blast de boss, les trois bonds secondaires, la limite après le troisième, la moitié du dégât causal, les exclusions finishers/Armorless/Sandbox et le binding intégré contre la GDExtension.
+- [i] Le recul de 220 px/s pendant 0,2 s est **[PROPOSÉ]** faute de valeur numérique dans la spec; vérification de lisibilité visuelle/auditive sur matériel reste ouverte.
+
 ## Overstimulation — tranche 16/18
 
 - [x] `survival_finisher_smoke.gd` passe sous Godot 4.7.2 avec la GDExtension : seuil de 10 % PV, marker bref, DoT/faibles impacts/boss/Armorless exclus, événement de mort natif, kill/XP uniques et burst de rayon 48 px aux dégâts testés.

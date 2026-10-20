@@ -134,7 +134,8 @@ bool SimulationWorker::restore_state(const SimulationWorkerState &state) {
 	for (const SimulationCommand &command : state.pending_commands) {
 		if (previous_command_sequence == std::numeric_limits<uint64_t>::max() ||
 				command.sequence != previous_command_sequence + 1 || command.capture_promise ||
-				static_cast<uint8_t>(command.type) >= static_cast<uint8_t>(CommandType::CaptureState)) {
+				command.type == CommandType::CaptureState ||
+				static_cast<uint8_t>(command.type) > static_cast<uint8_t>(CommandType::ApplyBossChainExplosion)) {
 			return false;
 		}
 		previous_command_sequence = command.sequence;
@@ -410,6 +411,24 @@ void SimulationWorker::apply(const SimulationCommand &command,
 				log("finisher damage resolved");
 			} catch (const std::exception &error) {
 				log(std::string("finisher damage rejected: ") + error.what());
+			}
+			break;
+		case CommandType::ApplyBossChainExplosion:
+			try {
+				const std::vector<EntityId> candidates = simulation_.query_radius(command.x, command.y,
+						command.area_radius);
+				if (pending_events_.size() + candidates.size() * 2 > max_pending_events_) {
+					log("boss chain explosion delayed: acknowledge pending events first");
+					break;
+				}
+				std::vector<CombatEvent> events;
+				simulation_.apply_boss_chain_explosion(command.x, command.y, command.area_radius,
+						command.area_damage, command.area_damage_is_health_fraction, command.knockback_speed,
+						command.chain_depth, events);
+				append_events(std::move(events));
+				log("boss chain explosion resolved");
+			} catch (const std::exception &error) {
+				log(std::string("boss chain explosion rejected: ") + error.what());
 			}
 			break;
 		case CommandType::DashEntity:

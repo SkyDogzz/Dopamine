@@ -399,6 +399,52 @@ std::size_t SimulationCore::damage_enemies_in_radius(float x, float y, float rad
 	return damaged;
 }
 
+std::size_t SimulationCore::apply_boss_chain_explosion(float x, float y, float radius, float damage,
+		bool damage_is_health_fraction, float knockback_speed, uint32_t chain_depth,
+		std::vector<CombatEvent> &events) {
+	if (!std::isfinite(x) || !std::isfinite(y) || !std::isfinite(radius) || radius < 0.0F ||
+			!std::isfinite(damage) || damage <= 0.0F || (damage_is_health_fraction && damage > 1.0F) ||
+			!std::isfinite(knockback_speed) || knockback_speed < 0.0F || chain_depth > 3) {
+		throw std::invalid_argument("invalid boss chain explosion");
+	}
+	const float radius_squared = radius * radius;
+	const std::vector<EntityId> targets = query_radius(x, y, radius);
+	std::size_t damaged = 0;
+	std::vector<EntityId> to_despawn;
+	std::size_t volatile_targets_remaining = 0;
+	const std::string source_type = "boss_chain_" + std::to_string(chain_depth);
+	for (const EntityId target : targets) {
+		const std::optional<Entity> candidate = entity(target);
+		if (!candidate || candidate->is_projectile || candidate->is_xp_orb ||
+				candidate->health.current <= 0.0F || candidate->type.id == "mid_boss" ||
+				candidate->type.id == "final_boss") {
+			continue;
+		}
+		const float dx = candidate->transform.x - x;
+		const float dy = candidate->transform.y - y;
+		const float distance_squared = dx * dx + dy * dy;
+		if (distance_squared > radius_squared) continue;
+		if (knockback_speed > 0.0F) {
+			const float distance = std::sqrt(distance_squared);
+			const float inverse_distance = distance > 0.001F ? 1.0F / distance : 0.0F;
+			const float direction_x = distance > 0.001F ? dx * inverse_distance : 0.0F;
+			const float direction_y = distance > 0.001F ? dy * inverse_distance : -1.0F;
+			dash_entity(target, direction_x * knockback_speed, direction_y * knockback_speed, 0.2);
+		}
+		const float amount = damage_is_health_fraction ? candidate->health.maximum * damage : damage;
+		const std::size_t first_event = events.size();
+		apply_damage({}, target, amount, events, to_despawn, volatile_targets_remaining, false);
+		const float causal_damage = events.size() > first_event ? events[first_event].amount : amount;
+		for (std::size_t index = first_event; index < events.size(); ++index) {
+			events[index].source_type = source_type;
+			if (events[index].type == CombatEventType::Death) events[index].causal_damage = causal_damage;
+		}
+		++damaged;
+	}
+	for (const EntityId id : to_despawn) despawn(id);
+	return damaged;
+}
+
 bool SimulationCore::collect_xp_orb(EntityId id, std::vector<CombatEvent> &events) {
 	if (id.index >= slots_.size() || !slots_[id.index].active ||
 			slots_[id.index].generation != id.generation || !xp_orb_flags_[id.index]) {

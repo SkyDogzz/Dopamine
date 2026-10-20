@@ -532,6 +532,28 @@ int main() {
 			area_damage.entity(area_far)->health.current == 20.0F && area_events.size() == 1 &&
 			area_events.front().type == dopamine::sim::CombatEventType::Damage,
 			"area damage should affect nearby ordinary enemies and exclude bosses and distant entities");
+	SimulationCore boss_chain;
+	const auto chain_target = boss_chain.spawn("chaser", 20.0F, 0.0F, 100.0F, 0.0F, 0.0F);
+	const auto chain_small = boss_chain.spawn("sprinter", -30.0F, 0.0F, 20.0F, 0.0F, 0.0F);
+	const auto chain_kill = boss_chain.spawn("chaser", 50.0F, 0.0F, 100.0F, 0.0F, 0.0F);
+	const auto chain_boss = boss_chain.spawn("final_boss", 25.0F, 0.0F, 500.0F, 0.0F, 0.0F);
+	const auto chain_projectile = boss_chain.spawn_projectile("enemy_projectile", 10.0F, 0.0F,
+			10.0F, 3.0F, 5.0, 0.0F, 0.0F);
+	std::vector<dopamine::sim::CombatEvent> setup_chain_events;
+	boss_chain.apply_direct_damage({}, chain_kill, 90.0F, setup_chain_events);
+	std::vector<dopamine::sim::CombatEvent> chain_events;
+	require(boss_chain.apply_boss_chain_explosion(0.0F, 0.0F, 160.0F, 0.2F, true,
+			220.0F, 0, chain_events) == 3 &&
+			boss_chain.entity(chain_target)->health.current == 80.0F &&
+			boss_chain.entity(chain_small)->health.current == 16.0F &&
+			!boss_chain.entity(chain_kill).has_value() &&
+			boss_chain.entity(chain_boss)->health.current == 500.0F &&
+			boss_chain.entity(chain_projectile)->health.current == 1.0F &&
+			boss_chain.entity(chain_target)->velocity.x > 0.0F &&
+			chain_events.size() == 4 && chain_events[0].source_type == "boss_chain_0" &&
+			chain_events[0].amount == 20.0F && chain_events.back().type == dopamine::sim::CombatEventType::Death &&
+			chain_events.back().source_type == "boss_chain_0" && chain_events.back().causal_damage == 20.0F,
+			"boss chain explosion should damage by max health, push enemies and spare bosses/projectiles");
 	steering.advance(0.1);
 	require(steering.entity(chaser)->transform.x < -20.0F, "steered entity should move after integration");
 	bool rejected_steering = false;

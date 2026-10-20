@@ -181,6 +181,7 @@ struct CombatEvent {
 	uint64_t reaction_chain_id = 0;
 	uint32_t reaction_budget = 1;
 	bool critical_hit = false;
+	float causal_damage = 0.0F;
 };
 
 struct Entity {
@@ -239,6 +240,9 @@ public:
 	bool dash_entity(EntityId target, float velocity_x, float velocity_y, double duration_seconds);
 	void apply_direct_damage(EntityId source, EntityId target, float amount, std::vector<CombatEvent> &events);
 	std::size_t damage_enemies_in_radius(float x, float y, float radius, float amount,
+			std::vector<CombatEvent> &events);
+	std::size_t apply_boss_chain_explosion(float x, float y, float radius, float damage,
+			bool damage_is_health_fraction, float knockback_speed, uint32_t chain_depth,
 			std::vector<CombatEvent> &events);
 	bool collect_xp_orb(EntityId id, std::vector<CombatEvent> &events);
 	bool despawn(EntityId id);

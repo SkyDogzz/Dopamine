@@ -519,6 +519,7 @@ var _overstimulation_finisher_targets: Dictionary = {}
 var _overstimulation_finisher_markers: Dictionary = {}
 var _overstimulation_finisher_pending: Dictionary = {}
 var _overstimulation_finisher_bursts: Array[Dictionary] = []
+var _overstimulation_boss_chain_bursts: Array[Dictionary] = []
 var _perfect_dodge_flash_expires_at := 0.0
 var _perfect_dodge_flash_position := Vector2.ZERO
 var _perfect_dodge_flash_was_visible := false
@@ -1078,6 +1079,10 @@ func _process(_delta: float) -> void:
 		_overstimulation_finisher_bursts[index]["remaining"] = float(_overstimulation_finisher_bursts[index]["remaining"]) - elapsed_active_time
 		if float(_overstimulation_finisher_bursts[index]["remaining"]) <= 0.0:
 			_overstimulation_finisher_bursts.remove_at(index)
+	for index in range(_overstimulation_boss_chain_bursts.size() - 1, -1, -1):
+		_overstimulation_boss_chain_bursts[index]["remaining"] = float(_overstimulation_boss_chain_bursts[index]["remaining"]) - elapsed_active_time
+		if float(_overstimulation_boss_chain_bursts[index]["remaining"]) <= 0.0:
+			_overstimulation_boss_chain_bursts.remove_at(index)
 	for index in range(_weapon_impacts.size() - 1, -1, -1):
 		_weapon_impacts[index]["remaining"] = float(_weapon_impacts[index]["remaining"]) - elapsed_active_time
 		if float(_weapon_impacts[index]["remaining"]) <= 0.0:
@@ -1126,9 +1131,11 @@ func _process(_delta: float) -> void:
 				var source_type: String = str(event.get("source_type", ""))
 				if source_type == "overstimulation_finisher":
 					continue
-				_try_overstimulation_finisher_hit(event, state["entities"], current_simulation_time)
-				_record_weapon_damage(source_type, float(event["amount"]))
-				if not bool(event.get("is_damage_over_time", false)):
+				var is_boss_chain_damage := source_type.begins_with("boss_chain_")
+				if not is_boss_chain_damage:
+					_try_overstimulation_finisher_hit(event, state["entities"], current_simulation_time)
+					_record_weapon_damage(source_type, float(event["amount"]))
+				if not is_boss_chain_damage and not bool(event.get("is_damage_over_time", false)):
 					var target_type := str(event.get("target_type", ""))
 					_start_screen_shake(float(event["amount"]))
 					var hit_family := "hit_heavy" if target_type in ["mid_boss", "final_boss"] else "hit_light"
@@ -1141,27 +1148,28 @@ func _process(_delta: float) -> void:
 					_add_damage_number(float(event["amount"]),
 							Vector2(float(event["position"]["x"]), float(event["position"]["y"])), target_key,
 							bool(event.get("critical_hit", false)), current_simulation_time)
-				_advance_lightning_chain(event, state["entities"], current_simulation_time)
-				_try_thermal_shock(event, state["entities"], current_simulation_time)
-				_try_toxic_ignition(event, current_simulation_time)
-				_try_electroplague(event, state["entities"])
-				_try_gravity_collapse(event, state["entities"])
-				_try_overcharge(event, current_simulation_time)
-				_try_hemorrhage(event)
-				_try_shatter(event, state["entities"])
-				_add_weapon_impact(source_type, Vector2(float(event["position"]["x"]), float(event["position"]["y"])),
-						bool(event.get("is_damage_over_time", false)), bool(event.get("critical_hit", false)))
-				if source_type == "pandemic_cloud":
-					_pandemic_poisoned_targets[target_key] = true
-				elif source_type == "starfall":
-					if not _starfall_fragments_spawned.has(source_key):
-						_starfall_fragments_spawned[source_key] = true
-						_spawn_starfall_fragments(Vector2(float(event["position"]["x"]), float(event["position"]["y"])),
-								damage_target, state["entities"])
-				var damage_lifesteal: float = float(event["amount"]) * (base_lifesteal_pct + loadout.global_relic_bonus("lifesteal_pct") + _equipment_bonus("lifesteal_pct")) / 100.0
-				if bool(event.get("is_damage_over_time", false)):
-					damage_lifesteal *= 0.25
-				_pending_lifesteal += damage_lifesteal
+				if not is_boss_chain_damage:
+					_advance_lightning_chain(event, state["entities"], current_simulation_time)
+					_try_thermal_shock(event, state["entities"], current_simulation_time)
+					_try_toxic_ignition(event, current_simulation_time)
+					_try_electroplague(event, state["entities"])
+					_try_gravity_collapse(event, state["entities"])
+					_try_overcharge(event, current_simulation_time)
+					_try_hemorrhage(event)
+					_try_shatter(event, state["entities"])
+					_add_weapon_impact(source_type, Vector2(float(event["position"]["x"]), float(event["position"]["y"])),
+							bool(event.get("is_damage_over_time", false)), bool(event.get("critical_hit", false)))
+					if source_type == "pandemic_cloud":
+						_pandemic_poisoned_targets[target_key] = true
+					elif source_type == "starfall":
+						if not _starfall_fragments_spawned.has(source_key):
+							_starfall_fragments_spawned[source_key] = true
+							_spawn_starfall_fragments(Vector2(float(event["position"]["x"]), float(event["position"]["y"])),
+									damage_target, state["entities"])
+					var damage_lifesteal: float = float(event["amount"]) * (base_lifesteal_pct + loadout.global_relic_bonus("lifesteal_pct") + _equipment_bonus("lifesteal_pct")) / 100.0
+					if bool(event.get("is_damage_over_time", false)):
+						damage_lifesteal *= 0.25
+					_pending_lifesteal += damage_lifesteal
 			"death":
 				kill_count += 1
 				var dead_target: Dictionary = event["target"]
@@ -1172,6 +1180,7 @@ func _process(_delta: float) -> void:
 						str(event.get("source_type", "")))
 				var death_position := Vector2(float(event["position"]["x"]), float(event["position"]["y"]))
 				var finisher_death := _resolve_overstimulation_finisher_death(dead_key, death_position)
+				_overstimulation_boss_chain_death(event, dead_enemy_type, death_position)
 				_record_overstimulation_cursed_kill(dead_enemy_type, death_position)
 				if bool(event.get("target_had_burn", false)) and \
 						_activate_overstimulation_weapon_relic_synergy("inferno_sprayer", current_simulation_time):
@@ -4108,7 +4117,8 @@ func _overstimulation_enabled() -> bool:
 func _try_overstimulation_finisher_hit(event: Dictionary, entities: Array, simulation_time: float) -> bool:
 	if not _overstimulation_enabled() or bool(event.get("is_damage_over_time", false)) or \
 			str(event.get("target_type", "")) in ["mid_boss", "final_boss"] or \
-			str(event.get("source_type", "")).is_empty():
+			str(event.get("source_type", "")).is_empty() or \
+			str(event.get("source_type", "")).begins_with("boss_chain_"):
 		return false
 	var amount := float(event.get("amount", 0.0))
 	var remaining_health := float(event.get("remaining_health", 0.0))
@@ -4207,6 +4217,40 @@ func _resolve_overstimulation_finisher_death(target_key: String, position: Vecto
 			_overstimulation_finisher_bursts.append({"position": position, "remaining": 0.2})
 		queue_redraw()
 	return finisher
+
+func _overstimulation_boss_chain_death(event: Dictionary, enemy_type: String, position: Vector2) -> void:
+	if not _overstimulation_enabled() or simulation == null or \
+			not simulation.has_method("apply_boss_chain_explosion"):
+		return
+	var source_type := str(event.get("source_type", ""))
+	var radius := 0.0
+	var damage := 0.0
+	var damage_is_health_fraction := false
+	var chain_depth := 0
+	if enemy_type in ["mid_boss", "final_boss"]:
+		radius = 160.0
+		damage = 0.2
+		damage_is_health_fraction = true
+	elif source_type.begins_with("boss_chain_"):
+		chain_depth = source_type.trim_prefix("boss_chain_").to_int()
+		if chain_depth >= 3:
+			return
+		damage = float(event.get("causal_damage", 0.0)) * 0.5
+		if damage <= 0.0:
+			return
+		radius = 72.0
+		chain_depth += 1
+	else:
+		return
+	var sequence: int = simulation.apply_boss_chain_explosion(position, radius, damage,
+			damage_is_health_fraction, 220.0, chain_depth)
+	if sequence <= 0:
+		return
+	if not _visual_effects_reduced():
+		_overstimulation_boss_chain_bursts.append({"position": position, "radius": radius, "remaining": 0.32})
+	_start_screen_shake(8.0 if damage_is_health_fraction else 5.0)
+	Sfx.play("explosion")
+	queue_redraw()
 
 func _overstimulation_spawn_rate_multiplier() -> float:
 	return wave_director.spawn_rate_multiplier() if _overstimulation_enabled() and wave_director != null else 1.0
@@ -5916,6 +5960,12 @@ func _draw() -> void:
 			draw_circle(burst["position"], 48.0 * (1.0 - fade * 0.3), Color(1.0, 0.2, 0.65, 0.16 * fade))
 			draw_arc(burst["position"], 48.0 * (1.0 - fade * 0.3), 0.0, TAU, 32,
 				Color(1.0, 0.44, 0.78, 0.8 * fade), 2.0, true)
+		for burst in _overstimulation_boss_chain_bursts:
+			var fade := clampf(float(burst["remaining"]) / 0.32, 0.0, 1.0)
+			var radius := float(burst["radius"])
+			draw_circle(burst["position"], radius * (1.0 - fade * 0.18), Color(1.0, 0.48, 0.12, 0.09 * fade))
+			draw_arc(burst["position"], radius * (1.0 - fade * 0.18), 0.0, TAU, 48,
+				Color(1.0, 0.72, 0.28, 0.75 * fade), 3.0, true)
 	for chest in _world_chests:
 		if CHEST_TEXTURE != null:
 			draw_texture_rect(CHEST_TEXTURE, Rect2(chest["position"] - Vector2.ONE * CHEST_SPRITE_SIZE * 0.5,
@@ -6082,6 +6132,7 @@ func _on_settings_changed() -> void:
 		_lightning_arcs.clear()
 		_pandemic_bursts.clear()
 		_overstimulation_finisher_bursts.clear()
+		_overstimulation_boss_chain_bursts.clear()
 	queue_redraw()
 
 func _start_screen_shake(damage_amount: float) -> void:
