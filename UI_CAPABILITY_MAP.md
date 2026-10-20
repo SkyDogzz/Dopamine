@@ -2,7 +2,7 @@
 
 Cette carte consigne l’intention approuvée par interview et l’état des modules. Les identifiants restent les références stables des specs et plans. Le bilan fonctionnel antérieur est dans [`tasks/ui-refonte/INTEGRATION-ui-refonte.md`](tasks/ui-refonte/INTEGRATION-ui-refonte.md).
 
-La refonte approuvée du rythme des menus et des transitions est suivie dans [`tasks/ui-refonte/PROPOSITION-menus-dynamiques.md`](tasks/ui-refonte/PROPOSITION-menus-dynamiques.md); son intégration par phases est en cours.
+La refonte approuvée du rythme des menus et des transitions est intégrée par phases; son périmètre, les vérifications et les points restant ouverts sont suivis dans [`tasks/ui-refonte/PROPOSITION-menus-dynamiques.md`](tasks/ui-refonte/PROPOSITION-menus-dynamiques.md).
 
 Les états « Livré » ci-dessous décrivent la tranche fonctionnelle initiale intégrée le 2026-10-16. Une extension d’intention confirmée le même jour demande de recréer les assets visuels actifs et de refaire graphiquement toutes les interfaces selon l’Art Bible. Cette extension est en cours : le sol Survival utilise maintenant une tuile 16×16 éditable, et les parcours Options/Pause/inventaire répondent au cancel de manette. Son inventaire reste suivi dans [`docs/art/INVENTAIRE_ASSETS_UI.md`](docs/art/INVENTAIRE_ASSETS_UI.md).
 

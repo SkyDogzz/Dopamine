@@ -1,6 +1,6 @@
 # Proposition — menus et transitions plus dynamiques
 
-**Statut :** les six propositions ont été approuvées par l’utilisateur le 2026-10-20; implémentation en cours par phases. Le balayage en blocs de 120 ms et sa suppression lorsque la réduction des effets visuels est active ont aussi été validés le 2026-10-20. Ce document complète l’intention générale de [`INTENTION_REFONTE_UI.md`](../../docs/planning/INTENTION_REFONTE_UI.md) sans modifier les décisions de gameplay ni les specs fonctionnelles livrées.
+**Statut :** les six propositions ont été approuvées par l’utilisateur le 2026-10-20 et intégrées en quatre phases. Le balayage en blocs de 120 ms et sa suppression lorsque la réduction des effets visuels est active ont aussi été validés le 2026-10-20. Ce document complète l’intention générale de [`INTENTION_REFONTE_UI.md`](../../docs/planning/INTENTION_REFONTE_UI.md) sans modifier les décisions de gameplay ni les specs fonctionnelles livrées.
 
 ## Objectif
 
@@ -28,7 +28,7 @@ Les six écrans et intentions ci-dessous sont approuvés. La transition inter-é
 
 **Vérifications ciblées prévues après approbation :** `launch_navigation_smoke.gd`, `survival_hub_smoke.gd`, `survival_hub_layout_smoke.gd`, `survival_starting_weapon_smoke.gd`, `keyboard_menu_journey_smoke.gd` et capture fenêtrée aux viewports de référence, dont le format compact utilisé par les smokes.
 
-**État au 2026-10-20 :** service global de transition créé et utilisé pour les changements de scène de l’accueil, du Sandbox Lab, du hub et de la session. Le balayage shader en blocs dure 120 ms; il est instantané avec les effets réduits et bloque les entrées pendant son exécution. Difficulté choisie explicitement cochée; arme focalisée marquée par un curseur. Les sons de focus/confirmation existants restent la source unique de retour. Smokes transition, hub, arme de départ, navigation clavier/manette synthétique et capture fenêtrée 1280×720 passés. Les autres phases restent à implémenter.
+**État au 2026-10-20 — intégré :** service global de transition utilisé pour les changements de scène de l’accueil, du Sandbox Lab, du hub et de la session. Le balayage shader en blocs dure 120 ms; il est instantané avec les effets réduits et bloque les entrées pendant son exécution. Difficulté choisie explicitement cochée; arme focalisée marquée par un curseur. Les sons de focus/confirmation existants restent la source unique de retour. Smokes transition, hub, arme de départ, navigation clavier/manette synthétique et capture fenêtrée 1280×720 passés.
 
 ### Phase 2 — Équipement, compétences, Codex et succès
 
@@ -36,7 +36,7 @@ Les six écrans et intentions ci-dessous sont approuvés. La transition inter-é
 
 **Vérifications ciblées prévues après approbation :** smokes visuels et fonctionnels existants des panneaux équipement, compétences, Codex et succès; navigation clavier/manette synthétique; layouts compacts.
 
-**État au 2026-10-20 :** les cinq panneaux du hub utilisent une entrée/sortie en fondu de 90 ms, avec affichage instantané lorsque la réduction visuelle est active. Le focus revient au bouton appelant dès la fermeture. Smokes hub, succès, layouts hub (640×360, 1280×720, 1920×1080), transitions et parcours manette passent avec données utilisateur isolées. Les smokes visuels autonomes équipement et arbre de compétences échouent actuellement sur leurs assertions de rendu/cadrage; ils ne sont pas traversés par l’animation du hub. À examiner lors de la revue visuelle transversale.
+**État au 2026-10-20 — intégré :** les cinq panneaux du hub utilisent une entrée/sortie en fondu de 90 ms, avec affichage instantané lorsque la réduction visuelle est active. Le focus revient au bouton appelant dès la fermeture. Smokes hub, succès, layouts hub (640×360, 1280×720, 1920×1080), transitions et parcours manette passent avec données utilisateur isolées. Limite de vérification : les smokes autonomes équipement et arbre de compétences échouent sur leurs assertions de rendu/cadrage; le smoke arbre change `root.size` sans redimensionner le viewport réel. Ces échecs ne traversent pas le fondu ajouté au hub.
 
 ### Phase 3 — Options, pause et écran de résultat
 
@@ -44,7 +44,7 @@ Les six écrans et intentions ci-dessous sont approuvés. La transition inter-é
 
 **Vérifications ciblées prévues après approbation :** `ui_settings_smoke.gd`, `pause_panel_visual_smoke.gd`, `survival_pause_smoke.gd`, `survival_pause_inventory_smoke.gd`, `run_result_panel_smoke.gd` et `keyboard_menu_journey_smoke.gd`.
 
-**État au 2026-10-20 :** entrée Options à 90 ms sur l’accueil et en pause; entrée Pause à 90 ms; panneau de résultat fondu à 90 ms après préparation du résumé. Les contrôles et le focus sont disponibles immédiatement. À la fermeture d’Options, le focus revient immédiatement et la simulation reste suspendue pendant la sortie visuelle; l’ouverture Options ne modifie pas l’état de pause. Smokes pause, panneau Pause, résultat, parcours clavier et navigation accueil passés. Le smoke des réglages échoue à son assertion de 640×360 car son test redimensionne `root.size` sans redimensionner le viewport enfant; le smoke d’inventaire en pause a la même limite de test. Aucun changement n’a été fait aux valeurs du résultat ni à la simulation.
+**État au 2026-10-20 — intégré :** entrée Options à 90 ms sur l’accueil et en pause; entrée Pause à 90 ms; panneau de résultat fondu à 90 ms après préparation du résumé. Les contrôles et le focus sont disponibles immédiatement. À la fermeture d’Options, le focus revient immédiatement et la simulation reste suspendue pendant la sortie visuelle; l’ouverture Options ne modifie pas l’état de pause. Smokes pause, panneau Pause, résultat, parcours clavier et navigation accueil passés. Limites de vérification : le smoke des réglages échoue à son assertion de 640×360 et celui d’inventaire en pause à son cadrage compact; leurs scénarios changent `root.size` sans redimensionner le viewport enfant. Aucun changement n’a été fait aux valeurs du résultat ni à la simulation.
 
 ### Phase 4 — Cohérence des retours audio et revue transversale
 
@@ -52,7 +52,7 @@ Les six écrans et intentions ci-dessous sont approuvés. La transition inter-é
 
 **Vérifications ciblées prévues après approbation :** parcours complet accueil → hub → arme → pause/options → résultat, contrôles de réduction des effets visuels, captures comparatives et revue audio si une sortie réelle est disponible. Aucun passage du Sandbox vers les services de progression ne sera ajouté.
 
-**État au 2026-10-20 :** le parcours global utilise les mêmes sons UI existants. `UIFeedback` déclenche le focus, la confirmation d’appui et le retour à l’annulation; les confirmations sont limitées par les familles SFX existantes et le focus est limité à 80 ms. La sélection de difficulté s’appuie sur le son d’appui déjà attaché au bouton, sans double lecture scriptée. Vérification automatisée des assets SFX prévue ci-dessous; mix détaillé et écoute sur sortie physique restent **[OUVERTS]**.
+**État au 2026-10-20 — intégré :** le parcours global utilise les mêmes sons UI existants. `UIFeedback` déclenche le focus, la confirmation d’appui et le retour à l’annulation; les demandes de focus sont limitées à une par 80 ms. La sélection de difficulté s’appuie sur le son d’appui déjà attaché au bouton, sans double lecture scriptée. `ui_foundation_smoke.gd`, `settings_service_smoke.gd`, `sfx_service_assets_smoke.gd` et `sfx_specific_event_smoke.gd` passent. Le mix détaillé et l’écoute sur sortie physique restent **[OUVERTS]**; le parcours sur manette physique reste à faire.
 
 ## Règles communes proposées
 
