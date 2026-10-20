@@ -79,6 +79,8 @@ void CombatSimulation::_bind_methods() {
 			&CombatSimulation::set_enemy_speed_multiplier);
 	ClassDB::bind_method(D_METHOD("damage_enemies_in_radius", "center", "radius", "damage"),
 			&CombatSimulation::damage_enemies_in_radius);
+	ClassDB::bind_method(D_METHOD("apply_finisher_damage", "target_index", "target_generation", "damage"),
+			&CombatSimulation::apply_finisher_damage);
 	ClassDB::bind_method(D_METHOD("dash_entity", "index", "generation", "velocity", "duration_seconds"),
 			&CombatSimulation::dash_entity);
 	ClassDB::bind_method(D_METHOD("acknowledge_events", "event_sequence"), &CombatSimulation::acknowledge_events);
@@ -455,6 +457,19 @@ int64_t CombatSimulation::damage_enemies_in_radius(Vector2 center, float radius,
 	command.x = static_cast<float>(center.x);
 	command.y = static_cast<float>(center.y);
 	command.projectile_radius = radius;
+	command.projectile_damage = damage;
+	return submit(std::move(command));
+}
+
+int64_t CombatSimulation::apply_finisher_damage(int64_t target_index, int64_t target_generation, float damage) {
+	constexpr int64_t max_id = std::numeric_limits<uint32_t>::max();
+	if (target_index < 0 || target_index > max_id || target_generation <= 0 || target_generation > max_id ||
+			!std::isfinite(damage) || damage <= 0.0F) {
+		return 0;
+	}
+	SimulationCommand command;
+	command.type = CommandType::ApplyFinisherDamage;
+	command.entity = {static_cast<uint32_t>(target_index), static_cast<uint32_t>(target_generation)};
 	command.projectile_damage = damage;
 	return submit(std::move(command));
 }

@@ -515,6 +515,10 @@ var _overstimulation_style_points := 0
 var _overstimulation_style_pending_points := 0
 var _overstimulation_style_burst_expires_at := 0.0
 var _overstimulation_style_scored_events: Dictionary = {}
+var _overstimulation_finisher_targets: Dictionary = {}
+var _overstimulation_finisher_markers: Dictionary = {}
+var _overstimulation_finisher_pending: Dictionary = {}
+var _overstimulation_finisher_bursts: Array[Dictionary] = []
 var _perfect_dodge_flash_expires_at := 0.0
 var _perfect_dodge_flash_position := Vector2.ZERO
 var _perfect_dodge_flash_was_visible := false
@@ -1070,6 +1074,10 @@ func _process(_delta: float) -> void:
 		_pandemic_bursts[index]["remaining"] = float(_pandemic_bursts[index]["remaining"]) - elapsed_active_time
 		if float(_pandemic_bursts[index]["remaining"]) <= 0.0:
 			_pandemic_bursts.remove_at(index)
+	for index in range(_overstimulation_finisher_bursts.size() - 1, -1, -1):
+		_overstimulation_finisher_bursts[index]["remaining"] = float(_overstimulation_finisher_bursts[index]["remaining"]) - elapsed_active_time
+		if float(_overstimulation_finisher_bursts[index]["remaining"]) <= 0.0:
+			_overstimulation_finisher_bursts.remove_at(index)
 	for index in range(_weapon_impacts.size() - 1, -1, -1):
 		_weapon_impacts[index]["remaining"] = float(_weapon_impacts[index]["remaining"]) - elapsed_active_time
 		if float(_weapon_impacts[index]["remaining"]) <= 0.0:
@@ -1116,6 +1124,9 @@ func _process(_delta: float) -> void:
 				var source_key := _entity_key(int(damage_source["index"]), int(damage_source["generation"]))
 				var target_key := _entity_key(int(damage_target["index"]), int(damage_target["generation"]))
 				var source_type: String = str(event.get("source_type", ""))
+				if source_type == "overstimulation_finisher":
+					continue
+				_try_overstimulation_finisher_hit(event, state["entities"], current_simulation_time)
 				_record_weapon_damage(source_type, float(event["amount"]))
 				if not bool(event.get("is_damage_over_time", false)):
 					var target_type := str(event.get("target_type", ""))
@@ -1160,6 +1171,7 @@ func _process(_delta: float) -> void:
 				_record_overstimulation_style_kill(dead_enemy_type, dead_key,
 						str(event.get("source_type", "")))
 				var death_position := Vector2(float(event["position"]["x"]), float(event["position"]["y"]))
+				var finisher_death := _resolve_overstimulation_finisher_death(dead_key, death_position)
 				_record_overstimulation_cursed_kill(dead_enemy_type, death_position)
 				if bool(event.get("target_had_burn", false)) and \
 						_activate_overstimulation_weapon_relic_synergy("inferno_sprayer", current_simulation_time):
@@ -1189,7 +1201,7 @@ func _process(_delta: float) -> void:
 							Sfx.play("explosion")
 							_show_effect_feedback("PRISM BREAK  ·  8-KILL EXPLOSION")
 				_record_enemy_kill(dead_enemy_type, dead_enemy_affix)
-				_record_weapon_kill(str(event.get("source_type", "")))
+				_record_weapon_kill(str(finisher_death.get("source_type", event.get("source_type", ""))))
 				Sfx.play("boss_defeat" if dead_enemy_type in ["mid_boss", "final_boss"] else "enemy_kill")
 				_queue_enemy_death_animation(dead_target, dead_enemy_type, death_position, current_simulation_time)
 				_add_enemy_death_pixels(dead_enemy_type, death_position)
@@ -1239,6 +1251,7 @@ func _process(_delta: float) -> void:
 						current_simulation_time, 14.0)
 				Sfx.play("xp_pickup")
 				_add_xp(float(event["amount"]))
+	_update_overstimulation_finisher_targets(state["entities"], current_simulation_time)
 	_apply_pending_lifesteal(elapsed_active_time)
 	if latest_event_sequence > _last_combat_event_sequence:
 		_last_combat_event_sequence = latest_event_sequence
@@ -4092,6 +4105,109 @@ func _wave_enemy_spawn_interval() -> float:
 func _overstimulation_enabled() -> bool:
 	return not sandbox_diagnostics_enabled and mode_id in ["survival", "endless"]
 
+func _try_overstimulation_finisher_hit(event: Dictionary, entities: Array, simulation_time: float) -> bool:
+	if not _overstimulation_enabled() or bool(event.get("is_damage_over_time", false)) or \
+			str(event.get("target_type", "")) in ["mid_boss", "final_boss"] or \
+			str(event.get("source_type", "")).is_empty():
+		return false
+	var amount := float(event.get("amount", 0.0))
+	var remaining_health := float(event.get("remaining_health", 0.0))
+	if amount <= 0.0:
+		return false
+	var target_id: Dictionary = event.get("target", {})
+	var target_key := _entity_key(int(target_id.get("index", -1)), int(target_id.get("generation", -1)))
+	var was_finisher_target := _overstimulation_finisher_targets.has(target_key)
+	var maximum_health := float(_overstimulation_finisher_targets.get(target_key, 0.0))
+	if maximum_health <= 0.0:
+		for entity in entities:
+			if entity.get("id", {}) == target_id:
+				maximum_health = float(entity.get("components", {}).get("Health", {}).get("maximum", 0.0))
+				break
+	if maximum_health <= 0.0:
+		return false
+	var finisher_threshold := maximum_health * 0.1
+	if not was_finisher_target:
+		if remaining_health <= 0.0:
+			return false
+		if remaining_health <= finisher_threshold:
+			_overstimulation_finisher_targets[target_key] = maximum_health
+			_overstimulation_finisher_markers[target_key] = simulation_time + 1.5
+			queue_redraw()
+			Sfx.play("boss_telegraph")
+		return false
+	if amount < finisher_threshold:
+		return false
+	if remaining_health <= 0.0:
+		_overstimulation_finisher_pending[target_key] = {
+			"impact_damage": amount,
+			"maximum_health": maximum_health,
+			"source_type": str(event.get("source_type", "")),
+		}
+		_overstimulation_finisher_targets.erase(target_key)
+		_overstimulation_finisher_markers.erase(target_key)
+		return true
+	var sequence: int = simulation.apply_finisher_damage(int(target_id["index"]), int(target_id["generation"]), maximum_health)
+	if sequence <= 0:
+		return false
+	_overstimulation_finisher_pending[target_key] = {
+		"impact_damage": amount,
+		"maximum_health": maximum_health,
+		"source_type": str(event.get("source_type", "")),
+	}
+	_overstimulation_finisher_targets.erase(target_key)
+	_overstimulation_finisher_markers.erase(target_key)
+	return true
+
+func _update_overstimulation_finisher_targets(entities: Array, simulation_time: float) -> void:
+	if not _overstimulation_enabled():
+		_overstimulation_finisher_targets.clear()
+		_overstimulation_finisher_markers.clear()
+		return
+	var active_targets: Dictionary = {}
+	for entity in entities:
+		var components: Dictionary = entity.get("components", {})
+		var enemy_type := str(components.get("EnemyType", ""))
+		if components.get("IsProjectile", false) or enemy_type in ["mid_boss", "final_boss"] or \
+				not components.has("Health"):
+			continue
+		var health: Dictionary = components["Health"]
+		var maximum := float(health.get("maximum", 0.0))
+		var current := float(health.get("current", 0.0))
+		var id: Dictionary = entity.get("id", {})
+		var key := _entity_key(int(id.get("index", -1)), int(id.get("generation", -1)))
+		if maximum <= 0.0 or current <= 0.0 or current > maximum * 0.1 or \
+				_overstimulation_finisher_pending.has(key):
+			continue
+		active_targets[key] = maximum
+		if not _overstimulation_finisher_targets.has(key):
+			_overstimulation_finisher_markers[key] = simulation_time + 1.5
+			Sfx.play("boss_telegraph")
+	for key in _overstimulation_finisher_targets.keys():
+		if not active_targets.has(key):
+			_overstimulation_finisher_targets.erase(key)
+	for key in _overstimulation_finisher_markers.keys():
+		if not active_targets.has(key) or simulation_time >= float(_overstimulation_finisher_markers[key]):
+			_overstimulation_finisher_markers.erase(key)
+	for key in active_targets:
+		_overstimulation_finisher_targets[key] = active_targets[key]
+	queue_redraw()
+
+func _resolve_overstimulation_finisher_death(target_key: String, position: Vector2) -> Dictionary:
+	_overstimulation_finisher_targets.erase(target_key)
+	_overstimulation_finisher_markers.erase(target_key)
+	if not _overstimulation_finisher_pending.has(target_key):
+		return {}
+	var finisher: Dictionary = _overstimulation_finisher_pending.get(target_key, {})
+	_overstimulation_finisher_pending.erase(target_key)
+	if _overstimulation_enabled():
+		simulation.damage_enemies_in_radius(position, 48.0, float(finisher["impact_damage"]) * 0.5)
+		Sfx.play("explosion")
+		_start_screen_shake(minf(float(finisher["impact_damage"]) * 0.15, 4.0))
+		if not _visual_effects_reduced():
+			_overstimulation_finisher_bursts.append({"position": position, "remaining": 0.2})
+		queue_redraw()
+	return finisher
+
 func _overstimulation_spawn_rate_multiplier() -> float:
 	return wave_director.spawn_rate_multiplier() if _overstimulation_enabled() and wave_director != null else 1.0
 
@@ -5744,6 +5860,18 @@ func _draw() -> void:
 			draw_arc(center, radius, 0.0, TAU, 48, ring_color, 1.5, true)
 	for entity in _entities:
 		var components: Dictionary = entity["components"]
+		if not components.get("IsProjectile", false):
+			var target_id: Dictionary = entity.get("id", {})
+			var target_key := _entity_key(int(target_id.get("index", -1)), int(target_id.get("generation", -1)))
+			if _overstimulation_finisher_targets.has(target_key) and \
+					_last_simulation_time < float(_overstimulation_finisher_markers.get(target_key, 0.0)):
+				var marker_position := Vector2(float(components["Transform2D"]["x"]),
+						float(components["Transform2D"]["y"])) + Vector2(-17.0, -22.0)
+				draw_arc(marker_position + Vector2(14.0, 1.0), 9.0, 0.0, TAU, 20, Color("#FF4C9A"), 2.0, true)
+				draw_string_outline(DAMAGE_NUMBER_FONT, marker_position, "FINISH", HORIZONTAL_ALIGNMENT_LEFT,
+						-1.0, 8, 2, Color("#09111A"))
+				draw_string(DAMAGE_NUMBER_FONT, marker_position, "FINISH", HORIZONTAL_ALIGNMENT_LEFT,
+						-1.0, 8, Color("#FF77B5"))
 		if components.get("IsProjectile", false) and ["frost_nova", "absolute_zero"].has(str(components.get("EnemyType", ""))):
 			var projectile: Dictionary = components.get("Projectile", {})
 			var transform: Dictionary = components["Transform2D"]
@@ -5783,6 +5911,11 @@ func _draw() -> void:
 		for burst in _pandemic_bursts:
 			var fade := clampf(float(burst["remaining"]) / maxf(pandemic_feedback_seconds, 0.01), 0.0, 1.0)
 			draw_circle(burst["position"], pandemic_spread_radius * (1.0 - fade * 0.35), Color(0.35, 1.0, 0.4, 0.18 * fade))
+		for burst in _overstimulation_finisher_bursts:
+			var fade := clampf(float(burst["remaining"]) / 0.2, 0.0, 1.0)
+			draw_circle(burst["position"], 48.0 * (1.0 - fade * 0.3), Color(1.0, 0.2, 0.65, 0.16 * fade))
+			draw_arc(burst["position"], 48.0 * (1.0 - fade * 0.3), 0.0, TAU, 32,
+				Color(1.0, 0.44, 0.78, 0.8 * fade), 2.0, true)
 	for chest in _world_chests:
 		if CHEST_TEXTURE != null:
 			draw_texture_rect(CHEST_TEXTURE, Rect2(chest["position"] - Vector2.ONE * CHEST_SPRITE_SIZE * 0.5,
@@ -5948,6 +6081,7 @@ func _on_settings_changed() -> void:
 		_weapon_transient_animations.clear()
 		_lightning_arcs.clear()
 		_pandemic_bursts.clear()
+		_overstimulation_finisher_bursts.clear()
 	queue_redraw()
 
 func _start_screen_shake(damage_amount: float) -> void:

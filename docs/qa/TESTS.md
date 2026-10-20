@@ -1,7 +1,14 @@
+## Overstimulation — tranche 16/18
+
+- [x] `survival_finisher_smoke.gd` passe sous Godot 4.7.2 avec la GDExtension : seuil de 10 % PV, marker bref, DoT/faibles impacts/boss/Armorless exclus, événement de mort natif, kill/XP uniques et burst de rayon 48 px aux dégâts testés.
+- [x] `simulation_worker_tests` passe après ajout de `CombatSimulation.apply_finisher_damage`; le test confirme une cible mono-ID et les événements Damage/Death ordinaires, étiquetés `overstimulation_finisher`. Le même binaire passe sous AddressSanitizer.
+- [x] Le use-after-scope préexistant dans `damage_enemies_in_radius` est corrigé : la cible optionnelle est conservée par valeur pendant sa lecture. `simulation_worker_tests` passe également sous AddressSanitizer après cette correction.
+- [x] CMake 4.4.4 compile `dopamine` sous Godot 4.7.2 / `godot-cpp` épinglé dans `/tmp/dopamine-overstimulation-16`; `survival_damage_causality_smoke.gd` passe avec cette extension.
+
 ## Overstimulation — tranche 15/18
 
 - [x] `survival_boss_combo_smoke.gd` passe sous Godot 4.7.2 : déclenchement au troisième pattern principal des vagues 12/24, sélection parmi les patterns connus, exclusion du pattern principal précédent, attente de 0,6 s avant le télégraphe complet de la seconde étape, et remplacement du follow-up Chaos.
-- [i] `survival_boss_attack_smoke.gd` et l’intégration avec la simulation native ne peuvent pas être exécutées jusqu’aux assertions dans cet environnement : `game/bin/linux/libdopamine.linux.template_debug.x86_64.so` est absente et `CombatSimulation` ne s’instancie pas. À relancer après compilation de la GDExtension.
+- [x] `survival_boss_attack_smoke.gd` passe maintenant avec la GDExtension compilée; les séquences standard et Chaos sont validées contre les patterns de boss complets.
 
 ## Overstimulation — tranche 14/18
 

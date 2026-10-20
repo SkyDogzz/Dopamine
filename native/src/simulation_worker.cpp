@@ -397,6 +397,21 @@ void SimulationWorker::apply(const SimulationCommand &command,
 				log(std::string("area damage rejected: ") + error.what());
 			}
 			break;
+		case CommandType::ApplyFinisherDamage:
+			if (pending_events_.size() + 2 > max_pending_events_) {
+				log("finisher damage delayed: acknowledge pending events first");
+				break;
+			}
+			try {
+				std::vector<CombatEvent> events;
+				simulation_.apply_direct_damage({}, command.entity, command.projectile_damage, events);
+				for (CombatEvent &event : events) event.source_type = "overstimulation_finisher";
+				append_events(std::move(events));
+				log("finisher damage resolved");
+			} catch (const std::exception &error) {
+				log(std::string("finisher damage rejected: ") + error.what());
+			}
+			break;
 		case CommandType::DashEntity:
 			try {
 				if (simulation_.dash_entity(command.entity, command.velocity_x, command.velocity_y,

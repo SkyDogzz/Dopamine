@@ -380,12 +380,13 @@ std::size_t SimulationCore::damage_enemies_in_radius(float x, float y, float rad
 	std::vector<EntityId> to_despawn;
 	std::size_t volatile_targets_remaining = 0;
 	for (const EntityId target : targets) {
-		const Entity &candidate = *entity(target);
-		if (candidate.health.current <= 0.0F || candidate.type.id == "mid_boss" || candidate.type.id == "final_boss") {
+		const std::optional<Entity> candidate = entity(target);
+		if (!candidate || candidate->health.current <= 0.0F || candidate->type.id == "mid_boss" ||
+				candidate->type.id == "final_boss") {
 			continue;
 		}
-		const float dx = candidate.transform.x - x;
-		const float dy = candidate.transform.y - y;
+		const float dx = candidate->transform.x - x;
+		const float dy = candidate->transform.y - y;
 		if (dx * dx + dy * dy > radius_squared) {
 			continue;
 		}

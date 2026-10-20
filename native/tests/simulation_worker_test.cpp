@@ -84,6 +84,33 @@ int main() {
 	}
 	submit_and_wait(worker, clear_area_target);
 
+	SimulationCommand finisher_target;
+	finisher_target.type = CommandType::Spawn;
+	finisher_target.entity_type = "chaser";
+	finisher_target.x = 2000.0F;
+	finisher_target.hp = 5.0F;
+	submit_and_wait(worker, finisher_target);
+	Entity target_id;
+	const auto before_finisher = worker.snapshot();
+	for (const Entity &entity : before_finisher->entities) {
+		if (entity.transform.x == 2000.0F) target_id = entity;
+	}
+	SimulationCommand finisher_damage;
+	finisher_damage.type = CommandType::ApplyFinisherDamage;
+	finisher_damage.entity = target_id.id;
+	finisher_damage.projectile_damage = 5.0F;
+	submit_and_wait(worker, finisher_damage);
+	const auto after_finisher = worker.snapshot();
+	require(after_finisher->events.size() == 2 &&
+			after_finisher->events.back().type == dopamine::sim::CombatEventType::Death &&
+			after_finisher->events.front().target == target_id.id &&
+			after_finisher->events.back().source_type == "overstimulation_finisher",
+			"single-target direct damage command should preserve the target's normal death event");
+	SimulationCommand acknowledge_finisher;
+	acknowledge_finisher.type = CommandType::AcknowledgeEvents;
+	acknowledge_finisher.event_sequence = after_finisher->events.back().sequence;
+	submit_and_wait(worker, acknowledge_finisher);
+
 	SimulationCommand set_speed;
 	set_speed.type = CommandType::SetSpeed;
 	set_speed.speed_multiplier = 2.0;

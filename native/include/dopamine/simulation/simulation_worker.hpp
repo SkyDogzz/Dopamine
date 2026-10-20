@@ -40,6 +40,7 @@ enum class CommandType {
 	AcknowledgeEvents,
 	Reset,
 	CaptureState,
+	ApplyFinisherDamage,
 };
 
 struct SimulationWorkerState;

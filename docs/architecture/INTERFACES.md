@@ -65,12 +65,15 @@ Les commandes GDExtension exposées sont :
 | Entités | `spawn`, `spawn_enemy`, `despawn`, `kill_all` | type/profil, nombre, position, PV/vitesse/menace; despawn prend l’ID index+génération |
 | Projectiles | `spawn_projectile`, `spawn_status_projectile` | type, position/vitesse, dégâts, rayon, durée; options DoT, explosion, ricochet, attraction, Chill, orbite, chaîne, critique, `homing_turn_rate` et `homing_radius` |
 | XP | `spawn_xp_orb`, `attract_xp_orbs`, `stop_xp_orb_attraction`, `collect_xp_orb` | position/valeur; cible/rayon/accélération/vitesse max/delta; collecte par ID index+génération |
+| Impact ciblé | `apply_finisher_damage` | cible index+génération et dégâts; émet les événements ordinaires Damage/Death avec le type de source `overstimulation_finisher` |
 | Statuts | `apply_damage_over_time`, `tick_damage_over_time` | cible index+génération, type de statut, dégâts et horloges pour l’application |
 | Contrôle | `pause`, `resume`, `step`, `set_speed`, `reset` | delta de Step; multiplicateur de vitesse |
 | Steering | `set_steering_target`, `dash_entity`, `apply_sandbox_overrides` | position, vitesse, séparation; cible et durée de dash; transaction des quatre paramètres de steering |
 | Événements/état | `acknowledge_events`, `snapshot`, `capture_state`, `restore_state` | séquence d’événement; checkpoint opaque versionné |
 
 Les fonctions de lecture `health_decay_amount`, `kill_heal_amount` et `initial_player_hp` ne soumettent pas de commande. Une commande soumise renvoie sa séquence positive; une entrée invalide, une file pleine ou un worker arrêté renvoie `0`. Les commandes typées rejettent avant l’enqueue les IDs/références invalides, valeurs non finies, durées ou nombres hors bornes; les commandes de spawn au Sandbox ont une limite de 500 entités par appel. `sandbox_smoke.gd` vérifie les cas invalides typés et que leur rejet ne change ni la séquence, ni les métriques, ni le temps, ni les paramètres de steering. Les chemins valides sont couverts par ce smoke et `sandbox_combat_smoke.gd`, `survival_chest_smoke.gd`, `survival_weapon_catalog_smoke.gd` et les tests natifs.
+
+`apply_finisher_damage` est une commande native mono-cible pour le finisher Overstimulation. Elle ne fait pas de recherche de rayon; l’ECS applique les dégâts au seul ID vivant reçu et publie Damage/Death normalement afin que Survival conserve son crédit de kill et d’XP.
 
 `capture_state()` renvoie un checkpoint natif opaque en mémoire `{format_version: 17, native_state: CombatSimulationSnapshot}`; une capture échouée renvoie un dictionnaire vide. `restore_state(checkpoint)` accepte seulement ces deux champs, le format 17 et un objet natif valide. Il arrête le worker, restaure son état complet puis le redémarre. Une version incompatible est refusée avant l’arrêt et ne change donc pas la simulation. Ce contrat GDExtension couvre le worker, pas les horloges/RNG/build de `SurvivalSession` ni une sérialisation persistante du Lab.
 
