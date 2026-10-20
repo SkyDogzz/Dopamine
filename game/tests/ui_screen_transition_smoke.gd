@@ -41,7 +41,35 @@ func _run() -> void:
 		_fail("Reduced visual effects should skip the decorative transition")
 		return
 
-	print("UI screen transition and reduced-effects smoke passed")
+	var panel := Control.new()
+	panel.visible = false
+	root.add_child(panel)
+	settings.set_reduced_visual_effects_enabled(false)
+	transitions.show_panel(panel)
+	if not panel.visible or panel.modulate.a != 0.0:
+		_fail("Panel entrance should begin with a short fade while visual effects are enabled")
+		return
+	await create_timer(0.15).timeout
+	if not is_equal_approx(panel.modulate.a, 1.0):
+		_fail("Panel entrance should finish without delaying its controls")
+		return
+	started_at = Time.get_ticks_msec()
+	await transitions.hide_panel(panel)
+	transition_elapsed = Time.get_ticks_msec() - started_at
+	if panel.visible or transition_elapsed < 60 or transition_elapsed >= 500:
+		_fail("Panel exit should finish its brief fade before hiding")
+		return
+
+	settings.set_reduced_visual_effects_enabled(true)
+	transitions.show_panel(panel)
+	started_at = Time.get_ticks_msec()
+	await transitions.hide_panel(panel)
+	transition_elapsed = Time.get_ticks_msec() - started_at
+	if panel.visible or transition_elapsed >= 100:
+		_fail("Reduced visual effects should make panel entrance and exit instant")
+		return
+
+	print("UI screen and panel transitions, reduced-effects smoke passed")
 	quit()
 
 func _fail(message: String) -> void:

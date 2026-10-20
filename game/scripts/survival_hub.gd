@@ -251,51 +251,58 @@ func _change_to_run_entry(entry: Node) -> void:
 func _open_equipment() -> void:
 	var result: Dictionary = progression_service.load_profile()
 	_equipment_panel.present(result["profile"]) if result.get("ok", false) else _equipment_panel.present_error()
+	UITransitions.show_panel(_equipment_panel)
 
 func _open_skill_tree() -> void:
 	var result: Dictionary = progression_service.load_profile()
 	_skill_tree_panel.present(result["profile"]) if result.get("ok", false) else _skill_tree_panel.present_error()
+	UITransitions.show_panel(_skill_tree_panel)
 
 func _open_armorless_records() -> void:
 	_records_panel.present(_armorless_records)
+	UITransitions.show_panel(_records_panel)
 
 func _close_armorless_records() -> void:
-	_records_panel.visible = false
 	_records_button.grab_focus()
+	await UITransitions.hide_panel(_records_panel)
 
 func _close_equipment() -> void:
-	_equipment_panel.visible = false
 	_equipment_button.grab_focus()
+	await UITransitions.hide_panel(_equipment_panel)
 
 func _close_skill_tree() -> void:
-	_skill_tree_panel.visible = false
 	_skill_tree_button.grab_focus()
+	await UITransitions.hide_panel(_skill_tree_panel)
 
 func _open_codex() -> void:
 	var result: Dictionary = progression_service.load_profile()
 	if not result.get("ok", false):
 		_codex_panel.present_error()
+		UITransitions.show_panel(_codex_panel)
 		return
 	_codex_panel.present({
 		"seen_enemies": result["profile"].get("codex_seen_enemies", []),
 		"unlocked_weapons": progression_service.unlocked_weapon_ids(),
 		"unlocked_relics": progression_service.unlocked_relic_ids(),
 	})
+	UITransitions.show_panel(_codex_panel)
 
 func _close_codex() -> void:
-	_codex_panel.visible = false
 	_codex_button.grab_focus()
+	await UITransitions.hide_panel(_codex_panel)
 
 func _open_achievements() -> void:
 	var result: Dictionary = progression_service.load_profile()
 	if not result.get("ok", false):
 		_achievements_panel.present_error()
+		UITransitions.show_panel(_achievements_panel)
 		return
 	_achievements_panel.present(progression_service.achievement_catalog(), result["profile"])
+	UITransitions.show_panel(_achievements_panel)
 
 func _close_achievements() -> void:
-	_achievements_panel.visible = false
 	_achievements_button.grab_focus()
+	await UITransitions.hide_panel(_achievements_panel)
 
 func _set_equipment_state(instance_id: String, equipped: bool) -> void:
 	var result: Dictionary = progression_service.set_equipped(instance_id, equipped)

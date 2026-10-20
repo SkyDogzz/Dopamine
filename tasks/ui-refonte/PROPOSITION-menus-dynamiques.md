@@ -36,6 +36,8 @@ Les six écrans et intentions ci-dessous sont approuvés. La transition inter-é
 
 **Vérifications ciblées prévues après approbation :** smokes visuels et fonctionnels existants des panneaux équipement, compétences, Codex et succès; navigation clavier/manette synthétique; layouts compacts.
 
+**État au 2026-10-20 :** les cinq panneaux du hub utilisent une entrée/sortie en fondu de 90 ms, avec affichage instantané lorsque la réduction visuelle est active. Le focus revient au bouton appelant dès la fermeture. Smokes hub, succès, layouts hub (640×360, 1280×720, 1920×1080), transitions et parcours manette passent avec données utilisateur isolées. Les smokes visuels autonomes équipement et arbre de compétences échouent actuellement sur leurs assertions de rendu/cadrage; ils ne sont pas traversés par l’animation du hub. À examiner lors de la revue visuelle transversale.
+
 ### Phase 3 — Options, pause et écran de résultat
 
 **[VALIDÉ]** Faire entrer les panneaux Options et Pause avec un mouvement très court ou une transition pixel; animer sobrement l’apparition du résumé de résultat. Réutiliser le balayage en blocs approuvé, avec une arrivée de panneau courte. La simulation demeure suspendue dans Pause et Options depuis Pause, et arrêtée sur le résultat. Le focus initial, l’annulation et les commandes principales restent accessibles pendant les animations.

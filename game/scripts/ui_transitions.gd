@@ -2,6 +2,7 @@ extends Node
 
 const BLOCK_WIPE_SHADER := preload("res://shaders/ui_block_wipe.gdshader")
 const TRANSITION_DURATION := 0.12
+const PANEL_DURATION := 0.09
 const WIPE_COLOR := Color("#080B18")
 
 var is_transitioning := false
@@ -43,6 +44,31 @@ func change_scene_to_node(scene: Node) -> Error:
 	return await _transition(func() -> Error:
 		return get_tree().change_scene_to_node(scene)
 	)
+
+func show_panel(panel: Control) -> void:
+	if panel == null:
+		return
+	panel.visible = true
+	if Settings.reduced_visual_effects_enabled:
+		panel.modulate.a = 1.0
+		return
+	panel.modulate.a = 0.0
+	_animate_panel_alpha(panel, 1.0)
+
+func hide_panel(panel: Control) -> void:
+	if panel == null or not panel.visible:
+		return
+	if not Settings.reduced_visual_effects_enabled:
+		await _animate_panel_alpha(panel, 0.0)
+	panel.visible = false
+	panel.modulate.a = 1.0
+
+func _animate_panel_alpha(panel: Control, alpha: float) -> void:
+	var tween := panel.create_tween()
+	tween.set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
+	tween.set_ignore_time_scale()
+	tween.tween_property(panel, "modulate:a", alpha, PANEL_DURATION).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+	await tween.finished
 
 func _transition(change_scene: Callable) -> Error:
 	if is_transitioning:
