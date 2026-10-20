@@ -1640,7 +1640,8 @@ func _update_pulse_warden_attacks(current_simulation_time: float, paused: bool) 
 		if not _pulse_warden_attacks.has(key):
 			_pulse_warden_attacks[key] = {"entity_id": id, "phase": phase, "pattern_index": 0,
 				"normal_attack_count": 0, "chaos_followup_pending": false,
-				"chaos_followup_count": 0, "is_chaos_followup": false,
+				"chaos_followup_count": 0, "main_attack_count": 0, "is_chaos_followup": false,
+				"combo_steps": [], "combo_step_index": 0, "combo_pending": false,
 				"stage": "waiting", "next_attack_at": current_simulation_time + pulse_warden_attack_interval_seconds}
 		var attack: Dictionary = _pulse_warden_attacks[key]
 		attack["origin"] = origin
@@ -1650,9 +1651,13 @@ func _update_pulse_warden_attacks(current_simulation_time: float, paused: bool) 
 			attack["phase"] = phase
 			attack["pattern_index"] = 0
 			attack["normal_attack_count"] = 0
+			attack["main_attack_count"] = 0
 			attack["chaos_followup_pending"] = false
 			attack["chaos_followup_count"] = 0
 			attack["is_chaos_followup"] = false
+			attack["combo_steps"] = []
+			attack["combo_step_index"] = 0
+			attack["combo_pending"] = false
 			attack["stage"] = "waiting"
 			attack["next_attack_at"] = current_simulation_time + maxf(0.1, pulse_warden_telegraph_seconds)
 		if str(attack["stage"]) == "charging":
@@ -1671,7 +1676,9 @@ func _update_pulse_warden_attacks(current_simulation_time: float, paused: bool) 
 					pulse_warden_telegraph_seconds)
 		elif current_simulation_time >= float(attack["next_attack_at"]):
 			var pattern_index: int = int(attack["pattern_index"])
-			if _schedule_chaos_attack_pattern(attack, ["radial", "aimed", "charge"]):
+			if _schedule_overstimulation_boss_combo(attack, phase, ["radial", "aimed", "charge"], current_simulation_time):
+				pass
+			elif _schedule_chaos_attack_pattern(attack, ["radial", "aimed", "charge"]):
 				pass
 			elif phase == 1:
 				attack["pattern"] = "radial"
@@ -1702,6 +1709,31 @@ func _schedule_chaos_attack_pattern(attack: Dictionary, patterns: Array) -> bool
 
 func _finish_boss_attack(attack: Dictionary, current_simulation_time: float,
 		attack_interval: float, telegraph_duration: float) -> void:
+	if bool(attack.get("combo_pending", false)):
+		var next_step := int(attack.get("combo_step_index", 0)) + 1
+		attack["combo_step_index"] = next_step
+		var combo_steps: Array = attack.get("combo_steps", [])
+		if next_step < combo_steps.size():
+			attack["is_chaos_followup"] = false
+			attack["pattern"] = str(combo_steps[next_step])
+			attack["aim"] = player.global_position
+			attack["fire_at"] = current_simulation_time + 0.6 + \
+					(pulse_warden_telegraph_seconds if attack.has("entity_id") else final_boss_telegraph_seconds)
+			attack["stage"] = "telegraph"
+			Sfx.play("boss_telegraph")
+			return
+		attack["combo_steps"] = []
+		attack["combo_step_index"] = 0
+		attack["combo_pending"] = false
+		attack["is_chaos_followup"] = false
+		attack["last_attack_pattern"] = str(attack.get("pattern", ""))
+		attack["last_normal_pattern"] = str(attack.get("pattern", ""))
+		attack["pattern_index"] = int(attack["pattern_index"]) + 1
+		attack["normal_attack_count"] = int(attack.get("normal_attack_count", 0)) + 1
+		attack["main_attack_count"] = int(attack.get("main_attack_count", 0)) + 1
+		attack["chaos_followup_pending"] = false
+		attack["next_attack_at"] = current_simulation_time + maxf(0.1, attack_interval)
+		return
 	var was_chaos_followup := bool(attack.get("is_chaos_followup", false))
 	attack["stage"] = "waiting"
 	attack["is_chaos_followup"] = false
@@ -1712,10 +1744,38 @@ func _finish_boss_attack(attack: Dictionary, current_simulation_time: float,
 	attack["last_normal_pattern"] = str(attack.get("pattern", ""))
 	attack["pattern_index"] = int(attack["pattern_index"]) + 1
 	attack["normal_attack_count"] = int(attack.get("normal_attack_count", 0)) + 1
+	attack["main_attack_count"] = int(attack.get("main_attack_count", 0)) + 1
 	var should_chain := difficulty_id == "chaos" and int(attack["normal_attack_count"]) % 2 == 0
 	attack["chaos_followup_pending"] = should_chain
 	var delay := telegraph_duration if should_chain else attack_interval
 	attack["next_attack_at"] = current_simulation_time + maxf(0.1, delay)
+
+func _schedule_overstimulation_boss_combo(attack: Dictionary, phase: int,
+		patterns: Array, current_simulation_time: float) -> bool:
+	if not _overstimulation_enabled() or wave_director == null or wave_director.wave not in [12, 24]:
+		return false
+	var completed_attacks := int(attack.get("main_attack_count", attack.get("normal_attack_count", 0)))
+	if completed_attacks <= 0 or completed_attacks % 3 != 2:
+		return false
+	var previous := str(attack.get("last_normal_pattern", attack.get("last_attack_pattern", "")))
+	var choices: Array = [["radial", "charge"], ["charge", "aimed"]] if wave_director.wave == 12 else \
+			[["ray", "zone"], ["spiral", "summon"]]
+	var eligible: Array = []
+	for pair in choices:
+		if pair[0] != previous and patterns.has(pair[0]) and patterns.has(pair[1]):
+			eligible.append(pair)
+	if eligible.is_empty():
+		eligible = choices
+	var choice_index := posmod(phase + int(attack.get("pattern_index", 0)), eligible.size())
+	var selected: Array = eligible[choice_index]
+	attack["combo_steps"] = selected.duplicate()
+	attack["combo_step_index"] = 0
+	attack["combo_pending"] = true
+	attack["chaos_followup_pending"] = false
+	attack["is_chaos_followup"] = false
+	attack["pattern"] = str(selected[0])
+	attack["combo_start_time"] = current_simulation_time
+	return true
 
 func _fire_pulse_warden_attack(attack: Dictionary) -> void:
 	var origin: Vector2 = attack["origin"]
@@ -1739,6 +1799,8 @@ func _fire_pulse_warden_attack(attack: Dictionary) -> void:
 		if sequence > 0:
 			attack["stage"] = "charging"
 			attack["charge_end_at"] = float(attack["fire_at"]) + pulse_warden_charge_seconds
+	elif pattern == "summon":
+		_spawn_boss_summon(origin)
 	else:
 		var aim: Vector2 = attack["aim"]
 		var direction := (aim - origin).normalized()
@@ -1750,7 +1812,7 @@ func _fire_pulse_warden_attack(attack: Dictionary) -> void:
 			var shot_direction := direction.rotated(offset * 0.18)
 			simulation.spawn_projectile("enemy_projectile", origin, shot_direction * pulse_warden_projectile_speed,
 					pulse_warden_projectile_damage, pulse_warden_projectile_radius, pulse_warden_projectile_lifetime)
-	if int(attack["phase"]) >= 2:
+	if int(attack["phase"]) >= 2 and pattern != "summon":
 		_spawn_boss_summon(origin)
 
 func _update_dopamine_core_attacks(current_simulation_time: float, paused: bool) -> void:
@@ -1773,7 +1835,8 @@ func _update_dopamine_core_attacks(current_simulation_time: float, paused: bool)
 		if not _dopamine_core_attacks.has(key):
 			_dopamine_core_attacks[key] = {"phase": phase, "pattern_index": 0,
 				"normal_attack_count": 0, "chaos_followup_pending": false,
-				"chaos_followup_count": 0, "is_chaos_followup": false,
+				"chaos_followup_count": 0, "main_attack_count": 0, "is_chaos_followup": false,
+				"combo_steps": [], "combo_step_index": 0, "combo_pending": false,
 				"stage": "waiting", "next_attack_at": current_simulation_time + final_boss_attack_interval_seconds}
 		var attack: Dictionary = _dopamine_core_attacks[key]
 		attack["origin"] = origin
@@ -1782,9 +1845,13 @@ func _update_dopamine_core_attacks(current_simulation_time: float, paused: bool)
 			attack["phase"] = phase
 			attack["pattern_index"] = 0
 			attack["normal_attack_count"] = 0
+			attack["main_attack_count"] = 0
 			attack["chaos_followup_pending"] = false
 			attack["chaos_followup_count"] = 0
 			attack["is_chaos_followup"] = false
+			attack["combo_steps"] = []
+			attack["combo_step_index"] = 0
+			attack["combo_pending"] = false
 			attack["stage"] = "waiting"
 			attack["next_attack_at"] = current_simulation_time + maxf(0.1, final_boss_telegraph_seconds)
 		if str(attack["stage"]) == "spiral":
@@ -1806,13 +1873,19 @@ func _update_dopamine_core_attacks(current_simulation_time: float, paused: bool)
 			if current_simulation_time < float(attack["fire_at"]):
 				continue
 			_fire_dopamine_core_attack(attack)
-			if str(attack["stage"]) != "spiral":
+			if str(attack["stage"]) != "spiral" and bool(attack.get("combo_pending", false)):
+				attack["combo_pending"] = true
+				_finish_boss_attack(attack, current_simulation_time, final_boss_attack_interval_seconds,
+						final_boss_telegraph_seconds)
+			elif str(attack["stage"]) != "spiral":
 				_finish_boss_attack(attack, current_simulation_time, final_boss_attack_interval_seconds,
 						final_boss_telegraph_seconds)
 		elif current_simulation_time >= float(attack["next_attack_at"]):
 			var pattern_index: int = int(attack["pattern_index"])
 			var pattern := "ray" if pattern_index % 2 == 0 else "zone"
-			if _schedule_chaos_attack_pattern(attack, ["ray", "zone", "spiral", "combined"]):
+			if _schedule_overstimulation_boss_combo(attack, phase, ["ray", "zone", "spiral", "summon"], current_simulation_time):
+				pattern = str(attack["pattern"])
+			elif _schedule_chaos_attack_pattern(attack, ["ray", "zone", "spiral", "combined"]):
 				pattern = str(attack["pattern"])
 			elif phase == 2:
 				pattern = "spiral"
@@ -1896,6 +1969,8 @@ func _fire_dopamine_core_attack(attack: Dictionary) -> void:
 		attack["stage"] = "spiral"
 		attack["spiral_shot_index"] = 0
 		attack["spiral_next_at"] = float(attack["fire_at"])
+		_spawn_boss_summon(origin)
+	elif pattern == "summon":
 		_spawn_boss_summon(origin)
 	if pattern == "ray" and _player_inside_final_boss_ray(origin, aim):
 		_take_enemy_damage(final_boss_ray_damage)
