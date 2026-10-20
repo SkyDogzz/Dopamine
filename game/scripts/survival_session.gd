@@ -99,6 +99,25 @@ const OVERSTIMULATION_COMBO_ATTACK_SPEED_PER_MILESTONE := 5.0
 const OVERSTIMULATION_COMBO_MILESTONES := [3, 6, 10, 15, 25]
 const OVERSTIMULATION_CHAIN_REACTION_RADIUS := 100.0 # [PROPOSÉ] la spec ne fixe pas le rayon.
 const OVERSTIMULATION_CURSED_ITEM_CHANCE := 0.2
+const OVERSTIMULATION_WEAPON_HEAT_PER_ACTIVATION := 12.0
+const OVERSTIMULATION_WEAPON_HEAT_PER_SECOND := 10.0
+const OVERSTIMULATION_WEAPON_OVERDRIVE_THRESHOLD := 100.0
+const OVERSTIMULATION_WEAPON_OVERDRIVE_RESET := 25.0
+const OVERSTIMULATION_WEAPON_OVERDRIVE_SECONDS := 2.0
+const OVERSTIMULATION_WEAPON_OVERDRIVE_CADENCE_MULTIPLIER := 1.35
+const OVERSTIMULATION_WEAPON_NAMES := {
+	"lightning_conductor": "LIGHTNING", "inferno_sprayer": "INFERNO",
+	"crimson_daggers": "DAGGERS", "minigun": "MINIGUN", "toxic_cloud": "TOXIC",
+	"sawblades": "SAWBLADES", "meteor_staff": "METEOR", "prism_laser": "PRISM",
+	"void_orb": "VOID ORB", "frost_nova": "FROST NOVA",
+}
+const OVERSTIMULATION_WEAPON_COLORS := {
+	"lightning_conductor": Color("#37E8F5"), "inferno_sprayer": Color("#FF895E"),
+	"crimson_daggers": Color("#FF7181"), "minigun": Color("#FFD447"),
+	"toxic_cloud": Color("#48E69B"), "sawblades": Color("#D8A7FF"),
+	"meteor_staff": Color("#FFB65D"), "prism_laser": Color("#F6F7FF"),
+	"void_orb": Color("#A58BFF"), "frost_nova": Color("#82D7FF"),
+}
 const OVERSTIMULATION_STYLE_BURST_SECONDS := 6.0
 const OVERSTIMULATION_STYLE_BURST_ATTACK_SPEED_BONUS := 15.0
 const OVERSTIMULATION_STYLE_BURST_AREA_BONUS := 10.0
@@ -466,6 +485,9 @@ var _overstimulation_cursed_enemy_speed_multiplier := 1.0
 var _overstimulation_cursed_contact_damage_multiplier := 1.0
 var _overstimulation_cursed_volatility_multiplier := 1.0
 var _overstimulation_cursed_offering := false
+var _overstimulation_weapon_heat: Dictionary = {}
+var _overstimulation_weapon_overdrive_until: Dictionary = {}
+var _weapon_heat_rows: Dictionary = {}
 var _overstimulation_enemy_speed_multiplier := 1.0
 var _overstimulation_applied_enemy_speed_multiplier := 1.0
 var _overstimulation_attack_speed_bonus := 0.0
@@ -624,6 +646,7 @@ var _codex_sightings_recorded: Dictionary = {}
 @onready var _style_bar: ProgressBar = $HUD/RunPanel/RunInfo/StyleGaugeRow/StyleBar
 @onready var _mutation_label: Label = $HUD/RunPanel/RunInfo/MutationStatus
 @onready var _cursed_item_label: Label = $HUD/RunPanel/RunInfo/CursedItemStatus
+@onready var _weapon_heat_container: VBoxContainer = $HUD/RunPanel/RunInfo/WeaponHeatStatus
 @onready var _difficulty_value: Label = $HUD/MetaPanel/MetaRow/DifficultyValue
 @onready var _boss_panel: PanelContainer = $HUD/BossPanel
 @onready var _boss_value: Label = $HUD/BossPanel/BossInfo/BossValue
@@ -1020,6 +1043,7 @@ func _process(_delta: float) -> void:
 	_record_codex_sightings(state.get("entities", []))
 	var current_simulation_time: float = float(state["simulation_time"])
 	var elapsed_active_time := current_simulation_time - _last_simulation_time
+	_update_overstimulation_weapon_heat(current_simulation_time, elapsed_active_time)
 	_update_screen_shake(elapsed_active_time)
 	for chain_id in _lightning_chain_states.keys():
 		if current_simulation_time > float(_lightning_chain_states[chain_id]["expires_at"]):
@@ -2036,7 +2060,11 @@ func _update_run_panel_status_height() -> void:
 	status_count += int(_style_gauge_row.visible)
 	status_count += int(_mutation_label.visible)
 	status_count += int(_cursed_item_label.visible)
-	_run_panel.offset_bottom = 51.0 + float(status_count) * 15.0
+	var heat_row_count := 0
+	for row_data in _weapon_heat_rows.values():
+		if bool(row_data["row"].visible):
+			heat_row_count += 1
+	_run_panel.offset_bottom = 51.0 + float(status_count) * 15.0 + float(heat_row_count) * 12.0
 
 func _run_stat_breakdown() -> Dictionary:
 	var stat_ids := [
@@ -3059,6 +3087,100 @@ func _record_overstimulation_cursed_kill(enemy_type: String, position: Vector2) 
 		Sfx.play("explosion")
 		_show_effect_feedback("VOLATILE CORE  ·  KILL EXPLOSION")
 
+func _update_overstimulation_weapon_heat(active_time: float, delta_seconds: float) -> void:
+	if not _overstimulation_enabled():
+		_overstimulation_weapon_heat.clear()
+		_overstimulation_weapon_overdrive_until.clear()
+		_update_overstimulation_weapon_heat_hud(active_time)
+		return
+	var cooling := OVERSTIMULATION_WEAPON_HEAT_PER_SECOND * maxf(delta_seconds, 0.0)
+	for weapon_id in _overstimulation_weapon_heat.keys():
+		if active_time >= float(_overstimulation_weapon_overdrive_until.get(weapon_id, 0.0)):
+			_overstimulation_weapon_heat[weapon_id] = maxf(0.0,
+					float(_overstimulation_weapon_heat[weapon_id]) - cooling)
+		_update_overstimulation_weapon_heat_hud(active_time)
+
+func _record_overstimulation_weapon_activation(weapon_id: String, base_cooldown: float,
+		active_time: float) -> void:
+	if not _overstimulation_enabled():
+		return
+	var activation_heat := OVERSTIMULATION_WEAPON_HEAT_PER_ACTIVATION + \
+			maxf(base_cooldown, 0.0) * OVERSTIMULATION_WEAPON_HEAT_PER_SECOND
+	var heat := minf(OVERSTIMULATION_WEAPON_OVERDRIVE_THRESHOLD,
+			float(_overstimulation_weapon_heat.get(weapon_id, 0.0)) + activation_heat)
+	if heat >= OVERSTIMULATION_WEAPON_OVERDRIVE_THRESHOLD:
+		heat = OVERSTIMULATION_WEAPON_OVERDRIVE_RESET
+		_overstimulation_weapon_overdrive_until[weapon_id] = active_time + OVERSTIMULATION_WEAPON_OVERDRIVE_SECONDS
+		Sfx.play("level_up")
+		if simulation != null:
+			_show_effect_feedback("OVERDRIVE  ·  %s  ·  2s" % weapon_id.replace("_", " ").to_upper())
+		queue_redraw()
+	_overstimulation_weapon_heat[weapon_id] = heat
+	_update_overstimulation_weapon_heat_hud(active_time)
+
+func _overstimulation_weapon_overdrive_active(weapon_id: String, active_time: float) -> bool:
+	return _overstimulation_enabled() and \
+			active_time < float(_overstimulation_weapon_overdrive_until.get(weapon_id, 0.0))
+
+func _overstimulation_weapon_cadence_multiplier(weapon_id: String, active_time: float) -> float:
+	return OVERSTIMULATION_WEAPON_OVERDRIVE_CADENCE_MULTIPLIER if \
+			_overstimulation_weapon_overdrive_active(weapon_id, active_time) else 1.0
+
+func _overstimulation_effective_weapon_cooldown(weapon_id: String, base_cooldown: float,
+		active_time: float) -> float:
+	return _effective_weapon_cooldown(base_cooldown) / \
+			_overstimulation_weapon_cadence_multiplier(weapon_id, active_time)
+
+func _update_overstimulation_weapon_heat_hud(active_time: float) -> void:
+	if _weapon_heat_container == null:
+		return
+	if not _overstimulation_enabled():
+		_weapon_heat_container.hide()
+		return
+	var visible_count := 0
+	for weapon_id in OVERSTIMULATION_WEAPON_NAMES:
+		var heat := float(_overstimulation_weapon_heat.get(weapon_id, 0.0))
+		var overdrive := _overstimulation_weapon_overdrive_active(weapon_id, active_time)
+		var row_data: Dictionary = _weapon_heat_rows.get(weapon_id, {})
+		if row_data.is_empty() and (heat > 0.0 or overdrive):
+			var row := HBoxContainer.new()
+			row.name = "%sHeatRow" % weapon_id
+			row.custom_minimum_size.y = 11.0
+			row.add_theme_constant_override("separation", 4)
+			var title := Label.new()
+			title.custom_minimum_size = Vector2(66.0, 11.0)
+			title.add_theme_font_size_override("font_size", 7)
+			title.mouse_filter = Control.MOUSE_FILTER_IGNORE
+			row.add_child(title)
+			var bar := ProgressBar.new()
+			bar.custom_minimum_size = Vector2(82.0, 7.0)
+			bar.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+			bar.show_percentage = false
+			bar.mouse_filter = Control.MOUSE_FILTER_IGNORE
+			var fill := StyleBoxFlat.new()
+			fill.bg_color = OVERSTIMULATION_WEAPON_COLORS[weapon_id]
+			bar.add_theme_stylebox_override("fill", fill)
+			row.add_child(bar)
+			_weapon_heat_container.add_child(row)
+			row_data = {"row": row, "title": title, "bar": bar}
+			_weapon_heat_rows[weapon_id] = row_data
+		if row_data.is_empty():
+			continue
+		var row: HBoxContainer = row_data["row"]
+		var title: Label = row_data["title"]
+		var bar: ProgressBar = row_data["bar"]
+		row.visible = heat > 0.0 or overdrive
+		if not row.visible:
+			continue
+		visible_count += 1
+		bar.max_value = OVERSTIMULATION_WEAPON_OVERDRIVE_THRESHOLD
+		bar.value = heat
+		var overdrive_seconds := maxf(0.0, float(_overstimulation_weapon_overdrive_until.get(weapon_id, 0.0)) - active_time)
+		title.text = "%s  %02.0f%%%s" % [OVERSTIMULATION_WEAPON_NAMES[weapon_id], heat,
+				"  OD %.1fs" % overdrive_seconds if overdrive else ""]
+		title.add_theme_color_override("font_color", Color("#FFFFFF") if overdrive else OVERSTIMULATION_WEAPON_COLORS[weapon_id])
+	_weapon_heat_container.visible = visible_count > 0
+
 func _apply_overstimulation_enemy_speed_multiplier() -> void:
 	var anomaly_multiplier := _overstimulation_enemy_speed_multiplier
 	var mutation_multiplier := _overstimulation_mutation_enemy_speed_multiplier
@@ -3896,7 +4018,8 @@ func _fire_lightning_conductor(active_time: float, paused: bool) -> void:
 	_queue_weapon_fire_visual("lightning_conductor", active_time)
 	_try_unique_lightning_burst(lightning_damage * damage_multiplier)
 	_try_evolution_shockwave(lightning_damage * damage_multiplier)
-	_next_weapon_time = active_time + _effective_weapon_cooldown(cooldown)
+	_record_overstimulation_weapon_activation("lightning_conductor", cooldown, active_time)
+	_next_weapon_time = active_time + _overstimulation_effective_weapon_cooldown("lightning_conductor", cooldown, active_time)
 
 func _try_thermal_shock(event: Dictionary, entities: Array, active_time: float) -> int:
 	if bool(event.get("is_damage_over_time", false)) or float(event.get("amount", 0.0)) <= 0.0:
@@ -4286,7 +4409,9 @@ func _fire_infinite_circuit(active_time: float, target_budget: int, damage_multi
 		Sfx.play_weapon_fire("lightning_conductor", "weapon_zap")
 		_queue_weapon_fire_visual("lightning_conductor", active_time)
 		_try_unique_lightning_burst(lightning_damage * damage_multiplier)
-		_next_weapon_time = active_time + _effective_weapon_cooldown(cooldown)
+		_record_overstimulation_weapon_activation("lightning_conductor", cooldown, active_time)
+		_next_weapon_time = active_time + _overstimulation_effective_weapon_cooldown(
+				"lightning_conductor", cooldown, active_time)
 
 func _nearest_lightning_targets(origin: Vector2, excluded_ids: Array[Vector2i], limit: int,
 		max_range: float = -1.0, entities: Variant = null) -> Array[Dictionary]:
@@ -4363,7 +4488,9 @@ func _fire_inferno_sprayer(active_time: float, paused: bool) -> void:
 		_queue_weapon_fire_visual("inferno_sprayer", active_time)
 		_try_unique_lightning_burst(damage)
 		_try_evolution_shockwave(damage)
-		_next_inferno_time = active_time + _effective_weapon_cooldown(inferno_cooldown)
+		_record_overstimulation_weapon_activation("inferno_sprayer", inferno_cooldown, active_time)
+		_next_inferno_time = active_time + _overstimulation_effective_weapon_cooldown(
+				"inferno_sprayer", inferno_cooldown, active_time)
 
 func _fire_crimson_daggers(active_time: float, paused: bool) -> void:
 	if not weapon_enabled or loadout.weapon_level("crimson_daggers") == 0 or paused or _chest_open or run_over or daggers_cooldown <= 0.0 or active_time < _next_daggers_time:
@@ -4410,7 +4537,9 @@ func _fire_crimson_daggers(active_time: float, paused: bool) -> void:
 		_queue_weapon_fire_visual("crimson_daggers", active_time)
 		_try_unique_lightning_burst(damage)
 		_try_evolution_shockwave(damage)
-		_next_daggers_time = active_time + _effective_weapon_cooldown(daggers_cooldown)
+		_record_overstimulation_weapon_activation("crimson_daggers", daggers_cooldown, active_time)
+		_next_daggers_time = active_time + _overstimulation_effective_weapon_cooldown(
+				"crimson_daggers", daggers_cooldown, active_time)
 
 func _fire_minigun(active_time: float, paused: bool) -> void:
 	if not weapon_enabled or loadout.weapon_level("minigun") == 0 or paused or _chest_open or run_over or minigun_cooldown <= 0.0:
@@ -4451,7 +4580,10 @@ func _fire_minigun(active_time: float, paused: bool) -> void:
 	if loadout.is_evolved("minigun"):
 		var ramp := clampf((active_time - _redline_fire_time) / maxf(redline_ramp_seconds, 0.01), 0.0, 1.0)
 		cadence_multiplier *= 1.0 + redline_max_cadence_bonus * ramp
-	_next_minigun_time = active_time + _effective_weapon_cooldown(minigun_cooldown) / cadence_multiplier
+	var heat_cooldown := minigun_cooldown / cadence_multiplier
+	_record_overstimulation_weapon_activation("minigun", heat_cooldown, active_time)
+	_next_minigun_time = active_time + _overstimulation_effective_weapon_cooldown(
+			"minigun", minigun_cooldown, active_time) / cadence_multiplier
 
 func _fire_toxic_cloud(active_time: float, paused: bool) -> void:
 	if not weapon_enabled or loadout.weapon_level("toxic_cloud") == 0 or paused or _chest_open or run_over or toxic_cooldown <= 0.0 or active_time < _next_toxic_time:
@@ -4481,7 +4613,9 @@ func _fire_toxic_cloud(active_time: float, paused: bool) -> void:
 	if sequence > 0:
 		Sfx.play_weapon_fire("toxic_cloud", "weapon_zap")
 		_queue_weapon_fire_visual("toxic_cloud", active_time)
-		_next_toxic_time = active_time + _effective_weapon_cooldown(toxic_cooldown)
+		_record_overstimulation_weapon_activation("toxic_cloud", toxic_cooldown, active_time)
+		_next_toxic_time = active_time + _overstimulation_effective_weapon_cooldown(
+				"toxic_cloud", toxic_cooldown, active_time)
 
 func _fire_sawblades(active_time: float, paused: bool) -> void:
 	if not weapon_enabled or loadout.weapon_level("sawblades") == 0 or paused or _chest_open or run_over or sawblades_cooldown <= 0.0 or active_time < _next_sawblades_time:
@@ -4509,7 +4643,9 @@ func _fire_sawblades(active_time: float, paused: bool) -> void:
 	if sequence > 0:
 		Sfx.play_weapon_fire("sawblades", "weapon_sweep")
 		_queue_weapon_fire_visual("sawblades", active_time)
-		_next_sawblades_time = active_time + _effective_weapon_cooldown(sawblades_cooldown)
+		_record_overstimulation_weapon_activation("sawblades", sawblades_cooldown, active_time)
+		_next_sawblades_time = active_time + _overstimulation_effective_weapon_cooldown(
+				"sawblades", sawblades_cooldown, active_time)
 
 func _fire_meteor_staff(active_time: float, paused: bool) -> void:
 	if not weapon_enabled or loadout.weapon_level("meteor_staff") == 0 or paused or _chest_open or run_over or meteor_staff_cooldown <= 0.0 or active_time < _next_meteor_time:
@@ -4539,7 +4675,10 @@ func _fire_meteor_staff(active_time: float, paused: bool) -> void:
 		Sfx.play_weapon_fire("meteor_staff", "weapon_shot")
 		_queue_weapon_fire_visual("meteor_staff", active_time)
 		var cooldown_multiplier := _weapon_level_multiplier("meteor_staff", "cooldown_multiplier", level)
-		_next_meteor_time = active_time + _effective_weapon_cooldown(meteor_staff_cooldown * cooldown_multiplier)
+		var weapon_cooldown := meteor_staff_cooldown * cooldown_multiplier
+		_record_overstimulation_weapon_activation("meteor_staff", weapon_cooldown, active_time)
+		_next_meteor_time = active_time + _overstimulation_effective_weapon_cooldown(
+				"meteor_staff", weapon_cooldown, active_time)
 
 func _fire_prism_laser(active_time: float, paused: bool) -> void:
 	_prism_beams.clear()
@@ -4598,7 +4737,9 @@ func _fire_prism_laser(active_time: float, paused: bool) -> void:
 	if fired:
 		Sfx.play_weapon_fire("prism_laser", "weapon_zap")
 		_queue_weapon_fire_visual("prism_laser", active_time)
-		_next_prism_time = active_time + _effective_weapon_cooldown(prism_laser_cooldown)
+		_record_overstimulation_weapon_activation("prism_laser", prism_laser_cooldown, active_time)
+		_next_prism_time = active_time + _overstimulation_effective_weapon_cooldown(
+				"prism_laser", prism_laser_cooldown, active_time)
 
 func _fire_void_orb(active_time: float, paused: bool) -> void:
 	if not weapon_enabled or loadout.weapon_level("void_orb") == 0 or paused or _chest_open or run_over or void_orb_cooldown <= 0.0 or active_time < _next_void_orb_time:
@@ -4626,7 +4767,9 @@ func _fire_void_orb(active_time: float, paused: bool) -> void:
 	if sequence > 0:
 		Sfx.play_weapon_fire("void_orb", "weapon_zap")
 		_queue_weapon_fire_visual("void_orb", active_time)
-		_next_void_orb_time = active_time + _effective_weapon_cooldown(void_orb_cooldown)
+		_record_overstimulation_weapon_activation("void_orb", void_orb_cooldown, active_time)
+		_next_void_orb_time = active_time + _overstimulation_effective_weapon_cooldown(
+				"void_orb", void_orb_cooldown, active_time)
 
 func _fire_frost_nova(active_time: float, paused: bool) -> void:
 	var level: int = loadout.weapon_level("frost_nova")
@@ -4656,7 +4799,11 @@ func _fire_frost_nova(active_time: float, paused: bool) -> void:
 			true, duration, frost_chill_speed_multiplier, vulnerability) > 0:
 		Sfx.play_weapon_fire("frost_nova", "weapon_zap")
 		_queue_weapon_fire_visual("frost_nova", active_time)
-		_next_frost_nova_time = active_time + _effective_weapon_cooldown(frost_nova_cooldown * _weapon_level_multiplier("frost_nova", "cooldown_multiplier", level))
+		var weapon_cooldown := frost_nova_cooldown * _weapon_level_multiplier(
+				"frost_nova", "cooldown_multiplier", level)
+		_record_overstimulation_weapon_activation("frost_nova", weapon_cooldown, active_time)
+		_next_frost_nova_time = active_time + _overstimulation_effective_weapon_cooldown(
+				"frost_nova", weapon_cooldown, active_time)
 
 func _nearest_enemy_excluding(origin: Vector2, max_range: float, excluded: Array[Vector2i]) -> Dictionary:
 	var nearest: Dictionary = {}
@@ -5275,6 +5422,15 @@ func _draw() -> void:
 	if _last_simulation_time < _magnet_heart_impulse_expires_at:
 		var impulse_radius := _magnet_heart_effective_pulse_radius()
 		draw_arc(player.global_position, impulse_radius, 0.0, TAU, 64, Color(0.22, 0.9, 1.0, 0.42), 1.5, true)
+	if not reduced_effects and player != null:
+		var ring_index := 0
+		for weapon_id in OVERSTIMULATION_WEAPON_COLORS:
+			if not _overstimulation_weapon_overdrive_active(weapon_id, _last_simulation_time):
+				continue
+			var pulse := 1.0 + sin(_last_simulation_time * 18.0) * 0.1
+			draw_arc(player.global_position, (player_contact_radius + 7.0 + ring_index * 3.0) * pulse,
+					0.0, TAU, 32, OVERSTIMULATION_WEAPON_COLORS[weapon_id], 2.0, true)
+			ring_index += 1
 	if not reduced_effects and _last_simulation_time < _perfect_dodge_flash_expires_at:
 		var flash_alpha := clampf((_perfect_dodge_flash_expires_at - _last_simulation_time) /
 				PERFECT_DODGE_FLASH_SECONDS, 0.0, 1.0)

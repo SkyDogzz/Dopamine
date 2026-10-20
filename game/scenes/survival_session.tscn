@@ -185,6 +185,12 @@ theme_override_font_sizes/font_size = 7
 text = "CURSED ITEM"
 clip_text = true
 
+[node name="WeaponHeatStatus" type="VBoxContainer" parent="HUD/RunPanel/RunInfo"]
+visible = false
+layout_mode = 2
+theme_override_constants/separation = 0
+mouse_filter = 2
+
 [node name="MetaPanel" type="PanelContainer" parent="HUD"]
 anchor_left = 1.0
 anchor_right = 1.0

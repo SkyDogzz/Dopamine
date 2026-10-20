@@ -1,3 +1,8 @@
+## Overstimulation — tranche 13/18
+
+- [x] `survival_weapon_heat_smoke.gd` vérifie la montée calibrée, le seuil 100, le reset à 25, le multiplicateur cadence 1,35 pendant 2 s, le refroidissement de 10/s et l’exclusion Armorless/Sandbox.
+- [i] Vérification ciblée sous Godot 4.7.2; les scénarios natifs de tir attendent la GDExtension absente. L’ajustement thermique des armes lentes est **[PROPOSÉ]** et reste à mesurer en runs.
+
 ## Overstimulation — tranche 12/18
 
 - [x] `survival_cursed_item_smoke.gd` vérifie la chance de 20 % pour élite/boss, l’absence en coffre ordinaire, les quatre effets, l’annonce d’un remplacement et les exclusions Armorless/Sandbox.
