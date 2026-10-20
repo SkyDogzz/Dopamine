@@ -106,9 +106,13 @@ func _run() -> void:
 	await _send_input(_key_event(KEY_ESCAPE))
 	await process_frame
 	await process_frame
-	if session.get_node_or_null("HUD/OptionsPanel") != null or not pause_menu.visible or \
-		root.gui_get_focus_owner() != options_button or not bool(session.simulation.snapshot()["paused"]):
+	if not pause_menu.visible or root.gui_get_focus_owner() != options_button or \
+		not bool(session.simulation.snapshot()["paused"]):
 		_fail("Closing Options should return to Pause, restore focus and keep the run paused")
+		return
+	await create_timer(0.11).timeout
+	if session.get_node_or_null("HUD/OptionsPanel") != null:
+		_fail("Closing Options should remove its panel after the brief exit transition")
 		return
 	options_button.grab_focus()
 	await _send_gamepad_button(JOY_BUTTON_A)
@@ -116,9 +120,13 @@ func _run() -> void:
 	options_panel = session.get_node("HUD/OptionsPanel")
 	await _send_gamepad_button(JOY_BUTTON_B)
 	await process_frame
-	if session.get_node_or_null("HUD/OptionsPanel") != null or not pause_menu.visible or \
-		root.gui_get_focus_owner() != options_button or not bool(session.simulation.snapshot()["paused"]):
+	if not pause_menu.visible or root.gui_get_focus_owner() != options_button or \
+		not bool(session.simulation.snapshot()["paused"]):
 		_fail("Escape in Options should return to Pause without resuming the run")
+		return
+	await create_timer(0.11).timeout
+	if session.get_node_or_null("HUD/OptionsPanel") != null:
+		_fail("Gamepad Options should leave after its brief exit transition")
 		return
 	await create_timer(0.2).timeout
 	state = session.simulation.snapshot()

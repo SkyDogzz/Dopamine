@@ -165,7 +165,6 @@ func _select_difficulty(difficulty_id: String) -> void:
 	var button: Button = _difficulty_buttons[difficulty_id]
 	if button.disabled:
 		return
-	var changed := selected_difficulty != difficulty_id
 	selected_difficulty = difficulty_id
 	button.button_pressed = true
 	for id in _difficulty_buttons:
@@ -178,8 +177,6 @@ func _select_difficulty(difficulty_id: String) -> void:
 		if index < DIFFICULTY_SCRIPT.ORDER.size() - 1 else "CHOISIE: CHAOS  •  DIFFICULTÉ MAXIMALE"
 	_refresh_armorless_record()
 	_refresh_endless_record()
-	if changed:
-		Sfx.play("ui_confirm")
 
 func _refresh_armorless_record() -> void:
 	var record: Dictionary = _armorless_records.get(selected_difficulty, {})

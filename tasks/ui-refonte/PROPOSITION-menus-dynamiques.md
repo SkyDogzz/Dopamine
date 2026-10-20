@@ -44,11 +44,15 @@ Les six écrans et intentions ci-dessous sont approuvés. La transition inter-é
 
 **Vérifications ciblées prévues après approbation :** `ui_settings_smoke.gd`, `pause_panel_visual_smoke.gd`, `survival_pause_smoke.gd`, `survival_pause_inventory_smoke.gd`, `run_result_panel_smoke.gd` et `keyboard_menu_journey_smoke.gd`.
 
+**État au 2026-10-20 :** entrée Options à 90 ms sur l’accueil et en pause; entrée Pause à 90 ms; panneau de résultat fondu à 90 ms après préparation du résumé. Les contrôles et le focus sont disponibles immédiatement. À la fermeture d’Options, le focus revient immédiatement et la simulation reste suspendue pendant la sortie visuelle; l’ouverture Options ne modifie pas l’état de pause. Smokes pause, panneau Pause, résultat, parcours clavier et navigation accueil passés. Le smoke des réglages échoue à son assertion de 640×360 car son test redimensionne `root.size` sans redimensionner le viewport enfant; le smoke d’inventaire en pause a la même limite de test. Aucun changement n’a été fait aux valeurs du résultat ni à la simulation.
+
 ### Phase 4 — Cohérence des retours audio et revue transversale
 
 **[VALIDÉ]** Harmoniser l’usage des sons de focus, confirmation et retour déjà présents, en évitant les répétitions au survol continu. Vérifier l’effet du volume général et préserver la lecture de musique existante. Les nouveaux sons et changements de mix restent hors de cette phase.
 
 **Vérifications ciblées prévues après approbation :** parcours complet accueil → hub → arme → pause/options → résultat, contrôles de réduction des effets visuels, captures comparatives et revue audio si une sortie réelle est disponible. Aucun passage du Sandbox vers les services de progression ne sera ajouté.
+
+**État au 2026-10-20 :** le parcours global utilise les mêmes sons UI existants. `UIFeedback` déclenche le focus, la confirmation d’appui et le retour à l’annulation; les confirmations sont limitées par les familles SFX existantes et le focus est limité à 80 ms. La sélection de difficulté s’appuie sur le son d’appui déjà attaché au bouton, sans double lecture scriptée. Vérification automatisée des assets SFX prévue ci-dessous; mix détaillé et écoute sur sortie physique restent **[OUVERTS]**.
 
 ## Règles communes proposées
 

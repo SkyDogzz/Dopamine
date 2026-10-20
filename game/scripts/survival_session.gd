@@ -694,6 +694,7 @@ var _codex_sightings_recorded: Dictionary = {}
 @onready var _revive_decline_button: Button = $HUD/ReviveConfirmationDialog/Center/Panel/Content/Actions/DeclineButton
 
 var _options_overlay: Control
+var _options_overlay_closing := false
 var _inventory_overlay: Control
 var _run_stat_hub: Control
 var _run_stat_hub_dirty := true
@@ -925,6 +926,7 @@ func _unhandled_input(event: InputEvent) -> void:
 		simulation.pause()
 		Sfx.play("ui_pause")
 		_pause_overlay.show()
+		UITransitions.show_panel(_pause_overlay)
 		_pause_resume_button.grab_focus()
 	else:
 		return
@@ -939,24 +941,26 @@ func _resume_manually_paused_run() -> void:
 	simulation.resume()
 
 func _open_pause_options() -> void:
-	if not _manually_paused or _options_overlay != null:
+	if not _manually_paused or _options_overlay != null or _options_overlay_closing:
 		return
 	var options_scene: PackedScene = load("res://scenes/options_panel.tscn")
 	_options_overlay = options_scene.instantiate() as Control
 	_options_overlay.name = "OptionsPanel"
 	_options_overlay.close_requested.connect(_close_pause_options)
 	$HUD.add_child(_options_overlay)
+	UITransitions.show_panel(_options_overlay)
 
 func _close_pause_options() -> void:
 	if _options_overlay == null:
 		return
-	_options_overlay.queue_free()
-	_options_overlay = null
-	call_deferred("_restore_pause_options_focus")
-
-func _restore_pause_options_focus() -> void:
 	if _manually_paused and is_instance_valid(_pause_options_button):
 		_pause_options_button.grab_focus()
+	var closing_overlay := _options_overlay
+	_options_overlay = null
+	_options_overlay_closing = true
+	await UITransitions.hide_panel(closing_overlay)
+	closing_overlay.queue_free()
+	_options_overlay_closing = false
 
 func _open_run_inventory() -> void:
 	if not _manually_paused or _inventory_overlay != null:
@@ -2995,6 +2999,7 @@ func _finish_run(victory: bool, animate_player_death: bool = false) -> void:
 	_run_result_overlay.visible = true
 	_run_result.show_result(victory, wave_director.wave, run_active_time, kill_count, reward, armorless_record,
 		victory and mode_id == "survival")
+	UITransitions.show_panel(_run_result)
 
 func _play_run_result_music(victory: bool) -> void:
 	var cue := $VictoryCueMusic if victory else $DefeatCueMusic

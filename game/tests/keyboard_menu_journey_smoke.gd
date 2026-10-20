@@ -26,8 +26,12 @@ func _run() -> void:
 		_fail("Input should open launch Options")
 		return
 	await _cancel()
-	if menu.get_node_or_null("OptionsPanel") != null or root.gui_get_focus_owner() != options:
+	if root.gui_get_focus_owner() != options:
 		_fail("Cancel should close launch Options and restore focus")
+		return
+	await create_timer(0.11).timeout
+	if menu.get_node_or_null("OptionsPanel") != null:
+		_fail("Launch Options should leave after its brief exit transition")
 		return
 	await _up()
 	if root.gui_get_focus_owner() != play:
@@ -98,10 +102,14 @@ func _run() -> void:
 		_fail("Input should open Options over Pause")
 		return
 	await _cancel()
-	if _session.get_node_or_null("HUD/OptionsPanel") != null or not pause.visible or \
-			root.gui_get_focus_owner() != options_button or not _session.simulation.snapshot()["paused"] or \
+	if not pause.visible or root.gui_get_focus_owner() != options_button or \
+			not _session.simulation.snapshot()["paused"] or \
 			not is_equal_approx(float(_session.simulation.snapshot()["simulation_time"]), paused_time):
 		_fail("Closing Options should restore Pause without advancing simulation")
+		return
+	await create_timer(0.11).timeout
+	if _session.get_node_or_null("HUD/OptionsPanel") != null:
+		_fail("Pause Options should leave after its brief exit transition")
 		return
 	var inventory_button: Button = pause.get_node("Center/Panel/Content/InventoryButton")
 	await _down()

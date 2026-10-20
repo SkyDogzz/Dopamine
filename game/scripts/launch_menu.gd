@@ -10,6 +10,7 @@ signal play_requested
 @onready var _menu_music: AudioStreamPlayer = $MenuMusic
 
 var _options_panel: Control
+var _options_panel_closing := false
 
 func _ready() -> void:
 	var menu_stream := _menu_music.stream as AudioStreamWAV
@@ -48,19 +49,20 @@ func _on_sandbox_lab_pressed() -> void:
 		push_error("Could not open Sandbox Lab: %s" % error_string(error))
 
 func _on_options_pressed() -> void:
-	if _options_panel != null:
+	if _options_panel != null or _options_panel_closing:
 		return
 	var options_scene: PackedScene = load("res://scenes/options_panel.tscn")
 	_options_panel = options_scene.instantiate() as Control
 	_options_panel.name = "OptionsPanel"
 	_options_panel.close_requested.connect(_on_options_close_requested)
 	add_child(_options_panel)
+	UITransitions.show_panel(_options_panel)
 
 func _on_options_close_requested() -> void:
-	_options_panel.queue_free()
+	var closing_panel := _options_panel
 	_options_panel = null
-	call_deferred("_restore_options_focus")
-
-func _restore_options_focus() -> void:
-	if is_instance_valid(_options_button):
-		_options_button.grab_focus()
+	_options_panel_closing = true
+	_options_button.grab_focus()
+	await UITransitions.hide_panel(closing_panel)
+	closing_panel.queue_free()
+	_options_panel_closing = false

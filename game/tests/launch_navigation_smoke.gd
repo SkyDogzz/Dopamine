@@ -100,11 +100,12 @@ func _run() -> void:
 	cancel_b.pressed = false
 	Input.parse_input_event(cancel_b)
 	await process_frame
-	if launch_menu.get_node_or_null("OptionsPanel") != null:
-		_fail("A gamepad B press should close Options")
-		return
 	if root.gui_get_focus_owner() != options_button:
 		_fail("Closing Options should restore focus to its launch button")
+		return
+	await create_timer(0.11).timeout
+	if launch_menu.get_node_or_null("OptionsPanel") != null:
+		_fail("Options should be removed after its brief exit transition")
 		return
 	var quit_button := launch_menu.get_node("%s/QuitButton" % MENU_PATH) as Button
 	var quit_connections := quit_button.pressed.get_connections()
