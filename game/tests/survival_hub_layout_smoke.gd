@@ -29,6 +29,7 @@ func _run() -> void:
 		var preparation_card := hub.get_node("Content/Main/PreparationCard") as PanelContainer
 		var right := preparation_card.get_global_rect()
 		var launch := (hub.get_node("Content/Main/PreparationCard/Body/LaunchButton") as Control).get_global_rect()
+		var intensity_toggle := (hub.get_node("Content/Main/DifficultyCard/Body/IntensityToggle") as Control).get_global_rect()
 		var records_button := (hub.get_node("Content/Header/RecordsButton") as Control).get_global_rect()
 		var record_status := (hub.get_node("Content/Main/DifficultyCard/Body/ArmorlessRecordStatus") as Control).get_global_rect()
 		var difficulty_style := difficulty_card.get_theme_stylebox("panel") as StyleBoxFlat
@@ -38,7 +39,8 @@ func _run() -> void:
 			_fail("Hub should keep difficulty secondary and highlight the preparation action surface")
 			return
 		if not bounds.encloses(content) or not bounds.encloses(left) or not bounds.encloses(right) or \
-			not bounds.encloses(launch) or not bounds.encloses(records_button) or not left.encloses(record_status) or left.intersects(right):
+			not bounds.encloses(launch) or not bounds.encloses(intensity_toggle) or \
+			not bounds.encloses(records_button) or not left.encloses(record_status) or left.intersects(right):
 			_fail("Hub layout should fit and keep columns separate at %s: left=%s right=%s launch=%s records=%s" % [size, left, right, launch, records_button])
 			return
 		var record_label: Label = hub.get_node("Content/Main/DifficultyCard/Body/ArmorlessRecordStatus")

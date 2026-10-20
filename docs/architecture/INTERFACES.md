@@ -4,6 +4,8 @@ Les exemples ci-dessous sont des **interfaces de conception proposées**, pas un
 
 ## Actions UI Godot
 
+`SurvivalHub` expose un `CheckButton` `IntensityToggle`, séparé du choix de difficulté et désactivé par défaut. `SurvivalEntry.overstimulation_intensity_enabled` transmet cet état à `SurvivalSession` pour Survival/Endless standard; les chemins Armorless et Sandbox ne le transmettent pas et la session l’ignore aussi hors modes standards. Le libellé du hub indique ×1,15 avant le lancement. La session transmet le booléen facultatif `intensity_mode_enabled` à `ProgressionService.award_survival_run` et `award_endless_standard_run`; sa valeur par défaut `false` préserve les appelants existants. Le service applique ×1,15 aux récompenses Essence et Powder de fin de run uniquement pour ces modes; Armorless n’est pas affecté. Aucune donnée d’intensité n’est écrite au profil ni partagée avec le Sandbox.
+
 Les contrôles `Control` utilisent les actions natives `ui_accept`, `ui_cancel`, `ui_up`, `ui_down`, `ui_left` et `ui_right`. Le projet mappe la validation à Entrée, Entrée du pavé numérique, Espace et bouton A; l’annulation à Échap et bouton B. Cette configuration conserve le pilotage clavier/manette via `InputMap`, conformément à l’ADR-011 **[ACCEPTÉ]**. Les contrôles interactifs doivent exposer un focus visible; la vérification d’un mapping ne remplace pas un essai avec une manette physique.
 
 ## Préférences système UI

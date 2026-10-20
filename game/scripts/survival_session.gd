@@ -69,6 +69,11 @@ const WAVE_OBJECTIVE_DURATION_SECONDS := 15.0
 const WAVE_OBJECTIVE_ZONE_RADIUS := 72.0
 const WAVE_OBJECTIVE_ZONE_SECONDS := 8.0
 const OVERSTIMULATION_EVENT_INTERVAL_WAVES := 3
+const OVERSTIMULATION_INTENSITY_EVENT_INTERVAL_WAVES := 2
+const OVERSTIMULATION_INTENSITY_SPAWN_RATE_MULTIPLIER := 1.25
+const OVERSTIMULATION_INTENSITY_DOUBLE_EVENT_CHANCE := 0.4
+const OVERSTIMULATION_INTENSITY_MOBILE_CORE_INTERVAL_SECONDS := 30.0
+const OVERSTIMULATION_INTENSITY_REWARD_MULTIPLIER := 1.15
 const OVERSTIMULATION_EVENT_WARNING_SECONDS := 5.0
 const OVERSTIMULATION_EVENT_DURATION_SECONDS := 15.0
 const OVERSTIMULATION_EVENT_XP_REWARD := 0.15
@@ -429,6 +434,7 @@ const TOXIC_IGNITION_TARGET_COOLDOWN_SECONDS := 1.0
 var simulation: Object
 var progression_service: RefCounted
 var mode_id := "survival"
+var overstimulation_intensity_enabled := false
 var armorless_run_state: RefCounted
 var difficulty_id := "normal"
 var _sprite_renderer: RefCounted
@@ -703,6 +709,8 @@ func _ready() -> void:
 		_settings_service.settings_changed.connect(_on_settings_changed)
 	if sandbox_diagnostics_enabled:
 		_sandbox_rng.seed = sandbox_rng_seed
+	_overstimulation_event_wave = _overstimulation_event_interval()
+	_mobile_xp_core_next_at = _mobile_xp_core_interval()
 	Engine.time_scale = 1.0
 	_weapon_progression = _load_weapon_progression()
 	if not _weapon_progression_valid:
@@ -787,7 +795,7 @@ func _ready() -> void:
 	player_xp_to_next = xp_base_to_next_level
 	wave_director = WAVE_DIRECTOR_SCRIPT.new(mode_id == "armorless", mode_id == "endless")
 	wave_director.wave_duration_seconds = wave_duration_seconds
-	_next_elite_spawn_time = maxf(0.0, elite_spawn_interval_seconds)
+	_next_elite_spawn_time = maxf(0.0, elite_spawn_interval_seconds) / _overstimulation_initial_spawn_multiplier()
 	_publish_player_target()
 	if spawn_initial_enemy and not wave_spawning_enabled:
 		simulation.spawn_enemy("chaser", 1, player.global_position + Vector2(140.0, 0.0), Vector2.ZERO,
@@ -2961,7 +2969,7 @@ func _finish_run(victory: bool, animate_player_death: bool = false) -> void:
 			if progression_service.has_method("award_endless_standard_run"):
 				reward = progression_service.award_endless_standard_run(
 					_run_id, wave_director.wave, kill_count, difficulty_id, _run_achievement_metrics(),
-					_maxed_chest_essence_bonus
+					_maxed_chest_essence_bonus, _overstimulation_intensity_active()
 				)
 	if mode_id == "armorless" and armorless_run_state != null:
 		if progression_service != null and progression_service.can_save_profile() and \
@@ -2979,7 +2987,7 @@ func _finish_run(victory: bool, animate_player_death: bool = false) -> void:
 	elif mode_id != "endless" and progression_service != null and progression_service.can_save_profile():
 		reward = progression_service.award_survival_run(
 			_run_id, wave_director.wave, victory, kill_count, difficulty_id, _run_achievement_metrics(),
-			_maxed_chest_essence_bonus
+			_maxed_chest_essence_bonus, _overstimulation_intensity_active()
 		)
 	if death_animation_player != null and death_animation_player.has_method("is_death_animation_finished"):
 		while not death_animation_player.is_death_animation_finished():
@@ -3012,7 +3020,7 @@ func _continue_as_endless_standard() -> void:
 	wave_director.elapsed_in_wave = 0.0
 	wave_director.state = WAVE_DIRECTOR_SCRIPT.State.WAVE
 	_next_enemy_spawn_time = player_active_time + _wave_enemy_spawn_interval()
-	_next_elite_spawn_time = player_active_time + maxf(0.05, elite_spawn_interval_seconds)
+	_next_elite_spawn_time = player_active_time + maxf(0.05, elite_spawn_interval_seconds) / _overstimulation_initial_spawn_multiplier()
 	_victory_pending = false
 	run_over = false
 	_run_result_overlay.hide()
@@ -3506,6 +3514,7 @@ func _restart_run() -> void:
 	replacement.progression_service = progression_service
 	replacement.difficulty_id = difficulty_id
 	replacement.mode_id = mode_id
+	replacement.overstimulation_intensity_enabled = overstimulation_intensity_enabled
 	get_tree().root.add_child(replacement)
 	get_tree().current_scene = replacement
 	queue_free()
@@ -3910,7 +3919,7 @@ func _update_mobile_xp_core(state: Dictionary, elapsed_active_time: float) -> vo
 		return
 	if not _mobile_core_active and player_active_time >= _mobile_xp_core_next_at:
 		while _mobile_xp_core_next_at <= player_active_time:
-			_mobile_xp_core_next_at += MOBILE_XP_CORE_INTERVAL_SECONDS
+			_mobile_xp_core_next_at += _mobile_xp_core_interval()
 		_start_mobile_xp_core()
 		return
 	if not _mobile_core_active:
@@ -4114,6 +4123,29 @@ func _wave_enemy_spawn_interval() -> float:
 func _overstimulation_enabled() -> bool:
 	return not sandbox_diagnostics_enabled and mode_id in ["survival", "endless"]
 
+func _overstimulation_intensity_active() -> bool:
+	return overstimulation_intensity_enabled and _overstimulation_enabled()
+
+func _overstimulation_initial_spawn_multiplier() -> float:
+	return OVERSTIMULATION_INTENSITY_SPAWN_RATE_MULTIPLIER if _overstimulation_intensity_active() else 1.0
+
+func _overstimulation_event_interval() -> int:
+	return OVERSTIMULATION_INTENSITY_EVENT_INTERVAL_WAVES if _overstimulation_intensity_active() else \
+		OVERSTIMULATION_EVENT_INTERVAL_WAVES
+
+func _mobile_xp_core_interval() -> float:
+	return OVERSTIMULATION_INTENSITY_MOBILE_CORE_INTERVAL_SECONDS if _overstimulation_intensity_active() else \
+		MOBILE_XP_CORE_INTERVAL_SECONDS
+
+func _overstimulation_event_eligible(wave: int) -> bool:
+	return wave >= _overstimulation_event_wave and wave % 12 != 0
+
+func _next_overstimulation_event_wave(current_wave: int) -> int:
+	var next_wave := current_wave + _overstimulation_event_interval()
+	while next_wave % 12 == 0:
+		next_wave += _overstimulation_event_interval()
+	return next_wave
+
 func _try_overstimulation_finisher_hit(event: Dictionary, entities: Array, simulation_time: float) -> bool:
 	if not _overstimulation_enabled() or bool(event.get("is_damage_over_time", false)) or \
 			str(event.get("target_type", "")) in ["mid_boss", "final_boss"] or \
@@ -4253,7 +4285,10 @@ func _overstimulation_boss_chain_death(event: Dictionary, enemy_type: String, po
 	queue_redraw()
 
 func _overstimulation_spawn_rate_multiplier() -> float:
-	return wave_director.spawn_rate_multiplier() if _overstimulation_enabled() and wave_director != null else 1.0
+	var multiplier: float = wave_director.spawn_rate_multiplier() if _overstimulation_enabled() and wave_director != null else 1.0
+	if _overstimulation_intensity_active():
+		multiplier *= OVERSTIMULATION_INTENSITY_SPAWN_RATE_MULTIPLIER
+	return multiplier
 
 func _match_wave_phase_feedback(phase_name: String) -> void:
 	if phase_name == "RISING":
@@ -5380,8 +5415,8 @@ func _update_overstimulation_event(delta_seconds: float) -> void:
 		return
 	_apply_overstimulation_enemy_speed_multiplier()
 	if _overstimulation_event_anomaly.is_empty() and not _overstimulation_event_warning and \
-			wave_director.state == WAVE_DIRECTOR_SCRIPT.State.WAVE and wave_director.wave >= _overstimulation_event_wave and \
-			wave_director.wave % 12 != 0:
+			wave_director.state == WAVE_DIRECTOR_SCRIPT.State.WAVE and \
+			_overstimulation_event_eligible(wave_director.wave):
 		_overstimulation_event_warning = true
 		_overstimulation_event_elapsed = 0.0
 		_wave_objective_panel.show()
@@ -5438,7 +5473,7 @@ func _finish_overstimulation_event() -> void:
 		_add_xp(player_xp_to_next * OVERSTIMULATION_EVENT_XP_REWARD)
 		_show_effect_feedback("ANOMALY SURVIVED  ·  +15% XP")
 		Sfx.play("chest_reward")
-	_overstimulation_event_wave += OVERSTIMULATION_EVENT_INTERVAL_WAVES
+	_overstimulation_event_wave = _next_overstimulation_event_wave(_overstimulation_event_wave)
 	queue_redraw()
 
 func _overstimulation_event_title() -> String:
@@ -5460,7 +5495,9 @@ func _draw_overstimulation_event_anomalies() -> Array[String]:
 	for previous_anomaly in _overstimulation_last_anomalies:
 		eligible.erase(previous_anomaly)
 	var selected: Array[String] = [eligible[_overstimulation_rng.randi_range(0, eligible.size() - 1)]]
-	if _overstimulation_rng.randf() < 0.2:
+	var double_anomaly_chance := OVERSTIMULATION_INTENSITY_DOUBLE_EVENT_CHANCE if \
+			_overstimulation_intensity_active() else 0.2
+	if _overstimulation_rng.randf() < double_anomaly_chance:
 		var compatible: Array[String] = []
 		for candidate in eligible:
 			if candidate == selected[0]:

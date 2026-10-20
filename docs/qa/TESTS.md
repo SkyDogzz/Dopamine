@@ -1,3 +1,10 @@
+## Overstimulation — tranche 18/18
+
+- [x] `survival_intensity_mode_smoke.gd` passe sous Godot 4.7.2 avec GDExtension : option off par défaut, visibilité du ×1,15, lancement Survival réel, cadence +25 %, événements aux deux vagues, noyau XP à 30 s, double anomalie mesurée à 40 % contre 20 % standard, Armorless/Sandbox exclus et Endless standard inclus.
+- [x] Récompenses vérifiées : Normal Survival vague 24 reste à 88 Essence/122 Basic Powder sans option et donne 109/140 avec option et +7 Essence bonus; Endless standard vague 25 donne 75/109 avec option. L’argument des API de progression reste facultatif et désactivé par défaut.
+- [x] `survival_hub_layout_smoke.gd` couvre le toggle à 640×360, 1280×720 et 1920×1080. `survival_wave_event_smoke.gd` confirme le taux normal de double événement inchangé.
+- [i] `survival_hub_smoke.gd` s’arrête avant ses assertions de cette tranche sur son clic synthétique Achievements (panneau non ouvert); le lancement réel est couvert par le smoke dédié. Les avertissements ObjectDB/ressources à la fermeture du smoke dédié restent présents.
+
 ## Overstimulation — tranche 17/18
 
 - [x] `simulation_core_tests` vérifie 20 % des PV maximum, le recul radial, les sources `boss_chain_0`, le dégât causal conservé sur une mort, et l’exclusion boss/projectile.

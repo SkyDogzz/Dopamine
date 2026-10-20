@@ -121,6 +121,15 @@ text = "SELECTED: EASY"
 autowrap_mode = 2
 vertical_alignment = 1
 
+[node name="IntensityToggle" type="CheckButton" parent="Content/Main/DifficultyCard/Body"]
+custom_minimum_size = Vector2(0, 23)
+layout_mode = 2
+focus_mode = 2
+theme_override_font_sizes/font_size = 8
+text = "ENCORE PLUS INTENSE  ·  ×1.15"
+tooltip_text = "Survival/Endless standard : apparitions +25 %, événements toutes les 2 vagues non-boss, chance d’anomalies doubles 40 %, noyau XP toutes les 30 s; récompenses de fin Essence et Powder ×1,15. Sans effet en Armorless/Sandbox."
+button_pressed = false
+
 [node name="ArmorlessRecordStatus" type="Label" parent="Content/Main/DifficultyCard/Body"]
 custom_minimum_size = Vector2(0, 18)
 layout_mode = 2

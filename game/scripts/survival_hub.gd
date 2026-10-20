@@ -16,6 +16,7 @@ const ACHIEVEMENTS_PANEL_SCENE := preload("res://scenes/achievements_panel.tscn"
 @onready var _endless_record_status: Label = $Content/Main/DifficultyCard/Body/EndlessRecordStatus
 @onready var _profile_status: Label = $Content/Header/ProfileStatus
 @onready var _launch_button: Button = $Content/Main/PreparationCard/Body/LaunchButton
+@onready var _intensity_toggle: CheckButton = $Content/Main/DifficultyCard/Body/IntensityToggle
 @onready var _armorless_launch_button: Button = $Content/Main/PreparationCard/Body/ModeButtons/ArmorlessLaunchButton
 @onready var _endless_launch_button: Button = $Content/Main/PreparationCard/Body/ModeButtons/EndlessLaunchButton
 @onready var _temporary_launch_button: Button = $Content/Main/PreparationCard/Body/TemporaryLaunchButton
@@ -204,6 +205,7 @@ func _launch_run() -> void:
 	var entry: Node = SURVIVAL_ENTRY_SCENE.instantiate()
 	entry.progression_service = progression_service
 	entry.difficulty_id = selected_difficulty
+	entry.overstimulation_intensity_enabled = _intensity_toggle.button_pressed
 	get_tree().root.add_child(entry)
 	get_tree().current_scene = entry
 	queue_free()
@@ -226,6 +228,7 @@ func _launch_endless_run() -> void:
 	entry.progression_service = progression_service
 	entry.difficulty_id = selected_difficulty
 	entry.mode_id = "endless"
+	entry.overstimulation_intensity_enabled = _intensity_toggle.button_pressed
 	get_tree().root.add_child(entry)
 	get_tree().current_scene = entry
 	queue_free()

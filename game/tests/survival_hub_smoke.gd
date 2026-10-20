@@ -54,6 +54,7 @@ func _run() -> void:
 		_fail("A new profile should select Easy and keep later difficulties visibly locked")
 		return
 	var launch_button: Button = hub.get_node("Content/Main/PreparationCard/Body/LaunchButton")
+	var intensity_toggle: CheckButton = hub.get_node("Content/Main/DifficultyCard/Body/IntensityToggle")
 	var temporary_launch_button: Button = hub.get_node("Content/Main/PreparationCard/Body/TemporaryLaunchButton")
 	var endless_launch_button: Button = hub.get_node("Content/Main/PreparationCard/Body/ModeButtons/EndlessLaunchButton")
 	if not endless_launch_button.disabled:
@@ -61,6 +62,9 @@ func _run() -> void:
 		return
 	if launch_button.text != "LANCER LA RUN  ·  EASY  →":
 		_fail("The primary launch action should repeat the selected difficulty")
+		return
+	if intensity_toggle.button_pressed or not intensity_toggle.text.contains("×1.15"):
+		_fail("The optional intensity mode should be visible with its reward multiplier and default off")
 		return
 	if not hard.tooltip_text.contains("NORMAL"):
 		_fail("A locked difficulty should explain its previous-difficulty requirement")
@@ -372,6 +376,7 @@ func _run() -> void:
 		_fail("The temporary profile action should remain separate from normal difficulty selection")
 		return
 	_difficulty_button(hub, "EASY").pressed.emit()
+	intensity_toggle.button_pressed = true
 	hub._launch_run()
 	var deadline := Time.get_ticks_msec() + 1500
 	while Time.get_ticks_msec() < deadline:
@@ -379,7 +384,9 @@ func _run() -> void:
 		if current_scene != null and current_scene.scene_file_path.ends_with("survival_session.tscn"):
 			break
 	if current_scene == null or not current_scene.scene_file_path.ends_with("survival_session.tscn") or \
-		current_scene.difficulty_id != "easy" or current_scene.progression_service != progression:
+		current_scene.difficulty_id != "easy" or current_scene.progression_service != progression or \
+		not current_scene._overstimulation_intensity_active() or current_scene._overstimulation_event_wave != 2 or \
+		current_scene._mobile_xp_core_next_at != 30.0:
 		_fail("Launching from the hub should pass the selected difficulty and normal profile service into the run")
 		return
 	if current_scene.loadout._weapons.size() != 2 or current_scene.loadout._relics.size() != 2:
@@ -396,6 +403,7 @@ func _run() -> void:
 	current_scene = armorless_hub
 	await process_frame
 	var armorless_button: Button = armorless_hub.get_node("Content/Main/PreparationCard/Body/ModeButtons/ArmorlessLaunchButton")
+	(armorless_hub.get_node("Content/Main/DifficultyCard/Body/IntensityToggle") as CheckButton).button_pressed = true
 	if armorless_button.disabled or not armorless_button.focus_mode == Control.FOCUS_ALL:
 		_fail("Armorless should be an available, keyboard-focusable hub launch action")
 		return
@@ -406,7 +414,8 @@ func _run() -> void:
 		if current_scene != armorless_hub:
 			break
 	if current_scene == armorless_hub or current_scene.mode_id != "armorless" or \
-		current_scene.progression_service != progression or not current_scene.wave_director.endless_armorless:
+		current_scene.progression_service != progression or not current_scene.wave_director.endless_armorless or \
+		current_scene._overstimulation_intensity_active():
 		_fail("The Armorless hub action should launch the selected difficulty with the persistent profile and endless rules")
 		return
 	current_scene.queue_free()
@@ -430,6 +439,7 @@ func _run() -> void:
 	if endless_button.disabled or endless_button.text != "ENDLESS STANDARD  →":
 		_fail("A previously unlocked Endless mode should be clearly available in the hub")
 		return
+	(endless_hub.get_node("Content/Main/DifficultyCard/Body/IntensityToggle") as CheckButton).button_pressed = true
 	endless_hub._launch_endless_run()
 	deadline = Time.get_ticks_msec() + 1500
 	while Time.get_ticks_msec() < deadline:
@@ -438,7 +448,7 @@ func _run() -> void:
 			break
 	if current_scene == endless_hub or current_scene.mode_id != "endless" or \
 		current_scene.difficulty_id != "easy" or current_scene.progression_service != progression or \
-		not current_scene.wave_director.endless_standard:
+		not current_scene.wave_director.endless_standard or not current_scene._overstimulation_intensity_active():
 		_fail("The unlocked hub action should start an Endless standard session with its endless director")
 		return
 	if current_scene.loadout.weapon_level("lightning_conductor") != 0 or \
