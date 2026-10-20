@@ -119,12 +119,12 @@ func _ready() -> void:
 	_refresh()
 
 func _on_survival_pressed() -> void:
-	var error := get_tree().change_scene_to_file("res://scenes/survival_entry.tscn")
+	var error := await UITransitions.change_scene_to_file("res://scenes/survival_entry.tscn")
 	if error != OK:
 		push_error("Could not open Survival entry scene: %s" % error_string(error))
 
 func _on_home_pressed() -> void:
-	var error := get_tree().change_scene_to_file("res://scenes/launch_menu.tscn")
+	var error := await UITransitions.change_scene_to_file("res://scenes/launch_menu.tscn")
 	if error != OK:
 		push_error("Could not return to launch menu: %s" % error_string(error))
 

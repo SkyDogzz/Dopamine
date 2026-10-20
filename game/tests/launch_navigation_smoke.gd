@@ -113,8 +113,9 @@ func _run() -> void:
 		return
 	var sandbox_button := launch_menu.get_node("%s/SandboxButton" % MENU_PATH) as Button
 	sandbox_button.pressed.emit()
-	await process_frame
-	await process_frame
+	if not await _wait_for_transition():
+		_fail("The shared UI transition should finish when opening the Sandbox")
+		return
 	if current_scene == null or current_scene.scene_file_path != "res://scenes/main.tscn":
 		_fail("The discrete Sandbox entry should open the existing developer scene")
 		return
@@ -126,8 +127,9 @@ func _run() -> void:
 		_fail("The Sandbox return action should receive initial keyboard/gamepad focus")
 		return
 	home_button.pressed.emit()
-	await process_frame
-	await process_frame
+	if not await _wait_for_transition():
+		_fail("The shared UI transition should finish when returning home")
+		return
 	if current_scene == null or current_scene.scene_file_path != LAUNCH_SCENE_PATH:
 		_fail("The Sandbox home action should return to the launch menu")
 		return
@@ -147,8 +149,9 @@ func _run() -> void:
 			return
 	var sandbox_lab_button := current_scene.get_node("%s/SandboxLabButton" % MENU_PATH) as Button
 	sandbox_lab_button.pressed.emit()
-	await process_frame
-	await process_frame
+	if not await _wait_for_transition():
+		_fail("The shared UI transition should finish when opening the Sandbox Lab")
+		return
 	if current_scene == null or current_scene.scene_file_path != "res://scenes/sandbox_lab.tscn":
 		_fail("The separate Sandbox Lab button should open the player Lab scene")
 		return
@@ -158,3 +161,10 @@ func _run() -> void:
 func _fail(message: String) -> void:
 	push_error(message)
 	quit(1)
+
+func _wait_for_transition() -> bool:
+	var transitions: Node = root.get_node("UITransitions")
+	var deadline := Time.get_ticks_msec() + 2000
+	while bool(transitions.get("is_transitioning")) and Time.get_ticks_msec() < deadline:
+		await process_frame
+	return not bool(transitions.get("is_transitioning"))

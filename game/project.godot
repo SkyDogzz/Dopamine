@@ -10,6 +10,7 @@ run/main_scene="res://scenes/launch_menu.tscn"
 [autoload]
 
 Settings="*res://scripts/settings_service.gd"
+UITransitions="*res://scripts/ui_transitions.gd"
 Sfx="*res://scripts/sfx_service.gd"
 UIFeedback="*res://scripts/ui_button_feedback.gd"
 PerformanceCapture="*res://scripts/performance_capture.gd"

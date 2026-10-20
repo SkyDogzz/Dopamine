@@ -30,7 +30,7 @@ func _on_play_pressed() -> void:
 	play_requested.emit()
 
 func _open_survival_hub() -> void:
-	var error := get_tree().change_scene_to_file("res://scenes/survival_hub.tscn")
+	var error := await UITransitions.change_scene_to_file("res://scenes/survival_hub.tscn")
 	if error != OK:
 		push_error("Could not open Survival hub: %s" % error_string(error))
 
@@ -38,12 +38,12 @@ func _on_quit_pressed() -> void:
 	get_tree().quit()
 
 func _on_sandbox_pressed() -> void:
-	var error := get_tree().change_scene_to_file("res://scenes/main.tscn")
+	var error := await UITransitions.change_scene_to_file("res://scenes/main.tscn")
 	if error != OK:
 		push_error("Could not open developer Sandbox: %s" % error_string(error))
 
 func _on_sandbox_lab_pressed() -> void:
-	var error := get_tree().change_scene_to_file("res://scenes/sandbox_lab.tscn")
+	var error := await UITransitions.change_scene_to_file("res://scenes/sandbox_lab.tscn")
 	if error != OK:
 		push_error("Could not open Sandbox Lab: %s" % error_string(error))
 

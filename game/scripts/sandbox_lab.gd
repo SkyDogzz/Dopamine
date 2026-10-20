@@ -777,6 +777,6 @@ func _set_status(message: String, error: bool) -> void:
 
 func _go_home() -> void:
 	context.stop()
-	var error := get_tree().change_scene_to_file("res://scenes/launch_menu.tscn")
+	var error := await UITransitions.change_scene_to_file("res://scenes/launch_menu.tscn")
 	if error != OK:
 		push_error("Could not return from Sandbox Lab: %s" % error_string(error))

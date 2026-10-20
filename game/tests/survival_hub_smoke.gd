@@ -50,7 +50,7 @@ func _run() -> void:
 	var easy := _difficulty_button(hub, "EASY")
 	var normal := _difficulty_button(hub, "NORMAL")
 	var hard := _difficulty_button(hub, "HARD")
-	if easy == null or not easy.button_pressed or easy.disabled or not normal.disabled or not hard.disabled:
+	if easy == null or not easy.button_pressed or not easy.text.ends_with("✓") or easy.disabled or not normal.disabled or not hard.disabled:
 		_fail("A new profile should select Easy and keep later difficulties visibly locked")
 		return
 	var launch_button: Button = hub.get_node("Content/Main/PreparationCard/Body/LaunchButton")
@@ -139,7 +139,9 @@ func _run() -> void:
 	var achievements_panel: Control = hub.get_node("AchievementsPanel")
 	var achievement_entries: GridContainer = achievements_panel.get_node("Center/Panel/Content/Body/BodyRow/EntriesScroll/Entries")
 	if not achievements_panel.visible or achievement_entries.get_child_count() != 100:
-		_fail("Achievements should open a panel with all 100 achievement families")
+		_fail("Achievements should open a panel with all 100 achievement families (visible %s, entries %d, focus %s)" % [
+			achievements_panel.visible, achievement_entries.get_child_count(), root.gui_get_focus_owner(),
+		])
 		return
 	if not bounds.encloses(achievements_panel.get_node("Center/Panel").get_global_rect()):
 		_fail("Achievements panel should fit the logical viewport")
@@ -344,6 +346,9 @@ func _run() -> void:
 	if launch_button.text != "LANCER LA RUN  ·  NORMAL  →":
 		_fail("The primary launch action should track difficulty selection")
 		return
+	if not _difficulty_button(hub, "NORMAL").text.ends_with("✓") or _difficulty_button(hub, "EASY").text.ends_with("✓"):
+		_fail("The selected difficulty marker should move with the active choice")
+		return
 	records_button.pressed.emit()
 	await process_frame
 	var records_panel: Control = hub.get_node_or_null("ArmorlessRecordsPanel")
@@ -411,9 +416,10 @@ func _run() -> void:
 	deadline = Time.get_ticks_msec() + 1500
 	while Time.get_ticks_msec() < deadline:
 		await process_frame
-		if current_scene != armorless_hub:
+		if current_scene != null and current_scene.scene_file_path.ends_with("survival_session.tscn"):
 			break
-	if current_scene == armorless_hub or current_scene.mode_id != "armorless" or \
+	if current_scene == null or not current_scene.scene_file_path.ends_with("survival_session.tscn") or \
+		current_scene.mode_id != "armorless" or \
 		current_scene.progression_service != progression or not current_scene.wave_director.endless_armorless or \
 		current_scene._overstimulation_intensity_active():
 		_fail("The Armorless hub action should launch the selected difficulty with the persistent profile and endless rules")
@@ -426,7 +432,9 @@ func _run() -> void:
 	current_scene = back_hub
 	await process_frame
 	await _send_gamepad_cancel()
-	await process_frame
+	if not await _wait_for_ui_transition():
+		_fail("The shared UI transition should finish when returning to the launch menu")
+		return
 	if current_scene == null or current_scene.scene_file_path != "res://scenes/launch_menu.tscn":
 		_fail("Gamepad B should return from the hub to the launch menu")
 		return
@@ -444,9 +452,10 @@ func _run() -> void:
 	deadline = Time.get_ticks_msec() + 1500
 	while Time.get_ticks_msec() < deadline:
 		await process_frame
-		if current_scene != endless_hub:
+		if current_scene != null and current_scene.scene_file_path.ends_with("survival_session.tscn"):
 			break
-	if current_scene == endless_hub or current_scene.mode_id != "endless" or \
+	if current_scene == null or not current_scene.scene_file_path.ends_with("survival_session.tscn") or \
+		current_scene.mode_id != "endless" or \
 		current_scene.difficulty_id != "easy" or current_scene.progression_service != progression or \
 		not current_scene.wave_director.endless_standard or not current_scene._overstimulation_intensity_active():
 		_fail("The unlocked hub action should start an Endless standard session with its endless director")
@@ -482,6 +491,13 @@ func _send_gamepad_cancel() -> void:
 	event.pressed = false
 	Input.parse_input_event(event)
 	await process_frame
+
+func _wait_for_ui_transition() -> bool:
+	var transitions: Node = root.get_node("UITransitions")
+	var deadline := Time.get_ticks_msec() + 2000
+	while bool(transitions.get("is_transitioning")) and Time.get_ticks_msec() < deadline:
+		await process_frame
+	return not bool(transitions.get("is_transitioning"))
 
 func _send_key(keycode: Key) -> void:
 	var event := InputEventKey.new()
@@ -523,10 +539,10 @@ func _send_mouse_click(control: Control) -> void:
 	event.global_position = event.position
 	event.button_index = MOUSE_BUTTON_LEFT
 	event.pressed = true
-	Input.parse_input_event(event)
+	root.push_input(event, true)
 	await process_frame
 	event.pressed = false
-	Input.parse_input_event(event)
+	root.push_input(event, true)
 	await process_frame
 
 func _fail(message: String) -> void:

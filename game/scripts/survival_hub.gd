@@ -165,14 +165,21 @@ func _select_difficulty(difficulty_id: String) -> void:
 	var button: Button = _difficulty_buttons[difficulty_id]
 	if button.disabled:
 		return
+	var changed := selected_difficulty != difficulty_id
 	selected_difficulty = difficulty_id
 	button.button_pressed = true
+	for id in _difficulty_buttons:
+		var difficulty_button: Button = _difficulty_buttons[id]
+		difficulty_button.text = "%s  ·  %s%s" % [str(id).to_upper(), \
+			"DISPONIBLE" if not difficulty_button.disabled else "VERROUILLÉE", "  ✓" if id == difficulty_id else ""]
 	_launch_button.text = "LANCER LA RUN  ·  %s  →" % difficulty_id.to_upper()
 	var index := DIFFICULTY_SCRIPT.ORDER.find(difficulty_id)
 	_difficulty_status.text = "CHOISIE: %s  •  UNE VICTOIRE DÉBLOQUE LA SUIVANTE" % difficulty_id.to_upper() \
 		if index < DIFFICULTY_SCRIPT.ORDER.size() - 1 else "CHOISIE: CHAOS  •  DIFFICULTÉ MAXIMALE"
 	_refresh_armorless_record()
 	_refresh_endless_record()
+	if changed:
+		Sfx.play("ui_confirm")
 
 func _refresh_armorless_record() -> void:
 	var record: Dictionary = _armorless_records.get(selected_difficulty, {})
@@ -195,7 +202,7 @@ func _refresh_endless_record() -> void:
 	]
 
 func _on_back_pressed() -> void:
-	var error := get_tree().change_scene_to_file("res://scenes/launch_menu.tscn")
+	var error := await UITransitions.change_scene_to_file("res://scenes/launch_menu.tscn")
 	if error != OK:
 		_profile_status.text = "RETOUR À L’ACCUEIL IMPOSSIBLE"
 
@@ -206,9 +213,7 @@ func _launch_run() -> void:
 	entry.progression_service = progression_service
 	entry.difficulty_id = selected_difficulty
 	entry.overstimulation_intensity_enabled = _intensity_toggle.button_pressed
-	get_tree().root.add_child(entry)
-	get_tree().current_scene = entry
-	queue_free()
+	await _change_to_run_entry(entry)
 
 func _launch_armorless_run() -> void:
 	if not _profile_available:
@@ -217,9 +222,7 @@ func _launch_armorless_run() -> void:
 	entry.progression_service = progression_service
 	entry.difficulty_id = selected_difficulty
 	entry.mode_id = "armorless"
-	get_tree().root.add_child(entry)
-	get_tree().current_scene = entry
-	queue_free()
+	await _change_to_run_entry(entry)
 
 func _launch_endless_run() -> void:
 	if not _profile_available or _endless_launch_button.disabled:
@@ -229,18 +232,21 @@ func _launch_endless_run() -> void:
 	entry.difficulty_id = selected_difficulty
 	entry.mode_id = "endless"
 	entry.overstimulation_intensity_enabled = _intensity_toggle.button_pressed
-	get_tree().root.add_child(entry)
-	get_tree().current_scene = entry
-	queue_free()
+	await _change_to_run_entry(entry)
 
 func _launch_temporary_run() -> void:
 	var temporary_progression = PROGRESSION_SERVICE_SCRIPT.new(null, "temporary")
 	var entry: Node = SURVIVAL_ENTRY_SCENE.instantiate()
 	entry.progression_service = temporary_progression
 	entry.difficulty_id = "easy"
-	get_tree().root.add_child(entry)
-	get_tree().current_scene = entry
-	queue_free()
+	await _change_to_run_entry(entry)
+
+func _change_to_run_entry(entry: Node) -> void:
+	var error: Error = await UITransitions.change_scene_to_node(entry)
+	if error != OK:
+		entry.queue_free()
+		_profile_status.text = "LANCEMENT IMPOSSIBLE"
+		push_error("Could not start the selected run: %s" % error_string(error))
 
 func _open_equipment() -> void:
 	var result: Dictionary = progression_service.load_profile()

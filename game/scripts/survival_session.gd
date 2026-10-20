@@ -1039,7 +1039,7 @@ func _confirm_abandon_run() -> void:
 	_persist_codex_sightings()
 	_manually_paused = false
 	run_over = true
-	var error := get_tree().change_scene_to_file("res://scenes/launch_menu.tscn")
+	var error := await UITransitions.change_scene_to_file("res://scenes/launch_menu.tscn")
 	if error != OK:
 		run_over = false
 		_manually_paused = true
@@ -3515,14 +3515,15 @@ func _restart_run() -> void:
 	replacement.difficulty_id = difficulty_id
 	replacement.mode_id = mode_id
 	replacement.overstimulation_intensity_enabled = overstimulation_intensity_enabled
-	get_tree().root.add_child(replacement)
-	get_tree().current_scene = replacement
-	queue_free()
+	var error: Error = await UITransitions.change_scene_to_node(replacement)
+	if error != OK:
+		replacement.queue_free()
+		push_error("Could not restart the run: %s" % error_string(error))
 
 func _quit_after_run() -> void:
 	if not run_over:
 		return
-	var error := get_tree().change_scene_to_file("res://scenes/launch_menu.tscn")
+	var error := await UITransitions.change_scene_to_file("res://scenes/launch_menu.tscn")
 	if error != OK:
 		push_error("Could not return to launch menu after the run: %s" % error_string(error))
 

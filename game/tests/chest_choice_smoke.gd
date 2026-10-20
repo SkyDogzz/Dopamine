@@ -20,6 +20,9 @@ func _run() -> void:
 	if not choice.present(options) or not choice.visible:
 		_fail("Chest choice should show exactly three valid offers")
 		return
+	if not (choice.get_node("Content/Options/Choice0/FocusMarker") as Label).visible:
+		_fail("The focused offer should have a visible selection marker")
+		return
 	if not choice.present(options.slice(0, 2), 2, "STARTING WEAPON"):
 		_fail("The shared choice modal should also show two starting weapon offers")
 		return
@@ -33,6 +36,10 @@ func _run() -> void:
 		_fail("Starting weapon choices should reopen")
 		return
 	(choice.get_node("Content/Options/Choice1") as Button).grab_focus()
+	if (choice.get_node("Content/Options/Choice0/FocusMarker") as Label).visible or \
+		not (choice.get_node("Content/Options/Choice1/FocusMarker") as Label).visible:
+		_fail("The offer marker should follow keyboard focus")
+		return
 	choice._input(_key_event(KEY_ENTER))
 	if selected_ids[0] != "new_weapon" or choice.visible:
 		_fail("Enter should confirm the focused weapon choice and close the modal")

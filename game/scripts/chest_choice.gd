@@ -111,10 +111,27 @@ func present(options: Array, required_count: int = 3, heading: String = "CHEST â
 		offer_description.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		offer_details.add_child(offer_description)
 		button.pressed.connect(_choose.bind(str(option["id"])))
+		button.focus_entered.connect(_mark_focused_choice.bind(button))
 		_options.add_child(button)
+		var selection_marker := Label.new()
+		selection_marker.name = "FocusMarker"
+		selection_marker.text = "â–¶"
+		selection_marker.add_theme_color_override("font_color", Color("#FF75E3"))
+		selection_marker.add_theme_font_size_override("font_size", 9)
+		selection_marker.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		selection_marker.visible = false
+		button.add_child(selection_marker)
+		selection_marker.set_anchors_and_offsets_preset(Control.PRESET_TOP_RIGHT)
+		selection_marker.position = Vector2(-16.0, 5.0)
 	visible = true
 	(_options.get_child(0) as Button).grab_focus()
 	return true
+
+func _mark_focused_choice(button: Button) -> void:
+	for child in _options.get_children():
+		var marker := (child as Button).get_node_or_null("FocusMarker") as Label
+		if marker != null:
+			marker.visible = child == button
 
 func _choose(option_id: String) -> void:
 	visible = false
