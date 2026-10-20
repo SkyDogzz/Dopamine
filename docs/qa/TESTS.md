@@ -1,5 +1,10 @@
 # Tests d'acceptation et validation
 
+## Overstimulation — tranche 11/18
+
+- [x] `survival_build_mutation_smoke.gd` vérifie l’offre en fin de vague 6, l’exclusion avant la mort du mid-boss en vague 12, le déclenchement après sa défaite, trois cartes distinctes et les effets des six mutations; Armorless et Sandbox restent exclus.
+- [i] Vérification de logique sous Godot 4.7.2. Le rayon de 100 px de Chain Reaction est **[PROPOSÉ]** faute de valeur dans la spec; la GDExtension manquante empêche le parcours interactif complet.
+
 ## Overstimulation — tranche 10/18
 
 - [x] `survival_style_gauge_smoke.gd` vérifie les points de kill ordinaire/élite, l’unicité, l’exclusion boss/chaîne, le burst au seuil 100, la banque plafonnée, le chaînage d’un burst, +15 % attaque et +10 % zone sans dégâts, le cumul de zone de risque, et la visibilité/isolation HUD.

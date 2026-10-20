@@ -20,14 +20,18 @@ func _initialize() -> void:
 		return
 	session._record_overstimulation_style_kill("mid_boss", "boss:1")
 	session._record_overstimulation_style_kill("final_boss", "boss_chain_1")
+	session._record_overstimulation_style_kill("chaser", "enemy:chain", "boss_chain_explosion")
 	if session._overstimulation_style_points != 9:
-		_fail("Bosses and boss-chain kills should not add style")
+		_fail("Bosses and boss-chain explosion kills should not add style")
 		return
 	for index in range(91):
 		session._add_overstimulation_style_points(1, "fill:%d" % index)
 	if session._overstimulation_style_points != 0 or session._overstimulation_style_pending_points != 0 or \
 			session._overstimulation_style_burst_expires_at != 6.0:
 		_fail("Reaching 100 should start a six-second burst and reset the gauge")
+		return
+	if session._overstimulation_style_points > 100 or session._overstimulation_style_pending_points > 100:
+		_fail("Style values should never exceed the 100-point cap")
 		return
 	if not is_equal_approx(session._effective_weapon_cooldown(1.0), 1.0 / 1.15) or \
 			not is_equal_approx(session._equipment_area(100.0), 110.0) or \
@@ -38,6 +42,9 @@ func _initialize() -> void:
 		session._add_overstimulation_style_points(1, "bank:%d" % index)
 	if session._overstimulation_style_pending_points != 100:
 		_fail("Points earned during Style Burst should bank up to 100")
+		return
+	if session._overstimulation_style_scored_events.size() != 213:
+		_fail("Each scored event should be deduplicated and tracked exactly once")
 		return
 	session.player_active_time = 6.0
 	session._update_overstimulation_style_gauge()

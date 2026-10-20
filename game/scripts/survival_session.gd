@@ -97,6 +97,7 @@ const OVERSTIMULATION_COMBO_WINDOW_SECONDS := 4.0
 const OVERSTIMULATION_COMBO_BONUS_SECONDS := 4.0
 const OVERSTIMULATION_COMBO_ATTACK_SPEED_PER_MILESTONE := 5.0
 const OVERSTIMULATION_COMBO_MILESTONES := [3, 6, 10, 15, 25]
+const OVERSTIMULATION_CHAIN_REACTION_RADIUS := 100.0 # [PROPOSÉ] la spec ne fixe pas le rayon.
 const OVERSTIMULATION_STYLE_BURST_SECONDS := 6.0
 const OVERSTIMULATION_STYLE_BURST_ATTACK_SPEED_BONUS := 15.0
 const OVERSTIMULATION_STYLE_BURST_AREA_BONUS := 10.0
@@ -437,6 +438,22 @@ var _overstimulation_event_remaining := 0.0
 var _overstimulation_event_anomaly := ""
 var _overstimulation_event_anomalies: Array[String] = []
 var _overstimulation_event_kills := 0
+var _overstimulation_mutation_wave := 6
+var _overstimulation_mutation_active := ""
+var _overstimulation_mutation_offering := false
+var _overstimulation_mutation_options: Array[Dictionary] = []
+var _overstimulation_mutation_kills := 0
+var _overstimulation_mutation_enemy_speed_multiplier := 1.0
+var _overstimulation_mutation_attack_speed_bonus := 0.0
+var _overstimulation_mutation_xp_storm := false
+var _overstimulation_mutation_healing_multiplier := 1.0
+var _overstimulation_mutation_health_decay_multiplier := 1.0
+var _overstimulation_mutation_area_bonus := 0.0
+var _overstimulation_mutation_spawn_rate_multiplier := 1.0
+var _overstimulation_mutation_critical_damage_bonus := 0.0
+var _overstimulation_mutation_damage_multiplier := 1.0
+var _overstimulation_mutation_player_speed_multiplier := 1.0
+var _overstimulation_mutation_rng := RandomNumberGenerator.new()
 var _overstimulation_enemy_speed_multiplier := 1.0
 var _overstimulation_applied_enemy_speed_multiplier := 1.0
 var _overstimulation_attack_speed_bonus := 0.0
@@ -593,6 +610,7 @@ var _codex_sightings_recorded: Dictionary = {}
 @onready var _style_gauge_row: HBoxContainer = $HUD/RunPanel/RunInfo/StyleGaugeRow
 @onready var _style_value: Label = $HUD/RunPanel/RunInfo/StyleGaugeRow/StyleValue
 @onready var _style_bar: ProgressBar = $HUD/RunPanel/RunInfo/StyleGaugeRow/StyleBar
+@onready var _mutation_label: Label = $HUD/RunPanel/RunInfo/MutationStatus
 @onready var _difficulty_value: Label = $HUD/MetaPanel/MetaRow/DifficultyValue
 @onready var _boss_panel: PanelContainer = $HUD/BossPanel
 @onready var _boss_value: Label = $HUD/BossPanel/BossInfo/BossValue
@@ -649,6 +667,7 @@ func _ready() -> void:
 	_sprite_renderer = SPRITE_RENDERER_SCRIPT.new()
 	_run_id = Crypto.new().generate_random_bytes(16).hex_encode()
 	_overstimulation_rng.seed = hash(_run_id)
+	_overstimulation_mutation_rng.seed = hash(_run_id) ^ 0x4D555441
 	if mode_id == "armorless":
 		armorless_run_state = ARMORLESS_RUN_STATE_SCRIPT.new(hash(_run_id))
 		armorless_run_state.begin_run()
@@ -979,6 +998,9 @@ func _process(_delta: float) -> void:
 			not _chest_open and not _pending_armorless_draft_waves.is_empty():
 		_open_next_armorless_draft()
 		return
+	if _overstimulation_mutation_offering:
+		return
+	_update_overstimulation_mutation_effects()
 	var state: Dictionary = simulation.snapshot()
 	_record_codex_sightings(state.get("entities", []))
 	var current_simulation_time: float = float(state["simulation_time"])
@@ -1087,7 +1109,8 @@ func _process(_delta: float) -> void:
 				var dead_enemy_type: String = str(event.get("target_type", ""))
 				_record_overstimulation_combo_kill(dead_enemy_type)
 				var dead_key := _entity_key(int(dead_target["index"]), int(dead_target["generation"]))
-				_record_overstimulation_style_kill(dead_enemy_type, dead_key)
+				_record_overstimulation_style_kill(dead_enemy_type, dead_key,
+						str(event.get("source_type", "")))
 				var dead_enemy_affix: String = str(event.get("target_affix", ""))
 				var death_position := Vector2(float(event["position"]["x"]), float(event["position"]["y"]))
 				if _overstimulation_prism_break and dead_enemy_type not in ["mid_boss", "final_boss"]:
@@ -1123,6 +1146,9 @@ func _process(_delta: float) -> void:
 				if dead_enemy_type == "mid_boss":
 					_boss_spawn_pending = false
 					wave_director.boss_defeated()
+					if _overstimulation_mutation_due(wave_director.wave - 1, wave_director.wave,
+							WAVE_DIRECTOR_SCRIPT.State.MID_BOSS, wave_director.state):
+						_open_overstimulation_mutation_offer(wave_director.wave - 1)
 				elif dead_enemy_type == "final_boss":
 					_boss_spawn_pending = false
 					wave_director.boss_defeated()
@@ -1197,7 +1223,7 @@ func _process(_delta: float) -> void:
 			not _pending_armorless_draft_waves.is_empty():
 		_open_next_armorless_draft()
 	player.controls_enabled = not state["paused"] and not run_over and not _chest_open and \
-			not _starting_weapon_choice_open and not _revive_pending
+			not _starting_weapon_choice_open and not _revive_pending and not _overstimulation_mutation_offering
 	_refresh_hud(state)
 	queue_redraw()
 
@@ -1910,6 +1936,7 @@ func _decline_revive() -> void:
 
 func _player_health_decay_amount(active_time_seconds: float, delta_seconds: float) -> float:
 	var amount: float = simulation.health_decay_amount(active_time_seconds, delta_seconds)
+	amount *= _overstimulation_mutation_health_decay_multiplier
 	if sandbox_diagnostics_enabled:
 		var multiplier := sandbox_health_decay_multiplier if is_finite(sandbox_health_decay_multiplier) else 1.0
 		amount *= clampf(multiplier, 0.0, 10.0)
@@ -1990,6 +2017,7 @@ func _update_run_panel_status_height() -> void:
 	var status_count := int(_risk_reward_label.visible) + int(_mobile_core_label.visible)
 	status_count += int(_combo_label.visible)
 	status_count += int(_style_gauge_row.visible)
+	status_count += int(_mutation_label.visible)
 	_run_panel.offset_bottom = 51.0 + float(status_count) * 15.0
 
 func _run_stat_breakdown() -> Dictionary:
@@ -2204,7 +2232,12 @@ func _collect_nearby_xp_orbs(state: Dictionary) -> void:
 func _xp_pickup_radius(current_simulation_time: float) -> float:
 	var pickup_radius_bonus_pct: float = _equipment_bonus("pickup_radius_pct") + loadout.global_relic_bonus("pickup_radius_pct") + _xp_run_stat_bonus("pickup_radius_pct")
 	var radius := xp_collection_radius * (1.0 + pickup_radius_bonus_pct / 100.0)
-	return radius * 2.0 if _overstimulation_xp_storm else radius
+	var multiplier := 1.0
+	if _overstimulation_xp_storm:
+		multiplier = 2.0
+	elif _overstimulation_mutation_xp_storm:
+		multiplier = 1.5
+	return radius * multiplier
 
 func _update_magnet_heart_pulse(state: Dictionary, elapsed_active_time: float) -> void:
 	if loadout.relic_level("magnet_heart") < loadout.MAX_LEVEL or run_over:
@@ -2385,6 +2418,67 @@ func _open_chest(options: Array, heading: String) -> bool:
 		_chest_choice.call_deferred("choose_first_option")
 	return true
 
+func _open_overstimulation_mutation_offer(wave_number: int) -> void:
+	if not _overstimulation_enabled() or simulation == null or run_over or _chest_open or \
+			_starting_weapon_choice_open or _overstimulation_mutation_offering:
+		return
+	if _run_stat_hub != null:
+		_run_stat_hub.set_detail_open(false)
+	_overstimulation_mutation_options = _draw_overstimulation_mutation_options()
+	if _overstimulation_mutation_options.size() != 3:
+		return
+	_overstimulation_mutation_offering = true
+	_chest_open = true
+	_active_chest_options = _overstimulation_mutation_options.duplicate(true)
+	_active_chest_heading = "BUILD MUTATION — WAVE %d — CHOOSE ONE" % wave_number
+	if not _chest_choice.present(_active_chest_options, _active_chest_options.size(), _active_chest_heading):
+		_overstimulation_mutation_offering = false
+		_overstimulation_mutation_wave = wave_number
+		_chest_open = false
+		_active_chest_options.clear()
+		return
+	_overstimulation_mutation_wave += 6
+	simulation.pause()
+	player.controls_enabled = false
+	Sfx.play("chest_open")
+
+func _draw_overstimulation_mutation_options() -> Array[Dictionary]:
+	var pool: Array[Dictionary] = [
+		{"id": "mutation:redline", "title": "REDLINE", "description": "+20% attack speed · enemies +10% speed"},
+		{"id": "mutation:chain_reaction", "title": "CHAIN REACTION", "description": "Each 8th kill explodes for weapon base damage"},
+		{"id": "mutation:experience_storm", "title": "EXPERIENCE STORM", "description": "+50% XP pickup radius · +10% player speed"},
+		{"id": "mutation:blood_rush", "title": "BLOOD RUSH", "description": "+50% kill healing · HP decay +20%"},
+		{"id": "mutation:frozen_tempo", "title": "FROZEN TEMPO", "description": "+25% weapon area · enemy spawn rate +15%"},
+		{"id": "mutation:prism_volley", "title": "PRISM VOLLEY", "description": "+25% critical damage · base damage −10%"},
+	]
+	var options: Array[Dictionary] = []
+	while options.size() < 3:
+		var index := _overstimulation_mutation_rng.randi_range(0, pool.size() - 1)
+		options.append(pool.pop_at(index))
+	return options
+
+func _choose_overstimulation_mutation(option_id: String) -> void:
+	var selected: Dictionary = {}
+	for option in _overstimulation_mutation_options:
+		if str(option.get("id", "")) == option_id:
+			selected = option
+			break
+	if selected.is_empty():
+		Sfx.play("ui_error")
+		_chest_choice.present(_active_chest_options, _active_chest_options.size(), _active_chest_heading)
+		return
+	_overstimulation_mutation_active = str(selected["id"]).trim_prefix("mutation:")
+	_overstimulation_mutation_offering = false
+	_overstimulation_mutation_options.clear()
+	_active_chest_options.clear()
+	_active_chest_heading = ""
+	_chest_open = false
+	_apply_overstimulation_mutation()
+	_update_overstimulation_mutation_hud()
+	_show_effect_feedback("MUTATION  ·  %s" % str(selected["title"]))
+	Sfx.play("level_up")
+	simulation.resume()
+
 func _on_chest_option_selected(option_id: String) -> void:
 	if _starting_weapon_choice_open:
 		if loadout.choose_starting_weapon(option_id.trim_prefix("start:")):
@@ -2394,6 +2488,9 @@ func _on_chest_option_selected(option_id: String) -> void:
 		else:
 			Sfx.play("ui_error")
 			_chest_choice.present(loadout.starting_weapon_options(), 2, "CHOOSE YOUR STARTING WEAPON")
+		return
+	if _overstimulation_mutation_offering:
+		_choose_overstimulation_mutation(option_id)
 		return
 	if _chest_open and _active_chest_heading.begins_with("ARMORLESS DRAFT"):
 		_choose_armorless_draft_option(option_id)
@@ -2734,11 +2831,103 @@ func _record_overstimulation_combo_kill(_enemy_type: String = "") -> void:
 		_play_overstimulation_combo_milestone_feedback()
 	_update_overstimulation_combo_hud()
 
-func _record_overstimulation_style_kill(enemy_type: String, event_key: String) -> void:
-	if enemy_type in ["mid_boss", "final_boss"] or event_key.begins_with("boss_chain_"):
+func _record_overstimulation_style_kill(enemy_type: String, event_key: String,
+		damage_source_type: String = "") -> void:
+	if enemy_type in ["mid_boss", "final_boss"] or damage_source_type.begins_with("boss_chain_"):
 		return
 	var points := 8 if enemy_type == "elite" else 1
 	_add_overstimulation_style_points(points, "kill:%s" % event_key)
+	_record_overstimulation_mutation_kill(enemy_type)
+
+func _overstimulation_mutation_due(previous_wave: int, current_wave: int, previous_state: int,
+		current_state: int) -> bool:
+	if not _overstimulation_enabled() or current_wave <= previous_wave or \
+			previous_wave < _overstimulation_mutation_wave:
+		return false
+	if previous_state == WAVE_DIRECTOR_SCRIPT.State.MID_BOSS and \
+			current_state == WAVE_DIRECTOR_SCRIPT.State.WAVE:
+		return true
+	return previous_state == WAVE_DIRECTOR_SCRIPT.State.WAVE and \
+			current_state == WAVE_DIRECTOR_SCRIPT.State.WAVE
+
+func _apply_overstimulation_mutation() -> void:
+	_overstimulation_mutation_kills = 0
+	_overstimulation_mutation_enemy_speed_multiplier = 1.1 if _overstimulation_mutation_active == "redline" else 1.0
+	_overstimulation_mutation_attack_speed_bonus = 20.0 if _overstimulation_mutation_active == "redline" else 0.0
+	_overstimulation_mutation_xp_storm = _overstimulation_mutation_active == "experience_storm"
+	_overstimulation_mutation_healing_multiplier = 1.5 if _overstimulation_mutation_active == "blood_rush" else 1.0
+	_overstimulation_mutation_health_decay_multiplier = 1.2 if _overstimulation_mutation_active == "blood_rush" else 1.0
+	_overstimulation_mutation_area_bonus = 25.0 if _overstimulation_mutation_active == "frozen_tempo" else 0.0
+	_overstimulation_mutation_spawn_rate_multiplier = 1.15 if _overstimulation_mutation_active == "frozen_tempo" else 1.0
+	_overstimulation_mutation_critical_damage_bonus = 25.0 if _overstimulation_mutation_active == "prism_volley" else 0.0
+	_overstimulation_mutation_damage_multiplier = 0.9 if _overstimulation_mutation_active == "prism_volley" else 1.0
+	_overstimulation_mutation_player_speed_multiplier = 1.1 if _overstimulation_mutation_active == "experience_storm" else 1.0
+	_apply_overstimulation_enemy_speed_multiplier()
+	if player != null:
+		_refresh_player_move_speed()
+	queue_redraw()
+
+func _update_overstimulation_mutation_effects() -> void:
+	if not _overstimulation_enabled():
+		_overstimulation_mutation_active = ""
+		_overstimulation_mutation_enemy_speed_multiplier = 1.0
+		_overstimulation_mutation_attack_speed_bonus = 0.0
+		_overstimulation_mutation_xp_storm = false
+		_overstimulation_mutation_healing_multiplier = 1.0
+		_overstimulation_mutation_health_decay_multiplier = 1.0
+		_overstimulation_mutation_area_bonus = 0.0
+		_overstimulation_mutation_spawn_rate_multiplier = 1.0
+		_overstimulation_mutation_critical_damage_bonus = 0.0
+		_overstimulation_mutation_damage_multiplier = 1.0
+		_overstimulation_mutation_player_speed_multiplier = 1.0
+		_overstimulation_mutation_offering = false
+		_overstimulation_mutation_options.clear()
+		_apply_overstimulation_enemy_speed_multiplier()
+		_refresh_player_move_speed()
+		_update_overstimulation_mutation_hud()
+		return
+	_update_overstimulation_mutation_hud()
+
+func _update_overstimulation_mutation_hud() -> void:
+	if _mutation_label == null:
+		return
+	if not _overstimulation_enabled() or _overstimulation_mutation_active.is_empty():
+		_mutation_label.hide()
+		return
+	var descriptions := {
+		"redline": "REDLINE · +20% ATTACK · ENEMIES +10% SPEED",
+		"chain_reaction": "CHAIN REACTION · EACH 8 KILLS EXPLODE",
+		"experience_storm": "EXPERIENCE STORM · +50% XP RADIUS · +10% SPEED",
+		"blood_rush": "BLOOD RUSH · +50% KILL HEAL · DECAY +20%",
+		"frozen_tempo": "FROZEN TEMPO · +25% AREA · SPAWNS +15%",
+		"prism_volley": "PRISM VOLLEY · +25% CRIT DAMAGE · DAMAGE −10%",
+	}
+	_mutation_label.show()
+	_mutation_label.text = str(descriptions.get(_overstimulation_mutation_active, "MUTATION"))
+
+func _record_overstimulation_mutation_kill(enemy_type: String) -> void:
+	if _overstimulation_mutation_active != "chain_reaction" or enemy_type in ["mid_boss", "final_boss"]:
+		return
+	_overstimulation_mutation_kills += 1
+	if _overstimulation_mutation_kills % 8 == 0 and simulation != null:
+		var sequence: int = simulation.damage_enemies_in_radius(player.global_position,
+				OVERSTIMULATION_CHAIN_REACTION_RADIUS,
+				_overstimulation_base_weapon_damage() * _persistent_damage_multiplier())
+		if sequence > 0:
+			Sfx.play("explosion")
+			_show_effect_feedback("CHAIN REACTION  ·  8-KILL EXPLOSION")
+
+func _apply_overstimulation_enemy_speed_multiplier() -> void:
+	var anomaly_multiplier := _overstimulation_enemy_speed_multiplier
+	var mutation_multiplier := _overstimulation_mutation_enemy_speed_multiplier
+	var combined_multiplier := anomaly_multiplier * mutation_multiplier
+	if is_equal_approx(combined_multiplier, _overstimulation_applied_enemy_speed_multiplier):
+		return
+	if simulation == null:
+		_overstimulation_applied_enemy_speed_multiplier = combined_multiplier
+		return
+	if simulation.set_enemy_speed_multiplier(combined_multiplier) > 0:
+		_overstimulation_applied_enemy_speed_multiplier = combined_multiplier
 
 func _add_overstimulation_style_points(points: int, event_key: String) -> void:
 	if not _overstimulation_enabled() or points <= 0 or event_key.is_empty() or \
@@ -2983,6 +3172,11 @@ func _advance_wave_director(delta_seconds: float, paused: bool) -> void:
 		wave_director.advance(delta_seconds)
 		if _overstimulation_enabled() and previous_wave != wave_director.wave and wave_director.objective_due():
 			_start_wave_objective(wave_director.wave)
+		if _overstimulation_mutation_due(previous_wave, wave_director.wave, previous_state,
+				wave_director.state):
+			_open_overstimulation_mutation_offer(previous_wave)
+			if _overstimulation_mutation_offering:
+				return
 		if previous_wave != wave_director.wave and _risk_reward_zone_due(wave_director.wave, wave_director.state):
 			_start_risk_reward_zone(wave_director.wave)
 		if _overstimulation_enabled() and wave_director.state == WAVE_DIRECTOR_SCRIPT.State.WAVE:
@@ -3454,7 +3648,8 @@ func _wave_enemy_spawn_interval() -> float:
 		return base_interval
 	var event_spawn_multiplier := 1.5 if _overstimulation_enabled() and \
 			_overstimulation_event_anomalies.has("FERAL_SURGE") else 1.0
-	return maxf(0.05, base_interval / spawn_scale / _overstimulation_spawn_rate_multiplier() / event_spawn_multiplier)
+	return maxf(0.05, base_interval / spawn_scale / _overstimulation_spawn_rate_multiplier() /
+			event_spawn_multiplier / _overstimulation_mutation_spawn_rate_multiplier)
 
 func _overstimulation_enabled() -> bool:
 	return not sandbox_diagnostics_enabled and mode_id in ["survival", "endless"]
@@ -4409,7 +4604,7 @@ func _spread_pandemic(origin: Vector2, entities: Array) -> void:
 		_pandemic_bursts.append({"position": origin, "remaining": pandemic_feedback_seconds})
 
 func _persistent_damage_multiplier() -> float:
-	return _cached_persistent_damage_multiplier * (1.0 + (loadout.global_relic_bonus("damage_pct") + _xp_run_stat_bonus("damage_pct")) / 100.0) * _risk_reward_damage_multiplier()
+	return _cached_persistent_damage_multiplier * (1.0 + (loadout.global_relic_bonus("damage_pct") + _xp_run_stat_bonus("damage_pct")) / 100.0) * _risk_reward_damage_multiplier() * _overstimulation_mutation_damage_multiplier
 
 func _weapon_combo_damage_multiplier(weapon_id: String) -> float:
 	return 1.25 if loadout.is_evolved(weapon_id) else 1.0
@@ -4465,17 +4660,19 @@ func _equipment_bonus(stat_id: String) -> float:
 
 func _equipment_kill_healing(base_healing: float) -> float:
 	var blood_chalice_bonus: float = loadout.relic_level("blood_chalice") * blood_chalice_heal_per_level * 100.0
-	return base_healing * (1.0 + (_equipment_bonus("kill_healing_pct") + blood_chalice_bonus + _xp_run_stat_bonus("kill_healing_pct")) / 100.0)
+	return base_healing * (1.0 + (_equipment_bonus("kill_healing_pct") + blood_chalice_bonus + _xp_run_stat_bonus("kill_healing_pct")) / 100.0) * _overstimulation_mutation_healing_multiplier
 
 func _equipment_xp_value(base_xp: float) -> float:
 	return base_xp * (1.0 + (_equipment_bonus("xp_pct") + _xp_run_stat_bonus("xp_pct")) / 100.0)
 
 func _refresh_player_move_speed() -> void:
+	if player == null:
+		return
 	var haste_multiplier := 1.15 if _has_unique_effect("elite_haste") and player_active_time < _elite_haste_expires_at else 1.0
 	var next_speed := _base_player_move_speed * (
 		1.0 + (_equipment_bonus("move_speed_pct") + _xp_run_stat_bonus("move_speed_pct")) / 100.0 +
 		_cached_skill_move_speed_pct + float(_cached_achievement_stat_bonuses.get("move_speed_pct", 0.0))
-	) * haste_multiplier
+	) * haste_multiplier * _overstimulation_mutation_player_speed_multiplier
 	if not is_equal_approx(player.move_speed, next_speed):
 		_run_stat_hub_dirty = true
 	player.move_speed = next_speed
@@ -4494,7 +4691,7 @@ func _effective_weapon_cooldown(base_cooldown: float) -> float:
 		_xp_run_stat_bonus("attack_speed_pct") + float(_cached_achievement_stat_bonuses.get("attack_speed_pct", 0.0)) +
 		objective_attack_speed_bonus + perfect_dodge_attack_speed_bonus + combo_attack_speed_bonus +
 		style_burst_attack_speed_bonus +
-		_overstimulation_attack_speed_bonus
+		_overstimulation_attack_speed_bonus + _overstimulation_mutation_attack_speed_bonus
 	) / 100.0
 	var cooldown_multiplier: float = maxf(0.1, 1.0 - (_equipment_bonus("cooldown_reduction_pct") + loadout.global_relic_bonus("cooldown_reduction_pct") + _xp_run_stat_bonus("cooldown_reduction_pct")) / 100.0)
 	return base_cooldown * cooldown_multiplier / speed_multiplier
@@ -4518,6 +4715,8 @@ func _overstimulation_base_weapon_damage() -> float:
 
 func _update_overstimulation_event(delta_seconds: float) -> void:
 	if not _overstimulation_enabled() or delta_seconds <= 0.0:
+		return
+	if _overstimulation_mutation_offering:
 		return
 	_apply_overstimulation_enemy_speed_multiplier()
 	if _overstimulation_event_anomaly.is_empty() and not _overstimulation_event_warning and \
@@ -4581,12 +4780,6 @@ func _finish_overstimulation_event() -> void:
 		Sfx.play("chest_reward")
 	_overstimulation_event_wave += OVERSTIMULATION_EVENT_INTERVAL_WAVES
 	queue_redraw()
-
-func _apply_overstimulation_enemy_speed_multiplier() -> void:
-	if is_equal_approx(_overstimulation_enemy_speed_multiplier, _overstimulation_applied_enemy_speed_multiplier):
-		return
-	if simulation.set_enemy_speed_multiplier(_overstimulation_enemy_speed_multiplier) > 0:
-		_overstimulation_applied_enemy_speed_multiplier = _overstimulation_enemy_speed_multiplier
 
 func _overstimulation_event_title() -> String:
 	var titles: Array[String] = []
@@ -4799,7 +4992,7 @@ func _roll_equipment_critical_multiplier() -> float:
 	var chance := _critical_chance()
 	if _random_float("critical_hit_roll") * 100.0 < chance:
 		_last_attack_critical_hit = true
-		return 1.5 + (_equipment_bonus("critical_damage_pct") + loadout.global_relic_bonus("critical_damage_pct") + _xp_run_stat_bonus("critical_damage_pct")) / 100.0
+		return 1.5 + (_equipment_bonus("critical_damage_pct") + loadout.global_relic_bonus("critical_damage_pct") + _xp_run_stat_bonus("critical_damage_pct") + _overstimulation_mutation_critical_damage_bonus) / 100.0
 	_last_attack_critical_hit = false
 	return 1.0
 
@@ -4814,7 +5007,7 @@ func _equipment_projectile_speed(base_speed: float) -> float:
 	return base_speed * (1.0 + (_equipment_bonus("projectile_speed_pct") + loadout.global_relic_bonus("projectile_speed_pct") + _xp_run_stat_bonus("projectile_speed_pct")) / 100.0)
 
 func _equipment_area(base_area: float) -> float:
-	return base_area * (1.0 + (_equipment_bonus("area_pct") + loadout.global_relic_bonus("area_pct") + _xp_run_stat_bonus("area_pct")) / 100.0) * _overstimulation_area_multiplier()
+	return base_area * (1.0 + (_equipment_bonus("area_pct") + loadout.global_relic_bonus("area_pct") + _xp_run_stat_bonus("area_pct") + _overstimulation_mutation_area_bonus) / 100.0) * _overstimulation_area_multiplier()
 
 func _risk_reward_damage_multiplier() -> float:
 	return 1.2 if player_active_time < _risk_reward_buff_expires_at else 1.0
